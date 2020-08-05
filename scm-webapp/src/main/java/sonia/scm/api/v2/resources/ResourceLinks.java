@@ -25,7 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.security.gpg.PublicKeyResource;
+import sonia.scm.security.gpg.UserPublicKeyResource;
 
 import javax.inject.Inject;
 import java.net.URI;
@@ -104,7 +104,7 @@ class ResourceLinks {
 
     UserLinks(ScmPathInfo pathInfo) {
       userLinkBuilder = new LinkBuilder(pathInfo, UserRootResource.class, UserResource.class);
-      publicKeyLinkBuilder = new LinkBuilder(pathInfo, PublicKeyResource.class);
+      publicKeyLinkBuilder = new LinkBuilder(pathInfo, UserPublicKeyResource.class);
     }
 
     String self(String name) {

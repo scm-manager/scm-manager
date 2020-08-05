@@ -51,7 +51,7 @@ public abstract class PublicKeyMapper {
   }
 
   @Mapping(target = "attributes", ignore = true)
-  @Mapping(target = "raw", ignore = true)
+//  @Mapping(target = "raw", ignore = true) // TODO: Why is there ?
   abstract RawGpgKeyDto map(RawGpgKey rawGpgKey);
 
   @ObjectFactory
@@ -65,16 +65,16 @@ public abstract class PublicKeyMapper {
   }
 
   private String createSelfLink(RawGpgKey rawGpgKey) {
-    return new LinkBuilder(scmPathInfoStore.get().get(), PublicKeyResource.class)
-      .method("findById")
-      .parameters(rawGpgKey.getId())
+    return new LinkBuilder(scmPathInfoStore.get().get(), UserPublicKeyResource.class)
+      .method("findByIdJson")
+      .parameters(rawGpgKey.getOwner(), rawGpgKey.getId())
       .href();
   }
 
   private String createDeleteLink(RawGpgKey rawGpgKey) {
-    return new LinkBuilder(scmPathInfoStore.get().get(), PublicKeyResource.class)
+    return new LinkBuilder(scmPathInfoStore.get().get(), UserPublicKeyResource.class)
       .method("deleteById")
-      .parameters(rawGpgKey.getId())
+      .parameters(rawGpgKey.getOwner(), rawGpgKey.getId())
       .href();
   }
 }

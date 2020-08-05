@@ -71,14 +71,14 @@ public class PublicKeyCollectionMapper {
   }
 
   private String createLink(String username) {
-    return new LinkBuilder(scmPathInfoStore.get().get(), PublicKeyResource.class)
+    return new LinkBuilder(scmPathInfoStore.get().get(), UserPublicKeyResource.class)
       .method("create")
       .parameters(username)
       .href();
   }
 
   private String selfLink(String username) {
-    return new LinkBuilder(scmPathInfoStore.get().get(), PublicKeyResource.class)
+    return new LinkBuilder(scmPathInfoStore.get().get(), UserPublicKeyResource.class)
       .method("findAll")
       .parameters(username)
       .href();

@@ -81,9 +81,21 @@ class PublicKeyMapperTest {
   }
 
   @Test
-  void shouldNotAppendDeleteLink() throws IOException {
+  void shouldNotAppendDeleteLinkIfPermissionMissing() throws IOException {
     String raw = GPGTestHelper.readResourceAsString("single.asc");
     RawGpgKey key = new RawGpgKey("1", "key_42", "trillian", raw, Collections.emptySet(), Instant.now());
+
+    RawGpgKeyDto dto = mapper.map(key);
+
+    assertThat(dto.getLinks().getLinkBy("delete")).isNotPresent();
+  }
+
+  @Test
+  void shouldNotAppendDeleteLinkIfReadonly() throws IOException {
+    when(subject.isPermitted("user:changePublicKeys:trillian")).thenReturn(true);
+
+    String raw = GPGTestHelper.readResourceAsString("single.asc");
+    RawGpgKey key = new RawGpgKey("1", "key_42", "trillian", raw, Collections.emptySet(), Instant.now(), true);
 
     RawGpgKeyDto dto = mapper.map(key);
 

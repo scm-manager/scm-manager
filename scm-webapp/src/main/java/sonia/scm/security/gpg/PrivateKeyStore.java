@@ -25,9 +25,9 @@
 package sonia.scm.security.gpg;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sonia.scm.security.CipherUtil;
-import sonia.scm.security.PrivateKey;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.xml.XmlInstantAdapter;
@@ -66,7 +66,8 @@ class PrivateKeyStore {
   @XmlAccessorType(XmlAccessType.FIELD)
   @AllArgsConstructor
   @NoArgsConstructor
-  private class RawPrivateKey {
+  @Getter
+  static class RawPrivateKey {
     private String key;
 
     @XmlJavaTypeAdapter(XmlInstantAdapter.class)

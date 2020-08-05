@@ -60,12 +60,17 @@ public class RawGpgKey {
   RawGpgKey(String id) {
     this.id = id;
   }
+  RawGpgKey(String id, String raw) {
+    this.id = id;
+    this.raw = raw;
+  }
   RawGpgKey(String id, String displayName, String owner, String raw, Set<Person> contacts, Instant created) {
     this.id = id;
     this.displayName = displayName;
     this.owner = owner;
     this.contacts = contacts;
     this.created = created;
+    this.raw = raw;
   }
 
   @Override

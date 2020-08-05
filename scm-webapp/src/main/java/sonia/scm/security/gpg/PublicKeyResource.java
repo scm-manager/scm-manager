@@ -24,7 +24,6 @@
 
 package sonia.scm.security.gpg;
 
-import de.otto.edison.hal.HalRepresentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -34,71 +33,27 @@ import sonia.scm.security.AllowAnonymousAccess;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
-import javax.ws.rs.HeaderParam;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriBuilder;
-import javax.ws.rs.core.UriInfo;
 import java.util.Optional;
 
 @Path("v2/public_keys")
 public class PublicKeyResource {
 
-  private static final String MEDIA_TYPE = VndMediaType.PREFIX + "publicKey" + VndMediaType.SUFFIX;
-  private static final String MEDIA_TYPE_COLLECTION = VndMediaType.PREFIX + "publicKeyCollection" + VndMediaType.SUFFIX;
 
-  private final PublicKeyMapper mapper;
-  private final PublicKeyCollectionMapper collectionMapper;
   private final PublicKeyStore store;
 
   @Inject
-  public PublicKeyResource(PublicKeyMapper mapper, PublicKeyCollectionMapper collectionMapper, PublicKeyStore store) {
-    this.mapper = mapper;
-    this.collectionMapper = collectionMapper;
+  public PublicKeyResource(PublicKeyStore store) {
     this.store = store;
   }
 
   @GET
-  @Path("{username}")
-  @Produces(MEDIA_TYPE_COLLECTION)
-  @Operation(
-    summary = "Get all public keys for user",
-    description = "Returns all keys for the given username.",
-    tags = "User",
-    operationId = "get_all_public_keys"
-  )
-  @ApiResponse(
-    responseCode = "200",
-    description = "success",
-    content = @Content(
-      mediaType = MEDIA_TYPE_COLLECTION,
-      schema = @Schema(implementation = HalRepresentation.class)
-    )
-  )
-  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
-  @ApiResponse(responseCode = "403", description = "not authorized /  the current user does not have the right privilege")
-  @ApiResponse(
-    responseCode = "500",
-    description = "internal server error",
-    content = @Content(
-      mediaType = VndMediaType.ERROR_TYPE,
-      schema = @Schema(implementation = ErrorDto.class)
-    )
-  )
-  public HalRepresentation findAll(@PathParam("username") String username) {
-    return collectionMapper.map(username, store.findByUsername(username));
-  }
-
-  @GET
   @Path("{id}")
-  @Produces(MEDIA_TYPE)
+  @Produces("application/pgp-keys")
   @AllowAnonymousAccess
   @Operation(
     summary = "Get single key for user",
@@ -110,7 +65,7 @@ public class PublicKeyResource {
     responseCode = "200",
     description = "success",
     content = @Content(
-      mediaType = MEDIA_TYPE,
+      mediaType = "application/pgp-keys",
       schema = @Schema(implementation = RawGpgKeyDto.class)
     )
   )
@@ -132,63 +87,12 @@ public class PublicKeyResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  public Response findByIdJson(@PathParam("id") String id) {
+  public Response findByIdGpg(@PathParam("id") String id) {
     Optional<RawGpgKey> byId = store.findById(id);
     if (byId.isPresent()) {
-      return Response.ok(mapper.map(byId.get())).build();
+      return Response.ok(byId.get().getRaw()).build();
     }
     return Response.status(Response.Status.NOT_FOUND).build();
-  }
-
-  @POST
-  @Path("{username}")
-  @Consumes(MEDIA_TYPE)
-  @Operation(
-    summary = "Create new key",
-    description = "Creates new key for user.",
-    tags = "User",
-    operationId = "create_public_key"
-  )
-  @ApiResponse(responseCode = "201", description = "create success")
-  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
-  @ApiResponse(responseCode = "403", description = "not authorized /  the current user does not have the right privilege")
-  @ApiResponse(
-    responseCode = "500",
-    description = "internal server error",
-    content = @Content(
-      mediaType = VndMediaType.ERROR_TYPE,
-      schema = @Schema(implementation = ErrorDto.class)
-    )
-  )
-  public Response create(@Context UriInfo uriInfo, @PathParam("username") String username, RawGpgKeyDto publicKey) {
-    String id = store.add(publicKey.getDisplayName(), username, publicKey.getRaw()).getId();
-    UriBuilder builder = uriInfo.getAbsolutePathBuilder();
-    builder.path(id);
-    return Response.created(builder.build()).build();
-  }
-
-  @DELETE
-  @Path("delete/{id}")
-  @Operation(
-    summary = "Deletes public key",
-    description = "Deletes public key for user.",
-    tags = "User",
-    operationId = "delete_public_key"
-  )
-  @ApiResponse(responseCode = "204", description = "delete success")
-  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
-  @ApiResponse(responseCode = "403", description = "not authorized /  the current user does not have the right privilege")
-  @ApiResponse(
-    responseCode = "500",
-    description = "internal server error",
-    content = @Content(
-      mediaType = VndMediaType.ERROR_TYPE,
-      schema = @Schema(implementation = ErrorDto.class)
-    )
-  )
-  public Response deleteById(@PathParam("id") String id) {
-    store.delete(id);
-    return Response.noContent().build();
   }
 
 }
