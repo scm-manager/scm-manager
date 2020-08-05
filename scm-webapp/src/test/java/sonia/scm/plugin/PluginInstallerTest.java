@@ -156,9 +156,38 @@ class PluginInstallerTest {
     assertThat(directory.resolve("plugins").resolve("scm-git-plugin.smp")).doesNotExist();
   }
 
+  @Test
+  void shouldFailForNameMismatch() throws IOException {
+    mockContent("42");
+
+    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor("scm-svn-plugin", "1.0.0", true);
+    when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
+
+    PluginInstallationContext context = PluginInstallationContext.empty();
+    AvailablePlugin gitPlugin = createGitPlugin();
+    PluginInformationMismatchException exception = assertThrows(PluginInformationMismatchException.class, () -> installer.install(context, gitPlugin));
+    assertThat(exception.getApi().getName()).isEqualTo("scm-git-plugin");
+    assertThat(exception.getDownloaded().getName()).isEqualTo("scm-svn-plugin");
+  }
+
+  @Test
+  void shouldFailForVersionMismatch() throws IOException {
+    mockContent("42");
+
+    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor("scm-git-plugin", "1.1.0", true);
+    when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
+
+    PluginInstallationContext context = PluginInstallationContext.empty();
+    AvailablePlugin gitPlugin = createGitPlugin();
+    PluginInformationMismatchException exception = assertThrows(PluginInformationMismatchException.class, () -> installer.install(context, gitPlugin));
+    assertThat(exception.getApi().getVersion()).isEqualTo("1.0.0");
+    assertThat(exception.getDownloaded().getVersion()).isEqualTo("1.1.0");
+  }
+
   private AvailablePlugin createPlugin(String name, String url, String checksum) {
     PluginInformation information = new PluginInformation();
     information.setName(name);
+    information.setVersion("1.0.0");
     AvailablePluginDescriptor descriptor = new AvailablePluginDescriptor(
       information, null, Collections.emptySet(), url, checksum
     );
@@ -166,9 +195,15 @@ class PluginInstallerTest {
   }
 
   private InstalledPluginDescriptor createPluginDescriptor(boolean supported) {
+    return createPluginDescriptor("scm-git-plugin", "1.0.0", supported);
+  }
+
+  private InstalledPluginDescriptor createPluginDescriptor(String name, String version, boolean supported) {
     InstalledPluginDescriptor installedPluginDescriptor = mock(InstalledPluginDescriptor.class, RETURNS_DEEP_STUBS);
+    lenient().when(installedPluginDescriptor.getInformation().getId()).thenReturn(name);
+    lenient().when(installedPluginDescriptor.getInformation().getName()).thenReturn(name);
+    lenient().when(installedPluginDescriptor.getInformation().getVersion()).thenReturn(version);
     lenient().when(installedPluginDescriptor.getCondition().isSupported()).thenReturn(supported);
-    lenient().when(installedPluginDescriptor.getInformation().getId()).thenReturn("scm-git-plugin");
     return installedPluginDescriptor;
   }
 }

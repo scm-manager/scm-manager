@@ -60,11 +60,46 @@ class PluginInstaller {
       Files.copy(input, file);
 
       verifyChecksum(plugin, input.hash(), file);
-      verifyConditions(context, file);
+
+      InstalledPluginDescriptor descriptor = smpDescriptorExtractor.extractPluginDescriptor(file);
+      PluginInstallationVerifier.verify(context, descriptor);
+
+      verifyInformation(plugin.getDescriptor(), descriptor);
+
       return new PendingPluginInstallation(plugin.install(), file);
+    } catch (PluginException ex) {
+      cleanup(file);
+      throw ex;
     } catch (IOException ex) {
       cleanup(file);
       throw new PluginDownloadException(plugin, ex);
+    }
+  }
+
+  private void verifyInformation(AvailablePluginDescriptor api, InstalledPluginDescriptor downloaded) {
+    verifyInformation(api.getInformation(), downloaded.getInformation());
+  }
+
+  private void verifyInformation(PluginInformation api, PluginInformation downloaded) {
+    if (!api.getName().equals(downloaded.getName())) {
+      throw new PluginInformationMismatchException(
+        api, downloaded,
+        String.format(
+          "downloaded plugin name \"%s\" does not match the expected name \"%s\" from plugin-center",
+          downloaded.getName(),
+          api.getName()
+        )
+      );
+    }
+    if (!api.getVersion().equals(downloaded.getVersion())) {
+      throw new PluginInformationMismatchException(
+        api, downloaded,
+        String.format(
+          "downloaded plugin version \"%s\" does not match the expected version \"%s\" from plugin-center",
+          downloaded.getVersion(),
+          api.getVersion()
+        )
+      );
     }
   }
 
@@ -86,16 +121,6 @@ class PluginInstaller {
         cleanup(file);
         throw new PluginChecksumMismatchException(plugin, calculatedChecksum, checksum.get());
       }
-    }
-  }
-
-  private void verifyConditions(PluginInstallationContext context, Path file) throws IOException {
-    InstalledPluginDescriptor pluginDescriptor = smpDescriptorExtractor.extractPluginDescriptor(file);
-    try {
-      PluginInstallationVerifier.verify(context, pluginDescriptor);
-    } catch (PluginException ex) {
-      cleanup(file);
-      throw ex;
     }
   }
 

@@ -55,6 +55,6 @@ public class DependencyVersionMismatchException extends PluginInstallException {
 
   @Override
   public String getCode() {
-    return null;
+    return "E5S6niWwi1";
   }
 }

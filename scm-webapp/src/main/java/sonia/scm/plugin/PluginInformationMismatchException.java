@@ -24,19 +24,28 @@
 
 package sonia.scm.plugin;
 
+import lombok.Getter;
+
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
+@Getter
 @SuppressWarnings("java:S110")
-public class PluginChecksumMismatchException extends PluginInstallException {
-  public PluginChecksumMismatchException(AvailablePlugin plugin, String calculatedChecksum, String expectedChecksum) {
+public class PluginInformationMismatchException extends PluginInstallException {
+
+  private final PluginInformation api;
+  private final PluginInformation downloaded;
+
+  public PluginInformationMismatchException(PluginInformation api, PluginInformation downloaded, String message) {
     super(
-      entity("Plugin", plugin.getDescriptor().getInformation().getName()).build(),
-      String.format("downloaded plugin checksum %s does not match expected %s", calculatedChecksum, expectedChecksum)
+      entity("Plugin", api.getName()).build(),
+      message
     );
+    this.api = api;
+    this.downloaded = downloaded;
   }
 
   @Override
   public String getCode() {
-    return "6mRuFxaWM1";
+    return "4RS6niPRX1";
   }
 }
