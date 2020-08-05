@@ -22,45 +22,21 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
 
 /**
- * Enumeration of available hook features.
- *
- * @author Sebastian Sdorra
- * @since 1.33
+ * @since 2.4.0
  */
-public enum HookFeature
-{
+public interface HookMergeDetectionProvider {
 
   /**
-   * Hook message provider
-   */
-  MESSAGE_PROVIDER,
-
-  /**
-   * Hook changeset provider
-   */
-  CHANGESET_PROVIDER,
-
-  /**
-   * Hook branch provider
+   * Checks whether <code>branch</code> has been merged into <code>target</code>. So this will also return
+   * <code>true</code>, when <code>branch</code> has been deleted with this change.
    *
-   * @since 1.45
+   * @param target The name of the branch to check, whether the other branch has been merged into.
+   * @param branch The name of the branch to check, whether it has been merged into the other branch.
+   * @return <code>true</code> when <code>branch</code> has been merged into <code>target</code>, <code>false</code>
+   * otherwise.
    */
-  BRANCH_PROVIDER,
-
-  /**
-   * Hook tag provider
-   *
-   * @since 1.50
-   */
-  TAG_PROVIDER,
-
-  /**
-   * Provider to detect merges
-   *
-   * @since 2.4.0
-   */
-  MERGE_DETECTION_PROVIDER
+  boolean branchesMerged(String target, String branch);
 }

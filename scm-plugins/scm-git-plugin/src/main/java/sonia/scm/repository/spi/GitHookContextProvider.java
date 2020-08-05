@@ -21,27 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
-
+import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.GitHookBranchProvider;
 import sonia.scm.repository.api.GitHookMessageProvider;
+import sonia.scm.repository.api.GitHookTagProvider;
+import sonia.scm.repository.api.GitPostReceiveHookMergeDetectionProvider;
+import sonia.scm.repository.api.GitPreReceiveHookMergeDetectionProvider;
 import sonia.scm.repository.api.HookBranchProvider;
 import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookMessageProvider;
-
-//~--- JDK imports ------------------------------------------------------------
+import sonia.scm.repository.api.HookTagProvider;
 
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
-import sonia.scm.repository.api.GitHookTagProvider;
-import sonia.scm.repository.api.HookTagProvider;
 
 /**
  *
@@ -50,24 +51,37 @@ import sonia.scm.repository.api.HookTagProvider;
 public class GitHookContextProvider extends HookContextProvider
 {
 
-  /** Field description */
-  private static final Set<HookFeature> SUPPORTED_FEATURES =
-    EnumSet.of(HookFeature.MESSAGE_PROVIDER, HookFeature.CHANGESET_PROVIDER,
-      HookFeature.BRANCH_PROVIDER, HookFeature.TAG_PROVIDER);
+  /**
+   * Field description
+   */
+  private static final Set<HookFeature> SUPPORTED_FEATURES = EnumSet.of(
+    HookFeature.MESSAGE_PROVIDER,
+    HookFeature.CHANGESET_PROVIDER,
+    HookFeature.BRANCH_PROVIDER,
+    HookFeature.TAG_PROVIDER,
+    HookFeature.MERGE_DETECTION_PROVIDER
+  );
 
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs a new instance
-   *
-   * @param receivePack git receive pack
+   *  @param receivePack git receive pack
    * @param receiveCommands received commands
+   * @param type
    */
-  public GitHookContextProvider(ReceivePack receivePack,
-    List<ReceiveCommand> receiveCommands)
-  {
+  public GitHookContextProvider(
+    ReceivePack receivePack,
+    List<ReceiveCommand> receiveCommands,
+    RepositoryHookType type,
+    Repository repository,
+    String repositoryId
+  ) {
     this.receivePack = receivePack;
     this.receiveCommands = receiveCommands;
+    this.type = type;
+    this.repository = repository;
+    this.repositoryId = repositoryId;
     this.changesetProvider = new GitHookChangesetProvider(receivePack,
       receiveCommands);
   }
@@ -100,19 +114,24 @@ public class GitHookContextProvider extends HookContextProvider
   }
 
   @Override
+  public HookMergeDetectionProvider getMergeDetectionProvider() {
+    if (type == RepositoryHookType.POST_RECEIVE) {
+      return new GitPostReceiveHookMergeDetectionProvider(repository, repositoryId);
+    } else {
+      return new GitPreReceiveHookMergeDetectionProvider(receiveCommands, repository, repositoryId);
+    }
+  }
+
+  @Override
   public Set<HookFeature> getSupportedFeatures()
   {
     return SUPPORTED_FEATURES;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
   private final GitHookChangesetProvider changesetProvider;
-
-  /** Field description */
   private final List<ReceiveCommand> receiveCommands;
-
-  /** Field description */
   private final ReceivePack receivePack;
+  private final RepositoryHookType type;
+  private final Repository repository;
+  private final String repositoryId;
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -50,7 +50,7 @@ public abstract class HookContextProvider
   /**
    * Return the provider specific {@link HookMessageProvider} or throws a {@link HookFeatureIsNotSupportedException}.
    * The method will throw a {@link HookException} if the client is already disconnected.
-   * 
+   *
    * @return provider specific {@link HookMessageProvider}
    */
   public final HookMessageProvider getMessageProvider()
@@ -86,31 +86,31 @@ public abstract class HookContextProvider
 
   /**
    * Return the provider specific {@link HookBranchProvider} or throws a {@link HookFeatureIsNotSupportedException}.
-   * 
+   *
    * @return provider specific {@link HookBranchProvider}
-   * 
+   *
    * @since 1.45
    */
   public HookBranchProvider getBranchProvider()
   {
     throw new HookFeatureIsNotSupportedException(HookFeature.BRANCH_PROVIDER);
   }
-  
+
   /**
    * Return the provider specific {@link HookTagProvider} or throws a {@link HookFeatureIsNotSupportedException}.
-   * 
+   *
    * @return provider specific {@link HookTagProvider}
-   * 
+   *
    * @since 1.50
    */
-  public HookTagProvider getTagProvider() 
+  public HookTagProvider getTagProvider()
   {
     throw new HookFeatureIsNotSupportedException(HookFeature.TAG_PROVIDER);
   }
 
   /**
    * Return the provider specific {@link HookChangesetProvider} or throws a {@link HookFeatureIsNotSupportedException}.
-   * 
+   *
    * @return provider specific {@link HookChangesetProvider}
    */
   public HookChangesetProvider getChangesetProvider()
@@ -118,11 +118,21 @@ public abstract class HookContextProvider
     throw new HookFeatureIsNotSupportedException(HookFeature.CHANGESET_PROVIDER);
   }
 
+  /**
+   * Return the provider specific {@link HookMergeDetectionProvider} or throws a {@link HookFeatureIsNotSupportedException}.
+   *
+   * @return provider specific {@link HookMergeDetectionProvider}
+   */
+  public HookMergeDetectionProvider getMergeDetectionProvider()
+  {
+    throw new HookFeatureIsNotSupportedException(HookFeature.MERGE_DETECTION_PROVIDER);
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
    * Creates a new provider specific {@link HookMessageProvider} or throws a {@link HookFeatureIsNotSupportedException}.
-   * 
+   *
    * @return provider specific {@link HookChangesetProvider}
    */
   protected HookMessageProvider createMessageProvider()

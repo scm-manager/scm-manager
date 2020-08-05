@@ -24,43 +24,29 @@
 
 package sonia.scm.repository.api;
 
-/**
- * Enumeration of available hook features.
- *
- * @author Sebastian Sdorra
- * @since 1.33
- */
-public enum HookFeature
-{
+import org.eclipse.jgit.lib.Repository;
+import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.spi.GitLogComputer;
+import sonia.scm.repository.spi.HookMergeDetectionProvider;
+import sonia.scm.repository.spi.LogCommandRequest;
 
-  /**
-   * Hook message provider
-   */
-  MESSAGE_PROVIDER,
+public class GitPostReceiveHookMergeDetectionProvider implements HookMergeDetectionProvider {
+  private final Repository repository;
+  private final String repositoryId;
 
-  /**
-   * Hook changeset provider
-   */
-  CHANGESET_PROVIDER,
+  public GitPostReceiveHookMergeDetectionProvider(Repository repository, String repositoryId) {
+    this.repository = repository;
+    this.repositoryId = repositoryId;
+  }
 
-  /**
-   * Hook branch provider
-   *
-   * @since 1.45
-   */
-  BRANCH_PROVIDER,
+  @Override
+  public boolean branchesMerged(String target, String branch) {
+    LogCommandRequest request = new LogCommandRequest();
+    request.setBranch(branch);
+    request.setAncestorChangeset(target);
+    request.setPagingLimit(1);
 
-  /**
-   * Hook tag provider
-   *
-   * @since 1.50
-   */
-  TAG_PROVIDER,
-
-  /**
-   * Provider to detect merges
-   *
-   * @since 2.4.0
-   */
-  MERGE_DETECTION_PROVIDER
+    ChangesetPagingResult changesets = new GitLogComputer(repositoryId, repository).compute(request);
+    return changesets.getTotal() == 0;
+  }
 }

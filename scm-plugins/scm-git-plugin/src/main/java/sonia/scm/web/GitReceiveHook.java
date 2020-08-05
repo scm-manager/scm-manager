@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -122,8 +122,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
 
       logger.trace("resolved repository to {}", repositoryId);
 
-      GitHookContextProvider context = new GitHookContextProvider(rpack,
-                                         receiveCommands);
+      GitHookContextProvider context = new GitHookContextProvider(rpack, receiveCommands, type, repository, repositoryId);
 
       hookEventFacade.handle(repositoryId).fireHookEvent(type, context);
 
