@@ -24,93 +24,74 @@
 
 package sonia.scm.version;
 
-//~--- non-JDK imports --------------------------------------------------------
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 /**
- *
  * @author Sebastian Sdorra
  */
-public class VersionTest
-{
+class VersionTest {
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void parseSimpleVersion()
-  {
+  void parseSimpleVersion() {
     Version v = Version.parse("1.0");
 
-    assertTrue(v.getMajor() == 1);
-    assertTrue(v.getMinor() == 0);
-    assertTrue(v.getPatch() == 0);
-    assertFalse(v.isSnapshot());
-    assertTrue(v.getType() == VersionType.RELEASE);
-    assertEquals(v.getParsedVersion(), "1.0.0");
+    assertThat(v.getMajor()).isOne();
+    assertThat(v.getMinor()).isZero();
+    assertThat(v.getPatch()).isZero();
+    assertThat(v.isSnapshot()).isFalse();
+    assertThat(v.getType()).isSameAs(VersionType.RELEASE);
+    assertThat(v.getParsedVersion()).isEqualTo("1.0.0");
 
     // test with snapshot
     v = Version.parse("1.1-SNAPSHOT");
-    assertTrue(v.getMajor() == 1);
-    assertTrue(v.getMinor() == 1);
-    assertTrue(v.getPatch() == 0);
-    assertTrue(v.isSnapshot());
-    assertTrue(v.getType() == VersionType.RELEASE);
-    assertEquals(v.getParsedVersion(), "1.1.0-SNAPSHOT");
+    assertThat(v.getMajor()).isOne();
+    assertThat(v.getMinor()).isOne();
+    assertThat(v.getPatch()).isZero();
+    assertThat(v.isSnapshot()).isTrue();
+    assertThat(v.getType()).isSameAs(VersionType.RELEASE);
+    assertThat(v.getParsedVersion()).isEqualTo("1.1.0-SNAPSHOT");
 
     // test with maintenance
     v = Version.parse("2.3.14");
-    assertTrue(v.getMajor() == 2);
-    assertTrue(v.getMinor() == 3);
-    assertTrue(v.getPatch() == 14);
-    assertFalse(v.isSnapshot());
-    assertTrue(v.getType() == VersionType.RELEASE);
-    assertEquals(v.getParsedVersion(), "2.3.14");
+    assertThat(v.getMajor()).isEqualTo(2);
+    assertThat(v.getMinor()).isEqualTo(3);
+    assertThat(v.getPatch()).isEqualTo(14);
+    assertThat(v.isSnapshot()).isFalse();
+    assertThat(v.getType()).isSameAs(VersionType.RELEASE);
+    assertThat(v.getParsedVersion()).isEqualTo("2.3.14");
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void parseTypeVersions()
-  {
+  void parseTypeVersions() {
     Version v = Version.parse("1.0-alpha");
 
-    assertTrue(v.getMajor() == 1);
-    assertTrue(v.getMinor() == 0);
-    assertTrue(v.getPatch() == 0);
-    assertFalse(v.isSnapshot());
-    assertTrue(v.getType() == VersionType.ALPHA);
-    assertTrue(v.getTypeVersion() == 1);
-    assertEquals(v.getParsedVersion(), "1.0.0-alpha1");
+    assertThat(v.getMajor()).isOne();
+    assertThat(v.getMinor()).isZero();
+    assertThat(v.getPatch()).isZero();
+    assertThat(v.isSnapshot()).isFalse();
+    assertThat(v.getType()).isSameAs(VersionType.ALPHA);
+    assertThat(v.getTypeVersion()).isOne();
+    assertThat(v.getParsedVersion()).isEqualTo("1.0.0-alpha1");
 
     // Test release candidate
     v = Version.parse("2.1.2-RC3");
-    assertTrue(v.getMajor() == 2);
-    assertTrue(v.getMinor() == 1);
-    assertTrue(v.getPatch() == 2);
-    assertFalse(v.isSnapshot());
-    assertTrue(v.getType() == VersionType.RELEASE_CANDIDAT);
-    assertTrue(v.getTypeVersion() == 3);
-    assertEquals(v.getParsedVersion(), "2.1.2-RC3");
+    assertThat(v.getMajor()).isEqualTo(2);
+    assertThat(v.getMinor()).isEqualTo(1);
+    assertThat(v.getPatch()).isEqualTo(2);
+    assertThat(v.isSnapshot()).isFalse();
+    assertThat(v.getType()).isSameAs(VersionType.RELEASE_CANDIDAT);
+    assertThat(v.getTypeVersion()).isEqualTo(3);
+    assertThat(v.getParsedVersion()).isEqualTo("2.1.2-RC3");
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testCompareTo()
-  {
+  void testCompareTo() {
     Version[] versions = new Version[9];
 
     versions[0] = Version.parse("2.3.1-SNAPSHOT");
@@ -123,60 +104,45 @@ public class VersionTest
     versions[7] = Version.parse("2.3");
     versions[8] = Version.parse("2.4.6");
     Arrays.sort(versions);
-    assertEquals(versions[0].getParsedVersion(), "2.4.6");
-    assertEquals(versions[1].getParsedVersion(), "2.3.1");
-    assertEquals(versions[2].getParsedVersion(), "2.3.1-SNAPSHOT");
-    assertEquals(versions[3].getParsedVersion(), "2.3.1-RC1");
-    assertEquals(versions[4].getParsedVersion(), "2.3.1-beta2");
-    assertEquals(versions[5].getParsedVersion(), "2.3.1-beta1");
-    assertEquals(versions[6].getParsedVersion(), "2.3.1-alpha2");
-    assertEquals(versions[7].getParsedVersion(), "2.3.1-M1");
-    assertEquals(versions[8].getParsedVersion(), "2.3.0");
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testIsNewer()
-  {
-    assertFalse(Version.parse("1.0").isNewer("1.0.1"));
-    assertTrue(Version.parse("1.1").isNewer("1.1-alpha1"));
-    assertTrue(Version.parse("1.1").isNewer("1.1-RC5"));
-  }
-
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testIsOlder()
-  {
-    assertFalse(Version.parse("1.0.1").isOlder("1.0"));
-    assertTrue(Version.parse("1.1-alpha1").isOlder("1.1"));
-    assertTrue(Version.parse("1.1-RC5").isOlder("1.1"));
+    assertThat(versions[0].getParsedVersion()).isEqualTo("2.4.6");
+    assertThat(versions[1].getParsedVersion()).isEqualTo("2.3.1");
+    assertThat(versions[2].getParsedVersion()).isEqualTo("2.3.1-SNAPSHOT");
+    assertThat(versions[3].getParsedVersion()).isEqualTo("2.3.1-RC1");
+    assertThat(versions[4].getParsedVersion()).isEqualTo("2.3.1-beta2");
+    assertThat(versions[5].getParsedVersion()).isEqualTo("2.3.1-beta1");
+    assertThat(versions[6].getParsedVersion()).isEqualTo("2.3.1-alpha2");
+    assertThat(versions[7].getParsedVersion()).isEqualTo("2.3.1-M1");
+    assertThat(versions[8].getParsedVersion()).isEqualTo("2.3.0");
   }
 
   @Test
-  public void testIsOlderOrEqual() {
-    assertTrue(Version.parse("1.0.0").isOlderOrEqual("1.0.1"));
-    assertTrue(Version.parse("1.0.1").isOlderOrEqual("1.0.1"));
+  void testIsNewer() {
+    assertThat(Version.parse("1.0").isNewer("1.0.1")).isFalse();
+    assertThat(Version.parse("1.1").isNewer("1.1-alpha1")).isTrue();
+    assertThat(Version.parse("1.1").isNewer("1.1-RC5")).isTrue();
   }
 
   @Test
-  public void testINewerOrEqual() {
-    assertTrue(Version.parse("1.0.1").isNewerOrEqual("1.0.0"));
-    assertTrue(Version.parse("1.0.1").isOlderOrEqual("1.0.1"));
+  void testIsOlder() {
+    assertThat(Version.parse("1.0.1").isOlder("1.0")).isFalse();
+    assertThat(Version.parse("1.1-alpha1").isOlder("1.1")).isTrue();
+    assertThat(Version.parse("1.1-RC5").isOlder("1.1")).isTrue();
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test(expected = VersionParseException.class)
-  public void testUnparseable()
-  {
-    Version.parse("aaaa");
+  @Test
+  void testIsOlderOrEqual() {
+    assertThat(Version.parse("1.0.0").isOlderOrEqual("1.0.1")).isTrue();
+    assertThat(Version.parse("1.0.1").isOlderOrEqual("1.0.1")).isTrue();
+  }
+
+  @Test
+  void testINewerOrEqual() {
+    assertThat(Version.parse("1.0.1").isNewerOrEqual("1.0.0")).isTrue();
+    assertThat(Version.parse("1.0.1").isOlderOrEqual("1.0.1")).isTrue();
+  }
+
+  @Test
+  void testUnparseable() {
+    assertThrows(VersionParseException.class, () -> Version.parse("aaaa"));
   }
 }
