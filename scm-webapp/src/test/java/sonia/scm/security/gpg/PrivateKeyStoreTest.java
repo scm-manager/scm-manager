@@ -22,32 +22,46 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.security.gpg;
 
-import org.eclipse.jgit.lib.GpgSigner;
-import sonia.scm.plugin.Extension;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.store.DataStoreFactory;
+import sonia.scm.store.InMemoryDataStoreFactory;
 
-import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
+import java.util.Optional;
 
-@Extension
-public class ScmGpgSignerInitializer implements ServletContextListener {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
-  private final ScmGpgSigner scmGpgSigner;
+@ExtendWith(MockitoExtension.class)
+class PrivateKeyStoreTest {
 
-  @Inject
-  public ScmGpgSignerInitializer(ScmGpgSigner scmGpgSigner) {
-    this.scmGpgSigner = scmGpgSigner;
+
+  private DataStoreFactory dataStoreFactory;
+  private PrivateKeyStore keyStore;
+
+  @BeforeEach
+  void setup() {
+    dataStoreFactory = new InMemoryDataStoreFactory();
+    keyStore = new PrivateKeyStore(dataStoreFactory);
   }
 
-  @Override
-  public void contextInitialized(ServletContextEvent servletContextEvent) {
-    GpgSigner.setDefault(scmGpgSigner);
+  @Test
+  void returnEmptyIfNotYetSet() {
+    final Optional<String> rawKey = keyStore.getForUserId("testId");
+    assertThat(rawKey).isEmpty();
   }
 
-  @Override
-  public void contextDestroyed(ServletContextEvent servletContextEvent) {
-    // Do nothing
+  @Test
+  void setForUserId() {
+    keyStore.setForUserId("testId", "Test Key");
+    final Optional<String> rawKey = keyStore.getForUserId("testId");
+    assertThat(rawKey).isNotEmpty();
+    assertThat(rawKey.get()).isEqualTo("Test Key");
   }
 }

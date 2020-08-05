@@ -43,6 +43,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
   private Person author;
   private String messageTemplate;
   private MergeStrategy mergeStrategy;
+  private boolean signingDisabled;
 
   public String getBranchToMerge() {
     return branchToMerge;
@@ -84,6 +85,14 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
     this.mergeStrategy = mergeStrategy;
   }
 
+  public boolean isSigningDisabled() {
+    return signingDisabled;
+  }
+
+  public void setSigningDisabled(boolean signingDisabled) {
+    this.signingDisabled = signingDisabled;
+  }
+
   public boolean isValid() {
     return !Strings.isNullOrEmpty(getBranchToMerge())
       && !Strings.isNullOrEmpty(getTargetBranch());
@@ -92,6 +101,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
   public void reset() {
     this.setBranchToMerge(null);
     this.setTargetBranch(null);
+    this.setSigningDisabled(false);
   }
 
   @Override
@@ -109,7 +119,8 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
     return Objects.equal(branchToMerge, other.branchToMerge)
       && Objects.equal(targetBranch, other.targetBranch)
       && Objects.equal(author, other.author)
-      && Objects.equal(mergeStrategy, other.mergeStrategy);
+      && Objects.equal(mergeStrategy, other.mergeStrategy)
+      && Objects.equal(signingDisabled, other.signingDisabled);
   }
 
   @Override
@@ -124,6 +135,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
       .add("targetBranch", targetBranch)
       .add("author", author)
       .add("mergeStrategy", mergeStrategy)
+      .add("signatureDisabled", signingDisabled)
       .toString();
   }
 }

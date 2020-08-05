@@ -24,30 +24,43 @@
 
 package sonia.scm.security.gpg;
 
-import com.sun.tools.javac.util.Pair;
+import org.apache.commons.io.IOUtils;
 import org.apache.shiro.SecurityUtils;
 import org.bouncycastle.bcpg.ArmoredInputStream;
+import org.bouncycastle.bcpg.ArmoredOutputStream;
+import org.bouncycastle.bcpg.BCPGOutputStream;
+import org.bouncycastle.bcpg.HashAlgorithmTags;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.bouncycastle.openpgp.PGPEncryptedData;
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPKeyPair;
+import org.bouncycastle.openpgp.PGPKeyRing;
 import org.bouncycastle.openpgp.PGPKeyRingGenerator;
 import org.bouncycastle.openpgp.PGPObjectFactory;
+import org.bouncycastle.openpgp.PGPPrivateKey;
 import org.bouncycastle.openpgp.PGPPublicKey;
-import org.bouncycastle.openpgp.PGPSecretKeyRing;
+import org.bouncycastle.openpgp.PGPSignature;
+import org.bouncycastle.openpgp.PGPSignatureGenerator;
 import org.bouncycastle.openpgp.PGPSignatureList;
 import org.bouncycastle.openpgp.PGPUtil;
+import org.bouncycastle.openpgp.jcajce.JcaPGPSecretKeyRingCollection;
 import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator;
+import org.bouncycastle.openpgp.operator.jcajce.JcaPGPContentSignerBuilder;
+import org.bouncycastle.openpgp.operator.jcajce.JcaPGPDigestCalculatorProviderBuilder;
 import org.bouncycastle.openpgp.operator.jcajce.JcaPGPKeyPair;
+import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyDecryptorBuilder;
+import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyEncryptorBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.security.GPG;
 import sonia.scm.security.PrivateKey;
 import sonia.scm.security.PublicKey;
-import sonia.scm.security.SessionId;
-import sonia.scm.user.User;
 
 import javax.inject.Inject;
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -61,6 +74,8 @@ import java.util.stream.Collectors;
 public class DefaultGPG implements GPG {
 
   private static final Logger LOG = LoggerFactory.getLogger(DefaultGPG.class);
+  static final String PRIVATE_KEY_ID = "SCM-KEY-ID";
+
   private final PublicKeyStore publicKeyStore;
   private final PrivateKeyStore privateKeyStore;
 
@@ -111,31 +126,101 @@ public class DefaultGPG implements GPG {
 
     if (!privateRawKey.isPresent()) {
       try {
-        // Generate key pair
-        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA", "BC");
-        keyPairGenerator.initialize(2048);
+        final PGPKeyRingGenerator keyPair = generateKeyPair();
 
-        KeyPair pair = keyPairGenerator.generateKeyPair();
+        final String rawPublicKey = exportKeyRing(keyPair.generatePublicKeyRing());
+        final String rawPrivateKey = exportKeyRing(keyPair.generateSecretKeyRing());
 
-        String identity = "0xAWESOMExBOB";
-        PGPKeyPair keyPair = new JcaPGPKeyPair(PGPPublicKey.RSA_GENERAL, pair, new Date());
+        privateKeyStore.setForUserId(userId, rawPrivateKey);
+        publicKeyStore.add("Default SCM-Manager Signing Key", userId, rawPublicKey, true);
 
-        new PGPKeyRingGenerator().generateSecretKeyRing().;
+        return new DefaultPrivateKey(rawPrivateKey);
+      } catch (PGPException | NoSuchAlgorithmException | NoSuchProviderException | IOException e) {
+        LOG.error("Private key could not be generated", e);
+        throw new IllegalStateException("Private key could not be generated", e);
+      }
+    } else {
+      return new DefaultPrivateKey(privateRawKey.get());
+    }
+  }
+
+  static PGPPrivateKey importPrivateKey(String rawKey) throws IOException, PGPException {
+    try (final InputStream decoderStream = PGPUtil.getDecoderStream(new ByteArrayInputStream(rawKey.getBytes()))) {
+      JcaPGPSecretKeyRingCollection secretKeyRingCollection = new JcaPGPSecretKeyRingCollection(decoderStream);
+      final PGPPrivateKey privateKey = secretKeyRingCollection.getKeyRings().next().getSecretKey().extractPrivateKey(new JcePBESecretKeyDecryptorBuilder().build(new char[]{}));
+      return privateKey;
+    }
+  }
+
+  String exportKeyRing(PGPKeyRing keyRing) throws IOException {
+    final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    final ArmoredOutputStream armoredOutputStream = new ArmoredOutputStream(byteArrayOutputStream);
+    keyRing.encode(armoredOutputStream);
+    armoredOutputStream.close();
+    return new String(byteArrayOutputStream.toByteArray());
+  }
+
+  PGPKeyRingGenerator generateKeyPair() throws PGPException, NoSuchProviderException, NoSuchAlgorithmException {
+    KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA", "BC");
+    keyPairGenerator.initialize(2048);
+
+    KeyPair pair = keyPairGenerator.generateKeyPair();
+
+    PGPKeyPair keyPair = new JcaPGPKeyPair(PGPPublicKey.RSA_GENERAL, pair, new Date());
+
+    return new PGPKeyRingGenerator(
+      PGPSignature.POSITIVE_CERTIFICATION,
+      keyPair,
+      PRIVATE_KEY_ID,
+      new JcaPGPDigestCalculatorProviderBuilder().build().get(HashAlgorithmTags.SHA1),
+      null,
+      null,
+      new JcaPGPContentSignerBuilder(PGPPublicKey.RSA_GENERAL, HashAlgorithmTags.SHA1),
+      new JcePBESecretKeyEncryptorBuilder(PGPEncryptedData.AES_256).build(new char[]{})
+    );
+  }
+
+  static class DefaultPrivateKey implements PrivateKey {
+
+    final PGPPrivateKey privateKey;
+
+    DefaultPrivateKey(String rawPrivateKey) {
+      try {
+        privateKey = importPrivateKey(rawPrivateKey);
+      } catch (IOException | PGPException e) {
+        throw new IllegalStateException("Could not read private key", e);
+      }
+    }
+
+    @Override
+    public String getId() {
+      return PRIVATE_KEY_ID;
+    }
+
+    @Override
+    public byte[] sign(InputStream stream) {
+
+      PGPSignatureGenerator signatureGenerator = new PGPSignatureGenerator(
+        new JcaPGPContentSignerBuilder(
+          PGPPublicKey.RSA_GENERAL,
+          HashAlgorithmTags.SHA1).setProvider(BouncyCastleProvider.PROVIDER_NAME)
+      );
+
+      try {
+        signatureGenerator.init(PGPSignature.BINARY_DOCUMENT, privateKey);
       } catch (PGPException e) {
-        e.printStackTrace();
-      } catch (NoSuchAlgorithmException e) {
-        e.printStackTrace();
-      } catch (NoSuchProviderException e) {
-        e.printStackTrace();
+        throw new IllegalStateException("Could not initialize signature generator", e);
       }
 
-      //
-      privateKeyStore.setForUserId(user.getId(), privateKeyGpgKeyPair.fst);
-      publicKeyStore.add(user.getDisplayName(), user.getName(), privateKeyGpgKeyPair.snd.getRaw());
-      return privateKeyGpgKeyPair.fst;
-    } else {
-//      PGPUtil.getDecoderStream();
-      return privateRawKey.get();
+      ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+      try (BCPGOutputStream out = new BCPGOutputStream(new ArmoredOutputStream(buffer))) {
+        signatureGenerator.update(IOUtils.toByteArray(stream));
+        signatureGenerator.generate().encode(out);
+      } catch (PGPException | IOException e) {
+        throw new IllegalStateException("Could not create signature", e);
+      }
+
+      return buffer.toByteArray();
     }
   }
 }

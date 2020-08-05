@@ -165,11 +165,11 @@ public class ModifyCommandBuilder {
   }
 
   /**
-   * Set the branch the changes should be made upon.
+   * Disables adding a verifiable signature to the modification.
    * @return This builder instance.
    */
-  public ModifyCommandBuilder disableSignature(String branch) {
-    request.setBranch(branch);
+  public ModifyCommandBuilder disableSigning() {
+    request.setSigningDisabled(true);
     return this;
   }
 

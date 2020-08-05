@@ -1,5 +1,4 @@
 /*
- *
  * MIT License
  *
  * Copyright (c) 2020-present Cloudogu GmbH and Contributors
@@ -46,7 +45,7 @@ public class ScmGpgSigner extends GpgSigner {
   }
 
   @Override
-  public void sign(CommitBuilder commitBuilder, String s, PersonIdent personIdent, CredentialsProvider credentialsProvider) throws CanceledException {
+  public void sign(CommitBuilder commitBuilder, String keyId, PersonIdent personIdent, CredentialsProvider credentialsProvider) throws CanceledException {
     try {
       final byte[] signature = this.gpg.getPrivateKey().sign(commitBuilder.build());
       commitBuilder.setGpgSignature(new GpgSignature(signature));
@@ -56,7 +55,7 @@ public class ScmGpgSigner extends GpgSigner {
   }
 
   @Override
-  public boolean canLocateSigningKey(String s, PersonIdent personIdent, CredentialsProvider credentialsProvider) throws CanceledException {
+  public boolean canLocateSigningKey(String keyId, PersonIdent personIdent, CredentialsProvider credentialsProvider) throws CanceledException {
     return true;
   }
 }

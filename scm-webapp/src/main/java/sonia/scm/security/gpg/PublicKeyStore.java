@@ -64,7 +64,11 @@ public class PublicKeyStore {
     this.eventBus = eventBus;
   }
 
-  public RawGpgKey add(String displayName, String username, String rawKey, ) {
+  public RawGpgKey add(String displayName, String username, String rawKey) {
+    return add(displayName, username, rawKey, false);
+  }
+
+  public RawGpgKey add(String displayName, String username, String rawKey, boolean readonly) {
     UserPermissions.changePublicKeys(username).check();
 
     if (!rawKey.contains("PUBLIC KEY")) {
@@ -78,7 +82,7 @@ public class PublicKeyStore {
       subKeyStore.put(subKey, new MasterKeyReference(master));
     }
 
-    RawGpgKey key = new RawGpgKey(master, displayName, username, rawKey, getContactsFromPublicKey(rawKey), Instant.now());
+    RawGpgKey key = new RawGpgKey(master, displayName, username, rawKey, getContactsFromPublicKey(rawKey), Instant.now(), readonly);
 
     store.put(master, key);
     eventBus.post(new PublicKeyCreatedEvent());

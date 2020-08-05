@@ -34,6 +34,12 @@ import java.io.InputStream;
 public interface PrivateKey {
 
   /**
+   * Returns the key's id.
+   * @return id
+   */
+  String getId();
+
+  /**
    * Creates a signature for the given data.
    * @param stream data stream to sign
    * @return signature

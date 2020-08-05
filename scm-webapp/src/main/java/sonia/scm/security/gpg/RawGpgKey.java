@@ -50,14 +50,22 @@ public class RawGpgKey {
   private String displayName;
   private String owner;
   private String raw;
-  private boolean readonly = false;
   private Set<Person> contacts;
 
   @XmlJavaTypeAdapter(XmlInstantAdapter.class)
   private Instant created;
 
+  private boolean readonly;
+
   RawGpgKey(String id) {
     this.id = id;
+  }
+  RawGpgKey(String id, String displayName, String owner, String raw, Set<Person> contacts, Instant created) {
+    this.id = id;
+    this.displayName = displayName;
+    this.owner = owner;
+    this.contacts = contacts;
+    this.created = created;
   }
 
   @Override

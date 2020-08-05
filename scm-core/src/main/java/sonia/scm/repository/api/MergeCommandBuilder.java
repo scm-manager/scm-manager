@@ -138,6 +138,15 @@ public class MergeCommandBuilder {
   }
 
   /**
+   * Disables adding a verifiable signature to the merge.
+   * @return This builder instance.
+   */
+  public MergeCommandBuilder disableSigning() {
+    request.setSigningDisabled(true);
+    return this;
+  }
+
+  /**
    * Use this to set the strategy of the merge commit manually.
    *
    * This is optional and for {@link #executeMerge()} only.
