@@ -83,7 +83,7 @@ class PluginInstallerTest {
   void shouldDownloadPlugin() throws IOException {
     mockContent("42");
 
-    installer.install(createGitPlugin());
+    installer.install(PluginInstallationContext.empty(), createGitPlugin());
 
     assertThat(directory.resolve("plugins").resolve("scm-git-plugin.smp")).hasContent("42");
   }
@@ -93,7 +93,7 @@ class PluginInstallerTest {
     mockContent("42");
     AvailablePlugin gitPlugin = createGitPlugin();
 
-    PendingPluginInstallation pending = installer.install(gitPlugin);
+    PendingPluginInstallation pending = installer.install(PluginInstallationContext.empty(), gitPlugin);
 
     assertThat(pending).isNotNull();
     assertThat(pending.getPlugin().getDescriptor()).isEqualTo(gitPlugin.getDescriptor());
@@ -117,14 +117,14 @@ class PluginInstallerTest {
   void shouldThrowPluginDownloadException() throws IOException {
     when(client.get("https://download.hitchhiker.com").request()).thenThrow(new IOException("failed to download"));
 
-    assertThrows(PluginDownloadException.class, () -> installer.install(createGitPlugin()));
+    assertThrows(PluginDownloadException.class, () -> installer.install(PluginInstallationContext.empty(), createGitPlugin()));
   }
 
   @Test
   void shouldThrowPluginChecksumMismatchException() throws IOException {
     mockContent("21");
 
-    assertThrows(PluginChecksumMismatchException.class, () -> installer.install(createGitPlugin()));
+    assertThrows(PluginChecksumMismatchException.class, () -> installer.install(PluginInstallationContext.empty(), createGitPlugin()));
     assertThat(directory.resolve("plugins").resolve("scm-git-plugin.smp")).doesNotExist();
   }
 
@@ -134,7 +134,7 @@ class PluginInstallerTest {
     when(stream.read(any(), anyInt(), anyInt())).thenThrow(new IOException("failed to read"));
     when(client.get("https://download.hitchhiker.com").request().contentAsStream()).thenReturn(stream);
 
-    assertThrows(PluginDownloadException.class, () -> installer.install(createGitPlugin()));
+    assertThrows(PluginDownloadException.class, () -> installer.install(PluginInstallationContext.empty(), createGitPlugin()));
     assertThat(directory.resolve("plugins").resolve("scm-git-plugin.smp")).doesNotExist();
   }
 
@@ -144,7 +144,7 @@ class PluginInstallerTest {
     InstalledPluginDescriptor supportedPlugin = createPluginDescriptor(false);
     when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
 
-    assertThrows(PluginConditionFailedException.class, () -> installer.install(createGitPlugin()));
+    assertThrows(PluginConditionFailedException.class, () -> installer.install(PluginInstallationContext.empty(), createGitPlugin()));
     assertThat(directory.resolve("plugins").resolve("scm-git-plugin.smp")).doesNotExist();
   }
 

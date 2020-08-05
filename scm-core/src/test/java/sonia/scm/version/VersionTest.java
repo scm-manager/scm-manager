@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.version;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -156,6 +156,18 @@ public class VersionTest
     assertFalse(Version.parse("1.0.1").isOlder("1.0"));
     assertTrue(Version.parse("1.1-alpha1").isOlder("1.1"));
     assertTrue(Version.parse("1.1-RC5").isOlder("1.1"));
+  }
+
+  @Test
+  public void testIsOlderOrEqual() {
+    assertTrue(Version.parse("1.0.0").isOlderOrEqual("1.0.1"));
+    assertTrue(Version.parse("1.0.1").isOlderOrEqual("1.0.1"));
+  }
+
+  @Test
+  public void testINewerOrEqual() {
+    assertTrue(Version.parse("1.0.1").isNewerOrEqual("1.0.0"));
+    assertTrue(Version.parse("1.0.1").isOlderOrEqual("1.0.1"));
   }
 
   /**

@@ -41,26 +41,26 @@ import java.util.Optional;
 @SuppressWarnings("UnstableApiUsage") // guava hash is marked as unstable
 class PluginInstaller {
 
-  private final SCMContextProvider context;
+  private final SCMContextProvider scmContext;
   private final AdvancedHttpClient client;
   private final SmpDescriptorExtractor smpDescriptorExtractor;
 
   @Inject
-  public PluginInstaller(SCMContextProvider context, AdvancedHttpClient client, SmpDescriptorExtractor smpDescriptorExtractor) {
-    this.context = context;
+  public PluginInstaller(SCMContextProvider scmContext, AdvancedHttpClient client, SmpDescriptorExtractor smpDescriptorExtractor) {
+    this.scmContext = scmContext;
     this.client = client;
     this.smpDescriptorExtractor = smpDescriptorExtractor;
   }
 
   @SuppressWarnings("squid:S4790") // hashing should be safe
-  public PendingPluginInstallation install(AvailablePlugin plugin) {
+  public PendingPluginInstallation install(PluginInstallationContext context, AvailablePlugin plugin) {
     Path file = null;
     try (HashingInputStream input = new HashingInputStream(Hashing.sha256(), download(plugin))) {
       file = createFile(plugin);
       Files.copy(input, file);
 
       verifyChecksum(plugin, input.hash(), file);
-      verifyConditions(plugin, file);
+      verifyConditions(context, file);
       return new PendingPluginInstallation(plugin.install(), file);
     } catch (IOException ex) {
       cleanup(file);
@@ -89,17 +89,13 @@ class PluginInstaller {
     }
   }
 
-  private void verifyConditions(AvailablePlugin plugin, Path file) throws IOException {
+  private void verifyConditions(PluginInstallationContext context, Path file) throws IOException {
     InstalledPluginDescriptor pluginDescriptor = smpDescriptorExtractor.extractPluginDescriptor(file);
-    if (!pluginDescriptor.getCondition().isSupported()) {
+    try {
+      PluginInstallationVerifier.verify(context, pluginDescriptor);
+    } catch (PluginException ex) {
       cleanup(file);
-      throw new PluginConditionFailedException(
-        pluginDescriptor.getCondition(),
-        String.format(
-          "could not load plugin %s, the plugin condition does not match",
-          plugin.getDescriptor().getInformation().getName()
-        )
-      );
+      throw ex;
     }
   }
 
@@ -108,7 +104,7 @@ class PluginInstaller {
   }
 
   private Path createFile(AvailablePlugin plugin) throws IOException {
-    Path directory = context.resolve(Paths.get("plugins"));
+    Path directory = scmContext.resolve(Paths.get("plugins"));
     Files.createDirectories(directory);
     return directory.resolve(plugin.getDescriptor().getInformation().getName() + ".smp");
   }

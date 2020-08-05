@@ -96,12 +96,19 @@ class DefaultPluginManagerTest {
   @Mock
   private Subject subject;
 
+  private final PluginInstallationContext context = PluginInstallationContext.empty();
+
   @BeforeEach
   void mockInstaller() {
-    lenient().when(installer.install(any())).then(ic -> {
-      AvailablePlugin plugin = ic.getArgument(0);
+    lenient().when(installer.install(any(), any())).then(ic -> {
+      AvailablePlugin plugin = ic.getArgument(1);
       return new PendingPluginInstallation(plugin.install(), null);
     });
+  }
+
+  @BeforeEach
+  void setUpContextFactory() {
+    manager.setContextFactory((List<AvailablePlugin> availablePlugins) -> context);
   }
 
   @Nested
@@ -209,7 +216,7 @@ class DefaultPluginManagerTest {
 
       manager.install("scm-git-plugin", false);
 
-      verify(installer).install(git);
+      verify(installer).install(context, git);
       verify(restarter, never()).restart(any(), any());
     }
 
@@ -222,8 +229,8 @@ class DefaultPluginManagerTest {
 
       manager.install("scm-review-plugin", false);
 
-      verify(installer).install(mail);
-      verify(installer).install(review);
+      verify(installer).install(context, mail);
+      verify(installer).install(context, review);
     }
 
     @Test
@@ -239,7 +246,7 @@ class DefaultPluginManagerTest {
       manager.install("scm-review-plugin", false);
 
       ArgumentCaptor<AvailablePlugin> captor = ArgumentCaptor.forClass(AvailablePlugin.class);
-      verify(installer).install(captor.capture());
+      verify(installer).install(any(), captor.capture());
 
       assertThat(captor.getValue().getDescriptor().getInformation().getName()).isEqualTo("scm-review-plugin");
     }
@@ -256,8 +263,8 @@ class DefaultPluginManagerTest {
 
       manager.install("scm-review-plugin", false);
 
-      verify(installer).install(mail);
-      verify(installer).install(review);
+      verify(installer).install(context, mail);
+      verify(installer).install(context, review);
     }
 
     @Test
@@ -272,8 +279,8 @@ class DefaultPluginManagerTest {
 
       manager.install("scm-review-plugin", false);
 
-      verify(installer).install(mail);
-      verify(installer).install(review);
+      verify(installer).install(context, mail);
+      verify(installer).install(context, review);
     }
 
     @Test
@@ -285,8 +292,8 @@ class DefaultPluginManagerTest {
 
       manager.install("scm-review-plugin", false);
 
-      verify(installer, never()).install(mail);
-      verify(installer).install(review);
+      verify(installer, never()).install(context, mail);
+      verify(installer).install(context, review);
     }
 
     @Test
@@ -299,12 +306,12 @@ class DefaultPluginManagerTest {
       when(center.getAvailable()).thenReturn(ImmutableSet.of(review, mail, notification));
 
       PendingPluginInstallation pendingNotification = mock(PendingPluginInstallation.class);
-      doReturn(pendingNotification).when(installer).install(notification);
+      doReturn(pendingNotification).when(installer).install(context, notification);
 
       PendingPluginInstallation pendingMail = mock(PendingPluginInstallation.class);
-      doReturn(pendingMail).when(installer).install(mail);
+      doReturn(pendingMail).when(installer).install(context, mail);
 
-      doThrow(new PluginChecksumMismatchException(mail, "1", "2")).when(installer).install(review);
+      doThrow(new PluginChecksumMismatchException(mail, "1", "2")).when(installer).install(context, review);
 
       assertThrows(PluginInstallException.class, () -> manager.install("scm-review-plugin", false));
 
@@ -322,7 +329,7 @@ class DefaultPluginManagerTest {
 
       assertThrows(NotFoundException.class, () -> manager.install("scm-review-plugin", false));
 
-      verify(installer, never()).install(any());
+      verify(installer, never()).install(any(), any());
     }
 
     @Test
@@ -332,7 +339,7 @@ class DefaultPluginManagerTest {
 
       manager.install("scm-git-plugin", true);
 
-      verify(installer).install(git);
+      verify(installer).install(context, git);
       verify(restarter).restart(any(), any());
     }
 
@@ -353,7 +360,7 @@ class DefaultPluginManagerTest {
       manager.install("scm-review-plugin", false);
       manager.install("scm-review-plugin", false);
       // only one interaction
-      verify(installer).install(any());
+      verify(installer).install(any(), any());
     }
 
     @Test
@@ -538,7 +545,7 @@ class DefaultPluginManagerTest {
       AvailablePlugin git = createAvailable("scm-git-plugin");
       when(center.getAvailable()).thenReturn(ImmutableSet.of(git));
       PendingPluginInstallation gitPendingPluginInformation = mock(PendingPluginInstallation.class);
-      when(installer.install(git)).thenReturn(gitPendingPluginInformation);
+      when(installer.install(context, git)).thenReturn(gitPendingPluginInformation);
 
       manager.install("scm-git-plugin", false);
       manager.uninstall("scm-ssh-plugin", false);
@@ -571,8 +578,8 @@ class DefaultPluginManagerTest {
 
       manager.updateAll();
 
-      verify(installer).install(newMailPlugin);
-      verify(installer).install(newReviewPlugin);
+      verify(installer).install(context, newMailPlugin);
+      verify(installer).install(context, newReviewPlugin);
     }
 
 
@@ -587,7 +594,7 @@ class DefaultPluginManagerTest {
 
       manager.updateAll();
 
-      verify(installer, never()).install(oldScriptPlugin);
+      verify(installer, never()).install(context, oldScriptPlugin);
     }
 
     @Test
@@ -607,7 +614,7 @@ class DefaultPluginManagerTest {
     void shouldFirePluginEventOnFailedInstallation() {
       AvailablePlugin review = createAvailable("scm-review-plugin");
       when(center.getAvailable()).thenReturn(ImmutableSet.of(review));
-      doThrow(new PluginDownloadException(review, new IOException())).when(installer).install(review);
+      doThrow(new PluginDownloadException(review, new IOException())).when(installer).install(context, review);
 
       assertThrows(PluginDownloadException.class, () -> manager.install("scm-review-plugin", false));
 

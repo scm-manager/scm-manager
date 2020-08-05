@@ -71,6 +71,13 @@ public class NameAndVersion {
     return Optional.ofNullable(version);
   }
 
+  public Version mustGetVersion() {
+    if (version == null) {
+      throw new IllegalStateException("version is not set");
+    }
+    return version;
+  }
+
   @Override
   public String toString() {
     return name + (version != null ? ":" + version.getParsedVersion() : "");
