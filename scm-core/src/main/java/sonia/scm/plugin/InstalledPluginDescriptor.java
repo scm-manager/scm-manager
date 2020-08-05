@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,6 +37,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -67,7 +68,11 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
    * @param condition
    * @param childFirstClassLoader
    * @param dependencies
+   *
+   * @deprecated this constructor uses dependencies with plain strings,
+   *             this is deprecated because the version information is missing.
    */
+  @Deprecated
   public InstalledPluginDescriptor(int scmVersion, PluginInformation information,
                                    PluginResources resources, PluginCondition condition,
                                    boolean childFirstClassLoader, Set<String> dependencies, Set<String> optionalDependencies)
@@ -77,8 +82,17 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
     this.resources = resources;
     this.condition = condition;
     this.childFirstClassLoader = childFirstClassLoader;
-    this.dependencies = dependencies;
-    this.optionalDependencies = optionalDependencies;
+    this.dependencies = mapToNameAndVersionSet(dependencies);
+    this.optionalDependencies = mapToNameAndVersionSet(optionalDependencies);
+  }
+
+  private static Set<NameAndVersion> mapToNameAndVersionSet(Set<String> dependencies) {
+    if (dependencies == null){
+      return ImmutableSet.of();
+    }
+    return dependencies.stream()
+      .map(d -> new NameAndVersion(d, null))
+      .collect(Collectors.toSet());
   }
 
   //~--- methods --------------------------------------------------------------
@@ -173,13 +187,19 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
    * @since 2.0.0
    */
   @Override
-  public Set<String> getDependencies()
-  {
-    if (dependencies == null)
-    {
+  public Set<String> getDependencies() {
+    return mapToStringSet(getDependenciesWithVersion());
+  }
+
+  /**
+   * Returns name and versions of the plugins which are this plugin depends on.
+   * @return dependencies with their versions
+   * @since 2.4.0
+   */
+  public Set<NameAndVersion> getDependenciesWithVersion() {
+    if (dependencies == null) {
       dependencies = ImmutableSet.of();
     }
-
     return dependencies;
   }
 
@@ -193,16 +213,29 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
    */
   @Override
   public Set<String> getOptionalDependencies() {
-    if (optionalDependencies == null)
-    {
+    return mapToStringSet(getOptionalDependenciesWithVersion());
+  }
+
+  /**
+   * Returns name and versions of the plugins which are this plugin optional depends on.
+   * @return optional dependencies with their versions
+   * @since 2.4.0
+   */
+  public Set<NameAndVersion> getOptionalDependenciesWithVersion() {
+    if (optionalDependencies == null) {
       optionalDependencies = ImmutableSet.of();
     }
-
     return optionalDependencies;
   }
 
   public Set<String> getDependenciesInclusiveOptionals() {
     return ImmutableSet.copyOf(Iterables.concat(getDependencies(), getOptionalDependencies()));
+  }
+
+  private Set<String> mapToStringSet(Set<NameAndVersion> dependencies) {
+    return dependencies.stream()
+      .map(NameAndVersion::getName)
+      .collect(Collectors.toSet());
   }
 
   /**
@@ -263,12 +296,12 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
   /** Field description */
   @XmlElement(name = "dependency")
   @XmlElementWrapper(name = "dependencies")
-  private Set<String> dependencies;
+  private Set<NameAndVersion> dependencies;
 
   /** Field description */
   @XmlElement(name = "dependency")
   @XmlElementWrapper(name = "optional-dependencies")
-  private Set<String> optionalDependencies;
+  private Set<NameAndVersion> optionalDependencies;
 
   /** Field description */
   @XmlElement(name = "information")
