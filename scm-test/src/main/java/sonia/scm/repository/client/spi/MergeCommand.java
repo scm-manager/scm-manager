@@ -22,14 +22,16 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.client.api;
+package sonia.scm.repository.client.spi;
+
+import sonia.scm.repository.Changeset;
+
+import java.io.IOException;
 
 /**
- *
- * @author Sebastian Sdorra
- * @since 1.18
+ * @since 2.4.0
  */
-public enum ClientCommand
-{
-  ADD, REMOVE, COMMIT, PUSH, TAG, BRANCH, DELETE_REMOTE_BRANCH, CHECKOUT, MERGE
+public interface MergeCommand {
+
+  Changeset merge(MergeRequest request) throws IOException;
 }

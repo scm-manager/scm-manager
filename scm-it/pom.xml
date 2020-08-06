@@ -192,6 +192,7 @@
             <version>2.10</version>
             <configuration>
               <artifactItems>
+                <!-- Copy war file -->
                 <artifactItem>
                   <groupId>sonia.scm</groupId>
                   <artifactId>scm-webapp</artifactId>
@@ -199,6 +200,15 @@
                   <type>war</type>
                   <outputDirectory>${project.build.outputDirectory}</outputDirectory>
                   <destFileName>scm-webapp.war</destFileName>
+                </artifactItem>
+                <!-- Copy integration test plugin -->
+                <artifactItem>
+                  <groupId>sonia.scm.plugins</groupId>
+                  <artifactId>scm-integration-test-plugin</artifactId>
+                  <version>${project.version}</version>
+                  <type>smp</type>
+                  <outputDirectory>${scm.home}/plugins</outputDirectory>
+                  <destFileName>scm-integration-test-plugin.smp</destFileName>
                 </artifactItem>
               </artifactItems>
             </configuration>

@@ -22,14 +22,68 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.client.api;
+package sonia.scm.repository.client.spi;
+
+import com.google.common.base.MoreObjects;
+import com.google.common.base.Objects;
 
 /**
- *
- * @author Sebastian Sdorra
- * @since 1.18
+ * @since 2.4.0
  */
-public enum ClientCommand
-{
-  ADD, REMOVE, COMMIT, PUSH, TAG, BRANCH, DELETE_REMOTE_BRANCH, CHECKOUT, MERGE
+public final class MergeRequest {
+
+  private String branch;
+  private String message;
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj == null)
+    {
+      return false;
+    }
+
+    if (getClass() != obj.getClass())
+    {
+      return false;
+    }
+
+    final MergeRequest other = (MergeRequest) obj;
+
+    return Objects.equal(branch, other.branch)
+      && Objects.equal(message, other.message);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hashCode(branch, message);
+  }
+
+  public void reset() {
+    this.branch = null;
+    this.message = null;
+  }
+
+  @Override
+  public String toString() {
+    return MoreObjects.toStringHelper(this)
+                  .add("branch", branch)
+                  .add("message", message)
+                  .toString();
+  }
+
+  public void setBranch(String branch) {
+    this.branch = branch;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
+  }
+
+  String getBranch() {
+    return branch;
+  }
+
+  String getMessage() {
+    return message;
+  }
 }
