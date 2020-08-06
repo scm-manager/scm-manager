@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
-import { Signature } from "@scm-manager/ui-types";
+import React, {FC} from "react";
+import {useTranslation} from "react-i18next";
+import {Signature} from "@scm-manager/ui-types";
 import styled from "styled-components";
 import Icon from "../../Icon";
-import Tooltip from "../../Tooltip";
+import {usePopover} from "../../popover";
+import Popover from "../../popover/Popover";
 
 type Props = {
   signatures: Signature[];
@@ -41,17 +42,21 @@ const StyledIcon = styled(Icon)`
   margin-bottom: 0.2em;
 `;
 
+const StyledDiv = styled.div`
+  > *:not(:last-child) {
+    margin-bottom: 24px; 
+  }
+`;
 
-const SignatureIcon: FC<Props> = ({ signatures, className }) => {
+const SignatureIcon: FC<Props> = ({signatures, className}) => {
   const [t] = useTranslation("repos");
+  const {popoverProps, triggerProps} = usePopover();
 
-  const signature = signatures?.length > 0 ? signatures[0] : undefined;
-
-  if (!signature) {
+  if (!signatures.length) {
     return null;
   }
 
-  const createTooltipMessage = () => {
+  const createSignatureBlock = (signature: Signature) => {
     let status;
     if (signature.status === "VERIFIED") {
       status = t("changeset.signatureVerified");
@@ -62,37 +67,50 @@ const SignatureIcon: FC<Props> = ({ signatures, className }) => {
     }
 
     if (signature.status === "NOT_FOUND") {
-      return `${t("changeset.signatureStatus")}: ${status}\n${t("changeset.keyId")}: ${signature.keyId}`;
+      return <p>
+        <div>{t("changeset.signatureStatus")}: {status}</div>
+        <div>{t("changeset.keyId")}: {signature.keyId}</div>
+      </p>;
     }
 
-    let message = `${t("changeset.keyOwner")}: ${signature.owner ? signature.owner : t("changeset.noOwner")}\n${t("changeset.keyId")}: ${signature.keyId}\n${t(
-      "changeset.signatureStatus"
-    )}: ${status}`;
-
-    if (signature.contacts?.length > 0) {
-      message += `\n${t("changeset.keyContacts")}:`;
-      signature.contacts.forEach((contact) => {
-        message += `\n- ${contact.name} <${contact.mail}>`;
-      });
-    }
-    return message;
+    return <p>
+      <div>{t("changeset.keyOwner")}: {signature.owner || t("changeset.noOwner")}</div>
+      <div>{t("changeset.keyId")}: {
+        signature._links?.rawKey ? <a href={signature._links.rawKey.href}>{signature.keyId}</a> : signature.keyId
+      }</div>
+      <div>{t("changeset.signatureStatus")}: {status}</div>
+      {signature.contacts?.length > 0 && <>
+        <div>{t("changeset.keyContacts")}:</div>
+        {signature.contacts.map(contact => <div>- {contact.name}{contact.mail && ` <${contact.mail}>`}</div>)}
+      </>}
+    </p>;
   };
 
+  const signatureElements = signatures.map(signature => createSignatureBlock(signature));
+
   const getColor = () => {
-    if (signature.status === "VERIFIED") {
+    const verified = signatures.some(sig => sig.status === "VERIFIED");
+    if (verified) {
       return "success";
     }
-    if (signature.status === "INVALID") {
+    const invalid = signatures.some(sig => sig.status === "INVALID");
+    if (invalid) {
       return "danger";
     }
     return undefined;
   };
 
-
   return (
-    <Tooltip location="top" message={createTooltipMessage()}>
-      <StyledIcon name="key" className={className} color={getColor()} />
-    </Tooltip>
+    <>
+      <Popover title={t("changeset.signatures")} width={500} {...popoverProps}>
+        <StyledDiv>
+          {signatureElements}
+        </StyledDiv>
+      </Popover>
+      <div {...triggerProps}>
+        <StyledIcon name="key" className={className} color={getColor()}/>
+      </div>
+    </>
   );
 };
 

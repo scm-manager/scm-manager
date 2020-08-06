@@ -51,7 +51,7 @@ public abstract class PublicKeyMapper {
   }
 
   @Mapping(target = "attributes", ignore = true)
-//  @Mapping(target = "raw", ignore = true) // TODO: Why is there ?
+  @Mapping(target = "raw", ignore = true)
   abstract RawGpgKeyDto map(RawGpgKey rawGpgKey);
 
   @ObjectFactory

@@ -95,6 +95,7 @@
     "signatureVerified": "verified",
     "signatureNotVerified": "not verified",
     "signatureInvalid": "invalid",
+    "signatures": "Signatures",
     "shortlink": {
       "title": "Changeset {{id}} of {{namespace}}/{{name}}"
     },

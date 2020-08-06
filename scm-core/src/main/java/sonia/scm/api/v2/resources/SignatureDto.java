@@ -22,43 +22,32 @@
  * SOFTWARE.
  */
 
-import {Collection, Link, Links} from "./hal";
-import { Tag } from "./Tags";
-import { Branch } from "./Branches";
-import { Person } from "./Person";
+package sonia.scm.api.v2.resources;
 
-export type Changeset = Collection & {
-  id: string;
-  date: Date;
-  author: Person;
-  description: string;
-  contributors?: Contributor[];
-  signatures?: Signature[];
-  _links: Links;
-  _embedded: {
-    tags?: Tag[];
-    branches?: Branch[];
-    parents?: ParentChangeset[];
-  };
-};
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import sonia.scm.repository.Person;
+import sonia.scm.repository.SignatureStatus;
 
-export type Signature = {
-  keyId: string;
-  type: string;
-  status: "VERIFIED" | "NOT_FOUND" | "INVALID";
-  owner: string;
-  contacts: Person[];
-  _links?: {
-    rawKey?: Link;
-  };
+import java.util.Optional;
+import java.util.Set;
+
+@Getter
+@Setter
+@NoArgsConstructor
+public class SignatureDto extends HalRepresentation {
+
+  private String keyId;
+  private String type;
+  private SignatureStatus status;
+  private Optional<String> owner;
+  private Set<Person> contacts;
+
+  public SignatureDto(Links links) {
+    super(links);
+  }
+
 }
-
-export type Contributor = {
-  person: Person;
-  type: string;
-};
-
-export type ParentChangeset = {
-  id: string;
-  _links: Links;
-};

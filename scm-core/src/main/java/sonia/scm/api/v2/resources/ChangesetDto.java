@@ -62,7 +62,7 @@ public class ChangesetDto extends HalRepresentation {
 
   private List<ContributorDto> contributors;
 
-  private List<Signature> signatures;
+  private List<SignatureDto> signatures;
 
   public ChangesetDto(Links links, Embedded embedded) {
     super(links, embedded);

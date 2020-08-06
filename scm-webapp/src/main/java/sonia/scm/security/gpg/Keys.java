@@ -26,6 +26,7 @@ package sonia.scm.security.gpg;
 
 import lombok.Value;
 import org.bouncycastle.openpgp.PGPException;
+import org.bouncycastle.openpgp.PGPPrivateKey;
 import org.bouncycastle.openpgp.PGPPublicKey;
 import org.bouncycastle.openpgp.PGPPublicKeyRing;
 import org.bouncycastle.openpgp.PGPPublicKeyRingCollection;
@@ -86,8 +87,16 @@ final class Keys {
     return new Keys(master, Collections.unmodifiableSet(subs));
   }
 
-  private static String createId(PGPPublicKey pgpPublicKey) {
-    return "0x" + Long.toHexString(pgpPublicKey.getKeyID()).toUpperCase(Locale.ENGLISH);
+  static String createId(PGPPublicKey pgpPublicKey) {
+    return formatKey(pgpPublicKey.getKeyID());
+  }
+
+  static String createId(PGPPrivateKey pgpPrivateKey) {
+    return formatKey(pgpPrivateKey.getKeyID());
+  }
+
+  static String formatKey(long keyId) {
+    return "0x" + Long.toHexString(keyId).toUpperCase(Locale.ENGLISH);
   }
 
   private static List<PGPPublicKey> collectKeys(String rawKey) {

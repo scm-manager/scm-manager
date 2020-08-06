@@ -34,6 +34,8 @@ import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPKeyRingGenerator;
 import org.bouncycastle.openpgp.PGPPrivateKey;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -79,6 +81,23 @@ class DefaultGPGTest {
   @InjectMocks
   private DefaultGPG gpg;
 
+  Subject subjectUnderTest;
+
+  @AfterEach
+  void unbindThreadContext() {
+    ThreadContext.unbindSubject();
+    ThreadContext.unbindSecurityManager();
+  }
+
+  @BeforeEach
+  void bindThreadContext() {
+    registerBouncyCastleProviderIfNecessary();
+
+    SecurityUtils.setSecurityManager(new DefaultSecurityManager());
+    subjectUnderTest = MockUtil.createUserSubject(SecurityUtils.getSecurityManager());
+    ThreadContext.bind(subjectUnderTest);
+  }
+
   @Test
   void shouldFindIdInSignature() throws IOException {
     String raw = GPGTestHelper.readResourceAsString("slarti.txt.asc");
@@ -123,8 +142,6 @@ class DefaultGPGTest {
 
   @Test
   void shouldGenerateKeyPair() throws NoSuchProviderException, NoSuchAlgorithmException, PGPException {
-    registerBouncyCastleProviderIfNecessary();
-
     final PGPKeyRingGenerator keyRingGenerator = gpg.generateKeyPair();
     assertThat(keyRingGenerator.generatePublicKeyRing().getPublicKey()).isNotNull();
     assertThat(keyRingGenerator.generateSecretKeyRing().getSecretKey()).isNotNull();
@@ -132,8 +149,6 @@ class DefaultGPGTest {
 
   @Test
   void shouldExportGeneratedKeyPair() throws NoSuchProviderException, NoSuchAlgorithmException, PGPException, IOException {
-    registerBouncyCastleProviderIfNecessary();
-
     final PGPKeyRingGenerator keyRingGenerator = gpg.generateKeyPair();
 
     final String exportedPublicKey = gpg.exportKeyRing(keyRingGenerator.generatePublicKeyRing());
@@ -150,27 +165,26 @@ class DefaultGPGTest {
   @Test
   void shouldImportKeyPair() throws IOException, PGPException {
     String raw = GPGTestHelper.readResourceAsString("private-key.asc");
-    final PGPPrivateKey privateKey = DefaultGPG.importPrivateKey(raw);
-    assertThat(privateKey).isNotNull();
+    final Optional<PGPPrivateKey> privateKey = PgpPrivateKeyExtractor.getFromRawKey(raw);
+    assertThat(privateKey).isPresent();
   }
 
   @Test
   void shouldImportExportedGeneratedPrivateKey() throws NoSuchProviderException, NoSuchAlgorithmException, PGPException, IOException {
-    registerBouncyCastleProviderIfNecessary();
-
     final PGPKeyRingGenerator keyRingGenerator = gpg.generateKeyPair();
     final String exportedPrivateKey = gpg.exportKeyRing(keyRingGenerator.generateSecretKeyRing());
-    final PGPPrivateKey privateKey = DefaultGPG.importPrivateKey(exportedPrivateKey);
-    assertThat(privateKey).isNotNull();
+    final Optional<PGPPrivateKey> privateKey = PgpPrivateKeyExtractor.getFromRawKey(exportedPrivateKey);
+    assertThat(privateKey).isPresent();
   }
 
   @Test
   void shouldCreateSignature() throws IOException {
-    registerBouncyCastleProviderIfNecessary();
+    SecurityUtils.setSecurityManager(new DefaultSecurityManager());
+    Subject subjectUnderTest = MockUtil.createUserSubject(SecurityUtils.getSecurityManager());
+    ThreadContext.bind(subjectUnderTest);
 
     String raw = GPGTestHelper.readResourceAsString("private-key.asc");
     final DefaultGPG.DefaultPrivateKey privateKey = new DefaultGPG.DefaultPrivateKey(raw);
-    assertThat(privateKey.getId()).contains(DefaultGPG.PRIVATE_KEY_ID);
     final byte[] signature = privateKey.sign("This is a test commit".getBytes());
     final String signatureString = new String(signature);
     assertThat(signature).isNotEmpty();
@@ -180,8 +194,6 @@ class DefaultGPGTest {
 
   @Test
   void shouldReturnGeneratedPrivateKeyIfNoneStored() {
-    registerBouncyCastleProviderIfNecessary();
-
     SecurityUtils.setSecurityManager(new DefaultSecurityManager());
     Subject subjectUnderTest = MockUtil.createUserSubject(SecurityUtils.getSecurityManager());
     ThreadContext.bind(subjectUnderTest);
@@ -195,8 +207,6 @@ class DefaultGPGTest {
 
   @Test
   void shouldReturnStoredPrivateKey() throws IOException {
-    registerBouncyCastleProviderIfNecessary();
-
     SecurityUtils.setSecurityManager(new DefaultSecurityManager());
     Subject subjectUnderTest = MockUtil.createUserSubject(SecurityUtils.getSecurityManager());
     ThreadContext.bind(subjectUnderTest);

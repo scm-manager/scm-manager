@@ -27,6 +27,7 @@ import {DateFromNow, DeleteButton, DownloadButton} from "@scm-manager/ui-compone
 import { PublicKey } from "./SetPublicKeys";
 import { useTranslation } from "react-i18next";
 import { Link } from "@scm-manager/ui-types";
+import styled from "styled-components";
 
 type Props = {
   publicKey: PublicKey;
@@ -53,12 +54,12 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
     <>
       <tr>
         <td>{publicKey.displayName}</td>
-        <td>
+        <td className="is-hidden-mobile">
           <DateFromNow date={publicKey.created} />
         </td>
         <td className="is-hidden-mobile">{publicKey.id}</td>
         <td>{deleteButton}</td>
-        <td>{downloadButton}</td>
+        <td className="is-hidden-mobile">{downloadButton}</td>
       </tr>
     </>
   );

@@ -24,34 +24,31 @@
 
 package sonia.scm.security.gpg;
 
-import org.bouncycastle.bcpg.ArmoredInputStream;
-import org.bouncycastle.openpgp.PGPObjectFactory;
-import org.bouncycastle.openpgp.PGPPublicKey;
-import org.bouncycastle.openpgp.PGPPublicKeyRing;
-import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator;
+import org.bouncycastle.openpgp.PGPPrivateKey;
+import org.bouncycastle.openpgp.PGPUtil;
+import org.bouncycastle.openpgp.jcajce.JcaPGPSecretKeyRingCollection;
+import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyDecryptorBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
+import java.io.InputStream;
 import java.util.Optional;
 
-public class PgpPublicKeyExtractor {
+public class PgpPrivateKeyExtractor {
 
-  private PgpPublicKeyExtractor() {}
+  private PgpPrivateKeyExtractor() {}
 
-  private static final Logger LOG = LoggerFactory.getLogger(PgpPublicKeyExtractor.class);
+  private static final Logger LOG = LoggerFactory.getLogger(PgpPrivateKeyExtractor.class);
 
-  static Optional<PGPPublicKey> getFromRawKey(String rawKey) {
-    try {
-      ArmoredInputStream armoredInputStream = new ArmoredInputStream(new ByteArrayInputStream(rawKey.getBytes()));
-      PGPObjectFactory pgpObjectFactory = new PGPObjectFactory(armoredInputStream, new JcaKeyFingerprintCalculator());
-      PGPPublicKey publicKey = ((PGPPublicKeyRing) pgpObjectFactory.nextObject()).getPublicKey();
-      return Optional.of(publicKey);
-
-    } catch (IOException e) {
+  static Optional<PGPPrivateKey> getFromRawKey(String rawKey) {
+    try (final InputStream decoderStream = PGPUtil.getDecoderStream(new ByteArrayInputStream(rawKey.getBytes()))) {
+      JcaPGPSecretKeyRingCollection secretKeyRingCollection = new JcaPGPSecretKeyRingCollection(decoderStream);
+      final PGPPrivateKey privateKey = secretKeyRingCollection.getKeyRings().next().getSecretKey().extractPrivateKey(new JcePBESecretKeyDecryptorBuilder().build(new char[]{}));
+      return Optional.of(privateKey);
+    } catch (Exception e) {
       LOG.error("Invalid PGP key", e);
+      return Optional.empty();
     }
-    return Optional.empty();
   }
 }
