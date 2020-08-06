@@ -41,18 +41,30 @@ public final class PluginInstallationContext {
     return new PluginInstallationContext(Collections.emptyMap());
   }
 
-  public static PluginInstallationContext of(Iterable<InstalledPlugin> installed, Iterable<AvailablePlugin> pending) {
+  public static PluginInstallationContext fromDescriptors(Iterable<? extends PluginDescriptor> installed, Iterable<? extends PluginDescriptor> pending) {
     Map<String, NameAndVersion> dependencies = new HashMap<>();
-    append(dependencies, installed);
-    append(dependencies, pending);
+    appendDescriptors(dependencies, installed);
+    appendDescriptors(dependencies, pending);
     return new PluginInstallationContext(dependencies);
   }
 
-  private static <P extends Plugin> void append(Map<String, NameAndVersion> dependencies, Iterable<P> plugins) {
-    for (Plugin plugin : plugins) {
-      PluginInformation information = plugin.getDescriptor().getInformation();
-      dependencies.put(information.getName(), new NameAndVersion(information.getName(), information.getVersion()));
-    }
+  public static PluginInstallationContext from(Iterable<? extends Plugin> installed, Iterable<? extends Plugin> pending) {
+    Map<String, NameAndVersion> dependencies = new HashMap<>();
+    appendPlugins(dependencies, installed);
+    appendPlugins(dependencies, pending);
+    return new PluginInstallationContext(dependencies);
+  }
+
+  private static <P extends PluginDescriptor> void appendDescriptors(Map<String, NameAndVersion> dependencies, Iterable<P> descriptors) {
+    descriptors.forEach(desc -> appendPlugins(dependencies, desc.getInformation()));
+  }
+
+  private static <P extends Plugin> void appendPlugins(Map<String, NameAndVersion> dependencies, Iterable<P> plugins) {
+    plugins.forEach(plugin -> appendPlugins(dependencies, plugin.getDescriptor().getInformation()));
+  }
+
+  private static void appendPlugins(Map<String, NameAndVersion> dependencies, PluginInformation information) {
+    dependencies.put(information.getName(), new NameAndVersion(information.getName(), information.getVersion()));
   }
 
   public Optional<NameAndVersion> find(String name) {

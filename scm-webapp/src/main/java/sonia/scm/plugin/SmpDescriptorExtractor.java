@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import javax.xml.bind.JAXBContext;
@@ -33,9 +33,12 @@ import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-class SmpDescriptorExtractor {
+final class SmpDescriptorExtractor {
 
-  InstalledPluginDescriptor extractPluginDescriptor(Path file) throws IOException {
+  private SmpDescriptorExtractor() {
+  }
+
+  static InstalledPluginDescriptor extractPluginDescriptor(Path file) throws IOException {
     try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(file), StandardCharsets.UTF_8))    {
       ZipEntry nextEntry;
       while ((nextEntry = zipInputStream.getNextEntry()) != null) {

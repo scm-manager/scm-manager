@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -35,7 +35,6 @@ import com.google.common.hash.Hashing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
-import sonia.scm.plugin.ExplodedSmp.PathTransformer;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -50,11 +49,14 @@ import java.nio.file.Path;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
-import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toSet;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -162,25 +164,16 @@ public final class PluginProcessor
   {
     logger.info("collect plugins");
 
-    Set<Path> archives = collect(pluginDirectory, new PluginArchiveFilter());
+    Set<ExplodedSmp> installedPlugins = findInstalledPlugins();
+    logger.debug("found {} installed plugins", installedPlugins.size());
 
-    logger.debug("extract {} archives", archives.size());
+    Set<ExplodedSmp> newlyInstalledPlugins = installPending(installedPlugins);
+    logger.debug("finished installation of {} plugins", newlyInstalledPlugins.size());
 
-    extract(archives);
-
-    List<Path> dirs =
-      collectPluginDirectories(pluginDirectory)
-      .stream()
-      .filter(isPluginDirectory())
-      .collect(toList());
-
-    logger.debug("process {} directories: {}", dirs.size(), dirs);
-
-    List<ExplodedSmp> smps = Lists.transform(dirs, new PathTransformer());
+    Set<ExplodedSmp> plugins = concat(installedPlugins, newlyInstalledPlugins);
 
     logger.trace("start building plugin tree");
-
-    PluginTree pluginTree = new PluginTree(smps);
+    PluginTree pluginTree = new PluginTree(plugins);
 
     logger.info("install plugin tree:\n{}", pluginTree);
 
@@ -193,6 +186,46 @@ public final class PluginProcessor
     logger.debug("collected {} plugins", wrappers.size());
 
     return ImmutableSet.copyOf(wrappers);
+  }
+
+  private ImmutableSet<ExplodedSmp> concat(Set<ExplodedSmp> installedPlugins, Set<ExplodedSmp> newlyInstalledPlugins) {
+    return ImmutableSet.<ExplodedSmp>builder().addAll(installedPlugins).addAll(newlyInstalledPlugins).build();
+  }
+
+  private Set<ExplodedSmp> installPending(Set<ExplodedSmp> installedPlugins) throws IOException {
+    Set<Path> archives = collect(pluginDirectory, new PluginArchiveFilter());
+    logger.debug("start installation of {} pending archives", archives.size());
+
+    Map<Path, InstalledPluginDescriptor> pending = new HashMap<>();
+    for (Path archive : archives) {
+      pending.put(archive, SmpDescriptorExtractor.extractPluginDescriptor(archive));
+    }
+
+    PluginInstallationContext installationContext = PluginInstallationContext.fromDescriptors(
+      installedPlugins.stream().map(ExplodedSmp::getPlugin).collect(toSet()),
+      pending.values()
+    );
+
+    for (Map.Entry<Path, InstalledPluginDescriptor> entry : pending.entrySet()) {
+      try {
+        PluginInstallationVerifier.verify(installationContext, entry.getValue());
+      } catch (PluginException ex) {
+        Path path = entry.getKey();
+        logger.error("failed to install smp {}, because it could not be verified", path);
+        logger.error("to restore scm-manager functionality remove the smp file {} from the plugin directory", path);
+        throw ex;
+      }
+    }
+
+    return extract(archives);
+  }
+
+  private Set<ExplodedSmp> findInstalledPlugins() throws IOException {
+    return collectPluginDirectories(pluginDirectory)
+      .stream()
+      .filter(isPluginDirectory())
+      .map(ExplodedSmp::create)
+      .collect(Collectors.toSet());
   }
 
   private Predicate<Path> isPluginDirectory() {
@@ -505,9 +538,11 @@ public final class PluginProcessor
    *
    * @throws IOException
    */
-  private void extract(Iterable<Path> archives) throws IOException
+  private Set<ExplodedSmp> extract(Iterable<Path> archives) throws IOException
   {
     logger.debug("extract archives");
+
+    ImmutableSet.Builder<ExplodedSmp> extracted = ImmutableSet.builder();
 
     for (Path archive : archives)
     {
@@ -519,17 +554,18 @@ public final class PluginProcessor
 
       logger.debug("extract plugin {}", smp.getPlugin());
 
-      File directory =
-        PluginsInternal.createPluginDirectory(pluginDirectory.toFile(),
-          smp.getPlugin());
+      File directory = PluginsInternal.createPluginDirectory(pluginDirectory.toFile(), smp.getPlugin());
 
-      String checksum = com.google.common.io.Files.hash(archiveFile,
-                          Hashing.sha256()).toString();
+      String checksum = com.google.common.io.Files.hash(archiveFile, Hashing.sha256()).toString();
       File checksumFile = PluginsInternal.getChecksumFile(directory);
 
       PluginsInternal.extract(smp, checksum, directory, checksumFile, false);
       moveArchive(archive);
+
+      extracted.add(ExplodedSmp.create(directory.toPath()));
     }
+
+    return extracted.build();
   }
 
   /**

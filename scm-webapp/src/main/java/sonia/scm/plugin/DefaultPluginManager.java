@@ -80,7 +80,7 @@ public class DefaultPluginManager implements PluginManager {
     this.eventBus = eventBus;
 
     this.computeInstallationDependencies();
-    this.contextFactory = (availablePlugins -> PluginInstallationContext.of(getInstalled(), availablePlugins));
+    this.contextFactory = (availablePlugins -> PluginInstallationContext.from(getInstalled(), availablePlugins));
   }
 
   @VisibleForTesting
