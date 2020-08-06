@@ -26,12 +26,9 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
-import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.GitHookBranchProvider;
 import sonia.scm.repository.api.GitHookMessageProvider;
 import sonia.scm.repository.api.GitHookTagProvider;
@@ -67,20 +64,17 @@ public class GitHookContextProvider extends HookContextProvider
 
   /**
    * Constructs a new instance
-   *  @param receivePack git receive pack
+   * @param receivePack git receive pack
    * @param receiveCommands received commands
-   * @param type
    */
   public GitHookContextProvider(
     ReceivePack receivePack,
     List<ReceiveCommand> receiveCommands,
-    RepositoryHookType type,
     Repository repository,
     String repositoryId
   ) {
     this.receivePack = receivePack;
     this.receiveCommands = receiveCommands;
-    this.type = type;
     this.repository = repository;
     this.repositoryId = repositoryId;
     this.changesetProvider = new GitHookChangesetProvider(receivePack,
@@ -116,25 +110,7 @@ public class GitHookContextProvider extends HookContextProvider
 
   @Override
   public HookMergeDetectionProvider getMergeDetectionProvider() {
-    if (type == RepositoryHookType.POST_RECEIVE) {
-      return new GitReceiveHookMergeDetectionProvider(repository, repositoryId, branch -> branch);
-    } else {
-      return new GitReceiveHookMergeDetectionProvider(repository, repositoryId, this::findNewRevisionForBranchIfToBeUpdated);
-    }
-  }
-
-  private String findNewRevisionForBranchIfToBeUpdated(String branch) {
-    return receiveCommands
-      .stream()
-      .filter(receiveCommand -> isReceiveCommandForBranch(branch, receiveCommand))
-      .map(ReceiveCommand::getNewId)
-      .map(AnyObjectId::getName)
-      .findFirst()
-      .orElse(branch);
-  }
-
-  private boolean isReceiveCommandForBranch(String branch, ReceiveCommand receiveCommand) {
-    return GitUtil.getBranch(receiveCommand.getRef()).equals(branch);
+    return new GitReceiveHookMergeDetectionProvider(repository, repositoryId, receiveCommands);
   }
 
   @Override
@@ -146,7 +122,6 @@ public class GitHookContextProvider extends HookContextProvider
   private final GitHookChangesetProvider changesetProvider;
   private final List<ReceiveCommand> receiveCommands;
   private final ReceivePack receivePack;
-  private final RepositoryHookType type;
   private final Repository repository;
   private final String repositoryId;
 }
