@@ -63,7 +63,6 @@ const PopoverContainer = styled.div<ContainerProps>`
     margin-top: -0.4rem;
     -webkit-transform-origin: center;
     transform-origin: center;
-    box-shadow: -1px 1px 2px rgba(10, 10, 10, 0.2);
     transform: rotate(-45deg);
   }
 `;

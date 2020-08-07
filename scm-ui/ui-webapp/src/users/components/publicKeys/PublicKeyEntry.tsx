@@ -43,12 +43,6 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
       <DeleteButton label={t("publicKey.delete")} action={() => onDelete((publicKey._links.delete as Link).href)} />
     );
   }
-  let downloadButton;
-  if (publicKey?._links?.raw) {
-    downloadButton = (
-      <DownloadButton displayName={t("publicKey.download")} url={(publicKey?._links?.raw as Link).href} />
-    );
-  }
 
   return (
     <>
@@ -57,9 +51,8 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
         <td className="is-hidden-mobile">
           <DateFromNow date={publicKey.created} />
         </td>
-        <td className="is-hidden-mobile">{publicKey.id}</td>
+        <td className="is-hidden-mobile">{publicKey._links?.raw ? <a href={(publicKey._links.raw as Link).href}>{publicKey.id}</a> : publicKey.id}</td>
         <td>{deleteButton}</td>
-        <td className="is-hidden-mobile">{downloadButton}</td>
       </tr>
     </>
   );

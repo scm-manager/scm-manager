@@ -89,13 +89,13 @@ const SignatureIcon: FC<Props> = ({signatures, className}) => {
   const signatureElements = signatures.map(signature => createSignatureBlock(signature));
 
   const getColor = () => {
-    const verified = signatures.some(sig => sig.status === "VERIFIED");
-    if (verified) {
-      return "success";
-    }
     const invalid = signatures.some(sig => sig.status === "INVALID");
     if (invalid) {
       return "danger";
+    }
+    const verified = signatures.some(sig => sig.status === "VERIFIED");
+    if (verified) {
+      return "success";
     }
     return undefined;
   };
