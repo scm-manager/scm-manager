@@ -25,7 +25,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { RouteComponentProps } from "react-router-dom";
-import { History } from "history";
 import { PagedCollection, User } from "@scm-manager/ui-types";
 import {
   CreateButton,
@@ -34,7 +33,8 @@ import {
   OverviewPageActions,
   Page,
   PageActions,
-  urls
+  urls,
+  Loading
 } from "@scm-manager/ui-components";
 import { getUsersLink } from "../../modules/indexResource";
 import {
@@ -88,6 +88,11 @@ class Users extends React.Component<Props> {
 
   render() {
     const { users, loading, error, canAddUsers, t } = this.props;
+
+    if (loading) {
+      return <Loading />;
+    }
+
     return (
       <Page title={t("users.title")} subtitle={t("users.subtitle")} loading={loading || !users} error={error}>
         {this.renderUserTable()}

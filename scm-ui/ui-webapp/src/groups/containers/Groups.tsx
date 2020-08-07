@@ -25,7 +25,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { RouteComponentProps } from "react-router-dom";
-import { History } from "history";
 import { Group, PagedCollection } from "@scm-manager/ui-types";
 import {
   CreateButton,
@@ -34,7 +33,8 @@ import {
   OverviewPageActions,
   Page,
   PageActions,
-  urls
+  urls,
+  Loading
 } from "@scm-manager/ui-components";
 import { getGroupsLink } from "../../modules/indexResource";
 import {
@@ -88,6 +88,11 @@ class Groups extends React.Component<Props> {
 
   render() {
     const { groups, loading, error, canAddGroups, t } = this.props;
+
+    if (loading) {
+      return <Loading />;
+    }
+
     return (
       <Page title={t("groups.title")} subtitle={t("groups.subtitle")} loading={loading || !groups} error={error}>
         {this.renderGroupTable()}

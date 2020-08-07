@@ -73,7 +73,7 @@ class App extends Component<Props> {
     let content;
     const navigation = authenticated ? <PrimaryNavigation links={links} /> : "";
 
-    if (!authenticated) {
+    if (!authenticated && !loading) {
       content = <Login />;
     } else if (loading) {
       content = <Loading />;

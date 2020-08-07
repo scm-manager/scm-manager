@@ -38,6 +38,7 @@ import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.AnonymousToken;
+import sonia.scm.security.BearerToken;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.WebTokenGenerator;
@@ -49,7 +50,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
+import static sonia.scm.web.filter.JwtValidator.isJwtTokenExpired;
 
 /**
  * Handles authentication, if a one of the {@link WebTokenGenerator} returns
@@ -61,23 +62,16 @@ import java.util.Set;
 @Singleton
 public class AuthenticationFilter extends HttpFilter {
 
+  private static final Logger logger =    LoggerFactory.getLogger(AuthenticationFilter.class);
+
   /**
    * marker for failed authentication
    */
   private static final String ATTRIBUTE_FAILED_AUTH = "sonia.scm.auth.failed";
-
-  /**
-   * Field description
-   */
   private static final String HEADER_AUTHORIZATION = "Authorization";
 
-  /**
-   * the logger for AuthenticationFilter
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(AuthenticationFilter.class);
-
-  //~--- constructors ---------------------------------------------------------
+  private final Set<WebTokenGenerator> tokenGenerators;
+  protected ScmConfiguration configuration;
 
   /**
    * Constructs a new basic authenticaton filter.
@@ -91,8 +85,6 @@ public class AuthenticationFilter extends HttpFilter {
     this.tokenGenerators = tokenGenerators;
   }
 
-  //~--- methods --------------------------------------------------------------
-
   /**
    * Handles authentication, if a one of the {@link WebTokenGenerator} returns
    * an {@link AuthenticationToken}.
@@ -104,14 +96,15 @@ public class AuthenticationFilter extends HttpFilter {
    * @throws ServletException
    */
   @Override
-  protected void doFilter(HttpServletRequest request,
-                          HttpServletResponse response, FilterChain chain)
+  protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
     throws IOException, ServletException {
     Subject subject = SecurityUtils.getSubject();
 
     AuthenticationToken token = createToken(request);
 
-    if (token != null) {
+    if (token instanceof BearerToken && isJwtTokenExpired(((BearerToken) token).getCredentials())) {
+      handleUnauthorized(request, response, chain);
+    } else if (token != null) {
       logger.trace(
         "found authentication token on request, start authentication");
       handleAuthentication(request, response, chain, subject, token);
@@ -173,11 +166,8 @@ public class AuthenticationFilter extends HttpFilter {
    * @param response http response
    * @throws IOException
    */
-  protected void sendUnauthorizedError(HttpServletRequest request,
-                                       HttpServletResponse response)
-    throws IOException {
-    HttpUtil.sendUnauthorized(request, response,
-      configuration.getRealmDescription());
+  protected void sendUnauthorizedError(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    HttpUtil.sendUnauthorized(request, response, configuration.getRealmDescription());
   }
 
   /**
@@ -260,8 +250,6 @@ public class AuthenticationFilter extends HttpFilter {
       response);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Returns {@code true} if anonymous access is enabled.
    *
@@ -270,16 +258,4 @@ public class AuthenticationFilter extends HttpFilter {
   private boolean isAnonymousAccessEnabled() {
     return (configuration != null) && configuration.getAnonymousMode() != AnonymousMode.OFF;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * set of web token generators
-   */
-  private final Set<WebTokenGenerator> tokenGenerators;
-
-  /**
-   * scm main configuration
-   */
-  protected ScmConfiguration configuration;
 }

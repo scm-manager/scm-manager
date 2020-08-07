@@ -60,8 +60,8 @@ class RepositoryRoles extends React.Component<Props> {
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    const { loading, list, page, rolesLink, location, fetchRolesByPage } = this.props;
-    if (list && page && !loading) {
+    const { loading, error, list, page, rolesLink, location, fetchRolesByPage } = this.props;
+    if (list && page && !loading && !error) {
       const statePage: number = list.page + 1;
       if (page !== statePage || prevProps.location.search !== location.search) {
         fetchRolesByPage(rolesLink, page);
@@ -73,7 +73,7 @@ class RepositoryRoles extends React.Component<Props> {
     const { t, loading, error } = this.props;
 
     if (error) {
-      return <ErrorNotification />;
+      return <ErrorNotification error={error}/>;
     }
 
     if (loading) {

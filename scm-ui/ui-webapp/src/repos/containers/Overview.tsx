@@ -33,7 +33,8 @@ import {
   OverviewPageActions,
   Page,
   PageActions,
-  urls
+  urls,
+  Loading
 } from "@scm-manager/ui-components";
 import { getRepositoriesLink } from "../../modules/indexResource";
 import {
@@ -80,6 +81,11 @@ class Overview extends React.Component<Props> {
 
   render() {
     const { error, loading, showCreateButton, t } = this.props;
+
+    if (loading) {
+      return <Loading />;
+    }
+
     return (
       <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={loading} error={error}>
         {this.renderOverview()}
