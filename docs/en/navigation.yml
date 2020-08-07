@@ -31,6 +31,7 @@
   - /development/definition-of-done/
   - /development/ui-dod/
   - /development/decision-table/
+  - /development/integration-tests/
 
 - section: Plugin Development
   entries:
