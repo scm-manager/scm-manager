@@ -675,7 +675,7 @@
 
   <properties>
     <scm.stage>DEVELOPMENT</scm.stage>
-    <scm.home>${project.build.directory}/scm-it</scm.home>
+    <scm.home>${project.parent.build.directory}/scm-it</scm.home>
     <environment.profile>default</environment.profile>
     <jjwt.version>0.11.2</jjwt.version>
     <selenium.version>2.53.1</selenium.version>

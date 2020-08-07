@@ -283,7 +283,7 @@
 
       <properties>
         <scm.stage>DEVELOPMENT</scm.stage>
-        <scm.home>${project.build.directory}/scm-it</scm.home>
+        <scm.home>${project.parent.build.directory}/scm-it</scm.home>
         <scm-it.logbackConfiguration>${project.basedir}/../scm-webapp/src/main/resources/logback.default.xml</scm-it.logbackConfiguration>
       </properties>
 
