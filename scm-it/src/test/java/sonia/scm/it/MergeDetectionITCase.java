@@ -92,6 +92,19 @@ public class MergeDetectionITCase {
   @Test
   public void shouldDetectSimpleMergeAsMerged() throws IOException {
     client.getCheckoutCommand().checkout("master");
+    client.getMergeCommand().noFf().merge("develop");
+
+    initializeMergeDetection("master", "develop");
+
+    client.getPushCommand().push();
+
+    Assertions.assertThat(getMergeDetectionResult("preMergeDetection", 0)).isTrue();
+    Assertions.assertThat(getMergeDetectionResult("postMergeDetection", 0)).isTrue();
+  }
+
+  @Test
+  public void shouldDetectFastForwardAsMerged() throws IOException {
+    client.getCheckoutCommand().checkout("master");
     client.getMergeCommand().merge("develop");
 
     initializeMergeDetection("master", "develop");

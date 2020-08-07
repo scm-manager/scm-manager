@@ -35,13 +35,28 @@ import java.io.IOException;
 public final class MergeCommandBuilder {
 
   private final MergeCommand command;
+  private final MergeRequest request = new MergeRequest();
 
   MergeCommandBuilder(MergeCommand command) {
     this.command = command;
   }
 
+  public MergeCommandBuilder ffOnly() {
+    request.setFfMode(MergeRequest.FastForwardMode.FF_ONLY);
+    return this;
+  }
+
+  public MergeCommandBuilder noFf() {
+    request.setFfMode(MergeRequest.FastForwardMode.NO_FF);
+    return this;
+  }
+
+  public MergeCommandBuilder ffIfPossible() {
+    request.setFfMode(MergeRequest.FastForwardMode.FF);
+    return this;
+  }
+
   public void merge(String branch) throws IOException {
-    MergeRequest request = new MergeRequest();
     request.setBranch(branch);
     command.merge(request);
   }

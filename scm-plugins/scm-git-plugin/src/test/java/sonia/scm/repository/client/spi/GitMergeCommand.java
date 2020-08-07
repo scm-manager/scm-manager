@@ -48,9 +48,25 @@ public class GitMergeCommand implements MergeCommand {
   public Changeset merge(MergeRequest request) throws IOException {
     try (GitChangesetConverter converter = new GitChangesetConverter(git.getRepository())) {
       ObjectId resolved = git.getRepository().resolve(request.getBranch());
-      MergeResult mergeResult = git.merge()
+      org.eclipse.jgit.api.MergeCommand mergeCommand = git.merge()
         .include(request.getBranch(), resolved)
-        .setMessage(request.getMessage())
+        .setMessage(request.getMessage());
+
+      switch (request.getFfMode()) {
+        case FF:
+          mergeCommand.setFastForward(org.eclipse.jgit.api.MergeCommand.FastForwardMode.FF);
+          break;
+        case NO_FF:
+          mergeCommand.setFastForward(org.eclipse.jgit.api.MergeCommand.FastForwardMode.NO_FF);
+          break;
+        case FF_ONLY:
+          mergeCommand.setFastForward(org.eclipse.jgit.api.MergeCommand.FastForwardMode.FF_ONLY);
+          break;
+        default:
+          throw new IllegalStateException("Unknown FF mode: " + request.getFfMode());
+      }
+
+      MergeResult mergeResult = mergeCommand
         .call();
 
       try (RevWalk revWalk = new RevWalk(git.getRepository())) {

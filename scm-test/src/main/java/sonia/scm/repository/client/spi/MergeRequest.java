@@ -34,6 +34,7 @@ public final class MergeRequest {
 
   private String branch;
   private String message;
+  private FastForwardMode ffMode = FastForwardMode.FF;
 
   @Override
   public boolean equals(Object obj) {
@@ -79,11 +80,23 @@ public final class MergeRequest {
     this.message = message;
   }
 
+  public void setFfMode(FastForwardMode ffMode) {
+    this.ffMode = ffMode;
+  }
+
   String getBranch() {
     return branch;
   }
 
   String getMessage() {
     return message;
+  }
+
+  public FastForwardMode getFfMode() {
+    return ffMode;
+  }
+
+  public enum FastForwardMode {
+    FF_ONLY, FF, NO_FF
   }
 }
