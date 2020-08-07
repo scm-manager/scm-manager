@@ -48,11 +48,7 @@ import static de.otto.edison.hal.Links.linkingTo;
 /**
  * Web Service Resource to support integration tests.
  */
-@OpenAPIDefinition(tags = {
-  @Tag(name = "Integration Test", description = "Support for integration tests")
-})
 @Path(IntegrationTestResource.INTEGRATION_TEST_PATH_V2)
-@Extension
 public class IntegrationTestResource {
 
   static final String INTEGRATION_TEST_PATH_V2 = "v2/integration-test";

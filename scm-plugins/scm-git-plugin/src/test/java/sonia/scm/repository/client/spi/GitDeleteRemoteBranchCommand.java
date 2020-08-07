@@ -55,8 +55,6 @@ public class GitDeleteRemoteBranchCommand implements DeleteRemoteBranchCommand {
         push.setCredentialsProvider(credentialsProvider);
       }
       push.setRefSpecs(refSpec).call();
-
-//      List<String> result = git.branchDelete().setBranchNames(name).call();
     } catch (GitAPIException ex) {
       throw new RepositoryClientException("could not delete branch", ex);
     }
