@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -925,11 +925,16 @@ public final class HttpUtil
   @VisibleForTesting
   static String createForwardedBaseUrl(HttpServletRequest request)
   {
-    String proto = getHeader(request, HEADER_X_FORWARDED_PROTO,
-                     request.getScheme());
+    String fhost = getHeader(request, HEADER_X_FORWARDED_HOST, null);
+    if (fhost == null) {
+      throw new IllegalStateException(
+        String.format("request has no %s header and does not look like it is forwarded", HEADER_X_FORWARDED_HOST)
+      );
+    }
+
+    String proto = getHeader(request, HEADER_X_FORWARDED_PROTO, request.getScheme());
     String host;
-    String fhost = getHeader(request, HEADER_X_FORWARDED_HOST,
-                     request.getScheme());
+
     String port = request.getHeader(HEADER_X_FORWARDED_PORT);
     int s = fhost.indexOf(SEPARATOR_PORT);
 

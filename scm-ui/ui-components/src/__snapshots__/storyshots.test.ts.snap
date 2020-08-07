@@ -38956,6 +38956,65 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 </div>
 `;
 
+exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
+<div
+  className="Checkboxstories__Spacing-sc-1bg8q8e-0 kJtXav"
+>
+  <div
+    className="field"
+  >
+    <div
+      className="control"
+      onClick={[Function]}
+    >
+      <label
+        className="checkbox"
+      >
+        <i
+          className="is-outlined fa-square has-text-black far"
+        />
+         
+        Classic helpText
+        <span
+          className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+          data-tooltip="This is a classic help text."
+        >
+          <i
+            className="fas fa-question-circle has-text-blue-light"
+          />
+        </span>
+      </label>
+    </div>
+  </div>
+  <div
+    className="field"
+  >
+    <div
+      className="control"
+      onClick={[Function]}
+    >
+      <label
+        className="checkbox"
+      >
+        <i
+          className="is-outlined fa-check-square has-text-link fa"
+        />
+         
+        Long helpText
+        <span
+          className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+          data-tooltip="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+        >
+          <i
+            className="fas fa-question-circle has-text-blue-light"
+          />
+        </span>
+      </label>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots Forms|DropDown Default 1`] = `
 <div
   className="select"
@@ -39065,6 +39124,51 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
 </div>
 `;
 
+exports[`Storyshots Forms|Radio With HelpText 1`] = `
+<div
+  className="Radiostories__RadioList-sc-18hvwhd-1 fSTSuW"
+>
+  <label
+    className="Radio__StyledRadio-ays4vp-0 hrHCWE radio"
+  >
+    <input
+      checked={false}
+      onChange={[Function]}
+      type="radio"
+    />
+     
+    Classic helpText
+    <span
+      className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+      data-tooltip="This is a classic help text."
+    >
+      <i
+        className="fas fa-question-circle has-text-blue-light"
+      />
+    </span>
+  </label>
+  <label
+    className="Radio__StyledRadio-ays4vp-0 hrHCWE radio"
+  >
+    <input
+      checked={true}
+      onChange={[Function]}
+      type="radio"
+    />
+     
+    Long helpText
+    <span
+      className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+      data-tooltip="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+    >
+      <i
+        className="fas fa-question-circle has-text-blue-light"
+      />
+    </span>
+  </label>
+</div>
+`;
+
 exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 <div
   className="Textareastories__Spacing-lk5v3m-0 hldael"
@@ -39139,6 +39243,64 @@ exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
   <p>
     
   </p>
+</div>
+`;
+
+exports[`Storyshots Help Default 1`] = `
+<div
+  className="Helpstories__Wrapper-yq79zu-0 fkZuPN"
+>
+  <span
+    className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+    data-tooltip="This is a help message"
+  >
+    <i
+      className="fas fa-question-circle has-text-blue-light"
+    />
+  </span>
+</div>
+`;
+
+exports[`Storyshots Help Multiline 1`] = `
+<div
+  className="Helpstories__Wrapper-yq79zu-0 fkZuPN"
+>
+  <div
+    className="Helpstories__Spacing-yq79zu-1 jVjwc"
+  >
+    <label>
+      With multiline (default):
+    </label>
+    <span
+      className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+      data-tooltip="Cleverness nuclear genuine static irresponsibility invited President Zaphod
+Beeblebrox hyperspace ship. Another custard through computer-generated universe
+shapes field strong disaster parties Russell’s ancestors infinite colour
+imaginative generator sweep."
+    >
+      <i
+        className="fas fa-question-circle has-text-blue-light"
+      />
+    </span>
+  </div>
+  <div
+    className="Helpstories__Spacing-yq79zu-1 jVjwc"
+  >
+    <label>
+      Without multiline:
+    </label>
+    <span
+      className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block"
+      data-tooltip="Cleverness nuclear genuine static irresponsibility invited President Zaphod
+Beeblebrox hyperspace ship. Another custard through computer-generated universe
+shapes field strong disaster parties Russell’s ancestors infinite colour
+imaginative generator sweep."
+    >
+      <i
+        className="fas fa-question-circle has-text-blue-light"
+      />
+    </span>
+  </div>
 </div>
 `;
 
@@ -41869,6 +42031,44 @@ exports[`Storyshots Modal|ConfirmAlert Default 1`] = `
 </div>
 `;
 
+exports[`Storyshots Modal|Modal Closeable 1`] = `
+<div
+  className="modal is-active"
+>
+  <div
+    className="modal-background"
+  />
+  <div
+    className="modal-card"
+  >
+    <header
+      className="modal-card-head has-background-light"
+    >
+      <p
+        className="modal-card-title is-marginless"
+      >
+        Hitchhiker Modal
+      </p>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body"
+    >
+      <p>
+        Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob.
+      </p>
+    </section>
+  </div>
+</div>
+`;
+
 exports[`Storyshots Modal|Modal Default 1`] = `
 <div
   className="modal is-active"
@@ -41897,7 +42097,434 @@ exports[`Storyshots Modal|Modal Default 1`] = `
       className="modal-card-body"
     >
       <p>
-        Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly ordinary mob.
+        Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob.
+      </p>
+    </section>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Modal|Modal Long content 1`] = `
+<div
+  className="modal is-active"
+>
+  <div
+    className="modal-background"
+  />
+  <div
+    className="modal-card"
+  >
+    <header
+      className="modal-card-head has-background-light"
+    >
+      <p
+        className="modal-card-title is-marginless"
+      >
+        Hitchhiker Modal
+      </p>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body"
+    >
+      <h1
+        className="title"
+      >
+        Marvin
+      </h1>
+      <h2
+        className="subtitle"
+      >
+        The Paranoid Android
+      </h2>
+      <hr />
+      <div
+        className="notification is-info"
+      >
+        
+        The following content comes from the awesome
+         
+        <a
+          href="https://hitchhikers.fandom.com/wiki/Main_Page"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Hitchhikers Wiki
+        </a>
+      </div>
+      <hr />
+      <div
+        className="has-text-centered"
+      >
+        <img
+          alt="Marvin"
+          src="https://vignette.wikia.nocookie.net/hitchhikers/images/a/a4/Marvin.jpg/revision/latest/scale-to-width-down/150?cb=20100530114055"
+        />
+      </div>
+      <hr />
+      <p
+        className="content"
+      >
+        Marvin, more fully known as Marvin the Paranoid Android, is an incredibly brilliant but overwhelmingly depressed robot manufactured by the Sirius Cybernetics Corporation and unwilling servant to the crew of the Heart of Gold.
+      </p>
+      <hr />
+      <div
+        className="content"
+      >
+        <h4>
+          Physical Appearance
+        </h4>
+        <p>
+          In the novels, Marvin is described thusly: "...though it was beautifully constructed and polished it looked somehow as if the various parts of its more or less humanoid body didn't quite fit properly. In fact, they fit perfectly well, but something in its bearing suggested that they might have fitted better."
+        </p>
+        <p>
+          On the radio show, there's no physical description of Marvin, though his voice is digitally altered to sound more robotic, and any scene that focuses on him is accompanied by sounds of mechanical clanking and hissing.
+        </p>
+        <p>
+          In the TV series, Marvin is built in the style of a 1950's robot similar to Robbie the Robot from Forbidden Planet or Twiki from Buck Rogers. His body is blocky and angular, with a pair of clamp-claw hands, shuffling feet and a squarish head with a dour face.
+        </p>
+        <p>
+          In the movie, Marvin is a short, stout robot built of smooth, white plastic. His arms are much longer than his legs, and his head is a massive sphere with only a pair of triangle eyes for a face. His large head and simian-like proportions give Marvin a perpetual slouch, adding to his melancholy personality. At the start of the film his eyes glow, but at the end he is shot but unharmed, leaving a hole in his head and dimming his eyes. This is probably the most depressing and unacceptable manifestation of Marvin ever conceived, and thus paradoxically the most accurate.
+        </p>
+      </div>
+      <hr />
+      <div
+        className="content"
+      >
+        <h4>
+          Personality
+        </h4>
+        <p>
+          Marvin the robot has a prototype version of the Genuine People Personality (GPP) software from SCC, allowing him sentience and the ability to feel emotions and develop a personality. He's also incredibly smart, having a "brain the size of a planet" capable of computing extremely complex mathematics, as well as solving difficult problems and operating high-tech devices.
+        </p>
+        <p>
+          However, despite being so smart, Marvin is typically made to perform menial tasks and labour such as escorting people, opening doors, picking up pieces of paper, and other tasks well beneath his skills. Even extremely hard tasks, such as computing for the vast Krikkit robot army, are trivial for Marvin. All this leaves him extremely bored, frustrated, and overwhelmingly depressed. Because of this, all modern GPP-capable machines, such as Eddie the computer and the Heart of Gold's automatic doors, are programmed to be extremely cheerful and happy, much to Marvin's disgust.
+        </p>
+        <p>
+          Marvin hates everyone and everything he comes into contact with, having no respect for anybody and will criticise and insult others at any opportunity, or otherwise rant and complain for hours on end about his own problems, such as the terrible pain he suffers in all the diodes down his left side. His contempt for everyone is often justified, as almost every person he comes across, even those who consider him a friend, (such as Arthur and Trillian, who treat him more kindly than Ford and Zaphod) treat Marvin as an expendable servant, even sending him to his death more than once (such as when Zaphod ordered Marvin to fight the gigantic, heavy-duty Frogstar Scout Robot Class D so he could escape). Being a robot, he still does what he's told (he won't enjoy it, nor will he let you forget it, but he'll do it anyway), though he'd much rather sulk in a corner by himself.
+        </p>
+        <p>
+          Several times in the series Marvin ends up alone and isolated for extremely long periods of time, sometimes spanning millions of years, either by sheer bad luck (such as the explosion that propelled everyone but Marvin to Milliways in the far-off future) or because his unpleasantly depressing personality drives them away or, in more than one case, makes them commit suicide. In his spare time (which he has a lot of), Marvin will attempt to occupy himself by composing songs and writing poetry. Of course, none of them are particularly cheerful, or even that good.
+        </p>
+      </div>
+    </section>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Modal|Modal With form elements 1`] = `
+<div
+  className="modal is-active"
+>
+  <div
+    className="modal-background"
+  />
+  <div
+    className="modal-card"
+  >
+    <header
+      className="modal-card-head has-background-light"
+    >
+      <p
+        className="modal-card-title is-marginless"
+      >
+        Hitchhiker Modal
+      </p>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body"
+    >
+      <div
+        className="Modalstories__RadioList-sc-2lb0wg-1 hFfBOw"
+      >
+        <label
+          className="Radio__StyledRadio-ays4vp-0 hrHCWE radio"
+        >
+          <input
+            checked={true}
+            onChange={[Function]}
+            type="radio"
+          />
+           
+          One
+          <span
+            className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+            data-tooltip="The first one"
+          >
+            <i
+              className="fas fa-question-circle has-text-blue-light"
+            />
+          </span>
+        </label>
+        <label
+          className="Radio__StyledRadio-ays4vp-0 hrHCWE radio"
+        >
+          <input
+            checked={false}
+            onChange={[Function]}
+            type="radio"
+          />
+           
+          Two
+          <span
+            className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+            data-tooltip="The second one"
+          >
+            <i
+              className="fas fa-question-circle has-text-blue-light"
+            />
+          </span>
+        </label>
+      </div>
+      <hr />
+      <p>
+        Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob.
+      </p>
+      <hr />
+      <div
+        className="field"
+      >
+        <label
+          className="label"
+        >
+          Text
+           
+        </label>
+        <div
+          className="control"
+        >
+          <textarea
+            className="textarea"
+            disabled={false}
+            onChange={[Function]}
+            onKeyDown={[Function]}
+          />
+        </div>
+      </div>
+      <hr />
+      <div
+        className="field is-grouped"
+      >
+        <div
+          className="control"
+        >
+          <button
+            className="button is-default"
+            onClick={[Function]}
+            type="button"
+          >
+            One
+             
+          </button>
+        </div>
+        <div
+          className="control"
+        >
+          <button
+            className="button is-default"
+            onClick={[Function]}
+            type="button"
+          >
+            Two
+             
+          </button>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Modal|Modal With long tooltips 1`] = `
+<div
+  className="modal is-active"
+>
+  <div
+    className="modal-background"
+  />
+  <div
+    className="modal-card"
+  >
+    <header
+      className="modal-card-head has-background-light"
+    >
+      <p
+        className="modal-card-title is-marginless"
+      >
+        Hitchhiker Modal
+      </p>
+      <button
+        aria-label="close"
+        className="delete"
+        onClick={[Function]}
+      />
+    </header>
+    <section
+      className="modal-card-body"
+    >
+      <div
+        className="notification is-info"
+      >
+        
+        This story exists because we had a problem, that long tooltips causes a horizontal scrollbar on the modal.
+      </div>
+      <hr />
+      <p>
+        The following elements will have a verly long help text, which has triggered the scrollbar in the past.
+      </p>
+      <hr />
+      <div
+        className="Modalstories__TopAndBottomMargin-sc-2lb0wg-0 bfocSI"
+      >
+        <div
+          className="field"
+        >
+          <div
+            className="control"
+            onClick={[Function]}
+          >
+            <label
+              className="checkbox"
+            >
+              <i
+                className="is-outlined fa-check-square has-text-link fa"
+              />
+               
+              Checkbox
+              <span
+                className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+                data-tooltip="Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob."
+              >
+                <i
+                  className="fas fa-question-circle has-text-blue-light"
+                />
+              </span>
+            </label>
+          </div>
+        </div>
+      </div>
+      <hr />
+      <div
+        className="Modalstories__TopAndBottomMargin-sc-2lb0wg-0 bfocSI"
+      >
+        <label
+          className="Radio__StyledRadio-ays4vp-0 hrHCWE radio"
+        >
+          <input
+            checked={false}
+            onChange={[Function]}
+            type="radio"
+          />
+           
+          Radio button
+          <span
+            className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+            data-tooltip="Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob."
+          >
+            <i
+              className="fas fa-question-circle has-text-blue-light"
+            />
+          </span>
+        </label>
+      </div>
+      <hr />
+      <div
+        className="Modalstories__TopAndBottomMargin-sc-2lb0wg-0 bfocSI"
+      >
+        <div
+          className="field"
+        >
+          <label
+            className="label"
+          >
+            Input
+             
+            <span
+              className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+              data-tooltip="Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob."
+            >
+              <i
+                className="fas fa-question-circle has-text-blue-light"
+              />
+            </span>
+          </label>
+          <div
+            className="control"
+          >
+            <input
+              className="input"
+              onChange={[Function]}
+              onKeyPress={[Function]}
+              placeholder=""
+              type="text"
+            />
+          </div>
+          
+        </div>
+      </div>
+      <hr />
+      <div
+        className="Modalstories__TopAndBottomMargin-sc-2lb0wg-0 bfocSI"
+      >
+        <div
+          className="field"
+        >
+          <label
+            className="label"
+          >
+            Textarea
+             
+            <span
+              className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
+              data-tooltip="Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows
+    hostess’s really oblong Infinite Improbability thing into the starship against which behavior accordance.with
+    Kakrafoon humanoid undergarment ship powered by GPP-guided bowl of petunias nothing was frequently away incredibly
+    ordinary mob."
+            >
+              <i
+                className="fas fa-question-circle has-text-blue-light"
+              />
+            </span>
+          </label>
+          <div
+            className="control"
+          >
+            <textarea
+              className="textarea"
+              disabled={false}
+              onChange={[Function]}
+              onKeyDown={[Function]}
+            />
+          </div>
+        </div>
+      </div>
+      <hr />
+      <p>
+        If this modal has no horizontal scrollbar the issue is fixed
       </p>
     </section>
   </div>

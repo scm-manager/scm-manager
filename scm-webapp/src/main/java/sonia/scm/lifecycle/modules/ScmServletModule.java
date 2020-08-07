@@ -33,8 +33,10 @@ import com.google.inject.throwingproviders.ThrowingProviderBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.Default;
+import sonia.scm.DefaultRootURL;
 import sonia.scm.PushStateDispatcher;
 import sonia.scm.PushStateDispatcherProvider;
+import sonia.scm.RootURL;
 import sonia.scm.Undecorated;
 import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.api.v2.resources.BranchLinkProvider;
@@ -239,6 +241,9 @@ class ScmServletModule extends ServletModule {
 
     // bind api link provider
     bind(BranchLinkProvider.class).to(DefaultBranchLinkProvider.class);
+
+    // bind url helper
+    bind(RootURL.class).to(DefaultRootURL.class);
   }
 
   private <T> void bind(Class<T> clazz, Class<? extends T> defaultImplementation) {

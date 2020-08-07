@@ -22,27 +22,32 @@
  * SOFTWARE.
  */
 
-package sonia.scm.web;
+package sonia.scm;
 
-import sonia.scm.RootURL;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.spi.InitializingHttpScmProtocolWrapper;
+import java.net.URL;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+/**
+ * RootURL is able to return the root url of the SCM-Manager instance,
+ * regardless of the scope (web request, async hook, ssh command, etc).
+ *
+ * @since 2.3.1
+ */
+public interface RootURL {
 
-@Singleton
-@Extension
-public class HgScmProtocolProviderWrapper extends InitializingHttpScmProtocolWrapper {
+  /**
+   * Returns the root url of the SCM-Manager instance.
+   *
+   * @return root url
+   */
+  URL get();
 
-  @Inject
-  public HgScmProtocolProviderWrapper(HgCGIServletProvider servletProvider, RootURL rootURL) {
-    super(servletProvider, rootURL);
+  /**
+   * Returns the root url of the SCM-Manager instance as string.
+   *
+   * @return root url as string
+   */
+  default String getAsString() {
+    return get().toExternalForm();
   }
 
-  @Override
-  public String getType() {
-    return HgRepositoryHandler.TYPE_NAME;
-  }
 }

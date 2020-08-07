@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -232,6 +232,12 @@ public class HttpUtilTest
     when(request.getContextPath()).thenReturn("/scm");
     assertEquals("https://www.scm-manager.org:443/scm",
       HttpUtil.createForwardedBaseUrl(request));
+  }
+
+  @Test(expected = IllegalStateException.class)
+  public void shouldTrowIllegalStateExceptionWithoutForwardedHostHeader() {
+    HttpServletRequest request = mock(HttpServletRequest.class);
+    HttpUtil.createForwardedBaseUrl(request);
   }
 
   /**

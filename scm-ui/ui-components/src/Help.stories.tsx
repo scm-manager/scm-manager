@@ -22,27 +22,37 @@
  * SOFTWARE.
  */
 
-package sonia.scm.web;
+import styled from "styled-components";
+import * as React from "react";
+import { storiesOf } from "@storybook/react";
+import Help from "./Help";
 
-import sonia.scm.RootURL;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.spi.InitializingHttpScmProtocolWrapper;
+const Wrapper = styled.div`
+  margin: 5rem;
+`;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+const Spacing = styled.div`
+  margin-top: 1rem;
+`;
 
-@Singleton
-@Extension
-public class HgScmProtocolProviderWrapper extends InitializingHttpScmProtocolWrapper {
+const longContent =
+  "Cleverness nuclear genuine static irresponsibility invited President Zaphod\n" +
+  "Beeblebrox hyperspace ship. Another custard through computer-generated universe\n" +
+  "shapes field strong disaster parties Russell’s ancestors infinite colour\n" +
+  "imaginative generator sweep.";
 
-  @Inject
-  public HgScmProtocolProviderWrapper(HgCGIServletProvider servletProvider, RootURL rootURL) {
-    super(servletProvider, rootURL);
-  }
-
-  @Override
-  public String getType() {
-    return HgRepositoryHandler.TYPE_NAME;
-  }
-}
+storiesOf("Help", module)
+  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .add("Default", () => <Help message="This is a help message" />)
+  .add("Multiline", () => (
+    <>
+      <Spacing>
+        <label>With multiline (default):</label>
+        <Help message={longContent} />
+      </Spacing>
+      <Spacing>
+        <label>Without multiline:</label>
+        <Help message={longContent} multiline={false} />
+      </Spacing>
+    </>
+  ));
