@@ -33,12 +33,12 @@ import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-final class SmpDescriptorExtractor {
+ class SmpDescriptorExtractor {
 
-  private SmpDescriptorExtractor() {
+  public SmpDescriptorExtractor() {
   }
 
-  static InstalledPluginDescriptor extractPluginDescriptor(Path file) throws IOException {
+   InstalledPluginDescriptor extractPluginDescriptor(Path file) throws IOException {
     try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(file), StandardCharsets.UTF_8))    {
       ZipEntry nextEntry;
       while ((nextEntry = zipInputStream.getNextEntry()) != null) {

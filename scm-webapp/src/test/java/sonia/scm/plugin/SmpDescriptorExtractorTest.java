@@ -63,11 +63,13 @@ class SmpDescriptorExtractorTest {
     "\n" +
     "</plugin>\n";
 
+  private final SmpDescriptorExtractor extractor = new SmpDescriptorExtractor();
+
   @Test
   void shouldExtractPluginXml(@TempDir Path tempDir) throws IOException {
     Path pluginFile = createZipFile(tempDir, "META-INF/scm/plugin.xml", PLUGIN_XML);
 
-    InstalledPluginDescriptor installedPluginDescriptor = SmpDescriptorExtractor.extractPluginDescriptor(pluginFile);
+    InstalledPluginDescriptor installedPluginDescriptor = extractor.extractPluginDescriptor(pluginFile);
 
     Assertions.assertThat(installedPluginDescriptor.getInformation().getName()).isEqualTo("scm-test-plugin");
   }
@@ -76,14 +78,14 @@ class SmpDescriptorExtractorTest {
   void shouldFailWithoutPluginXml(@TempDir Path tempDir) throws IOException {
     Path pluginFile = createZipFile(tempDir, "META-INF/wrong/plugin.xml", PLUGIN_XML);
 
-    assertThrows(IOException.class, () -> SmpDescriptorExtractor.extractPluginDescriptor(pluginFile));
+    assertThrows(IOException.class, () -> extractor.extractPluginDescriptor(pluginFile));
   }
 
   @Test
   void shouldFailWithIllegalPluginXml(@TempDir Path tempDir) throws IOException {
     Path pluginFile = createZipFile(tempDir, "META-INF/scm/plugin.xml", "<not><parsable>content</parsable></not>");
 
-    assertThrows(IOException.class, () -> SmpDescriptorExtractor.extractPluginDescriptor(pluginFile));
+    assertThrows(IOException.class, () -> extractor.extractPluginDescriptor(pluginFile));
   }
 
   Path createZipFile(Path tempDir, String internalFileName, String content) throws IOException {

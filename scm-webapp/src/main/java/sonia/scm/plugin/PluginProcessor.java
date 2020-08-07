@@ -105,6 +105,8 @@ public final class PluginProcessor
 
   //~--- constructors ---------------------------------------------------------
 
+  private final SmpDescriptorExtractor extractor = new SmpDescriptorExtractor();
+
   private ClassLoaderLifeCycle classLoaderLifeCycle;
 
   /**
@@ -198,7 +200,7 @@ public final class PluginProcessor
 
     Map<Path, InstalledPluginDescriptor> pending = new HashMap<>();
     for (Path archive : archives) {
-      pending.put(archive, SmpDescriptorExtractor.extractPluginDescriptor(archive));
+      pending.put(archive, extractor.extractPluginDescriptor(archive));
     }
 
     PluginInstallationContext installationContext = PluginInstallationContext.fromDescriptors(
