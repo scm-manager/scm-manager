@@ -26,11 +26,10 @@ package sonia.scm.it;
 
 import io.restassured.RestAssured;
 import org.assertj.core.api.Assertions;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import sonia.scm.it.utils.RepositoryUtil;
 import sonia.scm.it.utils.RestUtil;
 import sonia.scm.it.utils.TestData;
@@ -45,25 +44,22 @@ import static java.lang.String.format;
 import static java.util.Collections.singletonList;
 import static sonia.scm.it.utils.TestData.USER_SCM_ADMIN;
 
-public class MergeDetectionITCase {
+class MergeDetectionITCase {
 
   private static final Person ARTHUR = new Person("arthur", "arthur@hitchhiker.com");
-
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   RepositoryClient client;
   String masterFile;
   String developFile;
 
-  @Before
-  public void createRepository() throws IOException {
+  @BeforeEach
+  void createRepository(@TempDir Path tempDir) throws IOException {
     TestData.createDefault();
 
-    client = RepositoryUtil.createRepositoryClient("git", temporaryFolder.getRoot());
+    client = RepositoryUtil.createRepositoryClient("git", tempDir.toFile());
 
-    masterFile = createFile("hg2g.md");
-    developFile = createFile("how_to_make_tea.md");
+    masterFile = createFile(tempDir, "hg2g.md");
+    developFile = createFile(tempDir, "how_to_make_tea.md");
 
     client.getAddCommand().add(masterFile);
     client.getCommitCommand().commit(ARTHUR, "Add base file");
@@ -76,8 +72,8 @@ public class MergeDetectionITCase {
     client.getPushCommand().push();
   }
 
-  @After
-  public void disableMergeDetection() {
+  @AfterEach
+  void disableMergeDetection() {
     RestAssured.given()
       .auth().preemptive().basic(USER_SCM_ADMIN, USER_SCM_ADMIN)
       .when()
@@ -90,7 +86,7 @@ public class MergeDetectionITCase {
   }
 
   @Test
-  public void shouldDetectSimpleMergeAsMerged() throws IOException {
+  void shouldDetectSimpleMergeAsMerged() throws IOException {
     client.getCheckoutCommand().checkout("master");
     client.getMergeCommand().noFf().merge("develop");
 
@@ -103,7 +99,7 @@ public class MergeDetectionITCase {
   }
 
   @Test
-  public void shouldDetectFastForwardAsMerged() throws IOException {
+  void shouldDetectFastForwardAsMerged() throws IOException {
     client.getCheckoutCommand().checkout("master");
     client.getMergeCommand().merge("develop");
 
@@ -116,7 +112,7 @@ public class MergeDetectionITCase {
   }
 
   @Test
-  public void shouldDetectMergeWhenBranchHasBeenDeletedAsMerged() throws IOException {
+  void shouldDetectMergeWhenBranchHasBeenDeletedAsMerged() throws IOException {
     client.getCheckoutCommand().checkout("master");
     client.getMergeCommand().merge("develop");
     client.getPushCommand().push();
@@ -131,9 +127,9 @@ public class MergeDetectionITCase {
   }
 
   @Test
-  public void shouldDetectNormalPushAsNotMerged() throws IOException {
+  void shouldDetectNormalPushAsNotMerged(@TempDir Path tempDir) throws IOException {
     client.getCheckoutCommand().checkout("develop");
-    writeFile(developFile, "other content");
+    writeFile(tempDir, developFile, "other content");
     client.getAddCommand().add(developFile);
     client.getCommitCommand().commit(ARTHUR, "simple commit");
 
@@ -172,14 +168,14 @@ public class MergeDetectionITCase {
       .statusCode(204);
   }
 
-  private String createFile(String name) throws IOException {
-    temporaryFolder.newFile(name);
-    writeFile(name, "Some content");
+  private String createFile(Path tempDir, String name) throws IOException {
+    Files.createFile(tempDir.resolve(name));
+    writeFile(tempDir, name, "Some content");
     return name;
   }
 
-  private void writeFile(String name, String content) throws IOException {
-    Path file = temporaryFolder.getRoot().toPath().resolve(name);
+  private void writeFile(Path tempDir, String name, String content) throws IOException {
+    Path file = tempDir.resolve(name);
     Files.write(file, singletonList(content));
   }
 
