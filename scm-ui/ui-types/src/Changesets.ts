@@ -46,8 +46,8 @@ export type Signature = {
   keyId: string;
   type: string;
   status: "VERIFIED" | "NOT_FOUND" | "INVALID";
-  owner: string;
-  contacts: Person[];
+  owner?: string;
+  contacts?: Person[];
   _links?: {
     rawKey?: Link;
   };

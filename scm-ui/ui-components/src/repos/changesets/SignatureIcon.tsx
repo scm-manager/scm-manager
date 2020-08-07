@@ -79,9 +79,9 @@ const SignatureIcon: FC<Props> = ({signatures, className}) => {
         signature._links?.rawKey ? <a href={signature._links.rawKey.href}>{signature.keyId}</a> : signature.keyId
       }</div>
       <div>{t("changeset.signatureStatus")}: {status}</div>
-      {signature.contacts?.length > 0 && <>
+      {signature.contacts && signature.contacts.length > 0 && <>
         <div>{t("changeset.keyContacts")}:</div>
-        {signature.contacts.map(contact => <div>- {contact.name}{contact.mail && ` <${contact.mail}>`}</div>)}
+        {signature.contacts && signature.contacts.map(contact => <div>- {contact.name}{contact.mail && ` <${contact.mail}>`}</div>)}
       </>}
     </p>;
   };

@@ -67,9 +67,9 @@ const withReplacements = (
   );
 };
 
-const copy = (input: Object) => {
+function copy<T>(input: T): T {
   return JSON.parse(JSON.stringify(input));
-}
+};
 
 storiesOf("Changesets", module)
   .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
@@ -114,7 +114,10 @@ storiesOf("Changesets", module)
       type: "gpg",
       status: "VERIFIED",
       owner: "trillian",
-      contacts: ["Tricia Marie McMilla <trillian@hitchhiker.com>"]
+      contacts: [{
+        name: "Tricia Marie McMilla",
+        mail: "trillian@hitchhiker.com"
+      }]
     }];
     return <ChangesetRow repository={repository} changeset={changeset} />;
   })
@@ -125,7 +128,10 @@ storiesOf("Changesets", module)
       type: "gpg",
       status: "INVALID",
       owner: "trillian",
-      contacts: ["Tricia Marie McMilla <trillian@hitchhiker.com>"]
+      contacts: [{
+        name: "Tricia Marie McMilla",
+        mail: "trillian@hitchhiker.com"
+      }]
     }];
     return <ChangesetRow repository={repository} changeset={changeset} />;
   });

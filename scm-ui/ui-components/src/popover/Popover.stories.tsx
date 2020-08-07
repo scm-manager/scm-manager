@@ -35,7 +35,7 @@ const Wrapper = styled.div`
 
 storiesOf("Popover", module)
   .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
-  .add("Default", () => {
+  .add("Default", () => React.createElement(() => {
     const { triggerProps, popoverProps } = usePopover();
 
     return (
@@ -52,8 +52,8 @@ storiesOf("Popover", module)
         </button>
       </div>
     );
-  })
-  .add("Link", () => {
+  }))
+  .add("Link", () => React.createElement(() => {
     const { triggerProps, popoverProps } = usePopover();
 
     return (
@@ -70,4 +70,4 @@ storiesOf("Popover", module)
         </a>
       </div>
     );
-  });
+  }));

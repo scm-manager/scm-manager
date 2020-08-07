@@ -2737,18 +2737,14 @@ exports[`Storyshots Changesets With invalid signature 1`] = `
                       SCM Administrator
                     </a>
                   </p>
-                  <span
-                    className="tooltip has-tooltip-top"
-                    data-tooltip="changeset.keyOwner: trillian
-changeset.keyId: 0x247E908C6FD35473
-changeset.signatureStatus: changeset.signatureInvalid
-changeset.keyContacts:
-- undefined <undefined>"
+                  <div
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
                   >
                     <i
                       className="fas fa-key has-text-danger SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
                     />
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -2996,15 +2992,14 @@ exports[`Storyshots Changesets With unknown signature 1`] = `
                       SCM Administrator
                     </a>
                   </p>
-                  <span
-                    className="tooltip has-tooltip-top"
-                    data-tooltip="changeset.signatureStatus: changeset.signatureNotVerified
-changeset.keyId: 0x247E908C6FD35473"
+                  <div
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
                   >
                     <i
                       className="fas fa-key has-text-grey-light SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
                     />
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -3122,18 +3117,14 @@ exports[`Storyshots Changesets With valid signature 1`] = `
                       SCM Administrator
                     </a>
                   </p>
-                  <span
-                    className="tooltip has-tooltip-top"
-                    data-tooltip="changeset.keyOwner: trillian
-changeset.keyId: 0x247E908C6FD35473
-changeset.signatureStatus: changeset.signatureVerified
-changeset.keyContacts:
-- undefined <undefined>"
+                  <div
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
                   >
                     <i
                       className="fas fa-key has-text-success SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
                     />
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -42282,6 +42273,38 @@ exports[`Storyshots Notification Warning 1`] = `
 Beeblebrox hyperspace ship. Another custard through computer-generated universe
 shapes field strong disaster parties Russell’s ancestors infinite colour
 imaginative generator sweep.
+  </div>
+</div>
+`;
+
+exports[`Storyshots Popover Default 1`] = `
+<div
+  className="Popoverstories__Wrapper-sc-2pld2j-0 ifASIH"
+>
+  <div>
+    <button
+      className="button"
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+    >
+      Trigger
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Popover Link 1`] = `
+<div
+  className="Popoverstories__Wrapper-sc-2pld2j-0 ifASIH"
+>
+  <div>
+    <a
+      href="#"
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+    >
+      Trigger
+    </a>
   </div>
 </div>
 `;
