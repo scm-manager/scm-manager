@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -36,6 +36,8 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
+
+import javax.xml.bind.JAXB;
 
 import static org.hamcrest.Matchers.*;
 
@@ -53,6 +55,8 @@ import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 
 import java.util.Set;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 /**
  *
@@ -96,7 +100,39 @@ public class PluginProcessorTest
     new PluginResource("sonia/scm/plugin/scm-f-plugin-1.0.1.smp",
       "scm-f-plugin.smp", "scm-f-plugin:1.0.1");
 
+  private static final String PLUGIN_G = "sonia/scm/plugin/scm-g-plugin.xml";
+  private static final String PLUGIN_H = "sonia/scm/plugin/scm-h-plugin.xml";
+  private static final String PLUGIN_I = "sonia/scm/plugin/scm-i-plugin.xml";
+
   //~--- methods --------------------------------------------------------------
+
+  @Test(expected = PluginConditionFailedException.class)
+  public void testFailedPluginCondition() throws IOException {
+    createPlugin(PLUGIN_G);
+    collectPlugins();
+  }
+
+
+  @Test(expected = DependencyVersionMismatchException.class)
+  public void testWrongVersionOfDependency() throws IOException {
+    createPlugin(PLUGIN_H);
+    createPlugin(PLUGIN_I);
+    collectPlugins();
+  }
+
+  @SuppressWarnings("UnstableApiUsage")
+  private void createPlugin(String descriptorResource) throws IOException {
+    URL resource = Resources.getResource(descriptorResource);
+    InstalledPluginDescriptor descriptor = JAXB.unmarshal(resource, InstalledPluginDescriptor.class);
+
+    File file = new File(pluginDirectory, descriptor.getInformation().getName() + ".smp");
+
+    try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(file))) {
+      zip.putNextEntry(new ZipEntry("META-INF/scm/plugin.xml"));
+      Resources.copy(resource, zip);
+    }
+  }
+
 
   /**
    * Method description
