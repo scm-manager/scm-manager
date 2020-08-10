@@ -22,14 +22,11 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.client.api;
+package sonia.scm.repository.client.spi;
 
-/**
- *
- * @author Sebastian Sdorra
- * @since 1.18
- */
-public enum ClientCommand
-{
-  ADD, REMOVE, COMMIT, PUSH, TAG, BRANCH, DELETE_REMOTE_BRANCH, CHECKOUT, MERGE
+import java.io.IOException;
+
+public interface DeleteRemoteBranchCommand {
+
+  void delete(String name) throws IOException;
 }

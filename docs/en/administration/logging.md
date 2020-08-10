@@ -25,7 +25,7 @@ The location of the file depends also on the type of installation.
 
 | Type of Installation | Path |
 |----------------------|---------|
-| Docker | /opt/scm-server/conf/logging.xml |
+| Docker | /etc/scm/logging.xml |
 | RPM | /etc/scm/logging.xml |
 | DEB | /etc/scm/logging.xml |
 | Unix | $EXTRACT_PATH/scm-server/conf/logging.xml |
