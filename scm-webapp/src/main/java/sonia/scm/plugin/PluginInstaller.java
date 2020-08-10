@@ -62,9 +62,9 @@ class PluginInstaller {
       verifyChecksum(plugin, input.hash(), file);
 
       InstalledPluginDescriptor descriptor = smpDescriptorExtractor.extractPluginDescriptor(file);
-      PluginInstallationVerifier.verify(context, descriptor);
-
       verifyInformation(plugin.getDescriptor(), descriptor);
+
+      PluginInstallationVerifier.verify(context, descriptor);
 
       return new PendingPluginInstallation(plugin.install(), file);
     } catch (PluginException ex) {
