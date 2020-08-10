@@ -38,7 +38,6 @@ import org.eclipse.jgit.treewalk.filter.PathFilter;
 import org.eclipse.jgit.treewalk.filter.TreeFilter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
@@ -171,7 +170,7 @@ public class GitLogComputer {
       } else {
         LOG.debug("the repository with id {} seems to be empty", this.repositoryId);
 
-        return new ChangesetPagingResult(0, Collections.EMPTY_LIST);
+        return new ChangesetPagingResult(0, Collections.emptyList());
       }
     } catch (MissingObjectException e) {
       throw notFound(entity(GitLogCommand.REVISION, e.getObjectId().getName()).in(sonia.scm.repository.Repository.class, repositoryId));
