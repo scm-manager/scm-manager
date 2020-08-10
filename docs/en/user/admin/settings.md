@@ -26,8 +26,9 @@ Activate this option to make attacks using cross site scripting (XSS / XSRF) on 
 #### Plugin Center URL
 A plugin center can be used to conveniently manage plugins. If you want to use a plugin center that is not the default one, you only have to change this URL. If SCM-Manager is operated as part of a Cloudogu EcoSystem, the plugin center URL can be changed in the etcd.
 
-#### Enable Anonymous Access
-In SCM-Manager 2 the access for anonymous access is realized by using an "_anonymous" user. When the feature is activated, a new user with the name "_anonymous" is created. This user can be authorized just like any other user. This user is used for access to SCM-Manager without login credentials (this does not apply to access via web UI).
+#### Anonymous Access
+In SCM-Manager 2 the access for anonymous access is realized by using an "_anonymous" user. When the feature is activated, a new user with the name "_anonymous" is created. This user can be authorized just like any other user. This user is used for access to SCM-Manager without login credentials.
+If the anonymous mode is protocol only you may access the SCM-Manager via the REST API and VCS protocols. With fully enabled anonymous access you can also use the webclient without credentials.
 
 Example: If anonymous access is enabled and the "_anonymous" user has full access on a certain Git repository, everybody can access this repository via command line and the classic Git commands without any login credentials. Access via SSH is not supported at this time.
 
