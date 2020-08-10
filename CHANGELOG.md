@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- Check dependency versions on plugin installation ([#1283](https://github.com/scm-manager/scm-manager/pull/1283))
+- Check versions of plugin dependencies on plugin installation ([#1283](https://github.com/scm-manager/scm-manager/pull/1283))
 
 ## [2.3.1] - 2020-08-04
 ### Added
