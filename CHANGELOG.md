@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Repository names may not end with ".git" ([#1277](https://github.com/scm-manager/scm-manager/pull/1277))
+- Add preselected value to options in dropdown component if missing ([#1287](https://github.com/scm-manager/scm-manager/pull/1287))
 
 ## [2.3.1] - 2020-08-04
 ### Added
