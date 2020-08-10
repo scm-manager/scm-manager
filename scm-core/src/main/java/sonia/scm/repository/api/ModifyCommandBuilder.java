@@ -167,6 +167,7 @@ public class ModifyCommandBuilder {
   /**
    * Disables adding a verifiable signature to the modification.
    * @return This builder instance.
+   * @since 2.4.0
    */
   public ModifyCommandBuilder disableSigning() {
     request.setSigningDisabled(true);
