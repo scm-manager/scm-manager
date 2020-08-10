@@ -23,17 +23,15 @@
  */
 import React from "react";
 import DiffFile from "./DiffFile";
-import { DiffObjectProps, File } from "./DiffTypes";
+import {DiffObjectProps, File, FileControlFactory} from "./DiffTypes";
 import Notification from "../Notification";
-import { WithTranslation, withTranslation } from "react-i18next";
-import {Changeset} from "@scm-manager/ui-types";
+import {WithTranslation, withTranslation} from "react-i18next";
 
 type Props = WithTranslation &
   DiffObjectProps & {
-    diff: File[];
-    changeset: Changeset;
-    baseUrl?: string;
-  };
+  diff: File[];
+  fileControlFactory?: FileControlFactory;
+};
 
 class Diff extends React.Component<Props> {
   static defaultProps: Partial<Props> = {
@@ -41,7 +39,7 @@ class Diff extends React.Component<Props> {
   };
 
   render() {
-    const { diff, t, ...fileProps } = this.props;
+    const {diff, t, ...fileProps} = this.props;
     return (
       <>
         {diff.length === 0 ? (

@@ -45,11 +45,13 @@ export * from "./changesets";
 export { default as Diff } from "./Diff";
 export { default as DiffFile } from "./DiffFile";
 export { default as DiffButton } from "./DiffButton";
+export { FileControlFactory } from "./DiffTypes";
 export { default as LoadingDiff } from "./LoadingDiff";
 export { DefaultCollapsed, DefaultCollapsedFunction } from "./defaultCollapsed";
 export { default as RepositoryAvatar } from "./RepositoryAvatar";
 export { default as RepositoryEntry } from "./RepositoryEntry";
 export { default as RepositoryEntryLink } from "./RepositoryEntryLink";
+export { default as JumpToFileButton } from "./JumpToFileButton";
 
 export {
   File,

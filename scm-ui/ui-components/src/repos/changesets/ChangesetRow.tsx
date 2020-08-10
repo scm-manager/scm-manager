@@ -35,6 +35,7 @@ import ChangesetAuthor from "./ChangesetAuthor";
 import ChangesetTags from "./ChangesetTags";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 import ChangesetDescription from "./ChangesetDescription";
+import {FileControlFactory} from "../DiffTypes";
 
 type Props = WithTranslation & {
   repository: Repository;

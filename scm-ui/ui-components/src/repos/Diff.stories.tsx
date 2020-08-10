@@ -29,13 +29,15 @@ import parser from "gitdiff-parser";
 import simpleDiff from "../__resources__/Diff.simple";
 import hunksDiff from "../__resources__/Diff.hunks";
 import binaryDiff from "../__resources__/Diff.binary";
-import { DiffEventContext, File } from "./DiffTypes";
+import {DiffEventContext, File, FileControlFactory} from "./DiffTypes";
 import Toast from "../toast/Toast";
 import { getPath } from "./diffs";
 import DiffButton from "./DiffButton";
 import styled from "styled-components";
 import { MemoryRouter } from "react-router-dom";
-import {one} from "../__resources__/changesets";
+import {one, two} from "../__resources__/changesets";
+import {Changeset} from "@scm-manager/ui-types";
+import JumpToFileButton from "./JumpToFileButton";
 
 const diffFiles = parser.parse(simpleDiff);
 
@@ -45,16 +47,50 @@ const Container = styled.div`
 
 const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
 
+const fileControlFactory: (changeset: Changeset) => FileControlFactory = (changeset) => (file) => {
+  const baseUrl = "/repo/hitchhiker/heartOfGold/code/changeset";
+  const sourceLink = {
+    url: `${baseUrl}/${changeset.id}/${file.newPath}/`,
+    label: "Jump to source"
+  };
+  const targetLink = changeset._embedded?.parents?.length === 1 && {
+    url: `${baseUrl}/${changeset._embedded.parents[0].id}/${file.oldPath}`,
+    label: "Jump to target"
+  };
+
+  const links = [];
+  switch (file.type) {
+    case "add":
+      links.push(sourceLink);
+      break;
+    case "delete":
+      if (targetLink) {
+        links.push(targetLink);
+      }
+      break;
+    default:
+      if (targetLink) {
+        links.push(sourceLink, targetLink);
+      } else {
+        links.push(sourceLink);
+      }
+  }
+
+  return links.map(({url, label}) => <JumpToFileButton
+    tooltip={label}
+    link={url}
+  />);
+};
+
 storiesOf("Diff", module)
   .addDecorator(RoutingDecorator)
   .addDecorator(storyFn => <Container>{storyFn()}</Container>)
-  .add("Default", () => <Diff diff={diffFiles} changeset={one} />)
-  .add("Side-By-Side", () => <Diff diff={diffFiles} sideBySide={true} changeset={one} />)
-  .add("Collapsed", () => <Diff diff={diffFiles} defaultCollapse={true} changeset={one} />)
+  .add("Default", () => <Diff diff={diffFiles} />)
+  .add("Side-By-Side", () => <Diff diff={diffFiles} sideBySide={true} />)
+  .add("Collapsed", () => <Diff diff={diffFiles} defaultCollapse={true} fileControlFactory={fileControlFactory(two)} />)
   .add("File Controls", () => (
     <Diff
       diff={diffFiles}
-      changeset={one}
       fileControlFactory={() => (
         <DiffButton
           tooltip="A skull and crossbones or death's head is a symbol consisting of a human skull and two long bones crossed together under or behind the skull. The design originates in the Late Middle Ages as a symbol of death and especially as a memento mori on tombstones."
@@ -67,14 +103,12 @@ storiesOf("Diff", module)
   .add("File Annotation", () => (
     <Diff
       diff={diffFiles}
-      changeset={one}
       fileAnnotationFactory={file => [<p key={file.newPath}>Custom File annotation for {file.newPath}</p>]}
     />
   ))
   .add("Line Annotation", () => (
     <Diff
       diff={diffFiles}
-      changeset={one}
       annotationFactory={ctx => {
         return {
           N2: <p key="N2">Line Annotation</p>
@@ -94,7 +128,7 @@ storiesOf("Diff", module)
       return (
         <>
           {changeId && <Toast type="info" title={"Change " + changeId} />}
-          <Diff diff={diffFiles} changeset={one} onClick={onClick} />
+          <Diff diff={diffFiles} onClick={onClick} />
         </>
       );
     };
@@ -102,11 +136,11 @@ storiesOf("Diff", module)
   })
   .add("Hunks", () => {
     const hunkDiffFiles = parser.parse(hunksDiff);
-    return <Diff diff={hunkDiffFiles} changeset={one} />;
+    return <Diff diff={hunkDiffFiles} />;
   })
   .add("Binaries", () => {
     const binaryDiffFiles = parser.parse(binaryDiff);
-    return <Diff diff={binaryDiffFiles} changeset={one} />;
+    return <Diff diff={binaryDiffFiles} />;
   })
   .add("SyntaxHighlighting", () => {
     const filesWithLanguage = diffFiles.map((file: File) => {
@@ -118,22 +152,20 @@ storiesOf("Diff", module)
       }
       return file;
     });
-    return <Diff diff={filesWithLanguage} changeset={one} />;
+    return <Diff diff={filesWithLanguage} />;
   })
   .add("CollapsingWithFunction", () => (
-    <Diff diff={diffFiles} changeset={one} defaultCollapse={(oldPath, newPath) => oldPath.endsWith(".java")} />
+    <Diff diff={diffFiles} defaultCollapse={(oldPath, newPath) => oldPath.endsWith(".java")} />
   ))
   .add("Expandable", () => {
     const filesWithLanguage = diffFiles.map((file: File) => {
       file._links = { lines: { href: "http://example.com/" } };
       return file;
     });
-    return <Diff diff={filesWithLanguage} changeset={one} />;
+    return <Diff diff={filesWithLanguage} />;
   })
   .add("WithLinkToFile", () => (
     <Diff
       diff={diffFiles}
-      changeset={one}
-      baseUrl="/repo/hitchhiker/heartOfGold/code/changeset"
     />
   ));

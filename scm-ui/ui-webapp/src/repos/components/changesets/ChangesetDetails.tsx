@@ -43,11 +43,12 @@ import {
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
 import { Link as ReactLink } from "react-router-dom";
+import {FileControlFactory} from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   changeset: Changeset;
   repository: Repository;
-  baseUrl: string;
+  fileControlFactory?: FileControlFactory;
 };
 
 type State = {
@@ -131,6 +132,7 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
       </ContributorDetails>
     );
   }
+
   return (
     <>
       <ContributorLine onClick={e => setOpen(!open)}>
@@ -158,7 +160,7 @@ class ChangesetDetails extends React.Component<Props, State> {
   }
 
   render() {
-    const { changeset, repository, baseUrl, t } = this.props;
+    const { changeset, repository, fileControlFactory, t } = this.props;
     const { collapsed } = this.state;
 
     const description = changesets.parseDescription(changeset.description);
@@ -239,7 +241,7 @@ class ChangesetDetails extends React.Component<Props, State> {
               />
             }
           />
-          <ChangesetDiff changeset={changeset} baseUrl={baseUrl} defaultCollapse={collapsed} />
+          <ChangesetDiff changeset={changeset} fileControlFactory={fileControlFactory} defaultCollapse={collapsed} />
         </div>
       </>
     );

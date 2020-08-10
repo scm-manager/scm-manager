@@ -22,15 +22,16 @@
  * SOFTWARE.
  */
 import React from "react";
-import { Changeset, Link, Collection } from "@scm-manager/ui-types";
+import {Changeset, Collection, Link} from "@scm-manager/ui-types";
 import LoadingDiff from "../LoadingDiff";
 import Notification from "../../Notification";
-import { WithTranslation, withTranslation } from "react-i18next";
+import {WithTranslation, withTranslation} from "react-i18next";
+import {FileControlFactory} from "../DiffTypes";
 
 type Props = WithTranslation & {
   changeset: Changeset;
-  baseUrl: string;
   defaultCollapse?: boolean;
+  fileControlFactory?: FileControlFactory;
 };
 
 export const isDiffSupported = (changeset: Collection) => {
@@ -48,12 +49,12 @@ export const createUrl = (changeset: Collection) => {
 
 class ChangesetDiff extends React.Component<Props> {
   render() {
-    const { changeset, baseUrl, defaultCollapse, t } = this.props;
+    const {changeset, fileControlFactory, defaultCollapse, t} = this.props;
     if (!isDiffSupported(changeset)) {
       return <Notification type="danger">{t("changeset.diffNotSupported")}</Notification>;
     } else {
       const url = createUrl(changeset);
-      return <LoadingDiff url={url} defaultCollapse={defaultCollapse} sideBySide={false} changeset={changeset} baseUrl={baseUrl} />;
+      return <LoadingDiff url={url} defaultCollapse={defaultCollapse} sideBySide={false} fileControlFactory={fileControlFactory}/>;
     }
   }
 }

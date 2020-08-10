@@ -224,7 +224,7 @@
   },
   "diff": {
     "jumpToSource": "Zur Quelldatei springen",
-    "jumpToTarget": "Zur Zieldatei springen",
+    "jumpToTarget": "Zur vorherigen Version der Datei springen",
     "sideBySide": "Zur zweispaltigen Ansicht wechseln",
     "combined": "Zur kombinierten Ansicht wechseln",
     "noDiffFound": "Kein Diff zwischen den ausgewählten Branches gefunden.",
