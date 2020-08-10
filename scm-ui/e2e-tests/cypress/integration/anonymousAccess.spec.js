@@ -24,30 +24,55 @@
 
 describe("With Anonymous mode disabled", () => {
   it("Should show login page without primary navigation", () => {
-    setUserPermissions("_anonymous", ["repository:read,pull:*"]);
+    loginUser("scmadmin", "scmadmin");
     setAnonymousMode("OFF");
 
-    cy.visit("http://localhost:8081/scm/repos/");
+    cy.get("li")
+      .contains("Logout")
+      .click();
     cy.contains("Please login to proceed");
     cy.get("div").not("Login");
     cy.get("div").not("Repositories");
   });
   it("Should redirect after login", () => {
-    cy.visit("http://localhost:8081/scm/me/");
-    cy.get("div.field.username > div > input").type("scmadmin");
-    cy.get("div.field.password > div > input").type("scmadmin");
-    cy.get("button")
-      .contains("Login")
-      .click();
+    loginUser("scmadmin", "scmadmin");
+
+    cy.visit("http://localhost:8081/scm/me");
     cy.contains("Profile");
+    cy.get("li")
+      .contains("Logout")
+      .click();
   });
 });
 
 describe("With Anonymous mode protocol only enabled", () => {
   it("Should show login page without primary navigation", () => {
-    setUserPermissions("_anonymous", ["repository:read,pull:*"]);
+    loginUser("scmadmin", "scmadmin");
     setAnonymousMode("PROTOCOL_ONLY");
 
+    // Give anonymous user permissions
+    cy.get("li")
+      .contains("Users")
+      .click();
+    cy.get("td")
+      .contains("_anonymous")
+      .click();
+    cy.get("a")
+      .contains("Settings")
+      .click();
+    cy.get("li")
+      .contains("Permissions")
+      .click();
+    cy.get("label")
+      .contains("Read all repositories")
+      .click();
+    cy.get("button")
+      .contains("Set permissions")
+      .click();
+
+    cy.get("li")
+      .contains("Logout")
+      .click();
     cy.visit("http://localhost:8081/scm/repos/");
     cy.contains("Please login to proceed");
     cy.get("div").not("Login");
@@ -57,9 +82,12 @@ describe("With Anonymous mode protocol only enabled", () => {
 
 describe("With Anonymous mode fully enabled", () => {
   it("Should show repositories overview with Login button in primary navigation", () => {
-    setUserPermissions("_anonymous", ["repository:read,pull:*"]);
+    loginUser("scmadmin", "scmadmin");
     setAnonymousMode("FULL");
 
+    cy.get("li")
+      .contains("Logout")
+      .click();
     cy.visit("http://localhost:8081/scm/repos/");
     cy.contains("Overview of available repositories");
     cy.contains("SCM Anonymous");
@@ -79,6 +107,9 @@ describe("With Anonymous mode fully enabled", () => {
 
     cy.visit("http://localhost:8081/scm/login");
     cy.contains("SCM Administrator");
+    cy.get("li")
+      .contains("Logout")
+      .click();
   });
   it("Should logout and direct to login page", () => {
     loginUser("scmadmin", "scmadmin");
@@ -98,75 +129,39 @@ describe("With Anonymous mode fully enabled", () => {
   });
 });
 
+describe("Disable anonymous mode after tests", () => {
+  it("Disable anonymous mode after tests", () => {
+    loginUser("scmadmin", "scmadmin");
+    setAnonymousMode("OFF");
+
+    cy.get("li")
+      .contains("Logout")
+      .click();
+  });
+});
+
+const setAnonymousMode = anonymousMode => {
+  cy.get("li")
+    .contains("Administration")
+    .click();
+  cy.get("li")
+    .contains("Settings")
+    .click();
+  cy.get("select")
+    .contains("Disabled")
+    .parent()
+    .select(anonymousMode)
+    .should("have.value", anonymousMode);
+  cy.get("button")
+    .contains("Submit")
+    .click();
+};
+
 const loginUser = (username, password) => {
-  const loginUrl = `http://localhost:8081/scm/api/v2/auth/access_token`;
-
-  cy.request({
-    method: "POST",
-    url: loginUrl,
-    body: {
-      cookie: true,
-      username: username,
-      password: password,
-      grantType: "password"
-    }
-  });
-};
-
-const setUserPermissions = (user, permissions) => {
-  const MEDIA_TYPE = "application/vnd.scmm-permissionCollection+json;v=2";
-  const userPermissionUrl = `http://localhost:8081/scm/api/v2/users/${user}/permissions`;
-
-  cy.request({
-    method: "PUT",
-    url: userPermissionUrl,
-    body: { permissions: permissions },
-    headers: { "content-type": MEDIA_TYPE },
-    auth: {
-      user: "scmadmin",
-      pass: "scmadmin",
-      sendImmediately: true
-    }
-  });
-};
-
-const setAnonymousMode = anonMode => {
-  const MEDIA_TYPE = "application/vnd.scmm-config+json;v=2";
-
-  const content = {
-    adminGroups: [],
-    adminUsers: [],
-    anonymousMode: anonMode,
-    baseUrl: "http://localhost:8081/scm",
-    dateFormat: "YYYY-MM-DD HH:mm:ss",
-    disableGroupingGrid: false,
-    enableProxy: false,
-    enabledXsrfProtection: false,
-    forceBaseUrl: false,
-    loginAttemptLimit: 100,
-    loginAttemptLimitTimeout: 300,
-    loginInfoUrl: "https://login-info.scm-manager.org/api/v1/login-info",
-    namespaceStrategy: "UsernameNamespaceStrategy",
-    pluginUrl:
-      "https://oss.cloudogu.com/jenkins/job/scm-manager/job/scm-manager-bitbucket/job/plugin-snapshot/job/master/lastSuccessfulBuild/artifact/plugins/plugin-center.json",
-    proxyExcludes: [],
-    proxyPassword: null,
-    proxyPort: 8080,
-    proxyServer: "proxy.mydomain.com",
-    proxyUser: null,
-    realmDescription: "SONIA :: SCM Manager",
-    skipFailedAuthenticators: false
-  };
-
-  cy.request({
-    method: "PUT",
-    url: "http://localhost:8081/scm/api/v2/config",
-    body: content,
-    headers: { "content-type": MEDIA_TYPE },
-    auth: {
-      user: "scmadmin",
-      pass: "scmadmin",
-      sendImmediately: true
-    }
-  });
+  cy.visit("http://localhost:8081/scm/login");
+  cy.get("div.field.username > div > input").type(username);
+  cy.get("div.field.password > div > input").type(password);
+  cy.get("button")
+    .contains("Login")
+    .click();
 };

@@ -33,9 +33,10 @@ type Props = RoutingProps & {
   label: string;
   title?: string;
   icon?: string;
+  className?: string;
 };
 
-const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, icon, label, title }) => {
+const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, icon, label, title, className }) => {
   const active = useActiveMatch({ to, activeWhenMatch, activeOnlyWhenExact });
 
   const context = useMenuContext();
@@ -52,7 +53,7 @@ const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, icon, la
 
   return (
     <li title={collapsed ? title : undefined}>
-      <Link className={classNames(active ? "is-active" : "", collapsed ? "has-text-centered" : "")} to={to}>
+      <Link className={classNames(active ? "is-active" : "", collapsed ? "has-text-centered" : "", className)} to={to}>
         {showIcon}
         {collapsed ? null : label}
       </Link>

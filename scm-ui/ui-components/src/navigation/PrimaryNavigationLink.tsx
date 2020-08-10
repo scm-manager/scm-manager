@@ -23,19 +23,21 @@
  */
 import * as React from "react";
 import { Route, Link } from "react-router-dom";
+import classNames from "classnames";
 
 type Props = {
   to: string;
   label: string;
   match?: string;
   activeOnlyWhenExact?: boolean;
+  className?: string;
 };
 
 class PrimaryNavigationLink extends React.Component<Props> {
   renderLink = (route: any) => {
-    const { to, label } = this.props;
+    const { to, label, className } = this.props;
     return (
-      <li className={route.match ? "is-active" : ""}>
+      <li className={classNames(route.match ? "is-active" : "", className)}>
         <Link to={to}>{label}</Link>
       </li>
     );
