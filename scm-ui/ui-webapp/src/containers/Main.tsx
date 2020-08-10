@@ -61,11 +61,11 @@ class Main extends React.Component<Props> {
     if (authenticated) {
       url = "/repos/";
     }
-    if (!me) {
-      url = "/login";
-    }
     if (redirectUrlFactory) {
       url = redirectUrlFactory(this.props);
+    }
+    if (!me) {
+      url = "/login";
     }
     return (
       <div className="main">
@@ -95,6 +95,7 @@ class Main extends React.Component<Props> {
             renderAll={true}
             props={{
               authenticated,
+              me,
               links
             }}
           />

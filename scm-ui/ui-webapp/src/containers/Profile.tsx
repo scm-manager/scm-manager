@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { Route, RouteComponentProps, withRouter } from "react-router-dom";
-import { getMe, isAnonymous } from "../modules/auth";
+import { getMe } from "../modules/auth";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
@@ -63,6 +63,11 @@ class Profile extends React.Component<Props> {
     return this.stripEndingSlash(this.props.match.url);
   };
 
+  mayChangePassword = () => {
+    const { me } = this.props;
+    return !!me?._links?.password;
+  }
+
   render() {
     const url = this.matchedUrl();
 
@@ -92,7 +97,7 @@ class Profile extends React.Component<Props> {
           <CustomQueryFlexWrappedColumns>
             <PrimaryContentColumn>
               <Route path={url} exact render={() => <ProfileInfo me={me} />} />
-              {me?._links?.password && (
+              {this.mayChangePassword() && (
                 <Route path={`${url}/settings/password`} render={() => <ChangeUserPassword me={me} />} />
               )}
               <ExtensionPoint name="profile.route" props={extensionProps} renderAll={true} />
@@ -105,7 +110,7 @@ class Profile extends React.Component<Props> {
                   label={t("profile.informationNavLink")}
                   title={t("profile.informationNavLink")}
                 />
-                {!isAnonymous(me) && (
+                {this.mayChangePassword() && (
                   <SubNavigation
                     to={`${url}/settings/password`}
                     label={t("profile.settingsNavLink")}
