@@ -38,11 +38,10 @@ const Button = styled(Link)`
 
 type Props = {
   link: string;
+  tooltip: string;
 };
 
-const JumpToFileButton: FC<Props> = ({ link }) => {
-  const [t] = useTranslation("repos");
-  const tooltip = t("diff.jumpToFile");
+const JumpToFileButton: FC<Props> = ({ link, tooltip }) => {
   return (
     <Tooltip message={tooltip} location="top">
       <Button aria-label={tooltip} className="button" to={link}>

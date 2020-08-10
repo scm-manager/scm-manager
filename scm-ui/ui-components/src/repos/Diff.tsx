@@ -26,11 +26,12 @@ import DiffFile from "./DiffFile";
 import { DiffObjectProps, File } from "./DiffTypes";
 import Notification from "../Notification";
 import { WithTranslation, withTranslation } from "react-i18next";
+import {Changeset} from "@scm-manager/ui-types";
 
 type Props = WithTranslation &
   DiffObjectProps & {
     diff: File[];
-    changesetId?: string;
+    changeset: Changeset;
     baseUrl?: string;
   };
 

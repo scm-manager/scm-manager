@@ -33,11 +33,12 @@ import { DiffObjectProps, File } from "./DiffTypes";
 import { NotFoundError } from "../errors";
 import { Notification } from "../index";
 import { withTranslation, WithTranslation } from "react-i18next";
+import {Changeset} from "@scm-manager/ui-types";
 
 type Props = WithTranslation &
   DiffObjectProps & {
     url: string;
-    changesetId?: string;
+    changeset: Changeset;
     baseUrl: string;
   };
 

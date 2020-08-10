@@ -40,13 +40,14 @@ import { Modal } from "../modals";
 import ErrorNotification from "../ErrorNotification";
 import HunkExpandDivider from "./HunkExpandDivider";
 import JumpToFileButton from "./JumpToFileButton";
+import {Changeset} from "@scm-manager/ui-types";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
 type Props = DiffObjectProps &
   WithTranslation & {
     file: File;
-    changesetId?: string;
+    changeset: Changeset;
     baseUrl?: string;
   };
 
@@ -394,7 +395,7 @@ class DiffFile extends React.Component<Props, State> {
   hasContent = (file: File) => file && !file.isBinary && file.hunks && file.hunks.length > 0;
 
   render() {
-    const { fileControlFactory, fileAnnotationFactory, changesetId, baseUrl, t } = this.props;
+    const { fileControlFactory, fileAnnotationFactory, changeset: { id: changesetId, _embedded: { parents } }, baseUrl, t } = this.props;
     const { file, collapsed, sideBySide, diffExpander, expansionError } = this.state;
     const viewType = sideBySide ? "split" : "unified";
 
@@ -418,14 +419,29 @@ class DiffFile extends React.Component<Props, State> {
     }
     const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit" /> : null;
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
-    const jumpToFile =
-      changesetId && baseUrl ? (
-        <JumpToFileButton
-          link={`${baseUrl.substr(0, baseUrl.lastIndexOf("/"))}/sources/${changesetId}/${
-            file.type !== "delete" ? file.newPath : file.oldPath.substr(0, file.oldPath.lastIndexOf("/"))
-          }/`}
-        />
-      ) : null;
+    let jumpToSource = null;
+    let jumpToTarget = null;
+    if (changesetId && baseUrl) {
+      const jumpToSourceButton = <JumpToFileButton
+        tooltip={this.props.t("diff.jumpToSource")}
+        link={`${baseUrl.substr(0, baseUrl.lastIndexOf("/"))}/sources/${changesetId}/${file.newPath}/`}
+      />;
+      const jumpToTargetButton = parents?.length === 1 && <JumpToFileButton
+        tooltip={this.props.t("diff.jumpToTarget")}
+        link={`${baseUrl.substr(0, baseUrl.lastIndexOf("/"))}/sources/${parents[0].id}/${file.oldPath}/`}
+      />;
+      switch (file.type) {
+        case "add":
+          jumpToSource = jumpToSourceButton;
+          break;
+        case "delete":
+          jumpToTarget = jumpToTargetButton;
+          break;
+        default:
+          jumpToSource = jumpToSourceButton;
+          jumpToTarget = jumpToTargetButton;
+      }
+    }
     const sideBySideToggle =
       file.hunks && file.hunks.length > 0 ? (
         <ButtonWrapper className={classNames("level-right", "is-flex")}>
@@ -446,12 +462,16 @@ class DiffFile extends React.Component<Props, State> {
               )}
             </MenuContext.Consumer>
             {fileControls}
-            {jumpToFile}
+            {jumpToSource}
+            {jumpToTarget}
           </ButtonGroup>
         </ButtonWrapper>
       ) : (
         <ButtonWrapper className={classNames("level-right", "is-flex")}>
-          <ButtonGroup>{jumpToFile}</ButtonGroup>
+          <ButtonGroup>
+            {jumpToSource}
+            {jumpToTarget}
+          </ButtonGroup>
         </ButtonWrapper>
       );
 
