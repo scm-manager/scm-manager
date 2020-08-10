@@ -24,12 +24,30 @@
 
 package sonia.scm.repository.client.api;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.repository.client.spi.CheckoutCommand;
+
+import java.io.IOException;
+
 /**
- *
- * @author Sebastian Sdorra
- * @since 1.18
+ * @since 2.4.0
  */
-public enum ClientCommand
-{
-  ADD, REMOVE, COMMIT, PUSH, TAG, BRANCH, DELETE_REMOTE_BRANCH, CHECKOUT, MERGE
+public final class CheckoutCommandBuilder {
+
+  private static final Logger LOG = LoggerFactory.getLogger(CheckoutCommandBuilder.class);
+
+  private final CheckoutCommand command;
+
+  public CheckoutCommandBuilder(CheckoutCommand command) {
+    this.command = command;
+  }
+
+  public CheckoutCommandBuilder checkout(String name) throws IOException {
+    LOG.debug("checkout {}", name);
+
+    command.checkout(name);
+
+    return this;
+  }
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -33,26 +33,24 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.HookContextProvider;
+import sonia.scm.repository.spi.HookMergeDetectionProvider;
 
 /**
  * The context for all repository hooks. With the {@link HookContext} class it
  * is able to send messages back to the client, retrieve {@link Changeset}s
- * which are added during this push/commit and gives informations about changed 
+ * which are added during this push/commit and gives informations about changed
  * branches and tags.
  *
  * @author Sebastian Sdorra
  * @since 1.33
  */
-public final class HookContext
-{
+public final class HookContext {
 
   /**
    * the logger for HookContext
    */
   private static final Logger logger =
     LoggerFactory.getLogger(HookContext.class);
-
-  //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
@@ -62,9 +60,7 @@ public final class HookContext
    * @param repository
    * @param preProcessorUtil
    */
-  HookContext(HookContextProvider provider, Repository repository,
-    PreProcessorUtil preProcessorUtil)
-  {
+  HookContext(HookContextProvider provider, Repository repository, PreProcessorUtil preProcessorUtil) {
     this.provider = provider;
     this.repository = repository;
     this.preProcessorUtil = preProcessorUtil;
@@ -77,41 +73,33 @@ public final class HookContext
    * about changed branches during the current hook.
    *
    * @return {@link HookBranchProvider}
-   * 
-   * @throws HookFeatureIsNotSupportedException if the feature is not supported 
+   *
+   * @throws HookFeatureIsNotSupportedException if the feature is not supported
    *  by the underlying provider
-   * 
+   *
    * @since 1.45
    */
-  public HookBranchProvider getBranchProvider()
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("create branch provider for repository {}",
-        repository.getName());
-    }
+  public HookBranchProvider getBranchProvider() {
+    logger.debug("create branch provider for repository {}",
+      repository.getName());
 
     return provider.getBranchProvider();
   }
-  
+
  /**
    * Returns a {@link HookTagProvider} which is able to return informations
    * about changed tags during the current hook.
    *
    * @return {@link HookTagProvider}
-   * 
-   * @throws HookFeatureIsNotSupportedException if the feature is not supported 
+   *
+   * @throws HookFeatureIsNotSupportedException if the feature is not supported
    *  by the underlying provider
-   * 
+   *
    * @since 1.50
    */
-  public HookTagProvider getTagProvider()
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("create tag provider for repository {}",
-        repository.getName());
-    }
+  public HookTagProvider getTagProvider() {
+    logger.debug("create tag provider for repository {}",
+      repository.getName());
 
     return provider.getTagProvider();
   }
@@ -122,25 +110,19 @@ public final class HookContext
    *
    *
    * @return {@link HookChangesetBuilder}
-   * 
-   * @throws HookFeatureIsNotSupportedException if the feature is not supported 
+   *
+   * @throws HookFeatureIsNotSupportedException if the feature is not supported
    *  by the underlying provider
    */
-  public HookChangesetBuilder getChangesetProvider()
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("create changeset provider for repository {}",
-        repository.getName());
-    }
+  public HookChangesetBuilder getChangesetProvider() {
+    logger.debug("create changeset provider for repository {}",
+      repository.getName());
 
-    //J-
     return new HookChangesetBuilder(
-      repository, 
+      repository,
       preProcessorUtil,
       provider.getChangesetProvider()
     );
-    //J+
   }
 
   /**
@@ -152,19 +134,31 @@ public final class HookContext
    *
    * @return {@link HookMessageProvider} which is able to send message back to
    * the scm client
-   * 
-   * @throws HookFeatureIsNotSupportedException if the feature is not supported 
+   *
+   * @throws HookFeatureIsNotSupportedException if the feature is not supported
    *  by the underlying provider
    */
-  public HookMessageProvider getMessageProvider()
-  {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("create message provider for repository {}",
-        repository.getName());
-    }
+  public HookMessageProvider getMessageProvider() {
+    logger.debug("create message provider for repository {}",
+      repository.getName());
 
     return provider.getMessageProvider();
+  }
+
+  /**
+   * Returns a {@link HookMergeDetectionProvider} which is able to check whether two
+   * branches have been merged with the incoming changesets.
+   *
+   * @return {@link HookMergeDetectionProvider} which is able to detect merges.
+   *
+   * @throws HookFeatureIsNotSupportedException if the feature is not supported
+   *  by the underlying provider
+   */
+  public HookMergeDetectionProvider getMergeDetectionProvider() {
+    logger.debug("create merge detection provider for repository {}",
+      repository.getName());
+
+    return provider.getMergeDetectionProvider();
   }
 
   /**

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.client.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -49,7 +49,7 @@ public class GitRepositoryClientProvider extends RepositoryClientProvider
   private static final Set<ClientCommand> SUPPORTED_COMMANDS =
     ImmutableSet.of(ClientCommand.ADD, ClientCommand.REMOVE,
       ClientCommand.COMMIT, ClientCommand.TAG, ClientCommand.BRANCH,
-      ClientCommand.PUSH);
+      ClientCommand.DELETE_REMOTE_BRANCH, ClientCommand.MERGE, ClientCommand.PUSH);
 
   //~--- constructors ---------------------------------------------------------
 
@@ -118,6 +118,16 @@ public class GitRepositoryClientProvider extends RepositoryClientProvider
     return new GitBranchCommand(git);
   }
 
+  @Override
+  public DeleteRemoteBranchCommand getDeleteRemoteBranchCommand() {
+    return new GitDeleteRemoteBranchCommand(git, credentialsProvider);
+  }
+
+  @Override
+  public CheckoutCommand getCheckoutCommand() {
+    return new GitCheckoutCommand(git);
+  }
+
   /**
    * Method description
    *
@@ -176,6 +186,11 @@ public class GitRepositoryClientProvider extends RepositoryClientProvider
   public TagCommand getTagCommand()
   {
     return new GitTagCommand(git);
+  }
+
+  @Override
+  public MergeCommand getMergeCommand() {
+    return new GitMergeCommand(git);
   }
 
   @Override

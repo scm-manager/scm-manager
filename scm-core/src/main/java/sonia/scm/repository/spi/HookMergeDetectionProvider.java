@@ -22,14 +22,21 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.client.api;
+package sonia.scm.repository.spi;
 
 /**
- *
- * @author Sebastian Sdorra
- * @since 1.18
+ * @since 2.4.0
  */
-public enum ClientCommand
-{
-  ADD, REMOVE, COMMIT, PUSH, TAG, BRANCH, DELETE_REMOTE_BRANCH, CHECKOUT, MERGE
+public interface HookMergeDetectionProvider {
+
+  /**
+   * Checks whether <code>branch</code> has been merged into <code>target</code>. So this will also return
+   * <code>true</code>, when <code>branch</code> has been deleted with this change.
+   *
+   * @param target The name of the branch to check, whether the other branch has been merged into.
+   * @param branch The name of the branch to check, whether it has been merged into the other branch.
+   * @return <code>true</code> when <code>branch</code> has been merged into <code>target</code>, <code>false</code>
+   * otherwise.
+   */
+  boolean branchesMerged(String target, String branch);
 }
