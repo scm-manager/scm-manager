@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 
@@ -40,11 +40,9 @@ import lombok.ToString;
 @NoArgsConstructor
 public class ModificationsCommandRequest implements Resetable {
   private String revision;
-  private boolean sign = true;
 
   @Override
   public void reset() {
     revision = null;
-    sign = true;
   }
 }
