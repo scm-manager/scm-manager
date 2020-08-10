@@ -42,4 +42,14 @@ storiesOf("Forms|Checkbox", module)
     <Spacing>
       <Checkbox label="Checked but disabled" checked={true} disabled={true} />
     </Spacing>
+  ))
+  .add("With HelpText", () => (
+    <Spacing>
+      <Checkbox label="Classic helpText" checked={false} helpText="This is a classic help text." />
+      <Checkbox
+        label="Long helpText"
+        checked={true}
+        helpText="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+      />
+    </Spacing>
   ));

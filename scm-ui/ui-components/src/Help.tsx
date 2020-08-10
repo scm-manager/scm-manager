@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import Tooltip from "./Tooltip";
@@ -29,6 +29,7 @@ import HelpIcon from "./HelpIcon";
 
 type Props = {
   message: string;
+  multiline?: boolean;
   className?: string;
 };
 
@@ -37,13 +38,17 @@ const HelpTooltip = styled(Tooltip)`
   padding-left: 3px;
 `;
 
-export default class Help extends React.Component<Props> {
-  render() {
-    const { message, className } = this.props;
-    return (
-      <HelpTooltip className={classNames("is-inline-block", className)} message={message}>
-        <HelpIcon />
-      </HelpTooltip>
-    );
-  }
-}
+const Help: FC<Props> = ({ message, multiline, className }) => (
+  <HelpTooltip
+    className={classNames("is-inline-block", multiline ? "has-tooltip-multiline" : undefined, className)}
+    message={message}
+  >
+    <HelpIcon />
+  </HelpTooltip>
+);
+
+Help.defaultProps = {
+  multiline: true
+};
+
+export default Help;

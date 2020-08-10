@@ -30,6 +30,15 @@ const Spacing = styled.div`
   padding: 2em;
 `;
 
+const RadioList = styled.div`
+  display: flex;
+  flex-direction: column;
+  > label:not(:last-child) {
+    margin-bottom: 0.75rem;
+  }
+  padding: 2em;
+`;
+
 storiesOf("Forms|Radio", module)
   .add("Default", () => (
     <Spacing>
@@ -41,4 +50,14 @@ storiesOf("Forms|Radio", module)
     <Spacing>
       <Radio label="Checked but disabled" checked={true} disabled={true} />
     </Spacing>
+  ))
+  .add("With HelpText", () => (
+    <RadioList>
+      <Radio label="Classic helpText" checked={false} helpText="This is a classic help text." />
+      <Radio
+        label="Long helpText"
+        checked={true}
+        helpText="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+      />
+    </RadioList>
   ));

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.client.api;
 
 /**
@@ -31,5 +31,5 @@ package sonia.scm.repository.client.api;
  */
 public enum ClientCommand
 {
-  ADD, REMOVE, COMMIT, PUSH, TAG, BRANCH
+  ADD, REMOVE, COMMIT, PUSH, TAG, BRANCH, DELETE_REMOTE_BRANCH, CHECKOUT, MERGE
 }

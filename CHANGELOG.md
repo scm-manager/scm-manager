@@ -5,10 +5,27 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+
 ### Added
+- Introduced merge detection for receive hooks ([#1278](https://github.com/scm-manager/scm-manager/pull/1278))
 - Add link to source file in diff sections ([#1267](https://github.com/scm-manager/scm-manager/pull/1267))
 
+### Fixed
+- Repository names may not end with ".git" ([#1277](https://github.com/scm-manager/scm-manager/pull/1277))
+
+## [2.3.1] - 2020-08-04
+### Added
+- New api to resolve SCM-Manager root url ([#1276](https://github.com/scm-manager/scm-manager/pull/1276))
+
+### Changed
+- Help tooltips are now mutliline by default ([#1271](https://github.com/scm-manager/scm-manager/pull/1271))
+
+### Fixed
+- Fixed unnecessary horizontal scrollbar in modal dialogs ([#1271](https://github.com/scm-manager/scm-manager/pull/1271))
+- Avoid stacktrace logging when protocol url is accessed outside of request scope ([#1276](https://github.com/scm-manager/scm-manager/pull/1276))
+
 ## [2.3.0] - 2020-07-23
+
 ### Added
 - Add branch link provider to access branch links in plugins ([#1243](https://github.com/scm-manager/scm-manager/pull/1243))
 - Add key value input field component ([#1246](https://github.com/scm-manager/scm-manager/pull/1246))
@@ -248,3 +265,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.1.1]: https://www.scm-manager.org/download/2.1.1
 [2.2.0]: https://www.scm-manager.org/download/2.2.0
 [2.3.0]: https://www.scm-manager.org/download/2.3.0
+[2.3.1]: https://www.scm-manager.org/download/2.3.1

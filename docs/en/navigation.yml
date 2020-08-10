@@ -2,6 +2,7 @@
   entries:
   - /installation/
   - /migrate-scm-manager-from-v1/
+  - /import/
   - /faq/
   - /known-issues/
 
@@ -30,6 +31,7 @@
   - /development/definition-of-done/
   - /development/ui-dod/
   - /development/decision-table/
+  - /development/integration-tests/
 
 - section: Plugin Development
   entries:

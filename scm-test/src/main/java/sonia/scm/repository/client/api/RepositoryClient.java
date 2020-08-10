@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.client.api;
 
 import org.slf4j.Logger;
@@ -60,6 +60,18 @@ public final class RepositoryClient implements Closeable {
     return new BranchCommandBuilder(clientProvider.getBranchCommand());
   }
 
+  public DeleteRemoteBranchCommandBuilder getDeleteRemoteBranchCommand() {
+    logger.trace("delete branch command");
+
+    return new DeleteRemoteBranchCommandBuilder(clientProvider.getDeleteRemoteBranchCommand());
+  }
+
+  public CheckoutCommandBuilder getCheckoutCommand() {
+    logger.trace("create checkout command");
+
+    return new CheckoutCommandBuilder(clientProvider.getCheckoutCommand());
+  }
+
   public CommitCommandBuilder getCommitCommand() {
     logger.trace("create commit command");
 
@@ -84,10 +96,16 @@ public final class RepositoryClient implements Closeable {
     return new TagCommandBuilder(clientProvider.getTagCommand());
   }
 
+  public MergeCommandBuilder getMergeCommand() {
+    logger.trace("create merge command");
+
+    return new MergeCommandBuilder(clientProvider.getMergeCommand());
+  }
+
   public File getWorkingCopy() {
     return clientProvider.getWorkingCopy();
   }
-  
+
   public boolean isCommandSupported(ClientCommand command) {
     return clientProvider.getSupportedClientCommands().contains(command);
   }

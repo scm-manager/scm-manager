@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-components",
-  "version": "2.3.0",
+  "version": "2.4.0-SNAPSHOT",
   "description": "UI Components for SCM-Manager and its plugins",
   "main": "src/index.ts",
   "files": [

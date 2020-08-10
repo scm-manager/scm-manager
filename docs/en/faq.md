@@ -40,3 +40,7 @@ After changing the configuration, SCM-Manager must be restarted.
 ### How do I install plugins?
 
 Find the plugin you like to install at [plugins](/plugins#categories) and follow the installation instructions on the install page of the plugin.
+
+### How can I import my existing (git|mercurial|subversion) repository
+
+Please have a look on [these](../import/) detailed instructions.

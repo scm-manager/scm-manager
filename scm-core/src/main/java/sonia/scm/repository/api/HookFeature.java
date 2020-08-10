@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 /**
@@ -49,11 +49,18 @@ public enum HookFeature
    * @since 1.45
    */
   BRANCH_PROVIDER,
-  
+
   /**
    * Hook tag provider
-   * 
+   *
    * @since 1.50
    */
-  TAG_PROVIDER;
+  TAG_PROVIDER,
+
+  /**
+   * Provider to detect merges
+   *
+   * @since 2.4.0
+   */
+  MERGE_DETECTION_PROVIDER
 }
