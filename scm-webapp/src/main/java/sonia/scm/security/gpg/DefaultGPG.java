@@ -30,15 +30,15 @@ import org.bouncycastle.bcpg.ArmoredInputStream;
 import org.bouncycastle.bcpg.ArmoredOutputStream;
 import org.bouncycastle.bcpg.BCPGOutputStream;
 import org.bouncycastle.bcpg.HashAlgorithmTags;
+import org.bouncycastle.bcpg.PublicKeyAlgorithmTags;
+import org.bouncycastle.bcpg.SymmetricKeyAlgorithmTags;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.bouncycastle.openpgp.PGPEncryptedData;
 import org.bouncycastle.openpgp.PGPException;
 import org.bouncycastle.openpgp.PGPKeyPair;
 import org.bouncycastle.openpgp.PGPKeyRing;
 import org.bouncycastle.openpgp.PGPKeyRingGenerator;
 import org.bouncycastle.openpgp.PGPObjectFactory;
 import org.bouncycastle.openpgp.PGPPrivateKey;
-import org.bouncycastle.openpgp.PGPPublicKey;
 import org.bouncycastle.openpgp.PGPSignature;
 import org.bouncycastle.openpgp.PGPSignatureGenerator;
 import org.bouncycastle.openpgp.PGPSignatureList;
@@ -134,7 +134,6 @@ public class DefaultGPG implements GPG {
 
         return new DefaultPrivateKey(rawPrivateKey);
       } catch (PGPException | NoSuchAlgorithmException | NoSuchProviderException | IOException e) {
-        LOG.error("Private key could not be generated", e);
         throw new IllegalStateException("Private key could not be generated", e);
       }
     } else {
@@ -156,7 +155,7 @@ public class DefaultGPG implements GPG {
 
     KeyPair pair = keyPairGenerator.generateKeyPair();
 
-    PGPKeyPair keyPair = new JcaPGPKeyPair(PGPPublicKey.RSA_GENERAL, pair, new Date());
+    PGPKeyPair keyPair = new JcaPGPKeyPair(PublicKeyAlgorithmTags.RSA_GENERAL, pair, new Date());
     final User user = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
     final Person person = new Person(user.getDisplayName(), user.getMail());
 
@@ -167,8 +166,8 @@ public class DefaultGPG implements GPG {
       new JcaPGPDigestCalculatorProviderBuilder().build().get(HashAlgorithmTags.SHA1),
       null,
       null,
-      new JcaPGPContentSignerBuilder(PGPPublicKey.RSA_GENERAL, HashAlgorithmTags.SHA1),
-      new JcePBESecretKeyEncryptorBuilder(PGPEncryptedData.AES_256).build(new char[]{})
+      new JcaPGPContentSignerBuilder(PublicKeyAlgorithmTags.RSA_GENERAL, HashAlgorithmTags.SHA1),
+      new JcePBESecretKeyEncryptorBuilder(SymmetricKeyAlgorithmTags.AES_256).build(new char[]{})
     );
   }
 
@@ -194,7 +193,7 @@ public class DefaultGPG implements GPG {
 
       PGPSignatureGenerator signatureGenerator = new PGPSignatureGenerator(
         new JcaPGPContentSignerBuilder(
-          PGPPublicKey.RSA_GENERAL,
+          PublicKeyAlgorithmTags.RSA_GENERAL,
           HashAlgorithmTags.SHA1).setProvider(BouncyCastleProvider.PROVIDER_NAME)
       );
 
