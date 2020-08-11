@@ -156,7 +156,8 @@ public final class PluginTree
   }
 
   private void append(StringBuilder buffer, String indent, PluginNode node) {
-    buffer.append(indent).append("+- ").append(node.getId()).append("\n");
+    PluginInformation information = node.getPlugin().getPlugin().getInformation();
+    buffer.append(indent).append("+- ").append(node.getId()).append("@").append(information.getVersion()).append("\n");
     for (PluginNode child : node.getChildren()) {
       append(buffer, indent + "   ", child);
     }
