@@ -27,7 +27,6 @@ package sonia.scm.plugin;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Charsets;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Resources;
 import org.junit.Before;
@@ -48,8 +47,7 @@ import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
-import static org.hamcrest.Matchers.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -95,9 +93,9 @@ public class PluginProcessorTest
     new PluginResource("sonia/scm/plugin/scm-f-plugin-1.0.1.smp",
       "scm-f-plugin.smp", "scm-f-plugin:1.0.1");
 
-  private static final String PLUGIN_G = "scm-g-plugin.xml";
-  private static final String PLUGIN_H = "sonia/scm/plugin/scm-h-plugin.xml";
-  private static final String PLUGIN_I = "sonia/scm/plugin/scm-i-plugin.xml";
+  private static final String PLUGIN_G = "scm-g-plugin";
+  private static final String PLUGIN_H = "scm-h-plugin";
+  private static final String PLUGIN_I = "scm-i-plugin";
 
   //~--- methods --------------------------------------------------------------
 
@@ -117,20 +115,20 @@ public class PluginProcessorTest
 
   @Test
   public void shouldNotContainDuplicatesOnUpdate() throws IOException {
-    createInstalledPlugin("scm-mail-plugin-2-0-0.xml");
-    createInstalledPlugin("scm-review-plugin-2-0-0.xml");
-    createPendingPluginInstallation("scm-mail-plugin-2-1-0.xml");
-    createPendingPluginInstallation("scm-review-plugin-2-1-0.xml");
+    createInstalledPlugin("scm-mail-plugin-2-0-0");
+    createInstalledPlugin("scm-review-plugin-2-0-0");
+    createPendingPluginInstallation("scm-mail-plugin-2-1-0");
+    createPendingPluginInstallation("scm-review-plugin-2-1-0");
 
     Set<String> plugins = collectPlugins().stream()
       .map(p -> p.getDescriptor().getInformation().getName(true))
       .collect(Collectors.toSet());
-    assertThat(plugins, containsInAnyOrder("scm-mail-plugin:2.1.0", "scm-review-plugin:2.1.0"));
+    assertThat(plugins).containsOnly("scm-mail-plugin:2.1.0", "scm-review-plugin:2.1.0");
   }
 
   @SuppressWarnings("UnstableApiUsage")
   private void createPendingPluginInstallation(String descriptorResource) throws IOException {
-    URL resource = Resources.getResource("sonia/scm/plugin/" +descriptorResource);
+    URL resource = resource(descriptorResource);
     InstalledPluginDescriptor descriptor = JAXB.unmarshal(resource, InstalledPluginDescriptor.class);
 
     File file = new File(pluginDirectory, descriptor.getInformation().getName() + ".smp");
@@ -143,16 +141,21 @@ public class PluginProcessorTest
 
   @SuppressWarnings("UnstableApiUsage")
   private void createInstalledPlugin(String descriptorResource) throws IOException {
-    URL resource = Resources.getResource("sonia/scm/plugin/" + descriptorResource);
+    URL resource = resource(descriptorResource);
     InstalledPluginDescriptor descriptor = JAXB.unmarshal(resource, InstalledPluginDescriptor.class);
 
     File directory = new File(pluginDirectory, descriptor.getInformation().getName());
     File scmDirectory = new File(directory, "META-INF" + File.separator + "scm");
-    assertTrue(scmDirectory.mkdirs());
+    assertThat(scmDirectory.mkdirs()).isTrue();
 
     try (OutputStream output = new FileOutputStream(new File(scmDirectory, "plugin.xml"))) {
       Resources.copy(resource, output);
     }
+  }
+
+  @SuppressWarnings("UnstableApiUsage")
+  private URL resource(String descriptorResource) {
+    return Resources.getResource("sonia/scm/plugin/" + descriptorResource + ".xml");
   }
 
 
@@ -182,7 +185,7 @@ public class PluginProcessorTest
 
     InstalledPlugin plugin = collectAndGetFirst();
 
-    assertThat(plugin.getId(), is(PLUGIN_A.id));
+    assertThat(plugin.getId()).isEqualTo(PLUGIN_A.id);
   }
 
   @Test
@@ -192,7 +195,7 @@ public class PluginProcessorTest
     copySmp(PLUGIN_A);
     InstalledPlugin plugin = collectAndGetFirst();
 
-    assertThat(plugin.getId(), is(PLUGIN_A.id));
+    assertThat(plugin.getId()).isEqualTo(PLUGIN_A.id);
   }
 
   /**
@@ -207,16 +210,13 @@ public class PluginProcessorTest
     copySmps(PLUGIN_A, PLUGIN_B);
 
     Set<InstalledPlugin> plugins = collectPlugins();
-
-    assertThat(plugins, hasSize(2));
+    assertThat(plugins).hasSize(2);
 
     InstalledPlugin a = findPlugin(plugins, PLUGIN_A.id);
-
-    assertNotNull(a);
+    assertThat(a).isNotNull();
 
     InstalledPlugin b = findPlugin(plugins, PLUGIN_B.id);
-
-    assertNotNull(b);
+    assertThat(b).isNotNull();
   }
 
   /**
@@ -245,16 +245,16 @@ public class PluginProcessorTest
     // load parent class
     Class<?> clazz = cl.loadClass(PluginResource.class.getName());
 
-    assertSame(PluginResource.class, clazz);
+    assertThat(PluginResource.class).isSameAs(clazz);
 
     // load packaged class
     clazz = cl.loadClass("sonia.scm.plugins.HelloService");
-    assertNotNull(clazz);
+    assertThat(clazz).isNotNull();
 
     Object instance = clazz.newInstance();
     Object result = clazz.getMethod("sayHello").invoke(instance);
 
-    assertEquals("hello", result);
+    assertThat(result).isEqualTo("hello");
   }
 
   /**
@@ -285,16 +285,16 @@ public class PluginProcessorTest
     // load parent class
     Class<?> clazz = cl.loadClass(PluginResource.class.getName());
 
-    assertSame(PluginResource.class, clazz);
+    assertThat(PluginResource.class).isSameAs(clazz);
 
     // load packaged class
     clazz = cl.loadClass("sonia.scm.plugins.HelloAgainService");
-    assertNotNull(clazz);
+    assertThat(clazz).isNotNull();
 
     Object instance = clazz.newInstance();
     Object result = clazz.getMethod("sayHelloAgain").invoke(instance);
 
-    assertEquals("hello again", result);
+    assertThat(result).isEqualTo("hello again");
   }
 
   /**
@@ -304,19 +304,19 @@ public class PluginProcessorTest
    * @throws IOException
    */
   @Test
+  @SuppressWarnings("UnstableApiUsage")
   public void testPluginWebResourceLoader() throws IOException
   {
     copySmp(PLUGIN_A);
 
     InstalledPlugin plugin = collectAndGetFirst();
     WebResourceLoader wrl = plugin.getWebResourceLoader();
-
-    assertNotNull(wrl);
+    assertThat(wrl).isNotNull();
 
     URL url = wrl.getResource("hello");
+    assertThat(url).isNotNull();
 
-    assertNotNull(url);
-    assertThat(Resources.toString(url, Charsets.UTF_8), is("hello"));
+    assertThat(Resources.toString(url, Charsets.UTF_8)).isEqualTo("hello");
   }
 
   /**
@@ -329,13 +329,12 @@ public class PluginProcessorTest
   public void testUpdate() throws IOException
   {
     copySmp(PLUGIN_F_1_0_0);
-
     InstalledPlugin plugin = collectAndGetFirst();
+    assertThat(plugin.getId()).isEqualTo(PLUGIN_F_1_0_0.id);
 
-    assertThat(plugin.getId(), is(PLUGIN_F_1_0_0.id));
     copySmp(PLUGIN_F_1_0_1);
     plugin = collectAndGetFirst();
-    assertThat(plugin.getId(), is(PLUGIN_F_1_0_1.id));
+    assertThat(plugin.getId()).isEqualTo(PLUGIN_F_1_0_1.id);
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -367,7 +366,7 @@ public class PluginProcessorTest
   {
     Set<InstalledPlugin> plugins = collectPlugins();
 
-    assertThat(plugins, hasSize(1));
+    assertThat(plugins).hasSize(1);
 
     return Iterables.get(plugins, 0);
   }
@@ -393,6 +392,7 @@ public class PluginProcessorTest
    *
    * @throws IOException
    */
+  @SuppressWarnings("UnstableApiUsage")
   private void copySmp(PluginResource plugin) throws IOException
   {
     URL resource = Resources.getResource(plugin.path);
@@ -432,15 +432,7 @@ public class PluginProcessorTest
   private InstalledPlugin findPlugin(Iterable<InstalledPlugin> plugin,
                                      final String id)
   {
-    return Iterables.find(plugin, new Predicate<InstalledPlugin>()
-    {
-
-      @Override
-      public boolean apply(InstalledPlugin input)
-      {
-        return id.equals(input.getId());
-      }
-    });
+    return Iterables.find(plugin, input -> id.equals(input.getId()));
   }
 
   //~--- inner classes --------------------------------------------------------
