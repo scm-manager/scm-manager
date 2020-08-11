@@ -3093,6 +3093,13 @@ exports[`Storyshots Diff Binaries 1`] = `
             add
           </span>
         </div>
+        <div
+          className="DiffFile__ButtonWrapper-sc-10deuqx-4 dxoMYa level-right is-flex"
+        >
+          <div
+            className="field is-grouped"
+          />
+        </div>
       </div>
     </div>
     <div
