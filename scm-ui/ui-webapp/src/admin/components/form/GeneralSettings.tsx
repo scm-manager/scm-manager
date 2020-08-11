@@ -122,6 +122,7 @@ class GeneralSettings extends React.Component<Props> {
                 { label: t("general-settings.anonymousMode.off"), value: "OFF" }
               ]}
               helpText={t("help.allowAnonymousAccessHelpText")}
+              testId={"anonymous-mode-select"}
             />
           </div>
         </div>

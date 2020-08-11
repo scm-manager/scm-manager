@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Me, Links } from "@scm-manager/ui-types";
-import { useBinder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { Links, Me } from "@scm-manager/ui-types";
+import { ExtensionPoint, useBinder } from "@scm-manager/ui-extensions";
 import { AvatarImage } from "../avatar";
 import NavLink from "../navigation/NavLink";
 import FooterSection from "./FooterSection";
@@ -31,6 +31,7 @@ import styled from "styled-components";
 import { EXTENSION_POINT } from "../avatar/Avatar";
 import ExternalNavLink from "../navigation/ExternalNavLink";
 import { useTranslation } from "react-i18next";
+import { createAttributesForTesting, replaceSpacesInTestId } from "../devBuild";
 
 type Props = {
   me?: Me;
@@ -43,11 +44,13 @@ type TitleWithIconsProps = {
   icon: string;
 };
 
-const TitleWithIcon: FC<TitleWithIconsProps> = ({ icon, title }) => (
-  <>
-    <i className={`fas fa-${icon} fa-fw`} /> {title}
-  </>
-);
+const TitleWithIcon: FC<TitleWithIconsProps> = ({ icon, title }) => {
+  return (
+    <>
+      <i className={`fas fa-${icon} fa-fw`} {...createAttributesForTesting(replaceSpacesInTestId(title))} /> {title}
+    </>
+  );
+};
 
 type TitleWithAvatarProps = {
   me: Me;
@@ -66,12 +69,12 @@ const AvatarContainer = styled.span`
 `;
 
 const TitleWithAvatar: FC<TitleWithAvatarProps> = ({ me }) => (
-  <>
+  <div {...createAttributesForTesting(replaceSpacesInTestId(me.displayName))}>
     <AvatarContainer className="image is-rounded">
       <VCenteredAvatar person={me} representation="rounded" />
     </AvatarContainer>
     {me.displayName}
-  </>
+  </div>
 );
 
 const Footer: FC<Props> = ({ me, version, links }) => {
@@ -89,24 +92,14 @@ const Footer: FC<Props> = ({ me, version, links }) => {
     meSectionTile = <TitleWithIcon title={me.displayName} icon="user-circle" />;
   }
 
-  let meSectionBody = <div />;
-  {
-    if (me.name !== "_anonymous")
-      meSectionBody = (
-        <>
-          <NavLink to="/me/settings/password" label={t("profile.changePasswordNavLink")} />
-          <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
-        </>
-      );
-  }
-
   return (
     <footer className="footer">
       <section className="section container">
         <div className="columns is-size-7">
           <FooterSection title={meSectionTile}>
-            <NavLink to="/me" label={t("footer.user.profile")} />
-            {meSectionBody}
+            <NavLink to="/me" label={t("footer.user.profile")} testId="footer-user-profile" />
+            {me?._links?.password && <NavLink to="/me/settings/password" label={t("profile.changePasswordNavLink")} />}
+            <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
           </FooterSection>
           <FooterSection title={<TitleWithIcon title={t("footer.information.title")} icon="info-circle" />}>
             <ExternalNavLink to="https://www.scm-manager.org/" label={`SCM-Manager ${version}`} />

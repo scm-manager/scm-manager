@@ -32,7 +32,8 @@ import {
   callFetchIndexResources,
   fetchIndexResources,
   fetchIndexResourcesPending,
-  fetchIndexResourcesSuccess, getLoginLink
+  fetchIndexResourcesSuccess,
+  getLoginLink
 } from "./indexResource";
 import { AnyAction } from "redux";
 
@@ -176,7 +177,7 @@ const callFetchMe = (link: string): Promise<Me> => {
 export const login = (loginLink: string, username: string, password: string) => {
   const loginData = {
     cookie: true,
-    grantType: "password",
+    grant_type: "password",
     username,
     password
   };
@@ -219,7 +220,7 @@ export const fetchMe = (link: string) => {
   };
 };
 
-export const logout = (link: string) => {
+export const logout = (link: string, callback: () => void) => {
   return function(dispatch: any) {
     dispatch(logoutPending());
     return apiClient
@@ -247,6 +248,7 @@ export const logout = (link: string) => {
           dispatch(fetchIndexResources());
         }
       })
+      .then(callback)
       .catch(error => {
         dispatch(logoutFailure(error));
       });

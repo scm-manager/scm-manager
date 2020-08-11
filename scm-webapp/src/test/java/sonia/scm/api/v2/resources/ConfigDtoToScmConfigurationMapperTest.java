@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import org.junit.Before;
@@ -42,9 +42,9 @@ public class ConfigDtoToScmConfigurationMapperTest {
   @InjectMocks
   private ConfigDtoToScmConfigurationMapperImpl mapper;
 
-  private String[] expectedUsers = { "trillian", "arthur" };
-  private String[] expectedGroups = { "admin", "plebs" };
-  private String[] expectedExcludes = { "ex", "clude" };
+  private String[] expectedUsers = {"trillian", "arthur"};
+  private String[] expectedGroups = {"admin", "plebs"};
+  private String[] expectedExcludes = {"ex", "clude"};
 
   @Before
   public void init() {
@@ -56,25 +56,40 @@ public class ConfigDtoToScmConfigurationMapperTest {
     ConfigDto dto = createDefaultDto();
     ScmConfiguration config = mapper.map(dto);
 
-    assertEquals("prPw" , config.getProxyPassword());
-    assertEquals(42 , config.getProxyPort());
-    assertEquals("srvr" , config.getProxyServer());
-    assertEquals("user" , config.getProxyUser());
+    assertEquals("prPw", config.getProxyPassword());
+    assertEquals(42, config.getProxyPort());
+    assertEquals("srvr", config.getProxyServer());
+    assertEquals("user", config.getProxyUser());
     assertTrue(config.isEnableProxy());
-    assertEquals("realm" , config.getRealmDescription());
+    assertEquals("realm", config.getRealmDescription());
     assertTrue(config.isDisableGroupingGrid());
-    assertEquals("yyyy" , config.getDateFormat());
-    assertTrue(config.getAnonymousMode() == AnonymousMode.FULL);
-    assertEquals("baseurl" , config.getBaseUrl());
+    assertEquals("yyyy", config.getDateFormat());
+    assertEquals(AnonymousMode.PROTOCOL_ONLY, config.getAnonymousMode());
+    assertEquals("baseurl", config.getBaseUrl());
     assertTrue(config.isForceBaseUrl());
-    assertEquals(41 , config.getLoginAttemptLimit());
+    assertEquals(41, config.getLoginAttemptLimit());
     assertTrue("proxyExcludes", config.getProxyExcludes().containsAll(Arrays.asList(expectedExcludes)));
     assertTrue(config.isSkipFailedAuthenticators());
-    assertEquals("https://plug.ins" , config.getPluginUrl());
-    assertEquals(40 , config.getLoginAttemptLimitTimeout());
+    assertEquals("https://plug.ins", config.getPluginUrl());
+    assertEquals(40, config.getLoginAttemptLimitTimeout());
     assertTrue(config.isEnabledXsrfProtection());
     assertEquals("username", config.getNamespaceStrategy());
     assertEquals("https://scm-manager.org/login-info", config.getLoginInfoUrl());
+  }
+
+  @Test
+  public void shouldMapAnonymousAccessFieldToAnonymousMode() {
+    ConfigDto dto = createDefaultDto();
+
+    ScmConfiguration config = mapper.map(dto);
+
+    assertEquals(AnonymousMode.PROTOCOL_ONLY, config.getAnonymousMode());
+
+    dto.setAnonymousMode(null);
+    dto.setAnonymousAccessEnabled(false);
+    ScmConfiguration config2 = mapper.map(dto);
+
+    assertEquals(AnonymousMode.OFF, config2.getAnonymousMode());
   }
 
   private ConfigDto createDefaultDto() {
@@ -87,7 +102,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
     configDto.setRealmDescription("realm");
     configDto.setDisableGroupingGrid(true);
     configDto.setDateFormat("yyyy");
-    configDto.setAnonymousMode(AnonymousMode.FULL);
+    configDto.setAnonymousMode(AnonymousMode.PROTOCOL_ONLY);
     configDto.setBaseUrl("baseurl");
     configDto.setForceBaseUrl(true);
     configDto.setLoginAttemptLimit(41);

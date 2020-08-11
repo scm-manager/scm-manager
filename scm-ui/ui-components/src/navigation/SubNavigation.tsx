@@ -27,15 +27,25 @@ import classNames from "classnames";
 import useMenuContext from "./MenuContext";
 import { RoutingProps } from "./RoutingProps";
 import useActiveMatch from "./useActiveMatch";
+import { createAttributesForTesting } from "../devBuild";
 
 type Props = RoutingProps & {
   label: string;
   title?: string;
   icon?: string;
-  className?: string;
+  testId?: string;
 };
 
-const SubNavigation: FC<Props> = ({ to, activeOnlyWhenExact, activeWhenMatch, icon, title, label, children, className }) => {
+const SubNavigation: FC<Props> = ({
+  to,
+  activeOnlyWhenExact,
+  activeWhenMatch,
+  icon,
+  title,
+  label,
+  children,
+  testId
+}) => {
   const context = useMenuContext();
   const collapsed = context.isCollapsed();
 
@@ -61,7 +71,11 @@ const SubNavigation: FC<Props> = ({ to, activeOnlyWhenExact, activeWhenMatch, ic
 
   return (
     <li title={collapsed ? title : undefined}>
-      <Link className={classNames(active ? "is-active" : "", collapsed ? "has-text-centered" : "", className)} to={to}>
+      <Link
+        className={classNames(active ? "is-active" : "", collapsed ? "has-text-centered" : "")}
+        to={to}
+        {...createAttributesForTesting(testId)}
+      >
         <i className={classNames(defaultIcon, "fa-fw")} /> {collapsed ? "" : label}
       </Link>
       {childrenList}

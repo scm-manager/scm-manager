@@ -33,8 +33,7 @@ import {
   OverviewPageActions,
   Page,
   PageActions,
-  urls,
-  Loading
+  urls
 } from "@scm-manager/ui-components";
 import { getUsersLink } from "../../modules/indexResource";
 import {
@@ -88,10 +87,6 @@ class Users extends React.Component<Props> {
 
   render() {
     const { users, loading, error, canAddUsers, t } = this.props;
-
-    if (loading) {
-      return <Loading />;
-    }
 
     return (
       <Page title={t("users.title")} subtitle={t("users.subtitle")} loading={loading || !users} error={error}>

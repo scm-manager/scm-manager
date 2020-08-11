@@ -25,7 +25,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { Me, RepositoryCollection } from "@scm-manager/ui-types";
+import { RepositoryCollection } from "@scm-manager/ui-types";
 import {
   CreateButton,
   LinkPaginator,
@@ -33,8 +33,7 @@ import {
   OverviewPageActions,
   Page,
   PageActions,
-  urls,
-  Loading
+  urls
 } from "@scm-manager/ui-components";
 import { getRepositoriesLink } from "../../modules/indexResource";
 import {
@@ -45,11 +44,9 @@ import {
   isFetchReposPending
 } from "../modules/repos";
 import RepositoryList from "../components/list";
-import { fetchMe, isFetchMePending } from "../../modules/auth";
 
 type Props = WithTranslation &
   RouteComponentProps & {
-    me: Me;
     loading: boolean;
     error: Error;
     showCreateButton: boolean;
@@ -63,15 +60,13 @@ type Props = WithTranslation &
 
 class Overview extends React.Component<Props> {
   componentDidMount() {
-    const { me, fetchReposByPage, reposLink, page, location } = this.props;
-    if (me) {
-      fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
-    }
+    const { fetchReposByPage, reposLink, page, location } = this.props;
+    fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    const { me, loading, collection, page, reposLink, location, fetchReposByPage } = this.props;
-    if (collection && page && !loading && me) {
+    const { loading, collection, page, reposLink, location, fetchReposByPage } = this.props;
+    if (collection && page && !loading) {
       const statePage: number = collection.page + 1;
       if (page !== statePage || prevProps.location.search !== location.search) {
         fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
@@ -82,15 +77,16 @@ class Overview extends React.Component<Props> {
   render() {
     const { error, loading, showCreateButton, t } = this.props;
 
-    if (loading) {
-      return <Loading />;
-    }
-
     return (
       <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={loading} error={error}>
         {this.renderOverview()}
         <PageActions>
-          <OverviewPageActions showCreateButton={showCreateButton} link="repos" label={t("overview.createButton")} />
+          <OverviewPageActions
+            showCreateButton={showCreateButton}
+            link="repos"
+            label={t("overview.createButton")}
+            testId="repository-overview"
+          />
         </PageActions>
       </Page>
     );
@@ -134,15 +130,13 @@ class Overview extends React.Component<Props> {
 
 const mapStateToProps = (state: any, ownProps: Props) => {
   const { match } = ownProps;
-  const me = fetchMe(state);
   const collection = getRepositoryCollection(state);
-  const loading = isFetchReposPending(state) || isFetchMePending(state);
+  const loading = isFetchReposPending(state);
   const error = getFetchReposFailure(state);
   const page = urls.getPageFromMatch(match);
   const showCreateButton = isAbleToCreateRepos(state);
   const reposLink = getRepositoriesLink(state);
   return {
-    me,
     collection,
     loading,
     error,

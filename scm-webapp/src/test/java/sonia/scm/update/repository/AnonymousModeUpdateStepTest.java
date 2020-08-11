@@ -42,8 +42,10 @@ import java.io.IOException;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static sonia.scm.store.InMemoryConfigurationStoreFactory.create;
 
@@ -60,8 +62,8 @@ class AnonymousModeUpdateStepTest {
 
   @BeforeEach
   void initUpdateStep(@TempDir Path tempDir) throws IOException {
-    when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
-    configDir = tempDir.resolve("config");
+    when(contextProvider.resolve(any(Path.class))).thenReturn(tempDir.toAbsolutePath());
+    configDir = tempDir;
     Files.createDirectories(configDir);
     InMemoryConfigurationStoreFactory inMemoryConfigurationStoreFactory = create();
     configurationStore = inMemoryConfigurationStoreFactory.get("config", null);

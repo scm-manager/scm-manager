@@ -22,42 +22,34 @@
  * SOFTWARE.
  */
 
-package sonia.scm.web.filter;
+package sonia.scm.security;
 
-import java.time.Instant;
-import java.util.Base64;
+import org.apache.shiro.authc.AuthenticationException;
 
-public class JwtValidator {
+/**
+ *  This exception is thrown if the session token is expired
+ * @since 2.4.0
+ */
+@SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
+public class TokenExpiredException extends AuthenticationException {
 
-  private JwtValidator() {
+  /**
+   * Constructs a new SessionExpiredException.
+   *
+   * @param message the reason for the exception
+   */
+  public TokenExpiredException(String message) {
+    super(message);
   }
 
   /**
-   * Checks if the jwt token is expired.
+   * Constructs a new SessionExpiredException.
    *
-   * @return {@code true}if the token is expired
+   * @param message the reason for the exception
+   * @param cause   the underlying Throwable that caused this exception to be thrown.
    */
-  public static boolean isJwtTokenExpired(String raw) {
-
-    boolean expired = false;
-
-    String[] parts = raw.split("\\.");
-
-    if (parts.length > 1) {
-      Base64.Decoder decoder = Base64.getUrlDecoder();
-      String payload = new String(decoder.decode(parts[1]));
-      String[] splitJwt = payload.split(",");
-
-      for (String entry : splitJwt) {
-        if (entry.contains("\"exp\"")) {
-          long expirationTime = Long.parseLong(entry.replaceAll("[^\\d.]", ""));
-
-          if (Instant.now().isAfter(Instant.ofEpochSecond(expirationTime))) {
-            expired = true;
-          }
-        }
-      }
-    }
-    return expired;
+  public TokenExpiredException(String message, Throwable cause) {
+    super(message, cause);
   }
+
 }

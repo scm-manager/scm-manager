@@ -187,19 +187,6 @@ class MeDtoFactoryTest {
   }
 
   @Test
-  void shouldNotGetPasswordLinkForAnonymousUser() {
-    User user = SCMContext.ANONYMOUS;
-    prepareSubject(user);
-
-    when(userManager.isTypeDefault(any())).thenReturn(true);
-    when(UserPermissions.changePassword(user).isPermitted()).thenReturn(true);
-
-    MeDto dto = meDtoFactory.create();
-    assertThat(dto.getLinks().getLinkBy("password")).isNotPresent();
-  }
-
-
-  @Test
   void shouldAppendOnlySelfLinkIfAnonymousUser() {
     User user = SCMContext.ANONYMOUS;
     prepareSubject(user);

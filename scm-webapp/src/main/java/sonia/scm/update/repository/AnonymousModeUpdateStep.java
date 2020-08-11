@@ -29,6 +29,7 @@ import lombok.NoArgsConstructor;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.migration.UpdateStep;
+import sonia.scm.plugin.Extension;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
@@ -41,11 +42,12 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.io.File;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import static sonia.scm.version.Version.parse;
 
+@Extension
 public class AnonymousModeUpdateStep implements UpdateStep {
 
   private final SCMContextProvider contextProvider;
@@ -62,12 +64,14 @@ public class AnonymousModeUpdateStep implements UpdateStep {
     Path configFile = determineConfigDirectory().resolve("config" + StoreConstants.FILE_EXTENSION);
 
     if (configFile.toFile().exists()) {
+      PreUpdateScmConfiguration oldConfig = getPreUpdateScmConfigurationFromOldConfig(configFile);
       ScmConfiguration config = configStore.get();
-      if (getPreUpdateScmConfigurationFromOldConfig(configFile).isAnonymousAccessEnabled()) {
+      if (oldConfig.isAnonymousAccessEnabled()) {
         config.setAnonymousMode(AnonymousMode.PROTOCOL_ONLY);
       } else {
         config.setAnonymousMode(AnonymousMode.OFF);
       }
+      configStore.set(config);
     }
   }
 
@@ -87,7 +91,7 @@ public class AnonymousModeUpdateStep implements UpdateStep {
   }
 
   private Path determineConfigDirectory() {
-    return new File(contextProvider.getBaseDirectory(), StoreConstants.CONFIG_DIRECTORY_NAME).toPath();
+    return contextProvider.resolve(Paths.get(StoreConstants.CONFIG_DIRECTORY_NAME));
   }
 
   @XmlRootElement(name = "scm-config")

@@ -46,6 +46,7 @@ public class ConfigDto extends HalRepresentation {
   private String realmDescription;
   private boolean disableGroupingGrid;
   private String dateFormat;
+  private boolean anonymousAccessEnabled;
   private AnonymousMode anonymousMode;
   private String baseUrl;
   private boolean forceBaseUrl;

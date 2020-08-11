@@ -23,30 +23,39 @@
  */
 import * as React from "react";
 import { Route, Link } from "react-router-dom";
-import classNames from "classnames";
+import { createAttributesForTesting } from "../devBuild";
 
 type Props = {
   to: string;
   label: string;
   match?: string;
   activeOnlyWhenExact?: boolean;
-  className?: string;
+  testId?: string;
 };
 
 class PrimaryNavigationLink extends React.Component<Props> {
   renderLink = (route: any) => {
-    const { to, label, className } = this.props;
+    const { to, label, testId } = this.props;
     return (
-      <li className={classNames(route.match ? "is-active" : "", className)}>
-        <Link to={to}>{label}</Link>
+      <li className={route.match ? "is-active" : ""}>
+        <Link to={to} {...createAttributesForTesting(testId)}>
+          {label}
+        </Link>
       </li>
     );
   };
 
   render() {
-    const { to, match, activeOnlyWhenExact } = this.props;
+    const { to, match, activeOnlyWhenExact, testId } = this.props;
     const path = match ? match : to;
-    return <Route path={path} exact={activeOnlyWhenExact} children={this.renderLink} />;
+    return (
+      <Route
+        path={path}
+        exact={activeOnlyWhenExact}
+        children={this.renderLink}
+        {...createAttributesForTesting(testId)}
+      />
+    );
   }
 }
 

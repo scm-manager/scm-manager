@@ -32,8 +32,8 @@ import java.util.List;
 
 public class AuthenticationRequestDto {
 
-  @FormParam("grantType")
-  @JsonProperty("grantType")
+  @FormParam("grant_type")
+  @JsonProperty("grant_type")
   private String grantType;
 
   @FormParam("username")
@@ -69,7 +69,7 @@ public class AuthenticationRequestDto {
   }
 
   public boolean isValid() {
-    // password is currently the only valid grantType
+    // password is currently the only valid grant_type
     return "password".equals(grantType) && !Strings.isNullOrEmpty(username) && !Strings.isNullOrEmpty(password);
   }
 }

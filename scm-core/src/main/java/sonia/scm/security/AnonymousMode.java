@@ -24,6 +24,10 @@
 
 package sonia.scm.security;
 
+/**
+ * Available modes for anonymous access
+ * @since 2.4.0
+ */
 public enum AnonymousMode {
   FULL, PROTOCOL_ONLY, OFF
 }

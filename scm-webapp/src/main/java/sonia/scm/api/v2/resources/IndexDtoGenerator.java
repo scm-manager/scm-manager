@@ -123,9 +123,17 @@ public class IndexDtoGenerator extends HalAppenderMapper {
   }
 
   private boolean shouldAppendSubjectRelatedLinks() {
-    return (SecurityUtils.getSubject().isAuthenticated()
-      && !Authentications.isAuthenticatedSubjectAnonymous())
-      || (Authentications.isAuthenticatedSubjectAnonymous()
-      && configuration.getAnonymousMode() == AnonymousMode.FULL);
+    return isAuthenticatedSubjectNotAnonymous()
+      || isAuthenticatedSubjectAllowedToBeAnonymous();
+  }
+
+  private boolean isAuthenticatedSubjectAllowedToBeAnonymous() {
+    return Authentications.isAuthenticatedSubjectAnonymous()
+      && configuration.getAnonymousMode() == AnonymousMode.FULL;
+  }
+
+  private boolean isAuthenticatedSubjectNotAnonymous() {
+    return SecurityUtils.getSubject().isAuthenticated()
+      && !Authentications.isAuthenticatedSubjectAnonymous();
   }
 }

@@ -27,9 +27,12 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.AnonymousMode;
 
 import javax.inject.Inject;
 
@@ -43,6 +46,15 @@ public abstract class ScmConfigurationToConfigDtoMapper extends BaseMapper<ScmCo
 
   @Inject
   private ResourceLinks resourceLinks;
+
+  @Mapping(target = "anonymousAccessEnabled", source = "anonymousMode", qualifiedByName = "mapAnonymousAccess")
+  @Mapping(target = "attributes", ignore = true)
+  public abstract ConfigDto map(ScmConfiguration scmConfiguration);
+
+  @Named("mapAnonymousAccess")
+  boolean mapAnonymousAccess(AnonymousMode anonymousMode) {
+    return anonymousMode != AnonymousMode.OFF;
+  }
 
   @AfterMapping
   void appendLinks(ScmConfiguration config, @MappingTarget ConfigDto target) {

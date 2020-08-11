@@ -35,6 +35,7 @@ export type Config = {
   realmDescription: string;
   disableGroupingGrid: boolean;
   dateFormat: string;
+  anonymousAccessEnabled: boolean;
   anonymousMode: AnonymousMode;
   baseUrl: string;
   forceBaseUrl: boolean;

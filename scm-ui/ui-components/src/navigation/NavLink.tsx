@@ -28,15 +28,16 @@ import { RoutingProps } from "./RoutingProps";
 import { FC } from "react";
 import useMenuContext from "./MenuContext";
 import useActiveMatch from "./useActiveMatch";
+import {createAttributesForTesting} from "../devBuild";
 
 type Props = RoutingProps & {
   label: string;
   title?: string;
   icon?: string;
-  className?: string;
+  testId?: string;
 };
 
-const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, icon, label, title, className }) => {
+const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, icon, label, title, testId }) => {
   const active = useActiveMatch({ to, activeWhenMatch, activeOnlyWhenExact });
 
   const context = useMenuContext();
@@ -53,7 +54,11 @@ const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, icon, la
 
   return (
     <li title={collapsed ? title : undefined}>
-      <Link className={classNames(active ? "is-active" : "", collapsed ? "has-text-centered" : "", className)} to={to}>
+      <Link
+        className={classNames(active ? "is-active" : "", collapsed ? "has-text-centered" : "")}
+        to={to}
+        {...createAttributesForTesting(testId)}
+      >
         {showIcon}
         {collapsed ? null : label}
       </Link>

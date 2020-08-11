@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import org.apache.shiro.subject.Subject;
@@ -49,11 +49,11 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ScmConfigurationToConfigDtoMapperTest {
 
-  private URI baseUri =  URI.create("http://example.com/base/");
+  private URI baseUri = URI.create("http://example.com/base/");
 
-  private String[] expectedUsers = { "trillian", "arthur" };
-  private String[] expectedGroups = { "admin", "plebs" };
-  private String[] expectedExcludes = { "ex", "clude" };
+  private String[] expectedUsers = {"trillian", "arthur"};
+  private String[] expectedGroups = {"admin", "plebs"};
+  private String[] expectedExcludes = {"ex", "clude"};
 
   @SuppressWarnings("unused") // Is injected
   private ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -87,22 +87,22 @@ public class ScmConfigurationToConfigDtoMapperTest {
     when(subject.isPermitted("configuration:write:global")).thenReturn(true);
     ConfigDto dto = mapper.map(config);
 
-    assertEquals("heartOfGold" , dto.getProxyPassword());
-    assertEquals(1234 , dto.getProxyPort());
-    assertEquals("proxyserver" , dto.getProxyServer());
-    assertEquals("trillian" , dto.getProxyUser());
+    assertEquals("heartOfGold", dto.getProxyPassword());
+    assertEquals(1234, dto.getProxyPort());
+    assertEquals("proxyserver", dto.getProxyServer());
+    assertEquals("trillian", dto.getProxyUser());
     assertTrue(dto.isEnableProxy());
-    assertEquals("description" , dto.getRealmDescription());
+    assertEquals("description", dto.getRealmDescription());
     assertTrue(dto.isDisableGroupingGrid());
-    assertEquals("dd" , dto.getDateFormat());
-    assertSame(dto.getAnonymousMode(), AnonymousMode.FULL);
-    assertEquals("baseurl" , dto.getBaseUrl());
+    assertEquals("dd", dto.getDateFormat());
+    assertSame(AnonymousMode.FULL, dto.getAnonymousMode());
+    assertEquals("baseurl", dto.getBaseUrl());
     assertTrue(dto.isForceBaseUrl());
-    assertEquals(1 , dto.getLoginAttemptLimit());
+    assertEquals(1, dto.getLoginAttemptLimit());
     assertTrue("proxyExcludes", dto.getProxyExcludes().containsAll(Arrays.asList(expectedExcludes)));
     assertTrue(dto.isSkipFailedAuthenticators());
-    assertEquals("pluginurl" , dto.getPluginUrl());
-    assertEquals(2 , dto.getLoginAttemptLimitTimeout());
+    assertEquals("pluginurl", dto.getPluginUrl());
+    assertEquals(2, dto.getLoginAttemptLimitTimeout());
     assertTrue(dto.isEnabledXsrfProtection());
     assertEquals("username", dto.getNamespaceStrategy());
     assertEquals("https://scm-manager.org/login-info", dto.getLoginInfoUrl());
@@ -121,6 +121,21 @@ public class ScmConfigurationToConfigDtoMapperTest {
     assertEquals("baseurl", dto.getBaseUrl());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
     assertFalse(dto.getLinks().hasLink("update"));
+  }
+
+  @Test
+  public void shouldMapAnonymousAccessField() {
+    ScmConfiguration config = createConfiguration();
+
+    when(subject.hasRole("configuration:write:global")).thenReturn(false);
+    ConfigDto dto = mapper.map(config);
+
+    assertTrue(dto.isAnonymousAccessEnabled());
+
+    config.setAnonymousMode(AnonymousMode.OFF);
+    ConfigDto secondDto = mapper.map(config);
+
+    assertFalse(secondDto.isAnonymousAccessEnabled());
   }
 
   private ScmConfiguration createConfiguration() {

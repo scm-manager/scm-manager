@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -29,7 +29,6 @@ import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import org.apache.shiro.SecurityUtils;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupPermissions;

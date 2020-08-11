@@ -46,3 +46,16 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+
+const login = (username, password) => {
+  cy.visit( "/login");
+  cy.byTestId("username-input").type(username);
+  cy.byTestId("password-input").type(password);
+  cy.byTestId("login-button").click();
+};
+
+Cypress.Commands.add("login", login);
+Cypress.Commands.add("byTestId", (testId) => cy.get("[data-testid=" + testId + "]"));
+Cypress.Commands.add("containsNotByTestId", (container, testId) => cy.get(container).not("[data-testid=" + testId + "]"));
+

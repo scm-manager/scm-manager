@@ -21,46 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import { User } from "@scm-manager/ui-types";
-import { Icon, createAttributesForTesting } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  user: User;
+export const isDevBuild = () => (process.env.NODE_ENV === "development")
+
+export const createAttributesForTesting = (testId?: string) => {
+  if (!testId || !isDevBuild()) {
+    return undefined;
+  }
+  return {
+    "data-testid": testId
+  }
 };
 
-class UserRow extends React.Component<Props> {
-  renderLink(to: string, label: string) {
-    return (
-      <Link to={to} {...createAttributesForTesting(label)}>
-        {label}
-      </Link>
-    );
+export const replaceSpacesInTestId = (testId?: string) => {
+  if (!testId) {
+    return testId;
   }
 
-  render() {
-    const { user, t } = this.props;
-    const to = `/user/${user.name}`;
-    const iconType = user.active ? (
-      <Icon title={t("user.active")} name="user" />
-    ) : (
-      <Icon title={t("user.inactive")} name="user-slash" />
-    );
-
-    return (
-      <tr className={user.active ? "border-is-green" : "border-is-yellow"}>
-        <td>
-          {iconType} {this.renderLink(to, user.name)}
-        </td>
-        <td className="is-hidden-mobile">{this.renderLink(to, user.displayName)}</td>
-        <td>
-          <a href={`mailto:${user.mail}`}>{user.mail}</a>
-        </td>
-      </tr>
-    );
+  let id = testId;
+  while (id.includes(" ")) {
+    id = id.replace(" ", "-");
   }
-}
-
-export default withTranslation("users")(UserRow);
+  return id;
+};

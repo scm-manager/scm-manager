@@ -38,7 +38,7 @@ import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.AnonymousToken;
-import sonia.scm.security.BearerToken;
+import sonia.scm.security.TokenExpiredException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.WebTokenGenerator;
@@ -50,8 +50,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 
-import static sonia.scm.web.filter.JwtValidator.isJwtTokenExpired;
-
 /**
  * Handles authentication, if a one of the {@link WebTokenGenerator} returns
  * an {@link AuthenticationToken}.
@@ -62,13 +60,12 @@ import static sonia.scm.web.filter.JwtValidator.isJwtTokenExpired;
 @Singleton
 public class AuthenticationFilter extends HttpFilter {
 
-  private static final Logger logger =    LoggerFactory.getLogger(AuthenticationFilter.class);
+  private static final Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
 
   /**
    * marker for failed authentication
    */
   private static final String ATTRIBUTE_FAILED_AUTH = "sonia.scm.auth.failed";
-  private static final String HEADER_AUTHORIZATION = "Authorization";
 
   private final Set<WebTokenGenerator> tokenGenerators;
   protected ScmConfiguration configuration;
@@ -102,9 +99,7 @@ public class AuthenticationFilter extends HttpFilter {
 
     AuthenticationToken token = createToken(request);
 
-    if (token instanceof BearerToken && isJwtTokenExpired(((BearerToken) token).getCredentials())) {
-      handleUnauthorized(request, response, chain);
-    } else if (token != null) {
+    if (token != null) {
       logger.trace(
         "found authentication token on request, start authentication");
       handleAuthentication(request, response, chain, subject, token);
@@ -213,6 +208,13 @@ public class AuthenticationFilter extends HttpFilter {
     try {
       subject.login(token);
       processChain(request, response, chain, subject);
+    } catch (TokenExpiredException ex) {
+      if (logger.isTraceEnabled()) {
+        logger.trace("{} expired", token.getClass(), ex);
+      } else {
+        logger.debug("{} expired", token.getClass());
+      }
+      handleUnauthorized(request, response, chain);
     } catch (AuthenticationException ex) {
       logger.warn("authentication failed", ex);
       handleUnauthorized(request, response, chain);

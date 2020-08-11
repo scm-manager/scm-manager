@@ -23,145 +23,115 @@
  */
 
 describe("With Anonymous mode disabled", () => {
-  it("Should show login page without primary navigation", () => {
-    loginUser("scmadmin", "scmadmin");
+  before("Disable anonymous access", () => {
+    cy.login("scmadmin", "scmadmin");
     setAnonymousMode("OFF");
+    cy.byTestId("primary-navigation-logout").click();
+  });
 
-    cy.get("li")
-      .contains("Logout")
-      .click();
-    cy.contains("Please login to proceed");
-    cy.get("div").not("Login");
-    cy.get("div").not("Repositories");
+  it("Should show login page without primary navigation", () => {
+    cy.byTestId("login-button");
+    cy.containsNotByTestId("div", "primary-navigation-login");
+    cy.containsNotByTestId("div", "primary-navigation-repositories");
   });
   it("Should redirect after login", () => {
-    loginUser("scmadmin", "scmadmin");
+    cy.login("scmadmin", "scmadmin");
 
-    cy.visit("http://localhost:8081/scm/me");
-    cy.contains("Profile");
-    cy.get("li")
-      .contains("Logout")
-      .click();
+    cy.visit("/me");
+    cy.byTestId("footer-user-profile");
+    cy.byTestId("primary-navigation-logout").click();
   });
 });
 
 describe("With Anonymous mode protocol only enabled", () => {
-  it("Should show login page without primary navigation", () => {
-    loginUser("scmadmin", "scmadmin");
+  before("Set anonymous mode to protocol only", () => {
+    cy.login("scmadmin", "scmadmin");
     setAnonymousMode("PROTOCOL_ONLY");
+    cy.byTestId("primary-navigation-logout").click();
+  });
 
-    // Give anonymous user permissions
-    cy.get("li")
-      .contains("Users")
-      .click();
-    cy.get("td")
-      .contains("_anonymous")
-      .click();
-    cy.get("a")
-      .contains("Settings")
-      .click();
-    cy.get("li")
-      .contains("Permissions")
-      .click();
-    cy.get("label")
-      .contains("Read all repositories")
-      .click();
-    cy.get("button")
-      .contains("Set permissions")
-      .click();
+  it("Should show login page without primary navigation", () => {
+    cy.visit("/repos/");
+    cy.byTestId("login-button");
+    cy.containsNotByTestId("div", "primary-navigation-login");
+    cy.containsNotByTestId("div", "primary-navigation-repositories");
+  });
 
-    cy.get("li")
-      .contains("Logout")
-      .click();
-    cy.visit("http://localhost:8081/scm/repos/");
-    cy.contains("Please login to proceed");
-    cy.get("div").not("Login");
-    cy.get("div").not("Repositories");
+  after("Disable anonymous access", () => {
+    cy.login("scmadmin", "scmadmin");
+    setAnonymousMode("OFF");
+    cy.byTestId("primary-navigation-logout").click();
   });
 });
 
 describe("With Anonymous mode fully enabled", () => {
-  it("Should show repositories overview with Login button in primary navigation", () => {
-    loginUser("scmadmin", "scmadmin");
+  before("Set anonymous mode to full", () => {
+    cy.login("scmadmin", "scmadmin");
     setAnonymousMode("FULL");
 
-    cy.get("li")
-      .contains("Logout")
-      .click();
-    cy.visit("http://localhost:8081/scm/repos/");
-    cy.contains("Overview of available repositories");
-    cy.contains("SCM Anonymous");
-    cy.get("ul").contains("Login");
+    // Give anonymous user permissions
+    cy.byTestId("primary-navigation-users").click();
+    cy.byTestId("_anonymous").click();
+    cy.byTestId("user-settings-link").click();
+    cy.byTestId("user-permissions-link").click();
+    cy.byTestId("read-all-repositories").click();
+    cy.byTestId("set-permissions-button").click();
+
+    cy.byTestId("primary-navigation-logout").click();
+  });
+
+  it("Should show repositories overview with Login button in primary navigation", () => {
+    cy.visit("/repos/");
+    cy.byTestId("repository-overview-filter");
+    cy.byTestId("SCM-Anonymous");
+    cy.byTestId("primary-navigation-login");
   });
   it("Should show login page on url", () => {
-    cy.visit("http://localhost:8081/scm/login/");
+    cy.visit("/login/");
+    cy.byTestId("login-button");
   });
   it("Should show login page on link click", () => {
-    cy.visit("http://localhost:8081/scm/repos/");
-    cy.contains("Overview of available repositories");
-    cy.contains("Login").click();
-    cy.contains("Please login to proceed");
+    cy.visit("/repos/");
+    cy.byTestId("repository-overview-filter");
+    cy.byTestId("primary-navigation-login").click();
+    cy.byTestId("login-button");
   });
   it("Should login and direct to repositories overview", () => {
-    loginUser("scmadmin", "scmadmin");
+    cy.login("scmadmin", "scmadmin");
 
-    cy.visit("http://localhost:8081/scm/login");
-    cy.contains("SCM Administrator");
-    cy.get("li")
-      .contains("Logout")
-      .click();
+    cy.visit("/login");
+    cy.byTestId("SCM-Administrator");
+    cy.byTestId("primary-navigation-logout").click();
   });
   it("Should logout and direct to login page", () => {
-    loginUser("scmadmin", "scmadmin");
+    cy.login("scmadmin", "scmadmin");
 
-    cy.visit("http://localhost:8081/scm/repos/");
-    cy.contains("Overview of available repositories");
-    cy.contains("SCM Administrator");
-    cy.contains("Logout").click();
-    cy.contains("Please login to proceed");
+    cy.visit("/repos/");
+    cy.byTestId("repository-overview-filter");
+    cy.byTestId("SCM-Administrator");
+    cy.byTestId("primary-navigation-logout").click();
+    cy.byTestId("login-button");
   });
   it("Anonymous user should not be able to change password", () => {
-    cy.visit("http://localhost:8081/scm/repos/");
-    cy.contains("Profile").click();
-    cy.contains("scm-anonymous@scm-manager.org");
-    cy.get("ul").not("Settings");
+    cy.visit("/repos/");
+    cy.byTestId("footer-user-profile").click();
+    cy.byTestId("SCM-Anonymous");
+    cy.containsNotByTestId("ul", "user-settings-link");
     cy.get("section").not("Change password");
   });
-});
 
-describe("Disable anonymous mode after tests", () => {
-  it("Disable anonymous mode after tests", () => {
-    loginUser("scmadmin", "scmadmin");
+  after("Disable anonymous access", () => {
+    cy.login("scmadmin", "scmadmin");
     setAnonymousMode("OFF");
-
-    cy.get("li")
-      .contains("Logout")
-      .click();
+    cy.byTestId("primary-navigation-logout").click();
   });
 });
 
 const setAnonymousMode = anonymousMode => {
-  cy.get("li")
-    .contains("Administration")
-    .click();
-  cy.get("li")
-    .contains("Settings")
-    .click();
-  cy.get("select")
-    .contains("Disabled")
-    .parent()
+  cy.byTestId("primary-navigation-admin").click();
+  cy.byTestId("admin-settings-link").click();
+  cy.byTestId("anonymous-mode-select")
     .select(anonymousMode)
     .should("have.value", anonymousMode);
-  cy.get("button")
-    .contains("Submit")
-    .click();
-};
-
-const loginUser = (username, password) => {
-  cy.visit("http://localhost:8081/scm/login");
-  cy.get("div.field.username > div > input").type(username);
-  cy.get("div.field.password > div > input").type(password);
-  cy.get("button")
-    .contains("Login")
-    .click();
+  cy.byTestId("submit-button").click();
 };

@@ -118,7 +118,7 @@ describe("auth actions", () => {
     fetchMock.postOnce("/api/v2/auth/access_token", {
       body: {
         cookie: true,
-        grantType: "password",
+        grant_type: "password",
         username: "tricia",
         password: "secret123"
       },

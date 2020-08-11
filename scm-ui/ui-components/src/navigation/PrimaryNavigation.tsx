@@ -40,7 +40,7 @@ class PrimaryNavigation extends React.Component<Props> {
     return (to: string, match: string, label: string, linkName: string) => {
       const link = links[linkName];
       if (link) {
-        const navigationItem = <PrimaryNavigationLink className={t(label)} to={to} match={match} label={t(label)} key={linkName} />;
+        const navigationItem = <PrimaryNavigationLink testId={label.replace(".", "-")} to={to} match={match} label={t(label)} key={linkName} />;
         navigationItems.push(navigationItem);
       }
     };

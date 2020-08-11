@@ -29,9 +29,10 @@ type Props = {
   indeterminate?: boolean;
   disabled?: boolean;
   label?: string;
+  testId?: string;
 };
 
-const TriStateCheckbox: FC<Props> = ({ checked, indeterminate, disabled, label }) => {
+const TriStateCheckbox: FC<Props> = ({ checked, indeterminate, disabled, label, testId }) => {
   let icon;
   if (indeterminate) {
     icon = "minus-square";
@@ -57,8 +58,11 @@ const TriStateCheckbox: FC<Props> = ({ checked, indeterminate, disabled, label }
     color = "black";
   }
 
-  return <><Icon iconStyle={"is-outlined"} name={icon} className={className} color={color} />{" "}
-  {label}</>;
+  return (
+    <>
+      <Icon iconStyle={"is-outlined"} name={icon} className={className} color={color} testId={testId} /> {label}
+    </>
+  );
 };
 
 export default TriStateCheckbox;

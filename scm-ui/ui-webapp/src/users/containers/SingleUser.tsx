@@ -114,13 +114,13 @@ class SingleUser extends React.Component<Props> {
                   icon="fas fa-info-circle"
                   label={t("singleUser.menu.informationNavLink")}
                   title={t("singleUser.menu.informationNavLink")}
-                  className={t("singleUser.menu.informationNavLink")}
+                  testId="user-information-link"
                 />
                 <SubNavigation
                   to={`${url}/settings/general`}
                   label={t("singleUser.menu.settingsNavLink")}
                   title={t("singleUser.menu.settingsNavLink")}
-                  className={t("singleUser.menu.settingsNavLink")}
+                  testId="user-settings-link"
                 >
                   <EditUserNavLink user={user} editUrl={`${url}/settings/general`} />
                   <SetPasswordNavLink user={user} passwordUrl={`${url}/settings/password`} />

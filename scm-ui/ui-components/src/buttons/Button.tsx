@@ -25,6 +25,7 @@ import React, { MouseEvent, ReactNode } from "react";
 import classNames from "classnames";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import Icon from "../Icon";
+import { createAttributesForTesting } from "../devBuild";
 
 export type ButtonProps = {
   label?: string;
@@ -37,6 +38,7 @@ export type ButtonProps = {
   fullWidth?: boolean;
   reducedMobile?: boolean;
   children?: ReactNode;
+  testId?: string;
 };
 
 type Props = ButtonProps &
@@ -73,7 +75,8 @@ class Button extends React.Component<Props> {
       icon,
       fullWidth,
       reducedMobile,
-      children
+      children,
+      testId
     } = this.props;
     const loadingClass = loading ? "is-loading" : "";
     const fullWidthClass = fullWidth ? "is-fullwidth" : "";
@@ -86,6 +89,7 @@ class Button extends React.Component<Props> {
           disabled={disabled}
           onClick={this.onClick}
           className={classNames("button", "is-" + color, loadingClass, fullWidthClass, reducedMobileClass, className)}
+          {...createAttributesForTesting(testId)}
         >
           <span className="icon is-medium">
             <Icon name={icon} color="inherit" />
@@ -104,6 +108,7 @@ class Button extends React.Component<Props> {
         disabled={disabled}
         onClick={this.onClick}
         className={classNames("button", "is-" + color, loadingClass, fullWidthClass, className)}
+        {...createAttributesForTesting(testId)}
       >
         {label} {children}
       </button>

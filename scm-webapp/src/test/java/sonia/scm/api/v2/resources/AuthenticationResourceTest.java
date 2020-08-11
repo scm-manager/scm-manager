@@ -81,37 +81,37 @@ public class AuthenticationResourceTest {
 
   private static final String AUTH_JSON_TRILLIAN = "{\n" +
     "\t\"cookie\": true,\n" +
-    "\t\"grantType\": \"password\",\n" +
+    "\t\"grant_type\": \"password\",\n" +
     "\t\"username\": \"trillian\",\n" +
     "\t\"password\": \"secret\"\n" +
     "}";
 
-  private static final String AUTH_FORMENCODED_TRILLIAN = "cookie=true&grantType=password&username=trillian&password=secret";
+  private static final String AUTH_FORMENCODED_TRILLIAN = "cookie=true&grant_type=password&username=trillian&password=secret";
 
   private static final String AUTH_JSON_TRILLIAN_WRONG_PW = "{\n" +
     "\t\"cookie\": true,\n" +
-    "\t\"grantType\": \"password\",\n" +
+    "\t\"grant_type\": \"password\",\n" +
     "\t\"username\": \"trillian\",\n" +
     "\t\"password\": \"justWrong\"\n" +
     "}";
 
   private static final String AUTH_JSON_NOT_EXISTING_USER = "{\n" +
     "\t\"cookie\": true,\n" +
-    "\t\"grantType\": \"password\",\n" +
+    "\t\"grant_type\": \"password\",\n" +
     "\t\"username\": \"iDoNotExist\",\n" +
     "\t\"password\": \"doesNotMatter\"\n" +
     "}";
 
   private static final String AUTH_JSON_WITHOUT_USERNAME = String.join("\n",
     "{",
-    "\"grantType\": \"password\",",
+    "\"grant_type\": \"password\",",
     "\"password\": \"tricia123\"",
     "}"
   );
 
   private static final String AUTH_JSON_WITHOUT_PASSWORD = String.join("\n",
     "{",
-    "\"grantType\": \"password\",",
+    "\"grant_type\": \"password\",",
     "\"username\": \"trillian\"",
     "}"
   );
@@ -125,7 +125,7 @@ public class AuthenticationResourceTest {
 
   private static final String AUTH_JSON_WITH_INVALID_GRANT_TYPE = String.join("\n",
     "{",
-    "\"grantType\": \"el speciale\",",
+    "\"grant_type\": \"el speciale\",",
     "\"username\": \"trillian\",",
     "\"password\": \"tricia123\"",
     "}"

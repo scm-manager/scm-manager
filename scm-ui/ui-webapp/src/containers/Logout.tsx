@@ -22,42 +22,37 @@
  * SOFTWARE.
  */
 import React from "react";
-import { connect } from "react-redux";
-import { WithTranslation, withTranslation } from "react-i18next";
+import {connect} from "react-redux";
+import {WithTranslation, withTranslation} from "react-i18next";
 
-import { getLogoutFailure, logout } from "../modules/auth";
-import { ErrorPage, Loading } from "@scm-manager/ui-components";
-import { getLogoutLink } from "../modules/indexResource";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import { compose } from "redux";
+import {getLogoutFailure, logout} from "../modules/auth";
+import {ErrorPage, Loading} from "@scm-manager/ui-components";
+import {getLogoutLink} from "../modules/indexResource";
+import {RouteComponentProps, withRouter} from "react-router-dom";
+import {compose} from "redux";
 
 type Props = RouteComponentProps &
   WithTranslation & {
-    error: Error;
-    logoutLink: string;
+  error: Error;
+  logoutLink: string;
 
-    // dispatcher functions
-    logout: (link: string) => void;
-  };
+  // dispatcher functions
+  logout: (link: string, callback: () => void) => void;
+};
 
 class Logout extends React.Component<Props> {
   componentDidMount() {
-    new Promise((resolve, reject) => {
-      setTimeout(() => {
-        if (this.props.logoutLink) {
-          this.props.logout(this.props.logoutLink);
-          resolve(this.props.history.push("/login"));
-        }
-      });
-    });
+    if (this.props.logoutLink) {
+      this.props.logout(this.props.logoutLink, () => this.props.history.push("/login"));
+    }
   }
 
   render() {
-    const { error, t } = this.props;
+    const {error, t} = this.props;
     if (error) {
-      return <ErrorPage title={t("logout.error.title")} subtitle={t("logout.error.subtitle")} error={error} />;
+      return <ErrorPage title={t("logout.error.title")} subtitle={t("logout.error.subtitle")} error={error}/>;
     } else {
-      return <Loading />;
+      return <Loading/>;
     }
   }
 }
@@ -73,7 +68,7 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    logout: (link: string) => dispatch(logout(link))
+    logout: (link: string, callback: () => void) => dispatch(logout(link, callback))
   };
 };
 
