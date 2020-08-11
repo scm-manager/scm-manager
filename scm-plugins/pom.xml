@@ -45,6 +45,7 @@
     <module>scm-git-plugin</module>
     <module>scm-svn-plugin</module>
     <module>scm-legacy-plugin</module>
+    <module>scm-integration-test-plugin</module>
   </modules>
 
   <dependencies>

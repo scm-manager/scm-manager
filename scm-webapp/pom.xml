@@ -324,7 +324,7 @@
     <dependency>
       <groupId>net.java.dev.jna</groupId>
       <artifactId>jna</artifactId>
-      <version>5.5.0</version>
+      <version>5.6.0</version>
     </dependency>
 
     <!-- test scope -->
@@ -675,7 +675,7 @@
 
   <properties>
     <scm.stage>DEVELOPMENT</scm.stage>
-    <scm.home>target/scm-it</scm.home>
+    <scm.home>${project.parent.build.directory}/scm-it</scm.home>
     <environment.profile>default</environment.profile>
     <jjwt.version>0.11.2</jjwt.version>
     <selenium.version>2.53.1</selenium.version>
@@ -814,7 +814,7 @@
               <systemProperties>
                 <systemProperty>
                   <name>scm.home</name>
-                  <value>target/scm-it</value>
+                  <value>${scm.home}</value>
                 </systemProperty>
                 <systemProperty>
                   <name>scm.stage</name>
@@ -903,7 +903,7 @@
               <systemProperties>
                 <systemProperty>
                   <name>scm.home</name>
-                  <value>target/scm-it</value>
+                  <value>${scm.home}</value>
                 </systemProperty>
               </systemProperties>
               <jettyXml>${project.basedir}/src/main/conf/jetty.xml</jettyXml>

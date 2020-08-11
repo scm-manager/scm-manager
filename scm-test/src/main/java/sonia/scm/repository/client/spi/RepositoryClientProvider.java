@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.client.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -87,6 +87,14 @@ public abstract class RepositoryClientProvider implements Closeable
     throw new ClientCommandNotSupportedException(ClientCommand.BRANCH);
   }
 
+  public DeleteRemoteBranchCommand getDeleteRemoteBranchCommand() {
+    throw new ClientCommandNotSupportedException(ClientCommand.DELETE_REMOTE_BRANCH);
+  }
+
+  public CheckoutCommand getCheckoutCommand() {
+    throw new ClientCommandNotSupportedException(ClientCommand.CHECKOUT);
+  }
+
   /**
    * Method description
    *
@@ -129,6 +137,10 @@ public abstract class RepositoryClientProvider implements Closeable
   public TagCommand getTagCommand()
   {
     throw new ClientCommandNotSupportedException(ClientCommand.TAG);
+  }
+
+  public MergeCommand getMergeCommand() {
+    throw new ClientCommandNotSupportedException(ClientCommand.MERGE);
   }
 
   /**
