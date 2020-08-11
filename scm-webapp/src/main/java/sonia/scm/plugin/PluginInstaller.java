@@ -38,7 +38,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-@SuppressWarnings("UnstableApiUsage") // guava hash is marked as unstable
+@SuppressWarnings("UnstableApiUsage")
+  // guava hash is marked as unstable
 class PluginInstaller {
 
   private final SCMContextProvider scmContext;
@@ -76,28 +77,28 @@ class PluginInstaller {
     }
   }
 
-  private void verifyInformation(AvailablePluginDescriptor api, InstalledPluginDescriptor downloaded) {
-    verifyInformation(api.getInformation(), downloaded.getInformation());
+  private void verifyInformation(AvailablePluginDescriptor descriptorFromPluginCenter, InstalledPluginDescriptor downloadedDescriptor) {
+    verifyInformation(descriptorFromPluginCenter.getInformation(), downloadedDescriptor.getInformation());
   }
 
-  private void verifyInformation(PluginInformation api, PluginInformation downloaded) {
-    if (!api.getName().equals(downloaded.getName())) {
+  private void verifyInformation(PluginInformation informationFromPluginCenter, PluginInformation downloadedInformation) {
+    if (!informationFromPluginCenter.getName().equals(downloadedInformation.getName())) {
       throw new PluginInformationMismatchException(
-        api, downloaded,
+        informationFromPluginCenter, downloadedInformation,
         String.format(
           "downloaded plugin name \"%s\" does not match the expected name \"%s\" from plugin-center",
-          downloaded.getName(),
-          api.getName()
+          downloadedInformation.getName(),
+          informationFromPluginCenter.getName()
         )
       );
     }
-    if (!api.getVersion().equals(downloaded.getVersion())) {
+    if (!informationFromPluginCenter.getVersion().equals(downloadedInformation.getVersion())) {
       throw new PluginInformationMismatchException(
-        api, downloaded,
+        informationFromPluginCenter, downloadedInformation,
         String.format(
           "downloaded plugin version \"%s\" does not match the expected version \"%s\" from plugin-center",
-          downloaded.getVersion(),
-          api.getVersion()
+          downloadedInformation.getVersion(),
+          informationFromPluginCenter.getVersion()
         )
       );
     }

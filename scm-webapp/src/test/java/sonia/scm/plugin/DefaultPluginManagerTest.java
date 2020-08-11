@@ -90,7 +90,6 @@ class DefaultPluginManagerTest {
   @Captor
   private ArgumentCaptor<PluginEvent> eventCaptor;
 
-  @InjectMocks
   private DefaultPluginManager manager;
 
   @Mock
@@ -107,8 +106,10 @@ class DefaultPluginManagerTest {
   }
 
   @BeforeEach
-  void setUpContextFactory() {
-    manager.setContextFactory((List<AvailablePlugin> availablePlugins) -> context);
+  void setUpObjectUnderTest() {
+    manager = new DefaultPluginManager(
+      loader, center, installer, restarter, eventBus, plugins -> context
+    );
   }
 
   @Nested

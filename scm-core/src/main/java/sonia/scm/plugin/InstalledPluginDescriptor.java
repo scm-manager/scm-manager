@@ -70,7 +70,8 @@ public final class InstalledPluginDescriptor extends ScmModule implements Plugin
    * @param dependencies
    *
    * @deprecated this constructor uses dependencies with plain strings,
-   *             this is deprecated because the version information is missing.
+   *             which is deprecated because the version information is missing.
+   *             This class should not instantiated manually, it is designed to be loaded by jaxb.
    */
   @Deprecated
   public InstalledPluginDescriptor(int scmVersion, PluginInformation information,

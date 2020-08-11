@@ -26,7 +26,7 @@ package sonia.scm.plugin;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-@SuppressWarnings("java:S110")
+@SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
 public class DependencyNotFoundException extends PluginInstallException {
 
   private final String plugin;

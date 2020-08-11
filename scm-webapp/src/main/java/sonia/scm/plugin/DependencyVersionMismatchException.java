@@ -29,7 +29,7 @@ import lombok.Getter;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 @Getter
-@SuppressWarnings("java:S110")
+@SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
 public class DependencyVersionMismatchException extends PluginInstallException {
 
   private final String plugin;
