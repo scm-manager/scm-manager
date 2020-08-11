@@ -29,10 +29,9 @@ package sonia.scm.plugin;
 import com.google.common.base.Charsets;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Resources;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
 
 import javax.xml.bind.JAXB;
@@ -40,55 +39,46 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
+import java.nio.file.Path;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
-
-//~--- JDK imports ------------------------------------------------------------
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class PluginProcessorTest
-{
+class PluginProcessorTest {
 
-  /** Field description */
   private static final PluginResource PLUGIN_A =
     new PluginResource("sonia/scm/plugin/scm-a-plugin.smp", "scm-a-plugin.smp",
       "scm-a-plugin:1.0.0-SNAPSHOT");
 
-  /** Field description */
   private static final PluginResource PLUGIN_B =
     new PluginResource("sonia/scm/plugin/scm-b-plugin.smp", "scm-b-plugin.smp",
       "scm-b-plugin:1.0.0-SNAPSHOT");
 
-  /** Field description */
   private static final PluginResource PLUGIN_C =
     new PluginResource("sonia/scm/plugin/scm-c-plugin.smp", "scm-c-plugin.smp",
       "scm-c-plugin:1.0.0-SNAPSHOT");
 
-  /** Field description */
   private static final PluginResource PLUGIN_D =
     new PluginResource("sonia/scm/plugin/scm-d-plugin.smp", "scm-d-plugin.smp",
       "scm-d-plugin:1.0.0-SNAPSHOT");
 
-  /** Field description */
   private static final PluginResource PLUGIN_E =
     new PluginResource("sonia/scm/plugin/scm-e-plugin.smp", "scm-e-plugin.smp",
       "scm-e-plugin:1.0.0-SNAPSHOT");
 
-  /** Field description */
   private static final PluginResource PLUGIN_F_1_0_0 =
     new PluginResource("sonia/scm/plugin/scm-f-plugin-1.0.0.smp",
       "scm-f-plugin.smp", "scm-f-plugin:1.0.0");
 
-  /** Field description */
   private static final PluginResource PLUGIN_F_1_0_1 =
     new PluginResource("sonia/scm/plugin/scm-f-plugin-1.0.1.smp",
       "scm-f-plugin.smp", "scm-f-plugin:1.0.1");
@@ -97,24 +87,33 @@ public class PluginProcessorTest
   private static final String PLUGIN_H = "scm-h-plugin";
   private static final String PLUGIN_I = "scm-i-plugin";
 
-  //~--- methods --------------------------------------------------------------
+  private File pluginDirectory;
+  private PluginProcessor processor;
 
-  @Test(expected = PluginConditionFailedException.class)
-  public void testFailedPluginCondition() throws IOException {
-    createPendingPluginInstallation(PLUGIN_G);
-    collectPlugins();
+  @BeforeEach
+  void setUp(@TempDir Path tempDirectoryPath) {
+    pluginDirectory = tempDirectoryPath.toFile();
+    processor = new PluginProcessor(ClassLoaderLifeCycle.create(), tempDirectoryPath);
   }
 
 
-  @Test(expected = DependencyVersionMismatchException.class)
-  public void testWrongVersionOfDependency() throws IOException {
+  @Test
+  void shouldFailOnPluginCondition() throws IOException {
+    createPendingPluginInstallation(PLUGIN_G);
+
+    assertThrows(PluginConditionFailedException.class, this::collectPlugins);
+  }
+
+
+  @Test
+  void shouldFailOnWrongDependencyVersion() throws IOException {
     createPendingPluginInstallation(PLUGIN_H);
     createPendingPluginInstallation(PLUGIN_I);
-    collectPlugins();
+    assertThrows(DependencyVersionMismatchException.class, this::collectPlugins);
   }
 
   @Test
-  public void shouldNotContainDuplicatesOnUpdate() throws IOException {
+  void shouldNotContainDuplicatesOnUpdate() throws IOException {
     createInstalledPlugin("scm-mail-plugin-2-0-0");
     createInstalledPlugin("scm-review-plugin-2-0-0");
     createPendingPluginInstallation("scm-mail-plugin-2-1-0");
@@ -158,39 +157,23 @@ public class PluginProcessorTest
     return Resources.getResource("sonia/scm/plugin/" + descriptorResource + ".xml");
   }
 
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  @Test(expected = PluginCircularDependencyException.class)
-  public void testCircularDependencies() throws IOException
-  {
+  @Test
+  void shouldFailOnCircularDependencies() throws IOException {
     copySmps(PLUGIN_C, PLUGIN_D, PLUGIN_E);
-    collectPlugins();
+    assertThrows(PluginCircularDependencyException.class, this::collectPlugins);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  public void testCollectPlugins() throws IOException
-  {
+  void shouldCollectPlugins() throws IOException {
     copySmp(PLUGIN_A);
 
     InstalledPlugin plugin = collectAndGetFirst();
-
     assertThat(plugin.getId()).isEqualTo(PLUGIN_A.id);
   }
 
   @Test
-  public void shouldCollectPluginsAndDoNotFailOnNonPluginDirectories() throws IOException {
-    new File(pluginDirectory, "some-directory").mkdirs();
+  void shouldCollectPluginsAndDoNotFailOnNonPluginDirectories() throws IOException {
+    assertThat(new File(pluginDirectory, "some-directory").mkdirs()).isTrue();
 
     copySmp(PLUGIN_A);
     InstalledPlugin plugin = collectAndGetFirst();
@@ -198,15 +181,8 @@ public class PluginProcessorTest
     assertThat(plugin.getId()).isEqualTo(PLUGIN_A.id);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  public void testCollectPluginsWithDependencies() throws IOException
-  {
+  void shouldCollectPluginsWithDependencies() throws IOException {
     copySmps(PLUGIN_A, PLUGIN_B);
 
     Set<InstalledPlugin> plugins = collectPlugins();
@@ -219,24 +195,8 @@ public class PluginProcessorTest
     assertThat(b).isNotNull();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws ClassNotFoundException
-   * @throws IOException
-   * @throws IllegalAccessException
-   * @throws IllegalArgumentException
-   * @throws InstantiationException
-   * @throws InvocationTargetException
-   * @throws NoSuchMethodException
-   */
   @Test
-  public void testPluginClassLoader()
-    throws IOException, ClassNotFoundException, InstantiationException,
-    IllegalAccessException, NoSuchMethodException, IllegalArgumentException,
-    InvocationTargetException
-  {
+  void shouldCreateWorkingPluginClassLoader() throws Exception {
     copySmp(PLUGIN_A);
 
     InstalledPlugin plugin = collectAndGetFirst();
@@ -257,24 +217,8 @@ public class PluginProcessorTest
     assertThat(result).isEqualTo("hello");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws ClassNotFoundException
-   * @throws IOException
-   * @throws IllegalAccessException
-   * @throws IllegalArgumentException
-   * @throws InstantiationException
-   * @throws InvocationTargetException
-   * @throws NoSuchMethodException
-   */
   @Test
-  public void testPluginClassLoaderWithDependencies()
-    throws IOException, ClassNotFoundException, InstantiationException,
-    IllegalAccessException, NoSuchMethodException, IllegalArgumentException,
-    InvocationTargetException
-  {
+  void shouldCreateWorkingPluginClassLoaderWithDependencies() throws Exception {
     copySmps(PLUGIN_A, PLUGIN_B);
 
     Set<InstalledPlugin> plugins = collectPlugins();
@@ -297,16 +241,9 @@ public class PluginProcessorTest
     assertThat(result).isEqualTo("hello again");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
   @SuppressWarnings("UnstableApiUsage")
-  public void testPluginWebResourceLoader() throws IOException
-  {
+  void shouldCreatePluginWebResourceLoader() throws IOException {
     copySmp(PLUGIN_A);
 
     InstalledPlugin plugin = collectAndGetFirst();
@@ -319,15 +256,8 @@ public class PluginProcessorTest
     assertThat(Resources.toString(url, Charsets.UTF_8)).isEqualTo("hello");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Test
-  public void testUpdate() throws IOException
-  {
+  void shouldDoPluginUpdate() throws IOException {
     copySmp(PLUGIN_F_1_0_0);
     InstalledPlugin plugin = collectAndGetFirst();
     assertThat(plugin.getId()).isEqualTo(PLUGIN_F_1_0_0.id);
@@ -337,33 +267,7 @@ public class PluginProcessorTest
     assertThat(plugin.getId()).isEqualTo(PLUGIN_F_1_0_1.id);
   }
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  @Before
-  public void setUp() throws IOException
-  {
-    pluginDirectory = temp.newFolder();
-    processor = new PluginProcessor(ClassLoaderLifeCycle.create(), pluginDirectory.toPath());
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private InstalledPlugin collectAndGetFirst() throws IOException
-  {
+  private InstalledPlugin collectAndGetFirst() throws IOException {
     Set<InstalledPlugin> plugins = collectPlugins();
 
     assertThat(plugins).hasSize(1);
@@ -371,119 +275,42 @@ public class PluginProcessorTest
     return Iterables.get(plugins, 0);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   * @throws IOException
-   */
-  private Set<InstalledPlugin> collectPlugins() throws IOException
-  {
+  private Set<InstalledPlugin> collectPlugins() throws IOException {
     return processor.collectPlugins(PluginProcessorTest.class.getClassLoader());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param plugin
-   *
-   * @throws IOException
-   */
   @SuppressWarnings("UnstableApiUsage")
-  private void copySmp(PluginResource plugin) throws IOException
-  {
+  private void copySmp(PluginResource plugin) throws IOException {
     URL resource = Resources.getResource(plugin.path);
     File file = new File(pluginDirectory, plugin.name);
 
-    try (OutputStream out = new FileOutputStream(file))
-    {
+    try (OutputStream out = new FileOutputStream(file)) {
       Resources.copy(resource, out);
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param plugins
-   *
-   * @throws IOException
-   */
-  private void copySmps(PluginResource... plugins) throws IOException
-  {
-    for (PluginResource plugin : plugins)
-    {
+  private void copySmps(PluginResource... plugins) throws IOException {
+    for (PluginResource plugin : plugins) {
       copySmp(plugin);
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param plugin
-   * @param id
-   *
-   * @return
-   */
-  private InstalledPlugin findPlugin(Iterable<InstalledPlugin> plugin,
-                                     final String id)
-  {
+  private InstalledPlugin findPlugin(Iterable<InstalledPlugin> plugin, final String id) {
     return Iterables.find(plugin, input -> id.equals(input.getId()));
   }
+  private static class PluginResource {
 
-  //~--- inner classes --------------------------------------------------------
+    private final String path;
+    private final String name;
+    private final String id;
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 14/12/06
-   * @author         Enter your name here...
-   */
-  private static class PluginResource
-  {
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param path
-     * @param name
-     * @param id
-     */
-    public PluginResource(String path, String name, String id)
-    {
+    public PluginResource(String path, String name, String id) {
       this.path = path;
       this.name = name;
       this.id = id;
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final String id;
-
-    /** Field description */
-    private final String name;
-
-    /** Field description */
-    private final String path;
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @Rule
-  public TemporaryFolder temp = new TemporaryFolder();
-
-  /** Field description */
-  private File pluginDirectory;
-
-  /** Field description */
-  private PluginProcessor processor;
 }
