@@ -28,6 +28,7 @@ import styled from "styled-components";
 import Icon from "../../Icon";
 import {usePopover} from "../../popover";
 import Popover from "../../popover/Popover";
+import classNames from "classnames";
 
 type Props = {
   signatures: Signature[];
@@ -80,17 +81,17 @@ const SignatureIcon: FC<Props> = ({signatures, className}) => {
 
     if (signature.status === "NOT_FOUND") {
       return <p>
-        <div>{t("changeset.signatureStatus")}: {status}</div>
         <div>{t("changeset.keyId")}: {signature.keyId}</div>
+        <div>{t("changeset.signatureStatus")}: {status}</div>
       </p>;
     }
 
     return <p>
-      <div>{t("changeset.keyOwner")}: {signature.owner || t("changeset.noOwner")}</div>
       <div>{t("changeset.keyId")}: {
         signature._links?.rawKey ? <a href={signature._links.rawKey.href}>{signature.keyId}</a> : signature.keyId
       }</div>
-      <div>{t("changeset.signatureStatus")}: <span color={getColor([signature])}>{status}</span></div>
+      <div>{t("changeset.signatureStatus")}: <span className={classNames(`has-text-${getColor([signature])}`)}>{status}</span></div>
+      <div>{t("changeset.keyOwner")}: {signature.owner || t("changeset.noOwner")}</div>
       {signature.contacts && signature.contacts.length > 0 && <>
         <div>{t("changeset.keyContacts")}:</div>
         {signature.contacts && signature.contacts.map(contact =>
