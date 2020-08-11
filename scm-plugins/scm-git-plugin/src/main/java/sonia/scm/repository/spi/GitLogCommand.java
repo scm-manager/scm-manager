@@ -182,7 +182,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
       if (Strings.isNullOrEmpty(request.getBranch())) {
         request.setBranch(context.getConfig().getDefaultBranch());
       }
-      return new GitLogComputer(this.repository.getId(), gitRepository).compute(request);
+      return new GitLogComputer(this.repository.getId(), gitRepository, converterFactory).compute(request);
     } catch (IOException e) {
       throw new InternalRepositoryException(repository, "could not create change log", e);
     }

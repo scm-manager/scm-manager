@@ -63,6 +63,8 @@ public class GitHookContextProvider extends HookContextProvider
 
   //~--- constructors ---------------------------------------------------------
 
+  private final GitChangesetConverterFactory converterFactory;
+
   /**
    * Constructs a new instance
    * @param receivePack git receive pack
@@ -80,6 +82,7 @@ public class GitHookContextProvider extends HookContextProvider
     this.repositoryId = repositoryId;
     this.changesetProvider = new GitHookChangesetProvider(converterFactory, receivePack,
       receiveCommands);
+    this.converterFactory = converterFactory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -111,7 +114,7 @@ public class GitHookContextProvider extends HookContextProvider
 
   @Override
   public HookMergeDetectionProvider getMergeDetectionProvider() {
-    return new GitReceiveHookMergeDetectionProvider(repository, repositoryId, receiveCommands);
+    return new GitReceiveHookMergeDetectionProvider(repository, repositoryId, receiveCommands, converterFactory);
   }
 
   @Override

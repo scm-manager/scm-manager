@@ -60,7 +60,7 @@ public class GitChangesetConverter implements Closeable {
   private final Multimap<ObjectId, String> tags;
   private final TreeWalk treeWalk;
 
-  GitChangesetConverter(GPG gpg, org.eclipse.jgit.lib.Repository repository, RevWalk revWalk) {
+  public GitChangesetConverter(GPG gpg, org.eclipse.jgit.lib.Repository repository, RevWalk revWalk) {
     this.gpg = gpg;
     this.tags = GitUtil.createTagMap(repository, revWalk);
     this.treeWalk = new TreeWalk(repository);
