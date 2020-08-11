@@ -31,7 +31,12 @@ import java.util.Set;
 
 public final class PluginInstallationVerifier {
 
-  private PluginInstallationVerifier() {
+  private final PluginInstallationContext context;
+  private final InstalledPluginDescriptor descriptor;
+
+  private PluginInstallationVerifier(PluginInstallationContext context, InstalledPluginDescriptor descriptor) {
+    this.context = context;
+    this.descriptor = descriptor;
   }
 
   public static void verify(PluginInstallationContext context, InstalledPlugin plugin) {
@@ -39,12 +44,16 @@ public final class PluginInstallationVerifier {
   }
 
   public static void verify(PluginInstallationContext context, InstalledPluginDescriptor descriptor) {
-    verifyConditions(descriptor);
-    verifyDependencies(context, descriptor);
-    verifyOptionalDependencies(context, descriptor);
+    new PluginInstallationVerifier(context, descriptor).doVerification();
   }
 
-  private static void verifyConditions(InstalledPluginDescriptor descriptor) {
+  private void doVerification() {
+    verifyConditions();
+    verifyDependencies();
+    verifyOptionalDependencies();
+  }
+
+  private void verifyConditions() {
     // TODO we should provide more details here, which condition has failed
     if (!descriptor.getCondition().isSupported()) {
       throw new PluginConditionFailedException(
@@ -57,7 +66,7 @@ public final class PluginInstallationVerifier {
     }
   }
 
-  private static void verifyDependencies(PluginInstallationContext context, InstalledPluginDescriptor descriptor) {
+  private void verifyDependencies() {
     Set<NameAndVersion> dependencies = descriptor.getDependenciesWithVersion();
     for (NameAndVersion dependency : dependencies) {
       NameAndVersion installed = context.find(dependency.getName())
@@ -65,22 +74,22 @@ public final class PluginInstallationVerifier {
           () -> new DependencyNotFoundException(descriptor.getInformation().getName(), dependency.getName())
         );
 
-      dependency.getVersion().ifPresent(requiredVersion -> verifyDependencyVersion(descriptor, dependency, installed));
+      dependency.getVersion().ifPresent(requiredVersion -> verifyDependencyVersion(dependency, installed));
     }
   }
 
-  private static void verifyOptionalDependencies(PluginInstallationContext context, InstalledPluginDescriptor descriptor) {
+  private void verifyOptionalDependencies() {
     Set<NameAndVersion> dependencies = descriptor.getOptionalDependenciesWithVersion();
     for (NameAndVersion dependency : dependencies) {
       Optional<Version> version = dependency.getVersion();
       if (version.isPresent()) {
         Optional<NameAndVersion> installed = context.find(dependency.getName());
-        installed.ifPresent(nameAndVersion -> verifyDependencyVersion(descriptor, dependency, nameAndVersion));
+        installed.ifPresent(nameAndVersion -> verifyDependencyVersion(dependency, nameAndVersion));
       }
     }
   }
 
-  private static void verifyDependencyVersion(InstalledPluginDescriptor descriptor, NameAndVersion required, NameAndVersion installed) {
+  private void verifyDependencyVersion(NameAndVersion required, NameAndVersion installed) {
     Version requiredVersion = required.mustGetVersion();
     Version installedVersion = installed.mustGetVersion();
     if (installedVersion.isOlder(requiredVersion)) {
