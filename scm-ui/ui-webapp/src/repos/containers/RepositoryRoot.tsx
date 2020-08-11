@@ -177,7 +177,7 @@ class RepositoryRoot extends React.Component<Props> {
           break;
         default:
           if (targetLink) {
-            links.push(sourceLink, targetLink);
+            links.push(targetLink, sourceLink); // Target link first because its the previous file
           } else {
             links.push(sourceLink);
           }
