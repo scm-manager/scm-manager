@@ -2684,6 +2684,131 @@ exports[`Storyshots Changesets With avatar 1`] = `
 </div>
 `;
 
+exports[`Storyshots Changesets With contactless signature 1`] = `
+<div
+  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+>
+  <div
+    className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
+  >
+    <div
+      className="columns is-gapless is-mobile"
+    >
+      <div
+        className="column is-three-fifths"
+      >
+        <div
+          className="columns is-gapless"
+        >
+          <div
+            className="column is-four-fifths"
+          >
+            <div
+              className="media"
+            >
+              <div
+                className="ChangesetRow__Metadata-tkpti5-3 dfKqLe media-right"
+              >
+                <h4
+                  className="has-text-weight-bold is-ellipsis-overflow"
+                >
+                  
+                  initialize repository
+                  
+                </h4>
+                <p
+                  className="is-hidden-touch"
+                />
+                <p
+                  className="is-hidden-desktop"
+                />
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
+                >
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                  >
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                  <div
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                  >
+                    <i
+                      className="fas fa-key has-text-success SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ChangesetRow__VCenteredColumn-tkpti5-5 jtvbjX column"
+          />
+        </div>
+      </div>
+      <div
+        className="ChangesetRow__VCenteredChildColumn-tkpti5-6 cciHUW column is-flex"
+      >
+        <div
+          className="ButtonAddons__Flex-sc-182golj-0 jSuMVB field has-addons is-marginless"
+        >
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-exchange-alt has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.details
+                 
+              </span>
+            </button>
+          </p>
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-code has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.sources
+                 
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots Changesets With invalid signature 1`] = `
 <div
   className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
@@ -3373,6 +3498,131 @@ exports[`Storyshots Changesets With unknown signature 1`] = `
                   >
                     <i
                       className="fas fa-key has-text-grey-light SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ChangesetRow__VCenteredColumn-tkpti5-5 jtvbjX column"
+          />
+        </div>
+      </div>
+      <div
+        className="ChangesetRow__VCenteredChildColumn-tkpti5-6 cciHUW column is-flex"
+      >
+        <div
+          className="ButtonAddons__Flex-sc-182golj-0 jSuMVB field has-addons is-marginless"
+        >
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-exchange-alt has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.details
+                 
+              </span>
+            </button>
+          </p>
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-code has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.sources
+                 
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Changesets With unowned signature 1`] = `
+<div
+  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+>
+  <div
+    className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
+  >
+    <div
+      className="columns is-gapless is-mobile"
+    >
+      <div
+        className="column is-three-fifths"
+      >
+        <div
+          className="columns is-gapless"
+        >
+          <div
+            className="column is-four-fifths"
+          >
+            <div
+              className="media"
+            >
+              <div
+                className="ChangesetRow__Metadata-tkpti5-3 dfKqLe media-right"
+              >
+                <h4
+                  className="has-text-weight-bold is-ellipsis-overflow"
+                >
+                  
+                  initialize repository
+                  
+                </h4>
+                <p
+                  className="is-hidden-touch"
+                />
+                <p
+                  className="is-hidden-desktop"
+                />
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
+                >
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                  >
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                  <div
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                  >
+                    <i
+                      className="fas fa-key has-text-success SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
                     />
                   </div>
                 </div>

@@ -121,6 +121,29 @@ storiesOf("Changesets", module)
     }];
     return <ChangesetRow repository={repository} changeset={changeset} />;
   })
+  .add("With unowned signature", () => {
+    const changeset = copy(three);
+    changeset.signatures = [{
+      keyId: "0x247E908C6FD35473",
+      type: "gpg",
+      status: "VERIFIED",
+      contacts: [{
+        name: "Tricia Marie McMilla",
+        mail: "trillian@hitchhiker.com"
+      }]
+    }];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
+  })
+  .add("With contactless signature", () => {
+    const changeset = copy(three);
+    changeset.signatures = [{
+      keyId: "0x247E908C6FD35473",
+      type: "gpg",
+      status: "VERIFIED",
+      owner: "trillian"
+    }];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
+  })
   .add("With invalid signature", () => {
     const changeset = copy(three);
     changeset.signatures = [{
