@@ -190,8 +190,14 @@ public final class PluginProcessor
     return ImmutableSet.copyOf(wrappers);
   }
 
-  private ImmutableSet<ExplodedSmp> concat(Set<ExplodedSmp> installedPlugins, Set<ExplodedSmp> newlyInstalledPlugins) {
-    return ImmutableSet.<ExplodedSmp>builder().addAll(installedPlugins).addAll(newlyInstalledPlugins).build();
+  private Set<ExplodedSmp> concat(Set<ExplodedSmp> installedPlugins, Set<ExplodedSmp> newlyInstalledPlugins) {
+    // We first add all newly installed plugins,
+    // after that we add the missing plugins, which are already installed.
+    // ExplodedSmp is equal by its path, so duplicates (updates) are not in the result.
+    return ImmutableSet.<ExplodedSmp>builder()
+      .addAll(newlyInstalledPlugins)
+      .addAll(installedPlugins)
+      .build();
   }
 
   private Set<ExplodedSmp> installPending(Set<ExplodedSmp> installedPlugins) throws IOException {

@@ -30,7 +30,6 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Predicate;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Resources;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -38,25 +37,21 @@ import org.junit.rules.TemporaryFolder;
 import sonia.scm.lifecycle.classloading.ClassLoaderLifeCycle;
 
 import javax.xml.bind.JAXB;
-
-import static org.hamcrest.Matchers.*;
-
-import static org.junit.Assert.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
-
 import java.lang.reflect.InvocationTargetException;
-
 import java.net.URL;
-
 import java.util.Set;
+import java.util.stream.Collectors;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
+
+import static org.hamcrest.Matchers.*;
+import static org.junit.Assert.*;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -100,7 +95,7 @@ public class PluginProcessorTest
     new PluginResource("sonia/scm/plugin/scm-f-plugin-1.0.1.smp",
       "scm-f-plugin.smp", "scm-f-plugin:1.0.1");
 
-  private static final String PLUGIN_G = "sonia/scm/plugin/scm-g-plugin.xml";
+  private static final String PLUGIN_G = "scm-g-plugin.xml";
   private static final String PLUGIN_H = "sonia/scm/plugin/scm-h-plugin.xml";
   private static final String PLUGIN_I = "sonia/scm/plugin/scm-i-plugin.xml";
 
@@ -108,21 +103,34 @@ public class PluginProcessorTest
 
   @Test(expected = PluginConditionFailedException.class)
   public void testFailedPluginCondition() throws IOException {
-    createPlugin(PLUGIN_G);
+    createPendingPluginInstallation(PLUGIN_G);
     collectPlugins();
   }
 
 
   @Test(expected = DependencyVersionMismatchException.class)
   public void testWrongVersionOfDependency() throws IOException {
-    createPlugin(PLUGIN_H);
-    createPlugin(PLUGIN_I);
+    createPendingPluginInstallation(PLUGIN_H);
+    createPendingPluginInstallation(PLUGIN_I);
     collectPlugins();
   }
 
+  @Test
+  public void shouldNotContainDuplicatesOnUpdate() throws IOException {
+    createInstalledPlugin("scm-mail-plugin-2-0-0.xml");
+    createInstalledPlugin("scm-review-plugin-2-0-0.xml");
+    createPendingPluginInstallation("scm-mail-plugin-2-1-0.xml");
+    createPendingPluginInstallation("scm-review-plugin-2-1-0.xml");
+
+    Set<String> plugins = collectPlugins().stream()
+      .map(p -> p.getDescriptor().getInformation().getName(true))
+      .collect(Collectors.toSet());
+    assertThat(plugins, containsInAnyOrder("scm-mail-plugin:2.1.0", "scm-review-plugin:2.1.0"));
+  }
+
   @SuppressWarnings("UnstableApiUsage")
-  private void createPlugin(String descriptorResource) throws IOException {
-    URL resource = Resources.getResource(descriptorResource);
+  private void createPendingPluginInstallation(String descriptorResource) throws IOException {
+    URL resource = Resources.getResource("sonia/scm/plugin/" +descriptorResource);
     InstalledPluginDescriptor descriptor = JAXB.unmarshal(resource, InstalledPluginDescriptor.class);
 
     File file = new File(pluginDirectory, descriptor.getInformation().getName() + ".smp");
@@ -130,6 +138,20 @@ public class PluginProcessorTest
     try (ZipOutputStream zip = new ZipOutputStream(new FileOutputStream(file))) {
       zip.putNextEntry(new ZipEntry("META-INF/scm/plugin.xml"));
       Resources.copy(resource, zip);
+    }
+  }
+
+  @SuppressWarnings("UnstableApiUsage")
+  private void createInstalledPlugin(String descriptorResource) throws IOException {
+    URL resource = Resources.getResource("sonia/scm/plugin/" + descriptorResource);
+    InstalledPluginDescriptor descriptor = JAXB.unmarshal(resource, InstalledPluginDescriptor.class);
+
+    File directory = new File(pluginDirectory, descriptor.getInformation().getName());
+    File scmDirectory = new File(directory, "META-INF" + File.separator + "scm");
+    assertTrue(scmDirectory.mkdirs());
+
+    try (OutputStream output = new FileOutputStream(new File(scmDirectory, "plugin.xml"))) {
+      Resources.copy(resource, output);
     }
   }
 

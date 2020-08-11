@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.nio.file.Path;
+import java.util.Objects;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -103,6 +104,25 @@ public final class ExplodedSmp
   public InstalledPluginDescriptor getPlugin()
   {
     return plugin;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ExplodedSmp that = (ExplodedSmp) o;
+    return path.equals(that.path);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(path);
+  }
+
+  @Override
+  public String toString() {
+    PluginInformation information = plugin.getInformation();
+    return information.getName() + "@" + information.getVersion() + " (" + path + ")";
   }
 
   //~--- inner classes --------------------------------------------------------
