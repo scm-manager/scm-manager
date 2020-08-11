@@ -33,13 +33,10 @@ import java.nio.file.Path;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
- class SmpDescriptorExtractor {
+class SmpDescriptorExtractor {
 
-  public SmpDescriptorExtractor() {
-  }
-
-   InstalledPluginDescriptor extractPluginDescriptor(Path file) throws IOException {
-    try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(file), StandardCharsets.UTF_8))    {
+  InstalledPluginDescriptor extractPluginDescriptor(Path file) throws IOException {
+    try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(file), StandardCharsets.UTF_8)) {
       ZipEntry nextEntry;
       while ((nextEntry = zipInputStream.getNextEntry()) != null) {
         if ("META-INF/scm/plugin.xml".equals(nextEntry.getName())) {
