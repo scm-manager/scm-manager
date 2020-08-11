@@ -219,7 +219,7 @@ class AbstractGitCommand {
       }
     }
 
-    Optional<RevCommit> doCommit(String message, Person author, boolean signingDisabled) {
+    Optional<RevCommit> doCommit(String message, Person author, boolean sign) {
       Person authorToUse = determineAuthor(author);
       try {
         Status status = clone.status().call();
@@ -228,8 +228,8 @@ class AbstractGitCommand {
             .setAuthor(authorToUse.getName(), authorToUse.getMail())
             .setCommitter("SCM-Manager", "noreply@scm-manager.org")
             .setMessage(message)
-            .setSign(!signingDisabled)
-            .setSigningKey(signingDisabled ? null : "SCM-MANAGER-DEFAULT-KEY")
+            .setSign(sign)
+            .setSigningKey(sign ? "SCM-MANAGER-DEFAULT-KEY" : null)
             .call());
         } else {
           return empty();

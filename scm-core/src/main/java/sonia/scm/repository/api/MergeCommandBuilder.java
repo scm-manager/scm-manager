@@ -138,12 +138,12 @@ public class MergeCommandBuilder {
   }
 
   /**
-   * Disables adding a verifiable signature to the merge.
+   * Disables adding a verifiable signature to the merge commit.
    * @return This builder instance.
    * @since 2.4.0
    */
   public MergeCommandBuilder disableSigning() {
-    request.setSigningDisabled(true);
+    request.setSign(false);
     return this;
   }
 

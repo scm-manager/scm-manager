@@ -56,6 +56,18 @@ const SignatureIcon: FC<Props> = ({signatures, className}) => {
     return null;
   }
 
+  const getColor = (signatures: Signature[]) => {
+    const invalid = signatures.some(sig => sig.status === "INVALID");
+    if (invalid) {
+      return "danger";
+    }
+    const verified = signatures.some(sig => sig.status === "VERIFIED");
+    if (verified) {
+      return "success";
+    }
+    return undefined;
+  };
+
   const createSignatureBlock = (signature: Signature) => {
     let status;
     if (signature.status === "VERIFIED") {
@@ -78,37 +90,26 @@ const SignatureIcon: FC<Props> = ({signatures, className}) => {
       <div>{t("changeset.keyId")}: {
         signature._links?.rawKey ? <a href={signature._links.rawKey.href}>{signature.keyId}</a> : signature.keyId
       }</div>
-      <div>{t("changeset.signatureStatus")}: {status}</div>
+      <div>{t("changeset.signatureStatus")}: <span color={getColor([signature])}>{status}</span></div>
       {signature.contacts && signature.contacts.length > 0 && <>
         <div>{t("changeset.keyContacts")}:</div>
-        {signature.contacts && signature.contacts.map(contact => <div>- {contact.name}{contact.mail && ` <${contact.mail}>`}</div>)}
+        {signature.contacts && signature.contacts.map(contact =>
+          <div>- {contact.name}{contact.mail && ` <${contact.mail}>`}</div>)}
       </>}
     </p>;
   };
 
   const signatureElements = signatures.map(signature => createSignatureBlock(signature));
 
-  const getColor = () => {
-    const invalid = signatures.some(sig => sig.status === "INVALID");
-    if (invalid) {
-      return "danger";
-    }
-    const verified = signatures.some(sig => sig.status === "VERIFIED");
-    if (verified) {
-      return "success";
-    }
-    return undefined;
-  };
-
   return (
     <>
-      <Popover title={t("changeset.signatures")} width={500} {...popoverProps}>
+      <Popover title={<h1>{t("changeset.signatures")}</h1>} width={500} {...popoverProps}>
         <StyledDiv>
           {signatureElements}
         </StyledDiv>
       </Popover>
       <div {...triggerProps}>
-        <StyledIcon name="key" className={className} color={getColor()}/>
+        <StyledIcon name="key" className={className} color={getColor(signatures)}/>
       </div>
     </>
   );

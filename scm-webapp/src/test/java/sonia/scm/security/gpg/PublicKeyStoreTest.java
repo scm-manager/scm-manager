@@ -27,12 +27,10 @@ package sonia.scm.security.gpg;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
-import org.junit.Rule;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.rules.ExpectedException;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.event.ScmEventBus;
@@ -163,7 +161,7 @@ class PublicKeyStoreTest {
 
     assertThat(key).isPresent();
 
-    assertThrows(PublicKeyStore.DeletingReadonlyKeyNotAllowedException.class, () -> keyStore.delete("0x975922F193B07D6E"));
+    assertThrows(DeletingReadonlyKeyNotAllowedException.class, () -> keyStore.delete("0x975922F193B07D6E"));
     key = keyStore.findById("0x975922F193B07D6E");
 
     assertThat(key).isPresent();

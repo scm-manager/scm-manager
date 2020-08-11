@@ -38,7 +38,6 @@ import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.security.GPG;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import javax.inject.Inject;
@@ -94,7 +93,7 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
         r.execute(this);
       }
       failIfNotChanged(() -> new NoChangesMadeException(repository, ModifyWorker.this.request.getBranch()));
-      Optional<RevCommit> revCommit = doCommit(request.getCommitMessage(), request.getAuthor(), request.isSigningDisabled());
+      Optional<RevCommit> revCommit = doCommit(request.getCommitMessage(), request.getAuthor(), request.isSign());
       push();
       return revCommit.orElseThrow(() -> new NoChangesMadeException(repository, ModifyWorker.this.request.getBranch())).name();
     }

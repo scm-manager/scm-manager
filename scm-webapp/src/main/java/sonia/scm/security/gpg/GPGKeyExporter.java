@@ -24,25 +24,20 @@
 
 package sonia.scm.security.gpg;
 
-import org.junit.jupiter.api.Test;
+import org.bouncycastle.bcpg.ArmoredOutputStream;
+import org.bouncycastle.openpgp.PGPKeyRing;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.util.Collections;
 
-import static org.assertj.core.api.Assertions.assertThat;
+class GPGKeyExporter {
+  private GPGKeyExporter() { }
 
-class GpgKeyTest {
-
-  @Test
-  void shouldVerifyPublicKey() throws IOException {
-    String rawPublicKey = GPGTestHelper.readResourceAsString("subkeys.asc");
-    GpgKey publicKey = new GpgKey("1", "trillian", rawPublicKey, Collections.emptySet());
-
-    byte[] content = GPGTestHelper.readResourceAsBytes("slarti.txt");
-    byte[] signature = GPGTestHelper.readResourceAsBytes("slarti.txt.asc");
-
-    boolean verified = publicKey.verify(content, signature);
-    assertThat(verified).isTrue();
+  static String exportKeyRing(PGPKeyRing keyRing) throws IOException {
+    final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+    final ArmoredOutputStream armoredOutputStream = new ArmoredOutputStream(byteArrayOutputStream);
+    keyRing.encode(armoredOutputStream);
+    armoredOutputStream.close();
+    return new String(byteArrayOutputStream.toByteArray());
   }
-
 }

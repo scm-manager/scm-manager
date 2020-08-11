@@ -134,4 +134,91 @@ storiesOf("Changesets", module)
       }]
     }];
     return <ChangesetRow repository={repository} changeset={changeset} />;
+  })
+  .add("With multiple signatures and invalid status", () => {
+    const changeset = copy(three);
+    changeset.signatures = [{
+      keyId: "0x912389FJIQW8W223",
+      type: "gpg",
+      status: "INVALID",
+      owner: "trillian",
+      contacts: [{
+        name: "Tricia Marie McMilla",
+        mail: "trillian@hitchhiker.com"
+      }]
+    }, {
+      keyId: "0x247E908C6FD35473",
+      type: "gpg",
+      status: "VERIFIED",
+      owner: "trillian",
+      contacts: [{
+        name: "Tricia Marie McMilla",
+        mail: "trillian@hitchhiker.com"
+      }]
+    }, {
+      keyId: "0x9123891239VFIA33",
+      type: "gpg",
+      status: "NOT_FOUND",
+      owner: "trillian",
+      contacts: [{
+        name: "Tricia Marie McMilla",
+        mail: "trillian@hitchhiker.com"
+      }]
+    }];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
+  })
+  .add("With multiple signatures and valid status", () => {
+    const changeset = copy(three);
+    changeset.signatures = [{
+      keyId: "0x912389FJIQW8W223",
+      type: "gpg",
+      status: "NOT_FOUND",
+      owner: "trillian",
+      contacts: [{
+        name: "Tricia Marie McMilla",
+        mail: "trillian@hitchhiker.com"
+      }]
+    }, {
+      keyId: "0x247E908C6FD35473",
+      type: "gpg",
+      status: "VERIFIED",
+      owner: "trillian",
+      contacts: [{
+        name: "Tricia Marie McMilla",
+        mail: "trillian@hitchhiker.com"
+      }]
+    }, {
+      keyId: "0x9123891239VFIA33",
+      type: "gpg",
+      status: "NOT_FOUND",
+      owner: "trillian",
+      contacts: [{
+        name: "Tricia Marie McMilla",
+        mail: "trillian@hitchhiker.com"
+      }]
+    }];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
+  })
+  .add("With multiple signatures and not found status", () => {
+    const changeset = copy(three);
+    changeset.signatures = [{
+      keyId: "0x912389FJIQW8W223",
+      type: "gpg",
+      status: "NOT_FOUND",
+      owner: "trillian",
+      contacts: [{
+        name: "Tricia Marie McMilla",
+        mail: "trillian@hitchhiker.com"
+      }]
+    }, {
+      keyId: "0x9123891239VFIA33",
+      type: "gpg",
+      status: "NOT_FOUND",
+      owner: "trillian",
+      contacts: [{
+        name: "Tricia Marie McMilla",
+        mail: "trillian@hitchhiker.com"
+      }]
+    }];
+    return <ChangesetRow repository={repository} changeset={changeset} />;
   });

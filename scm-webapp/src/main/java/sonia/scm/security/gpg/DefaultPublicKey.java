@@ -46,16 +46,16 @@ import java.nio.charset.StandardCharsets;
 import java.util.Optional;
 import java.util.Set;
 
-public class GpgKey implements PublicKey {
+public class DefaultPublicKey implements PublicKey {
 
-  private static final Logger LOG = LoggerFactory.getLogger(GpgKey.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultPublicKey.class);
 
   private final String id;
   private final String owner;
   private final String raw;
   private final Set<Person> contacts;
 
-  public GpgKey(String id, String owner, String raw, Set<Person> contacts) {
+  public DefaultPublicKey(String id, String owner, String raw, Set<Person> contacts) {
     this.id = id;
     this.owner = owner;
     this.raw = raw;

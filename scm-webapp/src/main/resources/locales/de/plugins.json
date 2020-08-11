@@ -248,6 +248,14 @@
     "3tS0mjSoo1": {
       "displayName": "Fehler bei der Erstellung eines Arbeitsverzeichnisses",
       "description": "Der Server konnte kein Arbeitsverzeichnis zur Abarbeitung der Anfrage erstellen. Bitte prüfen Sie die Server Logs für genauere Informationen."
+    },
+    "3US6mweXy1": {
+      "displayName": "Fehler beim Löschen eines schreibgeschützen Schlüssels",
+      "description": "Vom Server generierte, öffentliche Schlüssel sind schreibgeschützt und können nicht gelöscht werden."
+    },
+    "BxS5wX2v71": {
+      "displayName": "Inkorrekter Schlüssel",
+      "description": "Der bereitgestellte Schlüssel ist kein korrekt formartierter öffentlicher Schlüssel."
     }
   },
   "namespaceStrategies": {

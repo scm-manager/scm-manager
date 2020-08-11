@@ -81,7 +81,7 @@ class DefaultGPGTest {
   @InjectMocks
   private DefaultGPG gpg;
 
-  Subject subjectUnderTest;
+  private Subject subjectUnderTest;
 
   @AfterEach
   void unbindThreadContext() {
@@ -141,39 +141,10 @@ class DefaultGPGTest {
   }
 
   @Test
-  void shouldGenerateKeyPair() throws NoSuchProviderException, NoSuchAlgorithmException, PGPException {
-    final PGPKeyRingGenerator keyRingGenerator = gpg.generateKeyPair();
-    assertThat(keyRingGenerator.generatePublicKeyRing().getPublicKey()).isNotNull();
-    assertThat(keyRingGenerator.generateSecretKeyRing().getSecretKey()).isNotNull();
-  }
-
-  @Test
-  void shouldExportGeneratedKeyPair() throws NoSuchProviderException, NoSuchAlgorithmException, PGPException, IOException {
-    final PGPKeyRingGenerator keyRingGenerator = gpg.generateKeyPair();
-
-    final String exportedPublicKey = gpg.exportKeyRing(keyRingGenerator.generatePublicKeyRing());
-    assertThat(exportedPublicKey).isNotBlank();
-    assertThat(exportedPublicKey).startsWith("-----BEGIN PGP PUBLIC KEY BLOCK-----");
-    assertThat(exportedPublicKey).contains("-----END PGP PUBLIC KEY BLOCK-----");
-
-    final String exportedPrivateKey = gpg.exportKeyRing(keyRingGenerator.generateSecretKeyRing());
-    assertThat(exportedPrivateKey).isNotBlank();
-    assertThat(exportedPrivateKey).startsWith("-----BEGIN PGP PRIVATE KEY BLOCK-----");
-    assertThat(exportedPrivateKey).contains("-----END PGP PRIVATE KEY BLOCK-----");
-  }
-
-  @Test
-  void shouldImportKeyPair() throws IOException, PGPException {
-    String raw = GPGTestHelper.readResourceAsString("private-key.asc");
-    final Optional<PGPPrivateKey> privateKey = PgpPrivateKeyExtractor.getFromRawKey(raw);
-    assertThat(privateKey).isPresent();
-  }
-
-  @Test
   void shouldImportExportedGeneratedPrivateKey() throws NoSuchProviderException, NoSuchAlgorithmException, PGPException, IOException {
-    final PGPKeyRingGenerator keyRingGenerator = gpg.generateKeyPair();
-    final String exportedPrivateKey = gpg.exportKeyRing(keyRingGenerator.generateSecretKeyRing());
-    final Optional<PGPPrivateKey> privateKey = PgpPrivateKeyExtractor.getFromRawKey(exportedPrivateKey);
+    final PGPKeyRingGenerator keyRingGenerator = GPGKeyPairGenerator.generateKeyPair();
+    final String exportedPrivateKey = GPGKeyExporter.exportKeyRing(keyRingGenerator.generateSecretKeyRing());
+    final Optional<PGPPrivateKey> privateKey = KeysExtractor.extractPrivateKey(exportedPrivateKey);
     assertThat(privateKey).isPresent();
   }
 
@@ -184,7 +155,7 @@ class DefaultGPGTest {
     ThreadContext.bind(subjectUnderTest);
 
     String raw = GPGTestHelper.readResourceAsString("private-key.asc");
-    final DefaultGPG.DefaultPrivateKey privateKey = new DefaultGPG.DefaultPrivateKey(raw);
+    final DefaultPrivateKey privateKey = new DefaultPrivateKey(raw);
     final byte[] signature = privateKey.sign("This is a test commit".getBytes());
     final String signatureString = new String(signature);
     assertThat(signature).isNotEmpty();

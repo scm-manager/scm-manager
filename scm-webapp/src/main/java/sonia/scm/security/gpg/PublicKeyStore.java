@@ -25,7 +25,6 @@
 package sonia.scm.security.gpg;
 
 import org.bouncycastle.openpgp.PGPPublicKey;
-import sonia.scm.BadRequestException;
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Person;
@@ -45,7 +44,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static sonia.scm.security.gpg.PgpPublicKeyExtractor.getFromRawKey;
+import static sonia.scm.security.gpg.KeysExtractor.extractPublicKey;
 
 @Singleton
 public class PublicKeyStore {
@@ -85,7 +84,7 @@ public class PublicKeyStore {
     RawGpgKey key = new RawGpgKey(master, displayName, username, rawKey, getContactsFromPublicKey(rawKey), Instant.now(), readonly);
 
     store.put(master, key);
-    eventBus.post(new PublicKeyCreatedEvent());
+    eventBus.post(new PublicKeyCreatedEvent(new DefaultPublicKey(key.getId(), key.getOwner(), key.getRaw(), key.getContacts())));
 
     return key;
 
@@ -93,7 +92,7 @@ public class PublicKeyStore {
 
   private Set<Person> getContactsFromPublicKey(String rawKey) {
     List<String> userIds = new ArrayList<>();
-    Optional<PGPPublicKey> publicKeyFromRawKey = getFromRawKey(rawKey);
+    Optional<PGPPublicKey> publicKeyFromRawKey = extractPublicKey(rawKey);
     publicKeyFromRawKey.ifPresent(pgpPublicKey -> pgpPublicKey.getUserIDs().forEachRemaining(userIds::add));
 
     return userIds.stream().map(Person::toPerson).collect(Collectors.toSet());
@@ -105,7 +104,7 @@ public class PublicKeyStore {
       if (!rawGpgKey.isReadonly()) {
         UserPermissions.changePublicKeys(rawGpgKey.getOwner()).check();
         store.remove(id);
-        eventBus.post(new PublicKeyDeletedEvent());
+        eventBus.post(new PublicKeyDeletedEvent(new DefaultPublicKey(rawGpgKey.getId(), rawGpgKey.getOwner(), rawGpgKey.getRaw(), rawGpgKey.getContacts())));
       } else {
         throw new DeletingReadonlyKeyNotAllowedException(id);
       }
@@ -127,22 +126,6 @@ public class PublicKeyStore {
       .stream()
       .filter(rawGpgKey -> username.equalsIgnoreCase(rawGpgKey.getOwner()))
       .collect(Collectors.toList());
-  }
-
-  @SuppressWarnings("squid:MaximumInheritanceDepth")
-  // exceptions have a deep inheritance depth themselves; therefore we accept this here
-  public static class DeletingReadonlyKeyNotAllowedException extends BadRequestException {
-
-    public DeletingReadonlyKeyNotAllowedException(String keyId) {
-      super(ContextEntry.ContextBuilder.entity(RawGpgKey.class, keyId).build(), "deleting readonly gpg keys is not allowed");
-    }
-
-    private static final String CODE = "3US6mweXy1";
-
-    @Override
-    public String getCode() {
-      return CODE;
-    }
   }
 
 }

@@ -24,13 +24,18 @@
 
 package sonia.scm.repository;
 
+import org.eclipse.jgit.api.errors.CanceledException;
+import org.eclipse.jgit.lib.CommitBuilder;
+import org.eclipse.jgit.lib.GpgSignature;
+import org.eclipse.jgit.lib.GpgSigner;
+import org.eclipse.jgit.lib.PersonIdent;
+import org.eclipse.jgit.transport.CredentialsProvider;
 import sonia.scm.security.GPG;
 import sonia.scm.security.PrivateKey;
 import sonia.scm.security.PublicKey;
 
 import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
 
 public final class GitTestHelper {
 
@@ -39,6 +44,25 @@ public final class GitTestHelper {
 
   public static GitChangesetConverterFactory createConverterFactory() {
     return new GitChangesetConverterFactory(new NoopGPG());
+  }
+
+  public static class SimpleGpgSigner extends GpgSigner {
+
+    public static byte[] getSignature() {
+      return "SIGNATURE".getBytes();
+    }
+
+    @Override
+    public void sign(CommitBuilder commitBuilder, String s, PersonIdent personIdent, CredentialsProvider
+      credentialsProvider) throws CanceledException {
+      commitBuilder.setGpgSignature(new GpgSignature(SimpleGpgSigner.getSignature()));
+    }
+
+    @Override
+    public boolean canLocateSigningKey(String s, PersonIdent personIdent, CredentialsProvider credentialsProvider) throws CanceledException {
+      return true;
+    }
+
   }
 
   private static class NoopGPG implements GPG {

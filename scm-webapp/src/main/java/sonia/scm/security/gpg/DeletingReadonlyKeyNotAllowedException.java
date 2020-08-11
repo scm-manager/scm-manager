@@ -22,11 +22,21 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.security.gpg;
 
-/**
- * @since 2.4.0
- */
-public enum SignatureStatus {
-  VERIFIED, NOT_FOUND, INVALID;
+import sonia.scm.BadRequestException;
+import sonia.scm.ContextEntry;
+
+public final class DeletingReadonlyKeyNotAllowedException extends BadRequestException {
+
+  public DeletingReadonlyKeyNotAllowedException(String keyId) {
+    super(ContextEntry.ContextBuilder.entity(RawGpgKey.class, keyId).build(), "deleting readonly gpg keys is not allowed");
+  }
+
+  private static final String CODE = "3US6mweXy1";
+
+  @Override
+  public String getCode() {
+    return CODE;
+  }
 }

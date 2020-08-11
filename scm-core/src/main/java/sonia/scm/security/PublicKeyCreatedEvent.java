@@ -31,5 +31,14 @@ import sonia.scm.event.Event;
  * @since 2.4.0
  */
 @Event
-public class PublicKeyCreatedEvent {
+public final class PublicKeyCreatedEvent {
+  private final PublicKey key;
+
+  public PublicKeyCreatedEvent(PublicKey key) {
+    this.key = key;
+  }
+
+  public PublicKey getKey() {
+    return key;
+  }
 }

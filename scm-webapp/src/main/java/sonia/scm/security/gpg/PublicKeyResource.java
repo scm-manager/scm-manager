@@ -65,8 +65,7 @@ public class PublicKeyResource {
     responseCode = "200",
     description = "success",
     content = @Content(
-      mediaType = "application/pgp-keys",
-      schema = @Schema(implementation = RawGpgKeyDto.class)
+      mediaType = "application/pgp-keys"
     )
   )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")

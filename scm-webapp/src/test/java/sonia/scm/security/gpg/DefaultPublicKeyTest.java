@@ -24,34 +24,25 @@
 
 package sonia.scm.security.gpg;
 
-import org.bouncycastle.bcpg.ArmoredInputStream;
-import org.bouncycastle.openpgp.PGPObjectFactory;
-import org.bouncycastle.openpgp.PGPPublicKey;
-import org.bouncycastle.openpgp.PGPPublicKeyRing;
-import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.util.Optional;
+import java.util.Collections;
 
-public class PgpPublicKeyExtractor {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  private PgpPublicKeyExtractor() {}
+class DefaultPublicKeyTest {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PgpPublicKeyExtractor.class);
+  @Test
+  void shouldVerifyPublicKey() throws IOException {
+    String rawPublicKey = GPGTestHelper.readResourceAsString("subkeys.asc");
+    DefaultPublicKey publicKey = new DefaultPublicKey("1", "trillian", rawPublicKey, Collections.emptySet());
 
-  static Optional<PGPPublicKey> getFromRawKey(String rawKey) {
-    try {
-      ArmoredInputStream armoredInputStream = new ArmoredInputStream(new ByteArrayInputStream(rawKey.getBytes()));
-      PGPObjectFactory pgpObjectFactory = new PGPObjectFactory(armoredInputStream, new JcaKeyFingerprintCalculator());
-      PGPPublicKey publicKey = ((PGPPublicKeyRing) pgpObjectFactory.nextObject()).getPublicKey();
-      return Optional.of(publicKey);
+    byte[] content = GPGTestHelper.readResourceAsBytes("slarti.txt");
+    byte[] signature = GPGTestHelper.readResourceAsBytes("slarti.txt.asc");
 
-    } catch (IOException e) {
-      LOG.error("Invalid PGP key", e);
-    }
-    return Optional.empty();
+    boolean verified = publicKey.verify(content, signature);
+    assertThat(verified).isTrue();
   }
+
 }

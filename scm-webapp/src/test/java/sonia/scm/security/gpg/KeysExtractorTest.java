@@ -24,6 +24,7 @@
 
 package sonia.scm.security.gpg;
 
+import org.bouncycastle.openpgp.PGPPrivateKey;
 import org.bouncycastle.openpgp.PGPPublicKey;
 import org.junit.jupiter.api.Test;
 
@@ -32,16 +33,23 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class PgpPublicKeyExtractorTest {
+class KeysExtractorTest {
 
   @Test
   void shouldExtractPublicKeyFromRawKey() throws IOException {
     String raw = GPGTestHelper.readResourceAsString("single.asc");
 
-    Optional<PGPPublicKey> publicKey = PgpPublicKeyExtractor.getFromRawKey(raw);
+    Optional<PGPPublicKey> publicKey = KeysExtractor.extractPublicKey(raw);
 
     assertThat(publicKey).isPresent();
     assertThat(Long.toHexString(publicKey.get().getKeyID())).isEqualTo("975922f193b07d6e");
+  }
+
+  @Test
+  void shouldExtractPrivateKeyFromRawKey() throws IOException {
+    String raw = GPGTestHelper.readResourceAsString("private-key.asc");
+    final Optional<PGPPrivateKey> privateKey = KeysExtractor.extractPrivateKey(raw);
+    assertThat(privateKey).isPresent();
   }
 
 }
