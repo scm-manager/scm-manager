@@ -3093,13 +3093,6 @@ exports[`Storyshots Diff Binaries 1`] = `
             add
           </span>
         </div>
-        <div
-          className="DiffFile__ButtonWrapper-sc-10deuqx-4 dxoMYa level-right is-flex"
-        >
-          <div
-            className="field is-grouped"
-          />
-        </div>
       </div>
     </div>
     <div
@@ -3180,6 +3173,44 @@ exports[`Storyshots Diff Collapsed 1`] = `
                 </a>
               </span>
             </div>
+            <div
+              className="control"
+            >
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="Jump to source"
+              >
+                <a
+                  aria-label="Jump to source"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
+                  href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc/src/main/java/com/cloudogu/scm/review/events/EventListener.java/"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-file-code has-text-inherit"
+                  />
+                </a>
+              </span>
+            </div>
+            <div
+              className="control"
+            >
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="Jump to target"
+              >
+                <a
+                  aria-label="Jump to target"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
+                  href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825/src/main/java/com/cloudogu/scm/review/events/EventListener.java"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-file-code has-text-inherit"
+                  />
+                </a>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -3233,6 +3264,44 @@ exports[`Storyshots Diff Collapsed 1`] = `
                 >
                   <i
                     className="fas fa-columns"
+                  />
+                </a>
+              </span>
+            </div>
+            <div
+              className="control"
+            >
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="Jump to source"
+              >
+                <a
+                  aria-label="Jump to source"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
+                  href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc/src/main/js/ChangeNotification.tsx/"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-file-code has-text-inherit"
+                  />
+                </a>
+              </span>
+            </div>
+            <div
+              className="control"
+            >
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="Jump to target"
+              >
+                <a
+                  aria-label="Jump to target"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
+                  href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825/src/main/js/ChangeNotification.tsx"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-file-code has-text-inherit"
                   />
                 </a>
               </span>
@@ -3294,6 +3363,44 @@ exports[`Storyshots Diff Collapsed 1`] = `
                 </a>
               </span>
             </div>
+            <div
+              className="control"
+            >
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="Jump to source"
+              >
+                <a
+                  aria-label="Jump to source"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
+                  href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc/src/main/resources/locales/de/plugins.json/"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-file-code has-text-inherit"
+                  />
+                </a>
+              </span>
+            </div>
+            <div
+              className="control"
+            >
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="Jump to target"
+              >
+                <a
+                  aria-label="Jump to target"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
+                  href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825/src/main/resources/locales/de/plugins.json"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-file-code has-text-inherit"
+                  />
+                </a>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -3347,6 +3454,44 @@ exports[`Storyshots Diff Collapsed 1`] = `
                 >
                   <i
                     className="fas fa-columns"
+                  />
+                </a>
+              </span>
+            </div>
+            <div
+              className="control"
+            >
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="Jump to source"
+              >
+                <a
+                  aria-label="Jump to source"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
+                  href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc/src/main/resources/locales/en/plugins.json/"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-file-code has-text-inherit"
+                  />
+                </a>
+              </span>
+            </div>
+            <div
+              className="control"
+            >
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="Jump to target"
+              >
+                <a
+                  aria-label="Jump to target"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
+                  href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825/src/main/resources/locales/en/plugins.json"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-file-code has-text-inherit"
                   />
                 </a>
               </span>
@@ -3408,6 +3553,44 @@ exports[`Storyshots Diff Collapsed 1`] = `
                 </a>
               </span>
             </div>
+            <div
+              className="control"
+            >
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="Jump to source"
+              >
+                <a
+                  aria-label="Jump to source"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
+                  href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc/src/test/java/com/cloudogu/scm/review/events/ClientTest.java/"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-file-code has-text-inherit"
+                  />
+                </a>
+              </span>
+            </div>
+            <div
+              className="control"
+            >
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="Jump to target"
+              >
+                <a
+                  aria-label="Jump to target"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
+                  href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825/src/test/java/com/cloudogu/scm/review/events/ClientTest.java"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-file-code has-text-inherit"
+                  />
+                </a>
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -3461,6 +3644,44 @@ exports[`Storyshots Diff Collapsed 1`] = `
                 >
                   <i
                     className="fas fa-columns"
+                  />
+                </a>
+              </span>
+            </div>
+            <div
+              className="control"
+            >
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="Jump to source"
+              >
+                <a
+                  aria-label="Jump to source"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
+                  href="/repo/hitchhiker/heartOfGold/code/changeset/d21cc6c359270aef2196796f4d96af65f51866dc/Main.java/"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-file-code has-text-inherit"
+                  />
+                </a>
+              </span>
+            </div>
+            <div
+              className="control"
+            >
+              <span
+                className="tooltip has-tooltip-top"
+                data-tooltip="Jump to target"
+              >
+                <a
+                  aria-label="Jump to target"
+                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
+                  href="/repo/hitchhiker/heartOfGold/code/changeset/e163c8f632db571c9aa51a8eb440e37cf550b825/Main.java"
+                  onClick={[Function]}
+                >
+                  <i
+                    className="fas fa-file-code has-text-inherit"
                   />
                 </a>
               </span>
@@ -38373,25 +38594,6 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
                 </a>
               </span>
             </div>
-            <div
-              className="control"
-            >
-              <span
-                className="tooltip has-tooltip-top"
-                data-tooltip="diff.jumpToFile"
-              >
-                <a
-                  aria-label="diff.jumpToFile"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
-                  href="/repo/hitchhiker/heartOfGold/code/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/main/java/com/cloudogu/scm/review/events/EventListener.java/"
-                  onClick={[Function]}
-                >
-                  <i
-                    className="fas fa-file-code has-text-inherit"
-                  />
-                </a>
-              </span>
-            </div>
           </div>
         </div>
       </div>
@@ -38988,25 +39190,6 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
                 >
                   <i
                     className="fas fa-columns"
-                  />
-                </a>
-              </span>
-            </div>
-            <div
-              className="control"
-            >
-              <span
-                className="tooltip has-tooltip-top"
-                data-tooltip="diff.jumpToFile"
-              >
-                <a
-                  aria-label="diff.jumpToFile"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
-                  href="/repo/hitchhiker/heartOfGold/code/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/main/js/ChangeNotification.tsx/"
-                  onClick={[Function]}
-                >
-                  <i
-                    className="fas fa-file-code has-text-inherit"
                   />
                 </a>
               </span>
@@ -39948,25 +40131,6 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
                 </a>
               </span>
             </div>
-            <div
-              className="control"
-            >
-              <span
-                className="tooltip has-tooltip-top"
-                data-tooltip="diff.jumpToFile"
-              >
-                <a
-                  aria-label="diff.jumpToFile"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
-                  href="/repo/hitchhiker/heartOfGold/code/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/main/resources/locales/de/plugins.json/"
-                  onClick={[Function]}
-                >
-                  <i
-                    className="fas fa-file-code has-text-inherit"
-                  />
-                </a>
-              </span>
-            </div>
           </div>
         </div>
       </div>
@@ -40475,25 +40639,6 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
                 </a>
               </span>
             </div>
-            <div
-              className="control"
-            >
-              <span
-                className="tooltip has-tooltip-top"
-                data-tooltip="diff.jumpToFile"
-              >
-                <a
-                  aria-label="diff.jumpToFile"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
-                  href="/repo/hitchhiker/heartOfGold/code/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/main/resources/locales/en/plugins.json/"
-                  onClick={[Function]}
-                >
-                  <i
-                    className="fas fa-file-code has-text-inherit"
-                  />
-                </a>
-              </span>
-            </div>
           </div>
         </div>
       </div>
@@ -40998,25 +41143,6 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
                 >
                   <i
                     className="fas fa-columns"
-                  />
-                </a>
-              </span>
-            </div>
-            <div
-              className="control"
-            >
-              <span
-                className="tooltip has-tooltip-top"
-                data-tooltip="diff.jumpToFile"
-              >
-                <a
-                  aria-label="diff.jumpToFile"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
-                  href="/repo/hitchhiker/heartOfGold/code/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/src/test/java/com/cloudogu/scm/review/events/ClientTest.java/"
-                  onClick={[Function]}
-                >
-                  <i
-                    className="fas fa-file-code has-text-inherit"
                   />
                 </a>
               </span>
@@ -42215,25 +42341,6 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
                 >
                   <i
                     className="fas fa-columns"
-                  />
-                </a>
-              </span>
-            </div>
-            <div
-              className="control"
-            >
-              <span
-                className="tooltip has-tooltip-top"
-                data-tooltip="diff.jumpToFile"
-              >
-                <a
-                  aria-label="diff.jumpToFile"
-                  className="JumpToFileButton__Button-sc-72e4b2-0 iuoeHJ button"
-                  href="/repo/hitchhiker/heartOfGold/code/sources/0b92307029a2a171e3b467a1502f392c733e3e8f/Main.java/"
-                  onClick={[Function]}
-                >
-                  <i
-                    className="fas fa-file-code has-text-inherit"
                   />
                 </a>
               </span>
