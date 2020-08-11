@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -335,6 +335,16 @@ public final class GitUtil
   public static boolean isBranch(String refName)
   {
     return Strings.nullToEmpty(refName).startsWith(PREFIX_HEADS);
+  }
+
+  public static Ref getBranchIdOrCurrentHead(org.eclipse.jgit.lib.Repository gitRepository, String requestedBranch) throws IOException {
+    if ( Strings.isNullOrEmpty(requestedBranch) ) {
+      logger.trace("no default branch configured, use repository head as default");
+      Optional<Ref> repositoryHeadRef = GitUtil.getRepositoryHeadRef(gitRepository);
+      return repositoryHeadRef.orElse(null);
+    } else {
+      return GitUtil.getBranchId(gitRepository, requestedBranch);
+    }
   }
 
   /**

@@ -124,8 +124,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
 
       logger.trace("resolved repository to {}", repositoryId);
 
-      GitHookContextProvider context = new GitHookContextProvider(converterFactory, rpack,
-                                         receiveCommands);
+      GitHookContextProvider context = new GitHookContextProvider(converterFactory, rpack, receiveCommands, repository, repositoryId);
 
       hookEventFacade.handle(repositoryId).fireHookEvent(type, context);
 

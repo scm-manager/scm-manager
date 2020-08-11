@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.assertj.core.api.Assertions;
@@ -48,7 +48,7 @@ public class GitDiffCommand_DequoteOutputStreamTest {
     stream.write(bytes, 0, bytes.length);
     stream.flush();
 
-    Assertions.assertThat(buffer.toString()).isEqualTo("diff --git a/file úüþëéåëåé a b/file úüþëéåëåé b\n" +
+    Assertions.assertThat(buffer.toString("UTF-8")).isEqualTo("diff --git a/file úüþëéåëåé a b/file úüþëéåëåé b\n" +
       "new file mode 100644\n" +
       "index 0000000..8cb0607\n" +
       "--- /dev/null\n" +

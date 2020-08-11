@@ -22,14 +22,28 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.client.api;
+package sonia.scm.repository.client.spi;
 
-/**
- *
- * @author Sebastian Sdorra
- * @since 1.18
- */
-public enum ClientCommand
-{
-  ADD, REMOVE, COMMIT, PUSH, TAG, BRANCH, DELETE_REMOTE_BRANCH, CHECKOUT, MERGE
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import sonia.scm.repository.client.api.RepositoryClientException;
+
+import java.io.IOException;
+
+public class GitCheckoutCommand implements CheckoutCommand {
+
+  private Git git;
+
+  GitCheckoutCommand(Git git) {
+    this.git = git;
+  }
+
+  @Override
+  public void checkout(String name) throws IOException {
+    try {
+      git.checkout().setName(name).call();
+    } catch (GitAPIException ex) {
+      throw new RepositoryClientException("could not checkout branch or revision", ex);
+    }
+  }
 }

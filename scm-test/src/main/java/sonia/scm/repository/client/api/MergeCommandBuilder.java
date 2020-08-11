@@ -24,12 +24,40 @@
 
 package sonia.scm.repository.client.api;
 
+import sonia.scm.repository.client.spi.MergeCommand;
+import sonia.scm.repository.client.spi.MergeRequest;
+
+import java.io.IOException;
+
 /**
- *
- * @author Sebastian Sdorra
- * @since 1.18
+ * @since 2.4.0
  */
-public enum ClientCommand
-{
-  ADD, REMOVE, COMMIT, PUSH, TAG, BRANCH, DELETE_REMOTE_BRANCH, CHECKOUT, MERGE
+public final class MergeCommandBuilder {
+
+  private final MergeCommand command;
+  private final MergeRequest request = new MergeRequest();
+
+  MergeCommandBuilder(MergeCommand command) {
+    this.command = command;
+  }
+
+  public MergeCommandBuilder ffOnly() {
+    request.setFfMode(MergeRequest.FastForwardMode.FF_ONLY);
+    return this;
+  }
+
+  public MergeCommandBuilder noFf() {
+    request.setFfMode(MergeRequest.FastForwardMode.NO_FF);
+    return this;
+  }
+
+  public MergeCommandBuilder ffIfPossible() {
+    request.setFfMode(MergeRequest.FastForwardMode.FF);
+    return this;
+  }
+
+  public void merge(String branch) throws IOException {
+    request.setBranch(branch);
+    command.merge(request);
+  }
 }

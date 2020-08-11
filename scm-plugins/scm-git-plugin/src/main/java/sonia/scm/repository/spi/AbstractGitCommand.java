@@ -41,7 +41,6 @@ import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
@@ -59,6 +58,7 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
+import static sonia.scm.repository.GitUtil.getBranchIdOrCurrentHead;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -116,15 +116,9 @@ class AbstractGitCommand {
   Ref getBranchOrDefault(Repository gitRepository, String requestedBranch) throws IOException {
     if (Strings.isNullOrEmpty(requestedBranch)) {
       String defaultBranchName = context.getConfig().getDefaultBranch();
-      if (!Strings.isNullOrEmpty(defaultBranchName)) {
-        return GitUtil.getBranchId(gitRepository, defaultBranchName);
-      } else {
-        logger.trace("no default branch configured, use repository head as default");
-        Optional<Ref> repositoryHeadRef = GitUtil.getRepositoryHeadRef(gitRepository);
-        return repositoryHeadRef.orElse(null);
-      }
+      return getBranchIdOrCurrentHead(gitRepository, defaultBranchName);
     } else {
-      return GitUtil.getBranchId(gitRepository, requestedBranch);
+      return getBranchIdOrCurrentHead(gitRepository, requestedBranch);
     }
   }
 
