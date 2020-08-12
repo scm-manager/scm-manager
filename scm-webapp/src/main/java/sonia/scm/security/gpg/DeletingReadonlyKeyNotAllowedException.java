@@ -27,6 +27,7 @@ package sonia.scm.security.gpg;
 import sonia.scm.BadRequestException;
 import sonia.scm.ContextEntry;
 
+@SuppressWarnings("squid:S110")
 public final class DeletingReadonlyKeyNotAllowedException extends BadRequestException {
 
   public DeletingReadonlyKeyNotAllowedException(String keyId) {

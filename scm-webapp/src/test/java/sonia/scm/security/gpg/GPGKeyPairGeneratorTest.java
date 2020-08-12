@@ -41,7 +41,7 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.security.Security;
 
-public class GPGKeyPairGeneratorTest {
+class GPGKeyPairGeneratorTest {
 
   private static void registerBouncyCastleProviderIfNecessary() {
     if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {

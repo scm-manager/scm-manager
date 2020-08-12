@@ -29,6 +29,7 @@ import sonia.scm.ContextEntry;
 
 import java.util.List;
 
+@SuppressWarnings("squid:S110")
 public class NotPublicKeyException extends BadRequestException {
   public NotPublicKeyException(List<ContextEntry> context, String message) {
     super(context, message);

@@ -38,6 +38,7 @@ import java.util.Set;
 @Getter
 @Setter
 @NoArgsConstructor
+@SuppressWarnings("squid:S2160")
 public class SignatureDto extends HalRepresentation {
 
   private String keyId;

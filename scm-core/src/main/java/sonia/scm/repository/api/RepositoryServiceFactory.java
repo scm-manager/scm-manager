@@ -135,7 +135,7 @@ public final class RepositoryServiceFactory {
   public RepositoryServiceFactory(ScmConfiguration configuration,
                                   CacheManager cacheManager, RepositoryManager repositoryManager,
                                   Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
-                                  Set<ScmProtocolProvider> protocolProviders, WorkdirProvider workdirProvider) {
+                                  @SuppressWarnings("rawtypes") Set<ScmProtocolProvider> protocolProviders, WorkdirProvider workdirProvider) {
     this(
       configuration, cacheManager, repositoryManager, resolvers,
       preProcessorUtil, protocolProviders, workdirProvider, ScmEventBus.getInstance()
@@ -348,9 +348,7 @@ public final class RepositoryServiceFactory {
       }
 
       RepositoryCacheKeyPredicate predicate = new RepositoryCacheKeyPredicate(repositoryId);
-      caches.forEach((cache) -> {
-        cache.removeAll(predicate);
-      });
+      caches.forEach(cache -> cache.removeAll(predicate));
     }
   }
 
