@@ -43,7 +43,7 @@ import {
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
 import { Link as ReactLink } from "react-router-dom";
-import {FileControlFactory} from "@scm-manager/ui-components";
+import { FileControlFactory } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   changeset: Changeset;

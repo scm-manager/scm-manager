@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 import React from "react";
-import {connect} from "react-redux";
-import {Redirect, Route, RouteComponentProps, Switch} from "react-router-dom";
-import {WithTranslation, withTranslation} from "react-i18next";
-import {binder, ExtensionPoint} from "@scm-manager/ui-extensions";
-import {Changeset, Repository} from "@scm-manager/ui-types";
+import { connect } from "react-redux";
+import { Redirect, Route, RouteComponentProps, Switch } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { Changeset, Repository } from "@scm-manager/ui-types";
 import {
   CustomQueryFlexWrappedColumns,
   ErrorPage,
@@ -39,7 +39,7 @@ import {
   StateMenuContextProvider,
   SubNavigation
 } from "@scm-manager/ui-components";
-import {fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending} from "../modules/repos";
+import { fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending } from "../modules/repos";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
 import BranchesOverview from "../branches/containers/BranchesOverview";
@@ -49,34 +49,34 @@ import EditRepoNavLink from "../components/EditRepoNavLink";
 import BranchRoot from "../branches/containers/BranchRoot";
 import PermissionsNavLink from "../components/PermissionsNavLink";
 import RepositoryNavLink from "../components/RepositoryNavLink";
-import {getLinks, getRepositoriesLink} from "../../modules/indexResource";
+import { getLinks, getRepositoriesLink } from "../../modules/indexResource";
 import CodeOverview from "../codeSection/containers/CodeOverview";
 import ChangesetView from "./ChangesetView";
 import SourceExtensions from "../sources/containers/SourceExtensions";
-import {FileControlFactory, JumpToFileButton} from "@scm-manager/ui-components";
+import { FileControlFactory, JumpToFileButton } from "@scm-manager/ui-components";
 
 type Props = RouteComponentProps &
   WithTranslation & {
-  namespace: string;
-  name: string;
-  repository: Repository;
-  loading: boolean;
-  error: Error;
-  repoLink: string;
-  indexLinks: object;
+    namespace: string;
+    name: string;
+    repository: Repository;
+    loading: boolean;
+    error: Error;
+    repoLink: string;
+    indexLinks: object;
 
-  // dispatch functions
-  fetchRepoByName: (link: string, namespace: string, name: string) => void;
-};
+    // dispatch functions
+    fetchRepoByName: (link: string, namespace: string, name: string) => void;
+  };
 
 class RepositoryRoot extends React.Component<Props> {
   componentDidMount() {
-    const {fetchRepoByName, namespace, name, repoLink} = this.props;
+    const { fetchRepoByName, namespace, name, repoLink } = this.props;
     fetchRepoByName(repoLink, namespace, name);
   }
 
   componentDidUpdate(prevProps: Props) {
-    const {fetchRepoByName, namespace, name, repoLink} = this.props;
+    const { fetchRepoByName, namespace, name, repoLink } = this.props;
     if (namespace !== prevProps.namespace || name !== prevProps.name) {
       fetchRepoByName(repoLink, namespace, name);
     }
@@ -106,7 +106,7 @@ class RepositoryRoot extends React.Component<Props> {
   };
 
   getCodeLinkname = () => {
-    const {repository} = this.props;
+    const { repository } = this.props;
     if (repository?._links?.sources) {
       return "sources";
     }
@@ -117,7 +117,7 @@ class RepositoryRoot extends React.Component<Props> {
   };
 
   evaluateDestinationForCodeLink = () => {
-    const {repository} = this.props;
+    const { repository } = this.props;
     const url = `${this.matchedUrl()}/code`;
     if (repository?._links?.sources) {
       return `${url}/sources/`;
@@ -126,16 +126,16 @@ class RepositoryRoot extends React.Component<Props> {
   };
 
   render() {
-    const {loading, error, indexLinks, repository, t} = this.props;
+    const { loading, error, indexLinks, repository, t } = this.props;
 
     if (error) {
       return (
-        <ErrorPage title={t("repositoryRoot.errorTitle")} subtitle={t("repositoryRoot.errorSubtitle")} error={error}/>
+        <ErrorPage title={t("repositoryRoot.errorTitle")} subtitle={t("repositoryRoot.errorSubtitle")} error={error} />
       );
     }
 
     if (!repository || loading) {
-      return <Loading/>;
+      return <Loading />;
     }
 
     const url = this.matchedUrl();
@@ -154,7 +154,7 @@ class RepositoryRoot extends React.Component<Props> {
       redirectedUrl = url + "/info";
     }
 
-    const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = (changeset) => (file) => {
+    const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = changeset => file => {
       const baseUrl = `${url}/code/sources`;
       const sourceLink = {
         url: `${baseUrl}/${changeset.id}/${file.newPath}/`,
@@ -183,73 +183,71 @@ class RepositoryRoot extends React.Component<Props> {
           }
       }
 
-      return links.map(({url, label}) => <JumpToFileButton
-        tooltip={label}
-        link={url}
-      />);
+      return links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />);
     };
 
     return (
       <StateMenuContextProvider>
         <Page
           title={repository.namespace + "/" + repository.name}
-          afterTitle={<ExtensionPoint name={"repository.afterTitle"} props={{repository}}/>}
+          afterTitle={<ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />}
         >
           <CustomQueryFlexWrappedColumns>
             <PrimaryContentColumn>
               <Switch>
-                <Redirect exact from={this.props.match.url} to={redirectedUrl}/>
+                <Redirect exact from={this.props.match.url} to={redirectedUrl} />
 
                 {/* redirect pre 2.0.0-rc2 links */}
-                <Redirect from={`${url}/changeset/:id`} to={`${url}/code/changeset/:id`}/>
-                <Redirect exact from={`${url}/sources`} to={`${url}/code/sources`}/>
-                <Redirect from={`${url}/sources/:revision/:path*`} to={`${url}/code/sources/:revision/:path*`}/>
-                <Redirect exact from={`${url}/changesets`} to={`${url}/code/changesets`}/>
-                <Redirect from={`${url}/branch/:branch/changesets`} to={`${url}/code/branch/:branch/changesets/`}/>
+                <Redirect from={`${url}/changeset/:id`} to={`${url}/code/changeset/:id`} />
+                <Redirect exact from={`${url}/sources`} to={`${url}/code/sources`} />
+                <Redirect from={`${url}/sources/:revision/:path*`} to={`${url}/code/sources/:revision/:path*`} />
+                <Redirect exact from={`${url}/changesets`} to={`${url}/code/changesets`} />
+                <Redirect from={`${url}/branch/:branch/changesets`} to={`${url}/code/branch/:branch/changesets/`} />
 
-                <Route path={`${url}/info`} exact component={() => <RepositoryDetails repository={repository}/>}/>
-                <Route path={`${url}/settings/general`} component={() => <EditRepo repository={repository}/>}/>
+                <Route path={`${url}/info`} exact component={() => <RepositoryDetails repository={repository} />} />
+                <Route path={`${url}/settings/general`} component={() => <EditRepo repository={repository} />} />
                 <Route
                   path={`${url}/settings/permissions`}
                   render={() => (
-                    <Permissions namespace={this.props.repository.namespace} repoName={this.props.repository.name}/>
+                    <Permissions namespace={this.props.repository.namespace} repoName={this.props.repository.name} />
                   )}
                 />
                 <Route
                   exact
                   path={`${url}/code/changeset/:id`}
-                  render={() => <ChangesetView repository={repository}
-                                               fileControlFactoryFactory={fileControlFactoryFactory}/>}
+                  render={() => (
+                    <ChangesetView repository={repository} fileControlFactoryFactory={fileControlFactoryFactory} />
+                  )}
                 />
                 <Route
                   path={`${url}/code/sourceext/:extension`}
                   exact={true}
-                  render={() => <SourceExtensions repository={repository}/>}
+                  render={() => <SourceExtensions repository={repository} />}
                 />
                 <Route
                   path={`${url}/code/sourceext/:extension/:revision/:path*`}
-                  render={() => <SourceExtensions repository={repository} baseUrl={`${url}/code/sources`}/>}
+                  render={() => <SourceExtensions repository={repository} baseUrl={`${url}/code/sources`} />}
                 />
                 <Route
                   path={`${url}/code`}
-                  render={() => <CodeOverview baseUrl={`${url}/code`} repository={repository}/>}
+                  render={() => <CodeOverview baseUrl={`${url}/code`} repository={repository} />}
                 />
                 <Route
                   path={`${url}/branch/:branch`}
-                  render={() => <BranchRoot repository={repository} baseUrl={`${url}/branch`}/>}
+                  render={() => <BranchRoot repository={repository} baseUrl={`${url}/branch`} />}
                 />
                 <Route
                   path={`${url}/branches`}
                   exact={true}
-                  render={() => <BranchesOverview repository={repository} baseUrl={`${url}/branch`}/>}
+                  render={() => <BranchesOverview repository={repository} baseUrl={`${url}/branch`} />}
                 />
-                <Route path={`${url}/branches/create`} render={() => <CreateBranch repository={repository}/>}/>
-                <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true}/>
+                <Route path={`${url}/branches/create`} render={() => <CreateBranch repository={repository} />} />
+                <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true} />
               </Switch>
             </PrimaryContentColumn>
             <SecondaryNavigationColumn>
               <SecondaryNavigation label={t("repositoryRoot.menu.navigationLabel")}>
-                <ExtensionPoint name="repository.navigation.topLevel" props={extensionProps} renderAll={true}/>
+                <ExtensionPoint name="repository.navigation.topLevel" props={extensionProps} renderAll={true} />
                 <NavLink
                   to={`${url}/info`}
                   icon="fas fa-info-circle"
@@ -276,15 +274,15 @@ class RepositoryRoot extends React.Component<Props> {
                   activeOnlyWhenExact={false}
                   title={t("repositoryRoot.menu.sourcesNavLink")}
                 />
-                <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true}/>
+                <ExtensionPoint name="repository.navigation" props={extensionProps} renderAll={true} />
                 <SubNavigation
                   to={`${url}/settings/general`}
                   label={t("repositoryRoot.menu.settingsNavLink")}
                   title={t("repositoryRoot.menu.settingsNavLink")}
                 >
-                  <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`}/>
-                  <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository}/>
-                  <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true}/>
+                  <EditRepoNavLink repository={repository} editUrl={`${url}/settings/general`} />
+                  <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} repository={repository} />
+                  <ExtensionPoint name="repository.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
               </SecondaryNavigation>
             </SecondaryNavigationColumn>
@@ -296,7 +294,7 @@ class RepositoryRoot extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: any, ownProps: Props) => {
-  const {namespace, name} = ownProps.match.params;
+  const { namespace, name } = ownProps.match.params;
   const repository = getRepository(state, namespace, name);
   const loading = isFetchRepoPending(state, namespace, name);
   const error = getFetchRepoFailure(state, namespace, name);

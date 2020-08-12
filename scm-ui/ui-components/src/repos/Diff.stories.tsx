@@ -29,14 +29,14 @@ import parser from "gitdiff-parser";
 import simpleDiff from "../__resources__/Diff.simple";
 import hunksDiff from "../__resources__/Diff.hunks";
 import binaryDiff from "../__resources__/Diff.binary";
-import {DiffEventContext, File, FileControlFactory} from "./DiffTypes";
+import { DiffEventContext, File, FileControlFactory } from "./DiffTypes";
 import Toast from "../toast/Toast";
 import { getPath } from "./diffs";
 import DiffButton from "./DiffButton";
 import styled from "styled-components";
 import { MemoryRouter } from "react-router-dom";
-import {one, two} from "../__resources__/changesets";
-import {Changeset} from "@scm-manager/ui-types";
+import { one, two } from "../__resources__/changesets";
+import { Changeset } from "@scm-manager/ui-types";
 import JumpToFileButton from "./JumpToFileButton";
 
 const diffFiles = parser.parse(simpleDiff);
@@ -47,7 +47,7 @@ const Container = styled.div`
 
 const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
 
-const fileControlFactory: (changeset: Changeset) => FileControlFactory = (changeset) => (file) => {
+const fileControlFactory: (changeset: Changeset) => FileControlFactory = changeset => file => {
   const baseUrl = "/repo/hitchhiker/heartOfGold/code/changeset";
   const sourceLink = {
     url: `${baseUrl}/${changeset.id}/${file.newPath}/`,
@@ -76,10 +76,7 @@ const fileControlFactory: (changeset: Changeset) => FileControlFactory = (change
       }
   }
 
-  return links.map(({url, label}) => <JumpToFileButton
-    tooltip={label}
-    link={url}
-  />);
+  return links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />);
 };
 
 storiesOf("Diff", module)
@@ -164,8 +161,4 @@ storiesOf("Diff", module)
     });
     return <Diff diff={filesWithLanguage} />;
   })
-  .add("WithLinkToFile", () => (
-    <Diff
-      diff={diffFiles}
-    />
-  ));
+  .add("WithLinkToFile", () => <Diff diff={diffFiles} />);

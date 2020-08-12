@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 import React from "react";
-import {connect} from "react-redux";
-import {compose} from "redux";
-import {withRouter} from "react-router-dom";
-import {WithTranslation, withTranslation} from "react-i18next";
-import {Changeset, Repository} from "@scm-manager/ui-types";
-import {ErrorPage, Loading} from "@scm-manager/ui-components";
+import { connect } from "react-redux";
+import { compose } from "redux";
+import { withRouter } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { Changeset, Repository } from "@scm-manager/ui-types";
+import { ErrorPage, Loading } from "@scm-manager/ui-components";
 import {
   fetchChangesetIfNeeded,
   getChangeset,
@@ -35,7 +35,7 @@ import {
   isFetchChangesetPending
 } from "../modules/changesets";
 import ChangesetDetails from "../components/changesets/ChangesetDetails";
-import {FileControlFactory} from "@scm-manager/ui-components";
+import { FileControlFactory } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   id: string;
@@ -50,28 +50,33 @@ type Props = WithTranslation & {
 
 class ChangesetView extends React.Component<Props> {
   componentDidMount() {
-    const {fetchChangesetIfNeeded, repository, id} = this.props;
+    const { fetchChangesetIfNeeded, repository, id } = this.props;
     fetchChangesetIfNeeded(repository, id);
   }
 
   componentDidUpdate(prevProps: Props) {
-    const {fetchChangesetIfNeeded, repository, id} = this.props;
+    const { fetchChangesetIfNeeded, repository, id } = this.props;
     if (prevProps.id !== id) {
       fetchChangesetIfNeeded(repository, id);
     }
   }
 
   render() {
-    const {changeset, loading, error, t, repository, fileControlFactoryFactory} = this.props;
+    const { changeset, loading, error, t, repository, fileControlFactoryFactory } = this.props;
 
     if (error) {
-      return <ErrorPage title={t("changesets.errorTitle")} subtitle={t("changesets.errorSubtitle")} error={error}/>;
+      return <ErrorPage title={t("changesets.errorTitle")} subtitle={t("changesets.errorSubtitle")} error={error} />;
     }
 
-    if (!changeset || loading) return <Loading/>;
+    if (!changeset || loading) return <Loading />;
 
-    return <ChangesetDetails changeset={changeset} repository={repository}
-                             fileControlFactory={fileControlFactoryFactory && fileControlFactoryFactory(changeset)}/>;
+    return (
+      <ChangesetDetails
+        changeset={changeset}
+        repository={repository}
+        fileControlFactory={fileControlFactoryFactory && fileControlFactoryFactory(changeset)}
+      />
+    );
   }
 }
 

@@ -22,21 +22,21 @@
  * SOFTWARE.
  */
 import React from "react";
-import {withTranslation, WithTranslation} from "react-i18next";
+import { withTranslation, WithTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 // @ts-ignore
-import {Decoration, getChangeKey, Hunk} from "react-diff-view";
-import {ButtonGroup} from "../buttons";
+import { Decoration, getChangeKey, Hunk } from "react-diff-view";
+import { ButtonGroup } from "../buttons";
 import Tag from "../Tag";
 import Icon from "../Icon";
-import {Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType} from "./DiffTypes";
+import { Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType } from "./DiffTypes";
 import TokenizedDiffView from "./TokenizedDiffView";
 import DiffButton from "./DiffButton";
-import {MenuContext} from "@scm-manager/ui-components";
-import DiffExpander, {ExpandableHunk} from "./DiffExpander";
+import { MenuContext } from "@scm-manager/ui-components";
+import DiffExpander, { ExpandableHunk } from "./DiffExpander";
 import HunkExpandLink from "./HunkExpandLink";
-import {Modal} from "../modals";
+import { Modal } from "../modals";
 import ErrorNotification from "../ErrorNotification";
 import HunkExpandDivider from "./HunkExpandDivider";
 
@@ -44,8 +44,8 @@ const EMPTY_ANNOTATION_FACTORY = {};
 
 type Props = DiffObjectProps &
   WithTranslation & {
-  file: File;
-};
+    file: File;
+  };
 
 type Collapsible = {
   collapsed?: boolean;
@@ -115,7 +115,7 @@ class DiffFile extends React.Component<Props, State> {
   }
 
   defaultCollapse: () => boolean = () => {
-    const {defaultCollapse, file} = this.props;
+    const { defaultCollapse, file } = this.props;
     if (typeof defaultCollapse === "boolean") {
       return defaultCollapse;
     } else if (typeof defaultCollapse === "function") {
@@ -126,7 +126,7 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   toggleCollapse = () => {
-    const {file} = this.state;
+    const { file } = this.state;
     if (this.hasContent(file)) {
       this.setState(state => ({
         collapsed: !state.collapsed
@@ -157,7 +157,7 @@ class DiffFile extends React.Component<Props, State> {
             <HunkExpandLink
               icon={"fa-angle-double-up"}
               onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}
-              text={this.props.t("diff.expandComplete", {count: expandableHunk.maxExpandHeadRange})}
+              text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandHeadRange })}
             />
           </HunkExpandDivider>
         );
@@ -167,19 +167,19 @@ class DiffFile extends React.Component<Props, State> {
             <HunkExpandLink
               icon={"fa-angle-up"}
               onClick={this.expandHead(expandableHunk, 10)}
-              text={this.props.t("diff.expandByLines", {count: 10})}
+              text={this.props.t("diff.expandByLines", { count: 10 })}
             />{" "}
             <HunkExpandLink
               icon={"fa-angle-double-up"}
               onClick={this.expandHead(expandableHunk, expandableHunk.maxExpandHeadRange)}
-              text={this.props.t("diff.expandComplete", {count: expandableHunk.maxExpandHeadRange})}
+              text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandHeadRange })}
             />
           </HunkExpandDivider>
         );
       }
     }
     // hunk header must be defined
-    return <span/>;
+    return <span />;
   };
 
   createHunkFooter = (expandableHunk: ExpandableHunk) => {
@@ -190,7 +190,7 @@ class DiffFile extends React.Component<Props, State> {
             <HunkExpandLink
               icon={"fa-angle-double-down"}
               onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
-              text={this.props.t("diff.expandComplete", {count: expandableHunk.maxExpandBottomRange})}
+              text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandBottomRange })}
             />
           </HunkExpandDivider>
         );
@@ -200,19 +200,19 @@ class DiffFile extends React.Component<Props, State> {
             <HunkExpandLink
               icon={"fa-angle-down"}
               onClick={this.expandBottom(expandableHunk, 10)}
-              text={this.props.t("diff.expandByLines", {count: 10})}
+              text={this.props.t("diff.expandByLines", { count: 10 })}
             />{" "}
             <HunkExpandLink
               icon={"fa-angle-double-down"}
               onClick={this.expandBottom(expandableHunk, expandableHunk.maxExpandBottomRange)}
-              text={this.props.t("diff.expandComplete", {count: expandableHunk.maxExpandBottomRange})}
+              text={this.props.t("diff.expandComplete", { count: expandableHunk.maxExpandBottomRange })}
             />
           </HunkExpandDivider>
         );
       }
     }
     // hunk footer must be defined
-    return <span/>;
+    return <span />;
   };
 
   createLastHunkFooter = (expandableHunk: ExpandableHunk) => {
@@ -222,7 +222,7 @@ class DiffFile extends React.Component<Props, State> {
           <HunkExpandLink
             icon={"fa-angle-down"}
             onClick={this.expandBottom(expandableHunk, 10)}
-            text={this.props.t("diff.expandLastBottomByLines", {count: 10})}
+            text={this.props.t("diff.expandLastBottomByLines", { count: 10 })}
           />{" "}
           <HunkExpandLink
             icon={"fa-angle-double-down"}
@@ -233,7 +233,7 @@ class DiffFile extends React.Component<Props, State> {
       );
     }
     // hunk header must be defined
-    return <span/>;
+    return <span />;
   };
 
   expandHead = (expandableHunk: ExpandableHunk, count: number) => {
@@ -255,16 +255,16 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   diffExpanded = (newFile: File) => {
-    this.setState({file: newFile, diffExpander: new DiffExpander(newFile)});
+    this.setState({ file: newFile, diffExpander: new DiffExpander(newFile) });
   };
 
   diffExpansionFailed = (err: any) => {
-    this.setState({expansionError: err});
+    this.setState({ expansionError: err });
   };
 
   collectHunkAnnotations = (hunk: HunkType) => {
-    const {annotationFactory} = this.props;
-    const {file} = this.state;
+    const { annotationFactory } = this.props;
+    const { file } = this.state;
     if (annotationFactory) {
       return annotationFactory({
         hunk,
@@ -276,8 +276,8 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   handleClickEvent = (change: Change, hunk: HunkType) => {
-    const {onClick} = this.props;
-    const {file} = this.state;
+    const { onClick } = this.props;
+    const { file } = this.state;
     const context = {
       changeId: getChangeKey(change),
       change,
@@ -290,7 +290,7 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   createGutterEvents = (hunk: HunkType) => {
-    const {onClick} = this.props;
+    const { onClick } = this.props;
     if (onClick) {
       return {
         onClick: (event: ChangeEvent) => {
@@ -311,7 +311,7 @@ class DiffFile extends React.Component<Props, State> {
     } else if (i > 0) {
       items.push(
         <Decoration>
-          <HunkDivider/>
+          <HunkDivider />
         </Decoration>
       );
     }
@@ -354,7 +354,7 @@ class DiffFile extends React.Component<Props, State> {
     if (file.oldPath !== file.newPath && (file.type === "copy" || file.type === "rename")) {
       return (
         <>
-          {file.oldPath} <Icon name="arrow-right" color="inherit"/> {file.newPath}
+          {file.oldPath} <Icon name="arrow-right" color="inherit" /> {file.newPath}
         </>
       );
     } else if (file.type === "delete") {
@@ -373,7 +373,7 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   renderChangeTag = (file: File) => {
-    const {t} = this.props;
+    const { t } = this.props;
     if (!file.type) {
       return;
     }
@@ -385,14 +385,14 @@ class DiffFile extends React.Component<Props, State> {
     const color =
       value === "added" ? "success is-outlined" : value === "deleted" ? "danger is-outlined" : "info is-outlined";
 
-    return <ChangeTypeTag className={classNames("is-rounded", "has-text-weight-normal")} color={color} label={value}/>;
+    return <ChangeTypeTag className={classNames("is-rounded", "has-text-weight-normal")} color={color} label={value} />;
   };
 
   hasContent = (file: File) => file && !file.isBinary && file.hunks && file.hunks.length > 0;
 
   render() {
-    const {fileControlFactory, fileAnnotationFactory, t} = this.props;
-    const {file, collapsed, sideBySide, diffExpander, expansionError} = this.state;
+    const { fileControlFactory, fileAnnotationFactory, t } = this.props;
+    const { file, collapsed, sideBySide, diffExpander, expansionError } = this.state;
     const viewType = sideBySide ? "split" : "unified";
 
     let body = null;
@@ -413,39 +413,41 @@ class DiffFile extends React.Component<Props, State> {
         </div>
       );
     }
-    const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit"/> : null;
+    const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit" /> : null;
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
-    const sideBySideToggle = file.hunks && file.hunks.length && <MenuContext.Consumer>
-      {({setCollapsed}) => (
-        <DiffButton
-          icon={sideBySide ? "align-left" : "columns"}
-          tooltip={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
-          onClick={() =>
-            this.toggleSideBySide(() => {
-              if (this.state.sideBySide) {
-                setCollapsed(true);
-              }
-            })
-          }
-        />
-      )}
-    </MenuContext.Consumer>;
+    const sideBySideToggle = file.hunks && file.hunks.length && (
+      <MenuContext.Consumer>
+        {({ setCollapsed }) => (
+          <DiffButton
+            icon={sideBySide ? "align-left" : "columns"}
+            tooltip={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
+            onClick={() =>
+              this.toggleSideBySide(() => {
+                if (this.state.sideBySide) {
+                  setCollapsed(true);
+                }
+              })
+            }
+          />
+        )}
+      </MenuContext.Consumer>
+    );
     const headerButtons = (
-        <ButtonWrapper className={classNames("level-right", "is-flex")}>
-          <ButtonGroup>
-            {sideBySideToggle}
-            {fileControls}
-          </ButtonGroup>
-        </ButtonWrapper>
-      );
+      <ButtonWrapper className={classNames("level-right", "is-flex")}>
+        <ButtonGroup>
+          {sideBySideToggle}
+          {fileControls}
+        </ButtonGroup>
+      </ButtonWrapper>
+    );
 
     let errorModal;
     if (expansionError) {
       errorModal = (
         <Modal
           title={t("diff.expansionFailed")}
-          closeFunction={() => this.setState({expansionError: undefined})}
-          body={<ErrorNotification error={expansionError}/>}
+          closeFunction={() => this.setState({ expansionError: undefined })}
+          body={<ErrorNotification error={expansionError} />}
           active={true}
         />
       );
