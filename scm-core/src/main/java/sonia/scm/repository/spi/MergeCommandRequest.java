@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.google.common.base.MoreObjects;
@@ -135,7 +135,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
       .add("targetBranch", targetBranch)
       .add("author", author)
       .add("mergeStrategy", mergeStrategy)
-      .add("signatureDisabled", sign)
+      .add("sign", sign)
       .toString();
   }
 }
