@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -30,11 +30,10 @@ import com.google.common.base.Function;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.nio.file.Path;
+import java.util.Objects;
 
-import java.util.Set;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The ExplodedSmp object represents an extracted SCM-Manager plugin. The object
@@ -105,6 +104,25 @@ public final class ExplodedSmp
   public InstalledPluginDescriptor getPlugin()
   {
     return plugin;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) return true;
+    if (o == null || getClass() != o.getClass()) return false;
+    ExplodedSmp that = (ExplodedSmp) o;
+    return path.equals(that.path);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(path);
+  }
+
+  @Override
+  public String toString() {
+    PluginInformation information = plugin.getInformation();
+    return information.getName() + "@" + information.getVersion() + " (" + path + ")";
   }
 
   //~--- inner classes --------------------------------------------------------
