@@ -37,6 +37,7 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.user.User;
@@ -82,7 +83,7 @@ class SetupContextListenerTest {
 
   @BeforeEach
   void mockScmConfiguration() {
-    when(scmConfiguration.isAnonymousAccessEnabled()).thenReturn(false);
+    when(scmConfiguration.getAnonymousMode()).thenReturn(AnonymousMode.OFF);
   }
 
   @BeforeEach
@@ -145,7 +146,7 @@ class SetupContextListenerTest {
   void shouldCreateAnonymousUserIfRequired() {
     List<User> users = Lists.newArrayList(UserTestData.createTrillian());
     when(userManager.getAll()).thenReturn(users);
-    when(scmConfiguration.isAnonymousAccessEnabled()).thenReturn(true);
+    when(scmConfiguration.getAnonymousMode()).thenReturn(AnonymousMode.FULL);
 
     setupContextListener.contextInitialized(null);
 
@@ -166,7 +167,7 @@ class SetupContextListenerTest {
   void shouldNotCreateAnonymousUserIfAlreadyExists() {
     List<User> users = Lists.newArrayList(SCMContext.ANONYMOUS);
     when(userManager.getAll()).thenReturn(users);
-    when(scmConfiguration.isAnonymousAccessEnabled()).thenReturn(true);
+    when(scmConfiguration.getAnonymousMode()).thenReturn(AnonymousMode.FULL);
 
     setupContextListener.contextInitialized(null);
 

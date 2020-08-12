@@ -187,15 +187,15 @@ class MeDtoFactoryTest {
   }
 
   @Test
-  void shouldNotGetPasswordLinkForAnonymousUser() {
+  void shouldAppendOnlySelfLinkIfAnonymousUser() {
     User user = SCMContext.ANONYMOUS;
     prepareSubject(user);
 
-    when(userManager.isTypeDefault(any())).thenReturn(true);
-    when(UserPermissions.changePassword(user).isPermitted()).thenReturn(true);
-
     MeDto dto = meDtoFactory.create();
+    assertThat(dto.getLinks().getLinkBy("self")).isPresent();
     assertThat(dto.getLinks().getLinkBy("password")).isNotPresent();
+    assertThat(dto.getLinks().getLinkBy("delete")).isNotPresent();
+    assertThat(dto.getLinks().getLinkBy("update")).isNotPresent();
   }
 
   @Test
@@ -235,6 +235,4 @@ class MeDtoFactoryTest {
     MeDto dto = meDtoFactory.create();
     assertThat(dto.getLinks().getLinkBy("profile").get().getHref()).isEqualTo("http://hitchhiker.com/users/trillian");
   }
-
-
 }

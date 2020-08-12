@@ -31,6 +31,7 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
+import sonia.scm.security.AnonymousMode;
 
 import javax.inject.Inject;
 
@@ -38,7 +39,7 @@ import javax.inject.Inject;
 @Extension
 public class AnonymousUserDeletionEventHandler {
 
-  private ScmConfiguration scmConfiguration;
+  private final ScmConfiguration scmConfiguration;
 
   @Inject
   public AnonymousUserDeletionEventHandler(ScmConfiguration scmConfiguration) {
@@ -55,6 +56,6 @@ public class AnonymousUserDeletionEventHandler {
   private boolean isAnonymousUserDeletionNotAllowed(UserEvent event) {
     return event.getEventType() == HandlerEventType.BEFORE_DELETE
       && event.getItem().getName().equals(SCMContext.USER_ANONYMOUS)
-      && scmConfiguration.isAnonymousAccessEnabled();
+      && scmConfiguration.getAnonymousMode() != AnonymousMode.OFF;
   }
 }

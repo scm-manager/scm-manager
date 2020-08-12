@@ -24,6 +24,8 @@
 
 import { Links } from "./hal";
 
+export type AnonymousMode = "FULL" | "PROTOCOL_ONLY" | "OFF";
+
 export type Config = {
   proxyPassword: string | null;
   proxyPort: number;
@@ -34,6 +36,7 @@ export type Config = {
   disableGroupingGrid: boolean;
   dateFormat: string;
   anonymousAccessEnabled: boolean;
+  anonymousMode: AnonymousMode;
   baseUrl: string;
   forceBaseUrl: boolean;
   loginAttemptLimit: number;

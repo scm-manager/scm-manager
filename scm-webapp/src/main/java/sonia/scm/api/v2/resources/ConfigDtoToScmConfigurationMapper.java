@@ -21,11 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.AnonymousMode;
 
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
@@ -33,4 +36,15 @@ import sonia.scm.config.ScmConfiguration;
 public abstract class ConfigDtoToScmConfigurationMapper {
 
   public abstract ScmConfiguration map(ConfigDto dto);
+
+  @AfterMapping // Should map anonymous mode from old flag if not send explicit
+  void mapAnonymousMode(@MappingTarget ScmConfiguration config, ConfigDto configDto) {
+    if (configDto.getAnonymousMode() == null) {
+      if (configDto.isAnonymousAccessEnabled()) {
+        config.setAnonymousMode(AnonymousMode.PROTOCOL_ONLY);
+      } else {
+        config.setAnonymousMode(AnonymousMode.OFF);
+      }
+    }
+  }
 }

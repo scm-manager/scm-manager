@@ -27,7 +27,15 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { withRouter } from "react-router-dom";
-import { fetchMe, getFetchMeFailure, getMe, isAuthenticated, isFetchMePending } from "../modules/auth";
+import {
+  fetchMe,
+  getFetchMeFailure,
+  getMe,
+  isAuthenticated,
+  isFetchMePending,
+  isLoginPending,
+  isLogoutPending
+} from "../modules/auth";
 import { ErrorPage, Footer, Header, Loading, PrimaryNavigation } from "@scm-manager/ui-components";
 import { Links, Me } from "@scm-manager/ui-types";
 import {
@@ -37,6 +45,7 @@ import {
   getMeLink,
   isFetchIndexResourcesPending
 } from "../modules/indexResource";
+import Login from "./Login";
 
 type Props = WithTranslation & {
   me: Me;
@@ -64,12 +73,14 @@ class App extends Component<Props> {
     let content;
     const navigation = authenticated ? <PrimaryNavigation links={links} /> : "";
 
-    if (loading) {
+    if (!authenticated && !loading) {
+      content = <Login />;
+    } else if (loading) {
       content = <Loading />;
     } else if (error) {
       content = <ErrorPage title={t("app.error.title")} subtitle={t("app.error.subtitle")} error={error} />;
     } else {
-      content = <Main authenticated={authenticated} links={links} />;
+      content = <Main authenticated={authenticated} links={links} me={me} />;
     }
     return (
       <div className="App">
@@ -88,9 +99,9 @@ const mapDispatchToProps = (dispatch: any) => {
 };
 
 const mapStateToProps = (state: any) => {
-  const authenticated = isAuthenticated(state);
+  const authenticated = isAuthenticated(state) && !isLogoutPending(state);
   const me = getMe(state);
-  const loading = isFetchMePending(state) || isFetchIndexResourcesPending(state);
+  const loading = isFetchMePending(state) || isFetchIndexResourcesPending(state) || isLoginPending(state);
   const error = getFetchMeFailure(state) || getFetchIndexResourcesFailure(state);
   const links = getLinks(state);
   const meLink = getMeLink(state);

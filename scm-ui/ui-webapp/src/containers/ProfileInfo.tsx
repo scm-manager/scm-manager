@@ -24,7 +24,12 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
-import { AvatarImage, AvatarWrapper, MailLink } from "@scm-manager/ui-components";
+import {
+  AvatarImage,
+  AvatarWrapper,
+  MailLink,
+  createAttributesForTesting
+} from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   me: Me;
@@ -47,11 +52,11 @@ class ProfileInfo extends React.Component<Props> {
             <tbody>
               <tr>
                 <th>{t("profile.username")}</th>
-                <td>{me.name}</td>
+                <td {...createAttributesForTesting(me.name)}>{me.name}</td>
               </tr>
               <tr>
                 <th>{t("profile.displayName")}</th>
-                <td>{me.displayName}</td>
+                <td {...createAttributesForTesting(me.displayName)}>{me.displayName}</td>
               </tr>
               <tr>
                 <th>{t("profile.mail")}</th>

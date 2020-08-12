@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import sonia.scm.HandlerEventType;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.AnonymousMode;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -45,7 +46,7 @@ class AnonymousUserDeletionEventHandlerTest {
 
   @Test
   void shouldThrowAnonymousUserDeletionExceptionIfAnonymousAccessIsEnabled() {
-    scmConfiguration.setAnonymousAccessEnabled(true);
+    scmConfiguration.setAnonymousMode(AnonymousMode.FULL);
 
     hook = new AnonymousUserDeletionEventHandler(scmConfiguration);
     UserEvent deletionEvent = new UserEvent(HandlerEventType.BEFORE_DELETE, SCMContext.ANONYMOUS);
@@ -55,7 +56,7 @@ class AnonymousUserDeletionEventHandlerTest {
 
   @Test
   void shouldNotThrowAnonymousUserDeletionException() {
-    scmConfiguration.setAnonymousAccessEnabled(false);
+    scmConfiguration.setAnonymousMode(AnonymousMode.OFF);
 
     hook = new AnonymousUserDeletionEventHandler(scmConfiguration);
     UserEvent deletionEvent = new UserEvent(HandlerEventType.BEFORE_DELETE,  SCMContext.ANONYMOUS);

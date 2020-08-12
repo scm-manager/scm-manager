@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Me, Links } from "@scm-manager/ui-types";
-import { useBinder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { Links, Me } from "@scm-manager/ui-types";
+import { ExtensionPoint, useBinder } from "@scm-manager/ui-extensions";
 import { AvatarImage } from "../avatar";
 import NavLink from "../navigation/NavLink";
 import FooterSection from "./FooterSection";
@@ -31,6 +31,7 @@ import styled from "styled-components";
 import { EXTENSION_POINT } from "../avatar/Avatar";
 import ExternalNavLink from "../navigation/ExternalNavLink";
 import { useTranslation } from "react-i18next";
+import { createAttributesForTesting } from "../devBuild";
 
 type Props = {
   me?: Me;
@@ -43,11 +44,13 @@ type TitleWithIconsProps = {
   icon: string;
 };
 
-const TitleWithIcon: FC<TitleWithIconsProps> = ({ icon, title }) => (
-  <>
-    <i className={`fas fa-${icon} fa-fw`} /> {title}
-  </>
-);
+const TitleWithIcon: FC<TitleWithIconsProps> = ({ icon, title }) => {
+  return (
+    <>
+      <i className={`fas fa-${icon} fa-fw`} {...createAttributesForTesting(title)} /> {title}
+    </>
+  );
+};
 
 type TitleWithAvatarProps = {
   me: Me;
@@ -66,12 +69,12 @@ const AvatarContainer = styled.span`
 `;
 
 const TitleWithAvatar: FC<TitleWithAvatarProps> = ({ me }) => (
-  <>
+  <div {...createAttributesForTesting(me.displayName)}>
     <AvatarContainer className="image is-rounded">
       <VCenteredAvatar person={me} representation="rounded" />
     </AvatarContainer>
     {me.displayName}
-  </>
+  </div>
 );
 
 const Footer: FC<Props> = ({ me, version, links }) => {
@@ -96,7 +99,9 @@ const Footer: FC<Props> = ({ me, version, links }) => {
           <FooterSection title={meSectionTile}>
             <NavLink to="/me" label={t("footer.user.profile")} />
             <NavLink to="/me/settings/password" label={t("profile.changePasswordNavLink")} />
-            <NavLink to="/me/settings/publicKeys" label={t("profile.publicKeysNavLink")} />
+            <NavLink to="/me" label={t("footer.user.profile")} testId="footer-user-profile" />
+            {me?._links?.password && <NavLink to="/me/settings/password" label={t("profile.changePasswordNavLink")} />}
+            {me?._links?.publicKeys && <NavLink to="/me/settings/publicKeys" label={t("profile.publicKeysNavLink")} />}
             <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
           </FooterSection>
           <FooterSection title={<TitleWithIcon title={t("footer.information.title")} icon="info-circle" />}>

@@ -25,7 +25,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { RouteComponentProps } from "react-router-dom";
-import { History } from "history";
 import { Group, PagedCollection } from "@scm-manager/ui-types";
 import {
   CreateButton,

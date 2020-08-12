@@ -42,7 +42,7 @@ export { AnnotatedSource, AnnotatedLine } from "./Annotate";
 
 export { Tag } from "./Tags";
 
-export { Config } from "./Config";
+export { Config, AnonymousMode } from "./Config";
 
 export { IndexResources } from "./IndexResources";
 

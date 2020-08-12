@@ -130,7 +130,7 @@ public class JwtAccessTokenResolverTest {
     String compact = createCompactToken("trillian", secureKey, exp, Scope.empty());
     
     // expect exception
-    expectedException.expect(AuthenticationException.class);
+    expectedException.expect(TokenExpiredException.class);
     expectedException.expectCause(instanceOf(ExpiredJwtException.class));
     
     BearerToken bearer = BearerToken.valueOf(compact);

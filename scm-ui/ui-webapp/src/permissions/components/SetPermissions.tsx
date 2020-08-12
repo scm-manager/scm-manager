@@ -142,6 +142,7 @@ class SetPermissions extends React.Component<Props, State> {
               disabled={!this.state.permissionsChanged}
               loading={loading}
               label={t("setPermissions.button")}
+              testId="set-permissions-button"
             />
           }
         />

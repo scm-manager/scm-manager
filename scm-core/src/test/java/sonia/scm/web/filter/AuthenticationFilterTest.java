@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.web.filter;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.web.filter;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
@@ -38,6 +36,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.BearerToken;
 import sonia.scm.web.WebTokenGenerator;
 
 import javax.servlet.FilterChain;
@@ -47,191 +46,98 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-//~--- JDK imports ------------------------------------------------------------
-
-/**
- *
- * @author Sebastian Sdorra
- */
 @RunWith(MockitoJUnitRunner.class)
 @SubjectAware(configuration = "classpath:sonia/scm/shiro.ini")
-public class AuthenticationFilterTest
-{
+public class AuthenticationFilterTest {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
+  @Rule
+  public ShiroRule shiro = new ShiroRule();
+
+  @Mock
+  private FilterChain chain;
+  @Mock
+  private HttpServletRequest request;
+  @Mock
+  private HttpServletResponse response;
+
+  private ScmConfiguration configuration;
+
   @Test
   @SubjectAware(username = "trillian", password = "secret")
-  public void testDoFilterAuthenticated() throws IOException, ServletException
-  {
+  public void testDoFilterAuthenticated() throws IOException, ServletException {
     AuthenticationFilter filter = createAuthenticationFilter();
 
     filter.doFilter(request, response, chain);
-    verify(chain).doFilter(any(HttpServletRequest.class),
-      any(HttpServletResponse.class));
+    verify(chain).doFilter(any(HttpServletRequest.class), any(HttpServletResponse.class));
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   @Test
-  public void testDoFilterUnauthorized() throws IOException, ServletException
-  {
+  public void testDoFilterUnauthorized() throws IOException, ServletException {
     AuthenticationFilter filter = createAuthenticationFilter();
 
     filter.doFilter(request, response, chain);
-    verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED,
-      "Authorization Required");
+    verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization Required");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   @Test
-  public void testDoFilterWithAuthenticationFailed()
-    throws IOException, ServletException
-  {
-    AuthenticationFilter filter =
-      createAuthenticationFilter(new DemoWebTokenGenerator("trillian", "sec"));
+  public void testDoFilterWithAuthenticationFailed() throws IOException, ServletException {
+    AuthenticationFilter filter = createAuthenticationFilter(new DemoWebTokenGenerator("trillian", "sec"));
 
     filter.doFilter(request, response, chain);
-    verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED,
-      "Authorization Required");
+
+    verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization Required");
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   @Test
-  public void testDoFilterWithAuthenticationSuccess()
-    throws IOException, ServletException
-  {
-    AuthenticationFilter filter =
-      createAuthenticationFilter(new DemoWebTokenGenerator("trillian",
-        "secret"));
+  public void testDoFilterWithAuthenticationSuccess() throws IOException, ServletException {
+    AuthenticationFilter filter = createAuthenticationFilter();
 
     filter.doFilter(request, response, chain);
-    verify(chain).doFilter(any(HttpServletRequest.class),
-      any(HttpServletResponse.class));
+
+    verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization Required");
   }
 
-  //~--- set methods ----------------------------------------------------------
+  @Test
+  public void testExpiredBearerToken() throws IOException, ServletException {
+    WebTokenGenerator generator = mock(WebTokenGenerator.class);
+    when(generator.createToken(request)).thenReturn(BearerToken.create(null,
+      "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJzY21hZG1pbiIsImp0aSI6IjNqUzZ4TzMwUzEiLCJpYXQiOjE1OTY3ODA5Mjg"
+        + "sImV4cCI6MTU5Njc0NDUyOCwic2NtLW1hbmFnZXIucmVmcmVzaEV4cGlyYXRpb24iOjE1OTY4MjQxMjg2MDIsInNjbS1tYW5h"
+        + "Z2VyLnBhcmVudFRva2VuSWQiOiIzalM2eE8zMFMxIn0.utZLmzGZr-M6MP19yrd0dgLPkJ0u1xojwHKQi36_QAs"));
+    AuthenticationFilter filter = createAuthenticationFilter(generator);
 
-  /**
-   * Method description
-   *
-   */
+    filter.doFilter(request, response, chain);
+    verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Authorization Required");
+  }
+
   @Before
-  public void setUp()
-  {
+  public void setUp() {
     configuration = new ScmConfiguration();
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param generators
-   *
-   * @return
-   */
-  private AuthenticationFilter createAuthenticationFilter(
-    WebTokenGenerator... generators)
-  {
-    return new AuthenticationFilter(configuration,
-      ImmutableSet.copyOf(generators));
+  private AuthenticationFilter createAuthenticationFilter(WebTokenGenerator... generators) {
+    return new AuthenticationFilter(configuration, ImmutableSet.copyOf(generators));
   }
 
-  //~--- inner classes --------------------------------------------------------
+  private static class DemoWebTokenGenerator implements WebTokenGenerator {
 
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 15/02/21
-   * @author         Enter your name here...
-   */
-  private static class DemoWebTokenGenerator implements WebTokenGenerator
-  {
+    private final String username;
+    private final String password;
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param username
-     * @param password
-     */
-    public DemoWebTokenGenerator(String username, String password)
-    {
+    public DemoWebTokenGenerator(String username, String password) {
       this.username = username;
       this.password = password;
     }
 
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param request
-     *
-     * @return
-     */
     @Override
-    public AuthenticationToken createToken(HttpServletRequest request)
-    {
+    public AuthenticationToken createToken(HttpServletRequest request) {
       return new UsernamePasswordToken(username, password);
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final String password;
-
-    /** Field description */
-    private final String username;
   }
 
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  @Rule
-  public ShiroRule shiro = new ShiroRule();
-
-  /** Field description */
-  @Mock
-  private FilterChain chain;
-
-  /** Field description */
-  private ScmConfiguration configuration;
-
-  /** Field description */
-  @Mock
-  private HttpServletRequest request;
-
-  /** Field description */
-  @Mock
-  private HttpServletResponse response;
 }

@@ -24,6 +24,7 @@
 import React, { ChangeEvent } from "react";
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
+import {createAttributesForTesting} from "../devBuild";
 
 export type SelectItem = {
   value: string;
@@ -39,6 +40,7 @@ type Props = {
   loading?: boolean;
   helpText?: string;
   disabled?: boolean;
+  testId?: string;
 };
 
 class Select extends React.Component<Props> {
@@ -57,7 +59,7 @@ class Select extends React.Component<Props> {
   };
 
   render() {
-    const { options, value, label, helpText, loading, disabled } = this.props;
+    const { options, value, label, helpText, loading, disabled, testId } = this.props;
     const loadingClass = loading ? "is-loading" : "";
 
     return (
@@ -71,6 +73,7 @@ class Select extends React.Component<Props> {
             value={value}
             onChange={this.handleInput}
             disabled={disabled}
+            {...createAttributesForTesting(testId)}
           >
             {options.map(opt => {
               return (

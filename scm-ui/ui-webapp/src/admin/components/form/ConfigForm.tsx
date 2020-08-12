@@ -63,7 +63,7 @@ class ConfigForm extends React.Component<Props, State> {
         realmDescription: "",
         disableGroupingGrid: false,
         dateFormat: "",
-        anonymousAccessEnabled: false,
+        anonymousMode: "OFF",
         baseUrl: "",
         forceBaseUrl: false,
         loginAttemptLimit: 0,
@@ -140,7 +140,7 @@ class ConfigForm extends React.Component<Props, State> {
           realmDescription={config.realmDescription}
           disableGroupingGrid={config.disableGroupingGrid}
           dateFormat={config.dateFormat}
-          anonymousAccessEnabled={config.anonymousAccessEnabled}
+          anonymousMode={config.anonymousMode}
           skipFailedAuthenticators={config.skipFailedAuthenticators}
           pluginUrl={config.pluginUrl}
           enabledXsrfProtection={config.enabledXsrfProtection}

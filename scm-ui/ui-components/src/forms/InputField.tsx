@@ -24,6 +24,7 @@
 import React, { ChangeEvent, KeyboardEvent } from "react";
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
+import { createAttributesForTesting } from "../devBuild";
 
 type Props = {
   label?: string;
@@ -39,6 +40,7 @@ type Props = {
   disabled?: boolean;
   helpText?: string;
   className?: string;
+  testId?: string;
 };
 
 class InputField extends React.Component<Props> {
@@ -80,7 +82,8 @@ class InputField extends React.Component<Props> {
       disabled,
       label,
       helpText,
-      className
+      className,
+      testId
     } = this.props;
     const errorView = validationError ? "is-danger" : "";
     const helper = validationError ? <p className="help is-danger">{errorMessage}</p> : "";
@@ -99,6 +102,7 @@ class InputField extends React.Component<Props> {
             onChange={this.handleInput}
             onKeyPress={this.handleKeyPress}
             disabled={disabled}
+            {...createAttributesForTesting(testId)}
           />
         </div>
         {helper}

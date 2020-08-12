@@ -29,6 +29,7 @@ import com.google.inject.Inject;
 import sonia.scm.EagerSingleton;
 import sonia.scm.SCMContext;
 import sonia.scm.plugin.Extension;
+import sonia.scm.security.AnonymousMode;
 import sonia.scm.user.UserManager;
 
 @Extension
@@ -48,7 +49,7 @@ public class ScmConfigurationChangedListener {
   }
 
   private void createAnonymousUserIfRequired(ScmConfigurationChangedEvent event) {
-    if (event.getConfiguration().isAnonymousAccessEnabled() && !userManager.contains(SCMContext.USER_ANONYMOUS)) {
+    if (event.getConfiguration().getAnonymousMode() != AnonymousMode.OFF && !userManager.contains(SCMContext.USER_ANONYMOUS)) {
       userManager.create(SCMContext.ANONYMOUS);
     }
   }

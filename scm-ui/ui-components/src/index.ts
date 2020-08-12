@@ -85,6 +85,7 @@ export { default as comparators } from "./comparators";
 
 export { apiClient } from "./apiclient";
 export * from "./errors";
+export { isDevBuild, createAttributesForTesting } from "./devBuild";
 
 export * from "./avatar";
 export * from "./buttons";

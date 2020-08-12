@@ -49,6 +49,7 @@
     "repositories": "Repositories",
     "users": "Users",
     "logout": "Logout",
+    "login": "Login",
     "groups": "Groups",
     "admin": "Administration"
   },
