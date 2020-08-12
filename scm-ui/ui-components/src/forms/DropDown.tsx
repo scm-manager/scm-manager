@@ -36,6 +36,11 @@ type Props = {
 class DropDown extends React.Component<Props> {
   render() {
     const { options, optionValues, preselectedOption, className, disabled } = this.props;
+
+    if (preselectedOption && options.filter(o => o === preselectedOption).length === 0) {
+      options.push(preselectedOption);
+    }
+
     return (
       <div className={classNames(className, "select", disabled ? "disabled" : "")}>
         <select value={preselectedOption ? preselectedOption : ""} onChange={this.change} disabled={disabled}>
