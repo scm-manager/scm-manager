@@ -23,15 +23,17 @@
  */
 import React from "react";
 import { connect } from "react-redux";
-import { Redirect, withRouter } from "react-router-dom";
+import { Redirect, RouteComponentProps, withRouter } from "react-router-dom";
 import { compose } from "redux";
 import styled from "styled-components";
-import { getLoginFailure, isAuthenticated, isLoginPending, login } from "../modules/auth";
+import { getLoginFailure, getMe, isAnonymous, isLoginPending, login } from "../modules/auth";
 import { getLoginInfoLink, getLoginLink } from "../modules/indexResource";
 import LoginInfo from "../components/LoginInfo";
+import { Me } from "@scm-manager/ui-types";
 
-type Props = {
+type Props = RouteComponentProps & {
   authenticated: boolean;
+  me: Me;
   loading: boolean;
   error?: Error;
   link: string;
@@ -39,10 +41,6 @@ type Props = {
 
   // dispatcher props
   login: (link: string, username: string, password: string) => void;
-
-  // context props
-  from: any;
-  location: any;
 };
 
 const HeroSection = styled.section`
@@ -65,9 +63,9 @@ class Login extends React.Component<Props> {
   };
 
   render() {
-    const { authenticated, ...restProps } = this.props;
+    const { authenticated, me, ...restProps } = this.props;
 
-    if (authenticated) {
+    if (authenticated && !!me) {
       return this.renderRedirect();
     }
 
@@ -86,13 +84,15 @@ class Login extends React.Component<Props> {
 }
 
 const mapStateToProps = (state: any) => {
-  const authenticated = isAuthenticated(state);
+  const authenticated = state?.auth?.me && !isAnonymous(state.auth.me);
+  const me = getMe(state);
   const loading = isLoginPending(state);
   const error = getLoginFailure(state);
   const link = getLoginLink(state);
   const loginInfoLink = getLoginInfoLink(state);
   return {
     authenticated,
+    me,
     loading,
     error,
     link,

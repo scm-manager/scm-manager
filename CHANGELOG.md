@@ -8,7 +8,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 - Introduced merge detection for receive hooks ([#1278](https://github.com/scm-manager/scm-manager/pull/1278))
-- add link to source file in diff sections ([#1267](https://github.com/scm-manager/scm-manager/pull/1267))
+- Anonymous mode for the web ui ([#1284](https://github.com/scm-manager/scm-manager/pull/1284))
+- Add link to source file in diff sections ([#1267](https://github.com/scm-manager/scm-manager/pull/1267))
 - Check versions of plugin dependencies on plugin installation ([#1283](https://github.com/scm-manager/scm-manager/pull/1283))
 
 ### Fixed
@@ -20,7 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New api to resolve SCM-Manager root url ([#1276](https://github.com/scm-manager/scm-manager/pull/1276))
 
 ### Changed
-- Help tooltips are now mutliline by default ([#1271](https://github.com/scm-manager/scm-manager/pull/1271))
+- Help tooltips are now multiline by default ([#1271](https://github.com/scm-manager/scm-manager/pull/1271))
 
 ### Fixed
 - Fixed unnecessary horizontal scrollbar in modal dialogs ([#1271](https://github.com/scm-manager/scm-manager/pull/1271))

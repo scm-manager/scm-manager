@@ -24,7 +24,12 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import { Checkbox, DateFromNow, MailLink } from "@scm-manager/ui-components";
+import {
+  Checkbox,
+  DateFromNow,
+  MailLink,
+  createAttributesForTesting
+} from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   user: User;
@@ -38,11 +43,11 @@ class Details extends React.Component<Props> {
         <tbody>
           <tr>
             <th>{t("user.name")}</th>
-            <td>{user.name}</td>
+            <td {...createAttributesForTesting(user.name)}>{user.name}</td>
           </tr>
           <tr>
             <th>{t("user.displayName")}</th>
-            <td>{user.displayName}</td>
+            <td {...createAttributesForTesting(user.displayName)}>{user.displayName}</td>
           </tr>
           <tr>
             <th>{t("user.mail")}</th>

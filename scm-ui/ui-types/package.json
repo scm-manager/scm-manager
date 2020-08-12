@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-types",
-  "version": "2.3.0",
+  "version": "2.4.0-SNAPSHOT",
   "description": "Flow types for SCM-Manager related Objects",
   "main": "src/index.ts",
   "files": [

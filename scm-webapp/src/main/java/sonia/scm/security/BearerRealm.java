@@ -92,6 +92,7 @@ public class BearerRealm extends AuthenticatingRealm
     checkArgument(token instanceof BearerToken, "%s is required", BearerToken.class);
 
     BearerToken bt = (BearerToken) token;
+
     AccessToken accessToken = tokenResolver.resolve(bt);
 
     return helper.authenticationInfoBuilder(accessToken.getSubject())

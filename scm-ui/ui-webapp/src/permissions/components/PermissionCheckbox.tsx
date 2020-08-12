@@ -54,6 +54,7 @@ class PermissionCheckbox extends React.Component<Props> {
         checked={checked}
         onChange={onChange}
         disabled={disabled}
+        testId={label}
       />
     );
   }

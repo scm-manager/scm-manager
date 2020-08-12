@@ -32,11 +32,12 @@ type Props = RouteComponentProps & {
   showCreateButton: boolean;
   link: string;
   label?: string;
+  testId?: string;
 };
 
 class OverviewPageActions extends React.Component<Props> {
   render() {
-    const { history, location, link } = this.props;
+    const { history, location, link, testId } = this.props;
     return (
       <>
         <FilterInput
@@ -44,6 +45,7 @@ class OverviewPageActions extends React.Component<Props> {
           filter={filter => {
             history.push(`/${link}/?q=${filter}`);
           }}
+          testId={testId + "-filter"}
         />
         {this.renderCreateButton()}
       </>

@@ -25,9 +25,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
 import { PagedCollection, RepositoryRole } from "@scm-manager/ui-types";
-import { CreateButton, LinkPaginator, Loading, Notification, Subtitle, Title, urls } from "@scm-manager/ui-components";
+import { CreateButton, LinkPaginator, Loading, Notification, Subtitle, Title, urls, ErrorNotification } from "@scm-manager/ui-components";
 import {
   fetchRolesByPage,
   getFetchRolesFailure,
@@ -61,8 +60,8 @@ class RepositoryRoles extends React.Component<Props> {
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    const { loading, list, page, rolesLink, location, fetchRolesByPage } = this.props;
-    if (list && page && !loading) {
+    const { loading, error, list, page, rolesLink, location, fetchRolesByPage } = this.props;
+    if (list && page && !loading && !error) {
       const statePage: number = list.page + 1;
       if (page !== statePage || prevProps.location.search !== location.search) {
         fetchRolesByPage(rolesLink, page);
@@ -71,7 +70,11 @@ class RepositoryRoles extends React.Component<Props> {
   };
 
   render() {
-    const { t, loading } = this.props;
+    const { t, loading, error } = this.props;
+
+    if (error) {
+      return <ErrorNotification error={error}/>;
+    }
 
     if (loading) {
       return <Loading />;

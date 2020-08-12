@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
@@ -30,7 +30,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import sonia.scm.group.GroupCollector;
-import sonia.scm.security.Authentications;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.UserPermissions;
@@ -89,7 +88,7 @@ public class MeDtoFactory extends HalAppenderMapper {
     if (UserPermissions.modify(user).isPermitted()) {
       linksBuilder.single(link("update", resourceLinks.me().update(user.getName())));
     }
-    if (userManager.isTypeDefault(user) && UserPermissions.changePassword(user).isPermitted() && !Authentications.isSubjectAnonymous(user.getName())) {
+    if (userManager.isTypeDefault(user) && UserPermissions.changePassword(user).isPermitted()) {
       linksBuilder.single(link("password", resourceLinks.me().passwordChange()));
     }
 
@@ -98,5 +97,4 @@ public class MeDtoFactory extends HalAppenderMapper {
 
     return new MeDto(linksBuilder.build(), embeddedBuilder.build());
   }
-
 }

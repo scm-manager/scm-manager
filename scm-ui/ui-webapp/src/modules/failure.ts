@@ -40,6 +40,7 @@ function removeAllEntriesOfIdentifierFromState(state: object, payload: any, iden
   const newState = {};
   for (const failureType in state) {
     if (failureType !== identifier && !failureType.startsWith(identifier)) {
+      // @ts-ignore Right types not available
       newState[failureType] = state[failureType];
     }
   }
@@ -50,6 +51,7 @@ function removeFromState(state: object, identifier: string) {
   const newState = {};
   for (const failureType in state) {
     if (failureType !== identifier) {
+      // @ts-ignore Right types not available
       newState[failureType] = state[failureType];
     }
   }
@@ -90,11 +92,13 @@ export default function reducer(
 }
 
 export function getFailure(state: object, actionType: string, itemId?: string | number) {
+  // @ts-ignore Right types not available
   if (state.failure) {
     let identifier = actionType;
     if (itemId) {
       identifier += "/" + itemId;
     }
+    // @ts-ignore Right types not available
     return state.failure[identifier];
   }
 }

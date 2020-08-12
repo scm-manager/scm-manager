@@ -48,6 +48,7 @@
     "repositories": "Repositories",
     "users": "Benutzer",
     "logout": "Abmelden",
+    "login": "Anmelden",
     "groups": "Gruppen",
     "admin": "Administration"
   },

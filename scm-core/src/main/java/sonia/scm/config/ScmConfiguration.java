@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.config;
 
 
@@ -30,6 +30,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.security.AnonymousMode;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.xml.XmlSetStringAdapter;
 
@@ -161,7 +162,7 @@ public class ScmConfiguration implements Configuration {
    * @see <a href="http://momentjs.com/docs/#/parsing/" target="_blank">http://momentjs.com/docs/#/parsing/</a>
    */
   private String dateFormat = DEFAULT_DATEFORMAT;
-  private boolean anonymousAccessEnabled = false;
+  private AnonymousMode anonymousMode = AnonymousMode.OFF;
 
   /**
    * Enables xsrf cookie protection.
@@ -200,7 +201,7 @@ public class ScmConfiguration implements Configuration {
     this.realmDescription = other.realmDescription;
     this.dateFormat = other.dateFormat;
     this.pluginUrl = other.pluginUrl;
-    this.anonymousAccessEnabled = other.anonymousAccessEnabled;
+    this.anonymousMode = other.anonymousMode;
     this.enableProxy = other.enableProxy;
     this.proxyPort = other.proxyPort;
     this.proxyServer = other.proxyServer;
@@ -311,8 +312,24 @@ public class ScmConfiguration implements Configuration {
     return realmDescription;
   }
 
+  /**
+   * Returns the currently enabled type of anonymous mode.
+   *
+   * @return anonymous mode
+   * @since 2.4.0
+   */
+  public AnonymousMode getAnonymousMode() {
+    return anonymousMode;
+  }
+
+  /**
+   * Returns {@code true} if anonymous mode is enabled.
+   * @return {@code true} if anonymous mode is enabled
+   * @deprecated since 2.4.0 use {@link ScmConfiguration#getAnonymousMode} instead
+   */
+  @Deprecated
   public boolean isAnonymousAccessEnabled() {
-    return anonymousAccessEnabled;
+    return anonymousMode != AnonymousMode.OFF;
   }
 
   public boolean isDisableGroupingGrid() {
@@ -360,8 +377,28 @@ public class ScmConfiguration implements Configuration {
     return skipFailedAuthenticators;
   }
 
+  /**
+   * Enables the anonymous access at protocol level.
+   * @param anonymousAccessEnabled enable or disables the anonymous access
+   * @deprecated since 2.4.0 use {@link ScmConfiguration#setAnonymousMode(AnonymousMode)} instead
+   */
+  @Deprecated
   public void setAnonymousAccessEnabled(boolean anonymousAccessEnabled) {
-    this.anonymousAccessEnabled = anonymousAccessEnabled;
+    if (anonymousAccessEnabled) {
+      this.anonymousMode = AnonymousMode.PROTOCOL_ONLY;
+    } else {
+      this.anonymousMode = AnonymousMode.OFF;
+    }
+  }
+
+  /**
+   * Configures the anonymous mode.
+   * @param mode type of anonymous mode
+   *
+   * @since 2.4.0
+   */
+  public void setAnonymousMode(AnonymousMode mode) {
+    this.anonymousMode = mode;
   }
 
   public void setBaseUrl(String baseUrl) {

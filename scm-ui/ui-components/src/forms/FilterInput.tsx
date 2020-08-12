@@ -24,10 +24,12 @@
 import React, { ChangeEvent, FormEvent } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
+import { createAttributesForTesting } from "../devBuild";
 
 type Props = WithTranslation & {
   filter: (p: string) => void;
   value?: string;
+  testId?: string;
 };
 
 type State = {
@@ -58,9 +60,9 @@ class FilterInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { t } = this.props;
+    const { t, testId } = this.props;
     return (
-      <form className="input-field" onSubmit={this.handleSubmit}>
+      <form className="input-field" onSubmit={this.handleSubmit} {...createAttributesForTesting(testId)}>
         <div className="control has-icons-left">
           <FixedHeightInput
             className="input"

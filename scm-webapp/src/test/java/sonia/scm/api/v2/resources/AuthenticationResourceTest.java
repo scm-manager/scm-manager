@@ -67,7 +67,7 @@ public class AuthenticationResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private RestDispatcher dispatcher = new RestDispatcher();
+  private final RestDispatcher dispatcher = new RestDispatcher();
 
   @Mock
   private AccessTokenBuilderFactory accessTokenBuilderFactory;
@@ -75,9 +75,9 @@ public class AuthenticationResourceTest {
   @Mock
   private AccessTokenBuilder accessTokenBuilder;
 
-  private AccessTokenCookieIssuer cookieIssuer = new DefaultAccessTokenCookieIssuer(mock(ScmConfiguration.class));
+  private final AccessTokenCookieIssuer cookieIssuer = new DefaultAccessTokenCookieIssuer(mock(ScmConfiguration.class));
 
-  private MockHttpResponse response = new MockHttpResponse();
+  private final MockHttpResponse response = new MockHttpResponse();
 
   private static final String AUTH_JSON_TRILLIAN = "{\n" +
     "\t\"cookie\": true,\n" +

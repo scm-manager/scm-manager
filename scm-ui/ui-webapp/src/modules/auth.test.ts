@@ -35,6 +35,7 @@ import reducer, {
   getLoginFailure,
   getLogoutFailure,
   getMe,
+  isAnonymous,
   isAuthenticated,
   isFetchMePending,
   isLoginPending,
@@ -349,23 +350,6 @@ describe("auth selectors", () => {
     ).toBe(true);
   });
 
-  it("should return false if me exist and login Link does exist", () => {
-    expect(
-      isAuthenticated({
-        auth: {
-          me
-        },
-        indexResources: {
-          links: {
-            login: {
-              href: "login.href"
-            }
-          }
-        }
-      })
-    ).toBe(false);
-  });
-
   it("should return me", () => {
     expect(
       getMe({
@@ -499,4 +483,9 @@ describe("auth selectors", () => {
       })
     ).toBe(true);
   });
+});
+
+it("should check if current user is anonymous", () => {
+  expect(isAnonymous({ name: "_anonymous", displayName: "Anon", _links: [], groups: [], mail: "" })).toBeTruthy();
+  expect(isAnonymous({ name: "scmadmin", displayName: "SCM Admin", _links: [], groups: [], mail: "" })).toBeFalsy();
 });

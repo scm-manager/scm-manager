@@ -22,52 +22,45 @@
  * SOFTWARE.
  */
 import React from "react";
-import { connect } from "react-redux";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Redirect } from "react-router-dom";
+import {connect} from "react-redux";
+import {WithTranslation, withTranslation} from "react-i18next";
 
-import { getLogoutFailure, isAuthenticated, isLogoutPending, isRedirecting, logout } from "../modules/auth";
-import { ErrorPage, Loading } from "@scm-manager/ui-components";
-import { getLogoutLink } from "../modules/indexResource";
+import {getLogoutFailure, logout} from "../modules/auth";
+import {ErrorPage, Loading} from "@scm-manager/ui-components";
+import {getLogoutLink} from "../modules/indexResource";
+import {RouteComponentProps, withRouter} from "react-router-dom";
+import {compose} from "redux";
 
-type Props = WithTranslation & {
-  authenticated: boolean;
-  loading: boolean;
-  redirecting: boolean;
+type Props = RouteComponentProps &
+  WithTranslation & {
   error: Error;
   logoutLink: string;
 
   // dispatcher functions
-  logout: (link: string) => void;
+  logout: (link: string, callback: () => void) => void;
 };
 
 class Logout extends React.Component<Props> {
   componentDidMount() {
-    this.props.logout(this.props.logoutLink);
+    if (this.props.logoutLink) {
+      this.props.logout(this.props.logoutLink, () => this.props.history.push("/login"));
+    }
   }
 
   render() {
-    const { authenticated, redirecting, loading, error, t } = this.props;
+    const {error, t} = this.props;
     if (error) {
-      return <ErrorPage title={t("logout.error.title")} subtitle={t("logout.error.subtitle")} error={error} />;
-    } else if (loading || authenticated || redirecting) {
-      return <Loading />;
+      return <ErrorPage title={t("logout.error.title")} subtitle={t("logout.error.subtitle")} error={error}/>;
     } else {
-      return <Redirect to="/login" />;
+      return <Loading/>;
     }
   }
 }
 
 const mapStateToProps = (state: any) => {
-  const authenticated = isAuthenticated(state);
-  const loading = isLogoutPending(state);
-  const redirecting = isRedirecting(state);
   const error = getLogoutFailure(state);
   const logoutLink = getLogoutLink(state);
   return {
-    authenticated,
-    loading,
-    redirecting,
     error,
     logoutLink
   };
@@ -75,8 +68,8 @@ const mapStateToProps = (state: any) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    logout: (link: string) => dispatch(logout(link))
+    logout: (link: string, callback: () => void) => dispatch(logout(link, callback))
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("commons")(Logout));
+export default compose(withTranslation("commons"), withRouter, connect(mapStateToProps, mapDispatchToProps))(Logout);

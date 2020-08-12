@@ -38,7 +38,12 @@
     "realm-description": "Realm Description",
     "disable-grouping-grid": "Disable Grouping Grid",
     "date-format": "Date Format",
-    "anonymous-access-enabled": "Anonymous Access Enabled",
+    "anonymousMode": {
+      "title": "Anonymous Access",
+      "full": "Enabled for Web UI and protocols",
+      "protocolOnly": "Enabled for protocols",
+      "off": "Disabled"
+    },
     "skip-failed-authenticators": "Skip Failed Authenticators",
     "plugin-url": "Plugin Center URL",
     "enabled-xsrf-protection": "Enabled XSRF Protection",
