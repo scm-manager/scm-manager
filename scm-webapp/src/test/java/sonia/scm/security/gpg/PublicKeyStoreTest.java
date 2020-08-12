@@ -173,8 +173,9 @@ class PublicKeyStoreTest {
   void shouldReturnEmptyListIfNoKeysAvailable() {
     List<RawGpgKey> keys = keyStore.findByUsername("zaphod");
 
-    assertThat(keys).isEmpty();
-    assertThat(keys).isInstanceOf(List.class);
+    assertThat(keys)
+      .isInstanceOf(List.class)
+      .isEmpty();
   }
 
   @Test
