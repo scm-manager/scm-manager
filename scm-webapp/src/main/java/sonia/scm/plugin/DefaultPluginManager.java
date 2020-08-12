@@ -42,6 +42,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -68,16 +69,29 @@ public class DefaultPluginManager implements PluginManager {
   private final Collection<PendingPluginUninstallation> pendingUninstallQueue = new ArrayList<>();
   private final PluginDependencyTracker dependencyTracker = new PluginDependencyTracker();
 
+  private final Function<List<AvailablePlugin>, PluginInstallationContext> contextFactory;
+
   @Inject
   public DefaultPluginManager(PluginLoader loader, PluginCenter center, PluginInstaller installer, Restarter restarter, ScmEventBus eventBus) {
+    this(loader, center, installer, restarter, eventBus, null);
+  }
+
+  DefaultPluginManager(PluginLoader loader, PluginCenter center, PluginInstaller installer, Restarter restarter, ScmEventBus eventBus, Function<List<AvailablePlugin>, PluginInstallationContext> contextFactory) {
     this.loader = loader;
     this.center = center;
     this.installer = installer;
     this.restarter = restarter;
     this.eventBus = eventBus;
 
+    if (contextFactory != null) {
+      this.contextFactory = contextFactory;
+    } else {
+      this.contextFactory = (availablePlugins -> PluginInstallationContext.from(getInstalled(), availablePlugins));
+    }
+
     this.computeInstallationDependencies();
   }
+
 
   @VisibleForTesting
   synchronized void computeInstallationDependencies() {
@@ -167,9 +181,10 @@ public class DefaultPluginManager implements PluginManager {
 
     List<AvailablePlugin> plugins = collectPluginsToInstall(name);
     List<PendingPluginInstallation> pendingInstallations = new ArrayList<>();
+
     for (AvailablePlugin plugin : plugins) {
       try {
-        PendingPluginInstallation pending = installer.install(plugin);
+        PendingPluginInstallation pending = installer.install(contextFactory.apply(plugins), plugin);
         dependencyTracker.addInstalled(plugin.getDescriptor());
         pendingInstallations.add(pending);
         eventBus.post(new PluginEvent(PluginEvent.PluginEventType.INSTALLED, plugin));
