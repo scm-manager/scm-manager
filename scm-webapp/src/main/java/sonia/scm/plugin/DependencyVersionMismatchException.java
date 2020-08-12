@@ -24,29 +24,37 @@
 
 package sonia.scm.plugin;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import lombok.Getter;
 
-class SmpDescriptorExtractor {
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-  InstalledPluginDescriptor extractPluginDescriptor(Path file) throws IOException {
-    try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(file), StandardCharsets.UTF_8)) {
-      ZipEntry nextEntry;
-      while ((nextEntry = zipInputStream.getNextEntry()) != null) {
-        if ("META-INF/scm/plugin.xml".equals(nextEntry.getName())) {
-          JAXBContext context = JAXBContext.newInstance(ScmModule.class, InstalledPluginDescriptor.class);
-          return (InstalledPluginDescriptor) context.createUnmarshaller().unmarshal(zipInputStream);
-        }
-      }
-    } catch (JAXBException e) {
-      throw new IOException("failed to read descriptor file META-INF/scm/plugin.xml from plugin", e);
-    }
-    throw new IOException("Missing plugin descriptor META-INF/scm/plugin.xml in download package");
+@Getter
+@SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
+public class DependencyVersionMismatchException extends PluginInstallException {
+
+  private final String plugin;
+  private final String dependency;
+  private final String minVersion;
+  private final String currentVersion;
+
+  public DependencyVersionMismatchException(String plugin, String dependency, String minVersion, String currentVersion) {
+    super(
+      entity("Dependency", dependency)
+        .in("Plugin", plugin)
+        .build(),
+      String.format(
+        "%s requires dependency %s at least in version %s, but it is installed in version %s",
+        plugin, dependency, minVersion, currentVersion
+      )
+    );
+    this.plugin = plugin;
+    this.dependency = dependency;
+    this.minVersion = minVersion;
+    this.currentVersion = currentVersion;
+  }
+
+  @Override
+  public String getCode() {
+    return "E5S6niWwi1";
   }
 }

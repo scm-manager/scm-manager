@@ -202,7 +202,9 @@ public class ValidationUtilTest
       "scm/main",
       "scm/plugins/git-plugin",
       "_scm",
-      "-scm"
+      "-scm",
+      "scm.git",
+      "scm.git.git"
     };
 
     for (String path : validPaths) {

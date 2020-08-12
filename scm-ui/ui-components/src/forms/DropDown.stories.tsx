@@ -48,4 +48,14 @@ storiesOf("Forms|DropDown", module)
         // nothing to do
       }}
     />
+  ))
+  .add("Add preselect if missing in options", () => (
+    <DropDown
+      optionValues={["alpha", "beta", "gamma"]}
+      options={["A", "B", "C"]}
+      preselectedOption={"D"}
+      optionSelected={selection => {
+        // nothing to do
+      }}
+    />
   ));

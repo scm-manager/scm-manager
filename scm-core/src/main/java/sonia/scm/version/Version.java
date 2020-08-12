@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.version;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -268,11 +268,28 @@ public final class Version implements Comparable<Version>
    *
    * @return true if newer
    */
-  public boolean isNewer(String versionString)
-  {
-    Version o = Version.parse(versionString);
+  public boolean isNewer(String versionString) {
+    return isNewer(Version.parse(versionString));
+  }
 
-    return (o != null) && isNewer(o);
+  /**
+   * Returns true if the given version is newer or equal.
+   * @param versionString other version
+   * @return true if newer
+   * @since 2.4.0
+   */
+  public boolean isNewerOrEqual(String versionString) {
+    return isNewerOrEqual(Version.parse(versionString));
+  }
+
+  /**
+   * Returns true if the given version is newer or equal.
+   * @param o other version
+   * @return {@code true} if newer or equal
+   * @since 2.4.0
+   */
+  public boolean isNewerOrEqual(Version o) {
+    return compareTo(o) <= 0;
   }
 
   /**
@@ -296,12 +313,30 @@ public final class Version implements Comparable<Version>
    *
    * @return true if older
    */
-  public boolean isOlder(String versionString)
-  {
-    Version o = Version.parse(versionString);
-
-    return (o != null) && isOlder(o);
+  public boolean isOlder(String versionString) {
+    return isOlder(Version.parse(versionString));
   }
+
+  /**
+   * Returns true if the given version is older or equal.
+   * @param versionString other version
+   * @return {@code true} if older or equal
+   * @since 2.4.0
+   */
+  public boolean isOlderOrEqual(String versionString) {
+    return isOlderOrEqual(Version.parse(versionString));
+  }
+
+  /**
+   * Returns true if the given version is older or equal.
+   * @param o other version
+   * @return {@code true} if older or equal
+   * @since 2.4.0
+   */
+  public boolean isOlderOrEqual(Version o) {
+    return compareTo(o) >= 0;
+  }
+
 
   /**
    * Returns true if the version is a snapshot.

@@ -38,33 +38,69 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
-@SuppressWarnings("UnstableApiUsage") // guava hash is marked as unstable
+@SuppressWarnings("UnstableApiUsage")
+  // guava hash is marked as unstable
 class PluginInstaller {
 
-  private final SCMContextProvider context;
+  private final SCMContextProvider scmContext;
   private final AdvancedHttpClient client;
   private final SmpDescriptorExtractor smpDescriptorExtractor;
 
   @Inject
-  public PluginInstaller(SCMContextProvider context, AdvancedHttpClient client, SmpDescriptorExtractor smpDescriptorExtractor) {
-    this.context = context;
+  public PluginInstaller(SCMContextProvider scmContext, AdvancedHttpClient client, SmpDescriptorExtractor smpDescriptorExtractor) {
+    this.scmContext = scmContext;
     this.client = client;
     this.smpDescriptorExtractor = smpDescriptorExtractor;
   }
 
   @SuppressWarnings("squid:S4790") // hashing should be safe
-  public PendingPluginInstallation install(AvailablePlugin plugin) {
+  public PendingPluginInstallation install(PluginInstallationContext context, AvailablePlugin plugin) {
     Path file = null;
     try (HashingInputStream input = new HashingInputStream(Hashing.sha256(), download(plugin))) {
       file = createFile(plugin);
       Files.copy(input, file);
 
       verifyChecksum(plugin, input.hash(), file);
-      verifyConditions(plugin, file);
+
+      InstalledPluginDescriptor descriptor = smpDescriptorExtractor.extractPluginDescriptor(file);
+      verifyInformation(plugin.getDescriptor(), descriptor);
+
+      PluginInstallationVerifier.verify(context, descriptor);
+
       return new PendingPluginInstallation(plugin.install(), file);
+    } catch (PluginException ex) {
+      cleanup(file);
+      throw ex;
     } catch (IOException ex) {
       cleanup(file);
       throw new PluginDownloadException(plugin, ex);
+    }
+  }
+
+  private void verifyInformation(AvailablePluginDescriptor descriptorFromPluginCenter, InstalledPluginDescriptor downloadedDescriptor) {
+    verifyInformation(descriptorFromPluginCenter.getInformation(), downloadedDescriptor.getInformation());
+  }
+
+  private void verifyInformation(PluginInformation informationFromPluginCenter, PluginInformation downloadedInformation) {
+    if (!informationFromPluginCenter.getName().equals(downloadedInformation.getName())) {
+      throw new PluginInformationMismatchException(
+        informationFromPluginCenter, downloadedInformation,
+        String.format(
+          "downloaded plugin name \"%s\" does not match the expected name \"%s\" from plugin-center",
+          downloadedInformation.getName(),
+          informationFromPluginCenter.getName()
+        )
+      );
+    }
+    if (!informationFromPluginCenter.getVersion().equals(downloadedInformation.getVersion())) {
+      throw new PluginInformationMismatchException(
+        informationFromPluginCenter, downloadedInformation,
+        String.format(
+          "downloaded plugin version \"%s\" does not match the expected version \"%s\" from plugin-center",
+          downloadedInformation.getVersion(),
+          informationFromPluginCenter.getVersion()
+        )
+      );
     }
   }
 
@@ -89,26 +125,12 @@ class PluginInstaller {
     }
   }
 
-  private void verifyConditions(AvailablePlugin plugin, Path file) throws IOException {
-    InstalledPluginDescriptor pluginDescriptor = smpDescriptorExtractor.extractPluginDescriptor(file);
-    if (!pluginDescriptor.getCondition().isSupported()) {
-      cleanup(file);
-      throw new PluginConditionFailedException(
-        pluginDescriptor.getCondition(),
-        String.format(
-          "could not load plugin %s, the plugin condition does not match",
-          plugin.getDescriptor().getInformation().getName()
-        )
-      );
-    }
-  }
-
   private InputStream download(AvailablePlugin plugin) throws IOException {
     return client.get(plugin.getDescriptor().getUrl()).request().contentAsStream();
   }
 
   private Path createFile(AvailablePlugin plugin) throws IOException {
-    Path directory = context.resolve(Paths.get("plugins"));
+    Path directory = scmContext.resolve(Paths.get("plugins"));
     Files.createDirectories(directory);
     return directory.resolve(plugin.getDescriptor().getInformation().getName() + ".smp");
   }

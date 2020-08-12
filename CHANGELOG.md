@@ -9,9 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Introduced merge detection for receive hooks ([#1278](https://github.com/scm-manager/scm-manager/pull/1278))
 - Anonymous mode for the web ui ([#1284](https://github.com/scm-manager/scm-manager/pull/1284))
+- Check versions of plugin dependencies on plugin installation ([#1283](https://github.com/scm-manager/scm-manager/pull/1283))
 
 ### Fixed
 - Repository names may not end with ".git" ([#1277](https://github.com/scm-manager/scm-manager/pull/1277))
+- Add preselected value to options in dropdown component if missing ([#1287](https://github.com/scm-manager/scm-manager/pull/1287))
 
 ## [2.3.1] - 2020-08-04
 ### Added
