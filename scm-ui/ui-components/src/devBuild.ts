@@ -22,22 +22,18 @@
  * SOFTWARE.
  */
 
-export const isDevBuild = () => (process.env.NODE_ENV === "development")
+export const isDevBuild = () => process.env.NODE_ENV === "development";
 
 export const createAttributesForTesting = (testId?: string) => {
   if (!testId || !isDevBuild()) {
     return undefined;
   }
   return {
-    "data-testid": testId
-  }
+    "data-testid": normalizeTestId(testId)
+  };
 };
 
-export const replaceSpacesInTestId = (testId?: string) => {
-  if (!testId) {
-    return testId;
-  }
-
+const normalizeTestId = (testId: string) => {
   let id = testId;
   while (id.includes(" ")) {
     id = id.replace(" ", "-");

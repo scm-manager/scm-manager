@@ -28,8 +28,7 @@ import {
   Checkbox,
   DateFromNow,
   MailLink,
-  createAttributesForTesting,
-  replaceSpacesInTestId
+  createAttributesForTesting
 } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
@@ -44,11 +43,11 @@ class Details extends React.Component<Props> {
         <tbody>
           <tr>
             <th>{t("user.name")}</th>
-            <td {...createAttributesForTesting(replaceSpacesInTestId(user.name))}>{user.name}</td>
+            <td {...createAttributesForTesting(user.name)}>{user.name}</td>
           </tr>
           <tr>
             <th>{t("user.displayName")}</th>
-            <td {...createAttributesForTesting(replaceSpacesInTestId(user.displayName))}>{user.displayName}</td>
+            <td {...createAttributesForTesting(user.displayName)}>{user.displayName}</td>
           </tr>
           <tr>
             <th>{t("user.mail")}</th>

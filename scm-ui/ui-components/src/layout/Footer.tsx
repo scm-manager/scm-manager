@@ -31,7 +31,7 @@ import styled from "styled-components";
 import { EXTENSION_POINT } from "../avatar/Avatar";
 import ExternalNavLink from "../navigation/ExternalNavLink";
 import { useTranslation } from "react-i18next";
-import { createAttributesForTesting, replaceSpacesInTestId } from "../devBuild";
+import { createAttributesForTesting } from "../devBuild";
 
 type Props = {
   me?: Me;
@@ -47,7 +47,7 @@ type TitleWithIconsProps = {
 const TitleWithIcon: FC<TitleWithIconsProps> = ({ icon, title }) => {
   return (
     <>
-      <i className={`fas fa-${icon} fa-fw`} {...createAttributesForTesting(replaceSpacesInTestId(title))} /> {title}
+      <i className={`fas fa-${icon} fa-fw`} {...createAttributesForTesting(title)} /> {title}
     </>
   );
 };
@@ -69,7 +69,7 @@ const AvatarContainer = styled.span`
 `;
 
 const TitleWithAvatar: FC<TitleWithAvatarProps> = ({ me }) => (
-  <div {...createAttributesForTesting(replaceSpacesInTestId(me.displayName))}>
+  <div {...createAttributesForTesting(me.displayName)}>
     <AvatarContainer className="image is-rounded">
       <VCenteredAvatar person={me} representation="rounded" />
     </AvatarContainer>

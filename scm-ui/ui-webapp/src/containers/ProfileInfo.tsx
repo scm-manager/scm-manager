@@ -28,8 +28,7 @@ import {
   AvatarImage,
   AvatarWrapper,
   MailLink,
-  createAttributesForTesting,
-  replaceSpacesInTestId
+  createAttributesForTesting
 } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
@@ -53,11 +52,11 @@ class ProfileInfo extends React.Component<Props> {
             <tbody>
               <tr>
                 <th>{t("profile.username")}</th>
-                <td {...createAttributesForTesting(replaceSpacesInTestId(me.name))}>{me.name}</td>
+                <td {...createAttributesForTesting(me.name)}>{me.name}</td>
               </tr>
               <tr>
                 <th>{t("profile.displayName")}</th>
-                <td {...createAttributesForTesting(replaceSpacesInTestId(me.displayName))}>{me.displayName}</td>
+                <td {...createAttributesForTesting(me.displayName)}>{me.displayName}</td>
               </tr>
               <tr>
                 <th>{t("profile.mail")}</th>
