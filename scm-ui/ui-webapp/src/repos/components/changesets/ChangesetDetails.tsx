@@ -43,8 +43,7 @@ import {
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
 import { Link as ReactLink } from "react-router-dom";
-import SignatureIcon from "@scm-manager/ui-components/src/repos/changesets/SignatureIcon";
-import { FileControlFactory } from "@scm-manager/ui-components";
+import { FileControlFactory, SignatureIcon } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   changeset: Changeset;
