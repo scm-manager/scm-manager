@@ -230,6 +230,8 @@
       "rename": "renamed",
       "copy": "copied"
     },
+    "jumpToSource": "Jump to source file",
+    "jumpToTarget": "Jump to the previous version of the file",
     "sideBySide": "Switch to side-by-side view",
     "combined": "Switch to combined view",
     "noDiffFound": "No Diff between the selected branches found.",

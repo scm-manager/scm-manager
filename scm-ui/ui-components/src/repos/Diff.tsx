@@ -23,13 +23,14 @@
  */
 import React from "react";
 import DiffFile from "./DiffFile";
-import { DiffObjectProps, File } from "./DiffTypes";
+import { DiffObjectProps, File, FileControlFactory } from "./DiffTypes";
 import Notification from "../Notification";
 import { WithTranslation, withTranslation } from "react-i18next";
 
 type Props = WithTranslation &
   DiffObjectProps & {
     diff: File[];
+    fileControlFactory?: FileControlFactory;
   };
 
 class Diff extends React.Component<Props> {

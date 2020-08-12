@@ -21,47 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React, { FC } from "react";
+import styled from "styled-components";
+import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import Tooltip from "../Tooltip";
+import Icon from "../Icon";
 
-import * as diffs from "./diffs";
+const Button = styled(Link)`
+  width: 50px;
+  cursor: pointer;
+  &:hover {
+    color: #33b2e8;
+  }
+`;
 
-import {
-  File,
-  FileChangeType,
-  Hunk,
-  Change,
-  ChangeType,
-  BaseContext,
-  AnnotationFactory,
-  AnnotationFactoryContext,
-  DiffEventHandler,
-  DiffEventContext
-} from "./DiffTypes";
-
-export { diffs };
-
-export * from "./annotate";
-export * from "./changesets";
-
-export { default as Diff } from "./Diff";
-export { default as DiffFile } from "./DiffFile";
-export { default as DiffButton } from "./DiffButton";
-export { FileControlFactory } from "./DiffTypes";
-export { default as LoadingDiff } from "./LoadingDiff";
-export { DefaultCollapsed, DefaultCollapsedFunction } from "./defaultCollapsed";
-export { default as RepositoryAvatar } from "./RepositoryAvatar";
-export { default as RepositoryEntry } from "./RepositoryEntry";
-export { default as RepositoryEntryLink } from "./RepositoryEntryLink";
-export { default as JumpToFileButton } from "./JumpToFileButton";
-
-export {
-  File,
-  FileChangeType,
-  Hunk,
-  Change,
-  ChangeType,
-  BaseContext,
-  AnnotationFactory,
-  AnnotationFactoryContext,
-  DiffEventHandler,
-  DiffEventContext
+type Props = {
+  link: string;
+  tooltip: string;
 };
+
+const JumpToFileButton: FC<Props> = ({ link, tooltip }) => {
+  return (
+    <Tooltip message={tooltip} location="top">
+      <Button aria-label={tooltip} className="button" to={link}>
+        <Icon name="file-code" color="inherit" />
+      </Button>
+    </Tooltip>
+  );
+};
+
+export default JumpToFileButton;
