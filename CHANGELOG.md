@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Repository names may not end with ".git" ([#1277](https://github.com/scm-manager/scm-manager/pull/1277))
+- Show error message if plugin loading failed ([#1289](https://github.com/scm-manager/scm-manager/pull/1289))
 
 ## [2.3.1] - 2020-08-04
 ### Added
