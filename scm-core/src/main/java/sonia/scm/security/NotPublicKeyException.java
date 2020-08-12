@@ -29,7 +29,7 @@ import sonia.scm.ContextEntry;
 
 import java.util.List;
 
-@SuppressWarnings("squid:S110")
+@SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
 public class NotPublicKeyException extends BadRequestException {
   public NotPublicKeyException(List<ContextEntry> context, String message) {
     super(context, message);

@@ -27,7 +27,7 @@ package sonia.scm.security.gpg;
 import sonia.scm.BadRequestException;
 import sonia.scm.ContextEntry;
 
-@SuppressWarnings("squid:S110")
+@SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
 public final class DeletingReadonlyKeyNotAllowedException extends BadRequestException {
 
   public DeletingReadonlyKeyNotAllowedException(String keyId) {
