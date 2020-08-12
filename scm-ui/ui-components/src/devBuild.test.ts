@@ -73,10 +73,19 @@ describe("devbuild tests", () => {
       expect(attributes).toBeUndefined();
     });
 
-    it("should normalize testid testid", () => {
+    it("should remove spaces from test id", () => {
       const attributes = createAttributesForTesting("heart of gold");
       if (attributes) {
         expect(attributes["data-testid"]).toBe("heart-of-gold");
+      } else {
+        throw new Error("attributes should be defined");
+      }
+    });
+
+    it("should lower case test id", () => {
+      const attributes = createAttributesForTesting("HeartOfGold");
+      if (attributes) {
+        expect(attributes["data-testid"]).toBe("heartofgold");
       } else {
         throw new Error("attributes should be defined");
       }

@@ -22,21 +22,23 @@
  * SOFTWARE.
  */
 
-export const isDevBuild = () => process.env.NODE_ENV === "development";
+describe("With Anonymous mode protocol only enabled", () => {
+  before("Set anonymous mode to protocol only", () => {
+    cy.login("scmadmin", "scmadmin");
+    cy.setAnonymousMode("PROTOCOL_ONLY");
+    cy.byTestId("primary-navigation-logout").click();
+  });
 
-export const createAttributesForTesting = (testId?: string) => {
-  if (!testId || !isDevBuild()) {
-    return undefined;
-  }
-  return {
-    "data-testid": normalizeTestId(testId)
-  };
-};
+  it("Should show login page without primary navigation", () => {
+    cy.visit("/repos/");
+    cy.byTestId("login-button");
+    cy.containsNotByTestId("div", "primary-navigation-login");
+    cy.containsNotByTestId("div", "primary-navigation-repositories");
+  });
 
-const normalizeTestId = (testId: string) => {
-  let id = testId.toLowerCase();
-  while (id.includes(" ")) {
-    id = id.replace(" ", "-");
-  }
-  return id;
-};
+  after("Disable anonymous access", () => {
+    cy.login("scmadmin", "scmadmin");
+    cy.setAnonymousMode("OFF");
+    cy.byTestId("primary-navigation-logout").click();
+  });
+});

@@ -45,9 +45,6 @@ class PermissionCheckbox extends React.Component<Props> {
       ? t("verbs.repository." + name + ".description")
       : this.translateOrDefault("permissions." + key + ".description", t("permissions.unknown"));
 
-    // @ts-ignore we have to use the label here because cypress gets confused with asterix and dots
-    const testId = label.replaceAll(" ", "-").toLowerCase();
-
     return (
       <Checkbox
         key={name}
@@ -57,7 +54,7 @@ class PermissionCheckbox extends React.Component<Props> {
         checked={checked}
         onChange={onChange}
         disabled={disabled}
-        testId={testId}
+        testId={label}
       />
     );
   }

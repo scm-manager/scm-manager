@@ -22,21 +22,23 @@
  * SOFTWARE.
  */
 
-export const isDevBuild = () => process.env.NODE_ENV === "development";
+describe("With Anonymous mode disabled", () => {
+  before("Disable anonymous access", () => {
+    cy.login("scmadmin", "scmadmin");
+    cy.setAnonymousMode("OFF");
+    cy.byTestId("primary-navigation-logout").click();
+  });
 
-export const createAttributesForTesting = (testId?: string) => {
-  if (!testId || !isDevBuild()) {
-    return undefined;
-  }
-  return {
-    "data-testid": normalizeTestId(testId)
-  };
-};
+  it("Should show login page without primary navigation", () => {
+    cy.byTestId("login-button");
+    cy.containsNotByTestId("div", "primary-navigation-login");
+    cy.containsNotByTestId("div", "primary-navigation-repositories");
+  });
+  it("Should redirect after login", () => {
+    cy.login("scmadmin", "scmadmin");
 
-const normalizeTestId = (testId: string) => {
-  let id = testId.toLowerCase();
-  while (id.includes(" ")) {
-    id = id.replace(" ", "-");
-  }
-  return id;
-};
+    cy.visit("/me");
+    cy.byTestId("footer-user-profile");
+    cy.byTestId("primary-navigation-logout").click();
+  });
+});
