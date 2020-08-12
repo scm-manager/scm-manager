@@ -41,6 +41,7 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Person;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +65,7 @@ public class GitBlameCommand extends AbstractGitCommand implements BlameCommand
 
   //~--- constructors ---------------------------------------------------------
 
+  @Inject
   public GitBlameCommand(GitContext context)
   {
     super(context);

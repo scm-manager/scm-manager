@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;

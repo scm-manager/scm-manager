@@ -36,3 +36,4 @@ export { default as ChangesetTag } from "./ChangesetTag";
 export { default as ChangesetTags } from "./ChangesetTags";
 export { default as ChangesetTagsCollapsed } from "./ChangesetTagsCollapsed";
 export { default as ContributorAvatar } from "./ContributorAvatar";
+export { default as SignatureIcon } from "./SignatureIcon";

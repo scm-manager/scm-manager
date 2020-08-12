@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.google.common.base.MoreObjects;
@@ -43,6 +43,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
   private Person author;
   private String messageTemplate;
   private MergeStrategy mergeStrategy;
+  private boolean sign = true;
 
   public String getBranchToMerge() {
     return branchToMerge;
@@ -84,6 +85,14 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
     this.mergeStrategy = mergeStrategy;
   }
 
+  public boolean isSign() {
+    return sign;
+  }
+
+  public void setSign(boolean sign) {
+    this.sign = sign;
+  }
+
   public boolean isValid() {
     return !Strings.isNullOrEmpty(getBranchToMerge())
       && !Strings.isNullOrEmpty(getTargetBranch());
@@ -92,6 +101,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
   public void reset() {
     this.setBranchToMerge(null);
     this.setTargetBranch(null);
+    this.setSign(true);
   }
 
   @Override
@@ -109,7 +119,8 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
     return Objects.equal(branchToMerge, other.branchToMerge)
       && Objects.equal(targetBranch, other.targetBranch)
       && Objects.equal(author, other.author)
-      && Objects.equal(mergeStrategy, other.mergeStrategy);
+      && Objects.equal(mergeStrategy, other.mergeStrategy)
+      && Objects.equal(sign, other.sign);
   }
 
   @Override
@@ -124,6 +135,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
       .add("targetBranch", targetBranch)
       .add("author", author)
       .add("mergeStrategy", mergeStrategy)
+      .add("sign", sign)
       .toString();
   }
 }

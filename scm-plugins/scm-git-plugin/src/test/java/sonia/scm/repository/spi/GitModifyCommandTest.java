@@ -27,23 +27,33 @@ package sonia.scm.repository.spi;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.CorruptObjectException;
+import org.eclipse.jgit.lib.CommitBuilder;
+import org.eclipse.jgit.lib.GpgSignature;
+import org.eclipse.jgit.lib.GpgSigner;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.transport.CredentialsProvider;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
+import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.security.PublicKey;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.File;
@@ -64,6 +74,11 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
   public ShiroRule shiro = new ShiroRule();
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory = mock(LfsBlobStoreFactory.class);
+
+  @BeforeClass
+  public static void setSigner() {
+    GpgSigner.setDefault(new GitTestHelper.SimpleGpgSigner());
+  }
 
   @Test
   public void shouldCreateCommit() throws IOException, GitAPIException {
@@ -304,6 +319,48 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     command.execute(request);
+  }
+
+  @Test
+  public void shouldSignCreatedCommit() throws IOException, GitAPIException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile, false));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+
+    try (Git git = new Git(createContext().open())) {
+
+      RevCommit lastCommit = getLastCommit(git);
+      assertThat(lastCommit.getRawGpgSignature()).isNotEmpty();
+      assertThat(lastCommit.getRawGpgSignature()).isEqualTo(GitTestHelper.SimpleGpgSigner.getSignature());
+    }
+  }
+
+  @Test
+  public void shouldNotSignCreatedCommitIfSigningDisabled() throws IOException, GitAPIException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.setSign(false);
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile, false));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+
+    try (Git git = new Git(createContext().open())) {
+
+      RevCommit lastCommit = getLastCommit(git);
+      assertThat(lastCommit.getRawGpgSignature()).isNullOrEmpty();
+    }
   }
 
   private void assertInTree(TreeAssertions assertions) throws IOException, GitAPIException {

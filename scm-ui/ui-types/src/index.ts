@@ -36,7 +36,7 @@ export { Branch, BranchRequest } from "./Branches";
 
 export { Person } from "./Person";
 
-export { Changeset, Contributor, ParentChangeset } from "./Changesets";
+export { Changeset, Contributor, ParentChangeset, Signature } from "./Changesets";
 
 export { AnnotatedSource, AnnotatedLine } from "./Annotate";
 

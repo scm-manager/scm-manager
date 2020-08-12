@@ -1716,7 +1716,7 @@ exports[`Storyshots CardColumnSmall Minimal 1`] = `
 
 exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 hHKBXk box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -1765,58 +1765,62 @@ exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                   
-                  commaSeparatedList.lastDivider
-                   
-                  changeset.contributors.coAuthoredBy
-                   
-                  <span
-                    className="ChangesetAuthor__AvatarList-sc-1oz0xgw-0 bpcCrU"
-                  >
+                    changeset.contributors.authoredBy
+                     
                     <a
-                      href="mailto:ford.prefect@hitchhiker.com"
-                      title="changeset.contributors.mailto ford.prefect@hitchhiker.com"
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
                     >
-                      <img
-                        alt="Ford Prefect"
-                        className="ContributorAvatar-sc-1yz8zn-0 laExrp"
-                        src="https://robohash.org/ford.prefect@hitchhiker.com"
-                      />
+                      SCM Administrator
                     </a>
-                    <a
-                      href="mailto:zaphod.beeblebrox@hitchhiker.cm"
-                      title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
+                     
+                    commaSeparatedList.lastDivider
+                     
+                    changeset.contributors.coAuthoredBy
+                     
+                    <span
+                      className="ChangesetAuthor__AvatarList-sc-1oz0xgw-0 bpcCrU"
                     >
-                      <img
-                        alt="Zaphod Beeblebrox"
-                        className="ContributorAvatar-sc-1yz8zn-0 laExrp"
-                        src="https://robohash.org/zaphod.beeblebrox@hitchhiker.cm"
-                      />
-                    </a>
-                    <a
-                      href="mailto:trillian@hitchhiker.cm"
-                      title="changeset.contributors.mailto trillian@hitchhiker.cm"
-                    >
-                      <img
-                        alt="Tricia Marie McMillan"
-                        className="ContributorAvatar-sc-1yz8zn-0 laExrp"
-                        src="https://robohash.org/trillian@hitchhiker.cm"
-                      />
-                    </a>
-                  </span>
-                   
-                </p>
+                      <a
+                        href="mailto:ford.prefect@hitchhiker.com"
+                        title="changeset.contributors.mailto ford.prefect@hitchhiker.com"
+                      >
+                        <img
+                          alt="Ford Prefect"
+                          className="ContributorAvatar-sc-1yz8zn-0 laExrp"
+                          src="https://robohash.org/ford.prefect@hitchhiker.com"
+                        />
+                      </a>
+                      <a
+                        href="mailto:zaphod.beeblebrox@hitchhiker.cm"
+                        title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
+                      >
+                        <img
+                          alt="Zaphod Beeblebrox"
+                          className="ContributorAvatar-sc-1yz8zn-0 laExrp"
+                          src="https://robohash.org/zaphod.beeblebrox@hitchhiker.cm"
+                        />
+                      </a>
+                      <a
+                        href="mailto:trillian@hitchhiker.cm"
+                        title="changeset.contributors.mailto trillian@hitchhiker.cm"
+                      >
+                        <img
+                          alt="Tricia Marie McMillan"
+                          className="ContributorAvatar-sc-1yz8zn-0 laExrp"
+                          src="https://robohash.org/trillian@hitchhiker.cm"
+                        />
+                      </a>
+                    </span>
+                     
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -1882,7 +1886,7 @@ exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
 
 exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 hHKBXk box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -1931,47 +1935,51 @@ exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                  , 
-                  changeset.contributors.committedBy
-                   
-                  <a
-                    href="mailto:zaphod.beeblebrox@hitchhiker.cm"
-                    title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
-                  >
-                    <img
-                      alt="Zaphod Beeblebrox"
-                      className="ContributorAvatar-sc-1yz8zn-0 laExrp"
-                      src="https://robohash.org/zaphod.beeblebrox@hitchhiker.cm"
-                    />
-                  </a>
-                   
-                  commaSeparatedList.lastDivider
-                   
-                  changeset.contributors.coAuthoredBy
-                   
-                  <a
-                    href="mailto:ford.prefect@hitchhiker.com"
-                    title="changeset.contributors.mailto ford.prefect@hitchhiker.com"
-                  >
-                    <img
-                      alt="Ford Prefect"
-                      className="ContributorAvatar-sc-1yz8zn-0 laExrp"
-                      src="https://robohash.org/ford.prefect@hitchhiker.com"
-                    />
-                  </a>
-                   
-                </p>
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                    , 
+                    changeset.contributors.committedBy
+                     
+                    <a
+                      href="mailto:zaphod.beeblebrox@hitchhiker.cm"
+                      title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
+                    >
+                      <img
+                        alt="Zaphod Beeblebrox"
+                        className="ContributorAvatar-sc-1yz8zn-0 laExrp"
+                        src="https://robohash.org/zaphod.beeblebrox@hitchhiker.cm"
+                      />
+                    </a>
+                     
+                    commaSeparatedList.lastDivider
+                     
+                    changeset.contributors.coAuthoredBy
+                     
+                    <a
+                      href="mailto:ford.prefect@hitchhiker.com"
+                      title="changeset.contributors.mailto ford.prefect@hitchhiker.com"
+                    >
+                      <img
+                        alt="Ford Prefect"
+                        className="ContributorAvatar-sc-1yz8zn-0 laExrp"
+                        src="https://robohash.org/ford.prefect@hitchhiker.com"
+                      />
+                    </a>
+                     
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -2037,7 +2045,7 @@ exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
 
 exports[`Storyshots Changesets Default 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 hHKBXk box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -2073,18 +2081,22 @@ exports[`Storyshots Changesets Default 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                </p>
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -2150,7 +2162,7 @@ exports[`Storyshots Changesets Default 1`] = `
 
 exports[`Storyshots Changesets Replacements 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 hHKBXk box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -2196,18 +2208,22 @@ exports[`Storyshots Changesets Replacements 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                </p>
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -2273,7 +2289,7 @@ exports[`Storyshots Changesets Replacements 1`] = `
 
 exports[`Storyshots Changesets With Committer 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 hHKBXk box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -2309,30 +2325,34 @@ exports[`Storyshots Changesets With Committer 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                   
-                  commaSeparatedList.lastDivider
-                   
-                  changeset.contributors.committedBy
-                   
-                  <a
-                    href="mailto:zaphod.beeblebrox@hitchhiker.cm"
-                    title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
-                  >
-                    Zaphod Beeblebrox
-                  </a>
-                   
-                </p>
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                     
+                    commaSeparatedList.lastDivider
+                     
+                    changeset.contributors.committedBy
+                     
+                    <a
+                      href="mailto:zaphod.beeblebrox@hitchhiker.cm"
+                      title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
+                    >
+                      Zaphod Beeblebrox
+                    </a>
+                     
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -2398,7 +2418,7 @@ exports[`Storyshots Changesets With Committer 1`] = `
 
 exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 hHKBXk box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -2434,39 +2454,43 @@ exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                  , 
-                  changeset.contributors.committedBy
-                   
-                  <a
-                    href="mailto:zaphod.beeblebrox@hitchhiker.cm"
-                    title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
-                  >
-                    Zaphod Beeblebrox
-                  </a>
-                   
-                  commaSeparatedList.lastDivider
-                   
-                  changeset.contributors.coAuthoredBy
-                   
-                  <a
-                    href="mailto:ford.prefect@hitchhiker.com"
-                    title="changeset.contributors.mailto ford.prefect@hitchhiker.com"
-                  >
-                    Ford Prefect
-                  </a>
-                   
-                </p>
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                    , 
+                    changeset.contributors.committedBy
+                     
+                    <a
+                      href="mailto:zaphod.beeblebrox@hitchhiker.cm"
+                      title="changeset.contributors.mailto zaphod.beeblebrox@hitchhiker.cm"
+                    >
+                      Zaphod Beeblebrox
+                    </a>
+                     
+                    commaSeparatedList.lastDivider
+                     
+                    changeset.contributors.coAuthoredBy
+                     
+                    <a
+                      href="mailto:ford.prefect@hitchhiker.com"
+                      title="changeset.contributors.mailto ford.prefect@hitchhiker.com"
+                    >
+                      Ford Prefect
+                    </a>
+                     
+                  </p>
+                </div>
               </div>
             </div>
           </div>
@@ -2532,7 +2556,7 @@ exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
 
 exports[`Storyshots Changesets With avatar 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 hHKBXk box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -2581,18 +2605,272 @@ exports[`Storyshots Changesets With avatar 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                </p>
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ChangesetRow__VCenteredColumn-tkpti5-5 jtvbjX column"
+          />
+        </div>
+      </div>
+      <div
+        className="ChangesetRow__VCenteredChildColumn-tkpti5-6 cciHUW column is-flex"
+      >
+        <div
+          className="ButtonAddons__Flex-sc-182golj-0 jSuMVB field has-addons is-marginless"
+        >
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-exchange-alt has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.details
+                 
+              </span>
+            </button>
+          </p>
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-code has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.sources
+                 
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Changesets With contactless signature 1`] = `
+<div
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
+>
+  <div
+    className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
+  >
+    <div
+      className="columns is-gapless is-mobile"
+    >
+      <div
+        className="column is-three-fifths"
+      >
+        <div
+          className="columns is-gapless"
+        >
+          <div
+            className="column is-four-fifths"
+          >
+            <div
+              className="media"
+            >
+              <div
+                className="ChangesetRow__Metadata-tkpti5-3 dfKqLe media-right"
+              >
+                <h4
+                  className="has-text-weight-bold is-ellipsis-overflow"
+                >
+                  
+                  initialize repository
+                  
+                </h4>
+                <p
+                  className="is-hidden-touch"
+                />
+                <p
+                  className="is-hidden-desktop"
+                />
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
+                >
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                  >
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                  <div
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                  >
+                    <i
+                      className="fas fa-key has-text-success SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ChangesetRow__VCenteredColumn-tkpti5-5 jtvbjX column"
+          />
+        </div>
+      </div>
+      <div
+        className="ChangesetRow__VCenteredChildColumn-tkpti5-6 cciHUW column is-flex"
+      >
+        <div
+          className="ButtonAddons__Flex-sc-182golj-0 jSuMVB field has-addons is-marginless"
+        >
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-exchange-alt has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.details
+                 
+              </span>
+            </button>
+          </p>
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-code has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.sources
+                 
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Changesets With invalid signature 1`] = `
+<div
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
+>
+  <div
+    className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
+  >
+    <div
+      className="columns is-gapless is-mobile"
+    >
+      <div
+        className="column is-three-fifths"
+      >
+        <div
+          className="columns is-gapless"
+        >
+          <div
+            className="column is-four-fifths"
+          >
+            <div
+              className="media"
+            >
+              <div
+                className="ChangesetRow__Metadata-tkpti5-3 dfKqLe media-right"
+              >
+                <h4
+                  className="has-text-weight-bold is-ellipsis-overflow"
+                >
+                  
+                  initialize repository
+                  
+                </h4>
+                <p
+                  className="is-hidden-touch"
+                />
+                <p
+                  className="is-hidden-desktop"
+                />
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
+                >
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                  >
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                  <div
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                  >
+                    <i
+                      className="fas fa-key has-text-danger SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -2658,7 +2936,7 @@ exports[`Storyshots Changesets With avatar 1`] = `
 
 exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 hHKBXk box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -2694,31 +2972,785 @@ exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
                 <p
                   className="is-hidden-desktop"
                 />
-                <p
-                  className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
                 >
-                  changeset.contributors.authoredBy
-                   
-                  <a
-                    href="mailto:scm-admin@scm-manager.org"
-                    title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    SCM Administrator
-                  </a>
-                   
-                  commaSeparatedList.lastDivider
-                   
-                  changeset.contributors.coAuthoredBy
-                   
-                  <a
-                    title="- Ford Prefect
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                     
+                    commaSeparatedList.lastDivider
+                     
+                    changeset.contributors.coAuthoredBy
+                     
+                    <a
+                      title="- Ford Prefect
 - Zaphod Beeblebrox
 - Tricia Marie McMillan"
+                    >
+                      changeset.contributors.more
+                    </a>
+                     
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ChangesetRow__VCenteredColumn-tkpti5-5 jtvbjX column"
+          />
+        </div>
+      </div>
+      <div
+        className="ChangesetRow__VCenteredChildColumn-tkpti5-6 cciHUW column is-flex"
+      >
+        <div
+          className="ButtonAddons__Flex-sc-182golj-0 jSuMVB field has-addons is-marginless"
+        >
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-exchange-alt has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.details
+                 
+              </span>
+            </button>
+          </p>
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-code has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.sources
+                 
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Changesets With multiple signatures and invalid status 1`] = `
+<div
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
+>
+  <div
+    className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
+  >
+    <div
+      className="columns is-gapless is-mobile"
+    >
+      <div
+        className="column is-three-fifths"
+      >
+        <div
+          className="columns is-gapless"
+        >
+          <div
+            className="column is-four-fifths"
+          >
+            <div
+              className="media"
+            >
+              <div
+                className="ChangesetRow__Metadata-tkpti5-3 dfKqLe media-right"
+              >
+                <h4
+                  className="has-text-weight-bold is-ellipsis-overflow"
+                >
+                  
+                  initialize repository
+                  
+                </h4>
+                <p
+                  className="is-hidden-touch"
+                />
+                <p
+                  className="is-hidden-desktop"
+                />
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
+                >
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
                   >
-                    changeset.contributors.more
-                  </a>
-                   
-                </p>
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                  <div
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                  >
+                    <i
+                      className="fas fa-key has-text-danger SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ChangesetRow__VCenteredColumn-tkpti5-5 jtvbjX column"
+          />
+        </div>
+      </div>
+      <div
+        className="ChangesetRow__VCenteredChildColumn-tkpti5-6 cciHUW column is-flex"
+      >
+        <div
+          className="ButtonAddons__Flex-sc-182golj-0 jSuMVB field has-addons is-marginless"
+        >
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-exchange-alt has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.details
+                 
+              </span>
+            </button>
+          </p>
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-code has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.sources
+                 
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Changesets With multiple signatures and not found status 1`] = `
+<div
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
+>
+  <div
+    className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
+  >
+    <div
+      className="columns is-gapless is-mobile"
+    >
+      <div
+        className="column is-three-fifths"
+      >
+        <div
+          className="columns is-gapless"
+        >
+          <div
+            className="column is-four-fifths"
+          >
+            <div
+              className="media"
+            >
+              <div
+                className="ChangesetRow__Metadata-tkpti5-3 dfKqLe media-right"
+              >
+                <h4
+                  className="has-text-weight-bold is-ellipsis-overflow"
+                >
+                  
+                  initialize repository
+                  
+                </h4>
+                <p
+                  className="is-hidden-touch"
+                />
+                <p
+                  className="is-hidden-desktop"
+                />
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
+                >
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                  >
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                  <div
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                  >
+                    <i
+                      className="fas fa-key has-text-grey-light SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ChangesetRow__VCenteredColumn-tkpti5-5 jtvbjX column"
+          />
+        </div>
+      </div>
+      <div
+        className="ChangesetRow__VCenteredChildColumn-tkpti5-6 cciHUW column is-flex"
+      >
+        <div
+          className="ButtonAddons__Flex-sc-182golj-0 jSuMVB field has-addons is-marginless"
+        >
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-exchange-alt has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.details
+                 
+              </span>
+            </button>
+          </p>
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-code has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.sources
+                 
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Changesets With multiple signatures and valid status 1`] = `
+<div
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
+>
+  <div
+    className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
+  >
+    <div
+      className="columns is-gapless is-mobile"
+    >
+      <div
+        className="column is-three-fifths"
+      >
+        <div
+          className="columns is-gapless"
+        >
+          <div
+            className="column is-four-fifths"
+          >
+            <div
+              className="media"
+            >
+              <div
+                className="ChangesetRow__Metadata-tkpti5-3 dfKqLe media-right"
+              >
+                <h4
+                  className="has-text-weight-bold is-ellipsis-overflow"
+                >
+                  
+                  initialize repository
+                  
+                </h4>
+                <p
+                  className="is-hidden-touch"
+                />
+                <p
+                  className="is-hidden-desktop"
+                />
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
+                >
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                  >
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                  <div
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                  >
+                    <i
+                      className="fas fa-key has-text-success SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ChangesetRow__VCenteredColumn-tkpti5-5 jtvbjX column"
+          />
+        </div>
+      </div>
+      <div
+        className="ChangesetRow__VCenteredChildColumn-tkpti5-6 cciHUW column is-flex"
+      >
+        <div
+          className="ButtonAddons__Flex-sc-182golj-0 jSuMVB field has-addons is-marginless"
+        >
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-exchange-alt has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.details
+                 
+              </span>
+            </button>
+          </p>
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-code has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.sources
+                 
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Changesets With unknown signature 1`] = `
+<div
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
+>
+  <div
+    className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
+  >
+    <div
+      className="columns is-gapless is-mobile"
+    >
+      <div
+        className="column is-three-fifths"
+      >
+        <div
+          className="columns is-gapless"
+        >
+          <div
+            className="column is-four-fifths"
+          >
+            <div
+              className="media"
+            >
+              <div
+                className="ChangesetRow__Metadata-tkpti5-3 dfKqLe media-right"
+              >
+                <h4
+                  className="has-text-weight-bold is-ellipsis-overflow"
+                >
+                  
+                  initialize repository
+                  
+                </h4>
+                <p
+                  className="is-hidden-touch"
+                />
+                <p
+                  className="is-hidden-desktop"
+                />
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
+                >
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                  >
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                  <div
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                  >
+                    <i
+                      className="fas fa-key has-text-grey-light SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ChangesetRow__VCenteredColumn-tkpti5-5 jtvbjX column"
+          />
+        </div>
+      </div>
+      <div
+        className="ChangesetRow__VCenteredChildColumn-tkpti5-6 cciHUW column is-flex"
+      >
+        <div
+          className="ButtonAddons__Flex-sc-182golj-0 jSuMVB field has-addons is-marginless"
+        >
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-exchange-alt has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.details
+                 
+              </span>
+            </button>
+          </p>
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-code has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.sources
+                 
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Changesets With unowned signature 1`] = `
+<div
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
+>
+  <div
+    className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
+  >
+    <div
+      className="columns is-gapless is-mobile"
+    >
+      <div
+        className="column is-three-fifths"
+      >
+        <div
+          className="columns is-gapless"
+        >
+          <div
+            className="column is-four-fifths"
+          >
+            <div
+              className="media"
+            >
+              <div
+                className="ChangesetRow__Metadata-tkpti5-3 dfKqLe media-right"
+              >
+                <h4
+                  className="has-text-weight-bold is-ellipsis-overflow"
+                >
+                  
+                  initialize repository
+                  
+                </h4>
+                <p
+                  className="is-hidden-touch"
+                />
+                <p
+                  className="is-hidden-desktop"
+                />
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
+                >
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                  >
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                  <div
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                  >
+                    <i
+                      className="fas fa-key has-text-success SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            className="ChangesetRow__VCenteredColumn-tkpti5-5 jtvbjX column"
+          />
+        </div>
+      </div>
+      <div
+        className="ChangesetRow__VCenteredChildColumn-tkpti5-6 cciHUW column is-flex"
+      >
+        <div
+          className="ButtonAddons__Flex-sc-182golj-0 jSuMVB field has-addons is-marginless"
+        >
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-exchange-alt has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.details
+                 
+              </span>
+            </button>
+          </p>
+          <p
+            className="control"
+          >
+            <button
+              className="button is-default is-reduced-mobile"
+              onClick={[Function]}
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-code has-text-inherit"
+                />
+              </span>
+              <span>
+                changeset.buttons.sources
+                 
+              </span>
+            </button>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Changesets With valid signature 1`] = `
+<div
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
+>
+  <div
+    className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
+  >
+    <div
+      className="columns is-gapless is-mobile"
+    >
+      <div
+        className="column is-three-fifths"
+      >
+        <div
+          className="columns is-gapless"
+        >
+          <div
+            className="column is-four-fifths"
+          >
+            <div
+              className="media"
+            >
+              <div
+                className="ChangesetRow__Metadata-tkpti5-3 dfKqLe media-right"
+              >
+                <h4
+                  className="has-text-weight-bold is-ellipsis-overflow"
+                >
+                  
+                  initialize repository
+                  
+                </h4>
+                <p
+                  className="is-hidden-touch"
+                />
+                <p
+                  className="is-hidden-desktop"
+                />
+                <div
+                  className="ChangesetRow__FlexRow-tkpti5-7 fTLhSo"
+                >
+                  <p
+                    className="ChangesetRow__AuthorWrapper-tkpti5-4 kDAubY is-size-7 is-ellipsis-overflow"
+                  >
+                    changeset.contributors.authoredBy
+                     
+                    <a
+                      href="mailto:scm-admin@scm-manager.org"
+                      title="changeset.contributors.mailto scm-admin@scm-manager.org"
+                    >
+                      SCM Administrator
+                    </a>
+                  </p>
+                  <div
+                    onMouseLeave={[Function]}
+                    onMouseOver={[Function]}
+                  >
+                    <i
+                      className="fas fa-key has-text-success SignatureIcon__StyledIcon-sc-1mwf1m5-0 cgFYhq mx-2 pt-1"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -43676,6 +44708,24 @@ exports[`Storyshots Layout|Footer Default 1`] = `
               footer.user.profile
             </a>
           </li>
+          <li>
+            <a
+              className=""
+              href="/me/settings/password"
+              onClick={[Function]}
+            >
+              profile.changePasswordNavLink
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              href="/me"
+              onClick={[Function]}
+            >
+              footer.user.profile
+            </a>
+          </li>
         </ul>
       </section>
       <section
@@ -43776,6 +44826,24 @@ exports[`Storyshots Layout|Footer Full 1`] = `
         <ul
           className="FooterSection__Menu-lx0ikb-1 idmusL"
         >
+          <li>
+            <a
+              className=""
+              href="/me"
+              onClick={[Function]}
+            >
+              footer.user.profile
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              href="/me/settings/password"
+              onClick={[Function]}
+            >
+              profile.changePasswordNavLink
+            </a>
+          </li>
           <li>
             <a
               className=""
@@ -43930,6 +44998,24 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
               footer.user.profile
             </a>
           </li>
+          <li>
+            <a
+              className=""
+              href="/me/settings/password"
+              onClick={[Function]}
+            >
+              profile.changePasswordNavLink
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              href="/me"
+              onClick={[Function]}
+            >
+              footer.user.profile
+            </a>
+          </li>
         </ul>
       </section>
       <section
@@ -44023,6 +45109,24 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
         <ul
           className="FooterSection__Menu-lx0ikb-1 idmusL"
         >
+          <li>
+            <a
+              className=""
+              href="/me"
+              onClick={[Function]}
+            >
+              footer.user.profile
+            </a>
+          </li>
+          <li>
+            <a
+              className=""
+              href="/me/settings/password"
+              onClick={[Function]}
+            >
+              profile.changePasswordNavLink
+            </a>
+          </li>
           <li>
             <a
               className=""
@@ -47008,6 +48112,38 @@ exports[`Storyshots Notification Warning 1`] = `
 Beeblebrox hyperspace ship. Another custard through computer-generated universe
 shapes field strong disaster parties Russell’s ancestors infinite colour
 imaginative generator sweep.
+  </div>
+</div>
+`;
+
+exports[`Storyshots Popover Default 1`] = `
+<div
+  className="Popoverstories__Wrapper-sc-2pld2j-0 ifASIH"
+>
+  <div>
+    <button
+      className="button"
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+    >
+      Trigger
+    </button>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Popover Link 1`] = `
+<div
+  className="Popoverstories__Wrapper-sc-2pld2j-0 ifASIH"
+>
+  <div>
+    <a
+      href="#"
+      onMouseLeave={[Function]}
+      onMouseOver={[Function]}
+    >
+      Trigger
+    </a>
   </div>
 </div>
 `;

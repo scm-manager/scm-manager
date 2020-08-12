@@ -199,6 +199,28 @@ class MeDtoFactoryTest {
   }
 
   @Test
+  void shouldAppendPublicKeysLink() {
+    User user = UserTestData.createTrillian();
+    prepareSubject(user);
+
+    when(subject.isPermitted("user:changePublicKeys:trillian")).thenReturn(true);
+
+    MeDto dto = meDtoFactory.create();
+    assertThat(dto.getLinks().getLinkBy("publicKeys").get().getHref()).isEqualTo("https://scm.hitchhiker.com/scm/v2/users/trillian/public_keys");
+  }
+
+  @Test
+  void shouldNotAppendPublicKeysLink() {
+    User user = UserTestData.createTrillian();
+    prepareSubject(user);
+
+    when(subject.isPermitted("user:changePublicKeys:trillian")).thenReturn(false);
+
+    MeDto dto = meDtoFactory.create();
+    assertThat(dto.getLinks().getLinkBy("publicKeys")).isNotPresent();
+  }
+
+  @Test
   void shouldAppendLinks() {
     prepareSubject(UserTestData.createTrillian());
 

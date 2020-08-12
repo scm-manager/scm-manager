@@ -29,17 +29,24 @@ import com.github.sdorra.shiro.SubjectAware;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.CanceledException;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.CommitBuilder;
+import org.eclipse.jgit.lib.GpgSignature;
+import org.eclipse.jgit.lib.GpgSigner;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.transport.CredentialsProvider;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Added;
+import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.api.MergeCommandResult;
@@ -67,6 +74,11 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   public ShiroRule shiro = new ShiroRule();
   @Rule
   public BindTransportProtocolRule transportProtocolRule = new BindTransportProtocolRule();
+
+  @BeforeClass
+  public static void setSigner() {
+    GpgSigner.setDefault(new GitTestHelper.SimpleGpgSigner());
+  }
 
   @Test
   public void shouldDetectMergeableBranches() {
@@ -417,6 +429,48 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     request.setBranchToMerge("master");
 
     command.dryRun(request);
+  }
+
+  @Test
+  public void shouldSignMergeCommit() throws IOException, GitAPIException {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setTargetBranch("master");
+    request.setBranchToMerge("empty_merge");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    MergeCommandResult mergeCommandResult = command.merge(request);
+
+    assertThat(mergeCommandResult.isSuccess()).isTrue();
+
+    Repository repository = createContext().open();
+    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+    RevCommit mergeCommit = commits.iterator().next();
+    assertThat(mergeCommit.getRawGpgSignature()).isNotEmpty();
+    assertThat(mergeCommit.getRawGpgSignature()).isEqualTo(GitTestHelper.SimpleGpgSigner.getSignature());
+
+  }
+
+  @Test
+  public void shouldNotSignMergeCommitIfSigningIsDisabled() throws IOException, GitAPIException {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setTargetBranch("master");
+    request.setBranchToMerge("empty_merge");
+    request.setMergeStrategy(MergeStrategy.MERGE_COMMIT);
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+    request.setSign(false);
+
+    MergeCommandResult mergeCommandResult = command.merge(request);
+
+    assertThat(mergeCommandResult.isSuccess()).isTrue();
+
+    Repository repository = createContext().open();
+    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+    RevCommit mergeCommit = commits.iterator().next();
+    assertThat(mergeCommit.getRawGpgSignature()).isNullOrEmpty();
+
   }
 
   private GitMergeCommand createCommand() {

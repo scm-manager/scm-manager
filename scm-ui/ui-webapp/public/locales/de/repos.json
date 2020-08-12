@@ -88,6 +88,15 @@
     "shortSummary": "Committet <0/> <1/>",
     "tags": "Tags",
     "diffNotSupported": "Diff des Changesets wird von diesem Repositorytyp nicht unterstützt",
+    "keyOwner": "Schlüssel Besitzer",
+    "signatureStatus": "Status",
+    "keyId": "Schlüssel-ID",
+    "keyContacts": "Kontakte",
+    "noOwner": "Unbekannt",
+    "signatureVerified": "Verifiziert",
+    "signatureNotVerified": "Nicht verifiziert",
+    "signatureInvalid": "Ungültig",
+    "signatures": "Signaturen",
     "shortlink": {
       "title": "Changeset {{id}} aus {{namespace}}/{{name}}"
     },

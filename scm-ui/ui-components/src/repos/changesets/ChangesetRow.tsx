@@ -35,6 +35,7 @@ import ChangesetAuthor from "./ChangesetAuthor";
 import ChangesetTags from "./ChangesetTags";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 import ChangesetDescription from "./ChangesetDescription";
+import SignatureIcon from "./SignatureIcon";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -77,6 +78,11 @@ const VCenteredColumn = styled.div`
 const VCenteredChildColumn = styled.div`
   align-items: center;
   justify-content: flex-end;
+`;
+
+const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
 `;
 
 class ChangesetRow extends React.Component<Props> {
@@ -124,9 +130,17 @@ class ChangesetRow extends React.Component<Props> {
                     <p className="is-hidden-desktop">
                       <Trans i18nKey="repos:changeset.shortSummary" components={[changesetId, dateFromNow]} />
                     </p>
-                    <AuthorWrapper className="is-size-7 is-ellipsis-overflow">
-                      <ChangesetAuthor changeset={changeset} />
-                    </AuthorWrapper>
+                    <FlexRow>
+                      <AuthorWrapper className="is-size-7 is-ellipsis-overflow">
+                        <ChangesetAuthor changeset={changeset} />
+                      </AuthorWrapper>
+                      {changeset?.signatures && changeset.signatures.length > 0 && (
+                        <SignatureIcon
+                          className="mx-2 pt-1"
+                          signatures={changeset.signatures}
+                        />
+                      )}
+                    </FlexRow>
                   </Metadata>
                 </div>
               </div>

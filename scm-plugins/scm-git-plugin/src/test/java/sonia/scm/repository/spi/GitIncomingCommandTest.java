@@ -32,6 +32,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.GitChangesetConverterFactory;
+import sonia.scm.repository.GitTestHelper;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.IOException;
@@ -173,14 +175,11 @@ public class GitIncomingCommandTest
     assertEquals(0, cpr.getTotal());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private GitIncomingCommand createCommand()
-  {
-    return new GitIncomingCommand(handler, new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())));
+  private GitIncomingCommand createCommand() {
+    return new GitIncomingCommand(
+      new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())),
+      handler,
+      GitTestHelper.createConverterFactory()
+    );
   }
 }

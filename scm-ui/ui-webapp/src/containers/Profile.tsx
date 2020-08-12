@@ -42,6 +42,8 @@ import {
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import SetPublicKeys from "../users/components/publicKeys/SetPublicKeys";
+import SetPublicKeyNavLink from "../users/components/navLinks/SetPublicKeysNavLink";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -66,7 +68,12 @@ class Profile extends React.Component<Props> {
   mayChangePassword = () => {
     const { me } = this.props;
     return !!me?._links?.password;
-  }
+  };
+
+  canManagePublicKeys = () => {
+    const { me } = this.props;
+    return !!me?._links?.publicKeys;
+  };
 
   render() {
     const url = this.matchedUrl();
@@ -100,6 +107,9 @@ class Profile extends React.Component<Props> {
               {this.mayChangePassword() && (
                 <Route path={`${url}/settings/password`} render={() => <ChangeUserPassword me={me} />} />
               )}
+              {this.canManagePublicKeys() && (
+                <Route path={`${url}/settings/publicKeys`} render={() => <SetPublicKeys user={me} />} />
+              )}
               <ExtensionPoint name="profile.route" props={extensionProps} renderAll={true} />
             </PrimaryContentColumn>
             <SecondaryNavigationColumn>
@@ -117,6 +127,7 @@ class Profile extends React.Component<Props> {
                     title={t("profile.settingsNavLink")}
                   >
                     <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
+                    <SetPublicKeyNavLink user={me} publicKeyUrl={`${url}/settings/publicKeys`} />
                     <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
                   </SubNavigation>
                 )}

@@ -42,6 +42,7 @@ import sonia.scm.NotFoundException;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverter;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.util.IOUtil;
@@ -59,10 +60,12 @@ public class GitLogComputer {
 
   private final String repositoryId;
   private final Repository gitRepository;
+  private final GitChangesetConverterFactory converterFactory;
 
-  public GitLogComputer(String repositoryId, Repository repository) {
+  public GitLogComputer(String repositoryId, Repository repository, GitChangesetConverterFactory converterFactory) {
     this.repositoryId = repositoryId;
     this.gitRepository = repository;
+    this.converterFactory = converterFactory;
   }
 
   public ChangesetPagingResult compute(LogCommandRequest request) {
@@ -123,7 +126,7 @@ public class GitLogComputer {
 
         revWalk = new RevWalk(gitRepository);
 
-        converter = new GitChangesetConverter(gitRepository, revWalk);
+        converter = converterFactory.create(gitRepository, revWalk);
 
         if (!Strings.isNullOrEmpty(request.getPath())) {
           revWalk.setTreeFilter(

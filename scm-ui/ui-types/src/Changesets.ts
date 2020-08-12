@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Collection, Links } from "./hal";
+import {Collection, Link, Links} from "./hal";
 import { Tag } from "./Tags";
 import { Branch } from "./Branches";
 import { Person } from "./Person";
@@ -33,6 +33,7 @@ export type Changeset = Collection & {
   author: Person;
   description: string;
   contributors?: Contributor[];
+  signatures?: Signature[];
   _links: Links;
   _embedded: {
     tags?: Tag[];
@@ -40,6 +41,17 @@ export type Changeset = Collection & {
     parents?: ParentChangeset[];
   };
 };
+
+export type Signature = {
+  keyId: string;
+  type: string;
+  status: "VERIFIED" | "NOT_FOUND" | "INVALID";
+  owner?: string;
+  contacts?: Person[];
+  _links?: {
+    rawKey?: Link;
+  };
+}
 
 export type Contributor = {
   person: Person;

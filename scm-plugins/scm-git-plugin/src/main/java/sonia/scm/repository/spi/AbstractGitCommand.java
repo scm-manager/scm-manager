@@ -63,11 +63,9 @@ import static sonia.scm.repository.GitUtil.getBranchIdOrCurrentHead;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
-class AbstractGitCommand
-{
+class AbstractGitCommand {
 
   /**
    * the logger for AbstractGitCommand
@@ -77,11 +75,9 @@ class AbstractGitCommand
   /**
    * Constructs ...
    *
-   *  @param context
-   *
+   * @param context
    */
-  AbstractGitCommand(GitContext context)
-  {
+  AbstractGitCommand(GitContext context) {
     this.repository = context.getRepository();
     this.context = context;
   }
@@ -91,19 +87,16 @@ class AbstractGitCommand
   /**
    * Method description
    *
-   *
    * @return
-   *
    * @throws IOException
    */
-  Repository open() throws IOException
-  {
+  Repository open() throws IOException {
     return context.open();
   }
 
   ObjectId getCommitOrDefault(Repository gitRepository, String requestedCommit) throws IOException {
     ObjectId commit;
-    if ( Strings.isNullOrEmpty(requestedCommit) ) {
+    if (Strings.isNullOrEmpty(requestedCommit)) {
       commit = getDefaultBranch(gitRepository);
     } else {
       commit = gitRepository.resolve(requestedCommit);
@@ -121,7 +114,7 @@ class AbstractGitCommand
   }
 
   Ref getBranchOrDefault(Repository gitRepository, String requestedBranch) throws IOException {
-    if ( Strings.isNullOrEmpty(requestedBranch) ) {
+    if (Strings.isNullOrEmpty(requestedBranch)) {
       String defaultBranchName = context.getConfig().getDefaultBranch();
       return getBranchIdOrCurrentHead(gitRepository, defaultBranchName);
     } else {
@@ -220,7 +213,7 @@ class AbstractGitCommand
       }
     }
 
-    Optional<RevCommit> doCommit(String message, Person author) {
+    Optional<RevCommit> doCommit(String message, Person author, boolean sign) {
       Person authorToUse = determineAuthor(author);
       try {
         Status status = clone.status().call();
@@ -229,6 +222,8 @@ class AbstractGitCommand
             .setAuthor(authorToUse.getName(), authorToUse.getMail())
             .setCommitter("SCM-Manager", "noreply@scm-manager.org")
             .setMessage(message)
+            .setSign(sign)
+            .setSigningKey(sign ? "SCM-MANAGER-DEFAULT-KEY" : null)
             .call());
         } else {
           return empty();
@@ -288,9 +283,13 @@ class AbstractGitCommand
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /**
+   * Field description
+   */
   protected GitContext context;
 
-  /** Field description */
+  /**
+   * Field description
+   */
   protected sonia.scm.repository.Repository repository;
 }

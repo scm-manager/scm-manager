@@ -29,6 +29,7 @@ import org.eclipse.jgit.diff.DiffFormatter;
 import org.eclipse.jgit.util.QuotedString;
 import sonia.scm.repository.api.DiffCommandBuilder;
 
+import javax.inject.Inject;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -41,6 +42,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
  */
 public class GitDiffCommand extends AbstractGitCommand implements DiffCommand {
 
+  @Inject
   GitDiffCommand(GitContext context) {
     super(context);
   }

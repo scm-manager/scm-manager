@@ -50,7 +50,7 @@ import java.security.Principal;
 @StaticPermissions(
   value = "user",
   globalPermissions = {"create", "list", "autocomplete"},
-  permissions = {"read", "modify", "delete", "changePassword"},
+  permissions = {"read", "modify", "delete", "changePassword", "changePublicKeys"},
   custom = true, customGlobal = true
 )
 @XmlRootElement(name = "users")

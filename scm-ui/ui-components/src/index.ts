@@ -97,6 +97,7 @@ export * from "./navigation";
 export * from "./repos";
 export * from "./table";
 export * from "./toast";
+export * from "./popover";
 
 export {
   File,

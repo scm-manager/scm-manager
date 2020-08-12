@@ -21,21 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.protocolcommand.git;
 
 import com.google.inject.Inject;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ReceivePack;
 import sonia.scm.protocolcommand.RepositoryContext;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.spi.HookEventFacade;
 
 public class ScmReceivePackFactory extends BaseReceivePackFactory<RepositoryContext> {
 
   @Inject
-  public ScmReceivePackFactory(GitRepositoryHandler handler, HookEventFacade hookEventFacade) {
-    super(handler, hookEventFacade);
+  public ScmReceivePackFactory(GitChangesetConverterFactory converterFactory, GitRepositoryHandler handler, HookEventFacade hookEventFacade) {
+    super(converterFactory, handler, hookEventFacade);
   }
 
   @Override
