@@ -101,7 +101,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
   public void reset() {
     this.setBranchToMerge(null);
     this.setTargetBranch(null);
-    this.setSign(false);
+    this.setSign(true);
   }
 
   @Override

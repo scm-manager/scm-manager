@@ -1716,7 +1716,7 @@ exports[`Storyshots CardColumnSmall Minimal 1`] = `
 
 exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -1886,7 +1886,7 @@ exports[`Storyshots Changesets Co-Authors with avatar 1`] = `
 
 exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -2045,7 +2045,7 @@ exports[`Storyshots Changesets Commiter and Co-Authors with avatar 1`] = `
 
 exports[`Storyshots Changesets Default 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -2162,7 +2162,7 @@ exports[`Storyshots Changesets Default 1`] = `
 
 exports[`Storyshots Changesets Replacements 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -2289,7 +2289,7 @@ exports[`Storyshots Changesets Replacements 1`] = `
 
 exports[`Storyshots Changesets With Committer 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -2418,7 +2418,7 @@ exports[`Storyshots Changesets With Committer 1`] = `
 
 exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -2556,7 +2556,7 @@ exports[`Storyshots Changesets With Committer and Co-Author 1`] = `
 
 exports[`Storyshots Changesets With avatar 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -2686,7 +2686,7 @@ exports[`Storyshots Changesets With avatar 1`] = `
 
 exports[`Storyshots Changesets With contactless signature 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -2811,7 +2811,7 @@ exports[`Storyshots Changesets With contactless signature 1`] = `
 
 exports[`Storyshots Changesets With invalid signature 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -2936,7 +2936,7 @@ exports[`Storyshots Changesets With invalid signature 1`] = `
 
 exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -3066,7 +3066,7 @@ exports[`Storyshots Changesets With multiple Co-Authors 1`] = `
 
 exports[`Storyshots Changesets With multiple signatures and invalid status 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -3191,7 +3191,7 @@ exports[`Storyshots Changesets With multiple signatures and invalid status 1`] =
 
 exports[`Storyshots Changesets With multiple signatures and not found status 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -3316,7 +3316,7 @@ exports[`Storyshots Changesets With multiple signatures and not found status 1`]
 
 exports[`Storyshots Changesets With multiple signatures and valid status 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -3441,7 +3441,7 @@ exports[`Storyshots Changesets With multiple signatures and valid status 1`] = `
 
 exports[`Storyshots Changesets With unknown signature 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -3566,7 +3566,7 @@ exports[`Storyshots Changesets With unknown signature 1`] = `
 
 exports[`Storyshots Changesets With unowned signature 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"
@@ -3691,7 +3691,7 @@ exports[`Storyshots Changesets With unowned signature 1`] = `
 
 exports[`Storyshots Changesets With valid signature 1`] = `
 <div
-  className="Changesetsstories__Wrapper-sc-122npan-0 gDnzNS box box-link-shadow"
+  className="Changesetsstories__Wrapper-sc-122npan-0 dylUKL box box-link-shadow"
 >
   <div
     className="ChangesetRow__Wrapper-tkpti5-0 bRWdJS"

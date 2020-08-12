@@ -24,40 +24,14 @@
 
 package sonia.scm.security.gpg;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.store.DataStoreFactory;
-import sonia.scm.store.InMemoryDataStoreFactory;
+import sonia.scm.security.PublicKey;
 
-import java.util.Optional;
+final class RawGpgKeyToDefaultPublicKeyMapper {
 
-import static org.assertj.core.api.Assertions.assertThat;
+  private RawGpgKeyToDefaultPublicKeyMapper() {}
 
-@ExtendWith(MockitoExtension.class)
-class PrivateKeyStoreTest {
-
-
-  private DataStoreFactory dataStoreFactory;
-  private PrivateKeyStore keyStore;
-
-  @BeforeEach
-  void setup() {
-    dataStoreFactory = new InMemoryDataStoreFactory();
-    keyStore = new PrivateKeyStore(dataStoreFactory);
+  static PublicKey map(RawGpgKey key) {
+    return new DefaultPublicKey(key.getId(), key.getOwner(), key.getRaw(), key.getContacts());
   }
 
-  @Test
-  void returnEmptyIfNotYetSet() {
-    final Optional<String> rawKey = keyStore.getForUserId("testId");
-    assertThat(rawKey).isEmpty();
-  }
-
-  @Test
-  void setForUserId() {
-    keyStore.setForUserId("testId", "Test Key");
-    final Optional<String> rawKey = keyStore.getForUserId("testId");
-    assertThat(rawKey).contains("Test Key");
-  }
 }

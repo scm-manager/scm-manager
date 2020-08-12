@@ -70,14 +70,16 @@ class GPGKeyExporterTest {
     final PGPKeyRingGenerator keyRingGenerator = GPGKeyPairGenerator.generateKeyPair();
 
     final String exportedPublicKey = GPGKeyExporter.exportKeyRing(keyRingGenerator.generatePublicKeyRing());
-    assertThat(exportedPublicKey).isNotBlank();
-    assertThat(exportedPublicKey).startsWith("-----BEGIN PGP PUBLIC KEY BLOCK-----");
-    assertThat(exportedPublicKey).contains("-----END PGP PUBLIC KEY BLOCK-----");
+    assertThat(exportedPublicKey)
+      .isNotBlank()
+      .startsWith("-----BEGIN PGP PUBLIC KEY BLOCK-----")
+      .contains("-----END PGP PUBLIC KEY BLOCK-----");
 
     final String exportedPrivateKey = GPGKeyExporter.exportKeyRing(keyRingGenerator.generateSecretKeyRing());
-    assertThat(exportedPrivateKey).isNotBlank();
-    assertThat(exportedPrivateKey).startsWith("-----BEGIN PGP PRIVATE KEY BLOCK-----");
-    assertThat(exportedPrivateKey).contains("-----END PGP PRIVATE KEY BLOCK-----");
+    assertThat(exportedPrivateKey)
+      .isNotBlank()
+      .startsWith("-----BEGIN PGP PRIVATE KEY BLOCK-----")
+      .contains("-----END PGP PRIVATE KEY BLOCK-----");
   }
 
 }

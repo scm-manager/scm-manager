@@ -33,41 +33,31 @@ import org.bouncycastle.openpgp.PGPUtil;
 import org.bouncycastle.openpgp.jcajce.JcaPGPSecretKeyRingCollection;
 import org.bouncycastle.openpgp.operator.jcajce.JcaKeyFingerprintCalculator;
 import org.bouncycastle.openpgp.operator.jcajce.JcePBESecretKeyDecryptorBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Optional;
 
-public class KeysExtractor {
+final class KeysExtractor {
 
   private KeysExtractor() {}
 
-  private static final Logger LOG = LoggerFactory.getLogger(KeysExtractor.class);
-
-  static Optional<PGPPrivateKey> extractPrivateKey(String rawKey) {
+  static PGPPrivateKey extractPrivateKey(String rawKey) {
     try (final InputStream decoderStream = PGPUtil.getDecoderStream(new ByteArrayInputStream(rawKey.getBytes()))) {
       JcaPGPSecretKeyRingCollection secretKeyRingCollection = new JcaPGPSecretKeyRingCollection(decoderStream);
-      final PGPPrivateKey privateKey = secretKeyRingCollection.getKeyRings().next().getSecretKey().extractPrivateKey(new JcePBESecretKeyDecryptorBuilder().build(new char[]{}));
-      return Optional.of(privateKey);
+      return secretKeyRingCollection.getKeyRings().next().getSecretKey().extractPrivateKey(new JcePBESecretKeyDecryptorBuilder().build(new char[]{}));
     } catch (Exception e) {
-      LOG.error("Invalid PGP key", e);
-      return Optional.empty();
+      throw new GPGException("Invalid PGP key", e);
     }
   }
 
-  static Optional<PGPPublicKey> extractPublicKey(String rawKey) {
+  static PGPPublicKey extractPublicKey(String rawKey) {
     try {
       ArmoredInputStream armoredInputStream = new ArmoredInputStream(new ByteArrayInputStream(rawKey.getBytes()));
       PGPObjectFactory pgpObjectFactory = new PGPObjectFactory(armoredInputStream, new JcaKeyFingerprintCalculator());
-      PGPPublicKey publicKey = ((PGPPublicKeyRing) pgpObjectFactory.nextObject()).getPublicKey();
-      return Optional.of(publicKey);
-
+      return ((PGPPublicKeyRing) pgpObjectFactory.nextObject()).getPublicKey();
     } catch (IOException e) {
-      LOG.error("Invalid PGP key", e);
+      throw new GPGException("Invalid PGP key", e);
     }
-    return Optional.empty();
   }
 }

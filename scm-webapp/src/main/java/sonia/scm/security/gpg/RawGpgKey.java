@@ -27,7 +27,6 @@ package sonia.scm.security.gpg;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import sonia.scm.repository.Person;
 import sonia.scm.xml.XmlInstantAdapter;
 

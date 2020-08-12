@@ -77,7 +77,7 @@ public class DefaultGPG implements GPG {
   public Optional<PublicKey> findPublicKey(String id) {
     Optional<RawGpgKey> key = publicKeyStore.findById(id);
 
-    return key.map(rawGpgKey -> new DefaultPublicKey(rawGpgKey.getId(), rawGpgKey.getOwner(), rawGpgKey.getRaw(), rawGpgKey.getContacts()));
+    return key.map(RawGpgKeyToDefaultPublicKeyMapper::map);
   }
 
   @Override
@@ -109,12 +109,12 @@ public class DefaultGPG implements GPG {
         privateKeyStore.setForUserId(userId, rawPrivateKey);
         publicKeyStore.add("Default SCM-Manager Signing Key", userId, rawPublicKey, true);
 
-        return new DefaultPrivateKey(rawPrivateKey);
+        return DefaultPrivateKey.parseRaw(rawPrivateKey);
       } catch (PGPException | NoSuchAlgorithmException | NoSuchProviderException | IOException e) {
         throw new GPGException("Private key could not be generated", e);
       }
     } else {
-      return new DefaultPrivateKey(privateRawKey.get());
+      return DefaultPrivateKey.parseRaw(privateRawKey.get());
     }
   }
 

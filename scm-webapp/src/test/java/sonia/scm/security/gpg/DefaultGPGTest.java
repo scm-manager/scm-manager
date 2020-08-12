@@ -144,8 +144,8 @@ class DefaultGPGTest {
   void shouldImportExportedGeneratedPrivateKey() throws NoSuchProviderException, NoSuchAlgorithmException, PGPException, IOException {
     final PGPKeyRingGenerator keyRingGenerator = GPGKeyPairGenerator.generateKeyPair();
     final String exportedPrivateKey = GPGKeyExporter.exportKeyRing(keyRingGenerator.generateSecretKeyRing());
-    final Optional<PGPPrivateKey> privateKey = KeysExtractor.extractPrivateKey(exportedPrivateKey);
-    assertThat(privateKey).isPresent();
+    final PGPPrivateKey privateKey = KeysExtractor.extractPrivateKey(exportedPrivateKey);
+    assertThat(privateKey).isNotNull();
   }
 
   @Test
@@ -155,12 +155,13 @@ class DefaultGPGTest {
     ThreadContext.bind(subjectUnderTest);
 
     String raw = GPGTestHelper.readResourceAsString("private-key.asc");
-    final DefaultPrivateKey privateKey = new DefaultPrivateKey(raw);
+    final DefaultPrivateKey privateKey = DefaultPrivateKey.parseRaw(raw);
     final byte[] signature = privateKey.sign("This is a test commit".getBytes());
     final String signatureString = new String(signature);
     assertThat(signature).isNotEmpty();
-    assertThat(signatureString).startsWith("-----BEGIN PGP SIGNATURE-----");
-    assertThat(signatureString).contains("-----END PGP SIGNATURE-----");
+    assertThat(signatureString)
+      .startsWith("-----BEGIN PGP SIGNATURE-----")
+      .contains("-----END PGP SIGNATURE-----");
   }
 
   @Test

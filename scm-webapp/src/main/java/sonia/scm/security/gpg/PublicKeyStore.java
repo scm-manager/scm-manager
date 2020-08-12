@@ -84,7 +84,7 @@ public class PublicKeyStore {
     RawGpgKey key = new RawGpgKey(master, displayName, username, rawKey, getContactsFromPublicKey(rawKey), Instant.now(), readonly);
 
     store.put(master, key);
-    eventBus.post(new PublicKeyCreatedEvent(new DefaultPublicKey(key.getId(), key.getOwner(), key.getRaw(), key.getContacts())));
+    eventBus.post(new PublicKeyCreatedEvent(RawGpgKeyToDefaultPublicKeyMapper.map(key)));
 
     return key;
 
@@ -92,8 +92,8 @@ public class PublicKeyStore {
 
   private Set<Person> getContactsFromPublicKey(String rawKey) {
     List<String> userIds = new ArrayList<>();
-    Optional<PGPPublicKey> publicKeyFromRawKey = extractPublicKey(rawKey);
-    publicKeyFromRawKey.ifPresent(pgpPublicKey -> pgpPublicKey.getUserIDs().forEachRemaining(userIds::add));
+    PGPPublicKey publicKeyFromRawKey = extractPublicKey(rawKey);
+    publicKeyFromRawKey.getUserIDs().forEachRemaining(userIds::add);
 
     return userIds.stream().map(Person::toPerson).collect(Collectors.toSet());
   }
@@ -104,7 +104,7 @@ public class PublicKeyStore {
       if (!rawGpgKey.isReadonly()) {
         UserPermissions.changePublicKeys(rawGpgKey.getOwner()).check();
         store.remove(id);
-        eventBus.post(new PublicKeyDeletedEvent(new DefaultPublicKey(rawGpgKey.getId(), rawGpgKey.getOwner(), rawGpgKey.getRaw(), rawGpgKey.getContacts())));
+        eventBus.post(new PublicKeyDeletedEvent(RawGpgKeyToDefaultPublicKeyMapper.map(rawGpgKey)));
       } else {
         throw new DeletingReadonlyKeyNotAllowedException(id);
       }

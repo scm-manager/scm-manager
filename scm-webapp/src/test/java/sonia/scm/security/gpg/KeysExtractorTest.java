@@ -29,7 +29,6 @@ import org.bouncycastle.openpgp.PGPPublicKey;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
-import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,17 +38,17 @@ class KeysExtractorTest {
   void shouldExtractPublicKeyFromRawKey() throws IOException {
     String raw = GPGTestHelper.readResourceAsString("single.asc");
 
-    Optional<PGPPublicKey> publicKey = KeysExtractor.extractPublicKey(raw);
+    PGPPublicKey publicKey = KeysExtractor.extractPublicKey(raw);
 
-    assertThat(publicKey).isPresent();
-    assertThat(Long.toHexString(publicKey.get().getKeyID())).isEqualTo("975922f193b07d6e");
+    assertThat(publicKey).isNotNull();
+    assertThat(Long.toHexString(publicKey.getKeyID())).isEqualTo("975922f193b07d6e");
   }
 
   @Test
   void shouldExtractPrivateKeyFromRawKey() throws IOException {
     String raw = GPGTestHelper.readResourceAsString("private-key.asc");
-    final Optional<PGPPrivateKey> privateKey = KeysExtractor.extractPrivateKey(raw);
-    assertThat(privateKey).isPresent();
+    final PGPPrivateKey privateKey = KeysExtractor.extractPrivateKey(raw);
+    assertThat(privateKey).isNotNull();
   }
 
 }

@@ -45,7 +45,9 @@ import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
 import java.util.Date;
 
-class GPGKeyPairGenerator {
+final class GPGKeyPairGenerator {
+  private GPGKeyPairGenerator() {}
+
   static PGPKeyRingGenerator generateKeyPair() throws PGPException, NoSuchProviderException, NoSuchAlgorithmException {
     KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA", "BC");
     keyPairGenerator.initialize(2048);

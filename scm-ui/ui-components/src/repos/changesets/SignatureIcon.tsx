@@ -57,12 +57,12 @@ const SignatureIcon: FC<Props> = ({signatures, className}) => {
     return null;
   }
 
-  const getColor = (signatures: Signature[]) => {
-    const invalid = signatures.some(sig => sig.status === "INVALID");
+  const getColor = (signaturesToVerify: Signature[]) => {
+    const invalid = signaturesToVerify.some(sig => sig.status === "INVALID");
     if (invalid) {
       return "danger";
     }
-    const verified = signatures.some(sig => sig.status === "VERIFIED");
+    const verified = signaturesToVerify.some(sig => sig.status === "VERIFIED");
     if (verified) {
       return "success";
     }
@@ -104,7 +104,7 @@ const SignatureIcon: FC<Props> = ({signatures, className}) => {
 
   return (
     <>
-      <Popover title={<h1>{t("changeset.signatures")}</h1>} width={500} {...popoverProps}>
+      <Popover title={<h1 className="has-text-weight-bold is-size-5">{t("changeset.signatures")}</h1>} width={500} {...popoverProps}>
         <StyledDiv>
           {signatureElements}
         </StyledDiv>

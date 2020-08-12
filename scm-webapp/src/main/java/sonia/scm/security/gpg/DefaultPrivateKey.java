@@ -37,22 +37,26 @@ import org.bouncycastle.openpgp.PGPSignatureGenerator;
 import org.bouncycastle.openpgp.operator.jcajce.JcaPGPContentSignerBuilder;
 import sonia.scm.security.PrivateKey;
 
+import javax.validation.constraints.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Optional;
 
 class DefaultPrivateKey implements PrivateKey {
 
-  final Optional<PGPPrivateKey> privateKey;
+  static DefaultPrivateKey parseRaw(String rawPrivateKey) {
+    return new DefaultPrivateKey(KeysExtractor.extractPrivateKey(rawPrivateKey));
+  }
 
-  DefaultPrivateKey(String rawPrivateKey) {
-    privateKey = KeysExtractor.extractPrivateKey(rawPrivateKey);
+  private final PGPPrivateKey privateKey;
+
+  private DefaultPrivateKey(@NotNull PGPPrivateKey privateKey) {
+    this.privateKey = privateKey;
   }
 
   @Override
   public String getId() {
-    return privateKey.map(Keys::createId).orElse(null);
+    return Keys.createId(privateKey);
   }
 
   @Override
@@ -64,14 +68,10 @@ class DefaultPrivateKey implements PrivateKey {
         HashAlgorithmTags.SHA1).setProvider(BouncyCastleProvider.PROVIDER_NAME)
     );
 
-    if (privateKey.isPresent()) {
-      try {
-        signatureGenerator.init(PGPSignature.BINARY_DOCUMENT, privateKey.get());
-      } catch (PGPException e) {
-        throw new GPGException("Could not initialize signature generator", e);
-      }
-    } else {
-      throw new GPGException("Missing private key");
+    try {
+      signatureGenerator.init(PGPSignature.BINARY_DOCUMENT, privateKey);
+    } catch (PGPException e) {
+      throw new GPGException("Could not initialize signature generator", e);
     }
 
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();

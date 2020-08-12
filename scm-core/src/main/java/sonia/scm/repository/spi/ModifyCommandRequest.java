@@ -58,7 +58,7 @@ public class ModifyCommandRequest implements Resetable, Validateable, CommandWit
     commitMessage = null;
     branch = null;
     defaultPath = false;
-    sign = false;
+    sign = true;
   }
 
   public void addRequest(PartialRequest request) {
