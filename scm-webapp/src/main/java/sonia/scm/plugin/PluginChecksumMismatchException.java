@@ -26,6 +26,7 @@ package sonia.scm.plugin;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
+@SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
 public class PluginChecksumMismatchException extends PluginInstallException {
   public PluginChecksumMismatchException(AvailablePlugin plugin, String calculatedChecksum, String expectedChecksum) {
     super(

@@ -241,6 +241,18 @@
       "displayName": "Error while cleaning up failed plugin",
       "description": "A failed plugin download could not be removed correctly. Please check the server log and remove the plugin manually."
     },
+    "5GS6lwvWF1": {
+      "displayName": "Dependency not found",
+      "description": "One of the plugin dependencies could not be found. Please check the server logs for more details."
+    },
+    "E5S6niWwi1": {
+      "displayName": "Dependency version mismatch",
+      "description": "The plugin depends on a newer version of an already installed plugin. Please check the server logs for more details."
+    },
+    "4RS6niPRX1": {
+      "displayName": "Plugin information mismatch",
+      "description": "The downloaded plugin does not match the information provided by the plugin center. Please check the server logs for more details."
+    },
     "2qRyyaVcJ1": {
       "displayName": "Invalid format in element",
       "description": "The input had some invalid formats. Please check the server log for further information."
