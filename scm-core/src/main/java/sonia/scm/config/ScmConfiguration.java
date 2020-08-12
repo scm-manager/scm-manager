@@ -313,16 +313,19 @@ public class ScmConfiguration implements Configuration {
   }
 
   /**
-   * since 2.4.0
-   * @return anonymousMode
+   * Returns the currently enabled type of anonymous mode.
+   *
+   * @return anonymous mode
+   * @since 2.4.0
    */
   public AnonymousMode getAnonymousMode() {
     return anonymousMode;
   }
 
   /**
-   * @deprecated since 2.4.0
-   * @use {@link ScmConfiguration#getAnonymousMode} instead
+   * Returns {@code true} if anonymous mode is enabled.
+   * @return {@code true} if anonymous mode is enabled
+   * @deprecated since 2.4.0 use {@link ScmConfiguration#getAnonymousMode} instead
    */
   @Deprecated
   public boolean isAnonymousAccessEnabled() {
@@ -375,8 +378,9 @@ public class ScmConfiguration implements Configuration {
   }
 
   /**
-   * @deprecated since 2.4.0
-   * @use {@link ScmConfiguration#setAnonymousMode(AnonymousMode)} instead
+   * Enables the anonymous access at protocol level.
+   * @param anonymousAccessEnabled enable or disables the anonymous access
+   * @deprecated since 2.4.0 use {@link ScmConfiguration#setAnonymousMode(AnonymousMode)} instead
    */
   @Deprecated
   public void setAnonymousAccessEnabled(boolean anonymousAccessEnabled) {
@@ -388,8 +392,10 @@ public class ScmConfiguration implements Configuration {
   }
 
   /**
-   * since 2.4.0
-   * @param mode
+   * Configures the anonymous mode.
+   * @param mode type of anonymous mode
+   *
+   * @since 2.4.0
    */
   public void setAnonymousMode(AnonymousMode mode) {
     this.anonymousMode = mode;

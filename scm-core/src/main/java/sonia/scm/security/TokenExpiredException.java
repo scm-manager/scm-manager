@@ -27,7 +27,7 @@ package sonia.scm.security;
 import org.apache.shiro.authc.AuthenticationException;
 
 /**
- *  This exception is thrown if the session token is expired
+ * This exception is thrown if the session token is expired
  * @since 2.4.0
  */
 @SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
