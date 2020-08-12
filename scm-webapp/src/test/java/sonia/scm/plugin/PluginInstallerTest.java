@@ -83,7 +83,7 @@ class PluginInstallerTest {
   void shouldDownloadPlugin() throws IOException {
     mockContent("42");
 
-    installer.install(createGitPlugin());
+    installer.install(PluginInstallationContext.empty(), createGitPlugin());
 
     assertThat(directory.resolve("plugins").resolve("scm-git-plugin.smp")).hasContent("42");
   }
@@ -93,7 +93,7 @@ class PluginInstallerTest {
     mockContent("42");
     AvailablePlugin gitPlugin = createGitPlugin();
 
-    PendingPluginInstallation pending = installer.install(gitPlugin);
+    PendingPluginInstallation pending = installer.install(PluginInstallationContext.empty(), gitPlugin);
 
     assertThat(pending).isNotNull();
     assertThat(pending.getPlugin().getDescriptor()).isEqualTo(gitPlugin.getDescriptor());
@@ -117,14 +117,18 @@ class PluginInstallerTest {
   void shouldThrowPluginDownloadException() throws IOException {
     when(client.get("https://download.hitchhiker.com").request()).thenThrow(new IOException("failed to download"));
 
-    assertThrows(PluginDownloadException.class, () -> installer.install(createGitPlugin()));
+    PluginInstallationContext context = PluginInstallationContext.empty();
+    AvailablePlugin gitPlugin = createGitPlugin();
+    assertThrows(PluginDownloadException.class, () -> installer.install(context, gitPlugin));
   }
 
   @Test
   void shouldThrowPluginChecksumMismatchException() throws IOException {
     mockContent("21");
 
-    assertThrows(PluginChecksumMismatchException.class, () -> installer.install(createGitPlugin()));
+    PluginInstallationContext context = PluginInstallationContext.empty();
+    AvailablePlugin gitPlugin = createGitPlugin();
+    assertThrows(PluginChecksumMismatchException.class, () -> installer.install(context, gitPlugin));
     assertThat(directory.resolve("plugins").resolve("scm-git-plugin.smp")).doesNotExist();
   }
 
@@ -134,7 +138,9 @@ class PluginInstallerTest {
     when(stream.read(any(), anyInt(), anyInt())).thenThrow(new IOException("failed to read"));
     when(client.get("https://download.hitchhiker.com").request().contentAsStream()).thenReturn(stream);
 
-    assertThrows(PluginDownloadException.class, () -> installer.install(createGitPlugin()));
+    PluginInstallationContext context = PluginInstallationContext.empty();
+    AvailablePlugin gitPlugin = createGitPlugin();
+    assertThrows(PluginDownloadException.class, () -> installer.install(context, gitPlugin));
     assertThat(directory.resolve("plugins").resolve("scm-git-plugin.smp")).doesNotExist();
   }
 
@@ -144,13 +150,44 @@ class PluginInstallerTest {
     InstalledPluginDescriptor supportedPlugin = createPluginDescriptor(false);
     when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
 
-    assertThrows(PluginConditionFailedException.class, () -> installer.install(createGitPlugin()));
+    PluginInstallationContext context = PluginInstallationContext.empty();
+    AvailablePlugin gitPlugin = createGitPlugin();
+    assertThrows(PluginConditionFailedException.class, () -> installer.install(context, gitPlugin));
     assertThat(directory.resolve("plugins").resolve("scm-git-plugin.smp")).doesNotExist();
+  }
+
+  @Test
+  void shouldFailForNameMismatch() throws IOException {
+    mockContent("42");
+
+    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor("scm-svn-plugin", "1.0.0", true);
+    when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
+
+    PluginInstallationContext context = PluginInstallationContext.empty();
+    AvailablePlugin gitPlugin = createGitPlugin();
+    PluginInformationMismatchException exception = assertThrows(PluginInformationMismatchException.class, () -> installer.install(context, gitPlugin));
+    assertThat(exception.getApi().getName()).isEqualTo("scm-git-plugin");
+    assertThat(exception.getDownloaded().getName()).isEqualTo("scm-svn-plugin");
+  }
+
+  @Test
+  void shouldFailForVersionMismatch() throws IOException {
+    mockContent("42");
+
+    InstalledPluginDescriptor supportedPlugin = createPluginDescriptor("scm-git-plugin", "1.1.0", true);
+    when(extractor.extractPluginDescriptor(any())).thenReturn(supportedPlugin);
+
+    PluginInstallationContext context = PluginInstallationContext.empty();
+    AvailablePlugin gitPlugin = createGitPlugin();
+    PluginInformationMismatchException exception = assertThrows(PluginInformationMismatchException.class, () -> installer.install(context, gitPlugin));
+    assertThat(exception.getApi().getVersion()).isEqualTo("1.0.0");
+    assertThat(exception.getDownloaded().getVersion()).isEqualTo("1.1.0");
   }
 
   private AvailablePlugin createPlugin(String name, String url, String checksum) {
     PluginInformation information = new PluginInformation();
     information.setName(name);
+    information.setVersion("1.0.0");
     AvailablePluginDescriptor descriptor = new AvailablePluginDescriptor(
       information, null, Collections.emptySet(), url, checksum
     );
@@ -158,9 +195,15 @@ class PluginInstallerTest {
   }
 
   private InstalledPluginDescriptor createPluginDescriptor(boolean supported) {
+    return createPluginDescriptor("scm-git-plugin", "1.0.0", supported);
+  }
+
+  private InstalledPluginDescriptor createPluginDescriptor(String name, String version, boolean supported) {
     InstalledPluginDescriptor installedPluginDescriptor = mock(InstalledPluginDescriptor.class, RETURNS_DEEP_STUBS);
+    lenient().when(installedPluginDescriptor.getInformation().getId()).thenReturn(name);
+    lenient().when(installedPluginDescriptor.getInformation().getName()).thenReturn(name);
+    lenient().when(installedPluginDescriptor.getInformation().getVersion()).thenReturn(version);
     lenient().when(installedPluginDescriptor.getCondition().isSupported()).thenReturn(supported);
-    lenient().when(installedPluginDescriptor.getInformation().getId()).thenReturn("scm-git-plugin");
     return installedPluginDescriptor;
   }
 }

@@ -39640,6 +39640,42 @@ exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
 </div>
 `;
 
+exports[`Storyshots Forms|DropDown Add preselect if missing in options 1`] = `
+<div
+  className="select"
+>
+  <select
+    onChange={[Function]}
+    value="D"
+  >
+    <option
+      selected={false}
+      value="alpha"
+    >
+      A
+    </option>
+    <option
+      selected={false}
+      value="beta"
+    >
+      B
+    </option>
+    <option
+      selected={false}
+      value="gamma"
+    >
+      C
+    </option>
+    <option
+      selected={true}
+      value="D"
+    >
+      D
+    </option>
+  </select>
+</div>
+`;
+
 exports[`Storyshots Forms|DropDown Default 1`] = `
 <div
   className="select"
@@ -39695,6 +39731,12 @@ exports[`Storyshots Forms|DropDown With Translation 1`] = `
       value="liff"
     >
       The Meaning Of Liff
+    </option>
+    <option
+      selected={true}
+      value="dirk"
+    >
+      dirk
     </option>
   </select>
 </div>

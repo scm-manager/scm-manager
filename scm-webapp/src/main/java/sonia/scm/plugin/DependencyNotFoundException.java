@@ -24,29 +24,39 @@
 
 package sonia.scm.plugin;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-class SmpDescriptorExtractor {
+@SuppressWarnings("squid:MaximumInheritanceDepth") // exceptions have a deep inheritance depth themselves; therefore we accept this here
+public class DependencyNotFoundException extends PluginInstallException {
 
-  InstalledPluginDescriptor extractPluginDescriptor(Path file) throws IOException {
-    try (ZipInputStream zipInputStream = new ZipInputStream(Files.newInputStream(file), StandardCharsets.UTF_8)) {
-      ZipEntry nextEntry;
-      while ((nextEntry = zipInputStream.getNextEntry()) != null) {
-        if ("META-INF/scm/plugin.xml".equals(nextEntry.getName())) {
-          JAXBContext context = JAXBContext.newInstance(ScmModule.class, InstalledPluginDescriptor.class);
-          return (InstalledPluginDescriptor) context.createUnmarshaller().unmarshal(zipInputStream);
-        }
-      }
-    } catch (JAXBException e) {
-      throw new IOException("failed to read descriptor file META-INF/scm/plugin.xml from plugin", e);
-    }
-    throw new IOException("Missing plugin descriptor META-INF/scm/plugin.xml in download package");
+  private final String plugin;
+  private final String missingDependency;
+
+  public DependencyNotFoundException(String plugin, String missingDependency) {
+    super(
+      entity("Dependency", missingDependency)
+        .in("Plugin", plugin)
+        .build(),
+      String.format(
+        "missing dependency %s of plugin %s",
+        missingDependency,
+        plugin
+      )
+    );
+    this.plugin = plugin;
+    this.missingDependency = missingDependency;
+  }
+
+  public String getPlugin() {
+    return plugin;
+  }
+
+  public String getMissingDependency() {
+    return missingDependency;
+  }
+
+  @Override
+  public String getCode() {
+    return "5GS6lwvWF1";
   }
 }

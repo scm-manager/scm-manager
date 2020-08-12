@@ -241,6 +241,18 @@
       "displayName": "Fehler beim Löschen falscher Downloads",
       "description": "Ein fehlerhaft heruntergeladenes Plugin konnte nicht gelöscht werden. Bitte prüfen Sie die Server Logs und löschen die Datei manuell."
     },
+    "5GS6lwvWF1": {
+      "displayName": "Abhänigkeit konnte nicht gefunden werden",
+      "description": "Eine der Abhänigkeiten des Plugins konnte nicht gefunden werden. Bitte prüfen Sie die Logs für weitere Informationen."
+    },
+    "E5S6niWwi1": {
+      "displayName": "Version einer Abhänigkeit zu niedrig",
+      "description": "Die Version einer Abhänigkeit des Plugin ist zu niedrig. Bitte prüfen Sie die Logs für weitere Informationen."
+    },
+    "4RS6niPRX1": {
+      "displayName": "Plugin information stimmen nicht überein",
+      "description": "Die Informationen des heruntergeladenen Plugins stimmen nicht mit den Informationen des Plugin Centers überein. Bitte prüfen Sie die Logs für weitere Informationen."
+    },
     "2qRyyaVcJ1": {
       "displayName": "Ungültig formatiertes Element",
       "description": "Die Eingabe beinhaltete unfültige Formate. Bitte prüfen Sie die Server Logs für genauere Informationen."
