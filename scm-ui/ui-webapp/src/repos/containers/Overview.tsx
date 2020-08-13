@@ -25,7 +25,6 @@ import React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
 import { RepositoryCollection } from "@scm-manager/ui-types";
 import {
   CreateButton,
@@ -77,11 +76,17 @@ class Overview extends React.Component<Props> {
 
   render() {
     const { error, loading, showCreateButton, t } = this.props;
+
     return (
       <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={loading} error={error}>
         {this.renderOverview()}
         <PageActions>
-          <OverviewPageActions showCreateButton={showCreateButton} link="repos" label={t("overview.createButton")} />
+          <OverviewPageActions
+            showCreateButton={showCreateButton}
+            link="repos"
+            label={t("overview.createButton")}
+            testId="repository-overview"
+          />
         </PageActions>
       </Page>
     );

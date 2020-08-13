@@ -36,13 +36,13 @@ export { Branch, BranchRequest } from "./Branches";
 
 export { Person } from "./Person";
 
-export { Changeset, Contributor, ParentChangeset } from "./Changesets";
+export { Changeset, Contributor, ParentChangeset, Signature } from "./Changesets";
 
 export { AnnotatedSource, AnnotatedLine } from "./Annotate";
 
 export { Tag } from "./Tags";
 
-export { Config } from "./Config";
+export { Config, AnonymousMode } from "./Config";
 
 export { IndexResources } from "./IndexResources";
 

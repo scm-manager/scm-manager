@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -72,9 +72,10 @@ public class GitHookChangesetCollector
    * @param rpack
    * @param receiveCommands
    */
-  public GitHookChangesetCollector(ReceivePack rpack,
+  public GitHookChangesetCollector(GitChangesetConverterFactory converterFactory, ReceivePack rpack,
     List<ReceiveCommand> receiveCommands)
   {
+    this.converterFactory = converterFactory;
     this.rpack = rpack;
     this.receiveCommands = receiveCommands;
     this.listener = CollectingPackParserListener.get(rpack);
@@ -100,14 +101,14 @@ public class GitHookChangesetCollector
     try
     {
       walk = rpack.getRevWalk();
-      converter = new GitChangesetConverter(repository, walk);
+      converter = converterFactory.create(repository, walk);
 
       for (ReceiveCommand rc : receiveCommands)
       {
         String ref = rc.getRefName();
-        
+
         logger.trace("handle receive command, type={}, ref={}, result={}", rc.getType(), ref, rc.getResult());
-        
+
         if (rc.getType() == ReceiveCommand.Type.DELETE)
         {
           logger.debug("skip delete of ref {}", ref);
@@ -130,7 +131,7 @@ public class GitHookChangesetCollector
             builder.append(rc.getType()).append(", ref=");
             builder.append(rc.getRefName()).append(", result=");
             builder.append(rc.getResult());
-            
+
             logger.error(builder.toString(), ex);
           }
         }
@@ -222,5 +223,6 @@ public class GitHookChangesetCollector
 
   private final List<ReceiveCommand> receiveCommands;
 
+  private final GitChangesetConverterFactory converterFactory;
   private final ReceivePack rpack;
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -29,6 +29,7 @@ package sonia.scm.repository.spi;
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
 
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitHookChangesetCollector;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -39,56 +40,27 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class GitHookChangesetProvider implements HookChangesetProvider
-{
+public class GitHookChangesetProvider implements HookChangesetProvider {
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param receivePack
-   * @param receiveCommands
-   */
-  public GitHookChangesetProvider(ReceivePack receivePack,
-    List<ReceiveCommand> receiveCommands)
-  {
+  private final GitChangesetConverterFactory converterFactory;
+  private final ReceivePack receivePack;
+  private final List<ReceiveCommand> receiveCommands;
+
+  private HookChangesetResponse response;
+
+  public GitHookChangesetProvider(GitChangesetConverterFactory converterFactory, ReceivePack receivePack,
+                                  List<ReceiveCommand> receiveCommands) {
+    this.converterFactory = converterFactory;
     this.receivePack = receivePack;
     this.receiveCommands = receiveCommands;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
   @Override
-  public synchronized HookChangesetResponse handleRequest(
-    HookChangesetRequest request)
-  {
-    if (response == null)
-    {
-      GitHookChangesetCollector collector =
-        new GitHookChangesetCollector(receivePack, receiveCommands);
-
+  public synchronized HookChangesetResponse handleRequest(HookChangesetRequest request) {
+    if (response == null) {
+      GitHookChangesetCollector collector = new GitHookChangesetCollector(converterFactory, receivePack, receiveCommands);
       response = new HookChangesetResponse(collector.collectChangesets());
     }
-
     return response;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private List<ReceiveCommand> receiveCommands;
-
-  /** Field description */
-  private ReceivePack receivePack;
-
-  /** Field description */
-  private HookChangesetResponse response;
 }

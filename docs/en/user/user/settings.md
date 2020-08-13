@@ -19,3 +19,8 @@ In the permissions section, the global, therefore not repository-specific permis
 There is a tooltip for each permission that provide some more details about the option.
 
 ![User Permissions](assets/user-settings-permissions.png)
+
+### Public keys
+Add public keys to users to enable changeset signature verification.
+
+![Public keys](assets/user-settings-publickeys.png)

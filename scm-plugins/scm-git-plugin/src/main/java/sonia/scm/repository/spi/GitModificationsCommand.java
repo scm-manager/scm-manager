@@ -41,6 +41,7 @@ import sonia.scm.repository.Modified;
 import sonia.scm.repository.Removed;
 import sonia.scm.repository.Renamed;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -53,7 +54,8 @@ import static sonia.scm.ContextEntry.ContextBuilder.entity;
 @Slf4j
 public class GitModificationsCommand extends AbstractGitCommand implements ModificationsCommand {
 
-  protected GitModificationsCommand(GitContext context) {
+  @Inject
+  GitModificationsCommand(GitContext context) {
     super(context);
   }
 

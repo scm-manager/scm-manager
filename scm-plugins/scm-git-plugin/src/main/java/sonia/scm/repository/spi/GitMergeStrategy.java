@@ -56,6 +56,7 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
   private final ObjectId revisionToMerge;
   private final Person author;
   private final String messageTemplate;
+  private final boolean sign;
 
   GitMergeStrategy(Git clone, MergeCommandRequest request, GitContext context, sonia.scm.repository.Repository repository) {
     super(clone, context, repository);
@@ -63,6 +64,7 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
     this.branchToMerge = request.getBranchToMerge();
     this.author = request.getAuthor();
     this.messageTemplate = request.getMessageTemplate();
+    this.sign = request.isSign();
     try {
       this.targetRevision = resolveRevision(request.getTargetBranch());
       this.revisionToMerge = resolveRevision(request.getBranchToMerge());
@@ -88,7 +90,7 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
 
   Optional<RevCommit> doCommit() {
     logger.debug("merged branch {} into {}", branchToMerge, targetBranch);
-    return doCommit(MessageFormat.format(determineMessageTemplate(), branchToMerge, targetBranch), author);
+    return doCommit(MessageFormat.format(determineMessageTemplate(), branchToMerge, targetBranch), author, sign);
   }
 
   MergeCommandResult createSuccessResult(String newRevision) {

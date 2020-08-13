@@ -109,16 +109,18 @@ class LoginForm extends React.Component<Props, State> {
           <ErrorNotification error={this.areCredentialsInvalid()} />
           <form onSubmit={this.handleSubmit}>
             <InputField
+              testId="username-input"
               placeholder={t("login.username-placeholder")}
               autofocus={true}
               onChange={this.handleUsernameChange}
             />
             <InputField
+              testId="password-input"
               placeholder={t("login.password-placeholder")}
               type="password"
               onChange={this.handlePasswordChange}
             />
-            <SubmitButton label={t("login.submit")} fullWidth={true} loading={loading} />
+            <SubmitButton label={t("login.submit")} fullWidth={true} loading={loading} testId="login-button" />
           </form>
         </TopMarginBox>
       </div>

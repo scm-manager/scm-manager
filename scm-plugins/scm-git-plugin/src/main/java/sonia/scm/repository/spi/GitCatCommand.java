@@ -44,6 +44,7 @@ import sonia.scm.util.IOUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
+import javax.inject.Inject;
 import java.io.Closeable;
 import java.io.FilterInputStream;
 import java.io.IOException;
@@ -61,6 +62,7 @@ public class GitCatCommand extends AbstractGitCommand implements CatCommand {
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
 
+  @Inject
   public GitCatCommand(GitContext context, LfsBlobStoreFactory lfsBlobStoreFactory) {
     super(context);
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;

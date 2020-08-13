@@ -33,6 +33,7 @@ import org.apache.shiro.subject.Subject;
 import sonia.scm.Priority;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.AnonymousMode;
 import sonia.scm.web.filter.HttpFilter;
 import sonia.scm.web.filter.PropagatePrincipleServletRequestWrapper;
 
@@ -89,7 +90,7 @@ public class PropagatePrincipleFilter extends HttpFilter
   private boolean hasPermission(Subject subject)
   {
     return ((configuration != null)
-      && configuration.isAnonymousAccessEnabled()) || subject.isAuthenticated()
+      && configuration.getAnonymousMode() != AnonymousMode.OFF) || subject.isAuthenticated()
         || subject.isRemembered();
   }
 

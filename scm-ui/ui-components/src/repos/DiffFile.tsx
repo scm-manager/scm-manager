@@ -309,7 +309,11 @@ class DiffFile extends React.Component<Props, State> {
     if (file._links?.lines) {
       items.push(this.createHunkHeader(expandableHunk));
     } else if (i > 0) {
-      items.push(<Decoration><HunkDivider /></Decoration>);
+      items.push(
+        <Decoration>
+          <HunkDivider />
+        </Decoration>
+      );
     }
 
     items.push(
@@ -411,29 +415,31 @@ class DiffFile extends React.Component<Props, State> {
     }
     const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit" /> : null;
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
-    const sideBySideToggle =
-      file.hunks && file.hunks.length > 0 ? (
-        <ButtonWrapper className={classNames("level-right", "is-flex")}>
-          <ButtonGroup>
-            <MenuContext.Consumer>
-              {({ setCollapsed }) => (
-                <DiffButton
-                  icon={sideBySide ? "align-left" : "columns"}
-                  tooltip={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
-                  onClick={() =>
-                    this.toggleSideBySide(() => {
-                      if (this.state.sideBySide) {
-                        setCollapsed(true);
-                      }
-                    })
-                  }
-                />
-              )}
-            </MenuContext.Consumer>
-            {fileControls}
-          </ButtonGroup>
-        </ButtonWrapper>
-      ) : null;
+    const sideBySideToggle = file.hunks && file.hunks.length && (
+      <MenuContext.Consumer>
+        {({ setCollapsed }) => (
+          <DiffButton
+            icon={sideBySide ? "align-left" : "columns"}
+            tooltip={t(sideBySide ? "diff.combined" : "diff.sideBySide")}
+            onClick={() =>
+              this.toggleSideBySide(() => {
+                if (this.state.sideBySide) {
+                  setCollapsed(true);
+                }
+              })
+            }
+          />
+        )}
+      </MenuContext.Consumer>
+    );
+    const headerButtons = (
+      <ButtonWrapper className={classNames("level-right", "is-flex")}>
+        <ButtonGroup>
+          {sideBySideToggle}
+          {fileControls}
+        </ButtonGroup>
+      </ButtonWrapper>
+    );
 
     let errorModal;
     if (expansionError) {
@@ -463,7 +469,7 @@ class DiffFile extends React.Component<Props, State> {
               </TitleWrapper>
               {this.renderChangeTag(file)}
             </FullWidthTitleHeader>
-            {sideBySideToggle}
+            {headerButtons}
           </FlexWrapLevel>
         </div>
         {body}

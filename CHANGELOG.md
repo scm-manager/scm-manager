@@ -5,14 +5,19 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
-
 ### Added
 - Introduced merge detection for receive hooks ([#1278](https://github.com/scm-manager/scm-manager/pull/1278))
+- Anonymous mode for the web ui ([#1284](https://github.com/scm-manager/scm-manager/pull/1284))
+- Add link to source file in diff sections ([#1267](https://github.com/scm-manager/scm-manager/pull/1267))
 - Check versions of plugin dependencies on plugin installation ([#1283](https://github.com/scm-manager/scm-manager/pull/1283))
+- Sign PR merges and commits performed through ui with generated private key ([#1285](https://github.com/scm-manager/scm-manager/pull/1285))
+- Add generic popover component to ui-components ([#1285](https://github.com/scm-manager/scm-manager/pull/1285))
+- Show changeset signatures in ui and add public keys ([#1273](https://github.com/scm-manager/scm-manager/pull/1273))
 
 ### Fixed
 - Repository names may not end with ".git" ([#1277](https://github.com/scm-manager/scm-manager/pull/1277))
 - Add preselected value to options in dropdown component if missing ([#1287](https://github.com/scm-manager/scm-manager/pull/1287))
+- Show error message if plugin loading failed ([#1289](https://github.com/scm-manager/scm-manager/pull/1289))
 - Fix timing problem with anchor links for markdown view ([#1290](https://github.com/scm-manager/scm-manager/pull/1290))
 
 ## [2.3.1] - 2020-08-04
@@ -20,13 +25,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - New api to resolve SCM-Manager root url ([#1276](https://github.com/scm-manager/scm-manager/pull/1276))
 
 ### Changed
-- Help tooltips are now mutliline by default ([#1271](https://github.com/scm-manager/scm-manager/pull/1271))
+- Help tooltips are now multiline by default ([#1271](https://github.com/scm-manager/scm-manager/pull/1271))
 
 ### Fixed
 - Fixed unnecessary horizontal scrollbar in modal dialogs ([#1271](https://github.com/scm-manager/scm-manager/pull/1271))
 - Avoid stacktrace logging when protocol url is accessed outside of request scope ([#1276](https://github.com/scm-manager/scm-manager/pull/1276))
 
 ## [2.3.0] - 2020-07-23
+
 ### Added
 - Add branch link provider to access branch links in plugins ([#1243](https://github.com/scm-manager/scm-manager/pull/1243))
 - Add key value input field component ([#1246](https://github.com/scm-manager/scm-manager/pull/1246))

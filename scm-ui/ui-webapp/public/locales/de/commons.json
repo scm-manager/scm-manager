@@ -48,6 +48,7 @@
     "repositories": "Repositories",
     "users": "Benutzer",
     "logout": "Abmelden",
+    "login": "Anmelden",
     "groups": "Gruppen",
     "admin": "Administration"
   },
@@ -69,6 +70,7 @@
     "navigationLabel": "Profil",
     "informationNavLink": "Information",
     "changePasswordNavLink": "Passwort ändern",
+    "publicKeysNavLink": "Öffentliche Schlüssel",
     "settingsNavLink": "Einstellungen",
     "username": "Benutzername",
     "displayName": "Anzeigename",

@@ -49,6 +49,7 @@
     "repositories": "Repositories",
     "users": "Users",
     "logout": "Logout",
+    "login": "Login",
     "groups": "Groups",
     "admin": "Administration"
   },
@@ -71,6 +72,7 @@
     "informationNavLink": "Information",
     "changePasswordNavLink": "Change password",
     "settingsNavLink": "Settings",
+    "publicKeysNavLink": "Public Keys",
     "username": "Username",
     "displayName": "Display Name",
     "mail": "E-Mail",

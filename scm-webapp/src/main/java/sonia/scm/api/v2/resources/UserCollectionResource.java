@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -34,6 +34,7 @@ import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
+import sonia.scm.user.UserPermissions;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -108,6 +109,7 @@ public class UserCollectionResource {
                          @DefaultValue("false") @QueryParam("desc") boolean desc,
                          @DefaultValue("") @QueryParam("q") String search
   ) {
+    UserPermissions.list().check();
     return adapter.getAll(page, pageSize, createSearchPredicate(search), sortBy, desc,
       pageResult -> userCollectionToDtoMapper.map(page, pageSize, pageResult));
   }

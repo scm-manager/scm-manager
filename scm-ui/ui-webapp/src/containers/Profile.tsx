@@ -42,6 +42,8 @@ import {
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import SetPublicKeys from "../users/components/publicKeys/SetPublicKeys";
+import SetPublicKeyNavLink from "../users/components/navLinks/SetPublicKeysNavLink";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -61,6 +63,16 @@ class Profile extends React.Component<Props> {
 
   matchedUrl = () => {
     return this.stripEndingSlash(this.props.match.url);
+  };
+
+  mayChangePassword = () => {
+    const { me } = this.props;
+    return !!me?._links?.password;
+  };
+
+  canManagePublicKeys = () => {
+    const { me } = this.props;
+    return !!me?._links?.publicKeys;
   };
 
   render() {
@@ -92,7 +104,12 @@ class Profile extends React.Component<Props> {
           <CustomQueryFlexWrappedColumns>
             <PrimaryContentColumn>
               <Route path={url} exact render={() => <ProfileInfo me={me} />} />
-              <Route path={`${url}/settings/password`} render={() => <ChangeUserPassword me={me} />} />
+              {this.mayChangePassword() && (
+                <Route path={`${url}/settings/password`} render={() => <ChangeUserPassword me={me} />} />
+              )}
+              {this.canManagePublicKeys() && (
+                <Route path={`${url}/settings/publicKeys`} render={() => <SetPublicKeys user={me} />} />
+              )}
               <ExtensionPoint name="profile.route" props={extensionProps} renderAll={true} />
             </PrimaryContentColumn>
             <SecondaryNavigationColumn>
@@ -103,14 +120,17 @@ class Profile extends React.Component<Props> {
                   label={t("profile.informationNavLink")}
                   title={t("profile.informationNavLink")}
                 />
-                <SubNavigation
-                  to={`${url}/settings/password`}
-                  label={t("profile.settingsNavLink")}
-                  title={t("profile.settingsNavLink")}
-                >
-                  <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
-                  <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
-                </SubNavigation>
+                {this.mayChangePassword() && (
+                  <SubNavigation
+                    to={`${url}/settings/password`}
+                    label={t("profile.settingsNavLink")}
+                    title={t("profile.settingsNavLink")}
+                  >
+                    <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
+                    <SetPublicKeyNavLink user={me} publicKeyUrl={`${url}/settings/publicKeys`} />
+                    <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
+                  </SubNavigation>
+                )}
               </SecondaryNavigation>
             </SecondaryNavigationColumn>
           </CustomQueryFlexWrappedColumns>

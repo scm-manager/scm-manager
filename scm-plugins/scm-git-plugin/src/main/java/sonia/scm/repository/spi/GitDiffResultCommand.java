@@ -32,6 +32,7 @@ import sonia.scm.repository.api.DiffFile;
 import sonia.scm.repository.api.DiffResult;
 import sonia.scm.repository.api.Hunk;
 
+import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
@@ -39,6 +40,7 @@ import java.util.stream.Collectors;
 
 public class GitDiffResultCommand extends AbstractGitCommand implements DiffResultCommand {
 
+  @Inject
   GitDiffResultCommand(GitContext context) {
     super(context);
   }

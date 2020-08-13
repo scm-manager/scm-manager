@@ -35,6 +35,7 @@ import ChangesetAuthor from "./ChangesetAuthor";
 import ChangesetTags from "./ChangesetTags";
 import ChangesetButtonGroup from "./ChangesetButtonGroup";
 import ChangesetDescription from "./ChangesetDescription";
+import SignatureIcon from "./SignatureIcon";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -79,6 +80,11 @@ const VCenteredChildColumn = styled.div`
   justify-content: flex-end;
 `;
 
+const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
+
 class ChangesetRow extends React.Component<Props> {
   createChangesetId = (changeset: Changeset) => {
     const { repository } = this.props;
@@ -101,7 +107,7 @@ class ChangesetRow extends React.Component<Props> {
                   <AvatarWrapper>
                     <AvatarFigure className="media-left">
                       <FixedSizedAvatar className="image">
-                        <AvatarImage person={changeset.author}/>
+                        <AvatarImage person={changeset.author} />
                       </FixedSizedAvatar>
                     </AvatarFigure>
                   </AvatarWrapper>
@@ -119,24 +125,32 @@ class ChangesetRow extends React.Component<Props> {
                       </ExtensionPoint>
                     </h4>
                     <p className="is-hidden-touch">
-                      <Trans i18nKey="repos:changeset.summary" components={[changesetId, dateFromNow]}/>
+                      <Trans i18nKey="repos:changeset.summary" components={[changesetId, dateFromNow]} />
                     </p>
                     <p className="is-hidden-desktop">
-                      <Trans i18nKey="repos:changeset.shortSummary" components={[changesetId, dateFromNow]}/>
+                      <Trans i18nKey="repos:changeset.shortSummary" components={[changesetId, dateFromNow]} />
                     </p>
-                    <AuthorWrapper className="is-size-7 is-ellipsis-overflow">
-                      <ChangesetAuthor changeset={changeset}/>
-                    </AuthorWrapper>
+                    <FlexRow>
+                      <AuthorWrapper className="is-size-7 is-ellipsis-overflow">
+                        <ChangesetAuthor changeset={changeset} />
+                      </AuthorWrapper>
+                      {changeset?.signatures && changeset.signatures.length > 0 && (
+                        <SignatureIcon
+                          className="mx-2 pt-1"
+                          signatures={changeset.signatures}
+                        />
+                      )}
+                    </FlexRow>
                   </Metadata>
                 </div>
               </div>
               <VCenteredColumn className="column">
-                <ChangesetTags changeset={changeset}/>
+                <ChangesetTags changeset={changeset} />
               </VCenteredColumn>
             </div>
           </div>
           <VCenteredChildColumn className={classNames("column", "is-flex")}>
-            <ChangesetButtonGroup repository={repository} changeset={changeset}/>
+            <ChangesetButtonGroup repository={repository} changeset={changeset} />
             <ExtensionPoint
               name="changeset.right"
               props={{

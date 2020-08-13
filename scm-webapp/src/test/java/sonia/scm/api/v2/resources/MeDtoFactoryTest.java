@@ -187,15 +187,37 @@ class MeDtoFactoryTest {
   }
 
   @Test
-  void shouldNotGetPasswordLinkForAnonymousUser() {
+  void shouldAppendOnlySelfLinkIfAnonymousUser() {
     User user = SCMContext.ANONYMOUS;
     prepareSubject(user);
 
-    when(userManager.isTypeDefault(any())).thenReturn(true);
-    when(UserPermissions.changePassword(user).isPermitted()).thenReturn(true);
+    MeDto dto = meDtoFactory.create();
+    assertThat(dto.getLinks().getLinkBy("self")).isPresent();
+    assertThat(dto.getLinks().getLinkBy("password")).isNotPresent();
+    assertThat(dto.getLinks().getLinkBy("delete")).isNotPresent();
+    assertThat(dto.getLinks().getLinkBy("update")).isNotPresent();
+  }
+
+  @Test
+  void shouldAppendPublicKeysLink() {
+    User user = UserTestData.createTrillian();
+    prepareSubject(user);
+
+    when(subject.isPermitted("user:changePublicKeys:trillian")).thenReturn(true);
 
     MeDto dto = meDtoFactory.create();
-    assertThat(dto.getLinks().getLinkBy("password")).isNotPresent();
+    assertThat(dto.getLinks().getLinkBy("publicKeys").get().getHref()).isEqualTo("https://scm.hitchhiker.com/scm/v2/users/trillian/public_keys");
+  }
+
+  @Test
+  void shouldNotAppendPublicKeysLink() {
+    User user = UserTestData.createTrillian();
+    prepareSubject(user);
+
+    when(subject.isPermitted("user:changePublicKeys:trillian")).thenReturn(false);
+
+    MeDto dto = meDtoFactory.create();
+    assertThat(dto.getLinks().getLinkBy("publicKeys")).isNotPresent();
   }
 
   @Test
@@ -213,6 +235,4 @@ class MeDtoFactoryTest {
     MeDto dto = meDtoFactory.create();
     assertThat(dto.getLinks().getLinkBy("profile").get().getHref()).isEqualTo("http://hitchhiker.com/users/trillian");
   }
-
-
 }

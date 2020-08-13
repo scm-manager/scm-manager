@@ -25,7 +25,7 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { User } from "@scm-manager/ui-types";
-import { Icon } from "@scm-manager/ui-components";
+import { Icon, createAttributesForTesting } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   user: User;
@@ -33,7 +33,11 @@ type Props = WithTranslation & {
 
 class UserRow extends React.Component<Props> {
   renderLink(to: string, label: string) {
-    return <Link to={to}>{label}</Link>;
+    return (
+      <Link to={to} {...createAttributesForTesting(label)}>
+        {label}
+      </Link>
+    );
   }
 
   render() {

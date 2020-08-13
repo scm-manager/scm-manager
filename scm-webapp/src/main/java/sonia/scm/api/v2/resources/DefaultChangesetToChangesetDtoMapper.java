@@ -31,17 +31,22 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Changeset;
+import sonia.scm.repository.Contributor;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.Signature;
 import sonia.scm.repository.Tag;
-import sonia.scm.repository.Contributor;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.security.gpg.PublicKeyResource;
+import sonia.scm.security.gpg.PublicKeyStore;
+import sonia.scm.security.gpg.RawGpgKey;
 import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -67,9 +72,33 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
   @Inject
   private TagCollectionToDtoMapper tagCollectionToDtoMapper;
 
+  @Inject
+  private ScmPathInfoStore scmPathInfoStore;
+
+  @Inject
+  private PublicKeyStore publicKeyStore;
+
   abstract ContributorDto map(Contributor contributor);
 
+  abstract SignatureDto map(Signature signature);
+
   abstract PersonDto map(Person person);
+
+  @ObjectFactory
+  SignatureDto createDto(Signature signature) {
+    final Optional<RawGpgKey> key = publicKeyStore.findById(signature.getKeyId());
+    if (signature.getType().equals("gpg") && key.isPresent()) {
+      final Links.Builder linkBuilder =
+        linkingTo()
+          .single(link("rawKey", new LinkBuilder(scmPathInfoStore.get(), PublicKeyResource.class)
+            .method("findByIdGpg")
+            .parameters(signature.getKeyId())
+            .href()));
+
+      return new SignatureDto(linkBuilder.build());
+    }
+    return new SignatureDto();
+  }
 
   @ObjectFactory
   ChangesetDto createDto(@Context Repository repository, Changeset source) {

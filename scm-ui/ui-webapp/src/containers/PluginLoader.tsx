@@ -22,10 +22,11 @@
  * SOFTWARE.
  */
 import React, { ReactNode } from "react";
-import { apiClient, Loading } from "@scm-manager/ui-components";
+import { apiClient, Loading, ErrorNotification, ErrorBoundary, Icon } from "@scm-manager/ui-components";
 import { getUiPluginsLink } from "../modules/indexResource";
 import { connect } from "react-redux";
 import loadBundle from "./loadBundle";
+import styled from "styled-components";
 
 type Props = {
   loaded: boolean;
@@ -36,12 +37,30 @@ type Props = {
 
 type State = {
   message: string;
+  errorMessage?: string;
+  error?: Error;
 };
 
 type Plugin = {
   name: string;
   bundles: string[];
 };
+
+const BigIcon = styled(Icon)`
+  font-size: 10rem;
+`;
+
+const Centered = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+`;
+
+const ErrorMessage = styled.span`
+  font-size: 20px;
+  margin: 1.5rem 0;
+`;
 
 class PluginLoader extends React.Component<Props, State> {
   constructor(props: Props) {
@@ -96,14 +115,33 @@ class PluginLoader extends React.Component<Props, State> {
 
     const promises = [];
     for (const bundle of plugin.bundles) {
-      promises.push(loadBundle(bundle));
+      promises.push(
+        loadBundle(bundle).catch(error => this.setState({ error, errorMessage: `loading ${plugin.name} failed` }))
+      );
     }
     return Promise.all(promises);
   };
 
   render() {
     const { loaded } = this.props;
-    const { message } = this.state;
+    const { message, error, errorMessage } = this.state;
+
+    if (error) {
+      return (
+        <section className="section">
+          <div className="container">
+            <ErrorBoundary>
+              <Centered>
+                <BigIcon name="exclamation-triangle" color="danger" />
+                <ErrorMessage>{errorMessage}</ErrorMessage>
+              </Centered>
+              <ErrorNotification error={error} />
+            </ErrorBoundary>
+          </div>
+        </section>
+      );
+    }
+
     if (loaded) {
       return <div>{this.props.children}</div>;
     }

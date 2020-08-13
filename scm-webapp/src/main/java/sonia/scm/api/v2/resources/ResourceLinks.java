@@ -25,6 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.security.gpg.UserPublicKeyResource;
 
 import javax.inject.Inject;
 import java.net.URI;
@@ -99,9 +100,11 @@ class ResourceLinks {
 
   static class UserLinks {
     private final LinkBuilder userLinkBuilder;
+    private final LinkBuilder publicKeyLinkBuilder;
 
     UserLinks(ScmPathInfo pathInfo) {
       userLinkBuilder = new LinkBuilder(pathInfo, UserRootResource.class, UserResource.class);
+      publicKeyLinkBuilder = new LinkBuilder(pathInfo, UserPublicKeyResource.class);
     }
 
     String self(String name) {
@@ -118,6 +121,10 @@ class ResourceLinks {
 
     public String passwordChange(String name) {
       return userLinkBuilder.method("getUserResource").parameters(name).method("overwritePassword").parameters().href();
+    }
+
+    public String publicKeys(String name) {
+      return publicKeyLinkBuilder.method("findAll").parameters(name).href();
     }
   }
 

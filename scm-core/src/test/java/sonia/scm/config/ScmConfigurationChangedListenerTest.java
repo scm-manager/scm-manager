@@ -29,6 +29,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.security.AnonymousMode;
 import sonia.scm.user.UserManager;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -52,7 +53,7 @@ class ScmConfigurationChangedListenerTest {
     when(userManager.contains(any())).thenReturn(false);
 
     ScmConfiguration changes = new ScmConfiguration();
-    changes.setAnonymousAccessEnabled(true);
+    changes.setAnonymousMode(AnonymousMode.FULL);
     scmConfiguration.load(changes);
 
     listener.handleEvent(new ScmConfigurationChangedEvent(scmConfiguration));
@@ -64,7 +65,7 @@ class ScmConfigurationChangedListenerTest {
     when(userManager.contains(any())).thenReturn(true);
 
     ScmConfiguration changes = new ScmConfiguration();
-    changes.setAnonymousAccessEnabled(true);
+    changes.setAnonymousMode(AnonymousMode.FULL);
     scmConfiguration.load(changes);
 
     listener.handleEvent(new ScmConfigurationChangedEvent(scmConfiguration));

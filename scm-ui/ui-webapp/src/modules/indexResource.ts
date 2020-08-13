@@ -111,23 +111,29 @@ export function getFetchIndexResourcesFailure(state: object) {
 }
 
 export function getLinks(state: object) {
+  // @ts-ignore Right types not available
   return state.indexResources.links;
 }
 
 export function getLink(state: object, name: string) {
+  // @ts-ignore Right types not available
   if (state.indexResources.links && state.indexResources.links[name]) {
+    // @ts-ignore Right types not available
     return state.indexResources.links[name].href;
   }
 }
 
 export function getLinkCollection(state: object, name: string): Link[] {
+  // @ts-ignore Right types not available
   if (state.indexResources.links && state.indexResources.links[name]) {
+    // @ts-ignore Right types not available
     return state.indexResources.links[name];
   }
   return [];
 }
 
 export function getAppVersion(state: object) {
+  // @ts-ignore Right types not available
   return state.indexResources.version;
 }
 

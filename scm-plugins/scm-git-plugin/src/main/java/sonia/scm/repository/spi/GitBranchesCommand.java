@@ -38,6 +38,7 @@ import sonia.scm.repository.Branch;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -53,6 +54,7 @@ public class GitBranchesCommand extends AbstractGitCommand implements BranchesCo
 
   private static final Logger LOG = LoggerFactory.getLogger(GitBranchesCommand.class);
 
+  @Inject
   public GitBranchesCommand(GitContext context)
   {
     super(context);

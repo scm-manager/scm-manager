@@ -30,6 +30,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
 import sonia.scm.repository.api.GitHookBranchProvider;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.api.GitHookMessageProvider;
 import sonia.scm.repository.api.GitHookTagProvider;
 import sonia.scm.repository.api.GitReceiveHookMergeDetectionProvider;
@@ -62,14 +63,16 @@ public class GitHookContextProvider extends HookContextProvider
 
   //~--- constructors ---------------------------------------------------------
 
+  private final GitChangesetConverterFactory converterFactory;
+
   /**
    * Constructs a new instance
    * @param receivePack git receive pack
    * @param receiveCommands received commands
    */
   public GitHookContextProvider(
-    ReceivePack receivePack,
-    List<ReceiveCommand> receiveCommands,
+    GitChangesetConverterFactory converterFactory, ReceivePack receivePack,
+                                List<ReceiveCommand> receiveCommands,
     Repository repository,
     String repositoryId
   ) {
@@ -77,8 +80,9 @@ public class GitHookContextProvider extends HookContextProvider
     this.receiveCommands = receiveCommands;
     this.repository = repository;
     this.repositoryId = repositoryId;
-    this.changesetProvider = new GitHookChangesetProvider(receivePack,
+    this.changesetProvider = new GitHookChangesetProvider(converterFactory, receivePack,
       receiveCommands);
+    this.converterFactory = converterFactory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -110,7 +114,7 @@ public class GitHookContextProvider extends HookContextProvider
 
   @Override
   public HookMergeDetectionProvider getMergeDetectionProvider() {
-    return new GitReceiveHookMergeDetectionProvider(repository, repositoryId, receiveCommands);
+    return new GitReceiveHookMergeDetectionProvider(repository, repositoryId, receiveCommands, converterFactory);
   }
 
   @Override

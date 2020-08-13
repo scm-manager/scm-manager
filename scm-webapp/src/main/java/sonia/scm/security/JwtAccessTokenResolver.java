@@ -21,22 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import java.util.Set;
-import javax.inject.Inject;
 import org.apache.shiro.authc.AuthenticationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.Extension;
 
+import javax.inject.Inject;
+import java.util.Set;
+
 /**
  * Jwt implementation of {@link AccessTokenResolver}.
- * 
+ *
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
@@ -47,7 +49,7 @@ public final class JwtAccessTokenResolver implements AccessTokenResolver {
    * the logger for JwtAccessTokenResolver
    */
   private static final Logger LOG = LoggerFactory.getLogger(JwtAccessTokenResolver.class);
-  
+
   private final SecureKeyResolver keyResolver;
   private final Set<AccessTokenValidator> validators;
 
@@ -56,7 +58,7 @@ public final class JwtAccessTokenResolver implements AccessTokenResolver {
     this.keyResolver = keyResolver;
     this.validators = validators;
   }
-  
+
   @Override
   public JwtAccessToken resolve(BearerToken bearerToken) {
     try {
@@ -71,6 +73,8 @@ public final class JwtAccessTokenResolver implements AccessTokenResolver {
       validate(token);
 
       return token;
+    } catch (ExpiredJwtException ex) {
+      throw new TokenExpiredException("The jwt token has been expired", ex);
     } catch (JwtException ex) {
       throw new AuthenticationException("signature is invalid", ex);
     }
@@ -92,5 +96,5 @@ public final class JwtAccessTokenResolver implements AccessTokenResolver {
   private String createValidationFailedMessage(AccessTokenValidator validator, AccessToken accessToken) {
     return String.format("token %s is invalid, marked by validator %s", accessToken.getId(), validator.getClass());
   }
-  
+
 }

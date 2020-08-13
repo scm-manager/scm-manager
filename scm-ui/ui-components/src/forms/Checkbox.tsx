@@ -35,6 +35,7 @@ type Props = {
   title?: string;
   disabled?: boolean;
   helpText?: string;
+  testId?: string;
 };
 
 export default class Checkbox extends React.Component<Props> {
@@ -59,7 +60,7 @@ export default class Checkbox extends React.Component<Props> {
   };
 
   render() {
-    const { label, checked, indeterminate, disabled } = this.props;
+    const { label, checked, indeterminate, disabled, testId } = this.props;
     return (
       <div className="field">
         {this.renderLabelWithHelp()}
@@ -70,7 +71,7 @@ export default class Checkbox extends React.Component<Props> {
             but bulma does.
             // @ts-ignore */}
           <label className="checkbox" disabled={disabled}>
-            <TriStateCheckbox checked={checked} indeterminate={indeterminate} disabled={disabled} />
+            <TriStateCheckbox checked={checked} indeterminate={indeterminate} disabled={disabled} testId={testId} />
             {label}
             {this.renderHelp()}
           </label>

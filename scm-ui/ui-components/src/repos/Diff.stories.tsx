@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { useEffect, useState } from "react";
+import React, { ReactNode, useEffect, useState } from "react";
 import { storiesOf } from "@storybook/react";
 import Diff from "./Diff";
 // @ts-ignore
@@ -29,11 +29,15 @@ import parser from "gitdiff-parser";
 import simpleDiff from "../__resources__/Diff.simple";
 import hunksDiff from "../__resources__/Diff.hunks";
 import binaryDiff from "../__resources__/Diff.binary";
-import { DiffEventContext, File } from "./DiffTypes";
+import { DiffEventContext, File, FileControlFactory } from "./DiffTypes";
 import Toast from "../toast/Toast";
 import { getPath } from "./diffs";
 import DiffButton from "./DiffButton";
 import styled from "styled-components";
+import { MemoryRouter } from "react-router-dom";
+import { one, two } from "../__resources__/changesets";
+import { Changeset } from "@scm-manager/ui-types";
+import JumpToFileButton from "./JumpToFileButton";
 
 const diffFiles = parser.parse(simpleDiff);
 
@@ -41,11 +45,46 @@ const Container = styled.div`
   padding: 2rem 6rem;
 `;
 
+const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
+
+const fileControlFactory: (changeset: Changeset) => FileControlFactory = changeset => file => {
+  const baseUrl = "/repo/hitchhiker/heartOfGold/code/changeset";
+  const sourceLink = {
+    url: `${baseUrl}/${changeset.id}/${file.newPath}/`,
+    label: "Jump to source"
+  };
+  const targetLink = changeset._embedded?.parents?.length === 1 && {
+    url: `${baseUrl}/${changeset._embedded.parents[0].id}/${file.oldPath}`,
+    label: "Jump to target"
+  };
+
+  const links = [];
+  switch (file.type) {
+    case "add":
+      links.push(sourceLink);
+      break;
+    case "delete":
+      if (targetLink) {
+        links.push(targetLink);
+      }
+      break;
+    default:
+      if (targetLink) {
+        links.push(sourceLink, targetLink);
+      } else {
+        links.push(sourceLink);
+      }
+  }
+
+  return links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />);
+};
+
 storiesOf("Diff", module)
+  .addDecorator(RoutingDecorator)
   .addDecorator(storyFn => <Container>{storyFn()}</Container>)
   .add("Default", () => <Diff diff={diffFiles} />)
   .add("Side-By-Side", () => <Diff diff={diffFiles} sideBySide={true} />)
-  .add("Collapsed", () => <Diff diff={diffFiles} defaultCollapse={true} />)
+  .add("Collapsed", () => <Diff diff={diffFiles} defaultCollapse={true} fileControlFactory={fileControlFactory(two)} />)
   .add("File Controls", () => (
     <Diff
       diff={diffFiles}
@@ -121,4 +160,5 @@ storiesOf("Diff", module)
       return file;
     });
     return <Diff diff={filesWithLanguage} />;
-  });
+  })
+  .add("WithLinkToFile", () => <Diff diff={diffFiles} />);

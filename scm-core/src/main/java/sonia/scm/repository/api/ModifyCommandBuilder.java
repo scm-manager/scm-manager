@@ -165,6 +165,16 @@ public class ModifyCommandBuilder {
   }
 
   /**
+   * Disables adding a verifiable signature to the modification commit.
+   * @return This builder instance.
+   * @since 2.4.0
+   */
+  public ModifyCommandBuilder disableSigning() {
+    request.setSign(false);
+    return this;
+  }
+
+  /**
    * Set the expected revision of the branch, before the changes are applied. If the branch does not have the
    * expected revision, a concurrent modification exception will be thrown when the command is executed and no
    * changes will be applied.

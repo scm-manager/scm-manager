@@ -34,6 +34,7 @@ import org.eclipse.jgit.transport.ReceiveCommand;
 import org.eclipse.jgit.transport.ReceivePack;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.spi.GitHookContextProvider;
@@ -66,9 +67,10 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    * @param hookEventFacade
    * @param handler
    */
-  public GitReceiveHook(HookEventFacade hookEventFacade,
-    GitRepositoryHandler handler)
+  public GitReceiveHook(GitChangesetConverterFactory converterFactory, HookEventFacade hookEventFacade,
+                        GitRepositoryHandler handler)
   {
+    this.converterFactory = converterFactory;
     this.hookEventFacade = hookEventFacade;
     this.handler = handler;
   }
@@ -122,7 +124,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
 
       logger.trace("resolved repository to {}", repositoryId);
 
-      GitHookContextProvider context = new GitHookContextProvider(rpack, receiveCommands, repository, repositoryId);
+      GitHookContextProvider context = new GitHookContextProvider(converterFactory, rpack, receiveCommands, repository, repositoryId);
 
       hookEventFacade.handle(repositoryId).fireHookEvent(type, context);
 
@@ -187,6 +189,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   /** Field description */
   private GitRepositoryHandler handler;
 
+  private final GitChangesetConverterFactory converterFactory;
   /** Field description */
   private HookEventFacade hookEventFacade;
 }

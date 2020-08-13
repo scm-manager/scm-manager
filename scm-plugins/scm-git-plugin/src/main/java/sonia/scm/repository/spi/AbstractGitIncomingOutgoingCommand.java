@@ -36,6 +36,7 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverter;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
@@ -58,18 +59,10 @@ public abstract class AbstractGitIncomingOutgoingCommand
   /** Field description */
   private static final String REMOTE_REF_PREFIX = "refs/remote/scm/%s/";
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *  @param handler
-   * @param context
-   */
-  AbstractGitIncomingOutgoingCommand(GitRepositoryHandler handler, GitContext context)
-  {
+  AbstractGitIncomingOutgoingCommand(GitContext context, GitRepositoryHandler handler, GitChangesetConverterFactory converterFactory) {
     super(context);
     this.handler = handler;
+    this.converterFactory = converterFactory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -132,7 +125,7 @@ public abstract class AbstractGitIncomingOutgoingCommand
       try
       {
         walk = new RevWalk(git.getRepository());
-        converter = new GitChangesetConverter(git.getRepository(), walk);
+        converter = converterFactory.create(git.getRepository(), walk);
 
         org.eclipse.jgit.api.LogCommand log = git.log();
 
@@ -203,4 +196,5 @@ public abstract class AbstractGitIncomingOutgoingCommand
 
   /** Field description */
   private GitRepositoryHandler handler;
+  private final GitChangesetConverterFactory converterFactory;
 }

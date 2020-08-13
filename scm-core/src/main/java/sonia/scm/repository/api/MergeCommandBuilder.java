@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import com.google.common.base.Preconditions;
@@ -134,6 +134,16 @@ public class MergeCommandBuilder {
    */
   public MergeCommandBuilder setAuthor(Person author) {
     request.setAuthor(author);
+    return this;
+  }
+
+  /**
+   * Disables adding a verifiable signature to the merge commit.
+   * @return This builder instance.
+   * @since 2.4.0
+   */
+  public MergeCommandBuilder disableSigning() {
+    request.setSign(false);
     return this;
   }
 

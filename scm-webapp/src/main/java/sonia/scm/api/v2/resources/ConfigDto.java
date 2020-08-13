@@ -29,6 +29,7 @@ import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import sonia.scm.security.AnonymousMode;
 
 import java.util.Set;
 
@@ -46,6 +47,7 @@ public class ConfigDto extends HalRepresentation {
   private boolean disableGroupingGrid;
   private String dateFormat;
   private boolean anonymousAccessEnabled;
+  private AnonymousMode anonymousMode;
   private String baseUrl;
   private boolean forceBaseUrl;
   private int loginAttemptLimit;

@@ -26,7 +26,7 @@ import { Trans, useTranslation, WithTranslation, withTranslation } from "react-i
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Changeset, Repository, Tag, ParentChangeset } from "@scm-manager/ui-types";
+import { Changeset, ParentChangeset, Repository, Tag } from "@scm-manager/ui-types";
 import {
   AvatarImage,
   AvatarWrapper,
@@ -38,15 +38,17 @@ import {
   changesets,
   ChangesetTag,
   DateFromNow,
-  Level,
-  Icon
+  Icon,
+  Level
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
 import { Link as ReactLink } from "react-router-dom";
+import { FileControlFactory, SignatureIcon } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   changeset: Changeset;
   repository: Repository;
+  fileControlFactory?: FileControlFactory;
 };
 
 type State = {
@@ -63,6 +65,10 @@ const TagsWrapper = styled.div`
   }
 `;
 
+const SignedIcon = styled(SignatureIcon)`
+  padding-left: 1rem;
+`;
+
 const BottomMarginLevel = styled(Level)`
   margin-bottom: 1rem !important;
 `;
@@ -73,6 +79,11 @@ const countContributors = (changeset: Changeset) => {
   }
   return 1;
 };
+
+const FlexRow = styled.div`
+  display: flex;
+  flex-direction: row;
+`;
 
 const ContributorLine = styled.div`
   display: flex;
@@ -120,22 +131,31 @@ const SeparatedParents = styled.div`
 const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
   const [t] = useTranslation("repos");
   const [open, setOpen] = useState(false);
+  const signatureIcon = changeset?.signatures && changeset.signatures.length > 0 && (
+    <SignatureIcon className="mx-2" signatures={changeset.signatures} />
+  );
+
   if (open) {
     return (
       <ContributorDetails>
-        <ContributorToggleLine onClick={e => setOpen(!open)}>
-          <Icon name="angle-down" /> {t("changeset.contributors.list")}
-        </ContributorToggleLine>
+        <FlexRow>
+          <ContributorToggleLine onClick={e => setOpen(!open)} className="is-ellipsis-overflow">
+            <Icon name="angle-down" /> {t("changeset.contributors.list")}
+          </ContributorToggleLine>
+          {signatureIcon}
+        </FlexRow>
         <ContributorTable changeset={changeset} />
       </ContributorDetails>
     );
   }
+
   return (
     <>
       <ContributorLine onClick={e => setOpen(!open)}>
-        <ContributorColumn>
+        <ContributorColumn className="is-ellipsis-overflow">
           <Icon name="angle-right" /> <ChangesetAuthor changeset={changeset} />
         </ContributorColumn>
+        {signatureIcon}
         <CountColumn className={"is-hidden-mobile"}>
           (
           <span className="has-text-link">
@@ -157,7 +177,7 @@ class ChangesetDetails extends React.Component<Props, State> {
   }
 
   render() {
-    const { changeset, repository, t } = this.props;
+    const { changeset, repository, fileControlFactory, t } = this.props;
     const { collapsed } = this.state;
 
     const description = changesets.parseDescription(changeset.description);
@@ -190,9 +210,9 @@ class ChangesetDetails extends React.Component<Props, State> {
                 <AvatarImage person={changeset.author} />
               </RightMarginP>
             </AvatarWrapper>
-            <div className="media-content is-ellipsis-overflow">
+            <div className="media-content">
               <Contributors changeset={changeset} />
-              <ChangesetSummary>
+              <ChangesetSummary className="is-ellipsis-overflow">
                 <p>
                   <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
                 </p>
@@ -238,7 +258,7 @@ class ChangesetDetails extends React.Component<Props, State> {
               />
             }
           />
-          <ChangesetDiff changeset={changeset} defaultCollapse={collapsed} />
+          <ChangesetDiff changeset={changeset} fileControlFactory={fileControlFactory} defaultCollapse={collapsed} />
         </div>
       </>
     );

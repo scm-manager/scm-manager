@@ -31,6 +31,8 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.ChangesetPagingResult;
+import sonia.scm.repository.GitChangesetConverterFactory;
+import sonia.scm.repository.GitTestHelper;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.IOException;
@@ -151,6 +153,10 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
    */
   private GitOutgoingCommand createCommand()
   {
-    return new GitOutgoingCommand(handler, new GitContext(outgoingDirectory, outgoingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())));
+    return new GitOutgoingCommand(
+      new GitContext(outgoingDirectory, outgoingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())),
+      handler,
+      GitTestHelper.createConverterFactory()
+    );
   }
 }

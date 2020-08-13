@@ -29,6 +29,8 @@ import sonia.scm.SCMContext;
 
 public class Authentications {
 
+  private Authentications() {}
+
   public static boolean isAuthenticatedSubjectAnonymous() {
     return isSubjectAnonymous((String) SecurityUtils.getSubject().getPrincipal());
   }

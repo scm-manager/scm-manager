@@ -133,6 +133,7 @@ class Admin extends React.Component<Props> {
                   icon="fas fa-info-circle"
                   label={t("admin.menu.informationNavLink")}
                   title={t("admin.menu.informationNavLink")}
+                  testId="admin-information-link"
                 />
                 {(availablePluginsLink || installedPluginsLink) && (
                   <SubNavigation
@@ -140,12 +141,21 @@ class Admin extends React.Component<Props> {
                     icon="fas fa-puzzle-piece"
                     label={t("plugins.menu.pluginsNavLink")}
                     title={t("plugins.menu.pluginsNavLink")}
+                    testId="admin-plugins-link"
                   >
                     {installedPluginsLink && (
-                      <NavLink to={`${url}/plugins/installed/`} label={t("plugins.menu.installedNavLink")} />
+                      <NavLink
+                        to={`${url}/plugins/installed/`}
+                        label={t("plugins.menu.installedNavLink")}
+                        testId="admin-installed-plugins-link"
+                      />
                     )}
                     {availablePluginsLink && (
-                      <NavLink to={`${url}/plugins/available/`} label={t("plugins.menu.availableNavLink")} />
+                      <NavLink
+                        to={`${url}/plugins/available/`}
+                        label={t("plugins.menu.availableNavLink")}
+                        testId="admin-available-plugins-link"
+                      />
                     )}
                   </SubNavigation>
                 )}
@@ -154,6 +164,7 @@ class Admin extends React.Component<Props> {
                   icon="fas fa-user-shield"
                   label={t("repositoryRole.navLink")}
                   title={t("repositoryRole.navLink")}
+                  testId="admin-repository-role-link"
                   activeWhenMatch={this.matchesRoles}
                   activeOnlyWhenExact={false}
                 />
@@ -162,8 +173,13 @@ class Admin extends React.Component<Props> {
                   to={`${url}/settings/general`}
                   label={t("admin.menu.settingsNavLink")}
                   title={t("admin.menu.settingsNavLink")}
+                  testId="admin-settings-link"
                 >
-                  <NavLink to={`${url}/settings/general`} label={t("admin.menu.generalNavLink")} />
+                  <NavLink
+                    to={`${url}/settings/general`}
+                    label={t("admin.menu.generalNavLink")}
+                    testId="admin-settings-general-link"
+                  />
                   <ExtensionPoint name="admin.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
               </SecondaryNavigation>

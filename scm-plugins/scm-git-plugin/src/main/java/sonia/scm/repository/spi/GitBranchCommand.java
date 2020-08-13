@@ -43,6 +43,7 @@ import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.HookFeature;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Set;
@@ -57,6 +58,7 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
   private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
 
+  @Inject
   GitBranchCommand(GitContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
     super(context);
     this.hookContextFactory = hookContextFactory;

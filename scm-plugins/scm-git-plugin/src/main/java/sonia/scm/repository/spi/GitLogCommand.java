@@ -36,10 +36,12 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.GitChangesetConverter;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.util.IOUtil;
 
+import javax.inject.Inject;
 import java.io.IOException;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -60,6 +62,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
   private static final Logger logger =
     LoggerFactory.getLogger(GitLogCommand.class);
   public static final String REVISION = "Revision";
+  private final GitChangesetConverterFactory converterFactory;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -70,9 +73,11 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
    *  @param context
    *
    */
-  GitLogCommand(GitContext context)
+  @Inject
+  GitLogCommand(GitContext context, GitChangesetConverterFactory converterFactory)
   {
     super(context);
+    this.converterFactory = converterFactory;
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -110,7 +115,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
 
         if (commit != null)
         {
-          converter = new GitChangesetConverter(gr, revWalk);
+          converter = converterFactory.create(gr, revWalk);
 
           if (isBranchRequested(request)) {
             String branch = request.getBranch();
@@ -177,7 +182,7 @@ public class GitLogCommand extends AbstractGitCommand implements LogCommand
       if (Strings.isNullOrEmpty(request.getBranch())) {
         request.setBranch(context.getConfig().getDefaultBranch());
       }
-      return new GitLogComputer(this.repository.getId(), gitRepository).compute(request);
+      return new GitLogComputer(this.repository.getId(), gitRepository, converterFactory).compute(request);
     } catch (IOException e) {
       throw new InternalRepositoryException(repository, "could not create change log", e);
     }

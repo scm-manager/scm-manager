@@ -41,11 +41,13 @@ import {
 import { Details } from "./../components/table";
 import EditUser from "./EditUser";
 import { fetchUserByName, getFetchUserFailure, getUserByName, isFetchUserPending } from "../modules/users";
-import { EditUserNavLink, SetPasswordNavLink, SetPermissionsNavLink } from "./../components/navLinks";
+import { EditUserNavLink, SetPasswordNavLink, SetPermissionsNavLink, SetPublicKeysNavLink } from "./../components/navLinks";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { getUsersLink } from "../../modules/indexResource";
 import SetUserPassword from "../components/SetUserPassword";
 import SetPermissions from "../../permissions/components/SetPermissions";
+import AddPublicKey from "../components/publicKeys/AddPublicKey";
+import SetPublicKeys from "../components/publicKeys/SetPublicKeys";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -105,6 +107,10 @@ class SingleUser extends React.Component<Props> {
                 path={`${url}/settings/permissions`}
                 component={() => <SetPermissions selectedPermissionsLink={user._links.permissions} />}
               />
+              <Route
+                path={`${url}/settings/publickeys`}
+                component={() => <SetPublicKeys user={user} />}
+              />
               <ExtensionPoint name="user.route" props={extensionProps} renderAll={true} />
             </PrimaryContentColumn>
             <SecondaryNavigationColumn>
@@ -114,15 +120,18 @@ class SingleUser extends React.Component<Props> {
                   icon="fas fa-info-circle"
                   label={t("singleUser.menu.informationNavLink")}
                   title={t("singleUser.menu.informationNavLink")}
+                  testId="user-information-link"
                 />
                 <SubNavigation
                   to={`${url}/settings/general`}
                   label={t("singleUser.menu.settingsNavLink")}
                   title={t("singleUser.menu.settingsNavLink")}
+                  testId="user-settings-link"
                 >
                   <EditUserNavLink user={user} editUrl={`${url}/settings/general`} />
                   <SetPasswordNavLink user={user} passwordUrl={`${url}/settings/password`} />
                   <SetPermissionsNavLink user={user} permissionsUrl={`${url}/settings/permissions`} />
+                  <SetPublicKeysNavLink user={user} publicKeyUrl={`${url}/settings/publickeys`} />
                   <ExtensionPoint name="user.setting" props={extensionProps} renderAll={true} />
                 </SubNavigation>
               </SecondaryNavigation>

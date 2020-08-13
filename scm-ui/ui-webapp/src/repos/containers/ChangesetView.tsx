@@ -35,11 +35,13 @@ import {
   isFetchChangesetPending
 } from "../modules/changesets";
 import ChangesetDetails from "../components/changesets/ChangesetDetails";
+import { FileControlFactory } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   id: string;
   changeset: Changeset;
   repository: Repository;
+  fileControlFactoryFactory?: (changeset: Changeset) => FileControlFactory;
   loading: boolean;
   error: Error;
   fetchChangesetIfNeeded: (repository: Repository, id: string) => void;
@@ -60,7 +62,7 @@ class ChangesetView extends React.Component<Props> {
   }
 
   render() {
-    const { changeset, loading, error, t, repository } = this.props;
+    const { changeset, loading, error, t, repository, fileControlFactoryFactory } = this.props;
 
     if (error) {
       return <ErrorPage title={t("changesets.errorTitle")} subtitle={t("changesets.errorSubtitle")} error={error} />;
@@ -68,7 +70,13 @@ class ChangesetView extends React.Component<Props> {
 
     if (!changeset || loading) return <Loading />;
 
-    return <ChangesetDetails changeset={changeset} repository={repository} />;
+    return (
+      <ChangesetDetails
+        changeset={changeset}
+        repository={repository}
+        fileControlFactory={fileControlFactoryFactory && fileControlFactoryFactory(changeset)}
+      />
+    );
   }
 }
 

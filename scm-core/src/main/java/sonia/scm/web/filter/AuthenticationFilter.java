@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -36,7 +36,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.AnonymousToken;
+import sonia.scm.security.TokenExpiredException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.WebTokenGenerator;
@@ -48,8 +50,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * Handles authentication, if a one of the {@link WebTokenGenerator} returns
  * an {@link AuthenticationToken}.
@@ -58,25 +58,22 @@ import java.util.Set;
  * @since 2.0.0
  */
 @Singleton
-public class AuthenticationFilter extends HttpFilter
-{
+public class AuthenticationFilter extends HttpFilter {
 
-  /** marker for failed authentication */
+  private static final Logger logger = LoggerFactory.getLogger(AuthenticationFilter.class);
+
+  /**
+   * marker for failed authentication
+   */
   private static final String ATTRIBUTE_FAILED_AUTH = "sonia.scm.auth.failed";
 
-  /** Field description */
-  private static final String HEADER_AUTHORIZATION = "Authorization";
-
-  /** the logger for AuthenticationFilter */
-  private static final Logger logger =
-    LoggerFactory.getLogger(AuthenticationFilter.class);
-
-  //~--- constructors ---------------------------------------------------------
+  private final Set<WebTokenGenerator> tokenGenerators;
+  protected ScmConfiguration configuration;
 
   /**
    * Constructs a new basic authenticaton filter.
    *
-   * @param configuration scm-manager global configuration
+   * @param configuration   scm-manager global configuration
    * @param tokenGenerators web token generators
    */
   @Inject
@@ -85,47 +82,35 @@ public class AuthenticationFilter extends HttpFilter
     this.tokenGenerators = tokenGenerators;
   }
 
-  //~--- methods --------------------------------------------------------------
-
   /**
    * Handles authentication, if a one of the {@link WebTokenGenerator} returns
    * an {@link AuthenticationToken}.
    *
-   * @param request servlet request
+   * @param request  servlet request
    * @param response servlet response
-   * @param chain filter chain
-   *
+   * @param chain    filter chain
    * @throws IOException
    * @throws ServletException
    */
   @Override
-  protected void doFilter(HttpServletRequest request,
-    HttpServletResponse response, FilterChain chain)
-    throws IOException, ServletException
-  {
+  protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    throws IOException, ServletException {
     Subject subject = SecurityUtils.getSubject();
 
     AuthenticationToken token = createToken(request);
 
-    if (token != null)
-    {
+    if (token != null) {
       logger.trace(
         "found authentication token on request, start authentication");
       handleAuthentication(request, response, chain, subject, token);
-    }
-    else if (subject.isAuthenticated())
-    {
+    } else if (subject.isAuthenticated()) {
       logger.trace("user is already authenticated");
       processChain(request, response, chain, subject);
-    }
-    else if (isAnonymousAccessEnabled() && !HttpUtil.isWUIRequest(request))
-    {
+    } else if (isAnonymousAccessEnabled()) {
       logger.trace("anonymous access granted");
       subject.login(new AnonymousToken());
       processChain(request, response, chain, subject);
-    }
-    else
-    {
+    } else {
       logger.trace("could not find user send unauthorized");
       handleUnauthorized(request, response, chain);
     }
@@ -135,28 +120,22 @@ public class AuthenticationFilter extends HttpFilter
    * Sends status code 403 back to client, if the authentication has failed.
    * In all other cases the method will send status code 403 back to client.
    *
-   * @param request servlet request
+   * @param request  servlet request
    * @param response servlet response
-   * @param chain filter chain
-   *
+   * @param chain    filter chain
    * @throws IOException
    * @throws ServletException
-   *
    * @since 1.8
    */
   protected void handleUnauthorized(HttpServletRequest request,
-    HttpServletResponse response, FilterChain chain)
-    throws IOException, ServletException
-  {
+                                    HttpServletResponse response, FilterChain chain)
+    throws IOException, ServletException {
 
     // send only forbidden, if the authentication has failed.
     // see https://bitbucket.org/sdorra/scm-manager/issue/545/git-clone-with-username-in-url-does-not
-    if (Boolean.TRUE.equals(request.getAttribute(ATTRIBUTE_FAILED_AUTH)))
-    {
+    if (Boolean.TRUE.equals(request.getAttribute(ATTRIBUTE_FAILED_AUTH))) {
       sendFailedAuthenticationError(request, response);
-    }
-    else
-    {
+    } else {
       sendUnauthorizedError(request, response);
     }
   }
@@ -164,16 +143,13 @@ public class AuthenticationFilter extends HttpFilter
   /**
    * Sends an error for a failed authentication back to client.
    *
-   *
-   * @param request http request
+   * @param request  http request
    * @param response http response
-   *
    * @throws IOException
    */
   protected void sendFailedAuthenticationError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
-  {
+                                               HttpServletResponse response)
+    throws IOException {
     HttpUtil.sendUnauthorized(request, response,
       configuration.getRealmDescription());
   }
@@ -181,38 +157,27 @@ public class AuthenticationFilter extends HttpFilter
   /**
    * Sends an unauthorized error back to client.
    *
-   *
-   * @param request http request
+   * @param request  http request
    * @param response http response
-   *
    * @throws IOException
    */
-  protected void sendUnauthorizedError(HttpServletRequest request,
-    HttpServletResponse response)
-    throws IOException
-  {
-    HttpUtil.sendUnauthorized(request, response,
-      configuration.getRealmDescription());
+  protected void sendUnauthorizedError(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    HttpUtil.sendUnauthorized(request, response, configuration.getRealmDescription());
   }
 
   /**
    * Iterates all {@link WebTokenGenerator} and creates an
    * {@link AuthenticationToken} from the given request.
    *
-   *
    * @param request http servlet request
-   *
    * @return authentication token of {@code null}
    */
-  private AuthenticationToken createToken(HttpServletRequest request)
-  {
+  private AuthenticationToken createToken(HttpServletRequest request) {
     AuthenticationToken token = null;
-    for (WebTokenGenerator generator : tokenGenerators)
-    {
+    for (WebTokenGenerator generator : tokenGenerators) {
       token = generator.createToken(request);
 
-      if (token != null)
-      {
+      if (token != null) {
         logger.trace("generated web token {} from generator {}",
           token.getClass(), generator.getClass());
 
@@ -226,30 +191,31 @@ public class AuthenticationFilter extends HttpFilter
   /**
    * Handle authentication with the given {@link AuthenticationToken}.
    *
-   *
-   * @param request http servlet request
+   * @param request  http servlet request
    * @param response http servlet response
-   * @param chain filter chain
-   * @param subject subject
-   * @param token authentication token
-   *
+   * @param chain    filter chain
+   * @param subject  subject
+   * @param token    authentication token
    * @throws IOException
    * @throws ServletException
    */
   private void handleAuthentication(HttpServletRequest request,
-    HttpServletResponse response, FilterChain chain, Subject subject,
-    AuthenticationToken token)
-    throws IOException, ServletException
-  {
+                                    HttpServletResponse response, FilterChain chain, Subject subject,
+                                    AuthenticationToken token)
+    throws IOException, ServletException {
     logger.trace("found basic authorization header, start authentication");
 
-    try
-    {
+    try {
       subject.login(token);
       processChain(request, response, chain, subject);
-    }
-    catch (AuthenticationException ex)
-    {
+    } catch (TokenExpiredException ex) {
+      if (logger.isTraceEnabled()) {
+        logger.trace("{} expired", token.getClass(), ex);
+      } else {
+        logger.debug("{} expired", token.getClass());
+      }
+      handleUnauthorized(request, response, chain);
+    } catch (AuthenticationException ex) {
       logger.warn("authentication failed", ex);
       handleUnauthorized(request, response, chain);
     }
@@ -258,33 +224,26 @@ public class AuthenticationFilter extends HttpFilter
   /**
    * Process the filter chain.
    *
-   *
-   * @param request http servlet request
+   * @param request  http servlet request
    * @param response http servlet response
-   * @param chain filter chain
-   * @param subject subject
-   *
+   * @param chain    filter chain
+   * @param subject  subject
    * @throws IOException
    * @throws ServletException
    */
   private void processChain(HttpServletRequest request,
-    HttpServletResponse response, FilterChain chain, Subject subject)
-    throws IOException, ServletException
-  {
+                            HttpServletResponse response, FilterChain chain, Subject subject)
+    throws IOException, ServletException {
     String username = Util.EMPTY_STRING;
 
-    if (!subject.isAuthenticated())
-    {
+    if (!subject.isAuthenticated()) {
 
       // anonymous access
       username = SCMContext.USER_ANONYMOUS;
-    }
-    else
-    {
+    } else {
       Object obj = subject.getPrincipal();
 
-      if (obj != null)
-      {
+      if (obj != null) {
         username = obj.toString();
       }
     }
@@ -293,24 +252,12 @@ public class AuthenticationFilter extends HttpFilter
       response);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Returns {@code true} if anonymous access is enabled.
    *
-   *
    * @return {@code true} if anonymous access is enabled
    */
-  private boolean isAnonymousAccessEnabled()
-  {
-    return (configuration != null) && configuration.isAnonymousAccessEnabled();
+  private boolean isAnonymousAccessEnabled() {
+    return (configuration != null) && configuration.getAnonymousMode() != AnonymousMode.OFF;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** set of web token generators */
-  private final Set<WebTokenGenerator> tokenGenerators;
-
-  /** scm main configuration */
-  protected ScmConfiguration configuration;
 }

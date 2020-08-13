@@ -23,21 +23,21 @@
  */
 import React from "react";
 import { connect } from "react-redux";
-import { Redirect, Route, Switch, RouteComponentProps } from "react-router-dom";
+import { Redirect, Route, RouteComponentProps, Switch } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository } from "@scm-manager/ui-types";
+import { Changeset, Repository } from "@scm-manager/ui-types";
 import {
+  CustomQueryFlexWrappedColumns,
   ErrorPage,
   Loading,
   NavLink,
   Page,
-  CustomQueryFlexWrappedColumns,
   PrimaryContentColumn,
-  SecondaryNavigationColumn,
   SecondaryNavigation,
-  SubNavigation,
-  StateMenuContextProvider
+  SecondaryNavigationColumn,
+  StateMenuContextProvider,
+  SubNavigation
 } from "@scm-manager/ui-components";
 import { fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending } from "../modules/repos";
 import RepositoryDetails from "../components/RepositoryDetails";
@@ -53,6 +53,7 @@ import { getLinks, getRepositoriesLink } from "../../modules/indexResource";
 import CodeOverview from "../codeSection/containers/CodeOverview";
 import ChangesetView from "./ChangesetView";
 import SourceExtensions from "../sources/containers/SourceExtensions";
+import { FileControlFactory, JumpToFileButton } from "@scm-manager/ui-components";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -117,7 +118,7 @@ class RepositoryRoot extends React.Component<Props> {
 
   evaluateDestinationForCodeLink = () => {
     const { repository } = this.props;
-    let url = `${this.matchedUrl()}/code`;
+    const url = `${this.matchedUrl()}/code`;
     if (repository?._links?.sources) {
       return `${url}/sources/`;
     }
@@ -153,6 +154,38 @@ class RepositoryRoot extends React.Component<Props> {
       redirectedUrl = url + "/info";
     }
 
+    const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = changeset => file => {
+      const baseUrl = `${url}/code/sources`;
+      const sourceLink = {
+        url: `${baseUrl}/${changeset.id}/${file.newPath}/`,
+        label: t("diff.jumpToSource")
+      };
+      const targetLink = changeset._embedded?.parents?.length === 1 && {
+        url: `${baseUrl}/${changeset._embedded.parents[0].id}/${file.oldPath}`,
+        label: t("diff.jumpToTarget")
+      };
+
+      const links = [];
+      switch (file.type) {
+        case "add":
+          links.push(sourceLink);
+          break;
+        case "delete":
+          if (targetLink) {
+            links.push(targetLink);
+          }
+          break;
+        default:
+          if (targetLink) {
+            links.push(targetLink, sourceLink); // Target link first because its the previous file
+          } else {
+            links.push(sourceLink);
+          }
+      }
+
+      return links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />);
+    };
+
     return (
       <StateMenuContextProvider>
         <Page
@@ -182,7 +215,9 @@ class RepositoryRoot extends React.Component<Props> {
                 <Route
                   exact
                   path={`${url}/code/changeset/:id`}
-                  render={() => <ChangesetView repository={repository} />}
+                  render={() => (
+                    <ChangesetView repository={repository} fileControlFactoryFactory={fileControlFactoryFactory} />
+                  )}
                 />
                 <Route
                   path={`${url}/code/sourceext/:extension`}

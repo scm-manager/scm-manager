@@ -32,6 +32,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitChangesetConverter;
+import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.client.api.RepositoryClientException;
 
 import java.io.IOException;
@@ -46,7 +47,7 @@ public class GitMergeCommand implements MergeCommand {
 
   @Override
   public Changeset merge(MergeRequest request) throws IOException {
-    try (GitChangesetConverter converter = new GitChangesetConverter(git.getRepository())) {
+    try (GitChangesetConverter converter = GitTestHelper.createConverterFactory().create(git.getRepository())) {
       ObjectId resolved = git.getRepository().resolve(request.getBranch());
       org.eclipse.jgit.api.MergeCommand mergeCommand = git.merge()
         .include(request.getBranch(), resolved)

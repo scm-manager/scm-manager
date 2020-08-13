@@ -57,6 +57,7 @@ import sonia.scm.store.BlobStore;
 import sonia.scm.util.Util;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
+import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -110,6 +111,11 @@ public class GitBrowseCommand extends AbstractGitCommand
   private ObjectId revId;
 
   private int resultCount = 0;
+
+  @Inject
+  public GitBrowseCommand(GitContext context, LfsBlobStoreFactory lfsBlobStoreFactory, SyncAsyncExecutorProvider executorProvider) {
+    this(context, lfsBlobStoreFactory, executorProvider.createExecutorWithDefaultTimeout());
+  }
 
   public GitBrowseCommand(GitContext context, LfsBlobStoreFactory lfsBlobStoreFactory, SyncAsyncExecutor executor) {
     super(context);

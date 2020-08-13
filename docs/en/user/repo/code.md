@@ -17,6 +17,8 @@ The changesets/commits overview shows the change history of the branch. Each ent
 
 The Details button leads to the content/changes of a changeset.
 
+The key icon shows if the changeset was signed. The users can add their public keys to SCM-Manager for signature verification. The green key means that the signature could be verified successfully against an existing public key. The grey key shows that no matching key could be found for the signature. The red key warns you about an invalid (possible faked) signature.
+
 The Sources button leads to the sources overview that shows the state from after this commit.
 
 ![Repository-Code-Changesets](assets/repository-code-changesetsView.png)

@@ -44,6 +44,7 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.PullResponse;
 
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -73,6 +74,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
    *  @param handler
    * @param context
    */
+  @Inject
   public GitPullCommand(GitRepositoryHandler handler, GitContext context)
   {
     super(handler, context);

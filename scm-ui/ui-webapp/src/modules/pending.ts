@@ -32,6 +32,7 @@ function removeFromState(state: object, identifier: string) {
   const newState = {};
   for (const childType in state) {
     if (childType !== identifier) {
+      // @ts-ignore Right types not available
       newState[childType] = state[childType];
     }
   }
@@ -42,6 +43,7 @@ function removeAllEntriesOfIdentifierFromState(state: object, payload: any, iden
   const newState = {};
   for (const childType in state) {
     if (childType !== identifier && !childType.startsWith(identifier)) {
+      // @ts-ignore Right types not available
       newState[childType] = state[childType];
     }
   }
@@ -92,6 +94,7 @@ export function isPending(state: object, actionType: string, itemId?: string | n
   if (itemId) {
     type += "/" + itemId;
   }
+  // @ts-ignore Right types not available
   if (state.pending && state.pending[type]) {
     return true;
   }

@@ -17,6 +17,8 @@ Die Übersicht der Changesets/Commits zeigt die Änderungshistorie je Branch an.
 
 Über den Details-Button kann man sich den Inhalt / die Änderungen dieses Changesets ansehen. 
 
+Der Schlüssel Icon zeigt an, ob ein Changeset signiert wurde. Um die Signatur zu validieren, können die Benutzer ihre öffentlichen Schlüssel (Public Keys) im SCM-Manager hinterlegen. Ein grüner Schlüssel bedeutet die Signatur konnte erfolgreich gegen einen hinterlegten öffentlichen Schlüssel im SCM-Manager verifiziert werden. Ein grauer Schlüssel heißt, dass die Signatur zu keinem Schlüssel im SCM-Manager passt. Und ein roter Schlüssel warnt vor einer ungültigen (möglicherweise gefälschten) Signatur.
+
 Über den Sources-Button gelangt man zur Sources-Übersicht und es wird der Datenstand zum Zeitpunkt nach diesem Commit angezeigt.
 
 ![Repository-Code-Changesets](assets/repository-code-changesetsView.png)
