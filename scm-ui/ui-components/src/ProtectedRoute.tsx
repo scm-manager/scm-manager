@@ -21,8 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { Component } from "react";
-import { Route, Redirect, withRouter, RouteComponentProps, RouteProps } from "react-router-dom";
+import React, {Component} from "react";
+import {connect} from "react-redux";
+import {Redirect, Route, RouteComponentProps, RouteProps, withRouter} from "react-router-dom";
+import {MissingLinkError} from "./errors";
+import ErrorPage from "./ErrorPage";
+import {compose} from "redux";
+import {withTranslation, WithTranslation} from "react-i18next";
 
 type Props = WithTranslation &
   RouteComponentProps &
@@ -31,11 +36,38 @@ type Props = WithTranslation &
   loginLink?: string;
 };
 
-class ProtectedRoute extends Component<Props> {
+type State = {
+  error: Error;
+}
+
+class ProtectedRoute extends Component<Props, State> {
+
+  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
+    if (error instanceof MissingLinkError) {
+      this.setState({
+        error
+      });
+    }
+  }
+
   renderRoute = (Component: any, authenticated?: boolean) => {
     const {loginLink, t} = this.props;
     return (routeProps: any) => {
-      if (authenticated) {
+      if (this.state.error) {
+        if (loginLink) {
+          return <Redirect
+            to={{
+              pathname: "/login",
+              state: {
+                from: routeProps.location
+              }
+            }}
+          />;
+        } else {
+          return <ErrorPage error={this.state.error} title={t("errorNotification.prefix")}
+                            subtitle={t("errorNotification.forbidden")}></ErrorPage>;
+        }
+      } else if (authenticated) {
         return <Component {...routeProps} />;
       } else {
         return (
@@ -65,4 +97,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export default withRouter(ProtectedRoute);
+export default compose(withRouter, connect(mapStateToProps), withTranslation("commons"))(ProtectedRoute);

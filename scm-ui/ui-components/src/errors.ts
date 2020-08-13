@@ -89,6 +89,10 @@ export class ConflictError extends BackendError {
   }
 }
 
+export class MissingLinkError extends Error {
+  name = "MissingLinkError";
+}
+
 export function createBackendError(content: BackendErrorContent, statusCode: number) {
   switch (statusCode) {
     case 404:
