@@ -22,25 +22,29 @@
  * SOFTWARE.
  */
 import React, {Component} from "react";
-import {connect} from "react-redux";
 import {Redirect, Route, RouteComponentProps, RouteProps, withRouter} from "react-router-dom";
 import {MissingLinkError} from "./errors";
 import ErrorPage from "./ErrorPage";
-import {compose} from "redux";
 import {withTranslation, WithTranslation} from "react-i18next";
 
 type Props = WithTranslation &
   RouteComponentProps &
   RouteProps & {
-  authenticated?: boolean;
-  loginLink?: string;
-};
+    authenticated?: boolean;
+    loginLink?: string;
+  };
 
 type State = {
-  error: Error;
-}
+  error?: Error;
+};
 
 class ProtectedRoute extends Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      error: undefined
+    };
+  }
 
   componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
     if (error instanceof MissingLinkError) {
@@ -51,21 +55,29 @@ class ProtectedRoute extends Component<Props, State> {
   }
 
   renderRoute = (Component: any, authenticated?: boolean) => {
-    const {loginLink, t} = this.props;
+    const { loginLink, t } = this.props;
+    const { error } = this.state;
     return (routeProps: any) => {
-      if (this.state.error) {
+      if (error) {
         if (loginLink) {
-          return <Redirect
-            to={{
-              pathname: "/login",
-              state: {
-                from: routeProps.location
-              }
-            }}
-          />;
+          return (
+            <Redirect
+              to={{
+                pathname: "/login",
+                state: {
+                  from: routeProps.location
+                }
+              }}
+            />
+          );
         } else {
-          return <ErrorPage error={this.state.error} title={t("errorNotification.prefix")}
-                            subtitle={t("errorNotification.forbidden")}></ErrorPage>;
+          return (
+            <ErrorPage
+              error={error}
+              title={t("errorNotification.prefix")}
+              subtitle={t("errorNotification.forbidden")}
+            />
+          );
         }
       } else if (authenticated) {
         return <Component {...routeProps} />;
@@ -85,16 +97,9 @@ class ProtectedRoute extends Component<Props, State> {
   };
 
   render() {
-    const {component, authenticated, ...routeProps} = this.props;
-    return <Route {...routeProps} render={this.renderRoute(component, authenticated)}/>;
+    const { component, authenticated, ...routeProps } = this.props;
+    return <Route {...routeProps} render={this.renderRoute(component, authenticated)} />;
   }
 }
 
-const mapStateToProps = (state: any) => {
-  const loginLink = state.indexResources.links["login"];
-  return {
-    loginLink
-  };
-};
-
-export default compose(withRouter, connect(mapStateToProps), withTranslation("commons"))(ProtectedRoute);
+export default withTranslation("commons")(withRouter(ProtectedRoute));
