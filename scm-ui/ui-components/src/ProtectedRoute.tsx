@@ -24,13 +24,16 @@
 import React, { Component } from "react";
 import { Route, Redirect, withRouter, RouteComponentProps, RouteProps } from "react-router-dom";
 
-type Props = RouteComponentProps &
+type Props = WithTranslation &
+  RouteComponentProps &
   RouteProps & {
-    authenticated?: boolean;
-  };
+  authenticated?: boolean;
+  loginLink?: string;
+};
 
 class ProtectedRoute extends Component<Props> {
   renderRoute = (Component: any, authenticated?: boolean) => {
+    const {loginLink, t} = this.props;
     return (routeProps: any) => {
       if (authenticated) {
         return <Component {...routeProps} />;
@@ -50,9 +53,16 @@ class ProtectedRoute extends Component<Props> {
   };
 
   render() {
-    const { component, authenticated, ...routeProps } = this.props;
-    return <Route {...routeProps} render={this.renderRoute(component, authenticated)} />;
+    const {component, authenticated, ...routeProps} = this.props;
+    return <Route {...routeProps} render={this.renderRoute(component, authenticated)}/>;
   }
 }
+
+const mapStateToProps = (state: any) => {
+  const loginLink = state.indexResources.links["login"];
+  return {
+    loginLink
+  };
+};
 
 export default withRouter(ProtectedRoute);
