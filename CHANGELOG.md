@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [2.4.0] - 2020-08-14
 ### Added
 - Introduced merge detection for receive hooks ([#1278](https://github.com/scm-manager/scm-manager/pull/1278))
 - Anonymous mode for the web ui ([#1284](https://github.com/scm-manager/scm-manager/pull/1284))
@@ -273,3 +273,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.2.0]: https://www.scm-manager.org/download/2.2.0
 [2.3.0]: https://www.scm-manager.org/download/2.3.0
 [2.3.1]: https://www.scm-manager.org/download/2.3.1
+[2.4.0]: https://www.scm-manager.org/download/2.4.0
