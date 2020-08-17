@@ -57,19 +57,22 @@ class ProtectedRoute extends Component<Props, State> {
   renderRoute = (Component: any, authenticated?: boolean) => {
     const { loginLink, t } = this.props;
     const { error } = this.state;
+
     return (routeProps: any) => {
+      const redirectToLogin = (
+        <Redirect
+          to={{
+            pathname: "/login",
+            state: {
+              from: routeProps.location
+            }
+          }}
+        />
+      );
+
       if (error) {
         if (loginLink) {
-          return (
-            <Redirect
-              to={{
-                pathname: "/login",
-                state: {
-                  from: routeProps.location
-                }
-              }}
-            />
-          );
+          return redirectToLogin;
         } else {
           return (
             <ErrorPage
@@ -82,16 +85,7 @@ class ProtectedRoute extends Component<Props, State> {
       } else if (authenticated) {
         return <Component {...routeProps} />;
       } else {
-        return (
-          <Redirect
-            to={{
-              pathname: "/login",
-              state: {
-                from: routeProps.location
-              }
-            }}
-          />
-        );
+        return redirectToLogin;
       }
     };
   };
