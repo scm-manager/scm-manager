@@ -38,7 +38,7 @@ import java.util.Optional;
 
 public class ScmAtLeastOneSuccessfulStrategy extends AbstractAuthenticationStrategy {
 
-  private final ThreadLocal<List<Throwable>> threadLocal = new ThreadLocal<>();
+  final ThreadLocal<List<Throwable>> threadLocal = new ThreadLocal<>();
 
   @Override
   public AuthenticationInfo beforeAllAttempts(Collection<? extends Realm> realms, AuthenticationToken token) throws AuthenticationException {

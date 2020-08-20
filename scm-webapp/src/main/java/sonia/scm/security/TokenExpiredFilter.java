@@ -48,7 +48,7 @@ import java.io.IOException;
 @Priority(Filters.PRIORITY_PRE_AUTHENTICATION)
 @Singleton
 public class TokenExpiredFilter extends HttpFilter {
-  private static final String TOKEN_EXPIRED_ERROR_CODE = "DDS8D8unr1";
+  static final String TOKEN_EXPIRED_ERROR_CODE = "DDS8D8unr1";
   private static final Logger LOG = LoggerFactory.getLogger(TokenExpiredFilter.class);
 
   private final AccessTokenCookieIssuer accessTokenCookieIssuer;

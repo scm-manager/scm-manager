@@ -23,7 +23,14 @@
  */
 
 import { contextPath } from "./urls";
-import { createBackendError, ForbiddenError, isBackendError, UnauthorizedError, BackendErrorContent } from "./errors";
+import {
+  createBackendError,
+  ForbiddenError,
+  isBackendError,
+  UnauthorizedError,
+  BackendErrorContent,
+  TOKEN_EXPIRED_ERROR_CODE
+} from "./errors";
 
 type SubscriptionEvent = {
   type: string;
@@ -120,8 +127,9 @@ function handleFailure(response: Response) {
   if (!response.ok) {
     if (isBackendError(response)) {
       return response.json().then((content: BackendErrorContent) => {
-        if (content.errorCode === "DDS8D8unr1") {
+        if (content.errorCode === TOKEN_EXPIRED_ERROR_CODE) {
           window.location.replace(`${contextPath}/login`);
+          // Throw error because if redirect is not instantaneous, we want to display something senseful
           throw new UnauthorizedError("Unauthorized", 401);
         } else {
           throw createBackendError(content, response.status);
