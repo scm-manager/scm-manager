@@ -51,6 +51,10 @@ public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIs
    * the logger for DefaultAccessTokenCookieIssuer
    */
   private static final Logger LOG = LoggerFactory.getLogger(DefaultAccessTokenCookieIssuer.class);
+
+  private static final int DEFAULT_COOKIE_EXPIRATION_AMOUNT = 24;
+  private static final TimeUnit DEFAULT_COOKIE_EXPIRATION_UNIT = TimeUnit.HOURS;
+  private static final int DEFAULT_COOKIE_EXPIRATION = (int) TimeUnit.SECONDS.convert(DEFAULT_COOKIE_EXPIRATION_AMOUNT, DEFAULT_COOKIE_EXPIRATION_UNIT);
   
   private final ScmConfiguration configuration;
 
@@ -75,7 +79,7 @@ public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIs
     LOG.trace("create and attach cookie for access token {}", accessToken.getId());
     Cookie c = new Cookie(HttpUtil.COOKIE_BEARER_AUTHENTICATION, accessToken.compact());
     c.setPath(contextPath(request));
-    c.setMaxAge(getMaxAge(accessToken));
+    c.setMaxAge(DEFAULT_COOKIE_EXPIRATION);
     c.setHttpOnly(isHttpOnly());
     c.setSecure(isSecure(request));
     
@@ -109,11 +113,6 @@ public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIs
       return "/";
     }
     return contextPath;
-  }
-  
-  private int getMaxAge(AccessToken accessToken){
-    long maxAgeMs = accessToken.getExpiration().getTime() - new Date().getTime();
-    return (int) TimeUnit.MILLISECONDS.toSeconds(maxAgeMs);
   }
   
   private boolean isSecure(HttpServletRequest request){

@@ -120,7 +120,12 @@ function handleFailure(response: Response) {
   if (!response.ok) {
     if (isBackendError(response)) {
       return response.json().then((content: BackendErrorContent) => {
-        throw createBackendError(content, response.status);
+        if (content.errorCode === "DDS8D8unr1") {
+          window.location.replace(`${contextPath}/login`);
+          throw new UnauthorizedError("Unauthorized", 401);
+        } else {
+          throw createBackendError(content, response.status);
+        }
       });
     } else {
       if (response.status === 401) {
