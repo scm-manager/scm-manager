@@ -90,6 +90,10 @@ const ChangeTypeTag = styled(Tag)`
   margin-left: 0.75rem;
 `;
 
+export function escapeWhitespace(path: string) {
+  return path.toLowerCase().replace(/\W/g, "-");
+}
+
 class DiffFile extends React.Component<Props, State> {
   static defaultProps: Partial<Props> = {
     defaultCollapse: false,
@@ -350,6 +354,16 @@ class DiffFile extends React.Component<Props, State> {
     }
   };
 
+  getAnchorId(file: File) {
+    let path: string;
+    if (file.type === "delete") {
+      path = file.oldPath;
+    } else {
+      path = file.newPath;
+    }
+    return escapeWhitespace(path);
+  }
+
   renderFileTitle = (file: File) => {
     if (file.oldPath !== file.newPath && (file.type === "copy" || file.type === "rename")) {
       return (
@@ -454,7 +468,7 @@ class DiffFile extends React.Component<Props, State> {
     }
 
     return (
-      <DiffFilePanel className={classNames("panel", "is-size-6")} collapsed={(file && file.isBinary) || collapsed}>
+      <DiffFilePanel className={classNames("panel", "is-size-6")} collapsed={(file && file.isBinary) || collapsed} id={this.getAnchorId(file)}>
         {errorModal}
         <div className="panel-heading">
           <FlexWrapLevel className="level">

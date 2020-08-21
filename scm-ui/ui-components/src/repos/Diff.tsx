@@ -22,34 +22,75 @@
  * SOFTWARE.
  */
 import React from "react";
-import DiffFile from "./DiffFile";
+import DiffFile, {escapeWhitespace} from "./DiffFile";
 import { DiffObjectProps, File, FileControlFactory } from "./DiffTypes";
 import Notification from "../Notification";
 import { WithTranslation, withTranslation } from "react-i18next";
+import {RouteComponentProps, withRouter} from "react-router-dom";
 
-type Props = WithTranslation &
+type Props = RouteComponentProps & WithTranslation &
   DiffObjectProps & {
     diff: File[];
     fileControlFactory?: FileControlFactory;
   };
 
-class Diff extends React.Component<Props> {
+type State = {
+  contentRef?: HTMLElement;
+}
+
+function getAnchorSelector(uriHashContent: string) {
+  return "#" + escapeWhitespace(decodeURIComponent(uriHashContent));
+}
+
+class Diff extends React.Component<Props, State> {
   static defaultProps: Partial<Props> = {
     sideBySide: false
   };
 
+  constructor(props: Readonly<Props>) {
+    super(props);
+    this.state = {
+      contentRef: undefined
+    };
+  }
+
+  componentDidUpdate() {
+    const { contentRef } = this.state;
+
+    // we have to use componentDidUpdate, because we have to wait until all
+    // children are rendered and componentDidMount is called before the
+    // changeset content was rendered.
+    const hash = this.props.location.hash;
+    const match = hash && hash.match(/^#diff-(.*)$/);
+    if (contentRef && match) {
+      const selector = getAnchorSelector(match[1]);
+      const element = contentRef.querySelector(selector);
+      if (element && element.scrollIntoView) {
+        element.scrollIntoView();
+      }
+    }
+  }
+
   render() {
     const { diff, t, ...fileProps } = this.props;
+    const updateContentRef = (el: HTMLElement | null) => {
+      if (el !== null && this.state.contentRef === undefined) {
+        this.setState({ contentRef: el });
+      }
+    };
+
     return (
-      <>
+      <div
+        ref={updateContentRef}
+      >
         {diff.length === 0 ? (
           <Notification type="info">{t("diff.noDiffFound")}</Notification>
         ) : (
           diff.map((file, index) => <DiffFile key={index} file={file} {...fileProps} {...this.props} />)
         )}
-      </>
+      </div>
     );
   }
 }
 
-export default withTranslation("repos")(Diff);
+export default withRouter(withTranslation("repos")(Diff));
