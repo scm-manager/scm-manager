@@ -121,8 +121,6 @@ public class DefaultAccessTokenCookieIssuerTest {
   }
 
   private Cookie authenticate() {
-    when(accessToken.getExpiration()).thenReturn(new Date());
-
     issuer.authenticate(request, response, accessToken);
 
     verify(response).addCookie(cookieArgumentCaptor.capture());

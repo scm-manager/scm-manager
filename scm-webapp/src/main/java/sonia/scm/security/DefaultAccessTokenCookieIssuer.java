@@ -52,8 +52,8 @@ public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIs
    */
   private static final Logger LOG = LoggerFactory.getLogger(DefaultAccessTokenCookieIssuer.class);
 
-  private static final int DEFAULT_COOKIE_EXPIRATION_AMOUNT = 24;
-  private static final TimeUnit DEFAULT_COOKIE_EXPIRATION_UNIT = TimeUnit.HOURS;
+  private static final int DEFAULT_COOKIE_EXPIRATION_AMOUNT = 365;
+  private static final TimeUnit DEFAULT_COOKIE_EXPIRATION_UNIT = TimeUnit.DAYS;
   private static final int DEFAULT_COOKIE_EXPIRATION = (int) TimeUnit.SECONDS.convert(DEFAULT_COOKIE_EXPIRATION_AMOUNT, DEFAULT_COOKIE_EXPIRATION_UNIT);
   
   private final ScmConfiguration configuration;

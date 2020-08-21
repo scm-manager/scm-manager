@@ -139,7 +139,6 @@ public class AuthenticationResourceTest {
     dispatcher.addSingletonResource(authenticationResource);
 
     AccessToken accessToken = mock(AccessToken.class);
-    when(accessToken.getExpiration()).thenReturn(new Date(Long.MAX_VALUE));
     when(accessTokenBuilder.build()).thenReturn(accessToken);
 
     when(accessTokenBuilderFactory.create()).thenReturn(accessTokenBuilder);
