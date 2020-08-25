@@ -67,4 +67,15 @@ public final class Tag {
     this.revision = revision;
     this.date = date;
   }
+
+  /**
+   * The date is retrieved in a best-effort fashion.
+   * In certain situations it might not be available.
+   * In these cases, this method returns <code>null</code>.
+   *
+   * @since 2.5.0
+   */
+  public Long getDate() {
+    return date;
+  }
 }

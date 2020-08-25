@@ -68,8 +68,8 @@ public class GitHookTagProvider implements HookTagProvider {
         LOG.debug("received ref name {} is not a tag", refName);
       } else {
         Long tagTime = null;
-        try (RevWalk walk = new RevWalk(repository)) {
-          tagTime = GitUtil.getTagTime(repository, walk, rc.getRef());
+        try {
+          tagTime = GitUtil.getTagTime(repository, rc.getRef());
         } catch (IOException e) {
           LOG.error("Could not read tag time", e);
         }

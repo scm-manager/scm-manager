@@ -26,6 +26,8 @@ package sonia.scm.repository.api;
 
 import com.google.common.collect.Lists;
 import java.util.List;
+
+import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -71,7 +73,7 @@ public class HgHookTagProviderTest {
   public void testGetCreatedTags(){
     Changeset c1 = new Changeset("1", Long.MIN_VALUE, null);
     c1.getTags().add("1.0.0");
-    Changeset c2 = new Changeset("2", Long.MIN_VALUE, null);
+    Changeset c2 = new Changeset("2", Long.MAX_VALUE, null);
     c2.getTags().add("2.0.0");
     Changeset c3 = new Changeset("3", Long.MIN_VALUE, null);
     prepareChangesets(c1, c2, c3);
@@ -83,10 +85,12 @@ public class HgHookTagProviderTest {
     Tag t1 = tags.get(0);
     assertEquals("1", t1.getRevision());
     assertEquals("1.0.0", t1.getName());
-    
+    Assertions.assertThat(t1.getDate()).isEqualTo(Long.MIN_VALUE);
+
     Tag t2 = tags.get(1);
     assertEquals("2", t2.getRevision());
     assertEquals("2.0.0", t2.getName());
+    Assertions.assertThat(t2.getDate()).isEqualTo(Long.MAX_VALUE);
   }
 
   private void prepareChangesets(Changeset... changesets){
