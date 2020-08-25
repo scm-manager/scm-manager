@@ -190,7 +190,7 @@ node('docker') {
 String mainBranch
 
 Maven setupMavenBuild() {
-  MavenWrapperInDocker mvn = new MavenWrapperInDocker(this, "scmmanager/java-build:11.0.7_10")
+  MavenWrapperInDocker mvn = new MavenWrapperInDocker(this, "scmmanager/java-build:11.0.8_10")
   mvn.enableDockerHost = true
 
   // disable logging durring the build
