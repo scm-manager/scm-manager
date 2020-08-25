@@ -37,7 +37,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
@@ -89,6 +88,9 @@ class DefaultPluginManagerTest {
 
   @Captor
   private ArgumentCaptor<PluginEvent> eventCaptor;
+
+  @Captor
+  private ArgumentCaptor<PluginInstallationContext> contextCaptor;
 
   private DefaultPluginManager manager;
 
@@ -624,8 +626,31 @@ class DefaultPluginManagerTest {
       assertThat(eventCaptor.getValue().getPlugin()).isEqualTo(review);
     }
 
-  }
+    @Test
+    void contextShouldContainAvailablePluginsAndPendingInstallationPlugins() {
+      DefaultPluginManager manager = new DefaultPluginManager(
+        loader, center, installer, restarter, eventBus, null
+      );
 
+      AvailablePlugin jenkins = createAvailable("scm-jenkins-plugin");
+      AvailablePlugin webhook = createAvailable("scm-webhook-plugin");
+      when(jenkins.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-el-plugin"));
+      when(webhook.getDescriptor().getDependencies()).thenReturn(ImmutableSet.of("scm-el-plugin"));
+      AvailablePlugin el = createAvailable("scm-el-plugin");
+      when(center.getAvailable()).thenReturn(ImmutableSet.of(jenkins, el, webhook));
+
+      manager.install("scm-jenkins-plugin", false);
+      manager.install("scm-webhook-plugin", false);
+
+      verify(installer, times(3)).install(contextCaptor.capture(), any());
+
+      PluginInstallationContext pluginInstallationContext = contextCaptor.getAllValues().get(2);
+
+      assertThat(pluginInstallationContext.find("scm-jenkins-plugin")).isPresent();
+      assertThat(pluginInstallationContext.find("scm-webhook-plugin")).isPresent();
+      assertThat(pluginInstallationContext.find("scm-el-plugin")).isPresent();
+    }
+  }
 
   @Nested
   class WithoutReadPermissions {
