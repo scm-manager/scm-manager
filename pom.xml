@@ -903,7 +903,7 @@
 
   <properties>
     <!-- test libraries -->
-    <mockito.version>2.28.2</mockito.version>
+    <mockito.version>3.5.6</mockito.version>
     <hamcrest.version>2.1</hamcrest.version>
     <junit.version>5.6.2</junit.version>
 
