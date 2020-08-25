@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import com.google.inject.util.Providers;
@@ -39,8 +39,11 @@ public class PushStateDispatcherProviderTest {
   @Mock
   private TemplateEngine templateEngine;
 
+  @Mock
+  private SCMContextProvider context;
+
   private PushStateDispatcherProvider provider = new PushStateDispatcherProvider(
-    Providers.of(new TemplatingPushStateDispatcher(templateEngine))
+    Providers.of(new TemplatingPushStateDispatcher(templateEngine, context))
   );
 
   @Test

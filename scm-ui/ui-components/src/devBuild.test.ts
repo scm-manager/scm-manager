@@ -25,31 +25,37 @@
 import { createAttributesForTesting, isDevBuild } from "./devBuild";
 
 describe("devbuild tests", () => {
-  let env: string | undefined;
+  let stage: string | undefined;
+
+  const setStage = (s?: string) => {
+    // @ts-ignore scmStage is set on the index page
+    window.scmStage = s;
+  };
 
   beforeAll(() => {
-    env = process.env.NODE_ENV;
+    // @ts-ignore scmStage is set on the index page
+    stage = window.scmStage;
   });
 
   afterAll(() => {
-    process.env.NODE_ENV = env;
+    setStage(stage);
   });
 
   describe("isDevBuild tests", () => {
     it("should return true for development", () => {
-      process.env.NODE_ENV = "development";
+      setStage("development");
       expect(isDevBuild()).toBe(true);
     });
 
     it("should return false for production", () => {
-      process.env.NODE_ENV = "production";
+      setStage("production");
       expect(isDevBuild()).toBe(false);
     });
   });
 
   describe("createAttributesForTesting in non development mode", () => {
     beforeAll(() => {
-      process.env.NODE_ENV = "production";
+      setStage("production");
     });
 
     it("should return undefined for non development", () => {
@@ -60,7 +66,7 @@ describe("devbuild tests", () => {
 
   describe("createAttributesForTesting in development mode", () => {
     beforeAll(() => {
-      process.env.NODE_ENV = "development";
+      setStage("development");
     });
 
     it("should return undefined for non development", () => {

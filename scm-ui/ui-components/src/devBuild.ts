@@ -22,7 +22,8 @@
  * SOFTWARE.
  */
 
-export const isDevBuild = () => process.env.NODE_ENV === "development";
+// @ts-ignore scmStage is set on the index page
+export const isDevBuild = () => (window.scmStage || "").toUpperCase() === "DEVELOPMENT";
 
 export const createAttributesForTesting = (testId?: string) => {
   if (!testId || !isDevBuild()) {
