@@ -41,6 +41,7 @@ public final class Tag {
 
   private final String name;
   private final String revision;
+  private final Long date;
 
   /**
    * Constructs a new tag.
@@ -49,7 +50,21 @@ public final class Tag {
    * @param revision tagged revision
    */
   public Tag(String name, String revision) {
+    this(name, revision, null);
+  }
+
+  /**
+   * Constructs a new tag.
+   *
+   * @param name     name of the tag
+   * @param revision tagged revision
+   * @param date     the creation timestamp (milliseconds) of the tag
+   *
+   * @since 2.5.0
+   */
+  public Tag(String name, String revision, Long date) {
     this.name = name;
     this.revision = revision;
+    this.date = date;
   }
 }
