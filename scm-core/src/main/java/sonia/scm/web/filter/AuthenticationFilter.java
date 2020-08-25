@@ -67,6 +67,7 @@ public class AuthenticationFilter extends HttpFilter {
    */
   private static final String ATTRIBUTE_FAILED_AUTH = "sonia.scm.auth.failed";
 
+
   private final Set<WebTokenGenerator> tokenGenerators;
   protected ScmConfiguration configuration;
 
@@ -117,7 +118,7 @@ public class AuthenticationFilter extends HttpFilter {
   }
 
   /**
-   * Sends status code 403 back to client, if the authentication has failed.
+   * Sends status code 401 back to client, if the authentication has failed.
    * In all other cases the method will send status code 403 back to client.
    *
    * @param request  servlet request
@@ -209,12 +210,8 @@ public class AuthenticationFilter extends HttpFilter {
       subject.login(token);
       processChain(request, response, chain, subject);
     } catch (TokenExpiredException ex) {
-      if (logger.isTraceEnabled()) {
-        logger.trace("{} expired", token.getClass(), ex);
-      } else {
-        logger.debug("{} expired", token.getClass());
-      }
-      handleUnauthorized(request, response, chain);
+      // Rethrow to be caught by TokenExpiredFilter
+      throw ex;
     } catch (AuthenticationException ex) {
       logger.warn("authentication failed", ex);
       handleUnauthorized(request, response, chain);

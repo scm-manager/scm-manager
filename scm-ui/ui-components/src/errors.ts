@@ -103,3 +103,5 @@ export function createBackendError(content: BackendErrorContent, statusCode: num
 export function isBackendError(response: Response) {
   return response.headers.get("Content-Type") === "application/vnd.scmm-error+json;v=2";
 }
+
+export const TOKEN_EXPIRED_ERROR_CODE = "DDS8D8unr1";
