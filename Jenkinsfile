@@ -75,7 +75,7 @@ node('docker') {
         integrationTest: {
           stage('Integration Test') {
             mvn 'verify -Pit -DskipUnitTests -pl :scm-webapp,:scm-it -Dmaven.test.failure.ignore=true'
-            junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml'
+            junit allowEmptyResults: true, testResults: '**/target/failsafe-reports/TEST-*.xml,**/target/cypress-reports/TEST-*.xml'
             archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/e2e-tests/cypress/videos/*.mp4'
             archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/e2e-tests/cypress/screenshots/**/*.png'
           }

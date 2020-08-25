@@ -7,7 +7,8 @@
   "license": "MIT",
   "private": false,
   "scripts": {
-    "headless": "cypress run"
+    "headless": "cypress run",
+    "ci": "cypress run --reporter junit --reporter-options \"mochaFile=../target/cypress-reports/TEST-[hash].xml\""
   },
   "devDependencies": {
     "cypress": "^4.12.0",

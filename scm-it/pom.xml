@@ -199,6 +199,11 @@
                 <version>${yarn.version}</version>
               </pkgManager>
               <script>e2e-tests</script>
+              <!--
+              we want not fail the build,
+              we want to mark it as unstable and record the test results
+              -->
+              <ignoreFailure>true</ignoreFailure>
             </configuration>
             <executions>
               <execution>
