@@ -26,9 +26,8 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
 import { Repository } from "@scm-manager/ui-types";
-import { confirmAlert, DeleteButton, ErrorNotification, Level, ButtonGroup } from "@scm-manager/ui-components";
+import { confirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { deleteRepo, getDeleteRepoFailure, isDeleteRepoPending } from "../modules/repos";
 
 type Props = RouteComponentProps &
@@ -89,10 +88,11 @@ class DeleteRepo extends React.Component<Props> {
         <ErrorNotification error={error} />
         <Level
           left={
-            <div>
+            <p>
               <strong>{t("deleteRepo.subtitle")}</strong>
-              <p>{t("deleteRepo.description")}</p>
-            </div>
+              <br />
+              {t("deleteRepo.description")}
+            </p>
           }
           right={<DeleteButton label={t("deleteRepo.button")} action={action} loading={loading} />}
         />
