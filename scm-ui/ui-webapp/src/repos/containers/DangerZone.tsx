@@ -36,9 +36,20 @@ type Props = {
 };
 
 const DangerZoneContainer = styled.div`
-  padding: 1rem;
+  padding: 1.5rem 1rem;
   border: 1px solid #ff6a88;
   border-radius: 5px;
+  > .level {
+    flex-flow: wrap;
+
+    .level-left {
+      max-width: 100%;
+    }
+
+    .level-right {
+      margin-top: 0.75rem;
+    }
+  }
   > *:not(:last-child) {
     padding-bottom: 1.5rem;
     border-bottom: solid 2px whitesmoke;
