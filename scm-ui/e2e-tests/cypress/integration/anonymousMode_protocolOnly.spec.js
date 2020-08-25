@@ -34,6 +34,8 @@ describe("With Anonymous mode protocol only enabled", () => {
     cy.byTestId("login-button");
     cy.containsNotByTestId("div", "primary-navigation-login");
     cy.containsNotByTestId("div", "primary-navigation-repositories");
+    // take a screenshot to test archiving
+    cy.screenshot();
   });
 
   after("Disable anonymous access", () => {

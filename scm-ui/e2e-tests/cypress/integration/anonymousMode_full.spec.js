@@ -24,7 +24,10 @@
 
 describe("With Anonymous mode fully enabled", () => {
   before("Set anonymous mode to full", () => {
-    cy.login("scmadmin", "scmadmin");
+    // take a screenshot to test archiving
+    cy.screenshot();
+    // fail test to test video archiving
+    cy.login("scmadmin", "FAIL");
     cy.setAnonymousMode("FULL");
 
     // Give anonymous user permissions

@@ -27,12 +27,16 @@ describe("With Anonymous mode disabled", () => {
     cy.login("scmadmin", "scmadmin");
     cy.setAnonymousMode("OFF");
     cy.byTestId("primary-navigation-logout").click();
+    // take a screenshot to test archiving
+    cy.screenshot();
   });
 
   it("Should show login page without primary navigation", () => {
     cy.byTestId("login-button");
     cy.containsNotByTestId("div", "primary-navigation-login");
     cy.containsNotByTestId("div", "primary-navigation-repositories");
+    // take a screenshot to test archiving
+    cy.screenshot();
   });
   it("Should redirect after login", () => {
     cy.login("scmadmin", "scmadmin");
