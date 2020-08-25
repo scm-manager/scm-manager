@@ -6,6 +6,9 @@
   "author": "Eduard Heimbuch <eduard.heimbuch@cloudogu.com>",
   "license": "MIT",
   "private": false,
+  "scripts": {
+    "headless": "cypress run"
+  },
   "devDependencies": {
     "cypress": "^4.12.0",
     "eslint-plugin-cypress": "^2.11.1"

@@ -187,6 +187,31 @@
           </plugin>
 
           <plugin>
+            <groupId>com.github.sdorra</groupId>
+            <artifactId>buildfrontend-maven-plugin</artifactId>
+            <configuration>
+              <workingDirectory>${basedir}/..</workingDirectory>
+              <node>
+                <version>${nodejs.version}</version>
+              </node>
+              <pkgManager>
+                <type>YARN</type>
+                <version>${yarn.version}</version>
+              </pkgManager>
+              <script>e2e-tests</script>
+            </configuration>
+            <executions>
+              <execution>
+                <id>e2e</id>
+                <phase>integration-test</phase>
+                <goals>
+                  <goal>run</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-dependency-plugin</artifactId>
             <version>2.10</version>
@@ -284,7 +309,7 @@
       <properties>
         <scm.stage>DEVELOPMENT</scm.stage>
         <scm.home>${project.parent.build.directory}/scm-it</scm.home>
-        <scm-it.logbackConfiguration>${project.basedir}/../scm-webapp/src/main/resources/logback.default.xml</scm-it.logbackConfiguration>
+        <scm-it.logbackConfiguration>${project.basedir}/../scm-webapp/src/main/resources/logback.ci.xml</scm-it.logbackConfiguration>
       </properties>
 
     </profile>
