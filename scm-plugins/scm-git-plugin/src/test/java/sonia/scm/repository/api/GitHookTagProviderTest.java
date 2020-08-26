@@ -21,21 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import com.google.common.collect.Lists;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectLoader;
-import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.MockedStatic;
@@ -47,19 +42,19 @@ import sonia.scm.repository.Tag;
 import java.util.List;
 
 import static org.hamcrest.Matchers.empty;
-import static org.junit.Assert.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.ArgumentMatchers.eq;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link GitHookTagProvider}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
-public class GitHookTagProviderTest{
+public class GitHookTagProviderTest {
 
   private static final String ZERO = ObjectId.zeroId().getName();
 
@@ -76,12 +71,12 @@ public class GitHookTagProviderTest{
   private ObjectId objectId;
 
   private List<ReceiveCommand> commands;
-  
+
   /**
    * Set up mocks for upcoming tests.
    */
   @Before
-  public void setUpMocks(){
+  public void setUpMocks() {
     commands = Lists.newArrayList(command);
   }
 
@@ -93,7 +88,7 @@ public class GitHookTagProviderTest{
     try (MockedStatic<GitUtil> dummy = Mockito.mockStatic(GitUtil.class)) {
       String revision = "86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1";
       Long timestamp = 1339416344000L;
-      String tagName = "test-tag";
+      String tagName = "1.0.0";
       String ref = "refs/tags/" + tagName;
 
       dummy.when(() -> GitUtil.getTagTime(repository, gitRef)).thenReturn(timestamp);
@@ -106,19 +101,29 @@ public class GitHookTagProviderTest{
       assertThat(provider.getDeletedTags(), empty());
     }
   }
-  
+
   /**
    * Tests {@link GitHookTagProvider#getDeletedTags()}.
    */
   @Test
   public void testGetDeletedTags() {
-    String revision = "b2002b64013e54b78eac251df0672bd5d6a83aa7";
-    GitHookTagProvider provider = createProvider(ReceiveCommand.Type.DELETE, "refs/tags/1.0.0", ZERO, revision);
-    
-    assertThat(provider.getCreatedTags(), empty());
-    assertTag("1.0.0", revision, null, provider.getDeletedTags());
+    try (MockedStatic<GitUtil> dummy = Mockito.mockStatic(GitUtil.class)) {
+      String revision = "b2002b64013e54b78eac251df0672bd5d6a83aa7";
+      Long timestamp = 1339416344000L;
+      String tagName = "1.0.0";
+      String ref = "refs/tags/" + tagName;
+
+      dummy.when(() -> GitUtil.getTagTime(repository, gitRef)).thenReturn(timestamp);
+      dummy.when(() -> GitUtil.getTagName(ref)).thenReturn(tagName);
+      dummy.when(() -> GitUtil.getId(ObjectId.fromString(revision))).thenReturn(revision);
+
+      GitHookTagProvider provider = createProvider(ReceiveCommand.Type.DELETE, ref, ZERO, revision);
+
+      assertThat(provider.getCreatedTags(), empty());
+      assertTag("1.0.0", revision, 1339416344000L, provider.getDeletedTags());
+    }
   }
-  
+
   /**
    * Tests {@link GitHookTagProvider} with a branch ref instead of a tag.
    */
@@ -126,7 +131,7 @@ public class GitHookTagProviderTest{
   public void testWithBranch() {
     String revision = "b2002b64013e54b78eac251df0672bd5d6a83aa7";
     GitHookTagProvider provider = createProvider(ReceiveCommand.Type.CREATE, "refs/heads/1.0.0", revision, revision);
-    
+
     assertThat(provider.getCreatedTags(), empty());
     assertThat(provider.getDeletedTags(), empty());
   }
@@ -136,24 +141,38 @@ public class GitHookTagProviderTest{
    */
   @Test
   public void testUpdateTags() {
-    String newId = "b2002b64013e54b78eac251df0672bd5d6a83aa7";
-    String oldId = "e0f2be968b147ff7043684a7715d2fe852553db4";
+    try (MockedStatic<GitUtil> dummy = Mockito.mockStatic(GitUtil.class)) {
+      String newRevision = "b2002b64013e54b78eac251df0672bd5d6a83aa7";
+      Long newTimestamp = 1339416344000L;
+      String newTagName = "1.0.0";
+      String newRef = "refs/tags/" + newTagName;
 
-    GitHookTagProvider provider = createProvider(ReceiveCommand.Type.UPDATE, "refs/tags/1.0.0", newId, oldId);
-    assertTag("1.0.0", newId, null, provider.getCreatedTags());
-    assertTag("1.0.0", oldId, null, provider.getDeletedTags());
+      String oldRevision = "e0f2be968b147ff7043684a7715d2fe852553db4";
+      String oldTagName = "0.9.0";
+
+      dummy.when(() -> GitUtil.getTagTime(repository, gitRef)).thenReturn(newTimestamp);
+      dummy.when(() -> GitUtil.getTagName(newRef)).thenReturn(newTagName);
+      dummy.when(() -> GitUtil.getId(ObjectId.fromString(newRevision))).thenReturn(newRevision);
+
+      dummy.when(() -> GitUtil.getId(ObjectId.fromString(oldRevision))).thenReturn(oldRevision);
+
+      GitHookTagProvider provider = createProvider(ReceiveCommand.Type.UPDATE, newRef, newRevision, oldRevision);
+
+      assertTag(newTagName, newRevision, newTimestamp, provider.getCreatedTags());
+      assertTag(oldTagName, oldRevision, null, provider.getDeletedTags());
+    }
   }
 
-  private void assertTag(String name, String revision, Long date, List<Tag> tags){
+  private void assertTag(String name, String revision, Long date, List<Tag> tags) {
     assertNotNull(tags);
     assertFalse(tags.isEmpty());
     assertEquals(1, tags.size());
     Tag tag = tags.get(0);
     assertEquals(name, tag.getName());
     assertEquals(revision, tag.getRevision());
-    assertEquals(date, tag.getDate());
+    assertEquals(date, tag.getDate().orElse(null));
   }
-  
+
   private GitHookTagProvider createProvider(ReceiveCommand.Type type, String ref, String newId, String oldId) {
     when(command.getNewId()).thenReturn(ObjectId.fromString(newId));
     when(command.getOldId()).thenReturn(ObjectId.fromString(oldId));

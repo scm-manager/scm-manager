@@ -38,6 +38,7 @@ import sonia.scm.web.EdisonHalAppender;
 import javax.inject.Inject;
 
 import java.time.Instant;
+import java.util.Optional;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
@@ -67,7 +68,7 @@ public abstract class TagToTagDtoMapper extends HalAppenderMapper {
   }
 
   @Named("mapDate")
-  Instant map(Long value) {
-    return value == null ? null : Instant.ofEpochMilli(value);
+  Instant map(Optional<Long> value) {
+    return value.map(Instant::ofEpochMilli).orElse(null);
   }
 }

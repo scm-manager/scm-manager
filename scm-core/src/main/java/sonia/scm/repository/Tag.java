@@ -28,6 +28,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Optional;
+
 /**
  * Represents a tag in a repository.
  *
@@ -75,7 +77,7 @@ public final class Tag {
    *
    * @since 2.5.0
    */
-  public Long getDate() {
-    return date;
+  public Optional<Long> getDate() {
+    return Optional.ofNullable(date);
   }
 }

@@ -85,12 +85,12 @@ public class HgHookTagProviderTest {
     Tag t1 = tags.get(0);
     assertEquals("1", t1.getRevision());
     assertEquals("1.0.0", t1.getName());
-    Assertions.assertThat(t1.getDate()).isEqualTo(Long.MIN_VALUE);
+    Assertions.assertThat(t1.getDate()).contains(Long.MIN_VALUE);
 
     Tag t2 = tags.get(1);
     assertEquals("2", t2.getRevision());
     assertEquals("2.0.0", t2.getName());
-    Assertions.assertThat(t2.getDate()).isEqualTo(Long.MAX_VALUE);
+    Assertions.assertThat(t2.getDate()).contains(Long.MAX_VALUE);
   }
 
   private void prepareChangesets(Changeset... changesets){
