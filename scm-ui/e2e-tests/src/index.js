@@ -37,14 +37,14 @@ const options = {
   }
 };
 
-const createOuputFile = test => {
+const createOutputFile = test => {
   const title = test.title.join(" -- ");
   return path.join("cypress", "videos", `${title}.mp4`);
 };
 
 const cutVideo = (video, test) => {
   return new Promise((resolve, reject) => {
-    const title = createOuputFile(test);
+    const title = createOutputFile(test);
     ffmpeg(video)
       .setStartTime(test.videoTimestamp / 1000)
       .setDuration(test.wallClockDuration / 1000)
