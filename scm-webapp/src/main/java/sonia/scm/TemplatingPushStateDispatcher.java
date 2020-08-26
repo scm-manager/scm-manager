@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -46,15 +46,17 @@ public class TemplatingPushStateDispatcher implements PushStateDispatcher {
   static final String TEMPLATE = "/index.mustache";
 
   private final TemplateEngine templateEngine;
+  private final SCMContextProvider context;
 
   @Inject
-  public TemplatingPushStateDispatcher(TemplateEngineFactory templateEngineFactory) {
-    this(templateEngineFactory.getDefaultEngine());
+  public TemplatingPushStateDispatcher(TemplateEngineFactory templateEngineFactory, SCMContextProvider context) {
+    this(templateEngineFactory.getDefaultEngine(), context);
   }
 
   @VisibleForTesting
-  TemplatingPushStateDispatcher(TemplateEngine templateEngine) {
+  TemplatingPushStateDispatcher(TemplateEngine templateEngine, SCMContextProvider context) {
     this.templateEngine = templateEngine;
+    this.context = context;
   }
 
   @Override
@@ -64,7 +66,7 @@ public class TemplatingPushStateDispatcher implements PushStateDispatcher {
 
     Template template = templateEngine.getTemplate(TEMPLATE);
     try (Writer writer = response.getWriter()) {
-      template.execute(writer, new IndexHtmlModel(request));
+      template.execute(writer, new IndexHtmlModel(request, context.getStage()));
     }
   }
 
@@ -72,13 +74,19 @@ public class TemplatingPushStateDispatcher implements PushStateDispatcher {
   static class IndexHtmlModel {
 
     private final HttpServletRequest request;
+    private final Stage scmStage;
 
-    private IndexHtmlModel(HttpServletRequest request) {
+    private IndexHtmlModel(HttpServletRequest request, Stage scmStage) {
       this.request = request;
+      this.scmStage = scmStage;
     }
 
     public String getContextPath() {
       return request.getContextPath();
+    }
+
+    public String getScmStage() {
+      return scmStage.name();
     }
 
     public String getLiveReloadURL() {
