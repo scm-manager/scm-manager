@@ -44708,24 +44708,6 @@ exports[`Storyshots Layout|Footer Default 1`] = `
               footer.user.profile
             </a>
           </li>
-          <li>
-            <a
-              className=""
-              href="/me/settings/password"
-              onClick={[Function]}
-            >
-              profile.changePasswordNavLink
-            </a>
-          </li>
-          <li>
-            <a
-              className=""
-              href="/me"
-              onClick={[Function]}
-            >
-              footer.user.profile
-            </a>
-          </li>
         </ul>
       </section>
       <section
@@ -44826,24 +44808,6 @@ exports[`Storyshots Layout|Footer Full 1`] = `
         <ul
           className="FooterSection__Menu-lx0ikb-1 idmusL"
         >
-          <li>
-            <a
-              className=""
-              href="/me"
-              onClick={[Function]}
-            >
-              footer.user.profile
-            </a>
-          </li>
-          <li>
-            <a
-              className=""
-              href="/me/settings/password"
-              onClick={[Function]}
-            >
-              profile.changePasswordNavLink
-            </a>
-          </li>
           <li>
             <a
               className=""
@@ -44998,24 +44962,6 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
               footer.user.profile
             </a>
           </li>
-          <li>
-            <a
-              className=""
-              href="/me/settings/password"
-              onClick={[Function]}
-            >
-              profile.changePasswordNavLink
-            </a>
-          </li>
-          <li>
-            <a
-              className=""
-              href="/me"
-              onClick={[Function]}
-            >
-              footer.user.profile
-            </a>
-          </li>
         </ul>
       </section>
       <section
@@ -45109,24 +45055,6 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
         <ul
           className="FooterSection__Menu-lx0ikb-1 idmusL"
         >
-          <li>
-            <a
-              className=""
-              href="/me"
-              onClick={[Function]}
-            >
-              footer.user.profile
-            </a>
-          </li>
-          <li>
-            <a
-              className=""
-              href="/me/settings/password"
-              onClick={[Function]}
-            >
-              profile.changePasswordNavLink
-            </a>
-          </li>
           <li>
             <a
               className=""

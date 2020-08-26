@@ -30,18 +30,23 @@ import ErrorBoundary from "./ErrorBoundary";
 import SyntaxHighlighter from "./SyntaxHighlighter";
 import MarkdownHeadingRenderer from "./MarkdownHeadingRenderer";
 import { create } from "./MarkdownLinkRenderer";
-import {useTranslation, WithTranslation, withTranslation} from "react-i18next";
+import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
 import Notification from "./Notification";
 import { createTransformer } from "./remarkChangesetShortLinkParser";
 
-type Props = RouteComponentProps & WithTranslation & {
-  content: string;
-  renderContext?: object;
-  renderers?: any;
-  skipHtml?: boolean;
-  enableAnchorHeadings?: boolean;
-  // basePath for markdown links
-  basePath?: string;
+type Props = RouteComponentProps &
+  WithTranslation & {
+    content: string;
+    renderContext?: object;
+    renderers?: any;
+    skipHtml?: boolean;
+    enableAnchorHeadings?: boolean;
+    // basePath for markdown links
+    basePath?: string;
+  };
+
+type State = {
+  contentRef: HTMLDivElement | null | undefined;
 };
 
 const xmlMarkupSample = `\`\`\`xml
@@ -73,27 +78,35 @@ const MarkdownErrorNotification: FC = () => {
   );
 };
 
-class MarkdownView extends React.Component<Props> {
+class MarkdownView extends React.Component<Props, State> {
   static defaultProps: Partial<Props> = {
     enableAnchorHeadings: false,
     skipHtml: false
   };
 
-  contentRef: HTMLDivElement | null | undefined;
-
   constructor(props: Props) {
     super(props);
+    this.state = {
+      contentRef: null
+    };
+  }
+
+  shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>, nextContext: any): boolean {
+    // We have check if the contentRef changed and update afterwards so the page can scroll to the anchor links.
+    // Otherwise it can happen that componentDidUpdate is never executed depending on how fast the markdown got rendered
+    return this.state.contentRef !== nextState.contentRef;
   }
 
   componentDidUpdate() {
+    const { contentRef } = this.state;
     // we have to use componentDidUpdate, because we have to wait until all
     // children are rendered and componentDidMount is called before the
     // markdown content was rendered.
     const hash = this.props.location.hash;
-    if (this.contentRef && hash) {
+    if (contentRef && hash) {
       // we query only child elements, to avoid strange scrolling with multiple
       // markdown elements on one page.
-      const element = this.contentRef.querySelector(hash);
+      const element = contentRef.querySelector(hash);
       if (element && element.scrollIntoView) {
         element.scrollIntoView();
       }
@@ -128,7 +141,7 @@ class MarkdownView extends React.Component<Props> {
 
     return (
       <ErrorBoundary fallback={MarkdownErrorNotification}>
-        <div ref={el => (this.contentRef = el)}>
+        <div ref={el => this.setState({ contentRef: el })}>
           <Markdown
             className="content is-word-break"
             skipHtml={skipHtml}

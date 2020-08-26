@@ -97,8 +97,6 @@ const Footer: FC<Props> = ({ me, version, links }) => {
       <section className="section container">
         <div className="columns is-size-7">
           <FooterSection title={meSectionTile}>
-            <NavLink to="/me" label={t("footer.user.profile")} />
-            <NavLink to="/me/settings/password" label={t("profile.changePasswordNavLink")} />
             <NavLink to="/me" label={t("footer.user.profile")} testId="footer-user-profile" />
             {me?._links?.password && <NavLink to="/me/settings/password" label={t("profile.changePasswordNavLink")} />}
             {me?._links?.publicKeys && <NavLink to="/me/settings/publicKeys" label={t("profile.publicKeysNavLink")} />}
