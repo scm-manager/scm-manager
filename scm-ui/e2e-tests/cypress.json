@@ -1,4 +1,5 @@
 {
   "baseUrl": "http://localhost:8081/scm",
-  "videoUploadOnPasses": false
+  "videoUploadOnPasses": false,
+  "videoCompression": false
 }
