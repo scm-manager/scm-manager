@@ -8,10 +8,12 @@
   "private": false,
   "scripts": {
     "headless": "cypress run",
-    "ci": "cypress run --reporter junit --reporter-options \"mochaFile=../target/cypress-reports/TEST-[hash].xml\""
+    "ci": "node src/index.js"
+  },
+  "dependencies": {
+    "cypress": "^4.12.0"
   },
   "devDependencies": {
-    "cypress": "^4.12.0",
     "eslint-plugin-cypress": "^2.11.1"
   },
   "prettier": "@scm-manager/prettier-config",
