@@ -35,7 +35,7 @@ type Props = RouteComponentProps & WithTranslation &
   };
 
 type State = {
-  contentRef?: HTMLElement;
+  contentRef?: HTMLElement | null;
 }
 
 function getAnchorSelector(uriHashContent: string) {
@@ -71,17 +71,18 @@ class Diff extends React.Component<Props, State> {
     }
   }
 
+  shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>): boolean {
+    // We have check if the contentRef changed and update afterwards so the page can scroll to the anchor links.
+    // Otherwise it can happen that componentDidUpdate is never executed depending on how fast the markdown got rendered
+    return this.state.contentRef !== nextState.contentRef;
+  }
+
   render() {
     const { diff, t, ...fileProps } = this.props;
-    const updateContentRef = (el: HTMLElement | null) => {
-      if (el !== null && this.state.contentRef === undefined) {
-        this.setState({ contentRef: el });
-      }
-    };
 
     return (
       <div
-        ref={updateContentRef}
+        ref={el => this.setState({ contentRef: el })}
       >
         {diff.length === 0 ? (
           <Notification type="info">{t("diff.noDiffFound")}</Notification>
