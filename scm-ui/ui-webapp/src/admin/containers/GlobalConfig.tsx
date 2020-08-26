@@ -26,7 +26,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { Config, NamespaceStrategies } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, Title } from "@scm-manager/ui-components";
-import { getConfigLink } from "../../modules/indexResource";
+import {getConfigLink, mustGetConfigLink} from "../../modules/indexResource";
 import {
   fetchConfig,
   getConfig,
@@ -186,7 +186,7 @@ const mapStateToProps = (state: any) => {
 
   const config = getConfig(state);
   const configUpdatePermission = getConfigUpdatePermission(state);
-  const configLink = getConfigLink(state);
+  const configLink = mustGetConfigLink(state);
   const namespaceStrategies = getNamespaceStrategies(state);
 
   return {

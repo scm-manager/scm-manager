@@ -25,7 +25,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { compose } from "redux";
-import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
+import { PendingPlugins, Plugin, PluginCollection } from "@scm-manager/ui-types";
 import {
   Button,
   ButtonGroup,
@@ -45,16 +45,15 @@ import {
 } from "../modules/plugins";
 import PluginsList from "../components/PluginList";
 import {
-  getAvailablePluginsLink,
-  getInstalledPluginsLink,
-  getPendingPluginsLink
+  getPendingPluginsLink,
+  mustGetAvailablePluginsLink,
+  mustGetInstalledPluginsLink
 } from "../../../modules/indexResource";
 import PluginTopActions from "../components/PluginTopActions";
 import PluginBottomActions from "../components/PluginBottomActions";
 import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
-import { Plugin } from "@scm-manager/ui-types";
 import ShowPendingModal from "../components/ShowPendingModal";
 
 type Props = WithTranslation & {
@@ -319,8 +318,8 @@ const mapStateToProps = (state: any) => {
   const collection = getPluginCollection(state);
   const loading = isFetchPluginsPending(state);
   const error = getFetchPluginsFailure(state);
-  const availablePluginsLink = getAvailablePluginsLink(state);
-  const installedPluginsLink = getInstalledPluginsLink(state);
+  const availablePluginsLink = mustGetAvailablePluginsLink(state);
+  const installedPluginsLink = mustGetInstalledPluginsLink(state);
   const pendingPluginsLink = getPendingPluginsLink(state);
   const pendingPlugins = getPendingPlugins(state);
 

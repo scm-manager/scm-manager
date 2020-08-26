@@ -29,7 +29,7 @@ import { History } from "history";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import { ErrorPage, Loading, Title } from "@scm-manager/ui-components";
-import { getRepositoryRolesLink } from "../../../modules/indexResource";
+import { mustGetRepositoryRolesLink } from "../../../modules/indexResource";
 import { fetchRoleByName, getFetchRoleFailure, getRoleByName, isFetchRolePending } from "../modules/roles";
 import PermissionRoleDetail from "../components/PermissionRoleDetails";
 import EditRepositoryRole from "./EditRepositoryRole";
@@ -107,7 +107,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   const role = getRoleByName(state, roleName);
   const loading = isFetchRolePending(state, roleName);
   const error = getFetchRoleFailure(state, roleName);
-  const repositoryRolesLink = getRepositoryRolesLink(state);
+  const repositoryRolesLink = mustGetRepositoryRolesLink(state);
   return {
     repositoryRolesLink,
     roleName,

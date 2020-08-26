@@ -23,16 +23,16 @@
  */
 import React from "react";
 
-import {Redirect, Route, Switch, withRouter} from "react-router-dom";
-import {Links, Me} from "@scm-manager/ui-types";
+import { Redirect, Route, Switch, withRouter } from "react-router-dom";
+import { Links, Me } from "@scm-manager/ui-types";
 
 import Overview from "../repos/containers/Overview";
 import Users from "../users/containers/Users";
 import Login from "../containers/Login";
 import Logout from "../containers/Logout";
 
-import {ProtectedRoute} from "@scm-manager/ui-components";
-import {binder, ExtensionPoint} from "@scm-manager/ui-extensions";
+import { ProtectedRoute, ErrorBoundary } from "@scm-manager/ui-components";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
 import CreateUser from "../users/containers/CreateUser";
 import SingleUser from "../users/containers/SingleUser";
@@ -50,13 +50,13 @@ import Profile from "./Profile";
 type Props = {
   me: Me;
   authenticated?: boolean;
-  loginLink?: string;
   links: Links;
+  loginLink?: string;
 };
 
 class Main extends React.Component<Props> {
   render() {
-    const { authenticated, me, links, loginLink } = this.props;
+    const { authenticated, me, loginLink, links } = this.props;
     const redirectUrlFactory = binder.getExtension("main.redirect", this.props);
     let url = "/";
     if (authenticated) {
@@ -68,44 +68,42 @@ class Main extends React.Component<Props> {
     if (!me) {
       url = "/login";
     }
-    const protectedRouteProps = {
-      authenticated,
-      loginLink
-    };
     return (
-      <div className="main">
-        <Switch>
-          <Redirect exact from="/" to={url} />
-          <Route exact path="/login" component={Login} />
-          <Route path="/logout" component={Logout} />
-          <Redirect exact strict from="/repos" to="/repos/" />
-          <ProtectedRoute exact path="/repos/" component={Overview} {...protectedRouteProps} />
-          <ProtectedRoute exact path="/repos/create" component={Create} {...protectedRouteProps} />
-          <ProtectedRoute exact path="/repos/:page" component={Overview} {...protectedRouteProps} />
-          <ProtectedRoute path="/repo/:namespace/:name" component={RepositoryRoot} {...protectedRouteProps} />
-          <Redirect exact strict from="/users" to="/users/" />
-          <ProtectedRoute exact path="/users/" component={Users} {...protectedRouteProps} />
-          <ProtectedRoute authenticated={authenticated} path="/users/create" component={CreateUser} />
-          <ProtectedRoute exact path="/users/:page" component={Users} {...protectedRouteProps} />
-          <ProtectedRoute authenticated={authenticated} path="/user/:name" component={SingleUser} />
-          <Redirect exact strict from="/groups" to="/groups/" />
-          <ProtectedRoute exact path="/groups/" component={Groups} {...protectedRouteProps} />
-          <ProtectedRoute authenticated={authenticated} path="/group/:name" component={SingleGroup} />
-          <ProtectedRoute authenticated={authenticated} path="/groups/create" component={CreateGroup} />
-          <ProtectedRoute exact path="/groups/:page" component={Groups} {...protectedRouteProps} />
-          <ProtectedRoute path="/admin" component={Admin} {...protectedRouteProps} />
-          <ProtectedRoute path="/me" component={Profile} {...protectedRouteProps} />
-          <ExtensionPoint
-            name="main.route"
-            renderAll={true}
-            props={{
-              me,
-              links,
-              ...protectedRouteProps
-            }}
-          />
-        </Switch>
-      </div>
+      <ErrorBoundary loginLink={loginLink}>
+        <div className="main">
+          <Switch>
+            <Redirect exact from="/" to={url} />
+            <Route exact path="/login" component={Login} />
+            <Route path="/logout" component={Logout} />
+            <Redirect exact strict from="/repos" to="/repos/" />
+            <ProtectedRoute exact path="/repos/" component={Overview} authenticated={authenticated} />
+            <ProtectedRoute exact path="/repos/create" component={Create} authenticated={authenticated} />
+            <ProtectedRoute exact path="/repos/:page" component={Overview} authenticated={authenticated} />
+            <ProtectedRoute path="/repo/:namespace/:name" component={RepositoryRoot} authenticated={authenticated} />
+            <Redirect exact strict from="/users" to="/users/" />
+            <ProtectedRoute exact path="/users/" component={Users} authenticated={authenticated} />
+            <ProtectedRoute path="/users/create" component={CreateUser} authenticated={authenticated} />
+            <ProtectedRoute exact path="/users/:page" component={Users} authenticated={authenticated} />
+            <ProtectedRoute path="/user/:name" component={SingleUser} authenticated={authenticated} />
+            <Redirect exact strict from="/groups" to="/groups/" />
+            <ProtectedRoute exact path="/groups/" component={Groups} authenticated={authenticated} />
+            <ProtectedRoute path="/group/:name" component={SingleGroup} authenticated={authenticated} />
+            <ProtectedRoute path="/groups/create" component={CreateGroup} authenticated={authenticated} />
+            <ProtectedRoute exact path="/groups/:page" component={Groups} authenticated={authenticated} />
+            <ProtectedRoute path="/admin" component={Admin} authenticated={authenticated} />
+            <ProtectedRoute path="/me" component={Profile} authenticated={authenticated} />
+            <ExtensionPoint
+              name="main.route"
+              renderAll={true}
+              props={{
+                me,
+                links,
+                authenticated
+              }}
+            />
+          </Switch>
+        </div>
+      </ErrorBoundary>
     );
   }
 }

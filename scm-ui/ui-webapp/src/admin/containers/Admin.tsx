@@ -37,7 +37,7 @@ import {
   SecondaryNavigation,
   SubNavigation
 } from "@scm-manager/ui-components";
-import { getAvailablePluginsLink, getInstalledPluginsLink, getLinks } from "../../modules/indexResource";
+import { getAvailablePluginsLink, getInstalledPluginsLink, getLinks, getLoginLink } from "../../modules/indexResource";
 import AdminDetails from "./AdminDetails";
 import PluginsOverview from "../plugins/containers/PluginsOverview";
 import GlobalConfig from "./GlobalConfig";
@@ -51,6 +51,7 @@ type Props = RouteComponentProps &
     links: Links;
     availablePluginsLink: string;
     installedPluginsLink: string;
+    loginLink?: string;
   };
 
 class Admin extends React.Component<Props> {
@@ -75,7 +76,7 @@ class Admin extends React.Component<Props> {
   };
 
   render() {
-    const { links, availablePluginsLink, installedPluginsLink, t } = this.props;
+    const { links, availablePluginsLink, installedPluginsLink, loginLink, t } = this.props;
 
     const url = this.matchedUrl();
     const extensionProps = {
@@ -85,7 +86,7 @@ class Admin extends React.Component<Props> {
 
     return (
       <StateMenuContextProvider>
-        <Page>
+        <Page loginLink={loginLink}>
           <CustomQueryFlexWrappedColumns>
             <PrimaryContentColumn>
               <Switch>
@@ -195,10 +196,12 @@ const mapStateToProps = (state: any) => {
   const links = getLinks(state);
   const availablePluginsLink = getAvailablePluginsLink(state);
   const installedPluginsLink = getInstalledPluginsLink(state);
+  const loginLink = getLoginLink(state);
   return {
     links,
     availablePluginsLink,
-    installedPluginsLink
+    installedPluginsLink,
+    loginLink
   };
 };
 

@@ -23,11 +23,18 @@
  */
 import React, { ReactNode } from "react";
 import ErrorNotification from "./ErrorNotification";
+import { MissingLinkError } from "./errors";
+import { withContextPath } from "./urls";
+import { withRouter, RouteComponentProps } from "react-router-dom";
+import ErrorPage from "./ErrorPage";
+import { WithTranslation, withTranslation } from "react-i18next";
 
-type Props = {
-  fallback?: React.ComponentType<any>;
-  children: ReactNode;
-};
+type Props = WithTranslation &
+  RouteComponentProps & {
+    fallback?: React.ComponentType<any>;
+    children: ReactNode;
+    loginLink?: string;
+  };
 
 type ErrorInfo = {
   componentStack: string;
@@ -44,16 +51,44 @@ class ErrorBoundary extends React.Component<Props, State> {
     this.state = {};
   }
 
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    // Catch errors in any components below and re-render with error message
-    this.setState({
-      error,
-      errorInfo
-    });
+  componentDidUpdate(prevProps: Readonly<Props>) {
+    // we must reset the error if the url has changed
+    if (this.state.error && prevProps.location !== this.props.location) {
+      this.setState({ error: undefined, errorInfo: undefined });
+    }
   }
 
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    this.setState(
+      {
+        error,
+        errorInfo
+      },
+      () => this.redirectToLogin(error)
+    );
+  }
+
+  redirectToLogin = (error: Error) => {
+    const { loginLink } = this.props;
+    if (error instanceof MissingLinkError) {
+      if (loginLink) {
+        window.location.assign(withContextPath("/login"));
+      }
+    }
+  };
+
   renderError = () => {
+    const { t } = this.props;
+    const { error } = this.state;
+
     let FallbackComponent = this.props.fallback;
+
+    if (error instanceof MissingLinkError) {
+      return (
+        <ErrorPage error={error} title={t("errorNotification.prefix")} subtitle={t("errorNotification.forbidden")} />
+      );
+    }
+
     if (!FallbackComponent) {
       FallbackComponent = ErrorNotification;
     }
@@ -69,4 +104,4 @@ class ErrorBoundary extends React.Component<Props, State> {
     return this.props.children;
   }
 }
-export default ErrorBoundary;
+export default withRouter(withTranslation("commons")(ErrorBoundary));

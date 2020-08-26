@@ -39,6 +39,7 @@ type Props = {
   error?: Error;
   showContentOnError?: boolean;
   children: ReactNode;
+  loginLink?: string;
 };
 
 const PageActionContainer = styled.div`
@@ -69,12 +70,12 @@ export default class Page extends React.Component<Props> {
   }
 
   render() {
-    const { error } = this.props;
+    const { error, loginLink } = this.props;
     return (
       <section className="section">
         <div className="container">
           {this.renderPageHeader()}
-          <ErrorBoundary>
+          <ErrorBoundary loginLink={loginLink}>
             <ErrorNotification error={error} />
             {this.renderContent()}
           </ErrorBoundary>

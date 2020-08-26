@@ -24,11 +24,10 @@
 
 import * as types from "./types";
 
-import { apiClient } from "@scm-manager/ui-components";
+import { apiClient, MissingLinkError } from "@scm-manager/ui-components";
 import { Action, IndexResources, Link } from "@scm-manager/ui-types";
 import { isPending } from "./pending";
 import { getFailure } from "./failure";
-import {MissingLinkError} from "@scm-manager/ui-components";
 
 // Action
 
@@ -154,8 +153,16 @@ export function getAvailablePluginsLink(state: object) {
   return getLink(state, "availablePlugins");
 }
 
+export function mustGetAvailablePluginsLink(state: object) {
+  return mustGetLink(state, "availablePlugins");
+}
+
 export function getInstalledPluginsLink(state: object) {
   return getLink(state, "installedPlugins");
+}
+
+export function mustGetInstalledPluginsLink(state: object) {
+  return mustGetLink(state, "installedPlugins");
 }
 
 export function getPendingPluginsLink(state: object) {
@@ -186,6 +193,10 @@ export function getRepositoryRolesLink(state: object) {
   return getLink(state, "repositoryRoles");
 }
 
+export function mustGetRepositoryRolesLink(state: object) {
+  return mustGetLink(state, "repositoryRoles");
+}
+
 export function getRepositoryVerbsLink(state: object) {
   return getLink(state, "repositoryVerbs");
 }
@@ -194,8 +205,16 @@ export function getGroupsLink(state: object) {
   return getLink(state, "groups");
 }
 
+export function mustGetGroupsLink(state: object) {
+  return mustGetLink(state, "groups");
+}
+
 export function getConfigLink(state: object) {
   return getLink(state, "config");
+}
+
+export function mustGetConfigLink(state: object) {
+  return mustGetLink(state, "config");
 }
 
 export function getRepositoriesLink(state: object) {

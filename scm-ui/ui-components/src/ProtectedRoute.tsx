@@ -21,24 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {Component} from "react";
-import {Redirect, Route, RouteComponentProps, RouteProps, withRouter} from "react-router-dom";
-import {MissingLinkError} from "./errors";
-import ErrorPage from "./ErrorPage";
-import {withTranslation, WithTranslation} from "react-i18next";
+import React, { Component } from "react";
+import { Redirect, Route, RouteComponentProps, RouteProps, withRouter } from "react-router-dom";
 
-type Props = WithTranslation &
-  RouteComponentProps &
+type Props = RouteComponentProps &
   RouteProps & {
     authenticated?: boolean;
-    loginLink?: string;
   };
 
-type State = {
-  error?: Error;
-};
-
-class ProtectedRoute extends Component<Props, State> {
+class ProtectedRoute extends Component<Props> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -46,54 +37,31 @@ class ProtectedRoute extends Component<Props, State> {
     };
   }
 
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    if (error instanceof MissingLinkError) {
-      this.setState({
-        error
-      });
-    }
-  }
-
-  renderRoute = (Component: any, authenticated?: boolean) => {
-    const { loginLink, t } = this.props;
-    const { error } = this.state;
+  renderRoute = (Component: any) => {
+    const { authenticated } = this.props;
 
     return (routeProps: any) => {
-      const redirectToLogin = (
-        <Redirect
-          to={{
-            pathname: "/login",
-            state: {
-              from: routeProps.location
-            }
-          }}
-        />
-      );
-
-      if (error) {
-        if (loginLink) {
-          return redirectToLogin;
-        } else {
-          return (
-            <ErrorPage
-              error={error}
-              title={t("errorNotification.prefix")}
-              subtitle={t("errorNotification.forbidden")}
-            />
-          );
-        }
-      } else if (authenticated) {
+      if (authenticated) {
         return <Component {...routeProps} />;
       } else {
-        return redirectToLogin;
+        return (
+          <Redirect
+            to={{
+              pathname: "/login",
+              state: {
+                from: routeProps.location
+              }
+            }}
+          />
+        );
       }
     };
   };
 
   render() {
-    const { component, authenticated, ...routeProps } = this.props;
-    return <Route {...routeProps} render={this.renderRoute(component, authenticated)} />;
+    const { component, ...routeProps } = this.props;
+    return <Route {...routeProps} render={this.renderRoute(component)} />;
   }
 }
 
-export default withTranslation("commons")(withRouter(ProtectedRoute));
+export default withRouter(ProtectedRoute);

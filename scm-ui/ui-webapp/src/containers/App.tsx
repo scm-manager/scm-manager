@@ -41,7 +41,8 @@ import { Links, Me } from "@scm-manager/ui-types";
 import {
   getAppVersion,
   getFetchIndexResourcesFailure,
-  getLinks, getLoginLink,
+  getLinks,
+  getLoginLink,
   getMeLink,
   isFetchIndexResourcesPending
 } from "../modules/indexResource";
@@ -81,7 +82,7 @@ class App extends Component<Props> {
     } else if (error) {
       content = <ErrorPage title={t("app.error.title")} subtitle={t("app.error.subtitle")} error={error} />;
     } else {
-      content = <Main authenticated={authenticated} loginLink={loginLink} links={links} me={me} />;
+      content = <Main authenticated={authenticated} links={links} me={me} loginLink={loginLink} />;
     }
     return (
       <div className="App">
