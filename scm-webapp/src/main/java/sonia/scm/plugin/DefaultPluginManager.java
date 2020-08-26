@@ -86,7 +86,11 @@ public class DefaultPluginManager implements PluginManager {
     if (contextFactory != null) {
       this.contextFactory = contextFactory;
     } else {
-      this.contextFactory = (availablePlugins -> PluginInstallationContext.from(getInstalled(), availablePlugins));
+      this.contextFactory = (plugins -> {
+        List<AvailablePlugin> pendingPlugins = new ArrayList<>(plugins);
+        pendingInstallQueue.stream().map(PendingPluginInstallation::getPlugin).forEach(pendingPlugins::add);
+        return PluginInstallationContext.from(getInstalled(), pendingPlugins);
+      });
     }
 
     this.computeInstallationDependencies();
