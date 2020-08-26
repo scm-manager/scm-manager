@@ -91,10 +91,11 @@ class MarkdownView extends React.Component<Props, State> {
     };
   }
 
-  shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>, nextContext: any): boolean {
+  shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>): boolean {
     // We have check if the contentRef changed and update afterwards so the page can scroll to the anchor links.
     // Otherwise it can happen that componentDidUpdate is never executed depending on how fast the markdown got rendered
-    return this.state.contentRef !== nextState.contentRef;
+    // We also have to check if props have changed, because we also want to rerender if one of our props has changed
+    return this.state.contentRef !== nextState.contentRef || this.props !== nextProps;
   }
 
   componentDidUpdate() {

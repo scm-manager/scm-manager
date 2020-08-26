@@ -38,7 +38,7 @@ type Props = {
 };
 
 const RenameRepository: FC<Props> = ({ repository, indexLinks }) => {
-  let history = useHistory();
+  const history = useHistory();
   const [t] = useTranslation("repos");
   const [error, setError] = useState<Error | undefined>(undefined);
   const [loading, setLoading] = useState(false);
@@ -156,10 +156,11 @@ const RenameRepository: FC<Props> = ({ repository, indexLinks }) => {
       />
       <Level
         left={
-          <div>
+          <p>
             <strong>{t("renameRepo.subtitle")}</strong>
-            <p>{t("renameRepo.description")}</p>
-          </div>
+            <br />
+            {t("renameRepo.description")}
+          </p>
         }
         right={
           <Button

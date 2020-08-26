@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import org.junit.Before;
@@ -61,18 +61,24 @@ public class TemplatingPushStateDispatcherTest {
   @Mock
   private Template template;
 
+  @Mock
+  private SCMContextProvider context;
+
   private TemplatingPushStateDispatcher dispatcher;
 
   @Before
   public void setUpMocks() {
-    dispatcher = new TemplatingPushStateDispatcher(templateEngine);
+    dispatcher = new TemplatingPushStateDispatcher(templateEngine, context);
   }
 
   @Test
   public void testDispatch() throws IOException {
+    when(context.getStage()).thenReturn(Stage.DEVELOPMENT);
+
     TemplatingPushStateDispatcher.IndexHtmlModel model = dispatch();
     assertEquals("/scm", model.getContextPath());
     assertNull(model.getLiveReloadURL());
+    assertEquals("DEVELOPMENT", model.getScmStage());
   }
 
   @Test

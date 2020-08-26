@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 
-FROM adoptopenjdk/openjdk11:x86_64-debian-jdk-11.0.7_10
+FROM adoptopenjdk/openjdk11:x86_64-debian-jdk-11.0.8_10
 
 ENV DOCKER_VERSION=19.03.8 \
     DOCKER_CHANNEL=stable \
@@ -34,11 +34,24 @@ COPY modprobe.sh /usr/local/bin/modprobe
 # install required packages
 RUN set -eux; \
  apt-get update \
- && apt-get install -y \
+ && apt-get install --no-install-recommends -y \
     # mercurial is requried for integration tests of the scm-hg-plugin
     mercurial \
     # git is required by yarn install of scm-ui
     git \
+    # the following dependencies are required for cypress tests and are copied from
+    # https://github.com/cypress-io/cypress-docker-images/blob/master/base/12.18.3/Dockerfile
+    libgtk2.0-0 \
+    libgtk-3-0 \
+    libnotify-dev \
+    libgconf-2-4 \
+    libgbm-dev \
+    libnss3 \
+    libxss1 \
+    libasound2 \
+    libxtst6 \
+    xauth \
+    xvfb \
  # download docker
  && curl -o docker-${DOCKER_VERSION}.tgz https://download.docker.com/linux/static/${DOCKER_CHANNEL}/x86_64/docker-${DOCKER_VERSION}.tgz \
  && echo "${DOCKER_CHECKSUM} docker-${DOCKER_VERSION}.tgz" > docker-${DOCKER_VERSION}.sha256sum \
