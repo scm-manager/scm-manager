@@ -26,17 +26,15 @@ package sonia.scm.repository.api;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-
-import java.io.IOException;
-import java.util.List;
-
 import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Tag;
+
+import java.io.IOException;
+import java.util.List;
 
 /**
  * Git provider implementation of {@link HookTagProvider}.
@@ -67,19 +65,17 @@ public class GitHookTagProvider implements HookTagProvider {
       if (Strings.isNullOrEmpty(tag)) {
         LOG.debug("received ref name {} is not a tag", refName);
       } else {
-        Long tagTime = null;
         try {
-          tagTime = GitUtil.getTagTime(repository, rc.getRef());
+          if (isCreate(rc)) {
+            createdTagBuilder.add(createTagFromNewId(rc, tag, GitUtil.getTagTime(repository, rc.getNewId())));
+          } else if (isDelete(rc)) {
+            deletedTagBuilder.add(createTagFromOldId(rc, tag, GitUtil.getTagTime(repository, rc.getOldId())));
+          } else if (isUpdate(rc)) {
+            createdTagBuilder.add(createTagFromNewId(rc, tag, GitUtil.getTagTime(repository, rc.getNewId())));
+            deletedTagBuilder.add(createTagFromOldId(rc, tag, GitUtil.getTagTime(repository, rc.getOldId())));
+          }
         } catch (IOException e) {
           LOG.error("Could not read tag time", e);
-        }
-        if (isCreate(rc)) {
-          createdTagBuilder.add(createTagFromNewId(rc, tag, tagTime));
-        } else if (isDelete(rc)) {
-          deletedTagBuilder.add(createTagFromOldId(rc, tag, tagTime));
-        } else if (isUpdate(rc)) {
-          createdTagBuilder.add(createTagFromNewId(rc, tag, tagTime));
-          deletedTagBuilder.add(createTagFromOldId(rc, tag, tagTime));
         }
       }
     }

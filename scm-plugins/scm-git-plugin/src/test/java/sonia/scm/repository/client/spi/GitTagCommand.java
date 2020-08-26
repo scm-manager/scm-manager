@@ -89,7 +89,7 @@ public class GitTagCommand implements TagCommand
       {
         walk = new RevWalk(git.getRepository());
         revObject = walk.parseAny(id);
-        tagTime = GitUtil.getTagTime(git.getRepository(), walk, GitUtil.getRefForCommit(git.getRepository(), id));
+        tagTime = GitUtil.getTagTime(git.getRepository(), walk, id);
       }
       finally
       {

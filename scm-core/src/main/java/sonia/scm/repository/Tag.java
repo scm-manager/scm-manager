@@ -73,7 +73,7 @@ public final class Tag {
   /**
    * The date is retrieved in a best-effort fashion.
    * In certain situations it might not be available.
-   * In these cases, this method returns <code>null</code>.
+   * In these cases, this method returns an empty optional.
    *
    * @since 2.5.0
    */
