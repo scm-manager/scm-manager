@@ -74,7 +74,7 @@ class Diff extends React.Component<Props, State> {
   shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>): boolean {
     // We have check if the contentRef changed and update afterwards so the page can scroll to the anchor links.
     // Otherwise it can happen that componentDidUpdate is never executed depending on how fast the markdown got rendered
-    return this.state.contentRef !== nextState.contentRef;
+    return this.state.contentRef !== nextState.contentRef || this.props !== nextProps;
   }
 
   render() {
