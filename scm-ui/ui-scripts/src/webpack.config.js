@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 const path = require("path");
-const createIndexMiddleware = require("./middleware/IndexMiddleware");
-const createContextPathMiddleware = require("./middleware/ContextPathMiddleware");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const OptimizeCSSAssetsPlugin = require("optimize-css-assets-webpack-plugin");
 const WorkerPlugin = require("worker-plugin");
+
+const createIndexMiddleware = require("./middleware/IndexMiddleware");
+const createContextPathMiddleware = require("./middleware/ContextPathMiddleware");
 
 const isDevelopment = process.env.NODE_ENV === "development";
 const root = path.resolve(process.cwd(), "scm-ui");
@@ -39,6 +40,8 @@ let mode = "production";
 if (isDevelopment) {
   mode = "development";
   babelPlugins.push(require.resolve("react-refresh/babel"));
+  // it is ok to use require here, because we want to load the package conditionally
+  // eslint-disable-next-line global-require
   const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
   webpackPlugins.push(new ReactRefreshWebpackPlugin());
 }
@@ -113,13 +116,15 @@ module.exports = [
       historyApiFallback: true,
       overlay: true,
       port: 3000,
-      before: function(app) {
+      before: app => {
         app.use(createContextPathMiddleware("/scm"));
       },
-      after: function(app) {
+      after: app => {
         const templatePath = path.join(root, "ui-webapp", "public", "index.mustache");
+        const stage = process.env.NODE_ENV || "DEVELOPMENT";
         const renderParams = {
-          contextPath: "/scm"
+          contextPath: "/scm",
+          scmStage: stage.toUpperCase()
         };
         app.use(createIndexMiddleware(templatePath, renderParams));
       },
