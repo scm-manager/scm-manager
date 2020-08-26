@@ -11,7 +11,9 @@
     "ci": "node src/index.js"
   },
   "dependencies": {
-    "cypress": "^4.12.0"
+    "@ffmpeg-installer/ffmpeg": "^1.0.20",
+    "cypress": "^4.12.0",
+    "fluent-ffmpeg": "^2.1.2"
   },
   "devDependencies": {
     "eslint-plugin-cypress": "^2.11.1"
