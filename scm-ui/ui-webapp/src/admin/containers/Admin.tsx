@@ -29,12 +29,13 @@ import { Redirect, Route, RouteComponentProps, Switch } from "react-router-dom";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Links } from "@scm-manager/ui-types";
 import {
+  CustomQueryFlexWrappedColumns,
   NavLink,
   Page,
-  CustomQueryFlexWrappedColumns,
   PrimaryContentColumn,
-  SecondaryNavigationColumn,
   SecondaryNavigation,
+  SecondaryNavigationColumn,
+  StateMenuContextProvider,
   SubNavigation
 } from "@scm-manager/ui-components";
 import { getAvailablePluginsLink, getInstalledPluginsLink, getLinks } from "../../modules/indexResource";
@@ -44,7 +45,6 @@ import GlobalConfig from "./GlobalConfig";
 import RepositoryRoles from "../roles/containers/RepositoryRoles";
 import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
 import CreateRepositoryRole from "../roles/containers/CreateRepositoryRole";
-import { StateMenuContextProvider } from "@scm-manager/ui-components";
 
 type Props = RouteComponentProps &
   WithTranslation & {

@@ -28,7 +28,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { User } from "@scm-manager/ui-types";
 import { Page } from "@scm-manager/ui-components";
-import { getUsersLink } from "../../modules/indexResource";
+import { mustGetUsersLink } from "../../modules/indexResource";
 import { createUser, createUserReset, getCreateUserFailure, isCreateUserPending } from "../modules/users";
 import UserForm from "../components/UserForm";
 
@@ -84,7 +84,7 @@ const mapDispatchToProps = (dispatch: any) => {
 const mapStateToProps = (state: any) => {
   const loading = isCreateUserPending(state);
   const error = getCreateUserFailure(state);
-  const usersLink = getUsersLink(state);
+  const usersLink = mustGetUsersLink(state);
   return {
     usersLink,
     loading,

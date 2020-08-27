@@ -21,56 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import i18next from "i18next";
-import { initReactI18next } from "react-i18next";
-import { addDecorator, configure } from "@storybook/react";
-import { withI18next } from "storybook-addon-i18next";
 
-import "!style-loader!css-loader!sass-loader!../../ui-styles/src/scm.scss";
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
-import withRedux from "./withRedux";
+import {createStore} from "redux";
+import { Provider } from 'react-redux'
 
+const reducer = (state, action) => {
+  return state;
+};
 
-let i18n = i18next;
-
-// only use fetch backend for storybook
-// and not for storyshots
-if (!process.env.JEST_WORKER_ID) {
-  const Backend = require("i18next-fetch-backend");
-  i18n = i18n.use(Backend.default)
+const withRedux = (storyFn) => {
+  return React.createElement(Provider, {
+    store: createStore(reducer, {}),
+    children: storyFn()
+  });
 }
 
-i18n
-.use(initReactI18next).init({
-  whitelist: ["en", "de", "es"],
-  lng: "en",
-  fallbackLng: "en",
-  interpolation: {
-    escapeValue: false
-  },
-  react: {
-    useSuspense: false
-  },
-  backend: {
-    loadPath: "/locales/{{lng}}/{{ns}}.json",
-    init: {
-      credentials: "same-origin"
-    }
-  }
-});
 
-addDecorator(
-  withI18next({
-    i18n,
-    languages: {
-      en: "English",
-      de: "Deutsch",
-      es: "Spanisch"
-    }
-  })
-);
-
-addDecorator(withRedux);
-
-configure(require.context("../src", true, /\.stories\.tsx?$/), module);
+export default withRedux;

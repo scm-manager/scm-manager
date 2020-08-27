@@ -24,7 +24,7 @@
 
 import * as types from "./types";
 
-import { apiClient } from "@scm-manager/ui-components";
+import { apiClient, MissingLinkError } from "@scm-manager/ui-components";
 import { Action, IndexResources, Link } from "@scm-manager/ui-types";
 import { isPending } from "./pending";
 import { getFailure } from "./failure";
@@ -123,6 +123,14 @@ export function getLink(state: object, name: string) {
   }
 }
 
+export function mustGetLink(state: object, name: string) {
+  const link = getLink(state, name);
+  if (link) {
+    return link;
+  }
+  throw new MissingLinkError(`No link in state for link name: '${name}'`);
+}
+
 export function getLinkCollection(state: object, name: string): Link[] {
   // @ts-ignore Right types not available
   if (state.indexResources.links && state.indexResources.links[name]) {
@@ -145,8 +153,16 @@ export function getAvailablePluginsLink(state: object) {
   return getLink(state, "availablePlugins");
 }
 
+export function mustGetAvailablePluginsLink(state: object) {
+  return mustGetLink(state, "availablePlugins");
+}
+
 export function getInstalledPluginsLink(state: object) {
   return getLink(state, "installedPlugins");
+}
+
+export function mustGetInstalledPluginsLink(state: object) {
+  return mustGetLink(state, "installedPlugins");
 }
 
 export function getPendingPluginsLink(state: object) {
@@ -169,8 +185,16 @@ export function getUsersLink(state: object) {
   return getLink(state, "users");
 }
 
+export function mustGetUsersLink(state: object) {
+  return mustGetLink(state, "users");
+}
+
 export function getRepositoryRolesLink(state: object) {
   return getLink(state, "repositoryRoles");
+}
+
+export function mustGetRepositoryRolesLink(state: object) {
+  return mustGetLink(state, "repositoryRoles");
 }
 
 export function getRepositoryVerbsLink(state: object) {
@@ -181,8 +205,16 @@ export function getGroupsLink(state: object) {
   return getLink(state, "groups");
 }
 
+export function mustGetGroupsLink(state: object) {
+  return mustGetLink(state, "groups");
+}
+
 export function getConfigLink(state: object) {
   return getLink(state, "config");
+}
+
+export function mustGetConfigLink(state: object) {
+  return mustGetLink(state, "config");
 }
 
 export function getRepositoriesLink(state: object) {
