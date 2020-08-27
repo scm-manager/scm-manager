@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
+import React, { ComponentType, ReactNode } from "react";
 import ErrorNotification from "./ErrorNotification";
 import { MissingLinkError } from "./errors";
 import { withContextPath } from "./urls";
@@ -31,12 +31,13 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { compose } from "redux";
 import { connect } from "react-redux";
 
-type Props = WithTranslation &
-  RouteComponentProps & {
-    fallback?: React.ComponentType<any>;
-    children: ReactNode;
-    loginLink?: string;
-  };
+type ExportedProps = {
+  fallback?: React.ComponentType<any>;
+  children: ReactNode;
+  loginLink?: string;
+};
+
+type Props = WithTranslation & RouteComponentProps & ExportedProps;
 
 type ErrorInfo = {
   componentStack: string;
@@ -115,4 +116,8 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export default compose(connect(mapStateToProps), withRouter, withTranslation("commons"))(ErrorBoundary);
+export default compose<ComponentType<ExportedProps>>(
+  withRouter,
+  withTranslation("commons"),
+  connect(mapStateToProps)
+)(ErrorBoundary);
