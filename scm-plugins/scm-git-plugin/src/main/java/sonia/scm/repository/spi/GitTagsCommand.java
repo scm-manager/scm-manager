@@ -127,7 +127,7 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
       Tag tag = null;
 
       try {
-        RevObject revObject = revWalk.parseAny(ref.getObjectId());
+        RevObject revObject = GitUtil.getCommit(repository, revWalk, ref);
 
         if (revObject != null) {
           String name = GitUtil.getTagName(ref);

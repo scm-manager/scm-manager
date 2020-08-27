@@ -54,10 +54,16 @@ public class GitTagsCommandTest extends AbstractGitCommandTestBase {
     final GitTagsCommand tagsCommand = new GitTagsCommand(gitContext);
     final List<Tag> tags = tagsCommand.getTags();
     assertThat(tags).hasSize(2);
-    assertThat(tags.get(0).getName()).isEqualTo("1.0.0");
-    assertThat(tags.get(0).getDate()).contains(1598348105000L); // Annotated - Take tag date
-    assertThat(tags.get(1).getName()).isEqualTo("test-tag");
-    assertThat(tags.get(1).getDate()).contains(1339416344000L); // Lightweight - Take commit date
+
+    Tag annotatedTag = tags.get(0);
+    assertThat(annotatedTag.getName()).isEqualTo("1.0.0");
+    assertThat(annotatedTag.getDate()).contains(1598348105000L); // Annotated - Take tag date
+    assertThat(annotatedTag.getRevision()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
+
+    Tag lightweightTag = tags.get(1);
+    assertThat(lightweightTag.getName()).isEqualTo("test-tag");
+    assertThat(lightweightTag.getDate()).contains(1339416344000L); // Lightweight - Take commit date
+    assertThat(lightweightTag.getRevision()).isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
   }
 
   @Override
