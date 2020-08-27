@@ -42,7 +42,6 @@ import {
   getAppVersion,
   getFetchIndexResourcesFailure,
   getLinks,
-  getLoginLink,
   getMeLink,
   isFetchIndexResourcesPending
 } from "../modules/indexResource";
@@ -55,7 +54,6 @@ type Props = WithTranslation & {
   loading: boolean;
   links: Links;
   meLink: string;
-  loginLink?: string;
   version: string;
 
   // dispatcher functions
@@ -70,7 +68,7 @@ class App extends Component<Props> {
   }
 
   render() {
-    const { me, loading, error, authenticated, links, loginLink, version, t } = this.props;
+    const { me, loading, error, authenticated, links, version, t } = this.props;
 
     let content;
     const navigation = authenticated ? <PrimaryNavigation links={links} /> : "";
@@ -82,7 +80,7 @@ class App extends Component<Props> {
     } else if (error) {
       content = <ErrorPage title={t("app.error.title")} subtitle={t("app.error.subtitle")} error={error} />;
     } else {
-      content = <Main authenticated={authenticated} links={links} me={me} loginLink={loginLink} />;
+      content = <Main authenticated={authenticated} links={links} me={me} />;
     }
     return (
       <div className="App">
@@ -107,7 +105,6 @@ const mapStateToProps = (state: any) => {
   const error = getFetchMeFailure(state) || getFetchIndexResourcesFailure(state);
   const links = getLinks(state);
   const meLink = getMeLink(state);
-  const loginLink = getLoginLink(state);
   const version = getAppVersion(state);
   return {
     authenticated,
@@ -116,7 +113,6 @@ const mapStateToProps = (state: any) => {
     error,
     links,
     meLink,
-    loginLink,
     version
   };
 };

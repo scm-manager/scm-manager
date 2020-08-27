@@ -39,7 +39,7 @@ import {
   SubNavigation,
   StateMenuContextProvider
 } from "@scm-manager/ui-components";
-import {getGroupsLink, mustGetGroupsLink} from "../../modules/indexResource";
+import { getGroupsLink, mustGetGroupsLink } from "../../modules/indexResource";
 import { fetchGroupByName, getFetchGroupFailure, getGroupByName, isFetchGroupPending } from "../modules/groups";
 import { Details } from "./../components/table";
 import { EditGroupNavLink, SetPermissionsNavLink } from "./../components/navLinks";

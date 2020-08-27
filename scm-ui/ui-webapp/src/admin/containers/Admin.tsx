@@ -29,29 +29,28 @@ import { Redirect, Route, RouteComponentProps, Switch } from "react-router-dom";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Links } from "@scm-manager/ui-types";
 import {
+  CustomQueryFlexWrappedColumns,
   NavLink,
   Page,
-  CustomQueryFlexWrappedColumns,
   PrimaryContentColumn,
-  SecondaryNavigationColumn,
   SecondaryNavigation,
+  SecondaryNavigationColumn,
+  StateMenuContextProvider,
   SubNavigation
 } from "@scm-manager/ui-components";
-import { getAvailablePluginsLink, getInstalledPluginsLink, getLinks, getLoginLink } from "../../modules/indexResource";
+import { getAvailablePluginsLink, getInstalledPluginsLink, getLinks } from "../../modules/indexResource";
 import AdminDetails from "./AdminDetails";
 import PluginsOverview from "../plugins/containers/PluginsOverview";
 import GlobalConfig from "./GlobalConfig";
 import RepositoryRoles from "../roles/containers/RepositoryRoles";
 import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
 import CreateRepositoryRole from "../roles/containers/CreateRepositoryRole";
-import { StateMenuContextProvider } from "@scm-manager/ui-components";
 
 type Props = RouteComponentProps &
   WithTranslation & {
     links: Links;
     availablePluginsLink: string;
     installedPluginsLink: string;
-    loginLink?: string;
   };
 
 class Admin extends React.Component<Props> {
@@ -76,7 +75,7 @@ class Admin extends React.Component<Props> {
   };
 
   render() {
-    const { links, availablePluginsLink, installedPluginsLink, loginLink, t } = this.props;
+    const { links, availablePluginsLink, installedPluginsLink, t } = this.props;
 
     const url = this.matchedUrl();
     const extensionProps = {
@@ -86,7 +85,7 @@ class Admin extends React.Component<Props> {
 
     return (
       <StateMenuContextProvider>
-        <Page loginLink={loginLink}>
+        <Page>
           <CustomQueryFlexWrappedColumns>
             <PrimaryContentColumn>
               <Switch>
@@ -196,12 +195,10 @@ const mapStateToProps = (state: any) => {
   const links = getLinks(state);
   const availablePluginsLink = getAvailablePluginsLink(state);
   const installedPluginsLink = getInstalledPluginsLink(state);
-  const loginLink = getLoginLink(state);
   return {
     links,
     availablePluginsLink,
-    installedPluginsLink,
-    loginLink
+    installedPluginsLink
   };
 };
 

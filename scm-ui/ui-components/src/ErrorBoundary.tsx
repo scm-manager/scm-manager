@@ -28,6 +28,8 @@ import { withContextPath } from "./urls";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import ErrorPage from "./ErrorPage";
 import { WithTranslation, withTranslation } from "react-i18next";
+import { compose } from "redux";
+import { connect } from "react-redux";
 
 type Props = WithTranslation &
   RouteComponentProps & {
@@ -104,4 +106,13 @@ class ErrorBoundary extends React.Component<Props, State> {
     return this.props.children;
   }
 }
-export default withRouter(withTranslation("commons")(ErrorBoundary));
+
+const mapStateToProps = (state: any) => {
+  const loginLink = state.indexResources?.links?.login?.href;
+
+  return {
+    loginLink
+  };
+};
+
+export default compose(connect(mapStateToProps), withRouter, withTranslation("commons"))(ErrorBoundary);

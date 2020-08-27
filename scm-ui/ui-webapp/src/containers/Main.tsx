@@ -51,12 +51,11 @@ type Props = {
   me: Me;
   authenticated?: boolean;
   links: Links;
-  loginLink?: string;
 };
 
 class Main extends React.Component<Props> {
   render() {
-    const { authenticated, me, loginLink, links } = this.props;
+    const { authenticated, me, links } = this.props;
     const redirectUrlFactory = binder.getExtension("main.redirect", this.props);
     let url = "/";
     if (authenticated) {
@@ -69,7 +68,7 @@ class Main extends React.Component<Props> {
       url = "/login";
     }
     return (
-      <ErrorBoundary loginLink={loginLink}>
+      <ErrorBoundary>
         <div className="main">
           <Switch>
             <Redirect exact from="/" to={url} />

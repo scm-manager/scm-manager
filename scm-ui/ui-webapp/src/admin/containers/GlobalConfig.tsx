@@ -26,7 +26,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { Config, NamespaceStrategies } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, Title } from "@scm-manager/ui-components";
-import {getConfigLink, mustGetConfigLink} from "../../modules/indexResource";
+import { mustGetConfigLink } from "../../modules/indexResource";
 import {
   fetchConfig,
   getConfig,
