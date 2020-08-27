@@ -125,23 +125,15 @@ const applyFetchOptions: (p: RequestInit) => RequestInit = o => {
 
 function handleFailure(response: Response) {
   if (!response.ok) {
-    if (isBackendError(response)) {
+    if (response.status === 401) {
+      throw new UnauthorizedError("Unauthorized", 401);
+    } else if (response.status === 403) {
+      throw new ForbiddenError("Forbidden", 403);
+    } else if (isBackendError(response)) {
       return response.json().then((content: BackendErrorContent) => {
-        if (content.errorCode === TOKEN_EXPIRED_ERROR_CODE) {
-          window.location.replace(`${contextPath}/login`);
-          // Throw error because if redirect is not instantaneous, we want to display something senseful
-          throw new UnauthorizedError("Unauthorized", 401);
-        } else {
-          throw createBackendError(content, response.status);
-        }
+        throw createBackendError(content, response.status);
       });
     } else {
-      if (response.status === 401) {
-        throw new UnauthorizedError("Unauthorized", 401);
-      } else if (response.status === 403) {
-        throw new ForbiddenError("Forbidden", 403);
-      }
-
       throw new Error("server returned status code " + response.status);
     }
   }

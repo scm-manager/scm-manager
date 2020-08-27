@@ -21,14 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
 import { BackendError, ForbiddenError, UnauthorizedError } from "./errors";
 import Notification from "./Notification";
 import BackendErrorNotification from "./BackendErrorNotification";
+import { useLocation } from "react-router-dom";
+import { withContextPath } from "./urls";
 
 type Props = WithTranslation & {
   error?: Error;
+};
+
+const LoginLink: FC = () => {
+  const [t] = useTranslation("commons");
+  const location = useLocation();
+  const from = encodeURIComponent(location.pathname);
+
+  return <a href={withContextPath(`/login?from=${from}`)}>{t("errorNotification.loginLink")}</a>;
 };
 
 class ErrorNotification extends React.Component<Props> {
@@ -40,8 +50,7 @@ class ErrorNotification extends React.Component<Props> {
       } else if (error instanceof UnauthorizedError) {
         return (
           <Notification type="danger">
-            <strong>{t("errorNotification.prefix")}:</strong> {t("errorNotification.timeout")}{" "}
-            <a href="javascript:window.location.reload(true)">{t("errorNotification.loginLink")}</a>
+            <strong>{t("errorNotification.prefix")}:</strong> {t("errorNotification.timeout")} <LoginLink />
           </Notification>
         );
       } else if (error instanceof ForbiddenError) {
