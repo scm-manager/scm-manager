@@ -394,22 +394,15 @@ public final class GitUtil
    */
   public static Long getTagTime(org.eclipse.jgit.lib.Repository repository, ObjectId objectId) throws IOException {
     try (RevWalk walk = new RevWalk(repository)) {
-      return GitUtil.getTagTime(repository, walk, objectId);
+      return GitUtil.getTagTime(walk, objectId);
     }
   }
 
   /**
    * @since 2.5.0
    */
-  public static Long getTagTime(org.eclipse.jgit.lib.Repository repository,
-                                RevWalk revWalk, ObjectId objectId)
-    throws IOException {
-
+  public static Long getTagTime(RevWalk revWalk, ObjectId objectId) throws IOException {
     if (objectId != null) {
-      if (revWalk == null) {
-        revWalk = new RevWalk(repository);
-      }
-
       final RevObject revObject = revWalk.parseAny(objectId);
       if (revObject instanceof RevTag) {
         return ((RevTag) revObject).getTaggerIdent().getWhen().getTime();

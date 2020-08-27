@@ -21,17 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import com.google.common.collect.Lists;
-import java.util.List;
-
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -43,9 +37,16 @@ import sonia.scm.repository.spi.HookChangesetProvider;
 import sonia.scm.repository.spi.HookChangesetRequest;
 import sonia.scm.repository.spi.HookChangesetResponse;
 
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.when;
+
 /**
  * Unit tests for {@link HgHookTagProvider}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 @RunWith(MockitoJUnitRunner.class)
@@ -53,7 +54,7 @@ public class HgHookTagProviderTest {
 
   @Mock
   private HookChangesetProvider changesetProvider;
-  
+
   @InjectMocks
   private HgHookTagProvider tagProvider;
 
@@ -63,9 +64,9 @@ public class HgHookTagProviderTest {
   @Test
   public void testGetDeletedTags() {
     prepareChangesets(new Changeset("1", Long.MIN_VALUE, null));
-    assertThat(tagProvider.getDeletedTags(), empty());
+    assertThat(tagProvider.getDeletedTags()).isEmpty();
   }
-  
+
   /**
    * Tests {@link HgHookTagProvider#getCreatedTags()}.
    */
@@ -77,20 +78,20 @@ public class HgHookTagProviderTest {
     c2.getTags().add("2.0.0");
     Changeset c3 = new Changeset("3", Long.MIN_VALUE, null);
     prepareChangesets(c1, c2, c3);
-    
+
     List<Tag> tags = tagProvider.getCreatedTags();
     assertNotNull(tags);
     assertEquals(2, tags.size());
-    
+
     Tag t1 = tags.get(0);
     assertEquals("1", t1.getRevision());
     assertEquals("1.0.0", t1.getName());
-    Assertions.assertThat(t1.getDate()).contains(Long.MIN_VALUE);
+    assertThat(t1.getDate()).contains(Long.MIN_VALUE);
 
     Tag t2 = tags.get(1);
     assertEquals("2", t2.getRevision());
     assertEquals("2.0.0", t2.getName());
-    Assertions.assertThat(t2.getDate()).contains(Long.MAX_VALUE);
+    assertThat(t2.getDate()).contains(Long.MAX_VALUE);
   }
 
   private void prepareChangesets(Changeset... changesets){

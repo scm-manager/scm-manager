@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.client.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -89,7 +89,7 @@ public class GitTagCommand implements TagCommand
       {
         walk = new RevWalk(git.getRepository());
         revObject = walk.parseAny(id);
-        tagTime = GitUtil.getTagTime(git.getRepository(), walk, id);
+        tagTime = GitUtil.getTagTime(walk, id);
       }
       finally
       {
