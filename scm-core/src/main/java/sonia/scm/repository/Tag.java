@@ -71,9 +71,18 @@ public final class Tag {
   }
 
   /**
-   * The date is retrieved in a best-effort fashion.
-   * In certain situations it might not be available.
-   * In these cases, this method returns an empty optional.
+   * Depending on the underlying source code management system
+   * (like git or hg) and depending on the type of this tag
+   * (for example git has <i>lightweight</i> and <i>annotated</i>
+   * tags), this date has different meaning. For annotated tags
+   * in git, this is the date the tag was created. In other cases
+   * (for lightweight tags in git or all tags in hg) this is the
+   * date of the referenced changeset.
+   * <p>
+   * Please note, that the date is retrieved in a best-effort fashion.
+   * In certain situations (for example if this tag is announced in
+   * a pre or post receive hook), it might not be available.
+   * In these cases, this method returns an empty {@link Optional}.
    *
    * @since 2.5.0
    */
