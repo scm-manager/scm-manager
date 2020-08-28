@@ -24,7 +24,7 @@
 
 import * as types from "./types";
 
-import { apiClient, MissingLinkError } from "@scm-manager/ui-components";
+import { apiClient, MissingLinkError, UnauthorizedError } from "@scm-manager/ui-components";
 import { Action, IndexResources, Link } from "@scm-manager/ui-types";
 import { isPending } from "./pending";
 import { getFailure } from "./failure";
@@ -46,14 +46,27 @@ export const callFetchIndexResources = (): Promise<IndexResources> => {
 
 export function fetchIndexResources() {
   return function(dispatch: any) {
+    /*
+     * The index resource returns a 401 if the access token expired.
+     * This only happens once because the error response automatically invalidates the cookie.
+     * In this event, we have to try the request once again.
+     */
+    let shouldRetry = true;
     dispatch(fetchIndexResourcesPending());
-    return callFetchIndexResources()
-      .then(resources => {
-        dispatch(fetchIndexResourcesSuccess(resources));
-      })
-      .catch(err => {
-        dispatch(fetchIndexResourcesFailure(err));
-      });
+    const run = (): Promise<any> =>
+      callFetchIndexResources()
+        .then(resources => {
+          dispatch(fetchIndexResourcesSuccess(resources));
+        })
+        .catch(err => {
+          if (err instanceof UnauthorizedError && shouldRetry) {
+            shouldRetry = false;
+            return run();
+          } else {
+            dispatch(fetchIndexResourcesFailure(err));
+          }
+        });
+    return run();
   };
 }
 
