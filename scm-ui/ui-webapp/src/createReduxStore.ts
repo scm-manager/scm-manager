@@ -40,12 +40,13 @@ import roles from "./admin/roles/modules/roles";
 import namespaceStrategies from "./admin/modules/namespaceStrategies";
 import indexResources from "./modules/indexResource";
 import plugins from "./admin/plugins/modules/plugins";
-import { apiClient } from "@scm-manager/ui-components";
-
+import { apiClient, UnauthorizedError } from "@scm-manager/ui-components";
 import branches from "./repos/branches/modules/branches";
-import { UnauthorizedError } from "@scm-manager/ui-components/src";
+
+const EMPTY_STATE = {} as any;
 
 function createReduxStore() {
+  // @ts-ignore __REDUX_DEVTOOLS_EXTENSION_COMPOSE__ is defined by react dev tools
   const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
   const appReducer = combineReducers({
@@ -67,27 +68,38 @@ function createReduxStore() {
     plugins
   });
 
+  // We assume that an UnauthorizedError means that the access token is expired.
+  // If the token is expired we want to show an error with the login link.
+  // This error should be displayed with the state (e.g. navigation) of the previous logged in user.
+  // But if the user navigates away, we want to reset the state to an anonymous one.
+
   const reducer = (state: any, action: AnyAction) => {
-    console.log(action.type, state?.tokenExpired);
-    if (state?.tokenExpired && action.type.indexOf("FAILURE") === -1) {
-      console.log("reset state");
-      return appReducer({}, action);
+    // Reset the state if the token is expired and a new action is dispatched (e.g. navigation).
+    // We exclude failures, because the fetch which had triggered the unauthorized error
+    // will likely end with an failure action.
+    if (state.tokenExpired && !action.type.includes("FAILURE")) {
+      // reset state by passing an empty state down to the app reducer
+      // we do not use the captured action, because the data is derived from the old state
+      return appReducer(EMPTY_STATE, { type: "_" });
     }
 
+    // If the user is authenticated and response is an unauthorized error,
+    // we assume that the token is expired.
     if (action.type === "API_CLIENT_UNAUTHORIZED" && isAuthenticated(state)) {
       return { ...state, tokenExpired: true };
     }
 
-    return { ...appReducer(state, action), tokenExpired: state?.tokenExpired };
+    // Keep the tokenExpired after calling appReducer,
+    // this is required because the appReducer would remove any unknown property.
+    return { ...appReducer(state, action), tokenExpired: state.tokenExpired };
   };
 
-  const store = createStore(reducer, composeEnhancers(applyMiddleware(thunk, logger)));
+  const store = createStore(reducer, EMPTY_STATE, composeEnhancers(applyMiddleware(thunk, logger)));
   apiClient.onError(error => {
     if (error instanceof UnauthorizedError) {
       store.dispatch({ type: "API_CLIENT_UNAUTHORIZED", error });
     }
   });
-
   return store;
 }
 
