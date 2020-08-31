@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update;
 
+import com.google.common.base.Stopwatch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,13 +38,19 @@ import sonia.scm.update.repository.XmlRepositoryV1UpdateStep;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static sonia.scm.update.MigrationWizardServlet.PROPERTY_WAIT_TIME;
 
 @ExtendWith(MockitoExtension.class)
 class MigrationWizardServletTest {
@@ -261,5 +268,59 @@ class MigrationWizardServletTest {
     servlet.doPost(request, response);
 
     verify(migrationStrategyDao).set("id", "git", "name", MigrationStrategy.COPY, "namespace", "name");
+  }
+
+  @Test
+  void shouldRestartAfterValidMigration() throws InterruptedException {
+
+    when(updateStep.getRepositoriesWithoutMigrationStrategies()).thenReturn(
+      Collections.singletonList(new V1Repository("id", "git", "name"))
+    );
+    doReturn("namespace").when(request).getParameter("namespace-id");
+    doReturn("name").when(request).getParameter("name-id");
+    doReturn("COPY").when(request).getParameter("strategy-id");
+
+    final CountDownLatch countDownLatch = new CountDownLatch(1);
+    when(restarter.isSupported()).thenReturn(true);
+    doAnswer(ic -> {
+      countDownLatch.countDown();
+      return null;
+    }).when(restarter).restart(any(), any());
+
+    servlet.doPost(request, response);
+
+    boolean restarted = countDownLatch.await(500L, TimeUnit.MILLISECONDS);
+
+    assertThat(restarted).isTrue();
+  }
+
+  @Test
+  void shouldRestartAfterValidMigrationWithSystemProperty() throws InterruptedException {
+    System.setProperty(PROPERTY_WAIT_TIME, "100");
+    Stopwatch stopwatch = Stopwatch.createStarted();
+
+    when(updateStep.getRepositoriesWithoutMigrationStrategies()).thenReturn(
+      Collections.singletonList(new V1Repository("id", "git", "name"))
+    );
+    doReturn("namespace").when(request).getParameter("namespace-id");
+    doReturn("name").when(request).getParameter("name-id");
+    doReturn("COPY").when(request).getParameter("strategy-id");
+
+    final CountDownLatch countDownLatch = new CountDownLatch(1);
+    when(restarter.isSupported()).thenReturn(true);
+    doAnswer(ic -> {
+      stopwatch.stop();
+      countDownLatch.countDown();
+      return null;
+    }).when(restarter).restart(any(), any());
+
+    servlet.doPost(request, response);
+
+    boolean restarted = countDownLatch.await(750L, TimeUnit.MILLISECONDS);
+
+    assertThat(stopwatch.elapsed()).isGreaterThanOrEqualTo(Duration.ofMillis(100L));
+    assertThat(restarted).isTrue();
+
+    System.clearProperty(PROPERTY_WAIT_TIME);
   }
 }

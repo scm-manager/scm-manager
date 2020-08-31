@@ -5,6 +5,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Add "sonia.scm.restart.wait" to set wait in milliseconds before restarting scm-server ([#1308](https://github.com/scm-manager/scm-manager/pull/1308))
+
 ### Fixed
 - Fix detection of markdown files for files having content does not start with '#' ([#1306](https://github.com/scm-manager/scm-manager/pull/1306))
 - Fix broken markdown rendering ([#1303](https://github.com/scm-manager/scm-manager/pull/1303))

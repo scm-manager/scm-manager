@@ -61,6 +61,7 @@ import static java.util.Comparator.comparing;
 class MigrationWizardServlet extends HttpServlet {
 
   private static final Logger LOG = LoggerFactory.getLogger(MigrationWizardServlet.class);
+  static final String PROPERTY_WAIT_TIME = "sonia.scm.restart-migration.wait";
 
   private final XmlRepositoryV1UpdateStep repositoryV1UpdateStep;
   private final DefaultMigrationStrategyDAO migrationStrategyDao;
@@ -129,7 +130,7 @@ class MigrationWizardServlet extends HttpServlet {
 
     repositoryLineEntries.stream()
       .forEach(
-        entry-> {
+        entry -> {
           String id = entry.getId();
           String protocol = entry.getType();
           String originalName = entry.getOriginalName();
@@ -145,12 +146,25 @@ class MigrationWizardServlet extends HttpServlet {
 
     if (restarter.isSupported()) {
       respondWithTemplate(resp, model, "templates/repository-migration-restart.mustache");
-      restarter.restart(MigrationWizardServlet.class, "wrote migration data");
+      new Thread(this::restart).start();
     } else {
       respondWithTemplate(resp, model, "templates/repository-migration-manual-restart.mustache");
       LOG.error("Restarting is not supported on this platform.");
       LOG.error("Please do a manual restart");
     }
+  }
+
+  private void restart() {
+    String wait = System.getProperty(PROPERTY_WAIT_TIME);
+    if (!Strings.isNullOrEmpty(wait)) {
+      try {
+        Thread.sleep(Long.parseLong(wait));
+      } catch (InterruptedException e) {
+        LOG.error("error on waiting before restart", e);
+        Thread.currentThread().interrupt();
+      }
+    }
+    restarter.restart(MigrationWizardServlet.class, "wrote migration data");
   }
 
   private List<RepositoryLineEntry> getRepositoryLineEntries() {
