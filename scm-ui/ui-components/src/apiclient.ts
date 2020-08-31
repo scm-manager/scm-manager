@@ -155,9 +155,19 @@ export function createUrlWithIdentifiers(url: string): string {
   return createUrl(url) + "?X-SCM-Client=WUI&X-SCM-Session-ID=" + sessionId;
 }
 
+type ErrorListener = (error: Error) => void;
+
 class ApiClient {
+  constructor() {
+    this.notifyAndRethrow = this.notifyAndRethrow.bind(this);
+  }
+
+  errorListeners: ErrorListener[] = [];
+
   get(url: string): Promise<Response> {
-    return fetch(createUrl(url), applyFetchOptions({})).then(handleFailure);
+    return fetch(createUrl(url), applyFetchOptions({}))
+      .then(handleFailure)
+      .catch(this.notifyAndRethrow);
   }
 
   post(url: string, payload?: any, contentType = "application/json", additionalHeaders: Record<string, string> = {}) {
@@ -193,7 +203,9 @@ class ApiClient {
       method: "HEAD"
     };
     options = applyFetchOptions(options);
-    return fetch(createUrl(url), options).then(handleFailure);
+    return fetch(createUrl(url), options)
+      .then(handleFailure)
+      .catch(this.notifyAndRethrow);
   }
 
   delete(url: string): Promise<Response> {
@@ -201,7 +213,9 @@ class ApiClient {
       method: "DELETE"
     };
     options = applyFetchOptions(options);
-    return fetch(createUrl(url), options).then(handleFailure);
+    return fetch(createUrl(url), options)
+      .then(handleFailure)
+      .catch(this.notifyAndRethrow);
   }
 
   httpRequestWithJSONBody(
@@ -245,7 +259,9 @@ class ApiClient {
       options.headers["Content-Type"] = contentType;
     }
 
-    return fetch(createUrl(url), options).then(handleFailure);
+    return fetch(createUrl(url), options)
+      .then(handleFailure)
+      .catch(this.notifyAndRethrow);
   }
 
   subscribe(url: string, argument: SubscriptionArgument): Cancel {
@@ -275,6 +291,15 @@ class ApiClient {
     }
 
     return () => es.close();
+  }
+
+  onError(errorListener: ErrorListener) {
+    this.errorListeners.push(errorListener);
+  }
+
+  private notifyAndRethrow(error: Error): never {
+    this.errorListeners.forEach(errorListener => errorListener(error));
+    throw error;
   }
 }
 
