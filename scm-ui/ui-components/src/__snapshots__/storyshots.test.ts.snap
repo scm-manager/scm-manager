@@ -44049,10 +44049,15 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
       <label
         className="checkbox"
       >
-        <i
-          className="is-outlined fa-square has-text-black far"
-        />
-         
+        <span
+          className="gwt-Anchor"
+          tabIndex={0}
+        >
+          <i
+            className="is-outlined fa-square has-text-black far"
+          />
+           
+        </span>
         Not checked
       </label>
     </div>
@@ -44067,10 +44072,15 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
       <label
         className="checkbox"
       >
-        <i
-          className="is-outlined fa-check-square has-text-link fa"
-        />
-         
+        <span
+          className="gwt-Anchor"
+          tabIndex={0}
+        >
+          <i
+            className="is-outlined fa-check-square has-text-link fa"
+          />
+           
+        </span>
         Checked
       </label>
     </div>
@@ -44085,10 +44095,15 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
       <label
         className="checkbox"
       >
-        <i
-          className="is-outlined fa-minus-square has-text-link far"
-        />
-         
+        <span
+          className="gwt-Anchor"
+          tabIndex={0}
+        >
+          <i
+            className="is-outlined fa-minus-square has-text-link far"
+          />
+           
+        </span>
         Indeterminate
       </label>
     </div>
@@ -44111,10 +44126,15 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
         className="checkbox"
         disabled={true}
       >
-        <i
-          className="is-outlined fa-check-square has-text-grey-light fa"
-        />
-         
+        <span
+          className="gwt-Anchor"
+          tabIndex={0}
+        >
+          <i
+            className="is-outlined fa-check-square has-text-grey-light fa"
+          />
+           
+        </span>
         Checked but disabled
       </label>
     </div>
@@ -44136,10 +44156,15 @@ exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
       <label
         className="checkbox"
       >
-        <i
-          className="is-outlined fa-square has-text-black far"
-        />
-         
+        <span
+          className="gwt-Anchor"
+          tabIndex={0}
+        >
+          <i
+            className="is-outlined fa-square has-text-black far"
+          />
+           
+        </span>
         Classic helpText
         <span
           className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
@@ -44162,10 +44187,15 @@ exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
       <label
         className="checkbox"
       >
-        <i
-          className="is-outlined fa-check-square has-text-link fa"
-        />
-         
+        <span
+          className="gwt-Anchor"
+          tabIndex={0}
+        >
+          <i
+            className="is-outlined fa-check-square has-text-link fa"
+          />
+           
+        </span>
         Long helpText
         <span
           className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
@@ -47541,10 +47571,15 @@ exports[`Storyshots Modal|Modal With long tooltips 1`] = `
             <label
               className="checkbox"
             >
-              <i
-                className="is-outlined fa-check-square has-text-link fa"
-              />
-               
+              <span
+                className="gwt-Anchor"
+                tabIndex={0}
+              >
+                <i
+                  className="is-outlined fa-check-square has-text-link fa"
+                />
+                 
+              </span>
               Checkbox
               <span
                 className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 cYhfno is-inline-block has-tooltip-multiline"
