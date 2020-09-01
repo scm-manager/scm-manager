@@ -6,7 +6,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- Add "sonia.scm.restart.wait" to set wait in milliseconds before restarting scm-server ([#1308](https://github.com/scm-manager/scm-manager/pull/1308))
+- Add "sonia.scm.restart-migration.wait" to set wait in milliseconds before restarting scm-server after migration ([#1308](https://github.com/scm-manager/scm-manager/pull/1308))
 
 ### Fixed
 - Fix detection of markdown files for files having content does not start with '#' ([#1306](https://github.com/scm-manager/scm-manager/pull/1306))
