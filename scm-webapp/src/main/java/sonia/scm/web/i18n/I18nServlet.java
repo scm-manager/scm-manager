@@ -33,7 +33,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.SCMContext;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.Stage;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
@@ -66,13 +66,15 @@ public class I18nServlet extends HttpServlet {
   public static final String PATTERN = "/locales/[a-z\\-A-Z]*/" + PLUGINS_JSON;
   public static final String CACHE_NAME = "sonia.cache.plugins.translations";
 
+  private final SCMContextProvider context;
   private final ClassLoader classLoader;
   private final Cache<String, JsonNode> cache;
   private final ObjectMapper objectMapper = new ObjectMapper();
 
 
   @Inject
-  public I18nServlet(PluginLoader pluginLoader, CacheManager cacheManager) {
+  public I18nServlet(SCMContextProvider context, PluginLoader pluginLoader, CacheManager cacheManager) {
+    this.context = context;
     this.classLoader = pluginLoader.getUberClassLoader();
     this.cache = cacheManager.getCache(CACHE_NAME);
   }
@@ -133,17 +135,11 @@ public class I18nServlet extends HttpServlet {
 
   @VisibleForTesting
   protected boolean isProductionStage() {
-    return SCMContext.getContext().getStage() == Stage.PRODUCTION;
+    return context.getStage() == Stage.PRODUCTION;
   }
 
-  /**
-   * Return a collected Json File as JsonNode from the given path from all plugins in the class path
-   *
-   * @param path the searched resource path
-   * @return a collected Json File as JsonNode from the given path from all plugins in the class path
-   */
   @VisibleForTesting
-  protected Optional<JsonNode> collectJsonFile(String path) throws IOException {
+  private Optional<JsonNode> collectJsonFile(String path) throws IOException {
     LOG.debug("Collect plugin translations from path {} for every plugin", path);
     JsonNode mergedJsonNode = null;
     Enumeration<URL> resources = classLoader.getResources(path.replaceFirst("/", ""));
@@ -160,18 +156,7 @@ public class I18nServlet extends HttpServlet {
     return Optional.ofNullable(mergedJsonNode);
   }
 
-
-  /**
-   * Merge the <code>updateNode</code> into the <code>mainNode</code> and return it.
-   * <p>
-   * This is not a deep merge.
-   *
-   * @param mainNode   the main node
-   * @param updateNode the update node
-   * @return the merged mainNode
-   */
-  @VisibleForTesting
-  protected JsonNode merge(JsonNode mainNode, JsonNode updateNode) {
+  private JsonNode merge(JsonNode mainNode, JsonNode updateNode) {
     Iterator<String> fieldNames = updateNode.fieldNames();
     while (fieldNames.hasNext()) {
       String fieldName = fieldNames.next();
