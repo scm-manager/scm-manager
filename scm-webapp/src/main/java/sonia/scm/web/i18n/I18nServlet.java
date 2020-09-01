@@ -33,7 +33,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.NotFoundException;
 import sonia.scm.SCMContext;
 import sonia.scm.Stage;
 import sonia.scm.cache.Cache;
@@ -52,11 +51,6 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.Optional;
-import java.util.function.BiConsumer;
-import java.util.function.Function;
-
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
-import static sonia.scm.NotFoundException.notFound;
 
 
 /**
@@ -89,43 +83,52 @@ public class I18nServlet extends HttpServlet {
     cache.clear();
   }
 
-  private JsonNode getCollectedJson(String path,
-                                    Function<String, Optional<JsonNode>> jsonFileProvider,
-                                    BiConsumer<String, JsonNode> createdJsonFileConsumer) {
-    return Optional.ofNullable(jsonFileProvider.apply(path)
-      .orElseGet(() -> {
-          Optional<JsonNode> createdFile = collectJsonFile(path);
-          createdFile.ifPresent(map -> createdJsonFileConsumer.accept(path, map));
-          return createdFile.orElse(null);
-        }
-      )).orElseThrow(() -> notFound(entity("jsonprovider", path)));
-  }
-
   @VisibleForTesting
   @Override
-  protected void doGet(HttpServletRequest req, HttpServletResponse response) {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) {
+    String path = request.getServletPath();
+    try {
+      Optional<JsonNode> json = findJson(path);
+      if (json.isPresent()) {
+        write(response, json.get());
+      } else {
+        LOG.debug("could not find translation at {}", path);
+        response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+      }
+    } catch (IOException ex) {
+      LOG.error("Error on getting the translation of the plugins", ex);
+      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+    }
+  }
+
+  private void write(HttpServletResponse response, JsonNode jsonNode) throws IOException {
     response.setCharacterEncoding("UTF-8");
     response.setContentType("application/json");
     response.setHeader("Cache-Control", "no-cache");
-    try (PrintWriter out = response.getWriter()) {
-      String path = req.getServletPath();
-      Function<String, Optional<JsonNode>> jsonFileProvider = usedPath -> Optional.empty();
-      BiConsumer<String, JsonNode> createdJsonFileConsumer = (usedPath, jsonNode) -> LOG.debug("A json File is created from the path {}", usedPath);
-      if (isProductionStage()) {
-        LOG.debug("In Production Stage get the plugin translations from the cache");
-        jsonFileProvider = usedPath -> Optional.ofNullable(cache.get(usedPath));
-        createdJsonFileConsumer = createdJsonFileConsumer
-          .andThen((usedPath, jsonNode) -> LOG.debug("Put the created json File in the cache with the key {}", usedPath))
-          .andThen(cache::put);
-      }
-      objectMapper.writeValue(out, getCollectedJson(path, jsonFileProvider, createdJsonFileConsumer));
-    } catch (IOException e) {
-      LOG.error("Error on getting the translation of the plugins", e);
-      response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-    } catch (NotFoundException e) {
-      LOG.error("Plugin translations are not found", e);
-      response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+
+    try (PrintWriter writer = response.getWriter()) {
+      objectMapper.writeValue(writer, jsonNode);
     }
+  }
+
+  public Optional<JsonNode> findJson(String path) throws IOException {
+    if (isProductionStage()) {
+      return findJsonCached(path);
+    }
+    return collectJsonFile(path);
+  }
+
+  private Optional<JsonNode> findJsonCached(String path) throws IOException {
+    JsonNode jsonNode = cache.get(path);
+    if (jsonNode != null) {
+      LOG.debug("return json node from cache for path {}", path);
+      return Optional.of(jsonNode);
+    }
+
+    LOG.debug("collect json for path {}", path);
+    Optional<JsonNode> collected = collectJsonFile(path);
+    collected.ifPresent(node -> cache.put(path, node));
+    return collected;
   }
 
   @VisibleForTesting
@@ -140,46 +143,39 @@ public class I18nServlet extends HttpServlet {
    * @return a collected Json File as JsonNode from the given path from all plugins in the class path
    */
   @VisibleForTesting
-  protected Optional<JsonNode> collectJsonFile(String path) {
+  protected Optional<JsonNode> collectJsonFile(String path) throws IOException {
     LOG.debug("Collect plugin translations from path {} for every plugin", path);
     JsonNode mergedJsonNode = null;
-    try {
-      Enumeration<URL> resources = classLoader.getResources(path.replaceFirst("/", ""));
-      while (resources.hasMoreElements()) {
-        URL url = resources.nextElement();
-        JsonNode jsonNode = objectMapper.readTree(url);
-        if (mergedJsonNode != null) {
-          merge(mergedJsonNode, jsonNode);
-        } else {
-          mergedJsonNode = jsonNode;
-        }
+    Enumeration<URL> resources = classLoader.getResources(path.replaceFirst("/", ""));
+    while (resources.hasMoreElements()) {
+      URL url = resources.nextElement();
+      JsonNode jsonNode = objectMapper.readTree(url);
+      if (mergedJsonNode != null) {
+        merge(mergedJsonNode, jsonNode);
+      } else {
+        mergedJsonNode = jsonNode;
       }
-    } catch (IOException e) {
-      LOG.error("Error on loading sources from {}", path, e);
-      return Optional.empty();
     }
+
     return Optional.ofNullable(mergedJsonNode);
   }
 
 
   /**
    * Merge the <code>updateNode</code> into the <code>mainNode</code> and return it.
-   *
+   * <p>
    * This is not a deep merge.
    *
-   * @param mainNode the main node
+   * @param mainNode   the main node
    * @param updateNode the update node
    * @return the merged mainNode
    */
   @VisibleForTesting
   protected JsonNode merge(JsonNode mainNode, JsonNode updateNode) {
     Iterator<String> fieldNames = updateNode.fieldNames();
-
     while (fieldNames.hasNext()) {
-
       String fieldName = fieldNames.next();
       JsonNode jsonNode = mainNode.get(fieldName);
-
       if (jsonNode != null) {
         mergeNode(updateNode, fieldName, jsonNode);
       } else {

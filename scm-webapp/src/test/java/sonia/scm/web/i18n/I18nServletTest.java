@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.i18n;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -40,7 +40,6 @@ import org.mockito.MockSettings;
 import org.mockito.internal.creation.MockSettingsImpl;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.event.ScmEventBus;
@@ -87,7 +86,7 @@ public class I18nServletTest {
       "}",
     "}"
   );
-  private static String SVN_PLUGIN_JSON = json(
+  private static final String SVN_PLUGIN_JSON = json(
     "{",
       "'scm-svn-plugin': {",
         "'information': {",
@@ -116,11 +115,11 @@ public class I18nServletTest {
   private I18nServlet servlet;
 
   @Mock
-  private Cache cache;
+  private Cache<String, JsonNode> cache;
+
   private Enumeration<URL> resources;
 
   @Before
-  @SuppressWarnings("unchecked")
   public void init() throws IOException {
     resources = Collections.enumeration(Lists.newArrayList(
       createFileFromString(SVN_PLUGIN_JSON).toURI().toURL(),
@@ -128,7 +127,7 @@ public class I18nServletTest {
       createFileFromString(HG_PLUGIN_JSON).toURI().toURL()
     ));
     when(pluginLoader.getUberClassLoader()).thenReturn(classLoader);
-    when(cacheManager.getCache(I18nServlet.CACHE_NAME)).thenReturn(cache);
+    when(cacheManager.<String, JsonNode>getCache(I18nServlet.CACHE_NAME)).thenReturn(cache);
     MockSettings settings = new MockSettingsImpl<>();
     settings.useConstructor(pluginLoader, cacheManager);
     settings.defaultAnswer(InvocationOnMock::callRealMethod);
@@ -145,7 +144,6 @@ public class I18nServletTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void shouldFailWith404OnMissingResources() throws IOException {
     String path = "/locales/de/plugins.json";
     HttpServletRequest request = mock(HttpServletRequest.class);
@@ -153,7 +151,9 @@ public class I18nServletTest {
     PrintWriter writer = mock(PrintWriter.class);
     when(response.getWriter()).thenReturn(writer);
     when(request.getServletPath()).thenReturn(path);
-    when(classLoader.getResources("locales/de/plugins.json")).thenThrow(IOException.class);
+    when(classLoader.getResources("locales/de/plugins.json")).thenReturn(
+      I18nServlet.class.getClassLoader().getResources("something/not/available")
+    );
 
     servlet.doGet(request, response);
 
@@ -161,9 +161,10 @@ public class I18nServletTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void shouldFailWith500OnIOException() throws IOException {
+    when(servlet.isProductionStage()).thenReturn(false);
     HttpServletRequest request = mock(HttpServletRequest.class);
+    when(request.getServletPath()).thenReturn("/locales/de/plugins.json");
     HttpServletResponse response = mock(HttpServletResponse.class);
     doThrow(IOException.class).when(response).getWriter();
 
@@ -173,7 +174,7 @@ public class I18nServletTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("UnstableApiUsage")
   public void inDevelopmentStageShouldNotUseCache() throws IOException {
     String path = "/locales/de/plugins.json";
     when(servlet.isProductionStage()).thenReturn(false);
@@ -193,7 +194,7 @@ public class I18nServletTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("UnstableApiUsage")
   public void inProductionStageShouldUseCache() throws IOException {
     String path = "/locales/de/plugins.json";
     when(servlet.isProductionStage()).thenReturn(true);
@@ -216,7 +217,7 @@ public class I18nServletTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
+  @SuppressWarnings("UnstableApiUsage")
   public void inProductionStageShouldGetFromCache() throws IOException {
     String path = "/locales/de/plugins.json";
     when(servlet.isProductionStage()).thenReturn(true);
@@ -245,7 +246,6 @@ public class I18nServletTest {
   }
 
   @Test
-  @SuppressWarnings("unchecked")
   public void shouldCollectJsonFile() throws IOException {
     String path = "locales/de/plugins.json";
     when(classLoader.getResources(path)).thenReturn(resources);
