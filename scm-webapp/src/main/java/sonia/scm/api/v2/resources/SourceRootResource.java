@@ -88,7 +88,7 @@ public class SourceRootResource {
       browseCommand.setPath(path);
       browseCommand.setOffset(offset);
       if (revision != null && !revision.isEmpty()) {
-        browseCommand.setRevision(URLDecoder.decode(revision, "UTF-8"));
+        browseCommand.setRevision(revision);
       }
       BrowserResult browserResult = browseCommand.getBrowserResult();
 
