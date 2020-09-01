@@ -15,10 +15,10 @@ $family-monospace: "Courier New", Monaco, Menlo, "Ubuntu Mono", "source-code-pro
 }
 
 .is-word-break {
-  -webkit-hyphens: auto;
-  -moz-hyphens: auto;
-  -ms-hyphens: auto;
-  hyphens: auto;
+  -webkit-hyphens: none;
+  -moz-hyphens: none;
+  -ms-hyphens: none;
+  hyphens: none;
   word-break: break-word;
 }
 
