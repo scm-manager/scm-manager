@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - JWT token timeout is now handled properly ([#1297](https://github.com/scm-manager/scm-manager/pull/1297))
 - Fix text-overflow in danger zone ([#1298](https://github.com/scm-manager/scm-manager/pull/1298))
 - Fix plugin installation error if previously a plugin was installed with the same dependency which is still pending. ([#1300](https://github.com/scm-manager/scm-manager/pull/1300))
+- Fix logging of large stacktrace for unknown language ([#1313](https://github.com/scm-manager/scm-manager/pull/1313))
 - Remove obsolete revision encoding on sources ([#1315](https://github.com/scm-manager/scm-manager/pull/1315))
 
 ## [2.4.0] - 2020-08-14
