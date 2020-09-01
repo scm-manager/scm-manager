@@ -44045,6 +44045,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
     <div
       className="control"
       onClick={[Function]}
+      onKeyDown={[Function]}
     >
       <label
         className="checkbox"
@@ -44068,6 +44069,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
     <div
       className="control"
       onClick={[Function]}
+      onKeyDown={[Function]}
     >
       <label
         className="checkbox"
@@ -44091,6 +44093,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
     <div
       className="control"
       onClick={[Function]}
+      onKeyDown={[Function]}
     >
       <label
         className="checkbox"
@@ -44121,6 +44124,7 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
     <div
       className="control"
       onClick={[Function]}
+      onKeyDown={[Function]}
     >
       <label
         className="checkbox"
@@ -44152,6 +44156,7 @@ exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
     <div
       className="control"
       onClick={[Function]}
+      onKeyDown={[Function]}
     >
       <label
         className="checkbox"
@@ -44183,6 +44188,7 @@ exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
     <div
       className="control"
       onClick={[Function]}
+      onKeyDown={[Function]}
     >
       <label
         className="checkbox"
@@ -47567,6 +47573,7 @@ exports[`Storyshots Modal|Modal With long tooltips 1`] = `
           <div
             className="control"
             onClick={[Function]}
+            onKeyDown={[Function]}
           >
             <label
               className="checkbox"
