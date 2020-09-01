@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.i18n;
 
 
@@ -31,14 +31,15 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.legman.Subscribe;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Singleton;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContext;
 import sonia.scm.Stage;
-import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.filter.WebElement;
+import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.plugin.PluginLoader;
 
 import javax.inject.Inject;
@@ -63,8 +64,9 @@ import static sonia.scm.NotFoundException.notFound;
  */
 @Singleton
 @WebElement(value = I18nServlet.PATTERN, regex = true)
-@Slf4j
 public class I18nServlet extends HttpServlet {
+
+  private static final Logger LOG = LoggerFactory.getLogger(I18nServlet.class);
 
   public static final String PLUGINS_JSON = "plugins.json";
   public static final String PATTERN = "/locales/[a-z\\-A-Z]*/" + PLUGINS_JSON;
@@ -72,7 +74,7 @@ public class I18nServlet extends HttpServlet {
 
   private final ClassLoader classLoader;
   private final Cache<String, JsonNode> cache;
-  private static ObjectMapper objectMapper = new ObjectMapper();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
 
   @Inject
@@ -83,7 +85,7 @@ public class I18nServlet extends HttpServlet {
 
   @Subscribe(async = false)
   public void handleRestartEvent(RestartEvent event) {
-    log.debug("Clear cache on restart event with reason {}", event.getReason());
+    LOG.debug("Clear cache on restart event with reason {}", event.getReason());
     cache.clear();
   }
 
@@ -108,21 +110,20 @@ public class I18nServlet extends HttpServlet {
     try (PrintWriter out = response.getWriter()) {
       String path = req.getServletPath();
       Function<String, Optional<JsonNode>> jsonFileProvider = usedPath -> Optional.empty();
-      BiConsumer<String, JsonNode> createdJsonFileConsumer = (usedPath, jsonNode) -> log.debug("A json File is created from the path {}", usedPath);
+      BiConsumer<String, JsonNode> createdJsonFileConsumer = (usedPath, jsonNode) -> LOG.debug("A json File is created from the path {}", usedPath);
       if (isProductionStage()) {
-        log.debug("In Production Stage get the plugin translations from the cache");
-        jsonFileProvider = usedPath -> Optional.ofNullable(
-          cache.get(usedPath));
+        LOG.debug("In Production Stage get the plugin translations from the cache");
+        jsonFileProvider = usedPath -> Optional.ofNullable(cache.get(usedPath));
         createdJsonFileConsumer = createdJsonFileConsumer
-          .andThen((usedPath, jsonNode) -> log.debug("Put the created json File in the cache with the key {}", usedPath))
+          .andThen((usedPath, jsonNode) -> LOG.debug("Put the created json File in the cache with the key {}", usedPath))
           .andThen(cache::put);
       }
       objectMapper.writeValue(out, getCollectedJson(path, jsonFileProvider, createdJsonFileConsumer));
     } catch (IOException e) {
-      log.error("Error on getting the translation of the plugins", e);
+      LOG.error("Error on getting the translation of the plugins", e);
       response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
     } catch (NotFoundException e) {
-      log.error("Plugin translations are not found", e);
+      LOG.error("Plugin translations are not found", e);
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
   }
@@ -140,7 +141,7 @@ public class I18nServlet extends HttpServlet {
    */
   @VisibleForTesting
   protected Optional<JsonNode> collectJsonFile(String path) {
-    log.debug("Collect plugin translations from path {} for every plugin", path);
+    LOG.debug("Collect plugin translations from path {} for every plugin", path);
     JsonNode mergedJsonNode = null;
     try {
       Enumeration<URL> resources = classLoader.getResources(path.replaceFirst("/", ""));
@@ -154,7 +155,7 @@ public class I18nServlet extends HttpServlet {
         }
       }
     } catch (IOException e) {
-      log.error("Error on loading sources from {}", path, e);
+      LOG.error("Error on loading sources from {}", path, e);
       return Optional.empty();
     }
     return Optional.ofNullable(mergedJsonNode);
