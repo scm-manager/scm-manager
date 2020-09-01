@@ -158,31 +158,32 @@ export function createUrlWithIdentifiers(url: string): string {
 type ErrorListener = (error: Error) => void;
 
 class ApiClient {
-  constructor() {
-    this.notifyAndRethrow = this.notifyAndRethrow.bind(this);
-  }
-
   errorListeners: ErrorListener[] = [];
 
-  get(url: string): Promise<Response> {
+  get = (url: string): Promise<Response> => {
     return fetch(createUrl(url), applyFetchOptions({}))
       .then(handleFailure)
       .catch(this.notifyAndRethrow);
-  }
+  };
 
-  post(url: string, payload?: any, contentType = "application/json", additionalHeaders: Record<string, string> = {}) {
+  post = (
+    url: string,
+    payload?: any,
+    contentType = "application/json",
+    additionalHeaders: Record<string, string> = {}
+  ) => {
     return this.httpRequestWithJSONBody("POST", url, contentType, additionalHeaders, payload);
-  }
+  };
 
-  postText(url: string, payload: string, additionalHeaders: Record<string, string> = {}) {
+  postText = (url: string, payload: string, additionalHeaders: Record<string, string> = {}) => {
     return this.httpRequestWithTextBody("POST", url, additionalHeaders, payload);
-  }
+  };
 
-  putText(url: string, payload: string, additionalHeaders: Record<string, string> = {}) {
+  putText = (url: string, payload: string, additionalHeaders: Record<string, string> = {}) => {
     return this.httpRequestWithTextBody("PUT", url, additionalHeaders, payload);
-  }
+  };
 
-  postBinary(url: string, fileAppender: (p: FormData) => void, additionalHeaders: Record<string, string> = {}) {
+  postBinary = (url: string, fileAppender: (p: FormData) => void, additionalHeaders: Record<string, string> = {}) => {
     const formData = new FormData();
     fileAppender(formData);
 
@@ -192,13 +193,13 @@ class ApiClient {
       headers: additionalHeaders
     };
     return this.httpRequestWithBinaryBody(options, url);
-  }
+  };
 
   put(url: string, payload: any, contentType = "application/json", additionalHeaders: Record<string, string> = {}) {
     return this.httpRequestWithJSONBody("PUT", url, contentType, additionalHeaders, payload);
   }
 
-  head(url: string) {
+  head = (url: string) => {
     let options: RequestInit = {
       method: "HEAD"
     };
@@ -206,9 +207,9 @@ class ApiClient {
     return fetch(createUrl(url), options)
       .then(handleFailure)
       .catch(this.notifyAndRethrow);
-  }
+  };
 
-  delete(url: string): Promise<Response> {
+  delete = (url: string): Promise<Response> => {
     let options: RequestInit = {
       method: "DELETE"
     };
@@ -216,15 +217,15 @@ class ApiClient {
     return fetch(createUrl(url), options)
       .then(handleFailure)
       .catch(this.notifyAndRethrow);
-  }
+  };
 
-  httpRequestWithJSONBody(
+  httpRequestWithJSONBody = (
     method: string,
     url: string,
     contentType: string,
     additionalHeaders: Record<string, string>,
     payload?: any
-  ): Promise<Response> {
+  ): Promise<Response> => {
     const options: RequestInit = {
       method: method,
       headers: additionalHeaders
@@ -233,23 +234,23 @@ class ApiClient {
       options.body = JSON.stringify(payload);
     }
     return this.httpRequestWithBinaryBody(options, url, contentType);
-  }
+  };
 
-  httpRequestWithTextBody(
+  httpRequestWithTextBody = (
     method: string,
     url: string,
     additionalHeaders: Record<string, string> = {},
     payload: string
-  ) {
+  ) => {
     const options: RequestInit = {
       method: method,
       headers: additionalHeaders
     };
     options.body = payload;
     return this.httpRequestWithBinaryBody(options, url, "text/plain");
-  }
+  };
 
-  httpRequestWithBinaryBody(options: RequestInit, url: string, contentType?: string) {
+  httpRequestWithBinaryBody = (options: RequestInit, url: string, contentType?: string) => {
     options = applyFetchOptions(options);
     if (contentType) {
       if (!options.headers) {
@@ -262,7 +263,7 @@ class ApiClient {
     return fetch(createUrl(url), options)
       .then(handleFailure)
       .catch(this.notifyAndRethrow);
-  }
+  };
 
   subscribe(url: string, argument: SubscriptionArgument): Cancel {
     const es = new EventSource(createUrlWithIdentifiers(url), {
@@ -293,14 +294,14 @@ class ApiClient {
     return () => es.close();
   }
 
-  onError(errorListener: ErrorListener) {
+  onError = (errorListener: ErrorListener) => {
     this.errorListeners.push(errorListener);
-  }
+  };
 
-  private notifyAndRethrow(error: Error): never {
+  private notifyAndRethrow = (error: Error): never => {
     this.errorListeners.forEach(errorListener => errorListener(error));
     throw error;
-  }
+  };
 }
 
 export const apiClient = new ApiClient();
