@@ -1,12 +1,12 @@
 {
   "name": "@scm-manager/ui-plugins",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "license": "MIT",
   "bin": {
     "ui-plugins": "./bin/ui-plugins.js"
   },
   "dependencies": {
-    "@scm-manager/ui-components": "^2.4.0",
+    "@scm-manager/ui-components": "^2.4.1",
     "@scm-manager/ui-extensions": "^2.1.0",
     "classnames": "^2.2.6",
     "query-string": "^5.0.1",
@@ -23,7 +23,7 @@
     "@scm-manager/jest-preset": "^2.1.0",
     "@scm-manager/prettier-config": "^2.1.0",
     "@scm-manager/tsconfig": "^2.1.0",
-    "@scm-manager/ui-scripts": "^2.1.0",
+    "@scm-manager/ui-scripts": "^2.4.1",
     "@scm-manager/ui-tests": "^2.1.0",
     "@scm-manager/ui-types": "^2.4.0",
     "@types/classnames": "^2.2.9",
