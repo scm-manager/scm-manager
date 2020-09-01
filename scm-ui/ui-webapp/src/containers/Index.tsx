@@ -64,6 +64,15 @@ class Index extends Component<Props, State> {
     this.props.fetchIndexResources();
   }
 
+  componentDidUpdate() {
+    const { indexResources, loading, error } = this.props;
+    const { pluginsLoaded } = this.state;
+    if (!indexResources && !loading && !error && pluginsLoaded) {
+      this.props.fetchIndexResources();
+      this.setState({ pluginsLoaded: false });
+    }
+  }
+
   pluginLoaderCallback = () => {
     this.setState({
       pluginsLoaded: true
