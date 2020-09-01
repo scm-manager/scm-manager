@@ -26,7 +26,7 @@ import { Trans, useTranslation, WithTranslation, withTranslation } from "react-i
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Changeset, ParentChangeset, Repository, Tag } from "@scm-manager/ui-types";
+import { Changeset, ParentChangeset, Repository } from "@scm-manager/ui-types";
 import {
   AvatarImage,
   AvatarWrapper,
@@ -36,14 +36,15 @@ import {
   ChangesetDiff,
   ChangesetId,
   changesets,
-  ChangesetTag,
+  ChangesetTags,
   DateFromNow,
+  FileControlFactory,
   Icon,
-  Level
+  Level,
+  SignatureIcon
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
 import { Link as ReactLink } from "react-router-dom";
-import { FileControlFactory, SignatureIcon } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   changeset: Changeset;
@@ -57,16 +58,6 @@ type State = {
 
 const RightMarginP = styled.p`
   margin-right: 1em;
-`;
-
-const TagsWrapper = styled.div`
-  & .tag {
-    margin-left: 0.25rem;
-  }
-`;
-
-const SignedIcon = styled(SignatureIcon)`
-  padding-left: 1rem;
 `;
 
 const BottomMarginLevel = styled(Level)`
@@ -224,7 +215,9 @@ class ChangesetDetails extends React.Component<Props, State> {
                 )}
               </ChangesetSummary>
             </div>
-            <div className="media-right">{this.renderTags()}</div>
+            <div className="media-right">
+              <ChangesetTags changeset={changeset} />
+            </div>
           </article>
           <p>
             {description.message.split("\n").map((item, key) => {
@@ -263,24 +256,6 @@ class ChangesetDetails extends React.Component<Props, State> {
       </>
     );
   }
-
-  getTags = () => {
-    return this.props.changeset._embedded.tags || [];
-  };
-
-  renderTags = () => {
-    const tags = this.getTags();
-    if (tags.length > 0) {
-      return (
-        <TagsWrapper className="level-item">
-          {tags.map((tag: Tag) => {
-            return <ChangesetTag key={tag.name} tag={tag} />;
-          })}
-        </TagsWrapper>
-      );
-    }
-    return null;
-  };
 
   collapseDiffs = () => {
     this.setState(state => ({
