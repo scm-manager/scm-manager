@@ -31,9 +31,8 @@ import javax.inject.Singleton;
 
 @Singleton
 public class DefaultRestarter implements Restarter {
-
-  private ScmEventBus eventBus;
-  private RestartStrategy strategy;
+  private final ScmEventBus eventBus;
+  private final RestartStrategy strategy;
 
   @Inject
   public DefaultRestarter() {
