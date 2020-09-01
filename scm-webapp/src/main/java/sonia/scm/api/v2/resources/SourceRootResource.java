@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -40,7 +40,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import java.io.IOException;
-import java.net.URLDecoder;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -88,7 +87,7 @@ public class SourceRootResource {
       browseCommand.setPath(path);
       browseCommand.setOffset(offset);
       if (revision != null && !revision.isEmpty()) {
-        browseCommand.setRevision(URLDecoder.decode(revision, "UTF-8"));
+        browseCommand.setRevision(revision);
       }
       BrowserResult browserResult = browseCommand.getBrowserResult();
 
