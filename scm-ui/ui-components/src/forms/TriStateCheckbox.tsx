@@ -58,10 +58,13 @@ const TriStateCheckbox: FC<Props> = ({ checked, indeterminate, disabled, label, 
     color = "black";
   }
 
+  // We need a tabIndex to make the checkbox accessible from keyboard.
+  // We also add the gwt-Anchor css class to support the key-jump browser extension
+  // https://github.com/KennethSundqvist/key-jump-chrome-extension/blob/master/src/content.js#L365
   return (
-    <>
+    <span tabIndex={0} className="gwt-Anchor">
       <Icon iconStyle={"is-outlined"} name={icon} className={className} color={color} testId={testId} /> {label}
-    </>
+    </span>
   );
 };
 
