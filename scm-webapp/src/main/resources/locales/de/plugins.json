@@ -268,6 +268,10 @@
     "BxS5wX2v71": {
       "displayName": "Inkorrekter Schlüssel",
       "description": "Der bereitgestellte Schlüssel ist kein korrekt formartierter öffentlicher Schlüssel."
+    },
+    "FVS9JY1T21": {
+      "displayName": "Ungültiger Accept Header",
+      "description": "Für den gesendeten Accept Header gibt es keine passende Funktion."
     }
   },
   "namespaceStrategies": {
