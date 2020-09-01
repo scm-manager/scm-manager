@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix text-overflow in danger zone ([#1298](https://github.com/scm-manager/scm-manager/pull/1298))
 - Fix plugin installation error if previously a plugin was installed with the same dependency which is still pending. ([#1300](https://github.com/scm-manager/scm-manager/pull/1300))
 - Remove obsolete revision encoding on sources ([#1315](https://github.com/scm-manager/scm-manager/pull/1315))
+- Map generic JaxRS 'web application exceptions' to appropriate response instead of "internal server error" ([#1318](https://github.com/scm-manager/scm-manager/pull/1312))
 
 ## [2.4.0] - 2020-08-14
 ### Added
