@@ -268,6 +268,10 @@
     "BxS5wX2v71": {
       "displayName": "Invalid key",
       "description": "The provided key is not a valid public key."
+    },
+    "FVS9JY1T21": {
+      "displayName": "Error in the request",
+      "description": "While processing the request there was an error. Please check the http return status and the concrete error message."
     }
   },
   "namespaceStrategies": {

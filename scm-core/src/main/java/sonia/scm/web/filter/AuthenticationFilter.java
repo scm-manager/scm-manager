@@ -166,6 +166,11 @@ public class AuthenticationFilter extends HttpFilter {
     HttpUtil.sendUnauthorized(request, response, configuration.getRealmDescription());
   }
 
+  protected void handleTokenExpiredException(HttpServletRequest request, HttpServletResponse response,
+                                             FilterChain chain, TokenExpiredException tokenExpiredException) throws IOException, ServletException {
+    throw tokenExpiredException;
+  }
+
   /**
    * Iterates all {@link WebTokenGenerator} and creates an
    * {@link AuthenticationToken} from the given request.
@@ -211,7 +216,7 @@ public class AuthenticationFilter extends HttpFilter {
       processChain(request, response, chain, subject);
     } catch (TokenExpiredException ex) {
       // Rethrow to be caught by TokenExpiredFilter
-      throw ex;
+      handleTokenExpiredException(request, response, chain, ex);
     } catch (AuthenticationException ex) {
       logger.warn("authentication failed", ex);
       handleUnauthorized(request, response, chain);

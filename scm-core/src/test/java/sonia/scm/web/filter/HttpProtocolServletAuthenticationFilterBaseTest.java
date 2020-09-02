@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.filter;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -30,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.TokenExpiredException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
@@ -43,6 +44,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.Set;
 
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -91,6 +93,25 @@ class HttpProtocolServletAuthenticationFilterBaseTest {
     authenticationFilter.handleUnauthorized(request, response, filterChain);
 
     verify(filterChain).doFilter(request, response);
+  }
+
+  @Test
+  void shouldIgnoreTokenExpiredExceptionForBrowserCall() throws IOException, ServletException {
+    when(userAgentParser.parse(request)).thenReturn(browser);
+
+    authenticationFilter.handleTokenExpiredException(request, response, filterChain, new TokenExpiredException("Nothing ever expired so much"));
+
+    verify(filterChain).doFilter(request, response);
+  }
+
+  @Test
+  void shouldRethrowTokenExpiredExceptionForApiCall() {
+    when(userAgentParser.parse(request)).thenReturn(nonBrowser);
+
+    final TokenExpiredException tokenExpiredException = new TokenExpiredException("Nothing ever expired so much");
+
+    assertThrows(TokenExpiredException.class,
+      () -> authenticationFilter.handleTokenExpiredException(request, response, filterChain, tokenExpiredException));
   }
 
 }

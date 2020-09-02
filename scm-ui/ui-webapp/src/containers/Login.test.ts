@@ -21,37 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
 
-type Props = {
-  message: string;
-  className?: string;
-  location: string;
-  multiline?: boolean;
-  children: ReactNode;
-};
+import { from } from "./Login";
 
-class Tooltip extends React.Component<Props> {
-  static defaultProps = {
-    location: "right"
-  };
+describe("from tests", () => {
+  it("should use default location", () => {
+    const path = from("", {});
+    expect(path).toBe("/");
+  });
 
-  render() {
-    const { className, message, location, multiline, children } = this.props;
-    let classes = `tooltip has-tooltip-${location}`;
-    if (multiline) {
-      classes += " has-tooltip-multiline";
-    }
-    if (className) {
-      classes += " " + className;
-    }
+  it("should use default location without params", () => {
+    const path = from();
+    expect(path).toBe("/");
+  });
 
-    return (
-      <span className={classes} data-tooltip={message}>
-        {children}
-      </span>
-    );
-  }
-}
+  it("should use default location with null params", () => {
+    const path = from("", null);
+    expect(path).toBe("/");
+  });
 
-export default Tooltip;
+  it("should use location from query parameter", () => {
+    const path = from("from=/repos", {});
+    expect(path).toBe("/repos");
+  });
+
+  it("should use location from state", () => {
+    const path = from("", { from: "/users" });
+    expect(path).toBe("/users");
+  });
+
+  it("should prefer location from query parameter", () => {
+    const path = from("from=/groups", { from: "/users" });
+    expect(path).toBe("/groups");
+  });
+
+  it("should decode query param", () => {
+    const path = from(`from=${encodeURIComponent("/admin/plugins/installed")}`);
+    expect(path).toBe("/admin/plugins/installed");
+  });
+});

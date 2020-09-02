@@ -21,37 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
 
-type Props = {
-  message: string;
-  className?: string;
-  location: string;
-  multiline?: boolean;
-  children: ReactNode;
+import React from "react";
+import {createStore} from "redux";
+import { Provider } from 'react-redux'
+
+const reducer = (state, action) => {
+  return state;
 };
 
-class Tooltip extends React.Component<Props> {
-  static defaultProps = {
-    location: "right"
-  };
-
-  render() {
-    const { className, message, location, multiline, children } = this.props;
-    let classes = `tooltip has-tooltip-${location}`;
-    if (multiline) {
-      classes += " has-tooltip-multiline";
-    }
-    if (className) {
-      classes += " " + className;
-    }
-
-    return (
-      <span className={classes} data-tooltip={message}>
-        {children}
-      </span>
-    );
-  }
+const withRedux = (storyFn) => {
+  return React.createElement(Provider, {
+    store: createStore(reducer, {}),
+    children: storyFn()
+  });
 }
 
-export default Tooltip;
+
+export default withRedux;

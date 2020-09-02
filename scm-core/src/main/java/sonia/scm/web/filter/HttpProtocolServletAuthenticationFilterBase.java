@@ -25,6 +25,7 @@
 package sonia.scm.web.filter;
 
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.security.TokenExpiredException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
@@ -57,6 +58,17 @@ public class HttpProtocolServletAuthenticationFilterBase extends AuthenticationF
       chain.doFilter(request, response);
     } else {
       HttpUtil.sendUnauthorized(request, response);
+    }
+  }
+
+  @Override
+  protected void handleTokenExpiredException(HttpServletRequest request, HttpServletResponse response, FilterChain chain, TokenExpiredException tokenExpiredException) throws IOException, ServletException {
+    UserAgent userAgent = userAgentParser.parse(request);
+    if (userAgent.isBrowser()) {
+      // we can proceed the filter chain because the HttpProtocolServlet will render the ui if the client is a browser
+      chain.doFilter(request, response);
+    } else {
+      super.handleTokenExpiredException(request, response, chain, tokenExpiredException);
     }
   }
 }

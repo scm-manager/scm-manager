@@ -30,6 +30,7 @@ import { getLoginFailure, getMe, isAnonymous, isLoginPending, login } from "../m
 import { getLoginInfoLink, getLoginLink } from "../modules/indexResource";
 import LoginInfo from "../components/LoginInfo";
 import { Me } from "@scm-manager/ui-types";
+import { parse } from "query-string";
 
 type Props = RouteComponentProps & {
   authenticated: boolean;
@@ -47,6 +48,18 @@ const HeroSection = styled.section`
   padding-top: 2em;
 `;
 
+interface FromObject {
+  from?: string;
+}
+
+/**
+ * @visibleForTesting
+ */
+export const from = (queryString?: string, stateParams?: FromObject | null): string => {
+  const queryParams = parse(queryString || "");
+  return queryParams?.from || stateParams?.from || "/";
+};
+
 class Login extends React.Component<Props> {
   handleLogin = (username: string, password: string): void => {
     const { link, login } = this.props;
@@ -54,12 +67,8 @@ class Login extends React.Component<Props> {
   };
 
   renderRedirect = () => {
-    const { from } = this.props.location.state || {
-      from: {
-        pathname: "/"
-      }
-    };
-    return <Redirect to={from} />;
+    const to = from(window.location.search, this.props.location.state);
+    return <Redirect to={to} />;
   };
 
   render() {

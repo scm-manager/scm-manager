@@ -125,23 +125,15 @@ const applyFetchOptions: (p: RequestInit) => RequestInit = o => {
 
 function handleFailure(response: Response) {
   if (!response.ok) {
-    if (isBackendError(response)) {
+    if (response.status === 401) {
+      throw new UnauthorizedError("Unauthorized", 401);
+    } else if (response.status === 403) {
+      throw new ForbiddenError("Forbidden", 403);
+    } else if (isBackendError(response)) {
       return response.json().then((content: BackendErrorContent) => {
-        if (content.errorCode === TOKEN_EXPIRED_ERROR_CODE) {
-          window.location.replace(`${contextPath}/login`);
-          // Throw error because if redirect is not instantaneous, we want to display something senseful
-          throw new UnauthorizedError("Unauthorized", 401);
-        } else {
-          throw createBackendError(content, response.status);
-        }
+        throw createBackendError(content, response.status);
       });
     } else {
-      if (response.status === 401) {
-        throw new UnauthorizedError("Unauthorized", 401);
-      } else if (response.status === 403) {
-        throw new ForbiddenError("Forbidden", 403);
-      }
-
       throw new Error("server returned status code " + response.status);
     }
   }
@@ -163,24 +155,35 @@ export function createUrlWithIdentifiers(url: string): string {
   return createUrl(url) + "?X-SCM-Client=WUI&X-SCM-Session-ID=" + sessionId;
 }
 
+type ErrorListener = (error: Error) => void;
+
 class ApiClient {
-  get(url: string): Promise<Response> {
-    return fetch(createUrl(url), applyFetchOptions({})).then(handleFailure);
-  }
+  errorListeners: ErrorListener[] = [];
 
-  post(url: string, payload?: any, contentType = "application/json", additionalHeaders: Record<string, string> = {}) {
+  get = (url: string): Promise<Response> => {
+    return fetch(createUrl(url), applyFetchOptions({}))
+      .then(handleFailure)
+      .catch(this.notifyAndRethrow);
+  };
+
+  post = (
+    url: string,
+    payload?: any,
+    contentType = "application/json",
+    additionalHeaders: Record<string, string> = {}
+  ) => {
     return this.httpRequestWithJSONBody("POST", url, contentType, additionalHeaders, payload);
-  }
+  };
 
-  postText(url: string, payload: string, additionalHeaders: Record<string, string> = {}) {
+  postText = (url: string, payload: string, additionalHeaders: Record<string, string> = {}) => {
     return this.httpRequestWithTextBody("POST", url, additionalHeaders, payload);
-  }
+  };
 
-  putText(url: string, payload: string, additionalHeaders: Record<string, string> = {}) {
+  putText = (url: string, payload: string, additionalHeaders: Record<string, string> = {}) => {
     return this.httpRequestWithTextBody("PUT", url, additionalHeaders, payload);
-  }
+  };
 
-  postBinary(url: string, fileAppender: (p: FormData) => void, additionalHeaders: Record<string, string> = {}) {
+  postBinary = (url: string, fileAppender: (p: FormData) => void, additionalHeaders: Record<string, string> = {}) => {
     const formData = new FormData();
     fileAppender(formData);
 
@@ -190,35 +193,39 @@ class ApiClient {
       headers: additionalHeaders
     };
     return this.httpRequestWithBinaryBody(options, url);
-  }
+  };
 
   put(url: string, payload: any, contentType = "application/json", additionalHeaders: Record<string, string> = {}) {
     return this.httpRequestWithJSONBody("PUT", url, contentType, additionalHeaders, payload);
   }
 
-  head(url: string) {
+  head = (url: string) => {
     let options: RequestInit = {
       method: "HEAD"
     };
     options = applyFetchOptions(options);
-    return fetch(createUrl(url), options).then(handleFailure);
-  }
+    return fetch(createUrl(url), options)
+      .then(handleFailure)
+      .catch(this.notifyAndRethrow);
+  };
 
-  delete(url: string): Promise<Response> {
+  delete = (url: string): Promise<Response> => {
     let options: RequestInit = {
       method: "DELETE"
     };
     options = applyFetchOptions(options);
-    return fetch(createUrl(url), options).then(handleFailure);
-  }
+    return fetch(createUrl(url), options)
+      .then(handleFailure)
+      .catch(this.notifyAndRethrow);
+  };
 
-  httpRequestWithJSONBody(
+  httpRequestWithJSONBody = (
     method: string,
     url: string,
     contentType: string,
     additionalHeaders: Record<string, string>,
     payload?: any
-  ): Promise<Response> {
+  ): Promise<Response> => {
     const options: RequestInit = {
       method: method,
       headers: additionalHeaders
@@ -227,23 +234,23 @@ class ApiClient {
       options.body = JSON.stringify(payload);
     }
     return this.httpRequestWithBinaryBody(options, url, contentType);
-  }
+  };
 
-  httpRequestWithTextBody(
+  httpRequestWithTextBody = (
     method: string,
     url: string,
     additionalHeaders: Record<string, string> = {},
     payload: string
-  ) {
+  ) => {
     const options: RequestInit = {
       method: method,
       headers: additionalHeaders
     };
     options.body = payload;
     return this.httpRequestWithBinaryBody(options, url, "text/plain");
-  }
+  };
 
-  httpRequestWithBinaryBody(options: RequestInit, url: string, contentType?: string) {
+  httpRequestWithBinaryBody = (options: RequestInit, url: string, contentType?: string) => {
     options = applyFetchOptions(options);
     if (contentType) {
       if (!options.headers) {
@@ -253,8 +260,10 @@ class ApiClient {
       options.headers["Content-Type"] = contentType;
     }
 
-    return fetch(createUrl(url), options).then(handleFailure);
-  }
+    return fetch(createUrl(url), options)
+      .then(handleFailure)
+      .catch(this.notifyAndRethrow);
+  };
 
   subscribe(url: string, argument: SubscriptionArgument): Cancel {
     const es = new EventSource(createUrlWithIdentifiers(url), {
@@ -284,6 +293,15 @@ class ApiClient {
 
     return () => es.close();
   }
+
+  onError = (errorListener: ErrorListener) => {
+    this.errorListeners.push(errorListener);
+  };
+
+  private notifyAndRethrow = (error: Error): never => {
+    this.errorListeners.forEach(errorListener => errorListener(error));
+    throw error;
+  };
 }
 
 export const apiClient = new ApiClient();

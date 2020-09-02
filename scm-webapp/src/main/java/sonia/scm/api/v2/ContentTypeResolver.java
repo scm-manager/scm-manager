@@ -21,51 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import Icon from "../Icon";
 
-type Props = {
-  checked: boolean;
-  indeterminate?: boolean;
-  disabled?: boolean;
-  label?: string;
-  testId?: string;
-};
+package sonia.scm.api.v2;
 
-const TriStateCheckbox: FC<Props> = ({ checked, indeterminate, disabled, label, testId }) => {
-  let icon;
-  if (indeterminate) {
-    icon = "minus-square";
-  } else if (checked) {
-    icon = "check-square";
-  } else {
-    icon = "square";
+import com.github.sdorra.spotter.ContentType;
+import com.github.sdorra.spotter.ContentTypeDetector;
+import com.github.sdorra.spotter.Language;
+
+public final class ContentTypeResolver {
+
+  private static final ContentTypeDetector PATH_BASED = ContentTypeDetector.builder()
+    .defaultPathBased().boost(Language.MARKDOWN)
+    .bestEffortMatch();
+
+  private static final ContentTypeDetector PATH_AND_CONTENT_BASED = ContentTypeDetector.builder()
+    .defaultPathAndContentBased().boost(Language.MARKDOWN)
+    .bestEffortMatch();
+
+  private ContentTypeResolver() {
   }
 
-  let className;
-  if (!checked || indeterminate) {
-    className = "far";
-  } else {
-    className = "fa";
+  public static ContentType resolve(String path) {
+    return PATH_BASED.detect(path);
   }
 
-  let color;
-  if (disabled) {
-    color = "grey-light";
-  } else if (checked || indeterminate) {
-    color = "link";
-  } else {
-    color = "black";
+  public static ContentType resolve(String path, byte[] contentPrefix) {
+    return PATH_AND_CONTENT_BASED.detect(path, contentPrefix);
   }
-
-  // We need a tabIndex to make the checkbox accessible from keyboard.
-  // We also add the gwt-Anchor css class to support the key-jump browser extension
-  // https://github.com/KennethSundqvist/key-jump-chrome-extension/blob/master/src/content.js#L365
-  return (
-    <span tabIndex={0} className="gwt-Anchor">
-      <Icon iconStyle={"is-outlined"} name={icon} className={className} color={color} testId={testId} /> {label}
-    </span>
-  );
-};
-
-export default TriStateCheckbox;
+}

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { Component } from "react";
-import { Route, Redirect, withRouter, RouteComponentProps, RouteProps } from "react-router-dom";
+import { Redirect, Route, RouteComponentProps, RouteProps, withRouter } from "react-router-dom";
 
 type Props = RouteComponentProps &
   RouteProps & {
@@ -30,7 +30,16 @@ type Props = RouteComponentProps &
   };
 
 class ProtectedRoute extends Component<Props> {
-  renderRoute = (Component: any, authenticated?: boolean) => {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      error: undefined
+    };
+  }
+
+  renderRoute = (Component: any) => {
+    const { authenticated } = this.props;
+
     return (routeProps: any) => {
       if (authenticated) {
         return <Component {...routeProps} />;
@@ -50,8 +59,8 @@ class ProtectedRoute extends Component<Props> {
   };
 
   render() {
-    const { component, authenticated, ...routeProps } = this.props;
-    return <Route {...routeProps} render={this.renderRoute(component, authenticated)} />;
+    const { component, ...routeProps } = this.props;
+    return <Route {...routeProps} render={this.renderRoute(component)} />;
   }
 }
 

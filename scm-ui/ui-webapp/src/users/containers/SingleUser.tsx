@@ -43,10 +43,9 @@ import EditUser from "./EditUser";
 import { fetchUserByName, getFetchUserFailure, getUserByName, isFetchUserPending } from "../modules/users";
 import { EditUserNavLink, SetPasswordNavLink, SetPermissionsNavLink, SetPublicKeysNavLink } from "./../components/navLinks";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { getUsersLink } from "../../modules/indexResource";
+import { mustGetUsersLink } from "../../modules/indexResource";
 import SetUserPassword from "../components/SetUserPassword";
 import SetPermissions from "../../permissions/components/SetPermissions";
-import AddPublicKey from "../components/publicKeys/AddPublicKey";
 import SetPublicKeys from "../components/publicKeys/SetPublicKeys";
 
 type Props = RouteComponentProps &
@@ -148,7 +147,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   const user = getUserByName(state, name);
   const loading = isFetchUserPending(state, name);
   const error = getFetchUserFailure(state, name);
-  const usersLink = getUsersLink(state);
+  const usersLink = mustGetUsersLink(state);
   return {
     usersLink,
     name,

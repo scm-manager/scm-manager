@@ -268,6 +268,10 @@
     "BxS5wX2v71": {
       "displayName": "Inkorrekter Schlüssel",
       "description": "Der bereitgestellte Schlüssel ist kein korrekt formartierter öffentlicher Schlüssel."
+    },
+    "FVS9JY1T21": {
+      "displayName": "Fehler bei der Anfrage",
+      "description": "Bei der Anfrage trat ein Fehler auf. Prüfen Sie bitte den Status der HTTP Antwort und die konkrete Meldung."
     }
   },
   "namespaceStrategies": {
