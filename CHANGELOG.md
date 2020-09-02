@@ -17,7 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fix layout overflow on changesets with multiple tags ([#1314](https://github.com/scm-manager/scm-manager/pull/1314))
 - Make checkbox accessible from keyboard ([#1309](https://github.com/scm-manager/scm-manager/pull/1309))
 - Fix logging of large stacktrace for unknown language ([#1313](https://github.com/scm-manager/scm-manager/pull/1313))
-- Fix incorrect word breaking behaviour in markdown ([1317](https://github.com/scm-manager/scm-manager/pull/1317))
+- Fix incorrect word breaking behaviour in markdown ([#1317](https://github.com/scm-manager/scm-manager/pull/1317))
 - Remove obsolete revision encoding on sources ([#1315](https://github.com/scm-manager/scm-manager/pull/1315))
 - Map generic JaxRS 'web application exceptions' to appropriate response instead of "internal server error" ([#1318](https://github.com/scm-manager/scm-manager/pull/1312))
 
