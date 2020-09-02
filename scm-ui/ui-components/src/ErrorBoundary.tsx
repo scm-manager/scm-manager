@@ -72,10 +72,10 @@ class ErrorBoundary extends React.Component<Props, State> {
   }
 
   redirectToLogin = (error: Error) => {
-    const { loginLink } = this.props;
+    const { loginLink, location } = this.props;
     if (error instanceof MissingLinkError) {
       if (loginLink) {
-        window.location.assign(withContextPath("/login"));
+        window.location.assign(withContextPath("/login?from=" + location.pathname));
       }
     }
   };

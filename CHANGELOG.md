@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add support for scroll anchors in url hash of diff page ([#1304](https://github.com/scm-manager/scm-manager/pull/1304))
 
+### Fixed
+- Redirection to requested page after login in anonymous mode
+
 ## [2.4.1] - 2020-09-01
 ### Added
 - Add "sonia.scm.restart-migration.wait" to set wait in milliseconds before restarting scm-server after migration ([#1308](https://github.com/scm-manager/scm-manager/pull/1308))
