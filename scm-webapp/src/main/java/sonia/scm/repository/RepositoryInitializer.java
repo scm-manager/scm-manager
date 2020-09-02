@@ -24,6 +24,7 @@
     
 package sonia.scm.repository;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.ByteSource;
 import com.google.common.io.CharSource;
 import org.slf4j.Logger;
@@ -38,6 +39,7 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Set;
 
 @Singleton
@@ -55,10 +57,14 @@ public class RepositoryInitializer {
   }
 
   public void initialize(Repository repository) {
+    initialize(repository, null);
+  }
+
+  public void initialize(Repository repository, Map<String, JsonNode> creationContext) {
     try (RepositoryService service = serviceFactory.create(repository)) {
       ModifyCommandBuilder modifyCommandBuilder = service.getModifyCommand();
 
-      InitializerContextImpl initializerContext = new InitializerContextImpl(repository, modifyCommandBuilder);
+      InitializerContextImpl initializerContext = new InitializerContextImpl(repository, modifyCommandBuilder, creationContext);
 
       for (RepositoryContentInitializer initializer : contentInitializers) {
         initializer.initialize(initializerContext);
@@ -77,15 +83,22 @@ public class RepositoryInitializer {
 
     private final Repository repository;
     private final ModifyCommandBuilder builder;
+    private final Map<String, JsonNode> creationContext;
 
-    InitializerContextImpl(Repository repository, ModifyCommandBuilder builder) {
+    InitializerContextImpl(Repository repository, ModifyCommandBuilder builder, Map<String, JsonNode> creationContext) {
       this.repository = repository;
       this.builder = builder;
+      this.creationContext = creationContext;
     }
 
     @Override
     public Repository getRepository() {
       return repository;
+    }
+
+    @Override
+    public Map<String, JsonNode> getCreationContext() {
+      return creationContext;
     }
 
     @Override

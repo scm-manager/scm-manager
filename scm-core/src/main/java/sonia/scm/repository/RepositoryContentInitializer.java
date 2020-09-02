@@ -21,14 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.ByteSource;
 import sonia.scm.plugin.ExtensionPoint;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
+import java.util.Map;
+import java.util.Optional;
 
 /**
  * Use this {@link RepositoryContentInitializer} to create new files with custom content
@@ -38,11 +42,19 @@ import java.io.InputStream;
 public interface RepositoryContentInitializer {
 
   /**
-   *
    * @param context add content to this context in order to commit files in the initial repository commit
    * @throws IOException
    */
   void initialize(InitializerContext context) throws IOException;
+
+  /**
+   * returns the class to which the creation context will be mapped
+   *
+   * @return the class of the creation context
+   */
+  default Optional<Class<?>> getType() {
+    return Optional.empty();
+  }
 
   /**
    * Use this {@link InitializerContext} to create new files on repository initialization
@@ -57,10 +69,18 @@ public interface RepositoryContentInitializer {
 
     /**
      * create new file which will be included in initial repository commit
+     *
      * @param path path of new file
      * @return
      */
     CreateFile create(String path);
+
+    /**
+     * @return creation context of repository which is going to be initialized
+     */
+    default Map<String, JsonNode> getCreationContext() {
+      return Collections.emptyMap();
+    }
   }
 
   /**
@@ -70,6 +90,7 @@ public interface RepositoryContentInitializer {
 
     /**
      * Applies content to new file
+     *
      * @param content content of file as string
      * @return {@link InitializerContext}
      * @throws IOException
@@ -78,6 +99,7 @@ public interface RepositoryContentInitializer {
 
     /**
      * Applies content to new file
+     *
      * @param input content of file as input stream
      * @return {@link InitializerContext}
      * @throws IOException
@@ -86,6 +108,7 @@ public interface RepositoryContentInitializer {
 
     /**
      * Applies content to new file
+     *
      * @param byteSource content of file as byte source
      * @return {@link InitializerContext}
      * @throws IOException
