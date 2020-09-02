@@ -22,13 +22,15 @@
  * SOFTWARE.
  */
 import React from "react";
-import DiffFile, {escapeWhitespace} from "./DiffFile";
+import DiffFile from "./DiffFile";
 import { DiffObjectProps, File, FileControlFactory } from "./DiffTypes";
+import { escapeWhitespace } from "./diffs";
 import Notification from "../Notification";
 import { WithTranslation, withTranslation } from "react-i18next";
-import {RouteComponentProps, withRouter} from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
-type Props = RouteComponentProps & WithTranslation &
+type Props = RouteComponentProps &
+  WithTranslation &
   DiffObjectProps & {
     diff: File[];
     fileControlFactory?: FileControlFactory;
@@ -36,7 +38,7 @@ type Props = RouteComponentProps & WithTranslation &
 
 type State = {
   contentRef?: HTMLElement | null;
-}
+};
 
 function getAnchorSelector(uriHashContent: string) {
   return "#" + escapeWhitespace(decodeURIComponent(uriHashContent));
@@ -81,9 +83,7 @@ class Diff extends React.Component<Props, State> {
     const { diff, t, ...fileProps } = this.props;
 
     return (
-      <div
-        ref={el => this.setState({ contentRef: el })}
-      >
+      <div ref={el => this.setState({ contentRef: el })}>
         {diff.length === 0 ? (
           <Notification type="info">{t("diff.noDiffFound")}</Notification>
         ) : (

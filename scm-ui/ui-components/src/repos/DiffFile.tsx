@@ -39,6 +39,7 @@ import HunkExpandLink from "./HunkExpandLink";
 import { Modal } from "../modals";
 import ErrorNotification from "../ErrorNotification";
 import HunkExpandDivider from "./HunkExpandDivider";
+import { escapeWhitespace } from "./diffs";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
@@ -90,10 +91,6 @@ const ChangeTypeTag = styled(Tag)`
   margin-left: 0.75rem;
 `;
 
-export function escapeWhitespace(path: string) {
-  return path.toLowerCase().replace(/\W/g, "-");
-}
-
 class DiffFile extends React.Component<Props, State> {
   static defaultProps: Partial<Props> = {
     defaultCollapse: false,
@@ -110,7 +107,7 @@ class DiffFile extends React.Component<Props, State> {
     };
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void {
+  componentDidUpdate(prevProps: Readonly<Props>) {
     if (this.props.defaultCollapse !== prevProps.defaultCollapse) {
       this.setState({
         collapsed: this.defaultCollapse()
