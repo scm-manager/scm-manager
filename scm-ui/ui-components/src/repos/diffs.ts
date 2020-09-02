@@ -39,3 +39,7 @@ export function createHunkIdentifier(file: File, hunk: Hunk) {
 export function createHunkIdentifierFromContext(ctx: BaseContext) {
   return createHunkIdentifier(ctx.file, ctx.hunk);
 }
+
+export function escapeWhitespace(path: string) {
+  return path.toLowerCase().replace(/\W/g, "-");
+}
