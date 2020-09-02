@@ -39,6 +39,7 @@ import HunkExpandLink from "./HunkExpandLink";
 import { Modal } from "../modals";
 import ErrorNotification from "../ErrorNotification";
 import HunkExpandDivider from "./HunkExpandDivider";
+import { escapeWhitespace } from "./diffs";
 
 const EMPTY_ANNOTATION_FACTORY = {};
 
@@ -106,7 +107,7 @@ class DiffFile extends React.Component<Props, State> {
     };
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>, snapshot?: any): void {
+  componentDidUpdate(prevProps: Readonly<Props>) {
     if (this.props.defaultCollapse !== prevProps.defaultCollapse) {
       this.setState({
         collapsed: this.defaultCollapse()
@@ -350,6 +351,16 @@ class DiffFile extends React.Component<Props, State> {
     }
   };
 
+  getAnchorId(file: File) {
+    let path: string;
+    if (file.type === "delete") {
+      path = file.oldPath;
+    } else {
+      path = file.newPath;
+    }
+    return escapeWhitespace(path);
+  }
+
   renderFileTitle = (file: File) => {
     if (file.oldPath !== file.newPath && (file.type === "copy" || file.type === "rename")) {
       return (
@@ -454,7 +465,7 @@ class DiffFile extends React.Component<Props, State> {
     }
 
     return (
-      <DiffFilePanel className={classNames("panel", "is-size-6")} collapsed={(file && file.isBinary) || collapsed}>
+      <DiffFilePanel className={classNames("panel", "is-size-6")} collapsed={(file && file.isBinary) || collapsed} id={this.getAnchorId(file)}>
         {errorModal}
         <div className="panel-heading">
           <FlexWrapLevel className="level">

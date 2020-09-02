@@ -35,7 +35,7 @@ import {
   PageActions,
   urls
 } from "@scm-manager/ui-components";
-import { getUsersLink } from "../../modules/indexResource";
+import { mustGetUsersLink } from "../../modules/indexResource";
 import {
   fetchUsersByPage,
   getFetchUsersFailure,
@@ -129,7 +129,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   const page = urls.getPageFromMatch(match);
   const canAddUsers = isPermittedToCreateUsers(state);
   const list = selectListAsCollection(state);
-  const usersLink = getUsersLink(state);
+  const usersLink = mustGetUsersLink(state);
 
   return {
     users,

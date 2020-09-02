@@ -39,7 +39,7 @@ import {
   SubNavigation,
   StateMenuContextProvider
 } from "@scm-manager/ui-components";
-import { getGroupsLink } from "../../modules/indexResource";
+import { getGroupsLink, mustGetGroupsLink } from "../../modules/indexResource";
 import { fetchGroupByName, getFetchGroupFailure, getGroupByName, isFetchGroupPending } from "../modules/groups";
 import { Details } from "./../components/table";
 import { EditGroupNavLink, SetPermissionsNavLink } from "./../components/navLinks";
@@ -138,7 +138,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   const group = getGroupByName(state, name);
   const loading = isFetchGroupPending(state, name);
   const error = getFetchGroupFailure(state, name);
-  const groupLink = getGroupsLink(state);
+  const groupLink = mustGetGroupsLink(state);
 
   return {
     name,

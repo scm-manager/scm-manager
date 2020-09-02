@@ -87,7 +87,7 @@ class SourcesView extends React.Component<Props, State> {
     const basePath = this.createBasePath();
     if (contentType.startsWith("image/")) {
       return <ImageViewer file={file} />;
-    } else if (contentType.includes("markdown")) {
+    } else if (contentType.includes("markdown") || (language && language.toLowerCase() === "markdown")) {
       return <SwitchableMarkdownViewer file={file} basePath={basePath} />;
     } else if (language) {
       return <SourcecodeViewer file={file} language={language} />;

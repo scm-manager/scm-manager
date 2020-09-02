@@ -117,7 +117,7 @@ const indexResourcesAuthenticated = {
 
 describe("index resource", () => {
   describe("fetch index resource", () => {
-    const index_url = "/api/v2/";
+    const indexUrl = "/api/v2/";
     const mockStore = configureMockStore([thunk]);
 
     afterEach(() => {
@@ -126,7 +126,7 @@ describe("index resource", () => {
     });
 
     it("should successfully fetch index resources when unauthenticated", () => {
-      fetchMock.getOnce(index_url, indexResourcesUnauthenticated);
+      fetchMock.getOnce(indexUrl, indexResourcesUnauthenticated);
 
       const expectedActions = [
         {
@@ -145,7 +145,7 @@ describe("index resource", () => {
     });
 
     it("should successfully fetch index resources when authenticated", () => {
-      fetchMock.getOnce(index_url, indexResourcesAuthenticated);
+      fetchMock.getOnce(indexUrl, indexResourcesAuthenticated);
 
       const expectedActions = [
         {
@@ -164,9 +164,53 @@ describe("index resource", () => {
     });
 
     it("should dispatch FETCH_INDEX_RESOURCES_FAILURE if request fails", () => {
-      fetchMock.getOnce(index_url, {
+      fetchMock.getOnce(indexUrl, {
         status: 500
       });
+
+      const store = mockStore({});
+      return store.dispatch(fetchIndexResources()).then(() => {
+        const actions = store.getActions();
+        expect(actions[0].type).toEqual(FETCH_INDEXRESOURCES_PENDING);
+        expect(actions[1].type).toEqual(FETCH_INDEXRESOURCES_FAILURE);
+        expect(actions[1].payload).toBeDefined();
+      });
+    });
+
+    it("should retry to fetch index resource on unauthorized error", () => {
+      fetchMock.getOnce(indexUrl, { status: 401 }).getOnce(indexUrl, indexResourcesAuthenticated, {
+        overwriteRoutes: false
+      });
+
+      const expectedActions = [
+        {
+          type: FETCH_INDEXRESOURCES_PENDING
+        },
+        {
+          type: FETCH_INDEXRESOURCES_SUCCESS,
+          payload: indexResourcesAuthenticated
+        }
+      ];
+
+      const store = mockStore({});
+      return store.dispatch(fetchIndexResources()).then(() => {
+        expect(store.getActions()).toEqual(expectedActions);
+      });
+    });
+
+    it("should only retry to fetch index resource on unauthorized error once", () => {
+      fetchMock
+        .getOnce(indexUrl, { status: 401 })
+        .getOnce(
+          indexUrl,
+          { status: 401 },
+          {
+            overwriteRoutes: false
+          }
+        )
+        .getOnce(indexUrl, indexResourcesAuthenticated, {
+          overwriteRoutes: false
+        });
 
       const store = mockStore({});
       return store.dispatch(fetchIndexResources()).then(() => {

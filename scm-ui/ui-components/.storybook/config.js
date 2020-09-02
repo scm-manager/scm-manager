@@ -29,6 +29,7 @@ import { withI18next } from "storybook-addon-i18next";
 import "!style-loader!css-loader!sass-loader!../../ui-styles/src/scm.scss";
 import React from "react";
 import { MemoryRouter } from "react-router-dom";
+import withRedux from "./withRedux";
 
 
 let i18n = i18next;
@@ -69,5 +70,7 @@ addDecorator(
     }
   })
 );
+
+addDecorator(withRedux);
 
 configure(require.context("../src", true, /\.stories\.tsx?$/), module);

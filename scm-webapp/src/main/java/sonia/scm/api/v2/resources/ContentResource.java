@@ -25,7 +25,6 @@
 package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.spotter.ContentType;
-import com.github.sdorra.spotter.ContentTypes;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,6 +33,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
+import sonia.scm.api.v2.ContentTypeResolver;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -204,7 +204,7 @@ public class ContentResource {
   }
 
   private void appendContentHeader(String path, byte[] head, Response.ResponseBuilder responseBuilder) {
-    ContentType contentType = ContentTypes.detect(path, head);
+    ContentType contentType = ContentTypeResolver.resolve(path, head);
     responseBuilder.header("Content-Type", contentType.getRaw());
     contentType.getLanguage().ifPresent(
       language -> responseBuilder.header(ProgrammingLanguages.HEADER, ProgrammingLanguages.getValue(language))

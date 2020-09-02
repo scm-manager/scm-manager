@@ -22,12 +22,12 @@
  * SOFTWARE.
  */
 import React, { ReactNode } from "react";
-import classNames from "classnames";
 
 type Props = {
   message: string;
   className?: string;
   location: string;
+  multiline?: boolean;
   children: ReactNode;
 };
 
@@ -37,9 +37,17 @@ class Tooltip extends React.Component<Props> {
   };
 
   render() {
-    const { className, message, location, children } = this.props;
+    const { className, message, location, multiline, children } = this.props;
+    let classes = `tooltip has-tooltip-${location}`;
+    if (multiline) {
+      classes += " has-tooltip-multiline";
+    }
+    if (className) {
+      classes += " " + className;
+    }
+
     return (
-      <span className={classNames("tooltip", "has-tooltip-" + location, className)} data-tooltip={message}>
+      <span className={classes} data-tooltip={message}>
         {children}
       </span>
     );

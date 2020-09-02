@@ -7,12 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Tags now have date information attached ([#1305](https://github.com/scm-manager/scm-manager/pull/1305))
+- Add support for scroll anchors in url hash of diff page ([#1304](https://github.com/scm-manager/scm-manager/pull/1304))
 
 ### Fixed
+- Redirection to requested page after login in anonymous mode
+
+## [2.4.1] - 2020-09-01
+### Added
+- Add "sonia.scm.restart-migration.wait" to set wait in milliseconds before restarting scm-server after migration ([#1308](https://github.com/scm-manager/scm-manager/pull/1308))
+
+### Fixed
+- Fix detection of markdown files for files having content does not start with '#' ([#1306](https://github.com/scm-manager/scm-manager/pull/1306))
 - Fix broken markdown rendering ([#1303](https://github.com/scm-manager/scm-manager/pull/1303))
 - JWT token timeout is now handled properly ([#1297](https://github.com/scm-manager/scm-manager/pull/1297))
 - Fix text-overflow in danger zone ([#1298](https://github.com/scm-manager/scm-manager/pull/1298))
 - Fix plugin installation error if previously a plugin was installed with the same dependency which is still pending. ([#1300](https://github.com/scm-manager/scm-manager/pull/1300))
+- Fix layout overflow on changesets with multiple tags ([#1314](https://github.com/scm-manager/scm-manager/pull/1314))
+- Make checkbox accessible from keyboard ([#1309](https://github.com/scm-manager/scm-manager/pull/1309))
+- Fix logging of large stacktrace for unknown language ([#1313](https://github.com/scm-manager/scm-manager/pull/1313))
+- Fix incorrect word breaking behaviour in markdown ([#1317](https://github.com/scm-manager/scm-manager/pull/1317))
+- Remove obsolete revision encoding on sources ([#1315](https://github.com/scm-manager/scm-manager/pull/1315))
+- Map generic JaxRS 'web application exceptions' to appropriate response instead of "internal server error" ([#1318](https://github.com/scm-manager/scm-manager/pull/1312))
+
 
 ## [2.4.0] - 2020-08-14
 ### Added
@@ -284,3 +300,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.3.0]: https://www.scm-manager.org/download/2.3.0
 [2.3.1]: https://www.scm-manager.org/download/2.3.1
 [2.4.0]: https://www.scm-manager.org/download/2.4.0
+[2.4.1]: https://www.scm-manager.org/download/2.4.1

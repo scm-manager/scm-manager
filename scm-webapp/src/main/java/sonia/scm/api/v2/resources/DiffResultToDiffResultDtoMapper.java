@@ -24,10 +24,10 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.github.sdorra.spotter.ContentTypes;
 import com.github.sdorra.spotter.Language;
 import com.google.inject.Inject;
 import de.otto.edison.hal.Links;
+import sonia.scm.api.v2.ContentTypeResolver;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.DiffFile;
 import sonia.scm.repository.api.DiffLine;
@@ -120,7 +120,7 @@ class DiffResultToDiffResultDtoMapper {
     dto.setOldRevision(file.getOldRevision());
 
 
-    Optional<Language> language = ContentTypes.detect(path).getLanguage();
+    Optional<Language> language = ContentTypeResolver.resolve(path).getLanguage();
     language.ifPresent(value -> dto.setLanguage(ProgrammingLanguages.getValue(value)));
 
     List<DiffResultDto.HunkDto> hunks = new ArrayList<>();

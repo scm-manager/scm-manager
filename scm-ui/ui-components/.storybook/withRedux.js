@@ -22,24 +22,20 @@
  * SOFTWARE.
  */
 
-import { BaseContext, File, Hunk } from "./DiffTypes";
+import React from "react";
+import {createStore} from "redux";
+import { Provider } from 'react-redux'
 
-export function getPath(file: File) {
-  if (file.type === "delete") {
-    return file.oldPath;
-  }
-  return file.newPath;
+const reducer = (state, action) => {
+  return state;
+};
+
+const withRedux = (storyFn) => {
+  return React.createElement(Provider, {
+    store: createStore(reducer, {}),
+    children: storyFn()
+  });
 }
 
-export function createHunkIdentifier(file: File, hunk: Hunk) {
-  const path = getPath(file);
-  return `${file.type}_${path}_${hunk.content}`;
-}
 
-export function createHunkIdentifierFromContext(ctx: BaseContext) {
-  return createHunkIdentifier(ctx.file, ctx.hunk);
-}
-
-export function escapeWhitespace(path: string) {
-  return path.toLowerCase().replace(/\W/g, "-");
-}
+export default withRedux;

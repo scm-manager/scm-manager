@@ -22,24 +22,30 @@
  * SOFTWARE.
  */
 
-import { BaseContext, File, Hunk } from "./DiffTypes";
+package sonia.scm.api.v2;
 
-export function getPath(file: File) {
-  if (file.type === "delete") {
-    return file.oldPath;
+import com.github.sdorra.spotter.ContentType;
+import com.github.sdorra.spotter.ContentTypeDetector;
+import com.github.sdorra.spotter.Language;
+
+public final class ContentTypeResolver {
+
+  private static final ContentTypeDetector PATH_BASED = ContentTypeDetector.builder()
+    .defaultPathBased().boost(Language.MARKDOWN)
+    .bestEffortMatch();
+
+  private static final ContentTypeDetector PATH_AND_CONTENT_BASED = ContentTypeDetector.builder()
+    .defaultPathAndContentBased().boost(Language.MARKDOWN)
+    .bestEffortMatch();
+
+  private ContentTypeResolver() {
   }
-  return file.newPath;
-}
 
-export function createHunkIdentifier(file: File, hunk: Hunk) {
-  const path = getPath(file);
-  return `${file.type}_${path}_${hunk.content}`;
-}
+  public static ContentType resolve(String path) {
+    return PATH_BASED.detect(path);
+  }
 
-export function createHunkIdentifierFromContext(ctx: BaseContext) {
-  return createHunkIdentifier(ctx.file, ctx.hunk);
-}
-
-export function escapeWhitespace(path: string) {
-  return path.toLowerCase().replace(/\W/g, "-");
+  public static ContentType resolve(String path, byte[] contentPrefix) {
+    return PATH_AND_CONTENT_BASED.detect(path, contentPrefix);
+  }
 }

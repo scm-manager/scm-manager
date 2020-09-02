@@ -23,7 +23,6 @@
  */
 package sonia.scm.lifecycle;
 
-import com.github.legman.Subscribe;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -31,8 +30,6 @@ import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.event.ScmEventBus;
-
-import javax.swing.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -72,7 +69,7 @@ class DefaultRestarterTest {
 
   @Test
   void shouldThrowRestartNotSupportedException() {
-    DefaultRestarter restarter = new DefaultRestarter(eventBus,null);
+    DefaultRestarter restarter = new DefaultRestarter(eventBus, null);
     assertThrows(
       RestartNotSupportedException.class, () -> restarter.restart(DefaultRestarterTest.class, "test")
     );

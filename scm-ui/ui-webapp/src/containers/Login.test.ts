@@ -22,24 +22,41 @@
  * SOFTWARE.
  */
 
-import { BaseContext, File, Hunk } from "./DiffTypes";
+import { from } from "./Login";
 
-export function getPath(file: File) {
-  if (file.type === "delete") {
-    return file.oldPath;
-  }
-  return file.newPath;
-}
+describe("from tests", () => {
+  it("should use default location", () => {
+    const path = from("", {});
+    expect(path).toBe("/");
+  });
 
-export function createHunkIdentifier(file: File, hunk: Hunk) {
-  const path = getPath(file);
-  return `${file.type}_${path}_${hunk.content}`;
-}
+  it("should use default location without params", () => {
+    const path = from();
+    expect(path).toBe("/");
+  });
 
-export function createHunkIdentifierFromContext(ctx: BaseContext) {
-  return createHunkIdentifier(ctx.file, ctx.hunk);
-}
+  it("should use default location with null params", () => {
+    const path = from("", null);
+    expect(path).toBe("/");
+  });
 
-export function escapeWhitespace(path: string) {
-  return path.toLowerCase().replace(/\W/g, "-");
-}
+  it("should use location from query parameter", () => {
+    const path = from("from=/repos", {});
+    expect(path).toBe("/repos");
+  });
+
+  it("should use location from state", () => {
+    const path = from("", { from: "/users" });
+    expect(path).toBe("/users");
+  });
+
+  it("should prefer location from query parameter", () => {
+    const path = from("from=/groups", { from: "/users" });
+    expect(path).toBe("/groups");
+  });
+
+  it("should decode query param", () => {
+    const path = from(`from=${encodeURIComponent("/admin/plugins/installed")}`);
+    expect(path).toBe("/admin/plugins/installed");
+  });
+});

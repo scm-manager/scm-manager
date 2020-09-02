@@ -21,43 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-package sonia.scm.lifecycle;
 
-import com.google.common.annotations.VisibleForTesting;
-import sonia.scm.event.ScmEventBus;
+package sonia.scm.api;
 
-import javax.inject.Inject;
-import javax.inject.Singleton;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
+import sonia.scm.api.v2.resources.ErrorDto;
+import sonia.scm.web.VndMediaType;
 
-@Singleton
-public class DefaultRestarter implements Restarter {
-  private final ScmEventBus eventBus;
-  private final RestartStrategy strategy;
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.ExceptionMapper;
+import javax.ws.rs.ext.Provider;
+import java.util.Collections;
 
-  @Inject
-  public DefaultRestarter() {
-    this(
-      ScmEventBus.getInstance(),
-      RestartStrategy.get(Thread.currentThread().getContextClassLoader()).orElse(null)
-    );
-  }
+@Provider
+public class WebApplicationExceptionMapper implements ExceptionMapper<WebApplicationException> {
 
-  @VisibleForTesting
-  DefaultRestarter(ScmEventBus eventBus, RestartStrategy strategy) {
-    this.eventBus = eventBus;
-    this.strategy = strategy;
-  }
+  private static final Logger LOG = LoggerFactory.getLogger(WebApplicationExceptionMapper.class);
+
+  private static final String ERROR_CODE = "FVS9JY1T21";
 
   @Override
-  public boolean isSupported() {
-    return strategy != null;
-  }
+  public Response toResponse(WebApplicationException exception) {
+    LOG.trace("caught web application exception", exception);
 
-  @Override
-  public void restart(Class<?> cause, String reason) {
-    if (!isSupported()) {
-      throw new RestartNotSupportedException("restarting is not supported");
-    }
-    eventBus.post(new RestartEvent(cause, reason));
+    ErrorDto errorDto = new ErrorDto();
+    errorDto.setMessage(exception.getMessage());
+    errorDto.setContext(Collections.emptyList());
+    errorDto.setErrorCode(ERROR_CODE);
+    errorDto.setTransactionId(MDC.get("transaction_id"));
+
+    Response originalResponse = exception.getResponse();
+
+    return Response.fromResponse(originalResponse)
+      .entity(errorDto)
+      .type(VndMediaType.ERROR_TYPE)
+      .build();
   }
 }

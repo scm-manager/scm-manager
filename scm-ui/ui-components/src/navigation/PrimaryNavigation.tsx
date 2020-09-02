@@ -26,8 +26,10 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
 import { Links } from "@scm-manager/ui-types";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import {withContextPath} from "../urls";
+import { withRouter, RouteComponentProps } from "react-router-dom";
 
-type Props = WithTranslation & {
+type Props = RouteComponentProps & WithTranslation & {
   links: Links;
 };
 
@@ -64,11 +66,17 @@ class PrimaryNavigation extends React.Component<Props> {
   };
 
   appendLogin = (navigationItems: ReactNode[], append: Appender) => {
-    const { t, links } = this.props;
+    const { t, links, location } = this.props;
+
+    const from = location.pathname;
+    const loginPath = "/login";
+    const to = `${loginPath}?from=${encodeURIComponent(from)}`;
 
     const props = {
       links,
-      label: t("primary-navigation.login")
+      label: t("primary-navigation.login"),
+      loginUrl: withContextPath(loginPath),
+      from
     };
 
     if (binder.hasExtension("primary-navigation.login", props)) {
@@ -76,7 +84,7 @@ class PrimaryNavigation extends React.Component<Props> {
         <ExtensionPoint key="primary-navigation.login" name="primary-navigation.login" props={props} />
       );
     } else {
-      append("/login", "/login", "primary-navigation.login", "login");
+      append(to, "/login", "primary-navigation.login", "login");
     }
   };
 
@@ -128,4 +136,4 @@ class PrimaryNavigation extends React.Component<Props> {
   }
 }
 
-export default withTranslation("commons")(PrimaryNavigation);
+export default withTranslation("commons")(withRouter(PrimaryNavigation));

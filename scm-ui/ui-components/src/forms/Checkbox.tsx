@@ -45,6 +45,13 @@ export default class Checkbox extends React.Component<Props> {
     }
   };
 
+  onKeyDown = (event: React.KeyboardEvent) => {
+    const SPACE = 32;
+    if (event.keyCode === SPACE) {
+      this.onCheckboxChange();
+    }
+  };
+
   renderHelp = () => {
     const { title, helpText } = this.props;
     if (helpText && !title) {
@@ -64,7 +71,7 @@ export default class Checkbox extends React.Component<Props> {
     return (
       <div className="field">
         {this.renderLabelWithHelp()}
-        <div className="control" onClick={this.onCheckboxChange}>
+        <div className="control" onClick={this.onCheckboxChange} onKeyDown={this.onKeyDown}>
           {/*
             we have to ignore the next line,
             because jsx label does not the custom disabled attribute

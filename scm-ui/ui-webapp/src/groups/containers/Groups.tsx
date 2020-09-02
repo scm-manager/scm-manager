@@ -35,7 +35,7 @@ import {
   PageActions,
   urls
 } from "@scm-manager/ui-components";
-import { getGroupsLink } from "../../modules/indexResource";
+import { mustGetGroupsLink } from "../../modules/indexResource";
 import {
   fetchGroupsByPage,
   getFetchGroupsFailure,
@@ -128,7 +128,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   const page = urls.getPageFromMatch(match);
   const canAddGroups = isPermittedToCreateGroups(state);
   const list = selectListAsCollection(state);
-  const groupLink = getGroupsLink(state);
+  const groupLink = mustGetGroupsLink(state);
 
   return {
     groups,
