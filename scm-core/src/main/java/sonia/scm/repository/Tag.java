@@ -28,6 +28,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.Optional;
+
 /**
  * Represents a tag in a repository.
  *
@@ -41,6 +43,7 @@ public final class Tag {
 
   private final String name;
   private final String revision;
+  private final Long date;
 
   /**
    * Constructs a new tag.
@@ -49,7 +52,41 @@ public final class Tag {
    * @param revision tagged revision
    */
   public Tag(String name, String revision) {
+    this(name, revision, null);
+  }
+
+  /**
+   * Constructs a new tag.
+   *
+   * @param name     name of the tag
+   * @param revision tagged revision
+   * @param date     the creation timestamp (milliseconds) of the tag
+   *
+   * @since 2.5.0
+   */
+  public Tag(String name, String revision, Long date) {
     this.name = name;
     this.revision = revision;
+    this.date = date;
+  }
+
+  /**
+   * Depending on the underlying source code management system
+   * (like git or hg) and depending on the type of this tag
+   * (for example git has <i>lightweight</i> and <i>annotated</i>
+   * tags), this date has different meaning. For annotated tags
+   * in git, this is the date the tag was created. In other cases
+   * (for lightweight tags in git or all tags in hg) this is the
+   * date of the referenced changeset.
+   * <p>
+   * Please note, that the date is retrieved in a best-effort fashion.
+   * In certain situations (for example if this tag is announced in
+   * a pre or post receive hook), it might not be available.
+   * In these cases, this method returns an empty {@link Optional}.
+   *
+   * @since 2.5.0
+   */
+  public Optional<Long> getDate() {
+    return Optional.ofNullable(date);
   }
 }

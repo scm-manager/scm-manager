@@ -103,7 +103,7 @@ public class GitHookContextProvider extends HookContextProvider
 
   @Override
   public HookTagProvider getTagProvider() {
-    return new GitHookTagProvider(receiveCommands);
+    return new GitHookTagProvider(receiveCommands, repository);
   }
 
   @Override

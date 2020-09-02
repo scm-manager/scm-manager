@@ -29,12 +29,16 @@ import de.otto.edison.hal.Links;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Named;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Tag;
 import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
+
+import java.time.Instant;
+import java.util.Optional;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
@@ -46,6 +50,7 @@ public abstract class TagToTagDtoMapper extends HalAppenderMapper {
   @Inject
   private ResourceLinks resourceLinks;
 
+  @Mapping(target = "date", source = "date", qualifiedByName = "mapDate")
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   public abstract TagDto map(Tag tag, @Context NamespaceAndName namespaceAndName);
 
@@ -60,5 +65,10 @@ public abstract class TagToTagDtoMapper extends HalAppenderMapper {
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), tag, namespaceAndName);
 
     return new TagDto(linksBuilder.build(), embeddedBuilder.build());
+  }
+
+  @Named("mapDate")
+  Instant map(Optional<Long> value) {
+    return value.map(Instant::ofEpochMilli).orElse(null);
   }
 }

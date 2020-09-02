@@ -32,6 +32,7 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Tag;
 
 import java.net.URI;
+import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -56,6 +57,13 @@ class TagToTagDtoMapperTest {
 
     TagDto dto = mapper.map(new Tag("1.0.0", "42"), new NamespaceAndName("hitchhiker", "hog"));
     assertThat(dto.getLinks().getLinkBy("yo").get().getHref()).isEqualTo("http://hitchhiker/hog/1.0.0");
+  }
+
+  @Test
+  void shouldMapDate() {
+    final long now = Instant.now().getEpochSecond() * 1000;
+    TagDto dto = mapper.map(new Tag("1.0.0", "42", now), new NamespaceAndName("hitchhiker", "hog"));
+    assertThat(dto.getDate()).isEqualTo(Instant.ofEpochMilli(now));
   }
 
 }

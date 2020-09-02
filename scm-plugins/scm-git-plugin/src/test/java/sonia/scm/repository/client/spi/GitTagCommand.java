@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.client.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -78,6 +78,7 @@ public class GitTagCommand implements TagCommand
     String revision = request.getRevision();
 
     RevObject revObject = null;
+    Long tagTime = null;
 
     if (!Strings.isNullOrEmpty(revision))
     {
@@ -88,6 +89,7 @@ public class GitTagCommand implements TagCommand
       {
         walk = new RevWalk(git.getRepository());
         revObject = walk.parseAny(id);
+        tagTime = GitUtil.getTagTime(walk, id);
       }
       finally
       {
@@ -110,9 +112,9 @@ public class GitTagCommand implements TagCommand
       }
 
       if (ref.isPeeled()) {
-        tag = new Tag(request.getName(), ref.getPeeledObjectId().toString());
+        tag = new Tag(request.getName(), ref.getPeeledObjectId().toString(), tagTime);
       } else {
-        tag = new Tag(request.getName(), ref.getObjectId().toString());
+        tag = new Tag(request.getName(), ref.getObjectId().toString(), tagTime);
       }
 
     }

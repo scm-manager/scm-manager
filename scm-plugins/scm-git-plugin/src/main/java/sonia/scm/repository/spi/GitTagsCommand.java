@@ -31,7 +31,7 @@ import com.google.common.collect.Lists;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,34 +45,28 @@ import java.util.List;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
-{
+public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
 
   /**
    * Constructs ...
    *
-   *  @param context
-   *
+   * @param context
    */
-  public GitTagsCommand(GitContext context)
-  {
+  public GitTagsCommand(GitContext context) {
     super(context);
   }
 
   //~--- get methods ----------------------------------------------------------
 
   @Override
-  public List<Tag> getTags() throws IOException
-  {
+  public List<Tag> getTags() throws IOException {
     List<Tag> tags = null;
 
     RevWalk revWalk = null;
 
-    try
-    {
+    try {
       final Git git = new Git(open());
 
       revWalk = new RevWalk(git.getRepository());
@@ -81,13 +75,9 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
 
       tags = Lists.transform(tagList,
         new TransformFuntion(git.getRepository(), revWalk));
-    }
-    catch (GitAPIException ex)
-    {
+    } catch (GitAPIException ex) {
       throw new InternalRepositoryException(repository, "could not read tags from repository", ex);
-    }
-    finally
-    {
+    } finally {
       GitUtil.release(revWalk);
     }
 
@@ -99,12 +89,10 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
   /**
    * Class description
    *
-   *
-   * @version        Enter version here..., 12/07/06
-   * @author         Enter your name here...
+   * @author Enter your name here...
+   * @version Enter version here..., 12/07/06
    */
-  private static class TransformFuntion implements Function<Ref, Tag>
-  {
+  private static class TransformFuntion implements Function<Ref, Tag> {
 
     /**
      * the logger for TransformFuntion
@@ -117,13 +105,11 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
     /**
      * Constructs ...
      *
-     *
      * @param repository
      * @param revWalk
      */
     public TransformFuntion(org.eclipse.jgit.lib.Repository repository,
-      RevWalk revWalk)
-    {
+                            RevWalk revWalk) {
       this.repository = repository;
       this.revWalk = revWalk;
     }
@@ -133,30 +119,23 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
     /**
      * Method description
      *
-     *
      * @param ref
-     *
      * @return
      */
     @Override
-    public Tag apply(Ref ref)
-    {
+    public Tag apply(Ref ref) {
       Tag tag = null;
 
-      try
-      {
-        RevCommit commit = GitUtil.getCommit(repository, revWalk, ref);
+      try {
+        RevObject revObject = GitUtil.getCommit(repository, revWalk, ref);
 
-        if (commit != null)
-        {
+        if (revObject != null) {
           String name = GitUtil.getTagName(ref);
 
-          tag = new Tag(name, commit.getId().name());
+          tag = new Tag(name, revObject.getId().name(), GitUtil.getTagTime(revWalk, ref.getObjectId()));
         }
 
-      }
-      catch (IOException ex)
-      {
+      } catch (IOException ex) {
         logger.error("could not get commit for tag", ex);
       }
 
@@ -165,10 +144,14 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
+    /**
+     * Field description
+     */
     private org.eclipse.jgit.lib.Repository repository;
 
-    /** Field description */
+    /**
+     * Field description
+     */
     private RevWalk revWalk;
   }
 }

@@ -42,6 +42,8 @@ import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevObject;
+import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.revwalk.filter.RevFilter;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
@@ -385,6 +387,31 @@ public final class GitUtil
     }
 
     return ref;
+  }
+
+  /**
+   * @since 2.5.0
+   */
+  public static Long getTagTime(org.eclipse.jgit.lib.Repository repository, ObjectId objectId) throws IOException {
+    try (RevWalk walk = new RevWalk(repository)) {
+      return GitUtil.getTagTime(walk, objectId);
+    }
+  }
+
+  /**
+   * @since 2.5.0
+   */
+  public static Long getTagTime(RevWalk revWalk, ObjectId objectId) throws IOException {
+    if (objectId != null) {
+      final RevObject revObject = revWalk.parseAny(objectId);
+      if (revObject instanceof RevTag) {
+        return ((RevTag) revObject).getTaggerIdent().getWhen().getTime();
+      } else if (revObject instanceof RevCommit) {
+        return getCommitTime((RevCommit) revObject);
+      }
+    }
+
+    return null;
   }
 
   /**

@@ -22,32 +22,24 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.repository.spi;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.junit.Test;
+import sonia.scm.repository.Tag;
 
-import java.time.Instant;
+import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-public class TagDto extends HalRepresentation {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  private String name;
+public class HgTagsCommandTest extends AbstractHgCommandTestBase {
 
-  private String revision;
-
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Instant date;
-
-  TagDto(Links links, Embedded embedded) {
-    super(links, embedded);
+  @Test
+  public void shouldGetTagDatesCorrectly() {
+    HgTagsCommand hgTagsCommand = new HgTagsCommand(cmdContext);
+    final List<Tag> tags = hgTagsCommand.getTags();
+    assertThat(tags).hasSize(1);
+    assertThat(tags.get(0).getName()).isEqualTo("tip");
+    assertThat(tags.get(0).getDate()).contains(1339586381000L);
   }
 
 }
