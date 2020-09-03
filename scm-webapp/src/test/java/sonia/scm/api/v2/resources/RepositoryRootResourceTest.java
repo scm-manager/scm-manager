@@ -133,6 +133,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     super.manager = repositoryManager;
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
+    super.repositoryNamespaceResource = new RepositoryNamespaceResource(repositoryManager, repositoryCollectionToDtoMapper);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
@@ -204,6 +205,40 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     assertTrue(filterCaptor.getValue().test(new Repository("x", "git", "all_repos", "x")));
     assertTrue(filterCaptor.getValue().test(new Repository("x", "git", "x", "repository")));
     assertFalse(filterCaptor.getValue().test(new Repository("rep", "rep", "x", "x")));
+  }
+
+  @Test
+  public void shouldCreateFilterForNamespace() throws URISyntaxException {
+    PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
+    when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
+
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_OK, response.getStatus());
+    assertTrue(filterCaptor.getValue().test(new Repository("x", "git", "space", "repo")));
+    assertFalse(filterCaptor.getValue().test(new Repository("x", "git", "spaceX", "repository")));
+    assertFalse(filterCaptor.getValue().test(new Repository("x", "git", "x", "space")));
+  }
+
+  @Test
+  public void shouldCreateFilterForNamespaceWithQuery() throws URISyntaxException {
+    PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
+    when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
+
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space?q=Rep");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_OK, response.getStatus());
+    assertTrue(filterCaptor.getValue().test(new Repository("x", "git", "space", "repo")));
+    assertFalse(filterCaptor.getValue().test(new Repository("x", "git", "space", "other")));
+    assertFalse(filterCaptor.getValue().test(new Repository("x", "git", "Rep", "Repository")));
   }
 
   @Test
