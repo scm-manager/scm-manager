@@ -53,7 +53,7 @@ class ProtocolInformation extends React.Component<Props> {
             echo "[paths]" &gt; .hg/hgrc
             <br />
             echo "default = {href}
-            " &gt; .hg/hgrc
+            " &gt;&gt; .hg/hgrc
             <br />
             echo "# {repository.name}
             " &gt; README.md
