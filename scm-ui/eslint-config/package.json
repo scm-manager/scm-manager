@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/eslint-config",
-  "version": "2.1.0",
+  "version": "2.5.0-SNAPSHOT",
   "description": "ESLint configuration for scm-manager and its plugins",
   "main": "src/index.js",
   "author": "Sebastian Sdorra <s.sdorra@gmail.com>",
