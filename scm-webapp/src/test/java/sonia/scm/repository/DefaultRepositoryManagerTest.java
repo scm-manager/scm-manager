@@ -33,6 +33,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.inject.util.Providers;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.apache.shiro.util.ThreadContext;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -442,6 +443,18 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     Repository changedRepo = repoManager.rename(repository, "hitchhiker", "puzzle42");
     assertEquals("puzzle42", changedRepo.getName());
     assertEquals("hitchhiker", changedRepo.getNamespace());
+  }
+
+  @Test
+  public void shouldReturnDistinctNamespaces() {
+    createTestRepository();
+    createSecondTestRepository();
+
+    Collection<String> namespaces = ((RepositoryManager) manager).getAllNamespaces();
+
+    Assertions.assertThat(namespaces)
+      .hasSize(1)
+      .contains("default_namespace");
   }
 
   //~--- methods --------------------------------------------------------------

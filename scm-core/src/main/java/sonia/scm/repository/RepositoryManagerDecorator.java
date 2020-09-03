@@ -131,6 +131,11 @@ public class RepositoryManagerDecorator
     return decorated.rename(repository, newNamespace, newName);
   }
 
+  @Override
+  public Collection<String> getAllNamespaces() {
+    return decorated.getAllNamespaces();
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /**

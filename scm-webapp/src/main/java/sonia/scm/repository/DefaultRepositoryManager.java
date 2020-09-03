@@ -61,6 +61,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 import java.util.function.Predicate;
 
+import static java.util.stream.Collectors.toSet;
 import static sonia.scm.AlreadyExistsException.alreadyExists;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -328,6 +329,13 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   @Override
   public Collection<Repository> getAll(int start, int limit) {
     return getAll(null, start, limit);
+  }
+
+  @Override
+  public Collection<String> getAllNamespaces() {
+    return getAll().stream()
+      .map(Repository::getNamespace)
+      .collect(toSet());
   }
 
   @Override

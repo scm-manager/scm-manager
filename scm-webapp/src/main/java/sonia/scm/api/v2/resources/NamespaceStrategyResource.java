@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
@@ -48,8 +48,8 @@ public class NamespaceStrategyResource {
 
   static final String PATH = "v2/namespaceStrategies";
 
-  private Set<NamespaceStrategy> namespaceStrategies;
-  private Provider<NamespaceStrategy> namespaceStrategyProvider;
+  private final Set<NamespaceStrategy> namespaceStrategies;
+  private final Provider<NamespaceStrategy> namespaceStrategyProvider;
 
   @Inject
   public NamespaceStrategyResource(Set<NamespaceStrategy> namespaceStrategies, Provider<NamespaceStrategy> namespaceStrategyProvider) {
