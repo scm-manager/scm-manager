@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import sonia.scm.PageResult;
@@ -44,6 +44,10 @@ public class RepositoryCollectionToDtoMapper extends BasicCollectionToDtoMapper<
     this.resourceLinks = resourceLinks;
   }
 
+  public CollectionDto map(String namespace, int pageNumber, int pageSize, PageResult<Repository> pageResult) {
+    return map(pageNumber, pageSize, pageResult, this.createSelfLink(namespace), this.createCreateLink());
+  }
+
   public CollectionDto map(int pageNumber, int pageSize, PageResult<Repository> pageResult) {
     return map(pageNumber, pageSize, pageResult, this.createSelfLink(), this.createCreateLink());
   }
@@ -54,5 +58,9 @@ public class RepositoryCollectionToDtoMapper extends BasicCollectionToDtoMapper<
 
   String createSelfLink() {
     return resourceLinks.repositoryCollection().self();
+  }
+
+  String createSelfLink(String namespace) {
+    return resourceLinks.repositoryCollection().forNamespace(namespace);
   }
 }

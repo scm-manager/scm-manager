@@ -307,6 +307,10 @@ class ResourceLinks {
       return collectionLinkBuilder.method("getRepositoryCollectionResource").parameters().method("getAll").parameters().href();
     }
 
+    String forNamespace(String namespace) {
+      return collectionLinkBuilder.method("getRepositoryCollectionResource").parameters().method("getByNamespace").parameters(namespace).href();
+    }
+
     String create() {
       return collectionLinkBuilder.method("getRepositoryCollectionResource").parameters().method("create").parameters().href();
     }

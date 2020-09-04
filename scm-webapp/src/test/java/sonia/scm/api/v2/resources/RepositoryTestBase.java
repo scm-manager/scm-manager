@@ -44,7 +44,6 @@ abstract class RepositoryTestBase {
   FileHistoryRootResource fileHistoryRootResource;
   IncomingRootResource incomingRootResource;
   RepositoryCollectionResource repositoryCollectionResource;
-  RepositoryNamespaceResource repositoryNamespaceResource;
   AnnotateResource annotateResource;
 
   RepositoryRootResource getRepositoryRootResource() {
@@ -66,7 +65,6 @@ abstract class RepositoryTestBase {
         dtoToRepositoryMapper,
         manager,
         repositoryBasedResourceProvider)),
-      of(repositoryNamespaceResource),
-      of(repositoryCollectionResource));
+            of(repositoryCollectionResource));
   }
 }

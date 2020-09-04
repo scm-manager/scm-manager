@@ -44,24 +44,17 @@ public class RepositoryRootResource {
   static final String REPOSITORIES_PATH_V2 = "v2/repositories/";
 
   private final Provider<RepositoryResource> repositoryResource;
-  private final Provider<RepositoryNamespaceResource> repositoryNamespaceResource;
   private final Provider<RepositoryCollectionResource> repositoryCollectionResource;
 
   @Inject
-  public RepositoryRootResource(Provider<RepositoryResource> repositoryResource, Provider<RepositoryNamespaceResource> repositoryNamespaceResource, Provider<RepositoryCollectionResource> repositoryCollectionResource) {
+  public RepositoryRootResource(Provider<RepositoryResource> repositoryResource, Provider<RepositoryCollectionResource> repositoryCollectionResource) {
     this.repositoryResource = repositoryResource;
-    this.repositoryNamespaceResource = repositoryNamespaceResource;
     this.repositoryCollectionResource = repositoryCollectionResource;
   }
 
   @Path("{namespace}/{name}")
   public RepositoryResource getRepositoryResource() {
     return repositoryResource.get();
-  }
-
-  @Path("{namespace}")
-  public RepositoryNamespaceResource getNamespaceResource() {
-    return repositoryNamespaceResource.get();
   }
 
   @Path("")
