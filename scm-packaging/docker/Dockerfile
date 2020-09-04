@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 
-FROM adoptopenjdk/openjdk11:jdk-11.0.7_10-alpine-slim
+FROM adoptopenjdk/openjdk11:jdk-11.0.8_10-alpine-slim
 ENV SCM_HOME=/var/lib/scm
 ENV CACHE_DIR=/var/cache/scm/work
 
