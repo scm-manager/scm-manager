@@ -234,6 +234,10 @@ export function getRepositoriesLink(state: object) {
   return getLink(state, "repositories");
 }
 
+export function getNamespacesLink(state: object) {
+  return getLink(state, "namespaces");
+}
+
 export function getHgConfigLink(state: object) {
   return getLink(state, "hgConfig");
 }

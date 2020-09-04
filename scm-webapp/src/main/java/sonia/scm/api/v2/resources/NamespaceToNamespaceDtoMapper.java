@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import javax.inject.Inject;
 
+import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 class NamespaceToNamespaceDtoMapper {
@@ -38,6 +39,12 @@ class NamespaceToNamespaceDtoMapper {
   }
 
   NamespaceDto map(String namespace) {
-    return new NamespaceDto(namespace, linkingTo().self(links.namespace().self(namespace)).build());
+    return new NamespaceDto(
+      namespace,
+      linkingTo()
+        .self(links.namespace().self(namespace))
+        .single(link("repositories", links.repositoryCollection().forNamespace(namespace)))
+        .build()
+    );
   }
 }

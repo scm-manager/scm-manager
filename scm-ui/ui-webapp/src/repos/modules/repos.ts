@@ -24,7 +24,7 @@
 
 import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../modules/types";
-import { Action, Repository, RepositoryCollection, RepositoryCreation } from "@scm-manager/ui-types";
+import { Action, Repository, RepositoryCollection, RepositoryCreation, NamespaceCollection } from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 
@@ -32,6 +32,11 @@ export const FETCH_REPOS = "scm/repos/FETCH_REPOS";
 export const FETCH_REPOS_PENDING = `${FETCH_REPOS}_${types.PENDING_SUFFIX}`;
 export const FETCH_REPOS_SUCCESS = `${FETCH_REPOS}_${types.SUCCESS_SUFFIX}`;
 export const FETCH_REPOS_FAILURE = `${FETCH_REPOS}_${types.FAILURE_SUFFIX}`;
+
+export const FETCH_NAMESPACES = "scm/repos/FETCH_NAMESPACES";
+export const FETCH_NAMESPACES_PENDING = `${FETCH_NAMESPACES}_${types.PENDING_SUFFIX}`;
+export const FETCH_NAMESPACES_SUCCESS = `${FETCH_NAMESPACES}_${types.SUCCESS_SUFFIX}`;
+export const FETCH_NAMESPACES_FAILURE = `${FETCH_NAMESPACES}_${types.FAILURE_SUFFIX}`;
 
 export const FETCH_REPO = "scm/repos/FETCH_REPO";
 export const FETCH_REPO_PENDING = `${FETCH_REPO}_${types.PENDING_SUFFIX}`;
@@ -67,11 +72,10 @@ export function fetchRepos(link: string) {
   return fetchReposByLink(link);
 }
 
-export function fetchReposByPage(link: string, page: number, namespace?: string, filter?: string) {
-  const namespacePath = namespace ? `${namespace}/` : "";
-  const linkWithPage = `${link}${namespacePath}?page=${page - 1}`;
+export function fetchReposByPage(link: string, page: number, filter?: string) {
+  const linkWithPage = `${link}?page=${page - 1}`;
   if (filter) {
-    return fetchReposByLink(`${linkWithPage}}&q=${decodeURIComponent(filter)}`);
+    return fetchReposByLink(`${linkWithPage}&q=${decodeURIComponent(filter)}`);
   }
   return fetchReposByLink(linkWithPage);
 }
@@ -121,6 +125,42 @@ export function fetchReposSuccess(repositories: RepositoryCollection): Action {
 export function fetchReposFailure(err: Error): Action {
   return {
     type: FETCH_REPOS_FAILURE,
+    payload: err
+  };
+}
+
+// fetch namespaces
+export function fetchNamespaces(link: string) {
+  return function(dispatch: any) {
+    dispatch(fetchNamespacesPending());
+    return apiClient
+      .get(link)
+      .then(response => response.json())
+      .then(namespaces => {
+        dispatch(fetchNamespacesSuccess(namespaces));
+      })
+      .catch(err => {
+        dispatch(fetchNamespacesFailure(err));
+      });
+  };
+}
+
+export function fetchNamespacesPending(): Action {
+  return {
+    type: FETCH_NAMESPACES_PENDING
+  };
+}
+
+export function fetchNamespacesSuccess(namespaces: NamespaceCollection): Action {
+  return {
+    type: FETCH_NAMESPACES_SUCCESS,
+    payload: namespaces
+  };
+}
+
+export function fetchNamespacesFailure(err: Error): Action {
+  return {
+    type: FETCH_NAMESPACES_FAILURE,
     payload: err
   };
 }
@@ -348,7 +388,7 @@ function createIdentifier(repository: Repository) {
   return repository.namespace + "/" + repository.name;
 }
 
-function normalizeByNamespaceAndName(repositoryCollection: RepositoryCollection) {
+function normalizeByNamespaceAndName(state: object, repositoryCollection: RepositoryCollection) {
   const names = [];
   const byNames = {};
   for (const repository of repositoryCollection._embedded.repositories) {
@@ -357,6 +397,7 @@ function normalizeByNamespaceAndName(repositoryCollection: RepositoryCollection)
     byNames[identifier] = repository;
   }
   return {
+    ...state,
     list: {
       ...repositoryCollection,
       _embedded: {
@@ -378,6 +419,13 @@ const reducerByNames = (state: object, repository: Repository) => {
   };
 };
 
+const reducerForNamespaces = (state: object, namespaces: NamespaceCollection) => {
+  return {
+    ...state,
+    namespaces: namespaces._embedded
+  };
+};
+
 export default function reducer(
   state: object = {},
   action: Action = {
@@ -390,7 +438,9 @@ export default function reducer(
 
   switch (action.type) {
     case FETCH_REPOS_SUCCESS:
-      return normalizeByNamespaceAndName(action.payload);
+      return normalizeByNamespaceAndName(state, action.payload);
+    case FETCH_NAMESPACES_SUCCESS:
+      return reducerForNamespaces(state, action.payload);
     case FETCH_REPO_SUCCESS:
       return reducerByNames(state, action.payload);
     default:
@@ -408,11 +458,16 @@ export function getRepositoryCollection(state: object) {
     }
     return {
       ...state.repos.list,
+      ...state.repos.namespaces,
       _embedded: {
         repositories
       }
     };
   }
+}
+
+export function getNamespaceCollection(state: object) {
+  return state.repos.namespaces?.namespaces;
 }
 
 export function isFetchReposPending(state: object) {
@@ -426,6 +481,20 @@ export function getFetchReposFailure(state: object) {
 export function getRepository(state: object, namespace: string, name: string) {
   if (state.repos && state.repos.byNames) {
     return state.repos.byNames[namespace + "/" + name];
+  }
+}
+
+export function isFetchNamespacesPending(state: object) {
+  return isPending(state, FETCH_NAMESPACES);
+}
+
+export function getFetchNamespacesFailure(state: object) {
+  return getFailure(state, FETCH_NAMESPACES);
+}
+
+export function getNamespace(state: object, namespace: string) {
+  if (state.namespaces) {
+    return state.namespaces[namespace];
   }
 }
 

@@ -911,5 +911,9 @@ class ResourceLinks {
     String self(String namespace) {
       return namespaceLinkBuilder.method("getNamespaceResource").parameters().method("get").parameters(namespace).href();
     }
+
+    String repositories(String namespace) {
+      return namespaceLinkBuilder.method("getNamespaceResource").parameters().method("get").parameters(namespace).href();
+    }
   }
 }
