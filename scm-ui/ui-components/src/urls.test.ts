@@ -22,7 +22,12 @@
  * SOFTWARE.
  */
 
-import { concat, getPageFromMatch, getQueryStringFromLocation, withEndingSlash } from "./urls";
+import {
+  concat,
+  getNamespaceAndPageFromMatch,
+  getQueryStringFromLocation,
+  withEndingSlash
+} from "./urls";
 
 describe("tests for withEndingSlash", () => {
   it("should append missing slash", () => {
@@ -42,28 +47,41 @@ describe("concat tests", () => {
   });
 });
 
-describe("tests for getPageFromMatch", () => {
-  function createMatch(page: string) {
+describe("tests for getNamespaceAndPageFromMatch", () => {
+  function createMatch(namespace?: string, page?: string) {
     return {
-      params: {
-        page
-      }
+      params: { namespace, page }
     };
   }
 
-  it("should return 1 for NaN", () => {
-    const match = createMatch("any");
-    expect(getPageFromMatch(match)).toBe(1);
+  it("should return no namespace and page 1 for neither namespace nor page", () => {
+    const match = createMatch();
+    expect(getNamespaceAndPageFromMatch(match)).toEqual({ namespace: undefined, page: 1 });
   });
 
-  it("should return 1 for 0", () => {
+  it("should return no namespace and page 1 for 0 as only parameter", () => {
     const match = createMatch("0");
-    expect(getPageFromMatch(match)).toBe(1);
+    expect(getNamespaceAndPageFromMatch(match)).toEqual({ namespace: undefined, page: 1 });
   });
 
-  it("should return the given number", () => {
+  it("should return no namespace and given number as page, when only a number is given", () => {
     const match = createMatch("42");
-    expect(getPageFromMatch(match)).toBe(42);
+    expect(getNamespaceAndPageFromMatch(match)).toEqual({ namespace: undefined, page: 42 });
+  });
+
+  it("should return big number as namespace and page 1, when only a big number is given", () => {
+    const match = createMatch("1337");
+    expect(getNamespaceAndPageFromMatch(match)).toEqual({ namespace: "1337", page: 1 });
+  });
+
+  it("should namespace and page 1, when only a string is given", () => {
+    const match = createMatch("something");
+    expect(getNamespaceAndPageFromMatch(match)).toEqual({ namespace: "something", page: 1 });
+  });
+
+  it("should namespace and given page, when namespace and page are given", () => {
+    const match = createMatch("something", "42");
+    expect(getNamespaceAndPageFromMatch(match)).toEqual({ namespace: "something", page: 42 });
   });
 });
 

@@ -52,30 +52,33 @@ type Props = WithTranslation &
     showCreateButton: boolean;
     collection: RepositoryCollection;
     page: number;
+    namespace: string;
     reposLink: string;
 
     // dispatched functions
-    fetchReposByPage: (link: string, page: number, filter?: string) => void;
+    fetchReposByPage: (link: string, page: number, namespace?: string, filter?: string) => void;
   };
 
 class Overview extends React.Component<Props> {
   componentDidMount() {
-    const { fetchReposByPage, reposLink, page, location } = this.props;
-    fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
+    const { fetchReposByPage, reposLink, namespace, page, location } = this.props;
+    fetchReposByPage(reposLink, page, namespace, urls.getQueryStringFromLocation(location));
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    const { loading, collection, page, reposLink, location, fetchReposByPage } = this.props;
+    const { loading, collection, namespace, page, reposLink, location, fetchReposByPage } = this.props;
     if (collection && page && !loading) {
       const statePage: number = collection.page + 1;
       if (page !== statePage || prevProps.location.search !== location.search) {
-        fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
+        fetchReposByPage(reposLink, page, namespace, urls.getQueryStringFromLocation(location));
       }
     }
   };
 
   render() {
-    const { error, loading, showCreateButton, t } = this.props;
+    const { error, loading, showCreateButton, namespace, t } = this.props;
+
+    const link = namespace ? `repos/${namespace}` : "repos";
 
     return (
       <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={loading} error={error}>
@@ -83,7 +86,7 @@ class Overview extends React.Component<Props> {
         <PageActions>
           <OverviewPageActions
             showCreateButton={showCreateButton}
-            link="repos"
+            link={link}
             label={t("overview.createButton")}
             testId="repository-overview"
           />
@@ -133,7 +136,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   const collection = getRepositoryCollection(state);
   const loading = isFetchReposPending(state);
   const error = getFetchReposFailure(state);
-  const page = urls.getPageFromMatch(match);
+  const { namespace, page } = urls.getNamespaceAndPageFromMatch(match);
   const showCreateButton = isAbleToCreateRepos(state);
   const reposLink = getRepositoriesLink(state);
   return {
@@ -141,6 +144,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
     loading,
     error,
     page,
+    namespace,
     showCreateButton,
     reposLink
   };
@@ -148,9 +152,10 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchReposByPage: (link: string, page: number, filter?: string) => {
-      dispatch(fetchReposByPage(link, page, filter));
+    fetchReposByPage: (link: string, page: number, namespace?: string, filter?: string) => {
+      dispatch(fetchReposByPage(link, page, namespace, filter));
     }
   };
 };
+
 export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("repos")(withRouter(Overview)));

@@ -67,11 +67,13 @@ export function fetchRepos(link: string) {
   return fetchReposByLink(link);
 }
 
-export function fetchReposByPage(link: string, page: number, filter?: string) {
+export function fetchReposByPage(link: string, page: number, namespace?: string, filter?: string) {
+  const namespacePath = namespace ? `${namespace}/` : "";
+  const linkWithPage = `${link}${namespacePath}?page=${page - 1}`;
   if (filter) {
-    return fetchReposByLink(`${link}?page=${page - 1}&q=${decodeURIComponent(filter)}`);
+    return fetchReposByLink(`${linkWithPage}}&q=${decodeURIComponent(filter)}`);
   }
-  return fetchReposByLink(`${link}?page=${page - 1}`);
+  return fetchReposByLink(linkWithPage);
 }
 
 function appendSortByLink(url: string) {
