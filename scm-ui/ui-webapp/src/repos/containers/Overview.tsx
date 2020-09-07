@@ -101,8 +101,16 @@ class Overview extends React.Component<Props> {
     }
   };
 
+  namespaceSelected = (newNamespace: string) => {
+    if (newNamespace === "") {
+      this.props.history.push("/repos/");
+    } else {
+      this.props.history.push(`/repos/${newNamespace}/`);
+    }
+  };
+
   render() {
-    const { error, loading, showCreateButton, namespace, t } = this.props;
+    const { error, loading, showCreateButton, namespace, namespaces, t } = this.props;
 
     const link = namespace ? `repos/${namespace}` : "repos";
 
@@ -112,6 +120,9 @@ class Overview extends React.Component<Props> {
         <PageActions>
           <OverviewPageActions
             showCreateButton={showCreateButton}
+            namespace={namespace}
+            namespaces={namespaces}
+            namespaceSelected={this.namespaceSelected}
             link={link}
             label={t("overview.createButton")}
             testId="repository-overview"

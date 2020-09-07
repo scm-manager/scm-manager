@@ -22,24 +22,30 @@
  * SOFTWARE.
  */
 import React from "react";
-import { History } from "history";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import classNames from "classnames";
-import { Button, urls } from "./index";
+import { Button, DropDown, urls } from "./index";
 import { FilterInput } from "./forms";
+import { Namespace } from "@scm-manager/ui-types";
 
 type Props = RouteComponentProps & {
   showCreateButton: boolean;
+  namespace: string;
+  namespaces: Namespace[];
   link: string;
+  namespaceSelected: (namespace: string) => void;
   label?: string;
   testId?: string;
 };
 
 class OverviewPageActions extends React.Component<Props> {
   render() {
-    const { history, location, link, testId } = this.props;
+    const { history, namespace, namespaces, location, link, testId } = this.props;
+    const sortedNamespaces = namespaces ? namespaces.map(n => n.namespace).sort() : [];
+    const namespaceOptions = ["", ...sortedNamespaces];
     return (
       <>
+        <DropDown options={namespaceOptions} preselectedOption={namespace} optionSelected={this.namespaceSelected} />
         <FilterInput
           value={urls.getQueryStringFromLocation(location)}
           filter={filter => {
@@ -51,6 +57,10 @@ class OverviewPageActions extends React.Component<Props> {
       </>
     );
   }
+
+  namespaceSelected = (newNamespace: string) => {
+    this.props.namespaceSelected(newNamespace);
+  };
 
   renderCreateButton() {
     const { showCreateButton, link, label } = this.props;
