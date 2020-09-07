@@ -3,9 +3,15 @@ title: Migrate from v1 to v2
 subtitle: How to use the Migration-Wizard
 ---
 
+# Preparation
+
 To upgrade an SCM-Manager from version 1 to version 2, some changes have to be made according the home directory of the SCM-Manager. So before you start, **make sure that you have an up to date backup of your SCM home folder!**
 
-Before the migration process can be started, the last running version of SCM-Manager had to be (at least) 1.60. Data of older versions cannot be migrated automatically. If this is the case, you can stop version 1 and start a version 2 SCM-Manager (make sure that you have configured the same SCM home folder). When SCM-Manager starts for the first time, you have to choose how to migrate your existing repositories. The background of this is the following:
+Before the migration process can be started, the last running version of SCM-Manager had to be (at least) 1.60. Data of older versions cannot be migrated automatically. If this is the case, you can stop version 1 and start a version 2 SCM-Manager (make sure that you have configured the same SCM home folder).
+ 
+# Repository migration
+ 
+When SCM-Manager starts for the first time, you have to choose how to migrate your existing repositories. The background of this is the following:
 
 While in version 1 of SCM-Manager the repositories were stored in a directory according to their type (`git`, `hg` or `svn`) and their name, in version 2 the directory is independent of the type and name. Therefore a repository is no longer named with an arbitrary number of name parts devided by slashes (`/`), but it has a namespace and a name (both of which must not contain slashes). The namespace should be used to group your repositories (for example you can use this to distinguish between the types of repositories like *git* and *hg* like version 1 or to assign them to different projects or users).
 
@@ -36,6 +42,16 @@ In the figure you can see an example of the page. We tried to guess meaningful n
 |*DELETE*	|The repository will not be migrated and will not be visible inside SCM-Manager. The data files will be deleted!|
 
 The probably most safe strategy (but also the most costly) is *COPY*. The old folder of the repository will be kept and all data will be copied to the new default folder (so this also is the default). *MOVE* and *INLINE* are more efficient. When you have a lot of repositories, maybe you will take the chance to clean them up and *IGNORE* or even *DELETE* old stuff.
+
+# Migration of other data
+
+For version 2 of SCM-Manager we introduced a new way to store data for repositories. We did our best to migrate old data like settings in plugins, so that nothing will be lost during update. What we did **not** do is to automatically install the new versions of your plugins. When you start your new instance, you will get a clean instance. You can install your new plugins from the administration page. Any plugin related data or settings will be migrated automatically.
+
+# Manual plugin installation
+
+If however you have to install plugins manually (for example because you cannot log in without the LDAP plugin), you can download them from the [plugins section](https://www.scm-manager.org/plugins/#categories) on our homepage. The download can be found in the "Releases" section of each plugin. Just store the `smp` file in the `plugin` directory of your SCM home and restart your server.
+
+# Huge number of repositories
 
 If you have more than 100 Repositories to migrate, you may have to adapt some configuration and increase the limit of jetty form keys. You can do this by setting the `maxFormKeys` and `maxFormContentSize` of the webapp in `conf/server-config.xml`. You have to add the keys to the `WebAppContext` with the id `"scm-webapp"` e.g.:
 
