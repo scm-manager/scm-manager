@@ -31,7 +31,7 @@ type Props = {
   className?: string;
 };
 
-const Title: FC<Props> = ({ title, preventRefreshingPageTitle, customPageTitle, className }) => {
+const Title: FC<Props> = ({ title, preventRefreshingPageTitle, customPageTitle, className , children}) => {
   useEffect(() => {
     if (!preventRefreshingPageTitle) {
       if (customPageTitle) {
@@ -42,7 +42,9 @@ const Title: FC<Props> = ({ title, preventRefreshingPageTitle, customPageTitle, 
     }
   }, [title, preventRefreshingPageTitle, customPageTitle]);
 
-  if (title) {
+  if (children) {
+    return <h1 className={classNames("title", className)}>{children}</h1>;
+  } else if (title) {
     return <h1 className={classNames("title", className)}>{title}</h1>;
   }
   return null;

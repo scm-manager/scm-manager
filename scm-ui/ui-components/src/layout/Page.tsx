@@ -33,6 +33,7 @@ import ErrorBoundary from "../ErrorBoundary";
 
 type Props = {
   title?: string;
+  titleComponent?: ReactNode;
   afterTitle?: ReactNode;
   subtitle?: string;
   loading?: boolean;
@@ -90,7 +91,7 @@ export default class Page extends React.Component<Props> {
   }
 
   renderPageHeader() {
-    const { error, title, afterTitle, subtitle, children } = this.props;
+    const { error, title, titleComponent, afterTitle, subtitle, children } = this.props;
 
     let pageActions = null;
     let pageActionsExists = false;
@@ -115,7 +116,7 @@ export default class Page extends React.Component<Props> {
         <div className="columns">
           <div className="column">
             <FlexContainer>
-              <Title title={title} /> {afterTitle && <MarginLeft>{afterTitle}</MarginLeft>}
+              <Title title={title}>{titleComponent}</Title>{afterTitle && <MarginLeft>{afterTitle}</MarginLeft>}
             </FlexContainer>
             <Subtitle subtitle={subtitle} />
           </div>
