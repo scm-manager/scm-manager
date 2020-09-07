@@ -22,11 +22,13 @@
  * SOFTWARE.
  */
 import React, { ReactNode } from "react";
+import { Link } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
 
 type Props = {
   name: string;
+  url?: string;
   elements: ReactNode[];
 };
 
@@ -69,7 +71,7 @@ export default class CardColumnGroup extends React.Component<Props, State> {
   };
 
   render() {
-    const { name, elements } = this.props;
+    const { name, url, elements } = this.props;
     const { collapsed } = this.state;
 
     const icon = collapsed ? "fa-angle-right" : "fa-angle-down";
@@ -85,13 +87,25 @@ export default class CardColumnGroup extends React.Component<Props, State> {
         );
       });
     }
+
+    const header = url ? (
+      <h2>
+        <span className={classNames("is-size-4", "has-cursor-pointer")} onClick={this.toggleCollapse}>
+          <i className={classNames("fa", icon)} />
+        </span>{" "}
+        <Link to={url}>{name}</Link>
+      </h2>
+    ) : (
+      <h2>
+        <span className={classNames("is-size-4", "has-cursor-pointer")} onClick={this.toggleCollapse}>
+          <i className={classNames("fa", icon)} /> {name}
+        </span>
+      </h2>
+    );
+
     return (
       <Container>
-        <h2>
-          <span className={classNames("is-size-4", "has-cursor-pointer")} onClick={this.toggleCollapse}>
-            <i className={classNames("fa", icon)} /> {name}
-          </span>
-        </h2>
+        {header}
         <hr />
         <Wrapper className={classNames("columns", "card-columns", "is-multiline")}>{content}</Wrapper>
         <div className="is-clearfix" />
