@@ -23,10 +23,10 @@
  */
 import React from "react";
 import styled from "styled-components";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository, RepositoryType } from "@scm-manager/ui-types";
-import { Checkbox, InputField, Level, Select, SubmitButton, Subtitle, Textarea } from "@scm-manager/ui-components";
+import {WithTranslation, withTranslation} from "react-i18next";
+import {ExtensionPoint} from "@scm-manager/ui-extensions";
+import {Repository, RepositoryCreation, RepositoryType} from "@scm-manager/ui-types";
+import {Checkbox, InputField, Level, Select, SubmitButton, Subtitle, Textarea} from "@scm-manager/ui-components";
 import * as validator from "./repositoryValidation";
 import { CUSTOM_NAMESPACE_STRATEGY } from "../../modules/repos";
 
@@ -45,7 +45,7 @@ const SpaceBetween = styled.div`
 `;
 
 type Props = WithTranslation & {
-  submitForm: (repo: Repository, shouldInit: boolean) => void;
+  submitForm: (repo: RepositoryCreation, shouldInit: boolean) => void;
   repository?: Repository;
   repositoryTypes?: RepositoryType[];
   namespaceStrategy?: string;
@@ -53,7 +53,7 @@ type Props = WithTranslation & {
 };
 
 type State = {
-  repository: Repository;
+  repository: RepositoryCreation;
   initRepository: boolean;
   namespaceValidationError: boolean;
   nameValidationError: boolean;
@@ -71,6 +71,7 @@ class RepositoryForm extends React.Component<Props, State> {
         type: "",
         contact: "",
         description: "",
+        creationContext: {},
         _links: {}
       },
       initRepository: false,
@@ -85,7 +86,8 @@ class RepositoryForm extends React.Component<Props, State> {
     if (repository) {
       this.setState({
         repository: {
-          ...repository
+          ...repository,
+          creationContext: {}
         }
       });
     }
@@ -125,6 +127,18 @@ class RepositoryForm extends React.Component<Props, State> {
   toggleInitCheckbox = () => {
     this.setState({
       initRepository: !this.state.initRepository
+    });
+  };
+
+  setCreationContextEntry = (key: string, value: any) => {
+    this.setState({
+      repository: {
+        ...this.state.repository,
+        creationContext: {
+          ...this.state.repository.creationContext,
+          [key]: value
+        }
+      }
     });
   };
 
@@ -209,6 +223,10 @@ class RepositoryForm extends React.Component<Props, State> {
     }
     const { repositoryTypes, t } = this.props;
     const repository = this.state.repository;
+    const extensionProps = {
+      repository,
+      setCreationContextEntry: this.setCreationContextEntry
+    };
     return (
       <>
         {this.renderNamespaceField()}
@@ -239,6 +257,9 @@ class RepositoryForm extends React.Component<Props, State> {
             />
           </CheckboxWrapper>
         </SpaceBetween>
+        {this.state.initRepository && (
+          <ExtensionPoint name="repos.create.initialize" props={extensionProps} renderAll={false} />
+        )}
       </>
     );
   }

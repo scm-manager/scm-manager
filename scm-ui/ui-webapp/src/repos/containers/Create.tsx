@@ -25,7 +25,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
-import { NamespaceStrategies, Repository, RepositoryType } from "@scm-manager/ui-types";
+import { NamespaceStrategies, Repository, RepositoryCreation, RepositoryType } from "@scm-manager/ui-types";
 import { Page } from "@scm-manager/ui-components";
 import {
   fetchRepositoryTypesIfNeeded,
@@ -56,9 +56,10 @@ type Props = WithTranslation & {
   fetchRepositoryTypesIfNeeded: () => void;
   createRepo: (
     link: string,
-    repository: Repository,
+    repository: RepositoryCreation,
     initRepository: boolean,
-    callback: (repo: Repository) => void
+    callback: (repo: Repository) => void,
+    initRepositoryContext?: any
   ) => void;
   resetForm: () => void;
 

@@ -24,7 +24,7 @@
 
 import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../modules/types";
-import { Action, Repository, RepositoryCollection } from "@scm-manager/ui-types";
+import { Action, Repository, RepositoryCollection, RepositoryCreation } from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 
@@ -183,7 +183,7 @@ export function fetchRepoFailure(namespace: string, name: string, error: Error):
 
 export function createRepo(
   link: string,
-  repository: Repository,
+  repository: RepositoryCreation,
   initRepository: boolean,
   callback?: (repo: Repository) => void
 ) {

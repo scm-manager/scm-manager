@@ -35,6 +35,10 @@ export type Repository = {
   _links: Links;
 };
 
+export type RepositoryCreation = Repository & {
+  creationContext: { [key: string]: any };
+};
+
 export type RepositoryCollection = PagedCollection & {
   _embedded: {
     repositories: Repository[] | string[];
