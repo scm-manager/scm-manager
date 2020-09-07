@@ -50,6 +50,7 @@ type Props = WithTranslation & {
   createLoading: boolean;
   error: Error;
   repoLink: string;
+  indexResources: any;
 
   // dispatch functions
   fetchNamespaceStrategiesIfNeeded: () => void;
@@ -81,7 +82,7 @@ class Create extends React.Component<Props> {
   };
 
   render() {
-    const { pageLoading, createLoading, repositoryTypes, namespaceStrategies, createRepo, error } = this.props;
+    const { pageLoading, createLoading, repositoryTypes, namespaceStrategies, createRepo, error, indexResources } = this.props;
 
     const { t, repoLink } = this.props;
     return (
@@ -99,6 +100,7 @@ class Create extends React.Component<Props> {
           submitForm={(repo, initRepository) => {
             createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
           }}
+          indexResources={indexResources}
         />
       </Page>
     );
@@ -113,13 +115,16 @@ const mapStateToProps = (state: any) => {
   const error =
     getFetchRepositoryTypesFailure(state) || getCreateRepoFailure(state) || getFetchNamespaceStrategiesFailure(state);
   const repoLink = getRepositoriesLink(state);
+  const indexResources = state?.indexResources;
+
   return {
     repositoryTypes,
     namespaceStrategies,
     pageLoading,
     createLoading,
     error,
-    repoLink
+    repoLink,
+    indexResources
   };
 };
 
@@ -131,7 +136,7 @@ const mapDispatchToProps = (dispatch: any) => {
     fetchNamespaceStrategiesIfNeeded: () => {
       dispatch(fetchNamespaceStrategiesIfNeeded());
     },
-    createRepo: (link: string, repository: Repository, initRepository: boolean, callback: () => void) => {
+    createRepo: (link: string, repository: RepositoryCreation, initRepository: boolean, callback: () => void) => {
       dispatch(createRepo(link, repository, initRepository, callback));
     },
     resetForm: () => {

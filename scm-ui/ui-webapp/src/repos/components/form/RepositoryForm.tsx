@@ -23,10 +23,10 @@
  */
 import React from "react";
 import styled from "styled-components";
-import {WithTranslation, withTranslation} from "react-i18next";
-import {ExtensionPoint} from "@scm-manager/ui-extensions";
-import {Repository, RepositoryCreation, RepositoryType} from "@scm-manager/ui-types";
-import {Checkbox, InputField, Level, Select, SubmitButton, Subtitle, Textarea} from "@scm-manager/ui-components";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { Repository, RepositoryCreation, RepositoryType } from "@scm-manager/ui-types";
+import { Checkbox, InputField, Level, Select, SubmitButton, Subtitle, Textarea } from "@scm-manager/ui-components";
 import * as validator from "./repositoryValidation";
 import { CUSTOM_NAMESPACE_STRATEGY } from "../../modules/repos";
 
@@ -50,6 +50,7 @@ type Props = WithTranslation & {
   repositoryTypes?: RepositoryType[];
   namespaceStrategy?: string;
   loading?: boolean;
+  indexResources: any;
 };
 
 type State = {
@@ -221,11 +222,12 @@ class RepositoryForm extends React.Component<Props, State> {
     if (!this.isCreateMode()) {
       return null;
     }
-    const { repositoryTypes, t } = this.props;
+    const { repositoryTypes, indexResources, t } = this.props;
     const repository = this.state.repository;
     const extensionProps = {
       repository,
-      setCreationContextEntry: this.setCreationContextEntry
+      setCreationContextEntry: this.setCreationContextEntry,
+      indexResources
     };
     return (
       <>
@@ -255,11 +257,11 @@ class RepositoryForm extends React.Component<Props, State> {
               onChange={this.toggleInitCheckbox}
               helpText={t("help.initializeRepository")}
             />
+            {this.state.initRepository && (
+              <ExtensionPoint name="repos.create.initialize" props={extensionProps} renderAll={false} />
+            )}
           </CheckboxWrapper>
         </SpaceBetween>
-        {this.state.initRepository && (
-          <ExtensionPoint name="repos.create.initialize" props={extensionProps} renderAll={false} />
-        )}
       </>
     );
   }
