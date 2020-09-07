@@ -100,7 +100,7 @@ export default class Page extends React.Component<Props> {
         if (this.isPageAction(child)) {
           pageActions = (
             <PageActionContainer
-              className={classNames("column", "is-three-fifths", "is-mobile-action-spacing", "is-flex")}
+              className={classNames("column", "is-three-fifths", "is-mobile-action-spacing", "is-flex-tablet")}
             >
               {child}
             </PageActionContainer>

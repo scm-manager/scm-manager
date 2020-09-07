@@ -26,47 +26,52 @@ import { withRouter, RouteComponentProps } from "react-router-dom";
 import classNames from "classnames";
 import { Button, DropDown, urls } from "./index";
 import { FilterInput } from "./forms";
-import { Namespace } from "@scm-manager/ui-types";
 
 type Props = RouteComponentProps & {
   showCreateButton: boolean;
-  namespace: string;
-  namespaces: Namespace[];
+  currentGroup: string;
+  groups: string[];
   link: string;
-  namespaceSelected: (namespace: string) => void;
+  groupSelected: (namespace: string) => void;
   label?: string;
   testId?: string;
 };
 
 class OverviewPageActions extends React.Component<Props> {
   render() {
-    const { history, namespace, namespaces, location, link, testId } = this.props;
-    const sortedNamespaces = namespaces ? namespaces.map(n => n.namespace).sort() : [];
-    const namespaceOptions = ["", ...sortedNamespaces];
-    return (
-      <>
-        <DropDown options={namespaceOptions} preselectedOption={namespace} optionSelected={this.namespaceSelected} />
-        <FilterInput
-          value={urls.getQueryStringFromLocation(location)}
-          filter={filter => {
-            history.push(`/${link}/?q=${filter}`);
-          }}
-          testId={testId + "-filter"}
+    const { history, currentGroup, groups, location, link, testId, groupSelected } = this.props;
+    const groupSelector = groups && (
+      <div className={"column is-flex"}>
+        <DropDown
+          options={groups}
+          preselectedOption={currentGroup}
+          optionSelected={groupSelected}
         />
+      </div>
+    );
+
+    return (
+      <div className={"columns is-tablet"}>
+        {groupSelector}
+        <div className={"column"}>
+          <FilterInput
+            value={urls.getQueryStringFromLocation(location)}
+            filter={filter => {
+              history.push(`/${link}/?q=${filter}`);
+            }}
+            testId={testId + "-filter"}
+          />
+        </div>
         {this.renderCreateButton()}
-      </>
+      </div>
     );
   }
-
-  namespaceSelected = (newNamespace: string) => {
-    this.props.namespaceSelected(newNamespace);
-  };
 
   renderCreateButton() {
     const { showCreateButton, link, label } = this.props;
     if (showCreateButton) {
       return (
-        <div className={classNames("input-button", "control")}>
+        <div className={classNames("input-button", "control", "column")}>
           <Button label={label} link={`/${link}/create`} color="primary" />
         </div>
       );
