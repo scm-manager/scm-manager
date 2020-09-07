@@ -35,7 +35,7 @@ class RepositoryGroupEntry extends React.Component<Props> {
     const entries = group.repositories.map((repository, index) => {
       return <RepositoryEntry repository={repository} key={index} />;
     });
-    return <CardColumnGroup name={group.name} elements={entries} />;
+    return <CardColumnGroup name={group.name} url={`/repos/${group.name}/`} elements={entries} />;
   }
 }
 
