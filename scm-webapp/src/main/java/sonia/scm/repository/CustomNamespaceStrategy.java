@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import sonia.scm.plugin.Extension;
@@ -37,7 +37,7 @@ public class CustomNamespaceStrategy implements NamespaceStrategy {
 
     doThrow()
       .violation("invalid namespace", "namespace")
-      .when(!ValidationUtil.isRepositoryNameValid(namespace));
+      .when(!ValidationUtil.isRepositoryNameValid(namespace) || namespace.matches("[0-9]{1,3}"));
 
     return namespace;
   }
