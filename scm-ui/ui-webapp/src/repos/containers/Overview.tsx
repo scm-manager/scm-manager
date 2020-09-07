@@ -85,10 +85,10 @@ class Overview extends React.Component<Props> {
   };
 
   fetchRepos = () => {
-    const { namespace, page, location, fetchReposByPage } = this.props;
+    const { page, location, fetchReposByPage } = this.props;
     const link = this.getReposLink();
     if (link) {
-      fetchReposByPage(link, page, namespace, urls.getQueryStringFromLocation(location));
+      fetchReposByPage(link, page, urls.getQueryStringFromLocation(location));
     }
   };
 
