@@ -37,14 +37,14 @@ import {
 } from "@scm-manager/ui-components";
 import { getNamespacesLink, getRepositoriesLink } from "../../modules/indexResource";
 import {
+  fetchNamespaces,
   fetchReposByPage,
   getFetchReposFailure,
+  getNamespaceCollection,
   getRepositoryCollection,
   isAbleToCreateRepos,
-  isFetchReposPending,
   isFetchNamespacesPending,
-  getNamespaceCollection,
-  fetchNamespaces
+  isFetchReposPending
 } from "../modules/repos";
 import RepositoryList from "../components/list";
 
@@ -67,27 +67,28 @@ type Props = WithTranslation &
 
 class Overview extends React.Component<Props> {
   componentDidMount() {
-    const { fetchReposByPage, fetchNamespaces, namespacesLink, namespace, page, location } = this.props;
+    const { fetchNamespaces, namespacesLink } = this.props;
     fetchNamespaces(namespacesLink);
-    const link = this.getReposLink();
-    if (link) {
-      fetchReposByPage(link, page, namespace, urls.getQueryStringFromLocation(location));
-    }
+    this.fetchRepos();
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    const { loading, collection, namespaces, namespace, page, location, fetchReposByPage } = this.props;
-    if (!collection && namespace && prevProps.namespaces !== namespaces) {
-      const link = this.getReposLink();
-      fetchReposByPage(link, page, namespace, urls.getQueryStringFromLocation(location));
-    } else if (collection && page && !loading) {
+    const { loading, collection, namespace, namespaces, page, location } = this.props;
+    if (namespaces !== prevProps.namespaces && namespace) {
+      this.fetchRepos();
+    } else if (collection && (page || namespace) && !loading) {
       const statePage: number = collection.page + 1;
-      if (page !== statePage || prevProps.location.search !== location.search) {
-        const link = this.getReposLink();
-        if (link) {
-          fetchReposByPage(link, page, namespace, urls.getQueryStringFromLocation(location));
-        }
+      if (page !== statePage || prevProps.location.search !== location.search || prevProps.namespace !== namespace) {
+        this.fetchRepos();
       }
+    }
+  };
+
+  fetchRepos = () => {
+    const { namespace, page, location, fetchReposByPage } = this.props;
+    const link = this.getReposLink();
+    if (link) {
+      fetchReposByPage(link, page, namespace, urls.getQueryStringFromLocation(location));
     }
   };
 
