@@ -912,6 +912,7 @@ exports[`Storyshots BranchSelector Default 1`] = `
             className="is-fullwidth select"
           >
             <select
+              className="DropDown__FullWidthSelect-jjsyoc-0 cHVjbs"
               disabled={false}
               onChange={[Function]}
               value=""
@@ -44317,6 +44318,7 @@ exports[`Storyshots Forms|DropDown Add preselect if missing in options 1`] = `
   className="select"
 >
   <select
+    className="DropDown__FullWidthSelect-jjsyoc-0 cHVjbs"
     onChange={[Function]}
     value="D"
   >
@@ -44353,6 +44355,7 @@ exports[`Storyshots Forms|DropDown Default 1`] = `
   className="select"
 >
   <select
+    className="DropDown__FullWidthSelect-jjsyoc-0 cHVjbs"
     onChange={[Function]}
     value="de"
   >
@@ -44383,6 +44386,7 @@ exports[`Storyshots Forms|DropDown With Translation 1`] = `
   className="select"
 >
   <select
+    className="DropDown__FullWidthSelect-jjsyoc-0 cHVjbs"
     onChange={[Function]}
     value="dirk"
   >

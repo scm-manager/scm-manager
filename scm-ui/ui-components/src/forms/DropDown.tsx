@@ -23,6 +23,7 @@
  */
 import React, { ChangeEvent } from "react";
 import classNames from "classnames";
+import styled from "styled-components";
 
 type Props = {
   options: string[];
@@ -32,6 +33,10 @@ type Props = {
   className?: string;
   disabled?: boolean;
 };
+
+const FullWidthSelect = styled.select`
+  width: 100%;
+`;
 
 class DropDown extends React.Component<Props> {
   render() {
@@ -43,7 +48,7 @@ class DropDown extends React.Component<Props> {
 
     return (
       <div className={classNames(className, "select", disabled ? "disabled" : "")}>
-        <select value={preselectedOption ? preselectedOption : ""} onChange={this.change} disabled={disabled}>
+        <FullWidthSelect value={preselectedOption ? preselectedOption : ""} onChange={this.change} disabled={disabled}>
           {options.map((option, index) => {
             const value = optionValues && optionValues[index] ? optionValues[index] : option;
             return (
@@ -52,7 +57,7 @@ class DropDown extends React.Component<Props> {
               </option>
             );
           })}
-        </select>
+        </FullWidthSelect>
       </div>
     );
   }

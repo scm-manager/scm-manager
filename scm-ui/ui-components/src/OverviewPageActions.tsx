@@ -43,6 +43,7 @@ class OverviewPageActions extends React.Component<Props> {
     const groupSelector = groups && (
       <div className={"column is-flex"}>
         <DropDown
+          className={"is-fullwidth"}
           options={groups}
           preselectedOption={currentGroup}
           optionSelected={groupSelected}
