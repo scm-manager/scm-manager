@@ -186,7 +186,7 @@ class RepositoryRoot extends React.Component<Props> {
       return links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />);
     };
 
-    const titleComponent = <><Link to={`/repos/${repository.namespace}/`}>{repository.namespace}</Link>/{repository.name}</>;
+    const titleComponent = <><Link to={`/repos/${repository.namespace}/`} className={"has-text-dark"}>{repository.namespace}</Link>/{repository.name}</>;
 
     return (
       <StateMenuContextProvider>

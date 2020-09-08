@@ -93,7 +93,7 @@ export default class CardColumnGroup extends React.Component<Props, State> {
         <span className={classNames("is-size-4", "has-cursor-pointer")} onClick={this.toggleCollapse}>
           <i className={classNames("fa", icon)} />
         </span>{" "}
-        <Link to={url}>{name}</Link>
+        <Link to={url} className={"has-text-dark"}>{name}</Link>
       </h2>
     ) : (
       <h2>
