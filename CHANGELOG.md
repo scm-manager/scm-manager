@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Added
+- Tags now have date information attached ([#1305](https://github.com/scm-manager/scm-manager/pull/1305))
+- Add support for scroll anchors in url hash of diff page ([#1304](https://github.com/scm-manager/scm-manager/pull/1304))
+- Documentation regarding data and plugin migration from v1 to v2 ([#1321](https://github.com/scm-manager/scm-manager/pull/1321))
+
+### Fixed
+- Redirection to requested page after login in anonymous mode
+
 ## [2.4.1] - 2020-09-01
 ### Added
 - Add "sonia.scm.restart-migration.wait" to set wait in milliseconds before restarting scm-server after migration ([#1308](https://github.com/scm-manager/scm-manager/pull/1308))

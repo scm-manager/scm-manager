@@ -23,7 +23,7 @@
  */
 
 import { File, FileChangeType, Hunk } from "./DiffTypes";
-import { getPath, createHunkIdentifier, createHunkIdentifierFromContext } from "./diffs";
+import { getPath, createHunkIdentifier, createHunkIdentifierFromContext, escapeWhitespace } from "./diffs";
 
 describe("tests for diff util functions", () => {
   const file = (type: FileChangeType, oldPath: string, newPath: string): File => {
@@ -86,6 +86,17 @@ describe("tests for diff util functions", () => {
         hunk: createHunk("@@ -1,42 +1,39 @@")
       });
       expect(identifier).toBe("delete_/etc/passwd_@@ -1,42 +1,39 @@");
+    });
+  });
+
+  describe("escapeWhitespace tests", () => {
+    it("should escape whitespaces", () => {
+      const escaped = escapeWhitespace("spaceship hog");
+      expect(escaped).toBe("spaceship-hog");
+    });
+    it("should escape multiple whitespaces", () => {
+      const escaped = escapeWhitespace("spaceship heart of gold");
+      expect(escaped).toBe("spaceship-heart-of-gold");
     });
   });
 });

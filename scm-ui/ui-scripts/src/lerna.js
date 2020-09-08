@@ -37,16 +37,8 @@ const yarn = args => {
   }
 };
 
-const version = version => {
-  yarn([
-    "run",
-    "lerna",
-    "--no-git-tag-version",
-    "--no-push",
-    "version",
-    "--yes",
-    version
-  ]);
+const version = v => {
+  yarn(["run", "lerna", "--no-git-tag-version", "--no-push", "version", "--force-publish", "--yes", v]);
 };
 
 const publish = () => {

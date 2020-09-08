@@ -24,32 +24,74 @@
 import React from "react";
 import DiffFile from "./DiffFile";
 import { DiffObjectProps, File, FileControlFactory } from "./DiffTypes";
+import { escapeWhitespace } from "./diffs";
 import Notification from "../Notification";
 import { WithTranslation, withTranslation } from "react-i18next";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 
-type Props = WithTranslation &
+type Props = RouteComponentProps &
+  WithTranslation &
   DiffObjectProps & {
     diff: File[];
     fileControlFactory?: FileControlFactory;
   };
 
-class Diff extends React.Component<Props> {
+type State = {
+  contentRef?: HTMLElement | null;
+};
+
+function getAnchorSelector(uriHashContent: string) {
+  return "#" + escapeWhitespace(decodeURIComponent(uriHashContent));
+}
+
+class Diff extends React.Component<Props, State> {
   static defaultProps: Partial<Props> = {
     sideBySide: false
   };
 
+  constructor(props: Readonly<Props>) {
+    super(props);
+    this.state = {
+      contentRef: undefined
+    };
+  }
+
+  componentDidUpdate() {
+    const { contentRef } = this.state;
+
+    // we have to use componentDidUpdate, because we have to wait until all
+    // children are rendered and componentDidMount is called before the
+    // changeset content was rendered.
+    const hash = this.props.location.hash;
+    const match = hash && hash.match(/^#diff-(.*)$/);
+    if (contentRef && match) {
+      const selector = getAnchorSelector(match[1]);
+      const element = contentRef.querySelector(selector);
+      if (element && element.scrollIntoView) {
+        element.scrollIntoView();
+      }
+    }
+  }
+
+  shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>): boolean {
+    // We have check if the contentRef changed and update afterwards so the page can scroll to the anchor links.
+    // Otherwise it can happen that componentDidUpdate is never executed depending on how fast the markdown got rendered
+    return this.state.contentRef !== nextState.contentRef || this.props !== nextProps;
+  }
+
   render() {
     const { diff, t, ...fileProps } = this.props;
+
     return (
-      <>
+      <div ref={el => this.setState({ contentRef: el })}>
         {diff.length === 0 ? (
           <Notification type="info">{t("diff.noDiffFound")}</Notification>
         ) : (
           diff.map((file, index) => <DiffFile key={index} file={file} {...fileProps} {...this.props} />)
         )}
-      </>
+      </div>
     );
   }
 }
 
-export default withTranslation("repos")(Diff);
+export default withRouter(withTranslation("repos")(Diff));

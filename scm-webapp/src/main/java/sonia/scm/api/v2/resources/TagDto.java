@@ -21,15 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -39,6 +42,9 @@ public class TagDto extends HalRepresentation {
   private String name;
 
   private String revision;
+
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private Instant date;
 
   TagDto(Links links, Embedded embedded) {
     super(links, embedded);

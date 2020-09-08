@@ -22,24 +22,24 @@
  * SOFTWARE.
  */
 
-import { BaseContext, File, Hunk } from "./DiffTypes";
+package sonia.scm.repository.spi;
 
-export function getPath(file: File) {
-  if (file.type === "delete") {
-    return file.oldPath;
+import org.junit.Test;
+import sonia.scm.repository.Tag;
+
+import java.util.List;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class HgTagsCommandTest extends AbstractHgCommandTestBase {
+
+  @Test
+  public void shouldGetTagDatesCorrectly() {
+    HgTagsCommand hgTagsCommand = new HgTagsCommand(cmdContext);
+    final List<Tag> tags = hgTagsCommand.getTags();
+    assertThat(tags).hasSize(1);
+    assertThat(tags.get(0).getName()).isEqualTo("tip");
+    assertThat(tags.get(0).getDate()).contains(1339586381000L);
   }
-  return file.newPath;
-}
 
-export function createHunkIdentifier(file: File, hunk: Hunk) {
-  const path = getPath(file);
-  return `${file.type}_${path}_${hunk.content}`;
-}
-
-export function createHunkIdentifierFromContext(ctx: BaseContext) {
-  return createHunkIdentifier(ctx.file, ctx.hunk);
-}
-
-export function escapeWhitespace(path: string) {
-  return path.toLowerCase().replace(/\W/g, "-");
 }

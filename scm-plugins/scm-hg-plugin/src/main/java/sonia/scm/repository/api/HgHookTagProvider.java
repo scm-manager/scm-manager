@@ -92,7 +92,7 @@ public class HgHookTagProvider implements HookTagProvider {
     if (tagNames != null){
       for ( String tagName : tagNames ){
         logger.trace("found tag {} at changeset {}", tagName, c.getId());
-        tags.add(new Tag(tagName, c.getId()));
+        tags.add(new Tag(tagName, c.getId(), c.getDate()));
       }
     }
   }

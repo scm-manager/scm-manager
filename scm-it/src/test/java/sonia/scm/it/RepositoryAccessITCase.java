@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.it;
 
 import groovy.util.logging.Slf4j;
@@ -178,9 +178,9 @@ public class RepositoryAccessITCase {
       .isGreaterThan(0);
 
     assertThat(response.body().jsonPath().getMap("_embedded.tags.find{it.name=='" + tagName + "'}"))
-      .as("assert tag name and revision")
+      .as("assert tag has attributes for name, revision, date and links")
       .isNotNull()
-      .hasSize(3)
+      .hasSize(4)
       .containsEntry("name", tagName)
       .containsEntry("revision", changeset.getId());
 

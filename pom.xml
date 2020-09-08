@@ -903,7 +903,7 @@
 
   <properties>
     <!-- test libraries -->
-    <mockito.version>2.28.2</mockito.version>
+    <mockito.version>3.5.6</mockito.version>
     <hamcrest.version>2.1</hamcrest.version>
     <junit.version>5.6.2</junit.version>
 
@@ -930,7 +930,7 @@
 
     <!-- security libraries -->
     <ssp.version>1.2.0</ssp.version>
-    <shiro.version>1.5.3</shiro.version>
+    <shiro.version>1.6.0</shiro.version>
 
     <!-- repository libraries -->
     <jgit.version>5.6.1.202002131546-r-scm1</jgit.version>

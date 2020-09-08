@@ -21,66 +21,75 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
-import java.util.List;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Tag;
 
+import java.io.IOException;
+import java.util.List;
+
 /**
  * Git provider implementation of {@link HookTagProvider}.
- * 
- * @since 1.50
+ *
  * @author Sebastian Sdorra
+ * @since 1.50
  */
 public class GitHookTagProvider implements HookTagProvider {
 
-  private static final Logger logger = LoggerFactory.getLogger(GitHookTagProvider.class);
-  
+  private static final Logger LOG = LoggerFactory.getLogger(GitHookTagProvider.class);
+
   private final List<Tag> createdTags;
   private final List<Tag> deletedTags;
 
   /**
    * Constructs new instance.
-   * 
+   *
    * @param commands received commands
    */
-  public GitHookTagProvider(List<ReceiveCommand> commands) {
+  public GitHookTagProvider(List<ReceiveCommand> commands, Repository repository) {
     ImmutableList.Builder<Tag> createdTagBuilder = ImmutableList.builder();
     ImmutableList.Builder<Tag> deletedTagBuilder = ImmutableList.builder();
-    
-    for ( ReceiveCommand rc : commands ){
+
+    for (ReceiveCommand rc : commands) {
       String refName = rc.getRefName();
       String tag = GitUtil.getTagName(refName);
-      
-      if (Strings.isNullOrEmpty(tag)){
-        logger.debug("received ref name {} is not a tag", refName);
-      } else if (isCreate(rc)) {
-        createdTagBuilder.add(createTagFromNewId(rc, tag));
-      } else if (isDelete(rc)){
-        deletedTagBuilder.add(createTagFromOldId(rc, tag));
-      } else if (isUpdate(rc)) {
-        createdTagBuilder.add(createTagFromNewId(rc, tag));
-        deletedTagBuilder.add(createTagFromOldId(rc, tag));
+
+      if (Strings.isNullOrEmpty(tag)) {
+        LOG.debug("received ref name {} is not a tag", refName);
+      } else {
+        try {
+          if (isCreate(rc)) {
+            createdTagBuilder.add(createTagFromNewId(rc, tag, GitUtil.getTagTime(repository, rc.getNewId())));
+          } else if (isDelete(rc)) {
+            deletedTagBuilder.add(createTagFromOldId(rc, tag, GitUtil.getTagTime(repository, rc.getOldId())));
+          } else if (isUpdate(rc)) {
+            createdTagBuilder.add(createTagFromNewId(rc, tag, GitUtil.getTagTime(repository, rc.getNewId())));
+            deletedTagBuilder.add(createTagFromOldId(rc, tag, GitUtil.getTagTime(repository, rc.getOldId())));
+          }
+        } catch (IOException e) {
+          LOG.error("Could not read tag time", e);
+        }
       }
     }
-    
+
     createdTags = createdTagBuilder.build();
     deletedTags = deletedTagBuilder.build();
   }
 
-  private Tag createTagFromNewId(ReceiveCommand rc, String tag) {
-    return new Tag(tag, GitUtil.getId(rc.getNewId()));
+  private Tag createTagFromNewId(ReceiveCommand rc, String tag, Long tagTime) {
+    return new Tag(tag, GitUtil.getId(rc.getNewId()), tagTime);
   }
 
-  private Tag createTagFromOldId(ReceiveCommand rc, String tag) {
-    return new Tag(tag, GitUtil.getId(rc.getOldId()));
+  private Tag createTagFromOldId(ReceiveCommand rc, String tag, Long tagTime) {
+    return new Tag(tag, GitUtil.getId(rc.getOldId()), tagTime);
   }
 
   private boolean isUpdate(ReceiveCommand rc) {

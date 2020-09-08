@@ -29,29 +29,22 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Function;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-
 import sonia.scm.repository.Tag;
 import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.List;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class HgTagsCommand extends AbstractCommand implements TagsCommand
-{
+public class HgTagsCommand extends AbstractCommand implements TagsCommand {
 
   /**
    * Constructs ...
    *
-   *  @param context
-   *
+   * @param context
    */
-  public HgTagsCommand(HgCommandContext context)
-  {
+  public HgTagsCommand(HgCommandContext context) {
     super(context);
   }
 
@@ -60,12 +53,10 @@ public class HgTagsCommand extends AbstractCommand implements TagsCommand
   /**
    * Method description
    *
-   *
    * @return
    */
   @Override
-  public List<Tag> getTags()
-  {
+  public List<Tag> getTags() {
     com.aragost.javahg.commands.TagsCommand cmd =
       com.aragost.javahg.commands.TagsCommand.on(open());
 
@@ -74,13 +65,11 @@ public class HgTagsCommand extends AbstractCommand implements TagsCommand
     List<Tag> tags = null;
 
     // check for empty repository
-    if (Util.isNotEmpty(tagList) && tagList.get(0).getChangeset() != null)
-    {
+    if (Util.isNotEmpty(tagList) && tagList.get(0).getChangeset() != null) {
       tags = Lists.transform(tagList, new TagTransformer());
     }
 
-    if (tags == null)
-    {
+    if (tags == null) {
       tags = Lists.newArrayList();
     }
 
@@ -92,31 +81,25 @@ public class HgTagsCommand extends AbstractCommand implements TagsCommand
   /**
    * Class description
    *
-   *
-   * @version        Enter version here..., 12/08/03
-   * @author         Enter your name here...
+   * @author Enter your name here...
+   * @version Enter version here..., 12/08/03
    */
   private static class TagTransformer
-    implements Function<com.aragost.javahg.Tag, Tag>
-  {
+    implements Function<com.aragost.javahg.Tag, Tag> {
 
     /**
      * Method description
      *
-     *
      * @param f
-     *
      * @return
      */
     @Override
-    public Tag apply(com.aragost.javahg.Tag f)
-    {
+    public Tag apply(com.aragost.javahg.Tag f) {
       Tag t = null;
 
-      if ((f != null) &&!Strings.isNullOrEmpty(f.getName())
-        && (f.getChangeset() != null))
-      {
-        t = new Tag(f.getName(), f.getChangeset().getNode());
+      if ((f != null) && !Strings.isNullOrEmpty(f.getName())
+        && (f.getChangeset() != null)) {
+        t = new Tag(f.getName(), f.getChangeset().getNode(), f.getChangeset().getTimestamp().getDate().getTime());
       }
 
       return t;
