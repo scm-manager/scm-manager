@@ -15,7 +15,7 @@ Auf der Übersichtsseite der Repositories werden die einzelnen Repositories nach
 
 ![Repository Übersicht](assets/repository-overview.png)
 
-Über die Suchleiste oben können die Repositories gefiltert werden. Die Suche filtert dabei nach dem Namen und der Beschreibung des Repositories.
+Mithilfe der Auswahlbox oben auf der Seite kann die Anzeige der Repositories auf einen Namespace eingeschränkt werden. Alternativ kann die Überschrift eines Namespace angeklickt werden, um nur Repositories aus diesem Namespace anzuzeigen. Über die Suchleiste neben der Auswahlbox können die Repositories frei gefiltert werden. Die Suche filtert dabei nach dem Namespace, dem Namen und der Beschreibung der Repositories.
 
 Ein bestimmter Tab des Repositories wie Branches, Changesets oder Sources kann über die blauen Icons geöffnet werden. 
 
@@ -37,6 +37,6 @@ Ist die Namespace-Strategie auf "Benutzerdefiniert" eingestellt, muss noch ein N
 ![Repository erstellen](assets/create-repository.png)
 
 ### Repository Informationen
-Die Informationsseite eines Repository zeigt die Metadaten zum Repository an. Darunter befinden sich Beschreibungen zu den unterschiedlichen Möglichkeiten wie man mit diesem Repository arbeiten kann.
+Die Informationsseite eines Repository zeigt die Metadaten zum Repository an. Darunter befinden sich Beschreibungen zu den unterschiedlichen Möglichkeiten wie man mit diesem Repository arbeiten kann. In der Überschrift kann der Namespace angeklickt werden, um alle Repositories aus diesem Namespace anzuzeigen.
 
 ![Repository-Information](assets/repository-information.png)
