@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Redirection to requested page after login in anonymous mode
+- Diff view for svn now handles whitespaces in filenames properly ([1325](https://github.com/scm-manager/scm-manager/pull/1325))
 
 ## [2.4.1] - 2020-09-01
 ### Added
