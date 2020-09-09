@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -97,8 +97,12 @@ public class RepositoryInitializer {
     }
 
     @Override
-    public <T> Optional<T> getCreationContext(String key, Class<T> type) {
-      return Optional.of(mapper.convertValue(creationContext.get(key), type));
+    public <T> Optional<T> oneByType(String key, Class<T> type) {
+      JsonNode node = creationContext.get(key);
+      if (node != null) {
+        return Optional.of(mapper.convertValue(node, type));
+      }
+      return Optional.empty();
     }
 
     @Override

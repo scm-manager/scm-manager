@@ -24,6 +24,8 @@
 
 package sonia.scm.repository;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
@@ -44,6 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -51,14 +54,12 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.doThrow;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class RepositoryInitializerTest {
+
+  private final ObjectMapper mapper = new ObjectMapper();
 
   @Mock
   private RepositoryServiceFactory repositoryServiceFactory;
@@ -154,6 +155,43 @@ class RepositoryInitializerTest {
     verify(repositoryService).close();
   }
 
+  @Test
+  void shouldCallRepositoryContentInitializerWithContext() throws IOException {
+    ModifyCommandBuilder.WithOverwriteFlagContentLoader slartiContentLoader = mockContentLoader("Slarti.md");
+
+    Set<RepositoryContentInitializer> repositoryContentInitializers = ImmutableSet.of(
+      new NamedFileInitializer()
+    );
+
+    RepositoryInitializer initializer = new RepositoryInitializer(repositoryServiceFactory, repositoryContentInitializers);
+    Named named = new Named();
+    named.setName("Slarti");
+    initializer.initialize(repository, Collections.singletonMap("named", mapper.valueToTree(named)));
+
+    verifyFileCreation(slartiContentLoader, "# Named file");
+
+    verify(modifyCommand).setCommitMessage("initialize repository");
+    verify(modifyCommand).execute();
+
+    verify(repositoryService).close();
+  }
+
+  @Test
+  void shouldDoNoInitializationWithoutContextType() {
+    Set<RepositoryContentInitializer> repositoryContentInitializers = ImmutableSet.of(
+      new NamedFileInitializer()
+    );
+
+    RepositoryInitializer initializer = new RepositoryInitializer(repositoryServiceFactory, repositoryContentInitializers);
+    initializer.initialize(repository, Collections.emptyMap());
+
+    verify(modifyCommand, never()).createFile(any());
+    verify(modifyCommand).setCommitMessage("initialize repository");
+    verify(modifyCommand).execute();
+
+    verify(repositoryService).close();
+  }
+
   private ModifyCommandBuilder.WithOverwriteFlagContentLoader mockContentLoader(String path) {
     ModifyCommandBuilder.WithOverwriteFlagContentLoader contentLoader = mock(ModifyCommandBuilder.WithOverwriteFlagContentLoader.class);
     doReturn(contentLoader).when(modifyCommand).createFile(path);
@@ -173,6 +211,29 @@ class RepositoryInitializerTest {
     verify(contentLoader).withData(captor.capture());
     byte[] bytes = ByteStreams.toByteArray(captor.getValue());
     assertThat(new String(bytes, StandardCharsets.UTF_8)).isEqualTo(expectedContent);
+  }
+
+  private static class NamedFileInitializer implements RepositoryContentInitializer {
+
+    @Override
+    public void initialize(InitializerContext context) throws IOException {
+      Optional<Named> named = context.oneByType("named", Named.class);
+      if (named.isPresent()) {
+        context.create(named.get().getName() + ".md").from("# Named file");
+      }
+    }
+  }
+
+  static class Named {
+    private String name;
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
   }
 
   @Priority(1)

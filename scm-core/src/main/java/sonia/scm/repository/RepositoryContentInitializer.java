@@ -71,7 +71,7 @@ public interface RepositoryContentInitializer {
      * @return context object or empty optional
      * @since 2.5.0
      */
-    default <T> Optional<T> getCreationContext(String key, Class<T> type) {
+    default <T> Optional<T> oneByType(String key, Class<T> type) {
       return Optional.empty();
     }
   }
