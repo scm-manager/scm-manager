@@ -29,6 +29,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Collections;
 import java.util.Map;
 
 @NoArgsConstructor
@@ -36,4 +37,11 @@ import java.util.Map;
 @Setter
 public class RepositoryCreationDto extends RepositoryDto {
   private Map<String, JsonNode> creationContext;
+
+  public Map<String, JsonNode> getCreationContext() {
+    if (creationContext == null) {
+      return Collections.emptyMap();
+    }
+    return creationContext;
+  }
 }
