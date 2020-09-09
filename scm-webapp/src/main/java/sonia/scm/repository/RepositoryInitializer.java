@@ -25,6 +25,7 @@
 package sonia.scm.repository;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.ByteSource;
 import com.google.common.io.CharSource;
 import org.slf4j.Logger;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 @Singleton
@@ -54,10 +56,6 @@ public class RepositoryInitializer {
   public RepositoryInitializer(RepositoryServiceFactory serviceFactory, Set<RepositoryContentInitializer> contentInitializerSet) {
     this.serviceFactory = serviceFactory;
     this.contentInitializers = Priorities.sortInstances(contentInitializerSet);
-  }
-
-  public void initialize(Repository repository) {
-    initialize(repository, null);
   }
 
   public void initialize(Repository repository, Map<String, JsonNode> creationContext) {
@@ -85,6 +83,8 @@ public class RepositoryInitializer {
     private final ModifyCommandBuilder builder;
     private final Map<String, JsonNode> creationContext;
 
+    private static final ObjectMapper mapper = new ObjectMapper();
+
     InitializerContextImpl(Repository repository, ModifyCommandBuilder builder, Map<String, JsonNode> creationContext) {
       this.repository = repository;
       this.builder = builder;
@@ -97,8 +97,8 @@ public class RepositoryInitializer {
     }
 
     @Override
-    public Map<String, JsonNode> getCreationContext() {
-      return creationContext;
+    public <T> Optional<T> getCreationContext(String key, Class<T> type) {
+      return Optional.of(mapper.convertValue(creationContext.get(key), type));
     }
 
     @Override
@@ -134,5 +134,4 @@ public class RepositoryInitializer {
       return initializerContext;
     }
   }
-
 }

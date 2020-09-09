@@ -74,6 +74,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
@@ -315,7 +316,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
     assertEquals("/v2/repositories/otherspace/repo", response.getOutputHeaders().get("Location").get(0).toString());
     verify(repositoryManager).create(any(Repository.class));
-    verify(repositoryInitializer, never()).initialize(any(Repository.class));
+    verify(repositoryInitializer, never()).initialize(any(Repository.class), anyMap());
   }
 
   @Test
@@ -336,7 +337,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
 
     ArgumentCaptor<Repository> captor = ArgumentCaptor.forClass(Repository.class);
-    verify(repositoryInitializer).initialize(captor.capture());
+    verify(repositoryInitializer).initialize(captor.capture(), anyMap());
 
     Repository repository = captor.getValue();
     assertEquals("space", repository.getNamespace());

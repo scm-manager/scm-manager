@@ -258,7 +258,7 @@ class RepositoryForm extends React.Component<Props, State> {
               helpText={t("help.initializeRepository")}
             />
             {this.state.initRepository && (
-              <ExtensionPoint name="repos.create.initialize" props={extensionProps} renderAll={false} />
+              <ExtensionPoint name="repos.create.initialize" props={extensionProps} renderAll={true} />
             )}
           </CheckboxWrapper>
         </SpaceBetween>

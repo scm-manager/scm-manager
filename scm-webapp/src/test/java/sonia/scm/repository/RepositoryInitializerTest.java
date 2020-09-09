@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import com.google.common.collect.ImmutableSet;
@@ -29,7 +29,6 @@ import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestTemplate;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
 import org.mockito.ArgumentCaptor;
@@ -44,6 +43,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Collections;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
 
@@ -88,7 +88,7 @@ class RepositoryInitializerTest {
     );
 
     RepositoryInitializer initializer = new RepositoryInitializer(repositoryServiceFactory, repositoryContentInitializers);
-    initializer.initialize(repository);
+    initializer.initialize(repository, Collections.emptyMap());
 
     verifyFileCreation(readmeContentLoader, "# HeartOfGold");
     verifyFileCreation(licenseContentLoader, "MIT");
@@ -108,7 +108,7 @@ class RepositoryInitializerTest {
     );
 
     RepositoryInitializer initializer = new RepositoryInitializer(repositoryServiceFactory, repositoryContentInitializers);
-    initializer.initialize(repository);
+    initializer.initialize(repository, Collections.emptyMap());
 
     verifyFileCreationWithStream(contentLoader, "awesome");
 
@@ -138,7 +138,7 @@ class RepositoryInitializerTest {
     );
 
     RepositoryInitializer initializer = new RepositoryInitializer(repositoryServiceFactory, repositoryContentInitializers);
-    initializer.initialize(repository);
+    initializer.initialize(repository, Collections.emptyMap());
 
     assertThat(reference.get()).isEqualTo("MIT");
   }
@@ -149,7 +149,7 @@ class RepositoryInitializerTest {
     doThrow(new IOException("epic fail")).when(contentLoader).withData(any(ByteSource.class));
 
     RepositoryInitializer initializer = new RepositoryInitializer(repositoryServiceFactory, ImmutableSet.of(new ReadmeContentInitializer()));
-    assertThrows(InternalRepositoryException.class, () -> initializer.initialize(repository));
+    assertThrows(InternalRepositoryException.class, () -> initializer.initialize(repository, Collections.emptyMap()));
 
     verify(repositoryService).close();
   }

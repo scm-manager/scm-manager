@@ -24,14 +24,11 @@
 
 package sonia.scm.repository;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.io.ByteSource;
 import sonia.scm.plugin.ExtensionPoint;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Collections;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -46,15 +43,6 @@ public interface RepositoryContentInitializer {
    * @throws IOException
    */
   void initialize(InitializerContext context) throws IOException;
-
-  /**
-   * returns the class to which the creation context will be mapped
-   *
-   * @return the class of the creation context
-   */
-  default Optional<Class<?>> getType() {
-    return Optional.empty();
-  }
 
   /**
    * Use this {@link InitializerContext} to create new files on repository initialization
@@ -76,10 +64,15 @@ public interface RepositoryContentInitializer {
     CreateFile create(String path);
 
     /**
-     * @return creation context of repository which is going to be initialized
+     * Find the the context object with the given key and unmarshalls it to the given type.
+     *
+     * @param key  key of the context object
+     * @param type type of the context object
+     * @return context object or empty optional
+     * @since 2.5.0
      */
-    default Map<String, JsonNode> getCreationContext() {
-      return Collections.emptyMap();
+    default <T> Optional<T> getCreationContext(String key, Class<T> type) {
+      return Optional.empty();
     }
   }
 

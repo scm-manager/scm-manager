@@ -59,8 +59,7 @@ type Props = WithTranslation & {
     link: string,
     repository: RepositoryCreation,
     initRepository: boolean,
-    callback: (repo: Repository) => void,
-    initRepositoryContext?: any
+    callback: (repo: Repository) => void
   ) => void;
   resetForm: () => void;
 
