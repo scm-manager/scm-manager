@@ -46,6 +46,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.Collections;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicReference;
@@ -150,7 +151,8 @@ class RepositoryInitializerTest {
     doThrow(new IOException("epic fail")).when(contentLoader).withData(any(ByteSource.class));
 
     RepositoryInitializer initializer = new RepositoryInitializer(repositoryServiceFactory, ImmutableSet.of(new ReadmeContentInitializer()));
-    assertThrows(InternalRepositoryException.class, () -> initializer.initialize(repository, Collections.emptyMap()));
+    Map<String, JsonNode> creationContext = Collections.emptyMap();
+    assertThrows(InternalRepositoryException.class, () -> initializer.initialize(repository, creationContext));
 
     verify(repositoryService).close();
   }

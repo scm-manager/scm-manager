@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.unmodifiableList;
 
@@ -49,4 +50,15 @@ public abstract class ExceptionWithContext extends RuntimeException {
   }
 
   public abstract String getCode();
+
+  /**
+   * Returns an url which gives more information about the exception or an empty optional.
+   * The methods returns an empty optional by default and can be overwritten.
+   *
+   * @return information url or empty
+   * @since 2.5.0
+   */
+  public Optional<String> getUrl() {
+    return Optional.empty();
+  }
 }
