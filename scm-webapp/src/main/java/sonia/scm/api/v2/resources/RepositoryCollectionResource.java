@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -147,7 +147,7 @@ public class RepositoryCollectionResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response create(@Valid RepositoryDto repository, @QueryParam("initialize") boolean initialize) {
+  public Response create(@Valid RepositoryCreationDto repository, @QueryParam("initialize") boolean initialize) {
     AtomicReference<Repository> reference = new AtomicReference<>();
     Response response = adapter.create(repository,
       () -> createModelObjectFromDto(repository),
@@ -156,7 +156,7 @@ public class RepositoryCollectionResource {
         return resourceLinks.repository().self(r.getNamespace(), r.getName());
       });
     if (initialize) {
-      repositoryInitializer.initialize(reference.get());
+      repositoryInitializer.initialize(reference.get(), repository.getContextEntries());
     }
     return response;
   }
