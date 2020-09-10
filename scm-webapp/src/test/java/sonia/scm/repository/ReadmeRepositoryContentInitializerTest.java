@@ -48,7 +48,7 @@ class ReadmeRepositoryContentInitializerTest {
 
   private Repository repository;
 
-  private ReadmeRepositoryContentInitializer initializer = new ReadmeRepositoryContentInitializer();
+  private final ReadmeRepositoryContentInitializer initializer = new ReadmeRepositoryContentInitializer();
 
   @BeforeEach
   void setUpContext() {

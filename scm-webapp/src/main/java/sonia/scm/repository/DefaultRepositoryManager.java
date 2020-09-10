@@ -261,6 +261,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
         throw new ChangeNamespaceNotAllowedException(repository);
       }
       changedRepository.setNamespace(newNamespace);
+      changedRepository.setNamespace(strategy.createNamespace(changedRepository));
     }
 
     managerDaoAdapter.modify(
