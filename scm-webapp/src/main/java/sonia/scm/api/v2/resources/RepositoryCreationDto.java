@@ -36,12 +36,12 @@ import java.util.Map;
 @Getter
 @Setter
 public class RepositoryCreationDto extends RepositoryDto {
-  private Map<String, JsonNode> creationContext;
+  private Map<String, JsonNode> contextEntries;
 
-  public Map<String, JsonNode> getCreationContext() {
-    if (creationContext == null) {
+  public Map<String, JsonNode> getContextEntries() {
+    if (contextEntries == null) {
       return Collections.emptyMap();
     }
-    return creationContext;
+    return contextEntries;
   }
 }

@@ -151,8 +151,8 @@ class RepositoryInitializerTest {
     doThrow(new IOException("epic fail")).when(contentLoader).withData(any(ByteSource.class));
 
     RepositoryInitializer initializer = new RepositoryInitializer(repositoryServiceFactory, ImmutableSet.of(new ReadmeContentInitializer()));
-    Map<String, JsonNode> creationContext = Collections.emptyMap();
-    assertThrows(InternalRepositoryException.class, () -> initializer.initialize(repository, creationContext));
+    Map<String, JsonNode> contextEntries = Collections.emptyMap();
+    assertThrows(InternalRepositoryException.class, () -> initializer.initialize(repository, contextEntries));
 
     verify(repositoryService).close();
   }
@@ -219,7 +219,7 @@ class RepositoryInitializerTest {
 
     @Override
     public void initialize(InitializerContext context) throws IOException {
-      Optional<Named> named = context.oneByType("named", Named.class);
+      Optional<Named> named = context.getEntry("named", Named.class);
       if (named.isPresent()) {
         context.create(named.get().getName() + ".md").from("# Named file");
       }

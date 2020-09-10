@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -156,7 +156,7 @@ public class RepositoryCollectionResource {
         return resourceLinks.repository().self(r.getNamespace(), r.getName());
       });
     if (initialize) {
-      repositoryInitializer.initialize(reference.get(), repository.getCreationContext());
+      repositoryInitializer.initialize(reference.get(), repository.getContextEntries());
     }
     return response;
   }

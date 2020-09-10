@@ -36,7 +36,7 @@ export type Repository = {
 };
 
 export type RepositoryCreation = Repository & {
-  creationContext: { [key: string]: any };
+  contextEntries: { [key: string]: any };
 };
 
 export type RepositoryCollection = PagedCollection & {

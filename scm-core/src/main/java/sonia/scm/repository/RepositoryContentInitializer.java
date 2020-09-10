@@ -64,14 +64,15 @@ public interface RepositoryContentInitializer {
     CreateFile create(String path);
 
     /**
-     * Find the the context object with the given key and unmarshalls it to the given type.
+     * Returns the the context entry with the given key and unmarshalls it to the given type.
+     * It no entry with the given key is available an empty optional is returned.
      *
      * @param key  key of the context object
      * @param type type of the context object
-     * @return context object or empty optional
+     * @return context entry or empty optional
      * @since 2.5.0
      */
-    default <T> Optional<T> oneByType(String key, Class<T> type) {
+    default <T> Optional<T> getEntry(String key, Class<T> type) {
       return Optional.empty();
     }
   }

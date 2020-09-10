@@ -58,11 +58,11 @@ public class RepositoryInitializer {
     this.contentInitializers = Priorities.sortInstances(contentInitializerSet);
   }
 
-  public void initialize(Repository repository, Map<String, JsonNode> creationContext) {
+  public void initialize(Repository repository, Map<String, JsonNode> contextEntries) {
     try (RepositoryService service = serviceFactory.create(repository)) {
       ModifyCommandBuilder modifyCommandBuilder = service.getModifyCommand();
 
-      InitializerContextImpl initializerContext = new InitializerContextImpl(repository, modifyCommandBuilder, creationContext);
+      InitializerContextImpl initializerContext = new InitializerContextImpl(repository, modifyCommandBuilder, contextEntries);
 
       for (RepositoryContentInitializer initializer : contentInitializers) {
         initializer.initialize(initializerContext);
@@ -81,14 +81,14 @@ public class RepositoryInitializer {
 
     private final Repository repository;
     private final ModifyCommandBuilder builder;
-    private final Map<String, JsonNode> creationContext;
+    private final Map<String, JsonNode> contextEntries;
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    InitializerContextImpl(Repository repository, ModifyCommandBuilder builder, Map<String, JsonNode> creationContext) {
+    InitializerContextImpl(Repository repository, ModifyCommandBuilder builder, Map<String, JsonNode> contextEntries) {
       this.repository = repository;
       this.builder = builder;
-      this.creationContext = creationContext;
+      this.contextEntries = contextEntries;
     }
 
     @Override
@@ -97,8 +97,8 @@ public class RepositoryInitializer {
     }
 
     @Override
-    public <T> Optional<T> oneByType(String key, Class<T> type) {
-      JsonNode node = creationContext.get(key);
+    public <T> Optional<T> getEntry(String key, Class<T> type) {
+      JsonNode node = contextEntries.get(key);
       if (node != null) {
         return Optional.of(mapper.convertValue(node, type));
       }

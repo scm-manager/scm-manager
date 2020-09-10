@@ -72,7 +72,7 @@ class RepositoryForm extends React.Component<Props, State> {
         type: "",
         contact: "",
         description: "",
-        creationContext: {},
+        contextEntries: {},
         _links: {}
       },
       initRepository: false,
@@ -88,7 +88,7 @@ class RepositoryForm extends React.Component<Props, State> {
       this.setState({
         repository: {
           ...repository,
-          creationContext: {}
+          contextEntries: {}
         }
       });
     }
@@ -135,8 +135,8 @@ class RepositoryForm extends React.Component<Props, State> {
     this.setState({
       repository: {
         ...this.state.repository,
-        creationContext: {
-          ...this.state.repository.creationContext,
+        contextEntries: {
+          ...this.state.repository.contextEntries,
           [key]: value
         }
       }
