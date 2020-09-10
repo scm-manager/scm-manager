@@ -112,8 +112,6 @@ class Overview extends React.Component<Props> {
   render() {
     const { error, loading, showCreateButton, namespace, namespaces, t } = this.props;
 
-    const link = namespace ? `repos/${namespace}` : "repos";
-
     const namespacesToRender = namespaces ? ["", ...namespaces._embedded.namespaces.map(n => n.namespace).sort()] : [];
 
     return (
@@ -125,7 +123,7 @@ class Overview extends React.Component<Props> {
             currentGroup={namespace}
             groups={namespacesToRender}
             groupSelected={this.namespaceSelected}
-            link={link}
+            link="repos"
             label={t("overview.createButton")}
             testId="repository-overview"
           />
