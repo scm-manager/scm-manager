@@ -50,7 +50,11 @@ export type RepositoryCollection = PagedCollection & {
   };
 };
 
-export type NamespaceCollection = Namespace[];
+export type NamespaceCollection = {
+  _embedded: {
+    namespaces: Namespace[];
+  };
+};
 
 export type RepositoryGroup = {
   name: string;

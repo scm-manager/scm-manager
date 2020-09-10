@@ -95,7 +95,7 @@ class Overview extends React.Component<Props> {
   getReposLink = () => {
     const { namespace, namespaces, reposLink } = this.props;
     if (namespace) {
-      return namespaces?.find(n => n.namespace === namespace)?._links?.repositories?.href;
+      return namespaces?._embedded.namespaces.find(n => n.namespace === namespace)?._links?.repositories?.href;
     } else {
       return reposLink;
     }
@@ -114,7 +114,7 @@ class Overview extends React.Component<Props> {
 
     const link = namespace ? `repos/${namespace}` : "repos";
 
-    const namespacesToRender = namespaces?["", ...namespaces.map(n => n.namespace).sort()]:[];
+    const namespacesToRender = namespaces ? ["", ...namespaces._embedded.namespaces.map(n => n.namespace).sort()] : [];
 
     return (
       <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={loading} error={error}>

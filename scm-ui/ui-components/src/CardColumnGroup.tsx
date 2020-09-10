@@ -88,24 +88,20 @@ export default class CardColumnGroup extends React.Component<Props, State> {
       });
     }
 
-    const header = url ? (
-      <h2>
-        <span className={classNames("is-size-4", "has-cursor-pointer")} onClick={this.toggleCollapse}>
-          <i className={classNames("fa", icon)} />
-        </span>{" "}
-        <Link to={url} className={"has-text-dark"}>{name}</Link>
-      </h2>
-    ) : (
-      <h2>
-        <span className={classNames("is-size-4", "has-cursor-pointer")} onClick={this.toggleCollapse}>
-          <i className={classNames("fa", icon)} /> {name}
-        </span>
-      </h2>
-    );
-
     return (
       <Container>
-        {header}
+        <h2>
+          <span className={classNames("is-size-4", "has-cursor-pointer")} onClick={this.toggleCollapse}>
+            <i className={classNames("fa", icon)} />
+          </span>{" "}
+          {url ? (
+            <Link to={url} className={"has-text-dark"}>
+              {name}
+            </Link>
+          ) : (
+            name
+          )}
+        </h2>
         <hr />
         <Wrapper className={classNames("columns", "card-columns", "is-multiline")}>{content}</Wrapper>
         <div className="is-clearfix" />

@@ -422,7 +422,7 @@ const reducerByNames = (state: object, repository: Repository) => {
 const reducerForNamespaces = (state: object, namespaces: NamespaceCollection) => {
   return {
     ...state,
-    namespaces: namespaces._embedded
+    namespaces: namespaces
   };
 };
 
@@ -467,7 +467,7 @@ export function getRepositoryCollection(state: object) {
 }
 
 export function getNamespaceCollection(state: object) {
-  return state.repos.namespaces?.namespaces;
+  return state.repos.namespaces;
 }
 
 export function isFetchReposPending(state: object) {
