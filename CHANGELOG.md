@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Redirection to requested page after login in anonymous mode
+- Update filter state on property change ([#1327](https://github.com/scm-manager/scm-manager/pull/1327))
 
 ## [2.4.1] - 2020-09-01
 ### Added
