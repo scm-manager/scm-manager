@@ -191,8 +191,8 @@ class RepositoryRoot extends React.Component<Props> {
     return (
       <StateMenuContextProvider>
         <Page
-          titleComponent={titleComponent}
-          title={`${repository.namespace}/${repository.name}`}
+          title={titleComponent}
+          documentTitle={`${repository.namespace}/${repository.name}`}
           afterTitle={<ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />}
         >
           <CustomQueryFlexWrappedColumns>
