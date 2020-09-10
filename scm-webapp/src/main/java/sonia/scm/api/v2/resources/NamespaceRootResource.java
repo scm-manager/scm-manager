@@ -32,33 +32,33 @@ import javax.inject.Provider;
 import javax.ws.rs.Path;
 
 /**
- * RESTful Web Service Resource to manage repositories.
+ * RESTful Web Service Resource to manage namespaces.
  */
 @OpenAPIDefinition(
   tags = {
-    @Tag(name = "Repository", description = "Repository related endpoints")
+    @Tag(name = "Namespace", description = "Namespace related endpoints")
   }
 )
-@Path(RepositoryRootResource.REPOSITORIES_PATH_V2)
-public class RepositoryRootResource {
-  static final String REPOSITORIES_PATH_V2 = "v2/repositories/";
+@Path(NamespaceRootResource.NAMESPACE_PATH_V2)
+public class NamespaceRootResource {
+  static final String NAMESPACE_PATH_V2 = "v2/namespaces/";
 
-  private final Provider<RepositoryResource> repositoryResource;
-  private final Provider<RepositoryCollectionResource> repositoryCollectionResource;
+  private final Provider<NamespaceCollectionResource> namespaceCollectionResource;
+  private final Provider<NamespaceResource> namespaceResource;
 
   @Inject
-  public RepositoryRootResource(Provider<RepositoryResource> repositoryResource, Provider<RepositoryCollectionResource> repositoryCollectionResource) {
-    this.repositoryResource = repositoryResource;
-    this.repositoryCollectionResource = repositoryCollectionResource;
+  public NamespaceRootResource(Provider<NamespaceCollectionResource> namespaceCollectionResource, Provider<NamespaceResource> namespaceResource) {
+    this.namespaceCollectionResource = namespaceCollectionResource;
+    this.namespaceResource = namespaceResource;
   }
 
-  @Path("{namespace}/{name}")
-  public RepositoryResource getRepositoryResource() {
-    return repositoryResource.get();
+  @Path("{namespace}")
+  public NamespaceResource getNamespaceResource() {
+    return namespaceResource.get();
   }
 
   @Path("")
-  public RepositoryCollectionResource getRepositoryCollectionResource() {
-    return repositoryCollectionResource.get();
+  public NamespaceCollectionResource getNamespaceCollectionResource() {
+    return namespaceCollectionResource.get();
   }
 }

@@ -207,6 +207,40 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
+  public void shouldCreateFilterForNamespace() throws URISyntaxException {
+    PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
+    when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
+
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_OK, response.getStatus());
+    assertTrue(filterCaptor.getValue().test(new Repository("x", "git", "space", "repo")));
+    assertFalse(filterCaptor.getValue().test(new Repository("x", "git", "spaceX", "repository")));
+    assertFalse(filterCaptor.getValue().test(new Repository("x", "git", "x", "space")));
+  }
+
+  @Test
+  public void shouldCreateFilterForNamespaceWithQuery() throws URISyntaxException {
+    PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
+    when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
+    when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
+
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space?q=Rep");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_OK, response.getStatus());
+    assertTrue(filterCaptor.getValue().test(new Repository("x", "git", "space", "repo")));
+    assertFalse(filterCaptor.getValue().test(new Repository("x", "git", "space", "other")));
+    assertFalse(filterCaptor.getValue().test(new Repository("x", "git", "Rep", "Repository")));
+  }
+
+  @Test
   public void shouldHandleUpdateForNotExistingRepository() throws URISyntaxException, IOException {
     URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
     byte[] repository = Resources.toByteArray(url);

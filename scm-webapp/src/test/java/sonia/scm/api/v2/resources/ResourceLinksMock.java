@@ -76,6 +76,8 @@ public class ResourceLinksMock {
     lenient().when(resourceLinks.repositoryRoleCollection()).thenReturn(new ResourceLinks.RepositoryRoleCollectionLinks(pathInfo));
     lenient().when(resourceLinks.namespaceStrategies()).thenReturn(new ResourceLinks.NamespaceStrategiesLinks(pathInfo));
     lenient().when(resourceLinks.annotate()).thenReturn(new ResourceLinks.AnnotateLinks(pathInfo));
+    lenient().when(resourceLinks.namespace()).thenReturn(new ResourceLinks.NamespaceLinks(pathInfo));
+    lenient().when(resourceLinks.namespaceCollection()).thenReturn(new ResourceLinks.NamespaceCollectionLinks(pathInfo));
 
     return resourceLinks;
   }

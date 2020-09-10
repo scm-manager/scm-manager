@@ -21,23 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import sonia.scm.plugin.Extension;
 import sonia.scm.util.ValidationUtil;
 
+import java.util.regex.Pattern;
+
 import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 @Extension
 public class CustomNamespaceStrategy implements NamespaceStrategy {
+
+  private static final Pattern ONE_TO_THREE_DIGITS = Pattern.compile("[0-9]{1,3}");
+
   @Override
   public String createNamespace(Repository repository) {
     String namespace = repository.getNamespace();
 
     doThrow()
       .violation("invalid namespace", "namespace")
-      .when(!ValidationUtil.isRepositoryNameValid(namespace));
+      .when(
+        !ValidationUtil.isRepositoryNameValid(namespace)
+          || ONE_TO_THREE_DIGITS.matcher(namespace).matches()
+          || namespace.equals("create"));
 
     return namespace;
   }

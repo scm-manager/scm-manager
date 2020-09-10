@@ -21,22 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { CardColumnGroup, RepositoryEntry } from "@scm-manager/ui-components";
-import { RepositoryGroup } from "@scm-manager/ui-types";
 
-type Props = {
-  group: RepositoryGroup;
-};
+package sonia.scm.api.v2.resources;
 
-class RepositoryGroupEntry extends React.Component<Props> {
-  render() {
-    const { group } = this.props;
-    const entries = group.repositories.map((repository, index) => {
-      return <RepositoryEntry repository={repository} key={index} />;
-    });
-    return <CardColumnGroup name={group.name} url={`/repos/${group.name}/`} elements={entries} />;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class NamespaceDto extends HalRepresentation {
+
+  private String namespace;
+
+  public NamespaceDto(String namespace, Links links) {
+    super(links);
+    this.namespace = namespace;
   }
 }
-
-export default RepositoryGroupEntry;

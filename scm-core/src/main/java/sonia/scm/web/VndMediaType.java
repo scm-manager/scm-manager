@@ -44,6 +44,7 @@ public class VndMediaType {
   public static final String GROUP = PREFIX + "group" + SUFFIX;
   public static final String AUTOCOMPLETE =  PREFIX + "autocomplete" + SUFFIX;
   public static final String REPOSITORY = PREFIX + "repository" + SUFFIX;
+  public static final String NAMESPACE = PREFIX + "namespace" + SUFFIX;
   public static final String REPOSITORY_PERMISSION = PREFIX + "repositoryPermission" + SUFFIX;
   public static final String CHANGESET = PREFIX + "changeset" + SUFFIX;
   public static final String CHANGESET_COLLECTION = PREFIX + "changesetCollection" + SUFFIX;
@@ -57,6 +58,7 @@ public class VndMediaType {
   public static final String USER_COLLECTION = PREFIX + "userCollection" + SUFFIX;
   public static final String GROUP_COLLECTION = PREFIX + "groupCollection" + SUFFIX;
   public static final String REPOSITORY_COLLECTION = PREFIX + "repositoryCollection" + SUFFIX;
+  public static final String NAMESPACE_COLLECTION = PREFIX + "namespaceCollection" + SUFFIX;
   public static final String BRANCH_COLLECTION = PREFIX + "branchCollection" + SUFFIX;
   public static final String CONFIG = PREFIX + "config" + SUFFIX;
   public static final String REPOSITORY_VERB_COLLECTION = PREFIX + "repositoryVerbCollection" + SUFFIX;

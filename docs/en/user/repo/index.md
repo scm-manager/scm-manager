@@ -13,7 +13,7 @@ The repository overview screen shows all repositories sorted by namespaces. Each
 
 ![Repository Overview](assets/repository-overview.png)
 
-The search bar at the top can be used to filter the repositories. The search uses the name and description of the repositories.
+Using the select box at the top of the page you can restrict the repositories shown for one namespace. Alternatively you can click on one namespace heading to show only repositories of this namespace. The search bar aside the select box can be used to arbitrarily filter the repositories by namespace, name and description.
 
 The different tabs like branches, changesets or sources of the repository can be accessed through the blue icons.
 
@@ -30,11 +30,11 @@ In  SCM-Manager new Git, Mercurial & Subversion (SVN) repositories can be create
 Optionally, repositories can be initialized during the creation. That creates a standard branch (master or default) for Git and Mercurial repositories. 
 Additionally, it performs a commit that creates a README.md. For Subversion repositories the README.md will be created in a directory named `trunk`.
 
-If the namespace strategy is set to custom, the namespace field is also mandatory.
+If the namespace strategy is set to custom, the namespace field is also mandatory. The namespace must heed the same restrictions as the name. Additionally, namespaces that only consist of three digits, or the word "create" are not valid.
 
 ![Create Repository](assets/create-repository.png)
 
 ### Repository Information
-The information screen of repositories shows meta data about the repository. Amongst that are descriptions for the different options on how the repository can be used. 
+The information screen of repositories shows meta data about the repository. Amongst that are descriptions for the different options on how the repository can be used. In the heading you can click the namespace to get the list of all repositories for this namespace.
 
 ![Repository Information](assets/repository-information.png)

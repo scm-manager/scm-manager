@@ -24,14 +24,10 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import sonia.scm.TypeManager;
 
 import java.io.IOException;
 import java.util.Collection;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The central class for managing {@link Repository} objects.
@@ -49,7 +45,7 @@ public interface RepositoryManager
    * @param event hook event
    * @since 2.0.0
    */
-  public void fireHookEvent(RepositoryHookEvent event);
+  void fireHookEvent(RepositoryHookEvent event);
 
   /**
    * Imports an existing {@link Repository}.
@@ -58,9 +54,7 @@ public interface RepositoryManager
    * @param repository {@link Repository} to import
    * @throws IOException
    */
-  public void importRepository(Repository repository) throws IOException;
-
-  //~--- get methods ----------------------------------------------------------
+  void importRepository(Repository repository) throws IOException;
 
   /**
    * Returns a {@link Repository} by its namespace and name or
@@ -70,14 +64,14 @@ public interface RepositoryManager
    * @return {@link Repository} by its namespace and name or null
    * if the {@link Repository} could not be found
    */
-  public Repository get(NamespaceAndName namespaceAndName);
+  Repository get(NamespaceAndName namespaceAndName);
 
   /**
    * Returns all configured repository types.
    *
    * @return all configured repository types
    */
-  public Collection<RepositoryType> getConfiguredTypes();
+  Collection<RepositoryType> getConfiguredTypes();
 
   /**
    * Returns a {@link RepositoryHandler} by the given type (hg, git, svn ...).
@@ -86,7 +80,7 @@ public interface RepositoryManager
    * @return {@link RepositoryHandler} by the given type
    */
   @Override
-  public RepositoryHandler getHandler(String type);
+  RepositoryHandler getHandler(String type);
 
   /**
    * @param repository   the repository {@link Repository}
@@ -94,5 +88,12 @@ public interface RepositoryManager
    * @param newName      the new repository name
    * @return {@link Repository} the renamed repository
    */
-  public Repository rename(Repository repository, String newNameSpace, String newName);
+  Repository rename(Repository repository, String newNameSpace, String newName);
+
+  /**
+   * Returns all namespaces.
+   *
+   * @return all namespaces
+   */
+  Collection<String> getAllNamespaces();
 }

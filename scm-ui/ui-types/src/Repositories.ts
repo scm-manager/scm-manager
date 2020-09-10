@@ -39,9 +39,20 @@ export type RepositoryCreation = Repository & {
   contextEntries: { [key: string]: any };
 };
 
+export type Namespace = {
+  namespace: string;
+  _links: Links;
+};
+
 export type RepositoryCollection = PagedCollection & {
   _embedded: {
     repositories: Repository[] | string[];
+  };
+};
+
+export type NamespaceCollection = {
+  _embedded: {
+    namespaces: Namespace[];
   };
 };
 

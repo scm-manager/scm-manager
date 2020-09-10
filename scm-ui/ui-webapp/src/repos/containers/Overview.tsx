@@ -25,7 +25,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { RepositoryCollection } from "@scm-manager/ui-types";
+import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
 import {
   CreateButton,
   LinkPaginator,
@@ -35,12 +35,15 @@ import {
   PageActions,
   urls
 } from "@scm-manager/ui-components";
-import { getRepositoriesLink } from "../../modules/indexResource";
+import { getNamespacesLink, getRepositoriesLink } from "../../modules/indexResource";
 import {
+  fetchNamespaces,
   fetchReposByPage,
   getFetchReposFailure,
+  getNamespaceCollection,
   getRepositoryCollection,
   isAbleToCreateRepos,
+  isFetchNamespacesPending,
   isFetchReposPending
 } from "../modules/repos";
 import RepositoryList from "../components/list";
@@ -51,31 +54,65 @@ type Props = WithTranslation &
     error: Error;
     showCreateButton: boolean;
     collection: RepositoryCollection;
+    namespaces: NamespaceCollection;
     page: number;
+    namespace: string;
     reposLink: string;
+    namespacesLink: string;
 
     // dispatched functions
-    fetchReposByPage: (link: string, page: number, filter?: string) => void;
+    fetchReposByPage: (link: string, page: number, namespace?: string, filter?: string) => void;
+    fetchNamespaces: (link: string) => void;
   };
 
 class Overview extends React.Component<Props> {
   componentDidMount() {
-    const { fetchReposByPage, reposLink, page, location } = this.props;
-    fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
+    const { fetchNamespaces, namespacesLink } = this.props;
+    fetchNamespaces(namespacesLink);
+    this.fetchRepos();
   }
 
   componentDidUpdate = (prevProps: Props) => {
-    const { loading, collection, page, reposLink, location, fetchReposByPage } = this.props;
-    if (collection && page && !loading) {
+    const { loading, collection, namespace, namespaces, page, location } = this.props;
+    if (namespaces !== prevProps.namespaces && namespace) {
+      this.fetchRepos();
+    } else if (collection && (page || namespace) && !loading) {
       const statePage: number = collection.page + 1;
-      if (page !== statePage || prevProps.location.search !== location.search) {
-        fetchReposByPage(reposLink, page, urls.getQueryStringFromLocation(location));
+      if (page !== statePage || prevProps.location.search !== location.search || prevProps.namespace !== namespace) {
+        this.fetchRepos();
       }
     }
   };
 
+  fetchRepos = () => {
+    const { page, location, fetchReposByPage } = this.props;
+    const link = this.getReposLink();
+    if (link) {
+      fetchReposByPage(link, page, urls.getQueryStringFromLocation(location));
+    }
+  };
+
+  getReposLink = () => {
+    const { namespace, namespaces, reposLink } = this.props;
+    if (namespace) {
+      return namespaces?._embedded.namespaces.find(n => n.namespace === namespace)?._links?.repositories?.href;
+    } else {
+      return reposLink;
+    }
+  };
+
+  namespaceSelected = (newNamespace: string) => {
+    if (newNamespace === "") {
+      this.props.history.push("/repos/");
+    } else {
+      this.props.history.push(`/repos/${newNamespace}/`);
+    }
+  };
+
   render() {
-    const { error, loading, showCreateButton, t } = this.props;
+    const { error, loading, showCreateButton, namespace, namespaces, t } = this.props;
+
+    const namespacesToRender = namespaces ? ["", ...namespaces._embedded.namespaces.map(n => n.namespace).sort()] : [];
 
     return (
       <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={loading} error={error}>
@@ -83,6 +120,9 @@ class Overview extends React.Component<Props> {
         <PageActions>
           <OverviewPageActions
             showCreateButton={showCreateButton}
+            currentGroup={namespace}
+            groups={namespacesToRender}
+            groupSelected={this.namespaceSelected}
             link="repos"
             label={t("overview.createButton")}
             testId="repository-overview"
@@ -131,18 +171,23 @@ class Overview extends React.Component<Props> {
 const mapStateToProps = (state: any, ownProps: Props) => {
   const { match } = ownProps;
   const collection = getRepositoryCollection(state);
-  const loading = isFetchReposPending(state);
+  const namespaces = getNamespaceCollection(state);
+  const loading = isFetchReposPending(state) || isFetchNamespacesPending(state);
   const error = getFetchReposFailure(state);
-  const page = urls.getPageFromMatch(match);
+  const { namespace, page } = urls.getNamespaceAndPageFromMatch(match);
   const showCreateButton = isAbleToCreateRepos(state);
   const reposLink = getRepositoriesLink(state);
+  const namespacesLink = getNamespacesLink(state);
   return {
     collection,
+    namespaces,
     loading,
     error,
     page,
+    namespace,
     showCreateButton,
-    reposLink
+    reposLink,
+    namespacesLink
   };
 };
 
@@ -150,7 +195,11 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchReposByPage: (link: string, page: number, filter?: string) => {
       dispatch(fetchReposByPage(link, page, filter));
+    },
+    fetchNamespaces: (link: string) => {
+      dispatch(fetchNamespaces(link));
     }
   };
 };
+
 export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("repos")(withRouter(Overview)));

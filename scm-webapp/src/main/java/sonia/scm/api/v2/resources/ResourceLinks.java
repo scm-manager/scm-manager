@@ -307,6 +307,10 @@ class ResourceLinks {
       return collectionLinkBuilder.method("getRepositoryCollectionResource").parameters().method("getAll").parameters().href();
     }
 
+    String forNamespace(String namespace) {
+      return collectionLinkBuilder.method("getRepositoryCollectionResource").parameters().method("getByNamespace").parameters(namespace).href();
+    }
+
     String create() {
       return collectionLinkBuilder.method("getRepositoryCollectionResource").parameters().method("create").parameters().href();
     }
@@ -874,6 +878,42 @@ class ResourceLinks {
 
     String self() {
       return permissionsLinkBuilder.method("getAll").parameters().href();
+    }
+  }
+
+  public NamespaceCollectionLinks namespaceCollection() {
+    return new NamespaceCollectionLinks(scmPathInfoStore.get());
+  }
+
+  static class NamespaceCollectionLinks {
+    private final LinkBuilder namespaceCollectionLinkBuilder;
+
+    NamespaceCollectionLinks(ScmPathInfo scmPathInfo) {
+      this.namespaceCollectionLinkBuilder = new LinkBuilder(scmPathInfo, NamespaceRootResource.class, NamespaceCollectionResource.class);
+    }
+
+    String self() {
+      return namespaceCollectionLinkBuilder.method("getNamespaceCollectionResource").parameters().method("getAll").parameters().href();
+    }
+  }
+
+  public NamespaceLinks namespace() {
+    return new NamespaceLinks(scmPathInfoStore.get());
+  }
+
+  static class NamespaceLinks {
+    private final LinkBuilder namespaceLinkBuilder;
+
+    NamespaceLinks(ScmPathInfo scmPathInfo) {
+      this.namespaceLinkBuilder = new LinkBuilder(scmPathInfo, NamespaceRootResource.class, NamespaceResource.class);
+    }
+
+    String self(String namespace) {
+      return namespaceLinkBuilder.method("getNamespaceResource").parameters().method("get").parameters(namespace).href();
+    }
+
+    String repositories(String namespace) {
+      return namespaceLinkBuilder.method("getNamespaceResource").parameters().method("get").parameters(namespace).href();
     }
   }
 }

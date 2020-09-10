@@ -132,9 +132,9 @@ class LinkPaginator extends React.Component<Props> {
         <nav className="pagination is-centered" aria-label="pagination">
           {this.renderPreviousButton("pagination-previous", t("paginator.previous"))}
           <ul className="pagination-list">
-            {this.pageLinks().map((link, index) => {
-              return <li key={index}>{link}</li>;
-            })}
+            {this.pageLinks().map((link, index) => (
+              <li key={index}>{link}</li>
+            ))}
           </ul>
           {this.renderNextButton("pagination-next", t("paginator.next"))}
         </nav>

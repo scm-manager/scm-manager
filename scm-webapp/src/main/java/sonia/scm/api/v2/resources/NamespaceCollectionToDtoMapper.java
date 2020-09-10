@@ -21,22 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { CardColumnGroup, RepositoryEntry } from "@scm-manager/ui-components";
-import { RepositoryGroup } from "@scm-manager/ui-types";
 
-type Props = {
-  group: RepositoryGroup;
-};
+package sonia.scm.api.v2.resources;
 
-class RepositoryGroupEntry extends React.Component<Props> {
-  render() {
-    const { group } = this.props;
-    const entries = group.repositories.map((repository, index) => {
-      return <RepositoryEntry repository={repository} key={index} />;
-    });
-    return <CardColumnGroup name={group.name} url={`/repos/${group.name}/`} elements={entries} />;
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.HalRepresentation;
+
+import javax.inject.Inject;
+import java.util.Collection;
+
+import static de.otto.edison.hal.Embedded.embeddedBuilder;
+import static de.otto.edison.hal.Links.linkingTo;
+import static java.util.stream.Collectors.toList;
+
+public class NamespaceCollectionToDtoMapper {
+
+  private final NamespaceToNamespaceDtoMapper namespaceMapper;
+  private final ResourceLinks links;
+
+  @Inject
+  public NamespaceCollectionToDtoMapper(NamespaceToNamespaceDtoMapper namespaceMapper, ResourceLinks links) {
+    this.namespaceMapper = namespaceMapper;
+    this.links = links;
+  }
+
+  public HalRepresentation map(Collection<String> namespaces) {
+    Embedded namespaceDtos = embeddedBuilder()
+      .with("namespaces", namespaces.stream().map(namespaceMapper::map).collect(toList()))
+      .build();
+    return new HalRepresentation(
+      linkingTo().self(links.namespaceCollection().self()).build(),
+      namespaceDtos
+    );
   }
 }
-
-export default RepositoryGroupEntry;

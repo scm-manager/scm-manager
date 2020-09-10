@@ -22,33 +22,49 @@
  * SOFTWARE.
  */
 import React from "react";
-import { History } from "history";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 import classNames from "classnames";
-import { Button, urls } from "./index";
+import { Button, DropDown, urls } from "./index";
 import { FilterInput } from "./forms";
 
 type Props = RouteComponentProps & {
   showCreateButton: boolean;
+  currentGroup: string;
+  groups: string[];
   link: string;
+  groupSelected: (namespace: string) => void;
   label?: string;
   testId?: string;
 };
 
 class OverviewPageActions extends React.Component<Props> {
   render() {
-    const { history, location, link, testId } = this.props;
-    return (
-      <>
-        <FilterInput
-          value={urls.getQueryStringFromLocation(location)}
-          filter={filter => {
-            history.push(`/${link}/?q=${filter}`);
-          }}
-          testId={testId + "-filter"}
+    const { history, currentGroup, groups, location, link, testId, groupSelected } = this.props;
+    const groupSelector = groups && (
+      <div className={"column is-flex"}>
+        <DropDown
+          className={"is-fullwidth"}
+          options={groups}
+          preselectedOption={currentGroup}
+          optionSelected={groupSelected}
         />
+      </div>
+    );
+
+    return (
+      <div className={"columns is-tablet"}>
+        {groupSelector}
+        <div className={"column"}>
+          <FilterInput
+            value={urls.getQueryStringFromLocation(location)}
+            filter={filter => {
+              history.push(`/${link}/?q=${filter}`);
+            }}
+            testId={testId + "-filter"}
+          />
+        </div>
         {this.renderCreateButton()}
-      </>
+      </div>
     );
   }
 
@@ -56,7 +72,7 @@ class OverviewPageActions extends React.Component<Props> {
     const { showCreateButton, link, label } = this.props;
     if (showCreateButton) {
       return (
-        <div className={classNames("input-button", "control")}>
+        <div className={classNames("input-button", "control", "column")}>
           <Button label={label} link={`/${link}/create`} color="primary" />
         </div>
       );

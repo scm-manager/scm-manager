@@ -46,10 +46,33 @@ export function concat(base: string, ...parts: string[]) {
   return url;
 }
 
+export function getNamespaceAndPageFromMatch(match: any) {
+  const namespaceFromMatch: string = match.params.namespace;
+  const pageFromMatch: string = match.params.page;
+
+  if (!namespaceFromMatch && !pageFromMatch) {
+    return { namespace: undefined, page: 1 };
+  }
+
+  if (!pageFromMatch) {
+    if (namespaceFromMatch.match(/^\d{1,3}$/)) {
+      return { namespace: undefined, page: parsePageNumber(namespaceFromMatch) };
+    } else {
+      return { namespace: namespaceFromMatch, page: 1 };
+    }
+  }
+
+  return { namespace: namespaceFromMatch, page: parsePageNumber(pageFromMatch) };
+}
+
 export function getPageFromMatch(match: any) {
-  let page = parseInt(match.params.page, 10);
+  return parsePageNumber(match.params.page);
+}
+
+function parsePageNumber(pageAsString: string) {
+  const page = parseInt(pageAsString, 10);
   if (isNaN(page) || !page) {
-    page = 1;
+    return 1;
   }
   return page;
 }

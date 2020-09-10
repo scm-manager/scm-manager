@@ -65,6 +65,6 @@ abstract class RepositoryTestBase {
         dtoToRepositoryMapper,
         manager,
         repositoryBasedResourceProvider)),
-      of(repositoryCollectionResource));
+            of(repositoryCollectionResource));
   }
 }

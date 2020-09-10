@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import sonia.scm.ScmConstraintViolationException;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -34,19 +35,21 @@ class CustomNamespaceStrategyTest {
 
   private final NamespaceStrategy namespaceStrategy = new CustomNamespaceStrategy();
 
-  @Test
-  void shouldReturnNamespaceFromRepository() {
-    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
-    assertThat(namespaceStrategy.createNamespace(heartOfGold)).isEqualTo(RepositoryTestData.NAMESPACE);
+  @ParameterizedTest
+  @ValueSource(strings = {"valid", "123_", "something_valid", "1234", "create_it"})
+  void shouldReturnNamespaceFromRepository(String expectedValidNamespace) {
+    Repository repository = RepositoryTestData.createHeartOfGold();
+    repository.setNamespace(expectedValidNamespace);
+
+    assertThat(namespaceStrategy.createNamespace(repository)).isEqualTo(expectedValidNamespace);
   }
 
-  @Test
-  void shouldThrowAnValidationExceptionForAnInvalidNamespace() {
-    Repository repository = new Repository();
-    repository.setNamespace("..");
-    repository.setName(".");
+  @ParameterizedTest
+  @ValueSource(strings = {"..", " ", "0", "123", "create"})
+  void shouldThrowAnValidationExceptionForAnInvalidNamespace(String expectedAsInvalidNamespace) {
+    Repository repository = RepositoryTestData.createHeartOfGold();
+    repository.setNamespace(expectedAsInvalidNamespace);
 
     assertThrows(ScmConstraintViolationException.class, () -> namespaceStrategy.createNamespace(repository));
   }
-
 }

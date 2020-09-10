@@ -32,7 +32,10 @@ import PageActions from "./PageActions";
 import ErrorBoundary from "../ErrorBoundary";
 
 type Props = {
-  title?: string;
+  title?: ReactNode;
+  // Use the documentTitle to set the document title (browser title) whenever you want to set one
+  // and use something different than a string for the title property.
+  documentTitle?: string;
   afterTitle?: ReactNode;
   subtitle?: string;
   loading?: boolean;
@@ -62,9 +65,9 @@ const FlexContainer = styled.div`
 
 export default class Page extends React.Component<Props> {
   componentDidUpdate() {
-    const { title } = this.props;
-    if (title && title !== document.title) {
-      document.title = title;
+    const textualTitle = this.getTextualTitle();
+    if (textualTitle && textualTitle !== document.title) {
+      document.title = textualTitle;
     }
   }
 
@@ -90,7 +93,7 @@ export default class Page extends React.Component<Props> {
   }
 
   renderPageHeader() {
-    const { error, title, afterTitle, subtitle, children } = this.props;
+    const { error, afterTitle, subtitle, children } = this.props;
 
     let pageActions = null;
     let pageActionsExists = false;
@@ -99,7 +102,7 @@ export default class Page extends React.Component<Props> {
         if (this.isPageAction(child)) {
           pageActions = (
             <PageActionContainer
-              className={classNames("column", "is-three-fifths", "is-mobile-action-spacing", "is-flex")}
+              className={classNames("column", "is-three-fifths", "is-mobile-action-spacing", "is-flex-tablet")}
             >
               {child}
             </PageActionContainer>
@@ -115,7 +118,8 @@ export default class Page extends React.Component<Props> {
         <div className="columns">
           <div className="column">
             <FlexContainer>
-              <Title title={title} /> {afterTitle && <MarginLeft>{afterTitle}</MarginLeft>}
+              <Title title={this.getTextualTitle()}>{this.getTitleComponent()}</Title>
+              {afterTitle && <MarginLeft>{afterTitle}</MarginLeft>}
             </FlexContainer>
             <Subtitle subtitle={subtitle} />
           </div>
@@ -146,4 +150,24 @@ export default class Page extends React.Component<Props> {
     });
     return content;
   }
+
+  getTextualTitle: () => string | undefined = () => {
+    const { title, documentTitle } = this.props;
+    if (documentTitle) {
+      return documentTitle;
+    } else if (typeof title === "string") {
+      return title;
+    } else {
+      return undefined;
+    }
+  };
+
+  getTitleComponent = () => {
+    const { title } = this.props;
+    if (title && typeof title !== "string") {
+      return title;
+    } else {
+      return undefined;
+    }
+  };
 }

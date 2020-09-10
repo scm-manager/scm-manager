@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { connect } from "react-redux";
-import { Redirect, Route, RouteComponentProps, Switch } from "react-router-dom";
+import { Link, Redirect, Route, RouteComponentProps, Switch } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Changeset, Repository } from "@scm-manager/ui-types";
@@ -186,10 +186,13 @@ class RepositoryRoot extends React.Component<Props> {
       return links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />);
     };
 
+    const titleComponent = <><Link to={`/repos/${repository.namespace}/`} className={"has-text-dark"}>{repository.namespace}</Link>/{repository.name}</>;
+
     return (
       <StateMenuContextProvider>
         <Page
-          title={repository.namespace + "/" + repository.name}
+          title={titleComponent}
+          documentTitle={`${repository.namespace}/${repository.name}`}
           afterTitle={<ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />}
         >
           <CustomQueryFlexWrappedColumns>

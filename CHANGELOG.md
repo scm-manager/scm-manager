@@ -10,6 +10,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support for scroll anchors in url hash of diff page ([#1304](https://github.com/scm-manager/scm-manager/pull/1304))
 - Documentation regarding data and plugin migration from v1 to v2 ([#1321](https://github.com/scm-manager/scm-manager/pull/1321))
 - Add RepositoryCreationDto with creation context and extension-point for repository initialization ([#1324](https://github.com/scm-manager/scm-manager/pull/1324))
+- UI filter and rest endpoints for namespaces ([#1323](https://github.com/scm-manager/scm-manager/pull/1323))
 
 ### Fixed
 - Redirection to requested page after login in anonymous mode

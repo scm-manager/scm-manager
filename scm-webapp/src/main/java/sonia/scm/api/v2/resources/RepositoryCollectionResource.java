@@ -46,6 +46,7 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
@@ -115,6 +116,38 @@ public class RepositoryCollectionResource {
       pageResult -> repositoryCollectionToDtoMapper.map(page, pageSize, pageResult));
   }
 
+  @GET
+  @Path("{namespace}")
+  @Produces(VndMediaType.REPOSITORY_COLLECTION)
+  @Operation(summary = "List of repositories from a namespace", description = "Returns all repositories from a namespace for a given page number with a given page size.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.REPOSITORY_COLLECTION,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"repository\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  public Response getByNamespace(@PathParam("namespace") String namespace,
+                                 @DefaultValue("0") @QueryParam("page") int page,
+                                 @DefaultValue("" + DEFAULT_PAGE_SIZE) @QueryParam("pageSize") int pageSize,
+                                 @QueryParam("sortBy") String sortBy,
+                                 @DefaultValue("false") @QueryParam("desc") boolean desc,
+                                 @DefaultValue("") @QueryParam("q") String search
+  ) {
+    return adapter.getAll(page, pageSize, createSearchPredicate(namespace, search), sortBy, desc,
+      pageResult -> repositoryCollectionToDtoMapper.map(namespace, page, pageSize, pageResult));
+  }
+
   /**
    * Creates a new repository.
    *
@@ -169,6 +202,15 @@ public class RepositoryCollectionResource {
 
   private String currentUser() {
     return SecurityUtils.getSubject().getPrincipals().oneByType(User.class).getName();
+  }
+
+  private Predicate<Repository> createSearchPredicate(String namespace, String search) {
+    if (isNullOrEmpty(search)) {
+      return repository -> repository.getNamespace().equals(namespace);
+    }
+    SearchRequest searchRequest = new SearchRequest(search, true);
+    return repository -> repository.getNamespace().equals(namespace)
+      && SearchUtil.matchesOne(searchRequest, repository.getName(), repository.getNamespace(), repository.getDescription());
   }
 
   private Predicate<Repository> createSearchPredicate(String search) {
