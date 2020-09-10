@@ -24,7 +24,13 @@
 
 import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../modules/types";
-import { Action, Repository, RepositoryCollection, RepositoryCreation, NamespaceCollection } from "@scm-manager/ui-types";
+import {
+  Action,
+  NamespaceCollection,
+  Repository,
+  RepositoryCollection,
+  RepositoryCreation
+} from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
 
@@ -458,7 +464,6 @@ export function getRepositoryCollection(state: object) {
     }
     return {
       ...state.repos.list,
-      ...state.repos.namespaces,
       _embedded: {
         repositories
       }
