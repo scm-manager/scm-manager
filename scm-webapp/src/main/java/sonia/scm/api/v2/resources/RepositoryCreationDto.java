@@ -22,43 +22,26 @@
  * SOFTWARE.
  */
 
-package sonia.scm;
+package sonia.scm.api.v2.resources;
 
-import java.util.List;
-import java.util.Optional;
+import com.fasterxml.jackson.databind.JsonNode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import static java.util.Collections.unmodifiableList;
+import java.util.Collections;
+import java.util.Map;
 
-public abstract class ExceptionWithContext extends RuntimeException {
+@NoArgsConstructor
+@Getter
+@Setter
+public class RepositoryCreationDto extends RepositoryDto {
+  private Map<String, JsonNode> contextEntries;
 
-  private static final long serialVersionUID = 4327413456580409224L;
-
-  private final List<ContextEntry> context;
-
-  public ExceptionWithContext(List<ContextEntry> context, String message) {
-    super(message);
-    this.context = context;
-  }
-
-  public ExceptionWithContext(List<ContextEntry> context, String message, Exception cause) {
-    super(message, cause);
-    this.context = context;
-  }
-
-  public List<ContextEntry> getContext() {
-    return unmodifiableList(context);
-  }
-
-  public abstract String getCode();
-
-  /**
-   * Returns an url which gives more information about the exception or an empty optional.
-   * The methods returns an empty optional by default and can be overwritten.
-   *
-   * @return information url or empty
-   * @since 2.5.0
-   */
-  public Optional<String> getUrl() {
-    return Optional.empty();
+  public Map<String, JsonNode> getContextEntries() {
+    if (contextEntries == null) {
+      return Collections.emptyMap();
+    }
+    return contextEntries;
   }
 }

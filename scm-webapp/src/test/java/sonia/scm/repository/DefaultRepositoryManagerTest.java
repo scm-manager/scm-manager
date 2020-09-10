@@ -46,6 +46,7 @@ import sonia.scm.ManagerTestBase;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContext;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.api.HookContext;
@@ -63,6 +64,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
+import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasProperty;
@@ -77,6 +79,7 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
@@ -400,12 +403,24 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
 
   @Test
   public void shouldThrowNoChangesMadeException() {
-    Repository repository = new Repository("1", "hg", "space", "x");
+    Repository repository = createTestRepository();
     RepositoryManager repoManager = createManager();
 
     thrown.expect(NoChangesMadeException.class);
 
-    repoManager.rename(repository, "space", "x");
+    repoManager.rename(repository, "default_namespace", "HeartOfGold");
+  }
+
+  @Test
+  public void shouldThrowValidationException() {
+    Repository repository = createTestRepository();
+    RepositoryManager repoManager = createManager();
+    when(namespaceStrategy.canBeChanged()).thenReturn(true);
+    when(namespaceStrategy.createNamespace(argThat(r -> r.getNamespace().equals("invalid")))).thenThrow(ScmConstraintViolationException.class);
+
+    thrown.expect(ScmConstraintViolationException.class);
+
+    repoManager.rename(repository, "invalid", "splendid");
   }
 
   @Test
