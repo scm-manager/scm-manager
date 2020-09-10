@@ -30,7 +30,7 @@ In  SCM-Manager new Git, Mercurial & Subversion (SVN) repositories can be create
 Optionally, repositories can be initialized during the creation. That creates a standard branch (master or default) for Git and Mercurial repositories. 
 Additionally, it performs a commit that creates a README.md. For Subversion repositories the README.md will be created in a directory named `trunk`.
 
-If the namespace strategy is set to custom, the namespace field is also mandatory.
+If the namespace strategy is set to custom, the namespace field is also mandatory. The namespace must heed the same restrictions as the name. Additionally, namespaces that only consist of three digits, or the word "create" are not valid.
 
 ![Create Repository](assets/create-repository.png)
 
