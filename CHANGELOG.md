@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Redirection to requested page after login in anonymous mode
+- Validate new namespace on repository rename ([#1322](https://github.com/scm-manager/scm-manager/pull/1322))
 
 ## [2.4.1] - 2020-09-01
 ### Added
