@@ -268,7 +268,7 @@ class RepositoryForm extends React.Component<Props, State> {
 
   handleNamespaceChange = (namespace: string) => {
     this.setState({
-      namespaceValidationError: !validator.isNameValid(namespace),
+      namespaceValidationError: !validator.isNamespaceValid(namespace),
       repository: {
         ...this.state.repository,
         namespace
