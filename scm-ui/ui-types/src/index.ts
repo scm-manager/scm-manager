@@ -29,7 +29,7 @@ export { Me } from "./Me";
 export { DisplayedUser, User } from "./User";
 export { Group, Member } from "./Group";
 
-export { Repository, RepositoryCollection, RepositoryGroup } from "./Repositories";
+export { Repository, RepositoryCollection, RepositoryGroup, RepositoryCreation } from "./Repositories";
 export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
 
 export { Branch, BranchRequest } from "./Branches";

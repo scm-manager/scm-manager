@@ -25,7 +25,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
-import { NamespaceStrategies, Repository, RepositoryType } from "@scm-manager/ui-types";
+import { NamespaceStrategies, Repository, RepositoryCreation, RepositoryType } from "@scm-manager/ui-types";
 import { Page } from "@scm-manager/ui-components";
 import {
   fetchRepositoryTypesIfNeeded,
@@ -50,13 +50,14 @@ type Props = WithTranslation & {
   createLoading: boolean;
   error: Error;
   repoLink: string;
+  indexResources: any;
 
   // dispatch functions
   fetchNamespaceStrategiesIfNeeded: () => void;
   fetchRepositoryTypesIfNeeded: () => void;
   createRepo: (
     link: string,
-    repository: Repository,
+    repository: RepositoryCreation,
     initRepository: boolean,
     callback: (repo: Repository) => void
   ) => void;
@@ -80,7 +81,7 @@ class Create extends React.Component<Props> {
   };
 
   render() {
-    const { pageLoading, createLoading, repositoryTypes, namespaceStrategies, createRepo, error } = this.props;
+    const { pageLoading, createLoading, repositoryTypes, namespaceStrategies, createRepo, error, indexResources } = this.props;
 
     const { t, repoLink } = this.props;
     return (
@@ -98,6 +99,7 @@ class Create extends React.Component<Props> {
           submitForm={(repo, initRepository) => {
             createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
           }}
+          indexResources={indexResources}
         />
       </Page>
     );
@@ -112,13 +114,16 @@ const mapStateToProps = (state: any) => {
   const error =
     getFetchRepositoryTypesFailure(state) || getCreateRepoFailure(state) || getFetchNamespaceStrategiesFailure(state);
   const repoLink = getRepositoriesLink(state);
+  const indexResources = state?.indexResources;
+
   return {
     repositoryTypes,
     namespaceStrategies,
     pageLoading,
     createLoading,
     error,
-    repoLink
+    repoLink,
+    indexResources
   };
 };
 
@@ -130,7 +135,7 @@ const mapDispatchToProps = (dispatch: any) => {
     fetchNamespaceStrategiesIfNeeded: () => {
       dispatch(fetchNamespaceStrategiesIfNeeded());
     },
-    createRepo: (link: string, repository: Repository, initRepository: boolean, callback: () => void) => {
+    createRepo: (link: string, repository: RepositoryCreation, initRepository: boolean, callback: () => void) => {
       dispatch(createRepo(link, repository, initRepository, callback));
     },
     resetForm: () => {

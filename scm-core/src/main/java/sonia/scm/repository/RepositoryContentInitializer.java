@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import com.google.common.io.ByteSource;
@@ -29,6 +29,7 @@ import sonia.scm.plugin.ExtensionPoint;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Optional;
 
 /**
  * Use this {@link RepositoryContentInitializer} to create new files with custom content
@@ -38,7 +39,6 @@ import java.io.InputStream;
 public interface RepositoryContentInitializer {
 
   /**
-   *
    * @param context add content to this context in order to commit files in the initial repository commit
    * @throws IOException
    */
@@ -57,10 +57,24 @@ public interface RepositoryContentInitializer {
 
     /**
      * create new file which will be included in initial repository commit
+     *
      * @param path path of new file
      * @return
      */
     CreateFile create(String path);
+
+    /**
+     * Returns the the context entry with the given key and unmarshalls it to the given type.
+     * It no entry with the given key is available an empty optional is returned.
+     *
+     * @param key  key of the context object
+     * @param type type of the context object
+     * @return context entry or empty optional
+     * @since 2.5.0
+     */
+    default <T> Optional<T> getEntry(String key, Class<T> type) {
+      return Optional.empty();
+    }
   }
 
   /**
@@ -70,6 +84,7 @@ public interface RepositoryContentInitializer {
 
     /**
      * Applies content to new file
+     *
      * @param content content of file as string
      * @return {@link InitializerContext}
      * @throws IOException
@@ -78,6 +93,7 @@ public interface RepositoryContentInitializer {
 
     /**
      * Applies content to new file
+     *
      * @param input content of file as input stream
      * @return {@link InitializerContext}
      * @throws IOException
@@ -86,6 +102,7 @@ public interface RepositoryContentInitializer {
 
     /**
      * Applies content to new file
+     *
      * @param byteSource content of file as byte source
      * @return {@link InitializerContext}
      * @throws IOException
