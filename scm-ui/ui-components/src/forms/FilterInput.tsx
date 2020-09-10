@@ -59,6 +59,16 @@ class FilterInput extends React.Component<Props, State> {
     event.preventDefault();
   };
 
+  componentDidUpdate = ({ value: oldValue }: Props) => {
+    const { value: newValue } = this.props;
+    const { value: stateValue } = this.state;
+    if (oldValue !== newValue && newValue !== stateValue) {
+      this.setState({
+        value: newValue || ""
+      });
+    }
+  };
+
   render() {
     const { t, testId } = this.props;
     return (

@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Redirection to requested page after login in anonymous mode
+- Update filter state on property change ([#1327](https://github.com/scm-manager/scm-manager/pull/1327))
 - Diff view for svn now handles whitespaces in filenames properly ([1325](https://github.com/scm-manager/scm-manager/pull/1325))
 - Validate new namespace on repository rename ([#1322](https://github.com/scm-manager/scm-manager/pull/1322))
 
