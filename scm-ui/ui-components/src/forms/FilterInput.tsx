@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, FormEvent } from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, {ChangeEvent, FormEvent} from "react";
+import {WithTranslation, withTranslation} from "react-i18next";
 import styled from "styled-components";
-import { createAttributesForTesting } from "../devBuild";
+import {createAttributesForTesting} from "../devBuild";
 
 type Props = WithTranslation & {
   filter: (p: string) => void;
@@ -57,6 +57,16 @@ class FilterInput extends React.Component<Props, State> {
   handleSubmit = (event: FormEvent) => {
     this.props.filter(this.state.value);
     event.preventDefault();
+  };
+
+  componentDidUpdate = (prevProps: Props) => {
+    const { value } = this.props;
+    const { value: stateValue } = this.state;
+    if (prevProps.value !== value && value !== stateValue) {
+      this.setState({
+        value: value || ""
+      });
+    }
   };
 
   render() {
