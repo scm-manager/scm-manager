@@ -4,7 +4,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [2.5.0] - 2020-09-10
 ### Added
 - Tags now have date information attached ([#1305](https://github.com/scm-manager/scm-manager/pull/1305))
 - Add support for scroll anchors in url hash of diff page ([#1304](https://github.com/scm-manager/scm-manager/pull/1304))
@@ -307,3 +307,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.3.1]: https://www.scm-manager.org/download/2.3.1
 [2.4.0]: https://www.scm-manager.org/download/2.4.0
 [2.4.1]: https://www.scm-manager.org/download/2.4.1
+[2.5.0]: https://www.scm-manager.org/download/2.5.0
