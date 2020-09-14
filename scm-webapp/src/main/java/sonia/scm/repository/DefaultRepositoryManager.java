@@ -331,6 +331,10 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     return getAll(null, start, limit);
   }
 
+  /**
+   * @deprecated Use {@link NamespaceManager#getAll()} instead.
+   */
+  @Deprecated
   @Override
   public Collection<String> getAllNamespaces() {
     return getAll().stream()
