@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -150,18 +150,18 @@ public abstract class ZippedRepositoryTestBase extends AbstractTestBase
 
   public static void extract(File targetFolder, String zippedRepositoryResource) throws IOException {
     URL url = Resources.getResource(zippedRepositoryResource);
-    ZipInputStream zip = null;
 
-    try
+    try (ZipInputStream zip = new ZipInputStream(url.openStream());)
     {
-      zip = new ZipInputStream(url.openStream());
-
       ZipEntry entry = zip.getNextEntry();
 
       while (entry != null)
       {
         File file = new File(targetFolder, entry.getName());
         File parent = file.getParentFile();
+        if (!IOUtil.isChild(parent, file)) {
+          throw new IOException("invalid zip entry name");
+        }
 
         if (!parent.exists())
         {
@@ -174,26 +174,15 @@ public abstract class ZippedRepositoryTestBase extends AbstractTestBase
         }
         else
         {
-          OutputStream output = null;
-
-          try
+          try (OutputStream output = new FileOutputStream(file))
           {
-            output = new FileOutputStream(file);
             IOUtil.copy(zip, output);
-          }
-          finally
-          {
-            IOUtil.close(output);
           }
         }
 
         zip.closeEntry();
         entry = zip.getNextEntry();
       }
-    }
-    finally
-    {
-      IOUtil.close(zip);
     }
   }
 

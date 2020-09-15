@@ -21,34 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Charsets;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteSource;
 import com.google.common.io.ByteStreams;
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
-
 import sonia.scm.util.IOUtil;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-
 import java.net.URL;
-
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
-
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Smp plugin archive.
@@ -65,9 +62,14 @@ public final class SmpArchive
    *
    * @param archive
    */
-  public SmpArchive(ByteSource archive)
-  {
+  public SmpArchive(ByteSource archive) {
+    this(archive, source -> new ZipInputStream(archive.openStream(), StandardCharsets.UTF_8));
+  }
+
+  @VisibleForTesting
+  SmpArchive(ByteSource archive, ZipInputStreamFactory zipInputStreamFactory) {
     this.archive = archive;
+    this.zipInputStreamFactory = zipInputStreamFactory;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -167,6 +169,9 @@ public final class SmpArchive
 
         String fileName = ze.getName();
         File file = new File(target, fileName);
+        if (!IOUtil.isChild(target, file)) {
+          throw new PluginException("smp contains illegal path, which tries to escape from the plugin directory: " + fileName);
+        }
 
         IOUtil.mkdirs(file.getParentFile());
 
@@ -285,9 +290,8 @@ public final class SmpArchive
    *
    * @throws IOException
    */
-  private ZipInputStream open() throws IOException
-  {
-    return new ZipInputStream(archive.openStream(), Charsets.UTF_8);
+  private ZipInputStream open() throws IOException {
+    return zipInputStreamFactory.open(archive);
   }
 
   /**
@@ -300,7 +304,7 @@ public final class SmpArchive
    */
   private NonClosingZipInputStream openNonClosing() throws IOException
   {
-    return new NonClosingZipInputStream(archive.openStream(), Charsets.UTF_8);
+    return new NonClosingZipInputStream(archive.openStream(), StandardCharsets.UTF_8);
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -398,11 +402,19 @@ public final class SmpArchive
     }
   }
 
+  @FunctionalInterface
+  interface ZipInputStreamFactory {
+
+    ZipInputStream open(ByteSource source) throws IOException;
+
+  }
+
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
   private final ByteSource archive;
+
+  private final ZipInputStreamFactory zipInputStreamFactory;
 
   /** Field description */
   private InstalledPluginDescriptor plugin;

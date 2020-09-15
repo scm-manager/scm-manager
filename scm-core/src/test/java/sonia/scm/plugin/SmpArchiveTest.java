@@ -28,6 +28,7 @@ package sonia.scm.plugin;
 
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
+import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -46,10 +47,13 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -104,6 +108,18 @@ class SmpArchiveTest {
     File archive = createArchive(tempDir, "sonia.sample", null);
     SmpArchive smp = SmpArchive.create(archive);
     assertThrows(PluginException.class, smp::getPlugin);
+  }
+
+  @Test
+  void shouldFailOnZipEntriesWhichCreateFilesOutsideOfThePluginFolder(@TempDir Path tempDir) throws IOException {
+    ZipInputStream zis = mock(ZipInputStream.class);
+    ZipEntry entry = mock(ZipEntry.class);
+    when(zis.getNextEntry()).thenReturn(entry);
+    when(entry.getName()).thenReturn("../../plugin.xml");
+    SmpArchive smp = new SmpArchive(ByteSource.empty(), source -> zis);
+    File directory = tempDir.resolve("one").resolve("two").resolve("three").toFile();
+    assertThat(directory.mkdirs()).isTrue();
+    assertThrows(PluginException.class, () -> smp.extract(directory));
   }
 
   private File createArchive(Path tempDir, String name, String version) throws IOException, XMLStreamException {
