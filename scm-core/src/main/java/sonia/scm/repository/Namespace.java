@@ -24,16 +24,29 @@
 
 package sonia.scm.repository;
 
+import com.github.sdorra.ssp.PermissionObject;
+import com.github.sdorra.ssp.StaticPermissions;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
 import static java.util.Collections.unmodifiableCollection;
 
-public class Namespace implements Cloneable {
+@StaticPermissions(
+  value = "namespace",
+  globalPermissions = {"permissionRead", "permissionWrite"},
+  permissions = {},
+  custom = true, customGlobal = true
+)
+@XmlAccessorType(XmlAccessType.FIELD)
+@XmlRootElement(name = "namespaces")
+public class Namespace implements PermissionObject, Cloneable {
 
   private String namespace;
   private Set<RepositoryPermission> permissions = new HashSet<>();
@@ -67,6 +80,11 @@ public class Namespace implements Cloneable {
 
   public boolean removePermission(RepositoryPermission permission) {
     return this.permissions.remove(permission);
+  }
+
+  @Override
+  public String getId() {
+    return getNamespace();
   }
 
   @Override
