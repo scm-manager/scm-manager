@@ -24,8 +24,6 @@
 
 package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteSource;
@@ -54,8 +52,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * @author Sebastian Sdorra
@@ -89,7 +85,7 @@ class SmpArchiveTest {
 
     PluginInformation info = plugin.getInformation();
 
-    assertThat(info).isNotNull();;
+    assertThat(info).isNotNull();
 
     assertThat(info.getName()).isEqualTo("sonia.sample");
     assertThat(info.getVersion()).isEqualTo("1.0");

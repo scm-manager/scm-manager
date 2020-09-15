@@ -53,12 +53,14 @@ import java.util.zip.ZipInputStream;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public final class SmpArchive
-{
+public final class SmpArchive {
+
+  private final ByteSource archive;
+  private final ZipInputStreamFactory zipInputStreamFactory;
+  private InstalledPluginDescriptor plugin;
 
   /**
    * Constructs ...
-   *
    *
    * @param archive
    */
@@ -77,52 +79,40 @@ public final class SmpArchive
   /**
    * Method description
    *
-   *
    * @param archive
-   *
    * @return
    */
-  public static SmpArchive create(ByteSource archive)
-  {
+  public static SmpArchive create(ByteSource archive) {
     return new SmpArchive(archive);
   }
 
   /**
    * Method description
    *
-   *
    * @param archive
-   *
    * @return
    */
-  public static SmpArchive create(URL archive)
-  {
+  public static SmpArchive create(URL archive) {
     return create(Resources.asByteSource(archive));
   }
 
   /**
    * Method description
    *
-   *
    * @param archive
-   *
    * @return
    */
-  public static SmpArchive create(Path archive)
-  {
+  public static SmpArchive create(Path archive) {
     return create(archive.toFile());
   }
 
   /**
    * Method description
    *
-   *
    * @param archive
-   *
    * @return
    */
-  public static SmpArchive create(File archive)
-  {
+  public static SmpArchive create(File archive) {
     return create(Files.asByteSource(archive));
   }
 
@@ -131,17 +121,13 @@ public final class SmpArchive
   /**
    * Method description
    *
-   *
    * @param entry
-   *
    * @return
    */
-  private static String getPath(ZipEntry entry)
-  {
+  private static String getPath(ZipEntry entry) {
     String path = entry.getName().replace("\\", "/");
 
-    if (!path.startsWith("/"))
-    {
+    if (!path.startsWith("/")) {
       path = "/".concat(path);
     }
 
@@ -153,19 +139,14 @@ public final class SmpArchive
   /**
    * Method description
    *
-   *
    * @param target
-   *
    * @throws IOException
    */
-  public void extract(File target) throws IOException
-  {
-    try (ZipInputStream zis = open())
-    {
+  public void extract(File target) throws IOException {
+    try (ZipInputStream zis = open()) {
       ZipEntry ze = zis.getNextEntry();
 
-      while (ze != null)
-      {
+      while (ze != null) {
 
         String fileName = ze.getName();
         File file = new File(target, fileName);
@@ -175,14 +156,10 @@ public final class SmpArchive
 
         IOUtil.mkdirs(file.getParentFile());
 
-        if (ze.isDirectory())
-        {
+        if (ze.isDirectory()) {
           IOUtil.mkdirs(file);
-        }
-        else
-        {
-          try (FileOutputStream fos = new FileOutputStream(file))
-          {
+        } else {
+          try (FileOutputStream fos = new FileOutputStream(file)) {
             ByteStreams.copy(zis, fos);
           }
         }
@@ -199,32 +176,25 @@ public final class SmpArchive
   /**
    * Method description
    *
-   *
    * @return
-   *
    * @throws IOException
    */
-  public InstalledPluginDescriptor getPlugin() throws IOException
-  {
-    if (plugin == null)
-    {
+  public InstalledPluginDescriptor getPlugin() throws IOException {
+    if (plugin == null) {
       plugin = createPlugin();
 
       PluginInformation info = plugin.getInformation();
 
-      if (info == null)
-      {
+      if (info == null) {
         throw new PluginException("could not find information section");
       }
 
-      if (Strings.isNullOrEmpty(info.getName()))
-      {
+      if (Strings.isNullOrEmpty(info.getName())) {
         throw new PluginException(
           "could not find name in plugin descriptor");
       }
 
-      if (Strings.isNullOrEmpty(info.getVersion()))
-      {
+      if (Strings.isNullOrEmpty(info.getVersion())) {
         throw new PluginException(
           "could not find version in plugin descriptor");
       }
@@ -238,26 +208,20 @@ public final class SmpArchive
   /**
    * Method description
    *
-   *
    * @return
-   *
    * @throws IOException
    */
-  private InstalledPluginDescriptor createPlugin() throws IOException
-  {
+  private InstalledPluginDescriptor createPlugin() throws IOException {
     InstalledPluginDescriptor p = null;
     NonClosingZipInputStream zis = null;
 
-    try
-    {
+    try {
       zis = openNonClosing();
 
       ZipEntry entry = zis.getNextEntry();
 
-      while (entry != null)
-      {
-        if (PluginConstants.PATH_DESCRIPTOR.equals(getPath(entry)))
-        {
+      while (entry != null) {
+        if (PluginConstants.PATH_DESCRIPTOR.equals(getPath(entry))) {
           p = Plugins.parsePluginDescriptor(new InputStreamByteSource(zis));
         }
 
@@ -265,17 +229,13 @@ public final class SmpArchive
       }
 
       zis.closeEntry();
-    }
-    finally
-    {
-      if (zis != null)
-      {
+    } finally {
+      if (zis != null) {
         zis.reallyClose();
       }
     }
 
-    if (p == null)
-    {
+    if (p == null) {
       throw new PluginLoadException("could not find plugin descriptor");
     }
 
@@ -285,9 +245,7 @@ public final class SmpArchive
   /**
    * Method description
    *
-   *
    * @return
-   *
    * @throws IOException
    */
   private ZipInputStream open() throws IOException {
@@ -297,13 +255,10 @@ public final class SmpArchive
   /**
    * Method description
    *
-   *
    * @return
-   *
    * @throws IOException
    */
-  private NonClosingZipInputStream openNonClosing() throws IOException
-  {
+  private NonClosingZipInputStream openNonClosing() throws IOException {
     return new NonClosingZipInputStream(archive.openStream(), StandardCharsets.UTF_8);
   }
 
@@ -312,21 +267,17 @@ public final class SmpArchive
   /**
    * Class description
    *
-   *
-   * @version        Enter version here..., 14/07/13
-   * @author         Enter your name here...
+   * @author Enter your name here...
+   * @version Enter version here..., 14/07/13
    */
-  private static class InputStreamByteSource extends ByteSource
-  {
+  private static class InputStreamByteSource extends ByteSource {
 
     /**
      * Constructs ...
      *
-     *
      * @param input
      */
-    public InputStreamByteSource(InputStream input)
-    {
+    public InputStreamByteSource(InputStream input) {
       this.input = input;
     }
 
@@ -335,20 +286,19 @@ public final class SmpArchive
     /**
      * Method description
      *
-     *
      * @return
-     *
      * @throws IOException
      */
     @Override
-    public InputStream openStream() throws IOException
-    {
+    public InputStream openStream() throws IOException {
       return input;
     }
 
     //~--- fields -------------------------------------------------------------
 
-    /** Field description */
+    /**
+     * Field description
+     */
     private final InputStream input;
   }
 
@@ -356,22 +306,18 @@ public final class SmpArchive
   /**
    * Class description
    *
-   *
-   * @version        Enter version here..., 14/07/12
-   * @author         Enter your name here...
+   * @author Enter your name here...
+   * @version Enter version here..., 14/07/12
    */
-  private static class NonClosingZipInputStream extends ZipInputStream
-  {
+  private static class NonClosingZipInputStream extends ZipInputStream {
 
     /**
      * Constructs ...
      *
-     *
      * @param in
      * @param charset
      */
-    public NonClosingZipInputStream(InputStream in, Charset charset)
-    {
+    public NonClosingZipInputStream(InputStream in, Charset charset) {
       super(in, charset);
     }
 
@@ -380,12 +326,10 @@ public final class SmpArchive
     /**
      * Method description
      *
-     *
      * @throws IOException
      */
     @Override
-    public void close() throws IOException
-    {
+    public void close() throws IOException {
 
       // do nothing
     }
@@ -393,11 +337,9 @@ public final class SmpArchive
     /**
      * Method description
      *
-     *
      * @throws IOException
      */
-    public void reallyClose() throws IOException
-    {
+    public void reallyClose() throws IOException {
       super.close();
     }
   }
@@ -408,14 +350,4 @@ public final class SmpArchive
     ZipInputStream open(ByteSource source) throws IOException;
 
   }
-
-
-  //~--- fields ---------------------------------------------------------------
-
-  private final ByteSource archive;
-
-  private final ZipInputStreamFactory zipInputStreamFactory;
-
-  /** Field description */
-  private InstalledPluginDescriptor plugin;
 }
