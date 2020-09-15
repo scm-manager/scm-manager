@@ -473,6 +473,43 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
 
   }
 
+  @Test
+  public void shouldAllowMergeWithRebase() throws IOException, GitAPIException {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setTargetBranch("master");
+    request.setBranchToMerge("mergeable");
+    request.setMergeStrategy(MergeStrategy.REBASE);
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    MergeCommandResult mergeCommandResult = command.merge(request);
+
+    assertThat(mergeCommandResult.isSuccess()).isTrue();
+
+    Repository repository = createContext().open();
+    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+    RevCommit mergeCommit = commits.iterator().next();
+    assertThat(mergeCommit.getParentCount()).isEqualTo(1);
+    assertThat(mergeCommit.getParent(0).name()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
+    assertThat(mergeCommit.getName()).isEqualTo(mergeCommandResult.getNewHeadRevision());
+    assertThat(mergeCommit.getName()).doesNotStartWith("91b99de908fcd04772798a31c308a64aea1a5523");
+  }
+
+  @Test
+  public void shouldRejectRebaseMergeIfBranchCannotBeRebased() {
+    GitMergeCommand command = createCommand();
+    MergeCommandRequest request = new MergeCommandRequest();
+    request.setTargetBranch("master");
+    request.setBranchToMerge("not-rebasable");
+    request.setMergeStrategy(MergeStrategy.REBASE);
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    MergeCommandResult mergeCommandResult = command.merge(request);
+
+    assertThat(mergeCommandResult.isSuccess()).isFalse();
+
+  }
+
   private GitMergeCommand createCommand() {
     return createCommand(git -> {
     });

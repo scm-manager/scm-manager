@@ -60,7 +60,8 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
   private static final Set<MergeStrategy> STRATEGIES = ImmutableSet.of(
     MergeStrategy.MERGE_COMMIT,
     MergeStrategy.FAST_FORWARD_IF_POSSIBLE,
-    MergeStrategy.SQUASH
+    MergeStrategy.SQUASH,
+    MergeStrategy.REBASE
   );
 
   @Inject
@@ -93,6 +94,9 @@ public class GitMergeCommand extends AbstractGitCommand implements MergeCommand 
 
       case MERGE_COMMIT:
         return inClone(clone -> new GitMergeCommit(clone, request, context, repository), workingCopyFactory, request.getTargetBranch());
+
+      case REBASE:
+        return inClone(clone -> new GitMergeRebase(clone, request, context, repository), workingCopyFactory, request.getTargetBranch());
 
       default:
         throw new MergeStrategyNotSupportedException(repository, request.getMergeStrategy());
