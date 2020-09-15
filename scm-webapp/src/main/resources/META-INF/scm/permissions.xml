@@ -45,6 +45,12 @@
     <value>repository:create</value>
   </permission>
   <permission>
+    <value>namespace:permissionRead</value>
+  </permission>
+  <permission>
+    <value>namespace:permissionWrite</value>
+  </permission>
+  <permission>
     <value>user:*</value>
   </permission>
   <permission>
