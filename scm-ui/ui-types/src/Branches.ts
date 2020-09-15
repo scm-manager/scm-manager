@@ -23,11 +23,14 @@
  */
 
 import { Links } from "./hal";
+import { Person } from ".";
 
 export type Branch = {
   name: string;
   revision: string;
   defaultBranch?: boolean;
+  lastModified?: Date;
+  lastModifier?: Person;
   _links: Links;
 };
 

@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
@@ -31,20 +32,29 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+import java.time.Instant;
 
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
 public class BranchDto extends HalRepresentation {
 
   private static final String VALID_CHARACTERS_AT_START_AND_END = "\\w-,;\\]{}@&+=$#`|<>";
   private static final String VALID_CHARACTERS = VALID_CHARACTERS_AT_START_AND_END + "/.";
   static final String VALID_BRANCH_NAMES = "[" + VALID_CHARACTERS_AT_START_AND_END + "]([" + VALID_CHARACTERS + "]*[" + VALID_CHARACTERS_AT_START_AND_END + "])?";
 
-  @NotEmpty @Length(min = 1, max=100) @Pattern(regexp = VALID_BRANCH_NAMES)
+  @NotEmpty
+  @Length(min = 1, max = 100)
+  @Pattern(regexp = VALID_BRANCH_NAMES)
   private String name;
   private String revision;
   private boolean defaultBranch;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private Instant lastModified;
+  private PersonDto lastModifier;
 
   BranchDto(Links links, Embedded embedded) {
     super(links, embedded);

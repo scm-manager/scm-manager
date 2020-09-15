@@ -21,34 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import { Link } from "react-router-dom";
 import { Branch } from "@scm-manager/ui-types";
 import DefaultBranchTag from "./DefaultBranchTag";
+import { DateFromNow } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
+import styled from "styled-components";
 
 type Props = {
   baseUrl: string;
   branch: Branch;
 };
 
-class BranchRow extends React.Component<Props> {
-  renderLink(to: string, label: string, defaultBranch?: boolean) {
-    return (
-      <Link to={to} title={label}>
-        {label} <DefaultBranchTag defaultBranch={defaultBranch} />
-      </Link>
-    );
-  }
+const Modified = styled.span`
+  margin-left: 1rem;
+  font-size: 0.8rem;
+`;
 
-  render() {
-    const { baseUrl, branch } = this.props;
-    const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
-    return (
-      <tr>
-        <td>{this.renderLink(to, branch.name, branch.defaultBranch)}</td>
-      </tr>
-    );
-  }
-}
+const BranchRow: FC<Props> = ({ baseUrl, branch }) => {
+  const [t] = useTranslation("repos");
+
+  const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
+  return (
+    <tr>
+      <td>
+        <Link to={to} title={branch.name}>
+          {branch.name}
+          <DefaultBranchTag defaultBranch={branch.defaultBranch} />
+          <Modified className="has-text-grey is-ellipsis-overflow">
+            {t("branches.overview.lastModified")} <DateFromNow date={branch.lastModified} />{" "}
+            {t("branches.overview.lastModifier")} {branch.lastModifier?.name}
+          </Modified>
+        </Link>
+      </td>
+    </tr>
+  );
+};
 
 export default BranchRow;
