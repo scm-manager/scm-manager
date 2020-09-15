@@ -21,13 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Lists;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.subject.PrincipalCollection;
@@ -45,6 +44,8 @@ import sonia.scm.SCMContext;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupCollector;
+import sonia.scm.repository.Namespace;
+import sonia.scm.repository.NamespaceDao;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryPermission;
@@ -53,8 +54,10 @@ import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
+import static com.google.common.collect.Lists.newArrayList;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
+import static java.util.Optional.of;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.nullValue;
@@ -92,6 +95,9 @@ public class DefaultAuthorizationCollectorTest {
   @Mock
   private GroupCollector groupCollector;
 
+  @Mock
+  private NamespaceDao namespaceDao;
+
   private DefaultAuthorizationCollector collector;
 
   @Rule
@@ -103,7 +109,7 @@ public class DefaultAuthorizationCollectorTest {
   @Before
   public void setUp(){
     when(cacheManager.getCache(Mockito.any(String.class))).thenReturn(cache);
-    collector = new DefaultAuthorizationCollector(cacheManager, repositoryDAO, securitySystem, repositoryPermissionProvider, groupCollector);
+    collector = new DefaultAuthorizationCollector(cacheManager, repositoryDAO, securitySystem, repositoryPermissionProvider, groupCollector, namespaceDao);
   }
 
   /**
@@ -195,12 +201,44 @@ public class DefaultAuthorizationCollectorTest {
     authenticate(UserTestData.createTrillian(), group);
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     heartOfGold.setId("one");
-    heartOfGold.setPermissions(Lists.newArrayList(new RepositoryPermission("trillian", asList("read", "pull"), false)));
+    heartOfGold.setPermissions(newArrayList(new RepositoryPermission("trillian", asList("read", "pull"), false)));
     Repository puzzle42 = RepositoryTestData.create42Puzzle();
     puzzle42.setId("two");
     RepositoryPermission permission = new RepositoryPermission(group, asList("read", "pull", "push"), true);
-    puzzle42.setPermissions(Lists.newArrayList(permission));
-    when(repositoryDAO.getAll()).thenReturn(Lists.newArrayList(heartOfGold, puzzle42));
+    puzzle42.setPermissions(newArrayList(permission));
+    when(repositoryDAO.getAll()).thenReturn(newArrayList(heartOfGold, puzzle42));
+
+    // execute and assert
+    AuthorizationInfo authInfo = collector.collect();
+    assertThat(authInfo.getRoles(), Matchers.containsInAnyOrder(Role.USER));
+    assertThat(authInfo.getObjectPermissions(), nullValue());
+    assertThat(authInfo.getStringPermissions(), containsInAnyOrder("user:autocomplete", "group:autocomplete", "user:changePassword:trillian", "repository:read,pull:one", "repository:read,pull,push:two", "user:read:trillian"));
+  }
+
+  /**
+   * Tests {@link AuthorizationCollector#collect(PrincipalCollection)} ()} with repository permissions.
+   */
+  @Test
+  @SubjectAware(
+    configuration = "classpath:sonia/scm/shiro-001.ini"
+  )
+  public void testCollectWithNamespacePermissions() {
+    String group = "heart-of-gold-crew";
+    authenticate(UserTestData.createTrillian(), group);
+    Repository heartOfGold = RepositoryTestData.createHeartOfGold();
+    heartOfGold.setId("one");
+    Namespace heartOfGoldNamespace = new Namespace(heartOfGold.getNamespace());
+    heartOfGoldNamespace.setPermissions(newArrayList(new RepositoryPermission("trillian", asList("read", "pull"), false)));
+
+    Repository puzzle42 = RepositoryTestData.create42Puzzle();
+    puzzle42.setNamespace("guide");
+    puzzle42.setId("two");
+    Namespace puzzleNamespace = new Namespace(puzzle42.getNamespace());
+    puzzleNamespace.setPermissions(newArrayList(new RepositoryPermission(group, asList("read", "pull", "push"), true)));
+
+    when(repositoryDAO.getAll()).thenReturn(newArrayList(heartOfGold, puzzle42));
+    when(namespaceDao.get(heartOfGold.getNamespace())).thenReturn(of(heartOfGoldNamespace));
+    when(namespaceDao.get(puzzle42.getNamespace())).thenReturn(of(puzzleNamespace));
 
     // execute and assert
     AuthorizationInfo authInfo = collector.collect();
@@ -228,15 +266,15 @@ public class DefaultAuthorizationCollectorTest {
     authenticate(UserTestData.createTrillian(), group);
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     heartOfGold.setId("one");
-    heartOfGold.setPermissions(Lists.newArrayList(
+    heartOfGold.setPermissions(newArrayList(
       new RepositoryPermission("trillian", "user role", false),
       new RepositoryPermission("trillian", "system role", false)
     ));
     Repository puzzle42 = RepositoryTestData.create42Puzzle();
     puzzle42.setId("two");
     RepositoryPermission permission = new RepositoryPermission(group, "group role", true);
-    puzzle42.setPermissions(Lists.newArrayList(permission));
-    when(repositoryDAO.getAll()).thenReturn(Lists.newArrayList(heartOfGold, puzzle42));
+    puzzle42.setPermissions(newArrayList(permission));
+    when(repositoryDAO.getAll()).thenReturn(newArrayList(heartOfGold, puzzle42));
 
     // execute and assert
     AuthorizationInfo authInfo = collector.collect();
@@ -272,7 +310,7 @@ public class DefaultAuthorizationCollectorTest {
     heartOfGold.setPermissions(singletonList(
       new RepositoryPermission("trillian", "unknown", false)
     ));
-    when(repositoryDAO.getAll()).thenReturn(Lists.newArrayList(heartOfGold));
+    when(repositoryDAO.getAll()).thenReturn(newArrayList(heartOfGold));
 
     // execute and assert
     AuthorizationInfo authInfo = collector.collect();
@@ -290,7 +328,7 @@ public class DefaultAuthorizationCollectorTest {
 
     StoredAssignedPermission p1 = new StoredAssignedPermission("one", new AssignedPermission("one", "one:one"));
     StoredAssignedPermission p2 = new StoredAssignedPermission("two", new AssignedPermission("two", "two:two"));
-    when(securitySystem.getPermissions(any())).thenReturn(Lists.newArrayList(p1, p2));
+    when(securitySystem.getPermissions(any())).thenReturn(newArrayList(p1, p2));
 
     // execute and assert
     AuthorizationInfo authInfo = collector.collect();

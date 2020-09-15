@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.security;
 
 import com.github.legman.Subscribe;
 import com.google.common.annotations.VisibleForTesting;
@@ -46,17 +44,19 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.group.GroupCollector;
 import sonia.scm.group.GroupPermissions;
 import sonia.scm.plugin.Extension;
+import sonia.scm.repository.Namespace;
+import sonia.scm.repository.NamespaceDao;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.user.User;
 import sonia.scm.user.UserPermissions;
-import sonia.scm.util.Util;
 
 import java.util.Collection;
+import java.util.Optional;
 import java.util.Set;
 
-//~--- JDK imports ------------------------------------------------------------
+import static java.util.Collections.emptySet;
 
 /**
  *
@@ -85,16 +85,18 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
    * @param securitySystem
    * @param repositoryPermissionProvider
    * @param groupCollector
+   * @param namespaceDao
    */
   @Inject
   public DefaultAuthorizationCollector(CacheManager cacheManager,
-                                       RepositoryDAO repositoryDAO, SecuritySystem securitySystem, RepositoryPermissionProvider repositoryPermissionProvider, GroupCollector groupCollector)
+                                       RepositoryDAO repositoryDAO, SecuritySystem securitySystem, RepositoryPermissionProvider repositoryPermissionProvider, GroupCollector groupCollector, NamespaceDao namespaceDao)
   {
     this.cache = cacheManager.getCache(CACHE_NAME);
     this.repositoryDAO = repositoryDAO;
     this.securitySystem = securitySystem;
     this.repositoryPermissionProvider = repositoryPermissionProvider;
     this.groupCollector = groupCollector;
+    this.namespaceDao = namespaceDao;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -186,28 +188,27 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   private void collectRepositoryPermissions(Builder<String> builder,
     Repository repository, User user, Set<String> groups)
   {
-    Collection<RepositoryPermission> repositoryPermissions = repository.getPermissions();
+    Optional<Namespace> namespace = namespaceDao.get(repository.getNamespace());
 
-    if (Util.isNotEmpty(repositoryPermissions))
+    boolean hasPermission = false;
+    for (RepositoryPermission permission : repository.getPermissions())
     {
-      boolean hasPermission = false;
-      for (RepositoryPermission permission : repositoryPermissions)
-      {
-        hasPermission = isUserPermitted(user, groups, permission);
-        if (hasPermission) {
-          addRepositoryPermission(builder, repository, user, permission);
-        }
-      }
-
-      if (!hasPermission && logger.isTraceEnabled())
-      {
-        logger.trace("no permission for user {} defined at repository {}", user.getName(), repository.getName());
+      hasPermission = isUserPermitted(user, groups, permission);
+      if (hasPermission) {
+        addRepositoryPermission(builder, repository, user, permission);
       }
     }
-    else if (logger.isTraceEnabled())
+    for (RepositoryPermission permission : namespace.map(Namespace::getPermissions).orElse(emptySet()))
     {
-      logger.trace("repository {} has no permission entries",
-        repository.getName());
+      hasPermission = isUserPermitted(user, groups, permission);
+      if (hasPermission) {
+        addRepositoryPermission(builder, repository, user, permission);
+      }
+    }
+
+    if (!hasPermission && logger.isTraceEnabled())
+    {
+      logger.trace("no permission for user {} defined at repository {}", user.getName(), repository.getNamespaceAndName());
     }
   }
 
@@ -371,4 +372,5 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
   private final RepositoryPermissionProvider repositoryPermissionProvider;
   private final GroupCollector groupCollector;
+  private final NamespaceDao namespaceDao;
 }
