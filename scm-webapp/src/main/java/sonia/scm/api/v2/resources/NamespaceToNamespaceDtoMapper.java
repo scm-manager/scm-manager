@@ -24,6 +24,9 @@
 
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.Links;
+import sonia.scm.repository.NamespacePermissions;
+
 import javax.inject.Inject;
 
 import static de.otto.edison.hal.Link.link;
@@ -39,12 +42,15 @@ class NamespaceToNamespaceDtoMapper {
   }
 
   NamespaceDto map(String namespace) {
-    return new NamespaceDto(
-      namespace,
-      linkingTo()
-        .self(links.namespace().self(namespace))
-        .single(link("repositories", links.repositoryCollection().forNamespace(namespace)))
-        .build()
-    );
+    Links.Builder linkingTo = linkingTo();
+    linkingTo
+      .self(links.namespace().self(namespace))
+      .single(link("repositories", links.repositoryCollection().forNamespace(namespace)));
+
+    if (NamespacePermissions.permissionRead().isPermitted()) {
+      linkingTo
+        .single(link("permissions", links.namespacePermission().all(namespace)));
+    }
+    return new NamespaceDto(namespace, linkingTo.build());
   }
 }
