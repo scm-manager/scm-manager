@@ -31,6 +31,7 @@
       "navigationLabel": "Repository",
       "informationNavLink": "Informationen",
       "branchesNavLink": "Branches",
+      "tagsNavLink": "Tags",
       "sourcesNavLink": "Code",
       "settingsNavLink": "Einstellungen",
       "generalNavLink": "Generell",
@@ -70,6 +71,19 @@
     "commits": "Commits",
     "sources": "Sources",
     "defaultTag": "Default"
+  },
+  "tags": {
+    "overview": {
+      "title": "Übersicht aller verfügbaren Tags",
+      "noTags": "Keine Tags gefunden.",
+      "created": "Erstellt"
+    },
+    "table": {
+      "tags": "Tags"
+    }
+  },
+  "tag": {
+    "name": "Name:"
   },
   "code": {
     "sources": "Sources",

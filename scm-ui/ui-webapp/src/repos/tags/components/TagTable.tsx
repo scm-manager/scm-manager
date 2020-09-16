@@ -22,11 +22,39 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import React, { FC } from "react";
+import { Tag } from "@scm-manager/ui-types";
+import { useTranslation } from "react-i18next";
+import TagRow from "./TagRow";
 
-export type Tag = {
-  name: string;
-  revision: string;
-  date: Date;
-  _links: Links;
+type Props = {
+  baseUrl: string;
+  tags: Tag[];
 };
+
+const TagTable: FC<Props> = ({ baseUrl, tags }) => {
+  const [t] = useTranslation("repos");
+
+  const renderRow = () => {
+    let rowContent = null;
+    if (tags) {
+      rowContent = tags.map((tag, index) => {
+        return <TagRow key={index} baseUrl={baseUrl} tag={tag} />;
+      });
+    }
+    return rowContent;
+  };
+
+  return (
+    <table className="card-table table is-hoverable is-fullwidth is-word-break">
+      <thead>
+        <tr>
+          <th>{t("tags.table.tags")}</th>
+        </tr>
+      </thead>
+      <tbody>{renderRow()}</tbody>
+    </table>
+  );
+};
+
+export default TagTable;

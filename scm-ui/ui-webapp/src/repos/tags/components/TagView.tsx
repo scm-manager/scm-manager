@@ -22,11 +22,33 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import React, { FC } from "react";
+import { Repository, Tag } from "@scm-manager/ui-types";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import TagDetail from "./TagDetail";
 
-export type Tag = {
-  name: string;
-  revision: string;
-  date: Date;
-  _links: Links;
+type Props = {
+  repository: Repository;
+  tag?: Tag;
 };
+
+const TagView: FC<Props> = ({ repository, tag }) => {
+  return (
+    <div>
+      <TagDetail tag={tag} />
+      <hr />
+      <div className="content">
+        <ExtensionPoint
+          name="repos.tag-details.information"
+          renderAll={true}
+          props={{
+            repository,
+            tag
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default TagView;

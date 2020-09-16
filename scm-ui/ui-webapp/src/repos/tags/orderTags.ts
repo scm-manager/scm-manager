@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+// sort tags by date beginning with latest first
+import { Tag } from "@scm-manager/ui-types";
 
-export type Tag = {
-  name: string;
-  revision: string;
-  date: Date;
-  _links: Links;
-};
+export default function orderTags(tags: Tag[]) {
+  tags.sort((a, b) => {
+   return new Date(b.date) - new Date(a.date);
+  });
+}

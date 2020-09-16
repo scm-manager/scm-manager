@@ -22,11 +22,31 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import orderTags from "./orderTags";
 
-export type Tag = {
-  name: string;
-  revision: string;
-  date: Date;
-  _links: Links;
+const tag1 = {
+  name: "tag1",
+  revision: "revision1",
+  date: new Date(2020, 1, 1),
+  _links: {}
 };
+const tag2 = {
+  name: "tag2",
+  revision: "revision2",
+  date: new Date(2020, 1, 3),
+  _links: {}
+};
+const tag3 = {
+  name: "tag3",
+  revision: "revision3",
+  date: new Date(2020, 1, 2),
+  _links: {}
+};
+
+describe("order tags", () => {
+  it("should order tags descending by date", () => {
+    const tags = [tag1, tag2, tag3];
+    orderTags(tags);
+    expect(tags).toEqual([tag2, tag3, tag1]);
+  });
+});

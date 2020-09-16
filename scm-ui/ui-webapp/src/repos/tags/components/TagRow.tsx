@@ -22,11 +22,39 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { Tag } from "@scm-manager/ui-types";
+import styled from "styled-components";
+import { DateFromNow } from "@scm-manager/ui-components";
 
-export type Tag = {
-  name: string;
-  revision: string;
-  date: Date;
-  _links: Links;
+type Props = {
+  tag: Tag;
+  baseUrl: string;
 };
+
+const Created = styled.span`
+  margin-left: 1rem;
+  font-size: 0.8rem;
+`;
+
+const TagRow: FC<Props> = ({ tag, baseUrl }) => {
+  const [t] = useTranslation("repos");
+
+  const to = `${baseUrl}/${encodeURIComponent(tag.name)}/info`;
+  return (
+    <tr>
+      <td>
+        <Link to={to} title={tag.name}>
+          {tag.name}
+          <Created className="has-text-grey is-ellipsis-overflow">
+            {t("tags.overview.created")} <DateFromNow date={tag.date} />
+          </Created>
+        </Link>
+      </td>
+    </tr>
+  );
+};
+
+export default TagRow;

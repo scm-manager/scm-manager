@@ -22,11 +22,28 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { Tag } from "@scm-manager/ui-types";
 
-export type Tag = {
-  name: string;
-  revision: string;
-  date: Date;
-  _links: Links;
+type Props = {
+  tag?: Tag;
 };
+
+const TagDetail: FC<Props> = ({ tag }) => {
+  const [t] = useTranslation("repos");
+
+  if (!tag) {
+    return null;
+  }
+
+  return (
+    <div className="media">
+      <div className="media-content subtitle">
+        <strong>{t("tag.name")}</strong> {tag?.name}
+      </div>
+    </div>
+  );
+};
+
+export default TagDetail;
