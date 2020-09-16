@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add support for pr merge with prior rebase ([#1332](https://github.com/scm-manager/scm-manager/pull/1332))
 
+### Fixed
+- Missing synchronization during repository creation ([#1328](https://github.com/scm-manager/scm-manager/pull/1328))
+
 ## [2.5.0] - 2020-09-10
 ### Added
 - Tags now have date information attached ([#1305](https://github.com/scm-manager/scm-manager/pull/1305))
