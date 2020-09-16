@@ -57,12 +57,12 @@ public abstract class BranchToBranchDtoMapper extends HalAppenderMapper {
   private RepositoryServiceFactory serviceFactory;
 
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
-  public abstract BranchDto map(Branch branch, @Context NamespaceAndName namespaceAndName);
+  public abstract BranchDto map(Branch branch, @Context NamespaceAndName namespaceAndName, boolean fullInformation);
 
   abstract PersonDto map(Person person);
 
   @ObjectFactory
-  BranchDto createDto(@Context NamespaceAndName namespaceAndName, Branch branch) {
+  BranchDto createDto(@Context NamespaceAndName namespaceAndName, Branch branch, boolean fullInformation) {
     Links.Builder linksBuilder = linkingTo()
       .self(resourceLinks.branch().self(namespaceAndName, branch.getName()))
       .single(linkBuilder("history", resourceLinks.branch().history(namespaceAndName, branch.getName())).build())
@@ -73,16 +73,18 @@ public abstract class BranchToBranchDtoMapper extends HalAppenderMapper {
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), branch, namespaceAndName);
     BranchDto branchDto = new BranchDto(linksBuilder.build(), embeddedBuilder.build());
 
-    try (RepositoryService service = serviceFactory.create(namespaceAndName)) {
-      Changeset latestChangeset = service.getLogCommand().setBranch(branch.getName()).getChangesets().getChangesets().get(0);
-      branchDto.setLastModified(Instant.ofEpochMilli(latestChangeset.getDate()));
-      branchDto.setLastModifier(map(latestChangeset.getAuthor()));
-    } catch (IOException e) {
-      throw new InternalRepositoryException(
-        ContextEntry.ContextBuilder.entity(Branch.class, branch.getName()),
-        "Could not read latest changeset for branch",
-        e
-      );
+    if (fullInformation) {
+      try (RepositoryService service = serviceFactory.create(namespaceAndName)) {
+        Changeset latestChangeset = service.getLogCommand().setBranch(branch.getName()).getChangesets().getChangesets().get(0);
+        branchDto.setLastModified(Instant.ofEpochMilli(latestChangeset.getDate()));
+        branchDto.setLastModifier(map(latestChangeset.getAuthor()));
+      } catch (IOException e) {
+        throw new InternalRepositoryException(
+          ContextEntry.ContextBuilder.entity(Branch.class, branch.getName()),
+          "Could not read latest changeset for branch",
+          e
+        );
+      }
     }
 
     return branchDto;

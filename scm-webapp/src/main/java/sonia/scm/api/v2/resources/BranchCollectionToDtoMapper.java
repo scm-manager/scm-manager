@@ -52,14 +52,14 @@ public class BranchCollectionToDtoMapper {
     this.branchToDtoMapper = branchToDtoMapper;
   }
 
-  public HalRepresentation map(Repository repository, Collection<Branch> branches) {
+  public HalRepresentation map(Repository repository, Collection<Branch> branches, boolean fullInformation) {
     return new HalRepresentation(
       createLinks(repository),
-      embedDtos(getBranchDtoList(repository.getNamespace(), repository.getName(), branches)));
+      embedDtos(getBranchDtoList(repository.getNamespace(), repository.getName(), branches, fullInformation)));
   }
 
-  public List<BranchDto> getBranchDtoList(String namespace, String name, Collection<Branch> branches) {
-    return branches.stream().map(branch -> branchToDtoMapper.map(branch, new NamespaceAndName(namespace, name))).collect(toList());
+  public List<BranchDto> getBranchDtoList(String namespace, String name, Collection<Branch> branches, boolean fullInformation) {
+    return branches.stream().map(branch -> branchToDtoMapper.map(branch, new NamespaceAndName(namespace, name), fullInformation)).collect(toList());
   }
 
   private Links createLinks(Repository repository) {

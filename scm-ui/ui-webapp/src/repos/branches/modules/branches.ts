@@ -24,7 +24,7 @@
 
 import { FAILURE_SUFFIX, PENDING_SUFFIX, RESET_SUFFIX, SUCCESS_SUFFIX } from "../../../modules/types";
 import { apiClient } from "@scm-manager/ui-components";
-import { Action, Branch, BranchRequest, Repository } from "@scm-manager/ui-types";
+import { Action, Branch, BranchRequest, Repository, Link } from "@scm-manager/ui-types";
 import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";
 
@@ -50,7 +50,7 @@ const CONTENT_TYPE_BRANCH_REQUEST = "application/vnd.scmm-branchRequest+json;v=2
 
 // Fetching branches
 
-export function fetchBranches(repository: Repository) {
+export function fetchBranches(repository: Repository, fullInformation: boolean) {
   if (!repository._links.branches) {
     return {
       type: FETCH_BRANCHES_SUCCESS,
@@ -64,8 +64,12 @@ export function fetchBranches(repository: Repository) {
 
   return function(dispatch: any) {
     dispatch(fetchBranchesPending(repository));
+    let link = (repository._links.branches as Link).href;
+    if (fullInformation) {
+      link += "?fullInformation=true";
+    }
     return apiClient
-      .get(repository._links.branches.href)
+      .get(link)
       .then(response => response.json())
       .then(data => {
         dispatch(fetchBranchesSuccess(data, repository));
@@ -77,7 +81,7 @@ export function fetchBranches(repository: Repository) {
 }
 
 export function fetchBranch(repository: Repository, name: string) {
-  let link = repository._links.branches.href;
+  let link = (repository._links.branches as Link).href;
   if (!link.endsWith("/")) {
     link += "/";
   }
@@ -125,8 +129,8 @@ export function createBranch(
 
 // Selectors
 
-function collectBranches(repoState) {
-  return repoState.list._embedded.branches.map(name => repoState.byName[name]);
+function collectBranches(repoState: any) {
+  return repoState.list._embedded.branches.map((name: string) => repoState.byName[name]);
 }
 
 const memoizedBranchCollector = memoizeOne(collectBranches);

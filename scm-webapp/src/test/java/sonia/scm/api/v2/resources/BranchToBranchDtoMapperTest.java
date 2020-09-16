@@ -79,8 +79,10 @@ class BranchToBranchDtoMapperTest {
 
     Branch branch = Branch.normalBranch("master", "42");
 
-    BranchDto dto = mapper.map(branch, new NamespaceAndName("hitchhiker", "heart-of-gold"));
+    BranchDto dto = mapper.map(branch, new NamespaceAndName("hitchhiker", "heart-of-gold"), false);
     assertThat(dto.getLinks().getLinkBy("ka").get().getHref()).isEqualTo("http://hitchhiker/heart-of-gold/master");
+    assertThat(dto.getLastModified()).isNull();
+    assertThat(dto.getLastModifier()).isNull();
   }
 
   @Test
@@ -94,7 +96,7 @@ class BranchToBranchDtoMapperTest {
     when(logCommandBuilder.getChangesets()).thenReturn(new ChangesetPagingResult(1, ImmutableList.of(changeset)));
     Branch branch = Branch.normalBranch("master", "42");
 
-    BranchDto dto = mapper.map(branch, new NamespaceAndName("hitchhiker", "heart-of-gold"));
+    BranchDto dto = mapper.map(branch, new NamespaceAndName("hitchhiker", "heart-of-gold"), true);
 
     assertThat(dto.getLastModified()).isEqualTo(Instant.ofEpochMilli(creationTime));
     assertThat(dto.getLastModifier().getName()).isEqualTo(PersonTestData.ZAPHOD.getName());

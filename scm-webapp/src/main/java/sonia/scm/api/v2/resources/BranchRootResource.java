@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.common.base.Strings;
@@ -120,7 +120,12 @@ public class BranchRootResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("branch") String branchName) throws IOException {
+  public Response get(
+    @PathParam("namespace") String namespace,
+    @PathParam("name") String name,
+    @PathParam("branch") String branchName,
+    @QueryParam("fullInformation") @DefaultValue("false") boolean fullInformation
+  ) throws IOException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       Branches branches = repositoryService.getBranchesCommand().getBranches();
@@ -128,7 +133,7 @@ public class BranchRootResource {
         .stream()
         .filter(branch -> branchName.equals(branch.getName()))
         .findFirst()
-        .map(branch -> branchToDtoMapper.map(branch, namespaceAndName))
+        .map(branch -> branchToDtoMapper.map(branch, namespaceAndName, fullInformation))
         .map(Response::ok)
         .orElseThrow(() -> notFound(entity("branch", branchName).in(namespaceAndName)))
         .build();
@@ -293,10 +298,14 @@ public class BranchRootResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws IOException {
+  public Response getAll(
+    @PathParam("namespace") String namespace,
+    @PathParam("name") String name,
+    @QueryParam("fullInformation") @DefaultValue("false") boolean fullInformation
+  ) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Branches branches = repositoryService.getBranchesCommand().getBranches();
-      return Response.ok(branchCollectionToDtoMapper.map(repositoryService.getRepository(), branches.getBranches())).build();
+      return Response.ok(branchCollectionToDtoMapper.map(repositoryService.getRepository(), branches.getBranches(), fullInformation)).build();
     } catch (CommandNotSupportedException ex) {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }

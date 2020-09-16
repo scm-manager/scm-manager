@@ -117,7 +117,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchBranches: (repository: Repository) => {
-      dispatch(fetchBranches(repository));
+      dispatch(fetchBranches(repository, true));
     }
   };
 };
