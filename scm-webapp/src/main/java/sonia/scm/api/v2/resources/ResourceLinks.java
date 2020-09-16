@@ -916,4 +916,40 @@ class ResourceLinks {
       return namespaceLinkBuilder.method("getNamespaceResource").parameters().method("get").parameters(namespace).href();
     }
   }
+
+  public NamespacePermissionLinks namespacePermission() {
+    return new NamespacePermissionLinks(scmPathInfoStore.get());
+  }
+
+  static class NamespacePermissionLinks {
+    private final LinkBuilder permissionLinkBuilder;
+
+    NamespacePermissionLinks(ScmPathInfo pathInfo) {
+      permissionLinkBuilder = new LinkBuilder(pathInfo, NamespaceRootResource.class, NamespaceResource.class, NamespacePermissionResource.class);
+    }
+
+    String all(String namespace) {
+      return permissionLinkBuilder.method("getNamespaceResource").parameters(namespace).method("permissions").parameters().method("getAll").parameters().href();
+    }
+
+    String create(String namespace) {
+      return permissionLinkBuilder.method("getNamespaceResource").parameters(namespace).method("permissions").parameters().method("create").parameters().href();
+    }
+
+    String self(String namespace, String permissionName) {
+      return getLink(namespace, permissionName, "get");
+    }
+
+    String update(String namespace, String permissionName) {
+      return getLink(namespace, permissionName, "update");
+    }
+
+    String delete(String namespace, String permissionName) {
+      return getLink(namespace, permissionName, "delete");
+    }
+
+    private String getLink(String namespace, String permissionName, String methodName) {
+      return permissionLinkBuilder.method("getNamespaceResource").parameters(namespace).method("permissions").parameters().method(methodName).parameters(permissionName).href();
+    }
+  }
 }
