@@ -8,6 +8,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Tags overview for repository [#1331](https://github.com/scm-manager/scm-manager/pull/1331)
 
+### Fixed
+- Missing synchronization during repository creation ([#1328](https://github.com/scm-manager/scm-manager/pull/1328))
+
 ## [2.5.0] - 2020-09-10
 ### Added
 - Tags now have date information attached ([#1305](https://github.com/scm-manager/scm-manager/pull/1305))

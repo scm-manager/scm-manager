@@ -48,7 +48,7 @@ final class TypedStoreContext<T> {
       JAXBContext jaxbContext = JAXBContext.newInstance(parameters.getType());
       return new TypedStoreContext<>(jaxbContext, parameters);
     } catch (JAXBException e) {
-      throw new StoreException("failed to create context for store");
+      throw new StoreException("failed to create context for store", e);
     }
   }
 

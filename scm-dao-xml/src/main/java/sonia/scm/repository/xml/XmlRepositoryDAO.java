@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.xml;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -83,29 +83,27 @@ public class XmlRepositoryDAO implements RepositoryDAO {
   }
 
   @Override
-  public void add(Repository repository) {
+  public synchronized void add(Repository repository) {
     add(repository, repositoryLocationResolver.create(repository.getId()));
   }
 
-  public void add(Repository repository, Object location) {
+  public synchronized void add(Repository repository, Object location) {
     if (!(location instanceof Path)) {
       throw new IllegalArgumentException("can only handle locations of type " + Path.class.getName() + ", not of type " + location.getClass().getName());
     }
+    Path repositoryPath = (Path) location;
+
     Repository clone = repository.clone();
 
-    synchronized (this) {
-      Path repositoryPath = (Path) location;
-
-      try {
-        metadataStore.write(repositoryPath, repository);
-      } catch (Exception e) {
-        repositoryLocationResolver.remove(repository.getId());
-        throw new InternalRepositoryException(repository, "failed to create filesystem", e);
-      }
-
-      byId.put(repository.getId(), clone);
-      byNamespaceAndName.put(repository.getNamespaceAndName(), clone);
+    try {
+      metadataStore.write(repositoryPath, repository);
+    } catch (Exception e) {
+      repositoryLocationResolver.remove(repository.getId());
+      throw new InternalRepositoryException(repository, "failed to create filesystem", e);
     }
+
+    byId.put(repository.getId(), clone);
+    byNamespaceAndName.put(repository.getNamespaceAndName(), clone);
   }
 
   @Override
