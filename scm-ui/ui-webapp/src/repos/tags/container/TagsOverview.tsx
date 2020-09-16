@@ -54,7 +54,7 @@ const TagsOverview: FC<Props> = ({ repository, baseUrl }) => {
   }, [repository]);
 
   const renderTagsTable = () => {
-    if (!loading && tags && tags.length > 0) {
+    if (!loading && tags?.length > 0) {
      orderTags(tags);
       return <TagTable baseUrl={baseUrl} tags={tags} />;
     }

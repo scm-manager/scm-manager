@@ -34,7 +34,7 @@ type Props = {
 
 const TagView: FC<Props> = ({ repository, tag }) => {
   return (
-    <div>
+    <>
       <TagDetail tag={tag} repository={repository} />
       <hr />
       <div className="content">
@@ -47,7 +47,7 @@ const TagView: FC<Props> = ({ repository, tag }) => {
           }}
         />
       </div>
-    </div>
+    </>
   );
 };
 

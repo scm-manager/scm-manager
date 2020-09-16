@@ -54,8 +54,8 @@ const TagRoot: FC<Props> = ({ repository, baseUrl }) => {
   }, [repository]);
 
   useEffect(() => {
-    const tagName = match?.params?.tag;
-    const link = tags && tags.length > 0 && (tags.find(tag => tag.name === tagName)?._links.self as Link).href;
+    const tagName = decodeURIComponent(match?.params?.tag);
+    const link = tags?.length > 0 && (tags.find(tag => tag.name === tagName)?._links.self as Link).href;
     if (link) {
       apiClient
         .get(link)

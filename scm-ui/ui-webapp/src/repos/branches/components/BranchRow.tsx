@@ -49,10 +49,12 @@ const BranchRow: FC<Props> = ({ baseUrl, branch }) => {
         <Link to={to} title={branch.name}>
           {branch.name}
           <DefaultBranchTag defaultBranch={branch.defaultBranch} />
-          <Modified className="has-text-grey is-ellipsis-overflow">
-            {t("branches.overview.lastModified")} <DateFromNow date={branch.lastModified} />{" "}
-            {t("branches.overview.lastModifier")} {branch.lastModifier?.name}
-          </Modified>
+          {branch?.lastModified && branch.lastModifier && (
+            <Modified className="has-text-grey is-ellipsis-overflow">
+              {t("branches.overview.lastModified")} <DateFromNow date={branch.lastModified} />{" "}
+              {t("branches.overview.lastModifier")} {branch.lastModifier?.name}
+            </Modified>
+          )}
         </Link>
       </td>
     </tr>

@@ -129,8 +129,8 @@ export function createBranch(
 
 // Selectors
 
-function collectBranches(repoState: any) {
-  return repoState.list._embedded.branches.map((name: string) => repoState.byName[name]);
+function collectBranches(repoState) {
+  return repoState.list._embedded.branches.map(name => repoState.byName[name]);
 }
 
 const memoizedBranchCollector = memoizeOne(collectBranches);

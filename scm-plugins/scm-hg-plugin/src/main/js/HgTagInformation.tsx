@@ -41,7 +41,7 @@ const HgTagInformation: FC<Props> = ({ tag }) => {
     <>
       <h4>{t("scm-hg-plugin.information.checkoutTag")}</h4>
       <pre>
-        <code>hg update {tag?.name}</code>
+        <code>hg update {tag.name}</code>
       </pre>
     </>
   );
