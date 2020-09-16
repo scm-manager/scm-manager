@@ -24,13 +24,25 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Tag } from "@scm-manager/ui-types";
+import { Repository, Tag } from "@scm-manager/ui-types";
+import { DateFromNow } from "@scm-manager/ui-components";
+import styled from "styled-components";
+import TagButtonGroup from "./TagButtonGroup";
 
 type Props = {
+  repository: Repository;
   tag?: Tag;
 };
 
-const TagDetail: FC<Props> = ({ tag }) => {
+const Created = styled.div`
+  margin-top: 0.5rem;
+`;
+
+const Date = styled(DateFromNow)`
+font-size: 1rem;
+`;
+
+const TagDetail: FC<Props> = ({ tag, repository }) => {
   const [t] = useTranslation("repos");
 
   if (!tag) {
@@ -40,7 +52,13 @@ const TagDetail: FC<Props> = ({ tag }) => {
   return (
     <div className="media">
       <div className="media-content subtitle">
-        <strong>{t("tag.name")}</strong> {tag?.name}
+        <strong>{t("tag.name") + ":"}</strong> {tag?.name}
+        <Created className="is-ellipsis-overflow">
+          <strong>{t("tags.overview.created") + ":"}</strong> <Date date={tag.date} className="has-text-grey" />
+        </Created>
+      </div>
+      <div className="media-right">
+        <TagButtonGroup repository={repository} tag={tag} />
       </div>
     </div>
   );

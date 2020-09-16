@@ -23,32 +23,30 @@
  */
 
 import React, { FC } from "react";
-import { Repository, Tag } from "@scm-manager/ui-types";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import TagDetail from "./TagDetail";
+import { Tag } from "@scm-manager/ui-types";
+import { useTranslation } from "react-i18next";
 
 type Props = {
-  repository: Repository;
-  tag?: Tag;
+  tag: Tag;
 };
 
-const TagView: FC<Props> = ({ repository, tag }) => {
+const GitTagInformation: FC<Props> = ({ tag }) => {
+  const [t] = useTranslation("plugins");
+
+  if (!tag) {
+    return null;
+  }
+
   return (
-    <div>
-      <TagDetail tag={tag} repository={repository} />
-      <hr />
-      <div className="content">
-        <ExtensionPoint
-          name="repos.tag-details.information"
-          renderAll={true}
-          props={{
-            repository,
-            tag
-          }}
-        />
-      </div>
-    </div>
+    <>
+      <h4>{t("scm-git-plugin.information.checkoutTag")}</h4>
+      <pre>
+        <code>
+          git checkout tags/{tag?.name} -b branch/{tag?.name}
+        </code>
+      </pre>
+    </>
   );
 };
 
-export default TagView;
+export default GitTagInformation;

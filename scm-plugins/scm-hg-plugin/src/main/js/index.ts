@@ -28,6 +28,7 @@ import HgAvatar from "./HgAvatar";
 import { ConfigurationBinder as cfgBinder } from "@scm-manager/ui-components";
 import HgGlobalConfiguration from "./HgGlobalConfiguration";
 import HgBranchInformation from "./HgBranchInformation";
+import HgTagInformation from "./HgTagInformation";
 
 const hgPredicate = (props: any) => {
   return props.repository && props.repository.type === "hg";
@@ -35,6 +36,7 @@ const hgPredicate = (props: any) => {
 
 binder.bind("repos.repository-details.information", ProtocolInformation, hgPredicate);
 binder.bind("repos.branch-details.information", HgBranchInformation, hgPredicate);
+binder.bind("repos.tag-details.information", HgTagInformation, hgPredicate);
 binder.bind("repos.repository-avatar", HgAvatar, hgPredicate);
 
 // bind global configuration

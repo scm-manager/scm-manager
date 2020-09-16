@@ -23,32 +23,31 @@
  */
 
 import React, { FC } from "react";
-import { Repository, Tag } from "@scm-manager/ui-types";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import TagDetail from "./TagDetail";
+import { Tag, Repository } from "@scm-manager/ui-types";
+import { Button, ButtonAddons } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   repository: Repository;
-  tag?: Tag;
+  tag: Tag;
 };
 
-const TagView: FC<Props> = ({ repository, tag }) => {
+const TagButtonGroup: FC<Props> = ({ repository, tag }) => {
+  const [t] = useTranslation("repos");
+
+  const changesetLink = `/repo/${repository.namespace}/${repository.name}/code/changeset/${encodeURIComponent(
+    tag.revision
+  )}`;
+  const sourcesLink = `/repo/${repository.namespace}/${repository.name}/sources/${encodeURIComponent(tag.revision)}/`;
+
   return (
-    <div>
-      <TagDetail tag={tag} repository={repository} />
-      <hr />
-      <div className="content">
-        <ExtensionPoint
-          name="repos.tag-details.information"
-          renderAll={true}
-          props={{
-            repository,
-            tag
-          }}
-        />
-      </div>
-    </div>
+    <>
+      <ButtonAddons>
+        <Button link={changesetLink} icon="exchange-alt" label={t("tag.commit")} reducedMobile={true} />
+        <Button link={sourcesLink} icon="code" label={t("tag.sources")} reducedMobile={true} />
+      </ButtonAddons>
+    </>
   );
 };
 
-export default TagView;
+export default TagButtonGroup;

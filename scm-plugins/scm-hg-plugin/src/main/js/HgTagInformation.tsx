@@ -23,32 +23,28 @@
  */
 
 import React, { FC } from "react";
-import { Repository, Tag } from "@scm-manager/ui-types";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import TagDetail from "./TagDetail";
+import { useTranslation } from "react-i18next";
+import { Tag } from "@scm-manager/ui-types";
 
 type Props = {
-  repository: Repository;
   tag?: Tag;
 };
 
-const TagView: FC<Props> = ({ repository, tag }) => {
+const HgTagInformation: FC<Props> = ({ tag }) => {
+  const [t] = useTranslation("plugins");
+
+  if (!tag) {
+    return null;
+  }
+
   return (
-    <div>
-      <TagDetail tag={tag} repository={repository} />
-      <hr />
-      <div className="content">
-        <ExtensionPoint
-          name="repos.tag-details.information"
-          renderAll={true}
-          props={{
-            repository,
-            tag
-          }}
-        />
-      </div>
-    </div>
+    <>
+      <h4>{t("scm-hg-plugin.information.checkoutTag")}</h4>
+      <pre>
+        <code>hg update {tag?.name}</code>
+      </pre>
+    </>
   );
 };
 
-export default TagView;
+export default HgTagInformation;

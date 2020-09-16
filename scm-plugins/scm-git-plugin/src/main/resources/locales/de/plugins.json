@@ -6,6 +6,7 @@
       "replace": "Ein bestehendes Repository aktualisieren",
       "fetch": "Remote-Änderungen herunterladen",
       "checkout": "Branch wechseln",
+      "checkoutTag": "Tag als neuen Branch auschecken",
       "merge": {
         "heading": "Merge des Source Branch in den Target Branch",
         "checkout": "1. Sicherstellen, dass der Workspace aufgeräumt ist und der Target Branch ausgecheckt wurde.",
