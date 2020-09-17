@@ -218,7 +218,8 @@
   "renameRepo": {
     "button": "Rename Repository",
     "subtitle": "Renames this repository",
-    "description": "There will be no redirects to the renamed repository.",
+    "description1": "There will be no redirects to the renamed repository.",
+    "description2": "Permissions from the namespace will not be adapted when the namespace is changed.",
     "modal": {
       "title": "Rename repository",
       "label": {

@@ -24,6 +24,8 @@ Icon             |  Description
 ![Repository Sources](assets/repository-overview-sources.png) | Opens the sources overview for the repository
 ![Repository Settings](assets/repository-overview-settings.png) | Opens the settings for the repository
 
+Clicking the icon on the right-hand side of each namespace caption, you can change additional settings for this namespace. 
+
 ### Create a Repository
 In  SCM-Manager new Git, Mercurial & Subversion (SVN) repositories can be created via a form that can be accessed via the "Create Repository" button. A valid name and the repository type are mandatory.
 
