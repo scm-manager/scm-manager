@@ -123,8 +123,7 @@ public class BranchRootResource {
   public Response get(
     @PathParam("namespace") String namespace,
     @PathParam("name") String name,
-    @PathParam("branch") String branchName,
-    @QueryParam("fullInformation") @DefaultValue("false") boolean fullInformation
+    @PathParam("branch") String branchName
   ) throws IOException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {

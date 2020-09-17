@@ -52,9 +52,7 @@
     "overview": {
       "title": "Übersicht aller verfügbaren Branches",
       "noBranches": "Keine Branches gefunden.",
-      "createButton": "Branch erstellen",
-      "lastModifier": "von",
-      "lastModified": "Aktualisiert"
+      "createButton": "Branch erstellen"
     },
     "table": {
       "branches": "Branches"

@@ -52,9 +52,7 @@
     "overview": {
       "title": "Overview of all branches",
       "noBranches": "No branches found.",
-      "createButton": "Create Branch",
-      "lastModifier": "by",
-      "lastModified": "Updated"
+      "createButton": "Create Branch"
     },
     "table": {
       "branches": "Branches"
