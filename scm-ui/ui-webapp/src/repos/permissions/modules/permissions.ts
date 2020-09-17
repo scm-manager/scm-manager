@@ -131,7 +131,7 @@ export function fetchAvailableFailure(error: Error): Action {
 
 // fetch permissions
 
-export function fetchPermissions(link: string, namespace: string, repoName: string) {
+export function fetchPermissions(link: string, namespace: string, repoName?: string) {
   return function(dispatch: any) {
     dispatch(fetchPermissionsPending(namespace, repoName));
     return apiClient
@@ -146,26 +146,26 @@ export function fetchPermissions(link: string, namespace: string, repoName: stri
   };
 }
 
-export function fetchPermissionsPending(namespace: string, repoName: string): Action {
+export function fetchPermissionsPending(namespace: string, repoName?: string): Action {
   return {
     type: FETCH_PERMISSIONS_PENDING,
     payload: {
       namespace,
       repoName
     },
-    itemId: namespace + "/" + repoName
+    itemId: createPermissionStateKey(namespace, repoName)
   };
 }
 
-export function fetchPermissionsSuccess(permissions: any, namespace: string, repoName: string): Action {
+export function fetchPermissionsSuccess(permissions: any, namespace: string, repoName?: string): Action {
   return {
     type: FETCH_PERMISSIONS_SUCCESS,
     payload: permissions,
-    itemId: namespace + "/" + repoName
+    itemId: createPermissionStateKey(namespace, repoName)
   };
 }
 
-export function fetchPermissionsFailure(namespace: string, repoName: string, error: Error): Action {
+export function fetchPermissionsFailure(namespace: string, repoName?: string, error: Error): Action {
   return {
     type: FETCH_PERMISSIONS_FAILURE,
     payload: {
@@ -173,13 +173,13 @@ export function fetchPermissionsFailure(namespace: string, repoName: string, err
       repoName,
       error
     },
-    itemId: namespace + "/" + repoName
+    itemId: createPermissionStateKey(namespace, repoName)
   };
 }
 
 // modify permission
 
-export function modifyPermission(permission: Permission, namespace: string, repoName: string, callback?: () => void) {
+export function modifyPermission(permission: Permission, namespace: string, repoName?: string, callback?: () => void) {
   return function(dispatch: any) {
     dispatch(modifyPermissionPending(permission, namespace, repoName));
     return apiClient
@@ -196,7 +196,7 @@ export function modifyPermission(permission: Permission, namespace: string, repo
   };
 }
 
-export function modifyPermissionPending(permission: Permission, namespace: string, repoName: string): Action {
+export function modifyPermissionPending(permission: Permission, namespace: string, repoName?: string): Action {
   return {
     type: MODIFY_PERMISSION_PENDING,
     payload: permission,
@@ -204,12 +204,12 @@ export function modifyPermissionPending(permission: Permission, namespace: strin
   };
 }
 
-export function modifyPermissionSuccess(permission: Permission, namespace: string, repoName: string): Action {
+export function modifyPermissionSuccess(permission: Permission, namespace: string, repoName?: string): Action {
   return {
     type: MODIFY_PERMISSION_SUCCESS,
     payload: {
       permission,
-      position: namespace + "/" + repoName
+      position: createPermissionStateKey(namespace, repoName)
     },
     itemId: createItemId(permission, namespace, repoName)
   };
@@ -219,7 +219,7 @@ export function modifyPermissionFailure(
   permission: Permission,
   error: Error,
   namespace: string,
-  repoName: string
+  repoName?: string
 ): Action {
   return {
     type: MODIFY_PERMISSION_FAILURE,
@@ -240,14 +240,14 @@ function newPermissions(oldPermissions: PermissionCollection, newPermission: Per
   }
 }
 
-export function modifyPermissionReset(namespace: string, repoName: string) {
+export function modifyPermissionReset(namespace: string, repoName?: string) {
   return {
     type: MODIFY_PERMISSION_RESET,
     payload: {
       namespace,
       repoName
     },
-    itemId: namespace + "/" + repoName
+    itemId: createPermissionStateKey(namespace, repoName)
   };
 }
 
@@ -256,7 +256,7 @@ export function createPermission(
   link: string,
   permission: PermissionCreateEntry,
   namespace: string,
-  repoName: string,
+  repoName?: string,
   callback?: () => void
 ) {
   return function(dispatch: Dispatch) {
@@ -281,48 +281,48 @@ export function createPermission(
 export function createPermissionPending(
   permission: PermissionCreateEntry,
   namespace: string,
-  repoName: string
+  repoName?: string
 ): Action {
   return {
     type: CREATE_PERMISSION_PENDING,
     payload: permission,
-    itemId: namespace + "/" + repoName
+    itemId: createPermissionStateKey(namespace, repoName)
   };
 }
 
 export function createPermissionSuccess(
   permission: PermissionCreateEntry,
   namespace: string,
-  repoName: string
+  repoName?: string
 ): Action {
   return {
     type: CREATE_PERMISSION_SUCCESS,
     payload: {
       permission,
-      position: namespace + "/" + repoName
+      position: createPermissionStateKey(namespace, repoName)
     },
-    itemId: namespace + "/" + repoName
+    itemId: createPermissionStateKey(namespace, repoName)
   };
 }
 
-export function createPermissionFailure(error: Error, namespace: string, repoName: string): Action {
+export function createPermissionFailure(error: Error, namespace: string, repoName?: string): Action {
   return {
     type: CREATE_PERMISSION_FAILURE,
     payload: error,
-    itemId: namespace + "/" + repoName
+    itemId: createPermissionStateKey(namespace, repoName)
   };
 }
 
-export function createPermissionReset(namespace: string, repoName: string) {
+export function createPermissionReset(namespace: string, repoName?: string) {
   return {
     type: CREATE_PERMISSION_RESET,
-    itemId: namespace + "/" + repoName
+    itemId: createPermissionStateKey(namespace, repoName)
   };
 }
 
 // delete permission
 
-export function deletePermission(permission: Permission, namespace: string, repoName: string, callback?: () => void) {
+export function deletePermission(permission: Permission, namespace: string, repoName?: string, callback?: () => void) {
   return function(dispatch: any) {
     dispatch(deletePermissionPending(permission, namespace, repoName));
     return apiClient
@@ -339,7 +339,7 @@ export function deletePermission(permission: Permission, namespace: string, repo
   };
 }
 
-export function deletePermissionPending(permission: Permission, namespace: string, repoName: string): Action {
+export function deletePermissionPending(permission: Permission, namespace: string, repoName?: string): Action {
   return {
     type: DELETE_PERMISSION_PENDING,
     payload: permission,
@@ -347,12 +347,12 @@ export function deletePermissionPending(permission: Permission, namespace: strin
   };
 }
 
-export function deletePermissionSuccess(permission: Permission, namespace: string, repoName: string): Action {
+export function deletePermissionSuccess(permission: Permission, namespace: string, repoName?: string): Action {
   return {
     type: DELETE_PERMISSION_SUCCESS,
     payload: {
       permission,
-      position: namespace + "/" + repoName
+      position: createPermissionStateKey(namespace, repoName)
     },
     itemId: createItemId(permission, namespace, repoName)
   };
@@ -361,7 +361,7 @@ export function deletePermissionSuccess(permission: Permission, namespace: strin
 export function deletePermissionFailure(
   permission: Permission,
   namespace: string,
-  repoName: string,
+  repoName?: string,
   error: Error
 ): Action {
   return {
@@ -374,14 +374,14 @@ export function deletePermissionFailure(
   };
 }
 
-export function deletePermissionReset(namespace: string, repoName: string) {
+export function deletePermissionReset(namespace: string, repoName?: string) {
   return {
     type: DELETE_PERMISSION_RESET,
     payload: {
       namespace,
       repoName
     },
-    itemId: namespace + "/" + repoName
+    itemId: createPermissionStateKey(namespace, repoName)
   };
 }
 
@@ -398,9 +398,9 @@ function deletePermissionFromState(oldPermissions: PermissionCollection, permiss
   return newPermission;
 }
 
-function createItemId(permission: Permission, namespace: string, repoName: string) {
+function createItemId(permission: Permission, namespace: string, repoName?: string) {
   const groupPermission = permission.groupPermission ? "@" : "";
-  return namespace + "/" + repoName + "/" + groupPermission + permission.name;
+  return createPermissionStateKey(namespace, repoName) + "/" + groupPermission + permission.name;
 }
 
 // reducer
@@ -427,7 +427,7 @@ export default function reducer(
           createPermission: !!action.payload._links.create
         }
       };
-    case MODIFY_PERMISSION_SUCCESS:
+    case MODIFY_PERMISSION_SUCCESS: {
       const positionOfPermission = action.payload.position;
       const newPermission = newPermissions(state[action.payload.position].entries, action.payload.permission);
       return {
@@ -437,7 +437,8 @@ export default function reducer(
           entries: newPermission
         }
       };
-    case CREATE_PERMISSION_SUCCESS:
+    }
+    case CREATE_PERMISSION_SUCCESS: {
       // return state;
       const position = action.payload.position;
       const permissions = state[action.payload.position].entries;
@@ -449,9 +450,10 @@ export default function reducer(
           entries: permissions
         }
       };
-    case DELETE_PERMISSION_SUCCESS:
+    }
+    case DELETE_PERMISSION_SUCCESS: {
       const permissionPosition = action.payload.position;
-      const new_Permissions = deletePermissionFromState(
+      const newPermissions = deletePermissionFromState(
         state[action.payload.position].entries,
         action.payload.permission
       );
@@ -459,9 +461,10 @@ export default function reducer(
         ...state,
         [permissionPosition]: {
           ...state[permissionPosition],
-          entries: new_Permissions
+          entries: newPermissions
         }
       };
+    }
     default:
       return state;
   }
@@ -490,9 +493,9 @@ function available(state: object) {
   return {};
 }
 
-export function getPermissionsOfRepo(state: object, namespace: string, repoName: string) {
-  if (state.permissions && state.permissions[namespace + "/" + repoName]) {
-    return state.permissions[namespace + "/" + repoName].entries;
+export function getPermissionsOfRepo(state: object, namespace: string, repoName?: string) {
+  if (state.permissions && state.permissions[createPermissionStateKey(namespace, repoName)]) {
+    return state.permissions[createPermissionStateKey(namespace, repoName)].entries;
   }
 }
 
@@ -500,52 +503,62 @@ export function isFetchAvailablePermissionsPending(state: object) {
   return isPending(state, FETCH_AVAILABLE, "available");
 }
 
-export function isFetchPermissionsPending(state: object, namespace: string, repoName: string) {
-  return isPending(state, FETCH_PERMISSIONS, namespace + "/" + repoName);
+export function isFetchPermissionsPending(state: object, namespace: string, repoName?: string) {
+  return isPending(state, FETCH_PERMISSIONS, createPermissionStateKey(namespace, repoName));
 }
 
 export function getFetchAvailablePermissionsFailure(state: object) {
   return getFailure(state, FETCH_AVAILABLE, "available");
 }
 
-export function getFetchPermissionsFailure(state: object, namespace: string, repoName: string) {
-  return getFailure(state, FETCH_PERMISSIONS, namespace + "/" + repoName);
+export function getFetchPermissionsFailure(state: object, namespace: string, repoName?: string) {
+  return getFailure(state, FETCH_PERMISSIONS, createPermissionStateKey(namespace, repoName));
 }
 
-export function isModifyPermissionPending(state: object, namespace: string, repoName: string, permission: Permission) {
-  return isPending(state, MODIFY_PERMISSION, createItemId(permission, namespace, repoName));
+export function isModifyPermissionPending(state: object, namespace: string, repoName?: string, permission: Permission) {
+  return isPending(state, MODIFY_PERMISSION, createItemId(permission, createPermissionStateKey(namespace, repoName)));
 }
 
-export function getModifyPermissionFailure(state: object, namespace: string, repoName: string, permission: Permission) {
-  return getFailure(state, MODIFY_PERMISSION, createItemId(permission, namespace, repoName));
+export function getModifyPermissionFailure(
+  state: object,
+  namespace: string,
+  repoName?: string,
+  permission: Permission
+) {
+  return getFailure(state, MODIFY_PERMISSION, createItemId(permission, createPermissionStateKey(namespace, repoName)));
 }
 
-export function hasCreatePermission(state: object, namespace: string, repoName: string) {
-  if (state.permissions && state.permissions[namespace + "/" + repoName])
-    return state.permissions[namespace + "/" + repoName].createPermission;
+export function hasCreatePermission(state: object, namespace: string, repoName?: string) {
+  if (state.permissions && state.permissions[createPermissionStateKey(namespace, repoName)])
+    return state.permissions[createPermissionStateKey(namespace, repoName)].createPermission;
   else return null;
 }
 
-export function isCreatePermissionPending(state: object, namespace: string, repoName: string) {
-  return isPending(state, CREATE_PERMISSION, namespace + "/" + repoName);
+export function isCreatePermissionPending(state: object, namespace: string, repoName?: string) {
+  return isPending(state, CREATE_PERMISSION, createPermissionStateKey(namespace, repoName));
 }
 
-export function getCreatePermissionFailure(state: object, namespace: string, repoName: string) {
-  return getFailure(state, CREATE_PERMISSION, namespace + "/" + repoName);
+export function getCreatePermissionFailure(state: object, namespace: string, repoName?: string) {
+  return getFailure(state, CREATE_PERMISSION, createPermissionStateKey(namespace, repoName));
 }
 
-export function isDeletePermissionPending(state: object, namespace: string, repoName: string, permission: Permission) {
+export function isDeletePermissionPending(state: object, namespace: string, repoName?: string, permission: Permission) {
   return isPending(state, DELETE_PERMISSION, createItemId(permission, namespace, repoName));
 }
 
-export function getDeletePermissionFailure(state: object, namespace: string, repoName: string, permission: Permission) {
+export function getDeletePermissionFailure(
+  state: object,
+  namespace: string,
+  repoName?: string,
+  permission: Permission
+) {
   return getFailure(state, DELETE_PERMISSION, createItemId(permission, namespace, repoName));
 }
 
-export function getDeletePermissionsFailure(state: object, namespace: string, repoName: string) {
+export function getDeletePermissionsFailure(state: object, namespace: string, repoName?: string) {
   const permissions =
-    state.permissions && state.permissions[namespace + "/" + repoName]
-      ? state.permissions[namespace + "/" + repoName].entries
+    state.permissions && state.permissions[createPermissionStateKey(namespace, repoName)]
+      ? state.permissions[createPermissionStateKey(namespace, repoName)].entries
       : null;
   if (permissions == null) return undefined;
   for (let i = 0; i < permissions.length; i++) {
@@ -556,10 +569,10 @@ export function getDeletePermissionsFailure(state: object, namespace: string, re
   return null;
 }
 
-export function getModifyPermissionsFailure(state: object, namespace: string, repoName: string) {
+export function getModifyPermissionsFailure(state: object, namespace: string, repoName?: string) {
   const permissions =
-    state.permissions && state.permissions[namespace + "/" + repoName]
-      ? state.permissions[namespace + "/" + repoName].entries
+    state.permissions && state.permissions[createPermissionStateKey(namespace, repoName)]
+      ? state.permissions[createPermissionStateKey(namespace, repoName)].entries
       : null;
   if (permissions == null) return undefined;
   for (let i = 0; i < permissions.length; i++) {
@@ -568,6 +581,10 @@ export function getModifyPermissionsFailure(state: object, namespace: string, re
     }
   }
   return null;
+}
+
+function createPermissionStateKey(namespace: string, repoName?: string) {
+  return namespace + (repoName ? "/" + repoName : "");
 }
 
 export function findVerbsForRole(availableRepositoryRoles: RepositoryRole[], roleName: string) {

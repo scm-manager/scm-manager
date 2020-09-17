@@ -25,7 +25,7 @@
 import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../modules/types";
 import {
-  Action,
+  Action, Namespace,
   NamespaceCollection,
   Repository,
   RepositoryCollection,
@@ -65,6 +65,11 @@ export const DELETE_REPO = "scm/repos/DELETE_REPO";
 export const DELETE_REPO_PENDING = `${DELETE_REPO}_${types.PENDING_SUFFIX}`;
 export const DELETE_REPO_SUCCESS = `${DELETE_REPO}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_REPO_FAILURE = `${DELETE_REPO}_${types.FAILURE_SUFFIX}`;
+
+export const FETCH_NAMESPACE = "scm/repos/FETCH_NAMESPACE";
+export const FETCH_NAMESPACE_PENDING = `${FETCH_NAMESPACE}_${types.PENDING_SUFFIX}`;
+export const FETCH_NAMESPACE_SUCCESS = `${FETCH_NAMESPACE}_${types.SUCCESS_SUFFIX}`;
+export const FETCH_NAMESPACE_FAILURE = `${FETCH_NAMESPACE}_${types.FAILURE_SUFFIX}`;
 
 export const CONTENT_TYPE = "application/vnd.scmm-repository+json;v=2";
 
@@ -388,6 +393,50 @@ export function deleteRepoFailure(repository: Repository, error: Error): Action 
   };
 }
 
+export function fetchNamespace(link: string, namespaceName: string) {
+  return function(dispatch: any) {
+    dispatch(fetchNamespacePending(namespaceName));
+    return apiClient
+      .get(link)
+      .then(response => response.json())
+      .then(namespace => {
+        dispatch(fetchNamespaceSuccess(namespace));
+      })
+      .catch(err => {
+        dispatch(fetchNamespaceFailure(namespaceName, err));
+      });
+  };
+}
+
+export function fetchNamespacePending(namespaceName: string): Action {
+  return {
+    type: FETCH_NAMESPACE_PENDING,
+    payload: {
+      namespaceName
+    },
+    itemId: namespaceName
+  };
+}
+
+export function fetchNamespaceSuccess(namespace: Namespace): Action {
+  return {
+    type: FETCH_NAMESPACE_SUCCESS,
+    payload: namespace,
+    itemId: namespace.namespace
+  };
+}
+
+export function fetchNamespaceFailure(namespaceName: string, error: Error): Action {
+  return {
+    type: FETCH_NAMESPACE_FAILURE,
+    payload: {
+      namespaceName,
+      error
+    },
+    itemId: namespaceName
+  };
+}
+
 // reducer
 
 function createIdentifier(repository: Repository) {
@@ -425,6 +474,17 @@ const reducerByNames = (state: object, repository: Repository) => {
   };
 };
 
+const reducerForNamespace = (state: object, namespace: Namespace) => {
+  const identifier = namespace.namespace;
+  return {
+    ...state,
+    namespacesByNames: {
+      ...state.namespacesByNames,
+      [identifier]: namespace
+    }
+  };
+};
+
 const reducerForNamespaces = (state: object, namespaces: NamespaceCollection) => {
   return {
     ...state,
@@ -449,6 +509,8 @@ export default function reducer(
       return reducerForNamespaces(state, action.payload);
     case FETCH_REPO_SUCCESS:
       return reducerByNames(state, action.payload);
+    case FETCH_NAMESPACE_SUCCESS:
+      return reducerForNamespace(state, action.payload);
     default:
       return state;
   }
@@ -497,10 +559,17 @@ export function getFetchNamespacesFailure(state: object) {
   return getFailure(state, FETCH_NAMESPACES);
 }
 
-export function getNamespace(state: object, namespace: string) {
-  if (state.namespaces) {
-    return state.namespaces[namespace];
-  }
+export function isFetchNamespacePending(state: object) {
+  return isPending(state, FETCH_NAMESPACE);
+}
+
+export function getFetchNamespaceFailure(state: object) {
+  return getFailure(state, FETCH_NAMESPACE);
+}
+
+export function fetchNamespaceByName(link: string, namespaceName: string) {
+  const namespaceUrl = link.endsWith("/") ? link : link + "/";
+  return fetchNamespace(`${namespaceUrl}${namespaceName}`, namespaceName);
 }
 
 export function isFetchRepoPending(state: object, namespace: string, name: string) {
@@ -509,6 +578,12 @@ export function isFetchRepoPending(state: object, namespace: string, name: strin
 
 export function getFetchRepoFailure(state: object, namespace: string, name: string) {
   return getFailure(state, FETCH_REPO, namespace + "/" + name);
+}
+
+export function getNamespace(state: object, namespaceName: string) {
+  if (state.repos && state.repos.namespacesByNames) {
+    return state.repos.namespacesByNames[namespaceName];
+  }
 }
 
 export function isAbleToCreateRepos(state: object) {
@@ -539,7 +614,12 @@ export function getDeleteRepoFailure(state: object, namespace: string, name: str
   return getFailure(state, DELETE_REPO, namespace + "/" + name);
 }
 
-export function getPermissionsLink(state: object, namespace: string, name: string) {
-  const repo = getRepository(state, namespace, name);
-  return repo && repo._links ? repo._links.permissions.href : undefined;
+export function getPermissionsLink(state: object, namespaceName: string, repoName?: string) {
+  if (repoName) {
+    const repo = getRepository(state, namespaceName, repoName);
+    return repo && repo._links ? repo._links.permissions.href : undefined;
+  } else {
+    const namespace = getNamespace(state, namespaceName);
+    return namespace && namespace._links ? namespace._links.permissions.href : undefined;
+  }
 }

@@ -46,6 +46,7 @@ import CreateGroup from "../groups/containers/CreateGroup";
 import Admin from "../admin/containers/Admin";
 
 import Profile from "./Profile";
+import NamespaceRoot from "../repos/namespaces/containers/NamespaceRoot";
 
 type Props = {
   me: Me;
@@ -80,6 +81,7 @@ class Main extends React.Component<Props> {
             <ProtectedRoute exact path="/repos/:namespace" component={Overview} authenticated={authenticated} />
             <ProtectedRoute exact path="/repos/:namespace/:page" component={Overview} authenticated={authenticated} />
             <ProtectedRoute path="/repo/:namespace/:name" component={RepositoryRoot} authenticated={authenticated} />
+            <ProtectedRoute path="/namespace/:namespaceName" component={NamespaceRoot} authenticated={authenticated} />
             <Redirect exact strict from="/users" to="/users/" />
             <ProtectedRoute exact path="/users/" component={Users} authenticated={authenticated} />
             <ProtectedRoute path="/users/create" component={CreateUser} authenticated={authenticated} />
