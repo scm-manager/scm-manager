@@ -12,9 +12,11 @@ In the danger zone at the bottom you may rename the repository or delete it. If 
 ![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
 
 ### Permissions
-Thanks to the finely granular permission concept of SCM-Manager, users and groups can be authorized based on definable roles or individual settings. Permissions can be granted globally or repository-specific. Global permissions are managed in the administration area of SCM-Manager. The following image shows repository-specific permissions.
+Thanks to the finely granular permission concept of SCM-Manager, users and groups can be authorized based on definable roles or individual settings. Permissions can be granted globally, namespace-wide, or repository-specific. Global permissions are managed in the administration area of SCM-Manager. The following image shows repository-specific permissions.
 
 Permissions can be granted to groups or users. It is possible to manage each permission individually or to create roles that contain several permissions. Roles can be defined in the administration area.
+
+Namespace-wide permissions can be configured in the namespace settings. These can be accessed via the settings icon on the right-hand side of the namespace heading in the repository overview.
 
 ![Repository-Settings-PermissionOverview](assets/repository-settings-permissionOverview.png)
 
