@@ -133,12 +133,12 @@ class Overview extends React.Component<Props> {
   }
 
   renderRepositoryList() {
-    const { collection, page, location, t } = this.props;
+    const { collection, page, location, namespaces, t } = this.props;
 
     if (collection._embedded && collection._embedded.repositories.length > 0) {
       return (
         <>
-          <RepositoryList repositories={collection._embedded.repositories} />
+          <RepositoryList repositories={collection._embedded.repositories} namespaces={namespaces} />
           <LinkPaginator collection={collection} page={page} filter={urls.getQueryStringFromLocation(location)} />
         </>
       );
