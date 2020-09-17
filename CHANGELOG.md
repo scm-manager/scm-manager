@@ -5,6 +5,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Permissions can be specified for namespaces ([#1335](https://github.com/scm-manager/scm-manager/pull/1335))
 ### Fixed
 - Missing synchronization during repository creation ([#1328](https://github.com/scm-manager/scm-manager/pull/1328))
 - Missing BranchCreatedEvent for mercurial ([#1334](https://github.com/scm-manager/scm-manager/pull/1334))
