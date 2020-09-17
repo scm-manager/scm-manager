@@ -119,7 +119,7 @@ class CreateBranch extends React.Component<Props> {
 const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchBranches: (repository: Repository) => {
-      dispatch(fetchBranches(repository, false));
+      dispatch(fetchBranches(repository));
     },
     createBranch: (
       createLink: string,

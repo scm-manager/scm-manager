@@ -133,7 +133,7 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
       }
       if (repositoryService.isSupported(Command.BRANCHES)) {
         embeddedBuilder.with("branches", branchCollectionToDtoMapper.getBranchDtoList(namespace, name,
-          getListOfObjects(source.getBranches(), branchName -> Branch.normalBranch(branchName, source.getId())), false));
+          getListOfObjects(source.getBranches(), branchName -> Branch.normalBranch(branchName, source.getId()))));
       }
 
       if (repositoryService.isSupported(Command.DIFF_RESULT)) {

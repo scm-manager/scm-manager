@@ -30,19 +30,11 @@ import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
-import sonia.scm.ContextEntry;
 import sonia.scm.repository.Branch;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Person;
-import sonia.scm.repository.api.RepositoryService;
-import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
-import java.io.IOException;
-import java.time.Instant;
 
 import static de.otto.edison.hal.Link.linkBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
@@ -53,16 +45,11 @@ public abstract class BranchToBranchDtoMapper extends HalAppenderMapper {
   @Inject
   private ResourceLinks resourceLinks;
 
-  @Inject
-  private RepositoryServiceFactory serviceFactory;
-
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
-  public abstract BranchDto map(Branch branch, @Context NamespaceAndName namespaceAndName, boolean fullInformation);
-
-  abstract PersonDto map(Person person);
+  public abstract BranchDto map(Branch branch, @Context NamespaceAndName namespaceAndName);
 
   @ObjectFactory
-  BranchDto createDto(@Context NamespaceAndName namespaceAndName, Branch branch, boolean fullInformation) {
+  BranchDto createDto(@Context NamespaceAndName namespaceAndName, Branch branch) {
     Links.Builder linksBuilder = linkingTo()
       .self(resourceLinks.branch().self(namespaceAndName, branch.getName()))
       .single(linkBuilder("history", resourceLinks.branch().history(namespaceAndName, branch.getName())).build())
@@ -71,22 +58,7 @@ public abstract class BranchToBranchDtoMapper extends HalAppenderMapper {
 
     Embedded.Builder embeddedBuilder = Embedded.embeddedBuilder();
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), branch, namespaceAndName);
-    BranchDto branchDto = new BranchDto(linksBuilder.build(), embeddedBuilder.build());
 
-    if (fullInformation) {
-      try (RepositoryService service = serviceFactory.create(namespaceAndName)) {
-        Changeset latestChangeset = service.getLogCommand().setBranch(branch.getName()).getChangesets().getChangesets().get(0);
-        branchDto.setLastModified(Instant.ofEpochMilli(latestChangeset.getDate()));
-        branchDto.setLastModifier(map(latestChangeset.getAuthor()));
-      } catch (IOException e) {
-        throw new InternalRepositoryException(
-          ContextEntry.ContextBuilder.entity(Branch.class, branch.getName()),
-          "Could not read latest changeset for branch",
-          e
-        );
-      }
-    }
-
-    return branchDto;
+    return new BranchDto(linksBuilder.build(), embeddedBuilder.build());
   }
 }

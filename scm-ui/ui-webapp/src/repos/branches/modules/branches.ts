@@ -50,7 +50,7 @@ const CONTENT_TYPE_BRANCH_REQUEST = "application/vnd.scmm-branchRequest+json;v=2
 
 // Fetching branches
 
-export function fetchBranches(repository: Repository, fullInformation: boolean) {
+export function fetchBranches(repository: Repository) {
   if (!repository._links.branches) {
     return {
       type: FETCH_BRANCHES_SUCCESS,
@@ -64,12 +64,8 @@ export function fetchBranches(repository: Repository, fullInformation: boolean) 
 
   return function(dispatch: any) {
     dispatch(fetchBranchesPending(repository));
-    let link = (repository._links.branches as Link).href;
-    if (fullInformation) {
-      link += "?fullInformation=true";
-    }
     return apiClient
-      .get(link)
+      .get((repository._links.branches as Link).href)
       .then(response => response.json())
       .then(data => {
         dispatch(fetchBranchesSuccess(data, repository));

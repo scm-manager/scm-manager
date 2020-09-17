@@ -108,7 +108,7 @@ class CodeOverview extends React.Component<Props> {
 const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchBranches: (repo: Repository) => {
-      dispatch(fetchBranches(repo, false));
+      dispatch(fetchBranches(repo));
     }
   };
 };

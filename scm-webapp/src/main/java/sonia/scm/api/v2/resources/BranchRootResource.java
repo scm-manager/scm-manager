@@ -133,7 +133,7 @@ public class BranchRootResource {
         .stream()
         .filter(branch -> branchName.equals(branch.getName()))
         .findFirst()
-        .map(branch -> branchToDtoMapper.map(branch, namespaceAndName, fullInformation))
+        .map(branch -> branchToDtoMapper.map(branch, namespaceAndName))
         .map(Response::ok)
         .orElseThrow(() -> notFound(entity("branch", branchName).in(namespaceAndName)))
         .build();
@@ -300,12 +300,11 @@ public class BranchRootResource {
     ))
   public Response getAll(
     @PathParam("namespace") String namespace,
-    @PathParam("name") String name,
-    @QueryParam("fullInformation") @DefaultValue("false") boolean fullInformation
+    @PathParam("name") String name
   ) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Branches branches = repositoryService.getBranchesCommand().getBranches();
-      return Response.ok(branchCollectionToDtoMapper.map(repositoryService.getRepository(), branches.getBranches(), fullInformation)).build();
+      return Response.ok(branchCollectionToDtoMapper.map(repositoryService.getRepository(), branches.getBranches())).build();
     } catch (CommandNotSupportedException ex) {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }

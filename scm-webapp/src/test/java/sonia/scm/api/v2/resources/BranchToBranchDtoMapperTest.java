@@ -24,29 +24,16 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Answers;
 import org.mockito.InjectMocks;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Branch;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.PersonTestData;
-import sonia.scm.repository.api.LogCommandBuilder;
-import sonia.scm.repository.api.RepositoryService;
-import sonia.scm.repository.api.RepositoryServiceFactory;
 
-import java.io.IOException;
 import java.net.URI;
-import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BranchToBranchDtoMapperTest {
@@ -55,13 +42,6 @@ class BranchToBranchDtoMapperTest {
 
   @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
-
-  @Mock
-  private RepositoryServiceFactory serviceFactory;
-  @Mock
-  private RepositoryService repositoryService;
-  @Mock(answer = Answers.RETURNS_SELF)
-  private LogCommandBuilder logCommandBuilder;
 
   @InjectMocks
   private BranchToBranchDtoMapperImpl mapper;
@@ -79,27 +59,7 @@ class BranchToBranchDtoMapperTest {
 
     Branch branch = Branch.normalBranch("master", "42");
 
-    BranchDto dto = mapper.map(branch, new NamespaceAndName("hitchhiker", "heart-of-gold"), false);
+    BranchDto dto = mapper.map(branch, new NamespaceAndName("hitchhiker", "heart-of-gold"));
     assertThat(dto.getLinks().getLinkBy("ka").get().getHref()).isEqualTo("http://hitchhiker/heart-of-gold/master");
-    assertThat(dto.getLastModified()).isNull();
-    assertThat(dto.getLastModifier()).isNull();
   }
-
-  @Test
-  void shouldMapLastChangeDateAndLastModifier() throws IOException {
-    long creationTime = 1000000000;
-    Changeset changeset = new Changeset("1", 1L, PersonTestData.ZAPHOD);
-    changeset.setDate(creationTime);
-
-    when(serviceFactory.create(any(NamespaceAndName.class))).thenReturn(repositoryService);
-    when(repositoryService.getLogCommand()).thenReturn(logCommandBuilder);
-    when(logCommandBuilder.getChangesets()).thenReturn(new ChangesetPagingResult(1, ImmutableList.of(changeset)));
-    Branch branch = Branch.normalBranch("master", "42");
-
-    BranchDto dto = mapper.map(branch, new NamespaceAndName("hitchhiker", "heart-of-gold"), true);
-
-    assertThat(dto.getLastModified()).isEqualTo(Instant.ofEpochMilli(creationTime));
-    assertThat(dto.getLastModifier().getName()).isEqualTo(PersonTestData.ZAPHOD.getName());
-  }
-
 }

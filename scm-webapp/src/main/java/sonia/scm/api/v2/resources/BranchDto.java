@@ -24,7 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
@@ -35,11 +34,11 @@ import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
-import java.time.Instant;
 
 @Getter
 @Setter
 @NoArgsConstructor
+@SuppressWarnings("java:S2160") // we do not need this for dto
 public class BranchDto extends HalRepresentation {
 
   private static final String VALID_CHARACTERS_AT_START_AND_END = "\\w-,;\\]{}@&+=$#`|<>";
@@ -52,10 +51,6 @@ public class BranchDto extends HalRepresentation {
   private String name;
   private String revision;
   private boolean defaultBranch;
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Instant lastModified;
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private PersonDto lastModifier;
 
   BranchDto(Links links, Embedded embedded) {
     super(links, embedded);
