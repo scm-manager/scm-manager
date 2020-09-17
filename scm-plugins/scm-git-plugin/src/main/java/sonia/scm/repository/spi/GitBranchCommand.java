@@ -30,7 +30,6 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Branch;
-import sonia.scm.repository.BranchCreatedEvent;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
@@ -48,9 +47,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Set;
 
-import static java.util.Collections.emptyList;
-import static java.util.Collections.singleton;
-import static java.util.Collections.singletonList;
+import static java.util.Collections.*;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 public class GitBranchCommand extends AbstractGitCommand implements BranchCommand {
@@ -72,8 +69,6 @@ public class GitBranchCommand extends AbstractGitCommand implements BranchComman
       eventBus.post(new PreReceiveRepositoryHookEvent(hookEvent));
       Ref ref = git.branchCreate().setStartPoint(request.getParentBranch()).setName(request.getNewBranch()).call();
       eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
-      // Clear cache synchronously to avoid branch not found in invalid cache
-      eventBus.post(new BranchCreatedEvent(repository, request.getNewBranch()));
       return Branch.normalBranch(request.getNewBranch(), GitUtil.getId(ref.getObjectId()));
     } catch (GitAPIException | IOException ex) {
       throw new InternalRepositoryException(repository, "could not create branch " + request.getNewBranch(), ex);
