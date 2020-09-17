@@ -46,4 +46,8 @@ public class NamespaceDao {
   public void add(Namespace namespace) {
     store.put(namespace.getNamespace(), namespace);
   }
+
+  public void delete(String namespace) {
+    store.remove(namespace);
+  }
 }

@@ -40,9 +40,10 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.argThat;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static sonia.scm.HandlerEventType.DELETE;
+import static sonia.scm.HandlerEventType.MODIFY;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -124,5 +125,27 @@ class DefaultNamespaceManagerTest {
     assertThat(newLife).isEqualTo(modifiedNamespace);
     verify(eventBus).post(argThat(event -> ((NamespaceModificationEvent)event).getEventType() == HandlerEventType.BEFORE_MODIFY));
     verify(eventBus).post(argThat(event -> ((NamespaceModificationEvent)event).getEventType() == HandlerEventType.MODIFY));
+  }
+
+  @Test
+  void shouldCleanUpPermissionWhenLastRepositoryOfNamespaceWasDeleted() {
+    when(repositoryManager.getAllNamespaces()).thenReturn(asList("universe", "rest"));
+
+    manager.cleanupDeletedNamespaces(new RepositoryEvent(DELETE, new Repository("1", "git", "life", "earth")));
+
+    assertThat(dao.get("life")).isEmpty();
+  }
+
+  @Test
+  void shouldCleanUpPermissionWhenLastRepositoryOfNamespaceWasRenamed() {
+    when(repositoryManager.getAllNamespaces()).thenReturn(asList("universe", "rest", "highway"));
+
+    manager.cleanupDeletedNamespaces(
+      new RepositoryModificationEvent(
+        MODIFY,
+        new Repository("1", "git", "highway", "earth"),
+        new Repository("1", "git", "life", "earth")));
+
+    assertThat(dao.get("life")).isEmpty();
   }
 }

@@ -25,8 +25,8 @@
 package sonia.scm.repository;
 
 import com.github.legman.EventBus;
+import com.github.legman.Subscribe;
 import sonia.scm.HandlerEventType;
-import sonia.scm.event.ScmEventBus;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -78,6 +78,26 @@ public class DefaultNamespaceManager implements NamespaceManager {
     }
     dao.add(namespace);
     fireEvent(HandlerEventType.MODIFY, namespace, oldNamespace);
+  }
+
+  @Subscribe
+  public void cleanupDeletedNamespaces(RepositoryEvent repositoryEvent) {
+    HandlerEventType eventType = repositoryEvent.getEventType();
+    if (eventType == HandlerEventType.DELETE || eventType == HandlerEventType.MODIFY && !repositoryEvent.getItem().getNamespace().equals(repositoryEvent.getOldItem().getNamespace())) {
+      Collection<String> allNamespaces = repositoryManager.getAllNamespaces();
+      String oldNamespace = getOldNamespace(repositoryEvent);
+      if (!allNamespaces.contains(oldNamespace)) {
+        dao.delete(oldNamespace);
+      }
+    }
+  }
+
+  public String getOldNamespace(RepositoryEvent repositoryEvent) {
+    if (repositoryEvent.getEventType() == HandlerEventType.DELETE) {
+      return repositoryEvent.getItem().getNamespace();
+    } else {
+      return repositoryEvent.getOldItem().getNamespace();
+    }
   }
 
   private Namespace createNamespaceForName(String namespace) {
