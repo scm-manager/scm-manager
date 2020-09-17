@@ -73,21 +73,29 @@ it("should group the repositories by their namespace", () => {
     hitchhikerHeartOfGold,
     hitchhikerPuzzle42
   ];
+  const namespaces = {
+    _embedded: {
+      namespaces: [{ namespace: "hitchhiker" }, { namespace: "slarti" }, { namespace: "zaphod" }]
+    }
+  };
 
   const expected = [
     {
       name: "hitchhiker",
+      namespace: { namespace: "hitchhiker" },
       repositories: [hitchhikerHeartOfGold, hitchhikerPuzzle42, hitchhikerRestand]
     },
     {
       name: "slarti",
+      namespace: { namespace: "slarti" },
       repositories: [slartiFjords, slartiBlueprintsFjords]
     },
     {
       name: "zaphod",
+      namespace: { namespace: "zaphod" },
       repositories: [zaphodMarvinFirmware]
     }
   ];
 
-  expect(groupByNamespace(repositories)).toEqual(expected);
+  expect(groupByNamespace(repositories, namespaces)).toEqual(expected);
 });

@@ -27,7 +27,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 
 type Props = {
-  name: string;
+  name: ReactNode;
   url?: string;
   elements: ReactNode[];
 };
