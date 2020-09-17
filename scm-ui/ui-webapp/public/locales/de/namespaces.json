@@ -1,0 +1,9 @@
+{
+  "namespaceRoot": {
+    "menu": {
+      "navigationLabel": "Namespace",
+      "settingsNavLink": "Einstellungen",
+      "permissionsNavLink": "Berechtigungen"
+    }
+  }
+}
