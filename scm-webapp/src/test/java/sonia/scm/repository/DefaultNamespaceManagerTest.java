@@ -24,11 +24,13 @@
 
 package sonia.scm.repository;
 
+import com.github.legman.EventBus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.HandlerEventType;
 import sonia.scm.store.InMemoryDataStore;
 import sonia.scm.store.InMemoryDataStoreFactory;
 
@@ -37,6 +39,9 @@ import java.util.Optional;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 
@@ -45,6 +50,8 @@ class DefaultNamespaceManagerTest {
 
   @Mock
   RepositoryManager repositoryManager;
+  @Mock
+  EventBus eventBus;
 
   Namespace life;
 
@@ -56,7 +63,7 @@ class DefaultNamespaceManagerTest {
   @BeforeEach
   void mockExistingNamespaces() {
     dao = new NamespaceDao(new InMemoryDataStoreFactory(new InMemoryDataStore()));
-    manager = new DefaultNamespaceManager(repositoryManager, dao);
+    manager = new DefaultNamespaceManager(repositoryManager, dao, eventBus);
 
     when(repositoryManager.getAllNamespaces()).thenReturn(asList("life", "universe", "rest"));
 
@@ -115,5 +122,7 @@ class DefaultNamespaceManagerTest {
     Namespace newLife = manager.get("life").get();
 
     assertThat(newLife).isEqualTo(modifiedNamespace);
+    verify(eventBus).post(argThat(event -> ((NamespaceModificationEvent)event).getEventType() == HandlerEventType.BEFORE_MODIFY));
+    verify(eventBus).post(argThat(event -> ((NamespaceModificationEvent)event).getEventType() == HandlerEventType.MODIFY));
   }
 }

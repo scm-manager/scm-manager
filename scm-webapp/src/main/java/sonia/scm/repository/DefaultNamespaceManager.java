@@ -24,6 +24,10 @@
 
 package sonia.scm.repository;
 
+import com.github.legman.EventBus;
+import sonia.scm.HandlerEventType;
+import sonia.scm.event.ScmEventBus;
+
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Optional;
@@ -36,11 +40,13 @@ public class DefaultNamespaceManager implements NamespaceManager {
 
   private final RepositoryManager repositoryManager;
   private final NamespaceDao dao;
+  private final EventBus eventBus;
 
   @Inject
-  public DefaultNamespaceManager(RepositoryManager repositoryManager, NamespaceDao dao) {
+  public DefaultNamespaceManager(RepositoryManager repositoryManager, NamespaceDao dao, EventBus eventBus) {
     this.repositoryManager = repositoryManager;
     this.dao = dao;
+    this.eventBus = eventBus;
   }
 
   @Override
@@ -64,15 +70,23 @@ public class DefaultNamespaceManager implements NamespaceManager {
 
   @Override
   public void modify(Namespace namespace) {
+    Namespace oldNamespace = get(namespace.getNamespace())
+      .orElseThrow(() -> notFound(entity(Namespace.class, namespace.getNamespace())));
+    fireEvent(HandlerEventType.BEFORE_MODIFY, namespace, oldNamespace);
     if (!get(namespace.getNamespace()).isPresent()) {
       throw notFound(entity("Namespace", namespace.getNamespace()));
     }
     dao.add(namespace);
+    fireEvent(HandlerEventType.MODIFY, namespace, oldNamespace);
   }
 
   private Namespace createNamespaceForName(String namespace) {
     return dao.get(namespace)
       .map(Namespace::clone)
       .orElse(new Namespace(namespace));
+  }
+
+  protected void fireEvent(HandlerEventType event, Namespace namespace, Namespace oldNamespace) {
+    eventBus.post(new NamespaceModificationEvent(event, namespace, oldNamespace));
   }
 }
