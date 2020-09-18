@@ -70,12 +70,10 @@ public class DefaultNamespaceManager implements NamespaceManager {
 
   @Override
   public void modify(Namespace namespace) {
+    NamespacePermissions.permissionWrite().check();
     Namespace oldNamespace = get(namespace.getNamespace())
       .orElseThrow(() -> notFound(entity(Namespace.class, namespace.getNamespace())));
     fireEvent(HandlerEventType.BEFORE_MODIFY, namespace, oldNamespace);
-    if (!get(namespace.getNamespace()).isPresent()) {
-      throw notFound(entity("Namespace", namespace.getNamespace()));
-    }
     dao.add(namespace);
     fireEvent(HandlerEventType.MODIFY, namespace, oldNamespace);
   }
@@ -101,9 +99,13 @@ public class DefaultNamespaceManager implements NamespaceManager {
   }
 
   private Namespace createNamespaceForName(String namespace) {
-    return dao.get(namespace)
-      .map(Namespace::clone)
-      .orElse(new Namespace(namespace));
+    if (NamespacePermissions.permissionRead().isPermitted()) {
+      return dao.get(namespace)
+        .map(Namespace::clone)
+        .orElse(new Namespace(namespace));
+    } else {
+      return new Namespace(namespace);
+    }
   }
 
   protected void fireEvent(HandlerEventType event, Namespace namespace, Namespace oldNamespace) {

@@ -153,10 +153,8 @@ public class AuthorizationChangedEventProducer {
 
   @Subscribe
   public void onEvent(NamespaceEvent event) {
-    if (event.getEventType().isPost()) {
-      if (isModificationEvent(event)) {
-        handleNamespaceModificationEvent((NamespaceModificationEvent) event);
-      }
+    if (event.getEventType().isPost() && isModificationEvent(event)) {
+      handleNamespaceModificationEvent((NamespaceModificationEvent) event);
     }
   }
 
