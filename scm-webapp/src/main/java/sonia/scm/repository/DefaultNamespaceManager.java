@@ -24,9 +24,9 @@
 
 package sonia.scm.repository;
 
-import com.github.legman.EventBus;
 import com.github.legman.Subscribe;
 import sonia.scm.HandlerEventType;
+import sonia.scm.event.ScmEventBus;
 
 import javax.inject.Inject;
 import java.util.Collection;
@@ -40,10 +40,10 @@ public class DefaultNamespaceManager implements NamespaceManager {
 
   private final RepositoryManager repositoryManager;
   private final NamespaceDao dao;
-  private final EventBus eventBus;
+  private final ScmEventBus eventBus;
 
   @Inject
-  public DefaultNamespaceManager(RepositoryManager repositoryManager, NamespaceDao dao, EventBus eventBus) {
+  public DefaultNamespaceManager(RepositoryManager repositoryManager, NamespaceDao dao, ScmEventBus eventBus) {
     this.repositoryManager = repositoryManager;
     this.dao = dao;
     this.eventBus = eventBus;
