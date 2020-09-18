@@ -28,6 +28,7 @@ import { Redirect, Switch, useLocation, useRouteMatch, Route } from "react-route
 import { apiClient, ErrorNotification, Loading } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import TagView from "../components/TagView";
+import { urls } from "@scm-manager/ui-components";
 
 type Props = {
   repository: Repository;
@@ -65,15 +66,8 @@ const TagRoot: FC<Props> = ({ repository, baseUrl }) => {
     }
   }, [tags]);
 
-  const stripEndingSlash = (url: string) => {
-    if (url.endsWith("/")) {
-      return url.substring(0, url.length - 1);
-    }
-    return url;
-  };
-
   const matchedUrl = () => {
-    return stripEndingSlash(match.url);
+    return urls.stripEndingSlash(match.url);
   };
 
   if (error) {

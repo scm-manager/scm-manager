@@ -34,6 +34,7 @@ import { fetchRoleByName, getFetchRoleFailure, getRoleByName, isFetchRolePending
 import PermissionRoleDetail from "../components/PermissionRoleDetails";
 import EditRepositoryRole from "./EditRepositoryRole";
 import { compose } from "redux";
+import { urls } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   roleName: string;
@@ -56,15 +57,8 @@ class SingleRepositoryRole extends React.Component<Props> {
     this.props.fetchRoleByName(this.props.repositoryRolesLink, this.props.roleName);
   }
 
-  stripEndingSlash = (url: string) => {
-    if (url.endsWith("/")) {
-      return url.substring(0, url.length - 2);
-    }
-    return url;
-  };
-
   matchedUrl = () => {
-    return this.stripEndingSlash(this.props.match.url);
+    return urls.stripEndingSlash(this.props.match.url);
   };
 
   render() {

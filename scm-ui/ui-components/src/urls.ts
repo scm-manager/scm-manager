@@ -80,3 +80,10 @@ function parsePageNumber(pageAsString: string) {
 export function getQueryStringFromLocation(location: any) {
   return location.search ? queryString.parse(location.search).q : undefined;
 }
+
+export function stripEndingSlash(url: string) {
+  if (url.endsWith("/")) {
+    return url.substring(0, url.length - 1);
+  }
+  return url;
+}

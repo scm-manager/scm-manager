@@ -44,6 +44,7 @@ import ProfileInfo from "./ProfileInfo";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import SetPublicKeys from "../users/components/publicKeys/SetPublicKeys";
 import SetPublicKeyNavLink from "../users/components/navLinks/SetPublicKeysNavLink";
+import { urls } from "@scm-manager/ui-components";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -54,15 +55,8 @@ type Props = RouteComponentProps &
   };
 
 class Profile extends React.Component<Props> {
-  stripEndingSlash = (url: string) => {
-    if (url.endsWith("/")) {
-      return url.substring(0, url.length - 2);
-    }
-    return url;
-  };
-
   matchedUrl = () => {
-    return this.stripEndingSlash(this.props.match.url);
+    return urls.stripEndingSlash(this.props.match.url);
   };
 
   mayChangePassword = () => {

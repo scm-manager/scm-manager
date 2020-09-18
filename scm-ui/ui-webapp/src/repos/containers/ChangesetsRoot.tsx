@@ -28,6 +28,7 @@ import { Repository, Branch } from "@scm-manager/ui-types";
 import Changesets from "./Changesets";
 import { compose } from "redux";
 import CodeActionBar from "../codeSection/components/CodeActionBar";
+import { urls } from "@scm-manager/ui-components";
 
 type Props = WithTranslation &
   RouteComponentProps & {
@@ -38,13 +39,6 @@ type Props = WithTranslation &
   };
 
 class ChangesetsRoot extends React.Component<Props> {
-  stripEndingSlash = (url: string) => {
-    if (url.endsWith("/")) {
-      return url.substring(0, url.length - 1);
-    }
-    return url;
-  };
-
   isBranchAvailable = () => {
     const { branches, selectedBranch } = this.props;
     return branches?.filter(b => b.name === selectedBranch).length === 0;
@@ -75,7 +69,7 @@ class ChangesetsRoot extends React.Component<Props> {
       return null;
     }
 
-    const url = this.stripEndingSlash(match.url);
+    const url = urls.stripEndingSlash(match.url);
 
     return (
       <>

@@ -45,6 +45,7 @@ import GlobalConfig from "./GlobalConfig";
 import RepositoryRoles from "../roles/containers/RepositoryRoles";
 import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
 import CreateRepositoryRole from "../roles/containers/CreateRepositoryRole";
+import { urls } from "@scm-manager/ui-components";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -54,18 +55,8 @@ type Props = RouteComponentProps &
   };
 
 class Admin extends React.Component<Props> {
-  stripEndingSlash = (url: string) => {
-    if (url.endsWith("/")) {
-      if (url.includes("role")) {
-        return url.substring(0, url.length - 2);
-      }
-      return url.substring(0, url.length - 1);
-    }
-    return url;
-  };
-
   matchedUrl = () => {
-    return this.stripEndingSlash(this.props.match.url);
+    return urls.stripEndingSlash(this.props.match.url);
   };
 
   matchesRoles = (route: any) => {

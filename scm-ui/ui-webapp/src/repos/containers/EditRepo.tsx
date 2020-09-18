@@ -33,6 +33,7 @@ import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { compose } from "redux";
 import DangerZone from "./DangerZone";
 import { getLinks } from "../../modules/indexResource";
+import { urls } from "@scm-manager/ui-components";
 
 type Props = {
   loading: boolean;
@@ -59,15 +60,8 @@ class EditRepo extends React.Component<Props> {
     history.push(`/repo/${repository.namespace}/${repository.name}`);
   };
 
-  stripEndingSlash = (url: string) => {
-    if (url.endsWith("/")) {
-      return url.substring(0, url.length - 2);
-    }
-    return url;
-  };
-
   matchedUrl = () => {
-    return this.stripEndingSlash(this.props.match.url);
+    return urls.stripEndingSlash(this.props.match.url);
   };
 
   render() {

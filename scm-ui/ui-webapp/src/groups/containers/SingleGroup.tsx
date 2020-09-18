@@ -45,6 +45,7 @@ import { Details } from "./../components/table";
 import { EditGroupNavLink, SetPermissionsNavLink } from "./../components/navLinks";
 import EditGroup from "./EditGroup";
 import SetPermissions from "../../permissions/components/SetPermissions";
+import { urls } from "@scm-manager/ui-components";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -63,15 +64,8 @@ class SingleGroup extends React.Component<Props> {
     this.props.fetchGroupByName(this.props.groupLink, this.props.name);
   }
 
-  stripEndingSlash = (url: string) => {
-    if (url.endsWith("/")) {
-      return url.substring(0, url.length - 2);
-    }
-    return url;
-  };
-
   matchedUrl = () => {
-    return this.stripEndingSlash(this.props.match.url);
+    return urls.stripEndingSlash(this.props.match.url);
   };
 
   render() {
