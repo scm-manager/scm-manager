@@ -224,26 +224,6 @@ class NamespaceRootResourceTest {
       assertThat(response.getStatus()).isEqualTo(404);
     }
 
-    @Test
-    void shouldNotCreateNewPermission() throws URISyntaxException {
-      MockHttpRequest request = MockHttpRequest.post("/" + NamespaceRootResource.NAMESPACE_PATH_V2 + "space/permissions")
-        .content("{\"name\":\"dent\",\"verbs\":[],\"role\":\"WRITE\",\"groupPermission\":false}".getBytes())
-        .header("Content-Type", "application/vnd.scmm-repositoryPermission+json;v=2");
-
-      dispatcher.invoke(request, response);
-
-      assertThat(response.getStatus()).isEqualTo(403);
-    }
-
-    @Test
-    void shouldNotDeletePermission() throws URISyntaxException {
-      MockHttpRequest request = MockHttpRequest.delete("/" + NamespaceRootResource.NAMESPACE_PATH_V2 + "hitchhiker/permissions/@humans");
-
-      dispatcher.invoke(request, response);
-
-      assertThat(response.getStatus()).isEqualTo(403);
-    }
-
     @Nested
     class WithWritePermission {
 

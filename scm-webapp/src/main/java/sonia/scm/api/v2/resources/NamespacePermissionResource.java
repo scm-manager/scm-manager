@@ -295,9 +295,8 @@ public class NamespacePermissionResource {
   }
 
   private Predicate<RepositoryPermission> filterPermission(String name) {
-    return permission -> getPermissionName(name).equals(permission.getName())
-      &&
-      permission.isGroupPermission() == isGroupPermission(name);
+    return permission ->
+      getPermissionName(name).equals(permission.getName()) && permission.isGroupPermission() == isGroupPermission(name);
   }
 
   private String getPermissionName(String permissionName) {

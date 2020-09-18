@@ -110,6 +110,14 @@ public class Namespace implements PermissionObject, Cloneable {
   }
 
   @Override
+  public String toString() {
+    return "Namespace{" +
+      "namespace='" + namespace + '\'' +
+      ", permissions=" + permissions +
+      '}';
+  }
+
+  @Override
   public Namespace clone() {
     try {
       Namespace clone = (Namespace) super.clone();
