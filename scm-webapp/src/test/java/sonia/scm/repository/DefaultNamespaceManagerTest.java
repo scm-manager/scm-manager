@@ -31,6 +31,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.HandlerEventType;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.store.InMemoryDataStore;
 import sonia.scm.store.InMemoryDataStoreFactory;
 
@@ -52,7 +53,7 @@ class DefaultNamespaceManagerTest {
   @Mock
   RepositoryManager repositoryManager;
   @Mock
-  EventBus eventBus;
+  ScmEventBus eventBus;
 
   Namespace life;
 
