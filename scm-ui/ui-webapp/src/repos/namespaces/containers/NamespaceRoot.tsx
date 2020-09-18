@@ -33,7 +33,8 @@ import {
   CustomQueryFlexWrappedColumns,
   ErrorPage,
   Loading,
-  Page, PrimaryContentColumn,
+  Page,
+  PrimaryContentColumn,
   SecondaryNavigation,
   SecondaryNavigationColumn,
   StateMenuContextProvider,
@@ -49,6 +50,7 @@ type Props = RouteComponentProps &
     namespaceName: string;
     namespacesLink: string;
     namespace: Namespace;
+    error: Error;
 
     // dispatch functions
     fetchNamespace: (link: string, namespace: string) => void;

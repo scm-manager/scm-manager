@@ -5,5 +5,10 @@
       "settingsNavLink": "Settings",
       "permissionsNavLink": "Permissions"
     }
+  },
+  "repositoryOverview": {
+    "settings": {
+      "tooltip": "Namespace related settings"
+    }
   }
 }

@@ -80,14 +80,19 @@ public class DefaultNamespaceManager implements NamespaceManager {
 
   @Subscribe
   public void cleanupDeletedNamespaces(RepositoryEvent repositoryEvent) {
-    HandlerEventType eventType = repositoryEvent.getEventType();
-    if (eventType == HandlerEventType.DELETE || eventType == HandlerEventType.MODIFY && !repositoryEvent.getItem().getNamespace().equals(repositoryEvent.getOldItem().getNamespace())) {
+    if (namespaceRelevantChange(repositoryEvent)) {
       Collection<String> allNamespaces = repositoryManager.getAllNamespaces();
       String oldNamespace = getOldNamespace(repositoryEvent);
       if (!allNamespaces.contains(oldNamespace)) {
         dao.delete(oldNamespace);
       }
     }
+  }
+
+  public boolean namespaceRelevantChange(RepositoryEvent repositoryEvent) {
+    HandlerEventType eventType = repositoryEvent.getEventType();
+    return eventType == HandlerEventType.DELETE
+      || eventType == HandlerEventType.MODIFY && !repositoryEvent.getItem().getNamespace().equals(repositoryEvent.getOldItem().getNamespace());
   }
 
   public String getOldNamespace(RepositoryEvent repositoryEvent) {

@@ -58,6 +58,6 @@ export type NamespaceCollection = {
 
 export type RepositoryGroup = {
   name: string;
-  namespace: Namespace;
+  namespace?: Namespace;
   repositories: Repository[];
 };

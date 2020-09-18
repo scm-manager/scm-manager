@@ -95,11 +95,11 @@
     },
     "namespace": {
       "permissionRead": {
-        "displayName": "read permissions on namespaces",
+        "displayName": "Read permissions on namespaces",
         "description": "May see the permissions set for namespaces"
       },
       "permissionWrite": {
-        "displayName": "modify permissions on namespaces",
+        "displayName": "Modify permissions on namespaces",
         "description": "May modify the permissions set for namespaces"
       }
     },

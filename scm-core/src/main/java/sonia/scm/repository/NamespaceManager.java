@@ -27,6 +27,13 @@ package sonia.scm.repository;
 import java.util.Collection;
 import java.util.Optional;
 
+/**
+ * Manages namespaces. Mind that namespaces do not have a lifecycle on their own, but only do exist through
+ * repositories. Therefore you cannot create or delete namespaces, but just change related settings like permissions
+ * associated with them.
+ *
+ * @since 2.6.0
+ */
 public interface NamespaceManager {
 
   /**
