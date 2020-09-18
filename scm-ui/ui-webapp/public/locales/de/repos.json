@@ -218,7 +218,8 @@
   "renameRepo": {
     "button": "Repository umbenennen",
     "subtitle": "Benennt dieses Repository um",
-    "description": "Es werden keine Weiterleitung auf den neuen Namen eingerichtet.",
+    "description1": "Es werden keine Weiterleitung auf den neuen Namen eingerichtet.",
+    "description2": "Berechtigungen aus dem Namespace werden bei einem Wechsel nicht übernommen.",
     "modal": {
       "title": "Repository umbenennen",
       "label": {

@@ -26,6 +26,8 @@ Icon             |  Beschreibung
 ![Repository Sources](assets/repository-overview-sources.png) | Öffnet die Sources-Übersicht für das Repository
 ![Repository Einstellungen](assets/repository-overview-settings.png) | Öffnet die Einstellungen für das Repository
 
+Zusätzlich können über das Icon rechts neben den Überschriften für die Namespaces weitere Einstellungen auf Namespace-Ebene vorgenommen werden.
+
 ### Repository erstellen
 Im SCM-Manager können neue Git, Mercurial & Subersion (SVN) Repositories über ein Formular angelegt werden. Dieses kann über den Button "Repository erstellen" aufgerufen werden. Dabei muss ein gültiger Name eingetragen und der Repository-Typ bestimmt werden. 
  

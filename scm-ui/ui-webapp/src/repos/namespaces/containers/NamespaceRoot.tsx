@@ -123,7 +123,6 @@ class NamespaceRoot extends React.Component<Props> {
         </Page>
       </StateMenuContextProvider>
     );
-    // return <h1>{`HALLO ${this.props.namespace}`}</h1>;
   }
 }
 

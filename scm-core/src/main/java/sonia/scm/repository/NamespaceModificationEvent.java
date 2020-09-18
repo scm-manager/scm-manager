@@ -24,30 +24,28 @@
 
 package sonia.scm.repository;
 
-import sonia.scm.store.DataStore;
-import sonia.scm.store.DataStoreFactory;
+import sonia.scm.HandlerEventType;
+import sonia.scm.ModificationHandlerEvent;
+import sonia.scm.event.Event;
 
-import javax.inject.Inject;
-import java.util.Optional;
+/**
+ * Event which is fired whenever a namespace is modified.
+ *
+ * @since 2.6.0
+ */
+@Event
+public final class NamespaceModificationEvent extends NamespaceEvent implements ModificationHandlerEvent<Namespace> {
 
-public class NamespaceDao {
+  private final Namespace itemBeforeModification;
 
-  private final DataStore<Namespace> store;
-
-  @Inject
-  NamespaceDao(DataStoreFactory storeFactory) {
-    this.store = storeFactory.withType(Namespace.class).withName("namespaces").build();
+  public NamespaceModificationEvent(HandlerEventType eventType, Namespace item, Namespace itemBeforeModification) {
+    super(eventType, item, itemBeforeModification);
+    this.itemBeforeModification = itemBeforeModification;
   }
 
-  public Optional<Namespace> get(String namespace) {
-    return store.getOptional(namespace);
+  @Override
+  public Namespace getItemBeforeModification() {
+    return itemBeforeModification;
   }
 
-  public void add(Namespace namespace) {
-    store.put(namespace.getNamespace(), namespace);
-  }
-
-  public void delete(String namespace) {
-    store.remove(namespace);
-  }
 }

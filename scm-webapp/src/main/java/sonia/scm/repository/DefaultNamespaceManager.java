@@ -24,6 +24,10 @@
 
 package sonia.scm.repository;
 
+import com.github.legman.Subscribe;
+import sonia.scm.HandlerEventType;
+import sonia.scm.event.ScmEventBus;
+
 import javax.inject.Inject;
 import java.util.Collection;
 import java.util.Optional;
@@ -36,11 +40,13 @@ public class DefaultNamespaceManager implements NamespaceManager {
 
   private final RepositoryManager repositoryManager;
   private final NamespaceDao dao;
+  private final ScmEventBus eventBus;
 
   @Inject
-  public DefaultNamespaceManager(RepositoryManager repositoryManager, NamespaceDao dao) {
+  public DefaultNamespaceManager(RepositoryManager repositoryManager, NamespaceDao dao, ScmEventBus eventBus) {
     this.repositoryManager = repositoryManager;
     this.dao = dao;
+    this.eventBus = eventBus;
   }
 
   @Override
@@ -64,15 +70,45 @@ public class DefaultNamespaceManager implements NamespaceManager {
 
   @Override
   public void modify(Namespace namespace) {
-    if (!get(namespace.getNamespace()).isPresent()) {
-      throw notFound(entity("Namespace", namespace.getNamespace()));
-    }
+    NamespacePermissions.permissionWrite().check();
+    Namespace oldNamespace = get(namespace.getNamespace())
+      .orElseThrow(() -> notFound(entity(Namespace.class, namespace.getNamespace())));
+    fireEvent(HandlerEventType.BEFORE_MODIFY, namespace, oldNamespace);
     dao.add(namespace);
+    fireEvent(HandlerEventType.MODIFY, namespace, oldNamespace);
+  }
+
+  @Subscribe
+  public void cleanupDeletedNamespaces(RepositoryEvent repositoryEvent) {
+    HandlerEventType eventType = repositoryEvent.getEventType();
+    if (eventType == HandlerEventType.DELETE || eventType == HandlerEventType.MODIFY && !repositoryEvent.getItem().getNamespace().equals(repositoryEvent.getOldItem().getNamespace())) {
+      Collection<String> allNamespaces = repositoryManager.getAllNamespaces();
+      String oldNamespace = getOldNamespace(repositoryEvent);
+      if (!allNamespaces.contains(oldNamespace)) {
+        dao.delete(oldNamespace);
+      }
+    }
+  }
+
+  public String getOldNamespace(RepositoryEvent repositoryEvent) {
+    if (repositoryEvent.getEventType() == HandlerEventType.DELETE) {
+      return repositoryEvent.getItem().getNamespace();
+    } else {
+      return repositoryEvent.getOldItem().getNamespace();
+    }
   }
 
   private Namespace createNamespaceForName(String namespace) {
-    return dao.get(namespace)
-      .map(Namespace::clone)
-      .orElse(new Namespace(namespace));
+    if (NamespacePermissions.permissionRead().isPermitted()) {
+      return dao.get(namespace)
+        .map(Namespace::clone)
+        .orElse(new Namespace(namespace));
+    } else {
+      return new Namespace(namespace);
+    }
+  }
+
+  protected void fireEvent(HandlerEventType event, Namespace namespace, Namespace oldNamespace) {
+    eventBus.post(new NamespaceModificationEvent(event, namespace, oldNamespace));
   }
 }

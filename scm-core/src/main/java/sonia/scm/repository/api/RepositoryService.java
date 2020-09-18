@@ -177,7 +177,7 @@ public final class RepositoryService implements Closeable {
     LOG.debug("create branch command for repository {}",
       repository.getNamespaceAndName());
 
-    return new BranchCommandBuilder(provider.getBranchCommand());
+    return new BranchCommandBuilder(repository, provider.getBranchCommand());
   }
 
   /**

@@ -34,7 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Namespace;
 import sonia.scm.repository.NamespaceManager;
-import sonia.scm.repository.NamespacePermissions;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.web.VndMediaType;
 
@@ -50,7 +49,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 import java.net.URI;
-import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Predicate;
 
@@ -120,7 +118,6 @@ public class NamespacePermissionResource {
   public Response create(@PathParam("namespace") String namespaceName, @Valid RepositoryPermissionDto permission) {
     log.info("try to add new permission: {}", permission);
     Namespace namespace = load(namespaceName);
-    NamespacePermissions.permissionWrite().check();
     checkPermissionAlreadyExists(permission, namespace);
     namespace.addPermission(dtoToModelMapper.map(permission));
     manager.modify(namespace);
@@ -164,7 +161,6 @@ public class NamespacePermissionResource {
   )
   public RepositoryPermissionDto get(@PathParam("namespace") String namespaceName, @PathParam("permission-name") String permissionName) {
     Namespace namespace = load(namespaceName);
-    NamespacePermissions.permissionRead().check();
     return
       namespace.getPermissions()
         .stream()
@@ -210,7 +206,6 @@ public class NamespacePermissionResource {
   )
   public HalRepresentation getAll(@PathParam("namespace") String namespaceMame) {
     Namespace namespace = load(namespaceMame);
-    NamespacePermissions.permissionRead().check();
     return repositoryPermissionCollectionToDtoMapper.map(namespace);
   }
 
@@ -241,7 +236,6 @@ public class NamespacePermissionResource {
                          @Valid RepositoryPermissionDto permission) {
     log.info("try to update the permission with name: {}. the modified permission is: {}", permissionName, permission);
     Namespace namespace = load(namespaceName);
-    NamespacePermissions.permissionWrite().check();
     String extractedPermissionName = getPermissionName(permissionName);
     if (!isPermissionExist(new RepositoryPermissionDto(extractedPermissionName, isGroupPermission(permissionName)), namespace)) {
       throw notFound(entity(RepositoryPermission.class, permissionName).in(Namespace.class, namespaceName));
@@ -289,7 +283,6 @@ public class NamespacePermissionResource {
                          @PathParam("permission-name") String permissionName) {
     log.info("try to delete the permission with name: {}.", permissionName);
     Namespace namespace = load(namespaceName);
-    NamespacePermissions.permissionWrite().check();
     namespace.getPermissions()
       .stream()
       .filter(filterPermission(permissionName))
