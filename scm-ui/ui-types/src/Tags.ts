@@ -27,6 +27,6 @@ import { Links } from "./hal";
 export type Tag = {
   name: string;
   revision: string;
-  date: Date;
+  date?: Date;
   _links: Links;
 };

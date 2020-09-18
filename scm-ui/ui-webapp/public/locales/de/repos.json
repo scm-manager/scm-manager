@@ -81,7 +81,7 @@
     }
   },
   "tag": {
-    "name": "Tag-Name",
+    "name": "Name",
     "commit": "Commit",
     "sources": "Sources"
   },

@@ -27,15 +27,11 @@ import { useTranslation } from "react-i18next";
 import { Tag } from "@scm-manager/ui-types";
 
 type Props = {
-  tag?: Tag;
+  tag: Tag;
 };
 
 const HgTagInformation: FC<Props> = ({ tag }) => {
   const [t] = useTranslation("plugins");
-
-  if (!tag) {
-    return null;
-  }
 
   return (
     <>

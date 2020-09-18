@@ -25,8 +25,8 @@
 // sort tags by date beginning with latest first
 import { Tag } from "@scm-manager/ui-types";
 
-export default function orderTags(tags: Tag[]) {
+export default (tags: Tag[]) => {
   tags.sort((a, b) => {
-   return new Date(b.date) - new Date(a.date);
+    return new Date(b.date) - new Date(a.date);
   });
-}
+};

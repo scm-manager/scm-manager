@@ -33,16 +33,12 @@ type Props = {
 const GitTagInformation: FC<Props> = ({ tag }) => {
   const [t] = useTranslation("plugins");
 
-  if (!tag) {
-    return null;
-  }
-
   return (
     <>
       <h4>{t("scm-git-plugin.information.checkoutTag")}</h4>
       <pre>
         <code>
-          git checkout tags/{tag?.name} -b branch/{tag?.name}
+          git checkout tags/{tag.name} -b branch/{tag.name}
         </code>
       </pre>
     </>

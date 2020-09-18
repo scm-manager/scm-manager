@@ -55,7 +55,7 @@ const TagsOverview: FC<Props> = ({ repository, baseUrl }) => {
 
   const renderTagsTable = () => {
     if (!loading && tags?.length > 0) {
-     orderTags(tags);
+      orderTags(tags);
       return <TagTable baseUrl={baseUrl} tags={tags} />;
     }
     return <Notification type="info">{t("tags.overview.noTags")}</Notification>;
@@ -69,12 +69,7 @@ const TagsOverview: FC<Props> = ({ repository, baseUrl }) => {
     return <Loading />;
   }
 
-  return (
-    <>
-      <Subtitle subtitle={t("tags.overview.title")} />
-      {renderTagsTable()}
-    </>
-  );
+  return <>{renderTagsTable()}</>;
 };
 
 export default TagsOverview;

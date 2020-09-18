@@ -25,38 +25,44 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Repository, Tag } from "@scm-manager/ui-types";
-import { DateFromNow } from "@scm-manager/ui-components";
+import { DateFromNow, Level } from "@scm-manager/ui-components";
 import styled from "styled-components";
 import TagButtonGroup from "./TagButtonGroup";
 
 type Props = {
   repository: Repository;
-  tag?: Tag;
+  tag: Tag;
 };
 
+const FlexRow = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
 const Created = styled.div`
-  margin-top: 0.5rem;
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+`;
+
+const Label = styled.strong`
+  margin-right: 0.3rem;
 `;
 
 const Date = styled(DateFromNow)`
-font-size: 1rem;
+  font-size: 0.8rem;
 `;
 
 const TagDetail: FC<Props> = ({ tag, repository }) => {
   const [t] = useTranslation("repos");
 
-  if (!tag) {
-    return null;
-  }
-
   return (
     <div className="media">
-      <div className="media-content subtitle">
-        <strong>{t("tag.name") + ":"}</strong> {tag?.name}
+      <FlexRow className="media-content subtitle">
+        <Label>{t("tag.name") + ": "} </Label> {tag.name}
         <Created className="is-ellipsis-overflow">
-          <strong>{t("tags.overview.created") + ":"}</strong> <Date date={tag.date} className="has-text-grey" />
+          {t("tags.overview.created")} <Date date={tag.date} className="has-text-grey" />
         </Created>
-      </div>
+      </FlexRow>
       <div className="media-right">
         <TagButtonGroup repository={repository} tag={tag} />
       </div>

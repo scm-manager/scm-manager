@@ -29,7 +29,7 @@ import TagDetail from "./TagDetail";
 
 type Props = {
   repository: Repository;
-  tag?: Tag;
+  tag: Tag;
 };
 
 const TagView: FC<Props> = ({ repository, tag }) => {

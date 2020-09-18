@@ -37,14 +37,13 @@ type Props = {
 const TagRoot: FC<Props> = ({ repository, baseUrl }) => {
   const match = useRouteMatch();
   const [tags, setTags] = useState<Tag[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | undefined>(undefined);
   const [tag, setTag] = useState<Tag>();
 
   useEffect(() => {
     const link = (repository._links?.tags as Link)?.href;
     if (link) {
-      setLoading(true);
       apiClient
         .get(link)
         .then(r => r.json())
