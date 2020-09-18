@@ -22,23 +22,33 @@
  * SOFTWARE.
  */
 
-import { binder } from "@scm-manager/ui-extensions";
-import ProtocolInformation from "./ProtocolInformation";
-import HgAvatar from "./HgAvatar";
-import { ConfigurationBinder as cfgBinder } from "@scm-manager/ui-components";
-import HgGlobalConfiguration from "./HgGlobalConfiguration";
-import HgBranchInformation from "./HgBranchInformation";
-import HgTagInformation from "./HgTagInformation";
+import React, { FC } from "react";
+import { Repository, Tag } from "@scm-manager/ui-types";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import TagDetail from "./TagDetail";
 
-const hgPredicate = (props: any) => {
-  return props.repository && props.repository.type === "hg";
+type Props = {
+  repository: Repository;
+  tag: Tag;
 };
 
-binder.bind("repos.repository-details.information", ProtocolInformation, hgPredicate);
-binder.bind("repos.branch-details.information", HgBranchInformation, hgPredicate);
-binder.bind("repos.tag-details.information", HgTagInformation, hgPredicate);
-binder.bind("repos.repository-avatar", HgAvatar, hgPredicate);
+const TagView: FC<Props> = ({ repository, tag }) => {
+  return (
+    <>
+      <TagDetail tag={tag} repository={repository} />
+      <hr />
+      <div className="content">
+        <ExtensionPoint
+          name="repos.tag-details.information"
+          renderAll={true}
+          props={{
+            repository,
+            tag
+          }}
+        />
+      </div>
+    </>
+  );
+};
 
-// bind global configuration
-
-cfgBinder.bindGlobal("/hg", "scm-hg-plugin.config.link", "hgConfig", HgGlobalConfiguration);
+export default TagView;

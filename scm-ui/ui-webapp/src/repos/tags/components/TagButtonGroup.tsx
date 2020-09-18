@@ -22,23 +22,32 @@
  * SOFTWARE.
  */
 
-import { binder } from "@scm-manager/ui-extensions";
-import ProtocolInformation from "./ProtocolInformation";
-import HgAvatar from "./HgAvatar";
-import { ConfigurationBinder as cfgBinder } from "@scm-manager/ui-components";
-import HgGlobalConfiguration from "./HgGlobalConfiguration";
-import HgBranchInformation from "./HgBranchInformation";
-import HgTagInformation from "./HgTagInformation";
+import React, { FC } from "react";
+import { Tag, Repository } from "@scm-manager/ui-types";
+import { Button, ButtonAddons } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 
-const hgPredicate = (props: any) => {
-  return props.repository && props.repository.type === "hg";
+type Props = {
+  repository: Repository;
+  tag: Tag;
 };
 
-binder.bind("repos.repository-details.information", ProtocolInformation, hgPredicate);
-binder.bind("repos.branch-details.information", HgBranchInformation, hgPredicate);
-binder.bind("repos.tag-details.information", HgTagInformation, hgPredicate);
-binder.bind("repos.repository-avatar", HgAvatar, hgPredicate);
+const TagButtonGroup: FC<Props> = ({ repository, tag }) => {
+  const [t] = useTranslation("repos");
 
-// bind global configuration
+  const changesetLink = `/repo/${repository.namespace}/${repository.name}/code/changeset/${encodeURIComponent(
+    tag.revision
+  )}`;
+  const sourcesLink = `/repo/${repository.namespace}/${repository.name}/sources/${encodeURIComponent(tag.revision)}/`;
 
-cfgBinder.bindGlobal("/hg", "scm-hg-plugin.config.link", "hgConfig", HgGlobalConfiguration);
+  return (
+    <>
+      <ButtonAddons>
+        <Button link={changesetLink} icon="exchange-alt" label={t("tag.commit")} reducedMobile={true} />
+        <Button link={sourcesLink} icon="code" label={t("tag.sources")} reducedMobile={true} />
+      </ButtonAddons>
+    </>
+  );
+};
+
+export default TagButtonGroup;

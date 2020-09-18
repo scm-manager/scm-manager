@@ -21,28 +21,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React, { FC } from "react";
-import { Link } from "react-router-dom";
-import { Branch } from "@scm-manager/ui-types";
-import DefaultBranchTag from "./DefaultBranchTag";
+import { useTranslation } from "react-i18next";
+import { Repository, Tag } from "@scm-manager/ui-types";
+import { DateFromNow, Level } from "@scm-manager/ui-components";
+import styled from "styled-components";
+import TagButtonGroup from "./TagButtonGroup";
 
 type Props = {
-  baseUrl: string;
-  branch: Branch;
+  repository: Repository;
+  tag: Tag;
 };
 
-const BranchRow: FC<Props> = ({ baseUrl, branch }) => {
-  const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
+const FlexRow = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const Created = styled.div`
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+`;
+
+const Label = styled.strong`
+  margin-right: 0.3rem;
+`;
+
+const Date = styled(DateFromNow)`
+  font-size: 0.8rem;
+`;
+
+const TagDetail: FC<Props> = ({ tag, repository }) => {
+  const [t] = useTranslation("repos");
+
   return (
-    <tr>
-      <td>
-        <Link to={to} title={branch.name}>
-          {branch.name}
-          <DefaultBranchTag defaultBranch={branch.defaultBranch} />
-        </Link>
-      </td>
-    </tr>
+    <div className="media">
+      <FlexRow className="media-content subtitle">
+        <Label>{t("tag.name") + ": "} </Label> {tag.name}
+        <Created className="is-ellipsis-overflow">
+          {t("tags.overview.created")} <Date date={tag.date} className="has-text-grey" />
+        </Created>
+      </FlexRow>
+      <div className="media-right">
+        <TagButtonGroup repository={repository} tag={tag} />
+      </div>
+    </div>
   );
 };
 
-export default BranchRow;
+export default TagDetail;

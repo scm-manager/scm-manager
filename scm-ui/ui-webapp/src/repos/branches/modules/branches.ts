@@ -24,7 +24,7 @@
 
 import { FAILURE_SUFFIX, PENDING_SUFFIX, RESET_SUFFIX, SUCCESS_SUFFIX } from "../../../modules/types";
 import { apiClient } from "@scm-manager/ui-components";
-import { Action, Branch, BranchRequest, Repository } from "@scm-manager/ui-types";
+import { Action, Branch, BranchRequest, Repository, Link } from "@scm-manager/ui-types";
 import { isPending } from "../../../modules/pending";
 import { getFailure } from "../../../modules/failure";
 
@@ -65,7 +65,7 @@ export function fetchBranches(repository: Repository) {
   return function(dispatch: any) {
     dispatch(fetchBranchesPending(repository));
     return apiClient
-      .get(repository._links.branches.href)
+      .get((repository._links.branches as Link).href)
       .then(response => response.json())
       .then(data => {
         dispatch(fetchBranchesSuccess(data, repository));
@@ -77,7 +77,7 @@ export function fetchBranches(repository: Repository) {
 }
 
 export function fetchBranch(repository: Repository, name: string) {
-  let link = repository._links.branches.href;
+  let link = (repository._links.branches as Link).href;
   if (!link.endsWith("/")) {
     link += "/";
   }

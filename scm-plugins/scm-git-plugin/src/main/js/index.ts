@@ -32,6 +32,7 @@ import GitGlobalConfiguration from "./GitGlobalConfiguration";
 import GitBranchInformation from "./GitBranchInformation";
 import GitMergeInformation from "./GitMergeInformation";
 import RepositoryConfig from "./RepositoryConfig";
+import GitTagInformation from "./GitTagInformation";
 
 // repository
 
@@ -42,6 +43,7 @@ export const gitPredicate = (props: any) => {
 
 binder.bind("repos.repository-details.information", ProtocolInformation, gitPredicate);
 binder.bind("repos.branch-details.information", GitBranchInformation, gitPredicate);
+binder.bind("repos.tag-details.information", GitTagInformation, gitPredicate);
 binder.bind("repos.repository-merge.information", GitMergeInformation, gitPredicate);
 binder.bind("repos.repository-avatar", GitAvatar, gitPredicate);
 

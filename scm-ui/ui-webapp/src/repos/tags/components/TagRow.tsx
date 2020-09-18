@@ -22,23 +22,39 @@
  * SOFTWARE.
  */
 
-import { binder } from "@scm-manager/ui-extensions";
-import ProtocolInformation from "./ProtocolInformation";
-import HgAvatar from "./HgAvatar";
-import { ConfigurationBinder as cfgBinder } from "@scm-manager/ui-components";
-import HgGlobalConfiguration from "./HgGlobalConfiguration";
-import HgBranchInformation from "./HgBranchInformation";
-import HgTagInformation from "./HgTagInformation";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { Tag } from "@scm-manager/ui-types";
+import styled from "styled-components";
+import { DateFromNow } from "@scm-manager/ui-components";
 
-const hgPredicate = (props: any) => {
-  return props.repository && props.repository.type === "hg";
+type Props = {
+  tag: Tag;
+  baseUrl: string;
 };
 
-binder.bind("repos.repository-details.information", ProtocolInformation, hgPredicate);
-binder.bind("repos.branch-details.information", HgBranchInformation, hgPredicate);
-binder.bind("repos.tag-details.information", HgTagInformation, hgPredicate);
-binder.bind("repos.repository-avatar", HgAvatar, hgPredicate);
+const Created = styled.span`
+  margin-left: 1rem;
+  font-size: 0.8rem;
+`;
 
-// bind global configuration
+const TagRow: FC<Props> = ({ tag, baseUrl }) => {
+  const [t] = useTranslation("repos");
 
-cfgBinder.bindGlobal("/hg", "scm-hg-plugin.config.link", "hgConfig", HgGlobalConfiguration);
+  const to = `${baseUrl}/${encodeURIComponent(tag.name)}/info`;
+  return (
+    <tr>
+      <td>
+        <Link to={to} title={tag.name}>
+          {tag.name}
+          <Created className="has-text-grey is-ellipsis-overflow">
+            {t("tags.overview.created")} <DateFromNow date={tag.date} />
+          </Created>
+        </Link>
+      </td>
+    </tr>
+  );
+};
+
+export default TagRow;
