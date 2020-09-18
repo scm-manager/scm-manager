@@ -220,6 +220,18 @@ public class AuthorizationChangedEventProducerTest {
     assertEventIsNotFired();
   }
 
+  @Test
+  public void testOnRepositoryNamespaceChanged()
+  {
+    Repository repositoryModified = RepositoryTestData.createHeartOfGold();
+    repositoryModified.setName("test123");
+    Repository repository = RepositoryTestData.createHeartOfGold();
+
+    repositoryModified.setNamespace("new_namespace");
+    producer.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
+    assertGlobalEventIsFired();
+  }
+
   private void resetStoredEvent(){
     producer.event = null;
   }
