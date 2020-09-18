@@ -55,20 +55,17 @@ type Props = RouteComponentProps &
   };
 
 class Admin extends React.Component<Props> {
-  matchedUrl = () => {
-    return urls.stripEndingSlash(this.props.match.url);
-  };
 
   matchesRoles = (route: any) => {
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
     const regex = new RegExp(`${url}/role/`);
     return route.location.pathname.match(regex);
   };
 
   render() {
-    const { links, availablePluginsLink, installedPluginsLink, t } = this.props;
+    const { links, availablePluginsLink, installedPluginsLink, match, t } = this.props;
 
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
     const extensionProps = {
       links,
       url

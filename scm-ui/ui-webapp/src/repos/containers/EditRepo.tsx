@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import { RouteComponentProps, withRouter } from "react-router-dom";
 import RepositoryForm from "../components/form";
 import { Repository, Links } from "@scm-manager/ui-types";
 import { getModifyRepoFailure, isModifyRepoPending, modifyRepo, modifyRepoReset } from "../modules/repos";
@@ -35,7 +35,7 @@ import DangerZone from "./DangerZone";
 import { getLinks } from "../../modules/indexResource";
 import { urls } from "@scm-manager/ui-components";
 
-type Props = {
+type Props = RouteComponentProps & {
   loading: boolean;
   error: Error;
   indexLinks: Links;
@@ -46,7 +46,6 @@ type Props = {
   // context props
   repository: Repository;
   history: History;
-  match: any;
 };
 
 class EditRepo extends React.Component<Props> {
@@ -60,14 +59,10 @@ class EditRepo extends React.Component<Props> {
     history.push(`/repo/${repository.namespace}/${repository.name}`);
   };
 
-  matchedUrl = () => {
-    return urls.stripEndingSlash(this.props.match.url);
-  };
-
   render() {
     const { loading, error, repository, indexLinks } = this.props;
 
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
 
     const extensionProps = {
       repository,

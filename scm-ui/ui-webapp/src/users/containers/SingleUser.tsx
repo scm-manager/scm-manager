@@ -66,10 +66,6 @@ class SingleUser extends React.Component<Props> {
     this.props.fetchUserByName(this.props.usersLink, this.props.name);
   }
 
-  matchedUrl = () => {
-    return urls.stripEndingSlash(this.props.match.url);
-  };
-
   render() {
     const { t, loading, error, user } = this.props;
 
@@ -81,7 +77,7 @@ class SingleUser extends React.Component<Props> {
       return <Loading />;
     }
 
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
 
     const extensionProps = {
       user,

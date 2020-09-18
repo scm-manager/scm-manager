@@ -66,10 +66,6 @@ const TagRoot: FC<Props> = ({ repository, baseUrl }) => {
     }
   }, [tags]);
 
-  const matchedUrl = () => {
-    return urls.stripEndingSlash(match.url);
-  };
-
   if (error) {
     return <ErrorNotification error={error} />;
   }
@@ -78,7 +74,7 @@ const TagRoot: FC<Props> = ({ repository, baseUrl }) => {
     return <Loading />;
   }
 
-  const url = matchedUrl();
+  const url = urls.matchedUrlFromMatch(match);
 
   return (
     <Switch>

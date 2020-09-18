@@ -43,6 +43,7 @@ import {
 import Permissions from "../../permissions/containers/Permissions";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import PermissionsNavLink from "./PermissionsNavLink";
+import { urls } from "@scm-manager/ui-components";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -62,20 +63,9 @@ class NamespaceRoot extends React.Component<Props> {
     fetchNamespace(namespacesLink, namespaceName);
   }
 
-  stripEndingSlash = (url: string) => {
-    if (url.endsWith("/")) {
-      return url.substring(0, url.length - 1);
-    }
-    return url;
-  };
-
-  matchedUrl = () => {
-    return this.stripEndingSlash(this.props.match.url);
-  };
-
   render() {
     const { loading, error, namespaceName, namespace, t } = this.props;
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
 
     const extensionProps = {
       namespace,

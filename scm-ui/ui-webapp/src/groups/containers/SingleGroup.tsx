@@ -64,10 +64,6 @@ class SingleGroup extends React.Component<Props> {
     this.props.fetchGroupByName(this.props.groupLink, this.props.name);
   }
 
-  matchedUrl = () => {
-    return urls.stripEndingSlash(this.props.match.url);
-  };
-
   render() {
     const { t, loading, error, group } = this.props;
 
@@ -79,7 +75,7 @@ class SingleGroup extends React.Component<Props> {
       return <Loading />;
     }
 
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
 
     const extensionProps = {
       group,

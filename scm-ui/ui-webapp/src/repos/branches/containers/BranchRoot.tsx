@@ -55,14 +55,10 @@ class BranchRoot extends React.Component<Props> {
     fetchBranch(repository, branchName);
   }
 
-  matchedUrl = () => {
-    return urls.stripEndingSlash(this.props.match.url);
-  };
-
   render() {
     const { repository, branch, loading, error, match, location } = this.props;
 
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
 
     if (error) {
       if (error instanceof NotFoundError && queryString.parse(location.search).create === "true") {

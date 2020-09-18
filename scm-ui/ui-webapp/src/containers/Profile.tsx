@@ -55,10 +55,6 @@ type Props = RouteComponentProps &
   };
 
 class Profile extends React.Component<Props> {
-  matchedUrl = () => {
-    return urls.stripEndingSlash(this.props.match.url);
-  };
-
   mayChangePassword = () => {
     const { me } = this.props;
     return !!me?._links?.password;
@@ -70,7 +66,7 @@ class Profile extends React.Component<Props> {
   };
 
   render() {
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
 
     const { me, t } = this.props;
 
