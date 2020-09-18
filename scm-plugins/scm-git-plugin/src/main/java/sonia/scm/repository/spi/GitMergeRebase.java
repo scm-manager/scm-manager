@@ -63,7 +63,7 @@ public class GitMergeRebase extends GitMergeStrategy {
           .setUpstream(targetBranch)
           .call();
     } catch (GitAPIException e) {
-      throw new InternalRepositoryException(getContext().getRepository(), "could not merge branch " + branchToMerge + " into " + targetBranch, e);
+      throw new InternalRepositoryException(getContext().getRepository(), "could not rebase branch " + branchToMerge + " onto " + targetBranch, e);
     }
 
     if (result.getStatus().isSuccessful()) {
@@ -84,7 +84,6 @@ public class GitMergeRebase extends GitMergeStrategy {
       getClone()
         .merge()
         .setFastForward(MergeCommand.FastForwardMode.FF_ONLY)
-        .setCommit(false) // we want to set the author manually
         .include(branchToMerge, sourceRevision)
         .call();
       push();

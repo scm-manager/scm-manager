@@ -496,7 +496,7 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void shouldRejectRebaseMergeIfBranchCannotBeRebased() {
+  public void shouldRejectRebaseMergeIfBranchCannotBeRebased() throws IOException, GitAPIException {
     GitMergeCommand command = createCommand();
     MergeCommandRequest request = new MergeCommandRequest();
     request.setTargetBranch("master");
@@ -507,6 +507,10 @@ public class GitMergeCommandTest extends AbstractGitCommandTestBase {
     MergeCommandResult mergeCommandResult = command.merge(request);
 
     assertThat(mergeCommandResult.isSuccess()).isFalse();
+    Repository repository = createContext().open();
+    Iterable<RevCommit> commits = new Git(repository).log().add(repository.resolve("master")).setMaxCount(1).call();
+    RevCommit headCommit = commits.iterator().next();
+    assertThat(headCommit.getName()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
 
   }
 
