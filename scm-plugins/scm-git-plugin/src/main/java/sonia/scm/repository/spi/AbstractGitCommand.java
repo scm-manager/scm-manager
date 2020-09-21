@@ -273,6 +273,11 @@ class AbstractGitCommand {
         User user = subject.getPrincipals().oneByType(User.class);
         String name = user.getDisplayName();
         String email = user.getMail();
+
+        if (email == null) {
+          email = "noreply@scm-manager.org";
+        }
+
         logger.debug("no author set; using logged in user: {} <{}>", name, email);
         return new Person(name, email);
       } else {
