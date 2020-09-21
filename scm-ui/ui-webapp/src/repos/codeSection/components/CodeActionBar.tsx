@@ -41,6 +41,13 @@ const ActionBar = styled.div`
   margin-bottom: 1em;
 `;
 
+const FlexShrinkLevel = styled(Level)`
+  .level-left {
+    flex-shrink: 1;
+    margin-right: 0.75rem;
+  }
+`;
+
 type Props = {
   selectedBranch?: string;
   branches: Branch[];
@@ -54,7 +61,7 @@ const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, sw
 
   return (
     <ActionBar>
-      <Level
+      <FlexShrinkLevel
         left={
           branches?.length > 0 && (
             <BranchSelector
