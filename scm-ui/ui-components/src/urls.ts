@@ -23,6 +23,7 @@
  */
 
 import queryString from "query-string";
+import { RouteComponentProps } from "react-router-dom";
 
 //@ts-ignore
 export const contextPath = window.ctxPath || "";
@@ -79,4 +80,20 @@ function parsePageNumber(pageAsString: string) {
 
 export function getQueryStringFromLocation(location: any) {
   return location.search ? queryString.parse(location.search).q : undefined;
+}
+
+export function stripEndingSlash(url: string) {
+  if (url.endsWith("/")) {
+    return url.substring(0, url.length - 1);
+  }
+  return url;
+}
+
+export function matchedUrlFromMatch(match: any) {
+  return stripEndingSlash(match.url);
+}
+
+export function matchedUrl(props: RouteComponentProps) {
+  const match = props.match;
+  return matchedUrlFromMatch(match);
 }

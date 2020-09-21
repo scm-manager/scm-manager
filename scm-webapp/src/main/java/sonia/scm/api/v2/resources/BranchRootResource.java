@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.common.base.Strings;
@@ -120,7 +120,11 @@ public class BranchRootResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  public Response get(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("branch") String branchName) throws IOException {
+  public Response get(
+    @PathParam("namespace") String namespace,
+    @PathParam("name") String name,
+    @PathParam("branch") String branchName
+  ) throws IOException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       Branches branches = repositoryService.getBranchesCommand().getBranches();
@@ -293,7 +297,10 @@ public class BranchRootResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response getAll(@PathParam("namespace") String namespace, @PathParam("name") String name) throws IOException {
+  public Response getAll(
+    @PathParam("namespace") String namespace,
+    @PathParam("name") String name
+  ) throws IOException {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Branches branches = repositoryService.getBranchesCommand().getBranches();
       return Response.ok(branchCollectionToDtoMapper.map(repositoryService.getRepository(), branches.getBranches())).build();

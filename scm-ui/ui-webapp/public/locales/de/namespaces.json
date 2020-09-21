@@ -5,5 +5,10 @@
       "settingsNavLink": "Einstellungen",
       "permissionsNavLink": "Berechtigungen"
     }
+  },
+  "repositoryOverview": {
+    "settings": {
+      "tooltip": "Einstellungen für den Namespace"
+    }
   }
 }

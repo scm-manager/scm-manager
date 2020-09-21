@@ -5,6 +5,7 @@ partiallyActive: true
 The Repository area includes everything based on repositories in namespaces. This includes all operations on branches, the code and settings.
 
 * [Branches](branches/)
+* [Tags](tags/)
 * [Code](code/)
 * [Settings](settings/)
 

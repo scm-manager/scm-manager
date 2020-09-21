@@ -24,8 +24,13 @@
 
 package sonia.scm.repository;
 
-import com.github.legman.EventBus;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -41,6 +46,7 @@ import java.util.Optional;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static sonia.scm.HandlerEventType.DELETE;
@@ -54,6 +60,8 @@ class DefaultNamespaceManagerTest {
   RepositoryManager repositoryManager;
   @Mock
   ScmEventBus eventBus;
+  @Mock
+  Subject subject;
 
   Namespace life;
 
@@ -64,8 +72,7 @@ class DefaultNamespaceManagerTest {
 
   @BeforeEach
   void mockExistingNamespaces() {
-    dao = new NamespaceDao(new InMemoryDataStoreFactory(new InMemoryDataStore()));
-    manager = new DefaultNamespaceManager(repositoryManager, dao, eventBus);
+    dao = new NamespaceDao(new InMemoryDataStoreFactory(new InMemoryDataStore<Namespace>()));
 
     when(repositoryManager.getAllNamespaces()).thenReturn(asList("life", "universe", "rest"));
 
@@ -76,6 +83,18 @@ class DefaultNamespaceManagerTest {
 
     universe = new Namespace("universe");
     rest = new Namespace("rest");
+
+    manager = new DefaultNamespaceManager(repositoryManager, dao, eventBus);
+  }
+
+  @BeforeEach
+  void mockSubject() {
+    ThreadContext.bind(subject);
+  }
+
+  @AfterEach
+  void unbindSubject() {
+    ThreadContext.unbindSubject();
   }
 
   @Test
@@ -83,49 +102,6 @@ class DefaultNamespaceManagerTest {
     Optional<Namespace> namespace = manager.get("dolphins");
 
     assertThat(namespace).isEmpty();
-  }
-
-  @Test
-  void shouldCreateNewNamespaceObjectIfNotInStore() {
-    Namespace namespace = manager.get("universe").orElse(null);
-
-    assertThat(namespace).isEqualTo(universe);
-    assertThat(namespace.getPermissions()).isEmpty();
-  }
-
-  @Test
-  void shouldEnrichExistingNamespaceWithPermissions() {
-    Namespace namespace = manager.get("life").orElse(null);
-
-    assertThat(namespace.getPermissions()).containsExactly(life.getPermissions().toArray(new RepositoryPermission[0]));
-  }
-
-  @Test
-  void shouldEnrichExistingNamespaceWithPermissionsInGetAll() {
-    Collection<Namespace> namespaces = manager.getAll();
-
-    assertThat(namespaces).containsExactly(
-      life,
-      universe,
-      rest
-    );
-    Namespace foundLifeNamespace = namespaces.stream().filter(namespace -> namespace.getNamespace().equals("life")).findFirst().get();
-    assertThat(
-      foundLifeNamespace.getPermissions()).containsExactly(life.getPermissions().toArray(new RepositoryPermission[0]));
-  }
-
-  @Test
-  void shouldModifyExistingNamespaceWithPermissions() {
-    Namespace modifiedNamespace = manager.get("life").get();
-
-    modifiedNamespace.setPermissions(asList(new RepositoryPermission("Arthur Dent", "READ", false)));
-    manager.modify(modifiedNamespace);
-
-    Namespace newLife = manager.get("life").get();
-
-    assertThat(newLife).isEqualTo(modifiedNamespace);
-    verify(eventBus).post(argThat(event -> ((NamespaceModificationEvent)event).getEventType() == HandlerEventType.BEFORE_MODIFY));
-    verify(eventBus).post(argThat(event -> ((NamespaceModificationEvent)event).getEventType() == HandlerEventType.MODIFY));
   }
 
   @Test
@@ -148,5 +124,94 @@ class DefaultNamespaceManagerTest {
         new Repository("1", "git", "life", "earth")));
 
     assertThat(dao.get("life")).isEmpty();
+  }
+
+  @Nested
+  class WithPermissionToReadPermissions {
+
+    @BeforeEach
+    void grantReadPermission() {
+      when(subject.isPermitted("namespace:permissionRead")).thenReturn(true);
+    }
+
+    @Test
+    void shouldCreateNewNamespaceObjectIfNotInStore() {
+      Namespace namespace = manager.get("universe").orElse(null);
+
+      assertThat(namespace).isEqualTo(universe);
+      assertThat(namespace.getPermissions()).isEmpty();
+    }
+
+    @Test
+    void shouldEnrichExistingNamespaceWithPermissions() {
+      Namespace namespace = manager.get("life").orElse(null);
+
+      assertThat(namespace.getPermissions()).containsExactly(life.getPermissions().toArray(new RepositoryPermission[0]));
+    }
+
+    @Test
+    void shouldEnrichExistingNamespaceWithPermissionsInGetAll() {
+      Collection<Namespace> namespaces = manager.getAll();
+
+      assertThat(namespaces).containsExactly(
+        life,
+        universe,
+        rest
+      );
+      Namespace foundLifeNamespace = namespaces.stream().filter(namespace -> namespace.getNamespace().equals("life")).findFirst().get();
+      assertThat(
+        foundLifeNamespace.getPermissions()).containsExactly(life.getPermissions().toArray(new RepositoryPermission[0]));
+    }
+
+    @Test
+    void shouldModifyExistingNamespaceWithPermissions() {
+      Namespace modifiedNamespace = manager.get("life").get();
+
+      modifiedNamespace.setPermissions(asList(new RepositoryPermission("Arthur Dent", "READ", false)));
+      manager.modify(modifiedNamespace);
+
+      Namespace newLife = manager.get("life").get();
+
+      assertThat(newLife).isEqualTo(modifiedNamespace);
+      verify(eventBus).post(argThat(event -> ((NamespaceModificationEvent) event).getEventType() == HandlerEventType.BEFORE_MODIFY));
+      verify(eventBus).post(argThat(event -> ((NamespaceModificationEvent) event).getEventType() == HandlerEventType.MODIFY));
+    }
+  }
+
+  @Nested
+  class WithoutPermissionToReadOrWritePermissions {
+
+    @BeforeEach
+    void grantReadPermission() {
+      when(subject.isPermitted("namespace:permissionRead")).thenReturn(false);
+      lenient().doThrow(AuthorizationException.class).when(subject).checkPermission("namespace:permissionWrite");
+    }
+
+    @Test
+    void shouldNotEnrichExistingNamespaceWithPermissions() {
+      Namespace namespace = manager.get("life").orElse(null);
+
+      assertThat(namespace.getPermissions()).isEmpty();
+    }
+
+    @Test
+    void shouldNotEnrichExistingNamespaceWithPermissionsInGetAll() {
+      Collection<Namespace> namespaces = manager.getAll();
+
+      assertThat(namespaces).containsExactly(
+        new Namespace("life"),
+        universe,
+        rest
+      );
+    }
+
+    @Test
+    void shouldNotModifyExistingNamespaceWithPermissions() {
+      Namespace modifiedNamespace = manager.get("life").get();
+
+      modifiedNamespace.setPermissions(asList(new RepositoryPermission("Arthur Dent", "READ", false)));
+
+      Assertions.assertThrows(AuthorizationException.class, () -> manager.modify(modifiedNamespace));
+    }
   }
 }

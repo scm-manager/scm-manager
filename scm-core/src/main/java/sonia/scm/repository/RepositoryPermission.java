@@ -119,9 +119,14 @@ public class RepositoryPermission implements PermissionObject, Serializable
     final RepositoryPermission other = (RepositoryPermission) obj;
 
     return Objects.equal(name, other.name)
-      && (verbs == null && other.verbs == null || verbs != null && other.verbs != null && CollectionUtils.isEqualCollection(verbs, other.verbs))
+      && equalVerbs(other)
       && Objects.equal(role, other.role)
       && Objects.equal(groupPermission, other.groupPermission);
+  }
+
+  public boolean equalVerbs(RepositoryPermission other) {
+    return verbs == null && other.verbs == null
+      || verbs != null && other.verbs != null && CollectionUtils.isEqualCollection(verbs, other.verbs);
   }
 
   /**

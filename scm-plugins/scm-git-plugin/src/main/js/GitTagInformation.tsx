@@ -22,40 +22,27 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+import React, { FC } from "react";
+import { Tag } from "@scm-manager/ui-types";
+import { useTranslation } from "react-i18next";
 
-import java.util.Collection;
-import java.util.Optional;
+type Props = {
+  tag: Tag;
+};
 
-/**
- * Manages namespaces. Mind that namespaces do not have a lifecycle on their own, but only do exist through
- * repositories. Therefore you cannot create or delete namespaces, but just change related settings like permissions
- * associated with them.
- *
- * @since 2.6.0
- */
-public interface NamespaceManager {
+const GitTagInformation: FC<Props> = ({ tag }) => {
+  const [t] = useTranslation("plugins");
 
-  /**
-   * Returns the Namespace with the given name.
-   *
-   * @param namespace The name of the requested namespace.
-   * @return Optional with the namespace for the given name, or an empty Optional if there is no such namespace
-   * (that is, there is no repository with this namespace).
-   */
-  Optional<Namespace> get(String namespace);
+  return (
+    <>
+      <h4>{t("scm-git-plugin.information.checkoutTag")}</h4>
+      <pre>
+        <code>
+          git checkout tags/{tag.name} -b branch/{tag.name}
+        </code>
+      </pre>
+    </>
+  );
+};
 
-  /**
-   * Returns a {@link java.util.Collection} of all namespaces.
-   *
-   * @return all namespaces
-   */
-  Collection<Namespace> getAll();
-
-  /**
-   * Modifies the given namespace.
-   *
-   * @param namespace The namespace to be modified.
-   */
-  void modify(Namespace namespace);
-}
+export default GitTagInformation;

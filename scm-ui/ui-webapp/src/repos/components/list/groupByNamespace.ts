@@ -65,5 +65,5 @@ function sortByName(a, b) {
 }
 
 function findNamespace(namespaces: NamespaceCollection, namespaceToFind: string) {
-  return namespaces._embedded.namespaces.filter(namespace => namespace.namespace === namespaceToFind)[0];
+  return namespaces._embedded.namespaces.find(namespace => namespace.namespace === namespaceToFind);
 }

@@ -56,16 +56,6 @@ public abstract class RepositoryPermissionToRepositoryPermissionDtoMapper {
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   public abstract RepositoryPermissionDto map(RepositoryPermission permission, @Context Namespace namespace);
 
-  @BeforeMapping
-  void validatePermissions(@Context Repository repository) {
-    RepositoryPermissions.permissionRead(repository).check();
-  }
-
-  @BeforeMapping
-  void validatePermissions(@Context Namespace namespace) {
-    NamespacePermissions.permissionRead().check();
-  }
-
   @AfterMapping
   void appendLinks(@MappingTarget RepositoryPermissionDto target, @Context Repository repository) {
     String permissionName = getUrlPermissionName(target);

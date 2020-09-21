@@ -22,40 +22,39 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+import React, { FC } from "react";
+import { Tag } from "@scm-manager/ui-types";
+import { useTranslation } from "react-i18next";
+import TagRow from "./TagRow";
 
-import java.util.Collection;
-import java.util.Optional;
+type Props = {
+  baseUrl: string;
+  tags: Tag[];
+};
 
-/**
- * Manages namespaces. Mind that namespaces do not have a lifecycle on their own, but only do exist through
- * repositories. Therefore you cannot create or delete namespaces, but just change related settings like permissions
- * associated with them.
- *
- * @since 2.6.0
- */
-public interface NamespaceManager {
+const TagTable: FC<Props> = ({ baseUrl, tags }) => {
+  const [t] = useTranslation("repos");
 
-  /**
-   * Returns the Namespace with the given name.
-   *
-   * @param namespace The name of the requested namespace.
-   * @return Optional with the namespace for the given name, or an empty Optional if there is no such namespace
-   * (that is, there is no repository with this namespace).
-   */
-  Optional<Namespace> get(String namespace);
+  const renderRow = () => {
+    let rowContent = null;
+    if (tags) {
+      rowContent = tags.map((tag, index) => {
+        return <TagRow key={index} baseUrl={baseUrl} tag={tag} />;
+      });
+    }
+    return rowContent;
+  };
 
-  /**
-   * Returns a {@link java.util.Collection} of all namespaces.
-   *
-   * @return all namespaces
-   */
-  Collection<Namespace> getAll();
+  return (
+    <table className="card-table table is-hoverable is-fullwidth is-word-break">
+      <thead>
+        <tr>
+          <th>{t("tags.table.tags")}</th>
+        </tr>
+      </thead>
+      <tbody>{renderRow()}</tbody>
+    </table>
+  );
+};
 
-  /**
-   * Modifies the given namespace.
-   *
-   * @param namespace The namespace to be modified.
-   */
-  void modify(Namespace namespace);
-}
+export default TagTable;

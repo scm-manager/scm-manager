@@ -6,6 +6,7 @@
       "replace": "Push an existing repository",
       "fetch": "Get remote changes",
       "checkout": "Switch branch",
+      "checkoutTag": "Checkout tag as new branch",
       "merge": {
         "heading": "How to merge source branch into target branch",
         "checkout": "1. Make sure your workspace is clean and checkout target branch",

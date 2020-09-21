@@ -22,40 +22,39 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { Tag } from "@scm-manager/ui-types";
+import styled from "styled-components";
+import { DateFromNow } from "@scm-manager/ui-components";
 
-import java.util.Collection;
-import java.util.Optional;
+type Props = {
+  tag: Tag;
+  baseUrl: string;
+};
 
-/**
- * Manages namespaces. Mind that namespaces do not have a lifecycle on their own, but only do exist through
- * repositories. Therefore you cannot create or delete namespaces, but just change related settings like permissions
- * associated with them.
- *
- * @since 2.6.0
- */
-public interface NamespaceManager {
+const Created = styled.span`
+  margin-left: 1rem;
+  font-size: 0.8rem;
+`;
 
-  /**
-   * Returns the Namespace with the given name.
-   *
-   * @param namespace The name of the requested namespace.
-   * @return Optional with the namespace for the given name, or an empty Optional if there is no such namespace
-   * (that is, there is no repository with this namespace).
-   */
-  Optional<Namespace> get(String namespace);
+const TagRow: FC<Props> = ({ tag, baseUrl }) => {
+  const [t] = useTranslation("repos");
 
-  /**
-   * Returns a {@link java.util.Collection} of all namespaces.
-   *
-   * @return all namespaces
-   */
-  Collection<Namespace> getAll();
+  const to = `${baseUrl}/${encodeURIComponent(tag.name)}/info`;
+  return (
+    <tr>
+      <td>
+        <Link to={to} title={tag.name}>
+          {tag.name}
+          <Created className="has-text-grey is-ellipsis-overflow">
+            {t("tags.overview.created")} <DateFromNow date={tag.date} />
+          </Created>
+        </Link>
+      </td>
+    </tr>
+  );
+};
 
-  /**
-   * Modifies the given namespace.
-   *
-   * @param namespace The namespace to be modified.
-   */
-  void modify(Namespace namespace);
-}
+export default TagRow;

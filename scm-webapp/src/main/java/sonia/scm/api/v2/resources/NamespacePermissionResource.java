@@ -60,10 +60,10 @@ import static sonia.scm.api.v2.resources.RepositoryPermissionDto.GROUP_PREFIX;
 @Slf4j
 public class NamespacePermissionResource {
 
-  private RepositoryPermissionDtoToRepositoryPermissionMapper dtoToModelMapper;
-  private RepositoryPermissionToRepositoryPermissionDtoMapper modelToDtoMapper;
-  private RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper;
-  private ResourceLinks resourceLinks;
+  private final RepositoryPermissionDtoToRepositoryPermissionMapper dtoToModelMapper;
+  private final RepositoryPermissionToRepositoryPermissionDtoMapper modelToDtoMapper;
+  private final RepositoryPermissionCollectionToDtoMapper repositoryPermissionCollectionToDtoMapper;
+  private final ResourceLinks resourceLinks;
   private final NamespaceManager manager;
 
   @Inject
@@ -234,7 +234,6 @@ public class NamespacePermissionResource {
   public void update(@PathParam("namespace") String namespaceName,
                          @PathParam("permission-name") String permissionName,
                          @Valid RepositoryPermissionDto permission) {
-    log.info("try to update the permission with name: {}. the modified permission is: {}", permissionName, permission);
     Namespace namespace = load(namespaceName);
     String extractedPermissionName = getPermissionName(permissionName);
     if (!isPermissionExist(new RepositoryPermissionDto(extractedPermissionName, isGroupPermission(permissionName)), namespace)) {
@@ -256,7 +255,7 @@ public class NamespacePermissionResource {
     }
     namespace.addPermission(newPermission);
     manager.modify(namespace);
-    log.info("the permission with name: {} is updated.", permissionName);
+    log.info("the permission with name: {} is updated to {}.", permissionName, permission);
   }
 
   /**
@@ -295,9 +294,9 @@ public class NamespacePermissionResource {
   }
 
   private Predicate<RepositoryPermission> filterPermission(String name) {
-    return permission -> getPermissionName(name).equals(permission.getName())
-      &&
-      permission.isGroupPermission() == isGroupPermission(name);
+    return permission ->
+      getPermissionName(name).equals(permission.getName())
+        && permission.isGroupPermission() == isGroupPermission(name);
   }
 
   private String getPermissionName(String permissionName) {
