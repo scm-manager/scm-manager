@@ -21,43 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
+import { Namespace } from "@scm-manager/ui-types";
+import { NavLink } from "@scm-manager/ui-components";
 
-import { PagedCollection, Links } from "./hal";
-
-export type Repository = {
-  namespace: string;
-  name: string;
-  type: string;
-  contact?: string;
-  description?: string;
-  creationDate?: string;
-  lastModified?: string;
-  _links: Links;
+type Props = WithTranslation & {
+  permissionUrl: string;
+  namespace: Namespace;
 };
 
-export type RepositoryCreation = Repository & {
-  contextEntries: { [key: string]: any };
-};
-
-export type Namespace = {
-  namespace: string;
-  _links: Links;
-};
-
-export type RepositoryCollection = PagedCollection & {
-  _embedded: {
-    repositories: Repository[] | string[];
+class PermissionsNavLink extends React.Component<Props> {
+  hasPermissionsLink = () => {
+    return this.props.namespace?._links?.permissions;
   };
-};
+  render() {
+    if (!this.hasPermissionsLink()) {
+      return null;
+    }
+    const { permissionUrl, t } = this.props;
+    return <NavLink to={permissionUrl} label={t("namespaceRoot.menu.permissionsNavLink")} />;
+  }
+}
 
-export type NamespaceCollection = {
-  _embedded: {
-    namespaces: Namespace[];
-  };
-};
-
-export type RepositoryGroup = {
-  name: string;
-  namespace?: Namespace;
-  repositories: Repository[];
-};
+export default withTranslation("namespaces")(PermissionsNavLink);

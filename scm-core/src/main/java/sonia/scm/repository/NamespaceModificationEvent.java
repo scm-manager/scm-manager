@@ -22,42 +22,30 @@
  * SOFTWARE.
  */
 
-import { PagedCollection, Links } from "./hal";
+package sonia.scm.repository;
 
-export type Repository = {
-  namespace: string;
-  name: string;
-  type: string;
-  contact?: string;
-  description?: string;
-  creationDate?: string;
-  lastModified?: string;
-  _links: Links;
-};
+import sonia.scm.HandlerEventType;
+import sonia.scm.ModificationHandlerEvent;
+import sonia.scm.event.Event;
 
-export type RepositoryCreation = Repository & {
-  contextEntries: { [key: string]: any };
-};
+/**
+ * Event which is fired whenever a namespace is modified.
+ *
+ * @since 2.6.0
+ */
+@Event
+public final class NamespaceModificationEvent extends NamespaceEvent implements ModificationHandlerEvent<Namespace> {
 
-export type Namespace = {
-  namespace: string;
-  _links: Links;
-};
+  private final Namespace itemBeforeModification;
 
-export type RepositoryCollection = PagedCollection & {
-  _embedded: {
-    repositories: Repository[] | string[];
-  };
-};
+  public NamespaceModificationEvent(HandlerEventType eventType, Namespace item, Namespace itemBeforeModification) {
+    super(eventType, item, itemBeforeModification);
+    this.itemBeforeModification = itemBeforeModification;
+  }
 
-export type NamespaceCollection = {
-  _embedded: {
-    namespaces: Namespace[];
-  };
-};
+  @Override
+  public Namespace getItemBeforeModification() {
+    return itemBeforeModification;
+  }
 
-export type RepositoryGroup = {
-  name: string;
-  namespace?: Namespace;
-  repositories: Repository[];
-};
+}

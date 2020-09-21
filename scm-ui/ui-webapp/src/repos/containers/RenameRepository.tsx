@@ -159,7 +159,9 @@ const RenameRepository: FC<Props> = ({ repository, indexLinks }) => {
           <p>
             <strong>{t("renameRepo.subtitle")}</strong>
             <br />
-            {t("renameRepo.description")}
+            {t("renameRepo.description1")}
+            <br />
+            {t("renameRepo.description2")}
           </p>
         }
         right={

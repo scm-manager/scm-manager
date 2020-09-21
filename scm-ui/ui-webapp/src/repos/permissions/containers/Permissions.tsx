@@ -57,13 +57,12 @@ import {
   getRepositoryVerbsLink,
   getUserAutoCompleteLink
 } from "../../../modules/indexResource";
-
 type Props = WithTranslation & {
   availablePermissions: boolean;
   availableRepositoryRoles: RepositoryRole[];
   availableVerbs: string[];
   namespace: string;
-  repoName: string;
+  repoName?: string;
   loading: boolean;
   error: Error;
   permissions: PermissionCollection;
@@ -77,17 +76,17 @@ type Props = WithTranslation & {
 
   // dispatch functions
   fetchAvailablePermissionsIfNeeded: (repositoryRolesLink: string, repositoryVerbsLink: string) => void;
-  fetchPermissions: (link: string, namespace: string, repoName: string) => void;
+  fetchPermissions: (link: string, namespace: string, repoName?: string) => void;
   createPermission: (
     link: string,
     permission: PermissionCreateEntry,
     namespace: string,
-    repoName: string,
+    repoName?: string,
     callback?: () => void
   ) => void;
-  createPermissionReset: (p1: string, p2: string) => void;
-  modifyPermissionReset: (p1: string, p2: string) => void;
-  deletePermissionReset: (p1: string, p2: string) => void;
+  createPermissionReset: (namespace: string, repoName?: string) => void;
+  modifyPermissionReset: (namespace: string, repoName?: string) => void;
+  deletePermissionReset: (namespace: string, repoName?: string) => void;
 
   // context props
   match: any;
@@ -241,7 +240,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
 
 const mapDispatchToProps = (dispatch: any) => {
   return {
-    fetchPermissions: (link: string, namespace: string, repoName: string) => {
+    fetchPermissions: (link: string, namespace: string, repoName?: string) => {
       dispatch(fetchPermissions(link, namespace, repoName));
     },
     fetchAvailablePermissionsIfNeeded: (repositoryRolesLink: string, repositoryVerbsLink: string) => {
@@ -256,13 +255,13 @@ const mapDispatchToProps = (dispatch: any) => {
     ) => {
       dispatch(createPermission(link, permission, namespace, repoName, callback));
     },
-    createPermissionReset: (namespace: string, repoName: string) => {
+    createPermissionReset: (namespace: string, repoName?: string) => {
       dispatch(createPermissionReset(namespace, repoName));
     },
-    modifyPermissionReset: (namespace: string, repoName: string) => {
+    modifyPermissionReset: (namespace: string, repoName?: string) => {
       dispatch(modifyPermissionReset(namespace, repoName));
     },
-    deletePermissionReset: (namespace: string, repoName: string) => {
+    deletePermissionReset: (namespace: string, repoName?: string) => {
       dispatch(deletePermissionReset(namespace, repoName));
     }
   };

@@ -93,6 +93,16 @@
         "description": "Darf alle installierten und verfügbaren Plugins lesen und verwalten"
       }
     },
+    "namespace": {
+      "permissionRead": {
+        "displayName": "Berechtigungen auf Namespaces lesen",
+        "description": "Darf die Berechtigungen auf Namespace-Ebene sehen"
+      },
+      "permissionWrite": {
+        "displayName": "Berechtigungen auf Namespaces modifizieren",
+        "description": "Darf die Berechtigungen auf Namespace-Ebene lesen und bearbeiten"
+      }
+    },
     "unknown": "Unbekannte Berechtigung"
   },
   "verbs": {

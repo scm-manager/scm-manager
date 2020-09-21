@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { connect } from "react-redux";
-import { Route, withRouter } from "react-router-dom";
+import { Route, RouteComponentProps, withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -34,38 +34,28 @@ import { fetchRoleByName, getFetchRoleFailure, getRoleByName, isFetchRolePending
 import PermissionRoleDetail from "../components/PermissionRoleDetails";
 import EditRepositoryRole from "./EditRepositoryRole";
 import { compose } from "redux";
+import { urls } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  roleName: string;
-  role: RepositoryRole;
-  loading: boolean;
-  error: Error;
-  repositoryRolesLink: string;
-  disabled: boolean;
+type Props = WithTranslation &
+  RouteComponentProps & {
+    roleName: string;
+    role: RepositoryRole;
+    loading: boolean;
+    error: Error;
+    repositoryRolesLink: string;
+    disabled: boolean;
 
-  // dispatcher function
-  fetchRoleByName: (p1: string, p2: string) => void;
+    // dispatcher function
+    fetchRoleByName: (p1: string, p2: string) => void;
 
-  // context objects
-  match: any;
-  history: History;
-};
+    // context objects
+    history: History;
+  };
 
 class SingleRepositoryRole extends React.Component<Props> {
   componentDidMount() {
     this.props.fetchRoleByName(this.props.repositoryRolesLink, this.props.roleName);
   }
-
-  stripEndingSlash = (url: string) => {
-    if (url.endsWith("/")) {
-      return url.substring(0, url.length - 2);
-    }
-    return url;
-  };
-
-  matchedUrl = () => {
-    return this.stripEndingSlash(this.props.match.url);
-  };
 
   render() {
     const { t, loading, error, role } = this.props;
@@ -80,7 +70,7 @@ class SingleRepositoryRole extends React.Component<Props> {
       return <Loading />;
     }
 
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
 
     const extensionProps = {
       role,
