@@ -78,7 +78,9 @@ public class RepositoryPermissionCollectionToDtoMapper {
   }
 
   private Links createLinks(Namespace namespace) {
-    NamespacePermissions.permissionRead().check();
+    if (!NamespacePermissions.permissionWrite().isPermitted()) {
+      NamespacePermissions.permissionRead().check();
+    }
     Links.Builder linksBuilder = linkingTo()
       .with(Links.linkingTo().self(resourceLinks.namespacePermission().all(namespace.getNamespace())).build());
     if (NamespacePermissions.permissionWrite().isPermitted()) {

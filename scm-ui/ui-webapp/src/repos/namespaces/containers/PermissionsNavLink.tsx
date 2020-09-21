@@ -33,7 +33,7 @@ type Props = WithTranslation & {
 
 class PermissionsNavLink extends React.Component<Props> {
   hasPermissionsLink = () => {
-    return this.props.namespace._links.permissions;
+    return this.props.namespace?._links?.permissions;
   };
   render() {
     if (!this.hasPermissionsLink()) {

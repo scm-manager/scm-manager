@@ -26,15 +26,14 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
-import org.mapstruct.BeforeMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import sonia.scm.repository.Namespace;
 import sonia.scm.repository.NamespacePermissions;
-import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryPermissions;
 
 import javax.inject.Inject;

@@ -47,7 +47,7 @@ class NamespaceToNamespaceDtoMapper {
       .self(links.namespace().self(namespace))
       .single(link("repositories", links.repositoryCollection().forNamespace(namespace)));
 
-    if (NamespacePermissions.permissionRead().isPermitted()) {
+    if (NamespacePermissions.permissionRead().isPermitted() || NamespacePermissions.permissionWrite().isPermitted()) {
       linkingTo
         .single(link("permissions", links.namespacePermission().all(namespace)));
     }

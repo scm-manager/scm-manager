@@ -104,7 +104,7 @@ public class DefaultNamespaceManager implements NamespaceManager {
   }
 
   private Namespace createNamespaceForName(String namespace) {
-    if (NamespacePermissions.permissionRead().isPermitted()) {
+    if (NamespacePermissions.permissionRead().isPermitted() || NamespacePermissions.permissionWrite().isPermitted()) {
       return dao.get(namespace)
         .map(Namespace::clone)
         .orElse(new Namespace(namespace));

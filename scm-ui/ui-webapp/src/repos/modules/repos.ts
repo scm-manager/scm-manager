@@ -617,9 +617,9 @@ export function getDeleteRepoFailure(state: object, namespace: string, name: str
 export function getPermissionsLink(state: object, namespaceName: string, repoName?: string) {
   if (repoName) {
     const repo = getRepository(state, namespaceName, repoName);
-    return repo && repo._links ? repo._links.permissions.href : undefined;
+    return repo?._links ? repo._links.permissions.href : undefined;
   } else {
     const namespace = getNamespace(state, namespaceName);
-    return namespace && namespace._links ? namespace._links.permissions.href : undefined;
+    return namespace?._links ? namespace?._links?.permissions?.href : undefined;
   }
 }
