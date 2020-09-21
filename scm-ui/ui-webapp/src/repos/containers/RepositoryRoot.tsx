@@ -54,6 +54,8 @@ import CodeOverview from "../codeSection/containers/CodeOverview";
 import ChangesetView from "./ChangesetView";
 import SourceExtensions from "../sources/containers/SourceExtensions";
 import { FileControlFactory, JumpToFileButton } from "@scm-manager/ui-components";
+import TagsOverview from "../tags/container/TagsOverview";
+import TagRoot from "../tags/container/TagRoot";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -96,6 +98,12 @@ class RepositoryRoot extends React.Component<Props> {
   matchesBranches = (route: any) => {
     const url = this.matchedUrl();
     const regex = new RegExp(`${url}/branch/.+/info`);
+    return route.location.pathname.match(regex);
+  };
+
+  matchesTags = (route: any) => {
+    const url = this.matchedUrl();
+    const regex = new RegExp(`${url}/tag/.+/info`);
     return route.location.pathname.match(regex);
   };
 
@@ -245,6 +253,15 @@ class RepositoryRoot extends React.Component<Props> {
                   render={() => <BranchesOverview repository={repository} baseUrl={`${url}/branch`} />}
                 />
                 <Route path={`${url}/branches/create`} render={() => <CreateBranch repository={repository} />} />
+                <Route
+                  path={`${url}/tag/:tag`}
+                  render={() => <TagRoot repository={repository} baseUrl={`${url}/tag`} />}
+                />
+                <Route
+                  path={`${url}/tags`}
+                  exact={true}
+                  render={() => <TagsOverview repository={repository} baseUrl={`${url}/tag`} />}
+                />
                 <ExtensionPoint name="repository.route" props={extensionProps} renderAll={true} />
               </Switch>
             </PrimaryContentColumn>
@@ -266,6 +283,16 @@ class RepositoryRoot extends React.Component<Props> {
                   activeWhenMatch={this.matchesBranches}
                   activeOnlyWhenExact={false}
                   title={t("repositoryRoot.menu.branchesNavLink")}
+                />
+                <RepositoryNavLink
+                  repository={repository}
+                  linkName="tags"
+                  to={`${url}/tags/`}
+                  icon="fas fa-tags"
+                  label={t("repositoryRoot.menu.tagsNavLink")}
+                  activeWhenMatch={this.matchesTags}
+                  activeOnlyWhenExact={false}
+                  title={t("repositoryRoot.menu.tagsNavLink")}
                 />
                 <RepositoryNavLink
                   repository={repository}

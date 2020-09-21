@@ -104,7 +104,8 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
   @Test
   public void shouldThrowExceptionWhenDeletingDefaultBranch() {
     String branchToBeDeleted = "master";
-    assertThrows(CannotDeleteDefaultBranchException.class, () -> createCommand().deleteOrClose(branchToBeDeleted));
+    GitBranchCommand command = createCommand();
+    assertThrows(CannotDeleteDefaultBranchException.class, () -> command.deleteOrClose(branchToBeDeleted));
   }
 
   private GitBranchCommand createCommand() {
@@ -130,7 +131,6 @@ public class GitBranchCommandTest extends AbstractGitCommandTestBase {
     List<Object> events = captor.getAllValues();
     assertThat(events.get(0)).isInstanceOf(PreReceiveRepositoryHookEvent.class);
     assertThat(events.get(1)).isInstanceOf(PostReceiveRepositoryHookEvent.class);
-    assertThat(events.get(2)).isInstanceOf(BranchCreatedEvent.class);
 
     PreReceiveRepositoryHookEvent event = (PreReceiveRepositoryHookEvent) events.get(0);
     assertThat(event.getContext().getBranchProvider().getCreatedOrModified()).containsExactly("new_branch");

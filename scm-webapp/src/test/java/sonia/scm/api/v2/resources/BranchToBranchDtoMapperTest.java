@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import org.junit.jupiter.api.Test;
@@ -62,5 +62,4 @@ class BranchToBranchDtoMapperTest {
     BranchDto dto = mapper.map(branch, new NamespaceAndName("hitchhiker", "heart-of-gold"));
     assertThat(dto.getLinks().getLinkBy("ka").get().getHref()).isEqualTo("http://hitchhiker/heart-of-gold/master");
   }
-
 }

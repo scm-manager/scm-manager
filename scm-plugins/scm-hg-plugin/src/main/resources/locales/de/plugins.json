@@ -5,7 +5,8 @@
       "create" : "Neues Repository erstellen",
       "replace" : "Ein bestehendes Repository aktualisieren",
       "fetch": "Remote-Änderungen herunterladen",
-      "checkout": "Branch wechseln"
+      "checkout": "Branch wechseln",
+      "checkoutTag": "Tag auschecken"
     },
     "config": {
       "link": "Mercurial",

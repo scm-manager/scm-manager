@@ -22,23 +22,31 @@
  * SOFTWARE.
  */
 
-import { binder } from "@scm-manager/ui-extensions";
-import ProtocolInformation from "./ProtocolInformation";
-import HgAvatar from "./HgAvatar";
-import { ConfigurationBinder as cfgBinder } from "@scm-manager/ui-components";
-import HgGlobalConfiguration from "./HgGlobalConfiguration";
-import HgBranchInformation from "./HgBranchInformation";
-import HgTagInformation from "./HgTagInformation";
+import orderTags from "./orderTags";
 
-const hgPredicate = (props: any) => {
-  return props.repository && props.repository.type === "hg";
+const tag1 = {
+  name: "tag1",
+  revision: "revision1",
+  date: new Date(2020, 1, 1),
+  _links: {}
+};
+const tag2 = {
+  name: "tag2",
+  revision: "revision2",
+  date: new Date(2020, 1, 3),
+  _links: {}
+};
+const tag3 = {
+  name: "tag3",
+  revision: "revision3",
+  date: new Date(2020, 1, 2),
+  _links: {}
 };
 
-binder.bind("repos.repository-details.information", ProtocolInformation, hgPredicate);
-binder.bind("repos.branch-details.information", HgBranchInformation, hgPredicate);
-binder.bind("repos.tag-details.information", HgTagInformation, hgPredicate);
-binder.bind("repos.repository-avatar", HgAvatar, hgPredicate);
-
-// bind global configuration
-
-cfgBinder.bindGlobal("/hg", "scm-hg-plugin.config.link", "hgConfig", HgGlobalConfiguration);
+describe("order tags", () => {
+  it("should order tags descending by date", () => {
+    const tags = [tag1, tag2, tag3];
+    orderTags(tags);
+    expect(tags).toEqual([tag2, tag3, tag1]);
+  });
+});

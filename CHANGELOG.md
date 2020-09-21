@@ -7,9 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Add support for pr merge with prior rebase ([#1332](https://github.com/scm-manager/scm-manager/pull/1332))
+- Tags overview for repository [#1331](https://github.com/scm-manager/scm-manager/pull/1331)
 
 ### Fixed
 - Missing synchronization during repository creation ([#1328](https://github.com/scm-manager/scm-manager/pull/1328))
+- Missing BranchCreatedEvent for mercurial ([#1334](https://github.com/scm-manager/scm-manager/pull/1334))
+- Branch not found right after creation ([#1334](https://github.com/scm-manager/scm-manager/pull/1334))
 
 ## [2.5.0] - 2020-09-10
 ### Added

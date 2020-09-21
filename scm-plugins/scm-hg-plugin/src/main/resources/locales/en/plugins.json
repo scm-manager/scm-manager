@@ -5,7 +5,8 @@
       "create" : "Create a new repository",
       "replace" : "Push an existing repository",
       "fetch": "Get remote changes",
-      "checkout": "Switch branch"
+      "checkout": "Switch branch",
+      "checkoutTag": "Checkout tag"
     },
     "config": {
       "link": "Mercurial",

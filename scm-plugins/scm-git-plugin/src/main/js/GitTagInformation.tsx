@@ -22,23 +22,27 @@
  * SOFTWARE.
  */
 
-import { binder } from "@scm-manager/ui-extensions";
-import ProtocolInformation from "./ProtocolInformation";
-import HgAvatar from "./HgAvatar";
-import { ConfigurationBinder as cfgBinder } from "@scm-manager/ui-components";
-import HgGlobalConfiguration from "./HgGlobalConfiguration";
-import HgBranchInformation from "./HgBranchInformation";
-import HgTagInformation from "./HgTagInformation";
+import React, { FC } from "react";
+import { Tag } from "@scm-manager/ui-types";
+import { useTranslation } from "react-i18next";
 
-const hgPredicate = (props: any) => {
-  return props.repository && props.repository.type === "hg";
+type Props = {
+  tag: Tag;
 };
 
-binder.bind("repos.repository-details.information", ProtocolInformation, hgPredicate);
-binder.bind("repos.branch-details.information", HgBranchInformation, hgPredicate);
-binder.bind("repos.tag-details.information", HgTagInformation, hgPredicate);
-binder.bind("repos.repository-avatar", HgAvatar, hgPredicate);
+const GitTagInformation: FC<Props> = ({ tag }) => {
+  const [t] = useTranslation("plugins");
 
-// bind global configuration
+  return (
+    <>
+      <h4>{t("scm-git-plugin.information.checkoutTag")}</h4>
+      <pre>
+        <code>
+          git checkout tags/{tag.name} -b branch/{tag.name}
+        </code>
+      </pre>
+    </>
+  );
+};
 
-cfgBinder.bindGlobal("/hg", "scm-hg-plugin.config.link", "hgConfig", HgGlobalConfiguration);
+export default GitTagInformation;

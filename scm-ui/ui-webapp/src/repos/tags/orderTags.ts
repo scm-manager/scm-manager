@@ -22,23 +22,11 @@
  * SOFTWARE.
  */
 
-import { binder } from "@scm-manager/ui-extensions";
-import ProtocolInformation from "./ProtocolInformation";
-import HgAvatar from "./HgAvatar";
-import { ConfigurationBinder as cfgBinder } from "@scm-manager/ui-components";
-import HgGlobalConfiguration from "./HgGlobalConfiguration";
-import HgBranchInformation from "./HgBranchInformation";
-import HgTagInformation from "./HgTagInformation";
+// sort tags by date beginning with latest first
+import { Tag } from "@scm-manager/ui-types";
 
-const hgPredicate = (props: any) => {
-  return props.repository && props.repository.type === "hg";
+export default (tags: Tag[]) => {
+  tags.sort((a, b) => {
+    return new Date(b.date) - new Date(a.date);
+  });
 };
-
-binder.bind("repos.repository-details.information", ProtocolInformation, hgPredicate);
-binder.bind("repos.branch-details.information", HgBranchInformation, hgPredicate);
-binder.bind("repos.tag-details.information", HgTagInformation, hgPredicate);
-binder.bind("repos.repository-avatar", HgAvatar, hgPredicate);
-
-// bind global configuration
-
-cfgBinder.bindGlobal("/hg", "scm-hg-plugin.config.link", "hgConfig", HgGlobalConfiguration);

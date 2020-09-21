@@ -298,10 +298,12 @@ public final class RepositoryServiceFactory {
 
     /**
      * Clear caches on repository push.
+     * We do this synchronously, because there are often workflows which are creating branches and fetch them straight
+     * after the creation.
      *
      * @param event hook event
      */
-    @Subscribe(referenceType = ReferenceType.STRONG)
+    @Subscribe(async = false, referenceType = ReferenceType.STRONG)
     public void onEvent(PostReceiveRepositoryHookEvent event) {
       Repository repository = event.getRepository();
 
@@ -322,13 +324,6 @@ public final class RepositoryServiceFactory {
       if (event.getEventType() == HandlerEventType.DELETE) {
         clearCaches(event.getItem().getId());
       }
-    }
-
-    @Subscribe(async = false)
-    @SuppressWarnings({"unchecked", "java:S3740", "rawtypes"})
-    public void onEvent(BranchCreatedEvent event) {
-      RepositoryCacheKeyPredicate predicate = new RepositoryCacheKeyPredicate(event.getRepository().getId());
-      cacheManager.getCache(BranchesCommandBuilder.CACHE_NAME).removeAll(predicate);
     }
 
     @Subscribe
