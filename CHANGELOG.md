@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Missing synchronization during repository creation ([#1328](https://github.com/scm-manager/scm-manager/pull/1328))
 - Missing BranchCreatedEvent for mercurial ([#1334](https://github.com/scm-manager/scm-manager/pull/1334))
 - Branch not found right after creation ([#1334](https://github.com/scm-manager/scm-manager/pull/1334))
+- Handling of branch with slashes in source view ([#1340](https://github.com/scm-manager/scm-manager/pull/1340))
 
 ## [2.5.0] - 2020-09-10
 ### Added
