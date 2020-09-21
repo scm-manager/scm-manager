@@ -61,11 +61,6 @@ public abstract class RepositoryPermissionToRepositoryPermissionDtoMapper {
     RepositoryPermissions.permissionRead(repository).check();
   }
 
-  @BeforeMapping
-  void validatePermissions(@Context Namespace namespace) {
-    NamespacePermissions.permissionRead().check();
-  }
-
   @AfterMapping
   void appendLinks(@MappingTarget RepositoryPermissionDto target, @Context Repository repository) {
     String permissionName = getUrlPermissionName(target);
