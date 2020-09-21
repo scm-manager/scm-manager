@@ -58,6 +58,7 @@ public class ConfigDto extends HalRepresentation {
   private boolean enabledXsrfProtection;
   private String namespaceStrategy;
   private String loginInfoUrl;
+  private String releaseFeedUrl;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

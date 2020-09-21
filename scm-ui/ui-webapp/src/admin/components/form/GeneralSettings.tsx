@@ -35,6 +35,7 @@ type Props = WithTranslation & {
   anonymousMode: AnonymousMode;
   skipFailedAuthenticators: boolean;
   pluginUrl: string;
+  releaseFeedUrl: string;
   enabledXsrfProtection: boolean;
   namespaceStrategy: string;
   namespaceStrategies?: NamespaceStrategies;
@@ -49,6 +50,7 @@ class GeneralSettings extends React.Component<Props> {
       realmDescription,
       loginInfoUrl,
       pluginUrl,
+      releaseFeedUrl,
       enabledXsrfProtection,
       anonymousMode,
       namespaceStrategy,
@@ -126,6 +128,17 @@ class GeneralSettings extends React.Component<Props> {
             />
           </div>
         </div>
+        <div className="columns">
+          <div className="column">
+            <InputField
+              label={t("general-settings.release-feed-url")}
+              onChange={this.handleReleaseFeedUrlChange}
+              value={releaseFeedUrl}
+              disabled={!hasUpdatePermission}
+              helpText={t("help.releaseFeedUrlHelpText")}
+            />
+          </div>
+        </div>
       </div>
     );
   }
@@ -147,6 +160,9 @@ class GeneralSettings extends React.Component<Props> {
   };
   handlePluginCenterUrlChange = (value: string) => {
     this.props.onChange(true, value, "pluginUrl");
+  };
+  handleReleaseFeedUrlChange = (value: string) => {
+    this.props.onChange(true, value, "releaseFeedUrl");
   };
 }
 

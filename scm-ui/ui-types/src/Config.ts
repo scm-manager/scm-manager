@@ -47,5 +47,6 @@ export type Config = {
   enabledXsrfProtection: boolean;
   namespaceStrategy: string;
   loginInfoUrl: string;
+  releaseFeedUrl: string;
   _links: Links;
 };

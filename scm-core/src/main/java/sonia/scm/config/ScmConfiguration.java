@@ -70,6 +70,12 @@ public class ScmConfiguration implements Configuration {
     "https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}";
 
   /**
+   * SCM Manager release feed url
+   */
+  public static final String RELEASE_FEED_URL =
+    "https://www.scm-manager.org/download/rss.xml";
+
+  /**
    * Default url for login information (plugin and feature tips on the login page).
    */
   public static final String DEFAULT_LOGIN_INFO_URL = "https://login-info.scm-manager.org/api/v1/login-info";
