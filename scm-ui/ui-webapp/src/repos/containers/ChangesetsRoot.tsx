@@ -70,12 +70,13 @@ class ChangesetsRoot extends React.Component<Props> {
     }
 
     const url = urls.stripEndingSlash(match.url);
+    const defaultBranch = branches?.find(b => b.defaultBranch === true);
 
     return (
       <>
         <CodeActionBar
           branches={branches}
-          selectedBranch={!this.isBranchAvailable() ? selectedBranch : undefined}
+          selectedBranch={!this.isBranchAvailable() ? selectedBranch : defaultBranch?.name}
           onSelectBranch={this.onSelectBranch}
           switchViewLink={this.evaluateSwitchViewLink()}
         />
