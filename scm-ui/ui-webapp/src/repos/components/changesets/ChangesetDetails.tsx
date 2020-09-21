@@ -102,7 +102,7 @@ const ContributorDetails = styled.div`
 
 const ContributorToggleLine = styled.p`
   cursor: pointer;
-  /** maring-bottom is inherit from content p **/
+  /** margin-bottom is inherit from content p **/
   margin-bottom: 0.5rem !important;
 `;
 
