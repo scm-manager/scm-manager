@@ -43,14 +43,14 @@ type Props = WithTranslation & {
   availableRepositoryRoles: RepositoryRole[];
   availableRepositoryVerbs: string[];
   submitForm: (p: Permission) => void;
-  modifyPermission: (permission: Permission, namespace: string, name: string) => void;
+  modifyPermission: (permission: Permission, namespace: string, name?: string) => void;
   permission: Permission;
   namespace: string;
-  repoName: string;
+  repoName?: string;
   match: any;
   history: History;
   loading: boolean;
-  deletePermission: (permission: Permission, namespace: string, name: string) => void;
+  deletePermission: (permission: Permission, namespace: string, name?: string) => void;
   deleteLoading: boolean;
 };
 

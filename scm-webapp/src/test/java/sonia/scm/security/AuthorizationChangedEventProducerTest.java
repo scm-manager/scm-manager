@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import com.google.common.collect.Lists;
@@ -31,6 +31,8 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupEvent;
 import sonia.scm.group.GroupModificationEvent;
+import sonia.scm.repository.Namespace;
+import sonia.scm.repository.NamespaceModificationEvent;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryModificationEvent;
@@ -218,6 +220,18 @@ public class AuthorizationChangedEventProducerTest {
     assertEventIsNotFired();
   }
 
+  @Test
+  public void testOnRepositoryNamespaceChanged()
+  {
+    Repository repositoryModified = RepositoryTestData.createHeartOfGold();
+    repositoryModified.setName("test123");
+    Repository repository = RepositoryTestData.createHeartOfGold();
+
+    repositoryModified.setNamespace("new_namespace");
+    producer.onEvent(new RepositoryModificationEvent(HandlerEventType.CREATE, repositoryModified, repository));
+    assertGlobalEventIsFired();
+  }
+
   private void resetStoredEvent(){
     producer.event = null;
   }
@@ -249,6 +263,55 @@ public class AuthorizationChangedEventProducerTest {
 
     producer.onEvent(new AssignedPermissionEvent(HandlerEventType.CREATE, userPermission));
     assertUserEventIsFired("trillian");
+  }
+
+  @Test
+  public void testOnNamespaceModificationEvent()
+  {
+    Namespace namespaceModified = new Namespace("hitchhiker");
+    namespaceModified.setPermissions(Lists.newArrayList(new RepositoryPermission("test", singletonList("read"), false)));
+
+    Namespace namespace = new Namespace("hitchhiker");
+    namespace.setPermissions(Lists.newArrayList(new RepositoryPermission("test", singletonList("read"), false)));
+
+    producer.onEvent(new NamespaceModificationEvent(HandlerEventType.BEFORE_CREATE, namespaceModified, namespace));
+    assertEventIsNotFired();
+
+    producer.onEvent(new NamespaceModificationEvent(HandlerEventType.CREATE, namespaceModified, namespace));
+    assertEventIsNotFired();
+
+    namespaceModified.setPermissions(Lists.newArrayList(new RepositoryPermission("test", singletonList("read"), false)));
+    producer.onEvent(new NamespaceModificationEvent(HandlerEventType.CREATE, namespaceModified, namespace));
+    assertEventIsNotFired();
+
+    namespaceModified.setPermissions(Lists.newArrayList(new RepositoryPermission("test123", singletonList("read"), false)));
+    producer.onEvent(new NamespaceModificationEvent(HandlerEventType.CREATE, namespaceModified, namespace));
+    assertGlobalEventIsFired();
+
+    resetStoredEvent();
+
+    namespaceModified.setPermissions(
+      Lists.newArrayList(new RepositoryPermission("test", singletonList("read"), true))
+    );
+    producer.onEvent(new NamespaceModificationEvent(HandlerEventType.CREATE, namespaceModified, namespace));
+    assertGlobalEventIsFired();
+
+    resetStoredEvent();
+
+    namespaceModified.setPermissions(
+      Lists.newArrayList(new RepositoryPermission("test", asList("read", "write"), false))
+    );
+    producer.onEvent(new NamespaceModificationEvent(HandlerEventType.CREATE, namespaceModified, namespace));
+    assertGlobalEventIsFired();
+
+    resetStoredEvent();
+    namespace.setPermissions(Lists.newArrayList(new RepositoryPermission("test", asList("read", "write"), false)));
+
+    namespaceModified.setPermissions(
+      Lists.newArrayList(new RepositoryPermission("test", asList("write", "read"), false))
+    );
+    producer.onEvent(new NamespaceModificationEvent(HandlerEventType.CREATE, namespaceModified, namespace));
+    assertEventIsNotFired();
   }
 
   private static class StoringAuthorizationChangedEventProducer extends AuthorizationChangedEventProducer {

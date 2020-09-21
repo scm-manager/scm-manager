@@ -12,9 +12,11 @@ Innerhalb der Gefahrenzone unten auf der Seite gibt es mit entsprechenden Rechte
 ![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
 
 ### Berechtigungen
-Dank des fein granularen Berechtigungskonzepts des SCM-Managers können Nutzern und Gruppen, basierend auf definierbaren Rollen oder auf individuellen Einstellungen, Rechte zugewiesen werden. Berechtigungen können global und auf Repository-Ebene vergeben werden. Globale Berechtigungen werden in der Administrations-Oberfläche des SCM-Managers vergeben. Unter diesem Eintrag handelt es sich um Repository-bezogene Berechtigungen. 
+Dank des fein granularen Berechtigungskonzepts des SCM-Managers können Nutzern und Gruppen, basierend auf definierbaren Rollen oder auf individuellen Einstellungen, Rechte zugewiesen werden. Berechtigungen können global, auf Namespace-Ebene und auf Repository-Ebene vergeben werden. Globale Berechtigungen werden in der Administrations-Oberfläche des SCM-Managers vergeben. Unter diesem Eintrag handelt es sich um Repository-bezogene Berechtigungen. 
 
 Die Berechtigungen können jeweils für Gruppen und für Benutzer vergeben werden. Dabei gibt es die Möglichkeiten die Berechtigungen über Berechtigungsrollen zu definieren oder jede Berechtigung einzeln zu vergeben. Die Berechtigungsrollen können in der Administrations-Oberfläche definiert werden.
+
+Berechtigungen auf Namespace-Ebene können über die Einstellungen für Namespaces bearbeitet werden. Diese sind über das Einstellungs-Symbol neben den Namespace-Überschriften auf der Repository-Übersicht erreichbar.
 
 ![Repository-Settings-PermissionOverview](assets/repository-settings-permissionOverview.png)
 

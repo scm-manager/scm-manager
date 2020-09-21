@@ -56,6 +56,7 @@ import SourceExtensions from "../sources/containers/SourceExtensions";
 import { FileControlFactory, JumpToFileButton } from "@scm-manager/ui-components";
 import TagsOverview from "../tags/container/TagsOverview";
 import TagRoot from "../tags/container/TagRoot";
+import { urls } from "@scm-manager/ui-components";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -84,31 +85,20 @@ class RepositoryRoot extends React.Component<Props> {
     }
   }
 
-  stripEndingSlash = (url: string) => {
-    if (url.endsWith("/")) {
-      return url.substring(0, url.length - 1);
-    }
-    return url;
-  };
-
-  matchedUrl = () => {
-    return this.stripEndingSlash(this.props.match.url);
-  };
-
   matchesBranches = (route: any) => {
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
     const regex = new RegExp(`${url}/branch/.+/info`);
     return route.location.pathname.match(regex);
   };
 
   matchesTags = (route: any) => {
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
     const regex = new RegExp(`${url}/tag/.+/info`);
     return route.location.pathname.match(regex);
   };
 
   matchesCode = (route: any) => {
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
     const regex = new RegExp(`${url}(/code)/.*`);
     return route.location.pathname.match(regex);
   };
@@ -126,7 +116,7 @@ class RepositoryRoot extends React.Component<Props> {
 
   evaluateDestinationForCodeLink = () => {
     const { repository } = this.props;
-    const url = `${this.matchedUrl()}/code`;
+    const url = `${urls.matchedUrl(this.props)}/code`;
     if (repository?._links?.sources) {
       return `${url}/sources/`;
     }
@@ -146,7 +136,7 @@ class RepositoryRoot extends React.Component<Props> {
       return <Loading />;
     }
 
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
 
     const extensionProps = {
       repository,

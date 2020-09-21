@@ -22,42 +22,40 @@
  * SOFTWARE.
  */
 
-import { PagedCollection, Links } from "./hal";
+package sonia.scm.repository;
 
-export type Repository = {
-  namespace: string;
-  name: string;
-  type: string;
-  contact?: string;
-  description?: string;
-  creationDate?: string;
-  lastModified?: string;
-  _links: Links;
-};
+import java.util.Collection;
+import java.util.Optional;
 
-export type RepositoryCreation = Repository & {
-  contextEntries: { [key: string]: any };
-};
+/**
+ * Manages namespaces. Mind that namespaces do not have a lifecycle on their own, but only do exist through
+ * repositories. Therefore you cannot create or delete namespaces, but just change related settings like permissions
+ * associated with them.
+ *
+ * @since 2.6.0
+ */
+public interface NamespaceManager {
 
-export type Namespace = {
-  namespace: string;
-  _links: Links;
-};
+  /**
+   * Returns the Namespace with the given name.
+   *
+   * @param namespace The name of the requested namespace.
+   * @return Optional with the namespace for the given name, or an empty Optional if there is no such namespace
+   * (that is, there is no repository with this namespace).
+   */
+  Optional<Namespace> get(String namespace);
 
-export type RepositoryCollection = PagedCollection & {
-  _embedded: {
-    repositories: Repository[] | string[];
-  };
-};
+  /**
+   * Returns a {@link java.util.Collection} of all namespaces.
+   *
+   * @return all namespaces
+   */
+  Collection<Namespace> getAll();
 
-export type NamespaceCollection = {
-  _embedded: {
-    namespaces: Namespace[];
-  };
-};
-
-export type RepositoryGroup = {
-  name: string;
-  namespace?: Namespace;
-  repositories: Repository[];
-};
+  /**
+   * Modifies the given namespace.
+   *
+   * @param namespace The namespace to be modified.
+   */
+  void modify(Namespace namespace);
+}

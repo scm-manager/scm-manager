@@ -76,7 +76,7 @@ const DangerZone: FC<Props> = ({ repository, indexLinks }) => {
     <>
       <hr />
       <Subtitle subtitle={t("repositoryForm.dangerZone")} />
-      <DangerZoneContainer>{dangerZone.map(entry => entry)}</DangerZoneContainer>
+      <DangerZoneContainer>{dangerZone}</DangerZoneContainer>
     </>
   );
 };

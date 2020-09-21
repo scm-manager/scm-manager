@@ -21,18 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
-import org.mapstruct.BeforeMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.repository.Namespace;
+import sonia.scm.repository.NamespacePermissions;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryPermissions;
 
 import javax.inject.Inject;
@@ -51,18 +52,9 @@ public abstract class RepositoryPermissionToRepositoryPermissionDtoMapper {
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   public abstract RepositoryPermissionDto map(RepositoryPermission permission, @Context Repository repository);
 
+  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
+  public abstract RepositoryPermissionDto map(RepositoryPermission permission, @Context Namespace namespace);
 
-  @BeforeMapping
-  void validatePermissions(@Context Repository repository) {
-    RepositoryPermissions.permissionRead(repository).check();
-  }
-
-  /**
-   * Add the self, update and delete links.
-   *
-   * @param target     the mapped dto
-   * @param repository the repository
-   */
   @AfterMapping
   void appendLinks(@MappingTarget RepositoryPermissionDto target, @Context Repository repository) {
     String permissionName = getUrlPermissionName(target);
@@ -71,6 +63,18 @@ public abstract class RepositoryPermissionToRepositoryPermissionDtoMapper {
     if (RepositoryPermissions.permissionWrite(repository).isPermitted()) {
       linksBuilder.single(link("update", resourceLinks.repositoryPermission().update(repository.getNamespace(), repository.getName(), permissionName)));
       linksBuilder.single(link("delete", resourceLinks.repositoryPermission().delete(repository.getNamespace(), repository.getName(), permissionName)));
+    }
+    target.add(linksBuilder.build());
+  }
+
+  @AfterMapping
+  void appendLinks(@MappingTarget RepositoryPermissionDto target, @Context Namespace namespace) {
+    String permissionName = getUrlPermissionName(target);
+    Links.Builder linksBuilder = linkingTo()
+      .self(resourceLinks.namespacePermission().self(namespace.getNamespace(), permissionName));
+    if (NamespacePermissions.permissionWrite().isPermitted()) {
+      linksBuilder.single(link("update", resourceLinks.namespacePermission().update(namespace.getNamespace(), permissionName)));
+      linksBuilder.single(link("delete", resourceLinks.namespacePermission().delete(namespace.getNamespace(), permissionName)));
     }
     target.add(linksBuilder.build());
   }

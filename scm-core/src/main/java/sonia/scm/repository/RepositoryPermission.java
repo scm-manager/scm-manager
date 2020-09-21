@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import org.apache.commons.collections.CollectionUtils;
 import sonia.scm.security.PermissionObject;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -118,10 +119,14 @@ public class RepositoryPermission implements PermissionObject, Serializable
     final RepositoryPermission other = (RepositoryPermission) obj;
 
     return Objects.equal(name, other.name)
-      && verbs.size() == other.verbs.size()
-      && verbs.containsAll(other.verbs)
+      && equalVerbs(other)
       && Objects.equal(role, other.role)
       && Objects.equal(groupPermission, other.groupPermission);
+  }
+
+  public boolean equalVerbs(RepositoryPermission other) {
+    return verbs == null && other.verbs == null
+      || verbs != null && other.verbs != null && CollectionUtils.isEqualCollection(verbs, other.verbs);
   }
 
   /**

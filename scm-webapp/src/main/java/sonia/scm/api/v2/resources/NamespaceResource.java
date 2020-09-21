@@ -32,6 +32,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -44,11 +45,13 @@ public class NamespaceResource {
 
   private final RepositoryManager manager;
   private final NamespaceToNamespaceDtoMapper namespaceMapper;
+  private final Provider<NamespacePermissionResource> namespacePermissionResource;
 
   @Inject
-  public NamespaceResource(RepositoryManager manager, NamespaceToNamespaceDtoMapper namespaceMapper) {
+  public NamespaceResource(RepositoryManager manager, NamespaceToNamespaceDtoMapper namespaceMapper, Provider<NamespacePermissionResource> namespacePermissionResource) {
     this.manager = manager;
     this.namespaceMapper = namespaceMapper;
+    this.namespacePermissionResource = namespacePermissionResource;
   }
 
   /**
@@ -97,4 +100,8 @@ public class NamespaceResource {
       .orElseThrow(() -> notFound(entity("Namespace", namespace)));
   }
 
+  @Path("permissions")
+  public NamespacePermissionResource permissions() {
+    return namespacePermissionResource.get();
+  }
 }

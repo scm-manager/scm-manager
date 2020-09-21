@@ -1,0 +1,14 @@
+{
+  "namespaceRoot": {
+    "menu": {
+      "navigationLabel": "Namespace",
+      "settingsNavLink": "Einstellungen",
+      "permissionsNavLink": "Berechtigungen"
+    }
+  },
+  "repositoryOverview": {
+    "settings": {
+      "tooltip": "Einstellungen für den Namespace"
+    }
+  }
+}
