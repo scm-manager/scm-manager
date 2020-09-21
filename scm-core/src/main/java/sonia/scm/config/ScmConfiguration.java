@@ -72,7 +72,7 @@ public class ScmConfiguration implements Configuration {
   /**
    * SCM Manager release feed url
    */
-  public static final String RELEASE_FEED_URL =
+  public static final String DEFAULT_RELEASE_FEED_URL =
     "https://www.scm-manager.org/download/rss.xml";
 
   /**
@@ -145,6 +145,9 @@ public class ScmConfiguration implements Configuration {
 
   @XmlElement(name = "plugin-url")
   private String pluginUrl = DEFAULT_PLUGINURL;
+
+  @XmlElement(name = "release-feed-url")
+  private String releaseFeedUrl = DEFAULT_RELEASE_FEED_URL;
 
   /**
    * Login attempt timeout.
@@ -223,6 +226,7 @@ public class ScmConfiguration implements Configuration {
     this.enabledXsrfProtection = other.enabledXsrfProtection;
     this.namespaceStrategy = other.namespaceStrategy;
     this.loginInfoUrl = other.loginInfoUrl;
+    this.releaseFeedUrl = other.releaseFeedUrl;
   }
 
   /**
@@ -279,6 +283,15 @@ public class ScmConfiguration implements Configuration {
   }
 
   /**
+   * Returns the url of the rss release feed.
+   *
+   * @return the rss release feed url.
+   */
+  public String getReleaseFeedUrl() {
+    return releaseFeedUrl;
+  }
+
+  /**
    * Returns a set of glob patterns for urls which should excluded from
    * proxy settings.
    *
@@ -330,6 +343,7 @@ public class ScmConfiguration implements Configuration {
 
   /**
    * Returns {@code true} if anonymous mode is enabled.
+   *
    * @return {@code true} if anonymous mode is enabled
    * @deprecated since 2.4.0 use {@link ScmConfiguration#getAnonymousMode} instead
    */
@@ -385,6 +399,7 @@ public class ScmConfiguration implements Configuration {
 
   /**
    * Enables the anonymous access at protocol level.
+   *
    * @param anonymousAccessEnabled enable or disables the anonymous access
    * @deprecated since 2.4.0 use {@link ScmConfiguration#setAnonymousMode(AnonymousMode)} instead
    */
@@ -399,8 +414,8 @@ public class ScmConfiguration implements Configuration {
 
   /**
    * Configures the anonymous mode.
-   * @param mode type of anonymous mode
    *
+   * @param mode type of anonymous mode
    * @since 2.4.0
    */
   public void setAnonymousMode(AnonymousMode mode) {
@@ -450,6 +465,10 @@ public class ScmConfiguration implements Configuration {
 
   public void setPluginUrl(String pluginUrl) {
     this.pluginUrl = pluginUrl;
+  }
+
+  public void setReleaseFeedUrl(String releaseFeedUrl) {
+    this.releaseFeedUrl = releaseFeedUrl;
   }
 
   /**
