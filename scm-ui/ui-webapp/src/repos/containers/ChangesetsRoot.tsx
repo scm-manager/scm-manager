@@ -70,7 +70,7 @@ class ChangesetsRoot extends React.Component<Props> {
     }
 
     const url = urls.stripEndingSlash(match.url);
-    const defaultBranch = branches?.filter(b => b.defaultBranch === true)[0];
+    const defaultBranch = branches?.find(b => b.defaultBranch === true);
 
     return (
       <>
