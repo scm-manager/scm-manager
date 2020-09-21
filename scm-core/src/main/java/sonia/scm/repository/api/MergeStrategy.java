@@ -25,21 +25,15 @@
 package sonia.scm.repository.api;
 
 public enum MergeStrategy {
-  MERGE_COMMIT("merge commit", true),
-  FAST_FORWARD_IF_POSSIBLE("fast forward if possible", false),
-  SQUASH("squash", true),
-  REBASE("rebase", false);
+  MERGE_COMMIT(true),
+  FAST_FORWARD_IF_POSSIBLE(true),
+  SQUASH(true),
+  REBASE(false);
 
-  private final String name;
   private final boolean commitMessageAllowed;
 
-  MergeStrategy(String name, boolean commitMessageAllowed) {
-    this.name = name;
+  MergeStrategy(boolean commitMessageAllowed) {
     this.commitMessageAllowed = commitMessageAllowed;
-  }
-
-  public String getName() {
-    return name;
   }
 
   public boolean isCommitMessageAllowed() {
