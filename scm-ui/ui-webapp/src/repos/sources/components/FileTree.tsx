@@ -109,7 +109,12 @@ class FileTree extends React.Component<Props, State> {
   }
 
   loadMore = () => {
-    this.props.fetchSources(this.props.repository, this.props.revision, this.props.path, this.props.hunks.length);
+    this.props.fetchSources(
+      this.props.repository,
+      decodeURIComponent(this.props.revision),
+      this.props.path,
+      this.props.hunks.length
+    );
   };
 
   renderTruncatedInfo = () => {
