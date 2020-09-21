@@ -22,17 +22,22 @@
  * SOFTWARE.
  */
 
-import { Repository, RepositoryGroup } from "@scm-manager/ui-types";
+import { NamespaceCollection, Repository, RepositoryGroup } from "@scm-manager/ui-types";
 
-export default function groupByNamespace(repositories: Repository[]): RepositoryGroup[] {
+export default function groupByNamespace(
+  repositories: Repository[],
+  namespaces: NamespaceCollection
+): RepositoryGroup[] {
   const groups = {};
   for (const repository of repositories) {
     const groupName = repository.namespace;
 
     let group = groups[groupName];
     if (!group) {
+      const namespace = findNamespace(namespaces, groupName);
       group = {
         name: groupName,
+        namespace: namespace,
         repositories: []
       };
       groups[groupName] = group;
@@ -57,4 +62,8 @@ function sortByName(a, b) {
     return 1;
   }
   return 0;
+}
+
+function findNamespace(namespaces: NamespaceCollection, namespaceToFind: string) {
+  return namespaces._embedded.namespaces.find(namespace => namespace.namespace === namespaceToFind);
 }

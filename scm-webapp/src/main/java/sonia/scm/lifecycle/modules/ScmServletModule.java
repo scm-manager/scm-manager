@@ -64,10 +64,12 @@ import sonia.scm.net.ahc.XmlContentTransformer;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
+import sonia.scm.repository.DefaultNamespaceManager;
 import sonia.scm.repository.DefaultRepositoryManager;
 import sonia.scm.repository.DefaultRepositoryProvider;
 import sonia.scm.repository.DefaultRepositoryRoleManager;
 import sonia.scm.repository.HealthCheckContextListener;
+import sonia.scm.repository.NamespaceManager;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.NamespaceStrategyProvider;
 import sonia.scm.repository.Repository;
@@ -191,6 +193,7 @@ class ScmServletModule extends ServletModule {
     bindDecorated(GroupManager.class, DefaultGroupManager.class,
       GroupManagerProvider.class);
     bind(GroupDisplayManager.class, DefaultGroupDisplayManager.class);
+    bind(NamespaceManager.class, DefaultNamespaceManager.class);
     bind(GroupCollector.class, DefaultGroupCollector.class);
     bind(CGIExecutorFactory.class, DefaultCGIExecutorFactory.class);
 

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import com.github.legman.Subscribe;
@@ -35,14 +35,19 @@ import sonia.scm.event.ScmEventBus;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupEvent;
 import sonia.scm.group.GroupModificationEvent;
+import sonia.scm.repository.Namespace;
+import sonia.scm.repository.NamespaceEvent;
+import sonia.scm.repository.NamespaceModificationEvent;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryEvent;
 import sonia.scm.repository.RepositoryModificationEvent;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.user.User;
 import sonia.scm.user.UserEvent;
 import sonia.scm.user.UserModificationEvent;
 
 import javax.inject.Singleton;
+import java.util.Collection;
 
 /**
  * Receives all kinds of events, which affects authorization relevant data and fires an
@@ -146,23 +151,50 @@ public class AuthorizationChangedEventProducer {
     }
   }
 
+  @Subscribe
+  public void onEvent(NamespaceEvent event) {
+    if (event.getEventType().isPost() && isModificationEvent(event)) {
+      handleNamespaceModificationEvent((NamespaceModificationEvent) event);
+    }
+  }
+
   private void handleRepositoryModificationEvent(RepositoryModificationEvent event) {
     Repository repository = event.getItem();
-    if (isAuthorizationDataModified(repository, event.getItemBeforeModification())) {
+    if (isAuthorizationDataModified(repository.getPermissions(), event.getItemBeforeModification().getPermissions())) {
       logger.debug(
-        "fire authorization changed event, because a relevant field of repository {} has changed", repository.getName()
+        "fire authorization changed event, because the permissions of repository {}/{} have changed", repository.getNamespace(), repository.getName()
+      );
+      fireEventForEveryUser();
+    } else if (!event.getItem().getNamespace().equals(event.getItemBeforeModification().getNamespace())) {
+      logger.debug(
+        "fire authorization changed event, because the namespace of repository {}/{} has changed", repository.getNamespace(), repository.getName()
       );
       fireEventForEveryUser();
     } else {
       logger.debug(
-        "authorization changed event is not fired, because non relevant field of repository {} has changed",
-        repository.getName()
+        "authorization changed event is not fired, because non relevant field of repository {}/{} has changed",
+        repository.getNamespace(), repository.getName()
       );
     }
   }
 
-  private boolean isAuthorizationDataModified(Repository repository, Repository beforeModification) {
-    return !(repository.getPermissions().containsAll(beforeModification.getPermissions()) && beforeModification.getPermissions().containsAll(repository.getPermissions()));
+  private void handleNamespaceModificationEvent(NamespaceModificationEvent event) {
+    Namespace namespace = event.getItem();
+    if (isAuthorizationDataModified(namespace.getPermissions(), event.getItemBeforeModification().getPermissions())) {
+      logger.debug(
+        "fire authorization changed event, because a relevant field of namespace {} has changed", namespace.getNamespace()
+      );
+      fireEventForEveryUser();
+    } else {
+      logger.debug(
+        "authorization changed event is not fired, because non relevant field of namespace {} has changed",
+        namespace.getNamespace()
+      );
+    }
+  }
+
+  private boolean isAuthorizationDataModified(Collection<RepositoryPermission> newPermissions, Collection<RepositoryPermission> permissionsBeforeModification) {
+    return !(newPermissions.containsAll(permissionsBeforeModification) && permissionsBeforeModification.containsAll(newPermissions));
   }
 
   private void fireEventForEveryUser() {

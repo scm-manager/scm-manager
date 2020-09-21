@@ -47,6 +47,7 @@ import { mustGetUsersLink } from "../../modules/indexResource";
 import SetUserPassword from "../components/SetUserPassword";
 import SetPermissions from "../../permissions/components/SetPermissions";
 import SetPublicKeys from "../components/publicKeys/SetPublicKeys";
+import { urls } from "@scm-manager/ui-components";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -65,17 +66,6 @@ class SingleUser extends React.Component<Props> {
     this.props.fetchUserByName(this.props.usersLink, this.props.name);
   }
 
-  stripEndingSlash = (url: string) => {
-    if (url.endsWith("/")) {
-      return url.substring(0, url.length - 2);
-    }
-    return url;
-  };
-
-  matchedUrl = () => {
-    return this.stripEndingSlash(this.props.match.url);
-  };
-
   render() {
     const { t, loading, error, user } = this.props;
 
@@ -87,7 +77,7 @@ class SingleUser extends React.Component<Props> {
       return <Loading />;
     }
 
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
 
     const extensionProps = {
       user,

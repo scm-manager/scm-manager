@@ -22,42 +22,32 @@
  * SOFTWARE.
  */
 
-import { PagedCollection, Links } from "./hal";
+package sonia.scm.repository;
 
-export type Repository = {
-  namespace: string;
-  name: string;
-  type: string;
-  contact?: string;
-  description?: string;
-  creationDate?: string;
-  lastModified?: string;
-  _links: Links;
-};
+import sonia.scm.store.DataStore;
+import sonia.scm.store.DataStoreFactory;
 
-export type RepositoryCreation = Repository & {
-  contextEntries: { [key: string]: any };
-};
+import javax.inject.Inject;
+import java.util.Optional;
 
-export type Namespace = {
-  namespace: string;
-  _links: Links;
-};
+public class NamespaceDao {
 
-export type RepositoryCollection = PagedCollection & {
-  _embedded: {
-    repositories: Repository[] | string[];
-  };
-};
+  private final DataStore<Namespace> store;
 
-export type NamespaceCollection = {
-  _embedded: {
-    namespaces: Namespace[];
-  };
-};
+  @Inject
+  NamespaceDao(DataStoreFactory storeFactory) {
+    this.store = storeFactory.withType(Namespace.class).withName("namespaces").build();
+  }
 
-export type RepositoryGroup = {
-  name: string;
-  namespace?: Namespace;
-  repositories: Repository[];
-};
+  public Optional<Namespace> get(String namespace) {
+    return store.getOptional(namespace);
+  }
+
+  public void add(Namespace namespace) {
+    store.put(namespace.getNamespace(), namespace);
+  }
+
+  public void delete(String namespace) {
+    store.remove(namespace);
+  }
+}

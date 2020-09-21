@@ -23,20 +23,21 @@
  */
 import React from "react";
 
-import { Repository } from "@scm-manager/ui-types";
+import { NamespaceCollection, Repository } from "@scm-manager/ui-types";
 
 import groupByNamespace from "./groupByNamespace";
 import RepositoryGroupEntry from "./RepositoryGroupEntry";
 
 type Props = {
   repositories: Repository[];
+  namespaces: NamespaceCollection;
 };
 
 class RepositoryList extends React.Component<Props> {
   render() {
-    const { repositories } = this.props;
+    const { repositories, namespaces } = this.props;
 
-    const groups = groupByNamespace(repositories);
+    const groups = groupByNamespace(repositories, namespaces);
     return (
       <div className="content">
         {groups.map(group => {

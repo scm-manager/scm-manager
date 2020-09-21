@@ -22,21 +22,37 @@
  * SOFTWARE.
  */
 import React from "react";
+import { Link } from "react-router-dom";
 import { CardColumnGroup, RepositoryEntry } from "@scm-manager/ui-components";
 import { RepositoryGroup } from "@scm-manager/ui-types";
+import { Icon } from "@scm-manager/ui-components";
+import { WithTranslation, withTranslation } from "react-i18next";
 
-type Props = {
+type Props = WithTranslation & {
   group: RepositoryGroup;
 };
 
 class RepositoryGroupEntry extends React.Component<Props> {
   render() {
-    const { group } = this.props;
+    const { group, t } = this.props;
+    const settingsLink = group.namespace?._links?.permissions && (
+      <Link to={`/namespace/${group.name}/settings`}>
+        <Icon color={"is-link"} name={"cog"} title={t("repositoryOverview.settings.tooltip")} />
+      </Link>
+    );
+    const namespaceHeader = (
+      <>
+        <Link to={`/repos/${group.name}/`} className={"has-text-dark"}>
+          {group.name}
+        </Link>{" "}
+        {settingsLink}
+      </>
+    );
     const entries = group.repositories.map((repository, index) => {
       return <RepositoryEntry repository={repository} key={index} />;
     });
-    return <CardColumnGroup name={group.name} url={`/repos/${group.name}/`} elements={entries} />;
+    return <CardColumnGroup name={namespaceHeader} elements={entries} />;
   }
 }
 
-export default RepositoryGroupEntry;
+export default withTranslation("namespaces")(RepositoryGroupEntry);

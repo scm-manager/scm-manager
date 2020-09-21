@@ -21,13 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
+import sonia.scm.repository.Namespace;
+import sonia.scm.repository.NamespacePermissions;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 
@@ -57,12 +59,32 @@ public class RepositoryPermissionCollectionToDtoMapper {
     return new HalRepresentation(createLinks(repository), embedDtos(repositoryPermissionDtoList));
   }
 
+  public HalRepresentation map(Namespace namespace) {
+    List<RepositoryPermissionDto> repositoryPermissionDtoList = namespace.getPermissions()
+      .stream()
+      .map(permission -> repositoryPermissionToRepositoryPermissionDtoMapper.map(permission, namespace))
+      .collect(toList());
+    return new HalRepresentation(createLinks(namespace), embedDtos(repositoryPermissionDtoList));
+  }
+
   private Links createLinks(Repository repository) {
     RepositoryPermissions.permissionRead(repository).check();
     Links.Builder linksBuilder = linkingTo()
       .with(Links.linkingTo().self(resourceLinks.repositoryPermission().all(repository.getNamespace(), repository.getName())).build());
     if (RepositoryPermissions.permissionWrite(repository).isPermitted()) {
       linksBuilder.single(link("create", resourceLinks.repositoryPermission().create(repository.getNamespace(), repository.getName())));
+    }
+    return linksBuilder.build();
+  }
+
+  private Links createLinks(Namespace namespace) {
+    if (!NamespacePermissions.permissionWrite().isPermitted()) {
+      NamespacePermissions.permissionRead().check();
+    }
+    Links.Builder linksBuilder = linkingTo()
+      .with(Links.linkingTo().self(resourceLinks.namespacePermission().all(namespace.getNamespace())).build());
+    if (NamespacePermissions.permissionWrite().isPermitted()) {
+      linksBuilder.single(link("create", resourceLinks.namespacePermission().create(namespace.getNamespace())));
     }
     return linksBuilder.build();
   }

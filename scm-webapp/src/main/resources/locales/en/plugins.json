@@ -93,6 +93,16 @@
         "description": "May see and manage all installed and available plugins"
       }
     },
+    "namespace": {
+      "permissionRead": {
+        "displayName": "Read permissions on namespaces",
+        "description": "May see the permissions set for namespaces"
+      },
+      "permissionWrite": {
+        "displayName": "Modify permissions on namespaces",
+        "description": "May read and modify the permissions set for namespaces"
+      }
+    },
     "unknown": "Unknown permission"
   },
   "verbs": {

@@ -31,6 +31,7 @@ import { fetchBranch, getBranch, getFetchBranchFailure, isFetchBranchPending } f
 import { ErrorNotification, Loading, NotFoundError } from "@scm-manager/ui-components";
 import { History } from "history";
 import queryString from "query-string";
+import { urls } from "@scm-manager/ui-components";
 
 type Props = {
   repository: Repository;
@@ -54,21 +55,10 @@ class BranchRoot extends React.Component<Props> {
     fetchBranch(repository, branchName);
   }
 
-  stripEndingSlash = (url: string) => {
-    if (url.endsWith("/")) {
-      return url.substring(0, url.length - 1);
-    }
-    return url;
-  };
-
-  matchedUrl = () => {
-    return this.stripEndingSlash(this.props.match.url);
-  };
-
   render() {
     const { repository, branch, loading, error, match, location } = this.props;
 
-    const url = this.matchedUrl();
+    const url = urls.matchedUrl(this.props);
 
     if (error) {
       if (error instanceof NotFoundError && queryString.parse(location.search).create === "true") {
