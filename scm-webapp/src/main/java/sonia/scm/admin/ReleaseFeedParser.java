@@ -30,17 +30,18 @@ import sonia.scm.net.ahc.AdvancedHttpClient;
 
 import javax.inject.Inject;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Comparator;
 import java.util.Optional;
 
-public class ReleaseFeedReader {
+public class ReleaseFeedParser {
 
-  private static final Logger LOG = LoggerFactory.getLogger(ReleaseFeedReader.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ReleaseFeedParser.class);
 
   private final AdvancedHttpClient client;
 
   @Inject
-  public ReleaseFeedReader(AdvancedHttpClient client) {
+  public ReleaseFeedParser(AdvancedHttpClient client) {
     this.client = client;
   }
 
@@ -50,13 +51,13 @@ public class ReleaseFeedReader {
     Optional<ReleaseFeedDto.Release> latestRelease = filterForLatestRelease(releaseFeed);
     if (latestRelease.isPresent()) {
       ReleaseFeedDto.Release release = latestRelease.get();
-      return Optional.of(new ReleaseInfo(release.getTitle(), release.getLink(), release.getPubDate()));
+      return Optional.of(new ReleaseInfo(release.getTitle(), release.getLink(), Instant.now()));
     }
     return Optional.empty();
   }
 
   private Optional<ReleaseFeedDto.Release> filterForLatestRelease(ReleaseFeedDto releaseFeed) {
-    return releaseFeed.getRSS().getChannel().getReleases()
+    return releaseFeed.getChannel().getReleases()
       .stream()
       .max(Comparator.comparing(ReleaseFeedDto.Release::getPubDate));
   }

@@ -34,20 +34,20 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 
 import java.io.IOException;
-import java.time.Instant;
+import java.util.Date;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class ReleaseFeedReaderTest {
+class ReleaseFeedParserTest {
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   AdvancedHttpClient client;
 
   @InjectMocks
-  ReleaseFeedReader releaseFeedReader;
+  ReleaseFeedParser releaseFeedParser;
 
   @Test
   void shouldFindLatestRelease() throws IOException {
@@ -55,7 +55,7 @@ class ReleaseFeedReaderTest {
 
     when(client.get(url).request().contentFromXml(ReleaseFeedDto.class)).thenReturn(createReleaseFeedDto());
 
-    Optional<ReleaseInfo> release = releaseFeedReader.findLatestRelease(url);
+    Optional<ReleaseInfo> release = releaseFeedParser.findLatestRelease(url);
 
     assertThat(release).isPresent();
     assertThat(release.get().getTitle()).isEqualTo("3");
@@ -63,16 +63,14 @@ class ReleaseFeedReaderTest {
   }
 
   private ReleaseFeedDto createReleaseFeedDto() {
-    ReleaseFeedDto.Release release1 = createRelease("1", "download-1", 1000000000L);
-    ReleaseFeedDto.Release release2 = createRelease("2", "download-2", 2000000000L);
-    ReleaseFeedDto.Release release3 = createRelease("3", "download-3", 3000000000L);
-    ReleaseFeedDto.Channel channel = new ReleaseFeedDto.Channel("scm", "scm releases", "scm-download", "gatsby", Instant.now(), ImmutableList.of(release1, release2, release3));
-    ReleaseFeedDto.RSS rss = new ReleaseFeedDto.RSS(channel);
-    return new ReleaseFeedDto(rss);
+    ReleaseFeedDto.Release release1 = createRelease("1", "download-1", new Date(1000000000L));
+    ReleaseFeedDto.Release release2 = createRelease("2", "download-2", new Date(2000000000L));
+    ReleaseFeedDto.Release release3 = createRelease("3", "download-3", new Date(3000000000L));
+    ReleaseFeedDto.Channel channel = new ReleaseFeedDto.Channel("scm", "scm releases", "scm-download", "gatsby", new Date(1L), ImmutableList.of(release1, release2, release3));
+    return new ReleaseFeedDto(channel);
   }
 
-  private ReleaseFeedDto.Release createRelease(String version, String link, long date) {
-    return new ReleaseFeedDto.Release(version, version, link, version, Instant.ofEpochMilli(date));
+  private ReleaseFeedDto.Release createRelease(String version, String link, Date date) {
+    return new ReleaseFeedDto.Release(version, version, link, version, date);
   }
-
 }

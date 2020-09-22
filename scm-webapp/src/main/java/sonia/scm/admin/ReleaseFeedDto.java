@@ -26,63 +26,61 @@ package sonia.scm.admin;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import sonia.scm.xml.XmlDateWithTimezoneAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
-import java.time.Instant;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.Date;
 import java.util.List;
 
-@XmlRootElement
+@XmlRootElement(name = "rss")
 @XmlAccessorType(XmlAccessType.FIELD)
+@NoArgsConstructor
 @AllArgsConstructor
+@Getter
+@Setter
 public final class ReleaseFeedDto {
 
-  @XmlElement(name = "rss")
-  private final RSS rss;
+  @XmlElement(name = "channel")
+  private Channel channel;
 
-  public RSS getRSS() {
-    return rss;
+  public Channel getChannel() {
+    return channel;
   }
 
-  @XmlRootElement(name = "rss")
   @XmlAccessorType(XmlAccessType.FIELD)
   @AllArgsConstructor
-  public static class RSS {
-
-    @XmlElement(name = "channel")
-    private final Channel channel;
-
-    public Channel getChannel() {
-      return channel;
-    }
-  }
-
-  @XmlAccessorType(XmlAccessType.FIELD)
-  @XmlRootElement(name = "channel")
+  @NoArgsConstructor
   @Getter
-  @AllArgsConstructor
+  @Setter
   public static class Channel {
 
-    private final String title;
-    private final String description;
-    private final String link;
-    private final String generator;
-    private final Instant lastBuildDate;
-    @XmlElement(name = "releases")
-    private final List<Release> releases;
+    private String title;
+    private String description;
+    private String link;
+    private String generator;
+    @XmlJavaTypeAdapter(XmlDateWithTimezoneAdapter.class)
+    private Date lastBuildDate;
+    @XmlElement(name = "item")
+    private List<Release> releases;
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
-  @XmlRootElement(name = "conditions")
-  @Getter
+  @NoArgsConstructor
   @AllArgsConstructor
+  @Getter
+  @Setter
   public static class Release {
-    private final String title;
-    private final String description;
-    private final String link;
-    private final String guid;
-    private final Instant pubDate;
+    private String title;
+    private String description;
+    private String link;
+    private String guid;
+    @XmlJavaTypeAdapter(XmlDateWithTimezoneAdapter.class)
+    private Date pubDate;
   }
 }

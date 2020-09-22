@@ -24,8 +24,77 @@
 
 package sonia.scm.admin;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.cache.Cache;
+import sonia.scm.cache.CacheManager;
+import sonia.scm.cache.MapCacheManager;
+import sonia.scm.config.ScmConfiguration;
 
+import java.io.IOException;
+import java.time.Instant;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
 class ReleaseVersionCheckerTest {
 
+  private ReleaseFeedParser feedReader;
+  private ScmConfiguration scmConfiguration;
+  private SCMContextProvider contextProvider;
+  private ReleaseVersionChecker checker;
+
+  @BeforeEach
+  void setup() {
+    feedReader = mock(ReleaseFeedParser.class);
+    scmConfiguration = mock(ScmConfiguration.class);
+    contextProvider = mock(SCMContextProvider.class);
+    CacheManager cacheManager = new MapCacheManager();
+
+    checker = new ReleaseVersionChecker(feedReader, scmConfiguration, contextProvider, cacheManager);
+  }
+
+  @Test
+  void shouldReturnEmptyOptional() throws IOException {
+    when(scmConfiguration.getReleaseFeedUrl()).thenReturn("releaseFeed");
+    when(feedReader.findLatestRelease("releaseFeed")).thenReturn(Optional.empty());
+
+    Optional<ReleaseInfo> releaseInfo = checker.checkForNewerVersion();
+
+    assertThat(releaseInfo).isNotPresent();
+  }
+
+  @Test
+  void shouldReturnReleaseInfoFromCache() {
+    ReleaseInfo cachedReleaseInfo = new ReleaseInfo("1.42.9", "download-link", Instant.now());
+    Cache<String, ReleaseInfo> cache = new MapCacheManager().getCache("sonia.cache.releaseInfo");
+    cache.put("latest", cachedReleaseInfo);
+    checker.setCache(cache);
+
+    Optional<ReleaseInfo> releaseInfo = checker.checkForNewerVersion();
+
+    assertThat(releaseInfo).isPresent();
+    assertThat(releaseInfo.get().getTitle()).isEqualTo("1.42.9");
+    assertThat(releaseInfo.get().getLink()).isEqualTo("download-link");
+  }
+
+  @Test
+  void shouldReturnReleaseInfo() throws IOException {
+    ReleaseInfo releaseInfo = new ReleaseInfo("2.0.0", "download-link", Instant.now());
+    when(scmConfiguration.getReleaseFeedUrl()).thenReturn("releaseFeed");
+    when(feedReader.findLatestRelease("releaseFeed")).thenReturn(Optional.of(releaseInfo));
+    when(contextProvider.getVersion()).thenReturn("1.9.0");
+
+    Optional<ReleaseInfo> latestRelease = checker.checkForNewerVersion();
+
+    assertThat(latestRelease).isPresent();
+    assertThat(latestRelease.get().getTitle()).isEqualTo("2.0.0");
+    assertThat(latestRelease.get().getLink()).isEqualTo("download-link");
+  }
 }

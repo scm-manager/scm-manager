@@ -24,7 +24,12 @@
 
 package sonia.scm.admin;
 
+import com.google.common.annotations.VisibleForTesting;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.cache.Cache;
+import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.version.Version;
 
@@ -34,28 +39,47 @@ import java.util.Optional;
 
 public class ReleaseVersionChecker {
 
-  private final ReleaseFeedReader releaseFeedReader;
+  private static final Logger LOG = LoggerFactory.getLogger(ReleaseVersionChecker.class);
+  private static final String CACHE_NAME = "sonia.cache.releaseInfo";
+
+  private final ReleaseFeedParser releaseFeedParser;
   private final ScmConfiguration scmConfiguration;
   private final SCMContextProvider scmContextProvider;
+  private Cache<String, ReleaseInfo> cache;
 
   @Inject
-  public ReleaseVersionChecker(ReleaseFeedReader releaseFeedReader, ScmConfiguration scmConfiguration, SCMContextProvider scmContextProvider) {
-    this.releaseFeedReader = releaseFeedReader;
+  public ReleaseVersionChecker(ReleaseFeedParser releaseFeedParser, ScmConfiguration scmConfiguration, SCMContextProvider scmContextProvider, CacheManager cacheManager) {
+    this.releaseFeedParser = releaseFeedParser;
     this.scmConfiguration = scmConfiguration;
     this.scmContextProvider = scmContextProvider;
+    this.cache = cacheManager.getCache(CACHE_NAME);
   }
 
-  Optional<ReleaseInfo> checkForNewerVersion() {
+  @VisibleForTesting
+  void setCache(Cache<String, ReleaseInfo> cache) {
+    this.cache = cache;
+  }
+
+  public Optional<ReleaseInfo> checkForNewerVersion() {
+    ReleaseInfo cachedReleaseInfo = cache.get("latest");
+    if (cachedReleaseInfo != null) {
+      return Optional.of(cachedReleaseInfo);
+    } else {
+      return findLatestReleaseInRssFeed();
+    }
+  }
+
+  private Optional<ReleaseInfo> findLatestReleaseInRssFeed() {
     try {
       String releaseFeedUrl = scmConfiguration.getReleaseFeedUrl();
-      Optional<ReleaseInfo> latestRelease = releaseFeedReader.findLatestRelease(releaseFeedUrl);
-      if (latestRelease.isPresent()) {
-        if (isNewerVersion(latestRelease.get())) {
-          return latestRelease;
-        }
+      Optional<ReleaseInfo> latestRelease = releaseFeedParser.findLatestRelease(releaseFeedUrl);
+      if (latestRelease.isPresent() && isNewerVersion(latestRelease.get())) {
+        cache.put("latest", latestRelease.get());
+        return latestRelease;
       }
     } catch (IOException e) {
       // This is an silent action. We don't want the user to get any kind of error for this.
+      LOG.info("No newer version found for SCM-Manager");
       return Optional.empty();
     }
     return Optional.empty();
