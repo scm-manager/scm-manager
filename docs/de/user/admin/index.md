@@ -11,6 +11,6 @@ Im Bereich Administration kann die SCM-Manager Instanz administriert werden. Von
 <!--- AppendLinkContentEnd -->
 
 ### Information
-Auf der Informationsseite in der Administration findet man die aktuelle Version der SCM-Manager Instanz und hilfreiche Links zur Kontaktaufnahme mit dem SCM-Manager Support-Team. 
+Auf der Informationsseite in der Administration findet man die aktuelle Version der SCM-Manager Instanz und hilfreiche Links zur Kontaktaufnahme mit dem SCM-Manager Support-Team. Falls eine neuere Version des SCM-Managers verfügbar ist, wird der Link zum Download-Bereich der offiziellen Webseite angezeigt. 
 
 ![Administration-Information](assets/administration-information.png)

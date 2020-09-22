@@ -25,7 +25,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
-import { apiClient, ErrorNotification, Image, Loading, Subtitle, Title } from "@scm-manager/ui-components";
+import { apiClient, Image, Loading, Subtitle, Title } from "@scm-manager/ui-components";
 import { getAppVersion, getReleaseInfoLink } from "../../modules/indexResource";
 
 type Props = WithTranslation & {
@@ -35,7 +35,6 @@ type Props = WithTranslation & {
 
 type State = {
   loading: boolean;
-  error?: Error;
   releaseInfo?: ReleaseInfo;
 };
 
@@ -73,22 +72,20 @@ class AdminDetails extends React.Component<Props, State> {
     const { releaseInfoLink } = this.props;
 
     if (releaseInfoLink) {
+      this.setState({ loading: true });
       apiClient
         .get(releaseInfoLink)
         .then(r => r.json())
         .then(releaseInfo => this.setState({ releaseInfo }))
         .then(() => this.setState({ loading: false }))
-        .catch(error => this.setState({ error }));
+        // ignore errors for this action
+        .catch(() => this.setState({ loading: false }));
     }
   }
 
   render() {
     const { version, t } = this.props;
-    const { loading, error, releaseInfo } = this.state;
-
-    if (error) {
-      return <ErrorNotification error={error} />;
-    }
+    const { loading, releaseInfo } = this.state;
 
     if (loading) {
       return <Loading />;
@@ -124,7 +121,6 @@ class AdminDetails extends React.Component<Props, State> {
             <hr />
           </>
         )}
-
         <BoxShadowBox className="box">
           <article className="media">
             <ImageWrapper className="media-left">

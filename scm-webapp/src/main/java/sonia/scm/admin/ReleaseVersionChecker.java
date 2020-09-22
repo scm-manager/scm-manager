@@ -77,13 +77,13 @@ public class ReleaseVersionChecker {
         cache.put("latest", latestRelease.get());
         return latestRelease;
       }
+      LOG.info("No newer version found for SCM-Manager");
+      return Optional.empty();
     } catch (IOException e) {
-      // This is an silent action. We don't want the user to get any kind of error for this.
+      // This is a silent action. We don't want the user to get any kind of error for this.
       LOG.info("No newer version found for SCM-Manager");
       return Optional.empty();
     }
-    LOG.info("No newer version found for SCM-Manager");
-    return Optional.empty();
   }
 
   private boolean isNewerVersion(ReleaseInfo releaseInfo) {
