@@ -21,11 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 public enum MergeStrategy {
-  MERGE_COMMIT,
-  FAST_FORWARD_IF_POSSIBLE,
-  SQUASH
+  MERGE_COMMIT(true),
+  FAST_FORWARD_IF_POSSIBLE(true),
+  SQUASH(true),
+  REBASE(false);
+
+  private final boolean commitMessageAllowed;
+
+  MergeStrategy(boolean commitMessageAllowed) {
+    this.commitMessageAllowed = commitMessageAllowed;
+  }
+
+  public boolean isCommitMessageAllowed() {
+    return commitMessageAllowed;
+  }
 }
