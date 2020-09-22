@@ -98,7 +98,7 @@
         "displayName": "Berechtigungen auf Namespaces lesen",
         "description": "Darf die Berechtigungen auf Namespace-Ebene sehen"
       },
-      "permissionWrite": {
+      "permissionRead,permissionWrite": {
         "displayName": "Berechtigungen auf Namespaces modifizieren",
         "description": "Darf die Berechtigungen auf Namespace-Ebene lesen und bearbeiten"
       }

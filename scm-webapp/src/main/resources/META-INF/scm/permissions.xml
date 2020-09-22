@@ -48,7 +48,7 @@
     <value>namespace:permissionRead</value>
   </permission>
   <permission>
-    <value>namespace:permissionWrite</value>
+    <value>namespace:permissionRead,permissionWrite</value>
   </permission>
   <permission>
     <value>user:*</value>
