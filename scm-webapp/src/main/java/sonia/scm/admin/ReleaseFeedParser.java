@@ -44,15 +44,20 @@ public class ReleaseFeedParser {
     this.client = client;
   }
 
-  Optional<ReleaseInfo> findLatestRelease(String url) throws IOException {
+  Optional<ReleaseInfo> findLatestRelease(String url) {
     LOG.info("Search for newer versions of SCM-Manager");
-    ReleaseFeedDto releaseFeed = client.get(url).request().contentFromXml(ReleaseFeedDto.class);
-    Optional<ReleaseFeedDto.Release> latestRelease = filterForLatestRelease(releaseFeed);
-    if (latestRelease.isPresent()) {
-      ReleaseFeedDto.Release release = latestRelease.get();
-      return Optional.of(new ReleaseInfo(release.getTitle(), release.getLink()));
+    Optional<ReleaseFeedDto.Release> latestRelease = parseLatestReleaseFromRssFeed(url);
+    return latestRelease.map(release -> new ReleaseInfo(release.getTitle(), release.getLink()));
+  }
+
+  private Optional<ReleaseFeedDto.Release> parseLatestReleaseFromRssFeed(String url) {
+    try {
+      ReleaseFeedDto releaseFeed = client.get(url).request().contentFromXml(ReleaseFeedDto.class);
+      return filterForLatestRelease(releaseFeed);
+    } catch (IOException e) {
+      LOG.error(String.format("Could not parse release feed from %s", url));
+      return Optional.empty();
     }
-    return Optional.empty();
   }
 
   private Optional<ReleaseFeedDto.Release> filterForLatestRelease(ReleaseFeedDto releaseFeed) {

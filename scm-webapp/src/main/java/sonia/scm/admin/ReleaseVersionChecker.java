@@ -34,7 +34,6 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.Optional;
 
 public class ReleaseVersionChecker {
@@ -65,25 +64,19 @@ public class ReleaseVersionChecker {
     if (cachedReleaseInfo != null) {
       return Optional.of(cachedReleaseInfo);
     } else {
-      return findLatestReleaseInRssFeed();
+      return findLatestRelease();
     }
   }
 
-  private Optional<ReleaseInfo> findLatestReleaseInRssFeed() {
-    try {
-      String releaseFeedUrl = scmConfiguration.getReleaseFeedUrl();
-      Optional<ReleaseInfo> latestRelease = releaseFeedParser.findLatestRelease(releaseFeedUrl);
-      if (latestRelease.isPresent() && isNewerVersion(latestRelease.get())) {
-        cache.put("latest", latestRelease.get());
-        return latestRelease;
-      }
-      LOG.info("No newer version found for SCM-Manager");
-      return Optional.empty();
-    } catch (IOException e) {
-      // This is a silent action. We don't want the user to get any kind of error for this.
-      LOG.info("No newer version found for SCM-Manager");
-      return Optional.empty();
+  private Optional<ReleaseInfo> findLatestRelease() {
+    String releaseFeedUrl = scmConfiguration.getReleaseFeedUrl();
+    Optional<ReleaseInfo> latestRelease = releaseFeedParser.findLatestRelease(releaseFeedUrl);
+    if (latestRelease.isPresent() && isNewerVersion(latestRelease.get())) {
+      cache.put("latest", latestRelease.get());
+      return latestRelease;
     }
+    LOG.info("No newer version found for SCM-Manager");
+    return Optional.empty();
   }
 
   private boolean isNewerVersion(ReleaseInfo releaseInfo) {

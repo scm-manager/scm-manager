@@ -73,7 +73,7 @@ public class ScmConfiguration implements Configuration {
    * SCM Manager release feed url
    */
   public static final String DEFAULT_RELEASE_FEED_URL =
-    "https://www.scm-manager.org/download/rss.xml";
+    "https://scm-manager.org/download/rss.xml";
 
   /**
    * Default url for login information (plugin and feature tips on the login page).
