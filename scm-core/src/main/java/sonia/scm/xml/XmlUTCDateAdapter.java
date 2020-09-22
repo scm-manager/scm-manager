@@ -28,7 +28,7 @@ import javax.xml.bind.annotation.adapters.XmlAdapter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class XmlDateWithTimezoneAdapter extends XmlAdapter<String, Date> {
+public class XmlUTCDateAdapter extends XmlAdapter<String, Date> {
   @Override
   public Date unmarshal(String date) throws Exception {
     SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");

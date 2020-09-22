@@ -62,7 +62,7 @@ public class AdminInfoResource {
   @GET
   @Path("releaseInfo")
   @Produces(VndMediaType.ADMIN_INFO)
-  @Operation(summary = "Returns release info.", description = "Returns a release info if a newer version of SCM-Manager is available.", tags = "AdminInfo")
+  @Operation(summary = "Returns release info.", description = "Returns information about the latest release if a newer version of SCM-Manager is available.", tags = "AdminInfo")
   @ApiResponse(responseCode = "200", description = "success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the information")

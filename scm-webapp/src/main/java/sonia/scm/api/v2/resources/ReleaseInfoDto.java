@@ -29,15 +29,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.Instant;
-
 @NoArgsConstructor
 @Setter
 @Getter
 @SuppressWarnings("squid:S2160") // we do not need equals for dto
 public class ReleaseInfoDto extends HalRepresentation {
-  private String title;
+  private String version;
   private String link;
-  private Instant releaseDate;
 }
 

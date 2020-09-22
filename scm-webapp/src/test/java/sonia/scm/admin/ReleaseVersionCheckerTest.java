@@ -35,7 +35,6 @@ import sonia.scm.cache.MapCacheManager;
 import sonia.scm.config.ScmConfiguration;
 
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -72,7 +71,7 @@ class ReleaseVersionCheckerTest {
 
   @Test
   void shouldReturnReleaseInfoFromCache() {
-    ReleaseInfo cachedReleaseInfo = new ReleaseInfo("1.42.9", "download-link", Instant.now());
+    ReleaseInfo cachedReleaseInfo = new ReleaseInfo("1.42.9", "download-link");
     Cache<String, ReleaseInfo> cache = new MapCacheManager().getCache("sonia.cache.releaseInfo");
     cache.put("latest", cachedReleaseInfo);
     checker.setCache(cache);
@@ -80,13 +79,13 @@ class ReleaseVersionCheckerTest {
     Optional<ReleaseInfo> releaseInfo = checker.checkForNewerVersion();
 
     assertThat(releaseInfo).isPresent();
-    assertThat(releaseInfo.get().getTitle()).isEqualTo("1.42.9");
+    assertThat(releaseInfo.get().getVersion()).isEqualTo("1.42.9");
     assertThat(releaseInfo.get().getLink()).isEqualTo("download-link");
   }
 
   @Test
   void shouldReturnReleaseInfo() throws IOException {
-    ReleaseInfo releaseInfo = new ReleaseInfo("2.0.0", "download-link", Instant.now());
+    ReleaseInfo releaseInfo = new ReleaseInfo("2.5.0", "download-link");
     when(scmConfiguration.getReleaseFeedUrl()).thenReturn("releaseFeed");
     when(feedReader.findLatestRelease("releaseFeed")).thenReturn(Optional.of(releaseInfo));
     when(contextProvider.getVersion()).thenReturn("1.9.0");
@@ -94,7 +93,7 @@ class ReleaseVersionCheckerTest {
     Optional<ReleaseInfo> latestRelease = checker.checkForNewerVersion();
 
     assertThat(latestRelease).isPresent();
-    assertThat(latestRelease.get().getTitle()).isEqualTo("2.0.0");
+    assertThat(latestRelease.get().getVersion()).isEqualTo("2.5.0");
     assertThat(latestRelease.get().getLink()).isEqualTo("download-link");
   }
 }

@@ -36,7 +36,8 @@ import {
   SecondaryNavigation,
   SecondaryNavigationColumn,
   StateMenuContextProvider,
-  SubNavigation
+  SubNavigation,
+  urls
 } from "@scm-manager/ui-components";
 import { getAvailablePluginsLink, getInstalledPluginsLink, getLinks } from "../../modules/indexResource";
 import AdminDetails from "./AdminDetails";
@@ -45,7 +46,6 @@ import GlobalConfig from "./GlobalConfig";
 import RepositoryRoles from "../roles/containers/RepositoryRoles";
 import SingleRepositoryRole from "../roles/containers/SingleRepositoryRole";
 import CreateRepositoryRole from "../roles/containers/CreateRepositoryRole";
-import { urls } from "@scm-manager/ui-components";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -55,7 +55,6 @@ type Props = RouteComponentProps &
   };
 
 class Admin extends React.Component<Props> {
-
   matchesRoles = (route: any) => {
     const url = urls.matchedUrl(this.props);
     const regex = new RegExp(`${url}/role/`);

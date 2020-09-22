@@ -27,12 +27,9 @@ package sonia.scm.admin;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.Instant;
-
 @AllArgsConstructor
 @Getter
 public class ReleaseInfo {
-  private final String title;
+  private final String version;
   private final String link;
-  private final Instant releaseDate;
 }

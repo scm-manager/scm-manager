@@ -25,18 +25,24 @@ import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
-import { Image, Loading, Subtitle, Title } from "@scm-manager/ui-components";
-import { getAppVersion } from "../../modules/indexResource";
+import { apiClient, ErrorNotification, Image, Loading, Subtitle, Title } from "@scm-manager/ui-components";
+import { getAppVersion, getReleaseInfoLink } from "../../modules/indexResource";
 
 type Props = WithTranslation & {
-  loading: boolean;
-  error: Error;
   version: string;
+  releaseInfoLink?: string;
 };
 
-const NoBottomMarginSubtitle = styled(Subtitle)`
-  margin-bottom: 0.25rem !important;
-`;
+type State = {
+  loading: boolean;
+  error?: Error;
+  releaseInfo?: ReleaseInfo;
+};
+
+type ReleaseInfo = {
+  version: string;
+  link: string;
+};
 
 const BottomMarginDiv = styled.div`
   margin-bottom: 1.5rem;
@@ -46,13 +52,43 @@ const BoxShadowBox = styled.div`
   box-shadow: 0 2px 3px rgba(40, 177, 232, 0.1), 0 0 0 2px rgba(40, 177, 232, 0.2);
 `;
 
+const NoBottomMarginSubtitle = styled(Subtitle)`
+  margin-bottom: 0.25rem !important;
+`;
+
 const ImageWrapper = styled.div`
   padding: 0.2rem 0.4rem;
 `;
 
-class AdminDetails extends React.Component<Props> {
+class AdminDetails extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      loading: false
+    };
+  }
+
+  componentDidMount() {
+    const { releaseInfoLink } = this.props;
+
+    if (releaseInfoLink) {
+      apiClient
+        .get(releaseInfoLink)
+        .then(r => r.json())
+        .then(releaseInfo => this.setState({ releaseInfo }))
+        .then(() => this.setState({ loading: false }))
+        .catch(error => this.setState({ error }));
+    }
+  }
+
   render() {
-    const { loading, t } = this.props;
+    const { version, t } = this.props;
+    const { loading, error, releaseInfo } = this.state;
+
+    if (error) {
+      return <ErrorNotification error={error} />;
+    }
 
     if (loading) {
       return <Loading />;
@@ -62,7 +98,33 @@ class AdminDetails extends React.Component<Props> {
       <>
         <Title title={t("admin.info.title")} />
         <NoBottomMarginSubtitle subtitle={t("admin.info.currentAppVersion")} />
-        <BottomMarginDiv>{this.props.version}</BottomMarginDiv>
+        <BottomMarginDiv>{version}</BottomMarginDiv>
+        {releaseInfo && (
+          <>
+            <BoxShadowBox className="box">
+              <article className="media">
+                <ImageWrapper className="media-left image is-96x96">
+                  <Image src="/images/blib.jpg" alt={t("admin.info.logo")} />
+                </ImageWrapper>
+                <div className="media-content">
+                  <div className="content">
+                    <h3 className="has-text-weight-medium">{t("admin.info.newRelease.title")}</h3>
+                    <p>
+                      {t("admin.info.newRelease.description", {
+                        version: releaseInfo?.version
+                      })}
+                    </p>
+                    <a className="button is-info is-pulled-right" target="_blank" href={releaseInfo?.link}>
+                      {t("admin.info.newRelease.downloadButton")}
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </BoxShadowBox>
+            <hr />
+          </>
+        )}
+
         <BoxShadowBox className="box">
           <article className="media">
             <ImageWrapper className="media-left">
@@ -110,8 +172,10 @@ class AdminDetails extends React.Component<Props> {
 
 const mapStateToProps = (state: any) => {
   const version = getAppVersion(state);
+  const releaseInfoLink = getReleaseInfoLink(state);
   return {
-    version
+    version,
+    releaseInfoLink
   };
 };
 

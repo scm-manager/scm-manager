@@ -37,12 +37,10 @@ class ReleaseInfoMapperTest {
 
   @Test
   void shouldMapToDto() {
-    Instant releaseDate = Instant.now();
-    ReleaseInfo releaseInfo = new ReleaseInfo("1.2.3", "download-link", releaseDate);
+    ReleaseInfo releaseInfo = new ReleaseInfo("1.2.3", "download-link");
     ReleaseInfoDto dto = mapper.map(releaseInfo);
 
     assertThat(dto.getLink()).isEqualTo(releaseInfo.getLink());
-    assertThat(dto.getReleaseDate()).isEqualTo(releaseDate);
-    assertThat(dto.getTitle()).isEqualTo(releaseInfo.getTitle());
+    assertThat(dto.getVersion()).isEqualTo(releaseInfo.getVersion());
   }
 }

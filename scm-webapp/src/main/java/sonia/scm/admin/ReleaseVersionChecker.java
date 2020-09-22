@@ -82,11 +82,12 @@ public class ReleaseVersionChecker {
       LOG.info("No newer version found for SCM-Manager");
       return Optional.empty();
     }
+    LOG.info("No newer version found for SCM-Manager");
     return Optional.empty();
   }
 
   private boolean isNewerVersion(ReleaseInfo releaseInfo) {
-    Version versionFromReleaseFeed = Version.parse(releaseInfo.getTitle());
+    Version versionFromReleaseFeed = Version.parse(releaseInfo.getVersion());
     return versionFromReleaseFeed.isNewer(scmContextProvider.getVersion());
   }
 }

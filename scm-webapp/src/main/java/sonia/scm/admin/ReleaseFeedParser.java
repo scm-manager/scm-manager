@@ -30,7 +30,6 @@ import sonia.scm.net.ahc.AdvancedHttpClient;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.time.Instant;
 import java.util.Comparator;
 import java.util.Optional;
 
@@ -51,7 +50,7 @@ public class ReleaseFeedParser {
     Optional<ReleaseFeedDto.Release> latestRelease = filterForLatestRelease(releaseFeed);
     if (latestRelease.isPresent()) {
       ReleaseFeedDto.Release release = latestRelease.get();
-      return Optional.of(new ReleaseInfo(release.getTitle(), release.getLink(), Instant.now()));
+      return Optional.of(new ReleaseInfo(release.getTitle(), release.getLink()));
     }
     return Optional.empty();
   }

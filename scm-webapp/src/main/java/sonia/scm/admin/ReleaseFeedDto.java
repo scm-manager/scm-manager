@@ -28,7 +28,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sonia.scm.xml.XmlDateWithTimezoneAdapter;
+import sonia.scm.xml.XmlUTCDateAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -64,7 +64,7 @@ public final class ReleaseFeedDto {
     private String description;
     private String link;
     private String generator;
-    @XmlJavaTypeAdapter(XmlDateWithTimezoneAdapter.class)
+    @XmlJavaTypeAdapter(XmlUTCDateAdapter.class)
     private Date lastBuildDate;
     @XmlElement(name = "item")
     private List<Release> releases;
@@ -80,7 +80,7 @@ public final class ReleaseFeedDto {
     private String description;
     private String link;
     private String guid;
-    @XmlJavaTypeAdapter(XmlDateWithTimezoneAdapter.class)
+    @XmlJavaTypeAdapter(XmlUTCDateAdapter.class)
     private Date pubDate;
   }
 }

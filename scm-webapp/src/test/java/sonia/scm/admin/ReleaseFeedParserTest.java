@@ -58,8 +58,8 @@ class ReleaseFeedParserTest {
     Optional<ReleaseInfo> release = releaseFeedParser.findLatestRelease(url);
 
     assertThat(release).isPresent();
-    assertThat(release.get().getTitle()).isEqualTo("3");
-    assertThat(release.get().getTitle()).isEqualTo("download-3");
+    assertThat(release.get().getVersion()).isEqualTo("3");
+    assertThat(release.get().getLink()).isEqualTo("download-3");
   }
 
   private ReleaseFeedDto createReleaseFeedDto() {
