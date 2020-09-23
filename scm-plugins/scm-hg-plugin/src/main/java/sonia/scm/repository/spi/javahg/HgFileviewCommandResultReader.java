@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi.javahg;
 
 import com.aragost.javahg.DateTime;
@@ -35,6 +35,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.Optional;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 class HgFileviewCommandResultReader {
 
@@ -48,7 +52,7 @@ class HgFileviewCommandResultReader {
     this.disableLastCommit = disableLastCommit;
   }
 
-  FileObject parseResult() throws IOException {
+  Optional<FileObject> parseResult() throws IOException {
     Deque<FileObject> stack = new LinkedList<>();
 
     FileObject last = null;
@@ -82,13 +86,17 @@ class HgFileviewCommandResultReader {
 
     if (stack.isEmpty()) {
       // if the stack is empty, the requested path is probably a file
-      return last;
+      return of(last);
+    } else if (stack.size() == 1 && stack.getFirst().isDirectory() && stack.getFirst().getChildren().isEmpty()) {
+      // There are no empty directories in hg. When we get this,
+      // we just get the requested path as a directory, but it does not exist.
+      return empty();
     } else {
       // if the stack is not empty, the requested path is a directory
       if (stream.read() == TRUNCATED_MARK) {
         stack.getLast().setTruncated(true);
       }
-      return stack.getLast();
+      return of(stack.getLast());
     }
   }
 
