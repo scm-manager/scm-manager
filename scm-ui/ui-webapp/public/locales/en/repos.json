@@ -133,6 +133,10 @@
       "more": "{{count}} more",
       "count": "{{count}} Contributor",
       "count_plural": "{{count}} Contributors"
+    },
+    "commitAuthor": {
+      "author": "Author",
+      "noMail": "This commit is generated without any meaningful email address because no email address is assigned to this user."
     }
   },
   "repositoryForm": {

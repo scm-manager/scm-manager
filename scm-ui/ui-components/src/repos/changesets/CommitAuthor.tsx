@@ -21,20 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
+import Notification from "../../Notification";
 
-import * as changesets from "./changesets";
-export { changesets };
+type Props = WithTranslation & {
+  displayName: string;
+  mail: string;
+};
 
-export { default as ChangesetAuthor, SingleContributor } from "./ChangesetAuthor";
-export { default as ChangesetButtonGroup } from "./ChangesetButtonGroup";
-export { default as ChangesetDescription } from "./ChangesetDescription";
-export { default as ChangesetDiff } from "./ChangesetDiff";
-export { default as ChangesetId } from "./ChangesetId";
-export { default as ChangesetList } from "./ChangesetList";
-export { default as ChangesetRow } from "./ChangesetRow";
-export { default as ChangesetTag } from "./ChangesetTag";
-export { default as ChangesetTags } from "./ChangesetTags";
-export { default as ChangesetTagsCollapsed } from "./ChangesetTagsCollapsed";
-export { default as CommitAuthor } from "./CommitAuthor";
-export { default as ContributorAvatar } from "./ContributorAvatar";
-export { default as SignatureIcon } from "./SignatureIcon";
+class CommitAuthor extends React.Component<Props> {
+  render() {
+    const { displayName, mail, t } = this.props;
+
+    const defaultMail = "noreply@scm-manager.org";
+
+    return (
+      <>
+        {!mail && <Notification type="warning">{t("changeset.commitAuthor.noMail")}</Notification>}
+        <span className="mb-2">
+          <strong>{t("changeset.commitAuthor.author")}</strong> {`${displayName} <${mail ? mail : defaultMail}>`}
+        </span>
+      </>
+    );
+  }
+}
+
+export default withTranslation("repos")(CommitAuthor);

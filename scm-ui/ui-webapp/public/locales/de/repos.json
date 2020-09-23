@@ -133,6 +133,10 @@
     "buttons": {
       "details": "Details",
       "sources": "Sources"
+    },
+    "commitAuthor": {
+      "author": "Autor",
+      "noMail": "Dieser Commit wird ohne aussagekräftige E-Mail Adresse erzeugt, weil diesem Benutzer keine E-Mail Adresse zugeordnet ist."
     }
   },
   "repositoryForm": {
