@@ -22,7 +22,10 @@
  * SOFTWARE.
  */
 import * as React from "react";
+import {FC} from "react";
 import classNames from "classnames";
+import usePortalRootElement from "../usePortalRootElement";
+import ReactDOM from "react-dom";
 
 type Props = {
   title: string;
@@ -31,38 +34,38 @@ type Props = {
   footer?: any;
   active: boolean;
   className?: string;
-  headColor: string;
+  headColor?: string;
 };
 
-class Modal extends React.Component<Props> {
-  static defaultProps = {
-    headColor: "light"
-  };
+export const Modal: FC<Props> = ({ title, closeFunction, body, footer, active, className, headColor = "light" }) => {
+  const portalRootElement = usePortalRootElement("modalsRoot");
 
-  render() {
-    const { title, closeFunction, body, footer, active, className, headColor } = this.props;
-
-    const isActive = active ? "is-active" : null;
-
-    let showFooter = null;
-    if (footer) {
-      showFooter = <footer className="modal-card-foot">{footer}</footer>;
-    }
-
-    return (
-      <div className={classNames("modal", className, isActive)}>
-        <div className="modal-background" />
-        <div className="modal-card">
-          <header className={classNames("modal-card-head", `has-background-${headColor}`)}>
-            <p className="modal-card-title is-marginless">{title}</p>
-            <button className="delete" aria-label="close" onClick={closeFunction} />
-          </header>
-          <section className="modal-card-body">{body}</section>
-          {showFooter}
-        </div>
-      </div>
-    );
+  if (!portalRootElement) {
+    return null;
   }
-}
+
+  const isActive = active ? "is-active" : null;
+
+  let showFooter = null;
+  if (footer) {
+    showFooter = <footer className="modal-card-foot">{footer}</footer>;
+  }
+
+  const modalElement = (
+    <div className={classNames("modal", className, isActive)}>
+      <div className="modal-background" />
+      <div className="modal-card">
+        <header className={classNames("modal-card-head", `has-background-${headColor}`)}>
+          <p className="modal-card-title is-marginless">{title}</p>
+          <button className="delete" aria-label="close" onClick={closeFunction} />
+        </header>
+        <section className="modal-card-body">{body}</section>
+        {showFooter}
+      </div>
+    </div>
+  );
+
+  return ReactDOM.createPortal(modalElement, portalRootElement);
+};
 
 export default Modal;
