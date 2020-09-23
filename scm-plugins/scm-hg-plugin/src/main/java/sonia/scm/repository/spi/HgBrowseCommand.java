@@ -36,6 +36,9 @@ import sonia.scm.repository.spi.javahg.HgFileviewCommand;
 
 import java.io.IOException;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
 //~--- JDK imports ------------------------------------------------------------
 
 /**
@@ -93,7 +96,8 @@ public class HgBrowseCommand extends AbstractCommand implements BrowseCommand
     cmd.setLimit(request.getLimit());
     cmd.setOffset(request.getOffset());
 
-    FileObject file = cmd.execute();
+    FileObject file = cmd.execute()
+      .orElseThrow(() -> notFound(entity("File", request.getPath()).in("Revision", revision).in(getRepository())));
     return new BrowserResult(c == null? "tip": c.getNode(), revision, file);
   }
 }

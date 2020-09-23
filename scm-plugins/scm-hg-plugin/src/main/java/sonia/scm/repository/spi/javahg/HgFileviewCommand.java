@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -29,12 +29,12 @@ package sonia.scm.repository.spi.javahg;
 import com.aragost.javahg.Repository;
 import com.aragost.javahg.internals.AbstractCommand;
 import com.aragost.javahg.internals.HgInputStream;
-
 import sonia.scm.repository.FileObject;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
+import java.util.Optional;
 
 /**
  * Mercurial command to list files of a repository.
@@ -161,7 +161,7 @@ public class HgFileviewCommand extends AbstractCommand
    *
    * @throws IOException
    */
-  public FileObject execute() throws IOException
+  public Optional<FileObject> execute() throws IOException
   {
     cmdAppend("-t");
 
