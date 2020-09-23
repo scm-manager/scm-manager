@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Set default branch in branch selector if nothing is selected ([#1338](https://github.com/scm-manager/scm-manager/pull/1338))
 - Handling of branch with slashes in source view ([#1340](https://github.com/scm-manager/scm-manager/pull/1340))
 - Detect not existing paths correctly in Mercurial ([#1343](https://github.com/scm-manager/scm-manager/pull/1343))
+- Return correct revisions for tags in hooks for git repositories ([#1344](https://github.com/scm-manager/scm-manager/pull/1344))
 
 ## [2.5.0] - 2020-09-10
 ### Added
