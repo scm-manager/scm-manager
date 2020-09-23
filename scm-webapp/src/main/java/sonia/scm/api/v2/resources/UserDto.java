@@ -46,7 +46,7 @@ public class UserDto extends HalRepresentation {
   private String displayName;
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Instant lastModified;
-  @NotEmpty @Email
+  @Email
   private String mail;
   @Pattern(regexp = ValidationUtil.REGEX_NAME)
   private String name;

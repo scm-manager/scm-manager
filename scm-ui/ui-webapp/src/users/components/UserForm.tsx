@@ -113,8 +113,7 @@ class UserForm extends React.Component<Props, State> {
       this.editUserComponentsAreUnchanged() ||
       this.state.mailValidationError ||
       this.state.displayNameValidationError ||
-      this.isFalsy(user.displayName) ||
-      this.isFalsy(user.mail)
+      this.isFalsy(user.displayName)
     );
   };
 

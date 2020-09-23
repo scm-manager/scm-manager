@@ -31,7 +31,10 @@ export const isNameValid = (name: string) => {
 const mailRegex = /^[ -~]+@[A-Za-z0-9][\w\-.]*\.[A-Za-z0-9][A-Za-z0-9-]+$/;
 
 export const isMailValid = (mail: string) => {
-  return mailRegex.test(mail);
+  if (mail) {
+    return mailRegex.test(mail);
+  }
+  return true;
 };
 
 export const isNumberValid = (number: any) => {
