@@ -75,7 +75,7 @@ public class ReleaseVersionChecker {
       return latestRelease;
     }
     // we cache that no new version was available to prevent request every time
-    LOG.info("No newer version found for SCM-Manager");
+    LOG.debug("No newer version found for SCM-Manager");
     cache.put(CACHE_KEY, Optional.empty());
     return Optional.empty();
   }

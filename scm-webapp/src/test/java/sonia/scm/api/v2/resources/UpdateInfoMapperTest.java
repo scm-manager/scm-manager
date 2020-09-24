@@ -57,6 +57,6 @@ class UpdateInfoMapperTest {
 
     assertThat(dto.getLink()).isEqualTo(updateInfo.getLink());
     assertThat(dto.getLatestVersion()).isEqualTo(updateInfo.getLatestVersion());
-    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo("https://hitchhiker.com/scm/updateInfo");
+    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo("https://hitchhiker.com/scm/v2/updateInfo");
   }
 }

@@ -63,6 +63,7 @@ public class AdminInfoResource {
   @Produces(VndMediaType.ADMIN_INFO)
   @Operation(summary = "Returns release info.", description = "Returns information about the latest release if a newer version of SCM-Manager is available.", tags = "AdminInfo")
   @ApiResponse(responseCode = "200", description = "success")
+  @ApiResponse(responseCode = "204", description = "no newer version was found")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(
     responseCode = "500",
