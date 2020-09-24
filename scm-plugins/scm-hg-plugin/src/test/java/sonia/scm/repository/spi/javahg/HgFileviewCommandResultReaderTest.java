@@ -21,11 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi.javahg;
 
 import com.aragost.javahg.internals.HgInputStream;
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import sonia.scm.repository.FileObject;
 
@@ -34,6 +33,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.OptionalLong;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -55,7 +55,7 @@ class HgFileviewCommandResultReaderTest {
       .file("b.txt", 100, time2.toEpochMilli(), "file b\nwith some\nmore text")
       .build();
 
-    FileObject fileObject = reader.parseResult();
+    FileObject fileObject = reader.parseResult().get();
 
     assertThat(fileObject.isDirectory()).isTrue();
     assertThat(fileObject.getChildren())
@@ -84,7 +84,7 @@ class HgFileviewCommandResultReaderTest {
       .file("a.txt")
       .truncated();
 
-    FileObject fileObject = reader.parseResult();
+    FileObject fileObject = reader.parseResult().get();
 
     assertThat(fileObject.isTruncated()).isTrue();
   }
@@ -96,7 +96,7 @@ class HgFileviewCommandResultReaderTest {
       .file("dir/a.txt")
       .build();
 
-    FileObject fileObject = reader.parseResult();
+    FileObject fileObject = reader.parseResult().get();
 
     assertThat(fileObject.isDirectory()).isTrue();
     assertThat(fileObject.getName()).isEqualTo("dir");
@@ -117,7 +117,7 @@ class HgFileviewCommandResultReaderTest {
       .file("d.txt")
       .build();
 
-    FileObject fileObject = reader.parseResult();
+    FileObject fileObject = reader.parseResult().get();
 
     assertThat(fileObject.getChildren())
       .extracting("name")
@@ -152,7 +152,7 @@ class HgFileviewCommandResultReaderTest {
       .file("d.txt")
       .build();
 
-    FileObject fileObject = reader.parseResult();
+    FileObject fileObject = reader.parseResult().get();
 
     assertThat(fileObject.getChildren())
       .extracting("name")
@@ -179,7 +179,7 @@ class HgFileviewCommandResultReaderTest {
       .file("d.txt")
       .build();
 
-    FileObject fileObject = reader.parseResult();
+    FileObject fileObject = reader.parseResult().get();
 
     assertThat(fileObject.getChildren())
       .extracting("name")
@@ -213,7 +213,7 @@ class HgFileviewCommandResultReaderTest {
       .file("directory/b.txt")
       .build();
 
-    FileObject fileObject = reader.parseResult();
+    FileObject fileObject = reader.parseResult().get();
 
     assertThat(fileObject.getChildren())
       .extracting("name")
@@ -248,7 +248,7 @@ class HgFileviewCommandResultReaderTest {
       .file("a.txt")
       .build();
 
-    FileObject fileObject = reader.parseResult();
+    FileObject fileObject = reader.parseResult().get();
 
     assertThat(fileObject.getChildren())
       .extracting("description")
@@ -256,6 +256,17 @@ class HgFileviewCommandResultReaderTest {
     assertThat(fileObject.getChildren())
       .extracting("commitDate")
       .containsOnly(OptionalLong.empty());
+  }
+
+  @Test
+  void shouldIgnoreSingleEmptyDir() throws IOException {
+    HgFileviewCommandResultReader reader = new MockInput()
+      .dir("empty")
+      .build();
+
+    Optional<FileObject> fileObject = reader.parseResult();
+
+    assertThat(fileObject).isEmpty();
   }
 
   private HgInputStream createInputStream(String input) {

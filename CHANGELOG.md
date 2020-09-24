@@ -1,3 +1,4 @@
+
 # Changelog
 All notable changes to this project will be documented in this file.
 
@@ -6,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
+- Add support for pr merge with prior rebase ([#1332](https://github.com/scm-manager/scm-manager/pull/1332))
 - Tags overview for repository [#1331](https://github.com/scm-manager/scm-manager/pull/1331)
 - Permissions can be specified for namespaces ([#1335](https://github.com/scm-manager/scm-manager/pull/1335))
 - Show update info on admin information page ([#1342](https://github.com/scm-manager/scm-manager/pull/1342))
@@ -17,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Overflow for too long branch names ([#1339](https://github.com/scm-manager/scm-manager/pull/1339))
 - Set default branch in branch selector if nothing is selected ([#1338](https://github.com/scm-manager/scm-manager/pull/1338))
 - Handling of branch with slashes in source view ([#1340](https://github.com/scm-manager/scm-manager/pull/1340))
+- Detect not existing paths correctly in Mercurial ([#1343](https://github.com/scm-manager/scm-manager/pull/1343))
 
 ## [2.5.0] - 2020-09-10
 ### Added
