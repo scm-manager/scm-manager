@@ -24,9 +24,14 @@
 
 package sonia.scm.repository.api;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
+import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevObject;
+import org.eclipse.jgit.revwalk.RevTag;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.ReceiveCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +40,8 @@ import sonia.scm.repository.Tag;
 
 import java.io.IOException;
 import java.util.List;
+
+import static sonia.scm.repository.GitUtil.getId;
 
 /**
  * Git provider implementation of {@link HookTagProvider}.
@@ -65,14 +72,14 @@ public class GitHookTagProvider implements HookTagProvider {
       if (Strings.isNullOrEmpty(tag)) {
         LOG.debug("received ref name {} is not a tag", refName);
       } else {
-        try {
+        try (RevWalk revWalk = createRevWalk(repository)) {
           if (isCreate(rc)) {
-            createdTagBuilder.add(createTagFromNewId(rc, tag, GitUtil.getTagTime(repository, rc.getNewId())));
+            createdTagBuilder.add(createTagFromNewId(revWalk, rc, tag));
           } else if (isDelete(rc)) {
-            deletedTagBuilder.add(createTagFromOldId(rc, tag, GitUtil.getTagTime(repository, rc.getOldId())));
+            deletedTagBuilder.add(createTagFromOldId(revWalk, rc, tag));
           } else if (isUpdate(rc)) {
-            createdTagBuilder.add(createTagFromNewId(rc, tag, GitUtil.getTagTime(repository, rc.getNewId())));
-            deletedTagBuilder.add(createTagFromOldId(rc, tag, GitUtil.getTagTime(repository, rc.getOldId())));
+            createdTagBuilder.add(createTagFromNewId(revWalk, rc, tag));
+            deletedTagBuilder.add(createTagFromOldId(revWalk, rc, tag));
           }
         } catch (IOException e) {
           LOG.error("Could not read tag time", e);
@@ -84,12 +91,25 @@ public class GitHookTagProvider implements HookTagProvider {
     deletedTags = deletedTagBuilder.build();
   }
 
-  private Tag createTagFromNewId(ReceiveCommand rc, String tag, Long tagTime) {
-    return new Tag(tag, GitUtil.getId(rc.getNewId()), tagTime);
+  private Tag createTagFromNewId(RevWalk revWalk, ReceiveCommand rc, String tag) throws IOException {
+    final ObjectId newId = rc.getNewId();
+    return new Tag(tag, getId(unpeelTag(revWalk, newId)), GitUtil.getTagTime(revWalk, newId));
   }
 
-  private Tag createTagFromOldId(ReceiveCommand rc, String tag, Long tagTime) {
-    return new Tag(tag, GitUtil.getId(rc.getOldId()), tagTime);
+  private Tag createTagFromOldId(RevWalk revWalk, ReceiveCommand rc, String tag) throws IOException {
+    final ObjectId oldId = rc.getOldId();
+    return new Tag(tag, getId(unpeelTag(revWalk, oldId)), GitUtil.getTagTime(revWalk, oldId));
+  }
+
+  public ObjectId unpeelTag(RevWalk revWalk, ObjectId oldId) throws IOException {
+    final RevObject revObject = revWalk.parseAny(oldId);
+    if (revObject instanceof RevTag) {
+      return unpeelTag(revWalk, ((RevTag) revObject).getObject());
+    } else if (revObject == null) {
+      return oldId;
+    } else {
+      return revObject;
+    }
   }
 
   private boolean isUpdate(ReceiveCommand rc) {
@@ -114,4 +134,8 @@ public class GitHookTagProvider implements HookTagProvider {
     return deletedTags;
   }
 
+  @VisibleForTesting
+  RevWalk createRevWalk(Repository repository) {
+    return new RevWalk(repository);
+  }
 }
