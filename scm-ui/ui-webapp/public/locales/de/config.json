@@ -61,7 +61,7 @@
     "realmDescriptionHelpText": "Beschreibung des Authentication Realm.",
     "dateFormatHelpText": "Moments Datumsformat. Zulässige Formate sind in der MomentJS Dokumentation beschrieben.",
     "pluginUrlHelpText": "Die URL der Plugin Center API. Beschreibung der Platzhalter: version = SCM-Manager Version; os = Betriebssystem; arch = Architektur",
-    "releaseFeedUrlHelpText": "Die URL des RSS Release Feed des SCM-Manager. Damit kann über neuere Versionen informiert werden.",
+    "releaseFeedUrlHelpText": "Die URL des RSS Release Feed des SCM-Manager. Darüber wird über die neue SCM-Manager Versionen informiert. Um diese Funktion zu deaktivieren lassen Sie dieses Feld leer.",
     "enableForwardingHelpText": "mod_proxy Port Weiterleitung aktivieren.",
     "disableGroupingGridHelpText": "Repository Gruppen deaktivieren. Nach einer Änderung an dieser Einstellung muss die Seite komplett neu geladen werden.",
     "allowAnonymousAccessHelpText": "Anonyme Benutzer haben Zugriff auf freigegebene Repositories.",

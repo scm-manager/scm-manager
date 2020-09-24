@@ -22,19 +22,14 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.admin;
 
-import de.otto.edison.hal.HalRepresentation;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@NoArgsConstructor
-@Setter
+@AllArgsConstructor
 @Getter
-@SuppressWarnings("squid:S2160") // we do not need equals for dto
-public class ReleaseInfoDto extends HalRepresentation {
-  private String version;
-  private String link;
+public class UpdateInfo {
+  private final String latestVersion;
+  private final String link;
 }
-

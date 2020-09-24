@@ -60,12 +60,6 @@ public final class ReleaseFeedDto {
   @Setter
   public static class Channel {
 
-    private String title;
-    private String description;
-    private String link;
-    private String generator;
-    @XmlJavaTypeAdapter(XmlUTCDateAdapter.class)
-    private Date lastBuildDate;
     @XmlElement(name = "item")
     private List<Release> releases;
   }

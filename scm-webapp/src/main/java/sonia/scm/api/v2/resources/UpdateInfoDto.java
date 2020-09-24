@@ -22,16 +22,27 @@
  * SOFTWARE.
  */
 
-package sonia.scm.admin;
+package sonia.scm.api.v2.resources;
 
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import sonia.scm.api.v2.resources.HalAppenderMapper;
-import sonia.scm.api.v2.resources.ReleaseInfoDto;
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Mapper
-public abstract class ReleaseInfoMapper extends HalAppenderMapper {
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+@SuppressWarnings("squid:S2160") // we do not need equals for dto
+public class UpdateInfoDto extends HalRepresentation {
+  private String latestVersion;
+  private String link;
 
-  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
-  public abstract ReleaseInfoDto map(ReleaseInfo releaseInfo);
+  UpdateInfoDto(Links links, Embedded embedded) {
+    super(links, embedded);
+  }
 }
+

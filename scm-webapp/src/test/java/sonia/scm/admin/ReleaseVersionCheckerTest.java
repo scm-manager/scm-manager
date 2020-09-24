@@ -60,40 +60,40 @@ class ReleaseVersionCheckerTest {
   }
 
   @Test
-  void shouldReturnEmptyOptional() throws IOException {
+  void shouldReturnEmptyOptional() {
     when(scmConfiguration.getReleaseFeedUrl()).thenReturn("releaseFeed");
     when(feedReader.findLatestRelease("releaseFeed")).thenReturn(Optional.empty());
 
-    Optional<ReleaseInfo> releaseInfo = checker.checkForNewerVersion();
+    Optional<UpdateInfo> updateInfo = checker.checkForNewerVersion();
 
-    assertThat(releaseInfo).isNotPresent();
+    assertThat(updateInfo).isNotPresent();
   }
 
   @Test
-  void shouldReturnReleaseInfoFromCache() {
-    ReleaseInfo cachedReleaseInfo = new ReleaseInfo("1.42.9", "download-link");
-    Cache<String, ReleaseInfo> cache = new MapCacheManager().getCache("sonia.cache.releaseInfo");
-    cache.put("latest", cachedReleaseInfo);
+  void shouldReturnUpdateInfoFromCache() {
+    UpdateInfo cachedUpdateInfo = new UpdateInfo("1.42.9", "download-link");
+    Cache<String, Optional<UpdateInfo>> cache = new MapCacheManager().getCache("sonia.cache.updateInfo");
+    cache.put("latestRelease", Optional.of(cachedUpdateInfo));
     checker.setCache(cache);
 
-    Optional<ReleaseInfo> releaseInfo = checker.checkForNewerVersion();
+    Optional<UpdateInfo> updateInfo = checker.checkForNewerVersion();
 
-    assertThat(releaseInfo).isPresent();
-    assertThat(releaseInfo.get().getVersion()).isEqualTo("1.42.9");
-    assertThat(releaseInfo.get().getLink()).isEqualTo("download-link");
+    assertThat(updateInfo).isPresent();
+    assertThat(updateInfo.get().getLatestVersion()).isEqualTo("1.42.9");
+    assertThat(updateInfo.get().getLink()).isEqualTo("download-link");
   }
 
   @Test
-  void shouldReturnReleaseInfo() throws IOException {
-    ReleaseInfo releaseInfo = new ReleaseInfo("2.5.0", "download-link");
+  void shouldReturnUpdateInfo() {
+    UpdateInfo updateInfo = new UpdateInfo("2.5.0", "download-link");
     when(scmConfiguration.getReleaseFeedUrl()).thenReturn("releaseFeed");
-    when(feedReader.findLatestRelease("releaseFeed")).thenReturn(Optional.of(releaseInfo));
+    when(feedReader.findLatestRelease("releaseFeed")).thenReturn(Optional.of(updateInfo));
     when(contextProvider.getVersion()).thenReturn("1.9.0");
 
-    Optional<ReleaseInfo> latestRelease = checker.checkForNewerVersion();
+    Optional<UpdateInfo> latestRelease = checker.checkForNewerVersion();
 
     assertThat(latestRelease).isPresent();
-    assertThat(latestRelease.get().getVersion()).isEqualTo("2.5.0");
+    assertThat(latestRelease.get().getLatestVersion()).isEqualTo("2.5.0");
     assertThat(latestRelease.get().getLink()).isEqualTo("download-link");
   }
 }

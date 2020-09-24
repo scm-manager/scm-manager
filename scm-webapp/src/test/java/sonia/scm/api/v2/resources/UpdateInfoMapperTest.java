@@ -22,25 +22,41 @@
  * SOFTWARE.
  */
 
-package sonia.scm.admin;
+package sonia.scm.api.v2.resources;
 
 import org.junit.jupiter.api.Test;
-import sonia.scm.api.v2.resources.ReleaseInfoDto;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.admin.UpdateInfo;
+import sonia.scm.api.v2.resources.UpdateInfoDto;
+import sonia.scm.api.v2.resources.UpdateInfoMapper;
+import sonia.scm.api.v2.resources.UpdateInfoMapperImpl;
+import sonia.scm.api.v2.resources.ResourceLinks;
+import sonia.scm.api.v2.resources.ResourceLinksMock;
 
-import java.time.Instant;
+import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-class ReleaseInfoMapperTest {
+@ExtendWith(MockitoExtension.class)
+class UpdateInfoMapperTest {
 
-  ReleaseInfoMapper mapper = new ReleaseInfoMapperImpl();
+  private final URI baseUri = URI.create("https://hitchhiker.com/scm/");
+
+  @SuppressWarnings("unused") // Is injected
+  private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
+
+  @InjectMocks
+  private UpdateInfoMapperImpl mapper;
 
   @Test
   void shouldMapToDto() {
-    ReleaseInfo releaseInfo = new ReleaseInfo("1.2.3", "download-link");
-    ReleaseInfoDto dto = mapper.map(releaseInfo);
+    UpdateInfo updateInfo = new UpdateInfo("1.2.3", "download-link");
+    UpdateInfoDto dto = mapper.map(updateInfo);
 
-    assertThat(dto.getLink()).isEqualTo(releaseInfo.getLink());
-    assertThat(dto.getVersion()).isEqualTo(releaseInfo.getVersion());
+    assertThat(dto.getLink()).isEqualTo(updateInfo.getLink());
+    assertThat(dto.getLatestVersion()).isEqualTo(updateInfo.getLatestVersion());
+    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo("https://hitchhiker.com/scm/updateInfo");
   }
 }

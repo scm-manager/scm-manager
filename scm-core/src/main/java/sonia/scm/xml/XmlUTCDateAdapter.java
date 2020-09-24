@@ -37,6 +37,7 @@ public class XmlUTCDateAdapter extends XmlAdapter<String, Date> {
 
   @Override
   public String marshal(Date date) {
-    return date.toString();
+    SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+    return formatter.format(date);
   }
 }

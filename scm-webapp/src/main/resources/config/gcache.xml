@@ -67,11 +67,11 @@
   />
 
   <!--
-  ReleaseInfo cache
+  UpdateInfo cache
   average: 30K
 -->
   <cache
-    name="sonia.cache.releaseInfo"
+    name="sonia.cache.updateInfo"
     maximumSize="1"
     expireAfterWrite="3600"
   />

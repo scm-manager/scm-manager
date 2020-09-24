@@ -30,8 +30,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import sonia.scm.admin.ReleaseInfo;
-import sonia.scm.admin.ReleaseInfoMapper;
+import sonia.scm.admin.UpdateInfo;
 import sonia.scm.admin.ReleaseVersionChecker;
 import sonia.scm.web.VndMediaType;
 
@@ -44,14 +43,14 @@ import java.util.Optional;
 @OpenAPIDefinition(tags = {
   @Tag(name = "AdminInfo", description = "Admin information endpoints")
 })
-@Path("")
+@Path("v2")
 public class AdminInfoResource {
 
   private final ReleaseVersionChecker checker;
-  private final ReleaseInfoMapper mapper;
+  private final UpdateInfoMapper mapper;
 
   @Inject
-  public AdminInfoResource(ReleaseVersionChecker checker, ReleaseInfoMapper mapper) {
+  public AdminInfoResource(ReleaseVersionChecker checker, UpdateInfoMapper mapper) {
     this.checker = checker;
     this.mapper = mapper;
   }
@@ -60,12 +59,11 @@ public class AdminInfoResource {
    * Checks for a newer core version of SCM-Manager.
    */
   @GET
-  @Path("releaseInfo")
+  @Path("updateInfo")
   @Produces(VndMediaType.ADMIN_INFO)
   @Operation(summary = "Returns release info.", description = "Returns information about the latest release if a newer version of SCM-Manager is available.", tags = "AdminInfo")
   @ApiResponse(responseCode = "200", description = "success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
-  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the information")
   @ApiResponse(
     responseCode = "500",
     description = "internal server error",
@@ -73,8 +71,8 @@ public class AdminInfoResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public ReleaseInfoDto getReleaseInfo() {
-    Optional<ReleaseInfo> releaseInfo = checker.checkForNewerVersion();
-    return releaseInfo.map(mapper::map).orElse(null);
+  public UpdateInfoDto getUpdateInfo() {
+    Optional<UpdateInfo> updateInfo = checker.checkForNewerVersion();
+    return updateInfo.map(mapper::map).orElse(null);
   }
 }

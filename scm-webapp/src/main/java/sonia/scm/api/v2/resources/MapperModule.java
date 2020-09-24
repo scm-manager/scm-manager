@@ -27,7 +27,6 @@ package sonia.scm.api.v2.resources;
 import com.google.inject.AbstractModule;
 import com.google.inject.servlet.ServletScopes;
 import org.mapstruct.factory.Mappers;
-import sonia.scm.admin.ReleaseInfoMapper;
 import sonia.scm.security.gpg.PublicKeyMapper;
 import sonia.scm.web.api.RepositoryToHalMapper;
 
@@ -77,7 +76,7 @@ public class MapperModule extends AbstractModule {
     bind(RepositoryToHalMapper.class).to(Mappers.getMapperClass(RepositoryToRepositoryDtoMapper.class));
 
     bind(BlameResultToBlameDtoMapper.class).to(Mappers.getMapperClass(BlameResultToBlameDtoMapper.class));
-    bind(ReleaseInfoMapper.class).to(Mappers.getMapperClass(ReleaseInfoMapper.class));
+    bind(UpdateInfoMapper.class).to(Mappers.getMapperClass(UpdateInfoMapper.class));
 
     // no mapstruct required
     bind(MeDtoFactory.class);

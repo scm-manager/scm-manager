@@ -55,10 +55,10 @@ class ReleaseFeedParserTest {
 
     when(client.get(url).request().contentFromXml(ReleaseFeedDto.class)).thenReturn(createReleaseFeedDto());
 
-    Optional<ReleaseInfo> release = releaseFeedParser.findLatestRelease(url);
+    Optional<UpdateInfo> release = releaseFeedParser.findLatestRelease(url);
 
     assertThat(release).isPresent();
-    assertThat(release.get().getVersion()).isEqualTo("3");
+    assertThat(release.get().getLatestVersion()).isEqualTo("3");
     assertThat(release.get().getLink()).isEqualTo("download-3");
   }
 
@@ -66,7 +66,7 @@ class ReleaseFeedParserTest {
     ReleaseFeedDto.Release release1 = createRelease("1", "download-1", new Date(1000000000L));
     ReleaseFeedDto.Release release2 = createRelease("2", "download-2", new Date(2000000000L));
     ReleaseFeedDto.Release release3 = createRelease("3", "download-3", new Date(3000000000L));
-    ReleaseFeedDto.Channel channel = new ReleaseFeedDto.Channel("scm", "scm releases", "scm-download", "gatsby", new Date(1L), ImmutableList.of(release1, release2, release3));
+    ReleaseFeedDto.Channel channel = new ReleaseFeedDto.Channel(ImmutableList.of(release1, release2, release3));
     return new ReleaseFeedDto(channel);
   }
 

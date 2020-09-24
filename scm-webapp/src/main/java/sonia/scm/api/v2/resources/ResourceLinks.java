@@ -275,8 +275,8 @@ class ResourceLinks {
       adminInfoLinkBuilder = new LinkBuilder(pathInfo, AdminInfoResource.class);
     }
 
-    String releaseInfo() {
-      return adminInfoLinkBuilder.method("getReleaseInfo").parameters().href();
+    String updateInfo() {
+      return adminInfoLinkBuilder.method("getUpdateInfo").parameters().href();
     }
   }
 

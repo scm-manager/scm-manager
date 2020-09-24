@@ -24,9 +24,11 @@
 
 package sonia.scm.admin;
 
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.net.ahc.AdvancedHttpClient;
+import sonia.scm.version.Version;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -44,18 +46,21 @@ public class ReleaseFeedParser {
     this.client = client;
   }
 
-  Optional<ReleaseInfo> findLatestRelease(String url) {
+  Optional<UpdateInfo> findLatestRelease(String url) {
     LOG.info("Search for newer versions of SCM-Manager");
     Optional<ReleaseFeedDto.Release> latestRelease = parseLatestReleaseFromRssFeed(url);
-    return latestRelease.map(release -> new ReleaseInfo(release.getTitle(), release.getLink()));
+    return latestRelease.map(release -> new UpdateInfo(release.getTitle(), release.getLink()));
   }
 
   private Optional<ReleaseFeedDto.Release> parseLatestReleaseFromRssFeed(String url) {
     try {
+      if (Strings.isNullOrEmpty(url)) {
+        return Optional.empty();
+      }
       ReleaseFeedDto releaseFeed = client.get(url).request().contentFromXml(ReleaseFeedDto.class);
       return filterForLatestRelease(releaseFeed);
     } catch (IOException e) {
-      LOG.error(String.format("Could not parse release feed from %s", url));
+      LOG.error("Could not parse release feed from {}", url, e);
       return Optional.empty();
     }
   }
@@ -63,6 +68,6 @@ public class ReleaseFeedParser {
   private Optional<ReleaseFeedDto.Release> filterForLatestRelease(ReleaseFeedDto releaseFeed) {
     return releaseFeed.getChannel().getReleases()
       .stream()
-      .max(Comparator.comparing(ReleaseFeedDto.Release::getPubDate));
+      .min(Comparator.comparing(release -> Version.parse(release.getTitle().trim())));
   }
 }
