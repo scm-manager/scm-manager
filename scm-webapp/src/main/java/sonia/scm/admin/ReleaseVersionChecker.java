@@ -40,7 +40,6 @@ public class ReleaseVersionChecker {
 
   private static final Logger LOG = LoggerFactory.getLogger(ReleaseVersionChecker.class);
   private static final String CACHE_NAME = "sonia.cache.updateInfo";
-  private static final String CACHE_KEY = "latestRelease";
 
   private final ReleaseFeedParser releaseFeedParser;
   private final ScmConfiguration scmConfiguration;
@@ -61,8 +60,8 @@ public class ReleaseVersionChecker {
   }
 
   public Optional<UpdateInfo> checkForNewerVersion() {
-    if (cache.size() > 0) {
-      return cache.get(CACHE_KEY);
+    if (cache.contains(scmConfiguration.getReleaseFeedUrl())) {
+      return cache.get(scmConfiguration.getReleaseFeedUrl());
     }
     return findLatestRelease();
   }
@@ -71,12 +70,12 @@ public class ReleaseVersionChecker {
     String releaseFeedUrl = scmConfiguration.getReleaseFeedUrl();
     Optional<UpdateInfo> latestRelease = releaseFeedParser.findLatestRelease(releaseFeedUrl);
     if (latestRelease.isPresent() && isNewerVersion(latestRelease.get())) {
-      cache.put(CACHE_KEY, latestRelease);
+      cache.put(scmConfiguration.getReleaseFeedUrl(), latestRelease);
       return latestRelease;
     }
     // we cache that no new version was available to prevent request every time
     LOG.debug("No newer version found for SCM-Manager");
-    cache.put(CACHE_KEY, Optional.empty());
+    cache.put(scmConfiguration.getReleaseFeedUrl(), Optional.empty());
     return Optional.empty();
   }
 
