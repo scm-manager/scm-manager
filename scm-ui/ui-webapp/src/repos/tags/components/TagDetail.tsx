@@ -25,7 +25,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Repository, Tag } from "@scm-manager/ui-types";
-import { DateFromNow, Level } from "@scm-manager/ui-components";
+import { DateFromNow } from "@scm-manager/ui-components";
 import styled from "styled-components";
 import TagButtonGroup from "./TagButtonGroup";
 
@@ -37,6 +37,7 @@ type Props = {
 const FlexRow = styled.div`
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 `;
 
 const Created = styled.div`
