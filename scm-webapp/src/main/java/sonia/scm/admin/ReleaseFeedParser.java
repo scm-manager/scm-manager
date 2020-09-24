@@ -105,7 +105,7 @@ public class ReleaseFeedParser {
       }
       ReleaseFeedDto releaseFeed = client.get(url).request().contentFromXml(ReleaseFeedDto.class);
       return filterForLatestRelease(releaseFeed);
-    } catch (IOException e) {
+    } catch (Exception e) {
       LOG.error("Could not parse release feed from {}", url, e);
       return Optional.empty();
     }
