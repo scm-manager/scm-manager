@@ -71,9 +71,12 @@ class ReleaseVersionCheckerTest {
 
   @Test
   void shouldReturnUpdateInfoFromCache() {
+    String url = "releaseFeed";
+    when(scmConfiguration.getReleaseFeedUrl()).thenReturn(url);
+
     UpdateInfo cachedUpdateInfo = new UpdateInfo("1.42.9", "download-link");
     Cache<String, Optional<UpdateInfo>> cache = new MapCacheManager().getCache("sonia.cache.updateInfo");
-    cache.put("latestRelease", Optional.of(cachedUpdateInfo));
+    cache.put(url, Optional.of(cachedUpdateInfo));
     checker.setCache(cache);
 
     Optional<UpdateInfo> updateInfo = checker.checkForNewerVersion();
