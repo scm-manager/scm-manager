@@ -22,31 +22,14 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+package sonia.scm.admin;
 
-export type AnonymousMode = "FULL" | "PROTOCOL_ONLY" | "OFF";
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-export type Config = {
-  proxyPassword: string | null;
-  proxyPort: number;
-  proxyServer: string;
-  proxyUser: string | null;
-  enableProxy: boolean;
-  realmDescription: string;
-  disableGroupingGrid: boolean;
-  dateFormat: string;
-  anonymousAccessEnabled: boolean;
-  anonymousMode: AnonymousMode;
-  baseUrl: string;
-  forceBaseUrl: boolean;
-  loginAttemptLimit: number;
-  proxyExcludes: string[];
-  skipFailedAuthenticators: boolean;
-  pluginUrl: string;
-  loginAttemptLimitTimeout: number;
-  enabledXsrfProtection: boolean;
-  namespaceStrategy: string;
-  loginInfoUrl: string;
-  releaseFeedUrl: string;
-  _links: Links;
-};
+@AllArgsConstructor
+@Getter
+public class UpdateInfo {
+  private final String latestVersion;
+  private final String link;
+}

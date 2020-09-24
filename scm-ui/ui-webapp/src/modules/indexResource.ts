@@ -158,6 +158,10 @@ export function getAppVersion(state: object) {
   return state.indexResources.version;
 }
 
+export function getUpdateInfoLink(state: object) {
+  return getLink(state, "updateInfo");
+}
+
 export function getUiPluginsLink(state: object) {
   return getLink(state, "uiPlugins");
 }

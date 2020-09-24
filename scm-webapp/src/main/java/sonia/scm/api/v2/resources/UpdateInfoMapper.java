@@ -22,31 +22,33 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+package sonia.scm.api.v2.resources;
 
-export type AnonymousMode = "FULL" | "PROTOCOL_ONLY" | "OFF";
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.Links;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.ObjectFactory;
+import sonia.scm.admin.UpdateInfo;
 
-export type Config = {
-  proxyPassword: string | null;
-  proxyPort: number;
-  proxyServer: string;
-  proxyUser: string | null;
-  enableProxy: boolean;
-  realmDescription: string;
-  disableGroupingGrid: boolean;
-  dateFormat: string;
-  anonymousAccessEnabled: boolean;
-  anonymousMode: AnonymousMode;
-  baseUrl: string;
-  forceBaseUrl: boolean;
-  loginAttemptLimit: number;
-  proxyExcludes: string[];
-  skipFailedAuthenticators: boolean;
-  pluginUrl: string;
-  loginAttemptLimitTimeout: number;
-  enabledXsrfProtection: boolean;
-  namespaceStrategy: string;
-  loginInfoUrl: string;
-  releaseFeedUrl: string;
-  _links: Links;
-};
+import javax.inject.Inject;
+
+import static de.otto.edison.hal.Links.linkingTo;
+
+@Mapper
+public abstract class UpdateInfoMapper extends HalAppenderMapper {
+
+  @Inject
+  private ResourceLinks resourceLinks;
+
+  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
+  public abstract UpdateInfoDto map(UpdateInfo updateInfo);
+
+  @ObjectFactory
+  UpdateInfoDto createDto() {
+    Links.Builder linksBuilder = linkingTo()
+      .self(resourceLinks.adminInfo().updateInfo());
+
+    return new UpdateInfoDto(linksBuilder.build(), Embedded.emptyEmbedded());
+  }
+}

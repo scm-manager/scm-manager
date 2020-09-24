@@ -9,6 +9,12 @@
     "info": {
       "title": "Administration",
       "currentAppVersion": "Current Application Version",
+      "newAppVersion": "New SCM-Manager version available",
+      "newRelease": {
+        "title": "New SCM-Manager version available",
+        "description": "Download the latest SCM-Manager version {{version}} from the official homepage.",
+        "downloadButton": "Get latest version"
+      },
       "communityTitle": "Community Support",
       "communityIconAlt": "Community Support Icon",
       "communityInfo": "Contact the SCM-Manager support team for questions about SCM-Manager, to report bugs or to request features through the official channels.",

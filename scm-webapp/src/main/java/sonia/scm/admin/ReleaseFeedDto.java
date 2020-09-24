@@ -21,48 +21,60 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
+package sonia.scm.admin;
+
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sonia.scm.security.AnonymousMode;
+import sonia.scm.xml.XmlUTCDateAdapter;
 
-import java.util.Set;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.util.Date;
+import java.util.List;
 
+@XmlRootElement(name = "rss")
+@XmlAccessorType(XmlAccessType.FIELD)
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
-public class ConfigDto extends HalRepresentation {
+public final class ReleaseFeedDto {
 
-  private String proxyPassword;
-  private int proxyPort;
-  private String proxyServer;
-  private String proxyUser;
-  private boolean enableProxy;
-  private String realmDescription;
-  private boolean disableGroupingGrid;
-  private String dateFormat;
-  private boolean anonymousAccessEnabled;
-  private AnonymousMode anonymousMode;
-  private String baseUrl;
-  private boolean forceBaseUrl;
-  private int loginAttemptLimit;
-  private Set<String> proxyExcludes;
-  private boolean skipFailedAuthenticators;
-  private String pluginUrl;
-  private long loginAttemptLimitTimeout;
-  private boolean enabledXsrfProtection;
-  private String namespaceStrategy;
-  private String loginInfoUrl;
-  private String releaseFeedUrl;
+  @XmlElement(name = "channel")
+  private Channel channel;
 
-  @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
+  public Channel getChannel() {
+    return channel;
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @AllArgsConstructor
+  @NoArgsConstructor
+  @Getter
+  @Setter
+  public static class Channel {
+
+    @XmlElement(name = "item")
+    private List<Release> releases;
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @NoArgsConstructor
+  @AllArgsConstructor
+  @Getter
+  @Setter
+  public static class Release {
+    private String title;
+    private String description;
+    private String link;
+    private String guid;
+    @XmlJavaTypeAdapter(XmlUTCDateAdapter.class)
+    private Date pubDate;
   }
 }

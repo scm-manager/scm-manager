@@ -66,6 +66,16 @@
     expireAfterWrite="3600"
   />
 
+  <!--
+  UpdateInfo cache
+  average: 30K
+-->
+  <cache
+    name="sonia.cache.updateInfo"
+    maximumSize="1"
+    expireAfterWrite="3600"
+  />
+
   <!-- 
     Search cache for users
     average: 0.5K

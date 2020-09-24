@@ -79,6 +79,7 @@ public class VndMediaType {
   public static final String ME = PREFIX + "me" + SUFFIX;
   public static final String SOURCE = PREFIX + "source" + SUFFIX;
   public static final String ANNOTATE = PREFIX + "annotate" + SUFFIX;
+  public static final String ADMIN_INFO = PREFIX + "adminInfo" + SUFFIX;
   public static final String ERROR_TYPE = PREFIX + "error" + SUFFIX;
 
   public static final String REPOSITORY_ROLE = PREFIX + "repositoryRole" + SUFFIX;

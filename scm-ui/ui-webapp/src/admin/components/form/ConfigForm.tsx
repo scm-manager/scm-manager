@@ -143,6 +143,7 @@ class ConfigForm extends React.Component<Props, State> {
           anonymousMode={config.anonymousMode}
           skipFailedAuthenticators={config.skipFailedAuthenticators}
           pluginUrl={config.pluginUrl}
+          releaseFeedUrl={config.releaseFeedUrl}
           enabledXsrfProtection={config.enabledXsrfProtection}
           namespaceStrategy={config.namespaceStrategy}
           onChange={(isValid, changedValue, name) => this.onChange(isValid, changedValue, name)}

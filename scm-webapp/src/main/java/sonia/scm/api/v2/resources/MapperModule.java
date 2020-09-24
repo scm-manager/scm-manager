@@ -76,6 +76,7 @@ public class MapperModule extends AbstractModule {
     bind(RepositoryToHalMapper.class).to(Mappers.getMapperClass(RepositoryToRepositoryDtoMapper.class));
 
     bind(BlameResultToBlameDtoMapper.class).to(Mappers.getMapperClass(BlameResultToBlameDtoMapper.class));
+    bind(UpdateInfoMapper.class).to(Mappers.getMapperClass(UpdateInfoMapper.class));
 
     // no mapstruct required
     bind(MeDtoFactory.class);

@@ -264,6 +264,22 @@ class ResourceLinks {
     }
   }
 
+  AdminInfoLinks adminInfo() {
+    return new AdminInfoLinks(scmPathInfoStore.get());
+  }
+
+  static class AdminInfoLinks {
+    private final LinkBuilder adminInfoLinkBuilder;
+
+    AdminInfoLinks(ScmPathInfo pathInfo) {
+      adminInfoLinkBuilder = new LinkBuilder(pathInfo, AdminInfoResource.class);
+    }
+
+    String updateInfo() {
+      return adminInfoLinkBuilder.method("getUpdateInfo").parameters().href();
+    }
+  }
+
   public RepositoryLinks repository() {
     return new RepositoryLinks(scmPathInfoStore.get());
   }

@@ -22,31 +22,22 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+package sonia.scm.xml;
 
-export type AnonymousMode = "FULL" | "PROTOCOL_ONLY" | "OFF";
+import javax.xml.bind.annotation.adapters.XmlAdapter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-export type Config = {
-  proxyPassword: string | null;
-  proxyPort: number;
-  proxyServer: string;
-  proxyUser: string | null;
-  enableProxy: boolean;
-  realmDescription: string;
-  disableGroupingGrid: boolean;
-  dateFormat: string;
-  anonymousAccessEnabled: boolean;
-  anonymousMode: AnonymousMode;
-  baseUrl: string;
-  forceBaseUrl: boolean;
-  loginAttemptLimit: number;
-  proxyExcludes: string[];
-  skipFailedAuthenticators: boolean;
-  pluginUrl: string;
-  loginAttemptLimitTimeout: number;
-  enabledXsrfProtection: boolean;
-  namespaceStrategy: string;
-  loginInfoUrl: string;
-  releaseFeedUrl: string;
-  _links: Links;
-};
+public class XmlUTCDateAdapter extends XmlAdapter<String, Date> {
+  @Override
+  public Date unmarshal(String date) throws Exception {
+    SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+    return formatter.parse(date);
+  }
+
+  @Override
+  public String marshal(Date date) {
+    SimpleDateFormat formatter = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
+    return formatter.format(date);
+  }
+}

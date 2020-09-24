@@ -83,7 +83,6 @@ public class ScmConfigurationToConfigDtoMapperTest {
   public void shouldMapFields() {
     ScmConfiguration config = createConfiguration();
 
-
     when(subject.isPermitted("configuration:write:global")).thenReturn(true);
     ConfigDto dto = mapper.map(config);
 
@@ -106,6 +105,7 @@ public class ScmConfigurationToConfigDtoMapperTest {
     assertTrue(dto.isEnabledXsrfProtection());
     assertEquals("username", dto.getNamespaceStrategy());
     assertEquals("https://scm-manager.org/login-info", dto.getLoginInfoUrl());
+    assertEquals("https://www.scm-manager.org/download/rss.xml", dto.getReleaseFeedUrl());
 
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
@@ -159,6 +159,7 @@ public class ScmConfigurationToConfigDtoMapperTest {
     config.setEnabledXsrfProtection(true);
     config.setNamespaceStrategy("username");
     config.setLoginInfoUrl("https://scm-manager.org/login-info");
+    config.setReleaseFeedUrl("https://www.scm-manager.org/download/rss.xml");
     return config;
   }
 
