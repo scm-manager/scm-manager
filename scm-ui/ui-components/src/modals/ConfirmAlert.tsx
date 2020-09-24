@@ -81,9 +81,6 @@ export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
   );
 };
 
-/**
- * @deprecated Use the {@link ConfirmAlert} component directly instead.
- */
 export function confirmAlert(properties: Props) {
   const root = document.getElementById("modalRoot");
   if (root) {
