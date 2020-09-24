@@ -31,25 +31,71 @@ import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 
+@Singleton
 public class ReleaseFeedParser {
+
+  public static final int DEFAULT_TIMEOUT_IN_MILLIS = 1000;
 
   private static final Logger LOG = LoggerFactory.getLogger(ReleaseFeedParser.class);
 
   private final AdvancedHttpClient client;
+  private final ExecutorService executorService;
+  private final long timeoutInMillis;
+  private Future<Optional<UpdateInfo>> updateInfoFuture;
 
   @Inject
   public ReleaseFeedParser(AdvancedHttpClient client) {
+    this(client, DEFAULT_TIMEOUT_IN_MILLIS);
+  }
+
+  public ReleaseFeedParser(AdvancedHttpClient client, long timeoutInMillis) {
     this.client = client;
+    this.timeoutInMillis = timeoutInMillis;
+    this.executorService = Executors.newSingleThreadExecutor();
   }
 
   Optional<UpdateInfo> findLatestRelease(String url) {
-    LOG.info("Search for newer versions of SCM-Manager");
-    Optional<ReleaseFeedDto.Release> latestRelease = parseLatestReleaseFromRssFeed(url);
-    return latestRelease.map(release -> new UpdateInfo(release.getTitle(), release.getLink()));
+    Future<Optional<UpdateInfo>> currentUpdateInfoFuture;
+    boolean updateInfoFutureCreated = false;
+    try {
+      synchronized (this) {
+        currentUpdateInfoFuture = this.updateInfoFuture;
+        if (currentUpdateInfoFuture == null) {
+          currentUpdateInfoFuture = submitRequest(url);
+          this.updateInfoFuture = currentUpdateInfoFuture;
+          updateInfoFutureCreated = true;
+        }
+      }
+      try {
+        return currentUpdateInfoFuture.get(timeoutInMillis, TimeUnit.MILLISECONDS);
+      } catch (Exception e) {
+        LOG.error("Could not read release feed", e);
+        return Optional.empty();
+      }
+    } finally {
+      if (updateInfoFutureCreated) {
+        synchronized (this) {
+          this.updateInfoFuture = null;
+        }
+      }
+    }
+  }
+
+  private Future<Optional<UpdateInfo>> submitRequest(String url) {
+    return executorService.submit(() -> {
+      LOG.info("Search for newer versions of SCM-Manager");
+      Optional<ReleaseFeedDto.Release> latestRelease = parseLatestReleaseFromRssFeed(url);
+      return latestRelease.map(release -> new UpdateInfo(release.getTitle(), release.getLink()));
+    });
   }
 
   private Optional<ReleaseFeedDto.Release> parseLatestReleaseFromRssFeed(String url) {

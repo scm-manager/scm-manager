@@ -25,10 +25,10 @@
 package sonia.scm.admin;
 
 import com.google.common.collect.ImmutableList;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.net.ahc.AdvancedHttpClient;
@@ -36,6 +36,11 @@ import sonia.scm.net.ahc.AdvancedHttpClient;
 import java.io.IOException;
 import java.util.Date;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.Semaphore;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -46,8 +51,12 @@ class ReleaseFeedParserTest {
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   AdvancedHttpClient client;
 
-  @InjectMocks
   ReleaseFeedParser releaseFeedParser;
+
+  @BeforeEach
+  void createSut() {
+    releaseFeedParser = new ReleaseFeedParser(client, 100);
+  }
 
   @Test
   void shouldFindLatestRelease() throws IOException {
@@ -55,11 +64,49 @@ class ReleaseFeedParserTest {
 
     when(client.get(url).request().contentFromXml(ReleaseFeedDto.class)).thenReturn(createReleaseFeedDto());
 
-    Optional<UpdateInfo> release = releaseFeedParser.findLatestRelease(url);
+    Optional<UpdateInfo> update = releaseFeedParser.findLatestRelease(url);
 
-    assertThat(release).isPresent();
-    assertThat(release.get().getLatestVersion()).isEqualTo("3");
-    assertThat(release.get().getLink()).isEqualTo("download-3");
+    assertThat(update).isPresent();
+    assertThat(update.get().getLatestVersion()).isEqualTo("3");
+    assertThat(update.get().getLink()).isEqualTo("download-3");
+  }
+
+  @Test
+  void shouldHandleTimeout() throws IOException {
+    String url = "https://www.scm-manager.org/download/rss.xml";
+
+    Semaphore waitWithResultUntilTimeout = new Semaphore(0);
+
+    when(client.get(url).request().contentFromXml(ReleaseFeedDto.class)).thenAnswer(invocation -> {
+      waitWithResultUntilTimeout.acquire();
+      return createReleaseFeedDto();
+    });
+
+    Optional<UpdateInfo> update = releaseFeedParser.findLatestRelease(url);
+
+    waitWithResultUntilTimeout.release();
+
+    assertThat(update).isEmpty();
+  }
+
+  @Test
+  void shouldNotQueryInParallel() throws IOException, ExecutionException, InterruptedException {
+    String url = "https://www.scm-manager.org/download/rss.xml";
+
+    Semaphore waitWithResultUntilBothTriggered = new Semaphore(0);
+
+    when(client.get(url).request().contentFromXml(ReleaseFeedDto.class)).thenAnswer(invocation -> {
+      waitWithResultUntilBothTriggered.acquire();
+      return createReleaseFeedDto();
+    });
+
+    final ExecutorService executorService = Executors.newFixedThreadPool(2);
+    Future<Optional<UpdateInfo>> update1 = executorService.submit(() -> releaseFeedParser.findLatestRelease(url));
+    Future<Optional<UpdateInfo>> update2 = executorService.submit(() -> releaseFeedParser.findLatestRelease(url));
+
+    waitWithResultUntilBothTriggered.release(2);
+
+    assertThat(update1.get()).containsSame(update2.get().get());
   }
 
   private ReleaseFeedDto createReleaseFeedDto() {
