@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Handling of branch with slashes in source view ([#1340](https://github.com/scm-manager/scm-manager/pull/1340))
 - Detect not existing paths correctly in Mercurial ([#1343](https://github.com/scm-manager/scm-manager/pull/1343))
 - Return correct revisions for tags in hooks for git repositories ([#1344](https://github.com/scm-manager/scm-manager/pull/1344))
+- Add option for concrete commit message in merges without templating ([#1351](https://github.com/scm-manager/scm-manager/pull/1351))
 
 ## [2.5.0] - 2020-09-10
 ### Added

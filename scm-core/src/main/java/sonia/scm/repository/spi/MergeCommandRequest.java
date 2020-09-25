@@ -42,6 +42,7 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
   private String targetBranch;
   private Person author;
   private String messageTemplate;
+  private String message;
   private MergeStrategy mergeStrategy;
   private boolean sign = true;
 
@@ -75,6 +76,14 @@ public class MergeCommandRequest implements Validateable, Resetable, Serializabl
 
   public void setMessageTemplate(String messageTemplate) {
     this.messageTemplate = messageTemplate;
+  }
+
+  public String getMessage() {
+    return message;
+  }
+
+  public void setMessage(String message) {
+    this.message = message;
   }
 
   public MergeStrategy getMergeStrategy() {
