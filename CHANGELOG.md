@@ -5,7 +5,7 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [2.6.0] - 2020-09-25
 ### Added
 - Add support for pr merge with prior rebase ([#1332](https://github.com/scm-manager/scm-manager/pull/1332))
 - Tags overview for repository [#1331](https://github.com/scm-manager/scm-manager/pull/1331)
@@ -327,3 +327,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.4.0]: https://www.scm-manager.org/download/2.4.0
 [2.4.1]: https://www.scm-manager.org/download/2.4.1
 [2.5.0]: https://www.scm-manager.org/download/2.5.0
+[2.6.0]: https://www.scm-manager.org/download/2.6.0
