@@ -90,7 +90,7 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
 
   Optional<RevCommit> doCommit() {
     logger.debug("merged branch {} into {}", branchToMerge, targetBranch);
-    return doCommit(MessageFormat.format(determineMessageTemplate(), branchToMerge, targetBranch), author, sign);
+    return doCommit(determineMessageTemplate(), author, sign);
   }
 
   MergeCommandResult createSuccessResult(String newRevision) {
@@ -107,7 +107,7 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
 
   private String determineMessageTemplate() {
     if (Strings.isNullOrEmpty(messageTemplate)) {
-      return MERGE_COMMIT_MESSAGE_TEMPLATE;
+      return MessageFormat.format(MERGE_COMMIT_MESSAGE_TEMPLATE, branchToMerge, targetBranch);
     } else {
       return messageTemplate;
     }
