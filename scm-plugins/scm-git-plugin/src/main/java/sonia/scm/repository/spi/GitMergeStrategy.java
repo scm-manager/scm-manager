@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
@@ -56,6 +56,7 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
   private final ObjectId revisionToMerge;
   private final Person author;
   private final String messageTemplate;
+  private final String message;
   private final boolean sign;
 
   GitMergeStrategy(Git clone, MergeCommandRequest request, GitContext context, sonia.scm.repository.Repository repository) {
@@ -64,6 +65,7 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
     this.branchToMerge = request.getBranchToMerge();
     this.author = request.getAuthor();
     this.messageTemplate = request.getMessageTemplate();
+    this.message = request.getMessage();
     this.sign = request.isSign();
     try {
       this.targetRevision = resolveRevision(request.getTargetBranch());
@@ -106,10 +108,12 @@ abstract class GitMergeStrategy extends AbstractGitCommand.GitCloneWorker<MergeC
   }
 
   private String determineMessage() {
-    if (Strings.isNullOrEmpty(messageTemplate)) {
-      return MessageFormat.format(MERGE_COMMIT_MESSAGE_TEMPLATE, branchToMerge, targetBranch);
+    if (!Strings.isNullOrEmpty(message)) {
+      return message;
+    } else if (!Strings.isNullOrEmpty(messageTemplate)) {
+      return MessageFormat.format(messageTemplate, branchToMerge, targetBranch);
     } else {
-      return messageTemplate;
+      return MessageFormat.format(MERGE_COMMIT_MESSAGE_TEMPLATE, branchToMerge, targetBranch);
     }
   }
 

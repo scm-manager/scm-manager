@@ -182,6 +182,18 @@ public class MergeCommandBuilder {
   }
 
   /**
+   * Use this to set the commit message. If no message is set, the message template will be used.
+   *
+   * This is optional and for {@link #executeMerge()} only.
+   *
+   * @return This builder instance.
+   */
+  public MergeCommandBuilder setMessage(String message) {
+    request.setMessage(message);
+    return this;
+  }
+
+  /**
    * Use this to reset the command.
    * @return This builder instance.
    */
