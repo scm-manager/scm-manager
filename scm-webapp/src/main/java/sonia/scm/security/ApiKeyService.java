@@ -26,6 +26,7 @@ package sonia.scm.security;
 
 import com.google.common.util.concurrent.Striped;
 import org.apache.shiro.authc.credential.PasswordService;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.util.ThreadContext;
 import sonia.scm.ContextEntry;
 import sonia.scm.store.ConfigurationEntryStore;
@@ -52,18 +53,20 @@ public class ApiKeyService {
   private final PasswordService passwordService;
   private final KeyGenerator keyGenerator;
   private final Supplier<String> passphraseGenerator;
+  private final ApiKeyTokenHandler tokenHandler;
 
   private final Striped<ReadWriteLock> locks = Striped.readWriteLock(10);
 
   @Inject
-  ApiKeyService(ConfigurationEntryStoreFactory storeFactory, KeyGenerator keyGenerator, PasswordService passwordService) {
-    this(storeFactory, passwordService, keyGenerator, () -> random(KEY_LENGTH, 0, 0, true, true, null, new SecureRandom()));
+  ApiKeyService(ConfigurationEntryStoreFactory storeFactory, KeyGenerator keyGenerator, PasswordService passwordService, ApiKeyTokenHandler tokenHandler) {
+    this(storeFactory, passwordService, keyGenerator, tokenHandler, () -> random(KEY_LENGTH, 0, 0, true, true, null, new SecureRandom()));
   }
 
-  ApiKeyService(ConfigurationEntryStoreFactory storeFactory, PasswordService passwordService, KeyGenerator keyGenerator, Supplier<String> passphraseGenerator) {
+  ApiKeyService(ConfigurationEntryStoreFactory storeFactory, PasswordService passwordService, KeyGenerator keyGenerator, ApiKeyTokenHandler tokenHandler, Supplier<String> passphraseGenerator) {
     this.store = storeFactory.withType(ApiKeyCollection.class).withName("apiKeys").build();
     this.passwordService = passwordService;
     this.keyGenerator = keyGenerator;
+    this.tokenHandler = tokenHandler;
     this.passphraseGenerator = passphraseGenerator;
   }
 
@@ -71,6 +74,7 @@ public class ApiKeyService {
     String user = currentUser();
     String passphrase = passphraseGenerator.get();
     String hashedPassphrase = passwordService.encryptPassword(passphrase);
+    ApiKeyWithPassphrase key = new ApiKeyWithPassphrase(keyGenerator.createKey(), name, role, hashedPassphrase);
     Lock lock = locks.get(user).writeLock();
     lock.lock();
     try {
@@ -78,12 +82,12 @@ public class ApiKeyService {
         throw alreadyExists(ContextEntry.ContextBuilder.entity(ApiKeyWithPassphrase.class, name));
       }
       final ApiKeyCollection apiKeyCollection = store.getOptional(user).orElse(new ApiKeyCollection(emptyList()));
-      final ApiKeyCollection newApiKeyCollection = apiKeyCollection.add(new ApiKeyWithPassphrase(keyGenerator.createKey(), name, role, hashedPassphrase));
+      final ApiKeyCollection newApiKeyCollection = apiKeyCollection.add(key);
       store.put(user, newApiKeyCollection);
     } finally {
       lock.unlock();
     }
-    return passphrase;
+    return tokenHandler.createToken(user, new ApiKey(key), passphrase);
   }
 
   public void remove(String id) {
@@ -103,6 +107,15 @@ public class ApiKeyService {
     } finally {
       lock.unlock();
     }
+  }
+
+  Optional<String> check(String tokenAsString) {
+    return check(tokenHandler.readToken(tokenAsString)
+      .orElseThrow(AuthorizationException::new));
+  }
+
+  private Optional<String> check(ApiKeyTokenHandler.Token token) {
+    return check(token.getUser(), token.getApiKeyId(), token.getPassphrase());
   }
 
   Optional<String> check(String user, String id, String passphrase) {

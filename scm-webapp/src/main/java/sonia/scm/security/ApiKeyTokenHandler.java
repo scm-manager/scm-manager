@@ -59,9 +59,9 @@ class ApiKeyTokenHandler {
     }
   }
 
-  Optional<Token> readToken(String asString) {
+  Optional<Token> readToken(String token) {
     try {
-      return of(OBJECT_MAPPER.readValue(decoder.decode(asString), Token.class));
+      return of(OBJECT_MAPPER.readValue(decoder.decode(token), Token.class));
     } catch (IOException | DecodingException e) {
       LOG.warn("error reading api token", e);
       return empty();

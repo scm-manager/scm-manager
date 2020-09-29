@@ -54,10 +54,10 @@ class ApiKeyServiceTest {
   PasswordService passwordService = mock(PasswordService.class);
   Supplier<String> passphraseGenerator = () -> Integer.toString(nextKey++);
   KeyGenerator keyGenerator = () -> Integer.toString(nextId++);
+  ApiKeyTokenHandler tokenHandler = new ApiKeyTokenHandler();
   ConfigurationEntryStoreFactory storeFactory = new InMemoryConfigurationEntryStoreFactory();
   ConfigurationEntryStore<ApiKeyCollection> store = storeFactory.withType(ApiKeyCollection.class).withName("apiKeys").build();
-  ApiKeyService service = new ApiKeyService(storeFactory, passwordService, keyGenerator, passphraseGenerator);
-
+  ApiKeyService service = new ApiKeyService(storeFactory, passwordService, keyGenerator, tokenHandler, passphraseGenerator);
 
   @BeforeEach
   void mockPasswordService() {
@@ -85,7 +85,7 @@ class ApiKeyServiceTest {
 
     @Test
     void shouldCreateNewKeyAndStoreItHashed() {
-      String newKey = service.createNewKey("1", "READ");
+      service.createNewKey("1", "READ");
 
       ApiKeyCollection apiKeys = store.get("dent");
 
@@ -93,7 +93,6 @@ class ApiKeyServiceTest {
       ApiKeyWithPassphrase key = apiKeys.getKeys().iterator().next();
       assertThat(key.getRole()).isEqualTo("READ");
       assertThat(key.getPassphrase()).isEqualTo("1-hashed");
-      assertThat(newKey).isEqualTo("1");
 
       Optional<String> role = service.check("dent", "1",  "1-hashed");
 
@@ -104,7 +103,7 @@ class ApiKeyServiceTest {
     void shouldReturnRoleForKey() {
       String newKey = service.createNewKey("1", "READ");
 
-      Optional<String> role = service.check("dent", "1", newKey);
+      Optional<String> role = service.check(newKey);
 
       assertThat(role).contains("READ");
     }
@@ -127,8 +126,8 @@ class ApiKeyServiceTest {
 
       assertThat(apiKeys.getKeys()).hasSize(2);
 
-      assertThat(service.check("dent", "1", firstKey)).contains("READ");
-      assertThat(service.check("dent", "2", secondKey)).contains("WRITE");
+      assertThat(service.check(firstKey)).contains("READ");
+      assertThat(service.check(secondKey)).contains("WRITE");
 
       assertThat(service.getKeys()).extracting("id").contains("1", "2");
     }
@@ -140,8 +139,8 @@ class ApiKeyServiceTest {
 
       service.remove("1");
 
-      assertThat(service.check("dent", "1", firstKey)).isEmpty();
-      assertThat(service.check("dent", "2", secondKey)).contains("WRITE");
+      assertThat(service.check(firstKey)).isEmpty();
+      assertThat(service.check(secondKey)).contains("WRITE");
     }
 
     @Test
@@ -150,7 +149,7 @@ class ApiKeyServiceTest {
 
       assertThrows(AlreadyExistsException.class, () -> service.createNewKey("1", "WRITE"));
 
-      assertThat(service.check("dent", "1", firstKey)).contains("READ");
+      assertThat(service.check(firstKey)).contains("READ");
     }
 
     @Test
