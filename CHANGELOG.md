@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.6.0] - 2020-09-25
 ### Added
 - Add support for pr merge with prior rebase ([#1332](https://github.com/scm-manager/scm-manager/pull/1332))
-- Tags overview for repository [#1331](https://github.com/scm-manager/scm-manager/pull/1331)
+- Tags overview for repository ([#1331](https://github.com/scm-manager/scm-manager/pull/1331))
 - Permissions can be specified for namespaces ([#1335](https://github.com/scm-manager/scm-manager/pull/1335))
 - Show update info on admin information page ([#1342](https://github.com/scm-manager/scm-manager/pull/1342))
 
