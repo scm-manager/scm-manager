@@ -119,7 +119,7 @@ public class MeResourceTest {
     when(userManager.isTypeDefault(userCaptor.capture())).thenCallRealMethod();
     when(userManager.getDefaultType()).thenReturn("xml");
     ApiKeyCollectionToDtoMapper apiKeyCollectionMapper = new ApiKeyCollectionToDtoMapper(apiKeyMapper, resourceLinks);
-    ApiKeyResource apiKeyResource = new ApiKeyResource(apiKeyService, apiKeyCollectionMapper, apiKeyMapper);
+    ApiKeyResource apiKeyResource = new ApiKeyResource(apiKeyService, apiKeyCollectionMapper, apiKeyMapper, resourceLinks);
     MeResource meResource = new MeResource(meDtoFactory, userManager, passwordService, of(apiKeyResource));
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/"));
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
@@ -238,6 +238,7 @@ public class MeResourceTest {
     assertThat(response.getContentAsString()).contains("\"displayName\":\"key 1\",\"role\":\"READ\"");
     assertThat(response.getContentAsString()).contains("\"displayName\":\"key 2\",\"role\":\"WRITE\"");
     assertThat(response.getContentAsString()).contains("\"self\":{\"href\":\"/v2/me/apiKeys\"}");
+    assertThat(response.getContentAsString()).contains("\"create\":{\"href\":\"/v2/me/apiKeys\"}");
   }
 
   @Test
@@ -252,6 +253,22 @@ public class MeResourceTest {
     assertThat(response.getContentAsString()).contains("\"displayName\":\"key 1\"");
     assertThat(response.getContentAsString()).contains("\"role\":\"READ\"");
     assertThat(response.getContentAsString()).contains("\"self\":{\"href\":\"/v2/me/apiKeys/1\"}");
+  }
+
+  @Test
+  public void shouldCreateNewApiKey() throws URISyntaxException, UnsupportedEncodingException {
+    when(apiKeyService.createNewKey("guide", "READ")).thenReturn(new ApiKeyService.CreationResult("abc", "1"));
+
+    final MockHttpRequest request = MockHttpRequest
+      .post("/" + MeResource.ME_PATH_V2 + "apiKeys/")
+      .contentType(VndMediaType.API_KEY)
+      .content("{\"displayName\":\"guide\",\"role\":\"READ\"}".getBytes());
+
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus()).isEqualTo(201);
+    assertThat(response.getContentAsString()).isEqualTo("abc");
+    assertThat(response.getOutputHeaders().get("Location")).containsExactly(URI.create("/v2/me/apiKeys/1"));
   }
 
   private User createDummyUser(String name) {

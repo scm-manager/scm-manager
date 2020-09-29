@@ -218,6 +218,10 @@ class ResourceLinks {
     String self() {
       return collectionLinkBuilder.method("apiKeys").parameters().method("getForCurrentUser").parameters().href();
     }
+
+    String create() {
+      return collectionLinkBuilder.method("apiKeys").parameters().method("create").parameters().href();
+    }
   }
 
   public ApiKeyLinks apiKey() {

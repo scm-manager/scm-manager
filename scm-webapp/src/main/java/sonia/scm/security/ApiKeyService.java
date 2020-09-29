@@ -25,6 +25,8 @@
 package sonia.scm.security;
 
 import com.google.common.util.concurrent.Striped;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.util.ThreadContext;
@@ -70,11 +72,12 @@ public class ApiKeyService {
     this.passphraseGenerator = passphraseGenerator;
   }
 
-  public String createNewKey(String name, String role) {
+  public CreationResult createNewKey(String name, String role) {
     String user = currentUser();
     String passphrase = passphraseGenerator.get();
     String hashedPassphrase = passwordService.encryptPassword(passphrase);
-    ApiKeyWithPassphrase key = new ApiKeyWithPassphrase(keyGenerator.createKey(), name, role, hashedPassphrase);
+    final String id = keyGenerator.createKey();
+    ApiKeyWithPassphrase key = new ApiKeyWithPassphrase(id, name, role, hashedPassphrase);
     Lock lock = locks.get(user).writeLock();
     lock.lock();
     try {
@@ -87,7 +90,8 @@ public class ApiKeyService {
     } finally {
       lock.unlock();
     }
-    return tokenHandler.createToken(user, new ApiKey(key), passphrase);
+    final String token = tokenHandler.createToken(user, new ApiKey(key), passphrase);
+    return new CreationResult(token, id);
   }
 
   public void remove(String id) {
@@ -159,5 +163,12 @@ public class ApiKeyService {
       .orElse(emptyList())
       .stream()
       .anyMatch(key -> key.getDisplayName().equals(name));
+  }
+
+  @Getter
+  @AllArgsConstructor
+  public static class CreationResult {
+    private final String token;
+    private final String id;
   }
 }

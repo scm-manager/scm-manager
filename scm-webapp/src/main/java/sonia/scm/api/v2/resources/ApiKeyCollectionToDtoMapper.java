@@ -33,6 +33,7 @@ import javax.inject.Inject;
 import java.util.Collection;
 import java.util.List;
 
+import static de.otto.edison.hal.Link.link;
 import static java.util.stream.Collectors.toList;
 
 public class ApiKeyCollectionToDtoMapper {
@@ -48,8 +49,9 @@ public class ApiKeyCollectionToDtoMapper {
 
   public HalRepresentation map(Collection<ApiKey> keys) {
     List<ApiKeyDto> dtos = keys.stream().map(apiKeyDtoMapper::map).collect(toList());
-    final Links.Builder links = Links.linkingTo();
-    links.self(resourceLinks.apiKeyCollection().self());
+    final Links.Builder links = Links.linkingTo()
+      .self(resourceLinks.apiKeyCollection().self())
+      .single(link("create", resourceLinks.apiKeyCollection().create()));
     return new HalRepresentation(links.build(), Embedded.embedded("apiKeys", dtos));
   }
 }

@@ -101,7 +101,7 @@ class ApiKeyServiceTest {
 
     @Test
     void shouldReturnRoleForKey() {
-      String newKey = service.createNewKey("1", "READ");
+      String newKey = service.createNewKey("1", "READ").getToken();
 
       Optional<String> role = service.check(newKey);
 
@@ -119,23 +119,24 @@ class ApiKeyServiceTest {
 
     @Test
     void shouldAddSecondKey() {
-      String firstKey = service.createNewKey("1", "READ");
-      String secondKey = service.createNewKey("2", "WRITE");
+      ApiKeyService.CreationResult firstKey = service.createNewKey("1", "READ");
+      ApiKeyService.CreationResult secondKey = service.createNewKey("2", "WRITE");
 
       ApiKeyCollection apiKeys = store.get("dent");
 
       assertThat(apiKeys.getKeys()).hasSize(2);
 
-      assertThat(service.check(firstKey)).contains("READ");
-      assertThat(service.check(secondKey)).contains("WRITE");
+      assertThat(service.check(firstKey.getToken())).contains("READ");
+      assertThat(service.check(secondKey.getToken())).contains("WRITE");
 
-      assertThat(service.getKeys()).extracting("id").contains("1", "2");
+      assertThat(service.getKeys()).extracting("id")
+        .contains(firstKey.getId(), secondKey.getId());
     }
 
     @Test
     void shouldRemoveKey() {
-      String firstKey = service.createNewKey("1", "READ");
-      String secondKey = service.createNewKey("2", "WRITE");
+      String firstKey = service.createNewKey("1", "READ").getToken();
+      String secondKey = service.createNewKey("2", "WRITE").getToken();
 
       service.remove("1");
 
@@ -145,7 +146,7 @@ class ApiKeyServiceTest {
 
     @Test
     void shouldFailWhenAddingSameNameTwice() {
-      String firstKey = service.createNewKey("1", "READ");
+      String firstKey = service.createNewKey("1", "READ").getToken();
 
       assertThrows(AlreadyExistsException.class, () -> service.createNewKey("1", "WRITE"));
 
@@ -154,7 +155,7 @@ class ApiKeyServiceTest {
 
     @Test
     void shouldIgnoreCorrectPassphraseWithWrongName() {
-      String firstKey = service.createNewKey("1", "READ");
+      String firstKey = service.createNewKey("1", "READ").getToken();
 
       assertThat(service.check("dent", "other", firstKey)).isEmpty();
     }

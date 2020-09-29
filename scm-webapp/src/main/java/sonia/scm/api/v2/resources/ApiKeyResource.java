@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,11 +36,19 @@ import sonia.scm.security.ApiKeyService;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 
+import java.net.URI;
+
+import static javax.ws.rs.core.Response.Status.CREATED;
 import static sonia.scm.NotFoundException.notFound;
 
 public class  ApiKeyResource {
@@ -47,12 +56,14 @@ public class  ApiKeyResource {
   private final ApiKeyService apiKeyService;
   private final ApiKeyCollectionToDtoMapper apiKeyCollectionMapper;
   private final ApiKeyToApiKeyDtoMapper apiKeyMapper;
+  private final ResourceLinks resourceLinks;
 
   @Inject
-  public ApiKeyResource(ApiKeyService apiKeyService, ApiKeyCollectionToDtoMapper apiKeyCollectionMapper, ApiKeyToApiKeyDtoMapper apiKeyMapper) {
+  public ApiKeyResource(ApiKeyService apiKeyService, ApiKeyCollectionToDtoMapper apiKeyCollectionMapper, ApiKeyToApiKeyDtoMapper apiKeyMapper, ResourceLinks links) {
     this.apiKeyService = apiKeyService;
     this.apiKeyCollectionMapper = apiKeyCollectionMapper;
     this.apiKeyMapper = apiKeyMapper;
+    this.resourceLinks = links;
   }
 
   @GET
@@ -113,5 +124,38 @@ public class  ApiKeyResource {
       .filter(key -> key.getId().equals(id))
       .map(apiKeyMapper::map).findAny()
       .orElseThrow(() -> notFound(ContextEntry.ContextBuilder.entity(ApiKey.class, id)));
+  }
+
+  @POST
+  @Path("")
+  @Consumes(VndMediaType.API_KEY)
+  @Operation(summary = "Create new api key for the current user", description = "Creates a new api key for the given user with the role specified in the given key.", tags = "User")
+  @ApiResponse(
+    responseCode = "201",
+    description = "create success",
+    headers = @Header(
+      name = "Location",
+      description = "uri to the created user",
+      schema = @Schema(type = "string")
+    ),
+    content = @Content(
+      mediaType = MediaType.TEXT_PLAIN
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "409", description = "conflict, a key with the given display name already exists")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  public Response create(@Valid ApiKeyDto apiKey) {
+    final ApiKeyService.CreationResult newKey = apiKeyService.createNewKey(apiKey.getDisplayName(), apiKey.getRole());
+    return Response.status(CREATED)
+      .entity(newKey.getToken())
+      .location(URI.create(resourceLinks.apiKey().self(newKey.getId())))
+      .build();
   }
 }
