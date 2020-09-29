@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -131,7 +131,7 @@ public class UserResource {
    *
    * <strong>Note:</strong> This method requires "user" privilege.
    *
-   * @param name    name of the user to be modified
+   * @param name name of the user to be modified
    * @param user user object to modify
    */
   @PUT

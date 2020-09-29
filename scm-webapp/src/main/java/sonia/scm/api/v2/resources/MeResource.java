@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -35,6 +35,7 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -61,11 +62,14 @@ public class MeResource {
   private final UserManager userManager;
   private final PasswordService passwordService;
 
+  private final Provider<ApiKeyResource> apiKeyResource;
+
   @Inject
-  public MeResource(MeDtoFactory meDtoFactory, UserManager userManager, PasswordService passwordService) {
+  public MeResource(MeDtoFactory meDtoFactory, UserManager userManager, PasswordService passwordService, Provider<ApiKeyResource> apiKeyResource) {
     this.meDtoFactory = meDtoFactory;
     this.userManager = userManager;
     this.passwordService = passwordService;
+    this.apiKeyResource = apiKeyResource;
   }
 
   /**
@@ -117,5 +121,10 @@ public class MeResource {
       passwordService.encryptPassword(passwordChange.getNewPassword())
     );
     return Response.noContent().build();
+  }
+
+  @Path("apiKeys")
+  public ApiKeyResource apiKeys() {
+    return apiKeyResource.get();
   }
 }

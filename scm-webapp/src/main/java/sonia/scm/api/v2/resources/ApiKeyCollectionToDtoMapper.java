@@ -22,23 +22,34 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security;
+package sonia.scm.api.v2.resources;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import sonia.scm.security.ApiKey;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
+import javax.inject.Inject;
+import java.util.Collection;
+import java.util.List;
 
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@Getter
-@XmlAccessorType(XmlAccessType.FIELD)
-class ApiKeyWithPassphrase {
-  private String id;
-  private String displayName;
-  private String role;
-  private String passphrase;
+import static java.util.stream.Collectors.toList;
+
+public class ApiKeyCollectionToDtoMapper {
+
+  private final ApiKeyToApiKeyDtoMapper apiKeyDtoMapper;
+  private final ResourceLinks resourceLinks;
+
+  @Inject
+  public ApiKeyCollectionToDtoMapper(ApiKeyToApiKeyDtoMapper apiKeyDtoMapper, ResourceLinks resourceLinks) {
+    this.apiKeyDtoMapper = apiKeyDtoMapper;
+    this.resourceLinks = resourceLinks;
+  }
+
+  public HalRepresentation map(Collection<ApiKey> keys) {
+    List<ApiKeyDto> dtos = keys.stream().map(apiKeyDtoMapper::map).collect(toList());
+    final Links.Builder links = Links.linkingTo();
+    links.self(resourceLinks.apiKeyCollection().self());
+    return new HalRepresentation(links.build(), Embedded.embedded("apiKeys", dtos));
+  }
 }

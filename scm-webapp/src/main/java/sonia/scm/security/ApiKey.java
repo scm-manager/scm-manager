@@ -30,10 +30,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public class ApiKey {
-  private final String name;
+  private final String id;
+  private final String displayName;
   private final String role;
 
   ApiKey(ApiKeyWithPassphrase apiKeyWithPassphrase) {
-    this(apiKeyWithPassphrase.getName(), apiKeyWithPassphrase.getRole());
+    this(apiKeyWithPassphrase.getId(), apiKeyWithPassphrase.getDisplayName(), apiKeyWithPassphrase.getRole());
   }
 }

@@ -86,5 +86,7 @@ public class MapperModule extends AbstractModule {
     bind(ScmPathInfoStore.class).in(ServletScopes.REQUEST);
 
     bind(PluginDtoMapper.class).to(Mappers.getMapperClass(PluginDtoMapper.class));
+
+    bind(ApiKeyToApiKeyDtoMapper.class).to(Mappers.getMapperClass(ApiKeyToApiKeyDtoMapper.class));
   }
 }

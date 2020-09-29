@@ -22,23 +22,26 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security;
+package sonia.scm.api.v2.resources;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import de.otto.edison.hal.Links;
+import org.mapstruct.Mapper;
+import org.mapstruct.ObjectFactory;
+import sonia.scm.security.ApiKey;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
+import javax.inject.Inject;
 
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-@Getter
-@XmlAccessorType(XmlAccessType.FIELD)
-class ApiKeyWithPassphrase {
-  private String id;
-  private String displayName;
-  private String role;
-  private String passphrase;
+@Mapper
+public abstract class ApiKeyToApiKeyDtoMapper {
+
+  @Inject
+  private ResourceLinks links;
+
+  abstract ApiKeyDto map(ApiKey key);
+
+  @ObjectFactory
+  ApiKeyDto createDto(ApiKey key) {
+    Links.linkingTo().self(links.apiKey().self(key.getId()));
+    return new ApiKeyDto(Links.linkingTo().self(links.apiKey().self(key.getId())).build());
+  }
 }

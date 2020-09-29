@@ -22,23 +22,20 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security;
+package sonia.scm.api.v2.resources;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-@XmlAccessorType(XmlAccessType.FIELD)
-class ApiKeyWithPassphrase {
-  private String id;
+@Setter
+public class ApiKeyDto extends HalRepresentation {
   private String displayName;
   private String role;
-  private String passphrase;
+
+  public ApiKeyDto(Links links) {
+    super(links);
+  }
 }

@@ -49,12 +49,14 @@ import static org.mockito.Mockito.when;
 class ApiKeyServiceTest {
 
   int nextKey = 1;
+  int nextId = 1;
 
   PasswordService passwordService = mock(PasswordService.class);
-  Supplier<String> keyGenerator = () -> Integer.toString(nextKey++);
+  Supplier<String> passphraseGenerator = () -> Integer.toString(nextKey++);
+  KeyGenerator keyGenerator = () -> Integer.toString(nextId++);
   ConfigurationEntryStoreFactory storeFactory = new InMemoryConfigurationEntryStoreFactory();
   ConfigurationEntryStore<ApiKeyCollection> store = storeFactory.withType(ApiKeyCollection.class).withName("apiKeys").build();
-  ApiKeyService service = new ApiKeyService(storeFactory, passwordService, keyGenerator);
+  ApiKeyService service = new ApiKeyService(storeFactory, passwordService, keyGenerator, passphraseGenerator);
 
 
   @BeforeEach
@@ -128,7 +130,7 @@ class ApiKeyServiceTest {
       assertThat(service.check("dent", "1", firstKey)).contains("READ");
       assertThat(service.check("dent", "2", secondKey)).contains("WRITE");
 
-      assertThat(service.getKeys()).extracting("name").contains("1", "2");
+      assertThat(service.getKeys()).extracting("id").contains("1", "2");
     }
 
     @Test
