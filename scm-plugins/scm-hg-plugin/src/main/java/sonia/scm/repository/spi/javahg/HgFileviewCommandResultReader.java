@@ -87,8 +87,8 @@ class HgFileviewCommandResultReader {
     if (stack.isEmpty()) {
       // if the stack is empty, the requested path is probably a file
       return of(last);
-    } else if (stack.size() == 1 && stack.getFirst().isDirectory() && stack.getFirst().getChildren().isEmpty()) {
-      // There are no empty directories in hg. When we get this,
+    } else if (isEmptySubDirectory(stack)) {
+      // There are no empty directories in hg (except the root). When we get this,
       // we just get the requested path as a directory, but it does not exist.
       return empty();
     } else {
@@ -98,6 +98,16 @@ class HgFileviewCommandResultReader {
       }
       return of(stack.getLast());
     }
+  }
+
+  private boolean isEmptySubDirectory(Deque<FileObject> stack) {
+    if (stack.size() != 1) {
+      return false;
+    }
+    final FileObject singleEntry = stack.getFirst();
+    return singleEntry.isDirectory()
+      && singleEntry.getChildren().isEmpty()
+      && !singleEntry.getName().isEmpty();
   }
 
   private FileObject read(HgInputStream stream) throws IOException {

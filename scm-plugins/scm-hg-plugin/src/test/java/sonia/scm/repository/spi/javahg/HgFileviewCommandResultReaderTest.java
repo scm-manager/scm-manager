@@ -269,6 +269,17 @@ class HgFileviewCommandResultReaderTest {
     assertThat(fileObject).isEmpty();
   }
 
+  @Test
+  void shouldReturnEmptyRootDir() throws IOException {
+    HgFileviewCommandResultReader reader = new MockInput()
+      .dir("")
+      .build();
+
+    Optional<FileObject> fileObject = reader.parseResult();
+
+    assertThat(fileObject).isNotEmpty();
+  }
+
   private HgInputStream createInputStream(String input) {
     return new HgInputStream(new ByteArrayInputStream(input.getBytes(UTF_8)), UTF_8.newDecoder());
   }
