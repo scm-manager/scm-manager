@@ -37,7 +37,6 @@ import sonia.scm.store.ConfigurationEntryStoreFactory;
 import javax.inject.Inject;
 import java.security.SecureRandom;
 import java.util.Collection;
-import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.function.Supplier;
@@ -114,16 +113,16 @@ public class ApiKeyService {
     }
   }
 
-  Optional<String> check(String tokenAsString) {
+  CheckResult check(String tokenAsString) {
     return check(tokenHandler.readToken(tokenAsString)
       .orElseThrow(AuthorizationException::new));
   }
 
-  private Optional<String> check(ApiKeyTokenHandler.Token token) {
+  private CheckResult check(ApiKeyTokenHandler.Token token) {
     return check(token.getUser(), token.getApiKeyId(), token.getPassphrase());
   }
 
-  Optional<String> check(String user, String id, String passphrase) {
+  CheckResult check(String user, String id, String passphrase) {
     Lock lock = locks.get(user).readLock();
     lock.lock();
     try {
@@ -134,7 +133,9 @@ public class ApiKeyService {
         .filter(key -> key.getId().equals(id))
         .filter(key -> passwordService.passwordsMatch(passphrase, key.getPassphrase()))
         .map(ApiKeyWithPassphrase::getRole)
-        .findAny();
+        .map(role -> new CheckResult(user, role))
+        .findAny()
+        .orElseThrow(AuthorizationException::new);
     } finally {
       lock.unlock();
     }
@@ -176,5 +177,12 @@ public class ApiKeyService {
   public static class CreationResult {
     private final String token;
     private final String id;
+  }
+
+  @Getter
+  @AllArgsConstructor
+  public static class CheckResult {
+    private final String user;
+    private final String role;
   }
 }

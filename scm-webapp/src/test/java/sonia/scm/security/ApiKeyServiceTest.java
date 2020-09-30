@@ -25,6 +25,7 @@
 package sonia.scm.security;
 
 import org.apache.shiro.authc.credential.PasswordService;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
@@ -37,7 +38,6 @@ import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -94,18 +94,18 @@ class ApiKeyServiceTest {
       assertThat(key.getRole()).isEqualTo("READ");
       assertThat(key.getPassphrase()).isEqualTo("1-hashed");
 
-      Optional<String> role = service.check("dent", "1",  "1-hashed");
+      ApiKeyService.CheckResult role = service.check("dent", "1",  "1-hashed");
 
-      assertThat(role).contains("READ");
+      assertThat(role).extracting("role").isEqualTo("READ");
     }
 
     @Test
     void shouldReturnRoleForKey() {
       String newKey = service.createNewKey("1", "READ").getToken();
 
-      Optional<String> role = service.check(newKey);
+      ApiKeyService.CheckResult role = service.check(newKey);
 
-      assertThat(role).contains("READ");
+      assertThat(role).extracting("role").isEqualTo("READ");
     }
 
     @Test
@@ -117,9 +117,7 @@ class ApiKeyServiceTest {
     void shouldNotReturnAnythingWithWrongKey() {
       service.createNewKey("1", "READ");
 
-      Optional<String> role = service.check("dent", "1", "wrong");
-
-      assertThat(role).isEmpty();
+      assertThrows(AuthorizationException.class, () -> service.check("dent", "1", "wrong"));
     }
 
     @Test
@@ -131,8 +129,8 @@ class ApiKeyServiceTest {
 
       assertThat(apiKeys.getKeys()).hasSize(2);
 
-      assertThat(service.check(firstKey.getToken())).contains("READ");
-      assertThat(service.check(secondKey.getToken())).contains("WRITE");
+      assertThat(service.check(firstKey.getToken())).extracting("role").isEqualTo("READ");
+      assertThat(service.check(secondKey.getToken())).extracting("role").isEqualTo("WRITE");
 
       assertThat(service.getKeys()).extracting("id")
         .contains(firstKey.getId(), secondKey.getId());
@@ -145,8 +143,8 @@ class ApiKeyServiceTest {
 
       service.remove("1");
 
-      assertThat(service.check(firstKey)).isEmpty();
-      assertThat(service.check(secondKey)).contains("WRITE");
+      assertThrows(AuthorizationException.class, () -> service.check(firstKey));
+      assertThat(service.check(secondKey)).extracting("role").isEqualTo("WRITE");
     }
 
     @Test
@@ -155,14 +153,14 @@ class ApiKeyServiceTest {
 
       assertThrows(AlreadyExistsException.class, () -> service.createNewKey("1", "WRITE"));
 
-      assertThat(service.check(firstKey)).contains("READ");
+      assertThat(service.check(firstKey)).extracting("role").isEqualTo("READ");
     }
 
     @Test
     void shouldIgnoreCorrectPassphraseWithWrongName() {
       String firstKey = service.createNewKey("1", "READ").getToken();
 
-      assertThat(service.check("dent", "other", firstKey)).isEmpty();
+      assertThrows(AuthorizationException.class, () -> service.check("dent", "other", firstKey));
     }
   }
 }
