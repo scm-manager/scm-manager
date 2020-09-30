@@ -31,17 +31,21 @@ import sonia.scm.security.ApiKey;
 
 import javax.inject.Inject;
 
+import static de.otto.edison.hal.Link.link;
+
 @Mapper
 public abstract class ApiKeyToApiKeyDtoMapper {
 
   @Inject
-  private ResourceLinks links;
+  private ResourceLinks resourceLinks;
 
   abstract ApiKeyDto map(ApiKey key);
 
   @ObjectFactory
   ApiKeyDto createDto(ApiKey key) {
-    Links.linkingTo().self(links.apiKey().self(key.getId()));
-    return new ApiKeyDto(Links.linkingTo().self(links.apiKey().self(key.getId())).build());
+    Links.Builder links = Links.linkingTo()
+      .self(resourceLinks.apiKey().self(key.getId()))
+      .single(link("delete", resourceLinks.apiKey().delete(key.getId())));
+    return new ApiKeyDto(links.build());
   }
 }

@@ -238,6 +238,10 @@ class ResourceLinks {
     String self(String id) {
       return apiKeyLinkBuilder.method("apiKeys").parameters().method("get").parameters(id).href();
     }
+
+    String delete(String id) {
+      return apiKeyLinkBuilder.method("apiKeys").parameters().method("delete").parameters(id).href();
+    }
   }
 
   UserCollectionLinks userCollection() {

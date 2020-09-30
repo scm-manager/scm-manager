@@ -38,6 +38,7 @@ import sonia.scm.web.VndMediaType;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -129,6 +130,7 @@ public class  ApiKeyResource {
   @POST
   @Path("")
   @Consumes(VndMediaType.API_KEY)
+  @Produces(MediaType.TEXT_PLAIN)
   @Operation(summary = "Create new api key for the current user", description = "Creates a new api key for the given user with the role specified in the given key.", tags = "User")
   @ApiResponse(
     responseCode = "201",
@@ -157,5 +159,15 @@ public class  ApiKeyResource {
       .entity(newKey.getToken())
       .location(URI.create(resourceLinks.apiKey().self(newKey.getId())))
       .build();
+  }
+
+  @DELETE
+  @Path("{id}")
+  @Operation(summary = "Delete api key", description = "Deletes the api key with the given id for the current user.", tags = "User")
+  @ApiResponse(responseCode = "204", description = "delete success or nothing to delete")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "500", description = "internal server error")
+  public void delete(@PathParam("id") String id) {
+    apiKeyService.remove(id);
   }
 }

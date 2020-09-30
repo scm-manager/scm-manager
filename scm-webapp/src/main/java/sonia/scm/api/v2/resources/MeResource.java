@@ -123,7 +123,7 @@ public class MeResource {
     return Response.noContent().build();
   }
 
-  @Path("apiKeys")
+  @Path("api-keys")
   public ApiKeyResource apiKeys() {
     return apiKeyResource.get();
   }

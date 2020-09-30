@@ -41,6 +41,7 @@ import java.util.Optional;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.toList;
@@ -140,7 +141,12 @@ public class ApiKeyService {
   }
 
   public Collection<ApiKey> getKeys() {
-    return store.get(currentUser()).getKeys().stream().map(ApiKey::new).collect(toList());
+    return store.getOptional(currentUser())
+      .map(ApiKeyCollection::getKeys)
+      .map(Collection::stream)
+      .orElse(Stream.empty())
+      .map(ApiKey::new)
+      .collect(toList());
   }
 
   private String currentUser() {

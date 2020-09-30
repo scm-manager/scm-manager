@@ -109,6 +109,11 @@ class ApiKeyServiceTest {
     }
 
     @Test
+    void shouldHandleNewUser() {
+      assertThat(service.getKeys()).isEmpty();
+    }
+
+    @Test
     void shouldNotReturnAnythingWithWrongKey() {
       service.createNewKey("1", "READ");
 
@@ -135,8 +140,8 @@ class ApiKeyServiceTest {
 
     @Test
     void shouldRemoveKey() {
-      String firstKey = service.createNewKey("1", "READ").getToken();
-      String secondKey = service.createNewKey("2", "WRITE").getToken();
+      String firstKey = service.createNewKey("first", "READ").getToken();
+      String secondKey = service.createNewKey("second", "WRITE").getToken();
 
       service.remove("1");
 
