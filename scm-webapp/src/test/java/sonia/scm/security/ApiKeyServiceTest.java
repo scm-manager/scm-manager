@@ -34,9 +34,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import sonia.scm.AlreadyExistsException;
-import sonia.scm.store.ConfigurationEntryStore;
-import sonia.scm.store.ConfigurationEntryStoreFactory;
-import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
+import sonia.scm.store.DataStore;
+import sonia.scm.store.DataStoreFactory;
+import sonia.scm.store.InMemoryDataStoreFactory;
 
 import java.util.function.Supplier;
 
@@ -55,8 +55,8 @@ class ApiKeyServiceTest {
   Supplier<String> passphraseGenerator = () -> Integer.toString(nextKey++);
   KeyGenerator keyGenerator = () -> Integer.toString(nextId++);
   ApiKeyTokenHandler tokenHandler = new ApiKeyTokenHandler();
-  ConfigurationEntryStoreFactory storeFactory = new InMemoryConfigurationEntryStoreFactory();
-  ConfigurationEntryStore<ApiKeyCollection> store = storeFactory.withType(ApiKeyCollection.class).withName("apiKeys").build();
+  DataStoreFactory storeFactory = new InMemoryDataStoreFactory();
+  DataStore<ApiKeyCollection> store = storeFactory.withType(ApiKeyCollection.class).withName("apiKeys").build();
   ApiKeyService service = new ApiKeyService(storeFactory, passwordService, keyGenerator, tokenHandler, passphraseGenerator);
 
   @BeforeEach

@@ -31,8 +31,8 @@ import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.util.ThreadContext;
 import sonia.scm.ContextEntry;
-import sonia.scm.store.ConfigurationEntryStore;
-import sonia.scm.store.ConfigurationEntryStoreFactory;
+import sonia.scm.store.DataStore;
+import sonia.scm.store.DataStoreFactory;
 
 import javax.inject.Inject;
 import java.security.SecureRandom;
@@ -51,7 +51,7 @@ public class ApiKeyService {
 
   public static final int KEY_LENGTH = 20;
 
-  private final ConfigurationEntryStore<ApiKeyCollection> store;
+  private final DataStore<ApiKeyCollection> store;
   private final PasswordService passwordService;
   private final KeyGenerator keyGenerator;
   private final Supplier<String> passphraseGenerator;
@@ -60,11 +60,11 @@ public class ApiKeyService {
   private final Striped<ReadWriteLock> locks = Striped.readWriteLock(10);
 
   @Inject
-  ApiKeyService(ConfigurationEntryStoreFactory storeFactory, KeyGenerator keyGenerator, PasswordService passwordService, ApiKeyTokenHandler tokenHandler) {
+  ApiKeyService(DataStoreFactory storeFactory, KeyGenerator keyGenerator, PasswordService passwordService, ApiKeyTokenHandler tokenHandler) {
     this(storeFactory, passwordService, keyGenerator, tokenHandler, () -> random(KEY_LENGTH, 0, 0, true, true, null, new SecureRandom()));
   }
 
-  ApiKeyService(ConfigurationEntryStoreFactory storeFactory, PasswordService passwordService, KeyGenerator keyGenerator, ApiKeyTokenHandler tokenHandler, Supplier<String> passphraseGenerator) {
+  ApiKeyService(DataStoreFactory storeFactory, PasswordService passwordService, KeyGenerator keyGenerator, ApiKeyTokenHandler tokenHandler, Supplier<String> passphraseGenerator) {
     this.store = storeFactory.withType(ApiKeyCollection.class).withName("apiKeys").build();
     this.passwordService = passwordService;
     this.keyGenerator = keyGenerator;
