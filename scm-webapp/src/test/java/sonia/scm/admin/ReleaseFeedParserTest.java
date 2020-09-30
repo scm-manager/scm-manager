@@ -55,7 +55,7 @@ class ReleaseFeedParserTest {
 
   @BeforeEach
   void createSut() {
-    releaseFeedParser = new ReleaseFeedParser(client, 100);
+    releaseFeedParser = new ReleaseFeedParser(client, 500);
   }
 
   @Test
