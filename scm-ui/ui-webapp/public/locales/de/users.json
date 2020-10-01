@@ -38,7 +38,8 @@
       "generalNavLink": "Generell",
       "setPasswordNavLink": "Passwort",
       "setPermissionsNavLink": "Berechtigungen",
-      "setPublicKeyNavLink": "Öffentliche Schlüssel"
+      "setPublicKeyNavLink": "Öffentliche Schlüssel",
+      "setApiKeyNavLink": "API Schlüssel"
     }
   },
   "createUser": {
@@ -66,6 +67,18 @@
     "noStoredKeys": "Es wurden keine Schlüssel gefunden.",
     "displayName": "Anzeigename",
     "raw": "Schlüssel",
+    "created": "Eingetragen an",
+    "addKey": "Schlüssel hinzufügen",
+    "delete": "Löschen",
+    "download": "Herunterladen"
+  },
+  "apiKey": {
+    "noStoredKeys": "Es wurden keine Schlüssel gefunden.",
+    "displayName": "Anzeigename",
+    "permissionRole": {
+      "label": "Berechtigte Rolle",
+      "help": "Mit der Rolle können Sie die Berechtigung für diesen Schlüssel einschränken"
+    },
     "created": "Eingetragen an",
     "addKey": "Schlüssel hinzufügen",
     "delete": "Löschen",

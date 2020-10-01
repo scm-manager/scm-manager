@@ -22,36 +22,41 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { ApiKey, ApiKeysCollection } from "./SetApiKeys";
+import ApiKeyEntry from "./ApiKeyEntry";
+import { Notification } from "@scm-manager/ui-components";
 
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import sonia.scm.security.ApiKey;
+type Props = {
+  apiKeys?: ApiKeysCollection;
+  onDelete: (link: string) => void;
+};
 
-import javax.inject.Inject;
-import java.util.Collection;
-import java.util.List;
+const ApiKeyTable: FC<Props> = ({ apiKeys, onDelete }) => {
+  const [t] = useTranslation("users");
 
-import static de.otto.edison.hal.Link.link;
-import static java.util.stream.Collectors.toList;
-
-public class ApiKeyCollectionToDtoMapper {
-
-  private final ApiKeyToApiKeyDtoMapper apiKeyDtoMapper;
-  private final ResourceLinks resourceLinks;
-
-  @Inject
-  public ApiKeyCollectionToDtoMapper(ApiKeyToApiKeyDtoMapper apiKeyDtoMapper, ResourceLinks resourceLinks) {
-    this.apiKeyDtoMapper = apiKeyDtoMapper;
-    this.resourceLinks = resourceLinks;
+  if (apiKeys?._embedded?.keys?.length === 0) {
+    return <Notification type="info">{t("apiKey.noStoredKeys")}</Notification>;
   }
 
-  public HalRepresentation map(Collection<ApiKey> keys) {
-    List<ApiKeyDto> dtos = keys.stream().map(apiKeyDtoMapper::map).collect(toList());
-    final Links.Builder links = Links.linkingTo()
-      .self(resourceLinks.apiKeyCollection().self())
-      .single(link("create", resourceLinks.apiKeyCollection().create()));
-    return new HalRepresentation(links.build(), Embedded.embedded("keys", dtos));
-  }
-}
+  return (
+    <table className="card-table table is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+          <th>{t("apiKey.displayName")}</th>
+          <th>{t("apiKey.permissionRole")}</th>
+          <th>{t("apiKey.created")}</th>
+          <th />
+        </tr>
+      </thead>
+      <tbody>
+        {apiKeys?._embedded?.keys?.map((apiKey: ApiKey, index: number) => {
+          return <ApiKeyEntry key={index} onDelete={onDelete} apiKey={apiKey} />;
+        })}
+      </tbody>
+    </table>
+  );
+};
+
+export default ApiKeyTable;

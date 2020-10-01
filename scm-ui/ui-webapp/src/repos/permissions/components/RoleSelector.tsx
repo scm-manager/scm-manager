@@ -26,7 +26,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { Select } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
-  availableRoles: string[];
+  availableRoles?: string[];
   handleRoleChange: (p: string) => void;
   role: string;
   label?: string;

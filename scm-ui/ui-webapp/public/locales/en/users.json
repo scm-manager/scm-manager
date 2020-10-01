@@ -38,7 +38,8 @@
       "generalNavLink": "General",
       "setPasswordNavLink": "Password",
       "setPermissionsNavLink": "Permissions",
-      "setPublicKeyNavLink": "Public Keys"
+      "setPublicKeyNavLink": "Public Keys",
+      "setApiKeyNavLink": "API keys"
     }
   },
   "createUser": {
@@ -66,6 +67,18 @@
     "noStoredKeys": "No keys found.",
     "displayName": "Display Name",
     "raw": "Key",
+    "created": "Created on",
+    "addKey": "Add key",
+    "delete": "Delete",
+    "download": "Download"
+  },
+  "apiKey": {
+    "noStoredKeys": "No keys found.",
+    "displayName": "Display Name",
+    "permissionRole": {
+      "label": "Permitted Role",
+      "help": "The api key will be restricted to permissions of this role"
+    },
     "created": "Created on",
     "addKey": "Add key",
     "delete": "Delete",

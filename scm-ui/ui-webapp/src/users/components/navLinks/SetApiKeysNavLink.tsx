@@ -21,37 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React, { FC } from "react";
+import { Link, User, Me } from "@scm-manager/ui-types";
+import { NavLink } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 
-package sonia.scm.api.v2.resources;
+type Props = {
+  user: User | Me;
+  apiKeyUrl: string;
+};
 
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import sonia.scm.security.ApiKey;
+const SetApiKeyNavLink: FC<Props> = ({ user, apiKeyUrl }) => {
+  const [t] = useTranslation("users");
 
-import javax.inject.Inject;
-import java.util.Collection;
-import java.util.List;
-
-import static de.otto.edison.hal.Link.link;
-import static java.util.stream.Collectors.toList;
-
-public class ApiKeyCollectionToDtoMapper {
-
-  private final ApiKeyToApiKeyDtoMapper apiKeyDtoMapper;
-  private final ResourceLinks resourceLinks;
-
-  @Inject
-  public ApiKeyCollectionToDtoMapper(ApiKeyToApiKeyDtoMapper apiKeyDtoMapper, ResourceLinks resourceLinks) {
-    this.apiKeyDtoMapper = apiKeyDtoMapper;
-    this.resourceLinks = resourceLinks;
+  if ((user?._links?.apiKeys as Link)?.href) {
+    return <NavLink to={apiKeyUrl} label={t("singleUser.menu.setApiKeyNavLink")} />;
   }
+  return null;
+};
 
-  public HalRepresentation map(Collection<ApiKey> keys) {
-    List<ApiKeyDto> dtos = keys.stream().map(apiKeyDtoMapper::map).collect(toList());
-    final Links.Builder links = Links.linkingTo()
-      .self(resourceLinks.apiKeyCollection().self())
-      .single(link("create", resourceLinks.apiKeyCollection().create()));
-    return new HalRepresentation(links.build(), Embedded.embedded("keys", dtos));
-  }
-}
+export default SetApiKeyNavLink;
