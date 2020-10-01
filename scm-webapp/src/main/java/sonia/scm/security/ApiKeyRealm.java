@@ -66,9 +66,9 @@ public class ApiKeyRealm extends AuthenticatingRealm {
     checkArgument(token instanceof BearerToken, "%s is required", BearerToken.class);
     BearerToken bt = (BearerToken) token;
     ApiKeyService.CheckResult check = apiKeyService.check(bt.getCredentials());
-    RepositoryRole repositoryRole = repositoryRoleManager.get(check.getRole());
+    RepositoryRole repositoryRole = repositoryRoleManager.get(check.getPermissionRole());
     if (repositoryRole == null) {
-      throw new AuthorizationException("api key has unknown role: " + check.getRole());
+      throw new AuthorizationException("api key has unknown role: " + check.getPermissionRole());
     }
     String scope = "repository:" + String.join(",", repositoryRole.getVerbs()) + ":*";
     return helper

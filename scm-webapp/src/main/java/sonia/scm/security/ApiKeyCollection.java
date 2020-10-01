@@ -31,6 +31,7 @@ import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,8 +43,9 @@ import static java.util.stream.Collectors.toList;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlRootElement
+@XmlRootElement(name = "keys")
 class ApiKeyCollection {
+  @XmlElement(name = "key")
   private Collection<ApiKeyWithPassphrase> keys;
 
   public ApiKeyCollection add(ApiKeyWithPassphrase key) {

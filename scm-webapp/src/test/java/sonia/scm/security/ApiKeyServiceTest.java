@@ -36,6 +36,7 @@ import org.junit.jupiter.api.Test;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
+import sonia.scm.store.InMemoryDataStore;
 import sonia.scm.store.InMemoryDataStoreFactory;
 
 import java.util.function.Supplier;
@@ -55,7 +56,7 @@ class ApiKeyServiceTest {
   Supplier<String> passphraseGenerator = () -> Integer.toString(nextKey++);
   KeyGenerator keyGenerator = () -> Integer.toString(nextId++);
   ApiKeyTokenHandler tokenHandler = new ApiKeyTokenHandler();
-  DataStoreFactory storeFactory = new InMemoryDataStoreFactory();
+  DataStoreFactory storeFactory = new InMemoryDataStoreFactory(new InMemoryDataStore<ApiKeyCollection>());
   DataStore<ApiKeyCollection> store = storeFactory.withType(ApiKeyCollection.class).withName("apiKeys").build();
   ApiKeyService service = new ApiKeyService(storeFactory, passwordService, keyGenerator, tokenHandler, passphraseGenerator);
 
@@ -91,12 +92,12 @@ class ApiKeyServiceTest {
 
       assertThat(apiKeys.getKeys()).hasSize(1);
       ApiKeyWithPassphrase key = apiKeys.getKeys().iterator().next();
-      assertThat(key.getRole()).isEqualTo("READ");
+      assertThat(key.getPermissionRole()).isEqualTo("READ");
       assertThat(key.getPassphrase()).isEqualTo("1-hashed");
 
       ApiKeyService.CheckResult role = service.check("dent", "1",  "1-hashed");
 
-      assertThat(role).extracting("role").isEqualTo("READ");
+      assertThat(role).extracting("permissionRole").isEqualTo("READ");
     }
 
     @Test
@@ -105,7 +106,7 @@ class ApiKeyServiceTest {
 
       ApiKeyService.CheckResult role = service.check(newKey);
 
-      assertThat(role).extracting("role").isEqualTo("READ");
+      assertThat(role).extracting("permissionRole").isEqualTo("READ");
     }
 
     @Test
@@ -129,8 +130,8 @@ class ApiKeyServiceTest {
 
       assertThat(apiKeys.getKeys()).hasSize(2);
 
-      assertThat(service.check(firstKey.getToken())).extracting("role").isEqualTo("READ");
-      assertThat(service.check(secondKey.getToken())).extracting("role").isEqualTo("WRITE");
+      assertThat(service.check(firstKey.getToken())).extracting("permissionRole").isEqualTo("READ");
+      assertThat(service.check(secondKey.getToken())).extracting("permissionRole").isEqualTo("WRITE");
 
       assertThat(service.getKeys()).extracting("id")
         .contains(firstKey.getId(), secondKey.getId());
@@ -144,7 +145,7 @@ class ApiKeyServiceTest {
       service.remove("1");
 
       assertThrows(AuthorizationException.class, () -> service.check(firstKey));
-      assertThat(service.check(secondKey)).extracting("role").isEqualTo("WRITE");
+      assertThat(service.check(secondKey)).extracting("permissionRole").isEqualTo("WRITE");
     }
 
     @Test
@@ -153,7 +154,7 @@ class ApiKeyServiceTest {
 
       assertThrows(AlreadyExistsException.class, () -> service.createNewKey("1", "WRITE"));
 
-      assertThat(service.check(firstKey)).extracting("role").isEqualTo("READ");
+      assertThat(service.check(firstKey)).extracting("permissionRole").isEqualTo("READ");
     }
 
     @Test

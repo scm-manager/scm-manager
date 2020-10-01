@@ -72,12 +72,12 @@ public class ApiKeyService {
     this.passphraseGenerator = passphraseGenerator;
   }
 
-  public CreationResult createNewKey(String name, String role) {
+  public CreationResult createNewKey(String name, String permissionRole) {
     String user = currentUser();
     String passphrase = passphraseGenerator.get();
     String hashedPassphrase = passwordService.encryptPassword(passphrase);
     final String id = keyGenerator.createKey();
-    ApiKeyWithPassphrase key = new ApiKeyWithPassphrase(id, name, role, hashedPassphrase);
+    ApiKeyWithPassphrase key = new ApiKeyWithPassphrase(id, name, permissionRole, hashedPassphrase);
     Lock lock = locks.get(user).writeLock();
     lock.lock();
     try {
@@ -132,7 +132,7 @@ public class ApiKeyService {
         .stream()
         .filter(key -> key.getId().equals(id))
         .filter(key -> passwordService.passwordsMatch(passphrase, key.getPassphrase()))
-        .map(ApiKeyWithPassphrase::getRole)
+        .map(ApiKeyWithPassphrase::getPermissionRole)
         .map(role -> new CheckResult(user, role))
         .findAny()
         .orElseThrow(AuthorizationException::new);
@@ -183,6 +183,6 @@ public class ApiKeyService {
   @AllArgsConstructor
   public static class CheckResult {
     private final String user;
-    private final String role;
+    private final String permissionRole;
   }
 }

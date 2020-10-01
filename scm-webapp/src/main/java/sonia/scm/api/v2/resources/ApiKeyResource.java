@@ -154,7 +154,7 @@ public class  ApiKeyResource {
       schema = @Schema(implementation = ErrorDto.class)
     ))
   public Response create(@Valid ApiKeyDto apiKey) {
-    final ApiKeyService.CreationResult newKey = apiKeyService.createNewKey(apiKey.getDisplayName(), apiKey.getRole());
+    final ApiKeyService.CreationResult newKey = apiKeyService.createNewKey(apiKey.getDisplayName(), apiKey.getPermissionRole());
     return Response.status(CREATED)
       .entity(newKey.getToken())
       .location(URI.create(resourceLinks.apiKey().self(newKey.getId())))

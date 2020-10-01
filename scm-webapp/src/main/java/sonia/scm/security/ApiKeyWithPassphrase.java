@@ -31,6 +31,7 @@ import lombok.NoArgsConstructor;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -38,7 +39,9 @@ import javax.xml.bind.annotation.XmlAccessorType;
 @XmlAccessorType(XmlAccessType.FIELD)
 class ApiKeyWithPassphrase {
   private String id;
+  @XmlElement(name = "display-name")
   private String displayName;
-  private String role;
+  @XmlElement(name = "permission-role")
+  private String permissionRole;
   private String passphrase;
 }

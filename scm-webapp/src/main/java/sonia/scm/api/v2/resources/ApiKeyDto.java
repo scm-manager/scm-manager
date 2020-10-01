@@ -30,12 +30,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
+
 @Getter
 @Setter
 @NoArgsConstructor
 public class ApiKeyDto extends HalRepresentation {
+  @NotEmpty
   private String displayName;
-  private String role;
+  @NotEmpty
+  private String permissionRole;
 
   public ApiKeyDto(Links links) {
     super(links);

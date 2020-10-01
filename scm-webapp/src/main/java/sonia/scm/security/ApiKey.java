@@ -32,9 +32,9 @@ import lombok.Getter;
 public class ApiKey {
   private final String id;
   private final String displayName;
-  private final String role;
+  private final String permissionRole;
 
   ApiKey(ApiKeyWithPassphrase apiKeyWithPassphrase) {
-    this(apiKeyWithPassphrase.getId(), apiKeyWithPassphrase.getDisplayName(), apiKeyWithPassphrase.getRole());
+    this(apiKeyWithPassphrase.getId(), apiKeyWithPassphrase.getDisplayName(), apiKeyWithPassphrase.getPermissionRole());
   }
 }
