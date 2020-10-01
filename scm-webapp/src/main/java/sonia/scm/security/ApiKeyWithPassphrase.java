@@ -28,10 +28,13 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sonia.scm.xml.XmlInstantAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.time.Instant;
 
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -44,4 +47,6 @@ class ApiKeyWithPassphrase {
   @XmlElement(name = "permission-role")
   private String permissionRole;
   private String passphrase;
+  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
+  private Instant created;
 }

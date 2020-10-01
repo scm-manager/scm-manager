@@ -27,14 +27,22 @@ package sonia.scm.security;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
+import java.time.Instant;
+
 @Getter
 @AllArgsConstructor
 public class ApiKey {
   private final String id;
   private final String displayName;
   private final String permissionRole;
+  private final Instant created;
 
   ApiKey(ApiKeyWithPassphrase apiKeyWithPassphrase) {
-    this(apiKeyWithPassphrase.getId(), apiKeyWithPassphrase.getDisplayName(), apiKeyWithPassphrase.getPermissionRole());
+    this(
+      apiKeyWithPassphrase.getId(),
+      apiKeyWithPassphrase.getDisplayName(),
+      apiKeyWithPassphrase.getPermissionRole(),
+      apiKeyWithPassphrase.getCreated()
+    );
   }
 }

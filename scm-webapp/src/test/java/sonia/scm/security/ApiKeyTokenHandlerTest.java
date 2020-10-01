@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
 
+import static java.time.Instant.now;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ApiKeyTokenHandlerTest {
@@ -37,7 +38,7 @@ class ApiKeyTokenHandlerTest {
 
   @Test
   void shouldSerializeAndDeserializeToken() {
-    final String tokenString = handler.createToken("dent", new ApiKey("42", "hg2g", "READ"), "some secret");
+    final String tokenString = handler.createToken("dent", new ApiKey("42", "hg2g", "READ", now()), "some secret");
 
     System.out.println(tokenString);
 

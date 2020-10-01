@@ -31,6 +31,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
+import java.time.Instant;
 
 @Getter
 @Setter
@@ -40,6 +41,7 @@ public class ApiKeyDto extends HalRepresentation {
   private String displayName;
   @NotEmpty
   private String permissionRole;
+  private Instant created;
 
   public ApiKeyDto(Links links) {
     super(links);

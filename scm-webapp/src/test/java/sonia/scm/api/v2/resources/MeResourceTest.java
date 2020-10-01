@@ -53,12 +53,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
 
 import static com.google.inject.util.Providers.of;
+import static java.time.Instant.now;
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -229,7 +229,10 @@ public class MeResourceTest {
 
   @Test
   public void shouldGetAllApiKeys() throws URISyntaxException, UnsupportedEncodingException {
-    when(apiKeyService.getKeys()).thenReturn(Arrays.asList(new ApiKey("1", "key 1", "READ"), new ApiKey("2", "key 2", "WRITE")));
+    when(apiKeyService.getKeys())
+      .thenReturn(asList(
+        new ApiKey("1", "key 1", "READ", now()),
+        new ApiKey("2", "key 2", "WRITE", now())));
 
     MockHttpRequest request = MockHttpRequest.get("/" + MeResource.ME_PATH_V2 + "api_keys");
     dispatcher.invoke(request, response);
@@ -244,7 +247,10 @@ public class MeResourceTest {
 
   @Test
   public void shouldGetSingleApiKey() throws URISyntaxException, UnsupportedEncodingException {
-    when(apiKeyService.getKeys()).thenReturn(Arrays.asList(new ApiKey("1", "key 1", "READ"), new ApiKey("2", "key 2", "WRITE")));
+    when(apiKeyService.getKeys())
+      .thenReturn(asList(
+        new ApiKey("1", "key 1", "READ", now()),
+        new ApiKey("2", "key 2", "WRITE", now())));
 
     MockHttpRequest request = MockHttpRequest.get("/" + MeResource.ME_PATH_V2 + "api_keys/1");
     dispatcher.invoke(request, response);
