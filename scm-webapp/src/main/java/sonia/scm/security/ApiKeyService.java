@@ -24,6 +24,7 @@
 
 package sonia.scm.security;
 
+import com.github.legman.Subscribe;
 import com.google.common.util.concurrent.Striped;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,8 +32,10 @@ import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.util.ThreadContext;
 import sonia.scm.ContextEntry;
+import sonia.scm.HandlerEventType;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
+import sonia.scm.user.UserEvent;
 import sonia.scm.user.UserPermissions;
 
 import javax.inject.Inject;
@@ -174,6 +177,13 @@ public class ApiKeyService {
       .orElse(emptyList())
       .stream()
       .anyMatch(key -> key.getDisplayName().equals(name));
+  }
+
+  @Subscribe
+  public void cleanupForDeletedUser(UserEvent userEvent) {
+    if (userEvent.getEventType() == HandlerEventType.DELETE) {
+      store.remove(userEvent.getItem().getId());
+    }
   }
 
   @Getter

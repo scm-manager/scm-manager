@@ -34,10 +34,13 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import sonia.scm.AlreadyExistsException;
+import sonia.scm.HandlerEventType;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.store.InMemoryDataStore;
 import sonia.scm.store.InMemoryDataStoreFactory;
+import sonia.scm.user.User;
+import sonia.scm.user.UserEvent;
 
 import java.util.function.Supplier;
 
@@ -162,6 +165,17 @@ class ApiKeyServiceTest {
       String firstKey = service.createNewKey("1", "READ").getToken();
 
       assertThrows(AuthorizationException.class, () -> service.check("dent", "other", firstKey));
+    }
+
+    @Test
+    void shouldDeleteTokensWhenUserIsDeleted() {
+      service.createNewKey("1", "READ").getToken();
+
+      assertThat(store.get("dent").getKeys()).hasSize(1);
+
+      service.cleanupForDeletedUser(new UserEvent(HandlerEventType.DELETE, new User("dent")));
+
+      assertThat(store.get("dent")).isNull();
     }
   }
 }
