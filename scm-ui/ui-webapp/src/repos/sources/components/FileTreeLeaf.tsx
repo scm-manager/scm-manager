@@ -22,15 +22,14 @@
  * SOFTWARE.
  */
 import * as React from "react";
-import { Link } from "react-router-dom";
+import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { File } from "@scm-manager/ui-types";
-import { DateFromNow, FileSize, Tooltip } from "@scm-manager/ui-components";
+import { DateFromNow, FileSize, Tooltip, Icon } from "@scm-manager/ui-components";
 import FileIcon from "./FileIcon";
-import { Icon } from "@scm-manager/ui-components";
-import { WithTranslation, withTranslation } from "react-i18next";
+import FileLink from "./content/FileLink";
 
 type Props = WithTranslation & {
   file: File;
@@ -45,46 +44,21 @@ const NoWrapTd = styled.td`
   white-space: nowrap;
 `;
 
-export function createLink(base: string, file: File) {
-  let link = base;
-  if (file.path) {
-    let path = file.path;
-    if (path.startsWith("/")) {
-      path = path.substring(1);
-    }
-    link += "/" + path;
-  }
-  if (!link.endsWith("/")) {
-    link += "/";
-  }
-  return link;
-}
-
 class FileTreeLeaf extends React.Component<Props> {
-  createLink = (file: File) => {
-    return createLink(this.props.baseUrl, file);
-  };
-
   createFileIcon = (file: File) => {
-    if (file.directory) {
-      return (
-        <Link to={this.createLink(file)}>
-          <FileIcon file={file} />
-        </Link>
-      );
-    }
     return (
-      <Link to={this.createLink(file)}>
+      <FileLink baseUrl={this.props.baseUrl} file={file}>
         <FileIcon file={file} />
-      </Link>
+      </FileLink>
     );
   };
 
   createFileName = (file: File) => {
-    if (file.directory) {
-      return <Link to={this.createLink(file)}>{file.name}</Link>;
-    }
-    return <Link to={this.createLink(file)}>{file.name}</Link>;
+    return (
+      <FileLink baseUrl={this.props.baseUrl} file={file}>
+        {file.name}
+      </FileLink>
+    );
   };
 
   contentIfPresent = (file: File, attribute: string, content: (file: File) => any) => {
@@ -94,13 +68,13 @@ class FileTreeLeaf extends React.Component<Props> {
     } else if (file.computationAborted) {
       return (
         <Tooltip location="top" message={t("sources.file-tree.computationAborted")}>
-          <Icon name={"question-circle"} />
+          <Icon name="question-circle" />
         </Tooltip>
       );
     } else if (file.partialResult) {
       return (
         <Tooltip location="top" message={t("sources.file-tree.notYetComputed")}>
-          <Icon name={"hourglass"} />
+          <Icon name="hourglass" />
         </Tooltip>
       );
     } else {
