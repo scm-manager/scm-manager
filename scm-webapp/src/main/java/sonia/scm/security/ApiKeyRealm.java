@@ -63,9 +63,11 @@ public class ApiKeyRealm extends AuthenticatingRealm {
 
   @Override
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) {
-    checkArgument(token instanceof BearerToken, "%s is required", BearerToken.class);
-    BearerToken bt = (BearerToken) token;
-    ApiKeyService.CheckResult check = apiKeyService.check(bt.getCredentials());
+    checkArgument(
+      token instanceof BearerToken || token instanceof UsernamePasswordToken,
+      "%s is required", BearerToken.class);
+    String password = getPassword(token);
+    ApiKeyService.CheckResult check = apiKeyService.check(password);
     RepositoryRole repositoryRole = repositoryRoleManager.get(check.getPermissionRole());
     if (repositoryRole == null) {
       throw new AuthorizationException("api key has unknown role: " + check.getPermissionRole());
@@ -73,8 +75,24 @@ public class ApiKeyRealm extends AuthenticatingRealm {
     String scope = "repository:" + String.join(",", repositoryRole.getVerbs()) + ":*";
     return helper
       .authenticationInfoBuilder(check.getUser())
-      .withSessionId(bt.getPrincipal())
+      .withSessionId(getPrincipal(token))
       .withScope(Scope.valueOf(scope))
       .build();
+  }
+
+  private String getPassword(AuthenticationToken token) {
+    if (token instanceof BearerToken) {
+      return ((BearerToken) token).getCredentials();
+    } else {
+      return new String(((UsernamePasswordToken) token).getPassword());
+    }
+  }
+
+  private SessionId getPrincipal(AuthenticationToken token) {
+    if (token instanceof BearerToken) {
+      return ((BearerToken) token).getPrincipal();
+    } else {
+      return SessionId.valueOf((((UsernamePasswordToken) token).getPrincipal()).toString());
+    }
   }
 }
