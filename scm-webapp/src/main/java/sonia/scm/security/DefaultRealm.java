@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -57,9 +57,9 @@ import java.util.Set;
 @Singleton
 public class DefaultRealm extends AuthorizingRealm
 {
-  
+
   private static final String SEPARATOR = System.getProperty("line.separator", "\n");
-  
+
   /**
    * the logger for DefaultRealm
    */
@@ -68,6 +68,7 @@ public class DefaultRealm extends AuthorizingRealm
   /** Field description */
   @VisibleForTesting
   static final String REALM = "DefaultRealm";
+  private final ScmPermissionResolver permissionResolver;
 
   //~--- constructors ---------------------------------------------------------
 
@@ -90,9 +91,16 @@ public class DefaultRealm extends AuthorizingRealm
     matcher.setPasswordService(service);
     setCredentialsMatcher(helper.wrapCredentialsMatcher(matcher));
     setAuthenticationTokenClass(UsernamePasswordToken.class);
+    permissionResolver = new ScmPermissionResolver();
+    setPermissionResolver(permissionResolver);
 
     // we cache in the AuthorizationCollector
     setCachingEnabled(false);
+  }
+
+  @Override
+  public ScmPermissionResolver getPermissionResolver() {
+    return permissionResolver;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -168,13 +176,13 @@ public class DefaultRealm extends AuthorizingRealm
 
   private void log( PrincipalCollection collection, AuthorizationInfo original, AuthorizationInfo filtered ) {
     StringBuilder buffer = new StringBuilder("authorization summary: ");
-    
+
     buffer.append(SEPARATOR).append("username   : ").append(collection.getPrimaryPrincipal());
     buffer.append(SEPARATOR).append("roles      : ");
-    append(buffer, original.getRoles()); 
+    append(buffer, original.getRoles());
     buffer.append(SEPARATOR).append("scope      : ");
-    append(buffer, collection.oneByType(Scope.class)); 
-    
+    append(buffer, collection.oneByType(Scope.class));
+
     if ( filtered != null ) {
       buffer.append(SEPARATOR).append("permissions (filtered by scope): ");
       append(buffer, filtered);
@@ -183,21 +191,21 @@ public class DefaultRealm extends AuthorizingRealm
       buffer.append(SEPARATOR).append("permissions: ");
     }
     append(buffer, original);
-    
+
     LOG.trace(buffer.toString());
   }
-  
+
   private void append(StringBuilder buffer, AuthorizationInfo authz) {
     append(buffer, authz.getStringPermissions());
-    append(buffer, authz.getObjectPermissions());    
+    append(buffer, authz.getObjectPermissions());
   }
-  
+
   private void append(StringBuilder buffer, Iterable<?> iterable){
     if (iterable != null){
       for ( Object item : iterable )
       {
         buffer.append(SEPARATOR).append(" - ").append(item);
-      }      
+      }
     }
   }
 

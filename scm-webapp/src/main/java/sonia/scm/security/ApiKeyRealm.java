@@ -24,17 +24,18 @@
 
 package sonia.scm.security;
 
-import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import sonia.scm.plugin.Extension;
+import sonia.scm.repository.RepositoryRole;
+import sonia.scm.repository.RepositoryRoleManager;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-
-import java.util.Optional;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
@@ -44,13 +45,20 @@ public class ApiKeyRealm extends AuthenticatingRealm {
 
   private final ApiKeyService apiKeyService;
   private final DAORealmHelper helper;
+  private final RepositoryRoleManager repositoryRoleManager;
 
   @Inject
-  public ApiKeyRealm(ApiKeyService apiKeyService, DAORealmHelperFactory helperFactory) {
+  public ApiKeyRealm(ApiKeyService apiKeyService, DAORealmHelperFactory helperFactory, RepositoryRoleManager repositoryRoleManager) {
     this.apiKeyService = apiKeyService;
     this.helper = helperFactory.create("ApiTokenRealm");
+    this.repositoryRoleManager = repositoryRoleManager;
     setAuthenticationTokenClass(BearerToken.class);
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
+  }
+
+  @Override
+  public boolean supports(AuthenticationToken token) {
+    return token instanceof UsernamePasswordToken || token instanceof BearerToken;
   }
 
   @Override
@@ -58,10 +66,15 @@ public class ApiKeyRealm extends AuthenticatingRealm {
     checkArgument(token instanceof BearerToken, "%s is required", BearerToken.class);
     BearerToken bt = (BearerToken) token;
     ApiKeyService.CheckResult check = apiKeyService.check(bt.getCredentials());
+    RepositoryRole repositoryRole = repositoryRoleManager.get(check.getRole());
+    if (repositoryRole == null) {
+      throw new AuthorizationException("api key has unknown role: " + check.getRole());
+    }
+    String scope = "repository:" + String.join(",", repositoryRole.getVerbs()) + ":*";
     return helper
       .authenticationInfoBuilder(check.getUser())
       .withSessionId(bt.getPrincipal())
-//      .withScope()
+      .withScope(Scope.valueOf(scope))
       .build();
   }
 }
