@@ -33,6 +33,7 @@ import org.apache.shiro.util.ThreadContext;
 import sonia.scm.ContextEntry;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
+import sonia.scm.user.UserPermissions;
 
 import javax.inject.Inject;
 import java.security.SecureRandom;
@@ -74,6 +75,7 @@ public class ApiKeyService {
 
   public CreationResult createNewKey(String name, String permissionRole) {
     String user = currentUser();
+    UserPermissions.changeApiKeys(user).check();
     String passphrase = passphraseGenerator.get();
     String hashedPassphrase = passwordService.encryptPassword(passphrase);
     final String id = keyGenerator.createKey();
@@ -96,6 +98,7 @@ public class ApiKeyService {
 
   public void remove(String id) {
     String user = currentUser();
+    UserPermissions.changeApiKeys(user).check();
     Lock lock = locks.get(user).writeLock();
     lock.lock();
     try {
