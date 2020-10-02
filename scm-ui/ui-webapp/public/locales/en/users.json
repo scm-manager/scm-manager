@@ -82,6 +82,12 @@
     "created": "Created on",
     "addKey": "Add key",
     "delete": "Delete",
-    "download": "Download"
+    "download": "Download",
+    "modal": {
+      "title": "Key created",
+      "text1": "Here is your new key. You can use it as a bearer token for rest calls or as a password for scm clients. Doing so you will have your permissions limited to repositories and the selected role.",
+      "text2": "This is the only time it will be shown, it cannot be recovered afterwards. Keep it in a safe place.",
+      "close": "Close"
+    }
   }
 }

@@ -82,6 +82,12 @@
     "created": "Eingetragen an",
     "addKey": "Schlüssel hinzufügen",
     "delete": "Löschen",
-    "download": "Herunterladen"
+    "download": "Herunterladen",
+    "modal": {
+      "title": "Schlüssel erzeugt",
+      "text1": "Hier ist der neue Schlüssel. Er kann als \"Bearer Token\" für REST Zugriffe oder als Passwort für SCM Clients genutzt werden. Sie erhalten Ihre Zugriffsrechte, eingeschränkt auf Repositories und die gewählte Rolle.",
+      "text2": "Dieses ist der einzige Zeitpunkt, an dem der Schlüssel angezeigt wird. Er kann im Nachhinein nicht mehr hergestellt werden. Bewahren Sie ihn an einem sicheren Ort auf.",
+      "close": "Schließen"
+    }
   }
 }

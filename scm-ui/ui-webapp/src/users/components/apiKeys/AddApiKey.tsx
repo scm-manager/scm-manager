@@ -34,6 +34,7 @@ import {
 import { RepositoryRole } from "@scm-manager/ui-types";
 import { getRepositoryRolesLink, getRepositoryVerbsLink } from "../../../modules/indexResource";
 import RoleSelector from "../../../repos/permissions/components/RoleSelector";
+import { Button, Modal } from "@scm-manager/ui-components";
 
 type Props = {
   createLink: string;
@@ -57,6 +58,7 @@ const AddApiKey: FC<Props> = ({
   const [error, setError] = useState<undefined | Error>();
   const [displayName, setDisplayName] = useState("");
   const [permissionRole, setPermissionRole] = useState("");
+  const [addedPassphrase, setAddedPassphrase] = useState("");
 
   useEffect(() => {
     if (!availableRepositoryRoles) {
@@ -77,8 +79,8 @@ const AddApiKey: FC<Props> = ({
     setLoading(true);
     apiClient
       .post(createLink, { displayName: displayName, permissionRole: permissionRole }, CONTENT_TYPE_API_KEY)
-      .then(resetForm)
-      .then(refresh)
+      .then(response => response.text())
+      .then(setAddedPassphrase)
       .then(() => setLoading(false))
       .catch(setError);
   };
@@ -91,10 +93,35 @@ const AddApiKey: FC<Props> = ({
     return <Loading />;
   }
 
-  const availableRoleNames = availableRepositoryRoles? availableRepositoryRoles.map(r => r.name): [];
+  const availableRoleNames = availableRepositoryRoles ? availableRepositoryRoles.map(r => r.name) : [];
+
+  const closeModal = () => {
+    resetForm();
+    refresh();
+    setAddedPassphrase("");
+  };
+
+  const newPassphraseModalContent = (
+    <div className={"media-content"}>
+      <p>{t("apiKey.modal.text1")}</p>
+      <p><b>{t("apiKey.modal.text2")}</b></p>
+      <pre>{addedPassphrase}</pre>
+    </div>
+  );
+
+  const newPassphraseModal = addedPassphrase && (
+    <Modal
+      body={newPassphraseModalContent}
+      closeFunction={closeModal}
+      title={t("apiKey.modal.title")}
+      footer={<Button label={t("apiKey.modal.close")} action={closeModal} />}
+      active={true}
+    />
+  );
 
   return (
     <>
+      {newPassphraseModal}
       <InputField label={t("apiKey.displayName")} value={displayName} onChange={setDisplayName} />
       <RoleSelector
         loading={!availableRoleNames}
