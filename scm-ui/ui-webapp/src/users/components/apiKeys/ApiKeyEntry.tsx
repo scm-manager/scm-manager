@@ -23,9 +23,10 @@
  */
 
 import React, { FC } from "react";
-import { DateFromNow } from "@scm-manager/ui-components";
+import { DateFromNow, Icon } from "@scm-manager/ui-components";
 import { ApiKey } from "./SetApiKeys";
 import { Link } from "@scm-manager/ui-types";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   apiKey: ApiKey;
@@ -33,12 +34,13 @@ type Props = {
 };
 
 export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
+  const [t] = useTranslation("users");
   let deleteButton;
   if (apiKey?._links?.delete) {
     deleteButton = (
       <a className="level-item" onClick={() => onDelete((apiKey._links.delete as Link).href)}>
         <span className="icon is-small">
-          <i className="fas fa-trash" />
+          <Icon name="trash" className="fas" title={t("apiKey.delete")} />
         </span>
       </a>
     );

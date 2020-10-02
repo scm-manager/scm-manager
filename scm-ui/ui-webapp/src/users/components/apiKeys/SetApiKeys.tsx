@@ -27,6 +27,7 @@ import React, { FC, useEffect, useState } from "react";
 import { apiClient, ErrorNotification, Loading } from "@scm-manager/ui-components";
 import ApiKeyTable from "./ApiKeyTable";
 import AddApiKey from "./AddApiKey";
+import { useTranslation } from "react-i18next";
 
 export type ApiKeysCollection = Collection & {
   _embedded: {
@@ -49,6 +50,7 @@ type Props = {
 };
 
 const SetApiKeys: FC<Props> = ({ user }) => {
+  const [t] = useTranslation("users");
   const [error, setError] = useState<undefined | Error>();
   const [loading, setLoading] = useState(false);
   const [apiKeys, setApiKeys] = useState<ApiKeysCollection | undefined>(undefined);
@@ -86,6 +88,11 @@ const SetApiKeys: FC<Props> = ({ user }) => {
 
   return (
     <>
+      <div className={"media-content"}>
+        <p>{t("apiKey.text1")}</p>
+        <p>{t("apiKey.text2")}</p>
+      </div>
+      <hr />
       <ApiKeyTable apiKeys={apiKeys} onDelete={onDelete} />
       {createLink && <AddApiKey createLink={createLink} refresh={fetchApiKeys} />}
     </>

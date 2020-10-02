@@ -83,10 +83,13 @@
     "addKey": "Add key",
     "delete": "Delete",
     "download": "Download",
+    "text1": "Create and manage personal access tokens to access the REST API or use as a password for SCM clients. The privileges of these tokens are limited to repositories and the selected role. You may view and create roles in the administration view “Permission Roles”.",
+    "text2": "To use the token in a REST request, pass it as a cookie named “X-Bearer-Token”. You may use the token as your password for SCM clients, too.",
     "modal": {
       "title": "Key created",
-      "text1": "Here is your new key. You can use it as a bearer token for rest calls or as a password for scm clients. Doing so you will have your permissions limited to repositories and the selected role.",
-      "text2": "This is the only time it will be shown, it cannot be recovered afterwards. Keep it in a safe place.",
+      "text1": "Your new API key is ready. You can use it as a bearer token for REST calls or as a password for SCM clients.",
+      "text2": "Store your API key in a safe place now! It is only displayed now and cannot be recovered later.",
+      "clipboard": "Copy to clipboard",
       "close": "Close"
     }
   }
