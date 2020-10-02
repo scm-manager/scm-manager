@@ -45,7 +45,7 @@ const ApiKeyTable: FC<Props> = ({ apiKeys, onDelete }) => {
       <thead>
         <tr>
           <th>{t("apiKey.displayName")}</th>
-          <th>{t("apiKey.permissionRole")}</th>
+          <th>{t("apiKey.permissionRole.label")}</th>
           <th>{t("apiKey.created")}</th>
           <th />
         </tr>

@@ -23,9 +23,8 @@
  */
 
 import React, { FC } from "react";
-import { DateFromNow, DeleteButton } from "@scm-manager/ui-components";
+import { DateFromNow } from "@scm-manager/ui-components";
 import { ApiKey } from "./SetApiKeys";
-import { useTranslation } from "react-i18next";
 import { Link } from "@scm-manager/ui-types";
 
 type Props = {
@@ -34,12 +33,14 @@ type Props = {
 };
 
 export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
-  const [t] = useTranslation("users");
-
   let deleteButton;
   if (apiKey?._links?.delete) {
     deleteButton = (
-      <DeleteButton label={t("apiKey.delete")} action={() => onDelete((apiKey._links.delete as Link).href)} />
+      <a className="level-item" onClick={() => onDelete((apiKey._links.delete as Link).href)}>
+        <span className="icon is-small">
+          <i className="fas fa-trash" />
+        </span>
+      </a>
     );
   }
 
@@ -51,7 +52,7 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
         <td className="is-hidden-mobile">
           <DateFromNow date={apiKey.created}/>
         </td>
-        <td>{deleteButton}</td>
+        <td className="is-darker">{deleteButton}</td>
       </tr>
     </>
   );
