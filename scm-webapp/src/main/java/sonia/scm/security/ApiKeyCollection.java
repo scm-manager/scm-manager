@@ -49,8 +49,13 @@ class ApiKeyCollection {
   private Collection<ApiKeyWithPassphrase> keys;
 
   public ApiKeyCollection add(ApiKeyWithPassphrase key) {
-    Collection<ApiKeyWithPassphrase> newKeys = new ArrayList<>(keys.size() + 1);
-    newKeys.addAll(keys);
+    Collection<ApiKeyWithPassphrase> newKeys;
+    if (keys == null) {
+      newKeys = new ArrayList<>();
+    } else {
+      newKeys = new ArrayList<>(keys.size() + 1);
+      newKeys.addAll(keys);
+    }
     newKeys.add(key);
     return new ApiKeyCollection(newKeys);
   }
