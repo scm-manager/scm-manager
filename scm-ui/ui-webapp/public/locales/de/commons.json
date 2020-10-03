@@ -71,6 +71,7 @@
     "informationNavLink": "Information",
     "changePasswordNavLink": "Passwort ändern",
     "publicKeysNavLink": "Öffentliche Schlüssel",
+    "apiKeysNavLink": "API Schlüssel",
     "settingsNavLink": "Einstellungen",
     "username": "Benutzername",
     "displayName": "Anzeigename",

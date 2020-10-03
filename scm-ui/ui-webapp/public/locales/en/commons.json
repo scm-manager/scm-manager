@@ -73,6 +73,7 @@
     "changePasswordNavLink": "Change password",
     "settingsNavLink": "Settings",
     "publicKeysNavLink": "Public Keys",
+    "apiKeysNavLink": "API Keys",
     "username": "Username",
     "displayName": "Display Name",
     "mail": "E-Mail",

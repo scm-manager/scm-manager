@@ -100,6 +100,7 @@ const Footer: FC<Props> = ({ me, version, links }) => {
             <NavLink to="/me" label={t("footer.user.profile")} testId="footer-user-profile" />
             {me?._links?.password && <NavLink to="/me/settings/password" label={t("profile.changePasswordNavLink")} />}
             {me?._links?.publicKeys && <NavLink to="/me/settings/publicKeys" label={t("profile.publicKeysNavLink")} />}
+            {me?._links?.apiKeys && <NavLink to="/me/settings/apiKeys" label={t("profile.apiKeysNavLink")} />}
             <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
           </FooterSection>
           <FooterSection title={<TitleWithIcon title={t("footer.information.title")} icon="info-circle" />}>
