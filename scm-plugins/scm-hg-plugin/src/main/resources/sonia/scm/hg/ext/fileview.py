@@ -244,6 +244,7 @@ class File_Printer:
       self.writer.write( format % (file.path(), file.size(), date, description) )
 
   def print_sub_repository(self, path, subrepo):
+    self.result_count += 1
     if self.shouldPrintResult():
       format = b'%s/ %s %s\n'
       if self.transport:
