@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC, useState } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { confirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { deleteRepo, getDeleteRepoFailure, isDeleteRepoPending } from "../modules/repos";
 
 type Props = RouteComponentProps &
@@ -39,67 +39,68 @@ type Props = RouteComponentProps &
     deleteRepo: (p1: Repository, p2: () => void) => void;
   };
 
-class DeleteRepo extends React.Component<Props> {
-  static defaultProps = {
-    confirmDialog: true
+const DeleteRepo: FC<Props> = ({ confirmDialog = true, repository, history, deleteRepo, loading, error, t }: Props) => {
+  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+
+  const deleted = () => {
+    history.push("/repos/");
   };
 
-  deleted = () => {
-    this.props.history.push("/repos/");
+  const deleteRepoCallback = () => {
+    deleteRepo(repository, deleted);
   };
 
-  deleteRepo = () => {
-    this.props.deleteRepo(this.props.repository, this.deleted);
+  const confirmDelete = () => {
+    setShowConfirmAlert(true);
   };
 
-  confirmDelete = () => {
-    const { t } = this.props;
-    confirmAlert({
-      title: t("deleteRepo.confirmAlert.title"),
-      message: t("deleteRepo.confirmAlert.message"),
-      buttons: [
-        {
-          className: "is-outlined",
-          label: t("deleteRepo.confirmAlert.submit"),
-          onClick: () => this.deleteRepo()
-        },
-        {
-          label: t("deleteRepo.confirmAlert.cancel"),
-          onClick: () => null
-        }
-      ]
-    });
+  const isDeletable = () => {
+    return repository._links.delete;
   };
 
-  isDeletable = () => {
-    return this.props.repository._links.delete;
-  };
+  const action = confirmDialog ? confirmDelete : deleteRepoCallback;
 
-  render() {
-    const { loading, error, confirmDialog, t } = this.props;
-    const action = confirmDialog ? this.confirmDelete : this.deleteRepo;
+  if (!isDeletable()) {
+    return null;
+  }
 
-    if (!this.isDeletable()) {
-      return null;
-    }
-
+  if (showConfirmAlert) {
     return (
-      <>
-        <ErrorNotification error={error} />
-        <Level
-          left={
-            <p>
-              <strong>{t("deleteRepo.subtitle")}</strong>
-              <br />
-              {t("deleteRepo.description")}
-            </p>
+      <ConfirmAlert
+        title={t("deleteRepo.confirmAlert.title")}
+        message={t("deleteRepo.confirmAlert.message")}
+        buttons={[
+          {
+            className: "is-outlined",
+            label: t("deleteRepo.confirmAlert.submit"),
+            onClick: () => deleteRepoCallback()
+          },
+          {
+            label: t("deleteRepo.confirmAlert.cancel"),
+            onClick: () => null
           }
-          right={<DeleteButton label={t("deleteRepo.button")} action={action} loading={loading} />}
-        />
-      </>
+        ]}
+        close={() => setShowConfirmAlert(false)}
+      />
     );
   }
-}
+
+  return (
+    <>
+      <ErrorNotification error={error} />
+      <Level
+        left={
+          <p>
+            <strong>{t("deleteRepo.subtitle")}</strong>
+            <br />
+            {t("deleteRepo.description")}
+          </p>
+        }
+        right={<DeleteButton label={t("deleteRepo.button")} action={action} loading={loading} />}
+      />
+    </>
+  );
+};
 
 const mapStateToProps = (state: any, ownProps: Props) => {
   const { namespace, name } = ownProps.repository;

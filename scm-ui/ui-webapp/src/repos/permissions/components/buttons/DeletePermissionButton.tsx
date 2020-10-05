@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC, useState } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Permission } from "@scm-manager/ui-types";
-import { confirmAlert } from "@scm-manager/ui-components";
+import { ConfirmAlert } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   permission: Permission;
@@ -35,53 +35,61 @@ type Props = WithTranslation & {
   loading: boolean;
 };
 
-class DeletePermissionButton extends React.Component<Props> {
-  static defaultProps = {
-    confirmDialog: true
+const DeletePermissionButton: FC<Props> = ({
+  confirmDialog = true,
+  permission,
+  namespace,
+  t,
+  deletePermission,
+  repoName
+}) => {
+  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+
+  const deletePermissionCallback = () => {
+    deletePermission(permission, namespace, repoName);
   };
 
-  deletePermission = () => {
-    this.props.deletePermission(this.props.permission, this.props.namespace, this.props.repoName);
+  const confirmDelete = () => {
+    setShowConfirmAlert(true);
   };
 
-  confirmDelete = () => {
-    const { t } = this.props;
-    confirmAlert({
-      title: t("permission.delete-permission-button.confirm-alert.title"),
-      message: t("permission.delete-permission-button.confirm-alert.message"),
-      buttons: [
-        {
-          className: "is-outlined",
-          label: t("permission.delete-permission-button.confirm-alert.submit"),
-          onClick: () => this.deletePermission()
-        },
-        {
-          label: t("permission.delete-permission-button.confirm-alert.cancel"),
-          onClick: () => null
-        }
-      ]
-    });
+  const isDeletable = () => {
+    return permission._links.delete;
   };
 
-  isDeletable = () => {
-    return this.props.permission._links.delete;
-  };
+  const action = confirmDialog ? confirmDelete : deletePermissionCallback;
 
-  render() {
-    const { confirmDialog } = this.props;
-    const action = confirmDialog ? this.confirmDelete : this.deletePermission;
+  if (!isDeletable()) {
+    return null;
+  }
 
-    if (!this.isDeletable()) {
-      return null;
-    }
+  if (showConfirmAlert) {
     return (
-      <a className="level-item" onClick={action}>
-        <span className="icon is-small">
-          <i className="fas fa-trash" />
-        </span>
-      </a>
+      <ConfirmAlert
+        title={t("permission.delete-permission-button.confirm-alert.title")}
+        message={t("permission.delete-permission-button.confirm-alert.message")}
+        buttons={[
+          {
+            className: "is-outlined",
+            label: t("permission.delete-permission-button.confirm-alert.submit"),
+            onClick: () => deletePermissionCallback()
+          },
+          {
+            label: t("permission.delete-permission-button.confirm-alert.cancel"),
+            onClick: () => null
+          }
+        ]}
+      />
     );
   }
-}
+
+  return (
+    <a className="level-item" onClick={action}>
+      <span className="icon is-small">
+        <i className="fas fa-trash" />
+      </span>
+    </a>
+  );
+};
 
 export default withTranslation("repos")(DeletePermissionButton);

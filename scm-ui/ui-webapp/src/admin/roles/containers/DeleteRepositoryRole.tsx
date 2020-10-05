@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC, useState } from "react";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
 import { RepositoryRole } from "@scm-manager/ui-types";
-import { confirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { deleteRole, getDeleteRoleFailure, isDeleteRolePending } from "../modules/roles";
 
 type Props = WithTranslation & {
@@ -42,59 +42,68 @@ type Props = WithTranslation & {
   history: History;
 };
 
-class DeleteRepositoryRole extends React.Component<Props> {
-  static defaultProps = {
-    confirmDialog: true
+const DeleteRepositoryRole: FC<Props> = ({
+  confirmDialog = true,
+  history,
+  deleteRole,
+  role,
+  loading,
+  error,
+  t
+}: Props) => {
+  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+
+  const roleDeleted = () => {
+    history.push("/admin/roles/");
   };
 
-  roleDeleted = () => {
-    this.props.history.push("/admin/roles/");
+  const deleteRoleCallback = () => {
+    deleteRole(role, roleDeleted);
   };
 
-  deleteRole = () => {
-    this.props.deleteRole(this.props.role, this.roleDeleted);
+  const confirmDelete = () => {
+    setShowConfirmAlert(true);
   };
 
-  confirmDelete = () => {
-    const { t } = this.props;
-    confirmAlert({
-      title: t("repositoryRole.delete.confirmAlert.title"),
-      message: t("repositoryRole.delete.confirmAlert.message"),
-      buttons: [
-        {
-          className: "is-outlined",
-          label: t("repositoryRole.delete.confirmAlert.submit"),
-          onClick: () => this.deleteRole()
-        },
-        {
-          label: t("repositoryRole.delete.confirmAlert.cancel"),
-          onClick: () => null
-        }
-      ]
-    });
+  const isDeletable = () => {
+    return role._links.delete;
   };
 
-  isDeletable = () => {
-    return this.props.role._links.delete;
-  };
+  const action = confirmDialog ? confirmDelete : deleteRoleCallback;
 
-  render() {
-    const { loading, error, confirmDialog, t } = this.props;
-    const action = confirmDialog ? this.confirmDelete : this.deleteRole;
+  if (!isDeletable()) {
+    return null;
+  }
 
-    if (!this.isDeletable()) {
-      return null;
-    }
-
+  if (showConfirmAlert) {
     return (
-      <>
-        <hr />
-        <ErrorNotification error={error} />
-        <Level right={<DeleteButton label={t("repositoryRole.delete.button")} action={action} loading={loading} />} />
-      </>
+      <ConfirmAlert
+        title={t("repositoryRole.delete.confirmAlert.title")}
+        message={t("repositoryRole.delete.confirmAlert.message")}
+        buttons={[
+          {
+            className: "is-outlined",
+            label: t("repositoryRole.delete.confirmAlert.submit"),
+            onClick: () => deleteRoleCallback()
+          },
+          {
+            label: t("repositoryRole.delete.confirmAlert.cancel"),
+            onClick: () => null
+          }
+        ]}
+        close={() => setShowConfirmAlert(false)}
+      />
     );
   }
-}
+
+  return (
+    <>
+      <hr />
+      <ErrorNotification error={error} />
+      <Level right={<DeleteButton label={t("repositoryRole.delete.button")} action={action} loading={loading} />} />
+    </>
+  );
+};
 
 const mapStateToProps = (state: any, ownProps: Props) => {
   const loading = isDeleteRolePending(state, ownProps.role.name);
