@@ -149,7 +149,9 @@
       "description": "Beschreibung",
       "notYetComputed": "Noch nicht berechnet; Der Wert wird in Kürze aktualisiert",
       "computationAborted": "Die Berechnung dauert zu lange und wurde abgebrochen",
-      "subRepository": "Subrepository:"
+      "subRepository": "Subrepository",
+      "folder": "Ordner",
+      "file": "Datei"
     },
     "content": {
       "historyButton": "History",

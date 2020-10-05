@@ -110,7 +110,9 @@
       "description": "Descripción",
       "notYetComputed": "Aún no calculado, se actualizará en poco tiempo",
       "computationAborted": "El cálculo tomó demasiado tiempo y fue abortado",
-      "subRepository": "Subrepositorio:"
+      "subRepository": "Subrepositorio",
+      "folder": "Carpeta",
+      "file": "Ficha"
     },
     "content": {
       "historyButton": "Historia",

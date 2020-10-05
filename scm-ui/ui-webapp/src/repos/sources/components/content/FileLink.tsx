@@ -86,7 +86,7 @@ const FileLink: FC<Props> = ({ baseUrl, file, children }) => {
       return <Link to={link}>{children}</Link>;
     } else {
       return (
-        <Tooltip location="top" message={t("sources.fileTree.subRepository") + "\n" + link}>
+        <Tooltip location="top" message={t("sources.fileTree.subRepository") + ": \n" + link}>
           {children}
         </Tooltip>
       );

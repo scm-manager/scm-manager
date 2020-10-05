@@ -149,7 +149,9 @@
       "description": "Description",
       "notYetComputed": "Not yet computed, will be updated in a short while",
       "computationAborted": "The computation took too long and was aborted",
-      "subRepository": "Subrepository:"
+      "subRepository": "Subrepository",
+      "folder": "Folder",
+      "file": "File"
     },
     "content": {
       "historyButton": "History",
