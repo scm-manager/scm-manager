@@ -31,13 +31,13 @@ type Props = {
 class FileIcon extends React.Component<Props> {
   render() {
     const { file } = this.props;
-    let icon = "file";
+    let icon = "fas fa-file";
     if (file.subRepository) {
-      icon = "folder-plus";
+      icon = "far fa-folder";
     } else if (file.directory) {
-      icon = "folder";
+      icon = "fas fa-folder";
     }
-    return <i className={`fa fa-${icon}`} />;
+    return <i className={icon} />;
   }
 }
 
