@@ -31,6 +31,8 @@ import lombok.Getter;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.util.ThreadContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.HandlerEventType;
 import sonia.scm.store.DataStore;
@@ -54,7 +56,8 @@ import static sonia.scm.AlreadyExistsException.alreadyExists;
 
 public class ApiKeyService {
 
-  public static final int KEY_LENGTH = 20;
+  private static final Logger LOG = LoggerFactory.getLogger(ApiKeyService.class);
+  private static final int PASSPHRASE_LENGTH = 20;
 
   private final DataStore<ApiKeyCollection> store;
   private final PasswordService passwordService;
@@ -66,7 +69,7 @@ public class ApiKeyService {
 
   @Inject
   ApiKeyService(DataStoreFactory storeFactory, KeyGenerator keyGenerator, PasswordService passwordService, ApiKeyTokenHandler tokenHandler) {
-    this(storeFactory, passwordService, keyGenerator, tokenHandler, () -> random(KEY_LENGTH, 0, 0, true, true, null, new SecureRandom()));
+    this(storeFactory, passwordService, keyGenerator, tokenHandler, () -> random(PASSPHRASE_LENGTH, 0, 0, true, true, null, new SecureRandom()));
   }
 
   ApiKeyService(DataStoreFactory storeFactory, PasswordService passwordService, KeyGenerator keyGenerator, ApiKeyTokenHandler tokenHandler, Supplier<String> passphraseGenerator) {
@@ -82,42 +85,42 @@ public class ApiKeyService {
     UserPermissions.changeApiKeys(user).check();
     String passphrase = passphraseGenerator.get();
     String hashedPassphrase = passwordService.encryptPassword(passphrase);
-    final String id = keyGenerator.createKey();
+    String id = keyGenerator.createKey();
     ApiKeyWithPassphrase key = new ApiKeyWithPassphrase(id, name, permissionRole, hashedPassphrase, now());
-    Lock lock = locks.get(user).writeLock();
-    lock.lock();
-    try {
-      if (containsName(user, name)) {
-        throw alreadyExists(ContextEntry.ContextBuilder.entity(ApiKeyWithPassphrase.class, name));
-      }
-      final ApiKeyCollection apiKeyCollection = store.getOptional(user).orElse(new ApiKeyCollection(emptyList()));
-      final ApiKeyCollection newApiKeyCollection = apiKeyCollection.add(key);
-      store.put(user, newApiKeyCollection);
-    } finally {
-      lock.unlock();
-    }
-    final String token = tokenHandler.createToken(user, new ApiKey(key), passphrase);
+    doSynchronized(user, true, () -> {
+      persistKey(name, user, key);
+      return null;
+    });
+    String token = tokenHandler.createToken(user, new ApiKey(key), passphrase);
+    LOG.info("created new api key for user {} with role {}", user, permissionRole);
     return new CreationResult(token, id);
+  }
+
+  public void persistKey(String name, String user, ApiKeyWithPassphrase key) {
+    if (containsName(user, name)) {
+      throw alreadyExists(ContextEntry.ContextBuilder.entity(ApiKeyWithPassphrase.class, name));
+    }
+    ApiKeyCollection apiKeyCollection = store.getOptional(user).orElse(new ApiKeyCollection(emptyList()));
+    ApiKeyCollection newApiKeyCollection = apiKeyCollection.add(key);
+    store.put(user, newApiKeyCollection);
   }
 
   public void remove(String id) {
     String user = currentUser();
     UserPermissions.changeApiKeys(user).check();
-    Lock lock = locks.get(user).writeLock();
-    lock.lock();
-    try {
+    doSynchronized(user, true, () -> {
       if (!containsId(user, id)) {
-        return;
+        return null;
       }
       store.getOptional(user).ifPresent(
         apiKeyCollection -> {
-          final ApiKeyCollection newApiKeyCollection = apiKeyCollection.remove(key -> id.equals(key.getId()));
+          ApiKeyCollection newApiKeyCollection = apiKeyCollection.remove(key -> id.equals(key.getId()));
           store.put(user, newApiKeyCollection);
+          LOG.info("removed api key for user {}", user);
         }
       );
-    } finally {
-      lock.unlock();
-    }
+      return null;
+    });
   }
 
   CheckResult check(String tokenAsString) {
@@ -130,22 +133,25 @@ public class ApiKeyService {
   }
 
   CheckResult check(String user, String id, String passphrase) {
-    Lock lock = locks.get(user).readLock();
-    lock.lock();
-    try {
-      return store
-        .get(user)
-        .getKeys()
-        .stream()
-        .filter(key -> key.getId().equals(id))
-        .filter(key -> passwordService.passwordsMatch(passphrase, key.getPassphrase()))
-        .map(ApiKeyWithPassphrase::getPermissionRole)
-        .map(role -> new CheckResult(user, role))
-        .findAny()
-        .orElseThrow(AuthorizationException::new);
-    } finally {
-      lock.unlock();
+    return doSynchronized(user, false, () -> store
+      .get(user)
+      .getKeys()
+      .stream()
+      .filter(key -> key.getId().equals(id))
+      .filter(key -> passwordsMatch(user, passphrase, key))
+      .map(ApiKeyWithPassphrase::getPermissionRole)
+      .map(role -> new CheckResult(user, role))
+      .findAny()
+      .orElseThrow(AuthorizationException::new));
+  }
+
+  private boolean passwordsMatch(String user, String passphrase, ApiKeyWithPassphrase key) {
+    boolean result = passwordService.passwordsMatch(passphrase, key.getPassphrase());
+    if (!result) {
+      // this can only happen with a forged api key, so it may be relevant enough to issue a warning
+      LOG.warn("got invalid api key for user {} with key id {}", user, key.getId());
     }
+    return result;
   }
 
   public Collection<ApiKey> getKeys() {
@@ -177,6 +183,17 @@ public class ApiKeyService {
       .orElse(emptyList())
       .stream()
       .anyMatch(key -> key.getDisplayName().equals(name));
+  }
+
+  private <T> T doSynchronized(String user, boolean write, Supplier<T> callback) {
+    final ReadWriteLock lockFactory = locks.get(user);
+    Lock lock = write ? lockFactory.writeLock() : lockFactory.readLock();
+    lock.lock();
+    try {
+      return callback.get();
+    } finally {
+      lock.unlock();
+    }
   }
 
   @Subscribe
