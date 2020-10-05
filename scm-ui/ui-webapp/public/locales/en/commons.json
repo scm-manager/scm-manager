@@ -70,7 +70,7 @@
   "profile": {
     "navigationLabel": "Profile",
     "informationNavLink": "Information",
-    "changePasswordNavLink": "Change password",
+    "changePasswordNavLink": "Change Password",
     "settingsNavLink": "Settings",
     "publicKeysNavLink": "Public Keys",
     "apiKeysNavLink": "API Keys",

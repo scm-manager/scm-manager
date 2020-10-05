@@ -39,7 +39,7 @@
       "setPasswordNavLink": "Password",
       "setPermissionsNavLink": "Permissions",
       "setPublicKeyNavLink": "Public Keys",
-      "setApiKeyNavLink": "API keys"
+      "setApiKeyNavLink": "API Keys"
     }
   },
   "createUser": {
