@@ -10,6 +10,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Align actionbar item horizontal and enforce correct margin between them ([#1358](https://github.com/scm-manager/scm-manager/pull/1358))
 
 ## [2.6.1] - 2020-09-30
+### Added
+- Users can create API keys with limited permissions ([#1359](https://github.com/scm-manager/scm-manager/pull/1359))
+
 ### Fixed
 - Not found error when using browse command in empty hg repository ([#1355](https://github.com/scm-manager/scm-manager/pull/1355))
 
