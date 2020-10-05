@@ -83,6 +83,7 @@ const DeleteUser: FC<Props> = ({ confirmDialog = true, loading, error, t, histor
             onClick: () => null
           }
         ]}
+        close={() => setShowConfirmAlert(false)}
       />
     );
   }

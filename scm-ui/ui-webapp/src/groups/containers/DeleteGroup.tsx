@@ -83,6 +83,7 @@ export const DeleteGroup: FC<Props> = ({ confirmDialog = true, group, history, t
             onClick: () => null
           }
         ]}
+        close={() => setShowConfirmAlert(false)}
       />
     );
   }

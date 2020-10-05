@@ -79,6 +79,7 @@ const DeletePermissionButton: FC<Props> = ({
             onClick: () => null
           }
         ]}
+        close={() => setShowConfirmAlert(false)}
       />
     );
   }
