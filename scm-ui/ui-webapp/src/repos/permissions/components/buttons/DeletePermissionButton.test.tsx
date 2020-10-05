@@ -21,16 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+import React, { FC } from "react";
+// eslint-disable-next-line no-restricted-imports
 import { mount, shallow } from "@scm-manager/ui-tests/enzyme-router";
+// eslint-disable-next-line no-restricted-imports
 import "@scm-manager/ui-tests/enzyme";
+// eslint-disable-next-line no-restricted-imports
 import "@scm-manager/ui-tests/i18n";
 import DeletePermissionButton from "./DeletePermissionButton";
 
-import { confirmAlert } from "@scm-manager/ui-components";
-
 jest.mock("@scm-manager/ui-components", () => ({
-  confirmAlert: jest.fn(),
+  ConfirmAlert: (({ children }) => <div className="modal">{children}</div>) as FC<never>,
   DeleteButton: require.requireActual("@scm-manager/ui-components").DeleteButton
 }));
 
@@ -40,6 +43,9 @@ describe("DeletePermissionButton", () => {
       _links: {}
     };
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const navLink = shallow(<DeletePermissionButton permission={permission} deletePermission={() => {}} />);
     expect(navLink.text()).toBe("");
   });
@@ -53,6 +59,9 @@ describe("DeletePermissionButton", () => {
       }
     };
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const deleteIcon = mount(<DeletePermissionButton permission={permission} deletePermission={() => {}} />);
     expect(deleteIcon.html()).not.toBe("");
   });
@@ -66,10 +75,13 @@ describe("DeletePermissionButton", () => {
       }
     };
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     const button = mount(<DeletePermissionButton permission={permission} deletePermission={() => {}} />);
     button.find(".fa-trash").simulate("click");
 
-    expect(confirmAlert.mock.calls.length).toBe(1);
+    expect(button.find(".modal")).toBeTruthy();
   });
 
   it("should call the delete permission function with delete url", () => {
@@ -82,11 +94,14 @@ describe("DeletePermissionButton", () => {
     };
 
     let calledUrl = null;
+
     function capture(permission) {
       calledUrl = permission._links.delete.href;
     }
 
     const button = mount(
+      // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+      // @ts-ignore
       <DeletePermissionButton permission={permission} confirmDialog={false} deletePermission={capture} />
     );
     button.find(".fa-trash").simulate("click");
