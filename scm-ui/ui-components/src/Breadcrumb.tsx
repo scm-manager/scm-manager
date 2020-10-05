@@ -48,9 +48,22 @@ const HomeIcon = styled(Icon)`
   line-height: 1.5rem;
 `;
 
-const ActionWrapper = styled.div`
+const ActionBar = styled.div`
   align-self: center;
-  padding-right: 1rem;
+
+  /* order actionbar items horizontal */
+  display: flex;
+  justify-content: flex-start;
+
+  /* ensure space between action bar items */
+  & > * {
+    /* 
+     * We have to use important, because plugins could use field or control classes like the editor-plugin does.
+     * Those classes overwrite the margin which is ok, if the plugin is the only one which is using the actionbar.
+     * But it looks terrible if another plugin use the actionbar, which does not use field and control classes.
+     */
+    margin: 0 0.75rem 0 0 !important;
+  }
 `;
 
 class Breadcrumb extends React.Component<Props> {
@@ -102,7 +115,7 @@ class Breadcrumb extends React.Component<Props> {
             </ul>
           </FlexStartNav>
           {binder.hasExtension("repos.sources.actionbar") && (
-            <ActionWrapper>
+            <ActionBar>
               <ExtensionPoint
                 name="repos.sources.actionbar"
                 props={{
@@ -115,7 +128,7 @@ class Breadcrumb extends React.Component<Props> {
                 }}
                 renderAll={true}
               />
-            </ActionWrapper>
+            </ActionBar>
           )}
         </div>
         <hr className="is-marginless" />

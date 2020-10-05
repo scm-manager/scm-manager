@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {FC} from "react";
-import {useTranslation} from "react-i18next";
-import {Signature} from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { Signature } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import Icon from "../../Icon";
-import {usePopover} from "../../popover";
+import { usePopover } from "../../popover";
 import Popover from "../../popover/Popover";
 import classNames from "classnames";
 
@@ -45,13 +45,13 @@ const StyledIcon = styled(Icon)`
 
 const StyledDiv = styled.div`
   > *:not(:last-child) {
-    margin-bottom: 24px; 
+    margin-bottom: 24px;
   }
 `;
 
-const SignatureIcon: FC<Props> = ({signatures, className}) => {
+const SignatureIcon: FC<Props> = ({ signatures, className }) => {
   const [t] = useTranslation("repos");
-  const {popoverProps, triggerProps} = usePopover();
+  const { popoverProps, triggerProps } = usePopover();
 
   if (!signatures.length) {
     return null;
@@ -80,37 +80,60 @@ const SignatureIcon: FC<Props> = ({signatures, className}) => {
     }
 
     if (signature.status === "NOT_FOUND") {
-      return <p>
-        <div>{t("changeset.keyId")}: {signature.keyId}</div>
-        <div>{t("changeset.signatureStatus")}: {status}</div>
-      </p>;
+      return (
+        <p>
+          <div>
+            {t("changeset.keyId")}: {signature.keyId}
+          </div>
+          <div>
+            {t("changeset.signatureStatus")}: {status}
+          </div>
+        </p>
+      );
     }
 
-    return <p>
-      <div>{t("changeset.keyId")}: {
-        signature._links?.rawKey ? <a href={signature._links.rawKey.href}>{signature.keyId}</a> : signature.keyId
-      }</div>
-      <div>{t("changeset.signatureStatus")}: <span className={classNames(`has-text-${getColor([signature])}`)}>{status}</span></div>
-      <div>{t("changeset.keyOwner")}: {signature.owner || t("changeset.noOwner")}</div>
-      {signature.contacts && signature.contacts.length > 0 && <>
-        <div>{t("changeset.keyContacts")}:</div>
-        {signature.contacts && signature.contacts.map(contact =>
-          <div>- {contact.name}{contact.mail && ` <${contact.mail}>`}</div>)}
-      </>}
-    </p>;
+    return (
+      <p>
+        <div>
+          {t("changeset.keyId")}:{" "}
+          {signature._links?.rawKey ? <a href={signature._links.rawKey.href}>{signature.keyId}</a> : signature.keyId}
+        </div>
+        <div>
+          {t("changeset.signatureStatus")}:{" "}
+          <span className={classNames(`has-text-${getColor([signature])}`)}>{status}</span>
+        </div>
+        <div>
+          {t("changeset.keyOwner")}: {signature.owner || t("changeset.noOwner")}
+        </div>
+        {signature.contacts && signature.contacts.length > 0 && (
+          <>
+            <div>{t("changeset.keyContacts")}:</div>
+            {signature.contacts &&
+              signature.contacts.map(contact => (
+                <div>
+                  - {contact.name}
+                  {contact.mail && ` <${contact.mail}>`}
+                </div>
+              ))}
+          </>
+        )}
+      </p>
+    );
   };
 
   const signatureElements = signatures.map(signature => createSignatureBlock(signature));
 
   return (
     <>
-      <Popover title={<h1 className="has-text-weight-bold is-size-5">{t("changeset.signatures")}</h1>} width={500} {...popoverProps}>
-        <StyledDiv>
-          {signatureElements}
-        </StyledDiv>
+      <Popover
+        title={<h1 className="has-text-weight-bold is-size-5">{t("changeset.signatures")}</h1>}
+        width={500}
+        {...popoverProps}
+      >
+        <StyledDiv>{signatureElements}</StyledDiv>
       </Popover>
       <div {...triggerProps}>
-        <StyledIcon name="key" className={className} color={getColor(signatures)}/>
+        <StyledIcon name="key" className={className} color={getColor(signatures)} />
       </div>
     </>
   );
