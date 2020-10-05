@@ -23,12 +23,32 @@
  */
 import React, { FC, ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { File } from "@scm-manager/ui-types";
+import { Tooltip } from "@scm-manager/ui-components";
 
 type Props = {
   baseUrl: string;
   file: File;
   children: ReactNode;
+};
+
+const isLocalRepository = (repositoryUrl: string) => {
+  let host = repositoryUrl.split("/")[2];
+  if (host.includes("@")) {
+    // remove prefix
+    host = host.split("@")[1];
+  }
+  // remove port
+  host = host.split(":")[0];
+  // remove query
+  host = host.split("?")[0];
+  return host === window.location.hostname;
+};
+
+const createRelativeLink = (repositoryUrl: string) => {
+  const paths = repositoryUrl.split("/");
+  return "/" + paths.slice(3).join("/");
 };
 
 const createFolderLink = (base: string, file: File) => {
@@ -46,22 +66,30 @@ const createFolderLink = (base: string, file: File) => {
   return link;
 };
 
-const createRelativeLink = (base: string, path: string) => {
-  let link = base;
-  link += path.split(".").join("");
-  if (!link.endsWith("/")) {
-    link += "/";
-  }
-  return link;
-};
-
 const FileLink: FC<Props> = ({ baseUrl, file, children }) => {
+  const [t] = useTranslation("repos");
   if (file?.subRepository?.repositoryUrl) {
-    const link = file.subRepository.repositoryUrl;
+    let link = file.subRepository.repositoryUrl;
+    if (file.subRepository.browserUrl) {
+      link = file.subRepository.browserUrl;
+    }
     if (link.startsWith("http://") || link.startsWith("https://")) {
+      if (file.subRepository.revision && isLocalRepository(link)) {
+        link += "/code/sources/" + file.subRepository.revision;
+      }
       return <a href={link}>{children}</a>;
-    } else if (link.startsWith(".")) {
-      return <Link to={createRelativeLink(baseUrl, link)}>{children}</Link>;
+    } else if (link.startsWith("ssh://") && isLocalRepository(link)) {
+      link = createRelativeLink(link);
+      if (file.subRepository.revision) {
+        link += "/code/sources/" + file.subRepository.revision;
+      }
+      return <Link to={link}>{children}</Link>;
+    } else {
+      return (
+        <Tooltip location="top" message={t("sources.fileTree.subRepository") + "\n" + link}>
+          {children}
+        </Tooltip>
+      );
     }
   }
   return <Link to={createFolderLink(baseUrl, file)}>{children}</Link>;

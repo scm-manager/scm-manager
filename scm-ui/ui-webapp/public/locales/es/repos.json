@@ -103,14 +103,14 @@
     "initializeRepository": "Initialize repository"
   },
   "sources": {
-    "file-tree": {
+    "fileTree": {
       "name": "Nombre",
       "length": "Longitud",
       "commitDate": "Fecha de cometer",
       "description": "Descripción",
-      "branch": "Rama",
       "notYetComputed": "Aún no calculado, se actualizará en poco tiempo",
-      "computationAborted": "El cálculo tomó demasiado tiempo y fue abortado"
+      "computationAborted": "El cálculo tomó demasiado tiempo y fue abortado",
+      "subRepository": "Subrepositorio:"
     },
     "content": {
       "historyButton": "Historia",
