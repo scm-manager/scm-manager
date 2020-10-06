@@ -46,12 +46,12 @@ const isLocalRepository = (repositoryUrl: string) => {
   return host === window.location.hostname;
 };
 
-const createRelativeLink = (repositoryUrl: string) => {
+export const createRelativeLink = (repositoryUrl: string) => {
   const paths = repositoryUrl.split("/");
   return "/" + paths.slice(3).join("/");
 };
 
-const createFolderLink = (base: string, file: File) => {
+export const createFolderLink = (base: string, file: File) => {
   let link = base;
   if (file.path) {
     let path = file.path;
