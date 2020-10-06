@@ -93,13 +93,13 @@ public class  ApiKeyResource {
 
   @GET
   @Path("{id}")
-  @Produces(VndMediaType.API_KEY_COLLECTION)
+  @Produces(VndMediaType.API_KEY)
   @Operation(summary = "Get one api key for the current user", description = "Returns the registered api key with the given id for the logged in user.", tags = "User")
   @ApiResponse(
     responseCode = "200",
     description = "success",
     content = @Content(
-      mediaType = VndMediaType.API_KEY_COLLECTION,
+      mediaType = VndMediaType.API_KEY,
       schema = @Schema(implementation = HalRepresentation.class)
     )
   )

@@ -38,11 +38,9 @@ class ApiKeyTokenHandlerTest {
 
   @Test
   void shouldSerializeAndDeserializeToken() {
-    final String tokenString = handler.createToken("dent", new ApiKey("42", "hg2g", "READ", now()), "some secret");
+    String tokenString = handler.createToken("dent", new ApiKey("42", "hg2g", "READ", now()), "some secret");
 
-    System.out.println(tokenString);
-
-    final Optional<ApiKeyTokenHandler.Token> token = handler.readToken(tokenString);
+    Optional<ApiKeyTokenHandler.Token> token = handler.readToken(tokenString);
 
     assertThat(token).isNotEmpty();
     assertThat(token).get().extracting("user").isEqualTo("dent");
@@ -52,14 +50,14 @@ class ApiKeyTokenHandlerTest {
 
   @Test
   void shouldNotFailWithInvalidTokenEncoding() {
-    final Optional<ApiKeyTokenHandler.Token> token = handler.readToken("invalid token");
+    Optional<ApiKeyTokenHandler.Token> token = handler.readToken("invalid token");
 
     assertThat(token).isEmpty();
   }
 
   @Test
   void shouldNotFailWithInvalidTokenContent() {
-    final Optional<ApiKeyTokenHandler.Token> token = handler.readToken(Encoders.BASE64URL.encode("{\"invalid\":\"token\"}".getBytes()));
+    Optional<ApiKeyTokenHandler.Token> token = handler.readToken(Encoders.BASE64URL.encode("{\"invalid\":\"token\"}".getBytes()));
 
     assertThat(token).isEmpty();
   }

@@ -64,7 +64,7 @@ const AddApiKey: FC<Props> = ({
     if (!availableRepositoryRoles) {
       fetchAvailablePermissionsIfNeeded(repositoryRolesLink, repositoryVerbsLink);
     }
-  });
+  }, [repositoryRolesLink, repositoryVerbsLink]);
 
   const isValid = () => {
     return !!displayName && !!permissionRole;

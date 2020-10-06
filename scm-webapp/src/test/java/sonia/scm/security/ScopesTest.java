@@ -71,7 +71,7 @@ public class ScopesTest {
   }
 
   @Test
-  public void testFilterX() {
+  public void testFilterIntersectingPermissions() {
     Scope scope = Scope.valueOf("repository:read,write:*");
     AuthorizationInfo authz = authz("repository:*:123");
 

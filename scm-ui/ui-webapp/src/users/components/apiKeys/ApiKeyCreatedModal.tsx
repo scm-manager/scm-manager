@@ -36,6 +36,11 @@ const KeyArea = styled.textarea`
   white-space: nowrap;
   overflow: auto;
   font-family: "Courier New", Monaco, Menlo, "Ubuntu Mono", "source-code-pro", monospace;
+  height: 3rem;
+`;
+
+const NoLeftMargin = styled.div`
+  margin-left: -1rem;
 `;
 
 const ApiKeyCreatedModal: FC<Props> = ({ addedKey, close }) => {
@@ -60,9 +65,9 @@ const ApiKeyCreatedModal: FC<Props> = ({ addedKey, close }) => {
         <div className={"column is-11"}>
           <KeyArea wrap={"soft"} ref={keyRef} className={"input"} value={addedKey} />
         </div>
-        <div className={"column is-1"}>
+        <NoLeftMargin className={"column is-1"}>
           <Icon className={"is-hidden-mobile fa-2x"} name={copied ? "clipboard-check" : "clipboard"} title={t("apiKey.modal.clipboard")} onClick={copy} />
-        </div>
+        </NoLeftMargin>
       </div>
     </div>
   );

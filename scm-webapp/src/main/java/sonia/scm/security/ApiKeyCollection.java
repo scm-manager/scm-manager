@@ -28,6 +28,7 @@ import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.apache.commons.collections.CollectionUtils;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -37,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Predicate;
 
+import static java.util.Collections.singletonList;
 import static java.util.stream.Collectors.toList;
 
 @AllArgsConstructor
@@ -50,13 +52,13 @@ class ApiKeyCollection {
 
   public ApiKeyCollection add(ApiKeyWithPassphrase key) {
     Collection<ApiKeyWithPassphrase> newKeys;
-    if (keys == null) {
-      newKeys = new ArrayList<>();
+    if (CollectionUtils.isEmpty(keys)) {
+      newKeys = singletonList(key);
     } else {
       newKeys = new ArrayList<>(keys.size() + 1);
       newKeys.addAll(keys);
+      newKeys.add(key);
     }
-    newKeys.add(key);
     return new ApiKeyCollection(newKeys);
   }
 
