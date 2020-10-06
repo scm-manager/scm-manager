@@ -23,27 +23,24 @@
  */
 import React, { FC, useState } from "react";
 import { connect } from "react-redux";
-import { compose } from "redux";
-import { withRouter } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { deleteUser, getDeleteUserFailure, isDeleteUserPending } from "../modules/users";
 
-type Props = WithTranslation & {
+type Props = {
   loading: boolean;
   error: Error;
   user: User;
   confirmDialog?: boolean;
   deleteUser: (user: User, callback?: () => void) => void;
-
-  // context props
-  history: History;
 };
 
-const DeleteUser: FC<Props> = ({ confirmDialog = true, loading, error, t, history, user, deleteUser }) => {
+const DeleteUser: FC<Props> = ({ confirmDialog = true, loading, error, user, deleteUser }) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const [t] = useTranslation("users");
+  const history = useHistory();
 
   const userDeleted = () => {
     history.push("/users/");
@@ -114,4 +111,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter, withTranslation("users"))(DeleteUser);
+export default connect(mapStateToProps, mapDispatchToProps)(DeleteUser);

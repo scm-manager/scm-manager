@@ -23,35 +23,24 @@
  */
 import React, { FC, useState } from "react";
 import { connect } from "react-redux";
-import { compose } from "redux";
-import { withRouter } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { deleteRole, getDeleteRoleFailure, isDeleteRolePending } from "../modules/roles";
 
-type Props = WithTranslation & {
+type Props = {
   loading: boolean;
   error: Error;
   role: RepositoryRole;
   confirmDialog?: boolean;
   deleteRole: (role: RepositoryRole, callback?: () => void) => void;
-
-  // context props
-  history: History;
 };
 
-const DeleteRepositoryRole: FC<Props> = ({
-  confirmDialog = true,
-  history,
-  deleteRole,
-  role,
-  loading,
-  error,
-  t
-}: Props) => {
+const DeleteRepositoryRole: FC<Props> = ({ confirmDialog = true, deleteRole, role, loading, error }: Props) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const [t] = useTranslation("admin");
+  const history = useHistory();
 
   const roleDeleted = () => {
     history.push("/admin/roles/");
@@ -122,8 +111,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  withRouter,
-  withTranslation("admin")
-)(DeleteRepositoryRole);
+export default connect(mapStateToProps, mapDispatchToProps)(DeleteRepositoryRole);

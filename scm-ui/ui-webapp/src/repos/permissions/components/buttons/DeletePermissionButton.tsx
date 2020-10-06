@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 import React, { FC, useState } from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { Permission } from "@scm-manager/ui-types";
 import { ConfirmAlert } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
+type Props = {
   permission: Permission;
   namespace: string;
   repoName: string;
@@ -39,11 +39,11 @@ const DeletePermissionButton: FC<Props> = ({
   confirmDialog = true,
   permission,
   namespace,
-  t,
   deletePermission,
   repoName
 }) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const [t] = useTranslation("repos");
 
   const deletePermissionCallback = () => {
     deletePermission(permission, namespace, repoName);
@@ -93,4 +93,4 @@ const DeletePermissionButton: FC<Props> = ({
   );
 };
 
-export default withTranslation("repos")(DeletePermissionButton);
+export default DeletePermissionButton;

@@ -23,27 +23,24 @@
  */
 import React, { FC, useState } from "react";
 import { connect } from "react-redux";
-import { compose } from "redux";
-import { withRouter } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { deleteGroup, getDeleteGroupFailure, isDeleteGroupPending } from "../modules/groups";
 
-type Props = WithTranslation & {
+type Props = {
   loading: boolean;
   error: Error;
   group: Group;
   confirmDialog?: boolean;
   deleteGroup: (group: Group, callback?: () => void) => void;
-
-  // context props
-  history: History;
 };
 
-export const DeleteGroup: FC<Props> = ({ confirmDialog = true, group, history, t, deleteGroup, loading, error }) => {
+export const DeleteGroup: FC<Props> = ({ confirmDialog = true, group, deleteGroup, loading, error }) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const [t] = useTranslation("groups");
+  const history = useHistory();
 
   const deleteGroupCallback = () => {
     deleteGroup(group, groupDeleted);
@@ -114,8 +111,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  withRouter,
-  withTranslation("groups")
-)(DeleteGroup);
+export default connect(mapStateToProps, mapDispatchToProps)(DeleteGroup);

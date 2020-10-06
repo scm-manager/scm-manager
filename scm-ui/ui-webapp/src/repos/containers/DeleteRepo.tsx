@@ -23,24 +23,24 @@
  */
 import React, { FC, useState } from "react";
 import { connect } from "react-redux";
-import { compose } from "redux";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { deleteRepo, getDeleteRepoFailure, isDeleteRepoPending } from "../modules/repos";
 
-type Props = RouteComponentProps &
-  WithTranslation & {
-    loading: boolean;
-    error: Error;
-    repository: Repository;
-    confirmDialog?: boolean;
-    deleteRepo: (p1: Repository, p2: () => void) => void;
-  };
+type Props = {
+  loading: boolean;
+  error: Error;
+  repository: Repository;
+  confirmDialog?: boolean;
+  deleteRepo: (p1: Repository, p2: () => void) => void;
+};
 
-const DeleteRepo: FC<Props> = ({ confirmDialog = true, repository, history, deleteRepo, loading, error, t }: Props) => {
+const DeleteRepo: FC<Props> = ({ confirmDialog = true, repository, deleteRepo, loading, error }: Props) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const [t] = useTranslation("repos");
+  const history = useHistory();
 
   const deleted = () => {
     history.push("/repos/");
@@ -120,4 +120,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter, withTranslation("repos"))(DeleteRepo);
+export default connect(mapStateToProps, mapDispatchToProps)(DeleteRepo);
