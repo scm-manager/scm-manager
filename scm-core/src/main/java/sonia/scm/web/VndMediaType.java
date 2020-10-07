@@ -85,6 +85,9 @@ public class VndMediaType {
   public static final String REPOSITORY_ROLE = PREFIX + "repositoryRole" + SUFFIX;
   public static final String REPOSITORY_ROLE_COLLECTION = PREFIX + "repositoryRoleCollection" + SUFFIX;
 
+  public static final String API_KEY = PREFIX + "apiKey" + SUFFIX;
+  public static final String API_KEY_COLLECTION = PREFIX + "apiKeyCollection" + SUFFIX;
+
   private VndMediaType() {
   }
 

@@ -204,6 +204,46 @@ class ResourceLinks {
     }
   }
 
+  public ApiKeyCollectionLinks apiKeyCollection() {
+    return new ApiKeyCollectionLinks(scmPathInfoStore.get());
+  }
+
+  static class ApiKeyCollectionLinks {
+    private final LinkBuilder collectionLinkBuilder;
+
+    ApiKeyCollectionLinks(ScmPathInfo pathInfo) {
+      this.collectionLinkBuilder = new LinkBuilder(pathInfo, MeResource.class, ApiKeyResource.class);
+    }
+
+    String self() {
+      return collectionLinkBuilder.method("apiKeys").parameters().method("getForCurrentUser").parameters().href();
+    }
+
+    String create() {
+      return collectionLinkBuilder.method("apiKeys").parameters().method("create").parameters().href();
+    }
+  }
+
+  public ApiKeyLinks apiKey() {
+    return new ApiKeyLinks(scmPathInfoStore.get());
+  }
+
+  static class ApiKeyLinks {
+    private final LinkBuilder apiKeyLinkBuilder;
+
+    ApiKeyLinks(ScmPathInfo pathInfo) {
+      this.apiKeyLinkBuilder = new LinkBuilder(pathInfo, MeResource.class, ApiKeyResource.class);
+    }
+
+    String self(String id) {
+      return apiKeyLinkBuilder.method("apiKeys").parameters().method("get").parameters(id).href();
+    }
+
+    String delete(String id) {
+      return apiKeyLinkBuilder.method("apiKeys").parameters().method("delete").parameters(id).href();
+    }
+  }
+
   UserCollectionLinks userCollection() {
     return new UserCollectionLinks(scmPathInfoStore.get());
   }

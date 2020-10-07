@@ -21,47 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Select } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  availableRoles?: string[];
-  handleRoleChange: (p: string) => void;
-  role: string;
-  label?: string;
-  helpText?: string;
-  loading?: boolean;
-};
+package sonia.scm.api.v2.resources;
 
-class RoleSelector extends React.Component<Props> {
-  render() {
-    const { availableRoles, role, handleRoleChange, loading, label, helpText } = this.props;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-    if (!availableRoles) return null;
+import javax.validation.constraints.NotEmpty;
+import java.time.Instant;
 
-    const options = role ? this.createSelectOptions(availableRoles) : ["", ...this.createSelectOptions(availableRoles)];
+@Getter
+@Setter
+@NoArgsConstructor
+public class ApiKeyDto extends HalRepresentation {
+  @NotEmpty
+  private String displayName;
+  @NotEmpty
+  private String permissionRole;
+  private Instant created;
 
-    return (
-      <Select
-        onChange={handleRoleChange}
-        value={role ? role : ""}
-        options={options}
-        loading={loading}
-        label={label}
-        helpText={helpText}
-      />
-    );
-  }
-
-  createSelectOptions(roles: string[]) {
-    return roles.map(role => {
-      return {
-        label: role,
-        value: role
-      };
-    });
+  public ApiKeyDto(Links links) {
+    super(links);
   }
 }
-
-export default withTranslation("repos")(RoleSelector);

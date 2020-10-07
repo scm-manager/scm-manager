@@ -21,47 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Select } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  availableRoles?: string[];
-  handleRoleChange: (p: string) => void;
-  role: string;
-  label?: string;
-  helpText?: string;
-  loading?: boolean;
-};
+package sonia.scm.security;
 
-class RoleSelector extends React.Component<Props> {
-  render() {
-    const { availableRoles, role, handleRoleChange, loading, label, helpText } = this.props;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-    if (!availableRoles) return null;
+import java.time.Instant;
 
-    const options = role ? this.createSelectOptions(availableRoles) : ["", ...this.createSelectOptions(availableRoles)];
+@Getter
+@AllArgsConstructor
+public class ApiKey {
+  private final String id;
+  private final String displayName;
+  private final String permissionRole;
+  private final Instant created;
 
-    return (
-      <Select
-        onChange={handleRoleChange}
-        value={role ? role : ""}
-        options={options}
-        loading={loading}
-        label={label}
-        helpText={helpText}
-      />
+  ApiKey(ApiKeyWithPassphrase apiKeyWithPassphrase) {
+    this(
+      apiKeyWithPassphrase.getId(),
+      apiKeyWithPassphrase.getDisplayName(),
+      apiKeyWithPassphrase.getPermissionRole(),
+      apiKeyWithPassphrase.getCreated()
     );
   }
-
-  createSelectOptions(roles: string[]) {
-    return roles.map(role => {
-      return {
-        label: role,
-        value: role
-      };
-    });
-  }
 }
-
-export default withTranslation("repos")(RoleSelector);

@@ -21,47 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Select } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  availableRoles?: string[];
-  handleRoleChange: (p: string) => void;
-  role: string;
-  label?: string;
-  helpText?: string;
-  loading?: boolean;
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { ApiKey, ApiKeysCollection } from "./SetApiKeys";
+import ApiKeyEntry from "./ApiKeyEntry";
+import { Notification } from "@scm-manager/ui-components";
+
+type Props = {
+  apiKeys?: ApiKeysCollection;
+  onDelete: (link: string) => void;
 };
 
-class RoleSelector extends React.Component<Props> {
-  render() {
-    const { availableRoles, role, handleRoleChange, loading, label, helpText } = this.props;
+const ApiKeyTable: FC<Props> = ({ apiKeys, onDelete }) => {
+  const [t] = useTranslation("users");
 
-    if (!availableRoles) return null;
-
-    const options = role ? this.createSelectOptions(availableRoles) : ["", ...this.createSelectOptions(availableRoles)];
-
-    return (
-      <Select
-        onChange={handleRoleChange}
-        value={role ? role : ""}
-        options={options}
-        loading={loading}
-        label={label}
-        helpText={helpText}
-      />
-    );
+  if (apiKeys?._embedded?.keys?.length === 0) {
+    return <Notification type="info">{t("apiKey.noStoredKeys")}</Notification>;
   }
 
-  createSelectOptions(roles: string[]) {
-    return roles.map(role => {
-      return {
-        label: role,
-        value: role
-      };
-    });
-  }
-}
+  return (
+    <table className="card-table table is-hoverable is-fullwidth">
+      <thead>
+        <tr>
+          <th>{t("apiKey.displayName")}</th>
+          <th>{t("apiKey.permissionRole.label")}</th>
+          <th>{t("apiKey.created")}</th>
+          <th />
+        </tr>
+      </thead>
+      <tbody>
+        {apiKeys?._embedded?.keys?.map((apiKey: ApiKey, index: number) => {
+          return <ApiKeyEntry key={index} onDelete={onDelete} apiKey={apiKey} />;
+        })}
+      </tbody>
+    </table>
+  );
+};
 
-export default withTranslation("repos")(RoleSelector);
+export default ApiKeyTable;

@@ -21,47 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Select } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  availableRoles?: string[];
-  handleRoleChange: (p: string) => void;
-  role: string;
-  label?: string;
-  helpText?: string;
-  loading?: boolean;
-};
+package sonia.scm.security;
 
-class RoleSelector extends React.Component<Props> {
-  render() {
-    const { availableRoles, role, handleRoleChange, loading, label, helpText } = this.props;
+import org.apache.shiro.authz.permission.PermissionResolver;
 
-    if (!availableRoles) return null;
-
-    const options = role ? this.createSelectOptions(availableRoles) : ["", ...this.createSelectOptions(availableRoles)];
-
-    return (
-      <Select
-        onChange={handleRoleChange}
-        value={role ? role : ""}
-        options={options}
-        loading={loading}
-        label={label}
-        helpText={helpText}
-      />
-    );
-  }
-
-  createSelectOptions(roles: string[]) {
-    return roles.map(role => {
-      return {
-        label: role,
-        value: role
-      };
-    });
+public class ScmPermissionResolver implements PermissionResolver {
+  @Override
+  public ScmWildcardPermission resolvePermission(String permissionString) {
+    return new ScmWildcardPermission(permissionString);
   }
 }
-
-export default withTranslation("repos")(RoleSelector);

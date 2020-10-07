@@ -21,47 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Select } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  availableRoles?: string[];
-  handleRoleChange: (p: string) => void;
-  role: string;
-  label?: string;
-  helpText?: string;
-  loading?: boolean;
-};
+package sonia.scm.api.v2.resources;
 
-class RoleSelector extends React.Component<Props> {
-  render() {
-    const { availableRoles, role, handleRoleChange, loading, label, helpText } = this.props;
+import de.otto.edison.hal.Links;
+import org.mapstruct.Mapper;
+import org.mapstruct.ObjectFactory;
+import sonia.scm.security.ApiKey;
 
-    if (!availableRoles) return null;
+import javax.inject.Inject;
 
-    const options = role ? this.createSelectOptions(availableRoles) : ["", ...this.createSelectOptions(availableRoles)];
+import static de.otto.edison.hal.Link.link;
 
-    return (
-      <Select
-        onChange={handleRoleChange}
-        value={role ? role : ""}
-        options={options}
-        loading={loading}
-        label={label}
-        helpText={helpText}
-      />
-    );
-  }
+@Mapper
+public abstract class ApiKeyToApiKeyDtoMapper {
 
-  createSelectOptions(roles: string[]) {
-    return roles.map(role => {
-      return {
-        label: role,
-        value: role
-      };
-    });
+  @Inject
+  private ResourceLinks resourceLinks;
+
+  abstract ApiKeyDto map(ApiKey key);
+
+  @ObjectFactory
+  ApiKeyDto createDto(ApiKey key) {
+    Links.Builder links = Links.linkingTo()
+      .self(resourceLinks.apiKey().self(key.getId()))
+      .single(link("delete", resourceLinks.apiKey().delete(key.getId())));
+    return new ApiKeyDto(links.build());
   }
 }
-
-export default withTranslation("repos")(RoleSelector);

@@ -21,47 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Select } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  availableRoles?: string[];
-  handleRoleChange: (p: string) => void;
-  role: string;
-  label?: string;
-  helpText?: string;
-  loading?: boolean;
-};
+package sonia.scm.security;
 
-class RoleSelector extends React.Component<Props> {
-  render() {
-    const { availableRoles, role, handleRoleChange, loading, label, helpText } = this.props;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import sonia.scm.xml.XmlInstantAdapter;
 
-    if (!availableRoles) return null;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.time.Instant;
 
-    const options = role ? this.createSelectOptions(availableRoles) : ["", ...this.createSelectOptions(availableRoles)];
-
-    return (
-      <Select
-        onChange={handleRoleChange}
-        value={role ? role : ""}
-        options={options}
-        loading={loading}
-        label={label}
-        helpText={helpText}
-      />
-    );
-  }
-
-  createSelectOptions(roles: string[]) {
-    return roles.map(role => {
-      return {
-        label: role,
-        value: role
-      };
-    });
-  }
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+@Getter
+@XmlAccessorType(XmlAccessType.FIELD)
+class ApiKeyWithPassphrase {
+  private String id;
+  @XmlElement(name = "display-name")
+  private String displayName;
+  @XmlElement(name = "permission-role")
+  private String permissionRole;
+  private String passphrase;
+  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
+  private Instant created;
 }
-
-export default withTranslation("repos")(RoleSelector);

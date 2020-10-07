@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
@@ -41,6 +41,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.ContextEntry;
 import sonia.scm.group.GroupCollector;
+import sonia.scm.security.ApiKey;
+import sonia.scm.security.ApiKeyService;
 import sonia.scm.user.InvalidPasswordException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -52,13 +54,17 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
+import static com.google.inject.util.Providers.of;
+import static java.time.Instant.now;
+import static java.util.Arrays.asList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -87,14 +93,21 @@ public class MeResourceTest {
   @Mock
   private UserManager userManager;
 
+  @Mock
+  private ApiKeyService apiKeyService;
+
   @InjectMocks
   private MeDtoFactory meDtoFactory;
+  @InjectMocks
+  private ApiKeyToApiKeyDtoMapperImpl apiKeyMapper;
 
   private ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
   @Mock
   private PasswordService passwordService;
   private User originalUser;
+
+  private MockHttpResponse response = new MockHttpResponse();
 
   @Before
   public void prepareEnvironment() {
@@ -106,7 +119,9 @@ public class MeResourceTest {
     when(groupCollector.collect("trillian")).thenReturn(ImmutableSet.of("group1", "group2"));
     when(userManager.isTypeDefault(userCaptor.capture())).thenCallRealMethod();
     when(userManager.getDefaultType()).thenReturn("xml");
-    MeResource meResource = new MeResource(meDtoFactory, userManager, passwordService);
+    ApiKeyCollectionToDtoMapper apiKeyCollectionMapper = new ApiKeyCollectionToDtoMapper(apiKeyMapper, resourceLinks);
+    ApiKeyResource apiKeyResource = new ApiKeyResource(apiKeyService, apiKeyCollectionMapper, apiKeyMapper, resourceLinks);
+    MeResource meResource = new MeResource(meDtoFactory, userManager, passwordService, of(apiKeyResource));
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/"));
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
     dispatcher.addSingletonResource(meResource);
@@ -118,14 +133,14 @@ public class MeResourceTest {
 
     MockHttpRequest request = MockHttpRequest.get("/" + MeResource.ME_PATH_V2);
     request.accept(VndMediaType.ME);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-    assertTrue(response.getContentAsString().contains("\"name\":\"trillian\""));
-    assertTrue(response.getContentAsString().contains("\"self\":{\"href\":\"/v2/me/\"}"));
-    assertTrue(response.getContentAsString().contains("\"delete\":{\"href\":\"/v2/users/trillian\"}"));
+    assertThat(response.getContentAsString()).contains("\"name\":\"trillian\"");
+    assertThat(response.getContentAsString()).contains("\"self\":{\"href\":\"/v2/me/\"}");
+    assertThat(response.getContentAsString()).contains("\"delete\":{\"href\":\"/v2/users/trillian\"}");
+    assertThat(response.getContentAsString()).contains("\"apiKeys\":{\"href\":\"/v2/me/api_keys\"}");
   }
 
   private void applyUserToSubject(User user) {
@@ -149,7 +164,6 @@ public class MeResourceTest {
       .put("/" + MeResource.ME_PATH_V2 + "password")
       .contentType(VndMediaType.PASSWORD_CHANGE)
       .content(content.getBytes());
-    MockHttpResponse response = new MockHttpResponse();
 
     when(passwordService.encryptPassword(newPassword)).thenReturn(encryptedNewPassword);
     when(passwordService.encryptPassword(oldPassword)).thenReturn(encryptedOldPassword);
@@ -174,7 +188,6 @@ public class MeResourceTest {
       .put("/" + MeResource.ME_PATH_V2 + "password")
       .contentType(VndMediaType.PASSWORD_CHANGE)
       .content(content.getBytes());
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -190,7 +203,6 @@ public class MeResourceTest {
       .put("/" + MeResource.ME_PATH_V2 + "password")
       .contentType(VndMediaType.PASSWORD_CHANGE)
       .content(content.getBytes());
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -206,7 +218,6 @@ public class MeResourceTest {
       .put("/" + MeResource.ME_PATH_V2 + "password")
       .contentType(VndMediaType.PASSWORD_CHANGE)
       .content(content.getBytes());
-    MockHttpResponse response = new MockHttpResponse();
 
     doThrow(new InvalidPasswordException(ContextEntry.ContextBuilder.entity("passwortChange", "-")))
       .when(userManager).changePasswordForLoggedInUser(any(), any());
@@ -216,6 +227,80 @@ public class MeResourceTest {
     assertEquals(HttpServletResponse.SC_BAD_REQUEST, response.getStatus());
   }
 
+  @Test
+  public void shouldGetAllApiKeys() throws URISyntaxException, UnsupportedEncodingException {
+    when(apiKeyService.getKeys())
+      .thenReturn(asList(
+        new ApiKey("1", "key 1", "READ", now()),
+        new ApiKey("2", "key 2", "WRITE", now())));
+
+    MockHttpRequest request = MockHttpRequest.get("/" + MeResource.ME_PATH_V2 + "api_keys");
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+
+    assertThat(response.getContentAsString()).contains("\"displayName\":\"key 1\",\"permissionRole\":\"READ\"");
+    assertThat(response.getContentAsString()).contains("\"displayName\":\"key 2\",\"permissionRole\":\"WRITE\"");
+    assertThat(response.getContentAsString()).contains("\"self\":{\"href\":\"/v2/me/api_keys\"}");
+    assertThat(response.getContentAsString()).contains("\"create\":{\"href\":\"/v2/me/api_keys\"}");
+  }
+
+  @Test
+  public void shouldGetSingleApiKey() throws URISyntaxException, UnsupportedEncodingException {
+    when(apiKeyService.getKeys())
+      .thenReturn(asList(
+        new ApiKey("1", "key 1", "READ", now()),
+        new ApiKey("2", "key 2", "WRITE", now())));
+
+    MockHttpRequest request = MockHttpRequest.get("/" + MeResource.ME_PATH_V2 + "api_keys/1");
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+
+    assertThat(response.getContentAsString()).contains("\"displayName\":\"key 1\"");
+    assertThat(response.getContentAsString()).contains("\"permissionRole\":\"READ\"");
+    assertThat(response.getContentAsString()).contains("\"self\":{\"href\":\"/v2/me/api_keys/1\"}");
+    assertThat(response.getContentAsString()).contains("\"delete\":{\"href\":\"/v2/me/api_keys/1\"}");
+  }
+
+  @Test
+  public void shouldCreateNewApiKey() throws URISyntaxException, UnsupportedEncodingException {
+    when(apiKeyService.createNewKey("guide", "READ")).thenReturn(new ApiKeyService.CreationResult("abc", "1"));
+
+    final MockHttpRequest request = MockHttpRequest
+      .post("/" + MeResource.ME_PATH_V2 + "api_keys/")
+      .contentType(VndMediaType.API_KEY)
+      .content("{\"displayName\":\"guide\",\"permissionRole\":\"READ\"}".getBytes());
+
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus()).isEqualTo(201);
+    assertThat(response.getContentAsString()).isEqualTo("abc");
+    assertThat(response.getOutputHeaders().get("Location")).containsExactly(URI.create("/v2/me/api_keys/1"));
+  }
+
+  @Test
+  public void shouldIgnoreInvalidNewApiKey() throws URISyntaxException, UnsupportedEncodingException {
+    when(apiKeyService.createNewKey("guide", "READ")).thenReturn(new ApiKeyService.CreationResult("abc", "1"));
+
+    final MockHttpRequest request = MockHttpRequest
+      .post("/" + MeResource.ME_PATH_V2 + "api_keys/")
+      .contentType(VndMediaType.API_KEY)
+      .content("{\"displayName\":\"guide\",\"pemissionRole\":\"\"}".getBytes());
+
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus()).isEqualTo(400);
+  }
+
+  @Test
+  public void shouldDeleteExistingApiKey() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.delete("/" + MeResource.ME_PATH_V2 + "api_keys/1");
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus()).isEqualTo(204);
+    verify(apiKeyService).remove("1");
+  }
 
   private User createDummyUser(String name) {
     User user = new User();

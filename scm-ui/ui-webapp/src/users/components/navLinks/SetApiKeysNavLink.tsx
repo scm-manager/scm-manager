@@ -21,47 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Select } from "@scm-manager/ui-components";
+import React, { FC } from "react";
+import { Link, User, Me } from "@scm-manager/ui-types";
+import { NavLink } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 
-type Props = WithTranslation & {
-  availableRoles?: string[];
-  handleRoleChange: (p: string) => void;
-  role: string;
-  label?: string;
-  helpText?: string;
-  loading?: boolean;
+type Props = {
+  user: User | Me;
+  apiKeyUrl: string;
 };
 
-class RoleSelector extends React.Component<Props> {
-  render() {
-    const { availableRoles, role, handleRoleChange, loading, label, helpText } = this.props;
+const SetApiKeyNavLink: FC<Props> = ({ user, apiKeyUrl }) => {
+  const [t] = useTranslation("users");
 
-    if (!availableRoles) return null;
-
-    const options = role ? this.createSelectOptions(availableRoles) : ["", ...this.createSelectOptions(availableRoles)];
-
-    return (
-      <Select
-        onChange={handleRoleChange}
-        value={role ? role : ""}
-        options={options}
-        loading={loading}
-        label={label}
-        helpText={helpText}
-      />
-    );
+  if ((user?._links?.apiKeys as Link)?.href) {
+    return <NavLink to={apiKeyUrl} label={t("singleUser.menu.setApiKeyNavLink")} />;
   }
+  return null;
+};
 
-  createSelectOptions(roles: string[]) {
-    return roles.map(role => {
-      return {
-        label: role,
-        value: role
-      };
-    });
-  }
-}
-
-export default withTranslation("repos")(RoleSelector);
+export default SetApiKeyNavLink;

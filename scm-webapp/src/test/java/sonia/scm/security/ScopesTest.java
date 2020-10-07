@@ -21,29 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Sets;
-import java.util.Set;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.Permission;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
-import org.apache.shiro.authz.permission.WildcardPermission;
-import org.apache.shiro.authz.permission.WildcardPermissionResolver;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import static org.hamcrest.Matchers.*;
+
+import java.util.Set;
+
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.emptyCollectionOf;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertThat;
 
 /**
  * Unit tests for {@link Scopes}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 public class ScopesTest {
 
-  private final WildcardPermissionResolver resolver = new WildcardPermissionResolver();
+  private final ScmPermissionResolver resolver = new ScmPermissionResolver();
 
   /**
    * Tests that filter keep roles.
@@ -51,11 +54,11 @@ public class ScopesTest {
   @Test
   public void testFilterKeepRoles(){
     AuthorizationInfo authz = authz("repository:read:123");
-    
+
     AuthorizationInfo filtered = Scopes.filter(resolver, authz, Scope.empty());
     assertThat(filtered.getRoles(), containsInAnyOrder("unit", "test"));
   }
-  
+
   /**
    * Tests filter with a simple allow.
    */
@@ -63,10 +66,18 @@ public class ScopesTest {
   public void testFilterSimpleAllow() {
     Scope scope = Scope.valueOf("repository:read:123");
     AuthorizationInfo authz = authz("repository:*", "user:*:me");
-    
+
     assertPermissions(Scopes.filter(resolver, authz, scope), "repository:read:123");
   }
-  
+
+  @Test
+  public void testFilterIntersectingPermissions() {
+    Scope scope = Scope.valueOf("repository:read,write:*");
+    AuthorizationInfo authz = authz("repository:*:123");
+
+    assertPermissions(Scopes.filter(resolver, authz, scope), "repository:read,write:123");
+  }
+
   /**
    * Tests filter with a simple deny.
    */
@@ -74,12 +85,12 @@ public class ScopesTest {
   public void testFilterSimpleDeny() {
     Scope scope = Scope.valueOf("repository:read:123");
     AuthorizationInfo authz = authz("user:*:me");
-    
+
     AuthorizationInfo filtered = Scopes.filter(resolver, authz, scope);
     assertThat(filtered.getStringPermissions(), is(nullValue()));
     assertThat(filtered.getObjectPermissions(), is(emptyCollectionOf(Permission.class)));
   }
-  
+
   /**
    * Tests filter with a multiple scope entries.
    */
@@ -87,10 +98,10 @@ public class ScopesTest {
   public void testFilterMultiple() {
     Scope scope = Scope.valueOf("repo:read,modify:1", "repo:read:2", "repo:*:3", "repo:modify:4");
     AuthorizationInfo authz = authz("repo:read:*");
-    
-    assertPermissions(Scopes.filter(resolver, authz, scope), "repo:read:2");
+
+    assertPermissions(Scopes.filter(resolver, authz, scope), "repo:read:1", "repo:read:2", "repo:read:3");
   }
-  
+
   /**
    * Tests filter with admin permissions.
    */
@@ -98,10 +109,10 @@ public class ScopesTest {
   public void testFilterAdmin(){
     Scope scope = Scope.valueOf("repository:*", "user:*:me");
     AuthorizationInfo authz = authz("*");
-    
+
     assertPermissions(Scopes.filter(resolver, authz, scope), "repository:*", "user:*:me");
   }
-  
+
  /**
    * Tests filter with requested admin permissions from a non admin.
    */
@@ -109,26 +120,24 @@ public class ScopesTest {
   public void testFilterRequestAdmin(){
     Scope scope = Scope.valueOf("*");
     AuthorizationInfo authz = authz("repository:*");
-    
-    assertThat(
-      Scopes.filter(resolver, authz, scope).getObjectPermissions(),
-      is(emptyCollectionOf(Permission.class))
-    );
+
+    assertPermissions(Scopes.filter(resolver, authz, scope),
+      "repository:*");
   }
-  
+
   private void assertPermissions(AuthorizationInfo authz, Object... permissions) {
     assertThat(authz.getStringPermissions(), is(nullValue()));
     assertThat(
-      Collections2.transform(authz.getObjectPermissions(), Permission::toString), 
+      Collections2.transform(authz.getObjectPermissions(), Permission::toString),
       containsInAnyOrder(permissions)
     );
   }
-  
+
   private AuthorizationInfo authz( String... values ) {
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(Sets.newHashSet("unit", "test"));
     Set<Permission> permissions = Sets.newLinkedHashSet();
     for ( String value : values ) {
-      permissions.add(new WildcardPermission(value));
+      permissions.add(new ScmWildcardPermission(value));
     }
     info.setObjectPermissions(permissions);
     return info;

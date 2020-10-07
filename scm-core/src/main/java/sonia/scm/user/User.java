@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.user;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -50,7 +50,7 @@ import java.security.Principal;
 @StaticPermissions(
   value = "user",
   globalPermissions = {"create", "list", "autocomplete"},
-  permissions = {"read", "modify", "delete", "changePassword", "changePublicKeys"},
+  permissions = {"read", "modify", "delete", "changePassword", "changePublicKeys", "changeApiKeys"},
   custom = true, customGlobal = true
 )
 @XmlRootElement(name = "users")

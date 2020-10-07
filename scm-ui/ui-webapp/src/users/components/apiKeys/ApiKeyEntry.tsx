@@ -21,47 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Select } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  availableRoles?: string[];
-  handleRoleChange: (p: string) => void;
-  role: string;
-  label?: string;
-  helpText?: string;
-  loading?: boolean;
+import React, { FC } from "react";
+import { DateFromNow, Icon } from "@scm-manager/ui-components";
+import { ApiKey } from "./SetApiKeys";
+import { Link } from "@scm-manager/ui-types";
+import { useTranslation } from "react-i18next";
+
+type Props = {
+  apiKey: ApiKey;
+  onDelete: (link: string) => void;
 };
 
-class RoleSelector extends React.Component<Props> {
-  render() {
-    const { availableRoles, role, handleRoleChange, loading, label, helpText } = this.props;
-
-    if (!availableRoles) return null;
-
-    const options = role ? this.createSelectOptions(availableRoles) : ["", ...this.createSelectOptions(availableRoles)];
-
-    return (
-      <Select
-        onChange={handleRoleChange}
-        value={role ? role : ""}
-        options={options}
-        loading={loading}
-        label={label}
-        helpText={helpText}
-      />
+export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
+  const [t] = useTranslation("users");
+  let deleteButton;
+  if (apiKey?._links?.delete) {
+    deleteButton = (
+      <a className="level-item" onClick={() => onDelete((apiKey._links.delete as Link).href)}>
+        <span className="icon is-small">
+          <Icon name="trash" className="fas" title={t("apiKey.delete")} />
+        </span>
+      </a>
     );
   }
 
-  createSelectOptions(roles: string[]) {
-    return roles.map(role => {
-      return {
-        label: role,
-        value: role
-      };
-    });
-  }
-}
+  return (
+    <>
+      <tr>
+        <td>{apiKey.displayName}</td>
+        <td>{apiKey.permissionRole}</td>
+        <td className="is-hidden-mobile">
+          <DateFromNow date={apiKey.created}/>
+        </td>
+        <td className="is-darker">{deleteButton}</td>
+      </tr>
+    </>
+  );
+};
 
-export default withTranslation("repos")(RoleSelector);
+export default ApiKeyEntry;

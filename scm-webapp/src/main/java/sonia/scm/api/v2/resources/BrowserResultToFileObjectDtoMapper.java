@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
@@ -61,8 +61,10 @@ public abstract class BrowserResultToFileObjectDtoMapper extends BaseFileObjectD
   @Override
   void applyEnrichers(Links.Builder links, Embedded.Builder embeddedBuilder, NamespaceAndName namespaceAndName, BrowserResult browserResult, FileObject fileObject) {
     EdisonHalAppender appender = new EdisonHalAppender(links, embeddedBuilder);
-    // we call enrichers, which are only responsible for top level browseresults
-    applyEnrichers(appender, browserResult, namespaceAndName);
+    if (browserResult.getFile().equals(fileObject)) {
+      // we call enrichers, which are only responsible for top level browseresults
+      applyEnrichers(appender, browserResult, namespaceAndName);
+    }
     // we call enrichers, which are responsible for all file object top level browse result and its children
     applyEnrichers(appender, fileObject, namespaceAndName, browserResult, browserResult.getRevision());
   }
