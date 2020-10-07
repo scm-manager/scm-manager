@@ -46,7 +46,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import static java.util.Comparator.comparing;
 import static org.tmatesoft.svn.core.SVNErrorCode.FS_NO_SUCH_REVISION;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
@@ -196,21 +195,30 @@ public class SvnBrowseCommand extends AbstractSvnCommand
 
       String externals = properties.getStringValue(SVNProperty.EXTERNALS).replaceAll("[\\r\\n]+", "");
       String[] externalsArray = externals.split(" ");
+      String subRepoName = "";
       for (String external : externalsArray) {
         if (shouldSetExternal(external)) {
           externals = external;
+        } else if (!external.contains("-r") && !external.isEmpty()) {
+          subRepoName = external;
         }
       }
 
       if (Util.isNotEmpty(externals)) {
         SubRepository subRepository = new SubRepository(externals);
-
-        FileObject subRepositoryDirectory = new FileObject();
-        subRepositoryDirectory.setSubRepository(subRepository);
-        fileObject.addChild(subRepositoryDirectory);
+        fileObject.addChild(createSubRepoDirectory(subRepository, subRepoName));
       }
     } catch (SVNException ex) {
       logger.error("could not fetch file properties", ex);
     }
+  }
+
+  private FileObject createSubRepoDirectory(SubRepository subRepository, String subRepoName) {
+    FileObject subRepositoryDirectory = new FileObject();
+    subRepositoryDirectory.setPath(subRepoName);
+    subRepositoryDirectory.setName(subRepoName);
+    subRepositoryDirectory.setDirectory(true);
+    subRepositoryDirectory.setSubRepository(subRepository);
+    return subRepositoryDirectory;
   }
 }
