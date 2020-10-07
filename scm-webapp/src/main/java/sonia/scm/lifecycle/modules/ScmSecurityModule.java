@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle.modules;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -33,6 +33,7 @@ import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.authc.pam.AuthenticationStrategy;
 import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
+import org.apache.shiro.authz.permission.PermissionResolver;
 import org.apache.shiro.crypto.hash.DefaultHashService;
 import org.apache.shiro.guice.web.ShiroWebModule;
 import org.apache.shiro.realm.Realm;
@@ -48,6 +49,7 @@ import javax.servlet.ServletContext;
 import org.apache.shiro.mgt.RememberMeManager;
 import sonia.scm.security.DisabledRememberMeManager;
 import sonia.scm.security.ScmAtLeastOneSuccessfulStrategy;
+import sonia.scm.security.ScmPermissionResolver;
 
 /**
  *
@@ -94,7 +96,7 @@ public class ScmSecurityModule extends ShiroWebModule
 
     // expose password service to global injector
     expose(PasswordService.class);
-    
+
     // disable remember me cookie generation
     bind(RememberMeManager.class).to(DisabledRememberMeManager.class);
 
@@ -102,6 +104,7 @@ public class ScmSecurityModule extends ShiroWebModule
     bind(ModularRealmAuthenticator.class);
     bind(Authenticator.class).to(ModularRealmAuthenticator.class);
     bind(AuthenticationStrategy.class).to(ScmAtLeastOneSuccessfulStrategy.class);
+    bind(PermissionResolver.class).to(ScmPermissionResolver.class);
 
     // bind realm
     for (Class<? extends Realm> realm : extensionProcessor.byExtensionPoint(Realm.class))
@@ -116,7 +119,7 @@ public class ScmSecurityModule extends ShiroWebModule
 
     // disable access to mustache resources
     addFilterChain("/**.mustache", filterConfig(ROLES, "nobody"));
-    
+
     // disable session
     addFilterChain("/**", NO_SESSION_CREATION);
   }

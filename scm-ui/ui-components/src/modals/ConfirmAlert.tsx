@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 import * as React from "react";
+import { FC, useState } from "react";
 import ReactDOM from "react-dom";
 import Modal from "./Modal";
 import classNames from "classnames";
@@ -29,59 +30,71 @@ import classNames from "classnames";
 type Button = {
   className?: string;
   label: string;
-  onClick: () => void | null;
+  onClick?: () => void | null;
 };
 
 type Props = {
   title: string;
   message: string;
   buttons: Button[];
+  close?: () => void;
 };
 
-class ConfirmAlert extends React.Component<Props> {
-  handleClickButton = (button: Button) => {
+export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
+  const [showModal, setShowModal] = useState(true);
+
+  const onClose = () => {
+    if (typeof close === "function") {
+      close();
+    } else {
+      setShowModal(false);
+    }
+  };
+
+  const handleClickButton = (button: Button) => {
     if (button.onClick) {
       button.onClick();
     }
-    this.close();
+    onClose();
   };
 
-  close = () => {
-    const container = document.getElementById("modalRoot");
-    if (container) {
-      ReactDOM.unmountComponentAtNode(container);
-    }
-  };
+  const body = <>{message}</>;
 
-  render() {
-    const { title, message, buttons } = this.props;
+  const footer = (
+    <div className="field is-grouped">
+      {buttons.map((button, i) => (
+        <p className="control">
+          <a
+            className={classNames("button", "is-info", button.className)}
+            key={i}
+            onClick={() => handleClickButton(button)}
+          >
+            {button.label}
+          </a>
+        </p>
+      ))}
+    </div>
+  );
 
-    const body = <>{message}</>;
+  return (
+    (showModal && <Modal title={title} closeFunction={onClose} body={body} active={true} footer={footer} />) || null
+  );
+};
 
-    const footer = (
-      <div className="field is-grouped">
-        {buttons.map((button, i) => (
-          <p className="control">
-            <a
-              className={classNames("button", "is-info", button.className)}
-              key={i}
-              onClick={() => this.handleClickButton(button)}
-            >
-              {button.label}
-            </a>
-          </p>
-        ))}
-      </div>
-    );
-
-    return <Modal title={title} closeFunction={() => this.close()} body={body} active={true} footer={footer} />;
-  }
-}
-
+/**
+ * @deprecated Please use {@link ConfirmAlert} directly.
+ */
 export function confirmAlert(properties: Props) {
   const root = document.getElementById("modalRoot");
   if (root) {
-    ReactDOM.render(<ConfirmAlert {...properties} />, root);
+    const close = () => {
+      const container = document.getElementById("modalRoot");
+      if (container) {
+        ReactDOM.unmountComponentAtNode(container);
+      }
+    };
+    const props = { ...properties, close };
+    ReactDOM.render(<ConfirmAlert {...props} />, root);
   }
 }
 

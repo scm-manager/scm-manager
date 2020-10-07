@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api;
 
 import org.slf4j.Logger;
@@ -42,7 +42,7 @@ public class NotSupportedExceptionMapper implements ExceptionMapper<NotSupported
 
   @Override
   public Response toResponse(NotSupportedException exception) {
-    LOG.debug("illegal media type");
+    LOG.debug("illegal media type", exception);
     ErrorDto error = new ErrorDto();
     error.setTransactionId(MDC.get("transaction_id"));
     error.setMessage("illegal media type");

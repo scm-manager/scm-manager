@@ -21,80 +21,78 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC, useState } from "react";
 import { connect } from "react-redux";
-import { compose } from "redux";
-import { withRouter } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
-import { confirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { deleteGroup, getDeleteGroupFailure, isDeleteGroupPending } from "../modules/groups";
 
-type Props = WithTranslation & {
+type Props = {
   loading: boolean;
   error: Error;
   group: Group;
   confirmDialog?: boolean;
   deleteGroup: (group: Group, callback?: () => void) => void;
-
-  // context props
-  history: History;
 };
 
-export class DeleteGroup extends React.Component<Props> {
-  static defaultProps = {
-    confirmDialog: true
+export const DeleteGroup: FC<Props> = ({ confirmDialog = true, group, deleteGroup, loading, error }) => {
+  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const [t] = useTranslation("groups");
+  const history = useHistory();
+
+  const deleteGroupCallback = () => {
+    deleteGroup(group, groupDeleted);
   };
 
-  deleteGroup = () => {
-    this.props.deleteGroup(this.props.group, this.groupDeleted);
+  const groupDeleted = () => {
+    history.push("/groups/");
   };
 
-  groupDeleted = () => {
-    this.props.history.push("/groups/");
+  const confirmDelete = () => {
+    setShowConfirmAlert(true);
   };
 
-  confirmDelete = () => {
-    const { t } = this.props;
-    confirmAlert({
-      title: t("deleteGroup.confirmAlert.title"),
-      message: t("deleteGroup.confirmAlert.message"),
-      buttons: [
-        {
-          className: "is-outlined",
-          label: t("deleteGroup.confirmAlert.submit"),
-          onClick: () => this.deleteGroup()
-        },
-        {
-          label: t("deleteGroup.confirmAlert.cancel"),
-          onClick: () => null
-        }
-      ]
-    });
+  const isDeletable = () => {
+    return group._links.delete;
   };
 
-  isDeletable = () => {
-    return this.props.group._links.delete;
-  };
+  const action = confirmDialog ? confirmDelete : deleteGroupCallback;
 
-  render() {
-    const { loading, error, confirmDialog, t } = this.props;
-    const action = confirmDialog ? this.confirmDelete : this.deleteGroup;
+  if (!isDeletable()) {
+    return null;
+  }
 
-    if (!this.isDeletable()) {
-      return null;
-    }
-
+  if (showConfirmAlert) {
     return (
-      <>
-        <hr />
-        <ErrorNotification error={error} />
-        <Level right={<DeleteButton label={t("deleteGroup.button")} action={action} loading={loading} />} />
-      </>
+      <ConfirmAlert
+        title={t("deleteGroup.confirmAlert.title")}
+        message={t("deleteGroup.confirmAlert.message")}
+        buttons={[
+          {
+            className: "is-outlined",
+            label: t("deleteGroup.confirmAlert.submit"),
+            onClick: () => deleteGroupCallback()
+          },
+          {
+            label: t("deleteGroup.confirmAlert.cancel"),
+            onClick: () => null
+          }
+        ]}
+        close={() => setShowConfirmAlert(false)}
+      />
     );
   }
-}
+
+  return (
+    <>
+      <hr />
+      <ErrorNotification error={error} />
+      <Level right={<DeleteButton label={t("deleteGroup.button")} action={action} loading={loading} />} />
+    </>
+  );
+};
 
 const mapStateToProps = (state: any, ownProps: Props) => {
   const loading = isDeleteGroupPending(state, ownProps.group.name);
@@ -113,8 +111,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default compose(
-  connect(mapStateToProps, mapDispatchToProps),
-  withRouter,
-  withTranslation("groups")
-)(DeleteGroup);
+export default connect(mapStateToProps, mapDispatchToProps)(DeleteGroup);

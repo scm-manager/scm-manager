@@ -13,6 +13,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Align actionbar item horizontal and enforce correct margin between them ([#1358](https://github.com/scm-manager/scm-manager/pull/1358))
 
 ## [2.6.1] - 2020-09-30
+### Added
+- Users can create API keys with limited permissions ([#1359](https://github.com/scm-manager/scm-manager/pull/1359))
+
 ### Fixed
 - Not found error when using browse command in empty hg repository ([#1355](https://github.com/scm-manager/scm-manager/pull/1355))
 
@@ -22,6 +25,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tags overview for repository ([#1331](https://github.com/scm-manager/scm-manager/pull/1331))
 - Permissions can be specified for namespaces ([#1335](https://github.com/scm-manager/scm-manager/pull/1335))
 - Show update info on admin information page ([#1342](https://github.com/scm-manager/scm-manager/pull/1342))
+
+### Changed
+- Rework modal to use react portal ([#1349](https://github.com/scm-manager/scm-manager/pull/1349))
 
 ### Fixed
 - Missing synchronization during repository creation ([#1328](https://github.com/scm-manager/scm-manager/pull/1328))

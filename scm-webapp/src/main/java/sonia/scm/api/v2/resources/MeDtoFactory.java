@@ -94,6 +94,9 @@ public class MeDtoFactory extends HalAppenderMapper {
     if (userManager.isTypeDefault(user) && UserPermissions.changePassword(user).isPermitted()) {
       linksBuilder.single(link("password", resourceLinks.me().passwordChange()));
     }
+    if (UserPermissions.changeApiKeys(user).isPermitted()) {
+      linksBuilder.single(link("apiKeys", resourceLinks.apiKeyCollection().self()));
+    }
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), new Me(), user);

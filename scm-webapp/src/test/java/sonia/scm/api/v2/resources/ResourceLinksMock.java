@@ -80,6 +80,8 @@ public class ResourceLinksMock {
     lenient().when(resourceLinks.namespaceCollection()).thenReturn(new ResourceLinks.NamespaceCollectionLinks(pathInfo));
     lenient().when(resourceLinks.namespacePermission()).thenReturn(new ResourceLinks.NamespacePermissionLinks(pathInfo));
     lenient().when(resourceLinks.adminInfo()).thenReturn(new ResourceLinks.AdminInfoLinks(pathInfo));
+    lenient().when(resourceLinks.apiKeyCollection()).thenReturn(new ResourceLinks.ApiKeyCollectionLinks(pathInfo));
+    lenient().when(resourceLinks.apiKey()).thenReturn(new ResourceLinks.ApiKeyLinks(pathInfo));
 
     return resourceLinks;
   }

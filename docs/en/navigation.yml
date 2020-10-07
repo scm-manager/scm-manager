@@ -12,6 +12,7 @@
     - /user/user/
     - /user/group/
     - /user/admin/
+    - /user/profile/
 
 - section: Administration
   entries:
