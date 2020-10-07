@@ -24,8 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -66,16 +64,14 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Stack;
 import java.util.function.Consumer;
 
-import static java.util.Collections.emptyList;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 import static sonia.scm.repository.spi.SyncAsyncExecutor.ExecutionType.ASYNCHRONOUS;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -251,7 +247,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   private void findChildren(FileObject parent, TreeWalk treeWalk) throws IOException {
     TreeEntry entry = new TreeEntry();
-    createTree(parent.getPath(), entry, treeWalk);
+    createTree(entry, treeWalk);
     convertToFileObject(parent, entry.getChildren());
   }
 
@@ -282,25 +278,22 @@ public class GitBrowseCommand extends AbstractGitCommand
     parent.setTruncated(hasNext);
   }
 
-  private Optional<TreeEntry> createTree(String path, TreeEntry parent, TreeWalk treeWalk) throws IOException {
-    List<TreeEntry> entries = new ArrayList<>();
+  private void createTree(TreeEntry parent, TreeWalk treeWalk) throws IOException {
+    Stack<TreeEntry> parents = new Stack<>();
+    parents.push(parent);
     while (treeWalk.next()) {
-      TreeEntry treeEntry = new TreeEntry(repo, treeWalk);
-      if (!treeEntry.getPathString().startsWith(path)) {
-        parent.setChildren(entries);
-        return of(treeEntry);
+      final String currentPath = treeWalk.getPathString();
+      while (!currentPath.startsWith(parents.peek().pathString)) {
+        parents.pop();
       }
-
-      entries.add(treeEntry);
-
+      TreeEntry currentParent = parents.peek();
+      TreeEntry treeEntry = new TreeEntry(repo, treeWalk);
+      currentParent.addChild(treeEntry);
       if (request.isRecursive() && treeEntry.getType() == TreeType.DIRECTORY) {
         treeWalk.enterSubtree();
-        Optional<TreeEntry> surplus = createTree(treeEntry.getNameString(), treeEntry, treeWalk);
-        surplus.ifPresent(entries::add);
+        parents.push(treeEntry);
       }
     }
-    parent.setChildren(entries);
-    return empty();
   }
 
   private FileObject findFirstMatch(TreeWalk treeWalk) throws IOException {
@@ -465,7 +458,9 @@ public class GitBrowseCommand extends AbstractGitCommand
     private final ObjectId objectId;
     private final TreeType type;
     private final SubRepository subRepository;
-    private List<TreeEntry> children = emptyList();
+    private final List<TreeEntry> children = new ArrayList<>();
+
+    private boolean sorted = true;
 
     TreeEntry() {
       pathString = "";
@@ -513,12 +508,16 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
 
     List<TreeEntry> getChildren() {
+      if (!sorted) {
+        sort(children, entry -> entry.type != TreeType.FILE, TreeEntry::getNameString);
+        sorted = true;
+      }
       return children;
     }
 
-    void setChildren(List<TreeEntry> children) {
-      sort(children, entry -> entry.type != TreeType.FILE, TreeEntry::getNameString);
-      this.children = children;
+    private void addChild(TreeEntry treeEntry) {
+      sorted = false;
+      children.add(treeEntry);
     }
   }
 }
