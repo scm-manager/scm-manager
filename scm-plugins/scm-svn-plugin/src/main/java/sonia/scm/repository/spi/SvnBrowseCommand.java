@@ -193,20 +193,22 @@ public class SvnBrowseCommand extends AbstractSvnCommand
 
       repository.getDir(entry.getRelativePath(), revision, properties, (Collection) null);
 
-      String externals = properties.getStringValue(SVNProperty.EXTERNALS).replaceAll("[\\r\\n]+", "");
-      String subRepoUrl = "";
-      String subRepoPath = "";
-      for (String external : externals.split(" ")) {
-        if (shouldSetExternal(external)) {
-          subRepoUrl = external;
-        } else if (!external.contains("-r") && !external.isEmpty()) {
-          subRepoPath = external;
+      String[] externals = properties.getStringValue(SVNProperty.EXTERNALS).split("\\r?\\n");
+      for (String external : externals) {
+        String subRepoUrl = "";
+        String subRepoPath = "";
+        for (String externalPart : external.split(" ")) {
+          if (shouldSetExternal(externalPart)) {
+            subRepoUrl = externalPart;
+          } else if (!externalPart.contains("-r") && !externalPart.isEmpty()) {
+            subRepoPath = externalPart;
+          }
         }
-      }
 
-      if (Util.isNotEmpty(externals)) {
-        SubRepository subRepository = new SubRepository(subRepoUrl);
-        fileObject.addChild(createSubRepoDirectory(subRepository, subRepoPath));
+        if (Util.isNotEmpty(external)) {
+          SubRepository subRepository = new SubRepository(subRepoUrl);
+          fileObject.addChild(createSubRepoDirectory(subRepository, subRepoPath));
+        }
       }
     } catch (SVNException ex) {
       logger.error("could not fetch file properties", ex);
