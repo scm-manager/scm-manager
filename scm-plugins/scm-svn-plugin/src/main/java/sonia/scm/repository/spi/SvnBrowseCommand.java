@@ -194,29 +194,29 @@ public class SvnBrowseCommand extends AbstractSvnCommand
       repository.getDir(entry.getRelativePath(), revision, properties, (Collection) null);
 
       String externals = properties.getStringValue(SVNProperty.EXTERNALS).replaceAll("[\\r\\n]+", "");
-      String[] externalsArray = externals.split(" ");
-      String subRepoName = "";
-      for (String external : externalsArray) {
+      String subRepoUrl = "";
+      String subRepoPath = "";
+      for (String external : externals.split(" ")) {
         if (shouldSetExternal(external)) {
-          externals = external;
+          subRepoUrl = external;
         } else if (!external.contains("-r") && !external.isEmpty()) {
-          subRepoName = external;
+          subRepoPath = external;
         }
       }
 
       if (Util.isNotEmpty(externals)) {
-        SubRepository subRepository = new SubRepository(externals);
-        fileObject.addChild(createSubRepoDirectory(subRepository, subRepoName));
+        SubRepository subRepository = new SubRepository(subRepoUrl);
+        fileObject.addChild(createSubRepoDirectory(subRepository, subRepoPath));
       }
     } catch (SVNException ex) {
       logger.error("could not fetch file properties", ex);
     }
   }
 
-  private FileObject createSubRepoDirectory(SubRepository subRepository, String subRepoName) {
+  private FileObject createSubRepoDirectory(SubRepository subRepository, String subRepoPath) {
     FileObject subRepositoryDirectory = new FileObject();
-    subRepositoryDirectory.setPath(subRepoName);
-    subRepositoryDirectory.setName(subRepoName);
+    subRepositoryDirectory.setPath(subRepoPath);
+    subRepositoryDirectory.setName(subRepoPath);
     subRepositoryDirectory.setDirectory(true);
     subRepositoryDirectory.setSubRepository(subRepository);
     return subRepositoryDirectory;

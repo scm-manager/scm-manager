@@ -69,8 +69,10 @@ export const createFolderLink = (base: string, file: File) => {
 const FileLink: FC<Props> = ({ baseUrl, file, children }) => {
   const [t] = useTranslation("repos");
   if (file?.subRepository?.repositoryUrl) {
+    // file link represents a subRepository
     let link = file.subRepository.repositoryUrl;
     if (file.subRepository.browserUrl) {
+      // replace upstream url with public browser url
       link = file.subRepository.browserUrl;
     }
     if (link.startsWith("http://") || link.startsWith("https://")) {
@@ -85,6 +87,7 @@ const FileLink: FC<Props> = ({ baseUrl, file, children }) => {
       }
       return <Link to={link}>{children}</Link>;
     } else {
+      // subRepository url cannot be linked
       return (
         <Tooltip location="top" message={t("sources.fileTree.subRepository") + ": \n" + link}>
           {children}
@@ -92,6 +95,7 @@ const FileLink: FC<Props> = ({ baseUrl, file, children }) => {
       );
     }
   }
+  // normal file or folder
   return <Link to={createFolderLink(baseUrl, file)}>{children}</Link>;
 };
 
