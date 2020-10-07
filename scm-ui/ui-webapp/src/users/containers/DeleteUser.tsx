@@ -21,80 +21,78 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC, useState } from "react";
 import { connect } from "react-redux";
-import { compose } from "redux";
-import { withRouter } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
+import { useHistory } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import { confirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { deleteUser, getDeleteUserFailure, isDeleteUserPending } from "../modules/users";
 
-type Props = WithTranslation & {
+type Props = {
   loading: boolean;
   error: Error;
   user: User;
   confirmDialog?: boolean;
   deleteUser: (user: User, callback?: () => void) => void;
-
-  // context props
-  history: History;
 };
 
-class DeleteUser extends React.Component<Props> {
-  static defaultProps = {
-    confirmDialog: true
+const DeleteUser: FC<Props> = ({ confirmDialog = true, loading, error, user, deleteUser }) => {
+  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const [t] = useTranslation("users");
+  const history = useHistory();
+
+  const userDeleted = () => {
+    history.push("/users/");
   };
 
-  userDeleted = () => {
-    this.props.history.push("/users/");
+  const deleteUserCallback = () => {
+    deleteUser(user, userDeleted);
   };
 
-  deleteUser = () => {
-    this.props.deleteUser(this.props.user, this.userDeleted);
+  const confirmDelete = () => {
+    setShowConfirmAlert(true);
   };
 
-  confirmDelete = () => {
-    const { t } = this.props;
-    confirmAlert({
-      title: t("deleteUser.confirmAlert.title"),
-      message: t("deleteUser.confirmAlert.message"),
-      buttons: [
-        {
-          className: "is-outlined",
-          label: t("deleteUser.confirmAlert.submit"),
-          onClick: () => this.deleteUser()
-        },
-        {
-          label: t("deleteUser.confirmAlert.cancel"),
-          onClick: () => null
-        }
-      ]
-    });
+  const isDeletable = () => {
+    return user._links.delete;
   };
 
-  isDeletable = () => {
-    return this.props.user._links.delete;
-  };
+  const action = confirmDialog ? confirmDelete : deleteUserCallback;
 
-  render() {
-    const { loading, error, confirmDialog, t } = this.props;
-    const action = confirmDialog ? this.confirmDelete : this.deleteUser;
+  if (!isDeletable()) {
+    return null;
+  }
 
-    if (!this.isDeletable()) {
-      return null;
-    }
-
+  if (showConfirmAlert) {
     return (
-      <>
-        <hr />
-        <ErrorNotification error={error} />
-        <Level right={<DeleteButton label={t("deleteUser.button")} action={action} loading={loading} />} />
-      </>
+      <ConfirmAlert
+        title={t("deleteUser.confirmAlert.title")}
+        message={t("deleteUser.confirmAlert.message")}
+        buttons={[
+          {
+            className: "is-outlined",
+            label: t("deleteUser.confirmAlert.submit"),
+            onClick: () => deleteUserCallback()
+          },
+          {
+            label: t("deleteUser.confirmAlert.cancel"),
+            onClick: () => null
+          }
+        ]}
+        close={() => setShowConfirmAlert(false)}
+      />
     );
   }
-}
+
+  return (
+    <>
+      <hr />
+      <ErrorNotification error={error} />
+      <Level right={<DeleteButton label={t("deleteUser.button")} action={action} loading={loading} />} />
+    </>
+  );
+};
 
 const mapStateToProps = (state: any, ownProps: Props) => {
   const loading = isDeleteUserPending(state, ownProps.user.name);
@@ -113,4 +111,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter, withTranslation("users"))(DeleteUser);
+export default connect(mapStateToProps, mapDispatchToProps)(DeleteUser);

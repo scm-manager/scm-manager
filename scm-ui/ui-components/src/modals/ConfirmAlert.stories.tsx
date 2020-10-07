@@ -25,7 +25,7 @@
 import { storiesOf } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
 import * as React from "react";
-import ConfirmAlert from "./ConfirmAlert";
+import ConfirmAlert, { confirmAlert } from "./ConfirmAlert";
 
 const body =
   "Mind-paralyzing change needed improbability vortex machine sorts sought same theory upending job just allows\n " +
@@ -40,11 +40,21 @@ const buttons = [
     onClick: () => null
   },
   {
-    label: "Submit",
-    onClick: () => {}
+    label: "Submit"
   }
 ];
 
 storiesOf("Modal|ConfirmAlert", module)
   .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .add("Default", () => <ConfirmAlert message={body} title={"Are you sure about that?"} buttons={buttons} />);
+  .add("Default", () => <ConfirmAlert message={body} title={"Are you sure about that?"} buttons={buttons} />)
+  .add("WithButton", () => {
+    const buttonClick = () => {
+      confirmAlert({ message: body, title: "Are you sure about that?", buttons });
+    };
+    return (
+      <>
+        <button onClick={buttonClick}>Open ConfirmAlert</button>
+        <div id="modalRoot" />
+      </>
+    );
+  });

@@ -23,6 +23,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Permissions can be specified for namespaces ([#1335](https://github.com/scm-manager/scm-manager/pull/1335))
 - Show update info on admin information page ([#1342](https://github.com/scm-manager/scm-manager/pull/1342))
 
+### Changed
+- Rework modal to use react portal ([#1349](https://github.com/scm-manager/scm-manager/pull/1349))
+
 ### Fixed
 - Missing synchronization during repository creation ([#1328](https://github.com/scm-manager/scm-manager/pull/1328))
 - Missing BranchCreatedEvent for mercurial ([#1334](https://github.com/scm-manager/scm-manager/pull/1334))
