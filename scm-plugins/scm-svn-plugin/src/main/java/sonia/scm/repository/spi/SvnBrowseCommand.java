@@ -203,9 +203,18 @@ public class SvnBrowseCommand extends AbstractSvnCommand
     {
       SVNProperties properties = new SVNProperties();
 
-      repository.getFile(entry.getRelativePath(), revision, properties, null);
+      repository.getDir(entry.getRelativePath(), revision, properties, (Collection) null);
 
-      String externals = properties.getStringValue(SVNProperty.EXTERNALS);
+      String externals = properties.getStringValue(SVNProperty.EXTERNALS).replaceAll("[\\r\\n]+", "");
+      String[] externalsArray = externals.split(" ");
+      for(String external: externalsArray)
+      {
+        if(external.startsWith("http://") || external.startsWith("https://") || external.startsWith("../")
+          || external.startsWith("^/") || external.startsWith("/"))
+        {
+          externals = external;
+        }
+      }
 
       if (Util.isNotEmpty(externals))
       {
