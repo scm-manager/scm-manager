@@ -200,7 +200,7 @@ public class SvnBrowseCommand extends AbstractSvnCommand
         for (String externalPart : external.split(" ")) {
           if (shouldSetExternal(externalPart)) {
             subRepoUrl = externalPart;
-          } else if (!externalPart.contains("-r") && !externalPart.isEmpty()) {
+          } else if (!externalPart.contains("-r")) {
             subRepoPath = externalPart;
           }
         }
