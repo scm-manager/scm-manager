@@ -220,11 +220,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
       RevTree tree = revWalk.parseTree(revId);
 
-      if (tree != null) {
-        treeWalk.addTree(tree);
-      } else {
-        throw new IllegalStateException("could not find tree for " + revId.name());
-      }
+      treeWalk.addTree(tree);
 
       if (isRootRequest()) {
         FileObject result = createEmptyRoot();
