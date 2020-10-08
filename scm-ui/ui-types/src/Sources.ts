@@ -24,7 +24,6 @@
 
 import { Links } from "./hal";
 
-// TODO ?? check ?? links
 export type SubRepository = {
   repositoryUrl: string;
   browserUrl: string;
@@ -39,7 +38,7 @@ export type File = {
   revision: string;
   length?: number;
   commitDate?: string;
-  subRepository?: SubRepository; // TODO
+  subRepository?: SubRepository;
   partialResult?: boolean;
   computationAborted?: boolean;
   truncated?: boolean;

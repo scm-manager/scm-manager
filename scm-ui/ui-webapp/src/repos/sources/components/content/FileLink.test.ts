@@ -22,10 +22,22 @@
  * SOFTWARE.
  */
 
-import { createLink } from "./FileTreeLeaf";
+import { createRelativeLink, createFolderLink } from "./FileLink";
 import { File } from "@scm-manager/ui-types";
 
-describe("create link tests", () => {
+describe("create relative link tests", () => {
+  it("should create relative link", () => {
+    expect(createRelativeLink("http://localhost:8081/scm/repo/scmadmin/scm-manager")).toBe(
+      "/scm/repo/scmadmin/scm-manager"
+    );
+    expect(createRelativeLink("ssh://_anonymous@repo.scm-manager.org:1234/repo/public/anonymous-access")).toBe(
+      "/repo/public/anonymous-access"
+    );
+    expect(createRelativeLink("ssh://server.local/project.git")).toBe("/project.git");
+  });
+});
+
+describe("create folder link tests", () => {
   function dir(path: string): File {
     return {
       name: "dir",
@@ -40,13 +52,13 @@ describe("create link tests", () => {
     };
   }
 
-  it("should create link", () => {
-    expect(createLink("src", dir("main"))).toBe("src/main/");
-    expect(createLink("src", dir("/main"))).toBe("src/main/");
-    expect(createLink("src", dir("/main/"))).toBe("src/main/");
+  it("should create folder link", () => {
+    expect(createFolderLink("src", dir("main"))).toBe("src/main/");
+    expect(createFolderLink("src", dir("/main"))).toBe("src/main/");
+    expect(createFolderLink("src", dir("/main/"))).toBe("src/main/");
   });
 
   it("should return base url if the directory path is empty", () => {
-    expect(createLink("src", dir(""))).toBe("src/");
+    expect(createFolderLink("src", dir(""))).toBe("src/");
   });
 });

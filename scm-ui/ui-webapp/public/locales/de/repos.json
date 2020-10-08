@@ -142,14 +142,16 @@
     "dangerZone": "Gefahrenzone"
   },
   "sources": {
-    "file-tree": {
+    "fileTree": {
       "name": "Name",
       "length": "Größe",
       "commitDate": "Commitdatum",
       "description": "Beschreibung",
-      "branch": "Branch",
       "notYetComputed": "Noch nicht berechnet; Der Wert wird in Kürze aktualisiert",
-      "computationAborted": "Die Berechnung dauert zu lange und wurde abgebrochen"
+      "computationAborted": "Die Berechnung dauert zu lange und wurde abgebrochen",
+      "subRepository": "Subrepository",
+      "folder": "Ordner",
+      "file": "Datei"
     },
     "content": {
       "historyButton": "History",

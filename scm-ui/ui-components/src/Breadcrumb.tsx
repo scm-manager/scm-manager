@@ -50,11 +50,11 @@ const HomeIcon = styled(Icon)`
 
 const ActionBar = styled.div`
   align-self: center;
-  
+
   /* order actionbar items horizontal */
   display: flex;
   justify-content: flex-start;
- 
+
   /* ensure space between action bar items */
   & > * {
     /* 

@@ -142,14 +142,16 @@
     "dangerZone": "Danger Zone"
   },
   "sources": {
-    "file-tree": {
+    "fileTree": {
       "name": "Name",
       "length": "Length",
       "commitDate": "Commit date",
       "description": "Description",
-      "branch": "Branch",
       "notYetComputed": "Not yet computed, will be updated in a short while",
-      "computationAborted": "The computation took too long and was aborted"
+      "computationAborted": "The computation took too long and was aborted",
+      "subRepository": "Subrepository",
+      "folder": "Folder",
+      "file": "File"
     },
     "content": {
       "historyButton": "History",
