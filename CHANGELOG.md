@@ -8,14 +8,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - SubRepository support ([#1357](https://github.com/scm-manager/scm-manager/pull/1357))
+- Users can create API keys with limited permissions ([#1359](https://github.com/scm-manager/scm-manager/pull/1359))
 ### Fixed
 - Align actionbar item horizontal and enforce correct margin between them ([#1358](https://github.com/scm-manager/scm-manager/pull/1358))
 - Fix recursive browse command for git ([#1361](https://github.com/scm-manager/scm-manager/pull/1361))
 
 ## [2.6.1] - 2020-09-30
-### Added
-- Users can create API keys with limited permissions ([#1359](https://github.com/scm-manager/scm-manager/pull/1359))
-
 ### Fixed
 - Not found error when using browse command in empty hg repository ([#1355](https://github.com/scm-manager/scm-manager/pull/1355))
 
