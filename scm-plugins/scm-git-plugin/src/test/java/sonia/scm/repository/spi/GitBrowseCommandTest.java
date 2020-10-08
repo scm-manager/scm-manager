@@ -346,6 +346,50 @@ public class GitBrowseCommandTest extends AbstractGitCommandTestBase {
       .containsExactly("e.txt");
   }
 
+  @Test
+  public void testRecursionWithDeepPaths() throws IOException {
+    BrowseCommandRequest request = new BrowseCommandRequest();
+    request.setRevision("deep-folders");
+    request.setRecursive(true);
+
+    FileObject root = createCommand().getBrowserResult(request).getFile();
+
+    assertThat(root.getChildren())
+      .extracting("name")
+      .containsExactly("c", "a.txt", "b.txt", "f.txt");
+    FileObject c = findFile(root.getChildren(), "c");
+
+    assertThat(c.getChildren())
+      .extracting("name")
+      .containsExactly("1", "4", "d.txt", "e.txt");
+
+    FileObject f_1 = findFile(c.getChildren(), "1");
+    assertThat(f_1.getChildren())
+      .extracting("name")
+      .containsExactly("2");
+    FileObject f_12 = findFile(f_1.getChildren(), "2");
+    assertThat(f_12.getChildren())
+      .extracting("name")
+      .containsExactly("3");
+    FileObject f_123 = findFile(f_12.getChildren(), "3");
+    assertThat(f_123.getChildren())
+      .extracting("name")
+      .containsExactly("123.txt");
+
+    FileObject f_4 = findFile(c.getChildren(), "4");
+    assertThat(f_4.getChildren())
+      .extracting("name")
+      .containsExactly("5", "6");
+    FileObject f_45 = findFile(f_4.getChildren(), "5");
+    assertThat(f_45.getChildren())
+      .extracting("name")
+      .containsExactly("45-1.txt", "45-2.txt");
+    FileObject f_46 = findFile(f_4.getChildren(), "6");
+    assertThat(f_46.getChildren())
+      .extracting("name")
+      .containsExactly("46-1.txt", "46-2.txt");
+  }
+
   private FileObject findFile(Collection<FileObject> foList, String name) {
     return foList.stream()
       .filter(f -> name.equals(f.getName()))
