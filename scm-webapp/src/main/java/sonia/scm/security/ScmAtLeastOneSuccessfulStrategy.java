@@ -55,16 +55,16 @@ public class ScmAtLeastOneSuccessfulStrategy extends AbstractAuthenticationStrat
   }
 
   @Override
-  public AuthenticationInfo afterAllAttempts(AuthenticationToken token, AuthenticationInfo aggregate) throws AuthenticationException {
+  public AuthenticationInfo afterAllAttempts(AuthenticationToken token, AuthenticationInfo aggregate) {
     final List<Throwable> throwables = threadLocal.get();
     threadLocal.remove();
     if (isAuthenticationSuccessful(aggregate)) {
       return aggregate;
     }
-    Optional<TokenExpiredException> tokenExpiredException = findTokenExpiredException(throwables);
+    Optional<? extends AuthenticationException> specializedException = findSpecializedException(throwables);
 
-    if (tokenExpiredException.isPresent()) {
-      throw tokenExpiredException.get();
+    if (specializedException.isPresent()) {
+      throw specializedException.get();
     } else {
       throw createAuthenticationException(token);
     }
@@ -80,6 +80,18 @@ public class ScmAtLeastOneSuccessfulStrategy extends AbstractAuthenticationStrat
 
   private static Optional<TokenExpiredException> findTokenExpiredException(List<Throwable> throwables) {
     return throwables.stream().filter(t -> t instanceof TokenExpiredException).findFirst().map(t -> (TokenExpiredException) t);
+  }
+
+  private static Optional<AuthenticationException> findTokenValidationFailedException(List<Throwable> throwables) {
+    return throwables.stream().filter(t -> t instanceof TokenValidationFailedException).findFirst().map(t -> (TokenValidationFailedException) t);
+  }
+
+  private static Optional<? extends AuthenticationException> findSpecializedException(List<Throwable> throwables) {
+    Optional<TokenExpiredException> tokenExpiredException = findTokenExpiredException(throwables);
+    if (tokenExpiredException.isPresent()) {
+      return tokenExpiredException;
+    }
+    return findTokenValidationFailedException(throwables);
   }
 
   private static AuthenticationException createAuthenticationException(AuthenticationToken token) {
