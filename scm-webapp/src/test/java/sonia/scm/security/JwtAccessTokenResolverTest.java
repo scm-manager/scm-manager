@@ -110,7 +110,7 @@ public class JwtAccessTokenResolverTest {
     when(validator.validate(Mockito.any(AccessToken.class))).thenReturn(false);
     
     // expect exception
-    expectedException.expect(AuthenticationException.class);
+    expectedException.expect(TokenValidationFailedException.class);
     expectedException.expectMessage(Matchers.containsString("token"));
     
     BearerToken bearer = BearerToken.valueOf(compact);
