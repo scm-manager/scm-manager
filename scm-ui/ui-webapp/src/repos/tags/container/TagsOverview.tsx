@@ -69,7 +69,12 @@ const TagsOverview: FC<Props> = ({ repository, baseUrl }) => {
     return <Loading />;
   }
 
-  return <>{renderTagsTable()}</>;
+  return (
+    <>
+      <Subtitle subtitle={t("tags.overview.title")} />
+      {renderTagsTable()}
+    </>
+  );
 };
 
 export default TagsOverview;
