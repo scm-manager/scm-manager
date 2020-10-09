@@ -5,9 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [2.6.2] - 2020-10-09
 ### Added
 - Introduce api for handling token validation failed exception ([#1362](https://github.com/scm-manager/scm-manager/pull/1362))
+### Fixed
 - Fix recursive browse command for git ([#1361](https://github.com/scm-manager/scm-manager/pull/1361))
 
 ## [2.6.1] - 2020-09-30
@@ -337,3 +338,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.4.1]: https://www.scm-manager.org/download/2.4.1
 [2.5.0]: https://www.scm-manager.org/download/2.5.0
 [2.6.0]: https://www.scm-manager.org/download/2.6.0
+[2.6.1]: https://www.scm-manager.org/download/2.6.1
+[2.6.2]: https://www.scm-manager.org/download/2.6.2
