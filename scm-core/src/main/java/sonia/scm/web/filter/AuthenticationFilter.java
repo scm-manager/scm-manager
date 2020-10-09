@@ -39,6 +39,7 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.AnonymousToken;
 import sonia.scm.security.TokenExpiredException;
+import sonia.scm.security.TokenValidationFailedException;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.WebTokenGenerator;
@@ -168,7 +169,13 @@ public class AuthenticationFilter extends HttpFilter {
 
   protected void handleTokenExpiredException(HttpServletRequest request, HttpServletResponse response,
                                              FilterChain chain, TokenExpiredException tokenExpiredException) throws IOException, ServletException {
+    logger.trace("rethrow token expired exception");
     throw tokenExpiredException;
+  }
+
+  protected void handleTokenValidationFailedException(HttpServletRequest request, HttpServletResponse response, FilterChain chain, TokenValidationFailedException tokenValidationFailedException) throws IOException, ServletException {
+    logger.trace("send unauthorized, because of a failed token validation");
+    handleUnauthorized(request, response, chain);
   }
 
   /**
@@ -216,7 +223,11 @@ public class AuthenticationFilter extends HttpFilter {
       processChain(request, response, chain, subject);
     } catch (TokenExpiredException ex) {
       // Rethrow to be caught by TokenExpiredFilter
+      logger.trace("handle token expired exception");
       handleTokenExpiredException(request, response, chain, ex);
+    } catch (TokenValidationFailedException ex) {
+      logger.trace("handle token validation failed exception");
+      handleTokenValidationFailedException(request, response, chain, ex);
     } catch (AuthenticationException ex) {
       logger.warn("authentication failed", ex);
       handleUnauthorized(request, response, chain);
@@ -259,7 +270,7 @@ public class AuthenticationFilter extends HttpFilter {
    *
    * @return {@code true} if anonymous access is enabled
    */
-  private boolean isAnonymousAccessEnabled() {
+  protected boolean isAnonymousAccessEnabled() {
     return (configuration != null) && configuration.getAnonymousMode() != AnonymousMode.OFF;
   }
 }

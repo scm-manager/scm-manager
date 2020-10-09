@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Users can create API keys with limited permissions ([#1359](https://github.com/scm-manager/scm-manager/pull/1359))
+- Introduce api for handling token validation failed exception ([#1362](https://github.com/scm-manager/scm-manager/pull/1362))
 
 ### Fixed
 - Align actionbar item horizontal and enforce correct margin between them ([#1358](https://github.com/scm-manager/scm-manager/pull/1358))
