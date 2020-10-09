@@ -89,7 +89,7 @@ public final class JwtAccessTokenResolver implements AccessTokenResolver {
     if (!validator.validate(accessToken)) {
       String msg = createValidationFailedMessage(validator, accessToken);
       LOG.debug(msg);
-      throw new AuthenticationException(msg);
+      throw new TokenValidationFailedException(validator, accessToken);
     }
   }
 

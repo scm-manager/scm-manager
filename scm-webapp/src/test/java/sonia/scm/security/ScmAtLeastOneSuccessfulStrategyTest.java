@@ -36,6 +36,7 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -60,6 +61,9 @@ public class ScmAtLeastOneSuccessfulStrategyTest {
   TokenExpiredException tokenExpiredException;
 
   @Mock
+  TokenValidationFailedException tokenValidationFailedException;
+
+  @Mock
   AuthenticationException authenticationException;
 
   @Mock
@@ -77,9 +81,25 @@ public class ScmAtLeastOneSuccessfulStrategyTest {
   }
 
   @Test(expected = TokenExpiredException.class)
-  public void shouldRethrowException() {
+  public void shouldRethrowTokenExpiredException() {
     final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy();
     strategy.threadLocal.set(singletonList(tokenExpiredException));
+
+    strategy.afterAllAttempts(token, aggregateInfo);
+  }
+
+  @Test(expected = TokenValidationFailedException.class)
+  public void shouldRethrowTokenValidationFailedException() {
+    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy();
+    strategy.threadLocal.set(singletonList(tokenValidationFailedException));
+
+    strategy.afterAllAttempts(token, aggregateInfo);
+  }
+
+  @Test(expected = TokenExpiredException.class)
+  public void shouldPrioritizeRethrowingTokenExpiredExceptionOverTokenValidationFailedException() {
+    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy();
+    strategy.threadLocal.set(Arrays.asList(tokenValidationFailedException, tokenExpiredException));
 
     strategy.afterAllAttempts(token, aggregateInfo);
   }
