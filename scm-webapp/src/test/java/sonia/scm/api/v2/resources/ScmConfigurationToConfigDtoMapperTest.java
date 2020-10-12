@@ -106,6 +106,7 @@ public class ScmConfigurationToConfigDtoMapperTest {
     assertEquals("username", dto.getNamespaceStrategy());
     assertEquals("https://scm-manager.org/login-info", dto.getLoginInfoUrl());
     assertEquals("https://www.scm-manager.org/download/rss.xml", dto.getReleaseFeedUrl());
+    assertEquals("scm-manager.local", dto.getMailHost());
 
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
