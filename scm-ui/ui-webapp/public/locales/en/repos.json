@@ -139,7 +139,7 @@
     "subtitle": "Edit Repository",
     "submit": "Save",
     "initializeRepository": "Initialize repository",
-    "dangerZone": "Danger Zone"
+    "dangerZone": "Rename and delete"
   },
   "sources": {
     "fileTree": {
@@ -224,8 +224,8 @@
   },
   "deleteRepo": {
     "button": "Delete Repository",
-    "subtitle": "Deletes this repository",
-    "description": "Once a repository was deleted, this cannot be undone. Please be careful with this action.",
+    "subtitle": "Delete repository",
+    "description": "Deleted repositories can not be restored.",
     "confirmAlert": {
       "title": "Delete repository",
       "message": "Do you really want to delete the repository?",
@@ -236,8 +236,8 @@
   "renameRepo": {
     "button": "Rename Repository",
     "subtitle": "Renames this repository",
-    "description1": "There will be no redirects to the renamed repository.",
-    "description2": "Permissions from the namespace will not be adapted when the namespace is changed.",
+    "description1": "The repository can only be accessed by its new name.",
+    "description2": "Namespace Permissions must be set again if the namespace is changed.",
     "modal": {
       "title": "Rename repository",
       "label": {
