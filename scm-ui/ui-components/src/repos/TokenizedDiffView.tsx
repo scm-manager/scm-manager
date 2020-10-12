@@ -29,7 +29,8 @@ import { File } from "./DiffTypes";
 
 // styling for the diff tokens
 // this must be aligned with th style, which is used in the SyntaxHighlighter component
-import "prism-themes/themes/prism-ghcolors.css";
+// eslint-disable-next-line no-restricted-imports
+import "@scm-manager/ui-styles/src/syntax-highlighting.css";
 
 const DiffView = styled(Diff)`
   /* align line numbers */

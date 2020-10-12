@@ -24,7 +24,8 @@
 import React from "react";
 
 import { PrismAsyncLight as ReactSyntaxHighlighter } from "react-syntax-highlighter";
-import { ghcolors } from "react-syntax-highlighter/dist/esm/styles/prism";
+// eslint-disable-next-line no-restricted-imports
+import highlightingTheme from "@scm-manager/ui-styles/src/syntax-highlighting.js";
 
 type Props = {
   language?: string;
@@ -52,7 +53,7 @@ class SyntaxHighlighter extends React.Component<Props> {
     const { showLineNumbers } = this.props;
     const language = this.getLanguage();
     return (
-      <ReactSyntaxHighlighter showLineNumbers={showLineNumbers} language={language} style={ghcolors}>
+      <ReactSyntaxHighlighter showLineNumbers={showLineNumbers} language={language} style={highlightingTheme}>
         {this.props.value}
       </ReactSyntaxHighlighter>
     );

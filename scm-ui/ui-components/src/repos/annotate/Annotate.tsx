@@ -26,7 +26,7 @@ import React, { FC, useReducer } from "react";
 import { Repository, AnnotatedSource, AnnotatedLine } from "@scm-manager/ui-types";
 // @ts-ignore
 import { PrismAsyncLight as ReactSyntaxHighlighter, createElement } from "react-syntax-highlighter";
-import { ghcolors } from "react-syntax-highlighter/dist/esm/styles/prism";
+import highlightingTheme from "@scm-manager/ui-styles/src/syntax-highlighting.js";
 import { DateInput } from "../../useDateFormatter";
 import Popover from "./Popover";
 import AnnotateLine from "./AnnotateLine";
@@ -144,7 +144,7 @@ const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
       <ReactSyntaxHighlighter
         showLineNumbers={false}
         language={source.language ? source.language : "text"}
-        style={ghcolors}
+        style={highlightingTheme}
         renderer={defaultRenderer}
       >
         {code}
