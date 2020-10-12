@@ -105,8 +105,6 @@ public class GitHookTagProvider implements HookTagProvider {
     final RevObject revObject = revWalk.parseAny(oldId);
     if (revObject instanceof RevTag) {
       return unpeelTag(revWalk, ((RevTag) revObject).getObject());
-    } else if (revObject == null) {
-      return oldId;
     } else {
       return revObject;
     }
