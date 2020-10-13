@@ -24,12 +24,14 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.common.base.Strings;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import sonia.scm.group.GroupCollector;
+import sonia.scm.user.EMail;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.UserPermissions;
@@ -46,12 +48,14 @@ public class MeDtoFactory extends HalAppenderMapper {
   private final ResourceLinks resourceLinks;
   private final UserManager userManager;
   private final GroupCollector groupCollector;
+  private final EMail eMail;
 
   @Inject
-  public MeDtoFactory(ResourceLinks resourceLinks, UserManager userManager, GroupCollector groupCollector) {
+  public MeDtoFactory(ResourceLinks resourceLinks, UserManager userManager, GroupCollector groupCollector, EMail eMail) {
     this.resourceLinks = resourceLinks;
     this.userManager = userManager;
     this.groupCollector = groupCollector;
+    this.eMail = eMail;
   }
 
   public MeDto create() {
@@ -61,6 +65,7 @@ public class MeDtoFactory extends HalAppenderMapper {
     MeDto dto = createDto(user);
     mapUserProperties(user, dto);
     mapGroups(user, dto);
+    setGeneratedMail(user, dto);
     return dto;
   }
 
@@ -77,6 +82,12 @@ public class MeDtoFactory extends HalAppenderMapper {
   private PrincipalCollection getPrincipalCollection() {
     Subject subject = SecurityUtils.getSubject();
     return subject.getPrincipals();
+  }
+
+  private void setGeneratedMail(User user, MeDto dto) {
+    if (Strings.isNullOrEmpty(user.getMail())) {
+      dto.setFallbackMail(eMail.createFallbackMailAddress(user));
+    }
   }
 
 
