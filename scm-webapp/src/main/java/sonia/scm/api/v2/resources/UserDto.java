@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -46,7 +46,8 @@ public class UserDto extends HalRepresentation {
   private String displayName;
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Instant lastModified;
-  @NotEmpty @Email
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @Email
   private String mail;
   @Pattern(regexp = ValidationUtil.REGEX_NAME)
   private String name;
