@@ -47,7 +47,15 @@ type PluginModule = {
 const BundleLoader = {
   name: "bundle-loader",
   fetch: (plugin: PluginModule) => {
-    return fetch(plugin.address, {
+    let url = plugin.address;
+    if (!url.endsWith(".bundle.js")) {
+      url += ".bundle.js";
+    }
+
+    if (url.includes("@scm-manager/")) {
+      url = url.replace("@scm-manager/", "");
+    }
+    return fetch(url, {
       credentials: "same-origin",
       headers: {
         Cache: "no-cache",
