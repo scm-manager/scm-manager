@@ -92,21 +92,19 @@ public class GitHookTagProvider implements HookTagProvider {
   }
 
   private Tag createTagFromNewId(RevWalk revWalk, ReceiveCommand rc, String tag) throws IOException {
-    final ObjectId newId = rc.getNewId();
+    ObjectId newId = rc.getNewId();
     return new Tag(tag, getId(unpeelTag(revWalk, newId)), GitUtil.getTagTime(revWalk, newId));
   }
 
   private Tag createTagFromOldId(RevWalk revWalk, ReceiveCommand rc, String tag) throws IOException {
-    final ObjectId oldId = rc.getOldId();
+    ObjectId oldId = rc.getOldId();
     return new Tag(tag, getId(unpeelTag(revWalk, oldId)), GitUtil.getTagTime(revWalk, oldId));
   }
 
   public ObjectId unpeelTag(RevWalk revWalk, ObjectId oldId) throws IOException {
-    final RevObject revObject = revWalk.parseAny(oldId);
+    RevObject revObject = revWalk.parseAny(oldId);
     if (revObject instanceof RevTag) {
       return unpeelTag(revWalk, ((RevTag) revObject).getObject());
-    } else if (revObject == null) {
-      return oldId;
     } else {
       return revObject;
     }

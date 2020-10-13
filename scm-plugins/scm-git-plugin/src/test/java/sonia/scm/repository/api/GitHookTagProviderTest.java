@@ -25,6 +25,7 @@
 package sonia.scm.repository.api;
 
 import com.google.common.collect.Lists;
+import org.eclipse.jgit.lib.AnyObjectId;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevObject;
@@ -49,6 +50,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -78,8 +81,15 @@ public class GitHookTagProviderTest {
    * Set up mocks for upcoming tests.
    */
   @Before
-  public void setUpMocks() {
+  public void setUpMocks() throws IOException {
     commands = Lists.newArrayList(command);
+    when(revWalk.parseAny(any(ObjectId.class))).thenAnswer(invocationOnMock -> {
+      ObjectId objectId = invocationOnMock.getArgument(0);
+      RevObject revObject = mock(RevObject.class);
+      String name = objectId.getName();
+      when(revObject.name()).thenReturn(name);
+      return revObject;
+    });
   }
 
   /**
@@ -95,7 +105,7 @@ public class GitHookTagProviderTest {
 
       dummy.when(() -> GitUtil.getTagTime(revWalk, ObjectId.fromString(revision))).thenReturn(timestamp);
       dummy.when(() -> GitUtil.getTagName(ref)).thenReturn(tagName);
-      dummy.when(() -> GitUtil.getId(ObjectId.fromString(revision))).thenReturn(revision);
+      dummy.when(() -> GitUtil.getId(hasObjectId(revision))).thenReturn(revision);
 
       GitHookTagProvider provider = createProvider(ReceiveCommand.Type.CREATE, ref, revision, ZERO);
 
@@ -117,7 +127,7 @@ public class GitHookTagProviderTest {
 
       dummy.when(() -> GitUtil.getTagTime(revWalk, ObjectId.fromString(revision))).thenReturn(timestamp);
       dummy.when(() -> GitUtil.getTagName(ref)).thenReturn(tagName);
-      dummy.when(() -> GitUtil.getId(ObjectId.fromString(revision))).thenReturn(revision);
+      dummy.when(() -> GitUtil.getId(hasObjectId(revision))).thenReturn(revision);
 
       GitHookTagProvider provider = createProvider(ReceiveCommand.Type.DELETE, ref, ZERO, revision);
 
@@ -154,8 +164,8 @@ public class GitHookTagProviderTest {
       dummy.when(() -> GitUtil.getTagTime(revWalk, ObjectId.fromString(oldRevision))).thenReturn(timestamp);
       dummy.when(() -> GitUtil.getTagTime(revWalk, ObjectId.fromString(newRevision))).thenReturn(null);
       dummy.when(() -> GitUtil.getTagName(ref)).thenReturn(tagName);
-      dummy.when(() -> GitUtil.getId(ObjectId.fromString(oldRevision))).thenReturn(oldRevision);
-      dummy.when(() -> GitUtil.getId(ObjectId.fromString(newRevision))).thenReturn(newRevision);
+      dummy.when(() -> GitUtil.getId(hasObjectId(oldRevision))).thenReturn(oldRevision);
+      dummy.when(() -> GitUtil.getId(hasObjectId(newRevision))).thenReturn(newRevision);
 
       GitHookTagProvider provider = createProvider(ReceiveCommand.Type.UPDATE, ref, newRevision, oldRevision);
 
@@ -180,8 +190,8 @@ public class GitHookTagProviderTest {
       dummy.when(() -> GitUtil.getTagTime(revWalk, ObjectId.fromString(newRevision))).thenReturn(timestamp);
       dummy.when(() -> GitUtil.getTagTime(revWalk, ObjectId.fromString(oldRevision))).thenReturn(null);
       dummy.when(() -> GitUtil.getTagName(ref)).thenReturn(tagName);
-      dummy.when(() -> GitUtil.getId(ObjectId.fromString(oldRevision))).thenReturn(oldRevision);
-      dummy.when(() -> GitUtil.getId(ObjectId.fromString(newRevision))).thenReturn(newRevision);
+      dummy.when(() -> GitUtil.getId(hasObjectId(oldRevision))).thenReturn(oldRevision);
+      dummy.when(() -> GitUtil.getId(hasObjectId(newRevision))).thenReturn(newRevision);
 
       GitHookTagProvider provider = createProvider(ReceiveCommand.Type.UPDATE, ref, newRevision, oldRevision);
 
@@ -200,22 +210,27 @@ public class GitHookTagProviderTest {
       String tagName = "1.0.0";
       String ref = "refs/tags/" + tagName;
 
-      final RevTag mockedTag = mock(RevTag.class);
+      RevTag mockedTag = mock(RevTag.class);
       when(revWalk.parseAny(ObjectId.fromString(REVISION_1))).thenReturn(mockedTag);
-      final RevObject commitForTag = mock(RevObject.class);
+      RevObject commitForTag = mock(RevObject.class);
+      when(commitForTag.getName()).thenReturn(revisionOfCommit);
       when(mockedTag.getObject()).thenReturn(commitForTag);
       dummy.when(() -> GitUtil.getTagTime(revWalk, ObjectId.fromString(REVISION_1))).thenReturn(timestampOfTag);
       dummy.when(() -> GitUtil.getTagTime(revWalk, commitForTag)).thenReturn(timestampOfCommit);
 
       dummy.when(() -> GitUtil.getTagTime(revWalk, ObjectId.fromString(revisionOfTag))).thenReturn(timestampOfCommit);
       dummy.when(() -> GitUtil.getTagName(ref)).thenReturn(tagName);
-      dummy.when(() -> GitUtil.getId(commitForTag)).thenReturn(revisionOfCommit);
+      dummy.when(() -> GitUtil.getId(hasObjectId(revisionOfCommit))).thenReturn(revisionOfCommit);
 
       GitHookTagProvider provider = createProvider(ReceiveCommand.Type.CREATE, ref, revisionOfTag, ZERO);
 
       assertTag(tagName, revisionOfCommit, timestampOfCommit, provider.getCreatedTags());
       assertThat(provider.getDeletedTags(), empty());
     }
+  }
+
+  public AnyObjectId hasObjectId(String oldRevision) {
+    return argThat(anyObjectId -> oldRevision.equals(anyObjectId.name()));
   }
 
   private void assertTag(String name, String revision, Long date, List<Tag> tags) {
