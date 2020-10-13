@@ -25,7 +25,12 @@
 package sonia.scm.repository.api;
 
 import com.google.common.io.ByteSource;
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
@@ -34,10 +39,12 @@ import org.mockito.Mock;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.stubbing.Answer;
-import sonia.scm.repository.Person;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.spi.ModifyCommand;
 import sonia.scm.repository.spi.ModifyCommandRequest;
 import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.user.EMail;
+import sonia.scm.user.User;
 
 import java.io.ByteArrayInputStream;
 import java.io.File;
@@ -50,14 +57,18 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyBoolean;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class ModifyCommandBuilderTest {
+
+  private static final ScmConfiguration SCM_CONFIGURATION = new ScmConfiguration();
 
   @Mock
   ModifyCommand command;
@@ -73,7 +84,7 @@ class ModifyCommandBuilderTest {
   void initWorkdir(@TempDir Path temp) throws IOException {
     workdir = Files.createDirectory(temp.resolve("workdir"));
     lenient().when(workdirProvider.createNewWorkdir()).thenReturn(workdir.toFile());
-    commandBuilder = new ModifyCommandBuilder(command, workdirProvider);
+    commandBuilder = new ModifyCommandBuilder(command, workdirProvider, new EMail(SCM_CONFIGURATION));
   }
 
   @BeforeEach
@@ -89,136 +100,27 @@ class ModifyCommandBuilderTest {
     );
   }
 
-  @Test
-  void shouldReturnTargetRevisionFromCommit() {
-    String targetRevision = initCommand()
-      .deleteFile("toBeDeleted")
-      .execute();
-
-    assertThat(targetRevision).isEqualTo("target");
-  }
-
-  @Test
-  void shouldExecuteDelete() throws IOException {
-    initCommand()
-      .deleteFile("toBeDeleted")
-      .execute();
-
-    verify(worker).delete("toBeDeleted");
-  }
-
-  @Test
-  void shouldExecuteCreateWithByteSourceContent() throws IOException {
-    ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
-    List<String> contentCaptor = new ArrayList<>();
-    doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), anyBoolean());
-
-    initCommand()
-      .createFile("toBeCreated").withData(ByteSource.wrap("content".getBytes()))
-      .execute();
-
-    assertThat(nameCaptor.getValue()).isEqualTo("toBeCreated");
-    assertThat(contentCaptor).contains("content");
-  }
-
-  @Test
-  void shouldExecuteCreateWithInputStreamContent() throws IOException {
-    ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
-    List<String> contentCaptor = new ArrayList<>();
-    doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), anyBoolean());
-
-    initCommand()
-      .createFile("toBeCreated").withData(new ByteArrayInputStream("content".getBytes()))
-      .execute();
-
-    assertThat(nameCaptor.getValue()).isEqualTo("toBeCreated");
-    assertThat(contentCaptor).contains("content");
-  }
-
-  @Test
-  void shouldExecuteCreateWithOverwriteFalseAsDefault() throws IOException {
-    ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<Boolean> overwriteCaptor = ArgumentCaptor.forClass(Boolean.class);
-    List<String> contentCaptor = new ArrayList<>();
-    doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), overwriteCaptor.capture());
-
-    initCommand()
-      .createFile("toBeCreated").withData(new ByteArrayInputStream("content".getBytes()))
-      .execute();
-
-    assertThat(nameCaptor.getValue()).isEqualTo("toBeCreated");
-    assertThat(overwriteCaptor.getValue()).isFalse();
-    assertThat(contentCaptor).contains("content");
-  }
-
-  @Test
-  void shouldExecuteCreateWithOverwriteIfSet() throws IOException {
-    ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<Boolean> overwriteCaptor = ArgumentCaptor.forClass(Boolean.class);
-    List<String> contentCaptor = new ArrayList<>();
-    doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), overwriteCaptor.capture());
-
-    initCommand()
-      .createFile("toBeCreated").setOverwrite(true).withData(new ByteArrayInputStream("content".getBytes()))
-      .execute();
-
-    assertThat(nameCaptor.getValue()).isEqualTo("toBeCreated");
-    assertThat(overwriteCaptor.getValue()).isTrue();
-    assertThat(contentCaptor).contains("content");
-  }
-
-  @Test
-  void shouldExecuteCreateMultipleTimes() throws IOException {
-    ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
-    List<String> contentCaptor = new ArrayList<>();
-    doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), anyBoolean());
-
-    initCommand()
-      .createFile("toBeCreated_1").withData(new ByteArrayInputStream("content_1".getBytes()))
-      .createFile("toBeCreated_2").withData(new ByteArrayInputStream("content_2".getBytes()))
-      .execute();
-
-    List<String> createdNames = nameCaptor.getAllValues();
-    assertThat(createdNames.get(0)).isEqualTo("toBeCreated_1");
-    assertThat(createdNames.get(1)).isEqualTo("toBeCreated_2");
-    assertThat(contentCaptor).contains("content_1", "content_2");
-  }
-
-  @Test
-  void shouldExecuteModify() throws IOException {
-    ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
-    List<String> contentCaptor = new ArrayList<>();
-    doAnswer(new ExtractContent(contentCaptor)).when(worker).modify(nameCaptor.capture(), any());
-
-    initCommand()
-      .modifyFile("toBeModified").withData(ByteSource.wrap("content".getBytes()))
-      .execute();
-
-    assertThat(nameCaptor.getValue()).isEqualTo("toBeModified");
-    assertThat(contentCaptor).contains("content");
-  }
-
   private ModifyCommandBuilder initCommand() {
     return commandBuilder
       .setBranch("branch")
-      .setCommitMessage("message")
-      .setAuthor(new Person());
+      .setCommitMessage("message");
   }
 
-  @Test
-  void shouldDeleteTemporaryFiles(@TempDir Path temp) throws IOException {
-    ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
-    ArgumentCaptor<File> fileCaptor = ArgumentCaptor.forClass(File.class);
-    doNothing().when(worker).modify(nameCaptor.capture(), fileCaptor.capture());
+  private void mockLoggedInUser(User loggedInUser) {
+    Subject subject = mock(Subject.class);
+    ThreadContext.bind(subject);
+    PrincipalCollection principals = mock(PrincipalCollection.class);
+    when(subject.getPrincipals()).thenReturn(principals);
+    when(principals.oneByType(User.class)).thenReturn(loggedInUser);
+  }
 
-    initCommand()
-      .modifyFile("toBeModified").withData(ByteSource.wrap("content".getBytes()))
-      .execute();
-
-    assertThat(Files.list(temp)).isEmpty();
+  @AfterEach
+  void unbindSubjec() {
+    ThreadContext.unbindSubject();
   }
 
   private static class ExtractContent implements Answer {
+
     private final List<String> contentCaptor;
 
     public ExtractContent(List<String> contentCaptor) {
@@ -228,6 +130,173 @@ class ModifyCommandBuilderTest {
     @Override
     public Object answer(InvocationOnMock invocation) throws Throwable {
       return contentCaptor.add(Files.readAllLines(((File) invocation.getArgument(1)).toPath()).get(0));
+    }
+  }
+
+  @Nested
+  class WithUserWithMail {
+
+    @BeforeEach
+    void initSubject() {
+      User loggedInUser = new User("dent", "Arthur", "dent@hitchhiker.com");
+      mockLoggedInUser(loggedInUser);
+    }
+
+    @Test
+    void shouldReturnTargetRevisionFromCommit() {
+      String targetRevision = initCommand()
+        .deleteFile("toBeDeleted")
+        .execute();
+
+      assertThat(targetRevision).isEqualTo("target");
+    }
+
+    @Test
+    void shouldExecuteDelete() throws IOException {
+      initCommand()
+        .deleteFile("toBeDeleted")
+        .execute();
+
+      verify(worker).delete("toBeDeleted");
+    }
+
+    @Test
+    void shouldExecuteCreateWithByteSourceContent() throws IOException {
+      ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
+      List<String> contentCaptor = new ArrayList<>();
+      doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), anyBoolean());
+
+      initCommand()
+        .createFile("toBeCreated").withData(ByteSource.wrap("content".getBytes()))
+        .execute();
+
+      assertThat(nameCaptor.getValue()).isEqualTo("toBeCreated");
+      assertThat(contentCaptor).contains("content");
+    }
+
+    @Test
+    void shouldExecuteCreateWithInputStreamContent() throws IOException {
+      ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
+      List<String> contentCaptor = new ArrayList<>();
+      doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), anyBoolean());
+
+      initCommand()
+        .createFile("toBeCreated").withData(new ByteArrayInputStream("content".getBytes()))
+        .execute();
+
+      assertThat(nameCaptor.getValue()).isEqualTo("toBeCreated");
+      assertThat(contentCaptor).contains("content");
+    }
+
+    @Test
+    void shouldExecuteCreateWithOverwriteFalseAsDefault() throws IOException {
+      ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
+      ArgumentCaptor<Boolean> overwriteCaptor = ArgumentCaptor.forClass(Boolean.class);
+      List<String> contentCaptor = new ArrayList<>();
+      doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), overwriteCaptor.capture());
+
+      initCommand()
+        .createFile("toBeCreated").withData(new ByteArrayInputStream("content".getBytes()))
+        .execute();
+
+      assertThat(nameCaptor.getValue()).isEqualTo("toBeCreated");
+      assertThat(overwriteCaptor.getValue()).isFalse();
+      assertThat(contentCaptor).contains("content");
+    }
+
+    @Test
+    void shouldExecuteCreateWithOverwriteIfSet() throws IOException {
+      ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
+      ArgumentCaptor<Boolean> overwriteCaptor = ArgumentCaptor.forClass(Boolean.class);
+      List<String> contentCaptor = new ArrayList<>();
+      doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), overwriteCaptor.capture());
+
+      initCommand()
+        .createFile("toBeCreated").setOverwrite(true).withData(new ByteArrayInputStream("content".getBytes()))
+        .execute();
+
+      assertThat(nameCaptor.getValue()).isEqualTo("toBeCreated");
+      assertThat(overwriteCaptor.getValue()).isTrue();
+      assertThat(contentCaptor).contains("content");
+    }
+
+    @Test
+    void shouldExecuteCreateMultipleTimes() throws IOException {
+      ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
+      List<String> contentCaptor = new ArrayList<>();
+      doAnswer(new ExtractContent(contentCaptor)).when(worker).create(nameCaptor.capture(), any(), anyBoolean());
+
+      initCommand()
+        .createFile("toBeCreated_1").withData(new ByteArrayInputStream("content_1".getBytes()))
+        .createFile("toBeCreated_2").withData(new ByteArrayInputStream("content_2".getBytes()))
+        .execute();
+
+      List<String> createdNames = nameCaptor.getAllValues();
+      assertThat(createdNames.get(0)).isEqualTo("toBeCreated_1");
+      assertThat(createdNames.get(1)).isEqualTo("toBeCreated_2");
+      assertThat(contentCaptor).contains("content_1", "content_2");
+    }
+
+    @Test
+    void shouldExecuteModify() throws IOException {
+      ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
+      List<String> contentCaptor = new ArrayList<>();
+      doAnswer(new ExtractContent(contentCaptor)).when(worker).modify(nameCaptor.capture(), any());
+
+      initCommand()
+        .modifyFile("toBeModified").withData(ByteSource.wrap("content".getBytes()))
+        .execute();
+
+      assertThat(nameCaptor.getValue()).isEqualTo("toBeModified");
+      assertThat(contentCaptor).contains("content");
+    }
+
+    @Test
+    void shouldDeleteTemporaryFiles(@TempDir Path temp) throws IOException {
+      ArgumentCaptor<String> nameCaptor = ArgumentCaptor.forClass(String.class);
+      ArgumentCaptor<File> fileCaptor = ArgumentCaptor.forClass(File.class);
+      doNothing().when(worker).modify(nameCaptor.capture(), fileCaptor.capture());
+
+      initCommand()
+        .modifyFile("toBeModified").withData(ByteSource.wrap("content".getBytes()))
+        .execute();
+
+      assertThat(Files.list(temp)).isEmpty();
+    }
+
+    @Test
+    void shouldUseMailFromUser() throws IOException {
+      initCommand()
+        .modifyFile("toBeModified").withData(ByteSource.wrap("content".getBytes()))
+        .execute();
+
+      verify(command).execute(argThat(modifyCommandRequest -> {
+        assertThat(modifyCommandRequest.getAuthor().getMail()).isEqualTo("dent@hitchhiker.com");
+        return true;
+      }));
+    }
+  }
+
+  @Nested
+  class WithUserWithoutMail {
+
+    @BeforeEach
+    void initSubject() {
+      User loggedInUser = new User("dent", "Arthur", null);
+      mockLoggedInUser(loggedInUser);
+    }
+
+    @Test
+    void shouldUseMailFromUser() throws IOException {
+      SCM_CONFIGURATION.setMailHost("heart-of-gold.local");
+      initCommand()
+        .modifyFile("toBeModified").withData(ByteSource.wrap("content".getBytes()))
+        .execute();
+
+      verify(command).execute(argThat(modifyCommandRequest -> {
+        assertThat(modifyCommandRequest.getAuthor().getMail()).isEqualTo("dent@heart-of-gold.local");
+        return true;
+      }));
     }
   }
 }

@@ -34,6 +34,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.user.EMail;
 
 import java.io.Closeable;
 import java.io.IOException;
@@ -87,6 +88,7 @@ public final class RepositoryService implements Closeable {
   @SuppressWarnings("rawtypes")
   private final Set<ScmProtocolProvider> protocolProviders;
   private final WorkdirProvider workdirProvider;
+  private final EMail eMail;
 
   /**
    * Constructs a new {@link RepositoryService}. This constructor should only
@@ -94,20 +96,22 @@ public final class RepositoryService implements Closeable {
    * @param cacheManager     cache manager
    * @param provider         implementation for {@link RepositoryServiceProvider}
    * @param repository       the repository
-   * @param workdirProvider
+   * @param workdirProvider  provider for workdirs
+   * @param eMail            utility to compute email addresses if missing
    */
   RepositoryService(CacheManager cacheManager,
                     RepositoryServiceProvider provider, Repository repository,
                     PreProcessorUtil preProcessorUtil,
                     @SuppressWarnings("rawtypes") Set<ScmProtocolProvider> protocolProviders,
-                    WorkdirProvider workdirProvider
-  ) {
+                    WorkdirProvider workdirProvider,
+                    EMail eMail) {
     this.cacheManager = cacheManager;
     this.provider = provider;
     this.repository = repository;
     this.preProcessorUtil = preProcessorUtil;
     this.protocolProviders = protocolProviders;
     this.workdirProvider = workdirProvider;
+    this.eMail = eMail;
   }
 
   /**
@@ -397,7 +401,7 @@ public final class RepositoryService implements Closeable {
     LOG.debug("create merge command for repository {}",
       repository.getNamespaceAndName());
 
-    return new MergeCommandBuilder(provider.getMergeCommand());
+    return new MergeCommandBuilder(provider.getMergeCommand(), eMail);
   }
 
   /**
@@ -418,7 +422,7 @@ public final class RepositoryService implements Closeable {
     LOG.debug("create modify command for repository {}",
       repository.getNamespaceAndName());
 
-    return new ModifyCommandBuilder(provider.getModifyCommand(), workdirProvider);
+    return new ModifyCommandBuilder(provider.getModifyCommand(), workdirProvider, eMail);
   }
 
   /**

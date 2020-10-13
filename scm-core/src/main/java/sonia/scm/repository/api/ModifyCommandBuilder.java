@@ -35,6 +35,7 @@ import sonia.scm.repository.spi.ModifyCommand;
 import sonia.scm.repository.spi.ModifyCommandRequest;
 import sonia.scm.repository.util.AuthorUtil;
 import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.user.EMail;
 import sonia.scm.util.IOUtil;
 
 import java.io.File;
@@ -72,14 +73,17 @@ public class ModifyCommandBuilder {
 
   private static final Logger LOG = LoggerFactory.getLogger(ModifyCommandBuilder.class);
 
+  private final EMail eMail;
+
   private final ModifyCommand command;
   private final File workdir;
 
   private final ModifyCommandRequest request = new ModifyCommandRequest();
 
-  ModifyCommandBuilder(ModifyCommand command, WorkdirProvider workdirProvider) {
+  ModifyCommandBuilder(ModifyCommand command, WorkdirProvider workdirProvider, EMail eMail) {
     this.command = command;
     this.workdir = workdirProvider.createNewWorkdir();
+    this.eMail = eMail;
   }
 
   /**
@@ -124,7 +128,7 @@ public class ModifyCommandBuilder {
    * @return The revision of the new commit.
    */
   public String execute() {
-    AuthorUtil.setAuthorIfNotAvailable(request);
+    AuthorUtil.setAuthorIfNotAvailable(request, eMail);
     try {
       Preconditions.checkArgument(request.isValid(), "commit message and at least one request are required");
       return command.execute(request);

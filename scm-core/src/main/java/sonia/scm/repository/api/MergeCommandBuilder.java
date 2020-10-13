@@ -30,6 +30,7 @@ import sonia.scm.repository.spi.MergeCommand;
 import sonia.scm.repository.spi.MergeCommandRequest;
 import sonia.scm.repository.spi.MergeConflictResult;
 import sonia.scm.repository.util.AuthorUtil;
+import sonia.scm.user.EMail;
 
 import java.util.Set;
 
@@ -75,11 +76,14 @@ import java.util.Set;
  */
 public class MergeCommandBuilder {
 
+  private final EMail eMail;
+
   private final MergeCommand mergeCommand;
   private final MergeCommandRequest request = new MergeCommandRequest();
 
-  MergeCommandBuilder(MergeCommand mergeCommand) {
+  MergeCommandBuilder(MergeCommand mergeCommand, EMail eMail) {
     this.mergeCommand = mergeCommand;
+    this.eMail = eMail;
   }
 
   /**
@@ -209,7 +213,7 @@ public class MergeCommandBuilder {
    * @return The result of the merge.
    */
   public MergeCommandResult executeMerge() {
-    AuthorUtil.setAuthorIfNotAvailable(request);
+    AuthorUtil.setAuthorIfNotAvailable(request, eMail);
     Preconditions.checkArgument(request.isValid(), "revision to merge and target revision is required");
     return mergeCommand.merge(request);
   }
