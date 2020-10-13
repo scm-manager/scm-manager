@@ -62,6 +62,12 @@ class Details extends React.Component<Props> {
             </td>
           </tr>
           <tr>
+            <th>{t("user.externalFlag")}</th>
+            <td>
+              <Checkbox checked={!!user?.external && user.external} />
+            </td>
+          </tr>
+          <tr>
             <th>{t("user.type")}</th>
             <td>{user.type}</td>
           </tr>

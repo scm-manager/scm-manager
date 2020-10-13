@@ -6,6 +6,7 @@
     "password": "Password",
     "active": "Active",
     "inactive": "Inactive",
+    "externalFlag": "External",
     "type": "Type",
     "creationDate": "Creation Date",
     "lastModified": "Last Modified"
@@ -20,7 +21,8 @@
     "displayNameHelpText": "Display name of the user.",
     "mailHelpText": "Email address of the user.",
     "adminHelpText": "An administrator is able to create, modify and delete repositories, groups and users.",
-    "activeHelpText": "Activate or deactivate the user."
+    "activeHelpText": "Activate or deactivate the user.",
+    "externalFlagHelpText": "This user is managed by an external system."
   },
   "users": {
     "title": "Users",

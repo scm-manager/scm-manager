@@ -41,6 +41,7 @@ import java.time.Instant;
 @NoArgsConstructor @Getter @Setter
 public class UserDto extends HalRepresentation {
   private boolean active;
+  private boolean external;
   private Instant creationDate;
   @NotEmpty
   private String displayName;

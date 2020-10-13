@@ -60,6 +60,7 @@ class UserForm extends React.Component<Props, State> {
         mail: "",
         password: "",
         active: true,
+        external: false,
         _links: {}
       },
       mailValidationError: false,
@@ -80,14 +81,10 @@ class UserForm extends React.Component<Props, State> {
     }
   }
 
-  isFalsy(value) {
-    return !value;
-  }
-
   createUserComponentsAreInvalid = () => {
     const user = this.state.user;
     if (!this.props.user) {
-      return this.state.nameValidationError || this.isFalsy(user.name) || !this.state.passwordValid;
+      return this.state.nameValidationError || !user.name || !this.state.passwordValid;
     } else {
       return false;
     }
@@ -99,7 +96,8 @@ class UserForm extends React.Component<Props, State> {
       return (
         this.props.user.displayName === user.displayName &&
         this.props.user.mail === user.mail &&
-        this.props.user.active === user.active
+        this.props.user.active === user.active &&
+          this.props.user.external === user.external
       );
     } else {
       return false;
@@ -113,8 +111,8 @@ class UserForm extends React.Component<Props, State> {
       this.editUserComponentsAreUnchanged() ||
       this.state.mailValidationError ||
       this.state.displayNameValidationError ||
-      this.isFalsy(user.displayName) ||
-      this.isFalsy(user.mail)
+      !user.displayName ||
+      !user.mail
     );
   };
 
@@ -181,12 +179,20 @@ class UserForm extends React.Component<Props, State> {
           </div>
           {passwordChangeField}
           <div className="columns">
-            <div className="column">
+            <div className="column is-half">
               <Checkbox
                 label={t("user.active")}
                 onChange={this.handleActiveChange}
                 checked={user ? user.active : false}
                 helpText={t("help.activeHelpText")}
+              />
+            </div>
+            <div className="column is-half">
+              <Checkbox
+                label={t("user.externalFlag")}
+                onChange={this.handleExternalFlagChange}
+                checked={!!user?.external && user.external}
+                helpText={t("help.externalFlagHelpText")}
               />
             </div>
           </div>
@@ -232,7 +238,7 @@ class UserForm extends React.Component<Props, State> {
         ...this.state.user,
         password
       },
-      passwordValid: !this.isFalsy(password) && passwordValid
+      passwordValid: !!password && passwordValid
     });
   };
 
@@ -241,6 +247,15 @@ class UserForm extends React.Component<Props, State> {
       user: {
         ...this.state.user,
         active
+      }
+    });
+  };
+
+  handleExternalFlagChange = (external: boolean) => {
+    this.setState({
+      user: {
+        ...this.state.user,
+        external
       }
     });
   };
