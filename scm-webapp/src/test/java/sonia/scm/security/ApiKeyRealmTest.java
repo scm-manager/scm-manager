@@ -96,6 +96,15 @@ class ApiKeyRealmTest {
     assertThrows(AuthorizationException.class, () -> realm.doGetAuthenticationInfo(token));
   }
 
+  @Test
+  void shouldIgnoreTokensWithDots() {
+    BearerToken token = valueOf("this.is.no.api.token");
+
+    boolean supports = realm.supports(token);
+
+    assertThat(supports).isFalse();
+  }
+
   void verifyScopeSet(String... permissions) {
     verify(authenticationInfoBuilder).withScope(argThat(scope -> {
       assertThat(scope).containsExactly(permissions);
