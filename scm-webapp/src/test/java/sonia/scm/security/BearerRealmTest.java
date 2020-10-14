@@ -40,6 +40,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static sonia.scm.security.BearerToken.valueOf;
 
 /**
  * Unit tests for {@link BearerRealm}.
@@ -95,5 +96,14 @@ class BearerRealmTest {
   @Test
   void shouldThrowIllegalArgumentExceptionForWrongTypeOfToken() {
     assertThrows(IllegalArgumentException.class, () -> realm.doGetAuthenticationInfo(new UsernamePasswordToken()));
+  }
+
+  @Test
+  void shouldIgnoreTokensWithoutDot() {
+    BearerToken token = valueOf("this-is-no-jwt-token");
+
+    boolean supports = realm.supports(token);
+
+    assertThat(supports).isFalse();
   }
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -29,6 +29,8 @@ import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.realm.AuthenticatingRealm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.group.GroupDAO;
 import sonia.scm.plugin.Extension;
 import sonia.scm.user.UserDAO;
@@ -54,6 +56,7 @@ public class BearerRealm extends AuthenticatingRealm
   @VisibleForTesting
   static final String REALM = "BearerRealm";
 
+  private static final Logger LOG = LoggerFactory.getLogger(BearerRealm.class);
 
   /** dao realm helper */
   private final DAORealmHelper helper;
@@ -76,7 +79,17 @@ public class BearerRealm extends AuthenticatingRealm
     setAuthenticationTokenClass(BearerToken.class);
   }
 
-  //~--- methods --------------------------------------------------------------
+  @Override
+  public boolean supports(AuthenticationToken token) {
+    if (token instanceof BearerToken) {
+      boolean containsDot = ((BearerToken) token).getCredentials().contains(".");
+      if (!containsDot) {
+        LOG.debug("Ignoring token without a dot ('.'); this probably is an API key");
+      }
+      return containsDot;
+    }
+    return false;
+  }
 
   /**
    * Validates the given bearer token and retrieves authentication data from
