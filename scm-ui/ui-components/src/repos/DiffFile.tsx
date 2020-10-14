@@ -488,7 +488,7 @@ class DiffFile extends React.Component<Props, State> {
     if (file?.hunks?.length) {
       modalContent = (
         <FullscreenModal
-          title={this.renderFileTitle(file)}
+          title={file.type === "delete" ? file.oldPath : file.newPath}
           closeFunction={() => this.closeModal()}
           body={<MarginlessModalContent>{body}</MarginlessModalContent>}
           active={showFullscreenModal}
