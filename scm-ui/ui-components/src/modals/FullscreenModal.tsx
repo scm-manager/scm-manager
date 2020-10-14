@@ -38,7 +38,7 @@ type Props = {
 const FullSizedModal = styled(Modal)`
   & .modal-card {
     width: 98%;
-    max-height: 100vh;
+    max-height: 97vh;
   }
 `;
 
