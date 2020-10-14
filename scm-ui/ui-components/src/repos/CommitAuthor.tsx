@@ -22,47 +22,42 @@
  * SOFTWARE.
  */
 
-import * as diffs from "./diffs";
+import React from "react";
+import { WithTranslation, withTranslation } from "react-i18next";
+import Notification from "../Notification";
+import { Me } from "@scm-manager/ui-types";
+import { connect } from "react-redux";
+import { compose } from "redux";
 
-import {
-  File,
-  FileChangeType,
-  Hunk,
-  Change,
-  ChangeType,
-  BaseContext,
-  AnnotationFactory,
-  AnnotationFactoryContext,
-  DiffEventHandler,
-  DiffEventContext
-} from "./DiffTypes";
-
-export { diffs };
-
-export * from "./annotate";
-export * from "./changesets";
-
-export { default as Diff } from "./Diff";
-export { default as DiffFile } from "./DiffFile";
-export { default as DiffButton } from "./DiffButton";
-export { FileControlFactory } from "./DiffTypes";
-export { default as LoadingDiff } from "./LoadingDiff";
-export { DefaultCollapsed, DefaultCollapsedFunction } from "./defaultCollapsed";
-export { default as RepositoryAvatar } from "./RepositoryAvatar";
-export { default as RepositoryEntry } from "./RepositoryEntry";
-export { default as RepositoryEntryLink } from "./RepositoryEntryLink";
-export { default as JumpToFileButton } from "./JumpToFileButton";
-export { default as CommitAuthor } from "./CommitAuthor";
-
-export {
-  File,
-  FileChangeType,
-  Hunk,
-  Change,
-  ChangeType,
-  BaseContext,
-  AnnotationFactory,
-  AnnotationFactoryContext,
-  DiffEventHandler,
-  DiffEventContext
+type Props = WithTranslation & {
+  // props from global state
+  me: Me;
 };
+
+class CommitAuthor extends React.Component<Props> {
+  render() {
+    const { me, t } = this.props;
+
+    const mail = me.mail ? me.mail : me.fallbackMail;
+
+    return (
+      <>
+        {!me.mail && <Notification type="warning">{t("commit.commitAuthor.noMail")}</Notification>}
+        <span className="mb-2">
+          <strong>{t("commit.commitAuthor.author")}</strong> {`${me.displayName} <${mail}>`}
+        </span>
+      </>
+    );
+  }
+}
+
+const mapStateToProps = (state: any) => {
+  const { auth } = state;
+  const me = auth.me;
+
+  return {
+    me
+  };
+};
+
+export default compose(connect(mapStateToProps), withTranslation("repos"))(CommitAuthor);
