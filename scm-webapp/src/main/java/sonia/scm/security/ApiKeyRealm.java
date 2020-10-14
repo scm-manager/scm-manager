@@ -85,6 +85,7 @@ public class ApiKeyRealm extends AuthenticatingRealm {
   private AuthenticationInfo buildAuthenticationInfo(AuthenticationToken token, ApiKeyService.CheckResult check) {
     RepositoryRole repositoryRole = determineRole(check);
     Scope scope = createScope(repositoryRole);
+    LOG.debug("login for user {} with api key limited to role {}", check.getUser(), check.getPermissionRole());
     return helper
       .authenticationInfoBuilder(check.getUser())
       .withSessionId(getPrincipal(token))
