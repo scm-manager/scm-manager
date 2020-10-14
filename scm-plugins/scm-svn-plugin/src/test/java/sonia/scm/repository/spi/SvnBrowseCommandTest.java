@@ -24,10 +24,20 @@
 
 package sonia.scm.repository.spi;
 
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.tmatesoft.svn.core.SVNDepth;
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.SVNPropertyValue;
+import org.tmatesoft.svn.core.SVNURL;
+import org.tmatesoft.svn.core.wc.SVNClientManager;
+import org.tmatesoft.svn.core.wc.SVNRevision;
 import sonia.scm.repository.BrowserResult;
 import sonia.scm.repository.FileObject;
+import sonia.scm.repository.SubRepository;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -36,14 +46,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
-{
+public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase {
+
+  @Rule
+  public TemporaryFolder temporaryFolder = new TemporaryFolder();
 
   @Test
   public void testBrowseWithFilePath() {
@@ -82,7 +94,6 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
 
   /**
    * Method description
-   *
    *
    * @throws IOException
    */
@@ -260,14 +271,51 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
       .containsExactly("e.txt");
   }
 
+  @Test
+  public void shouldNotAddSubRepositoryIfNotSetInProperties() {
+    BrowserResult browserResult = new SvnBrowseCommand(createContext()).getBrowserResult(new BrowseCommandRequest());
+
+    boolean containsSubRepository = browserResult.getFile().getChildren()
+      .stream()
+      .anyMatch(c -> c.getSubRepository() != null);
+
+    assertFalse(containsSubRepository);
+  }
+
+  @Test
+  public void shouldAddSubRepositoryIfSetInProperties() throws IOException, SVNException {
+    String externalLink = "https://scm-manager.org/svn-repo";
+    SvnContext svnContext = setProp("svn:externals", "external -r1 " + externalLink);
+
+    BrowserResult browserResult = new SvnBrowseCommand(svnContext).getBrowserResult(new BrowseCommandRequest());
+
+    boolean containsSubRepository = browserResult.getFile().getChildren()
+      .stream()
+      .anyMatch(c -> c.getSubRepository().getRepositoryUrl().equals(externalLink));
+
+    assertTrue(containsSubRepository);
+  }
+
+  private SvnContext setProp(String propName, String propValue) throws SVNException, IOException {
+    SvnContext context = createContext();
+    SVNClientManager client = SVNClientManager.newInstance();
+
+    File workingCopyDirectory = temporaryFolder.newFolder("working-copy");
+
+    SVNURL url = SVNURL.fromFile(context.getDirectory());
+    client.getUpdateClient().doCheckout(url, workingCopyDirectory, SVNRevision.HEAD, SVNRevision.HEAD, SVNDepth.INFINITY, true);
+
+    client.getWCClient().doSetProperty(workingCopyDirectory, propName, SVNPropertyValue.create(propValue), true, SVNDepth.UNKNOWN, null, null);
+    client.getCommitClient().doCommit(new File[]{workingCopyDirectory}, false, "set prop", null, null, false, false, SVNDepth.UNKNOWN);
+    return context;
+  }
+
   /**
    * Method description
    *
-   *
    * @return
    */
-  private SvnBrowseCommand createCommand()
-  {
+  private SvnBrowseCommand createCommand() {
     return new SvnBrowseCommand(createContext());
   }
 
@@ -276,14 +324,11 @@ public class SvnBrowseCommandTest extends AbstractSvnCommandTestBase
   /**
    * Method description
    *
-   *
    * @param foList
    * @param name
-   *
    * @return
    */
-  private FileObject getFileObject(Collection<FileObject> foList, String name)
-  {
+  private FileObject getFileObject(Collection<FileObject> foList, String name) {
     return foList.stream()
       .filter(f -> name.equals(f.getName()))
       .findFirst()
