@@ -21,9 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import * as React from "react";
+import { FC, ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import { Modal } from "./Modal";
+import Button from "../buttons/Button";
+import styled from "styled-components";
 
-// @create-index
+type Props = {
+  title: string;
+  closeFunction: () => void;
+  body: ReactNode;
+  active: boolean;
+};
 
-export { default as ConfirmAlert, confirmAlert } from "./ConfirmAlert";
-export { default as Modal } from "./Modal";
-export { default as FullscreenModal } from "./FullscreenModal";
+const FullSizedModal = styled(Modal)`
+  & .modal-card {
+    width: 98%;
+    max-height: 100vh;
+  }
+`;
+
+const FullscreenModal: FC<Props> = ({ title, closeFunction, body, active }) => {
+  const [t] = useTranslation("repos");
+  const footer = <Button label={t("diff.fullscreen.close")} action={closeFunction} color="grey" />;
+
+  return <FullSizedModal title={title} closeFunction={closeFunction} body={body} footer={footer} active={active} />;
+};
+
+export default FullscreenModal;

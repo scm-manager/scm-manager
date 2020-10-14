@@ -263,7 +263,11 @@
     "expandLastBottomByLines": "Bis zu {{count}} weitere Zeilen laden",
     "expandLastBottomComplete": "Alle verbleibenden Zeilen laden",
     "expanding": "Zeilen werden geladen ...",
-    "expansionFailed": "Fehler beim Laden der zusätzlichen Zeilen"
+    "expansionFailed": "Fehler beim Laden der zusätzlichen Zeilen",
+    "fullscreen": {
+      "open": "In Vollbildansicht öffnen",
+      "close": "Schließen"
+    }
   },
   "fileUpload": {
     "clickHere": "Klicken Sie hier um Ihre Datei hochzuladen.",
