@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Fixed
+- Null Pointer Exception on anonymous migration with deleted repositories ([#1371](https://github.com/scm-manager/scm-manager/pull/1371))
+- Null Pointer Exception on parsing SVN properties ([#1373](https://github.com/scm-manager/scm-manager/pull/1373))
+
+### Changed
+- Reduced logging for invalid JWT or api keys ([#1374](https://github.com/scm-manager/scm-manager/pull/1374))
+
 ## [2.7.0] - 2020-10-12
 ### Added
 - Users can create API keys with limited permissions ([#1359](https://github.com/scm-manager/scm-manager/pull/1359))
