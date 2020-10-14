@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update.repository;
 
 import org.slf4j.Logger;
@@ -89,9 +89,13 @@ public class PublicFlagUpdateStep implements UpdateStep {
       .filter(V1Repository::isPublic)
       .forEach(v1Repository -> {
         Repository v2Repository = repositoryDAO.get(v1Repository.getId());
-        LOG.info(String.format("Add RepositoryRole 'READ' to _anonymous user for repository: %s - %s/%s", v2Repository.getId(), v2Repository.getNamespace(), v2Repository.getName()));
-        v2Repository.addPermission(new RepositoryPermission(v2AnonymousUser.getId(), "READ", false));
-        repositoryDAO.modify(v2Repository);
+        if (v2Repository != null) {
+          LOG.info("Add RepositoryRole 'READ' to _anonymous user for repository: {} - {}/{}", v2Repository.getId(), v2Repository.getNamespace(), v2Repository.getName());
+          v2Repository.addPermission(new RepositoryPermission(v2AnonymousUser.getId(), "READ", false));
+          repositoryDAO.modify(v2Repository);
+        } else {
+          LOG.info("Repository no longer found for id {}; could not set permission for former anonymous mode", v1Repository.getId());
+        }
       });
   }
 
