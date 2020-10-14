@@ -59,7 +59,7 @@ public class ConfigDto extends HalRepresentation {
   private String namespaceStrategy;
   private String loginInfoUrl;
   private String releaseFeedUrl;
-  private String mailHost;
+  private String mailDomainName;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

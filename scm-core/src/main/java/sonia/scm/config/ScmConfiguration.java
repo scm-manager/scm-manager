@@ -81,10 +81,10 @@ public class ScmConfiguration implements Configuration {
   public static final String DEFAULT_LOGIN_INFO_URL = "https://login-info.scm-manager.org/api/v1/login-info";
 
   /**
-   * Default e-mail host that will be used whenever we have to generate an e-mail address for a user that has no mail
-   * address configured.
+   * Default e-mail domain name that will be used whenever we have to generate an e-mail address for a user that has no
+   * mail address configured.
    */
-  public static final String DEFAULT_MAIL_HOST = "scm-manager.local";
+  public static final String DEFAULT_MAIL_DOMAIN_NAME = "scm-manager.local";
 
   /**
    * Default plugin url from version 1.0
@@ -193,8 +193,8 @@ public class ScmConfiguration implements Configuration {
   @XmlElement(name = "login-info-url")
   private String loginInfoUrl = DEFAULT_LOGIN_INFO_URL;
 
-  @XmlElement(name = "mail-host")
-  private String mailHost = DEFAULT_MAIL_HOST;
+  @XmlElement(name = "mail-domain-name")
+  private String mailDomainName = DEFAULT_MAIL_DOMAIN_NAME;
 
   /**
    * Calls the {@link sonia.scm.ConfigChangedListener#configChanged(Object)}
@@ -235,7 +235,7 @@ public class ScmConfiguration implements Configuration {
     this.namespaceStrategy = other.namespaceStrategy;
     this.loginInfoUrl = other.loginInfoUrl;
     this.releaseFeedUrl = other.releaseFeedUrl;
-    this.mailHost = other.mailHost;
+    this.mailDomainName = other.mailDomainName;
   }
 
   /**
@@ -305,8 +305,8 @@ public class ScmConfiguration implements Configuration {
    *
    * @since 2.8.0
    */
-  public String getMailHost() {
-    return mailHost;
+  public String getMailDomainName() {
+    return mailDomainName;
   }
 
   /**
@@ -492,11 +492,11 @@ public class ScmConfiguration implements Configuration {
   /**
    * Sets the mail host, that will be used to create e-mail addresses for users without one whenever one is required.
    *
-   * @param mailHost The new mail host to use.
+   * @param mailDomainName The new mail host to use.
    * @since 2.8.0
    */
-  public void setMailHost(String mailHost) {
-    this.mailHost = mailHost;
+  public void setMailDomainName(String mailDomainName) {
+    this.mailDomainName = mailDomainName;
   }
 
   /**

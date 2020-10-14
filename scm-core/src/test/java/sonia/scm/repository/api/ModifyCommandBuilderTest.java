@@ -288,7 +288,7 @@ class ModifyCommandBuilderTest {
 
     @Test
     void shouldUseMailFromUser() throws IOException {
-      SCM_CONFIGURATION.setMailHost("heart-of-gold.local");
+      SCM_CONFIGURATION.setMailDomainName("heart-of-gold.local");
       initCommand()
         .modifyFile("toBeModified").withData(ByteSource.wrap("content".getBytes()))
         .execute();

@@ -36,7 +36,7 @@ type Props = WithTranslation & {
   skipFailedAuthenticators: boolean;
   pluginUrl: string;
   releaseFeedUrl: string;
-  mailHost: string;
+  mailDomainName: string;
   enabledXsrfProtection: boolean;
   namespaceStrategy: string;
   namespaceStrategies?: NamespaceStrategies;
@@ -52,7 +52,7 @@ class GeneralSettings extends React.Component<Props> {
       loginInfoUrl,
       pluginUrl,
       releaseFeedUrl,
-      mailHost,
+      mailDomainName,
       enabledXsrfProtection,
       anonymousMode,
       namespaceStrategy,
@@ -142,11 +142,11 @@ class GeneralSettings extends React.Component<Props> {
           </div>
           <div className="column is-half">
             <InputField
-              label={t("general-settings.mail-host")}
-              onChange={this.handleMailHostChange}
-              value={mailHost}
+              label={t("general-settings.mail-domain-name")}
+              onChange={this.handleMailDomainNameChange}
+              value={mailDomainName}
               disabled={!hasUpdatePermission}
-              helpText={t("help.mailHostHelpText")}
+              helpText={t("help.mailDomainNameHelpText")}
             />
           </div>
         </div>
@@ -175,8 +175,8 @@ class GeneralSettings extends React.Component<Props> {
   handleReleaseFeedUrlChange = (value: string) => {
     this.props.onChange(true, value, "releaseFeedUrl");
   };
-  handleMailHostChange = (value: string) => {
-    this.props.onChange(true, value, "mailHost");
+  handleMailDomainNameChange = (value: string) => {
+    this.props.onChange(true, value, "mailDomainName");
   };
 }
 

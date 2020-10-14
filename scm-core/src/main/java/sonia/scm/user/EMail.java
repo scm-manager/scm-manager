@@ -43,7 +43,7 @@ public class EMail {
       if (user.getId().contains("@")) {
         return user.getId();
       } else {
-        return user.getId() + "@" + scmConfiguration.getMailHost();
+        return user.getId() + "@" + scmConfiguration.getMailDomainName();
       }
     } else {
       return user.getMail();
