@@ -31,12 +31,12 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>2.8.0-SNAPSHOT</version>
+    <version>2.7.1</version>
   </parent>
 
   <groupId>sonia.scm</groupId>
   <artifactId>scm-annotation-processor</artifactId>
-  <version>2.8.0-SNAPSHOT</version>
+  <version>2.7.1</version>
   <name>scm-annotation-processor</name>
 
   <dependencies>
@@ -46,7 +46,7 @@
     <dependency>
       <groupId>sonia.scm</groupId>
       <artifactId>scm-annotations</artifactId>
-      <version>2.8.0-SNAPSHOT</version>
+      <version>2.7.1</version>
     </dependency>
 
     <!-- rest api -->
