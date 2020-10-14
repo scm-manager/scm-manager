@@ -139,7 +139,7 @@
     "subtitle": "Repository bearbeiten",
     "submit": "Speichern",
     "initializeRepository": "Repository initiieren",
-    "dangerZone": "Gefahrenzone"
+    "dangerZone": "Umbenennen und Löschen"
   },
   "sources": {
     "fileTree": {
@@ -224,8 +224,8 @@
   },
   "deleteRepo": {
     "button": "Repository löschen",
-    "subtitle": "Löscht dieses Repository",
-    "description": "Diese Aktion kann nicht rückgangig gemacht werden.",
+    "subtitle": "Repository löschen",
+    "description": "Gelöschte Repositories können nicht wieder hergestellt werden.",
     "confirmAlert": {
       "title": "Repository löschen",
       "message": "Soll das Repository wirklich gelöscht werden?",
@@ -235,9 +235,9 @@
   },
   "renameRepo": {
     "button": "Repository umbenennen",
-    "subtitle": "Benennt dieses Repository um",
-    "description1": "Es werden keine Weiterleitung auf den neuen Namen eingerichtet.",
-    "description2": "Berechtigungen aus dem Namespace werden bei einem Wechsel nicht übernommen.",
+    "subtitle": "Repository umbenennen",
+    "description1": "Das Repository kann nur über den neuen Namen erreicht werden.",
+    "description2": "Berechtigungen aus dem Namespace müssen erneut vergeben werden.",
     "modal": {
       "title": "Repository umbenennen",
       "label": {
