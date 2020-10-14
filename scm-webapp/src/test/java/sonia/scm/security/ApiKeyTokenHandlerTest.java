@@ -64,7 +64,7 @@ class ApiKeyTokenHandlerTest {
 
   @Test
   void shouldParseRealWorldExample() {
-    Optional<ApiKeyTokenHandler.Token> token = handler.readToken("JhcGlLZXlJZCI6IkE2U0ROWmV0MjEiLCJ1c2VyIjoiaG9yc3QiLCJwYXNzcGhyYXNlIjoiWGNKQ01PMnZuZ1JaOEhVU21BSVoifQ");
+    Optional<ApiKeyTokenHandler.Token> token = handler.readToken("eyJhcGlLZXlJZCI6IkE2U0ROWmV0MjEiLCJ1c2VyIjoiaG9yc3QiLCJwYXNzcGhyYXNlIjoiWGNKQ01PMnZuZ1JaOEhVU21BSVoifQ");
 
     assertThat(token).get().extracting("user").isEqualTo("horst");
   }
