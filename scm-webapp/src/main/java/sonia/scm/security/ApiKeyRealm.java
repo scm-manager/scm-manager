@@ -30,6 +30,8 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.realm.AuthenticatingRealm;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;
@@ -42,6 +44,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Singleton
 @Extension
 public class ApiKeyRealm extends AuthenticatingRealm {
+
+  private static final Logger LOG = LoggerFactory.getLogger(ApiKeyRealm.class);
 
   private final ApiKeyService apiKeyService;
   private final DAORealmHelper helper;
@@ -58,7 +62,14 @@ public class ApiKeyRealm extends AuthenticatingRealm {
 
   @Override
   public boolean supports(AuthenticationToken token) {
-    return token instanceof UsernamePasswordToken || token instanceof BearerToken;
+    if (token instanceof UsernamePasswordToken || token instanceof BearerToken) {
+      boolean containsDot = getPassword(token).contains(".");
+      if (containsDot) {
+        LOG.debug("Ignoring token with at least one dot ('.'); this is probably a JWT token");
+      }
+      return !containsDot;
+    }
+    return false;
   }
 
   @Override
@@ -74,6 +85,7 @@ public class ApiKeyRealm extends AuthenticatingRealm {
   private AuthenticationInfo buildAuthenticationInfo(AuthenticationToken token, ApiKeyService.CheckResult check) {
     RepositoryRole repositoryRole = determineRole(check);
     Scope scope = createScope(repositoryRole);
+    LOG.debug("login for user {} with api key limited to role {}", check.getUser(), check.getPermissionRole());
     return helper
       .authenticationInfoBuilder(check.getUser())
       .withSessionId(getPrincipal(token))
