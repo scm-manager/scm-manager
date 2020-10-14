@@ -90,9 +90,11 @@ public class PublicFlagUpdateStep implements UpdateStep {
       .forEach(v1Repository -> {
         Repository v2Repository = repositoryDAO.get(v1Repository.getId());
         if (v2Repository != null) {
-          LOG.info(String.format("Add RepositoryRole 'READ' to _anonymous user for repository: %s - %s/%s", v2Repository.getId(), v2Repository.getNamespace(), v2Repository.getName()));
+          LOG.info("Add RepositoryRole 'READ' to _anonymous user for repository: {} - {}/{}", v2Repository.getId(), v2Repository.getNamespace(), v2Repository.getName());
           v2Repository.addPermission(new RepositoryPermission(v2AnonymousUser.getId(), "READ", false));
           repositoryDAO.modify(v2Repository);
+        } else {
+          LOG.info("Repository no longer found for id {}; could not set permission for former anonymous mode", v1Repository.getId());
         }
       });
   }
