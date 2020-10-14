@@ -33,7 +33,7 @@ import Icon from "../Icon";
 import { Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType } from "./DiffTypes";
 import TokenizedDiffView from "./TokenizedDiffView";
 import DiffButton from "./DiffButton";
-import { MenuContext } from "@scm-manager/ui-components";
+import { MenuContext, OpenInFullscreenButton, FullscreenModal } from "@scm-manager/ui-components";
 import DiffExpander, { ExpandableHunk } from "./DiffExpander";
 import HunkExpandLink from "./HunkExpandLink";
 import { Modal } from "../modals";
@@ -57,6 +57,7 @@ type State = Collapsible & {
   sideBySide?: boolean;
   diffExpander: DiffExpander;
   expansionError?: any;
+  showFullscreenModal: boolean;
 };
 
 const DiffFilePanel = styled.div`
@@ -91,6 +92,10 @@ const ChangeTypeTag = styled(Tag)`
   margin-left: 0.75rem;
 `;
 
+const MarginlessModalContent = styled.div`
+  margin: -1.25rem;
+`;
+
 class DiffFile extends React.Component<Props, State> {
   static defaultProps: Partial<Props> = {
     defaultCollapse: false,
@@ -103,7 +108,8 @@ class DiffFile extends React.Component<Props, State> {
       collapsed: this.defaultCollapse(),
       sideBySide: props.sideBySide,
       diffExpander: new DiffExpander(props.file),
-      file: props.file
+      file: props.file,
+      showFullscreenModal: false
     };
   }
 
@@ -142,6 +148,18 @@ class DiffFile extends React.Component<Props, State> {
       }),
       () => callback()
     );
+  };
+
+  openModal = () => {
+    this.setState({
+      showFullscreenModal: true
+    });
+  };
+
+  closeModal = () => {
+    this.setState({
+      showFullscreenModal: false
+    });
   };
 
   setCollapse = (collapsed: boolean) => {
@@ -403,7 +421,7 @@ class DiffFile extends React.Component<Props, State> {
 
   render() {
     const { fileControlFactory, fileAnnotationFactory, t } = this.props;
-    const { file, collapsed, sideBySide, diffExpander, expansionError } = this.state;
+    const { file, collapsed, sideBySide, diffExpander, expansionError, showFullscreenModal } = this.state;
     const viewType = sideBySide ? "split" : "unified";
 
     let body = null;
@@ -426,7 +444,8 @@ class DiffFile extends React.Component<Props, State> {
     }
     const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit" /> : null;
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
-    const sideBySideToggle = file.hunks && file.hunks.length && (
+    const openInFullscreen = file?.hunks?.length ? <OpenInFullscreenButton onClick={this.openModal} /> : null;
+    const sideBySideToggle = file?.hunks?.length && (
       <MenuContext.Consumer>
         {({ setCollapsed }) => (
           <DiffButton
@@ -447,6 +466,7 @@ class DiffFile extends React.Component<Props, State> {
       <ButtonWrapper className={classNames("level-right", "is-flex")}>
         <ButtonGroup>
           {sideBySideToggle}
+          {openInFullscreen}
           {fileControls}
         </ButtonGroup>
       </ButtonWrapper>
@@ -464,8 +484,24 @@ class DiffFile extends React.Component<Props, State> {
       );
     }
 
+    let modalContent;
+    if (file?.hunks?.length) {
+      modalContent = (
+        <FullscreenModal
+          title={this.renderFileTitle(file)}
+          closeFunction={() => this.closeModal()}
+          body={<MarginlessModalContent>{body}</MarginlessModalContent>}
+          active={showFullscreenModal}
+        />
+      );
+    }
+
     return (
-      <DiffFilePanel className={classNames("panel", "is-size-6")} collapsed={(file && file.isBinary) || collapsed} id={this.getAnchorId(file)}>
+      <DiffFilePanel
+        className={classNames("panel", "is-size-6")}
+        collapsed={(file && file.isBinary) || collapsed}
+        id={this.getAnchorId(file)}
+      >
         {errorModal}
         <div className="panel-heading">
           <FlexWrapLevel className="level">
@@ -484,6 +520,7 @@ class DiffFile extends React.Component<Props, State> {
           </FlexWrapLevel>
         </div>
         {body}
+        {modalContent}
       </DiffFilePanel>
     );
   }
