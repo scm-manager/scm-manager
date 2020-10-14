@@ -74,6 +74,29 @@ SystemJS.config({
   }
 });
 
+// We have to patch the resolve methods of SystemJS
+// in order to resolve the correct bundle url for plugins
+
+const resolveModuleUrl = (key: string) => {
+  if (key.startsWith("@scm-manager/scm-") && key.endsWith("-plugin")) {
+    const pluginName = key.replace("@scm-manager/", "");
+    return urls.withContextPath(`/assets/${pluginName}.bundle.js`);
+  }
+  return key;
+};
+
+const defaultResolve = SystemJS.resolve;
+SystemJS.resolve = function(key, parentName) {
+  const module = resolveModuleUrl(key);
+  return defaultResolve.apply(this, [module, parentName]);
+};
+
+const defaultResolveSync = SystemJS.resolveSync;
+SystemJS.resolveSync = function(key, parentName) {
+  const module = resolveModuleUrl(key);
+  return defaultResolveSync.apply(this, [module, parentName]);
+};
+
 const expose = (name: string, cmp: any, defaultCmp?: any) => {
   let mod = cmp;
   if (defaultCmp) {

@@ -25,6 +25,7 @@
 package sonia.scm.update.repository;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
@@ -77,63 +78,81 @@ class PublicFlagUpdateStepTest {
     //prepare backup xml
     V1RepositoryFileSystem.createV1Home(tempDir);
     Files.move(tempDir.resolve("config").resolve("repositories.xml"), tempDir.resolve("config").resolve("repositories.xml.v1.backup"));
-    when(repositoryDAO.get((String) any())).thenReturn(REPOSITORY);
   }
 
   @Test
-  void shouldDeleteOldAnonymousUserIfExists() throws JAXBException {
-    User anonymous = new User("anonymous");
-    when(userDAO.getAll()).thenReturn(Collections.singleton(anonymous));
-    doReturn(anonymous).when(userDAO).get("anonymous");
-    doReturn(SCMContext.ANONYMOUS).when(userDAO).get(SCMContext.USER_ANONYMOUS);
-
-    updateStep.doUpdate();
-
-    verify(userDAO).delete(anonymous);
-  }
-
-  @Test
-  void shouldNotTryToDeleteOldAnonymousUserIfNotExists() throws JAXBException {
-    when(userDAO.getAll()).thenReturn(Collections.emptyList());
-    doReturn(SCMContext.ANONYMOUS).when(userDAO).get(SCMContext.USER_ANONYMOUS);
-
-    updateStep.doUpdate();
-
-    verify(userDAO, never()).delete(any());
-  }
-
-  @Test
-  void shouldCreateNewAnonymousUserIfNotExists() throws JAXBException {
-    doReturn(SCMContext.ANONYMOUS).when(userDAO).get(SCMContext.USER_ANONYMOUS);
-    when(userDAO.getAll()).thenReturn(Collections.singleton(new User("trillian")));
-
-    updateStep.doUpdate();
-
-    verify(userDAO).add(SCMContext.ANONYMOUS);
-  }
-
-  @Test
-  void shouldNotCreateNewAnonymousUserIfAlreadyExists() throws JAXBException {
-    doReturn(SCMContext.ANONYMOUS).when(userDAO).get(SCMContext.USER_ANONYMOUS);
-    when(userDAO.getAll()).thenReturn(Collections.singleton(new User("_anonymous")));
-
-    updateStep.doUpdate();
-
-    verify(userDAO, never()).add(SCMContext.ANONYMOUS);
-  }
-
-  @Test
-  void shouldMigratePublicFlagToAnonymousRepositoryPermission() throws JAXBException {
+  void shouldNotFailForDeletedRepository() throws JAXBException {
     when(userDAO.getAll()).thenReturn(Collections.emptyList());
     when(userDAO.get("_anonymous")).thenReturn(SCMContext.ANONYMOUS);
 
     updateStep.doUpdate();
 
-    verify(repositoryDAO, times(2)).modify(repositoryCaptor.capture());
+    verify(repositoryDAO, never()).modify(any());
+  }
 
-    RepositoryPermission migratedRepositoryPermission = repositoryCaptor.getValue().getPermissions().iterator().next();
-    assertThat(migratedRepositoryPermission.getName()).isEqualTo(SCMContext.USER_ANONYMOUS);
-    assertThat(migratedRepositoryPermission.getRole()).isEqualTo("READ");
-    assertThat(migratedRepositoryPermission.isGroupPermission()).isFalse();
+  @Nested
+  class WithExistingRepository {
+
+    @BeforeEach
+    void mockRepository() {
+      when(repositoryDAO.get((String) any())).thenReturn(REPOSITORY);
+    }
+
+    @Test
+    void shouldDeleteOldAnonymousUserIfExists() throws JAXBException {
+      User anonymous = new User("anonymous");
+      when(userDAO.getAll()).thenReturn(Collections.singleton(anonymous));
+      doReturn(anonymous).when(userDAO).get("anonymous");
+      doReturn(SCMContext.ANONYMOUS).when(userDAO).get(SCMContext.USER_ANONYMOUS);
+
+      updateStep.doUpdate();
+
+      verify(userDAO).delete(anonymous);
+    }
+
+    @Test
+    void shouldNotTryToDeleteOldAnonymousUserIfNotExists() throws JAXBException {
+      when(userDAO.getAll()).thenReturn(Collections.emptyList());
+      doReturn(SCMContext.ANONYMOUS).when(userDAO).get(SCMContext.USER_ANONYMOUS);
+
+      updateStep.doUpdate();
+
+      verify(userDAO, never()).delete(any());
+    }
+
+    @Test
+    void shouldCreateNewAnonymousUserIfNotExists() throws JAXBException {
+      doReturn(SCMContext.ANONYMOUS).when(userDAO).get(SCMContext.USER_ANONYMOUS);
+      when(userDAO.getAll()).thenReturn(Collections.singleton(new User("trillian")));
+
+      updateStep.doUpdate();
+
+      verify(userDAO).add(SCMContext.ANONYMOUS);
+    }
+
+    @Test
+    void shouldNotCreateNewAnonymousUserIfAlreadyExists() throws JAXBException {
+      doReturn(SCMContext.ANONYMOUS).when(userDAO).get(SCMContext.USER_ANONYMOUS);
+      when(userDAO.getAll()).thenReturn(Collections.singleton(new User("_anonymous")));
+
+      updateStep.doUpdate();
+
+      verify(userDAO, never()).add(SCMContext.ANONYMOUS);
+    }
+
+    @Test
+    void shouldMigratePublicFlagToAnonymousRepositoryPermission() throws JAXBException {
+      when(userDAO.getAll()).thenReturn(Collections.emptyList());
+      when(userDAO.get("_anonymous")).thenReturn(SCMContext.ANONYMOUS);
+
+      updateStep.doUpdate();
+
+      verify(repositoryDAO, times(2)).modify(repositoryCaptor.capture());
+
+      RepositoryPermission migratedRepositoryPermission = repositoryCaptor.getValue().getPermissions().iterator().next();
+      assertThat(migratedRepositoryPermission.getName()).isEqualTo(SCMContext.USER_ANONYMOUS);
+      assertThat(migratedRepositoryPermission.getRole()).isEqualTo("READ");
+      assertThat(migratedRepositoryPermission.isGroupPermission()).isFalse();
+    }
   }
 }
