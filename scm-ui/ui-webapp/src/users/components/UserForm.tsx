@@ -31,7 +31,8 @@ import {
   PasswordConfirmation,
   SubmitButton,
   Subtitle,
-  validation as validator
+  validation as validator,
+  Modal
 } from "@scm-manager/ui-components";
 import * as userValidator from "./userValidation";
 
@@ -47,6 +48,7 @@ type State = {
   nameValidationError: boolean;
   displayNameValidationError: boolean;
   passwordValid: boolean;
+  showPasswordModal: boolean;
 };
 
 class UserForm extends React.Component<Props, State> {
@@ -66,7 +68,8 @@ class UserForm extends React.Component<Props, State> {
       mailValidationError: false,
       displayNameValidationError: false,
       nameValidationError: false,
-      passwordValid: false
+      passwordValid: false,
+      showPasswordModal: false
     };
   }
 
@@ -97,7 +100,7 @@ class UserForm extends React.Component<Props, State> {
         this.props.user.displayName === user.displayName &&
         this.props.user.mail === user.mail &&
         this.props.user.active === user.active &&
-          this.props.user.external === user.external
+        this.props.user.external === user.external
       );
     } else {
       return false;
@@ -105,14 +108,14 @@ class UserForm extends React.Component<Props, State> {
   };
 
   isValid = () => {
-    const user = this.state.user;
+    const { user } = this.state;
     return !(
       this.createUserComponentsAreInvalid() ||
       this.editUserComponentsAreUnchanged() ||
       this.state.mailValidationError ||
       this.state.displayNameValidationError ||
       !user.displayName ||
-      !user.mail
+      (!user.mail && !(user.external && !user.password))
     );
   };
 
@@ -125,10 +128,10 @@ class UserForm extends React.Component<Props, State> {
 
   render() {
     const { loading, t } = this.props;
-    const user = this.state.user;
+    const { user, showPasswordModal, passwordValid } = this.state;
 
+    const passwordChangeField = <PasswordConfirmation passwordChanged={this.handlePasswordChange} />;
     let nameField = null;
-    let passwordChangeField = null;
     let subtitle = null;
     if (!this.props.user) {
       // create new user
@@ -144,12 +147,32 @@ class UserForm extends React.Component<Props, State> {
           />
         </div>
       );
-
-      passwordChangeField = <PasswordConfirmation passwordChanged={this.handlePasswordChange} />;
     } else {
       // edit existing user
       subtitle = <Subtitle subtitle={t("userForm.subtitle")} />;
     }
+
+    if (showPasswordModal) {
+      return (
+        <Modal
+          body={passwordChangeField}
+          closeFunction={() =>
+            this.setState({ user: { ...user, external: true } }, () => this.showPasswordModal(false))
+          }
+          active={showPasswordModal}
+          title={"userForm.modal.required"}
+          footer={
+            <SubmitButton
+              action={() => !!user.password && passwordValid && this.showPasswordModal(false)}
+              disabled={!this.state.passwordValid}
+              scrollToTop={false}
+              label={t("userForm.modal.setPassword")}
+            />
+          }
+        />
+      );
+    }
+
     return (
       <>
         {subtitle}
@@ -177,7 +200,7 @@ class UserForm extends React.Component<Props, State> {
               />
             </div>
           </div>
-          {passwordChangeField}
+          {!this.props.user && passwordChangeField}
           <div className="columns">
             <div className="column is-half">
               <Checkbox
@@ -201,6 +224,10 @@ class UserForm extends React.Component<Props, State> {
       </>
     );
   }
+
+  showPasswordModal = (showPasswordModal: boolean) => {
+    this.setState({ showPasswordModal });
+  };
 
   handleUsernameChange = (name: string) => {
     this.setState({
@@ -252,12 +279,15 @@ class UserForm extends React.Component<Props, State> {
   };
 
   handleExternalFlagChange = (external: boolean) => {
-    this.setState({
-      user: {
-        ...this.state.user,
-        external
-      }
-    });
+    this.setState(
+      {
+        user: {
+          ...this.state.user,
+          external
+        }
+      },
+      () => !external && this.showPasswordModal(true)
+    );
   };
 }
 

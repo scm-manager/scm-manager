@@ -63,7 +63,11 @@
   },
   "userForm": {
     "subtitle": "Edit User",
-    "button": "Submit"
+    "button": "Submit",
+    "modal": {
+      "setPassword": "Set password",
+      "required": "Set new password for internal user"
+    }
   },
   "publicKey": {
     "noStoredKeys": "No keys found.",
