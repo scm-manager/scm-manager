@@ -22,34 +22,31 @@
  * SOFTWARE.
  */
 
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import Notification from "../Notification";
 import { Me } from "@scm-manager/ui-types";
 import { connect } from "react-redux";
-import { compose } from "redux";
 
-type Props = WithTranslation & {
+type Props = {
   // props from global state
   me: Me;
 };
 
-class CommitAuthor extends React.Component<Props> {
-  render() {
-    const { me, t } = this.props;
+const CommitAuthor: FC<Props> = ({ me }) => {
+  const [t] = useTranslation("repos");
 
-    const mail = me.mail ? me.mail : me.fallbackMail;
+  const mail = me.mail ? me.mail : me.fallbackMail;
 
-    return (
-      <>
-        {!me.mail && <Notification type="warning">{t("commit.commitAuthor.noMail")}</Notification>}
-        <span className="mb-2">
-          <strong>{t("commit.commitAuthor.author")}</strong> {`${me.displayName} <${mail}>`}
-        </span>
-      </>
-    );
-  }
-}
+  return (
+    <>
+      {!me.mail && <Notification type="warning">{t("commit.commitAuthor.noMail")}</Notification>}
+      <span className="mb-2">
+        <strong>{t("commit.commitAuthor.author")}</strong> {`${me.displayName} <${mail}>`}
+      </span>
+    </>
+  );
+};
 
 const mapStateToProps = (state: any) => {
   const { auth } = state;
@@ -60,4 +57,4 @@ const mapStateToProps = (state: any) => {
   };
 };
 
-export default compose(connect(mapStateToProps), withTranslation("repos"))(CommitAuthor);
+export default connect(mapStateToProps)(CommitAuthor);
