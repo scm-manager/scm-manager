@@ -26,6 +26,7 @@ package sonia.scm.user;
 
 import com.google.common.base.Strings;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.util.ValidationUtil;
 
 import javax.inject.Inject;
 
@@ -50,7 +51,7 @@ public class EMail {
    */
   public String getMailOrFallback(User user) {
     if (Strings.isNullOrEmpty(user.getMail())) {
-      if (user.getId().contains("@")) {
+      if (isMailUsedAsId(user)) {
         return user.getId();
       } else {
         return createFallbackMail(user);
@@ -58,6 +59,10 @@ public class EMail {
     } else {
       return user.getMail();
     }
+  }
+
+  private boolean isMailUsedAsId(User user) {
+    return ValidationUtil.isMailAddressValid(user.getId());
   }
 
   private String createFallbackMail(User user) {
