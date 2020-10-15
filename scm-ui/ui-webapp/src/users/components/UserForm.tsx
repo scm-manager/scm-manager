@@ -23,18 +23,19 @@
  */
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { User } from "@scm-manager/ui-types";
+import { User, Link } from "@scm-manager/ui-types";
 import {
   Checkbox,
   InputField,
   Level,
+  Modal,
   PasswordConfirmation,
   SubmitButton,
   Subtitle,
-  validation as validator,
-  Modal
+  validation as validator
 } from "@scm-manager/ui-components";
 import * as userValidator from "./userValidation";
+import { setPassword } from "./setPassword";
 
 type Props = WithTranslation & {
   submitForm: (p: User) => void;
@@ -87,7 +88,7 @@ class UserForm extends React.Component<Props, State> {
   createUserComponentsAreInvalid = () => {
     const user = this.state.user;
     if (!this.props.user) {
-      return this.state.nameValidationError || !user.name || !this.state.passwordValid;
+      return this.state.nameValidationError || !user.name || (!user.external && !this.state.passwordValid);
     } else {
       return false;
     }
@@ -107,22 +108,29 @@ class UserForm extends React.Component<Props, State> {
     }
   };
 
-  isValid = () => {
+  isInvalid = () => {
     const { user } = this.state;
-    return !(
+
+    return (
       this.createUserComponentsAreInvalid() ||
       this.editUserComponentsAreUnchanged() ||
       this.state.mailValidationError ||
       this.state.displayNameValidationError ||
+      this.state.nameValidationError ||
       !user.displayName ||
-      (!user.mail && !(user.external && !user.password))
+      (!user.external && !user.password)
     );
   };
 
   submit = (event: Event) => {
+    const { user, passwordValid } = this.state;
     event.preventDefault();
-    if (this.isValid()) {
+    if (!this.isInvalid()) {
       this.props.submitForm(this.state.user);
+      if (user.password && passwordValid) {
+        setPassword((user._links.password as Link).href, user.password);
+        //TODO handle error
+      }
     }
   };
 
@@ -160,7 +168,7 @@ class UserForm extends React.Component<Props, State> {
             this.setState({ user: { ...user, external: true } }, () => this.showPasswordModal(false))
           }
           active={showPasswordModal}
-          title={"userForm.modal.required"}
+          title={"userForm.modal.passwordRequired"}
           footer={
             <SubmitButton
               action={() => !!user.password && passwordValid && this.showPasswordModal(false)}
@@ -199,18 +207,7 @@ class UserForm extends React.Component<Props, State> {
                 helpText={t("help.mailHelpText")}
               />
             </div>
-          </div>
-          {!this.props.user && passwordChangeField}
-          <div className="columns">
-            <div className="column is-half">
-              <Checkbox
-                label={t("user.active")}
-                onChange={this.handleActiveChange}
-                checked={user ? user.active : false}
-                helpText={t("help.activeHelpText")}
-              />
-            </div>
-            <div className="column is-half">
+            <div className="column is-full">
               <Checkbox
                 label={t("user.externalFlag")}
                 onChange={this.handleExternalFlagChange}
@@ -219,7 +216,22 @@ class UserForm extends React.Component<Props, State> {
               />
             </div>
           </div>
-          <Level right={<SubmitButton disabled={!this.isValid()} loading={loading} label={t("userForm.button")} />} />
+          {!user.external && (
+            <>
+              {!this.props.user && passwordChangeField}
+              <div className="columns">
+                <div className="column">
+                  <Checkbox
+                    label={t("user.active")}
+                    onChange={this.handleActiveChange}
+                    checked={user ? user.active : false}
+                    helpText={t("help.activeHelpText")}
+                  />
+                </div>
+              </div>
+            </>
+          )}
+          <Level right={<SubmitButton disabled={this.isInvalid()} loading={loading} label={t("userForm.button")} />} />
         </form>
       </>
     );
@@ -286,7 +298,8 @@ class UserForm extends React.Component<Props, State> {
           external
         }
       },
-      () => !external && this.showPasswordModal(true)
+      //Only show password modal if edit mode and external flag was changed to internal
+      () => !external && this.props.user?.external && this.showPasswordModal(true)
     );
   };
 }

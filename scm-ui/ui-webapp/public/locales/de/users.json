@@ -63,7 +63,11 @@
   },
   "userForm": {
     "subtitle": "Benutzer bearbeiten",
-    "button": "Speichern"
+    "button": "Speichern",
+    "modal": {
+      "passwordRequired": "Neues Passwort für internen Benutzer setzen",
+      "setPassword": "Passwort setzen"
+    }
   },
   "publicKey": {
     "noStoredKeys": "Es wurden keine Schlüssel gefunden.",

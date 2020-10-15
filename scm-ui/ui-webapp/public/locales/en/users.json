@@ -66,7 +66,7 @@
     "button": "Submit",
     "modal": {
       "setPassword": "Set password",
-      "required": "Set new password for internal user"
+      "passwordRequired": "Set new password for internal user"
     }
   },
   "publicKey": {
