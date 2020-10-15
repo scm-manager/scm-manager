@@ -244,7 +244,7 @@ class MeDtoFactoryTest {
     User user = UserTestData.createTrillian();
     user.setMail(null);
     prepareSubject(user);
-    when(eMail.createFallbackMailAddress(user)).thenReturn("trillian@hitchhiker.local");
+    when(eMail.getMailOrFallback(user)).thenReturn("trillian@hitchhiker.local");
 
     MeDto dto = meDtoFactory.create();
 

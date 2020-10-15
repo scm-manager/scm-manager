@@ -29,6 +29,11 @@ import sonia.scm.config.ScmConfiguration;
 
 import javax.inject.Inject;
 
+/**
+ * Email is able to resolve email addresses of users.
+ *
+ * @since 2.8.0
+ */
 public class EMail {
 
   private final ScmConfiguration scmConfiguration;
@@ -38,15 +43,24 @@ public class EMail {
     this.scmConfiguration = scmConfiguration;
   }
 
-  public String createFallbackMailAddress(User user) {
+  /**
+   * Returns the email address of the given user or a generated fallback address.
+   * @param user user to resolve address from
+   * @return email address or fallback
+   */
+  public String getMailOrFallback(User user) {
     if (Strings.isNullOrEmpty(user.getMail())) {
       if (user.getId().contains("@")) {
         return user.getId();
       } else {
-        return user.getId() + "@" + scmConfiguration.getMailDomainName();
+        return createFallbackMail(user);
       }
     } else {
       return user.getMail();
     }
+  }
+
+  private String createFallbackMail(User user) {
+    return user.getId() + "@" + scmConfiguration.getMailDomainName();
   }
 }

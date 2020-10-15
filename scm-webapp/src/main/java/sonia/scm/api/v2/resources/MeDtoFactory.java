@@ -86,7 +86,7 @@ public class MeDtoFactory extends HalAppenderMapper {
 
   private void setGeneratedMail(User user, MeDto dto) {
     if (Strings.isNullOrEmpty(user.getMail())) {
-      dto.setFallbackMail(eMail.createFallbackMailAddress(user));
+      dto.setFallbackMail(eMail.getMailOrFallback(user));
     }
   }
 

@@ -37,7 +37,7 @@ class EMailTest {
   void shouldUserUsersAddressIfAvailable() {
     User user = new User("dent", "Arthur Dent", "arthur@hitchhiker.com");
 
-    String mailAddress = eMail.createFallbackMailAddress(user);
+    String mailAddress = eMail.getMailOrFallback(user);
 
     assertThat(mailAddress).isEqualTo("arthur@hitchhiker.com");
   }
@@ -46,7 +46,7 @@ class EMailTest {
   void shouldCreateAddressIfNoneAvailable() {
     User user = new User("dent", "Arthur Dent", "");
 
-    String mailAddress = eMail.createFallbackMailAddress(user);
+    String mailAddress = eMail.getMailOrFallback(user);
 
     assertThat(mailAddress).isEqualTo("dent@scm-manager.local");
   }
@@ -55,7 +55,7 @@ class EMailTest {
   void shouldUserUsersIdIfItLooksLikeAnMailAddress() {
     User user = new User("dent@hitchhiker.com", "Arthur Dent", "");
 
-    String mailAddress = eMail.createFallbackMailAddress(user);
+    String mailAddress = eMail.getMailOrFallback(user);
 
     assertThat(mailAddress).isEqualTo("dent@hitchhiker.com");
   }

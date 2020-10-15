@@ -48,7 +48,7 @@ public class AuthorUtil {
     Subject subject = SecurityUtils.getSubject();
     User user = subject.getPrincipals().oneByType(User.class);
     String name = user.getDisplayName();
-    String mailAddress = eMail != null ? eMail.createFallbackMailAddress(user) : user.getMail();
+    String mailAddress = eMail != null ? eMail.getMailOrFallback(user) : user.getMail();
     return new Person(name, mailAddress);
   }
 

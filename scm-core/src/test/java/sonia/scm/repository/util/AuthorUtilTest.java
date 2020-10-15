@@ -36,10 +36,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Person;
 import sonia.scm.user.EMail;
 import sonia.scm.user.User;
-import sonia.scm.web.UserAgentParserTest;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -65,7 +63,7 @@ class AuthorUtilTest {
   void shouldCreateMailAddressFromEmail() {
     User trillian = new User("trillian");
     when(subject.getPrincipals().oneByType(User.class)).thenReturn(trillian);
-    when(eMail.createFallbackMailAddress(trillian)).thenReturn("tricia@hitchhicker.com");
+    when(eMail.getMailOrFallback(trillian)).thenReturn("tricia@hitchhicker.com");
 
     Command command = new Command(null);
     AuthorUtil.setAuthorIfNotAvailable(command, eMail);
