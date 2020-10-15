@@ -135,6 +135,12 @@
       "sources": "Sources"
     }
   },
+  "commit": {
+    "commitAuthor": {
+      "author": "Autor",
+      "noMail": "Für den aktuellen Benutzer existiert keine E-Mail-Adresse. Es wird die unten angezeigte generierte Adresse genutzt."
+    }
+  },
   "repositoryForm": {
     "subtitle": "Repository bearbeiten",
     "submit": "Speichern",
@@ -269,4 +275,4 @@
     "clickHere": "Klicken Sie hier um Ihre Datei hochzuladen.",
     "dragAndDrop": "Sie können Ihre Datei auch direkt in die Dropzone ziehen."
   }
-}
+},

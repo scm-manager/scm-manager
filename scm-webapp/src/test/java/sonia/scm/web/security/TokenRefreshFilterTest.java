@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.security;
 
 import org.apache.shiro.authc.AuthenticationToken;
@@ -52,6 +52,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static sonia.scm.security.BearerToken.valueOf;
 
 @ExtendWith({MockitoExtension.class})
 class TokenRefreshFilterTest {
@@ -103,7 +104,7 @@ class TokenRefreshFilterTest {
 
   @Test
   void shouldNotRefreshNonJwtToken() throws IOException, ServletException {
-    BearerToken token = mock(BearerToken.class);
+    BearerToken token = createValidToken();
     JwtAccessToken jwtToken = mock(JwtAccessToken.class);
     when(tokenGenerator.createToken(request)).thenReturn(token);
     when(resolver.resolve(token)).thenReturn(jwtToken);
@@ -116,7 +117,7 @@ class TokenRefreshFilterTest {
 
   @Test
   void shouldRefreshIfRefreshable() throws IOException, ServletException {
-    BearerToken token = mock(BearerToken.class);
+    BearerToken token = createValidToken();
     JwtAccessToken jwtToken = mock(JwtAccessToken.class);
     JwtAccessToken newJwtToken = mock(JwtAccessToken.class);
     when(tokenGenerator.createToken(request)).thenReturn(token);
@@ -127,5 +128,9 @@ class TokenRefreshFilterTest {
 
     verify(issuer).authenticate(request, response, newJwtToken);
     verify(filterChain).doFilter(request, response);
+  }
+
+  BearerToken createValidToken() {
+    return valueOf("some.jwt.token");
   }
 }

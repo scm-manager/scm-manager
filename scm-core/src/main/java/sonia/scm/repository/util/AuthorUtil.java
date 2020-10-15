@@ -21,28 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.util;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import sonia.scm.repository.Person;
+import sonia.scm.user.EMail;
 import sonia.scm.user.User;
+
+import javax.annotation.Nullable;
 
 public class AuthorUtil {
 
   public static void setAuthorIfNotAvailable(CommandWithAuthor request) {
+    setAuthorIfNotAvailable(request, null);
+  }
+
+  public static void setAuthorIfNotAvailable(CommandWithAuthor request, @Nullable EMail eMail) {
     if (request.getAuthor() == null) {
-      request.setAuthor(createAuthorFromSubject());
+      request.setAuthor(createAuthorFromSubject(eMail));
     }
   }
 
-  private static Person createAuthorFromSubject() {
+  private static Person createAuthorFromSubject(@Nullable EMail eMail) {
     Subject subject = SecurityUtils.getSubject();
     User user = subject.getPrincipals().oneByType(User.class);
     String name = user.getDisplayName();
-    String email = user.getMail();
-    return new Person(name, email);
+    String mailAddress = eMail != null ? eMail.getMailOrFallback(user) : user.getMail();
+    return new Person(name, mailAddress);
   }
 
   public interface CommandWithAuthor {

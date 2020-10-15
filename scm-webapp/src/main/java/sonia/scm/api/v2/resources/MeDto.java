@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
@@ -40,7 +41,10 @@ public class MeDto extends HalRepresentation {
 
   private String name;
   private String displayName;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
   private String mail;
+  @JsonInclude(JsonInclude.Include.NON_NULL)
+  private String fallbackMail;
   private Set<String> groups;
 
   MeDto(Links links, Embedded embedded) {

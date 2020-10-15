@@ -22,40 +22,41 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.user;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import sonia.scm.util.ValidationUtil;
+import org.junit.jupiter.api.Test;
+import sonia.scm.config.ScmConfiguration;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-import java.time.Instant;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@NoArgsConstructor @Getter @Setter
-public class UserDto extends HalRepresentation {
-  private boolean active;
-  private Instant creationDate;
-  @NotEmpty
-  private String displayName;
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Instant lastModified;
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  @Email
-  private String mail;
-  @Pattern(regexp = ValidationUtil.REGEX_NAME)
-  private String name;
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private String password;
-  private String type;
+class EMailTest {
 
-  UserDto(Links links, Embedded embedded) {
-    super(links, embedded);
+  EMail eMail = new EMail(new ScmConfiguration());
+
+  @Test
+  void shouldUserUsersAddressIfAvailable() {
+    User user = new User("dent", "Arthur Dent", "arthur@hitchhiker.com");
+
+    String mailAddress = eMail.getMailOrFallback(user);
+
+    assertThat(mailAddress).isEqualTo("arthur@hitchhiker.com");
+  }
+
+  @Test
+  void shouldCreateAddressIfNoneAvailable() {
+    User user = new User("dent", "Arthur Dent", "");
+
+    String mailAddress = eMail.getMailOrFallback(user);
+
+    assertThat(mailAddress).isEqualTo("dent@scm-manager.local");
+  }
+
+  @Test
+  void shouldUserUsersIdIfItLooksLikeAnMailAddress() {
+    User user = new User("dent@hitchhiker.com", "Arthur Dent", "");
+
+    String mailAddress = eMail.getMailOrFallback(user);
+
+    assertThat(mailAddress).isEqualTo("dent@hitchhiker.com");
   }
 }

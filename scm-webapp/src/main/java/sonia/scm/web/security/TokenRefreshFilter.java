@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.security;
 
 import org.apache.shiro.authc.AuthenticationException;
@@ -90,6 +90,10 @@ public class TokenRefreshFilter extends HttpFilter {
 
   private void examineToken(HttpServletRequest request, HttpServletResponse response, BearerToken token) {
     AccessToken accessToken;
+    if (!token.getCredentials().contains(".")) {
+      LOG.trace("Ignoring token without dot. This probably is an API key, no JWT");
+      return;
+    }
     try {
       accessToken = resolver.resolve(token);
     } catch (AuthenticationException e) {
