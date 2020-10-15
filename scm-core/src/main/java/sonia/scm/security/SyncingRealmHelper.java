@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import com.google.inject.Inject;
@@ -33,9 +33,13 @@ import sonia.scm.NotFoundException;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.Extension;
+import sonia.scm.user.ExternalUserConverter;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.security.AdministrationContext;
+
+import java.util.Collections;
+import java.util.Set;
 
 /**
  * Helper class for syncing realms. The class should simplify the creation of realms, which are syncing authenticated
@@ -50,28 +54,41 @@ public final class SyncingRealmHelper {
   private final AdministrationContext ctx;
   private final UserManager userManager;
   private final GroupManager groupManager;
+  private final Set<ExternalUserConverter> externalUserConverters;
 
   /**
    * Constructs a new SyncingRealmHelper.
    *
-   * @param ctx administration context
-   * @param userManager user manager
-   * @param groupManager group manager
+   * @param ctx                    administration context
+   * @param userManager            user manager
+   * @param groupManager           group manager
+   * @param externalUserConverters global scm configuration
    */
   @Inject
-  public SyncingRealmHelper(AdministrationContext ctx, UserManager userManager, GroupManager groupManager) {
+  public SyncingRealmHelper(AdministrationContext ctx, UserManager userManager, GroupManager groupManager, Set<ExternalUserConverter> externalUserConverters) {
     this.ctx = ctx;
     this.userManager = userManager;
     this.groupManager = groupManager;
+    this.externalUserConverters = externalUserConverters;
+  }
+
+  /**
+   * Constructs a new SyncingRealmHelper.
+   *
+   * @param ctx          administration context
+   * @param userManager  user manager
+   * @param groupManager group manager
+   */
+  @Deprecated
+  public SyncingRealmHelper(AdministrationContext ctx, UserManager userManager, GroupManager groupManager) {
+    this(ctx, userManager, groupManager, Collections.emptySet());
   }
 
   /**
    * Create {@link AuthenticationInfo} from user and groups.
    *
-   *
    * @param realm name of the realm
-   * @param user authenticated user
-   *
+   * @param user  authenticated user
    * @return authentication info
    */
   public AuthenticationInfo createAuthenticationInfo(String realm, User user) {
@@ -114,10 +131,17 @@ public final class SyncingRealmHelper {
   public void store(final User user) {
     ctx.runAsAdmin(() -> {
       if (userManager.contains(user.getName())) {
+        User clone = user.clone();
+        if (!externalUserConverters.isEmpty()) {
+          for (ExternalUserConverter converter : externalUserConverters) {
+            clone = converter.convert(clone);
+          }
+        }
+
         try {
-          userManager.modify(user);
+          userManager.modify(clone);
         } catch (NotFoundException e) {
-          throw new IllegalStateException("got NotFoundException though user " + user.getName() + " could be loaded", e);
+          throw new IllegalStateException("got NotFoundException though user " + clone.getName() + " could be loaded", e);
         }
       } else {
         try {
