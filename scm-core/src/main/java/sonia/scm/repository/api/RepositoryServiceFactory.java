@@ -40,6 +40,7 @@ import sonia.scm.HandlerEventType;
 import sonia.scm.NotFoundException;
 import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.ClearRepositoryCacheEvent;
 import sonia.scm.repository.NamespaceAndName;
@@ -58,6 +59,7 @@ import sonia.scm.security.PublicKeyDeletedEvent;
 import sonia.scm.security.ScmSecurityException;
 import sonia.scm.user.EMail;
 
+import javax.annotation.Nullable;
 import java.util.Set;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -114,13 +116,88 @@ public final class RepositoryServiceFactory {
   private static final Logger logger =
     LoggerFactory.getLogger(RepositoryServiceFactory.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final CacheManager cacheManager;
+  private final RepositoryManager repositoryManager;
+  private final Set<RepositoryServiceResolver> resolvers;
+  private final PreProcessorUtil preProcessorUtil;
+  @SuppressWarnings({"rawtypes", "java:S3740"})
+  private final Set<ScmProtocolProvider> protocolProviders;
+  private final WorkdirProvider workdirProvider;
 
+  @Nullable
   private final EMail eMail;
-  @SuppressWarnings("rawtypes")
-  private Set<ScmProtocolProvider> protocolProviders;
 
-  //~--- methods --------------------------------------------------------------
+
+  /**
+   * Constructs a new {@link RepositoryServiceFactory}. This constructor
+   * should not be called manually, it should only be used by the injection
+   * container.
+   *
+   * @param configuration     configuration
+   * @param cacheManager      cache manager
+   * @param repositoryManager manager for repositories
+   * @param resolvers         a set of {@link RepositoryServiceResolver}
+   * @param preProcessorUtil  helper object for pre processor handling
+   * @param protocolProviders providers for repository protocols
+   * @param workdirProvider   provider for working directories
+   *
+   * @deprecated use {@link RepositoryServiceFactory#RepositoryServiceFactory(CacheManager, RepositoryManager, Set, PreProcessorUtil, Set, WorkdirProvider, EMail)} instead
+   * @since 1.21
+   */
+  @Deprecated
+  public RepositoryServiceFactory(ScmConfiguration configuration,
+                                  CacheManager cacheManager, RepositoryManager repositoryManager,
+                                  Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
+                                  @SuppressWarnings({"rawtypes", "java:S3740"}) Set<ScmProtocolProvider> protocolProviders,
+                                  WorkdirProvider workdirProvider) {
+    this(
+      cacheManager, repositoryManager, resolvers,
+      preProcessorUtil, protocolProviders, workdirProvider, null, ScmEventBus.getInstance()
+    );
+  }
+
+  /**
+   * Constructs a new {@link RepositoryServiceFactory}. This constructor
+   * should not be called manually, it should only be used by the injection
+   * container.
+   *
+   * @param cacheManager      cache manager
+   * @param repositoryManager manager for repositories
+   * @param resolvers         a set of {@link RepositoryServiceResolver}
+   * @param preProcessorUtil  helper object for pre processor handling
+   * @param protocolProviders providers for repository protocols
+   * @param workdirProvider   provider for working directories
+   * @param eMail             handling user emails
+   * @since 2.8.0
+   */
+  @Inject
+  public RepositoryServiceFactory(CacheManager cacheManager, RepositoryManager repositoryManager,
+                                  Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
+                                  @SuppressWarnings({"rawtypes", "java:S3740"})  Set<ScmProtocolProvider> protocolProviders,
+                                  WorkdirProvider workdirProvider, EMail eMail) {
+    this(
+      cacheManager, repositoryManager, resolvers,
+      preProcessorUtil, protocolProviders, workdirProvider,
+      eMail, ScmEventBus.getInstance()
+    );
+  }
+
+  @VisibleForTesting
+  @SuppressWarnings("java:S107") // to keep backward compatibility, we can not reduce amount of parameters
+  RepositoryServiceFactory(CacheManager cacheManager, RepositoryManager repositoryManager,
+                           Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
+                           @SuppressWarnings({"rawtypes", "java:S3740"}) Set<ScmProtocolProvider> protocolProviders,
+                           WorkdirProvider workdirProvider, @Nullable EMail eMail, ScmEventBus eventBus) {
+    this.cacheManager = cacheManager;
+    this.repositoryManager = repositoryManager;
+    this.resolvers = resolvers;
+    this.preProcessorUtil = preProcessorUtil;
+    this.protocolProviders = protocolProviders;
+    this.workdirProvider = workdirProvider;
+    this.eMail = eMail;
+
+    eventBus.register(new CacheClearHook(cacheManager));
+  }
 
   /**
    * Creates a new RepositoryService for the given repository.
@@ -177,30 +254,48 @@ public final class RepositoryServiceFactory {
   }
 
   /**
-   * Constructs a new {@link RepositoryServiceFactory}. This constructor
-   * should not be called manually, it should only be used by the injection
-   * container.
+   * Creates a new RepositoryService for the given repository.
    *
-   * @param cacheManager      cache manager
-   * @param repositoryManager manager for repositories
-   * @param resolvers         a set of {@link RepositoryServiceResolver}
-   * @param preProcessorUtil  helper object for pre processor handling
-   * @param protocolProviders
-   * @param workdirProvider
-   * @since 1.21
+   * @param repository the repository
+   * @return a implementation of RepositoryService
+   * for the given type of repository
+   * @throws RepositoryServiceNotFoundException if no repository service
+   *                                            implementation for this kind of repository is available
+   * @throws NullPointerException               if the repository is null
+   * @throws ScmSecurityException               if current user has not read permissions
+   *                                            for that repository
    */
-  @Inject
-  public RepositoryServiceFactory(CacheManager cacheManager, RepositoryManager repositoryManager,
-                                  Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
-                                  @SuppressWarnings("rawtypes") Set<ScmProtocolProvider> protocolProviders,
-                                  WorkdirProvider workdirProvider, EMail eMail) {
-    this(
-      cacheManager, repositoryManager, resolvers,
-      preProcessorUtil, protocolProviders, workdirProvider, eMail, ScmEventBus.getInstance()
-    );
-  }
+  public RepositoryService create(Repository repository) {
+    Preconditions.checkNotNull(repository, "repository is required");
 
-  //~--- inner classes --------------------------------------------------------
+    // check for read permissions of current user
+    RepositoryPermissions.read(repository).check();
+
+    RepositoryService service = null;
+
+    for (RepositoryServiceResolver resolver : resolvers) {
+      RepositoryServiceProvider provider = resolver.resolve(repository);
+
+      if (provider != null) {
+        if (logger.isDebugEnabled()) {
+          logger.debug(
+            "create new repository service for repository {} of type {}",
+            repository.getName(), repository.getType());
+        }
+
+        service = new RepositoryService(cacheManager, provider, repository,
+          preProcessorUtil, protocolProviders, workdirProvider, eMail);
+
+        break;
+      }
+    }
+
+    if (service == null) {
+      throw new RepositoryServiceNotFoundException(repository);
+    }
+
+    return service;
+  }
 
   /**
    * Hook and listener to clear all relevant repository caches.
@@ -224,8 +319,6 @@ public final class RepositoryServiceFactory {
       this.caches.add(cacheManager.getCache(TagsCommandBuilder.CACHE_NAME));
       this.caches.add(cacheManager.getCache(BranchesCommandBuilder.CACHE_NAME));
     }
-
-    //~--- methods ------------------------------------------------------------
 
     /**
      * Clear caches on explicit repository cache clear event.
@@ -288,88 +381,4 @@ public final class RepositoryServiceFactory {
     }
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * cache manager
-   */
-  private final CacheManager cacheManager;
-
-  /**
-   * pre processor util
-   */
-  private final PreProcessorUtil preProcessorUtil;
-
-  /**
-   * repository manager
-   */
-  private final RepositoryManager repositoryManager;
-
-  /**
-   * service resolvers
-   */
-  private final Set<RepositoryServiceResolver> resolvers;
-
-  @VisibleForTesting
-  RepositoryServiceFactory(CacheManager cacheManager, RepositoryManager repositoryManager,
-                           Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
-                           @SuppressWarnings("rawtypes") Set<ScmProtocolProvider> protocolProviders,
-                           WorkdirProvider workdirProvider, EMail eMail, ScmEventBus eventBus) {
-    this.cacheManager = cacheManager;
-    this.repositoryManager = repositoryManager;
-    this.resolvers = resolvers;
-    this.preProcessorUtil = preProcessorUtil;
-    this.protocolProviders = protocolProviders;
-    this.workdirProvider = workdirProvider;
-    this.eMail = eMail;
-
-    eventBus.register(new CacheClearHook(cacheManager));
-  }
-
-  private final WorkdirProvider workdirProvider;
-
-  /**
-   * Creates a new RepositoryService for the given repository.
-   *
-   * @param repository the repository
-   * @return a implementation of RepositoryService
-   * for the given type of repository
-   * @throws RepositoryServiceNotFoundException if no repository service
-   *                                            implementation for this kind of repository is available
-   * @throws NullPointerException               if the repository is null
-   * @throws ScmSecurityException               if current user has not read permissions
-   *                                            for that repository
-   */
-  public RepositoryService create(Repository repository) {
-    Preconditions.checkNotNull(repository, "repository is required");
-
-    // check for read permissions of current user
-    RepositoryPermissions.read(repository).check();
-
-    RepositoryService service = null;
-
-    for (RepositoryServiceResolver resolver : resolvers) {
-      RepositoryServiceProvider provider = resolver.resolve(repository);
-
-      if (provider != null) {
-        if (logger.isDebugEnabled()) {
-          logger.debug(
-            "create new repository service for repository {} of type {}",
-            repository.getName(), repository.getType());
-        }
-
-        service = new RepositoryService(cacheManager, provider, repository,
-          preProcessorUtil, protocolProviders, workdirProvider, eMail);
-
-        break;
-      }
-    }
-
-    if (service == null) {
-      throw new RepositoryServiceNotFoundException(repository);
-    }
-
-    return service;
-  }
 }
