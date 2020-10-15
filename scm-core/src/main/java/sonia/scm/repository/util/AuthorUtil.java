@@ -30,19 +30,21 @@ import sonia.scm.repository.Person;
 import sonia.scm.user.EMail;
 import sonia.scm.user.User;
 
+import javax.annotation.Nullable;
+
 public class AuthorUtil {
 
   public static void setAuthorIfNotAvailable(CommandWithAuthor request) {
     setAuthorIfNotAvailable(request, null);
   }
 
-  public static void setAuthorIfNotAvailable(CommandWithAuthor request, EMail eMail) {
+  public static void setAuthorIfNotAvailable(CommandWithAuthor request, @Nullable EMail eMail) {
     if (request.getAuthor() == null) {
       request.setAuthor(createAuthorFromSubject(eMail));
     }
   }
 
-  private static Person createAuthorFromSubject(EMail eMail) {
+  private static Person createAuthorFromSubject(@Nullable EMail eMail) {
     Subject subject = SecurityUtils.getSubject();
     User user = subject.getPrincipals().oneByType(User.class);
     String name = user.getDisplayName();

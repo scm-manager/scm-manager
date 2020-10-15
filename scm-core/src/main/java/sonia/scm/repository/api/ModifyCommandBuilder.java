@@ -38,6 +38,7 @@ import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.user.EMail;
 import sonia.scm.util.IOUtil;
 
+import javax.annotation.Nullable;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -52,7 +53,6 @@ import java.util.function.Consumer;
  *   default a {@link sonia.scm.AlreadyExistsException} will be thrown)</li>
  *   <li>modify existing files ({@link #modifyFile(String)}</li>
  *   <li>delete existing files ({@link #deleteFile(String)}</li>
- *   <li>move/rename existing files ({@link #moveFile(String, String)}</li>
  * </ul>
  *
  * You can collect multiple changes before they are executed with a call to {@link #execute()}.
@@ -73,14 +73,15 @@ public class ModifyCommandBuilder {
 
   private static final Logger LOG = LoggerFactory.getLogger(ModifyCommandBuilder.class);
 
-  private final EMail eMail;
-
   private final ModifyCommand command;
   private final File workdir;
 
+  @Nullable
+  private final EMail eMail;
+
   private final ModifyCommandRequest request = new ModifyCommandRequest();
 
-  ModifyCommandBuilder(ModifyCommand command, WorkdirProvider workdirProvider, EMail eMail) {
+  ModifyCommandBuilder(ModifyCommand command, WorkdirProvider workdirProvider, @Nullable EMail eMail) {
     this.command = command;
     this.workdir = workdirProvider.createNewWorkdir();
     this.eMail = eMail;

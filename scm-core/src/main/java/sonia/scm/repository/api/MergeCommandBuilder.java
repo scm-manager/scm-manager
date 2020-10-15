@@ -32,6 +32,7 @@ import sonia.scm.repository.spi.MergeConflictResult;
 import sonia.scm.repository.util.AuthorUtil;
 import sonia.scm.user.EMail;
 
+import javax.annotation.Nullable;
 import java.util.Set;
 
 /**
@@ -76,12 +77,13 @@ import java.util.Set;
  */
 public class MergeCommandBuilder {
 
-  private final EMail eMail;
-
   private final MergeCommand mergeCommand;
   private final MergeCommandRequest request = new MergeCommandRequest();
 
-  MergeCommandBuilder(MergeCommand mergeCommand, EMail eMail) {
+  @Nullable
+  private final EMail eMail;
+
+  MergeCommandBuilder(MergeCommand mergeCommand, @Nullable EMail eMail) {
     this.mergeCommand = mergeCommand;
     this.eMail = eMail;
   }
