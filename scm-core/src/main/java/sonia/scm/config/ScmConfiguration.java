@@ -83,6 +83,8 @@ public class ScmConfiguration implements Configuration {
   /**
    * Default e-mail domain name that will be used whenever we have to generate an e-mail address for a user that has no
    * mail address configured.
+   *
+   * @since 2.8.0
    */
   public static final String DEFAULT_MAIL_DOMAIN_NAME = "scm-manager.local";
 
@@ -301,8 +303,8 @@ public class ScmConfiguration implements Configuration {
   }
 
   /**
-   * Returns the mail host, that will be used to create e-mail addresses for users without one whenever one is required.
-   *
+   * Returns the mail domain, that will be used to create e-mail addresses for users without one whenever one is required.
+   * @return default mail domain
    * @since 2.8.0
    */
   public String getMailDomainName() {
@@ -492,7 +494,7 @@ public class ScmConfiguration implements Configuration {
   /**
    * Sets the mail host, that will be used to create e-mail addresses for users without one whenever one is required.
    *
-   * @param mailDomainName The new mail host to use.
+   * @param mailDomainName The default mail domain to use
    * @since 2.8.0
    */
   public void setMailDomainName(String mailDomainName) {
