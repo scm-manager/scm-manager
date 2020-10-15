@@ -32,6 +32,10 @@ import sonia.scm.user.User;
 
 public class AuthorUtil {
 
+  public static void setAuthorIfNotAvailable(CommandWithAuthor request) {
+    setAuthorIfNotAvailable(request, null);
+  }
+
   public static void setAuthorIfNotAvailable(CommandWithAuthor request, EMail eMail) {
     if (request.getAuthor() == null) {
       request.setAuthor(createAuthorFromSubject(eMail));
@@ -42,7 +46,7 @@ public class AuthorUtil {
     Subject subject = SecurityUtils.getSubject();
     User user = subject.getPrincipals().oneByType(User.class);
     String name = user.getDisplayName();
-    String mailAddress = eMail.createFallbackMailAddress(user);
+    String mailAddress = eMail != null ? eMail.createFallbackMailAddress(user) : user.getMail();
     return new Person(name, mailAddress);
   }
 
