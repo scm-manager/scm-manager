@@ -34,7 +34,9 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.user.EMail;
 
+import javax.annotation.Nullable;
 import java.io.Closeable;
 import java.io.IOException;
 import java.util.Set;
@@ -84,9 +86,12 @@ public final class RepositoryService implements Closeable {
   private final PreProcessorUtil preProcessorUtil;
   private final RepositoryServiceProvider provider;
   private final Repository repository;
-  @SuppressWarnings("rawtypes")
+  @SuppressWarnings({"rawtypes", "java:S3740"})
   private final Set<ScmProtocolProvider> protocolProviders;
   private final WorkdirProvider workdirProvider;
+
+  @Nullable
+  private final EMail eMail;
 
   /**
    * Constructs a new {@link RepositoryService}. This constructor should only
@@ -94,20 +99,23 @@ public final class RepositoryService implements Closeable {
    * @param cacheManager     cache manager
    * @param provider         implementation for {@link RepositoryServiceProvider}
    * @param repository       the repository
-   * @param workdirProvider
+   * @param workdirProvider  provider for workdirs
+   * @param eMail            utility to compute email addresses if missing
    */
   RepositoryService(CacheManager cacheManager,
-                    RepositoryServiceProvider provider, Repository repository,
+                    RepositoryServiceProvider provider,
+                    Repository repository,
                     PreProcessorUtil preProcessorUtil,
-                    @SuppressWarnings("rawtypes") Set<ScmProtocolProvider> protocolProviders,
-                    WorkdirProvider workdirProvider
-  ) {
+                    @SuppressWarnings({"rawtypes", "java:S3740"}) Set<ScmProtocolProvider> protocolProviders,
+                    WorkdirProvider workdirProvider,
+                    @Nullable EMail eMail) {
     this.cacheManager = cacheManager;
     this.provider = provider;
     this.repository = repository;
     this.preProcessorUtil = preProcessorUtil;
     this.protocolProviders = protocolProviders;
     this.workdirProvider = workdirProvider;
+    this.eMail = eMail;
   }
 
   /**
@@ -397,7 +405,7 @@ public final class RepositoryService implements Closeable {
     LOG.debug("create merge command for repository {}",
       repository.getNamespaceAndName());
 
-    return new MergeCommandBuilder(provider.getMergeCommand());
+    return new MergeCommandBuilder(provider.getMergeCommand(), eMail);
   }
 
   /**
@@ -418,7 +426,7 @@ public final class RepositoryService implements Closeable {
     LOG.debug("create modify command for repository {}",
       repository.getNamespaceAndName());
 
-    return new ModifyCommandBuilder(provider.getModifyCommand(), workdirProvider);
+    return new ModifyCommandBuilder(provider.getModifyCommand(), workdirProvider, eMail);
   }
 
   /**
@@ -448,7 +456,7 @@ public final class RepositoryService implements Closeable {
       .map(this::createProviderInstanceForRepository);
   }
 
-  @SuppressWarnings("rawtypes")
+  @SuppressWarnings({"rawtypes", "java:S3740"})
   private ScmProtocol createProviderInstanceForRepository(ScmProtocolProvider protocolProvider) {
     return protocolProvider.get(repository);
   }

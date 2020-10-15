@@ -47,6 +47,7 @@
     "skip-failed-authenticators": "Fehlgeschlagene Authentifizierer überspringen",
     "plugin-url": "Plugin Center URL",
     "release-feed-url": "Release Feed URL",
+    "mail-domain-name": "Fallback E-Mail Domain Name",
     "enabled-xsrf-protection": "XSRF Protection aktivieren",
     "namespace-strategy": "Namespace Strategie",
     "login-info-url": "Login Info URL"
@@ -62,6 +63,7 @@
     "dateFormatHelpText": "Moments Datumsformat. Zulässige Formate sind in der MomentJS Dokumentation beschrieben.",
     "pluginUrlHelpText": "Die URL der Plugin Center API. Beschreibung der Platzhalter: version = SCM-Manager Version; os = Betriebssystem; arch = Architektur",
     "releaseFeedUrlHelpText": "Die URL des RSS Release Feed des SCM-Manager. Darüber wird über die neue SCM-Manager Version informiert. Um diese Funktion zu deaktivieren lassen Sie dieses Feld leer.",
+    "mailDomainNameHelpText": "Dieser Domain Name wird genutzt, wenn für einen User eine E-Mail-Adresse benötigt wird, für den keine hinterlegt ist. Diese Domain wird nicht zum Versenden von E-Mails genutzt und auch keine anderweitige Verbindung aufgebaut.",
     "enableForwardingHelpText": "mod_proxy Port Weiterleitung aktivieren.",
     "disableGroupingGridHelpText": "Repository Gruppen deaktivieren. Nach einer Änderung an dieser Einstellung muss die Seite komplett neu geladen werden.",
     "allowAnonymousAccessHelpText": "Anonyme Benutzer haben Zugriff auf freigegebene Repositories.",

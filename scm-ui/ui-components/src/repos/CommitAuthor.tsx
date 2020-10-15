@@ -22,40 +22,39 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import Notification from "../Notification";
+import { Me } from "@scm-manager/ui-types";
+import { connect } from "react-redux";
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import sonia.scm.util.ValidationUtil;
+type Props = {
+  // props from global state
+  me: Me;
+};
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-import java.time.Instant;
+const CommitAuthor: FC<Props> = ({ me }) => {
+  const [t] = useTranslation("repos");
 
-@NoArgsConstructor @Getter @Setter
-public class UserDto extends HalRepresentation {
-  private boolean active;
-  private Instant creationDate;
-  @NotEmpty
-  private String displayName;
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Instant lastModified;
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  @Email
-  private String mail;
-  @Pattern(regexp = ValidationUtil.REGEX_NAME)
-  private String name;
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private String password;
-  private String type;
+  const mail = me.mail ? me.mail : me.fallbackMail;
 
-  UserDto(Links links, Embedded embedded) {
-    super(links, embedded);
-  }
-}
+  return (
+    <>
+      {!me.mail && <Notification type="warning">{t("commit.commitAuthor.noMail")}</Notification>}
+      <span className="mb-2">
+        <strong>{t("commit.commitAuthor.author")}</strong> {`${me.displayName} <${mail}>`}
+      </span>
+    </>
+  );
+};
+
+const mapStateToProps = (state: any) => {
+  const { auth } = state;
+  const me = auth.me;
+
+  return {
+    me
+  };
+};
+
+export default connect(mapStateToProps)(CommitAuthor);

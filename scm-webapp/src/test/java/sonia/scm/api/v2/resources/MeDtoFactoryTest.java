@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.ImmutableSet;
@@ -38,9 +38,9 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import sonia.scm.SCMContext;
 import sonia.scm.group.GroupCollector;
+import sonia.scm.user.EMail;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
-import sonia.scm.user.UserPermissions;
 import sonia.scm.user.UserTestData;
 
 import java.net.URI;
@@ -65,13 +65,16 @@ class MeDtoFactoryTest {
   @Mock
   private Subject subject;
 
+  @Mock
+  private EMail eMail;
+
   private MeDtoFactory meDtoFactory;
 
   @BeforeEach
   void setUpContext() {
     ThreadContext.bind(subject);
     ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
-    meDtoFactory = new MeDtoFactory(resourceLinks, userManager, groupCollector);
+    meDtoFactory = new MeDtoFactory(resourceLinks, userManager, groupCollector, eMail);
   }
 
   @AfterEach
@@ -234,5 +237,18 @@ class MeDtoFactoryTest {
 
     MeDto dto = meDtoFactory.create();
     assertThat(dto.getLinks().getLinkBy("profile").get().getHref()).isEqualTo("http://hitchhiker.com/users/trillian");
+  }
+
+  @Test
+  void shouldUserGeneratedMailOnlyWhenUserHasNone() {
+    User user = UserTestData.createTrillian();
+    user.setMail(null);
+    prepareSubject(user);
+    when(eMail.getMailOrFallback(user)).thenReturn("trillian@hitchhiker.local");
+
+    MeDto dto = meDtoFactory.create();
+
+    assertThat(dto.getMail()).isNull();
+    assertThat(dto.getFallbackMail()).isEqualTo("trillian@hitchhiker.local");
   }
 }
