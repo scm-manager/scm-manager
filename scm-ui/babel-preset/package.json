@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/babel-preset",
-  "version": "2.6.2",
+  "version": "2.6.3",
   "license": "MIT",
   "description": "Babel configuration for scm-manager and its plugins",
   "main": "index.js",

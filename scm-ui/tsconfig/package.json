@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/tsconfig",
-  "version": "2.6.2",
+  "version": "2.6.3",
   "license": "MIT",
   "description": "TypeScript configuration",
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",

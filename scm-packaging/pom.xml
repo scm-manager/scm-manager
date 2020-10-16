@@ -31,13 +31,13 @@
   <parent>
     <groupId>sonia.scm</groupId>
     <artifactId>scm</artifactId>
-    <version>2.6.2</version>
+    <version>2.6.3</version>
   </parent>
 
   <groupId>sonia.scm.packaging</groupId>
   <artifactId>scm-packaging</artifactId>
   <packaging>pom</packaging>
-  <version>2.6.2</version>
+  <version>2.6.3</version>
 
   <properties>
     <deployment.serverId>packages.scm-manager.org</deployment.serverId>
