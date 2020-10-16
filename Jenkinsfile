@@ -7,8 +7,8 @@ import com.cloudogu.ces.cesbuildlib.*
 
 node('docker') {
 
-  developmentBranch = 'develop'
-  mainBranch = 'master'
+  developmentBranch = 'support/2.6.x'
+  mainBranch = 'support/2.6.x'
 
   properties([
     // Keep only the last 10 build to preserve space
