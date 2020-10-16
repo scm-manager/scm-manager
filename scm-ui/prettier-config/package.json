@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/prettier-config",
-  "version": "2.6.3",
+  "version": "2.7.0-SNAPSHOT",
   "license": "MIT",
   "description": "Prettier configuration",
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
