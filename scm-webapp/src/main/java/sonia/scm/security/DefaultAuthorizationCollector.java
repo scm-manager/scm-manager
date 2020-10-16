@@ -250,6 +250,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
       builder.add(getUserAutocompletePermission());
       builder.add(getGroupAutocompletePermission());
       builder.add(getChangeOwnPasswordPermission(user));
+      builder.add(getPublicKeyPermission(user));
     }
 
     SimpleAuthorizationInfo info = new SimpleAuthorizationInfo(ImmutableSet.of(Role.USER));
@@ -264,6 +265,10 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
   private String getChangeOwnPasswordPermission(User user) {
     return UserPermissions.changePassword(user).asShiroString();
+  }
+
+  private String getPublicKeyPermission(User user) {
+    return UserPermissions.changePublicKeys(user).asShiroString();
   }
 
   private String getUserAutocompletePermission() {

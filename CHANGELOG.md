@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## Unreleased
+### Fixed
+- Missing default permission to manage public gpg keys ([#1377](https://github.com/scm-manager/scm-manager/pull/1377))
+
 ## [2.6.2] - 2020-10-09
 ### Added
 - Introduce api for handling token validation failed exception ([#1362](https://github.com/scm-manager/scm-manager/pull/1362))
