@@ -772,6 +772,7 @@
             <exclude>**/logback.ci.xml</exclude>
             <exclude>**/pkg/ourPackage/scm-source.properties</exclude>
             <exclude>**/.vagrant/**</exclude>
+            <exclude>**/*.css</exclude>
           </excludes>
           <mapping>
             <tsx>SLASHSTAR_STYLE</tsx>

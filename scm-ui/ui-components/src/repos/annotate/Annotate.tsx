@@ -24,8 +24,12 @@
 
 import React, { FC, useReducer } from "react";
 import { Repository, AnnotatedSource, AnnotatedLine } from "@scm-manager/ui-types";
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 import { PrismAsyncLight as ReactSyntaxHighlighter, createElement } from "react-syntax-highlighter";
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+// eslint-disable-next-line no-restricted-imports
 import highlightingTheme from "@scm-manager/ui-styles/src/syntax-highlighting.js";
 import { DateInput } from "../../useDateFormatter";
 import Popover from "./Popover";
