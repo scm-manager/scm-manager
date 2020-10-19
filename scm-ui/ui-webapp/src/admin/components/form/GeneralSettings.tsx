@@ -143,15 +143,6 @@ class GeneralSettings extends React.Component<Props> {
             />
           </div>
           <div className="column is-half">
-            <InputField
-              label={t("general-settings.mail-domain-name")}
-              onChange={this.handleMailDomainNameChange}
-              value={mailDomainName}
-              disabled={!hasUpdatePermission}
-              helpText={t("help.mailDomainNameHelpText")}
-            />
-          </div>
-          <div className="column is-half">
             <Checkbox
               label={t("general-settings.enabled-user-converter")}
               onChange={this.handleEnabledUserConverterChange}
@@ -159,6 +150,17 @@ class GeneralSettings extends React.Component<Props> {
               title={t("general-settings.enabled-user-converter")}
               disabled={!hasUpdatePermission}
               helpText={t("help.enabledUserConverterHelpText")}
+            />
+          </div>
+        </div>
+        <div className="columns">
+          <div className="column is-half">
+            <InputField
+              label={t("general-settings.mail-domain-name")}
+              onChange={this.handleMailDomainNameChange}
+              value={mailDomainName}
+              disabled={!hasUpdatePermission}
+              helpText={t("help.mailDomainNameHelpText")}
             />
           </div>
         </div>
