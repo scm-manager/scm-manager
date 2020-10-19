@@ -49,5 +49,6 @@ export type Config = {
   namespaceStrategy: string;
   loginInfoUrl: string;
   releaseFeedUrl: string;
+  mailDomainName: string;
   _links: Links;
 };

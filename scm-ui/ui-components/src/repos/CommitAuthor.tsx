@@ -22,23 +22,39 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import Notification from "../Notification";
+import { Me } from "@scm-manager/ui-types";
+import { connect } from "react-redux";
 
-export type DisplayedUser = {
-  id: string;
-  displayName: string;
-  mail?: string;
+type Props = {
+  // props from global state
+  me: Me;
 };
 
-export type User = {
-  displayName: string;
-  name: string;
-  mail?: string;
-  password: string;
-  active: boolean;
-  type?: string;
-  creationDate?: string;
-  lastModified?: string;
-  external?: boolean;
-  _links: Links;
+const CommitAuthor: FC<Props> = ({ me }) => {
+  const [t] = useTranslation("repos");
+
+  const mail = me.mail ? me.mail : me.fallbackMail;
+
+  return (
+    <>
+      {!me.mail && <Notification type="warning">{t("commit.commitAuthor.noMail")}</Notification>}
+      <span className="mb-2">
+        <strong>{t("commit.commitAuthor.author")}</strong> {`${me.displayName} <${mail}>`}
+      </span>
+    </>
+  );
 };
+
+const mapStateToProps = (state: any) => {
+  const { auth } = state;
+  const me = auth.me;
+
+  return {
+    me
+  };
+};
+
+export default connect(mapStateToProps)(CommitAuthor);

@@ -46,6 +46,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.spi.RepositoryServiceResolver;
 import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.user.EMail;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -55,9 +56,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RepositoryServiceFactoryTest {
-
-  @Mock
-  private ScmConfiguration configuration;
 
   @Mock(answer = Answers.RETURNS_MOCKS)
   private CacheManager cacheManager;
@@ -94,8 +92,9 @@ class RepositoryServiceFactoryTest {
       builder.add(repositoryServiceResolver);
     }
     return new RepositoryServiceFactory(
-      configuration, cacheManager, repositoryManager, builder.build(),
-      preProcessorUtil, ImmutableSet.of(), workdirProvider, eventBus
+      cacheManager, repositoryManager, builder.build(),
+      preProcessorUtil, ImmutableSet.of(), workdirProvider,
+      new EMail(new ScmConfiguration()), eventBus
     );
   }
 

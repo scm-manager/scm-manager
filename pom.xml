@@ -903,7 +903,7 @@
 
   <properties>
     <!-- test libraries -->
-    <mockito.version>3.5.11</mockito.version>
+    <mockito.version>3.5.13</mockito.version>
     <hamcrest.version>2.1</hamcrest.version>
     <junit.version>5.7.0</junit.version>
 
@@ -913,7 +913,7 @@
     <servlet.version>3.1.0</servlet.version>
 
     <jaxrs.version>2.1.1</jaxrs.version>
-    <resteasy.version>4.5.7.Final</resteasy.version>
+    <resteasy.version>4.5.8.Final</resteasy.version>
     <jersey-client.version>1.19.4</jersey-client.version>
     <jackson.version>2.11.2</jackson.version>
     <guice.version>4.2.3</guice.version>

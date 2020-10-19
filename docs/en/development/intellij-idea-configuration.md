@@ -11,6 +11,12 @@ title: Intellij IDEA Configuration
 
 ### Settings
 
+* Build, Execution, Deployment / Compiler
+    * Add runtime assertions for non-null-annotated methods and parameters (must be checked)
+    * Configure annotation ... (of "Add runtime assertions...")
+        * Nullable annotations: select (✓) `javax.annotation.Nullable`
+        * NotNull annotations: select (✓) `javax.annotation.Nonnull` and check Instrument
+
 * Run Configurations / Edit Configuration
     * Add Maven
     * Name: run-backend

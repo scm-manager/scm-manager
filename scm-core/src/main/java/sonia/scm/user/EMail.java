@@ -22,23 +22,50 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+package sonia.scm.user;
 
-export type DisplayedUser = {
-  id: string;
-  displayName: string;
-  mail?: string;
-};
+import com.google.common.base.Strings;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.util.ValidationUtil;
 
-export type User = {
-  displayName: string;
-  name: string;
-  mail?: string;
-  password: string;
-  active: boolean;
-  type?: string;
-  creationDate?: string;
-  lastModified?: string;
-  external?: boolean;
-  _links: Links;
-};
+import javax.inject.Inject;
+
+/**
+ * Email is able to resolve email addresses of users.
+ *
+ * @since 2.8.0
+ */
+public class EMail {
+
+  private final ScmConfiguration scmConfiguration;
+
+  @Inject
+  public EMail(ScmConfiguration scmConfiguration) {
+    this.scmConfiguration = scmConfiguration;
+  }
+
+  /**
+   * Returns the email address of the given user or a generated fallback address.
+   * @param user user to resolve address from
+   * @return email address or fallback
+   */
+  public String getMailOrFallback(User user) {
+    if (Strings.isNullOrEmpty(user.getMail())) {
+      if (isMailUsedAsId(user)) {
+        return user.getId();
+      } else {
+        return createFallbackMail(user);
+      }
+    } else {
+      return user.getMail();
+    }
+  }
+
+  private boolean isMailUsedAsId(User user) {
+    return ValidationUtil.isMailAddressValid(user.getId());
+  }
+
+  private String createFallbackMail(User user) {
+    return user.getId() + "@" + scmConfiguration.getMailDomainName();
+  }
+}

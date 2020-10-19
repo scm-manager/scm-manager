@@ -21,13 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import org.junit.Test;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
+import sonia.scm.user.EMail;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.http.HttpServletRequest;
@@ -46,9 +48,11 @@ public class RepositoryServiceTest {
   private final RepositoryServiceProvider provider = mock(RepositoryServiceProvider.class);
   private final Repository repository = new Repository("", "git", "space", "repo");
 
+  private final EMail eMail = new EMail(new ScmConfiguration());
+
   @Test
   public void shouldReturnMatchingProtocolsFromProvider() {
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
     Stream<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
 
     assertThat(sizeOf(supportedProtocols.collect(Collectors.toList()))).isEqualTo(1);
@@ -56,7 +60,7 @@ public class RepositoryServiceTest {
 
   @Test
   public void shouldFindKnownProtocol() {
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
 
     HttpScmProtocol protocol = repositoryService.getProtocol(HttpScmProtocol.class);
 
@@ -65,11 +69,9 @@ public class RepositoryServiceTest {
 
   @Test
   public void shouldFailForUnknownProtocol() {
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
 
-    assertThrows(IllegalArgumentException.class, () -> {
-      repositoryService.getProtocol(UnknownScmProtocol.class);
-    });
+    assertThrows(IllegalArgumentException.class, () -> repositoryService.getProtocol(UnknownScmProtocol.class));
   }
 
   private static class DummyHttpProtocol extends HttpScmProtocol {

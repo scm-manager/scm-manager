@@ -22,23 +22,41 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+package sonia.scm.user;
 
-export type DisplayedUser = {
-  id: string;
-  displayName: string;
-  mail?: string;
-};
+import org.junit.jupiter.api.Test;
+import sonia.scm.config.ScmConfiguration;
 
-export type User = {
-  displayName: string;
-  name: string;
-  mail?: string;
-  password: string;
-  active: boolean;
-  type?: string;
-  creationDate?: string;
-  lastModified?: string;
-  external?: boolean;
-  _links: Links;
-};
+import static org.assertj.core.api.Assertions.assertThat;
+
+class EMailTest {
+
+  EMail eMail = new EMail(new ScmConfiguration());
+
+  @Test
+  void shouldUserUsersAddressIfAvailable() {
+    User user = new User("dent", "Arthur Dent", "arthur@hitchhiker.com");
+
+    String mailAddress = eMail.getMailOrFallback(user);
+
+    assertThat(mailAddress).isEqualTo("arthur@hitchhiker.com");
+  }
+
+  @Test
+  void shouldCreateAddressIfNoneAvailable() {
+    User user = new User("dent", "Arthur Dent", "");
+
+    String mailAddress = eMail.getMailOrFallback(user);
+
+    assertThat(mailAddress).isEqualTo("dent@scm-manager.local");
+  }
+
+  @Test
+  void shouldUserUsersIdIfItLooksLikeAnMailAddress() {
+    User user = new User("dent@hitchhiker.com", "Arthur Dent", "");
+
+    String mailAddress = eMail.getMailOrFallback(user);
+
+    assertThat(mailAddress).isEqualTo("dent@hitchhiker.com");
+  }
+}

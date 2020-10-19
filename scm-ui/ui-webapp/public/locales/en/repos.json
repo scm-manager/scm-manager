@@ -135,6 +135,12 @@
       "count_plural": "{{count}} Contributors"
     }
   },
+  "commit": {
+    "commitAuthor": {
+      "author": "Author",
+      "noMail": "We have found no email address for your current user. We will use the generated address shown below."
+    }
+  },
   "repositoryForm": {
     "subtitle": "Edit Repository",
     "submit": "Save",
