@@ -148,7 +148,10 @@ public final class SyncingRealmHelper {
         }
       } else {
         try {
-          userManager.create(user);
+          User clone = user.clone();
+          // New user created by syncing realm helper is always external
+          clone.setExternal(true);
+          userManager.create(clone);
         } catch (AlreadyExistsException e) {
           throw new IllegalStateException("got AlreadyExistsException though user " + user.getName() + " could not be loaded", e);
 
