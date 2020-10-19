@@ -120,7 +120,7 @@ class UserForm extends React.Component<Props, State> {
       this.state.displayNameValidationError ||
       this.state.nameValidationError ||
       !user.displayName ||
-      (!user.external && !user.password)
+      (this.props.user?.external && !user.external && !user.password)
     );
   };
 
