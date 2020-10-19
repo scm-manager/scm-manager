@@ -128,8 +128,8 @@ class UserForm extends React.Component<Props, State> {
     const { user, passwordValid } = this.state;
     event.preventDefault();
     if (!this.isInvalid()) {
-      if (user.password && passwordValid) {
-        setPassword((user._links.password as Link).href, user.password).catch();
+      if (user.password && passwordValid && user._links?.password) {
+        setPassword((user._links.password as Link).href, user.password).catch(error => this.setState({ error }));
       }
       this.props.submitForm(this.state.user);
     }
@@ -175,10 +175,6 @@ class UserForm extends React.Component<Props, State> {
     } else {
       // edit existing user
       subtitle = <Subtitle subtitle={t("userForm.subtitle")} />;
-    }
-
-    if (error) {
-      return <ErrorNotification error={error} />;
     }
 
     return (
@@ -232,6 +228,7 @@ class UserForm extends React.Component<Props, State> {
               </div>
             </>
           )}
+          {error && <ErrorNotification error={error} />}
           <Level right={<SubmitButton disabled={this.isInvalid()} loading={loading} label={t("userForm.button")} />} />
         </form>
       </>

@@ -67,6 +67,12 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   private String mail;
   private String name;
   private String password;
+  @Deprecated
+  /**
+   * @deprecated Use external instead.
+   * The user type is replaced by {@link external} flag
+   * Since 2.8.0
+   */
   private String type;
 
   public User(String name) {
