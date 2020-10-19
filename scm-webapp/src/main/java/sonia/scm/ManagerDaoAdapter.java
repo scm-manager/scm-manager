@@ -46,8 +46,6 @@ public class ManagerDaoAdapter<T extends ModelObject> {
     if (notModified != null) {
       permissionCheck.apply(notModified).check();
 
-      doThrow().violation("type must not be changed").when(!notModified.getType().equals(object.getType()));
-
       AssertUtil.assertIsValid(object);
 
       beforeUpdate.handle(notModified);
