@@ -108,15 +108,6 @@ public class DefaultUserManagerTest extends UserManagerTestBase
     Assertions.assertThat(userCaptor.getValue().getPassword()).isEqualTo("newEncrypted");
   }
 
-  @Test(expected = ChangePasswordNotAllowedException.class)
-  public void shouldFailOverwritePasswordForWrongType() {
-    trillian.setType("wrongType");
-
-    UserManager userManager = new DefaultUserManager(userDAO);
-
-    userManager.overwritePassword("trillian", "---");
-  }
-
   @Test(expected = NotFoundException.class)
   public void shouldFailOverwritePasswordForMissingUser() {
     UserManager userManager = new DefaultUserManager(userDAO);

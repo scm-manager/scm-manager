@@ -101,17 +101,6 @@ public class UserToUserDtoMapperTest {
   }
 
   @Test
-  public void shouldGetPasswordLinkOnlyForDefaultUserType() {
-    User user = createDefaultUser();
-    when(subject.isPermitted("user:modify:abc")).thenReturn(true);
-    when(userManager.isTypeDefault(eq(user))).thenReturn(false);
-
-    UserDto userDto = mapper.map(user);
-
-    assertFalse("expected no password link", userDto.getLinks().getLinkBy("password").isPresent());
-  }
-
-  @Test
   public void shouldGetEmptyPasswordProperty() {
     User user = createDefaultUser();
     user.setPassword("myHighSecurePassword");
