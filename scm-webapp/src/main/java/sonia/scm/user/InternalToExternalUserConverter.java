@@ -24,11 +24,13 @@
 
 package sonia.scm.user;
 
+import lombok.extern.slf4j.Slf4j;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
 
 import javax.inject.Inject;
 
+@Slf4j
 @Extension
 public class InternalToExternalUserConverter implements ExternalUserConverter{
 
@@ -40,15 +42,15 @@ public class InternalToExternalUserConverter implements ExternalUserConverter{
   }
 
   public User convert(User user) {
-    if (shouldNotConvertUser(user)) {
-      return user;
+    if (shouldConvertUser(user)) {
+      log.info("Convert internal user {} to external", user.getId());
+      user.setExternal(true);
+      user.setPassword(null);
     }
-    user.setExternal(true);
-    user.setPassword(null);
     return user;
   }
 
-  private boolean shouldNotConvertUser(User user) {
-    return user.isExternal() || !scmConfiguration.isEnabledUserConverter();
+  private boolean shouldConvertUser(User user) {
+    return !user.isExternal() && scmConfiguration.isEnabledUserConverter();
   }
 }

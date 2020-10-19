@@ -25,6 +25,7 @@
 package sonia.scm.security;
 
 import com.google.inject.Inject;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.subject.SimplePrincipalCollection;
@@ -48,6 +49,7 @@ import java.util.Set;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
+@Slf4j
 @Extension
 public final class SyncingRealmHelper {
 
@@ -133,6 +135,7 @@ public final class SyncingRealmHelper {
       if (userManager.contains(user.getName())) {
         User clone = user.clone();
         if (!externalUserConverters.isEmpty()) {
+          log.debug("execute available user converters");
           for (ExternalUserConverter converter : externalUserConverters) {
             clone = converter.convert(clone);
           }

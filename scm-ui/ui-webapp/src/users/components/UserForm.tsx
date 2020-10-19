@@ -23,9 +23,10 @@
  */
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { User, Link } from "@scm-manager/ui-types";
+import { Link, User } from "@scm-manager/ui-types";
 import {
   Checkbox,
+  ErrorNotification,
   InputField,
   Level,
   Modal,
@@ -50,6 +51,7 @@ type State = {
   displayNameValidationError: boolean;
   passwordValid: boolean;
   showPasswordModal: boolean;
+  error?: Error;
 };
 
 class UserForm extends React.Component<Props, State> {
@@ -126,19 +128,34 @@ class UserForm extends React.Component<Props, State> {
     const { user, passwordValid } = this.state;
     event.preventDefault();
     if (!this.isInvalid()) {
-      this.props.submitForm(this.state.user);
       if (user.password && passwordValid) {
-        setPassword((user._links.password as Link).href, user.password);
-        //TODO handle error
+        setPassword((user._links.password as Link).href, user.password).catch();
       }
+      this.props.submitForm(this.state.user);
     }
   };
 
   render() {
     const { loading, t } = this.props;
-    const { user, showPasswordModal, passwordValid } = this.state;
+    const { user, showPasswordModal, passwordValid, error } = this.state;
 
     const passwordChangeField = <PasswordConfirmation passwordChanged={this.handlePasswordChange} />;
+    const passwordModal = (
+      <Modal
+        body={passwordChangeField}
+        closeFunction={() => this.setState({ user: { ...user, external: true } }, () => this.showPasswordModal(false))}
+        active={showPasswordModal}
+        title={t("userForm.modal.passwordRequired")}
+        footer={
+          <SubmitButton
+            action={() => !!user.password && passwordValid && this.showPasswordModal(false)}
+            disabled={!this.state.passwordValid}
+            scrollToTop={false}
+            label={t("userForm.modal.setPassword")}
+          />
+        }
+      />
+    );
     let nameField = null;
     let subtitle = null;
     if (!this.props.user) {
@@ -160,30 +177,14 @@ class UserForm extends React.Component<Props, State> {
       subtitle = <Subtitle subtitle={t("userForm.subtitle")} />;
     }
 
-    if (showPasswordModal) {
-      return (
-        <Modal
-          body={passwordChangeField}
-          closeFunction={() =>
-            this.setState({ user: { ...user, external: true } }, () => this.showPasswordModal(false))
-          }
-          active={showPasswordModal}
-          title={"userForm.modal.passwordRequired"}
-          footer={
-            <SubmitButton
-              action={() => !!user.password && passwordValid && this.showPasswordModal(false)}
-              disabled={!this.state.passwordValid}
-              scrollToTop={false}
-              label={t("userForm.modal.setPassword")}
-            />
-          }
-        />
-      );
+    if (error) {
+      return <ErrorNotification error={error} />;
     }
 
     return (
       <>
         {subtitle}
+        {showPasswordModal && passwordModal}
         <form onSubmit={this.submit}>
           <div className="columns is-multiline">
             {nameField}
@@ -298,8 +299,8 @@ class UserForm extends React.Component<Props, State> {
           external
         }
       },
-      //Only show password modal if edit mode and external flag was changed to internal
-      () => !external && this.props.user?.external && this.showPasswordModal(true)
+      //Only show password modal if edit mode and external flag was changed to internal and password was not already set
+      () => !external && this.props.user?.external && !this.state.user.password && this.showPasswordModal(true)
     );
   };
 }
