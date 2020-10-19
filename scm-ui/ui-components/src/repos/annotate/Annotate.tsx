@@ -30,7 +30,7 @@ import { PrismAsyncLight as ReactSyntaxHighlighter, createElement } from "react-
 // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
 // eslint-disable-next-line no-restricted-imports
-import highlightingTheme from "@scm-manager/ui-styles/src/syntax-highlighting.js";
+import highlightingTheme from "@scm-manager/ui-styles/src/syntax-highlighting";
 import { DateInput } from "../../useDateFormatter";
 import Popover from "./Popover";
 import AnnotateLine from "./AnnotateLine";

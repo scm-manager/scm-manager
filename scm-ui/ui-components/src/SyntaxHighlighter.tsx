@@ -25,7 +25,7 @@ import React from "react";
 
 import { PrismAsyncLight as ReactSyntaxHighlighter } from "react-syntax-highlighter";
 // eslint-disable-next-line no-restricted-imports
-import highlightingTheme from "@scm-manager/ui-styles/src/syntax-highlighting.js";
+import highlightingTheme from "@scm-manager/ui-styles/src/syntax-highlighting";
 
 type Props = {
   language?: string;
