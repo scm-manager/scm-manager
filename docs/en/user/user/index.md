@@ -14,11 +14,11 @@ The user overview shows a list of all existing users. A page with details about 
 ### Create User
 The "Create User" form can be used to create new users in SCM-Manager. New users don’t have any permissions and should therefore be configured right after they were created.
 
-![Create User](assets/create-user.png)
+![Create User](assets/user-create.png)
 
 ### User Details Page
 The user details page shows the information about the user.
 
-The active box shows whether the user is able to use SCM-Manager. The type XML from the shown example indicates that the user was created in SCM-Manager. Users can also be created through external sources, for example based on the information from a LDAP instance that is connected through the LDAP plugin.
+The active box shows whether the user is able to use SCM-Manager. The external box shows if it is an internal user or is managed by an external system.
 
 ![User-Information](assets/user-information.png)

@@ -3,7 +3,11 @@ title: Benutzer
 subtitle: Einstellungen
 ---
 ### Generell
-In den generellen Einstellungen des Benutzers können der Anzeigename, die E-Mail-Adresse und der Aktivitätsstatus des Kontos editiert werden.
+In den generellen Einstellungen des Benutzers können der Anzeigename, die E-Mail-Adresse, der "Extern"-Status und der Aktivitätsstatus des Kontos editiert werden.
+
+Wird ein interner Benutzer zu einem externen Benutzer konvertiert, wird das SCM-Manager Passwort des Benutzers entfernt. Soll ein externer Benutzer zu einem internen Benutzer umgewandelt werden, wird nach einem neuen Passwort für diesen Benutzer gefragt.
+
+![User Password Modal](assets/user-password-modal.png)
 
 Über die Schaltfläche unten kann der Benutzer auch komplett gelöscht werden. Dieser Vorgang kann nicht rückgängig gemacht werden.
 

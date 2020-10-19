@@ -32,6 +32,15 @@ If the anonymous mode is protocol only you may access the SCM-Manager via the RE
 
 Example: If anonymous access is enabled and the "_anonymous" user has full access on a certain Git repository, everybody can access this repository via command line and the classic Git commands without any login credentials. Access via SSH is not supported at this time.
 
+#### Release Feed Url
+The url of the RSS Release Feed for SCM-Manager. This provides up-to-date version information. To disable this feature just leave the url blank.
+
+#### User converter
+Internal users will automatically be converted to external on their first login using an external system. After convertion the users may only log in using the external system.
+
+#### Fallback Mail Domain Name
+This domain name will be used to create email addresses for users without one when needed. It will not be used to send mails nor will be accessed otherwise.
+
 #### Login Attempt Limit
 It can be configured how many failed login attempts a user can have before the account gets disabled. The counter for failed login attempts is reset after a successful login. This feature can be deactivated by setting the value "-1".
 

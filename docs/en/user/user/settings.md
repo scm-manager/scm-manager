@@ -3,7 +3,11 @@ title: User
 subtitle: Settings
 ---
 ### General
-In the general settings the display name, e-mail address and active status of an account can be edited. 
+In the general settings the display name, e-mail address, external flag and active status of an account can be edited. 
+
+If an user is converted from internal to external the passwords will be removed. Switching an external user to internal user a password must be set using the password modal dialogue.
+
+![User Password Modal](assets/user-password-modal.png)
 
 On the bottom is also a button to delete the user. The deletion is irreversible.
 
