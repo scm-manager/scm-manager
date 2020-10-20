@@ -21,9 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import * as React from "react";
+import { FC, ReactNode, useState } from "react";
+import { useTranslation } from "react-i18next";
+import styled from "styled-components";
+import FullscreenModal from "../modals/FullscreenModal";
 
-// @create-index
+type Props = {
+  modalTitle: string;
+  modalBody: ReactNode;
+};
 
-export { default as ConfirmAlert, confirmAlert } from "./ConfirmAlert";
-export { default as Modal } from "./Modal";
-export { default as FullscreenModal } from "./FullscreenModal";
+const Button = styled.a`
+  width: 50px;
+  &:hover {
+    color: #33b2e8;
+  }
+`;
+
+const OpenInFullscreenButton: FC<Props> = ({ modalTitle, modalBody }) => {
+  const [t] = useTranslation("repos");
+  const [showModal, setShowModal] = useState(false);
+
+  return (
+    <>
+      <Button title={t("diff.fullscreen.open")} className="button" onClick={() => setShowModal(true)}>
+        <i className="fas fa-search-plus" />
+      </Button>
+      {showModal && (
+        <FullscreenModal
+          title={modalTitle}
+          closeFunction={() => setShowModal(false)}
+          body={modalBody}
+          active={showModal}
+        />
+      )}
+    </>
+  );
+};
+
+export default OpenInFullscreenButton;

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import * as React from "react";
-import {FC} from "react";
+import { FC } from "react";
 import classNames from "classnames";
 import usePortalRootElement from "../usePortalRootElement";
 import ReactDOM from "react-dom";

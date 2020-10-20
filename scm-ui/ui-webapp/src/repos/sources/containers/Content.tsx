@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { ReactNode } from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { File, Repository } from "@scm-manager/ui-types";
-import { DateFromNow, ErrorNotification, FileSize, Icon } from "@scm-manager/ui-components";
+import { DateFromNow, ErrorNotification, FileSize, Icon, OpenInFullscreenButton } from "@scm-manager/ui-components";
 import { getSources } from "../modules/sources";
 import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
@@ -82,6 +82,12 @@ const LighterGreyBackgroundTable = styled.table`
   background-color: #fbfbfb;
 `;
 
+const BorderLessDiv = styled.div`
+  margin: -1.25rem;
+  border: none;
+  box-shadow: none;
+`;
+
 export type SourceViewSelection = "source" | "history" | "annotations";
 
 class Content extends React.Component<Props, State> {
@@ -106,7 +112,7 @@ class Content extends React.Component<Props, State> {
     });
   };
 
-  showHeader() {
+  showHeader(content: ReactNode) {
     const { repository, file, revision } = this.props;
     const { selected, collapsed } = this.state;
     const icon = collapsed ? "angle-right" : "angle-down";
@@ -129,6 +135,10 @@ class Content extends React.Component<Props, State> {
           </div>
           <div className="buttons is-grouped">
             {selector}
+            <OpenInFullscreenButton
+              modalTitle={file?.name}
+              modalBody={<BorderLessDiv className="panel">{content}</BorderLessDiv>}
+            />
             <ExtensionPoint
               name="repos.sources.content.actionbar"
               props={{
@@ -211,24 +221,18 @@ class Content extends React.Component<Props, State> {
     const { file, revision, repository, path, breadcrumb } = this.props;
     const { selected, errorFromExtension } = this.state;
 
-    const header = this.showHeader();
     let content;
     switch (selected) {
       case "source":
-        content = (
-          <SourcesView revision={revision} file={file} repository={repository} path={path}/>
-        );
+        content = <SourcesView revision={revision} file={file} repository={repository} path={path} />;
         break;
       case "history":
-        content = (
-          <HistoryView file={file} repository={repository}/>
-        );
+        content = <HistoryView file={file} repository={repository} />;
         break;
       case "annotations":
-        content = (
-          <AnnotateView file={file} repository={repository} />
-        );
+        content = <AnnotateView file={file} repository={repository} />;
     }
+    const header = this.showHeader(content);
     const moreInformation = this.showMoreInformation();
 
     return (
