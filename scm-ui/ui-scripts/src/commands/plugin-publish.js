@@ -21,17 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-const { yarn } = require("./yarn");
+const yarn = require("../yarn");
+const versions = require("../versions");
 
-const version = v => {
-  yarn(["run", "lerna", "--no-git-tag-version", "--no-push", "version", "--force-publish", "--yes", v]);
-};
+const args = process.argv.slice(2);
 
-const publish = () => {
-  yarn(["run", "lerna", "publish", "from-package", "--yes"]);
-};
+if (args.length < 1) {
+  console.log("usage ui-scripts publish <version>");
+  process.exit(1);
+}
 
-module.exports = {
-  version,
-  publish
-};
+const version = args[0];
+const index = version.indexOf("-SNAPSHOT");
+if (index > 0) {
+  const snapshotVersion = `${version.substring(0, index)}-${versions.createSnapshotVersion()}`;
+  console.log(`publish snapshot release ${snapshotVersion}`);
+  yarn.version(snapshotVersion);
+  yarn.publish(snapshotVersion);
+  yarn.version(version);
+} else {
+  // ?? not sure
+  yarn.publish(version);
+}

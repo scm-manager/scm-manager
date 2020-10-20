@@ -580,7 +580,7 @@
         <plugin>
           <groupId>sonia.scm.maven</groupId>
           <artifactId>smp-maven-plugin</artifactId>
-          <version>1.2.0</version>
+          <version>1.3.0</version>
         </plugin>
 
         <plugin>
@@ -772,7 +772,6 @@
             <exclude>**/logback.ci.xml</exclude>
             <exclude>**/pkg/ourPackage/scm-source.properties</exclude>
             <exclude>**/.vagrant/**</exclude>
-            <exclude>**/*.css</exclude>
           </excludes>
           <mapping>
             <tsx>SLASHSTAR_STYLE</tsx>
