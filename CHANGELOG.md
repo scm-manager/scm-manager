@@ -12,6 +12,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Missing default permission to manage public gpg keys ([#1377](https://github.com/scm-manager/scm-manager/pull/1377))
 
+## [2.6.3] - 2020-10-16
+### Fixed
+- Missing default permission to manage public gpg keys ([#1377](https://github.com/scm-manager/scm-manager/pull/1377))
+
 ## [2.7.1] - 2020-10-14
 ### Fixed
 - Null Pointer Exception on anonymous migration with deleted repositories ([#1371](https://github.com/scm-manager/scm-manager/pull/1371))
@@ -365,3 +369,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.6.0]: https://www.scm-manager.org/download/2.6.0
 [2.6.1]: https://www.scm-manager.org/download/2.6.1
 [2.6.2]: https://www.scm-manager.org/download/2.6.2
+[2.6.3]: https://www.scm-manager.org/download/2.6.3
