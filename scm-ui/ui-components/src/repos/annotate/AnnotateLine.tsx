@@ -80,7 +80,7 @@ const Metadata = styled(LineElement)`
 `;
 
 const EmptyMetadata = styled(LineElement)`
-  width: 16.7em;
+  width: 16.5em;
 `;
 
 const dispatchDeferred = (dispatch: Dispatch<Action>, action: Action) => {
