@@ -48,12 +48,12 @@ const OpenInFullscreenButton: FC<Props> = ({ modalTitle, modalBody }) => {
       <Button title={t("diff.fullscreen.open")} className="button" onClick={() => setShowModal(true)}>
         <i className="fas fa-search-plus" />
       </Button>
-      <FullscreenModal
+      {showModal && <FullscreenModal
         title={modalTitle}
         closeFunction={() => setShowModal(false)}
         body={modalBody}
         active={showModal}
-      />
+      />}
     </>
   );
 };
