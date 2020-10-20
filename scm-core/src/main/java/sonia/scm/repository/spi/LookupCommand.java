@@ -24,12 +24,15 @@
 
 package sonia.scm.repository.spi;
 
+import java.util.Optional;
+
 public interface LookupCommand {
 
   /**
    * Executes lookup for given parameters.
+   *
    * @param request Arguments provided for the lookup.
    * @return Result of provided type.
    */
-  <T> T lookup(LookupCommandRequest request);
+  <T> Optional<T> lookup(LookupCommandRequest request);
 }

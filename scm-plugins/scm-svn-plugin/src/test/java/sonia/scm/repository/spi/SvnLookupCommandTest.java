@@ -24,43 +24,57 @@
 
 package sonia.scm.repository.spi;
 
-import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.io.SVNRepository;
 
-import java.util.Arrays;
 import java.util.Optional;
 
-@Slf4j
-public class SvnLookupCommand extends AbstractSvnCommand implements LookupCommand {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
-  protected SvnLookupCommand(SvnContext context) {
-    super(context);
+@ExtendWith(MockitoExtension.class)
+class SvnLookupCommandTest {
+
+  @Mock
+  SvnContext context;
+
+  @Mock
+  SVNRepository svnRepository;
+
+  @InjectMocks
+  SvnLookupCommand command;
+
+  @Test
+  void shouldReturnEmptyOptional() {
+    LookupCommandRequest request = new LookupCommandRequest();
+    request.setType(String.class);
+    request.setArgs(new String[]{"props"});
+
+    Optional<Object> result = command.lookup(request);
+
+    assertThat(result).isNotPresent();
   }
 
-  @Override
-  public <T> Optional<T> lookup(LookupCommandRequest request) {
-    try {
-      if (requestContainsArg(request, "props")) {
-        return lookupProps(request);
-      }
-    } catch (SVNException e) {
-      log.error("Lookup failed: ", e);
-    }
+  @Test
+  void shouldReturnRepositoryUUID() throws SVNException {
+    String uuid = "trillian-hitchhiker-42";
+    when(context.open()).thenReturn(svnRepository);
+    when(svnRepository.getRepositoryUUID(true)).thenReturn(uuid);
 
-    return Optional.empty();
-  }
+    LookupCommandRequest request = new LookupCommandRequest();
+    request.setType(String.class);
+    request.setArgs(new String[]{"props", "uuid"});
 
-  private <T> Optional<T> lookupProps(LookupCommandRequest request) throws SVNException {
-    if (requestContainsArg(request, "uuid")) {
-      SVNRepository repository = context.open();
-      return Optional.of((T) repository.getRepositoryUUID(true));
-    }
-    log.debug("No result found on lookup");
-    return Optional.empty();
-  }
+    Optional<Object> result = command.lookup(request);
 
-  private boolean requestContainsArg(LookupCommandRequest request, String props) {
-    return Arrays.stream(request.getArgs()).anyMatch(a -> a.equalsIgnoreCase(props));
+    assertThat(result).isPresent();
+    assertThat(result.get())
+      .isInstanceOf(String.class)
+      .isEqualTo(uuid);
   }
 }

@@ -27,6 +27,8 @@ package sonia.scm.repository.api;
 import sonia.scm.repository.spi.LookupCommand;
 import sonia.scm.repository.spi.LookupCommandRequest;
 
+import java.util.Optional;
+
 /**
  * The lookup command executes a lookup for additional repository information.
  *
@@ -41,7 +43,7 @@ public class LookupCommandBuilder {
     this.lookupCommand = lookupCommand;
   }
 
-  public <T> T lookup(Class<T> type, String... args) {
+  public <T> Optional<T> lookup(Class<T> type, String... args) {
     request.setType(type);
     request.setArgs(args);
     return lookupCommand.lookup(request);
