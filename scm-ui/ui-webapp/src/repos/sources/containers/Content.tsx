@@ -21,21 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { ReactNode } from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { File, Repository } from "@scm-manager/ui-types";
-import {
-  DateFromNow,
-  ErrorNotification,
-  FileSize,
-  Icon,
-  OpenInFullscreenButton,
-  FullscreenModal
-} from "@scm-manager/ui-components";
+import { DateFromNow, ErrorNotification, FileSize, Icon, OpenInFullscreenButton } from "@scm-manager/ui-components";
 import { getSources } from "../modules/sources";
 import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
@@ -55,7 +48,6 @@ type State = {
   collapsed: boolean;
   selected: SourceViewSelection;
   errorFromExtension?: Error;
-  showFullscreenModal: boolean;
 };
 
 const Header = styled.div`
@@ -104,8 +96,7 @@ class Content extends React.Component<Props, State> {
 
     this.state = {
       collapsed: true,
-      selected: "source",
-      showFullscreenModal: false
+      selected: "source"
     };
   }
 
@@ -115,25 +106,13 @@ class Content extends React.Component<Props, State> {
     }));
   };
 
-  openModal = () => {
-    this.setState({
-      showFullscreenModal: true
-    });
-  };
-
-  closeModal = () => {
-    this.setState({
-      showFullscreenModal: false
-    });
-  };
-
   handleExtensionError = (error: Error) => {
     this.setState({
       errorFromExtension: error
     });
   };
 
-  showHeader() {
+  showHeader(content: ReactNode) {
     const { repository, file, revision } = this.props;
     const { selected, collapsed } = this.state;
     const icon = collapsed ? "angle-right" : "angle-down";
@@ -156,7 +135,10 @@ class Content extends React.Component<Props, State> {
           </div>
           <div className="buttons is-grouped">
             {selector}
-            <OpenInFullscreenButton onClick={this.openModal} />
+            <OpenInFullscreenButton
+              modalTitle={file?.name}
+              modalBody={<BorderLessDiv className="panel">{content}</BorderLessDiv>}
+            />
             <ExtensionPoint
               name="repos.sources.content.actionbar"
               props={{
@@ -237,9 +219,8 @@ class Content extends React.Component<Props, State> {
 
   render() {
     const { file, revision, repository, path, breadcrumb } = this.props;
-    const { selected, errorFromExtension, showFullscreenModal } = this.state;
+    const { selected, errorFromExtension } = this.state;
 
-    const header = this.showHeader();
     let content;
     switch (selected) {
       case "source":
@@ -251,6 +232,7 @@ class Content extends React.Component<Props, State> {
       case "annotations":
         content = <AnnotateView file={file} repository={repository} />;
     }
+    const header = this.showHeader(content);
     const moreInformation = this.showMoreInformation();
 
     return (
@@ -260,12 +242,6 @@ class Content extends React.Component<Props, State> {
           <Header>{header}</Header>
           {moreInformation}
           {content}
-          <FullscreenModal
-            title={file?.name}
-            closeFunction={() => this.closeModal()}
-            body={<BorderLessDiv className="panel">{content}</BorderLessDiv>}
-            active={showFullscreenModal}
-          />
         </div>
         {errorFromExtension && <ErrorNotification error={errorFromExtension} />}
       </div>

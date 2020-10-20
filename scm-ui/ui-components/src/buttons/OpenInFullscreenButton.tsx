@@ -22,12 +22,14 @@
  * SOFTWARE.
  */
 import * as React from "react";
-import { FC } from "react";
+import { FC, ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import FullscreenModal from "../modals/FullscreenModal";
 
 type Props = {
-  onClick?: () => void;
+  modalTitle: string;
+  modalBody: ReactNode;
 };
 
 const Button = styled.a`
@@ -37,13 +39,22 @@ const Button = styled.a`
   }
 `;
 
-const OpenInFullscreenButton: FC<Props> = ({ onClick }) => {
+const OpenInFullscreenButton: FC<Props> = ({ modalTitle, modalBody }) => {
   const [t] = useTranslation("repos");
+  const [showModal, setShowModal] = useState(false);
 
   return (
-    <Button title={t("diff.fullscreen.open")} className="button" onClick={onClick}>
-      <i className="fas fa-search-plus" />
-    </Button>
+    <>
+      <Button title={t("diff.fullscreen.open")} className="button" onClick={() => setShowModal(true)}>
+        <i className="fas fa-search-plus" />
+      </Button>
+      <FullscreenModal
+        title={modalTitle}
+        closeFunction={() => setShowModal(false)}
+        body={modalBody}
+        active={showModal}
+      />
+    </>
   );
 };
 

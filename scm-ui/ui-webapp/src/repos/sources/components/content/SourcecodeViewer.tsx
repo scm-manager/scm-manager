@@ -37,30 +37,23 @@ const SourcecodeViewer: FC<Props> = ({ file, language }) => {
   const [currentFileRevision, setCurrentFileRevision] = useState("");
 
   useEffect(() => {
-    function fetchContent() {
+    if (file.revision !== currentFileRevision) {
       getContent((file._links.self as Link).href)
         .then(content => {
-          setLoading(false);
           setContent(content);
           setCurrentFileRevision(file.revision);
-        })
-        .catch(error => {
           setLoading(false);
-          setError(error);
-        });
+        })
+        .catch(setError);
     }
-
-    if (file.revision !== currentFileRevision) {
-      fetchContent();
-    }
-  });
-
-  if (loading) {
-    return <Loading />;
-  }
+  }, [currentFileRevision, file]);
 
   if (error) {
     return <ErrorNotification error={error} />;
+  }
+
+  if (loading) {
+    return <Loading />;
   }
 
   if (!content) {

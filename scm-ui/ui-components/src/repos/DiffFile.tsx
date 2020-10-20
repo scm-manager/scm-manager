@@ -33,7 +33,7 @@ import Icon from "../Icon";
 import { Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType } from "./DiffTypes";
 import TokenizedDiffView from "./TokenizedDiffView";
 import DiffButton from "./DiffButton";
-import { MenuContext, OpenInFullscreenButton, FullscreenModal } from "@scm-manager/ui-components";
+import { MenuContext, OpenInFullscreenButton } from "@scm-manager/ui-components";
 import DiffExpander, { ExpandableHunk } from "./DiffExpander";
 import HunkExpandLink from "./HunkExpandLink";
 import { Modal } from "../modals";
@@ -57,7 +57,6 @@ type State = Collapsible & {
   sideBySide?: boolean;
   diffExpander: DiffExpander;
   expansionError?: any;
-  showFullscreenModal: boolean;
 };
 
 const DiffFilePanel = styled.div`
@@ -108,8 +107,7 @@ class DiffFile extends React.Component<Props, State> {
       collapsed: this.defaultCollapse(),
       sideBySide: props.sideBySide,
       diffExpander: new DiffExpander(props.file),
-      file: props.file,
-      showFullscreenModal: false
+      file: props.file
     };
   }
 
@@ -148,18 +146,6 @@ class DiffFile extends React.Component<Props, State> {
       }),
       () => callback()
     );
-  };
-
-  openModal = () => {
-    this.setState({
-      showFullscreenModal: true
-    });
-  };
-
-  closeModal = () => {
-    this.setState({
-      showFullscreenModal: false
-    });
   };
 
   setCollapse = (collapsed: boolean) => {
@@ -421,7 +407,7 @@ class DiffFile extends React.Component<Props, State> {
 
   render() {
     const { fileControlFactory, fileAnnotationFactory, t } = this.props;
-    const { file, collapsed, sideBySide, diffExpander, expansionError, showFullscreenModal } = this.state;
+    const { file, collapsed, sideBySide, diffExpander, expansionError } = this.state;
     const viewType = sideBySide ? "split" : "unified";
 
     let body = null;
@@ -444,7 +430,12 @@ class DiffFile extends React.Component<Props, State> {
     }
     const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit" /> : null;
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
-    const openInFullscreen = file?.hunks?.length ? <OpenInFullscreenButton onClick={this.openModal} /> : null;
+    const openInFullscreen = file?.hunks?.length ? (
+      <OpenInFullscreenButton
+        modalTitle={file.type === "delete" ? file.oldPath : file.newPath}
+        modalBody={<MarginlessModalContent>{body}</MarginlessModalContent>}
+      />
+    ) : null;
     const sideBySideToggle = file?.hunks?.length && (
       <MenuContext.Consumer>
         {({ setCollapsed }) => (
@@ -484,18 +475,6 @@ class DiffFile extends React.Component<Props, State> {
       );
     }
 
-    let modalContent;
-    if (file?.hunks?.length) {
-      modalContent = (
-        <FullscreenModal
-          title={file.type === "delete" ? file.oldPath : file.newPath}
-          closeFunction={() => this.closeModal()}
-          body={<MarginlessModalContent>{body}</MarginlessModalContent>}
-          active={showFullscreenModal}
-        />
-      );
-    }
-
     return (
       <DiffFilePanel
         className={classNames("panel", "is-size-6")}
@@ -520,7 +499,6 @@ class DiffFile extends React.Component<Props, State> {
           </FlexWrapLevel>
         </div>
         {body}
-        {modalContent}
       </DiffFilePanel>
     );
   }
