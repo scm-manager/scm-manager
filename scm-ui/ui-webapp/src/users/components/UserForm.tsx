@@ -113,8 +113,7 @@ class UserForm extends React.Component<Props, State> {
       this.editUserComponentsAreUnchanged() ||
       this.state.mailValidationError ||
       this.state.displayNameValidationError ||
-      this.isFalsy(user.displayName) ||
-      this.isFalsy(user.mail)
+      this.isFalsy(user.displayName)
     );
   };
 
@@ -152,6 +151,7 @@ class UserForm extends React.Component<Props, State> {
       // edit existing user
       subtitle = <Subtitle subtitle={t("userForm.subtitle")} />;
     }
+
     return (
       <>
         {subtitle}
@@ -218,7 +218,7 @@ class UserForm extends React.Component<Props, State> {
 
   handleEmailChange = (mail: string) => {
     this.setState({
-      mailValidationError: !validator.isMailValid(mail),
+      mailValidationError: !!mail && !validator.isMailValid(mail),
       user: {
         ...this.state.user,
         mail

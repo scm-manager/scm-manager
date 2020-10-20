@@ -22,40 +22,50 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.user;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.google.common.base.Strings;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.util.ValidationUtil;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
-import java.time.Instant;
+import javax.inject.Inject;
 
-@NoArgsConstructor @Getter @Setter
-public class UserDto extends HalRepresentation {
-  private boolean active;
-  private Instant creationDate;
-  @NotEmpty
-  private String displayName;
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Instant lastModified;
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  @Email
-  private String mail;
-  @Pattern(regexp = ValidationUtil.REGEX_NAME)
-  private String name;
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private String password;
-  private String type;
+/**
+ * Email is able to resolve email addresses of users.
+ *
+ * @since 2.8.0
+ */
+public class EMail {
 
-  UserDto(Links links, Embedded embedded) {
-    super(links, embedded);
+  private final ScmConfiguration scmConfiguration;
+
+  @Inject
+  public EMail(ScmConfiguration scmConfiguration) {
+    this.scmConfiguration = scmConfiguration;
+  }
+
+  /**
+   * Returns the email address of the given user or a generated fallback address.
+   * @param user user to resolve address from
+   * @return email address or fallback
+   */
+  public String getMailOrFallback(User user) {
+    if (Strings.isNullOrEmpty(user.getMail())) {
+      if (isMailUsedAsId(user)) {
+        return user.getId();
+      } else {
+        return createFallbackMail(user);
+      }
+    } else {
+      return user.getMail();
+    }
+  }
+
+  private boolean isMailUsedAsId(User user) {
+    return ValidationUtil.isMailAddressValid(user.getId());
+  }
+
+  private String createFallbackMail(User user) {
+    return user.getId() + "@" + scmConfiguration.getMailDomainName();
   }
 }

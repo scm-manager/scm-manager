@@ -42,7 +42,6 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.BranchCreatedEvent;
 import sonia.scm.repository.ClearRepositoryCacheEvent;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
@@ -58,7 +57,9 @@ import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.security.PublicKeyCreatedEvent;
 import sonia.scm.security.PublicKeyDeletedEvent;
 import sonia.scm.security.ScmSecurityException;
+import sonia.scm.user.EMail;
 
+import javax.annotation.Nullable;
 import java.util.Set;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -115,7 +116,17 @@ public final class RepositoryServiceFactory {
   private static final Logger logger =
     LoggerFactory.getLogger(RepositoryServiceFactory.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final CacheManager cacheManager;
+  private final RepositoryManager repositoryManager;
+  private final Set<RepositoryServiceResolver> resolvers;
+  private final PreProcessorUtil preProcessorUtil;
+  @SuppressWarnings({"rawtypes", "java:S3740"})
+  private final Set<ScmProtocolProvider> protocolProviders;
+  private final WorkdirProvider workdirProvider;
+
+  @Nullable
+  private final EMail eMail;
+
 
   /**
    * Constructs a new {@link RepositoryServiceFactory}. This constructor
@@ -127,39 +138,66 @@ public final class RepositoryServiceFactory {
    * @param repositoryManager manager for repositories
    * @param resolvers         a set of {@link RepositoryServiceResolver}
    * @param preProcessorUtil  helper object for pre processor handling
-   * @param protocolProviders
-   * @param workdirProvider
+   * @param protocolProviders providers for repository protocols
+   * @param workdirProvider   provider for working directories
+   *
+   * @deprecated use {@link RepositoryServiceFactory#RepositoryServiceFactory(CacheManager, RepositoryManager, Set, PreProcessorUtil, Set, WorkdirProvider, EMail)} instead
    * @since 1.21
    */
-  @Inject
+  @Deprecated
   public RepositoryServiceFactory(ScmConfiguration configuration,
                                   CacheManager cacheManager, RepositoryManager repositoryManager,
                                   Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
-                                  @SuppressWarnings("rawtypes") Set<ScmProtocolProvider> protocolProviders, WorkdirProvider workdirProvider) {
+                                  @SuppressWarnings({"rawtypes", "java:S3740"}) Set<ScmProtocolProvider> protocolProviders,
+                                  WorkdirProvider workdirProvider) {
     this(
-      configuration, cacheManager, repositoryManager, resolvers,
-      preProcessorUtil, protocolProviders, workdirProvider, ScmEventBus.getInstance()
+      cacheManager, repositoryManager, resolvers,
+      preProcessorUtil, protocolProviders, workdirProvider, null, ScmEventBus.getInstance()
+    );
+  }
+
+  /**
+   * Constructs a new {@link RepositoryServiceFactory}. This constructor
+   * should not be called manually, it should only be used by the injection
+   * container.
+   *
+   * @param cacheManager      cache manager
+   * @param repositoryManager manager for repositories
+   * @param resolvers         a set of {@link RepositoryServiceResolver}
+   * @param preProcessorUtil  helper object for pre processor handling
+   * @param protocolProviders providers for repository protocols
+   * @param workdirProvider   provider for working directories
+   * @param eMail             handling user emails
+   * @since 2.8.0
+   */
+  @Inject
+  public RepositoryServiceFactory(CacheManager cacheManager, RepositoryManager repositoryManager,
+                                  Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
+                                  @SuppressWarnings({"rawtypes", "java:S3740"})  Set<ScmProtocolProvider> protocolProviders,
+                                  WorkdirProvider workdirProvider, EMail eMail) {
+    this(
+      cacheManager, repositoryManager, resolvers,
+      preProcessorUtil, protocolProviders, workdirProvider,
+      eMail, ScmEventBus.getInstance()
     );
   }
 
   @VisibleForTesting
-  RepositoryServiceFactory(ScmConfiguration configuration,
-                           CacheManager cacheManager, RepositoryManager repositoryManager,
+  @SuppressWarnings("java:S107") // to keep backward compatibility, we can not reduce amount of parameters
+  RepositoryServiceFactory(CacheManager cacheManager, RepositoryManager repositoryManager,
                            Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
-                           Set<ScmProtocolProvider> protocolProviders, WorkdirProvider workdirProvider,
-                           ScmEventBus eventBus) {
-    this.configuration = configuration;
+                           @SuppressWarnings({"rawtypes", "java:S3740"}) Set<ScmProtocolProvider> protocolProviders,
+                           WorkdirProvider workdirProvider, @Nullable EMail eMail, ScmEventBus eventBus) {
     this.cacheManager = cacheManager;
     this.repositoryManager = repositoryManager;
     this.resolvers = resolvers;
     this.preProcessorUtil = preProcessorUtil;
     this.protocolProviders = protocolProviders;
     this.workdirProvider = workdirProvider;
+    this.eMail = eMail;
 
     eventBus.register(new CacheClearHook(cacheManager));
   }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Creates a new RepositoryService for the given repository.
@@ -246,7 +284,7 @@ public final class RepositoryServiceFactory {
         }
 
         service = new RepositoryService(cacheManager, provider, repository,
-          preProcessorUtil, protocolProviders, workdirProvider);
+          preProcessorUtil, protocolProviders, workdirProvider, eMail);
 
         break;
       }
@@ -258,8 +296,6 @@ public final class RepositoryServiceFactory {
 
     return service;
   }
-
-  //~--- inner classes --------------------------------------------------------
 
   /**
    * Hook and listener to clear all relevant repository caches.
@@ -283,8 +319,6 @@ public final class RepositoryServiceFactory {
       this.caches.add(cacheManager.getCache(TagsCommandBuilder.CACHE_NAME));
       this.caches.add(cacheManager.getCache(BranchesCommandBuilder.CACHE_NAME));
     }
-
-    //~--- methods ------------------------------------------------------------
 
     /**
      * Clear caches on explicit repository cache clear event.
@@ -347,35 +381,4 @@ public final class RepositoryServiceFactory {
     }
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * cache manager
-   */
-  private final CacheManager cacheManager;
-
-  /**
-   * scm-manager configuration
-   */
-  private final ScmConfiguration configuration;
-
-  /**
-   * pre processor util
-   */
-  private final PreProcessorUtil preProcessorUtil;
-
-  /**
-   * repository manager
-   */
-  private final RepositoryManager repositoryManager;
-
-  /**
-   * service resolvers
-   */
-  private final Set<RepositoryServiceResolver> resolvers;
-
-  private Set<ScmProtocolProvider> protocolProviders;
-
-  private final WorkdirProvider workdirProvider;
 }

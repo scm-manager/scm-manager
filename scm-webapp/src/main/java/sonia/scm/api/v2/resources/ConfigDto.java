@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
@@ -59,6 +59,7 @@ public class ConfigDto extends HalRepresentation {
   private String namespaceStrategy;
   private String loginInfoUrl;
   private String releaseFeedUrl;
+  private String mailDomainName;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package
