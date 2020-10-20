@@ -46,7 +46,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   //J-
   public static final Set<Command> COMMANDS = ImmutableSet.of(
     Command.BLAME, Command.BROWSE, Command.CAT, Command.DIFF,
-    Command.LOG, Command.BUNDLE, Command.UNBUNDLE, Command.MODIFY
+    Command.LOG, Command.BUNDLE, Command.UNBUNDLE, Command.MODIFY, Command.LOOKUP
   );
   //J+
 
@@ -155,6 +155,8 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   public ModifyCommand getModifyCommand() {
     return new SvnModifyCommand(context, workingCopyFactory);
   }
+
+  public LookupCommand getLookupCommand() { return new SvnLookupCommand(context);}
 
   /**
    * Method description

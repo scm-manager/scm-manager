@@ -274,4 +274,12 @@ public abstract class RepositoryServiceProvider implements Closeable
   {
     throw new CommandNotSupportedException(Command.MODIFY);
   }
+
+  /**
+   * @since 2.8.0
+   */
+  public LookupCommand getLookupCommand()
+  {
+    throw new CommandNotSupportedException(Command.LOOKUP);
+  }
 }

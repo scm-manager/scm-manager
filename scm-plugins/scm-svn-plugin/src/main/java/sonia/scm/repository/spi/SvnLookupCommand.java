@@ -21,46 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.api;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+package sonia.scm.repository.spi;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+import lombok.extern.slf4j.Slf4j;
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.io.SVNRepository;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+import java.util.Arrays;
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
-  
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+@Slf4j
+public class SvnLookupCommand extends AbstractSvnCommand implements LookupCommand {
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
+  protected SvnLookupCommand(SvnContext context) {
+    super(context);
+  }
 
-  /**
-   * @since 2.8.0
-   */
-  LOOKUP;
+  @Override
+  public <T> T lookup(LookupCommandRequest request) {
+    try {
+      SVNRepository repository = context.open();
+      if (request.getArgs()[0].equalsIgnoreCase("props")) {
+        if (Arrays.stream(request.getArgs()).anyMatch(a -> a.equalsIgnoreCase("uuid"))) {
+          return (T) repository.getRepositoryUUID(false);
+        }
+      }
+    } catch (SVNException | ClassCastException e) {
+      log.error("Invalid lookup request", e);
+    }
+
+    return null;
+  }
 }

@@ -21,46 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.api;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+package sonia.scm.repository.spi;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+import lombok.Getter;
+import lombok.Setter;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
-
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
-  
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
-
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
-
-  /**
-   * @since 2.8.0
-   */
-  LOOKUP;
+@Getter
+@Setter
+public class LookupCommandRequest {
+  private Class<?> type;
+  private String[] args;
 }

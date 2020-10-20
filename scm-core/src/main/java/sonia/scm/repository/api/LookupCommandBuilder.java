@@ -21,46 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
+import sonia.scm.repository.spi.LookupCommand;
+import sonia.scm.repository.spi.LookupCommandRequest;
+
 /**
- * Enumeration of available commands.
+ * The lookup command executes a lookup for additional repository information.
  *
- * @author Sebastian Sdorra
- * @since 1.17
+ * @since 2.8.0
  */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+public class LookupCommandBuilder {
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+  private final LookupCommand lookupCommand;
+  private final LookupCommandRequest request = new LookupCommandRequest();
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+  public LookupCommandBuilder(LookupCommand lookupCommand) {
+    this.lookupCommand = lookupCommand;
+  }
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
-  
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
-
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
-
-  /**
-   * @since 2.8.0
-   */
-  LOOKUP;
+  public <T> T lookup(Class<T> type, String... args) {
+    request.setType(type);
+    request.setArgs(args);
+    return lookupCommand.lookup(request);
+  }
 }
