@@ -26,10 +26,12 @@ import { FC, ReactNode, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import FullscreenModal from "../modals/FullscreenModal";
+import Tooltip from "../Tooltip";
 
 type Props = {
   modalTitle: string;
   modalBody: ReactNode;
+  useTitleTooltip?: boolean; // not recommended
 };
 
 const Button = styled.a`
@@ -39,13 +41,14 @@ const Button = styled.a`
   }
 `;
 
-const OpenInFullscreenButton: FC<Props> = ({ modalTitle, modalBody }) => {
+const OpenInFullscreenButton: FC<Props> = ({ modalTitle, modalBody, useTitleTooltip = false }) => {
   const [t] = useTranslation("repos");
   const [showModal, setShowModal] = useState(false);
 
-  return (
+  const tooltip = t("diff.fullscreen.open");
+  const content = (
     <>
-      <Button title={t("diff.fullscreen.open")} className="button" onClick={() => setShowModal(true)}>
+      <Button title={useTitleTooltip ? tooltip : undefined} className="button" onClick={() => setShowModal(true)}>
         <i className="fas fa-search-plus" />
       </Button>
       {showModal && (
@@ -57,6 +60,15 @@ const OpenInFullscreenButton: FC<Props> = ({ modalTitle, modalBody }) => {
         />
       )}
     </>
+  );
+
+  if (useTitleTooltip) {
+    return <>{content}</>;
+  }
+  return (
+    <Tooltip message={tooltip} location="top">
+      {content}
+    </Tooltip>
   );
 };
 
