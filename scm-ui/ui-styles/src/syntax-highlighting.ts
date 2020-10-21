@@ -149,24 +149,19 @@ export default {
   },
   operator: {
     color: "#686868",
-    background: "#ffffff",
   },
   entity: {
     color: "#686868",
-    background: "#ffffff",
     cursor: "help",
   },
   url: {
     color: "#686868",
-    background: "#ffffff",
   },
   ".language-css .token.string": {
     color: "#686868",
-    background: "#ffffff",
   },
   ".style .token.string": {
     color: "#686868",
-    background: "#ffffff",
   },
   atrule: {
     color: "#00a984",

@@ -188,9 +188,6 @@ pre[class*="language-"] {
 .style .token.string {
 
   color: #686868;
-
-  background: #ffffff;
-
 }
 
 .token.atrule,
