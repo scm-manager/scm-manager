@@ -130,22 +130,22 @@ export default {
     color: "#2c99c7",
   },
   selector: {
-    color: "#cca201",
+    color: "#005f9a",
   },
   "attr-name": {
-    color: "#cca201",
+    color: "#005f9a",
   },
   string: {
-    color: "#cca201",
+    color: "#005f9a",
   },
   char: {
-    color: "#cca201",
+    color: "#005f9a",
   },
   builtin: {
-    color: "#cca201",
+    color: "#005f9a",
   },
   inserted: {
-    color: "#cca201",
+    color: "#005f9a",
   },
   operator: {
     color: "#686868",
