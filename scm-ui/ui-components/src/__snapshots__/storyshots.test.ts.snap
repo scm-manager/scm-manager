@@ -3954,15 +3954,19 @@ exports[`Storyshots Diff Binaries 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -4235,15 +4239,19 @@ exports[`Storyshots Diff Collapsed 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
               <div
                 className="control"
@@ -4344,15 +4352,19 @@ exports[`Storyshots Diff Collapsed 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
               <div
                 className="control"
@@ -4453,15 +4465,19 @@ exports[`Storyshots Diff Collapsed 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
               <div
                 className="control"
@@ -4562,15 +4578,19 @@ exports[`Storyshots Diff Collapsed 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
               <div
                 className="control"
@@ -4671,15 +4691,19 @@ exports[`Storyshots Diff Collapsed 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
               <div
                 className="control"
@@ -4780,15 +4804,19 @@ exports[`Storyshots Diff Collapsed 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
               <div
                 className="control"
@@ -4898,15 +4926,19 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -4969,15 +5001,19 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -5823,15 +5859,19 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -6273,15 +6313,19 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -6723,15 +6767,19 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -6794,15 +6842,19 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -6874,15 +6926,19 @@ exports[`Storyshots Diff Default 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -7451,15 +7507,19 @@ exports[`Storyshots Diff Default 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -8305,15 +8365,19 @@ exports[`Storyshots Diff Default 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -8755,15 +8819,19 @@ exports[`Storyshots Diff Default 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -9205,15 +9273,19 @@ exports[`Storyshots Diff Default 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -10262,15 +10334,19 @@ exports[`Storyshots Diff Default 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -10796,15 +10872,19 @@ exports[`Storyshots Diff Expandable 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -11410,15 +11490,19 @@ exports[`Storyshots Diff Expandable 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -12361,15 +12445,19 @@ exports[`Storyshots Diff Expandable 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -12883,15 +12971,19 @@ exports[`Storyshots Diff Expandable 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -13405,15 +13497,19 @@ exports[`Storyshots Diff Expandable 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -14617,15 +14713,19 @@ exports[`Storyshots Diff Expandable 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -15188,15 +15288,19 @@ exports[`Storyshots Diff File Annotation 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -15769,15 +15873,19 @@ exports[`Storyshots Diff File Annotation 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -16627,15 +16735,19 @@ exports[`Storyshots Diff File Annotation 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -17081,15 +17193,19 @@ exports[`Storyshots Diff File Annotation 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -17535,15 +17651,19 @@ exports[`Storyshots Diff File Annotation 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -18596,15 +18716,19 @@ exports[`Storyshots Diff File Annotation 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -19134,15 +19258,19 @@ exports[`Storyshots Diff File Controls 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
               <div
                 className="control"
@@ -19729,15 +19857,19 @@ exports[`Storyshots Diff File Controls 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
               <div
                 className="control"
@@ -20601,15 +20733,19 @@ exports[`Storyshots Diff File Controls 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
               <div
                 className="control"
@@ -21069,15 +21205,19 @@ exports[`Storyshots Diff File Controls 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
               <div
                 className="control"
@@ -21537,15 +21677,19 @@ exports[`Storyshots Diff File Controls 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
               <div
                 className="control"
@@ -22612,15 +22756,19 @@ exports[`Storyshots Diff File Controls 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
               <div
                 className="control"
@@ -23164,15 +23312,19 @@ exports[`Storyshots Diff Hunks 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -24005,15 +24157,19 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -24594,15 +24750,19 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -25460,15 +25620,19 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -25910,15 +26074,19 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -26360,15 +26528,19 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -27417,15 +27589,19 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -27963,15 +28139,19 @@ exports[`Storyshots Diff OnClick 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -28580,15 +28760,19 @@ exports[`Storyshots Diff OnClick 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -29496,15 +29680,19 @@ exports[`Storyshots Diff OnClick 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -29976,15 +30164,19 @@ exports[`Storyshots Diff OnClick 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -30456,15 +30648,19 @@ exports[`Storyshots Diff OnClick 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -31589,15 +31785,19 @@ exports[`Storyshots Diff OnClick 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -32159,15 +32359,19 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -32829,15 +33033,19 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -33773,15 +33981,19 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -34275,15 +34487,19 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -34777,15 +34993,19 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -36003,15 +36223,19 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -36610,15 +36834,19 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -37187,15 +37415,19 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -38041,15 +38273,19 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -38491,15 +38727,19 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -38941,15 +39181,19 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -39998,15 +40242,19 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -40532,15 +40780,19 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -41146,15 +41398,19 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -42097,15 +42353,19 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -42619,15 +42879,19 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -43141,15 +43405,19 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
@@ -44353,15 +44621,19 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
               <div
                 className="control"
               >
-                <a
-                  className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
-                  onClick={[Function]}
-                  title="diff.fullscreen.open"
+                <span
+                  className="tooltip has-tooltip-top"
+                  data-tooltip="diff.fullscreen.open"
                 >
-                  <i
-                    className="fas fa-search-plus"
-                  />
-                </a>
+                  <a
+                    className="OpenInFullscreenButton__Button-hpt3du-0 cLnuyu button"
+                    onClick={[Function]}
+                  >
+                    <i
+                      className="fas fa-search-plus"
+                    />
+                  </a>
+                </span>
               </div>
             </div>
           </div>
