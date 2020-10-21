@@ -22,50 +22,31 @@
  * SOFTWARE.
  */
 import * as React from "react";
-import { FC } from "react";
-import classNames from "classnames";
-import usePortalRootElement from "../usePortalRootElement";
-import ReactDOM from "react-dom";
+import { FC, ReactNode } from "react";
+import { useTranslation } from "react-i18next";
+import { Modal } from "./Modal";
+import Button from "../buttons/Button";
+import styled from "styled-components";
 
 type Props = {
   title: string;
   closeFunction: () => void;
-  body: any;
-  footer?: any;
+  body: ReactNode;
   active: boolean;
-  className?: string;
-  headColor?: string;
 };
 
-export const Modal: FC<Props> = ({ title, closeFunction, body, footer, active, className, headColor = "light" }) => {
-  const portalRootElement = usePortalRootElement("modalsRoot");
-
-  if (!portalRootElement) {
-    return null;
+const FullSizedModal = styled(Modal)`
+  & .modal-card {
+    width: 98%;
+    max-height: 97vh;
   }
+`;
 
-  const isActive = active ? "is-active" : null;
+const FullscreenModal: FC<Props> = ({ title, closeFunction, body, active }) => {
+  const [t] = useTranslation("repos");
+  const footer = <Button label={t("diff.fullscreen.close")} action={closeFunction} color="grey" />;
 
-  let showFooter = null;
-  if (footer) {
-    showFooter = <footer className="modal-card-foot">{footer}</footer>;
-  }
-
-  const modalElement = (
-    <div className={classNames("modal", className, isActive)}>
-      <div className="modal-background" onClick={closeFunction} />
-      <div className="modal-card">
-        <header className={classNames("modal-card-head", `has-background-${headColor}`)}>
-          <p className="modal-card-title is-marginless">{title}</p>
-          <button className="delete" aria-label="close" onClick={closeFunction} />
-        </header>
-        <section className="modal-card-body">{body}</section>
-        {showFooter}
-      </div>
-    </div>
-  );
-
-  return ReactDOM.createPortal(modalElement, portalRootElement);
+  return <FullSizedModal title={title} closeFunction={closeFunction} body={body} footer={footer} active={active} />;
 };
 
-export default Modal;
+export default FullscreenModal;
