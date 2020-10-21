@@ -31,7 +31,7 @@ import Tooltip from "../Tooltip";
 type Props = {
   modalTitle: string;
   modalBody: ReactNode;
-  useTitleTooltip?: boolean; // not recommended
+  tooltipStyle?: "tooltipComponent" | "htmlTitle";
 };
 
 const Button = styled.a`
@@ -41,14 +41,18 @@ const Button = styled.a`
   }
 `;
 
-const OpenInFullscreenButton: FC<Props> = ({ modalTitle, modalBody, useTitleTooltip = false }) => {
+const OpenInFullscreenButton: FC<Props> = ({ modalTitle, modalBody, tooltipStyle = "tooltipComponent" }) => {
   const [t] = useTranslation("repos");
   const [showModal, setShowModal] = useState(false);
 
   const tooltip = t("diff.fullscreen.open");
   const content = (
     <>
-      <Button title={useTitleTooltip ? tooltip : undefined} className="button" onClick={() => setShowModal(true)}>
+      <Button
+        title={tooltipStyle === "htmlTitle" ? tooltip : undefined}
+        className="button"
+        onClick={() => setShowModal(true)}
+      >
         <i className="fas fa-search-plus" />
       </Button>
       {showModal && (
@@ -62,7 +66,7 @@ const OpenInFullscreenButton: FC<Props> = ({ modalTitle, modalBody, useTitleTool
     </>
   );
 
-  if (useTitleTooltip) {
+  if (tooltipStyle === "htmlTitle") {
     return <>{content}</>;
   }
   return (
