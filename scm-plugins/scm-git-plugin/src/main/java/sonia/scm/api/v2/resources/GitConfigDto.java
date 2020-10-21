@@ -41,6 +41,8 @@ public class GitConfigDto extends HalRepresentation {
 
   private boolean nonFastForwardDisallowed;
 
+  private String defaultBranch;
+
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package
   protected HalRepresentation add(Links links) {

@@ -24,6 +24,8 @@
       "gcExpressionHelpText": "Benutze Quartz Cron Ausdrücke (SECOND MINUTE HOUR DAYOFMONTH MONTH DAYOFWEEK), um git GC regelmäßig auszuführen.",
       "nonFastForwardDisallowed": "Deaktiviere \"Non Fast-Forward\"",
       "nonFastForwardDisallowedHelpText": "Git Pushes ablehnen, die nicht \"fast-forward\" sind, wie \"--force\".",
+      "defaultBranch": "Default Branch",
+      "defaultBranchValidationError": "Dies ist kein valider Branchname",
       "disabled": "Deaktiviert",
       "disabledHelpText": "Aktiviere oder deaktiviere das Git Plugin",
       "submit": "Speichern"
