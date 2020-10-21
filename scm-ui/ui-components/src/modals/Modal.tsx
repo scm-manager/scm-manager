@@ -53,7 +53,7 @@ export const Modal: FC<Props> = ({ title, closeFunction, body, footer, active, c
 
   const modalElement = (
     <div className={classNames("modal", className, isActive)}>
-      <div className="modal-background" />
+      <div className="modal-background" onClick={closeFunction} />
       <div className="modal-card">
         <header className={classNames("modal-card-head", `has-background-${headColor}`)}>
           <p className="modal-card-title is-marginless">{title}</p>
