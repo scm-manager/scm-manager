@@ -204,7 +204,7 @@ exports[`Storyshots Annotate Default 1`] = `
                 className="token"
                 style={
                   Object {
-                    "color": "#cca201",
+                    "color": "#005f9a",
                   }
                 }
               >
@@ -431,7 +431,7 @@ exports[`Storyshots Annotate Default 1`] = `
                 className="token"
                 style={
                   Object {
-                    "color": "#cca201",
+                    "color": "#005f9a",
                   }
                 }
               >
@@ -767,7 +767,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
                 className="token"
                 style={
                   Object {
-                    "color": "#cca201",
+                    "color": "#005f9a",
                   }
                 }
               >
@@ -1004,7 +1004,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
                 className="token"
                 style={
                   Object {
-                    "color": "#cca201",
+                    "color": "#005f9a",
                   }
                 }
               >
@@ -48062,7 +48062,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             className="token"
             style={
               Object {
-                "color": "#cca201",
+                "color": "#005f9a",
               }
             }
           >
@@ -50223,7 +50223,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -50259,7 +50259,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -50464,7 +50464,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -50680,7 +50680,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -50869,7 +50869,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -50955,7 +50955,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -51010,7 +51010,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -51128,7 +51128,7 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -52542,7 +52542,7 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -53187,7 +53187,7 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -53920,7 +53920,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -54186,7 +54186,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -54211,7 +54211,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -54307,7 +54307,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -55049,7 +55049,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -55069,7 +55069,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -55216,7 +55216,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -55396,7 +55396,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -55497,7 +55497,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -55675,7 +55675,7 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -56869,7 +56869,7 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
@@ -57394,7 +57394,7 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         className="token"
         style={
           Object {
-            "color": "#cca201",
+            "color": "#005f9a",
           }
         }
       >
