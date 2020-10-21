@@ -9,10 +9,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Generation of email addresses for users, where none is configured ([#1370](https://github.com/scm-manager/scm-manager/pull/1370))
 - Add mechanism for deploying ui content ([#1382](https://github.com/scm-manager/scm-manager/pull/1382))
+- Source code fullscreen view ([#1376](https://github.com/scm-manager/scm-manager/pull/1376))
 
 ### Changed
 - Centralise syntax highlighting ([#1382](https://github.com/scm-manager/scm-manager/pull/1382))
-- Source code fullscreen view ([#1376](https://github.com/scm-manager/scm-manager/pull/1376))
 
 ## [2.6.3] - 2020-10-16
 ### Fixed
