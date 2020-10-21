@@ -66,7 +66,7 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY etnktp has-text-info"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY gKMOKG has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
@@ -123,7 +123,7 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 cLNtyY eRUjwS"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 cLNtyY khRuUK"
           />
           <div
             className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 cLNtyY gVYXaQ"
@@ -146,7 +146,7 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY etnktp has-text-info"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY gKMOKG has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
@@ -223,7 +223,7 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 cLNtyY eRUjwS"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 cLNtyY khRuUK"
           />
           <div
             className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 cLNtyY gVYXaQ"
@@ -246,7 +246,7 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY etnktp has-text-info"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY gKMOKG has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
@@ -358,7 +358,7 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY etnktp has-text-info"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY gKMOKG has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
@@ -460,7 +460,7 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY etnktp has-text-info"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY gKMOKG has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
@@ -522,7 +522,7 @@ exports[`Storyshots Annotate Default 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 cLNtyY eRUjwS"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 cLNtyY khRuUK"
           />
           <div
             className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 cLNtyY gVYXaQ"
@@ -619,7 +619,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY etnktp has-text-info"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY gKMOKG has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
@@ -681,7 +681,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 cLNtyY eRUjwS"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 cLNtyY khRuUK"
           />
           <div
             className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 cLNtyY gVYXaQ"
@@ -704,7 +704,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY etnktp has-text-info"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY gKMOKG has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
@@ -786,7 +786,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 cLNtyY eRUjwS"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 cLNtyY khRuUK"
           />
           <div
             className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 cLNtyY gVYXaQ"
@@ -809,7 +809,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY etnktp has-text-info"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY gKMOKG has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
@@ -926,7 +926,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY etnktp has-text-info"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY gKMOKG has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
@@ -1033,7 +1033,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY etnktp has-text-info"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__Metadata-h9c4md-5 cLNtyY gKMOKG has-text-info"
             onMouseOut={[Function]}
             onMouseOver={[Function]}
           >
@@ -1100,7 +1100,7 @@ exports[`Storyshots Annotate With Avatars 1`] = `
           className="AnnotateLine__Line-h9c4md-4 cjyweO"
         >
           <div
-            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 cLNtyY eRUjwS"
+            className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__EmptyMetadata-h9c4md-6 cLNtyY khRuUK"
           />
           <div
             className="AnnotateLine__LineElement-h9c4md-0 AnnotateLine__LineNumber-h9c4md-3 cLNtyY gVYXaQ"
