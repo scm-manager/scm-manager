@@ -33,7 +33,7 @@ import Icon from "../Icon";
 import { Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType } from "./DiffTypes";
 import TokenizedDiffView from "./TokenizedDiffView";
 import DiffButton from "./DiffButton";
-import { MenuContext } from "@scm-manager/ui-components";
+import { MenuContext, OpenInFullscreenButton } from "@scm-manager/ui-components";
 import DiffExpander, { ExpandableHunk } from "./DiffExpander";
 import HunkExpandLink from "./HunkExpandLink";
 import { Modal } from "../modals";
@@ -89,6 +89,15 @@ const HunkDivider = styled.hr`
 
 const ChangeTypeTag = styled(Tag)`
   margin-left: 0.75rem;
+`;
+
+const MarginlessModalContent = styled.div`
+  margin: -1.25rem;
+
+  & .panel-block {
+    flex-direction: column;
+    align-items: stretch;
+  }
 `;
 
 class DiffFile extends React.Component<Props, State> {
@@ -406,27 +415,34 @@ class DiffFile extends React.Component<Props, State> {
     const { file, collapsed, sideBySide, diffExpander, expansionError } = this.state;
     const viewType = sideBySide ? "split" : "unified";
 
-    let body = null;
+    const fileAnnotations = fileAnnotationFactory ? fileAnnotationFactory(file) : null;
+    const innerContent = (
+      <div className="panel-block is-paddingless">
+        {fileAnnotations}
+        <TokenizedDiffView className={viewType} viewType={viewType} file={file}>
+          {(hunks: HunkType[]) =>
+            hunks?.map((hunk, n) => {
+              return this.renderHunk(file, diffExpander.getHunk(n), n);
+            })
+          }
+        </TokenizedDiffView>
+      </div>
+    );
     let icon = "angle-right";
+    let body = null;
     if (!collapsed) {
-      const fileAnnotations = fileAnnotationFactory ? fileAnnotationFactory(file) : null;
       icon = "angle-down";
-      body = (
-        <div className="panel-block is-paddingless">
-          {fileAnnotations}
-          <TokenizedDiffView className={viewType} viewType={viewType} file={file}>
-            {(hunks: HunkType[]) =>
-              hunks?.map((hunk, n) => {
-                return this.renderHunk(file, diffExpander.getHunk(n), n);
-              })
-            }
-          </TokenizedDiffView>
-        </div>
-      );
+      body = innerContent;
     }
     const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit" /> : null;
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
-    const sideBySideToggle = file.hunks && file.hunks.length && (
+    const openInFullscreen = file?.hunks?.length ? (
+      <OpenInFullscreenButton
+        modalTitle={file.type === "delete" ? file.oldPath : file.newPath}
+        modalBody={<MarginlessModalContent>{innerContent}</MarginlessModalContent>}
+      />
+    ) : null;
+    const sideBySideToggle = file?.hunks?.length && (
       <MenuContext.Consumer>
         {({ setCollapsed }) => (
           <DiffButton
@@ -447,6 +463,7 @@ class DiffFile extends React.Component<Props, State> {
       <ButtonWrapper className={classNames("level-right", "is-flex")}>
         <ButtonGroup>
           {sideBySideToggle}
+          {openInFullscreen}
           {fileControls}
         </ButtonGroup>
       </ButtonWrapper>
@@ -465,7 +482,11 @@ class DiffFile extends React.Component<Props, State> {
     }
 
     return (
-      <DiffFilePanel className={classNames("panel", "is-size-6")} collapsed={(file && file.isBinary) || collapsed} id={this.getAnchorId(file)}>
+      <DiffFilePanel
+        className={classNames("panel", "is-size-6")}
+        collapsed={(file && file.isBinary) || collapsed}
+        id={this.getAnchorId(file)}
+      >
         {errorModal}
         <div className="panel-heading">
           <FlexWrapLevel className="level">

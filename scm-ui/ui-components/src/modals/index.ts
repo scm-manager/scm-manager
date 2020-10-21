@@ -26,3 +26,4 @@
 
 export { default as ConfirmAlert, confirmAlert } from "./ConfirmAlert";
 export { default as Modal } from "./Modal";
+export { default as FullscreenModal } from "./FullscreenModal";
