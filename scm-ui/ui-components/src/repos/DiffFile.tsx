@@ -93,6 +93,11 @@ const ChangeTypeTag = styled(Tag)`
 
 const MarginlessModalContent = styled.div`
   margin: -1.25rem;
+
+  & .panel-block {
+    flex-direction: column;
+    align-items: stretch;
+  }
 `;
 
 class DiffFile extends React.Component<Props, State> {
