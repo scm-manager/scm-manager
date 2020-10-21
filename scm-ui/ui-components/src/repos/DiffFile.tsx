@@ -415,30 +415,31 @@ class DiffFile extends React.Component<Props, State> {
     const { file, collapsed, sideBySide, diffExpander, expansionError } = this.state;
     const viewType = sideBySide ? "split" : "unified";
 
-    let body = null;
+    const fileAnnotations = fileAnnotationFactory ? fileAnnotationFactory(file) : null;
+    const innerContent = (
+      <div className="panel-block is-paddingless">
+        {fileAnnotations}
+        <TokenizedDiffView className={viewType} viewType={viewType} file={file}>
+          {(hunks: HunkType[]) =>
+            hunks?.map((hunk, n) => {
+              return this.renderHunk(file, diffExpander.getHunk(n), n);
+            })
+          }
+        </TokenizedDiffView>
+      </div>
+    );
     let icon = "angle-right";
+    let body = null;
     if (!collapsed) {
-      const fileAnnotations = fileAnnotationFactory ? fileAnnotationFactory(file) : null;
       icon = "angle-down";
-      body = (
-        <div className="panel-block is-paddingless">
-          {fileAnnotations}
-          <TokenizedDiffView className={viewType} viewType={viewType} file={file}>
-            {(hunks: HunkType[]) =>
-              hunks?.map((hunk, n) => {
-                return this.renderHunk(file, diffExpander.getHunk(n), n);
-              })
-            }
-          </TokenizedDiffView>
-        </div>
-      );
+      body = innerContent;
     }
     const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit" /> : null;
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
     const openInFullscreen = file?.hunks?.length ? (
       <OpenInFullscreenButton
         modalTitle={file.type === "delete" ? file.oldPath : file.newPath}
-        modalBody={<MarginlessModalContent>{body}</MarginlessModalContent>}
+        modalBody={<MarginlessModalContent>{innerContent}</MarginlessModalContent>}
       />
     ) : null;
     const sideBySideToggle = file?.hunks?.length && (
