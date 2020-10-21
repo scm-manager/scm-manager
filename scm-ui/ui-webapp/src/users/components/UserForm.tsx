@@ -128,10 +128,10 @@ class UserForm extends React.Component<Props, State> {
     const { user, passwordValid } = this.state;
     event.preventDefault();
     if (!this.isInvalid()) {
+      this.props.submitForm(this.state.user);
       if (user.password && passwordValid && user._links?.password) {
         setPassword((user._links.password as Link).href, user.password).catch(error => this.setState({ error }));
       }
-      this.props.submitForm(this.state.user);
     }
   };
 
@@ -208,7 +208,7 @@ class UserForm extends React.Component<Props, State> {
               <Checkbox
                 label={t("user.externalFlag")}
                 onChange={this.handleExternalFlagChange}
-                checked={!!user?.external && user.external}
+                checked={!!user?.external}
                 helpText={t("help.externalFlagHelpText")}
               />
             </div>

@@ -36,7 +36,7 @@ Example: If anonymous access is enabled and the "_anonymous" user has full acces
 The url of the RSS Release Feed for SCM-Manager. This provides up-to-date version information. To disable this feature just leave the url blank.
 
 #### User converter
-Internal users will automatically be converted to external on their first login using an external system. After convertion the users may only log in using the external system.
+Internal users will automatically be converted to external on their first login using an external system. After conversion the users may only log in using the external system.
 
 #### Fallback Mail Domain Name
 This domain name will be used to create email addresses for users without one when needed. It will not be used to send mails nor will be accessed otherwise.

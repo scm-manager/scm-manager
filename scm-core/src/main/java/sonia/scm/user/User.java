@@ -69,9 +69,9 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   private String password;
   @Deprecated
   /**
-   * @deprecated Use external instead.
    * The user type is replaced by {@link external} flag
-   * Since 2.8.0
+   * @since 2.8.0
+   * @deprecated Use {@link external} instead.
    */
   private String type;
 

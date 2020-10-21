@@ -21,66 +21,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.user;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.user;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import com.google.common.collect.Lists;
-
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
-
 import org.mockito.ArgumentCaptor;
 import sonia.scm.NotFoundException;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 import sonia.scm.user.xml.XmlUserDAO;
 
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Collections;
-import java.util.List;
-import org.junit.Rule;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
- *
  * @author Sebastian Sdorra
  */
 @SubjectAware(
-    username = "trillian",
-    password = "secret",
-    configuration = "classpath:sonia/scm/repository/shiro.ini"
+  username = "trillian",
+  password = "secret",
+  configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
-public class DefaultUserManagerTest extends UserManagerTestBase
-{
+public class DefaultUserManagerTest extends UserManagerTestBase {
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-
-  private UserDAO userDAO ;
-  private User trillian;
+  private UserDAO userDAO;
 
   /**
    * Method description
    *
-   *
    * @return
    */
   @Override
-  public UserManager createManager()
-  {
+  public UserManager createManager() {
     return new DefaultUserManager(createXmlUserDAO());
   }
 
   @Before
   public void initDao() {
-    trillian = UserTestData.createTrillian();
+    User trillian = UserTestData.createTrillian();
     trillian.setPassword("oldEncrypted");
 
     userDAO = mock(UserDAO.class);
@@ -113,6 +99,16 @@ public class DefaultUserManagerTest extends UserManagerTestBase
     UserManager userManager = new DefaultUserManager(userDAO);
 
     userManager.overwritePassword("notExisting", "---");
+  }
+
+  @Test(expected = ChangePasswordNotAllowedException.class)
+  public void shouldFailOverwritePasswordForExternalUser() {
+    User trillian = new User("trillian");
+    trillian.setExternal(true);
+    when(userDAO.get("trillian")).thenReturn(trillian);
+    UserManager userManager = new DefaultUserManager(userDAO);
+
+    userManager.overwritePassword("trillian", "---");
   }
 
   @Test

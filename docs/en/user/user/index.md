@@ -19,6 +19,6 @@ The "Create User" form can be used to create new users in SCM-Manager. New users
 ### User Details Page
 The user details page shows the information about the user.
 
-The active box shows whether the user is able to use SCM-Manager. The external box shows if it is an internal user or is managed by an external system.
+The active box shows whether the user is able to use SCM-Manager. The external box shows if it is an internal user or whether it is managed by an external system.
 
 ![User-Information](assets/user-information.png)

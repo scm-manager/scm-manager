@@ -80,6 +80,7 @@ public final class SyncingRealmHelper {
    * @param ctx          administration context
    * @param userManager  user manager
    * @param groupManager group manager
+   * @deprecated
    */
   @Deprecated
   public SyncingRealmHelper(AdministrationContext ctx, UserManager userManager, GroupManager groupManager) {
@@ -110,17 +111,9 @@ public final class SyncingRealmHelper {
   public void store(final Group group) {
     ctx.runAsAdmin(() -> {
       if (groupManager.get(group.getId()) != null) {
-        try {
-          groupManager.modify(group);
-        } catch (NotFoundException e) {
-          throw new IllegalStateException("got NotFoundException though group " + group.getName() + " could be loaded", e);
-        }
+        modifyGroup(group);
       } else {
-        try {
-          groupManager.create(group);
-        } catch (AlreadyExistsException e) {
-          throw new IllegalStateException("got AlreadyExistsException though group " + group.getName() + " could not be loaded", e);
-        }
+        createNewGroup(group);
       }
     });
   }
@@ -133,30 +126,54 @@ public final class SyncingRealmHelper {
   public void store(final User user) {
     ctx.runAsAdmin(() -> {
       if (userManager.contains(user.getName())) {
-        User clone = user.clone();
-        if (!externalUserConverters.isEmpty()) {
-          log.debug("execute available user converters");
-          for (ExternalUserConverter converter : externalUserConverters) {
-            clone = converter.convert(clone);
-          }
-        }
-
-        try {
-          userManager.modify(clone);
-        } catch (NotFoundException e) {
-          throw new IllegalStateException("got NotFoundException though user " + clone.getName() + " could be loaded", e);
-        }
+        modifyUser(user);
       } else {
-        try {
-          User clone = user.clone();
-          // New user created by syncing realm helper is always external
-          clone.setExternal(true);
-          userManager.create(clone);
-        } catch (AlreadyExistsException e) {
-          throw new IllegalStateException("got AlreadyExistsException though user " + user.getName() + " could not be loaded", e);
-
-        }
+        createNewUser(user);
       }
     });
+  }
+
+  private void createNewUser(User user) {
+    try {
+      User clone = user.clone();
+      // New user created by syncing realm helper is always external
+      clone.setExternal(true);
+      userManager.create(clone);
+    } catch (AlreadyExistsException e) {
+      throw new IllegalStateException("got AlreadyExistsException though user " + user.getName() + " could not be loaded", e);
+
+    }
+  }
+
+  private void modifyUser(User user) {
+    User clone = user.clone();
+    if (!externalUserConverters.isEmpty()) {
+      log.debug("execute available user converters");
+      for (ExternalUserConverter converter : externalUserConverters) {
+        clone = converter.convert(clone);
+      }
+    }
+
+    try {
+      userManager.modify(clone);
+    } catch (NotFoundException e) {
+      throw new IllegalStateException("got NotFoundException though user " + clone.getName() + " could be loaded", e);
+    }
+  }
+
+  private void createNewGroup(Group group) {
+    try {
+      groupManager.create(group);
+    } catch (AlreadyExistsException e) {
+      throw new IllegalStateException("got AlreadyExistsException though group " + group.getName() + " could not be loaded", e);
+    }
+  }
+
+  private void modifyGroup(Group group) {
+    try {
+      groupManager.modify(group);
+    } catch (NotFoundException e) {
+      throw new IllegalStateException("got NotFoundException though group " + group.getName() + " could be loaded", e);
+    }
   }
 }
