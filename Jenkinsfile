@@ -7,7 +7,8 @@ import com.cloudogu.ces.cesbuildlib.*
 
 node('docker') {
 
-  mainBranch = 'develop'
+  developmentBranch = 'develop'
+  mainBranch = 'master'
 
   properties([
     // Keep only the last 10 build to preserve space
@@ -51,9 +52,9 @@ node('docker') {
           sh "git config 'remote.origin.fetch' '+refs/heads/*:refs/remotes/origin/*'"
           sh "git fetch --all"
 
-          // merge release branch into master
-          sh "git checkout master"
-          sh "git reset --hard origin/master"
+          // merge release branch into main branch
+          sh "git checkout ${mainBranch}"
+          sh "git reset --hard origin/${mainBranch}"
           sh "git merge --ff-only ${env.BRANCH_NAME}"
 
           // set tag
@@ -87,7 +88,7 @@ node('docker') {
         sonarQube.analyzeWith(mvn)
       }
 
-      if (isBuildSuccessful() && (isMainBranch() || isReleaseBranch())) {
+      if (isBuildSuccessful() && (isDevelopmentBranch() || isReleaseBranch())) {
         def commitHash = git.getCommitHash()
 
         def imageVersion = mvn.getVersion()
@@ -143,20 +144,28 @@ node('docker') {
         }
 
         stage('Presentation Environment') {
-          build job: 'scm-manager/next-scm.cloudogu.com', propagate: false, wait: false, parameters: [
-            string(name: 'changeset', value: commitHash),
-            string(name: 'imageTag', value: imageVersion)
-          ]
+          // we don't use developmentBranch, because we only want the lastest version of develop branch on
+          // next-scm. We don't want a support branch or something similar on the presentation environment.
+          if ("develop".equals(env.BRANCH_NAME)) {
+            build job: 'scm-manager/next-scm.cloudogu.com', propagate: false, wait: false, parameters: [
+              string(name: 'changeset', value: commitHash),
+              string(name: 'imageTag', value: imageVersion)
+            ]
+          }
         }
 
         if (isReleaseBranch()) {
           stage('Update Repository') {
 
             // merge changes into develop
-            sh "git checkout develop"
+            sh "git checkout ${developmentBranch}"
+
             // TODO what if we have a conflict
             // e.g.: someone has edited the changelog during the release
-            sh "git merge master"
+            if (!developmentBranch.equals(mainBranch)) {
+              sh "git merge ${mainBranch}"
+            }
+
 
             // set versions for maven packages
             mvn "build-helper:parse-version versions:set -DgenerateBackupPoms=false -DnewVersion='\${parsedVersion.majorVersion}.\${parsedVersion.nextMinorVersion}.0-SNAPSHOT'"
@@ -176,8 +185,10 @@ node('docker') {
 
             // push changes back to remote repository
             withCredentials([usernamePassword(credentialsId: 'cesmarvin-github', usernameVariable: 'GIT_AUTH_USR', passwordVariable: 'GIT_AUTH_PSW')]) {
-              sh "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" push origin master --tags"
-              sh "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" push origin develop --tags"
+              sh "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" push origin ${mainBranch} --tags"
+              if (!developmentBranch.equals(mainBranch)) {
+                sh "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" push origin develop --tags"
+              }
               sh "git -c credential.helper=\"!f() { echo username='\$GIT_AUTH_USR'; echo password='\$GIT_AUTH_PSW'; }; f\" push origin :${env.BRANCH_NAME}"
             }
           }
@@ -189,6 +200,7 @@ node('docker') {
   }
 }
 
+String developmentBranch
 String mainBranch
 
 Maven setupMavenBuild() {
@@ -201,7 +213,7 @@ Maven setupMavenBuild() {
   mvn.additionalArgs += " -Dscm-it.logbackConfiguration=${logConf}"
   mvn.additionalArgs += " -Dsonar.coverage.exclusions=**/*.test.ts,**/*.test.tsx,**/*.stories.tsx"
 
-  if (isMainBranch() || isReleaseBranch()) {
+  if (isDevelopmentBranch() || isReleaseBranch()) {
     // Release starts javadoc, which takes very long, so do only for certain branches
     mvn.additionalArgs += ' -DperformRelease'
     // JDK8 is more strict, we should fix this before the next release. Right now, this is just not the focus, yet.
@@ -218,8 +230,8 @@ String getReleaseVersion() {
   return env.BRANCH_NAME.substring("release/".length());
 }
 
-boolean isMainBranch() {
-  return mainBranch.equals(env.BRANCH_NAME)
+boolean isDevelopmentBranch() {
+  return developmentBranch.equals(env.BRANCH_NAME)
 }
 
 void withGPGEnvironment(def closure) {
