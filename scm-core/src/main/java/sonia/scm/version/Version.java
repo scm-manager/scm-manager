@@ -31,6 +31,8 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.ComparisonChain;
 
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -42,6 +44,8 @@ import java.util.Locale;
  */
 public final class Version implements Comparable<Version>
 {
+
+  private static final Pattern MAVEN_UNIQUE_SNAPSHOT = Pattern.compile("-[0-9]{8}\\.[0-9]{6}-[0-9]+");
 
   /**
    * Constructs a new version object
@@ -388,10 +392,15 @@ public final class Version implements Comparable<Version>
   {
     String qualifier = qualifierPart.trim().toLowerCase(Locale.ENGLISH);
 
-    if (qualifier.contains("snapshot"))
-    {
+    if (qualifier.contains("snapshot")) {
       snapshot = true;
       qualifier = qualifier.replace("snapshot", "");
+    } else {
+      Matcher matcher = MAVEN_UNIQUE_SNAPSHOT.matcher(qualifier);
+      if (matcher.matches()) {
+        snapshot = true;
+        qualifier = matcher.replaceAll("-");
+      }
     }
 
     if (qualifier.length() > 0)
