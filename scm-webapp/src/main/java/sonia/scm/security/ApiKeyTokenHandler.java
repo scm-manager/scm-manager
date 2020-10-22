@@ -62,7 +62,10 @@ class ApiKeyTokenHandler {
     try {
       return of(OBJECT_MAPPER.readValue(decoder.decode(token), Token.class));
     } catch (IOException e) {
-      LOG.debug("failed to read api token, perhaps it is a jwt token or a normal password", e);
+      LOG.debug("failed to read api token, perhaps it is a jwt token or a normal password");
+      if (LOG.isTraceEnabled()) {
+        LOG.trace("failed to parse token", e);
+      }
       return empty();
     }
   }
