@@ -9,6 +9,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Generation of email addresses for users, where none is configured ([#1370](https://github.com/scm-manager/scm-manager/pull/1370))
 - Automatic user converter for external users ([#1380](https://github.com/scm-manager/scm-manager/pull/1380))
+- Source code fullscreen view ([#1376](https://github.com/scm-manager/scm-manager/pull/1376))
+
+## [2.6.3] - 2020-10-16
+### Fixed
+- Missing default permission to manage public gpg keys ([#1377](https://github.com/scm-manager/scm-manager/pull/1377))
 
 ## [2.7.1] - 2020-10-14
 ### Fixed
@@ -363,3 +368,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.6.0]: https://www.scm-manager.org/download/2.6.0
 [2.6.1]: https://www.scm-manager.org/download/2.6.1
 [2.6.2]: https://www.scm-manager.org/download/2.6.2
+[2.6.3]: https://www.scm-manager.org/download/2.6.3
+[2.7.0]: https://www.scm-manager.org/download/2.7.0
+[2.7.1]: https://www.scm-manager.org/download/2.7.1

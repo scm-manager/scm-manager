@@ -276,7 +276,11 @@
     "expandLastBottomByLines": "load up to {{count}} more lines",
     "expandLastBottomComplete": "load all remaining lines",
     "expanding": "loading lines ...",
-    "expansionFailed": "Error while loading additional lines"
+    "expansionFailed": "Error while loading additional lines",
+    "fullscreen": {
+      "open": "Open in Fullscreen",
+      "close": "Close"
+    }
   },
   "fileUpload": {
     "clickHere": "Click here to select your file",
