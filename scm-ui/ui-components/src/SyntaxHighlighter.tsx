@@ -23,9 +23,9 @@
  */
 import React from "react";
 
-import { LightAsync as ReactSyntaxHighlighter } from "react-syntax-highlighter";
-// @ts-ignore
-import { arduinoLight } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { PrismAsyncLight as ReactSyntaxHighlighter } from "react-syntax-highlighter";
+// eslint-disable-next-line no-restricted-imports
+import highlightingTheme from "@scm-manager/ui-styles/src/syntax-highlighting";
 
 type Props = {
   language?: string;
@@ -53,7 +53,7 @@ class SyntaxHighlighter extends React.Component<Props> {
     const { showLineNumbers } = this.props;
     const language = this.getLanguage();
     return (
-      <ReactSyntaxHighlighter showLineNumbers={showLineNumbers} language={language} style={arduinoLight}>
+      <ReactSyntaxHighlighter showLineNumbers={showLineNumbers} language={language} style={highlightingTheme}>
         {this.props.value}
       </ReactSyntaxHighlighter>
     );

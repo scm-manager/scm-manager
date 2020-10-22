@@ -21,32 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+const { spawnSync } = require("child_process");
+const os = require("os");
 
-import refractor from "refractor/core";
+const yarnCmd = os.platform() === "win32" ? "yarn.cmd" : "yarn";
 
-const isLanguageRegistered = (lang: string) => {
-  const registeredLanguages = refractor.listLanguages();
-  return registeredLanguages.includes(lang);
-};
-
-const loadLanguage = (lang: string, callback: () => void) => {
-  if (isLanguageRegistered(lang)) {
-    callback();
-  } else {
-    import(
-      /* webpackChunkName: "tokenizer-refractor-[request]" */
-      `refractor/lang/${lang}`
-    ).then(loadedLanguage => {
-      refractor.register(loadedLanguage.default);
-      callback();
-    });
+const yarn = args => {
+  const result = spawnSync(yarnCmd, args, { stdio: "inherit" });
+  if (result.error) {
+    console.log("could not start yarn command:", result.error);
+    process.exit(2);
+  } else if (result.status !== 0) {
+    console.log("yarn process ends with status code:", result.status);
+    process.exit(3);
   }
 };
 
-const refractorAdapter = {
-  isLanguageRegistered,
-  loadLanguage,
-  ...refractor
+const version = v => {
+  yarn(["version", "--no-git-tag-version", "--new-version", v]);
 };
 
-export default refractorAdapter;
+const publish = v => {
+  yarn(["publish", "--new-version", v]);
+};
+
+module.exports = {
+  version,
+  publish,
+  yarn
+};

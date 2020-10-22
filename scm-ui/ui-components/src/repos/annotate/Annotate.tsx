@@ -24,10 +24,13 @@
 
 import React, { FC, useReducer } from "react";
 import { Repository, AnnotatedSource, AnnotatedLine } from "@scm-manager/ui-types";
-
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
 // @ts-ignore
-import { LightAsync as ReactSyntaxHighlighter, createElement } from "react-syntax-highlighter";
-import { arduinoLight } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { PrismAsyncLight as ReactSyntaxHighlighter, createElement } from "react-syntax-highlighter";
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+// eslint-disable-next-line no-restricted-imports
+import highlightingTheme from "@scm-manager/ui-styles/src/syntax-highlighting";
 import { DateInput } from "../../useDateFormatter";
 import Popover from "./Popover";
 import AnnotateLine from "./AnnotateLine";
@@ -145,7 +148,7 @@ const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
       <ReactSyntaxHighlighter
         showLineNumbers={false}
         language={source.language ? source.language : "text"}
-        style={arduinoLight}
+        style={highlightingTheme}
         renderer={defaultRenderer}
       >
         {code}

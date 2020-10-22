@@ -29,7 +29,7 @@ const root = process.cwd();
 const packageJsonPath = path.join(root, "package.json");
 const packageJSON = JSON.parse(fs.readFileSync(packageJsonPath, { encoding: "UTF-8" }));
 
-let name = packageJSON.name;
+let { name } = packageJSON;
 const orgaIndex = name.indexOf("/");
 if (orgaIndex > 0) {
   name = name.substring(orgaIndex + 1);
@@ -62,7 +62,8 @@ module.exports = function(mode) {
       "classnames",
       "query-string",
       "redux",
-      "react-redux"
+      "react-redux",
+      /^@scm-manager\/scm-.*-plugin$/i
     ],
     module: {
       rules: [
@@ -90,9 +91,9 @@ module.exports = function(mode) {
       extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"]
     },
     output: {
-      path: path.join(root, "target", name + "-" + packageJSON.version, "webapp", "assets"),
+      path: path.join(root, "target", `${name}-${packageJSON.version}`, "webapp", "assets"),
       filename: "[name].bundle.js",
-      chunkFilename: name + ".[name].chunk.js",
+      chunkFilename: `${name}.[name].chunk.js`,
       library: name,
       libraryTarget: "amd"
     }

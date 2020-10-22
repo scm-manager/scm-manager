@@ -16,10 +16,13 @@
     "react-diff-view": "^2.4.1"
   },
   "devDependencies": {
+    "css": "^3.0.0",
     "css-loader": "^3.2.0",
+    "prettier": "^2.1.2",
     "sass": "^1.26.3",
     "sass-loader": "^8.0.0",
     "style-loader": "^1.0.0",
+    "to-camel-case": "^1.0.0",
     "webpack": "^4.41.5",
     "webpack-dev-server": "^3.10.1"
   },
