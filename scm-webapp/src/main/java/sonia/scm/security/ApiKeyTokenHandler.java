@@ -28,6 +28,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.io.Decoder;
 import io.jsonwebtoken.io.Decoders;
+import io.jsonwebtoken.io.DecodingException;
 import io.jsonwebtoken.io.Encoder;
 import io.jsonwebtoken.io.Encoders;
 import lombok.AllArgsConstructor;
@@ -61,7 +62,7 @@ class ApiKeyTokenHandler {
   Optional<Token> readToken(String token) {
     try {
       return of(OBJECT_MAPPER.readValue(decoder.decode(token), Token.class));
-    } catch (IOException e) {
+    } catch (IOException | DecodingException e) {
       LOG.debug("failed to read api token, perhaps it is a jwt token or a normal password");
       if (LOG.isTraceEnabled()) {
         LOG.trace("failed to parse token", e);
