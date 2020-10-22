@@ -186,6 +186,71 @@ public class UserResource {
     return Response.noContent().build();
   }
 
+  /**
+   * This Endpoint is for Admin user to convert external user to internal.
+   * The oldPassword property of the DTO is not needed here. it will be ignored.
+   * The oldPassword property is needed in the MeResources when the actual user change the own password.
+   *
+   * <strong>Note:</strong> This method requires "user:modify" privilege to modify the password of other users.
+   *
+   * @param name              name of the user to be modified
+   * @param passwordOverwrite change password object to modify password. the old password is here not required
+   */
+  @PUT
+  @Path("convert-to-internal")
+  @Consumes(VndMediaType.USER)
+  @Operation(summary = "Converts an external user to internal", description = "Converts an external user to an internal one and set the new password.", tags = "User")
+  @ApiResponse(responseCode = "204", description = "update success")
+  @ApiResponse(responseCode = "400", description = "invalid body, e.g. the new password is missing")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"user\" privilege")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no user with the specified id/name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(responseCode = "500", description = "internal server error")
+  public Response toInternal(@PathParam("id") String name, @Valid PasswordOverwriteDto passwordOverwrite) {
+    UserDto dto = userToDtoMapper.map(userManager.get(name));
+    dto.setExternal(false);
+    adapter.update(name, existing -> dtoToUserMapper.map(dto, existing.getPassword()));
+    userManager.overwritePassword(name, passwordService.encryptPassword(passwordOverwrite.getNewPassword()));
+    return Response.noContent().build();
+  }
+
+  /**
+   * This Endpoint is for Admin user to convert internal user to external.
+   *
+   * <strong>Note:</strong> This method requires "user:modify" privilege to modify the password of other users.
+   *
+   * @param name              name of the user to be modified
+   */
+  @PUT
+  @Path("convert-to-external")
+  @Consumes(VndMediaType.USER)
+  @Operation(summary = "Converts an internal user to external", description = "Converts an internal user to an external one and removes the local password.", tags = "User")
+  @ApiResponse(responseCode = "204", description = "update success")
+  @ApiResponse(responseCode = "400", description = "invalid body, e.g. the new password is missing")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"user\" privilege")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no user with the specified id/name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(responseCode = "500", description = "internal server error")
+  public Response toExternal(@PathParam("id") String name) {
+    userManager.overwritePassword(name, passwordService.encryptPassword(null));
+    UserDto dto = userToDtoMapper.map(userManager.get(name));
+    dto.setExternal(true);
+    adapter.update(name, existing -> dtoToUserMapper.map(dto, existing.getPassword()));
+    return Response.noContent().build();
+  }
+
   @Path("permissions")
   public UserPermissionResource permissions() {
     return userPermissionResource;

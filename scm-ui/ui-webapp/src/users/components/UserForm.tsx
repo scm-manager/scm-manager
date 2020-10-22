@@ -29,14 +29,12 @@ import {
   ErrorNotification,
   InputField,
   Level,
-  Modal,
   PasswordConfirmation,
   SubmitButton,
   Subtitle,
   validation as validator
 } from "@scm-manager/ui-components";
 import * as userValidator from "./userValidation";
-import { setPassword } from "./setPassword";
 
 type Props = WithTranslation & {
   submitForm: (p: User) => void;
@@ -50,7 +48,6 @@ type State = {
   nameValidationError: boolean;
   displayNameValidationError: boolean;
   passwordValid: boolean;
-  showPasswordModal: boolean;
   error?: Error;
 };
 
@@ -71,8 +68,7 @@ class UserForm extends React.Component<Props, State> {
       mailValidationError: false,
       displayNameValidationError: false,
       nameValidationError: false,
-      passwordValid: false,
-      showPasswordModal: false
+      passwordValid: false
     };
   }
 
@@ -119,43 +115,22 @@ class UserForm extends React.Component<Props, State> {
       this.state.mailValidationError ||
       this.state.displayNameValidationError ||
       this.state.nameValidationError ||
-      !user.displayName ||
-      (this.props.user?.external && !user.external && !user.password)
+      !user.displayName
     );
   };
 
   submit = (event: Event) => {
-    const { user, passwordValid } = this.state;
     event.preventDefault();
     if (!this.isInvalid()) {
       this.props.submitForm(this.state.user);
-      if (user.password && passwordValid && user._links?.password) {
-        setPassword((user._links.password as Link).href, user.password).catch(error => this.setState({ error }));
-      }
     }
   };
 
   render() {
     const { loading, t } = this.props;
-    const { user, showPasswordModal, passwordValid, error } = this.state;
+    const { user, error } = this.state;
 
     const passwordChangeField = <PasswordConfirmation passwordChanged={this.handlePasswordChange} />;
-    const passwordModal = (
-      <Modal
-        body={passwordChangeField}
-        closeFunction={() => this.setState({ user: { ...user, external: true } }, () => this.showPasswordModal(false))}
-        active={showPasswordModal}
-        title={t("userForm.modal.passwordRequired")}
-        footer={
-          <SubmitButton
-            action={() => !!user.password && passwordValid && this.showPasswordModal(false)}
-            disabled={!this.state.passwordValid}
-            scrollToTop={false}
-            label={t("userForm.modal.setPassword")}
-          />
-        }
-      />
-    );
     let nameField = null;
     let subtitle = null;
     if (!this.props.user) {
@@ -180,7 +155,6 @@ class UserForm extends React.Component<Props, State> {
     return (
       <>
         {subtitle}
-        {showPasswordModal && passwordModal}
         <form onSubmit={this.submit}>
           <div className="columns is-multiline">
             {nameField}
@@ -204,14 +178,6 @@ class UserForm extends React.Component<Props, State> {
                 helpText={t("help.mailHelpText")}
               />
             </div>
-            <div className="column is-full">
-              <Checkbox
-                label={t("user.externalFlag")}
-                onChange={this.handleExternalFlagChange}
-                checked={!!user?.external}
-                helpText={t("help.externalFlagHelpText")}
-              />
-            </div>
           </div>
           {!user.external && (
             <>
@@ -229,15 +195,11 @@ class UserForm extends React.Component<Props, State> {
             </>
           )}
           {error && <ErrorNotification error={error} />}
-          <Level right={<SubmitButton disabled={this.isInvalid()} loading={loading} label={t("userForm.button")} />} />
+          <Level right={<SubmitButton disabled={this.isInvalid()} loading={loading} label={t("userForm.button.submit")} />} />
         </form>
       </>
     );
   }
-
-  showPasswordModal = (showPasswordModal: boolean) => {
-    this.setState({ showPasswordModal });
-  };
 
   handleUsernameChange = (name: string) => {
     this.setState({
@@ -286,19 +248,6 @@ class UserForm extends React.Component<Props, State> {
         active
       }
     });
-  };
-
-  handleExternalFlagChange = (external: boolean) => {
-    this.setState(
-      {
-        user: {
-          ...this.state.user,
-          external
-        }
-      },
-      //Only show password modal if edit mode and external flag was changed to internal and password was not already set
-      () => !external && this.props.user?.external && !this.state.user.password && this.showPasswordModal(true)
-    );
   };
 }
 

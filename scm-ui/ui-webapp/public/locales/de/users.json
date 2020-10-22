@@ -63,10 +63,16 @@
   },
   "userForm": {
     "subtitle": "Benutzer bearbeiten",
-    "button": "Speichern",
+    "userIsInternal": "Der Benutzer wird vom SCM-Manager verwaltet",
+    "userIsExternal": "Der Benutzer wird von einem externen System verwaltet",
+    "button": {
+      "submit": "Speichern",
+      "convertToExternal": "Zu externem Benutzer konvertieren",
+      "convertToInternal": "Zu internem Benutzer konvertieren"
+    },
     "modal": {
       "passwordRequired": "Neues Passwort für internen Benutzer setzen",
-      "setPassword": "Passwort setzen"
+      "convertToInternal": "Zu internem Benutzer konvertieren"
     }
   },
   "publicKey": {

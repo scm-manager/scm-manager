@@ -66,7 +66,12 @@ public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
     if (UserPermissions.modify(user).isPermitted()) {
       linksBuilder.single(link("update", resourceLinks.user().update(user.getName())));
       linksBuilder.single(link("publicKeys", resourceLinks.user().publicKeys(user.getName())));
-      linksBuilder.single(link("password", resourceLinks.user().passwordChange(user.getName())));
+      if (user.isExternal()) {
+        linksBuilder.single(link("convertToInternal", resourceLinks.user().toInternal(user.getName())));
+      } else {
+        linksBuilder.single(link("password", resourceLinks.user().passwordChange(user.getName())));
+        linksBuilder.single(link("convertToExternal", resourceLinks.user().toExternal(user.getName())));
+      }
     }
     if (PermissionPermissions.read().isPermitted()) {
       linksBuilder.single(link("permissions", resourceLinks.userPermissions().permissions(user.getName())));
