@@ -40,6 +40,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.time.Instant;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 import java.util.OptionalLong;
 
@@ -57,6 +59,9 @@ public abstract class BrowserResultToFileObjectDtoMapper extends BaseFileObjectD
   @Mapping(target = "children", qualifiedBy = Children.class)
   @Children
   protected abstract FileObjectDto fileObjectToDto(FileObject fileObject, @Context NamespaceAndName namespaceAndName, @Context BrowserResult browserResult, @Context Integer offset);
+
+  @Children
+  abstract List<FileObjectDto> map(Collection<FileObject> value);
 
   @Override
   void applyEnrichers(Links.Builder links, Embedded.Builder embeddedBuilder, NamespaceAndName namespaceAndName, BrowserResult browserResult, FileObject fileObject) {
