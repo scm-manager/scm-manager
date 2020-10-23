@@ -21,32 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+const yarn = require("../yarn");
+const versions = require("../versions");
 
-import refractor from "refractor/core";
+const args = process.argv.slice(2);
 
-const isLanguageRegistered = (lang: string) => {
-  const registeredLanguages = refractor.listLanguages();
-  return registeredLanguages.includes(lang);
-};
+if (args.length < 1) {
+  console.log("usage ui-scripts publish <version>");
+  process.exit(1);
+}
 
-const loadLanguage = (lang: string, callback: () => void) => {
-  if (isLanguageRegistered(lang)) {
-    callback();
-  } else {
-    import(
-      /* webpackChunkName: "tokenizer-refractor-[request]" */
-      `refractor/lang/${lang}`
-    ).then(loadedLanguage => {
-      refractor.register(loadedLanguage.default);
-      callback();
-    });
-  }
-};
-
-const refractorAdapter = {
-  isLanguageRegistered,
-  loadLanguage,
-  ...refractor
-};
-
-export default refractorAdapter;
+const version = args[0];
+const index = version.indexOf("-SNAPSHOT");
+if (index > 0) {
+  const snapshotVersion = `${version.substring(0, index)}-${versions.createSnapshotVersion()}`;
+  console.log(`publish snapshot release ${snapshotVersion}`);
+  yarn.version(snapshotVersion);
+  yarn.publish(snapshotVersion);
+  yarn.version(version);
+} else {
+  // ?? not sure
+  yarn.publish(version);
+}

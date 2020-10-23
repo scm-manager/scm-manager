@@ -10,6 +10,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Generation of email addresses for users, where none is configured ([#1370](https://github.com/scm-manager/scm-manager/pull/1370))
 - Automatic user converter for external users ([#1380](https://github.com/scm-manager/scm-manager/pull/1380))
 - Source code fullscreen view ([#1376](https://github.com/scm-manager/scm-manager/pull/1376))
+- Plugins can now expose ui components to be shared with other plugins ([#1382](https://github.com/scm-manager/scm-manager/pull/1382))
+- Source code fullscreen view ([#1376](https://github.com/scm-manager/scm-manager/pull/1376))
+
+### Changed
+- Reduce logging of ApiTokenRealm ([#1385](https://github.com/scm-manager/scm-manager/pull/1385))
+- Centralise syntax highlighting ([#1382](https://github.com/scm-manager/scm-manager/pull/1382))
+
+### Fixed
+- Handling of snapshot plugin dependencies ([#1384](https://github.com/scm-manager/scm-manager/pull/1384))
 
 ## [2.6.3] - 2020-10-16
 ### Fixed

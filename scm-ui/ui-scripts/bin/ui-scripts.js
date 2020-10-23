@@ -25,7 +25,7 @@
 /* eslint-disable no-console */
 const { spawnSync } = require("child_process");
 
-const commands = ["plugin", "plugin-watch", "publish", "version"];
+const commands = ["plugin", "plugin-watch", "plugin-publish", "publish", "version"];
 
 const args = process.argv.slice(2);
 
@@ -39,7 +39,7 @@ const nodeArgs = commandIndex > 0 ? args.slice(0, commandIndex) : [];
 if (commands.includes(command)) {
   const result = spawnSync(
     "node",
-    nodeArgs.concat(require.resolve("../src/commands/" + command)).concat(args.slice(commandIndex + 1)),
+    nodeArgs.concat(require.resolve(`../src/commands/${command}`)).concat(args.slice(commandIndex + 1)),
     { stdio: "inherit" }
   );
   if (result.signal) {
