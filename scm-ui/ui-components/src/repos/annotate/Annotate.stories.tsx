@@ -67,7 +67,7 @@ const commitImplementMain = {
 };
 
 const source: AnnotatedSource = {
-  language: "go",
+  language: "golang",
   lines: [
     {
       lineNumber: 1,
