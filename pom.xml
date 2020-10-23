@@ -937,7 +937,7 @@
     <svnkit.version>1.10.1-scm2</svnkit.version>
 
     <!-- util libraries -->
-    <guava.version>26.0-jre</guava.version>
+    <guava.version>30.0-android</guava.version>
 
     <!-- frontend -->
     <nodejs.version>12.16.1</nodejs.version>
