@@ -63,12 +63,12 @@
   },
   "userForm": {
     "subtitle": "Edit User",
-    "userIsInternal": "This user is managed by SCM-Manager",
+    "userIsInternal": "This user is managed internally by SCM-Manager",
     "userIsExternal": "This user is managed by an external system",
     "button": {
       "submit": "Submit",
-      "convertToExternal": "Convert to external",
-      "convertToInternal": "Convert to internal"
+      "convertToExternal": "Convert user to external",
+      "convertToInternal": "Convert user to internal"
     },
     "modal": {
       "passwordRequired": "Set new password for internal user",

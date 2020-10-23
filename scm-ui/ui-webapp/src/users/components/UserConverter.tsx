@@ -38,7 +38,6 @@ import styled from "styled-components";
 const ExternalDescription = styled.div`
   display: flex;
   align-items: center;
-  font-size: 1.25rem;
   font-weight: 400;
 `;
 

@@ -179,6 +179,20 @@ class UserForm extends React.Component<Props, State> {
               />
             </div>
           </div>
+          {!this.props.user && (
+            <>
+              <div className="columns">
+                <div className="column">
+                  <Checkbox
+                    label={t("user.externalFlag")}
+                    onChange={this.handleExternalChange}
+                    checked={!!user.external}
+                    helpText={t("help.externalFlagHelpText")}
+                  />
+                </div>
+              </div>
+            </>
+          )}
           {!user.external && (
             <>
               {!this.props.user && passwordChangeField}
@@ -246,6 +260,15 @@ class UserForm extends React.Component<Props, State> {
       user: {
         ...this.state.user,
         active
+      }
+    });
+  };
+
+  handleExternalChange = (external: boolean) => {
+    this.setState({
+      user: {
+        ...this.state.user,
+        external
       }
     });
   };

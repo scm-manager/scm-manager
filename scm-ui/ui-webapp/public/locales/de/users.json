@@ -63,7 +63,7 @@
   },
   "userForm": {
     "subtitle": "Benutzer bearbeiten",
-    "userIsInternal": "Der Benutzer wird vom SCM-Manager verwaltet",
+    "userIsInternal": "Der Benutzer wird intern vom SCM-Manager verwaltet",
     "userIsExternal": "Der Benutzer wird von einem externen System verwaltet",
     "button": {
       "submit": "Speichern",

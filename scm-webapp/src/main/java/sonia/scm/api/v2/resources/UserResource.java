@@ -244,7 +244,7 @@ public class UserResource {
     ))
   @ApiResponse(responseCode = "500", description = "internal server error")
   public Response toExternal(@PathParam("id") String name) {
-    userManager.overwritePassword(name, passwordService.encryptPassword(null));
+    userManager.overwritePassword(name, null);
     UserDto dto = userToDtoMapper.map(userManager.get(name));
     dto.setExternal(true);
     adapter.update(name, existing -> dtoToUserMapper.map(dto, existing.getPassword()));
