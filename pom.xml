@@ -949,7 +949,7 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <netbeans.hint.license>SCM-MIT</netbeans.hint.license>
     <jdk.classifier/>
-    <org.mapstruct.version>1.4.0.Final</org.mapstruct.version>
+    <org.mapstruct.version>1.4.1.Final</org.mapstruct.version>
 
     <!-- Sonar exclusions -->
     <!-- *StoreFactory classes are excluded because extracting the floating store parameter classes in a generic -->
