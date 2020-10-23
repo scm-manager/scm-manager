@@ -25,6 +25,7 @@
 package sonia.scm.security;
 
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -99,6 +100,15 @@ class ApiKeyRealmTest {
   @Test
   void shouldIgnoreTokensWithDots() {
     BearerToken token = valueOf("this.is.no.api.token");
+
+    boolean supports = realm.supports(token);
+
+    assertThat(supports).isFalse();
+  }
+
+  @Test
+  void shouldIgnoreNonBase64Tokens() {
+    UsernamePasswordToken token = new UsernamePasswordToken("trillian", "My&SecretPassword");
 
     boolean supports = realm.supports(token);
 
