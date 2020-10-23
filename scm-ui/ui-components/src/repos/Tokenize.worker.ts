@@ -24,14 +24,28 @@
 
 // @ts-ignore we have no types for react-diff-view
 import { tokenize } from "react-diff-view";
-import refractor from "./refractorAdapter";
+import createRefractor, { RefractorAdapter } from "./refractorAdapter";
 
 // the WorkerGlobalScope is assigned to self
 // see https://developer.mozilla.org/en-US/docs/Web/API/WorkerGlobalScope/self
 declare const self: Worker;
 
-self.addEventListener("message", ({ data: { id, payload } }) => {
+type TokenizeMessage = {
+  id: string;
+  language: string;
+  hunks: any;
+  payload: any;
+};
+
+let refractor: RefractorAdapter;
+
+function initRefractor(theme: { [key: string]: string }) {
+  refractor = createRefractor(theme);
+}
+
+function runTokenize({ id, payload }: TokenizeMessage) {
   const { hunks, language } = payload;
+
   const options = {
     highlight: language !== "text",
     language: language,
@@ -59,5 +73,13 @@ self.addEventListener("message", ({ data: { id, payload } }) => {
 
   if (options.highlight) {
     refractor.loadLanguage(language, createTokenizer(self));
+  }
+}
+
+self.addEventListener("message", ({ data }) => {
+  if (data.theme) {
+    initRefractor(data.theme);
+  } else {
+    runTokenize(data);
   }
 });

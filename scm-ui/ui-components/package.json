@@ -34,7 +34,7 @@
     "@types/react-router-dom": "^5.1.0",
     "@types/react-select": "^2.0.19",
     "@types/react-syntax-highlighter": "^11.0.1",
-    "@types/refractor": "^2.8.0",
+    "@types/refractor": "^3.0.0",
     "@types/storybook__addon-storyshots": "^5.1.1",
     "@types/styled-components": "^5.1.0",
     "@types/to-camel-case": "^1.0.0",
