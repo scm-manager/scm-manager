@@ -35,6 +35,7 @@ import { DateInput } from "../../useDateFormatter";
 import Popover from "./Popover";
 import AnnotateLine from "./AnnotateLine";
 import { Action } from "./actions";
+import { determineLanguage } from "../../languages";
 
 type Props = {
   source: AnnotatedSource;
@@ -147,7 +148,7 @@ const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
       {popover}
       <ReactSyntaxHighlighter
         showLineNumbers={false}
-        language={source.language ? source.language : "text"}
+        language={determineLanguage(source.language)}
         style={highlightingTheme}
         renderer={defaultRenderer}
       >

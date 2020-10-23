@@ -26,6 +26,7 @@ import styled from "styled-components";
 // @ts-ignore we have no typings for react-diff-view
 import { Diff, useTokenizeWorker } from "react-diff-view";
 import { File } from "./DiffTypes";
+import { determineLanguage } from "../languages";
 
 // styling for the diff tokens
 // this must be aligned with th style, which is used in the SyntaxHighlighter component
@@ -86,17 +87,10 @@ type Props = {
   className?: string;
 };
 
-const determineLanguage = (file: File) => {
-  if (file.language) {
-    return file.language.toLowerCase();
-  }
-  return "text";
-};
-
 const TokenizedDiffView: FC<Props> = ({ file, viewType, className, children }) => {
   const { tokens } = useTokenizeWorker(tokenize, {
     hunks: file.hunks,
-    language: determineLanguage(file)
+    language: determineLanguage(file.language)
   });
 
   return (

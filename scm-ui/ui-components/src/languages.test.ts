@@ -21,43 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { storiesOf } from "@storybook/react";
-import styled from "styled-components";
-import SyntaxHighlighter from "./SyntaxHighlighter";
 
-import JavaHttpServer from "./__resources__/HttpServer.java";
-import GoHttpServer from "./__resources__/HttpServer.go";
-import JsHttpServer from "./__resources__/HttpServer.js";
-import PyHttpServer from "./__resources__/HttpServer.py";
+import { determineLanguage } from "./languages";
 
-const Spacing = styled.div`
-  padding: 1em;
-`;
+describe("syntax highlighter", () => {
+  it("should return the language as it is", () => {
+    const java = determineLanguage("java");
+    expect(java).toBe("java");
+  });
 
-storiesOf("SyntaxHighlighter", module)
-  .add("Java", () => (
-    <Spacing>
-      <SyntaxHighlighter language="java" value={JavaHttpServer} />
-    </Spacing>
-  ))
-  .add("Go", () => (
-    <Spacing>
-      <SyntaxHighlighter language="golang" value={GoHttpServer} />
-    </Spacing>
-  ))
-  .add("Javascript", () => (
-    <Spacing>
-      <SyntaxHighlighter language="javascript" value={JsHttpServer} />
-    </Spacing>
-  ))
-  .add("Python", () => (
-    <Spacing>
-      <SyntaxHighlighter language="python" value={PyHttpServer} />
-    </Spacing>
-  ))
-  .add("Without line numbers", () => (
-    <Spacing>
-      <SyntaxHighlighter language="java" value={JavaHttpServer} showLineNumbers={false} />
-    </Spacing>
-  ));
+  it("should lower case the language", () => {
+    const java = determineLanguage("Java");
+    expect(java).toBe("java");
+  });
+
+  it("should return text if language is undefied", () => {
+    const lang = determineLanguage();
+    expect(lang).toBe("text");
+  });
+
+  it("should return text if language is an empty string", () => {
+    const lang = determineLanguage("");
+    expect(lang).toBe("text");
+  });
+
+  it("should use alias go for golang", () => {
+    const go = determineLanguage("golang");
+    expect(go).toBe("go");
+  });
+});

@@ -21,43 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { storiesOf } from "@storybook/react";
-import styled from "styled-components";
-import SyntaxHighlighter from "./SyntaxHighlighter";
 
-import JavaHttpServer from "./__resources__/HttpServer.java";
-import GoHttpServer from "./__resources__/HttpServer.go";
-import JsHttpServer from "./__resources__/HttpServer.js";
-import PyHttpServer from "./__resources__/HttpServer.py";
+// this aliases are only to map from spotter detection to prismjs
+const languageAliases: { [key: string]: string } = {
+  golang: "go"
+};
 
-const Spacing = styled.div`
-  padding: 1em;
-`;
+export const defaultLanguage = "text";
 
-storiesOf("SyntaxHighlighter", module)
-  .add("Java", () => (
-    <Spacing>
-      <SyntaxHighlighter language="java" value={JavaHttpServer} />
-    </Spacing>
-  ))
-  .add("Go", () => (
-    <Spacing>
-      <SyntaxHighlighter language="golang" value={GoHttpServer} />
-    </Spacing>
-  ))
-  .add("Javascript", () => (
-    <Spacing>
-      <SyntaxHighlighter language="javascript" value={JsHttpServer} />
-    </Spacing>
-  ))
-  .add("Python", () => (
-    <Spacing>
-      <SyntaxHighlighter language="python" value={PyHttpServer} />
-    </Spacing>
-  ))
-  .add("Without line numbers", () => (
-    <Spacing>
-      <SyntaxHighlighter language="java" value={JavaHttpServer} showLineNumbers={false} />
-    </Spacing>
-  ));
+export const determineLanguage = (language?: string) => {
+  if (!language) {
+    return defaultLanguage;
+  }
+  const lang = language.toLowerCase();
+  if (languageAliases[lang]) {
+    return languageAliases[lang];
+  }
+  return lang;
+};

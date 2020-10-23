@@ -39,7 +39,6 @@ exports[`Storyshots Annotate Default 1`] = `
       }
     >
       <code
-        className="language-go"
         style={
           Object {
             "MozHyphens": "none",
@@ -592,7 +591,6 @@ exports[`Storyshots Annotate With Avatars 1`] = `
       }
     >
       <code
-        className="language-go"
         style={
           Object {
             "MozHyphens": "none",
@@ -46774,7 +46772,6 @@ exports[`Storyshots MarkdownView Code without Lang 1`] = `
         }
       >
         <code
-          className="language-text"
           style={
             Object {
               "MozHyphens": "none",
@@ -46797,21 +46794,39 @@ exports[`Storyshots MarkdownView Code without Lang 1`] = `
             }
           }
         >
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
+          <code
             style={
               Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "1em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
+                "MozHyphens": "none",
+                "MozTabSize": "4",
+                "OTabSize": "4",
+                "WebkitHyphens": "none",
+                "color": "#363636",
+                "direction": "ltr",
+                "float": "left",
+                "fontFamily": "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+                "fontSize": "13px",
+                "hyphens": "none",
+                "lineHeight": "1.5",
+                "msHyphens": "none",
+                "paddingRight": "10px",
+                "tabSize": "4",
+                "textAlign": "left",
+                "textShadow": "none",
+                "whiteSpace": "pre",
+                "wordBreak": "normal",
+                "wordSpacing": "normal",
               }
             }
           >
-            1
-          </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              1
+
+            </span>
+          </code>
           <span
             style={Object {}}
           >
@@ -47680,7 +47695,6 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
           </span>
         </code>
         <code
-          className="language-go"
           style={
             Object {
               "MozHyphens": "none",
@@ -47990,7 +48004,6 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
         }
       >
         <code
-          className="language-xml"
           style={
             Object {
               "MozHyphens": "none",
@@ -48013,23 +48026,195 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             }
           }
         >
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
+          <code
             style={
               Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
+                "MozHyphens": "none",
+                "MozTabSize": "4",
+                "OTabSize": "4",
+                "WebkitHyphens": "none",
+                "color": "#363636",
+                "direction": "ltr",
+                "float": "left",
+                "fontFamily": "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+                "fontSize": "13px",
+                "hyphens": "none",
+                "lineHeight": "1.5",
+                "msHyphens": "none",
+                "paddingRight": "10px",
+                "tabSize": "4",
+                "textAlign": "left",
+                "textShadow": "none",
+                "whiteSpace": "pre",
+                "wordBreak": "normal",
+                "wordSpacing": "normal",
               }
             }
           >
-            1
-          </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              1
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              2
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              3
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              4
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              5
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              6
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              7
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              8
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              9
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              10
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              11
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              12
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              13
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              14
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              15
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              16
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              17
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              18
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              19
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              20
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              21
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              22
+
+            </span>
+            <span
+              className="react-syntax-highlighter-line-number"
+              style={Object {}}
+            >
+              23
+
+            </span>
+          </code>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48039,7 +48224,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48059,7 +48244,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
              
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#005f9a",
@@ -48069,7 +48254,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             [...]
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48084,79 +48269,19 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             
 
           </span>
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            2
-          </span>
           
 
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            3
-          </span>
             [...]
 
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            4
-          </span>
           
 
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            5
-          </span>
           <span
             style={Object {}}
           >
               
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48166,7 +48291,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48176,7 +48301,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             build
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48192,27 +48317,12 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 
           </span>
           <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            6
-          </span>
-          <span
             style={Object {}}
           >
                 
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48222,7 +48332,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48232,7 +48342,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             plugins
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48247,79 +48357,19 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             
 
           </span>
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            7
-          </span>
           
 
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            8
-          </span>
                 [...]
 
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            9
-          </span>
           
 
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            10
-          </span>
           <span
             style={Object {}}
           >
                   
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48329,7 +48379,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48339,7 +48389,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             plugin
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48355,27 +48405,12 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 
           </span>
           <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            11
-          </span>
-          <span
             style={Object {}}
           >
                     
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48385,7 +48420,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48395,7 +48430,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             groupId
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48410,7 +48445,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             org.apache.maven.plugins
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48420,7 +48455,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;/
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48430,7 +48465,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             groupId
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48446,27 +48481,12 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 
           </span>
           <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            12
-          </span>
-          <span
             style={Object {}}
           >
                     
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48476,7 +48496,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48486,7 +48506,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             artifactId
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48501,7 +48521,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             maven-enforcer-plugin
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48511,7 +48531,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;/
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48521,7 +48541,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             artifactId
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48537,27 +48557,12 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 
           </span>
           <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            13
-          </span>
-          <span
             style={Object {}}
           >
                   
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48567,7 +48572,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;/
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48577,7 +48582,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             plugin
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48591,21 +48596,6 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
           >
             
 
-          </span>
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            14
           </span>
           <span
             style={Object {}}
@@ -48613,7 +48603,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
                   
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48623,7 +48613,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48633,7 +48623,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             plugin
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48649,27 +48639,12 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 
           </span>
           <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            15
-          </span>
-          <span
             style={Object {}}
           >
                     
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48679,7 +48654,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48689,7 +48664,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             groupId
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48704,7 +48679,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             org.codehaus.mojo
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48714,7 +48689,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;/
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48724,7 +48699,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             groupId
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48740,27 +48715,12 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 
           </span>
           <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            16
-          </span>
-          <span
             style={Object {}}
           >
                     
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48770,7 +48730,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48780,7 +48740,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             artifactId
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48795,7 +48755,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             animal-sniffer-maven-plugin
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48805,7 +48765,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;/
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48815,7 +48775,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             artifactId
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48831,27 +48791,12 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 
           </span>
           <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            17
-          </span>
-          <span
             style={Object {}}
           >
                   
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48861,7 +48806,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;/
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48871,7 +48816,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             plugin
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48887,27 +48832,12 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 
           </span>
           <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            18
-          </span>
-          <span
             style={Object {}}
           >
                 
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48917,7 +48847,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;/
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48927,7 +48857,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             plugins
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48943,27 +48873,12 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
 
           </span>
           <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            19
-          </span>
-          <span
             style={Object {}}
           >
               
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48973,7 +48888,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;/
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -48983,7 +48898,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             build
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -48998,79 +48913,19 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             
 
           </span>
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            20
-          </span>
           
 
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            21
-          </span>
             [...]
 
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            22
-          </span>
           
 
-          <span
-            className="linenumber react-syntax-highlighter-line-number"
-            style={
-              Object {
-                "color": "#9a9a9a",
-                "display": "inline-block",
-                "minWidth": "2em",
-                "paddingRight": "1em",
-                "textAlign": "right",
-                "userSelect": "none",
-              }
-            }
-          >
-            23
-          </span>
           <span
             style={Object {}}
           >
             
           </span>
           <span
-            className="token"
+            className="token token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -49080,7 +48935,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             &lt;/
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#2c99c7",
@@ -49090,7 +48945,7 @@ exports[`Storyshots MarkdownView Xml Code Block 1`] = `
             project
           </span>
           <span
-            className="token"
+            className="token token"
             style={
               Object {
                 "color": "#9a9a9a",
@@ -50077,7 +49932,6 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
     }
   >
     <code
-      className="language-go"
       style={
         Object {
           "MozHyphens": "none",
@@ -50100,21 +49954,151 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
         }
       }
     >
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
+      <code
         style={
           Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
+            "MozHyphens": "none",
+            "MozTabSize": "4",
+            "OTabSize": "4",
+            "WebkitHyphens": "none",
+            "color": "#363636",
+            "direction": "ltr",
+            "float": "left",
+            "fontFamily": "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+            "fontSize": "13px",
+            "hyphens": "none",
+            "lineHeight": "1.5",
+            "msHyphens": "none",
+            "paddingRight": "10px",
+            "tabSize": "4",
+            "textAlign": "left",
+            "textShadow": "none",
+            "whiteSpace": "pre",
+            "wordBreak": "normal",
+            "wordSpacing": "normal",
           }
         }
       >
-        1
-      </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          1
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          2
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          3
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          4
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          5
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          6
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          7
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          8
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          9
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          10
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          11
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          12
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          13
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          14
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          15
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          16
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          17
+
+        </span>
+      </code>
       <span
         className="token"
         style={
@@ -50131,38 +50115,8 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
          main
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        2
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        3
-      </span>
       <span
         style={Object {}}
       >
@@ -50200,21 +50154,6 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        4
-      </span>
-      <span
         style={Object {}}
       >
           
@@ -50234,21 +50173,6 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        5
       </span>
       <span
         style={Object {}}
@@ -50272,21 +50196,6 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        6
-      </span>
-      <span
         style={Object {}}
       >
         
@@ -50307,38 +50216,8 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        7
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        8
-      </span>
       <span
         style={Object {}}
       >
@@ -50409,21 +50288,6 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        9
       </span>
       <span
         style={Object {}}
@@ -50607,21 +50471,6 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        10
-      </span>
-      <span
         style={Object {}}
       >
             fmt
@@ -50703,21 +50552,6 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        11
-      </span>
-      <span
         style={Object {}}
       >
           
@@ -50748,38 +50582,8 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        12
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        13
-      </span>
       <span
         style={Object {}}
       >
@@ -50900,21 +50704,6 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        14
       </span>
       <span
         style={Object {}}
@@ -51057,38 +50846,8 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        15
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        16
-      </span>
       <span
         style={Object {}}
       >
@@ -51176,21 +50935,6 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        17
-      </span>
-      <span
         style={Object {}}
       >
         
@@ -51210,21 +50954,6 @@ exports[`Storyshots SyntaxHighlighter Go 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        18
       </span>
       
 
@@ -51265,7 +50994,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
     }
   >
     <code
-      className="language-java"
       style={
         Object {
           "MozHyphens": "none",
@@ -51288,21 +51016,249 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         }
       }
     >
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
+      <code
         style={
           Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
+            "MozHyphens": "none",
+            "MozTabSize": "4",
+            "OTabSize": "4",
+            "WebkitHyphens": "none",
+            "color": "#363636",
+            "direction": "ltr",
+            "float": "left",
+            "fontFamily": "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+            "fontSize": "13px",
+            "hyphens": "none",
+            "lineHeight": "1.5",
+            "msHyphens": "none",
+            "paddingRight": "10px",
+            "tabSize": "4",
+            "textAlign": "left",
+            "textShadow": "none",
+            "whiteSpace": "pre",
+            "wordBreak": "normal",
+            "wordSpacing": "normal",
           }
         }
       >
-        1
-      </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          1
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          2
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          3
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          4
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          5
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          6
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          7
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          8
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          9
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          10
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          11
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          12
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          13
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          14
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          15
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          16
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          17
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          18
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          19
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          20
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          21
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          22
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          23
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          24
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          25
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          26
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          27
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          28
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          29
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          30
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          31
+
+        </span>
+      </code>
       <span
         className="token"
         style={
@@ -51319,13 +51275,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
          
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         com
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -51335,7 +51291,7 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         example
@@ -51356,38 +51312,8 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        2
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        3
-      </span>
       <span
         style={Object {}}
       >
@@ -51409,13 +51335,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
          
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         java
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -51425,7 +51351,7 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         io
@@ -51463,21 +51389,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        4
-      </span>
-      <span
         style={Object {}}
       >
         
@@ -51498,13 +51409,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
          
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         java
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -51514,7 +51425,7 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         io
@@ -51552,21 +51463,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        5
-      </span>
-      <span
         style={Object {}}
       >
         
@@ -51587,13 +51483,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
          
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         java
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -51603,7 +51499,7 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         net
@@ -51640,38 +51536,8 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        6
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        7
-      </span>
       <span
         style={Object {}}
       >
@@ -51693,13 +51559,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
          
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         com
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -51709,13 +51575,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         sun
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -51725,13 +51591,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         net
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -51741,7 +51607,7 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         httpserver
@@ -51779,21 +51645,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        8
-      </span>
-      <span
         style={Object {}}
       >
         
@@ -51814,13 +51665,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
          
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         com
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -51830,13 +51681,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         sun
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -51846,13 +51697,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         net
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -51862,7 +51713,7 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         httpserver
@@ -51900,21 +51751,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        9
-      </span>
-      <span
         style={Object {}}
       >
         
@@ -51935,13 +51771,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
          
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         com
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -51951,13 +51787,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         sun
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -51967,13 +51803,13 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         net
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -51983,7 +51819,7 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         httpserver
@@ -52020,38 +51856,8 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        10
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        11
-      </span>
       <span
         style={Object {}}
       >
@@ -52114,38 +51920,8 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        12
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        13
-      </span>
       <span
         style={Object {}}
       >
@@ -52303,21 +52079,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        14
       </span>
       <span
         style={Object {}}
@@ -52489,21 +52250,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        15
-      </span>
-      <span
         style={Object {}}
       >
             server
@@ -52631,21 +52377,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        16
-      </span>
-      <span
         style={Object {}}
       >
             server
@@ -52732,21 +52463,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        17
-      </span>
-      <span
         style={Object {}}
       >
             server
@@ -52808,21 +52524,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        18
-      </span>
-      <span
         style={Object {}}
       >
           
@@ -52843,38 +52544,8 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        19
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        20
-      </span>
       <span
         style={Object {}}
       >
@@ -52964,21 +52635,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        21
-      </span>
-      <span
         style={Object {}}
       >
             
@@ -52998,21 +52654,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        22
       </span>
       <span
         style={Object {}}
@@ -53138,21 +52779,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        23
-      </span>
-      <span
         style={Object {}}
       >
               
@@ -53208,21 +52834,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        24
       </span>
       <span
         style={Object {}}
@@ -53351,21 +52962,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        25
-      </span>
-      <span
         style={Object {}}
       >
               
@@ -53451,21 +53047,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        26
       </span>
       <span
         style={Object {}}
@@ -53574,21 +53155,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        27
-      </span>
-      <span
         style={Object {}}
       >
               os
@@ -53650,21 +53216,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        28
-      </span>
-      <span
         style={Object {}}
       >
             
@@ -53684,21 +53235,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        29
       </span>
       <span
         style={Object {}}
@@ -53721,38 +53257,8 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        30
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        31
-      </span>
       <span
         style={Object {}}
       >
@@ -53773,21 +53279,6 @@ exports[`Storyshots SyntaxHighlighter Java 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "3em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        32
       </span>
       
 
@@ -53828,7 +53319,6 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
     }
   >
     <code
-      className="language-javascript"
       style={
         Object {
           "MozHyphens": "none",
@@ -53851,21 +53341,81 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
         }
       }
     >
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
+      <code
         style={
           Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
+            "MozHyphens": "none",
+            "MozTabSize": "4",
+            "OTabSize": "4",
+            "WebkitHyphens": "none",
+            "color": "#363636",
+            "direction": "ltr",
+            "float": "left",
+            "fontFamily": "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+            "fontSize": "13px",
+            "hyphens": "none",
+            "lineHeight": "1.5",
+            "msHyphens": "none",
+            "paddingRight": "10px",
+            "tabSize": "4",
+            "textAlign": "left",
+            "textShadow": "none",
+            "whiteSpace": "pre",
+            "wordBreak": "normal",
+            "wordSpacing": "normal",
           }
         }
       >
-        1
-      </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          1
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          2
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          3
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          4
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          5
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          6
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          7
+
+        </span>
+      </code>
       <span
         className="token"
         style={
@@ -53952,38 +53502,8 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        2
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        3
-      </span>
       <span
         style={Object {}}
       >
@@ -54051,7 +53571,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
         req
       </span>
       <span
-        className="token parameter"
+        className="token parameter token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -54096,21 +53616,6 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        4
       </span>
       <span
         style={Object {}}
@@ -54196,7 +53701,7 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
         className="token"
         style={
           Object {
-            "color": "#686868",
+            "color": "#9a9a9a",
           }
         }
       >
@@ -54252,21 +53757,6 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        5
       </span>
       <span
         style={Object {}}
@@ -54340,21 +53830,6 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        6
-      </span>
-      <span
         style={Object {}}
       >
           res
@@ -54414,21 +53889,6 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        7
       </span>
       <span
         style={Object {}}
@@ -54521,21 +53981,6 @@ exports[`Storyshots SyntaxHighlighter Javascript 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        8
-      </span>
       
 
     </code>
@@ -54575,7 +54020,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
     }
   >
     <code
-      className="language-python"
       style={
         Object {
           "MozHyphens": "none",
@@ -54598,21 +54042,172 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
         }
       }
     >
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
+      <code
         style={
           Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
+            "MozHyphens": "none",
+            "MozTabSize": "4",
+            "OTabSize": "4",
+            "WebkitHyphens": "none",
+            "color": "#363636",
+            "direction": "ltr",
+            "float": "left",
+            "fontFamily": "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+            "fontSize": "13px",
+            "hyphens": "none",
+            "lineHeight": "1.5",
+            "msHyphens": "none",
+            "paddingRight": "10px",
+            "tabSize": "4",
+            "textAlign": "left",
+            "textShadow": "none",
+            "whiteSpace": "pre",
+            "wordBreak": "normal",
+            "wordSpacing": "normal",
           }
         }
       >
-        1
-      </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          1
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          2
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          3
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          4
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          5
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          6
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          7
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          8
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          9
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          10
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          11
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          12
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          13
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          14
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          15
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          16
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          17
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          18
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          19
+
+        </span>
+        <span
+          className="react-syntax-highlighter-line-number"
+          style={Object {}}
+        >
+          20
+
+        </span>
+      </code>
       <span
         className="token"
         style={
@@ -54659,38 +54254,8 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
         HTTPServer
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        2
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        3
-      </span>
       <span
         style={Object {}}
       >
@@ -54727,38 +54292,8 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        4
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        5
-      </span>
       <span
         style={Object {}}
       >
@@ -54826,38 +54361,8 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        6
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        7
-      </span>
       <span
         style={Object {}}
       >
@@ -54930,21 +54435,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        8
-      </span>
-      <span
         style={Object {}}
       >
             self
@@ -54999,21 +54489,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        9
       </span>
       <span
         style={Object {}}
@@ -55092,21 +54567,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        10
-      </span>
-      <span
         style={Object {}}
       >
             self
@@ -55151,21 +54611,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        11
       </span>
       <span
         style={Object {}}
@@ -55239,21 +54684,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        12
-      </span>
-      <span
         style={Object {}}
       >
             
@@ -55274,38 +54704,8 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        13
-      </span>
       
 
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        14
-      </span>
       <span
         style={Object {}}
       >
@@ -55336,21 +54736,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        15
       </span>
       <span
         style={Object {}}
@@ -55459,21 +54844,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        16
-      </span>
-      <span
         style={Object {}}
       >
           
@@ -55525,21 +54895,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        17
-      </span>
-      <span
         style={Object {}}
       >
           server
@@ -55586,21 +54941,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        18
-      </span>
-      <span
         style={Object {}}
       >
         
@@ -55637,21 +54977,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
 
       </span>
       <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        19
-      </span>
-      <span
         style={Object {}}
       >
           
@@ -55686,21 +55011,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
       >
         
 
-      </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        20
       </span>
       <span
         style={Object {}}
@@ -55763,21 +55073,6 @@ exports[`Storyshots SyntaxHighlighter Python 1`] = `
         
 
       </span>
-      <span
-        className="linenumber react-syntax-highlighter-line-number"
-        style={
-          Object {
-            "color": "#9a9a9a",
-            "display": "inline-block",
-            "minWidth": "2em",
-            "paddingRight": "1em",
-            "textAlign": "right",
-            "userSelect": "none",
-          }
-        }
-      >
-        21
-      </span>
       
 
     </code>
@@ -55817,7 +55112,6 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
     }
   >
     <code
-      className="language-java"
       style={
         Object {
           "MozHyphens": "none",
@@ -55856,13 +55150,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
          
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         com
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -55872,7 +55166,7 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         example
@@ -55916,13 +55210,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
          
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         java
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -55932,7 +55226,7 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         io
@@ -55990,13 +55284,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
          
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         java
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -56006,7 +55300,7 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         io
@@ -56064,13 +55358,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
          
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         java
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -56080,7 +55374,7 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         net
@@ -56140,13 +55434,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
          
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         com
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -56156,13 +55450,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         sun
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -56172,13 +55466,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         net
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -56188,7 +55482,7 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         httpserver
@@ -56246,13 +55540,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
          
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         com
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -56262,13 +55556,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         sun
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -56278,13 +55572,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         net
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -56294,7 +55588,7 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         httpserver
@@ -56352,13 +55646,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
          
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         com
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -56368,13 +55662,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         sun
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -56384,13 +55678,13 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         net
       </span>
       <span
-        className="token"
+        className="token namespace token"
         style={
           Object {
             "color": "#9a9a9a",
@@ -56400,7 +55694,7 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
         .
       </span>
       <span
-        className="token"
+        className="token namespace"
         style={Object {}}
       >
         httpserver
