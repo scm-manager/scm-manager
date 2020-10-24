@@ -87,9 +87,8 @@ code[class*="language-"] {
 
 pre[class*="language-"]::selection,
 code[class*="language-"]::selection,
-pre[class*="language-"]::mozselection,
-code[class*="language-"]::mozselection {
-
+pre[class*="language-"]::-moz-selection,
+code[class*="language-"]::-moz-selection {
   text-shadow: none;
 
   background: #7fe3cd;
