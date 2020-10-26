@@ -3861,10 +3861,10 @@
   dependencies:
     redux "^4.0.0"
 
-"@types/refractor@^2.8.0":
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/@types/refractor/-/refractor-2.8.0.tgz#2e17b69f27e89c1ea076f49b599abe3567c54e01"
-  integrity sha512-l3wSB96RFZnvB8bnbF8UmYsDD1MQl+u7jtYq+DgI/vo3RD5pdbK3OitGEvMO3DNJhTYmCEhXLVWyyWTddzwNzQ==
+"@types/refractor@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/refractor/-/refractor-3.0.0.tgz#c535cfad1c54cf377ae2984f6cf6e9627a36ea66"
+  integrity sha512-jkCqkTpxMXXfN03Xpzj+mBMxo9IxG616SV2U42iwHkBGq/f8RrX3DCzLayIqUV+MAIBCUvl5xPnjqpUtZRnMqA==
   dependencies:
     "@types/prismjs" "*"
 
