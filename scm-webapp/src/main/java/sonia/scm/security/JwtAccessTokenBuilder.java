@@ -33,7 +33,6 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -156,7 +155,7 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
   @Override
   public JwtAccessToken build() {
-    if (ThreadContext.getSubject().getPrincipals().getRealmNames().contains(ApiKeyRealm.API_TOKEN_REALM_NAME)) {
+    if (SecurityUtils.getSubject().getPrincipals().getRealmNames().contains(ApiKeyRealm.NAME)) {
       throw new AuthorizationException("Cannot create access token for api keys");
     }
     String id = keyGenerator.createKey();

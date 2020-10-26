@@ -46,7 +46,7 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Extension
 public class ApiKeyRealm extends AuthenticatingRealm {
 
-  public static final String API_TOKEN_REALM_NAME = "ApiTokenRealm";
+  public static final String NAME = "ApiTokenRealm";
 
   private static final Logger LOG = LoggerFactory.getLogger(ApiKeyRealm.class);
 
@@ -57,7 +57,7 @@ public class ApiKeyRealm extends AuthenticatingRealm {
   @Inject
   public ApiKeyRealm(ApiKeyService apiKeyService, DAORealmHelperFactory helperFactory, RepositoryRoleManager repositoryRoleManager) {
     this.apiKeyService = apiKeyService;
-    this.helper = helperFactory.create(API_TOKEN_REALM_NAME);
+    this.helper = helperFactory.create(NAME);
     this.repositoryRoleManager = repositoryRoleManager;
     setAuthenticationTokenClass(BearerToken.class);
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
