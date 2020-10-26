@@ -21,30 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.net.ahc;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Charsets;
 import com.google.common.base.Strings;
 import com.google.common.collect.LinkedHashMultimap;
 import com.google.common.collect.Multimap;
-
 import org.apache.shiro.codec.Base64;
-
 import sonia.scm.util.HttpUtil;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Base class for http requests.
  *
  * @author Sebastian Sdorra
  * @param <T> request implementation
- * 
+ *
  * @since 1.46
  */
 public abstract class BaseHttpRequest<T extends BaseHttpRequest>
@@ -75,7 +73,7 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
    *
    * @throws IOException
    */
-  public AdvancedHttpResponse request() throws IOException 
+  public AdvancedHttpResponse request() throws IOException
   {
     return client.request(this);
   }
@@ -102,7 +100,7 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
     String auth = Strings.nullToEmpty(username).concat(":").concat(
                     Strings.nullToEmpty(password));
 
-    auth = Base64.encodeToString(auth.getBytes(Charsets.ISO_8859_1));
+    auth = Base64.encodeToString(auth.getBytes(StandardCharsets.ISO_8859_1));
     headers.put("Authorization", "Basic ".concat(auth));
 
     return self();
@@ -129,7 +127,7 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
    *
    *
    * @param disableCertificateValidation true to disable certificate validation
-   * 
+   *
    * @return request instance
    */
   public T disableCertificateValidation(boolean disableCertificateValidation)
@@ -246,6 +244,19 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
     return self();
   }
 
+  /**
+   * Sets the kind of span for tracing api.
+   *
+   * @param spanKind kind of span
+   * @return request instance
+   *
+   * @since 2.9.0
+   */
+  public T spanKind(String spanKind) {
+    this.spanKind = spanKind;
+    return self();
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -279,6 +290,17 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
   public String getUrl()
   {
     return url;
+  }
+
+  /**
+   * Returns the kind of span which is used for the trace api.
+   *
+   * @return kind of span
+   *
+   * @since 2.9.0
+   */
+  public String getSpanKind() {
+    return spanKind;
   }
 
   /**
@@ -317,7 +339,7 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
   /**
    * Returns true if the proxy settings are ignored.
    *
-   * 
+   *
    * @return true if the proxy settings are ignored
    */
   public boolean isIgnoreProxySettings()
@@ -341,7 +363,7 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
   }
 
   /**
-   * Returns string representation of the given object or {@code null}, if the 
+   * Returns string representation of the given object or {@code null}, if the
    * object is {@code null}.
    *
    *
@@ -398,4 +420,7 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
 
   /** url of request */
   private String url;
+
+  /** kind of span for trace api */
+  private String spanKind = "http-request";
 }
