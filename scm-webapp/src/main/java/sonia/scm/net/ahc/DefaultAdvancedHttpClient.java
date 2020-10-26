@@ -307,7 +307,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
       {
         TrustManager[] trustAllCerts = new TrustManager[] {
                                          new TrustAllTrustManager() };
-        SSLContext sc = SSLContext.getInstance("SSL");
+        SSLContext sc = SSLContext.getInstance("TLS");
 
         sc.init(null, trustAllCerts, new java.security.SecureRandom());
         connection.setSSLSocketFactory(sc.getSocketFactory());
@@ -337,7 +337,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
 
     if (isProxyEnabled(request))
     {
-      connection = openProxyConnection(request, url);
+      connection = openProxyConnection(url);
       appendProxyAuthentication(connection);
     }
     else
@@ -347,7 +347,9 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
         logger.trace("ignore proxy settings");
       }
 
-      logger.debug("fetch {}", url.toExternalForm());
+      if (logger.isDebugEnabled()) {
+        logger.debug("fetch {}", url.toExternalForm());
+      }
 
       connection = createConnection(url);
     }
@@ -355,8 +357,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
     return connection;
   }
 
-  private HttpURLConnection openProxyConnection(BaseHttpRequest<?> request,
-    URL url)
+  private HttpURLConnection openProxyConnection(URL url)
     throws IOException
   {
     if (logger.isDebugEnabled())
@@ -392,5 +393,5 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
   private final Provider<SSLContext> sslContextProvider;
 
   /** tracer used for request tracing */
-  private Tracer tracer;
+  private final Tracer tracer;
 }
