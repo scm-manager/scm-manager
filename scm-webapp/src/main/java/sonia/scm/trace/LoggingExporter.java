@@ -24,33 +24,55 @@
 
 package sonia.scm.trace;
 
-import lombok.Value;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.plugin.Extension;
 
-import java.time.Duration;
-import java.time.Instant;
+import javax.inject.Inject;
 import java.util.Map;
+import java.util.function.Consumer;
 
 /**
- * The {@link SpanContext} represents a finished span which could be processed by an {@link Exporter}.
+ * An {@link Exporter} which logs every collected span.
  *
  * @since 2.9.0
  */
-@Value
-public class SpanContext {
+@Extension
+public final class LoggingExporter implements Exporter {
 
-  String kind;
-  Map<String,String> labels;
-  Instant opened;
-  Instant closed;
-  boolean failed;
+  private static final Logger LOG = LoggerFactory.getLogger(LoggingExporter.class);
 
-  /**
-   * Calculates the duration of the span.
-   *
-   * @return duration of the span
-   */
-  public Duration duration() {
-    return Duration.between(opened, closed);
+  private final Consumer<String> logger;
+
+  @Inject
+  LoggingExporter() {
+    this(LOG::info);
+  }
+
+  LoggingExporter(Consumer<String> logger) {
+    this.logger = logger;
+  }
+
+  @Override
+  public void export(SpanContext span) {
+    logger.accept(format(span));
+  }
+
+  private String format(SpanContext span) {
+    StringBuilder message = new StringBuilder("received ");
+    if (span.isFailed()) {
+      message.append("failed ");
+    }
+    message.append(span.getKind()).append(" span, which took ");
+    message.append(span.duration().toMillis()).append("ms");
+    Map<String, String> labels = span.getLabels();
+    if (!labels.isEmpty()) {
+      message.append(":");
+      for (Map.Entry<String, String> e : labels.entrySet()) {
+        message.append("\n - ").append(e.getKey()).append(": ").append(e.getValue());
+      }
+    }
+    return message.toString();
   }
 
 }
