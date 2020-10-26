@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.net.ahc;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -30,11 +30,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.TrustAllHostnameVerifier;
+import sonia.scm.trace.Span;
+import sonia.scm.trace.Tracer;
 import sonia.scm.util.HttpUtil;
 
 import static org.junit.Assert.*;
@@ -82,12 +85,12 @@ public class DefaultAdvancedHttpClientTest
       DefaultAdvancedHttpClient.TIMEOUT_CONNECTION);
     verify(connection).addRequestProperty(HttpUtil.HEADER_CONTENT_LENGTH, "0");
   }
-  
+
   @Test(expected = ContentTransformerNotFoundException.class)
   public void testContentTransformerNotFound(){
     client.createTransformer(String.class, "text/plain");
   }
-  
+
   @Test
   public void testContentTransformer(){
     ContentTransformer transformer = mock(ContentTransformer.class);
@@ -265,6 +268,32 @@ public class DefaultAdvancedHttpClientTest
       "Basic dHJpY2lhOnRyaWNpYXMgc2VjcmV0");
   }
 
+  @Test
+  public void shouldCreateTracingSpan() throws IOException {
+    when(connection.getResponseCode()).thenReturn(200);
+
+    new AdvancedHttpRequest(client, HttpMethod.GET, "https://www.scm-manager.org").spanKind("spaceships").request();
+    verify(tracer).span("spaceships");
+    verify(span).label("url", "https://www.scm-manager.org");
+    verify(span).label("method", "GET");
+    verify(span).label("status", 200);
+    verify(span, never()).failed();
+    verify(span).close();
+  }
+
+  @Test
+  public void shouldCreateFailedTracingSpan() throws IOException {
+    when(connection.getResponseCode()).thenReturn(500);
+
+    new AdvancedHttpRequest(client, HttpMethod.GET, "https://www.scm-manager.org").request();
+    verify(tracer).span("http-request");
+    verify(span).label("url", "https://www.scm-manager.org");
+    verify(span).label("method", "GET");
+    verify(span).label("status", 500);
+    verify(span).failed();
+    verify(span).close();
+  }
+
   //~--- set methods ----------------------------------------------------------
 
   /**
@@ -277,6 +306,7 @@ public class DefaultAdvancedHttpClientTest
     configuration = new ScmConfiguration();
     transformers = new HashSet<ContentTransformer>();
     client = new TestingAdvacedHttpClient(configuration, transformers);
+    when(tracer.span(anyString())).thenReturn(span);
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -298,10 +328,9 @@ public class DefaultAdvancedHttpClientTest
      * @param configuration
      * @param transformers
      */
-    public TestingAdvacedHttpClient(ScmConfiguration configuration,
-      Set<ContentTransformer> transformers)
+    public TestingAdvacedHttpClient(ScmConfiguration configuration, Set<ContentTransformer> transformers)
     {
-      super(configuration, transformers, new SSLContextProvider());
+      super(configuration, tracer, transformers, new SSLContextProvider());
     }
 
     //~--- methods ------------------------------------------------------------
@@ -364,4 +393,10 @@ public class DefaultAdvancedHttpClientTest
 
   /** Field description */
   private Set<ContentTransformer> transformers;
+
+  @Mock
+  private Tracer tracer;
+
+  @Mock
+  private Span span;
 }

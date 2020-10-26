@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.net.ahc;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -33,9 +33,11 @@ import com.google.common.collect.Multimap;
 import com.google.common.io.ByteSource;
 
 import org.hamcrest.Matchers;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
@@ -56,6 +58,7 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import sonia.scm.net.SSLContextProvider;
+import sonia.scm.trace.Tracer;
 
 /**
  *
@@ -64,6 +67,13 @@ import sonia.scm.net.SSLContextProvider;
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultAdvancedHttpResponseTest
 {
+
+  private DefaultAdvancedHttpClient client;
+
+  @Before
+  public void setUpClient() {
+    client = new DefaultAdvancedHttpClient(new ScmConfiguration(), tracer, new HashSet<>(), new SSLContextProvider());
+  }
 
   /**
    * Method description
@@ -130,13 +140,10 @@ public class DefaultAdvancedHttpResponseTest
     assertTrue(headers.get("Test-2").isEmpty());
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final DefaultAdvancedHttpClient client =
-    new DefaultAdvancedHttpClient(new ScmConfiguration(), new HashSet<>(), new SSLContextProvider());
-
   /** Field description */
   @Mock
   private HttpURLConnection connection;
+
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private Tracer tracer;
 }
