@@ -34,7 +34,6 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
 class TracerTest {
 
   private Tracer tracer;
@@ -63,8 +62,6 @@ class TracerTest {
     try (Span span = tracer.span("sample")) {
       span.label("l1", "one");
       Thread.sleep(1L);
-    } catch (Exception ex) {
-      span.
     }
 
     SpanContext span = exporter.spans.get(0);

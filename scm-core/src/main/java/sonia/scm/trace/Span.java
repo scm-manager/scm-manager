@@ -24,7 +24,6 @@
 
 package sonia.scm.trace;
 
-import java.time.Clock;
 import java.time.Instant;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -37,7 +36,6 @@ import java.util.Map;
  */
 public final class Span implements AutoCloseable {
 
-  private final Clock clock;
   private final Tracer tracer;
   private final String kind;
   private final Map<String,String> labels = new LinkedHashMap<>();
@@ -45,14 +43,9 @@ public final class Span implements AutoCloseable {
   private boolean failed;
 
   Span(Tracer tracer, String kind) {
-    this(tracer, kind, Clock.systemUTC());
-  }
-
-  Span(Tracer tracer, String kind, Clock clock) {
-    this.clock = clock;
     this.tracer = tracer;
     this.kind = kind;
-    this.opened = clock.instant();
+    this.opened = Instant.now();
   }
 
   /**
@@ -142,7 +135,7 @@ public final class Span implements AutoCloseable {
    */
   @Override
   public void close() {
-    tracer.export(new SpanContext(kind, Collections.unmodifiableMap(labels), opened, clock.instant(), failed));
+    tracer.export(new SpanContext(kind, Collections.unmodifiableMap(labels), opened, Instant.now(), failed));
   }
 
 }
