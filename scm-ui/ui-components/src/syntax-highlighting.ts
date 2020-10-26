@@ -188,6 +188,9 @@ export default {
   bold: {
     fontWeight: "bold"
   },
+  title: {
+    fontWeight: "bold"
+  },
   italic: {
     fontStyle: "italic"
   },
