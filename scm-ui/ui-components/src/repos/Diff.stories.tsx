@@ -29,6 +29,7 @@ import parser from "gitdiff-parser";
 import simpleDiff from "../__resources__/Diff.simple";
 import hunksDiff from "../__resources__/Diff.hunks";
 import binaryDiff from "../__resources__/Diff.binary";
+import markdownDiff from "../__resources__/Diff.markdown";
 import { DiffEventContext, File, FileControlFactory } from "./DiffTypes";
 import Toast from "../toast/Toast";
 import { getPath } from "./diffs";
@@ -150,6 +151,10 @@ storiesOf("Diff", module)
       return file;
     });
     return <Diff diff={filesWithLanguage} />;
+  })
+  .add("SyntaxHighlighting (Markdown)", () => {
+    // @ts-ignore
+    return <Diff diff={markdownDiff.files} />;
   })
   .add("CollapsingWithFunction", () => (
     <Diff diff={diffFiles} defaultCollapse={(oldPath, newPath) => oldPath.endsWith(".java")} />

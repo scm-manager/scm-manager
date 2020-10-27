@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import com.google.common.base.Preconditions;
@@ -31,6 +31,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -154,6 +155,9 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
   @Override
   public JwtAccessToken build() {
+    if (SecurityUtils.getSubject().getPrincipals().getRealmNames().contains(ApiKeyRealm.NAME)) {
+      throw new AuthorizationException("Cannot create access token for api keys");
+    }
     String id = keyGenerator.createKey();
 
     String sub = getSubject();

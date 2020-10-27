@@ -24,29 +24,51 @@
 
 import refractor from "refractor/core";
 
-const isLanguageRegistered = (lang: string) => {
-  const registeredLanguages = refractor.listLanguages();
-  return registeredLanguages.includes(lang);
+type RunHookEnv = {
+  classes: string[];
 };
 
-const loadLanguage = (lang: string, callback: () => void) => {
-  if (isLanguageRegistered(lang)) {
-    callback();
-  } else {
-    import(
-      /* webpackChunkName: "tokenizer-refractor-[request]" */
-      `refractor/lang/${lang}`
-    ).then(loadedLanguage => {
-      refractor.register(loadedLanguage.default);
+export type RefractorAdapter = typeof refractor & {
+  isLanguageRegistered: (lang: string) => boolean;
+  loadLanguage: (lang: string, callback: () => void) => void;
+};
+
+const createAdapter = (theme: { [key: string]: string }): RefractorAdapter => {
+  const isLanguageRegistered = (lang: string) => {
+    const registeredLanguages = refractor.listLanguages();
+    return registeredLanguages.includes(lang);
+  };
+
+  const loadLanguage = (lang: string, callback: () => void) => {
+    if (isLanguageRegistered(lang)) {
       callback();
-    });
-  }
+    } else {
+      import(
+        /* webpackChunkName: "tokenizer-refractor-[request]" */
+        `refractor/lang/${lang}`
+      ).then(loadedLanguage => {
+        refractor.register(loadedLanguage.default);
+        callback();
+      });
+    }
+  };
+
+  // @ts-ignore hooks are not in the type definition
+  const originalRunHook = refractor.hooks.run;
+  const runHook = (name: string, env: RunHookEnv) => {
+    originalRunHook.apply(name, env);
+    if (env.classes) {
+      env.classes = env.classes.map(className => theme[className] || className);
+    }
+  };
+  // @ts-ignore hooks are not in the type definition
+  refractor.hooks.run = runHook;
+
+  return {
+    isLanguageRegistered,
+    loadLanguage,
+    ...refractor
+  };
 };
 
-const refractorAdapter = {
-  isLanguageRegistered,
-  loadLanguage,
-  ...refractor
-};
-
-export default refractorAdapter;
+export default createAdapter;

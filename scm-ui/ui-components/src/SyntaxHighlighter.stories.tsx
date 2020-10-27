@@ -30,6 +30,7 @@ import JavaHttpServer from "./__resources__/HttpServer.java";
 import GoHttpServer from "./__resources__/HttpServer.go";
 import JsHttpServer from "./__resources__/HttpServer.js";
 import PyHttpServer from "./__resources__/HttpServer.py";
+import Markdown from "./__resources__/test-page.md";
 
 const Spacing = styled.div`
   padding: 1em;
@@ -54,6 +55,11 @@ storiesOf("SyntaxHighlighter", module)
   .add("Python", () => (
     <Spacing>
       <SyntaxHighlighter language="python" value={PyHttpServer} />
+    </Spacing>
+  ))
+  .add("Markdown", () => (
+    <Spacing>
+      <SyntaxHighlighter language="markdown" value={Markdown} />
     </Spacing>
   ))
   .add("Without line numbers", () => (
