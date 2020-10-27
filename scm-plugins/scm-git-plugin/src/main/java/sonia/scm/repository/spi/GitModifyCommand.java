@@ -33,6 +33,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ConcurrentModificationException;
+import sonia.scm.ContextEntry;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitWorkingCopyFactory;
@@ -87,7 +88,7 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       getClone().getRepository().getFullBranch();
       if (!StringUtils.isEmpty(request.getExpectedRevision())
         && !request.getExpectedRevision().equals(getCurrentRevision().getName())) {
-        throw new ConcurrentModificationException("branch", request.getBranch() == null ? "default" : request.getBranch());
+        throw new ConcurrentModificationException(ContextEntry.ContextBuilder.entity("Branch", request.getBranch() == null ? "default" : request.getBranch()).in(repository).build());
       }
       for (ModifyCommandRequest.PartialRequest r : request.getRequests()) {
         r.execute(this);
