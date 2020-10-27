@@ -193,12 +193,18 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
     try (Span span = tracer.span(request.getSpanKind())) {
       span.label("url", request.getUrl());
       span.label("method", request.getMethod());
-      DefaultAdvancedHttpResponse response = doRequest(request);
-      span.label("status", response.getStatus());
-      if (!response.isSuccessful()) {
+      try {
+        DefaultAdvancedHttpResponse response = doRequest(request);
+        span.label("status", response.getStatus());
+        if (!response.isSuccessful()) {
+          span.failed();
+        }
+        return response;
+      } catch (IOException ex) {
+        span.label("exception", ex.getMessage());
         span.failed();
+        throw ex;
       }
-      return response;
     }
   }
 
