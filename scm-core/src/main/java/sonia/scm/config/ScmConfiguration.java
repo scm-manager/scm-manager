@@ -192,7 +192,7 @@ public class ScmConfiguration implements Configuration {
   /**
    * Enables user converter.
    *
-   * @since 2.8.0
+   * @since 2.9.0
    */
   @XmlElement(name = "user-converter")
   private boolean enabledUserConverter = false;
@@ -401,7 +401,7 @@ public class ScmConfiguration implements Configuration {
    *
    * @return {@code true} if the user converter is enabled
    * The user converter automatically converts an internal user to external on their first login using an external system like ldap
-   * @since 2.8.0
+   * @since 2.9.0
    */
   public boolean isEnabledUserConverter() {
     return enabledUserConverter;
@@ -578,7 +578,7 @@ public class ScmConfiguration implements Configuration {
    * Set {@code true} to enable user converter.
    *
    * @param enabledUserConverter {@code true} to enable user converter
-   * @since 2.8.0
+   * @since 2.9.0
    */
   public void setEnabledUserConverter(boolean enabledUserConverter) {
     this.enabledUserConverter = enabledUserConverter;

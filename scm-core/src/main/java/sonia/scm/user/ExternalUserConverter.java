@@ -33,7 +33,7 @@ public interface ExternalUserConverter {
    * Returns the converted user.
    *
    * @return converted user
-   * @since 2.8.0
+   * @since 2.9.0
    */
   User convert(User user);
 }
