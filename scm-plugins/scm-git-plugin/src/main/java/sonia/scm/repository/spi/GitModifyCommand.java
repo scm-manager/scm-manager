@@ -86,6 +86,9 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     @Override
     String run() throws IOException {
       getClone().getRepository().getFullBranch();
+
+      boolean initialCommit = getClone().getRepository().getRefDatabase().getRefs().isEmpty();
+
       if (!StringUtils.isEmpty(request.getExpectedRevision())
         && !request.getExpectedRevision().equals(getCurrentRevision().getName())) {
         throw new ConcurrentModificationException(ContextEntry.ContextBuilder.entity("Branch", request.getBranch() == null ? "default" : request.getBranch()).in(repository).build());
@@ -95,8 +98,21 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       }
       failIfNotChanged(() -> new NoChangesMadeException(repository, ModifyWorker.this.request.getBranch()));
       Optional<RevCommit> revCommit = doCommit(request.getCommitMessage(), request.getAuthor(), request.isSign());
+
+      if (initialCommit && StringUtils.isNotBlank(context.getGlobalConfig().getDefaultBranch())) {
+        createDefaultBranch();
+      }
+
       push();
       return revCommit.orElseThrow(() -> new NoChangesMadeException(repository, ModifyWorker.this.request.getBranch())).name();
+    }
+
+    private void createDefaultBranch() {
+      try {
+        getClone().checkout().setName(context.getGlobalConfig().getDefaultBranch()).setCreateBranch(true).call();
+      } catch (GitAPIException e) {
+        throw new InternalRepositoryException(repository, "could not create default branch for initial commit", e);
+      }
     }
 
     @Override

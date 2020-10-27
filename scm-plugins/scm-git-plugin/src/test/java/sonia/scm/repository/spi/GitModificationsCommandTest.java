@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Before;
 import org.junit.Test;
+import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.Modifications;
 
 import java.io.File;
@@ -42,8 +43,8 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
 
   @Before
   public void init() {
-    incomingModificationsCommand = new GitModificationsCommand(new GitContext(incomingDirectory, incomingRepository, null));
-    outgoingModificationsCommand = new GitModificationsCommand(new GitContext(outgoingDirectory, outgoingRepository, null));
+    incomingModificationsCommand = new GitModificationsCommand(new GitContext(incomingDirectory, incomingRepository, null, new GitConfig()));
+    outgoingModificationsCommand = new GitModificationsCommand(new GitContext(outgoingDirectory, outgoingRepository, null, new GitConfig()));
   }
 
   @Test
@@ -106,11 +107,11 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
   }
 
   void pushOutgoingAndPullIncoming() throws IOException {
-    GitPushCommand cmd = new GitPushCommand(handler, new GitContext(outgoingDirectory, outgoingRepository, null));
+    GitPushCommand cmd = new GitPushCommand(handler, new GitContext(outgoingDirectory, outgoingRepository, null, new GitConfig()));
     PushCommandRequest request = new PushCommandRequest();
     request.setRemoteRepository(incomingRepository);
     cmd.push(request);
-    GitPullCommand pullCommand = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, null));
+    GitPullCommand pullCommand = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, null, new GitConfig()));
     PullCommandRequest pullRequest = new PullCommandRequest();
     pullRequest.setRemoteRepository(incomingRepository);
     pullCommand.pull(pullRequest);

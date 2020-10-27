@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
+import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
@@ -51,19 +52,7 @@ public class GitContext implements Closeable, RepositoryProvider
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param directory
-   * @param repository
-   */
-  public GitContext(File directory, Repository repository, GitRepositoryConfigStoreProvider storeProvider)
-  {
-    this.directory = directory;
-    this.repository = repository;
-    this.storeProvider = storeProvider;
-  }
+  private final GitConfig config;
 
   //~--- methods --------------------------------------------------------------
 
@@ -122,6 +111,22 @@ public class GitContext implements Closeable, RepositoryProvider
     }
   }
 
+  /**
+   * Constructs ...
+   *
+   *
+   * @param directory
+   * @param repository
+   * @param config
+   */
+  public GitContext(File directory, Repository repository, GitRepositoryConfigStoreProvider storeProvider, GitConfig config)
+  {
+    this.directory = directory;
+    this.repository = repository;
+    this.storeProvider = storeProvider;
+    this.config = config;
+  }
+
   void setConfig(GitRepositoryConfig newConfig) {
     storeProvider.get(repository).set(newConfig);
   }
@@ -132,6 +137,10 @@ public class GitContext implements Closeable, RepositoryProvider
   private final File directory;
   private final Repository repository;
   private final GitRepositoryConfigStoreProvider storeProvider;
+
+  GitConfig getGlobalConfig() {
+    return config;
+  }
 
   /** Field description */
   private org.eclipse.jgit.lib.Repository gitRepository;
