@@ -29,36 +29,29 @@ package sonia.scm.net.ahc;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.net.SSLContextProvider;
 import sonia.scm.net.TrustAllHostnameVerifier;
 import sonia.scm.trace.Span;
 import sonia.scm.trace.Tracer;
 import sonia.scm.util.HttpUtil;
 
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSocketFactory;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
 import java.net.HttpURLConnection;
 import java.net.SocketAddress;
 import java.net.URL;
-
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSocketFactory;
-import sonia.scm.net.SSLContextProvider;
+import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -290,6 +283,26 @@ public class DefaultAdvancedHttpClientTest
     verify(span).label("url", "https://www.scm-manager.org");
     verify(span).label("method", "GET");
     verify(span).label("status", 500);
+    verify(span).failed();
+    verify(span).close();
+  }
+
+  @Test
+  public void shouldCreateFailedTracingSpanOnIOException() throws IOException {
+    when(connection.getResponseCode()).thenThrow(new IOException("failed"));
+
+    boolean thrown = false;
+    try {
+      new AdvancedHttpRequest(client, HttpMethod.DELETE, "http://failing.host").spanKind("failures").request();
+    } catch (IOException ex) {
+      thrown = true;
+    }
+    assertTrue(thrown);
+
+    verify(tracer).span("failures");
+    verify(span).label("url", "http://failing.host");
+    verify(span).label("method", "DELETE");
+    verify(span).label("exception", "failed");
     verify(span).failed();
     verify(span).close();
   }
