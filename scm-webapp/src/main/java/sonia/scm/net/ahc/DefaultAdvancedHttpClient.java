@@ -325,7 +325,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
     }
     else
     {
-      logger.trace("set ssl socker factory from provider");
+      logger.trace("set ssl socket factory from provider");
       connection.setSSLSocketFactory(sslContextProvider.get().getSocketFactory());
     }
 
