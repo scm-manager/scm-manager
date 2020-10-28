@@ -71,11 +71,11 @@
               <goal>wget</goal>
             </goals>
             <configuration>
-              <url>https://github.com/winsw/winsw/releases/download/v2.9.0/WinSW.NETCore31.x64.exe</url>
+              <url>https://github.com/winsw/winsw/releases/download/v2.10.3/WinSW.NETCore31.x86.exe</url>
               <unpack>false</unpack>
               <outputFileName>scm-server.exe</outputFileName>
               <outputDirectory>${project.build.directory}/windows</outputDirectory>
-              <sha256>59d29a41652cfc9a564c9c05d77976391833a6fb686bce941ad89f8f8dff120b</sha256>
+              <sha256>d6ad842e104bfb200bca06d6724e3e1fb19d013fa62fa49a21298d2ee9b044b7</sha256>
             </configuration>
           </execution>
         </executions>
