@@ -59,13 +59,14 @@ import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Stack;
 import java.util.function.Consumer;
 
 import static java.util.Optional.empty;
@@ -142,12 +143,12 @@ public class GitBrowseCommand extends AbstractGitCommand
     if (Util.isEmpty(request.getRevision())) {
       return getDefaultBranch(repo);
     } else {
-      ObjectId revId = GitUtil.getRevisionId(repo, request.getRevision());
-      if (revId == null) {
+      ObjectId revisionId = GitUtil.getRevisionId(repo, request.getRevision());
+      if (revisionId == null) {
         logger.error("could not find revision {}", request.getRevision());
         throw notFound(entity("Revision", request.getRevision()).in(this.repository));
       }
-      return revId;
+      return revisionId;
     }
   }
 
@@ -213,7 +214,9 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   private FileObject getEntry() throws IOException {
     try (RevWalk revWalk = new RevWalk(repo); TreeWalk treeWalk = new TreeWalk(repo)) {
-      logger.debug("load repository browser for revision {}", revId.name());
+      if (logger.isDebugEnabled()) { // method call in logger call
+        logger.debug("load repository browser for revision {}", revId.name());
+      }
 
       if (!isRootRequest()) {
         treeWalk.setFilter(PathFilter.create(request.getPath()));
@@ -276,7 +279,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   }
 
   private void createTree(TreeEntry parent, TreeWalk treeWalk) throws IOException {
-    Stack<TreeEntry> parents = new Stack<>();
+    Deque<TreeEntry> parents = new ArrayDeque<>();
     parents.push(parent);
     while (treeWalk.next()) {
       final String currentPath = treeWalk.getPathString();
