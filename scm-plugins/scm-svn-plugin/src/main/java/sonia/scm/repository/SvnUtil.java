@@ -232,6 +232,7 @@ public final class SvnUtil
    *
    * @return
    */
+  @SuppressWarnings("java:S1149") // we can not use StringBuild SVNXMLUtil requires StringBuffer
   public static String createErrorBody(SVNErrorCode errorCode)
   {
     StringBuffer xmlBuffer = new StringBuffer();
