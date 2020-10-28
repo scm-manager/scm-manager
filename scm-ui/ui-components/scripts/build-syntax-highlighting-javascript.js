@@ -121,4 +121,4 @@ function createJavascriptStyleSheet(directory, inputFile, outputFile) {
   });
 }
 
-createJavascriptStyleSheet(path.join("..", "src"), "syntax-highlighting.css", "syntax-highlighting.ts");
+createJavascriptStyleSheet(path.join("..", "src"), "syntax-highlighting.module.css", "syntax-highlighting.ts");

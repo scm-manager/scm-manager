@@ -26,11 +26,10 @@ import styled from "styled-components";
 // @ts-ignore we have no typings for react-diff-view
 import { Diff, useTokenizeWorker } from "react-diff-view";
 import { File } from "./DiffTypes";
+import { determineLanguage } from "../languages";
 
-// styling for the diff tokens
-// this must be aligned with th style, which is used in the SyntaxHighlighter component
-// eslint-disable-next-line no-restricted-imports
-import "../syntax-highlighting.css";
+// @ts-ignore no types for css modules
+import theme from "../syntax-highlighting.module.css";
 
 const DiffView = styled(Diff)`
   /* align line numbers */
@@ -59,26 +58,11 @@ const DiffView = styled(Diff)`
   &.unified .diff-widget-content .is-indented-line {
     padding-left: 6.5rem;
   }
-  
-  /* conflict between prism and bulma number class */
-  .number {
-    align-items: inherit;
-    background-color: inherit;
-    border-radius: inherit;
-    display: initial;
-    font-size: inherit;
-    height: inherit;
-    justify-content: inherit;
-    margin-right: inherit;
-    margin-left: 0;
-    min-width: inherit;
-    padding: 0;
-    text-align: inherit;
-  }
 `;
 
 // WebWorker which creates tokens for syntax highlighting
 const tokenize = new Worker("./Tokenize.worker.ts", { name: "tokenizer", type: "module" });
+tokenize.postMessage({ theme });
 
 type Props = {
   file: File;
@@ -86,17 +70,10 @@ type Props = {
   className?: string;
 };
 
-const determineLanguage = (file: File) => {
-  if (file.language) {
-    return file.language.toLowerCase();
-  }
-  return "text";
-};
-
 const TokenizedDiffView: FC<Props> = ({ file, viewType, className, children }) => {
   const { tokens } = useTokenizeWorker(tokenize, {
     hunks: file.hunks,
-    language: determineLanguage(file)
+    language: determineLanguage(file.language)
   });
 
   return (

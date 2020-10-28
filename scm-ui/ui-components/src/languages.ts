@@ -21,37 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
 
-import { PrismAsyncLight as ReactSyntaxHighlighter } from "react-syntax-highlighter";
-import { defaultLanguage, determineLanguage } from "./languages";
-// eslint-disable-next-line no-restricted-imports
-import highlightingTheme from "./syntax-highlighting";
-
-type Props = {
-  language?: string;
-  value: string;
-  showLineNumbers?: boolean;
+// this aliases are only to map from spotter detection to prismjs
+const languageAliases: { [key: string]: string } = {
+  golang: "go"
 };
 
-class SyntaxHighlighter extends React.Component<Props> {
-  static defaultProps: Partial<Props> = {
-    language: defaultLanguage,
-    showLineNumbers: true
-  };
+export const defaultLanguage = "text";
 
-  render() {
-    const { showLineNumbers, language } = this.props;
-    return (
-      <ReactSyntaxHighlighter
-        showLineNumbers={showLineNumbers}
-        language={determineLanguage(language)}
-        style={highlightingTheme}
-      >
-        {this.props.value}
-      </ReactSyntaxHighlighter>
-    );
+export const determineLanguage = (language?: string) => {
+  if (!language) {
+    return defaultLanguage;
   }
-}
-
-export default SyntaxHighlighter;
+  const lang = language.toLowerCase();
+  if (languageAliases[lang]) {
+    return languageAliases[lang];
+  }
+  return lang;
+};

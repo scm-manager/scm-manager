@@ -21,37 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
 
-import { PrismAsyncLight as ReactSyntaxHighlighter } from "react-syntax-highlighter";
-import { defaultLanguage, determineLanguage } from "./languages";
-// eslint-disable-next-line no-restricted-imports
-import highlightingTheme from "./syntax-highlighting";
+import { determineLanguage } from "./languages";
 
-type Props = {
-  language?: string;
-  value: string;
-  showLineNumbers?: boolean;
-};
+describe("syntax highlighter", () => {
+  it("should return the language as it is", () => {
+    const java = determineLanguage("java");
+    expect(java).toBe("java");
+  });
 
-class SyntaxHighlighter extends React.Component<Props> {
-  static defaultProps: Partial<Props> = {
-    language: defaultLanguage,
-    showLineNumbers: true
-  };
+  it("should lower case the language", () => {
+    const java = determineLanguage("Java");
+    expect(java).toBe("java");
+  });
 
-  render() {
-    const { showLineNumbers, language } = this.props;
-    return (
-      <ReactSyntaxHighlighter
-        showLineNumbers={showLineNumbers}
-        language={determineLanguage(language)}
-        style={highlightingTheme}
-      >
-        {this.props.value}
-      </ReactSyntaxHighlighter>
-    );
-  }
-}
+  it("should return text if language is undefied", () => {
+    const lang = determineLanguage();
+    expect(lang).toBe("text");
+  });
 
-export default SyntaxHighlighter;
+  it("should return text if language is an empty string", () => {
+    const lang = determineLanguage("");
+    expect(lang).toBe("text");
+  });
+
+  it("should use alias go for golang", () => {
+    const go = determineLanguage("golang");
+    expect(go).toBe("go");
+  });
+});
