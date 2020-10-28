@@ -186,7 +186,7 @@ class UserForm extends React.Component<Props, State> {
                   <Checkbox
                     label={t("user.externalFlag")}
                     onChange={this.handleExternalChange}
-                    checked={!!user.external}
+                    checked={user.external}
                     helpText={t("help.externalFlagHelpText")}
                   />
                 </div>

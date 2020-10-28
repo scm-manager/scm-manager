@@ -39,6 +39,6 @@ export type User = {
   type?: string;
   creationDate?: string;
   lastModified?: string;
-  external?: boolean;
+  external: boolean;
   _links: Links;
 };
