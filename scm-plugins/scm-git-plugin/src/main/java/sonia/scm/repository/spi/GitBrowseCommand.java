@@ -55,6 +55,7 @@ import sonia.scm.store.BlobStore;
 import sonia.scm.util.Util;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -283,11 +284,15 @@ public class GitBrowseCommand extends AbstractGitCommand
         parents.pop();
       }
       TreeEntry currentParent = parents.peek();
-      TreeEntry treeEntry = new TreeEntry(repo, treeWalk);
-      currentParent.addChild(treeEntry);
-      if (request.isRecursive() && treeEntry.getType() == TreeType.DIRECTORY) {
-        treeWalk.enterSubtree();
-        parents.push(treeEntry);
+      TreeEntry treeEntry = createTreeEntry(repo, treeWalk);
+      if (treeEntry != null) {
+        currentParent.addChild(treeEntry);
+        if (request.isRecursive() && treeEntry.getType() == TreeType.DIRECTORY) {
+          treeWalk.enterSubtree();
+          parents.push(treeEntry);
+        }
+      } else {
+        logger.warn("failed to find tree entry for {}", currentPath);
       }
     }
   }
@@ -304,7 +309,12 @@ public class GitBrowseCommand extends AbstractGitCommand
         currentDepth++;
 
         if (currentDepth >= limit) {
-          return createFileObject(new TreeEntry(repo, treeWalk));
+          TreeEntry treeEntry = createTreeEntry(repo, treeWalk);
+          if (treeEntry != null) {
+            return createFileObject(treeEntry);
+          } else {
+            logger.warn("could not find tree entry at {}", name);
+          }
         } else {
           treeWalk.enterSubtree();
         }
@@ -328,8 +338,12 @@ public class GitBrowseCommand extends AbstractGitCommand
     }
   }
 
-  private SubRepository getSubRepository(String path)
-    throws IOException {
+  @Nullable
+  private SubRepository getSubRepository(String path) throws IOException {
+    if (request.isDisableSubRepositoryDetection()) {
+      return null;
+    }
+
     Map<String, SubRepository> subRepositories = subrepositoryCache.get(revId);
 
     if (subRepositories == null) {
@@ -447,6 +461,23 @@ public class GitBrowseCommand extends AbstractGitCommand
     FILE, DIRECTORY, SUB_REPOSITORY
   }
 
+  @Nullable
+  TreeEntry createTreeEntry(org.eclipse.jgit.lib.Repository repo, TreeWalk treeWalk) throws IOException {
+    String pathString = treeWalk.getPathString();
+    ObjectId objectId = treeWalk.getObjectId(0);
+    SubRepository subRepository = getSubRepository(pathString);
+    if (subRepository != null) {
+      return new TreeEntry(pathString, treeWalk.getNameString(), objectId, subRepository);
+    } else if (repo.getObjectDatabase().has(objectId)) {
+      TreeType type = TreeType.FILE;
+      if (repo.open(objectId).getType() == Constants.OBJ_TREE) {
+        type = TreeType.DIRECTORY;
+      }
+      return new TreeEntry(pathString, treeWalk.getNameString(), objectId, type);
+    }
+    return null;
+  }
+
   private class TreeEntry {
 
     private final String pathString;
@@ -466,21 +497,20 @@ public class GitBrowseCommand extends AbstractGitCommand
       type = TreeType.DIRECTORY;
     }
 
-    TreeEntry(org.eclipse.jgit.lib.Repository repo, TreeWalk treeWalk) throws IOException {
-      this.pathString = treeWalk.getPathString();
-      this.nameString = treeWalk.getNameString();
-      this.objectId = treeWalk.getObjectId(0);
+    TreeEntry(String pathString, String nameString, ObjectId objectId, SubRepository subRepository) {
+      this.pathString = pathString;
+      this.nameString = nameString;
+      this.objectId = objectId;
+      this.type = TreeType.SUB_REPOSITORY;
+      this.subRepository = subRepository;
+    }
 
-      if (!request.isDisableSubRepositoryDetection() && GitBrowseCommand.this.getSubRepository(pathString) != null) {
-        subRepository = GitBrowseCommand.this.getSubRepository(pathString);
-        type = TreeType.SUB_REPOSITORY;
-      } else if (repo.open(objectId).getType() == Constants.OBJ_TREE) {
-        subRepository = null;
-        type = TreeType.DIRECTORY;
-      } else {
-        subRepository = null;
-        type = TreeType.FILE;
-      }
+    TreeEntry(String pathString, String nameString, ObjectId objectId, TreeType type) {
+      this.pathString = pathString;
+      this.nameString = nameString;
+      this.objectId = objectId;
+      this.type = type;
+      this.subRepository = null;
     }
 
     String getPathString() {
