@@ -198,7 +198,7 @@ public final class SvnUtil
                             Person.toPerson(entry.getAuthor()),
                             entry.getMessage());
 
-    if (revision > 0)
+    if (revision > 1)
     {
       changeset.getParents().add(String.valueOf(revision - 1));
     }

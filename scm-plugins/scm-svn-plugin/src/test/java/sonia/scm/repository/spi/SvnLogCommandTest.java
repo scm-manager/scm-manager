@@ -32,10 +32,9 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.ChangesetPagingResult;
 import sonia.scm.repository.Modifications;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import java.util.stream.StreamSupport;
+
+import static org.junit.Assert.*;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -57,10 +56,35 @@ public class SvnLogCommandTest extends AbstractSvnCommandTestBase
   }
 
   @Test
+  public void shouldNotReturnChangesetWithIdZero() {
+    ChangesetPagingResult result = createCommand().getChangesets(new LogCommandRequest());
+    boolean found = StreamSupport.stream(result.spliterator(), false).anyMatch(c -> "0".equals(c.getId()));
+    assertFalse(found);
+  }
+
+  @Test(expected = IllegalArgumentException.class)
+  public void shouldThrowIllegalArgumentExceptionForChangesetZero() {
+    createCommand().getChangeset("0", new LogCommandRequest());
+  }
+
+  @Test
+  public void shouldNotReturnChangesetZeroAsParent() {
+    Changeset changeset = createCommand().getChangeset("1", new LogCommandRequest());
+    assertTrue(changeset.getParents().isEmpty());
+  }
+
+  @Test
+  public void shouldAppendParentChangeset() {
+    Changeset changeset = createCommand().getChangeset("2", new LogCommandRequest());
+    assertEquals(1, changeset.getParents().size());
+    assertEquals("1", changeset.getParents().get(0));
+  }
+
+  @Test
   public void testShouldStartWithRevisionOne() {
     ChangesetPagingResult result = createCommand().getChangesets(new LogCommandRequest());
     Changeset first = Iterables.getLast(result);
-    assertEquals(first.getId(), "1");
+    assertEquals("1", first.getId());
   }
 
   @Test
