@@ -26,14 +26,18 @@ package sonia.scm.user;
 
 import sonia.scm.plugin.ExtensionPoint;
 
+/**
+ * The external user converter can be used to modify users
+ * which are provided by external systems before creation in SCM-Manager.
+ * The implementations will be called in the {@link sonia.scm.security.SyncingRealmHelper}
+ * @since 2.9.0
+ */
 @ExtensionPoint
 public interface ExternalUserConverter {
 
   /**
    * Returns the converted user.
-   *
    * @return converted user
-   * @since 2.9.0
    */
   User convert(User user);
 }

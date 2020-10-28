@@ -167,7 +167,7 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
     return Objects.equal(name, other.name)
       && Objects.equal(displayName, other.displayName)
       && Objects.equal(mail, other.mail)
-      && Objects.equal(type, other.type)
+      && Objects.equal(external, other.external)
       && Objects.equal(active, other.active)
       && Objects.equal(password, other.password)
       && Objects.equal(creationDate, other.creationDate)
@@ -177,8 +177,8 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
 
   @Override
   public int hashCode() {
-    return Objects.hashCode(name, displayName, mail, type, password,
-      active, creationDate, lastModified, properties);
+    return Objects.hashCode(name, displayName, mail, password,
+      active, external, creationDate, lastModified, properties);
   }
 
   @Override
@@ -195,6 +195,7 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
       .add("password", pwd)
       .add("type", type)
       .add("active", active)
+      .add("external", external)
       .add("creationDate", creationDate)
       .add("lastModified", lastModified)
       .add("properties", properties)
@@ -205,7 +206,6 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
   @Override
   public boolean isValid() {
     return ValidationUtil.isNameValid(name) && Util.isNotEmpty(displayName)
-      && Util.isNotEmpty(type)
       && ((Util.isEmpty(mail)) || ValidationUtil.isMailAddressValid(mail));
   }
 
