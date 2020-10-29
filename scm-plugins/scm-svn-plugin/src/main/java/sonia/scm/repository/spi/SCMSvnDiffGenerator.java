@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import de.regnis.q.sequence.line.diff.QDiffGenerator;
@@ -56,6 +56,7 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.io.RandomAccessFile;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -344,16 +345,17 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
       String label1 = getLabel(newTargetString1, revision1);
       String label2 = getLabel(newTargetString2, revision2);
 
-      boolean shouldStopDisplaying = displayHeader(outputStream, displayPath, false, fallbackToAbsolutePath, SvnDiffCallback.OperationKind.Modified);
       visitedPaths.add(displayPath);
       if (useGitFormat) {
         displayGitDiffHeader(outputStream, SvnDiffCallback.OperationKind.Modified,
           getRelativeToRootPath(target, originalTarget1),
           getRelativeToRootPath(target, originalTarget2),
           null);
-      }
-      if (shouldStopDisplaying) {
-        return;
+      } else {
+        boolean shouldStopDisplaying = displayHeader(outputStream, displayPath, false, fallbackToAbsolutePath, SvnDiffCallback.OperationKind.Modified);
+        if (shouldStopDisplaying) {
+          return;
+        }
       }
 
 //            if (useGitFormat) {
@@ -374,9 +376,74 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
       }
     }
 
-    displayPropertyChangesOn(useGitFormat ? getRelativeToRootPath(target, originalTarget1) : displayPath, outputStream);
+    if (useGitFormat) {
+      displayGitPropDiffValues(outputStream, propChanges, originalProps);
+    } else {
+      displayPropertyChangesOn(displayPath, outputStream);
+      displayPropDiffValues(outputStream, propChanges, originalProps);
+    }
+  }
 
-    displayPropDiffValues(outputStream, propChanges, originalProps);
+  private void displayGitPropDiffValues(OutputStream outputStream, SVNProperties diff, SVNProperties baseProps) throws SVNException {
+    for (Iterator changedPropNames = diff.nameSet().iterator(); changedPropNames.hasNext(); ) {
+      String name = (String) changedPropNames.next();
+      SVNPropertyValue originalValue = baseProps != null ? baseProps.getSVNPropertyValue(name) : null;
+      SVNPropertyValue newValue = diff.getSVNPropertyValue(name);
+
+      try {
+        byte[] originalValueBytes = getPropertyAsBytes(originalValue, getEncoding());
+        byte[] newValueBytes = getPropertyAsBytes(newValue, getEncoding());
+
+        if (originalValueBytes == null) {
+          originalValueBytes = new byte[0];
+        } else {
+          originalValueBytes = maybeAppendEOL(originalValueBytes);
+        }
+
+        boolean newValueHadEol = newValueBytes != null && newValueBytes.length > 0 &&
+          (newValueBytes[newValueBytes.length - 1] == SVNProperty.EOL_CR_BYTES[0] ||
+            newValueBytes[newValueBytes.length - 1] == SVNProperty.EOL_LF_BYTES[0]);
+
+        if (newValueBytes == null) {
+          newValueBytes = new byte[0];
+        } else {
+          newValueBytes = maybeAppendEOL(newValueBytes);
+        }
+
+        QDiffUniGenerator.setup();
+        Map properties = new SVNHashMap();
+
+        properties.put(QDiffGeneratorFactory.IGNORE_EOL_PROPERTY, Boolean.valueOf(getDiffOptions().isIgnoreEOLStyle()));
+        properties.put(QDiffGeneratorFactory.EOL_PROPERTY, new String(getEOL()));
+        properties.put(QDiffGeneratorFactory.HUNK_DELIMITER, "@@");
+        if (getDiffOptions().isIgnoreAllWhitespace()) {
+          properties.put(QDiffGeneratorFactory.IGNORE_SPACE_PROPERTY, QDiffGeneratorFactory.IGNORE_ALL_SPACE);
+        } else if (getDiffOptions().isIgnoreAmountOfWhitespace()) {
+          properties.put(QDiffGeneratorFactory.IGNORE_SPACE_PROPERTY, QDiffGeneratorFactory.IGNORE_SPACE_CHANGE);
+        }
+
+        QDiffGenerator generator = new QDiffUniGenerator(properties, "");
+        StringWriter writer = new StringWriter();
+        QDiffManager.generateTextDiff(new ByteArrayInputStream(originalValueBytes), new ByteArrayInputStream(newValueBytes),
+          null, writer, generator);
+        writer.flush();
+
+        String lines[] = writer.toString().split("\\r?\\n");
+        displayString(outputStream, lines[0] + "\n");
+        displayString(outputStream, " # property " + name + " has changed\n");
+        for (int i=1; i< lines.length; i++) {
+          displayString(outputStream, lines[i] + "\n");
+        }
+
+        if (!newValueHadEol) {
+          displayString(outputStream, "\\ No newline at end of property");
+          displayEOL(outputStream);
+        }
+      } catch (IOException e) {
+        wrapException(e);
+      }
+    }
+
   }
 
   private void throwBadRelativePathException(String displayPath, String relativeToPath) throws SVNException {
