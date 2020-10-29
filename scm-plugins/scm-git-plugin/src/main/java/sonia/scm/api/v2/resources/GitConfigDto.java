@@ -29,6 +29,7 @@ import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -47,7 +48,8 @@ public class GitConfigDto extends HalRepresentation {
   private boolean nonFastForwardDisallowed;
 
   @NotEmpty
-  @Pattern(regexp = VALID_BRANCH_NAMES, message = "")
+  @Length(min = 1, max = 100)
+  @Pattern(regexp = VALID_BRANCH_NAMES)
   private String defaultBranch;
 
   @Override
