@@ -25,6 +25,7 @@
       "nonFastForwardDisallowed": "Deaktiviere \"Non Fast-Forward\"",
       "nonFastForwardDisallowedHelpText": "Git Pushes ablehnen, die nicht \"fast-forward\" sind, wie \"--force\".",
       "defaultBranch": "Default Branch",
+      "defaultBranchHelpText": "Dieser Name wird bei der Initialisierung neuer Git Repositories genutzt. Er hat keine weiteren Auswirkungen (insbesondere hat er keinen Einfluss auf den Branchnamen bei leeren Repositories).",
       "defaultBranchValidationError": "Dies ist kein valider Branchname",
       "disabled": "Deaktiviert",
       "disabledHelpText": "Aktiviere oder deaktiviere das Git Plugin",

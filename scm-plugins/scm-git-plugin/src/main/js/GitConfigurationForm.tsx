@@ -107,6 +107,7 @@ class GitConfigurationForm extends React.Component<Props, State> {
         <InputField
           name="defaultBranch"
           label={t("scm-git-plugin.config.defaultBranch")}
+          helpText={t("scm-git-plugin.config.defaultBranchHelpText")}
           value={defaultBranch}
           onChange={this.onDefaultBranchChange}
           disabled={readOnly}
