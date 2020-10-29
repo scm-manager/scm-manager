@@ -43,28 +43,28 @@ public class BrowserUserAgentProvider implements UserAgentProvider
   @VisibleForTesting
   static final UserAgent CHROME = UserAgent.builder(
                                     "Chrome").basicAuthenticationCharset(
-                                    Charsets.UTF_8).build();
+                                    Charsets.UTF_8).browser(true).build();
 
   /** Field description */
   private static final String CHROME_PATTERN = "chrome";
 
   /** Field description */
   @VisibleForTesting
-  static final UserAgent FIREFOX = UserAgent.builder("Firefox").build();
+  static final UserAgent FIREFOX = UserAgent.builder("Firefox").browser(true).build();
 
   /** Field description */
   private static final String FIREFOX_PATTERN = "firefox";
 
   /** Field description */
   @VisibleForTesting
-  static final UserAgent MSIE = UserAgent.builder("Internet Explorer").build();
+  static final UserAgent MSIE = UserAgent.builder("Internet Explorer").browser(true).build();
 
   /** Field description */
   private static final String MSIE_PATTERN = "msie";
 
   /** Field description */
   @VisibleForTesting    // todo check charset
-  static final UserAgent SAFARI = UserAgent.builder("Safari").build();
+  static final UserAgent SAFARI = UserAgent.builder("Safari").browser(true).build();
 
   /** Field description */
   private static final String OPERA_PATTERN = "opera";
@@ -76,7 +76,7 @@ public class BrowserUserAgentProvider implements UserAgentProvider
   @VisibleForTesting    // todo check charset
   static final UserAgent OPERA = UserAgent.builder(
                                    "Opera").basicAuthenticationCharset(
-                                   Charsets.UTF_8).build();
+                                   Charsets.UTF_8).browser(true).build();
 
   //~--- methods --------------------------------------------------------------
 

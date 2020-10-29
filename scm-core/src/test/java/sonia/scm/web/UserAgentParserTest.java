@@ -89,7 +89,7 @@ public class UserAgentParserTest
     UserAgent ua = parser.parse(UA_1);
 
     assertEquals(Charsets.ISO_8859_1, ua.getBasicAuthenticationCharset());
-    assertTrue(ua.isBrowser());
+    assertFalse(ua.isBrowser());
   }
 
   /**

@@ -46,6 +46,7 @@ public class GitUserAgentProvider implements UserAgentProvider {
   @VisibleForTesting
   static final UserAgent JGIT = UserAgent.builder("JGit")
           .browser(false)
+          .scmClient(true)
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
   
@@ -54,6 +55,7 @@ public class GitUserAgentProvider implements UserAgentProvider {
   @VisibleForTesting
   static final UserAgent GIT = UserAgent.builder("Git")
           .browser(false)
+          .scmClient(true)
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
   
@@ -62,6 +64,7 @@ public class GitUserAgentProvider implements UserAgentProvider {
   @VisibleForTesting
   static final UserAgent GIT_LFS = UserAgent.builder("Git Lfs")
           .browser(false)
+          .scmClient(true)
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
 
@@ -70,6 +73,7 @@ public class GitUserAgentProvider implements UserAgentProvider {
   @VisibleForTesting
   static final UserAgent MSYSGIT = UserAgent.builder("msysGit")
           .browser(false)
+          .scmClient(true)
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
 

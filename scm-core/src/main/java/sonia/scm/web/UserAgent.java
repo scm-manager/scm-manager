@@ -57,9 +57,25 @@ public final class UserAgent
   private UserAgent(String name, boolean browser,
     Charset basicAuthenticationCharset)
   {
+    this(name, browser, basicAuthenticationCharset, false);
+  }
+
+  /**
+   * Constructs a new user agent
+   *
+   *
+   * @param name
+   * @param browser
+   * @param basicAuthenticationCharset
+   */
+  private UserAgent(String name, boolean browser,
+                    Charset basicAuthenticationCharset,
+                    boolean scmClient)
+  {
     this.name = checkNotNull(name);
     this.browser = browser;
     this.basicAuthenticationCharset = checkNotNull(basicAuthenticationCharset);
+    this.scmClient = scmClient;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -159,6 +175,10 @@ public final class UserAgent
     return browser;
   }
 
+  public boolean isScmClient() {
+    return scmClient;
+  }
+
   //~--- inner classes --------------------------------------------------------
 
   /**
@@ -213,6 +233,21 @@ public final class UserAgent
     }
 
     /**
+     * Set to {@code true} if the {@link UserAgent} is an scm client.
+     *
+     *
+     * @param scmClient {@code true} for an scm client
+     *
+     * @return {@code this}
+     */
+    public Builder scmClient(boolean scmClient)
+    {
+      this.scmClient = scmClient;
+
+      return this;
+    }
+
+    /**
      * Builds the {@link UserAgent}.
      *
      *
@@ -220,7 +255,7 @@ public final class UserAgent
      */
     public UserAgent build()
     {
-      return new UserAgent(name, browser, basicAuthenticationCharset);
+      return new UserAgent(name, browser, basicAuthenticationCharset, scmClient);
     }
 
     //~--- fields -------------------------------------------------------------
@@ -229,7 +264,10 @@ public final class UserAgent
     private final String name;
 
     /** indicator for browsers */
-    private boolean browser = true;
+    private boolean browser = false;
+
+    /** indicator for browsers */
+    private boolean scmClient = false;
 
     /** basic authentication charset */
     private Charset basicAuthenticationCharset = Charsets.ISO_8859_1;
@@ -243,6 +281,9 @@ public final class UserAgent
 
   /** indicator for browsers */
   private final boolean browser;
+
+  /** indicator for scm clients (e.g. git, hg, svn) */
+  private final boolean scmClient;
 
   /** name of UserAgent */
   private final String name;
