@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
@@ -29,6 +29,11 @@ import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+
+import static sonia.scm.repository.Branch.VALID_BRANCH_NAMES;
 
 @NoArgsConstructor
 @Getter
@@ -41,6 +46,8 @@ public class GitConfigDto extends HalRepresentation {
 
   private boolean nonFastForwardDisallowed;
 
+  @NotEmpty
+  @Pattern(regexp = VALID_BRANCH_NAMES, message = "")
   private String defaultBranch;
 
   @Override
