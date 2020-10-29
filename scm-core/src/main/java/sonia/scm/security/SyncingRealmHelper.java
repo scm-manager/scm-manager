@@ -80,7 +80,7 @@ public final class SyncingRealmHelper {
    * @param ctx          administration context
    * @param userManager  user manager
    * @param groupManager group manager
-   * @deprecated Use the other constructor including {@link ExternalUserConverter} instead.
+   * @deprecated Use {@link #SyncingRealmHelper(AdministrationContext, UserManager, GroupManager, Set)} instead.
    */
   @Deprecated
   public SyncingRealmHelper(AdministrationContext ctx, UserManager userManager, GroupManager groupManager) {
