@@ -99,19 +99,23 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       failIfNotChanged(() -> new NoChangesMadeException(repository, ModifyWorker.this.request.getBranch()));
       Optional<RevCommit> revCommit = doCommit(request.getCommitMessage(), request.getAuthor(), request.isSign());
 
-      if (initialCommit && StringUtils.isNotBlank(context.getGlobalConfig().getDefaultBranch())) {
-        createDefaultBranch();
+      if (initialCommit) {
+        handleBranchForInitialCommit();
       }
 
       push();
       return revCommit.orElseThrow(() -> new NoChangesMadeException(repository, ModifyWorker.this.request.getBranch())).name();
     }
 
-    private void createDefaultBranch() {
-      try {
-        getClone().checkout().setName(context.getGlobalConfig().getDefaultBranch()).setCreateBranch(true).call();
-      } catch (GitAPIException e) {
-        throw new InternalRepositoryException(repository, "could not create default branch for initial commit", e);
+    private void handleBranchForInitialCommit() {
+      String branch = StringUtils.isNotBlank(request.getBranch()) ? request.getBranch() : context.getGlobalConfig().getDefaultBranch();
+      if (StringUtils.isNotBlank(branch)) {
+        try {
+          getClone().checkout().setName(branch).setCreateBranch(true).call();
+        } catch (GitAPIException e) {
+          throw new InternalRepositoryException(repository, "could not create default branch for initial commit", e);
+
+        }
       }
     }
 

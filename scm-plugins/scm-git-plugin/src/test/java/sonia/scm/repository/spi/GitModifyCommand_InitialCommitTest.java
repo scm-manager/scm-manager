@@ -64,7 +64,7 @@ public class GitModifyCommand_InitialCommitTest extends AbstractGitCommandTestBa
   }
 
   @Test
-  public void shouldCreateCommitOnMasterByDkefault() throws IOException, GitAPIException {
+  public void shouldCreateCommitOnMasterByDefault() throws IOException, GitAPIException {
     createContext().getGlobalConfig().setDefaultBranch("");
 
     executeModifyCommand();
@@ -87,17 +87,32 @@ public class GitModifyCommand_InitialCommitTest extends AbstractGitCommandTestBa
     }
   }
 
-  private void executeModifyCommand() throws IOException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+  @Test
+  public void shouldCreateCommitWithBranchFromRequestIfPresent() throws IOException, GitAPIException {
+    createContext().getGlobalConfig().setDefaultBranch("main");
 
-    GitModifyCommand command = createCommand();
+    ModifyCommandRequest request = createRequest();
+    request.setBranch("different");
+    createCommand().execute(request);
+
+    try (Git git = new Git(createContext().open())) {
+      List<Ref> branches = git.branchList().call();
+      assertThat(branches).extracting("name").containsExactly("refs/heads/different");
+    }
+  }
+
+  private void executeModifyCommand() throws IOException {
+    createCommand().execute(createRequest());
+  }
+
+  private ModifyCommandRequest createRequest() throws IOException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("initial commit");
     request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile, false));
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
-
-    command.execute(request);
+    return request;
   }
 
   private GitModifyCommand createCommand() {
