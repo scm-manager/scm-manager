@@ -50,8 +50,6 @@ public class GitContext implements Closeable, RepositoryProvider
   private static final Logger logger =
     LoggerFactory.getLogger(GitContext.class);
 
-  //~--- constructors ---------------------------------------------------------
-
   private final GitConfig config;
 
   //~--- methods --------------------------------------------------------------
@@ -111,14 +109,6 @@ public class GitContext implements Closeable, RepositoryProvider
     }
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param directory
-   * @param repository
-   * @param config
-   */
   public GitContext(File directory, Repository repository, GitRepositoryConfigStoreProvider storeProvider, GitConfig config)
   {
     this.directory = directory;
