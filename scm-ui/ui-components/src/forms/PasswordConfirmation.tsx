@@ -34,6 +34,7 @@ type State = {
 type Props = WithTranslation & {
   passwordChanged: (p1: string, p2: boolean) => void;
   passwordValidator?: (p: string) => boolean;
+  onReturnPressed?: () => void;
 };
 
 class PasswordConfirmation extends React.Component<Props, State> {
@@ -57,7 +58,7 @@ class PasswordConfirmation extends React.Component<Props, State> {
   }
 
   render() {
-    const { t } = this.props;
+    const { t, onReturnPressed } = this.props;
     return (
       <div className="columns is-multiline">
         <div className="column is-half">
@@ -78,6 +79,7 @@ class PasswordConfirmation extends React.Component<Props, State> {
             value={this.state ? this.state.confirmedPassword : ""}
             validationError={this.state.passwordConfirmationFailed}
             errorMessage={t("password.passwordConfirmFailed")}
+            onReturnPressed={onReturnPressed}
           />
         </div>
       </div>

@@ -94,7 +94,15 @@ const UserConverter: FC<Props> = ({ user, fetchUser }) => {
     }
   };
 
-  const passwordChangeField = <PasswordConfirmation passwordChanged={changePassword} />;
+  const onReturnPressed = () => {
+    if (password && passwordValid) {
+      toInternal();
+    }
+  };
+
+  const passwordChangeField = (
+    <PasswordConfirmation passwordChanged={changePassword} onReturnPressed={onReturnPressed} />
+  );
   const passwordModal = (
     <Modal
       body={passwordChangeField}
