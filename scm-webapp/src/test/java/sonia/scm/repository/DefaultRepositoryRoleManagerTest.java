@@ -149,12 +149,6 @@ class DefaultRepositoryRoleManagerTest {
     }
 
     @Test
-    void shouldNotModifyRole_whenTypeChanged() {
-      assertThrows(ScmConstraintViolationException.class, () -> manager.modify(new RepositoryRole(CUSTOM_ROLE_NAME, singletonList("changed"), null)));
-      verify(dao, never()).modify(any());
-    }
-
-    @Test
     void shouldNotModifyRole_whenRoleDoesNotExists() {
       assertThrows(NotFoundException.class, () -> manager.modify(new RepositoryRole("noSuchRole", singletonList("changed"), null)));
       verify(dao, never()).modify(any());

@@ -21,30 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { User } from "@scm-manager/ui-types";
-import { NavLink } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  user: User;
-  passwordUrl: string;
-};
+import { apiClient } from "@scm-manager/ui-components";
+import { CONTENT_TYPE_USER } from "../modules/users";
 
-class ChangePasswordNavLink extends React.Component<Props> {
-  render() {
-    const { t, passwordUrl } = this.props;
-
-    if (!this.hasPermissionToSetPassword()) {
-      return null;
-    }
-    return <NavLink to={passwordUrl} label={t("singleUser.menu.setPasswordNavLink")} testId="user-password-link"/>;
-  }
-
-  hasPermissionToSetPassword = () => {
-    const { user } = this.props;
-    return user._links.password;
-  };
+export function convertToInternal(url: string, newPassword: string) {
+  return apiClient
+    .put(
+      url,
+      {
+        newPassword
+      },
+      CONTENT_TYPE_USER
+    )
+    .then(response => {
+      return response;
+    });
 }
 
-export default withTranslation("users")(ChangePasswordNavLink);
+export function convertToExternal(url: string) {
+  return apiClient.put(url, {}, CONTENT_TYPE_USER).then(response => {
+    return response;
+  });
+}

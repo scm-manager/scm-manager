@@ -21,30 +21,36 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { User } from "@scm-manager/ui-types";
-import { NavLink } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  user: User;
-  passwordUrl: string;
-};
+package sonia.scm.user;
 
-class ChangePasswordNavLink extends React.Component<Props> {
-  render() {
-    const { t, passwordUrl } = this.props;
+import lombok.extern.slf4j.Slf4j;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.plugin.Extension;
 
-    if (!this.hasPermissionToSetPassword()) {
-      return null;
-    }
-    return <NavLink to={passwordUrl} label={t("singleUser.menu.setPasswordNavLink")} testId="user-password-link"/>;
+import javax.inject.Inject;
+
+@Slf4j
+@Extension
+public class InternalToExternalUserConverter implements ExternalUserConverter{
+
+  private final ScmConfiguration scmConfiguration;
+
+  @Inject
+  public InternalToExternalUserConverter(ScmConfiguration scmConfiguration) {
+    this.scmConfiguration = scmConfiguration;
   }
 
-  hasPermissionToSetPassword = () => {
-    const { user } = this.props;
-    return user._links.password;
-  };
-}
+  public User convert(User user) {
+    if (shouldConvertUser(user)) {
+      log.info("Convert internal user {} to external", user.getId());
+      user.setExternal(true);
+      user.setPassword(null);
+    }
+    return user;
+  }
 
-export default withTranslation("users")(ChangePasswordNavLink);
+  private boolean shouldConvertUser(User user) {
+    return !user.isExternal() && scmConfiguration.isEnabledUserConverter();
+  }
+}
