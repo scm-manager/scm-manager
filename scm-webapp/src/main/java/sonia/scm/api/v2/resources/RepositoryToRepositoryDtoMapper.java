@@ -93,11 +93,7 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     }
     try (RepositoryService repositoryService = serviceFactory.create(repository)) {
       if (RepositoryPermissions.pull(repository).isPermitted()) {
-        Stream<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
-        if (Authentications.isAuthenticatedSubjectAnonymous()) {
-          supportedProtocols = supportedProtocols.filter(p -> !p.getType().equals("ssh"));
-        }
-        List<Link> protocolLinks = supportedProtocols
+        List<Link> protocolLinks = repositoryService.getSupportedProtocols()
           .map(this::createProtocolLink)
           .collect(toList());
         linksBuilder.array(protocolLinks);
