@@ -50,7 +50,13 @@ public class GitContext implements Closeable, RepositoryProvider
   private static final Logger logger =
     LoggerFactory.getLogger(GitContext.class);
 
-  private final GitConfig config;
+  public GitContext(File directory, Repository repository, GitRepositoryConfigStoreProvider storeProvider, GitConfig config)
+  {
+    this.directory = directory;
+    this.repository = repository;
+    this.storeProvider = storeProvider;
+    this.config = config;
+  }
 
   //~--- methods --------------------------------------------------------------
 
@@ -109,16 +115,12 @@ public class GitContext implements Closeable, RepositoryProvider
     }
   }
 
-  public GitContext(File directory, Repository repository, GitRepositoryConfigStoreProvider storeProvider, GitConfig config)
-  {
-    this.directory = directory;
-    this.repository = repository;
-    this.storeProvider = storeProvider;
-    this.config = config;
-  }
-
   void setConfig(GitRepositoryConfig newConfig) {
     storeProvider.get(repository).set(newConfig);
+  }
+
+  GitConfig getGlobalConfig() {
+    return config;
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -127,10 +129,7 @@ public class GitContext implements Closeable, RepositoryProvider
   private final File directory;
   private final Repository repository;
   private final GitRepositoryConfigStoreProvider storeProvider;
-
-  GitConfig getGlobalConfig() {
-    return config;
-  }
+  private final GitConfig config;
 
   /** Field description */
   private org.eclipse.jgit.lib.Repository gitRepository;
