@@ -198,7 +198,7 @@ public final class SvnUtil
                             Person.toPerson(entry.getAuthor()),
                             entry.getMessage());
 
-    if (revision > 0)
+    if (revision > 1)
     {
       changeset.getParents().add(String.valueOf(revision - 1));
     }
@@ -232,6 +232,7 @@ public final class SvnUtil
    *
    * @return
    */
+  @SuppressWarnings("java:S1149") // we can not use StringBuild SVNXMLUtil requires StringBuffer
   public static String createErrorBody(SVNErrorCode errorCode)
   {
     StringBuffer xmlBuffer = new StringBuffer();
