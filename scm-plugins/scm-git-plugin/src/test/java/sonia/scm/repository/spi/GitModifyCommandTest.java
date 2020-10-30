@@ -24,55 +24,26 @@
 
 package sonia.scm.repository.spi;
 
-import com.github.sdorra.shiro.ShiroRule;
-import com.github.sdorra.shiro.SubjectAware;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.errors.CorruptObjectException;
-import org.eclipse.jgit.lib.GpgSigner;
 import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectReader;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
-import sonia.scm.repository.work.WorkdirProvider;
-import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static sonia.scm.repository.spi.GitRepositoryConfigStoreProviderTestUtil.createGitRepositoryConfigStoreProvider;
 
-@SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini", username = "admin", password = "secret")
-public class GitModifyCommandTest extends AbstractGitCommandTestBase {
-
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
-  @Rule
-  public BindTransportProtocolRule transportProtocolRule = new BindTransportProtocolRule();
-  @Rule
-  public ShiroRule shiro = new ShiroRule();
-
-  private final LfsBlobStoreFactory lfsBlobStoreFactory = mock(LfsBlobStoreFactory.class);
-
-  @BeforeClass
-  public static void setSigner() {
-    GpgSigner.setDefault(new GitTestHelper.SimpleGpgSigner());
-  }
+public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test
   public void shouldCreateCommit() throws IOException, GitAPIException {
@@ -355,35 +326,5 @@ public class GitModifyCommandTest extends AbstractGitCommandTestBase {
       RevCommit lastCommit = getLastCommit(git);
       assertThat(lastCommit.getRawGpgSignature()).isNullOrEmpty();
     }
-  }
-
-  private void assertInTree(TreeAssertions assertions) throws IOException, GitAPIException {
-    try (Git git = new Git(createContext().open())) {
-      RevCommit lastCommit = getLastCommit(git);
-      try (RevWalk walk = new RevWalk(git.getRepository())) {
-        RevCommit commit = walk.parseCommit(lastCommit);
-        ObjectId treeId = commit.getTree().getId();
-        try (ObjectReader reader = git.getRepository().newObjectReader()) {
-          assertions.checkAssertions(new CanonicalTreeParser(null, reader, treeId));
-        }
-      }
-    }
-  }
-
-  private RevCommit getLastCommit(Git git) throws GitAPIException {
-    return git.log().setMaxCount(1).call().iterator().next();
-  }
-
-  private GitModifyCommand createCommand() {
-    return new GitModifyCommand(
-      createContext(),
-      new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())),
-      lfsBlobStoreFactory,
-      createGitRepositoryConfigStoreProvider());
-  }
-
-  @FunctionalInterface
-  private interface TreeAssertions {
-    void checkAssertions(CanonicalTreeParser treeParser) throws CorruptObjectException;
   }
 }

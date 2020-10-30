@@ -36,7 +36,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class GitRepositoryConfigStoreProviderTestUtil {
+class GitRepositoryConfigStoreProviderTestUtil {
 
   static GitRepositoryConfigStoreProvider createGitRepositoryConfigStoreProvider() {
     GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider = mock(GitRepositoryConfigStoreProvider.class);
