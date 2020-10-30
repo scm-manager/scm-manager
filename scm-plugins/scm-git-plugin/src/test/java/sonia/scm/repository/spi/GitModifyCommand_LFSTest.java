@@ -50,6 +50,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static sonia.scm.repository.spi.GitRepositoryConfigStoreProviderTestUtil.createGitRepositoryConfigStoreProvider;
 
 @SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini", username = "admin", password = "secret")
 public class GitModifyCommand_LFSTest extends AbstractGitCommandTestBase {
@@ -131,7 +132,11 @@ public class GitModifyCommand_LFSTest extends AbstractGitCommandTestBase {
   }
 
   private GitModifyCommand createCommand() {
-    return new GitModifyCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())), lfsBlobStoreFactory);
+    return new GitModifyCommand(
+      createContext(),
+      new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())),
+      lfsBlobStoreFactory,
+      createGitRepositoryConfigStoreProvider());
   }
 
   @Override

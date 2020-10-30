@@ -29,14 +29,18 @@ import com.github.sdorra.shiro.SubjectAware;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.CorruptObjectException;
+import org.eclipse.jgit.lib.GpgSigner;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
@@ -45,9 +49,11 @@ import sonia.scm.web.lfs.LfsBlobStoreFactory;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
+import static sonia.scm.repository.spi.GitRepositoryConfigStoreProviderTestUtil.createGitRepositoryConfigStoreProvider;
 
 @SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini", username = "admin", password = "secret")
 public class GitModifyCommand_withEmptyRepositoryTest extends AbstractGitCommandTestBase {
@@ -60,6 +66,11 @@ public class GitModifyCommand_withEmptyRepositoryTest extends AbstractGitCommand
   public ShiroRule shiro = new ShiroRule();
 
   private final LfsBlobStoreFactory lfsBlobStoreFactory = mock(LfsBlobStoreFactory.class);
+
+  @BeforeClass
+  public static void setSigner() {
+    GpgSigner.setDefault(new GitTestHelper.SimpleGpgSigner());
+  }
 
   @Test
   public void shouldCreateNewFileInEmptyRepository() throws IOException, GitAPIException {
@@ -77,6 +88,44 @@ public class GitModifyCommand_withEmptyRepositoryTest extends AbstractGitCommand
     TreeAssertions assertions = canonicalTreeParser -> assertThat(canonicalTreeParser.findFile("new_file")).isTrue();
 
     assertInTree(assertions);
+  }
+
+  @Test
+  public void shouldCreateCommitOnMasterByDefault() throws IOException, GitAPIException {
+    createContext().getGlobalConfig().setDefaultBranch("");
+
+    executeModifyCommand();
+
+    try (Git git = new Git(createContext().open())) {
+      List<Ref> branches = git.branchList().call();
+      assertThat(branches).extracting("name").containsExactly("refs/heads/master");
+    }
+  }
+
+  @Test
+  public void shouldCreateCommitWithConfiguredDefaultBranch() throws IOException, GitAPIException {
+    createContext().getGlobalConfig().setDefaultBranch("main");
+
+    executeModifyCommand();
+
+    try (Git git = new Git(createContext().open())) {
+      List<Ref> branches = git.branchList().call();
+      assertThat(branches).extracting("name").containsExactly("refs/heads/main");
+    }
+  }
+
+  @Test
+  public void shouldCreateCommitWithBranchFromRequestIfPresent() throws IOException, GitAPIException {
+    createContext().getGlobalConfig().setDefaultBranch("main");
+
+    ModifyCommandRequest request = createRequest();
+    request.setBranch("different");
+    createCommand().execute(request);
+
+    try (Git git = new Git(createContext().open())) {
+      List<Ref> branches = git.branchList().call();
+      assertThat(branches).extracting("name").containsExactly("refs/heads/different");
+    }
   }
 
   @Override
@@ -97,12 +146,30 @@ public class GitModifyCommand_withEmptyRepositoryTest extends AbstractGitCommand
     }
   }
 
-  private RevCommit getLastCommit(Git git) throws GitAPIException {
-    return git.log().setMaxCount(1).call().iterator().next();
+  private RevCommit getLastCommit(Git git) throws GitAPIException, IOException {
+    return git.log().setMaxCount(1).all().call().iterator().next();
+  }
+
+  private void executeModifyCommand() throws IOException {
+    createCommand().execute(createRequest());
+  }
+
+  private ModifyCommandRequest createRequest() throws IOException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("initial commit");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile, false));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+    return request;
   }
 
   private GitModifyCommand createCommand() {
-    return new GitModifyCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())), lfsBlobStoreFactory);
+    return new GitModifyCommand(
+      createContext(),
+      new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())),
+      lfsBlobStoreFactory,
+      createGitRepositoryConfigStoreProvider());
   }
 
   @FunctionalInterface
