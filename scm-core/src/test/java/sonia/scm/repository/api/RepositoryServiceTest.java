@@ -24,7 +24,15 @@
 
 package sonia.scm.repository.api;
 
-import org.junit.Test;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.HttpScmProtocol;
@@ -42,7 +50,9 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.util.IterableUtil.sizeOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 public class RepositoryServiceTest {
 
   private final RepositoryServiceProvider provider = mock(RepositoryServiceProvider.class);
@@ -50,8 +60,22 @@ public class RepositoryServiceTest {
 
   private final EMail eMail = new EMail(new ScmConfiguration());
 
+  @Mock
+  private Subject subject;
+
+  @BeforeEach
+  void bindSubject() {
+    ThreadContext.bind(subject);
+  }
+
+  @AfterEach
+  void unbindSubject() {
+    ThreadContext.unbindSubject();
+  }
+
   @Test
   public void shouldReturnMatchingProtocolsFromProvider() {
+    when(subject.getPrincipal()).thenReturn("Hitchhiker");
     RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
     Stream<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
 
@@ -59,7 +83,17 @@ public class RepositoryServiceTest {
   }
 
   @Test
+  public void shouldFilterOutNonAnonymousEnabledProtocolsForAnonymousUser() {
+    when(subject.getPrincipal()).thenReturn(SCMContext.USER_ANONYMOUS);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Stream.of(new DummyScmProtocolProvider(), new DummyScmProtocolProvider(false)).collect(Collectors.toSet()), null, eMail);
+    Stream<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
+
+    assertThat(sizeOf(supportedProtocols.collect(Collectors.toList()))).isEqualTo(1);
+  }
+
+  @Test
   public void shouldFindKnownProtocol() {
+    when(subject.getPrincipal()).thenReturn("Hitchhiker");
     RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
 
     HttpScmProtocol protocol = repositoryService.getProtocol(HttpScmProtocol.class);
@@ -69,22 +103,43 @@ public class RepositoryServiceTest {
 
   @Test
   public void shouldFailForUnknownProtocol() {
+    when(subject.getPrincipal()).thenReturn("Hitchhiker");
     RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
 
     assertThrows(IllegalArgumentException.class, () -> repositoryService.getProtocol(UnknownScmProtocol.class));
   }
 
   private static class DummyHttpProtocol extends HttpScmProtocol {
-    public DummyHttpProtocol(Repository repository) {
+
+    private final boolean anonymousEnabled;
+
+    public DummyHttpProtocol(Repository repository, boolean anonymousEnabled) {
       super(repository, "");
+      this.anonymousEnabled = anonymousEnabled;
     }
 
     @Override
     public void serve(HttpServletRequest request, HttpServletResponse response, Repository repository, ServletConfig config) {
     }
+
+    @Override
+    public boolean isAnonymousEnabled() {
+      return anonymousEnabled;
+    }
   }
 
   private static class DummyScmProtocolProvider implements ScmProtocolProvider {
+
+    private final boolean anonymousEnabled;
+
+    public DummyScmProtocolProvider() {
+      this(true);
+    }
+
+    public DummyScmProtocolProvider(boolean anonymousEnabled) {
+      this.anonymousEnabled = anonymousEnabled;
+    }
+
     @Override
     public String getType() {
       return "git";
@@ -92,9 +147,10 @@ public class RepositoryServiceTest {
 
     @Override
     public ScmProtocol get(Repository repository) {
-      return new DummyHttpProtocol(repository);
+      return new DummyHttpProtocol(repository, anonymousEnabled);
     }
   }
 
-  private interface UnknownScmProtocol extends ScmProtocol {}
+  private interface UnknownScmProtocol extends ScmProtocol {
+  }
 }
