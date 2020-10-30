@@ -79,7 +79,7 @@ class GitConfigurationForm extends React.Component<Props, State> {
   };
 
   isValidDefaultBranch = () => {
-    return validator.isNameValid(this.state.defaultBranch);
+    return validator.isBranchValid(this.state.defaultBranch);
   };
 
   render() {
