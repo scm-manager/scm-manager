@@ -39,14 +39,12 @@ import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.ScmProtocol;
-import sonia.scm.security.Authentications;
 import sonia.scm.web.EdisonHalAppender;
 import sonia.scm.web.api.RepositoryToHalMapper;
 
 import javax.inject.Inject;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Stream;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
