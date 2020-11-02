@@ -123,6 +123,14 @@ class ResourceLinks {
       return userLinkBuilder.method("getUserResource").parameters(name).method("overwritePassword").parameters().href();
     }
 
+    public String toExternal(String name) {
+      return userLinkBuilder.method("getUserResource").parameters(name).method("toExternal").parameters().href();
+    }
+
+    public String toInternal(String name) {
+      return userLinkBuilder.method("getUserResource").parameters(name).method("toInternal").parameters().href();
+    }
+
     public String publicKeys(String name) {
       return publicKeyLinkBuilder.method("findAll").parameters(name).href();
     }

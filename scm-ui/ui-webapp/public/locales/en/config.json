@@ -49,6 +49,7 @@
     "release-feed-url": "Release Feed URL",
     "mail-domain-name": "Fallback Mail Domain Name",
     "enabled-xsrf-protection": "Enabled XSRF Protection",
+    "enabled-user-converter": "Enabled User Converter",
     "namespace-strategy": "Namespace Strategy",
     "login-info-url": "Login Info URL"
   },
@@ -81,6 +82,7 @@
     "proxyUserHelpText": "The username for the proxy server authentication.",
     "proxyExcludesHelpText": "Glob patterns for hostnames, which should be excluded from proxy settings.",
     "enableXsrfProtectionHelpText": "Enable XSRF Cookie Protection. Note: This feature is still experimental.",
+    "enabledUserConverterHelpText": "Enable User Converter. Internal users will automatically be converted to external on their first login using an external system.",
     "nameSpaceStrategyHelpText": "The namespace strategy.",
     "loginInfoUrlHelpText": "URL to login information (plugin and feature tips at login page). If this is omitted, no login information will be displayed."
   }

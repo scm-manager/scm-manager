@@ -6,15 +6,20 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Added
+- Automatic user converter for external users ([#1380](https://github.com/scm-manager/scm-manager/pull/1380))
+
 ### Fixed
+- Internal server error for git sub modules without tree object ([#1397](https://github.com/scm-manager/scm-manager/pull/1397))
 - Do not expose subversion commit with id 0 ([#1395](https://github.com/scm-manager/scm-manager/pull/1395))
 - Disable cloning repositories via ssh for anonymous users ([#1403](https://github.com/scm-manager/scm-manager/pull/1403))
+- SVN diff with property changes ([#1400](https://github.com/scm-manager/scm-manager/pull/1400))
 
 ## [2.8.0] - 2020-10-27
 ### Added
 - Generation of email addresses for users, where none is configured ([#1370](https://github.com/scm-manager/scm-manager/pull/1370))
-- Plugins can now expose ui components to be shared with other plugins ([#1382](https://github.com/scm-manager/scm-manager/pull/1382))
 - Source code fullscreen view ([#1376](https://github.com/scm-manager/scm-manager/pull/1376))
+- Plugins can now expose ui components to be shared with other plugins ([#1382](https://github.com/scm-manager/scm-manager/pull/1382))
 
 ### Changed
 - Reduce logging of ApiTokenRealm ([#1385](https://github.com/scm-manager/scm-manager/pull/1385))

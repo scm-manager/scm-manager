@@ -32,6 +32,15 @@ Ist der anonyme Zugriff nur für Protokoll aktiviert, können die REST API und d
 
 Beispiel: Falls der anonyme Zugriff aktiviert ist und der "_anonymous"-Benutzer volle Zugriffsrechte auf ein bestimmtes Git-Repository hat, kann jeder über eine Kommandozeile mit den klassischen Git-Befehlen ohne Zugangsdaten auf dieses Repository zugreifen. Zugriffe über SSH werden aktuell nicht unterstützt.
 
+#### Release Feed Url
+Die URL des RSS Release Feed des SCM-Managers. Darüber wird über die neue SCM-Manager Version informiert. Um diese Funktion zu deaktivieren lassen Sie dieses Feld leer.
+
+#### User converter
+Ist der Benutzer Konverter aktiviert, werden alle internen Benutzer beim Einloggen über ein externes System automatisch zu externen Benutzern konvertiert. Nach dem Konvertieren können sich die Benutzer nicht mehr mit dem lokalen SCM-Manager Passwort einloggen, sondern nur noch über das Fremdsystem.
+
+#### Fallback E-Mail Domain Name
+Dieser Domain Name wird genutzt, wenn für einen User eine E-Mail-Adresse benötigt wird, für den keine hinterlegt ist. Diese Domain wird nicht zum Versenden von E-Mails genutzt und auch keine anderweitige Verbindung aufgebaut.
+
 #### Anmeldeversuche
 Es lässt sich konfigurieren wie häufig sich ein Benutzer falsch anmelden darf, bevor dessen Benutzerkonto gesperrt wird. Der Zähler für fehlerhafte Anmeldeversuche wird nach einem erfolgreichen Login zurückgesetzt. Man kann dieses Feature abschalten, indem man "-1" in die Konfiguration einträgt.
 

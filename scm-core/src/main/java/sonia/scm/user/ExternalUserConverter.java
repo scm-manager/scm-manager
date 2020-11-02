@@ -21,30 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { User } from "@scm-manager/ui-types";
-import { NavLink } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
-  user: User;
-  passwordUrl: string;
-};
+package sonia.scm.user;
 
-class ChangePasswordNavLink extends React.Component<Props> {
-  render() {
-    const { t, passwordUrl } = this.props;
+import sonia.scm.plugin.ExtensionPoint;
 
-    if (!this.hasPermissionToSetPassword()) {
-      return null;
-    }
-    return <NavLink to={passwordUrl} label={t("singleUser.menu.setPasswordNavLink")} testId="user-password-link"/>;
-  }
+/**
+ * The external user converter can be used to modify users
+ * which are provided by external systems before creation in SCM-Manager.
+ * The implementations will be called in the {@link sonia.scm.security.SyncingRealmHelper}
+ * @since 2.9.0
+ */
+@ExtensionPoint
+public interface ExternalUserConverter {
 
-  hasPermissionToSetPassword = () => {
-    const { user } = this.props;
-    return user._links.password;
-  };
+  /**
+   * Returns the converted user.
+   * @return converted user
+   */
+  User convert(User user);
 }
-
-export default withTranslation("users")(ChangePasswordNavLink);
