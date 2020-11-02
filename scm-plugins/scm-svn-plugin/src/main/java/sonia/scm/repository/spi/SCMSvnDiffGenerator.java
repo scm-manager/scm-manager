@@ -391,8 +391,8 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
       SVNPropertyValue newValue = diff.getSVNPropertyValue(name);
 
       try {
-        byte[] originalValueBytes = getPropertyAsBytes(originalValue, getEncoding());
-        byte[] newValueBytes = getPropertyAsBytes(newValue, getEncoding());
+        byte[] originalValueBytes = getPropertyAsBytes(originalValue, getEncoding(), true);
+        byte[] newValueBytes = getPropertyAsBytes(newValue, getEncoding(), true);
 
         if (originalValueBytes == null) {
           originalValueBytes = new byte[0];
@@ -1190,6 +1190,10 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
   }
 
   private byte[] getPropertyAsBytes(SVNPropertyValue value, String encoding) {
+    return getPropertyAsBytes(value, encoding, false);
+  }
+
+  private byte[] getPropertyAsBytes(SVNPropertyValue value, String encoding, boolean replaceBinary) {
     if (value == null) {
       return null;
     }
@@ -1200,7 +1204,11 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
         return value.getString().getBytes();
       }
     }
-    return value.getBytes();
+    if (replaceBinary) {
+      return String.format("Binary value (%s bytes)", value.getBytes().length).getBytes();
+    } else {
+      return value.getBytes();
+    }
   }
 
   private void displayMergeInfoDiff(OutputStream outputStream, String oldValue, String newValue) throws SVNException, IOException {

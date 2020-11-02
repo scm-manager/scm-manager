@@ -43,11 +43,15 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Base64;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class SvnDiffCommandTest {
+
+  // the smallest gif of the world
+  private static final String GIF = "R0lGODlhAQABAIABAP///wAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
 
   private final SVNClientManager client = SVNClientManager.newInstance();
 
@@ -85,8 +89,6 @@ class SvnDiffCommandTest {
 
     String diff = gitDiff("1");
 
-    System.out.println(diff);
-
     assertThat(diff).isEqualToIgnoringNewLines(String.join("\n",
       "diff --git a/ b/",
       "--- a/",
@@ -114,8 +116,6 @@ class SvnDiffCommandTest {
 
     String diff = gitDiff("2");
 
-    System.out.println(diff);
-
     assertThat(diff).isEqualToIgnoringNewLines(String.join("\n",
       "diff --git a/ b/",
       "--- a/",
@@ -124,6 +124,26 @@ class SvnDiffCommandTest {
       " # property scm:spaceship has changed",
       "-Razor Crest",
       "+Heart Of Gold",
+      "\\ No newline at end of property"
+    ));
+  }
+
+  @Test
+  void shouldCreateGitCompatibleDiffForBinaryProps() throws SVNException, IOException {
+    createRepository();
+
+    byte[] gif = Base64.getDecoder().decode(GIF);
+    commitProperty("scm:gif", gif);
+
+    String diff = gitDiff("1");
+
+    assertThat(diff).isEqualToIgnoringNewLines(String.join("\n",
+      "diff --git a/ b/",
+      "--- a/",
+      "+++ b/",
+      "@@ -0,0 +1 @@",
+      " # property scm:gif has changed",
+      "+Binary value (43 bytes)",
       "\\ No newline at end of property"
     ));
   }
@@ -145,6 +165,15 @@ class SvnDiffCommandTest {
   }
 
   private void commitProperty(String name, String value) throws SVNException {
+    setProperty(name, SVNPropertyValue.create(value));
+    commit("set property " + name + " = " + value);
+  }
+
+  private void commitProperty(String name, byte[] value) throws SVNException {
+    commitProperty(name, SVNPropertyValue.create(name, value));
+  }
+
+  private void commitProperty(String name, SVNPropertyValue value) throws SVNException {
     setProperty(name, value);
     commit("set property " + name + " = " + value);
   }
@@ -162,11 +191,11 @@ class SvnDiffCommandTest {
     );
   }
 
-  private void setProperty(String name, String value) throws SVNException {
+  private void setProperty(String name, SVNPropertyValue value) throws SVNException {
     client.getWCClient().doSetProperty(
       workingCopy,
       name,
-      SVNPropertyValue.create(value),
+      value,
       true,
       SVNDepth.UNKNOWN,
       null,
@@ -176,7 +205,7 @@ class SvnDiffCommandTest {
 
   private void commitProperties(Map<String, String> properties) throws SVNException {
     for (Map.Entry<String, String> e : properties.entrySet()) {
-      setProperty(e.getKey(), e.getValue());
+      setProperty(e.getKey(), SVNPropertyValue.create(e.getValue()));
     }
     commit("set " + properties.size() + " properties");
   }
