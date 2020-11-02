@@ -84,7 +84,7 @@ public class HttpProtocolServlet extends HttpServlet {
         response.setStatus(HttpStatus.SC_BAD_REQUEST);
       }
     } else {
-      log.trace("dispatch browser request for user agent {}", userAgent);
+      log.trace("dispatch non-scm-client request for user agent {}", userAgent);
       dispatcher.dispatch(request, response, request.getRequestURI());
     }
   }

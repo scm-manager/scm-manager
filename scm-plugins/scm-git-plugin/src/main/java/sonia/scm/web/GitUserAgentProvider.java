@@ -44,36 +44,30 @@ public class GitUserAgentProvider implements UserAgentProvider {
   private static final String PREFIX_JGIT = "jgit/";
 
   @VisibleForTesting
-  static final UserAgent JGIT = UserAgent.builder("JGit")
+  static final UserAgent JGIT = UserAgent.scmClient("JGit")
           .browser(false)
-          .scmClient(true)
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
   
   private static final String PREFIX_REGULAR = "git/";
   
   @VisibleForTesting
-  static final UserAgent GIT = UserAgent.builder("Git")
+  static final UserAgent GIT = UserAgent.scmClient("Git")
           .browser(false)
-          .scmClient(true)
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
   
   private static final String PREFIX_LFS = "git-lfs/";
 
   @VisibleForTesting
-  static final UserAgent GIT_LFS = UserAgent.builder("Git Lfs")
-          .browser(false)
-          .scmClient(true)
+  static final UserAgent GIT_LFS = UserAgent.scmClient("Git Lfs")
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
 
   private static final String SUFFIX_MSYSGIT = "msysgit";
   
   @VisibleForTesting
-  static final UserAgent MSYSGIT = UserAgent.builder("msysGit")
-          .browser(false)
-          .scmClient(true)
+  static final UserAgent MSYSGIT = UserAgent.scmClient("msysGit")
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
 

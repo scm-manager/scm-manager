@@ -62,7 +62,7 @@ public final class UserAgentParser
 
   /** unknown UserAgent */
   @VisibleForTesting
-  static final UserAgent UNKNOWN = UserAgent.builder("UNKNOWN").build();
+  static final UserAgent UNKNOWN = UserAgent.other("UNKNOWN").build();
 
   /** logger */
   private static final Logger logger =
