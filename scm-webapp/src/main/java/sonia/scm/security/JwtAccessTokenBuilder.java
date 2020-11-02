@@ -156,7 +156,7 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
   @Override
   public JwtAccessToken build() {
     if (SecurityUtils.getSubject().getPrincipals().getRealmNames().contains(ApiKeyRealm.NAME)) {
-      throw new AuthorizationException("Cannot create access token for api keys");
+      scope = Scope.valueOf(SecurityUtils.getSubject().getPrincipals().oneByType(Scope.class));
     }
     String id = keyGenerator.createKey();
 
