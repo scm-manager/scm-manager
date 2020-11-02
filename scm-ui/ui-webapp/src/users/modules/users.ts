@@ -56,7 +56,7 @@ export const DELETE_USER_PENDING = `${DELETE_USER}_${types.PENDING_SUFFIX}`;
 export const DELETE_USER_SUCCESS = `${DELETE_USER}_${types.SUCCESS_SUFFIX}`;
 export const DELETE_USER_FAILURE = `${DELETE_USER}_${types.FAILURE_SUFFIX}`;
 
-const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
+export const CONTENT_TYPE_USER = "application/vnd.scmm-user+json;v=2";
 
 // TODO i18n for error messages
 

@@ -27,10 +27,17 @@ import { withRouter } from "react-router-dom";
 import UserForm from "../components/UserForm";
 import DeleteUser from "./DeleteUser";
 import { User } from "@scm-manager/ui-types";
-import { getModifyUserFailure, isModifyUserPending, modifyUser, modifyUserReset } from "../modules/users";
+import {
+  fetchUserByLink,
+  getModifyUserFailure,
+  isModifyUserPending,
+  modifyUser,
+  modifyUserReset
+} from "../modules/users";
 import { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import { compose } from "redux";
+import UserConverter from "../components/UserConverter";
 
 type Props = {
   loading: boolean;
@@ -39,6 +46,7 @@ type Props = {
   // dispatch functions
   modifyUser: (user: User, callback?: () => void) => void;
   modifyUserReset: (p: User) => void;
+  fetchUser: (user: User) => void;
 
   // context objects
   user: User;
@@ -64,7 +72,9 @@ class EditUser extends React.Component<Props> {
     return (
       <div>
         <ErrorNotification error={error} />
-        <UserForm submitForm={user => this.modifyUser(user)} user={user} loading={loading} />
+        <UserForm submitForm={this.modifyUser} user={user} loading={loading} />
+        <hr />
+        <UserConverter user={user} fetchUser={this.props.fetchUser} />
         <DeleteUser user={user} />
       </div>
     );
@@ -87,6 +97,9 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     modifyUserReset: (user: User) => {
       dispatch(modifyUserReset(user));
+    },
+    fetchUser: (user: User) => {
+      dispatch(fetchUserByLink(user));
     }
   };
 };
