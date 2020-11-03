@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Fixed
 - Do not expose subversion commit with id 0 ([#1395](https://github.com/scm-manager/scm-manager/pull/1395))
+- Repositories can now be cloned with api keys ([#1407](https://github.com/scm-manager/scm-manager/pull/1407))
 
 ## [2.8.0] - 2020-10-27
 ### Added
