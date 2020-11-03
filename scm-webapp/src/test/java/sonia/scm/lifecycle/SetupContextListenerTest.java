@@ -197,7 +197,7 @@ class SetupContextListenerTest {
     authenticated.setDescription(AUTHENTICATED_GROUP_DESCRIPTION);
     authenticated.setExternal(true);
 
-    verify(groupManager, times(1)).create(createAuthenticatedGroup());
+    verify(groupManager, times(1)).create(authenticated);
   }
 
   @Test

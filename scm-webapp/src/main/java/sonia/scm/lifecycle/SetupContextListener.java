@@ -136,6 +136,7 @@ public class SetupContextListener implements ServletContextListener {
     private void createAuthenticatedGroup() {
       Group authenticated = new Group("xml", AUTHENTICATED);
       authenticated.setDescription(AUTHENTICATED_GROUP_DESCRIPTION);
+      authenticated.setExternal(true);
       groupManager.create(authenticated);
     }
   }
