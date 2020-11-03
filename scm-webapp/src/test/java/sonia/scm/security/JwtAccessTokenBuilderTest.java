@@ -146,7 +146,7 @@ class JwtAccessTokenBuilderTest {
     }
 
     @Test
-    void testRejectedRequest() {
+    void testSimpleRequest() {
       JwtAccessTokenBuilder builder = factory.create().subject("dent");
       final JwtAccessToken accessToken = builder.build();
       assertThat(accessToken).isNotNull();
