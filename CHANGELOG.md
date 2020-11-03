@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Internal server error for git sub modules without tree object ([#1397](https://github.com/scm-manager/scm-manager/pull/1397))
 - Do not expose subversion commit with id 0 ([#1395](https://github.com/scm-manager/scm-manager/pull/1395))
+- Disable cloning repositories via ssh for anonymous users ([#1403](https://github.com/scm-manager/scm-manager/pull/1403))
 - SVN diff with property changes ([#1400](https://github.com/scm-manager/scm-manager/pull/1400))
 - Branches link in repository overview ([#1404](https://github.com/scm-manager/scm-manager/pull/1404))
 
