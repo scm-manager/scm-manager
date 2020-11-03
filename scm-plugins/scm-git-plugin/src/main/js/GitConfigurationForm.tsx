@@ -24,12 +24,13 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Links } from "@scm-manager/ui-types";
-import { InputField, Checkbox } from "@scm-manager/ui-components";
+import { InputField, Checkbox, validation as validator } from "@scm-manager/ui-components";
 
 type Configuration = {
   repositoryDirectory?: string;
   gcExpression?: string;
   nonFastForwardDisallowed: boolean;
+  defaultBranch: string;
   _links: Links;
 };
 
@@ -68,8 +69,21 @@ class GitConfigurationForm extends React.Component<Props, State> {
     );
   };
 
+  onDefaultBranchChange = (value: string) => {
+    this.setState(
+      {
+        defaultBranch: value
+      },
+      () => this.props.onConfigurationChange(this.state, this.isValidDefaultBranch())
+    );
+  };
+
+  isValidDefaultBranch = () => {
+    return validator.isBranchValid(this.state.defaultBranch);
+  };
+
   render() {
-    const { gcExpression, nonFastForwardDisallowed } = this.state;
+    const { gcExpression, nonFastForwardDisallowed, defaultBranch } = this.state;
     const { readOnly, t } = this.props;
 
     return (
@@ -89,6 +103,16 @@ class GitConfigurationForm extends React.Component<Props, State> {
           checked={nonFastForwardDisallowed}
           onChange={this.onNonFastForwardDisallowed}
           disabled={readOnly}
+        />
+        <InputField
+          name="defaultBranch"
+          label={t("scm-git-plugin.config.defaultBranch")}
+          helpText={t("scm-git-plugin.config.defaultBranchHelpText")}
+          value={defaultBranch}
+          onChange={this.onDefaultBranchChange}
+          disabled={readOnly}
+          validationError={!this.isValidDefaultBranch()}
+          errorMessage={t("scm-git-plugin.config.defaultBranchValidationError")}
         />
       </>
     );

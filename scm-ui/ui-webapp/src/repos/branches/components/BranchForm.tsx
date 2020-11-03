@@ -124,15 +124,13 @@ class BranchForm extends React.Component<Props, State> {
 
   handleSourceChange = (source: string) => {
     this.setState({
-      ...this.state,
       source
     });
   };
 
   handleNameChange = (name: string) => {
     this.setState({
-      nameValidationError: !validator.isNameValid(name),
-      ...this.state,
+      nameValidationError: !validator.isBranchValid(name),
       name
     });
   };

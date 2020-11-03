@@ -28,6 +28,12 @@ export const isNameValid = (name: string) => {
   return nameRegex.test(name);
 };
 
+export const branchRegex = /^[\w-,;\]{}@&+=$#`|<>]([\w-,;\]{}@&+=$#`|<>/.]*[\w-,;\]{}@&+=$#`|<>])?$/;
+
+export const isBranchValid = (name: string) => {
+  return branchRegex.test(name);
+};
+
 const mailRegex = /^[ -~]+@[A-Za-z0-9][\w\-.]*\.[A-Za-z0-9][A-Za-z0-9-]+$/;
 
 export const isMailValid = (mail: string) => {

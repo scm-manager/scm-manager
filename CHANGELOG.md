@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Automatic user converter for external users ([#1380](https://github.com/scm-manager/scm-manager/pull/1380))
+- The name of the initial git branch can be configured and is set to `main` by default ([#1399](https://github.com/scm-manager/scm-manager/pull/1399))
 
 ### Fixed
 - Internal server error for git sub modules without tree object ([#1397](https://github.com/scm-manager/scm-manager/pull/1397))

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -33,7 +33,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
- *
  * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "config")
@@ -49,6 +48,9 @@ public class GitConfig extends RepositoryConfig {
   @XmlElement(name = "disallow-non-fast-forward")
   private boolean nonFastForwardDisallowed;
 
+  @XmlElement(name = "default-branch")
+  private String defaultBranch = "main";
+
   public String getGcExpression() {
     return gcExpression;
   }
@@ -63,6 +65,14 @@ public class GitConfig extends RepositoryConfig {
 
   public void setNonFastForwardDisallowed(boolean nonFastForwardDisallowed) {
     this.nonFastForwardDisallowed = nonFastForwardDisallowed;
+  }
+
+  public String getDefaultBranch() {
+    return defaultBranch;
+  }
+
+  public void setDefaultBranch(String defaultBranch) {
+    this.defaultBranch = defaultBranch;
   }
 
   @Override
