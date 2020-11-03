@@ -129,7 +129,7 @@ public class SetupContextListener implements ServletContextListener {
     }
 
     private boolean authenticatedGroupDoesNotExists() {
-      return groupManager == null || groupManager.get(AUTHENTICATED) == null;
+      return groupManager.get(AUTHENTICATED) == null;
     }
 
     private void createAuthenticatedGroup() {
