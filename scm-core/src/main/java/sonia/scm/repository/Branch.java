@@ -21,18 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import sonia.scm.Validateable;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.regex.Pattern;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -44,8 +46,13 @@ import java.io.Serializable;
  */
 @XmlRootElement(name = "branch")
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class Branch implements Serializable
+public final class Branch implements Serializable, Validateable
 {
+
+  private static final String VALID_CHARACTERS_AT_START_AND_END = "\\w-,;\\]{}@&+=$#`|<>";
+  private static final String VALID_CHARACTERS = VALID_CHARACTERS_AT_START_AND_END + "/.";
+  public static final String VALID_BRANCH_NAMES = "[" + VALID_CHARACTERS_AT_START_AND_END + "]([" + VALID_CHARACTERS + "]*[" + VALID_CHARACTERS_AT_START_AND_END + "])?";
+  public static final Pattern VALID_BRANCH_NAME_PATTERN = Pattern.compile(VALID_BRANCH_NAMES);
 
   /** Field description */
   private static final long serialVersionUID = -4602244691711222413L;
@@ -82,6 +89,11 @@ public final class Branch implements Serializable
   }
 
   //~--- methods --------------------------------------------------------------
+
+  @Override
+  public boolean isValid() {
+    return VALID_BRANCH_NAME_PATTERN.matcher(name).matches();
+  }
 
   /**
    * {@inheritDoc}

@@ -25,24 +25,23 @@
 package sonia.scm.repository.spi;
 
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
-import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.Repository;
+import sonia.scm.store.ConfigurationStore;
+import sonia.scm.store.InMemoryConfigurationStore;
 
-import javax.inject.Inject;
+import java.util.HashMap;
 
-class GitContextFactory {
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
-  private final GitRepositoryHandler handler;
-  private final GitRepositoryConfigStoreProvider storeProvider;
+class GitRepositoryConfigStoreProviderTestUtil {
 
-  @Inject
-  GitContextFactory(GitRepositoryHandler handler, GitRepositoryConfigStoreProvider storeProvider) {
-    this.handler = handler;
-    this.storeProvider = storeProvider;
+  static GitRepositoryConfigStoreProvider createGitRepositoryConfigStoreProvider() {
+    GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider = mock(GitRepositoryConfigStoreProvider.class);
+    HashMap<String, ConfigurationStore<GitRepositoryConfig>> storeMap = new HashMap<>();
+    when(gitRepositoryConfigStoreProvider.get(any())).thenAnswer(invocation -> storeMap.computeIfAbsent(invocation.getArgument(0, Repository.class).getId(), id -> new InMemoryConfigurationStore<>()));
+    return gitRepositoryConfigStoreProvider;
   }
-
-  GitContext create(Repository repository) {
-    return new GitContext(handler.getDirectory(repository.getId()), repository, storeProvider, handler.getConfig());
-  }
-
 }

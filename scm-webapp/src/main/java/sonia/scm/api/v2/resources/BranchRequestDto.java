@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import lombok.Getter;
@@ -31,7 +31,7 @@ import javax.validation.constraints.NotEmpty;
 
 import javax.validation.constraints.Pattern;
 
-import static sonia.scm.api.v2.resources.BranchDto.VALID_BRANCH_NAMES;
+import static sonia.scm.repository.Branch.VALID_BRANCH_NAMES;
 
 @Getter
 @Setter

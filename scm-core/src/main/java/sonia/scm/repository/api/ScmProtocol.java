@@ -40,4 +40,11 @@ public interface ScmProtocol {
    * The URL to access the repository providing this protocol.
    */
   String getUrl();
+
+  /**
+   * Whether the protocol can be used as an anonymous user.
+   */
+  default boolean isAnonymousEnabled() {
+    return true;
+  }
 }

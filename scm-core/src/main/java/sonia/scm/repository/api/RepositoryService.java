@@ -34,6 +34,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.security.Authentications;
 import sonia.scm.user.EMail;
 
 import javax.annotation.Nullable;
@@ -453,7 +454,8 @@ public final class RepositoryService implements Closeable {
   public Stream<ScmProtocol> getSupportedProtocols() {
     return protocolProviders.stream()
       .filter(protocolProvider -> protocolProvider.getType().equals(getRepository().getType()))
-      .map(this::createProviderInstanceForRepository);
+      .map(this::createProviderInstanceForRepository)
+      .filter(protocol -> !Authentications.isAuthenticatedSubjectAnonymous() || protocol.isAnonymousEnabled());
   }
 
   @SuppressWarnings({"rawtypes", "java:S3740"})

@@ -32,7 +32,7 @@ import org.junit.Ignore;
 import org.junit.Test;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.GitChangesetConverterFactory;
+import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
@@ -99,7 +99,7 @@ public class GitIncomingCommandTest
 
     commit(outgoing, "added a");
 
-    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())));
+    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory()), new GitConfig()));
     PullCommandRequest req = new PullCommandRequest();
     req.setRemoteRepository(outgoingRepository);
     pull.pull(req);
@@ -177,7 +177,7 @@ public class GitIncomingCommandTest
 
   private GitIncomingCommand createCommand() {
     return new GitIncomingCommand(
-      new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())),
+      new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory()), new GitConfig()),
       handler,
       GitTestHelper.createConverterFactory()
     );

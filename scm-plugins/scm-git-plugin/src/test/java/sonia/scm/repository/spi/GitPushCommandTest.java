@@ -29,6 +29,7 @@ package sonia.scm.repository.spi;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
+import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.api.PushResponse;
 
 import java.io.IOException;
@@ -89,6 +90,6 @@ public class GitPushCommandTest extends AbstractRemoteCommandTestBase
    */
   private GitPushCommand createCommand()
   {
-    return new GitPushCommand(handler, new GitContext(outgoingDirectory, outgoingRepository, null));
+    return new GitPushCommand(handler, new GitContext(outgoingDirectory, outgoingRepository, null, new GitConfig()));
   }
 }

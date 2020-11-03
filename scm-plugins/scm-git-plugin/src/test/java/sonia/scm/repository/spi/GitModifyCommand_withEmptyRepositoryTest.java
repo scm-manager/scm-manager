@@ -24,42 +24,21 @@
 
 package sonia.scm.repository.spi;
 
-import com.github.sdorra.shiro.ShiroRule;
-import com.github.sdorra.shiro.SubjectAware;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.errors.CorruptObjectException;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
-import sonia.scm.repository.work.WorkdirProvider;
-import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 
-@SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini", username = "admin", password = "secret")
-public class GitModifyCommand_withEmptyRepositoryTest extends AbstractGitCommandTestBase {
-
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
-  @Rule
-  public BindTransportProtocolRule transportProtocolRule = new BindTransportProtocolRule();
-  @Rule
-  public ShiroRule shiro = new ShiroRule();
-
-  private final LfsBlobStoreFactory lfsBlobStoreFactory = mock(LfsBlobStoreFactory.class);
+public class GitModifyCommand_withEmptyRepositoryTest extends GitModifyCommandTestBase {
 
   @Test
   public void shouldCreateNewFileInEmptyRepository() throws IOException, GitAPIException {
@@ -79,34 +58,65 @@ public class GitModifyCommand_withEmptyRepositoryTest extends AbstractGitCommand
     assertInTree(assertions);
   }
 
+  @Test
+  public void shouldCreateCommitOnMasterByDefault() throws IOException, GitAPIException {
+    createContext().getGlobalConfig().setDefaultBranch("");
+
+    executeModifyCommand();
+
+    try (Git git = new Git(createContext().open())) {
+      List<Ref> branches = git.branchList().call();
+      assertThat(branches).extracting("name").containsExactly("refs/heads/master");
+    }
+  }
+
+  @Test
+  public void shouldCreateCommitWithConfiguredDefaultBranch() throws IOException, GitAPIException {
+    createContext().getGlobalConfig().setDefaultBranch("main");
+
+    executeModifyCommand();
+
+    try (Git git = new Git(createContext().open())) {
+      List<Ref> branches = git.branchList().call();
+      assertThat(branches).extracting("name").containsExactly("refs/heads/main");
+    }
+  }
+
+  @Test
+  public void shouldCreateCommitWithBranchFromRequestIfPresent() throws IOException, GitAPIException {
+    createContext().getGlobalConfig().setDefaultBranch("main");
+
+    ModifyCommandRequest request = createRequest();
+    request.setBranch("different");
+    createCommand().execute(request);
+
+    try (Git git = new Git(createContext().open())) {
+      List<Ref> branches = git.branchList().call();
+      assertThat(branches).extracting("name").containsExactly("refs/heads/different");
+    }
+  }
+
   @Override
   protected String getZippedRepositoryResource() {
     return "sonia/scm/repository/spi/scm-git-empty-repo.zip";
   }
 
-  private void assertInTree(TreeAssertions assertions) throws IOException, GitAPIException {
-    try (Git git = new Git(createContext().open())) {
-      RevCommit lastCommit = getLastCommit(git);
-      try (RevWalk walk = new RevWalk(git.getRepository())) {
-        RevCommit commit = walk.parseCommit(lastCommit);
-        ObjectId treeId = commit.getTree().getId();
-        try (ObjectReader reader = git.getRepository().newObjectReader()) {
-          assertions.checkAssertions(new CanonicalTreeParser(null, reader, treeId));
-        }
-      }
-    }
+  @Override
+  RevCommit getLastCommit(Git git) throws GitAPIException, IOException {
+    return git.log().setMaxCount(1).all().call().iterator().next();
   }
 
-  private RevCommit getLastCommit(Git git) throws GitAPIException {
-    return git.log().setMaxCount(1).call().iterator().next();
+  private void executeModifyCommand() throws IOException {
+    createCommand().execute(createRequest());
   }
 
-  private GitModifyCommand createCommand() {
-    return new GitModifyCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())), lfsBlobStoreFactory);
-  }
+  private ModifyCommandRequest createRequest() throws IOException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
-  @FunctionalInterface
-  private interface TreeAssertions {
-    void checkAssertions(CanonicalTreeParser treeParser) throws CorruptObjectException;
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("initial commit");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile, false));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+    return request;
   }
 }
