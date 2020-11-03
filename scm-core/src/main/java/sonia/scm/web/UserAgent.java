@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,7 +37,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- * The software agent that is acting on behalf of a user. The user agent 
+ * The software agent that is acting on behalf of a user. The user agent
  * represents a browser or one of the repository client (svn, git or hg).
  *
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
@@ -49,18 +49,15 @@ public final class UserAgent
   /**
    * Constructs a new user agent
    *
-   *
-   * @param name
-   * @param browser
+   *  @param name
    * @param basicAuthenticationCharset
+   * @param browser
    */
-  private UserAgent(String name, boolean browser,
-                    Charset basicAuthenticationCharset,
-                    boolean scmClient)
+  private UserAgent(String name, Charset basicAuthenticationCharset, boolean browser, boolean scmClient)
   {
     this.name = checkNotNull(name);
-    this.browser = browser;
     this.basicAuthenticationCharset = checkNotNull(basicAuthenticationCharset);
+    this.browser = browser;
     this.scmClient = scmClient;
   }
 
@@ -151,7 +148,7 @@ public final class UserAgent
   //~--- get methods ----------------------------------------------------------
 
   /**
-   * Returns the {@link Charset}, which is used to decode the basic 
+   * Returns the {@link Charset}, which is used to decode the basic
    * authentication header.
    *
    * @return {@link Charset} for basic authentication
@@ -176,7 +173,7 @@ public final class UserAgent
    * Returns {@code true} if UserAgent is a browser.
    *
    *
-   * @return {@code true} if UserAgent is a browser 
+   * @return {@code true} if UserAgent is a browser
    */
   public boolean isBrowser()
   {
@@ -256,7 +253,7 @@ public final class UserAgent
      */
     public UserAgent build()
     {
-      return new UserAgent(name, browser, basicAuthenticationCharset, scmClient);
+      return new UserAgent(name, basicAuthenticationCharset, browser, scmClient);
     }
 
     //~--- fields -------------------------------------------------------------
