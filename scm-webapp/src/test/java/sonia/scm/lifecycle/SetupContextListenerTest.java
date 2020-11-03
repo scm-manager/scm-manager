@@ -37,6 +37,8 @@ import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.group.Group;
+import sonia.scm.group.GroupManager;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
@@ -56,6 +58,8 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static sonia.scm.group.GroupCollector.AUTHENTICATED;
+import static sonia.scm.lifecycle.SetupContextListener.SetupAction.AUTHENTICATED_GROUP_DESCRIPTION;
 
 @ExtendWith(MockitoExtension.class)
 class SetupContextListenerTest {
@@ -74,6 +78,9 @@ class SetupContextListenerTest {
 
   @Mock
   ScmConfiguration scmConfiguration;
+
+  @Mock
+  private GroupManager groupManager;
 
   @Mock
   private PermissionAssigner permissionAssigner;
@@ -96,6 +103,7 @@ class SetupContextListenerTest {
 
   @Test
   void shouldCreateAdminAccountIfNoUserExistsAndAssignPermissions() {
+    when(groupManager.get(AUTHENTICATED)).thenReturn(createAuthenticatedGroup());
     when(passwordService.encryptPassword("scmadmin")).thenReturn("secret");
 
     setupContextListener.contextInitialized(null);
@@ -108,6 +116,7 @@ class SetupContextListenerTest {
   void shouldCreateAdminAccountIfOnlyAnonymousUserExistsAndAssignPermissions() {
     when(userManager.getAll()).thenReturn(Lists.newArrayList(SCMContext.ANONYMOUS));
     when(userManager.contains(SCMContext.USER_ANONYMOUS)).thenReturn(true);
+    when(groupManager.get(AUTHENTICATED)).thenReturn(createAuthenticatedGroup());
     when(passwordService.encryptPassword("scmadmin")).thenReturn("secret");
 
     setupContextListener.contextInitialized(null);
@@ -135,6 +144,7 @@ class SetupContextListenerTest {
   void shouldDoNothingOnSecondStart() {
     List<User> users = Lists.newArrayList(UserTestData.createTrillian());
     when(userManager.getAll()).thenReturn(users);
+    when(groupManager.get(AUTHENTICATED)).thenReturn(createAuthenticatedGroup());
 
     setupContextListener.contextInitialized(null);
 
@@ -146,6 +156,7 @@ class SetupContextListenerTest {
   void shouldCreateAnonymousUserIfRequired() {
     List<User> users = Lists.newArrayList(UserTestData.createTrillian());
     when(userManager.getAll()).thenReturn(users);
+    when(groupManager.get(AUTHENTICATED)).thenReturn(createAuthenticatedGroup());
     when(scmConfiguration.getAnonymousMode()).thenReturn(AnonymousMode.FULL);
 
     setupContextListener.contextInitialized(null);
@@ -157,6 +168,7 @@ class SetupContextListenerTest {
   void shouldNotCreateAnonymousUserIfNotRequired() {
     List<User> users = Lists.newArrayList(UserTestData.createTrillian());
     when(userManager.getAll()).thenReturn(users);
+    when(groupManager.get(AUTHENTICATED)).thenReturn(createAuthenticatedGroup());
 
     setupContextListener.contextInitialized(null);
 
@@ -167,11 +179,34 @@ class SetupContextListenerTest {
   void shouldNotCreateAnonymousUserIfAlreadyExists() {
     List<User> users = Lists.newArrayList(SCMContext.ANONYMOUS);
     when(userManager.getAll()).thenReturn(users);
+    when(groupManager.get(AUTHENTICATED)).thenReturn(createAuthenticatedGroup());
     when(scmConfiguration.getAnonymousMode()).thenReturn(AnonymousMode.FULL);
 
     setupContextListener.contextInitialized(null);
 
     verify(userManager, times(1)).create(SCMContext.ANONYMOUS);
+  }
+
+  @Test
+  void shouldCreateAuthenticatedGroupIfMissing() {
+    when(groupManager.get(AUTHENTICATED)).thenReturn(null);
+
+    setupContextListener.contextInitialized(null);
+
+    Group authenticated = createAuthenticatedGroup();
+    authenticated.setDescription(AUTHENTICATED_GROUP_DESCRIPTION);
+    authenticated.setExternal(true);
+
+    verify(groupManager, times(1)).create(authenticated);
+  }
+
+  @Test
+  void shouldNotCreateAuthenticatedGroupIfAlreadyExists() {
+    when(groupManager.get(AUTHENTICATED)).thenReturn(createAuthenticatedGroup());
+
+    setupContextListener.contextInitialized(null);
+
+    verify(groupManager, never()).create(any());
   }
 
   private void verifyAdminPermissionsAssigned() {
@@ -192,4 +227,7 @@ class SetupContextListenerTest {
     assertThat(user.getPassword()).isEqualTo("secret");
   }
 
+  private Group createAuthenticatedGroup() {
+    return new Group("xml", AUTHENTICATED);
+  }
 }
