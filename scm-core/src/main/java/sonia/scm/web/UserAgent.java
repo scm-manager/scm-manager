@@ -28,6 +28,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -263,7 +264,7 @@ public final class UserAgent
     private boolean scmClient = false;
 
     /** basic authentication charset */
-    private Charset basicAuthenticationCharset = Charsets.ISO_8859_1;
+    private Charset basicAuthenticationCharset = StandardCharsets.ISO_8859_1;
   }
 
 
