@@ -81,7 +81,8 @@ public class SetupContextListener implements ServletContextListener {
     private final ScmConfiguration scmConfiguration;
     private final GroupManager groupManager;
 
-    private static final String AUTHENTICATED_GROUP_DESCRIPTION = "Includes all authenticated users";
+    @VisibleForTesting
+    static final String AUTHENTICATED_GROUP_DESCRIPTION = "Includes all authenticated users";
 
     @Inject
     public SetupAction(UserManager userManager, PasswordService passwordService, PermissionAssigner permissionAssigner, ScmConfiguration scmConfiguration, GroupManager groupManager) {
