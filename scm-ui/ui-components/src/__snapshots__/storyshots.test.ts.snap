@@ -50436,7 +50436,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
-            href="/repo/hitchhiker/heartOfGold/branches"
+            href="/repo/hitchhiker/heartOfGold/branches/"
             onClick={[Function]}
           >
             <i
@@ -50550,7 +50550,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
-            href="/repo/hitchhiker/heartOfGold/branches"
+            href="/repo/hitchhiker/heartOfGold/branches/"
             onClick={[Function]}
           >
             <i
@@ -50661,7 +50661,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
-            href="/repo/hitchhiker/heartOfGold/branches"
+            href="/repo/hitchhiker/heartOfGold/branches/"
             onClick={[Function]}
           >
             <i
@@ -50772,7 +50772,7 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
-            href="/repo/hitchhiker/heartOfGold/branches"
+            href="/repo/hitchhiker/heartOfGold/branches/"
             onClick={[Function]}
           >
             <i

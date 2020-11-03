@@ -21,23 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import org.eclipse.jgit.transport.ScmTransportProtocol;
-import org.eclipse.jgit.transport.Transport;
 import org.junit.After;
-import org.junit.Before;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
+import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitRepositoryConfig;
-import sonia.scm.repository.PreProcessorUtil;
-import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
-
-import static com.google.inject.util.Providers.of;
-import static org.mockito.Mockito.mock;
 
 /**
  *
@@ -69,7 +62,7 @@ public class AbstractGitCommandTestBase extends ZippedRepositoryTestBase
   {
     if (context == null)
     {
-      context = new GitContext(repositoryDirectory, repository, new GitRepositoryConfigStoreProvider(InMemoryConfigurationStoreFactory.create()));
+      context = new GitContext(repositoryDirectory, repository, new GitRepositoryConfigStoreProvider(InMemoryConfigurationStoreFactory.create()), new GitConfig());
     }
 
     return context;

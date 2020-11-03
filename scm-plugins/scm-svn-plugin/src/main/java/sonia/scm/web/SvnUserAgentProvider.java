@@ -49,13 +49,13 @@ public final class SvnUserAgentProvider implements UserAgentProvider
   /** TortoiseSVN */
   @VisibleForTesting
   static final UserAgent TORTOISE_SVN = 
-    UserAgent.builder("TortoiseSVN").browser(false)
+    UserAgent.scmClient("TortoiseSVN")
              .basicAuthenticationCharset(Charsets.UTF_8).build();
 
   /** Subversion cli client */
   @VisibleForTesting
   static final UserAgent SVN =
-    UserAgent.builder("Subversion").browser(false)
+    UserAgent.scmClient("Subversion")
              .basicAuthenticationCharset(Charsets.UTF_8).build();
 
   //~--- methods --------------------------------------------------------------

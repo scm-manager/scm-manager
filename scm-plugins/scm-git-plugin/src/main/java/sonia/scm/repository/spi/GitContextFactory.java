@@ -42,7 +42,7 @@ class GitContextFactory {
   }
 
   GitContext create(Repository repository) {
-    return new GitContext(handler.getDirectory(repository.getId()), repository, storeProvider);
+    return new GitContext(handler.getDirectory(repository.getId()), repository, storeProvider, handler.getConfig());
   }
 
 }

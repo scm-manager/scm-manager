@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -40,36 +40,32 @@ import sonia.scm.plugin.Extension;
  */
 @Extension
 public class GitUserAgentProvider implements UserAgentProvider {
- 
+
   private static final String PREFIX_JGIT = "jgit/";
 
   @VisibleForTesting
-  static final UserAgent JGIT = UserAgent.builder("JGit")
-          .browser(false)
+  static final UserAgent JGIT = UserAgent.scmClient("JGit")
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
-  
+
   private static final String PREFIX_REGULAR = "git/";
-  
+
   @VisibleForTesting
-  static final UserAgent GIT = UserAgent.builder("Git")
-          .browser(false)
+  static final UserAgent GIT = UserAgent.scmClient("Git")
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
-  
+
   private static final String PREFIX_LFS = "git-lfs/";
 
   @VisibleForTesting
-  static final UserAgent GIT_LFS = UserAgent.builder("Git Lfs")
-          .browser(false)
+  static final UserAgent GIT_LFS = UserAgent.scmClient("Git Lfs")
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
 
   private static final String SUFFIX_MSYSGIT = "msysgit";
-  
+
   @VisibleForTesting
-  static final UserAgent MSYSGIT = UserAgent.builder("msysGit")
-          .browser(false)
+  static final UserAgent MSYSGIT = UserAgent.scmClient("msysGit")
           .basicAuthenticationCharset(Charsets.UTF_8)
           .build();
 
@@ -80,7 +76,7 @@ public class GitUserAgentProvider implements UserAgentProvider {
   @Override
   public UserAgent parseUserAgent(String userAgentString) {
     String lowerUserAgent = toLower(userAgentString);
-    
+
     if (isJGit(lowerUserAgent)) {
       return JGIT;
     } else if (isMsysGit(lowerUserAgent)) {
@@ -93,23 +89,23 @@ public class GitUserAgentProvider implements UserAgentProvider {
       return null;
     }
   }
-  
+
   private String toLower(String value) {
     return Strings.nullToEmpty(value).toLowerCase(Locale.ENGLISH);
   }
-  
+
   private boolean isJGit(String userAgent) {
     return userAgent.startsWith(PREFIX_JGIT);
   }
-  
+
   private boolean isMsysGit(String userAgent) {
     return userAgent.startsWith(PREFIX_REGULAR) && userAgent.contains(SUFFIX_MSYSGIT);
   }
-  
+
   private boolean isGitLFS(String userAgent) {
     return userAgent.startsWith(PREFIX_LFS);
   }
-  
+
   private boolean isGit(String userAgent) {
     return userAgent.startsWith(PREFIX_REGULAR);
   }

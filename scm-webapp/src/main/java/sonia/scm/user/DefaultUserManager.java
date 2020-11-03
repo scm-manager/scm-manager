@@ -389,8 +389,8 @@ public class DefaultUserManager extends AbstractUserManager
     if (user == null) {
       throw new NotFoundException(User.class, userId);
     }
-    if (!isTypeDefault(user) || isAnonymousUser(user)) {
-      throw new ChangePasswordNotAllowedException(ContextEntry.ContextBuilder.entity("PasswordChange", "-").in(User.class, user.getName()), user.getType());
+    if (isAnonymousUser(user) || user.isExternal()) {
+      throw new ChangePasswordNotAllowedException(ContextEntry.ContextBuilder.entity("PasswordChange", "-").in(User.class, user.getName()), "external");
     }
     user.setPassword(newPassword);
     this.modify(user);
