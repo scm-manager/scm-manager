@@ -30,6 +30,7 @@ type Props = WithTranslation & {
   filter: (p: string) => void;
   value?: string;
   testId?: string;
+  placeholder?: string;
 };
 
 type State = {
@@ -70,14 +71,14 @@ class FilterInput extends React.Component<Props, State> {
   };
 
   render() {
-    const { t, testId } = this.props;
+    const { t, testId, placeholder } = this.props;
     return (
       <form className="input-field" onSubmit={this.handleSubmit} {...createAttributesForTesting(testId)}>
         <div className="control has-icons-left">
           <FixedHeightInput
             className="input"
             type="search"
-            placeholder={t("filterEntries")}
+            placeholder={placeholder || t("filterEntries")}
             value={this.state.value}
             onChange={this.handleChange}
           />
