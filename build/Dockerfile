@@ -22,7 +22,7 @@
 # SOFTWARE.
 #
 
-FROM adoptopenjdk/openjdk11:x86_64-debian-jdk-11.0.8_10
+FROM adoptopenjdk/openjdk11:x86_64-debian-jdk-11.0.9_11.1
 
 ENV DOCKER_VERSION=19.03.8 \
     DOCKER_CHANNEL=stable \
