@@ -53,7 +53,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class RepositoryServiceTest {
+class RepositoryServiceTest {
 
   private final RepositoryServiceProvider provider = mock(RepositoryServiceProvider.class);
   private final Repository repository = new Repository("", "git", "space", "repo");
@@ -74,7 +74,7 @@ public class RepositoryServiceTest {
   }
 
   @Test
-  public void shouldReturnMatchingProtocolsFromProvider() {
+  void shouldReturnMatchingProtocolsFromProvider() {
     when(subject.getPrincipal()).thenReturn("Hitchhiker");
     RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
     Stream<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
@@ -83,7 +83,7 @@ public class RepositoryServiceTest {
   }
 
   @Test
-  public void shouldFilterOutNonAnonymousEnabledProtocolsForAnonymousUser() {
+  void shouldFilterOutNonAnonymousEnabledProtocolsForAnonymousUser() {
     when(subject.getPrincipal()).thenReturn(SCMContext.USER_ANONYMOUS);
     RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Stream.of(new DummyScmProtocolProvider(), new DummyScmProtocolProvider(false)).collect(Collectors.toSet()), null, eMail);
     Stream<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
@@ -92,7 +92,7 @@ public class RepositoryServiceTest {
   }
 
   @Test
-  public void shouldFindKnownProtocol() {
+  void shouldFindKnownProtocol() {
     when(subject.getPrincipal()).thenReturn("Hitchhiker");
     RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
 
@@ -102,7 +102,7 @@ public class RepositoryServiceTest {
   }
 
   @Test
-  public void shouldFailForUnknownProtocol() {
+  void shouldFailForUnknownProtocol() {
     when(subject.getPrincipal()).thenReturn("Hitchhiker");
     RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
 
