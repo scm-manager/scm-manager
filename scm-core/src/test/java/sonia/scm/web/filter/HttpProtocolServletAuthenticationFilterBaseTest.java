@@ -69,8 +69,8 @@ class HttpProtocolServletAuthenticationFilterBaseTest {
   @Mock
   private FilterChain filterChain;
 
-  private UserAgent nonBrowser = UserAgent.builder("i'm not a browser").browser(false).build();
-  private UserAgent browser = UserAgent.builder("i am a browser").browser(true).build();
+  private UserAgent nonBrowser = UserAgent.other("i'm not a browser").build();
+  private UserAgent browser = UserAgent.browser("i am a browser").build();
 
   @BeforeEach
   void setUpObjectUnderTest() {

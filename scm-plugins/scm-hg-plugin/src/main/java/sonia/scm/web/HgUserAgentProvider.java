@@ -45,8 +45,7 @@ public class HgUserAgentProvider implements UserAgentProvider
 
   /** mercurial seems to use system encoding */
   @VisibleForTesting
-  static UserAgent HG = UserAgent.builder("Mercurial").browser(
-                          false).basicAuthenticationCharset(
+  static UserAgent HG = UserAgent.scmClient("Mercurial").basicAuthenticationCharset(
                           Charset.defaultCharset()).build();
 
   /** Field description */
