@@ -24,17 +24,12 @@
 
 package sonia.scm.web;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.Charsets;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 
 import java.nio.charset.Charset;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * The software agent that is acting on behalf of a user. The user agent
@@ -118,7 +113,7 @@ public final class UserAgent
 
     return Objects.equal(name, other.name)
       && Objects.equal(browser, other.browser)
-      && Objects.equal(basicAuthenticationCharset, basicAuthenticationCharset);
+      && Objects.equal(basicAuthenticationCharset, other.basicAuthenticationCharset);
   }
 
   /**
