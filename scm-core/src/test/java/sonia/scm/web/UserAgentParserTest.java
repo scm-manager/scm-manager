@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -99,11 +99,11 @@ public class UserAgentParserTest
   @Test
   public void testParse()
   {
-    UserAgent ua = UserAgent.builder("UA1").build();
+    UserAgent ua = UserAgent.other("UA1").build();
 
     when(provider1.parseUserAgent(UA_1)).thenReturn(ua);
 
-    UserAgent ua2 = UserAgent.builder("UA2").build();
+    UserAgent ua2 = UserAgent.other("UA2").build();
 
     when(provider2.parseUserAgent(UA_2)).thenReturn(ua2);
 
@@ -120,7 +120,7 @@ public class UserAgentParserTest
   {
     when(request.getHeader(HttpUtil.HEADER_USERAGENT)).thenReturn(UA_2);
 
-    UserAgent ua = UserAgent.builder("UA2").build();
+    UserAgent ua = UserAgent.other("UA2").build();
 
     when(provider1.parseUserAgent(UA_2)).thenReturn(ua);
     assertEquals(ua, parser.parse(request));
@@ -144,7 +144,7 @@ public class UserAgentParserTest
   @Test
   public void testParseWithCache()
   {
-    UserAgent ua = UserAgent.builder("UA").build();
+    UserAgent ua = UserAgent.other("UA").build();
 
     when(cache.get(UA_1)).thenReturn(ua);
     assertEquals(ua, parser.parse(UA_1));
