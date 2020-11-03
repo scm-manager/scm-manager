@@ -56,6 +56,7 @@ public class ConfigDto extends HalRepresentation {
   private String pluginUrl;
   private long loginAttemptLimitTimeout;
   private boolean enabledXsrfProtection;
+  private boolean enabledUserConverter;
   private String namespaceStrategy;
   private String loginInfoUrl;
   private String releaseFeedUrl;

@@ -72,6 +72,7 @@ class ConfigForm extends React.Component<Props, State> {
         pluginUrl: "",
         loginAttemptLimitTimeout: 0,
         enabledXsrfProtection: true,
+        enabledUserConverter: false,
         namespaceStrategy: "",
         loginInfoUrl: "",
         _links: {}
@@ -146,6 +147,7 @@ class ConfigForm extends React.Component<Props, State> {
           releaseFeedUrl={config.releaseFeedUrl}
           mailDomainName={config.mailDomainName}
           enabledXsrfProtection={config.enabledXsrfProtection}
+          enabledUserConverter={config.enabledUserConverter}
           namespaceStrategy={config.namespaceStrategy}
           onChange={(isValid, changedValue, name) => this.onChange(isValid, changedValue, name)}
           hasUpdatePermission={configUpdatePermission}

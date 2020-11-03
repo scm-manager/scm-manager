@@ -189,6 +189,14 @@ public class ScmConfiguration implements Configuration {
   @XmlElement(name = "xsrf-protection")
   private boolean enabledXsrfProtection = true;
 
+  /**
+   * Enables user converter.
+   *
+   * @since 2.9.0
+   */
+  @XmlElement(name = "user-converter")
+  private boolean enabledUserConverter = false;
+
   @XmlElement(name = "namespace-strategy")
   private String namespaceStrategy = "UsernameNamespaceStrategy";
 
@@ -238,6 +246,7 @@ public class ScmConfiguration implements Configuration {
     this.loginInfoUrl = other.loginInfoUrl;
     this.releaseFeedUrl = other.releaseFeedUrl;
     this.mailDomainName = other.mailDomainName;
+    this.enabledUserConverter = other.enabledUserConverter;
   }
 
   /**
@@ -385,6 +394,17 @@ public class ScmConfiguration implements Configuration {
    */
   public boolean isEnabledXsrfProtection() {
     return enabledXsrfProtection;
+  }
+
+  /**
+   * Returns {@code true} if the user converter is enabled.
+   *
+   * @return {@code true} if the user converter is enabled
+   * The user converter automatically converts an internal user to external on their first login using an external system like ldap
+   * @since 2.9.0
+   */
+  public boolean isEnabledUserConverter() {
+    return enabledUserConverter;
   }
 
   public boolean isEnableProxy() {
@@ -552,6 +572,16 @@ public class ScmConfiguration implements Configuration {
    */
   public void setEnabledXsrfProtection(boolean enabledXsrfProtection) {
     this.enabledXsrfProtection = enabledXsrfProtection;
+  }
+
+  /**
+   * Set {@code true} to enable user converter.
+   *
+   * @param enabledUserConverter {@code true} to enable user converter
+   * @since 2.9.0
+   */
+  public void setEnabledUserConverter(boolean enabledUserConverter) {
+    this.enabledUserConverter = enabledUserConverter;
   }
 
   public void setNamespaceStrategy(String namespaceStrategy) {

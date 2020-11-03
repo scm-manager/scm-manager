@@ -102,7 +102,7 @@ class JwtAccessTokenBuilderTest {
   void testBuild() {
     JwtAccessToken token = factory.create().subject("dent")
       .issuer("https://www.scm-manager.org")
-      .expiresIn(5, TimeUnit.SECONDS)
+      .expiresIn(1, TimeUnit.MINUTES)
       .custom("a", "b")
       .scope(Scope.valueOf("repo:*"))
       .build();

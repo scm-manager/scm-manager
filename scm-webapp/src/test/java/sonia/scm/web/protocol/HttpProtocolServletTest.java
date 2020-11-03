@@ -91,15 +91,12 @@ class HttpProtocolServletTest {
     @BeforeEach
     void prepareMocks() {
       when(userAgentParser.parse(request)).thenReturn(userAgent);
-      when(userAgent.isBrowser()).thenReturn(true);
+      when(userAgent.isScmClient()).thenReturn(false);
       when(request.getRequestURI()).thenReturn("uri");
     }
 
     @Test
     void shouldDispatchBrowserRequests() throws ServletException, IOException {
-      when(userAgent.isBrowser()).thenReturn(true);
-      when(request.getRequestURI()).thenReturn("uri");
-
       servlet.service(request, response);
 
       verify(dispatcher).dispatch(request, response, "uri");
@@ -113,7 +110,7 @@ class HttpProtocolServletTest {
     @BeforeEach
     void prepareMocks() {
       when(userAgentParser.parse(request)).thenReturn(userAgent);
-      when(userAgent.isBrowser()).thenReturn(false);
+      when(userAgent.isScmClient()).thenReturn(true);
     }
 
     @Test

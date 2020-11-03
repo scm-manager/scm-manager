@@ -45,6 +45,7 @@ export type Config = {
   pluginUrl: string;
   loginAttemptLimitTimeout: number;
   enabledXsrfProtection: boolean;
+  enabledUserConverter: boolean;
   namespaceStrategy: string;
   loginInfoUrl: string;
   releaseFeedUrl: string;

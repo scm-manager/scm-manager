@@ -42,7 +42,8 @@ class ChangePasswordNavLink extends React.Component<Props> {
   }
 
   hasPermissionToSetPassword = () => {
-    return this.props.user._links.password;
+    const { user } = this.props;
+    return user._links.password;
   };
 }
 

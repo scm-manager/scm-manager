@@ -30,14 +30,16 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.attributes.FilterCommandRegistry;
 import org.eclipse.jgit.revwalk.RevCommit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.ConcurrentModificationException;
+import sonia.scm.ContextEntry;
 import sonia.scm.NoChangesMadeException;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
+import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
+import sonia.scm.store.ConfigurationStore;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import javax.inject.Inject;
@@ -49,21 +51,22 @@ import java.util.concurrent.locks.Lock;
 
 public class GitModifyCommand extends AbstractGitCommand implements ModifyCommand {
 
-  private static final Logger LOG = LoggerFactory.getLogger(GitModifyCommand.class);
   private static final Striped<Lock> REGISTER_LOCKS = Striped.lock(5);
 
   private final GitWorkingCopyFactory workingCopyFactory;
   private final LfsBlobStoreFactory lfsBlobStoreFactory;
+  private final GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider;
 
   @Inject
-  GitModifyCommand(GitContext context, GitRepositoryHandler repositoryHandler, LfsBlobStoreFactory lfsBlobStoreFactory) {
-    this(context, repositoryHandler.getWorkingCopyFactory(), lfsBlobStoreFactory);
+  GitModifyCommand(GitContext context, GitRepositoryHandler repositoryHandler, LfsBlobStoreFactory lfsBlobStoreFactory, GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider) {
+    this(context, repositoryHandler.getWorkingCopyFactory(), lfsBlobStoreFactory, gitRepositoryConfigStoreProvider);
   }
 
-  GitModifyCommand(GitContext context, GitWorkingCopyFactory workingCopyFactory, LfsBlobStoreFactory lfsBlobStoreFactory) {
+  GitModifyCommand(GitContext context, GitWorkingCopyFactory workingCopyFactory, LfsBlobStoreFactory lfsBlobStoreFactory, GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider) {
     super(context);
     this.workingCopyFactory = workingCopyFactory;
     this.lfsBlobStoreFactory = lfsBlobStoreFactory;
+    this.gitRepositoryConfigStoreProvider = gitRepositoryConfigStoreProvider;
   }
 
   @Override
@@ -85,17 +88,47 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     @Override
     String run() throws IOException {
       getClone().getRepository().getFullBranch();
+
+      boolean initialCommit = getClone().getRepository().getRefDatabase().getRefs().isEmpty();
+
       if (!StringUtils.isEmpty(request.getExpectedRevision())
         && !request.getExpectedRevision().equals(getCurrentRevision().getName())) {
-        throw new ConcurrentModificationException("branch", request.getBranch() == null ? "default" : request.getBranch());
+        throw new ConcurrentModificationException(ContextEntry.ContextBuilder.entity("Branch", request.getBranch() == null ? "default" : request.getBranch()).in(repository).build());
       }
       for (ModifyCommandRequest.PartialRequest r : request.getRequests()) {
         r.execute(this);
       }
       failIfNotChanged(() -> new NoChangesMadeException(repository, ModifyWorker.this.request.getBranch()));
       Optional<RevCommit> revCommit = doCommit(request.getCommitMessage(), request.getAuthor(), request.isSign());
+
+      if (initialCommit) {
+        handleBranchForInitialCommit();
+      }
+
       push();
       return revCommit.orElseThrow(() -> new NoChangesMadeException(repository, ModifyWorker.this.request.getBranch())).name();
+    }
+
+    private void handleBranchForInitialCommit() {
+      String branch = StringUtils.isNotBlank(request.getBranch()) ? request.getBranch() : context.getGlobalConfig().getDefaultBranch();
+      if (StringUtils.isNotBlank(branch)) {
+        try {
+          getClone().checkout().setName(branch).setCreateBranch(true).call();
+          setBranchInConfig(branch);
+        } catch (GitAPIException e) {
+          throw new InternalRepositoryException(repository, "could not create default branch for initial commit", e);
+        }
+      }
+    }
+
+    private void setBranchInConfig(String branch) {
+      ConfigurationStore<GitRepositoryConfig> store = gitRepositoryConfigStoreProvider
+        .get(repository);
+      GitRepositoryConfig gitRepositoryConfig = store
+        .getOptional()
+        .orElse(new GitRepositoryConfig());
+      gitRepositoryConfig.setDefaultBranch(branch);
+      store.set(gitRepositoryConfig);
     }
 
     @Override
