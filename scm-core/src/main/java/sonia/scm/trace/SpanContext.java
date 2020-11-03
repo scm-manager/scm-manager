@@ -24,8 +24,17 @@
 
 package sonia.scm.trace;
 
-import lombok.Value;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import sonia.scm.xml.XmlInstantAdapter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Map;
@@ -35,12 +44,19 @@ import java.util.Map;
  *
  * @since 2.9.0
  */
-@Value
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+@NoArgsConstructor(access = AccessLevel.PACKAGE)
+@AllArgsConstructor(access = AccessLevel.PACKAGE)
+@Getter
+@Setter
 public class SpanContext {
 
   String kind;
-  Map<String,String> labels;
+  Map<String, String> labels;
+  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
   Instant opened;
+  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
   Instant closed;
   boolean failed;
 
@@ -51,6 +67,11 @@ public class SpanContext {
    */
   public Duration duration() {
     return Duration.between(opened, closed);
+  }
+
+  // For testing
+  public static SpanContext create(String kind, Map<String, String> labels, Instant opened, Instant closed, boolean failed) {
+    return new SpanContext(kind, labels, opened, closed, failed);
   }
 
 }
