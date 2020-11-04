@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -33,6 +33,8 @@ import sonia.scm.net.ahc.AdvancedHttpClient;
 import javax.inject.Inject;
 import java.util.Collections;
 import java.util.Set;
+
+import static sonia.scm.plugin.Tracing.SPAN_KIND;
 
 class PluginCenterLoader {
 
@@ -57,7 +59,8 @@ class PluginCenterLoader {
   Set<AvailablePlugin> load(String url) {
     try {
       LOG.info("fetch plugins from {}", url);
-      PluginCenterDto pluginCenterDto = client.get(url).request().contentFromJson(PluginCenterDto.class);
+      PluginCenterDto pluginCenterDto = client.get(url).spanKind(SPAN_KIND).request()
+          .contentFromJson(PluginCenterDto.class);
       return mapper.map(pluginCenterDto);
     } catch (Exception ex) {
       LOG.error("failed to load plugins from plugin center, returning empty list", ex);

@@ -34,6 +34,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.net.ahc.AdvancedHttpClient;
+import sonia.scm.net.ahc.AdvancedHttpResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -50,6 +51,7 @@ import static org.mockito.Mockito.anyInt;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static sonia.scm.plugin.Tracing.SPAN_KIND;
 
 @ExtendWith({MockitoExtension.class})
 class PluginInstallerTest {
@@ -101,8 +103,12 @@ class PluginInstallerTest {
   }
 
   private void mockContent(String content) throws IOException {
-    when(client.get("https://download.hitchhiker.com").request().contentAsStream())
+    when(request("https://download.hitchhiker.com").contentAsStream())
       .thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
+  }
+
+  private AdvancedHttpResponse request(String url) throws IOException {
+    return client.get(url).spanKind(SPAN_KIND).request();
   }
 
   private AvailablePlugin createGitPlugin() {
@@ -115,7 +121,7 @@ class PluginInstallerTest {
 
   @Test
   void shouldThrowPluginDownloadException() throws IOException {
-    when(client.get("https://download.hitchhiker.com").request()).thenThrow(new IOException("failed to download"));
+    when(request("https://download.hitchhiker.com")).thenThrow(new IOException("failed to download"));
 
     PluginInstallationContext context = PluginInstallationContext.empty();
     AvailablePlugin gitPlugin = createGitPlugin();
@@ -136,7 +142,7 @@ class PluginInstallerTest {
   void shouldThrowPluginDownloadExceptionAndCleanup() throws IOException {
     InputStream stream = mock(InputStream.class);
     when(stream.read(any(), anyInt(), anyInt())).thenThrow(new IOException("failed to read"));
-    when(client.get("https://download.hitchhiker.com").request().contentAsStream()).thenReturn(stream);
+    when(request("https://download.hitchhiker.com").contentAsStream()).thenReturn(stream);
 
     PluginInstallationContext context = PluginInstallationContext.empty();
     AvailablePlugin gitPlugin = createGitPlugin();

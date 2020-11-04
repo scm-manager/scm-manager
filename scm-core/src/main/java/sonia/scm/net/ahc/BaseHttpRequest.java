@@ -422,5 +422,5 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
   private String url;
 
   /** kind of span for trace api */
-  private String spanKind = "http-request";
+  private String spanKind = "HTTP Request";
 }

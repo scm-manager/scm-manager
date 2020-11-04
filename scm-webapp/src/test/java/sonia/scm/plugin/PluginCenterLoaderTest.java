@@ -32,6 +32,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.net.ahc.AdvancedHttpClient;
+import sonia.scm.net.ahc.AdvancedHttpResponse;
 
 import java.io.IOException;
 import java.util.Collections;
@@ -41,6 +42,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static sonia.scm.plugin.Tracing.SPAN_KIND;
 
 @ExtendWith(MockitoExtension.class)
 class PluginCenterLoaderTest {
@@ -63,16 +65,20 @@ class PluginCenterLoaderTest {
   void shouldFetch() throws IOException {
     Set<AvailablePlugin> plugins = Collections.emptySet();
     PluginCenterDto dto = new PluginCenterDto();
-    when(client.get(PLUGIN_URL).request().contentFromJson(PluginCenterDto.class)).thenReturn(dto);
+    when(request().contentFromJson(PluginCenterDto.class)).thenReturn(dto);
     when(mapper.map(dto)).thenReturn(plugins);
 
     Set<AvailablePlugin> fetched = loader.load(PLUGIN_URL);
     assertThat(fetched).isSameAs(plugins);
   }
 
+  private AdvancedHttpResponse request() throws IOException {
+    return client.get(PLUGIN_URL).spanKind(SPAN_KIND).request();
+  }
+
   @Test
   void shouldReturnEmptySetIfPluginCenterNotBeReached() throws IOException {
-    when(client.get(PLUGIN_URL).request()).thenThrow(new IOException("failed to fetch"));
+    when(request()).thenThrow(new IOException("failed to fetch"));
 
     Set<AvailablePlugin> fetch = loader.load(PLUGIN_URL);
     assertThat(fetch).isEmpty();
@@ -80,7 +86,7 @@ class PluginCenterLoaderTest {
 
   @Test
   void shouldFirePluginCenterErrorEvent() throws IOException {
-    when(client.get(PLUGIN_URL).request()).thenThrow(new IOException("failed to fetch"));
+    when(request()).thenThrow(new IOException("failed to fetch"));
 
     loader.load(PLUGIN_URL);
 
