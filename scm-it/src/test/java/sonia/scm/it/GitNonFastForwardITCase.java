@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.it;
 
 import com.google.common.base.Charsets;
@@ -185,7 +185,7 @@ public class GitNonFastForwardITCase {
   }
 
   private static void setNonFastForwardDisallowed(boolean nonFastForwardDisallowed) {
-    String config = String.format("{'disabled': false, 'gcExpression': null, 'nonFastForwardDisallowed': %s}", nonFastForwardDisallowed)
+    String config = String.format("{'disabled': false, 'gcExpression': null, 'defaultBranch': 'main', 'nonFastForwardDisallowed': %s}", nonFastForwardDisallowed)
       .replace('\'', '"');
 
     given(VndMediaType.PREFIX + "gitConfig" + VndMediaType.SUFFIX)

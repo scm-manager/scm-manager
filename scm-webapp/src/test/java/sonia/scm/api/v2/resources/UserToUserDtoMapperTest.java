@@ -90,25 +90,15 @@ public class UserToUserDtoMapperTest {
   }
 
   @Test
-  public void shouldGetPasswordLinkForAdmin() {
+  public void shouldGetInternalUserLinks() {
     User user = createDefaultUser();
+    user.setExternal(false);
     when(subject.isPermitted("user:modify:abc")).thenReturn(true);
-    when(userManager.isTypeDefault(eq(user))).thenReturn(true);
 
     UserDto userDto = mapper.map(user);
 
     assertEquals("expected password link with modify permission", expectedBaseUri.resolve("abc/password").toString(), userDto.getLinks().getLinkBy("password").get().getHref());
-  }
-
-  @Test
-  public void shouldGetPasswordLinkOnlyForDefaultUserType() {
-    User user = createDefaultUser();
-    when(subject.isPermitted("user:modify:abc")).thenReturn(true);
-    when(userManager.isTypeDefault(eq(user))).thenReturn(false);
-
-    UserDto userDto = mapper.map(user);
-
-    assertFalse("expected no password link", userDto.getLinks().getLinkBy("password").isPresent());
+    assertEquals("expected convert to external link with modify permission", expectedBaseUri.resolve("abc/convert-to-external").toString(), userDto.getLinks().getLinkBy("convertToExternal").get().getHref());
   }
 
   @Test

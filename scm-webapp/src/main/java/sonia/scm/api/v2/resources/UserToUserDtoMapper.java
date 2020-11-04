@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
@@ -66,8 +66,11 @@ public abstract class UserToUserDtoMapper extends BaseMapper<User, UserDto> {
     if (UserPermissions.modify(user).isPermitted()) {
       linksBuilder.single(link("update", resourceLinks.user().update(user.getName())));
       linksBuilder.single(link("publicKeys", resourceLinks.user().publicKeys(user.getName())));
-      if (userManager.isTypeDefault(user)) {
+      if (user.isExternal()) {
+        linksBuilder.single(link("convertToInternal", resourceLinks.user().toInternal(user.getName())));
+      } else {
         linksBuilder.single(link("password", resourceLinks.user().passwordChange(user.getName())));
+        linksBuilder.single(link("convertToExternal", resourceLinks.user().toExternal(user.getName())));
       }
     }
     if (PermissionPermissions.read().isPermitted()) {

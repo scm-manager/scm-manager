@@ -28,6 +28,7 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
 import com.google.inject.util.Providers;
+import com.sun.mail.iap.Argument;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -58,10 +59,12 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
@@ -455,6 +458,43 @@ public class UserRootResourceTest {
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
 
     assertEquals("other:*", captor.getValue().iterator().next().getValue());
+  }
+
+  @Test
+  public void shouldConvertUserToInternalAndSetNewPassword() throws URISyntaxException {
+    when(passwordService.encryptPassword(anyString())).thenReturn("abc");
+    ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/convert-to-internal")
+      .contentType(VndMediaType.USER)
+      .content("{\"newPassword\":\"trillian\"}".getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    verify(passwordService).encryptPassword("trillian");
+    verify(userManager).overwritePassword("Neo", "abc");
+    verify(userManager).modify(userCaptor.capture());
+
+    User user = userCaptor.getValue();
+    assertThat(user.isExternal()).isFalse();
+  }
+
+  @Test
+  public void shouldConvertUserToExternalAndRemoveLocalPassword() throws URISyntaxException {
+    ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
+    MockHttpRequest request = MockHttpRequest
+      .put("/" + UserRootResource.USERS_PATH_V2 + "Neo/convert-to-external")
+      .contentType(VndMediaType.USER);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    verify(userManager).overwritePassword("Neo", null);
+    verify(userManager).modify(userCaptor.capture());
+
+    User user = userCaptor.getValue();
+    assertThat(user.isExternal()).isTrue();
   }
 
   private PageResult<User> createSingletonPageResult(int overallCount) {

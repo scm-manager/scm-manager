@@ -74,10 +74,7 @@ public class HttpProtocolServlet extends HttpServlet {
   @Override
   protected void service(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     UserAgent userAgent = userAgentParser.parse(request);
-    if (userAgent.isBrowser()) {
-      log.trace("dispatch browser request for user agent {}", userAgent);
-      dispatcher.dispatch(request, response, request.getRequestURI());
-    } else {
+    if (userAgent.isScmClient()) {
       String pathInfo = request.getPathInfo();
       Optional<NamespaceAndName> namespaceAndName = pathExtractor.fromUri(pathInfo);
       if (namespaceAndName.isPresent()) {
@@ -86,6 +83,9 @@ public class HttpProtocolServlet extends HttpServlet {
         log.debug("namespace and name not found in request path {}", pathInfo);
         response.setStatus(HttpStatus.SC_BAD_REQUEST);
       }
+    } else {
+      log.trace("dispatch non-scm-client request for user agent {}", userAgent);
+      dispatcher.dispatch(request, response, request.getRequestURI());
     }
   }
 
