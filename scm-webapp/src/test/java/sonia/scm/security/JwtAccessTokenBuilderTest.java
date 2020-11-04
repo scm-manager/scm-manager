@@ -146,12 +146,18 @@ class JwtAccessTokenBuilderTest {
     }
 
     @Test
-    void testSimpleRequest() {
+    void shouldCreateJwtAndUsePreviousScope() {
       JwtAccessTokenBuilder builder = factory.create().subject("dent");
       final JwtAccessToken accessToken = builder.build();
       assertThat(accessToken).isNotNull();
       assertThat(accessToken.getSubject()).isEqualTo("dent");
       assertThat((Collection<String>) accessToken.getCustom("scope").get()).containsExactly("dummy:scope:*");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenScopeAlreadyDefinedInBuilder() {
+      JwtAccessTokenBuilder builder = factory.create().scope(Scope.valueOf("an:incompatible:scope")).subject("dent");
+      assertThrows(AuthorizationException.class, builder::build);
     }
   }
 
