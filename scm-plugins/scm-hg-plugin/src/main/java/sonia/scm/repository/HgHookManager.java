@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -54,11 +54,10 @@ import java.util.UUID;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class HgHookManager
-{
+public class HgHookManager {
 
-  /** Field description */
-  public static final String URL_HOOKPATH = "/hook/hg/";
+  @SuppressWarnings("java:S1075") // this url is fixed
+  private static final String URL_HOOKPATH = "/hook/hg/";
 
   /**
    * the logger for HgHookManager
@@ -191,64 +190,27 @@ public class HgHookManager
     return accessTokenBuilderFactory.create().build();
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   */
-  private void buildHookUrl(HttpServletRequest request)
-  {
-    if (configuration.isForceBaseUrl())
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug(
-          "create hook url from configured base url because force base url is enabled");
-      }
+  private void buildHookUrl(HttpServletRequest request) {
+    if (configuration.isForceBaseUrl()) {
+      logger.debug("create hook url from configured base url because force base url is enabled");
 
       hookUrl = createConfiguredUrl();
-
-      if (!isUrlWorking(hookUrl))
-      {
+      if (!isUrlWorking(hookUrl)) {
         disableHooks();
       }
-    }
-    else
-    {
-      if (logger.isDebugEnabled())
-      {
-        logger.debug("create hook url from request");
-      }
+    } else {
+      logger.debug("create hook url from request");
 
       hookUrl = HttpUtil.getCompleteUrl(request, URL_HOOKPATH);
-
-      if (!isUrlWorking(hookUrl))
-      {
-        if (logger.isWarnEnabled())
-        {
-          logger.warn(
-            "hook url {} from request does not work, try now localhost",
-            hookUrl);
-        }
+      if (!isUrlWorking(hookUrl)) {
+        logger.warn("hook url {} from request does not work, try now localhost", hookUrl);
 
         hookUrl = createLocalUrl(request);
-
-        if (!isUrlWorking(hookUrl))
-        {
-          if (logger.isWarnEnabled())
-          {
-            logger.warn(
-              "localhost hook url {} does not work, try now from configured base url",
-              hookUrl);
-          }
+        if (!isUrlWorking(hookUrl)) {
+          logger.warn("localhost hook url {} does not work, try now from configured base url", hookUrl);
 
           hookUrl = createConfiguredUrl();
-
-          if (!isUrlWorking(hookUrl))
-          {
+          if (!isUrlWorking(hookUrl)) {
             disableHooks();
           }
         }
@@ -270,7 +232,7 @@ public class HgHookManager
         configuration.getBaseUrl(),
         "http://localhost:8080/scm"
       )
-    ).concat("/hook/hg/");
+    ).concat(URL_HOOKPATH);
     //J+
   }
 
@@ -324,11 +286,7 @@ public class HgHookManager
     {
       request = httpServletRequestProvider.get();
     }
-    catch (ProvisionException ex)
-    {
-      logger.debug("http servlet request is not available");
-    }
-    catch (OutOfScopeException ex)
+    catch (ProvisionException | OutOfScopeException ex)
     {
       logger.debug("http servlet request is not available");
     }
@@ -358,6 +316,7 @@ public class HgHookManager
                          .disableHostnameValidation(true)
                          .disableCertificateValidation(true)
                          .ignoreProxySettings(true)
+                         .disableTracing()
                          .request()
                          .getStatus();
       //J+
