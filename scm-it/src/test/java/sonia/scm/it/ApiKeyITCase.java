@@ -30,6 +30,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.junit.runners.Parameterized;
 import sonia.scm.it.utils.RepositoryUtil;
 import sonia.scm.it.utils.RestUtil;
 import sonia.scm.it.utils.TestData;
@@ -39,15 +41,29 @@ import sonia.scm.web.VndMediaType;
 
 import javax.ws.rs.core.MediaType;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Objects;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThrows;
 import static sonia.scm.it.utils.RepositoryUtil.addAndCommitRandomFile;
 import static sonia.scm.it.utils.RestUtil.given;
+import static sonia.scm.it.utils.ScmTypes.availableScmTypes;
 import static sonia.scm.it.utils.TestData.WRITE;
 
+@RunWith(Parameterized.class)
 public class ApiKeyITCase {
+
+  @Parameterized.Parameters(name = "{0}")
+  public static Collection<String> createParameters() {
+    return availableScmTypes();
+  }
+
+  private final String repositoryType;
+
+  public ApiKeyITCase(String repositoryType) {
+    this.repositoryType = repositoryType;
+  }
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -56,7 +72,7 @@ public class ApiKeyITCase {
   public void prepareEnvironment() {
     TestData.createDefault();
     TestData.createNotAdminUser("user", "user");
-    TestData.createUserPermission("user", WRITE, "git");
+    TestData.createUserPermission("user", WRITE, repositoryType);
   }
 
   @After
@@ -68,7 +84,7 @@ public class ApiKeyITCase {
   public void shouldCloneWithRestrictedApiKey() throws IOException {
     String passphrase = registerApiKey();
 
-    RepositoryClient client = RepositoryUtil.createRepositoryClient("git", temporaryFolder.newFolder(), "user", passphrase);
+    RepositoryClient client = RepositoryUtil.createRepositoryClient(repositoryType, temporaryFolder.newFolder(), "user", passphrase);
 
     assertEquals(1, Objects.requireNonNull(client.getWorkingCopy().list()).length);
   }
@@ -77,7 +93,7 @@ public class ApiKeyITCase {
   public void shouldFailToCommit() throws IOException {
     String passphrase = registerApiKey();
 
-    RepositoryClient client = RepositoryUtil.createRepositoryClient("git", temporaryFolder.newFolder(), "user", passphrase);
+    RepositoryClient client = RepositoryUtil.createRepositoryClient(repositoryType, temporaryFolder.newFolder(), "user", passphrase);
 
     assertThrows(RepositoryClientException.class, () -> addAndCommitRandomFile(client, "user"));
   }
