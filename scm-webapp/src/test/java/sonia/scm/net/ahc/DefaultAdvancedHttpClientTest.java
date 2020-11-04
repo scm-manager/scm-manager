@@ -279,7 +279,7 @@ public class DefaultAdvancedHttpClientTest
     when(connection.getResponseCode()).thenReturn(500);
 
     new AdvancedHttpRequest(client, HttpMethod.GET, "https://www.scm-manager.org").request();
-    verify(tracer).span("http-request");
+    verify(tracer).span("HTTP Request");
     verify(span).label("url", "https://www.scm-manager.org");
     verify(span).label("method", "GET");
     verify(span).label("status", 500);
@@ -302,10 +302,21 @@ public class DefaultAdvancedHttpClientTest
     verify(tracer).span("failures");
     verify(span).label("url", "http://failing.host");
     verify(span).label("method", "DELETE");
-    verify(span).label("exception", "failed");
+    verify(span).label("exception", IOException.class.getName());
+    verify(span).label("message", "failed");
     verify(span).failed();
     verify(span).close();
   }
+
+  @Test
+  public void shouldNotCreateSpan() throws IOException {
+    when(connection.getResponseCode()).thenReturn(200);
+
+    new AdvancedHttpRequest(client, HttpMethod.GET, "https://www.scm-manager.org")
+      .disableTracing().request();
+    verify(tracer, never()).span(anyString());
+  }
+
 
   //~--- set methods ----------------------------------------------------------
 

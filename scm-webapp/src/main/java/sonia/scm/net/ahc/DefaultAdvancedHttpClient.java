@@ -190,6 +190,16 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
    */
   @Override
   protected AdvancedHttpResponse request(BaseHttpRequest<?> request) throws IOException {
+    String spanKind = request.getSpanKind();
+    if (Strings.isNullOrEmpty(spanKind)) {
+      logger.debug("execute request {} without tracing", request.getUrl());
+      return doRequest(request);
+    }
+    return doRequestWithTracing(request);
+  }
+
+  @Nonnull
+  private DefaultAdvancedHttpResponse doRequestWithTracing(BaseHttpRequest<?> request) throws IOException {
     try (Span span = tracer.span(request.getSpanKind())) {
       span.label("url", request.getUrl());
       span.label("method", request.getMethod());
@@ -201,7 +211,8 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
         }
         return response;
       } catch (IOException ex) {
-        span.label("exception", ex.getMessage());
+        span.label("exception", ex.getClass().getName());
+        span.label("message", ex.getMessage());
         span.failed();
         throw ex;
       }

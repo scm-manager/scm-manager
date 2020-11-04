@@ -257,6 +257,17 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
     return self();
   }
 
+  /**
+   * Disables tracing for the request.
+   * This should only be done for internal requests.
+   *
+   * @return request instance
+   */
+  public T disableTracing() {
+    this.spanKind = null;
+    return self();
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
@@ -422,5 +433,5 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
   private String url;
 
   /** kind of span for trace api */
-  private String spanKind = "http-request";
+  private String spanKind = "HTTP Request";
 }
