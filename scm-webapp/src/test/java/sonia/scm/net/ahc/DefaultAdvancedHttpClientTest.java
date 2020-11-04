@@ -302,7 +302,8 @@ public class DefaultAdvancedHttpClientTest
     verify(tracer).span("failures");
     verify(span).label("url", "http://failing.host");
     verify(span).label("method", "DELETE");
-    verify(span).label("exception", "failed");
+    verify(span).label("exception", IOException.class.getName());
+    verify(span).label("message", "failed");
     verify(span).failed();
     verify(span).close();
   }

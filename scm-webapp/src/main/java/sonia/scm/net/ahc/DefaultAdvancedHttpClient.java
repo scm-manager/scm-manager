@@ -201,7 +201,8 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
         }
         return response;
       } catch (IOException ex) {
-        span.label("exception", ex.getMessage());
+        span.label("exception", ex.getClass().getName());
+        span.label("message", ex.getMessage());
         span.failed();
         throw ex;
       }
