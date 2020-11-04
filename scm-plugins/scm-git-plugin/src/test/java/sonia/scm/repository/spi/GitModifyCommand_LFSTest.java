@@ -24,22 +24,15 @@
 
 package sonia.scm.repository.spi;
 
-import com.github.sdorra.shiro.ShiroRule;
-import com.github.sdorra.shiro.SubjectAware;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
-import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
-import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -51,17 +44,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini", username = "admin", password = "secret")
-public class GitModifyCommand_LFSTest extends AbstractGitCommandTestBase {
-
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
-  @Rule
-  public BindTransportProtocolRule transportProtocolRule = new BindTransportProtocolRule();
-  @Rule
-  public ShiroRule shiro = new ShiroRule();
-
-  private final LfsBlobStoreFactory lfsBlobStoreFactory = mock(LfsBlobStoreFactory.class);
+public class GitModifyCommand_LFSTest extends GitModifyCommandTestBase {
 
   @BeforeClass
   public static void registerFilter() {
@@ -124,14 +107,6 @@ public class GitModifyCommand_LFSTest extends AbstractGitCommandTestBase {
     request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
 
     return command.execute(request);
-  }
-
-  private RevCommit getLastCommit(Git git) throws GitAPIException {
-    return git.log().setMaxCount(1).call().iterator().next();
-  }
-
-  private GitModifyCommand createCommand() {
-    return new GitModifyCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())), lfsBlobStoreFactory);
   }
 
   @Override

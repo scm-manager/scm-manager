@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import org.junit.jupiter.params.ParameterizedTest;
@@ -29,6 +29,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static sonia.scm.repository.Branch.VALID_BRANCH_NAMES;
 
 class BranchDtoTest {
 
@@ -54,10 +55,11 @@ class BranchDtoTest {
     "val{d",
     "val{}d",
     "val|kill",
-    "val}"
+    "val}",
+    "va/li/d"
   })
   void shouldAcceptValidBranchName(String branchName) {
-    assertTrue(branchName.matches(BranchDto.VALID_BRANCH_NAMES));
+    assertTrue(branchName.matches(VALID_BRANCH_NAMES));
   }
 
   @ParameterizedTest
@@ -70,6 +72,6 @@ class BranchDtoTest {
     "val id"
   })
   void shouldRejectInvalidBranchName(String branchName) {
-    assertFalse(branchName.matches(BranchDto.VALID_BRANCH_NAMES));
+    assertFalse(branchName.matches(VALID_BRANCH_NAMES));
   }
 }

@@ -27,15 +27,18 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableSet;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
+import sonia.scm.user.ExternalUserConverter;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.web.security.AdministrationContext;
@@ -46,7 +49,9 @@ import java.io.IOException;
 import static org.hamcrest.Matchers.hasItem;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -68,7 +73,12 @@ public class SyncingRealmHelperTest {
   @Mock
   private UserManager userManager;
 
+  @Mock
+  private ExternalUserConverter converter;
+
   private SyncingRealmHelper helper;
+
+  private SyncingRealmHelper helperWithConverters;
 
   /**
    * Mock {@link AdministrationContext} and create object under test.
@@ -94,6 +104,7 @@ public class SyncingRealmHelperTest {
     };
 
     helper = new SyncingRealmHelper(ctx, userManager, groupManager);
+    helperWithConverters = new SyncingRealmHelper(ctx, userManager, groupManager, ImmutableSet.of(converter));
   }
 
   /**
@@ -140,10 +151,15 @@ public class SyncingRealmHelperTest {
    */
   @Test
   public void testStoreUserCreate() {
+    ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
     User user = new User("tricia");
 
     helper.store(user);
-    verify(userManager, times(1)).create(user);
+    verify(userManager, times(1)).create(userArgumentCaptor.capture());
+
+    User value = userArgumentCaptor.getValue();
+    assertEquals(user.getDisplayName(), value.getDisplayName());
+    assertEquals(user.getName(), value.getName());
   }
 
   /**
@@ -151,9 +167,10 @@ public class SyncingRealmHelperTest {
    */
   @Test(expected = IllegalStateException.class)
   public void testStoreUserFailure() {
+    ArgumentCaptor<User> userArgumentCaptor = ArgumentCaptor.forClass(User.class);
     User user = new User("tricia");
 
-    doThrow(AlreadyExistsException.class).when(userManager).create(user);
+    doThrow(AlreadyExistsException.class).when(userManager).create(userArgumentCaptor.capture());
     helper.store(user);
   }
 
@@ -168,6 +185,23 @@ public class SyncingRealmHelperTest {
 
     helper.store(user);
     verify(userManager, times(1)).modify(user);
+  }
+
+  /**
+   * Tests {@link SyncingRealmHelper#store(User)} with an existing user.
+   */
+  @Test
+  public void testConvertUser(){
+    User zaphod = new User("zaphod");
+    when(converter.convert(any())).thenReturn(zaphod);
+    when(userManager.contains("tricia")).thenReturn(Boolean.TRUE);
+
+    User user = new User("tricia");
+
+    helperWithConverters.store(user);
+
+    verify(converter).convert(user);
+    verify(userManager, times(1)).modify(zaphod);
   }
 
 

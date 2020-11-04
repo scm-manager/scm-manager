@@ -43,6 +43,7 @@ import sonia.scm.ContextEntry;
 import sonia.scm.group.GroupCollector;
 import sonia.scm.security.ApiKey;
 import sonia.scm.security.ApiKeyService;
+import sonia.scm.user.EMail;
 import sonia.scm.user.InvalidPasswordException;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
@@ -95,6 +96,9 @@ public class MeResourceTest {
 
   @Mock
   private ApiKeyService apiKeyService;
+
+  @Mock
+  private EMail eMail;
 
   @InjectMocks
   private MeDtoFactory meDtoFactory;

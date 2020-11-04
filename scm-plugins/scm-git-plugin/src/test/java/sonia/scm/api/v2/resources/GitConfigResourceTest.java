@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
@@ -261,7 +261,7 @@ public class GitConfigResourceTest {
   private MockHttpResponse put() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.put("/" + GitConfigResource.GIT_CONFIG_PATH_V2)
                                              .contentType(GitVndMediaType.GIT_CONFIG)
-                                             .content("{\"disabled\":true}".getBytes());
+                                             .content("{\"disabled\":true, \"defaultBranch\":\"main\"}".getBytes());
 
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);

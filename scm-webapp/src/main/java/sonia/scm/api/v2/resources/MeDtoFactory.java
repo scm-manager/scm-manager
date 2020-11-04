@@ -102,7 +102,7 @@ public class MeDtoFactory extends HalAppenderMapper {
     if (UserPermissions.changePublicKeys(user).isPermitted()) {
       linksBuilder.single(link("publicKeys", resourceLinks.user().publicKeys(user.getName())));
     }
-    if (userManager.isTypeDefault(user) && UserPermissions.changePassword(user).isPermitted()) {
+    if (!user.isExternal() && UserPermissions.changePassword(user).isPermitted()) {
       linksBuilder.single(link("password", resourceLinks.me().passwordChange()));
     }
     if (UserPermissions.changeApiKeys(user).isPermitted()) {

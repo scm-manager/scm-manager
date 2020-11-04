@@ -30,6 +30,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.group.Group;
+import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.PermissionAssigner;
@@ -43,6 +45,8 @@ import javax.inject.Inject;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import java.util.Collections;
+
+import static sonia.scm.group.GroupCollector.AUTHENTICATED;
 
 @Extension
 public class SetupContextListener implements ServletContextListener {
@@ -75,13 +79,18 @@ public class SetupContextListener implements ServletContextListener {
     private final PasswordService passwordService;
     private final PermissionAssigner permissionAssigner;
     private final ScmConfiguration scmConfiguration;
+    private final GroupManager groupManager;
+
+    @VisibleForTesting
+    static final String AUTHENTICATED_GROUP_DESCRIPTION = "Includes all authenticated users";
 
     @Inject
-    public SetupAction(UserManager userManager, PasswordService passwordService, PermissionAssigner permissionAssigner, ScmConfiguration scmConfiguration) {
+    public SetupAction(UserManager userManager, PasswordService passwordService, PermissionAssigner permissionAssigner, ScmConfiguration scmConfiguration, GroupManager groupManager) {
       this.userManager = userManager;
       this.passwordService = passwordService;
       this.permissionAssigner = permissionAssigner;
       this.scmConfiguration = scmConfiguration;
+      this.groupManager = groupManager;
     }
 
     @Override
@@ -91,6 +100,10 @@ public class SetupContextListener implements ServletContextListener {
       }
       if (anonymousUserRequiredButNotExists()) {
         userManager.create(SCMContext.ANONYMOUS);
+      }
+
+      if (authenticatedGroupDoesNotExists()) {
+        createAuthenticatedGroup();
       }
     }
 
@@ -114,6 +127,17 @@ public class SetupContextListener implements ServletContextListener {
 
       PermissionDescriptor descriptor = new PermissionDescriptor("*");
       permissionAssigner.setPermissionsForUser("scmadmin", Collections.singleton(descriptor));
+    }
+
+    private boolean authenticatedGroupDoesNotExists() {
+      return groupManager.get(AUTHENTICATED) == null;
+    }
+
+    private void createAuthenticatedGroup() {
+      Group authenticated = new Group("xml", AUTHENTICATED);
+      authenticated.setDescription(AUTHENTICATED_GROUP_DESCRIPTION);
+      authenticated.setExternal(true);
+      groupManager.create(authenticated);
     }
   }
 }

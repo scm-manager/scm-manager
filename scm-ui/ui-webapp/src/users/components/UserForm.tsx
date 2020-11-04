@@ -23,9 +23,10 @@
  */
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { User } from "@scm-manager/ui-types";
+import { Link, User } from "@scm-manager/ui-types";
 import {
   Checkbox,
+  ErrorNotification,
   InputField,
   Level,
   PasswordConfirmation,
@@ -47,6 +48,7 @@ type State = {
   nameValidationError: boolean;
   displayNameValidationError: boolean;
   passwordValid: boolean;
+  error?: Error;
 };
 
 class UserForm extends React.Component<Props, State> {
@@ -60,6 +62,7 @@ class UserForm extends React.Component<Props, State> {
         mail: "",
         password: "",
         active: true,
+        external: false,
         _links: {}
       },
       mailValidationError: false,
@@ -80,14 +83,10 @@ class UserForm extends React.Component<Props, State> {
     }
   }
 
-  isFalsy(value) {
-    return !value;
-  }
-
   createUserComponentsAreInvalid = () => {
     const user = this.state.user;
     if (!this.props.user) {
-      return this.state.nameValidationError || this.isFalsy(user.name) || !this.state.passwordValid;
+      return this.state.nameValidationError || !user.name || (!user.external && !this.state.passwordValid);
     } else {
       return false;
     }
@@ -99,37 +98,40 @@ class UserForm extends React.Component<Props, State> {
       return (
         this.props.user.displayName === user.displayName &&
         this.props.user.mail === user.mail &&
-        this.props.user.active === user.active
+        this.props.user.active === user.active &&
+        this.props.user.external === user.external
       );
     } else {
       return false;
     }
   };
 
-  isValid = () => {
-    const user = this.state.user;
-    return !(
+  isInvalid = () => {
+    const { user } = this.state;
+
+    return (
       this.createUserComponentsAreInvalid() ||
       this.editUserComponentsAreUnchanged() ||
       this.state.mailValidationError ||
       this.state.displayNameValidationError ||
-      this.isFalsy(user.displayName)
+      this.state.nameValidationError ||
+      !user.displayName
     );
   };
 
   submit = (event: Event) => {
     event.preventDefault();
-    if (this.isValid()) {
+    if (!this.isInvalid()) {
       this.props.submitForm(this.state.user);
     }
   };
 
   render() {
     const { loading, t } = this.props;
-    const user = this.state.user;
+    const { user, error } = this.state;
 
+    const passwordChangeField = <PasswordConfirmation passwordChanged={this.handlePasswordChange} />;
     let nameField = null;
-    let passwordChangeField = null;
     let subtitle = null;
     if (!this.props.user) {
       // create new user
@@ -145,8 +147,6 @@ class UserForm extends React.Component<Props, State> {
           />
         </div>
       );
-
-      passwordChangeField = <PasswordConfirmation passwordChanged={this.handlePasswordChange} />;
     } else {
       // edit existing user
       subtitle = <Subtitle subtitle={t("userForm.subtitle")} />;
@@ -179,18 +179,37 @@ class UserForm extends React.Component<Props, State> {
               />
             </div>
           </div>
-          {passwordChangeField}
-          <div className="columns">
-            <div className="column">
-              <Checkbox
-                label={t("user.active")}
-                onChange={this.handleActiveChange}
-                checked={user ? user.active : false}
-                helpText={t("help.activeHelpText")}
-              />
-            </div>
-          </div>
-          <Level right={<SubmitButton disabled={!this.isValid()} loading={loading} label={t("userForm.button")} />} />
+          {!this.props.user && (
+            <>
+              <div className="columns">
+                <div className="column">
+                  <Checkbox
+                    label={t("user.externalFlag")}
+                    onChange={this.handleExternalChange}
+                    checked={user.external}
+                    helpText={t("help.externalFlagHelpText")}
+                  />
+                </div>
+              </div>
+            </>
+          )}
+          {!user.external && (
+            <>
+              {!this.props.user && passwordChangeField}
+              <div className="columns">
+                <div className="column">
+                  <Checkbox
+                    label={t("user.active")}
+                    onChange={this.handleActiveChange}
+                    checked={user ? user.active : false}
+                    helpText={t("help.activeHelpText")}
+                  />
+                </div>
+              </div>
+            </>
+          )}
+          {error && <ErrorNotification error={error} />}
+          <Level right={<SubmitButton disabled={this.isInvalid()} loading={loading} label={t("userForm.button.submit")} />} />
         </form>
       </>
     );
@@ -232,7 +251,7 @@ class UserForm extends React.Component<Props, State> {
         ...this.state.user,
         password
       },
-      passwordValid: !this.isFalsy(password) && passwordValid
+      passwordValid: !!password && passwordValid
     });
   };
 
@@ -241,6 +260,15 @@ class UserForm extends React.Component<Props, State> {
       user: {
         ...this.state.user,
         active
+      }
+    });
+  };
+
+  handleExternalChange = (external: boolean) => {
+    this.setState({
+      user: {
+        ...this.state.user,
+        external
       }
     });
   };

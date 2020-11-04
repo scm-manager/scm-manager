@@ -6,6 +6,7 @@
     "password": "Password",
     "active": "Active",
     "inactive": "Inactive",
+    "externalFlag": "External",
     "type": "Type",
     "creationDate": "Creation Date",
     "lastModified": "Last Modified"
@@ -20,7 +21,8 @@
     "displayNameHelpText": "Display name of the user.",
     "mailHelpText": "Email address of the user.",
     "adminHelpText": "An administrator is able to create, modify and delete repositories, groups and users.",
-    "activeHelpText": "Activate or deactivate the user."
+    "activeHelpText": "Activate or deactivate the user.",
+    "externalFlagHelpText": "This user is managed by an external system."
   },
   "users": {
     "title": "Users",
@@ -61,7 +63,17 @@
   },
   "userForm": {
     "subtitle": "Edit User",
-    "button": "Submit"
+    "userIsInternal": "This user is managed internally by SCM-Manager",
+    "userIsExternal": "This user is managed by an external system",
+    "button": {
+      "submit": "Submit",
+      "convertToExternal": "Convert user to external",
+      "convertToInternal": "Convert user to internal"
+    },
+    "modal": {
+      "passwordRequired": "Set new password for internal user",
+      "convertToInternal": "Convert to internal"
+    }
   },
   "publicKey": {
     "noStoredKeys": "No keys found.",

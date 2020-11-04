@@ -24,12 +24,14 @@
 
 package sonia.scm.user;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.ReducedModelObject;
@@ -41,12 +43,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.security.Principal;
 
-//~--- JDK imports ------------------------------------------------------------
-
-/**
- *
- * @author Sebastian Sdorra
- */
 @StaticPermissions(
   value = "user",
   globalPermissions = {"create", "list", "autocomplete"},
@@ -55,57 +51,42 @@ import java.security.Principal;
 )
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
-public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject, ReducedModelObject
-{
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+public class User extends BasicPropertiesAware implements Principal, ModelObject, PermissionObject, ReducedModelObject {
 
-  /** Field description */
   private static final long serialVersionUID = -3089541936726329663L;
 
-  //~--- constructors ---------------------------------------------------------
+  private boolean active = true;
+  private boolean external;
+  private Long creationDate;
+  private String displayName;
+  private Long lastModified;
+  private String mail;
+  private String name;
+  private String password;
 
   /**
-   * Constructs ...
-   *
+   * The user type is replaced by {@link #external} flag
+   * @deprecated Use {@link #external} instead.
    */
-  public User() {}
+  @Deprecated
+  private String type;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param name
-   */
-  public User(String name)
-  {
+  public User(String name) {
     this.name = name;
     this.displayName = name;
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param name
-   * @param displayName
-   * @param mail
-   */
-  public User(String name, String displayName, String mail)
-  {
+  public User(String name, String displayName, String mail) {
     this.name = name;
     this.displayName = displayName;
     this.mail = mail;
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param name
-   * @param displayName
-   * @param mail
-   */
-  public User(String name, String displayName, String mail, String password, String type, boolean active)
-  {
+  public User(String name, String displayName, String mail, String password, String type, boolean active) {
     this.name = name;
     this.displayName = displayName;
     this.mail = mail;
@@ -114,90 +95,57 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
     this.active = active;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   *
-   */
   @Override
-  public User clone()
-  {
-    User user = null;
+  public User clone() {
+    User user;
 
-    try
-    {
+    try {
       user = (User) super.clone();
-    }
-    catch (CloneNotSupportedException ex)
-    {
+    } catch (CloneNotSupportedException ex) {
       throw new RuntimeException(ex);
     }
 
     return user;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   *
-   * @return
-   */
-  public boolean copyProperties(User user)
-  {
+  public boolean copyProperties(User user) {
     return copyProperties(user, true);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param user
-   * @param copyPassword
-   *
-   * @return
-   */
-  public boolean copyProperties(User user, boolean copyPassword)
-  {
+  public boolean copyProperties(User user, boolean copyPassword) {
     boolean result = false;
 
-    if (user.isActive() != active)
-    {
+    if (user.isActive() != active) {
       result = true;
       user.setActive(active);
     }
 
-    if (Util.isNotEquals(user.getDisplayName(), displayName))
-    {
+    if (user.isExternal() != external) {
+      result = true;
+      user.setExternal(external);
+    }
+
+    if (Util.isNotEquals(user.getDisplayName(), displayName)) {
       result = true;
       user.setDisplayName(displayName);
     }
 
-    if (Util.isNotEquals(user.getMail(), mail))
-    {
+    if (Util.isNotEquals(user.getMail(), mail)) {
       result = true;
       user.setMail(mail);
     }
 
-    if (Util.isNotEquals(user.getName(), name))
-    {
+    if (Util.isNotEquals(user.getName(), name)) {
       result = true;
       user.setName(name);
     }
 
-    if (copyPassword && Util.isNotEquals(user.getPassword(), password))
-    {
+    if (copyPassword && Util.isNotEquals(user.getPassword(), password)) {
       result = true;
       user.setPassword(password);
     }
 
-    if (Util.isNotEquals(user.getType(), type))
-    {
+    if (Util.isNotEquals(user.getType(), type)) {
       result = true;
       user.setType(type);
     }
@@ -205,316 +153,65 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
     return result;
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
   @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
+  public boolean equals(Object obj) {
+    if (obj == null) {
       return false;
     }
 
-    if (getClass() != obj.getClass())
-    {
+    if (getClass() != obj.getClass()) {
       return false;
     }
 
     final User other = (User) obj;
 
     return Objects.equal(name, other.name)
-           && Objects.equal(displayName, other.displayName)
-           && Objects.equal(mail, other.mail)
-           && Objects.equal(type, other.type)
-           && Objects.equal(active, other.active)
-           && Objects.equal(password, other.password)
-           && Objects.equal(creationDate, other.creationDate)
-           && Objects.equal(lastModified, other.lastModified)
-           && Objects.equal(properties, other.properties);
+      && Objects.equal(displayName, other.displayName)
+      && Objects.equal(mail, other.mail)
+      && Objects.equal(external, other.external)
+      && Objects.equal(active, other.active)
+      && Objects.equal(password, other.password)
+      && Objects.equal(creationDate, other.creationDate)
+      && Objects.equal(lastModified, other.lastModified)
+      && Objects.equal(properties, other.properties);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
   @Override
-  public int hashCode()
-  {
-    return Objects.hashCode(name, displayName, mail, type, password,
-                            active, creationDate, lastModified, properties);
+  public int hashCode() {
+    return Objects.hashCode(name, displayName, mail, password,
+      active, external, creationDate, lastModified, properties);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
   @Override
-  public String toString()
-  {
+  public String toString() {
     String pwd = (password != null)
-                 ? "(is set)"
-                 : "(not set)";
+      ? "(is set)"
+      : "(not set)";
 
     //J-
     return MoreObjects.toStringHelper(this)
-            .add("name", name)
-            .add("displayName",displayName)
-            .add("mail", mail)
-            .add("password", pwd)
-            .add("type", type)
-            .add("active", active)
-            .add("creationDate", creationDate)
-            .add("lastModified", lastModified)
-            .add("properties", properties)
-            .toString();
+      .add("name", name)
+      .add("displayName", displayName)
+      .add("mail", mail)
+      .add("password", pwd)
+      .add("type", type)
+      .add("active", active)
+      .add("external", external)
+      .add("creationDate", creationDate)
+      .add("lastModified", lastModified)
+      .add("properties", properties)
+      .toString();
     //J+
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Long getCreationDate()
-  {
-    return creationDate;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getDisplayName()
-  {
-    return displayName;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public String getId()
-  {
-    return name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public Long getLastModified()
-  {
-    return lastModified;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getMail()
-  {
-    return mail;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String getName()
-  {
-    return name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getPassword()
-  {
-    return password;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public String getType()
-  {
-    return type;
-  }
-
-  /**
-   * Returns false if the user is deactivated.
-   *
-   *
-   * @return false if the user is deactivated
-   * @since 1.16
-   */
-  public boolean isActive()
-  {
-    return active;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @Override
-  public boolean isValid()
-  {
+  public boolean isValid() {
     return ValidationUtil.isNameValid(name) && Util.isNotEmpty(displayName)
-           && Util.isNotEmpty(type)
-           && ((Util.isEmpty(mail)) || ValidationUtil.isMailAddressValid(mail));
+      && ((Util.isEmpty(mail)) || ValidationUtil.isMailAddressValid(mail));
   }
 
-  //~--- set methods ----------------------------------------------------------
-
-  /**
-   * Activate or deactive this user.
-   *
-   *
-   * @param active false to deactivate the user.
-   * @since 1.6
-   */
-  public void setActive(boolean active)
-  {
-    this.active = active;
+  @Override
+  public String getId() {
+    return name;
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @param creationDate
-   */
-  public void setCreationDate(Long creationDate)
-  {
-    this.creationDate = creationDate;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param displayName
-   */
-  public void setDisplayName(String displayName)
-  {
-    this.displayName = displayName;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param lastModified
-   */
-  public void setLastModified(Long lastModified)
-  {
-    this.lastModified = lastModified;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param mail
-   */
-  public void setMail(String mail)
-  {
-    this.mail = mail;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param name
-   */
-  public void setName(String name)
-  {
-    this.name = name;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param password
-   */
-  public void setPassword(String password)
-  {
-    this.password = password;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   */
-  public void setType(String type)
-  {
-    this.type = type;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private boolean active = true;
-
-  /** Field description */
-  private Long creationDate;
-
-  /** Field description */
-  private String displayName;
-
-  /** Field description */
-  private Long lastModified;
-
-  /** Field description */
-  private String mail;
-
-  /** Field description */
-  private String name;
-
-  /** Field description */
-  private String password;
-
-  /** Field description */
-  private String type;
 }

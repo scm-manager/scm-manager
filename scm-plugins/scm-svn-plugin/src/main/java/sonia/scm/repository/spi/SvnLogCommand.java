@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
@@ -76,6 +77,7 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     try
     {
       long revisioNumber = parseRevision(revision, repository);
+      Preconditions.checkArgument(revisioNumber > 0, "revision must be greater than zero: %d", revisioNumber);
       SVNRepository repo = open();
       Collection<SVNLogEntry> entries = repo.log(null, null, revisioNumber,
                                           revisioNumber, true, true);
