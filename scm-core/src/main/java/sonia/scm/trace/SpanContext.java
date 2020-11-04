@@ -26,9 +26,9 @@ package sonia.scm.trace;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import sonia.scm.xml.XmlInstantAdapter;
 
 import javax.xml.bind.annotation.XmlAccessType;
@@ -44,21 +44,30 @@ import java.util.Map;
  *
  * @since 2.9.0
  */
+@Getter
 @XmlRootElement
+@EqualsAndHashCode
+@AllArgsConstructor
 @XmlAccessorType(XmlAccessType.FIELD)
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-@AllArgsConstructor(access = AccessLevel.PACKAGE)
-@Getter
-@Setter
 public class SpanContext {
 
-  String kind;
-  Map<String, String> labels;
+  private String kind;
+  private Map<String, String> labels;
   @XmlJavaTypeAdapter(XmlInstantAdapter.class)
-  Instant opened;
+  private Instant opened;
   @XmlJavaTypeAdapter(XmlInstantAdapter.class)
-  Instant closed;
-  boolean failed;
+  private Instant closed;
+  private boolean failed;
+
+  /**
+   * Returns the label with the given key or {@code null}.
+   * @param key key of label
+   * @return label or {@code null}
+   */
+  public String label(String key) {
+    return labels.get(key);
+  }
 
   /**
    * Calculates the duration of the span.
@@ -68,10 +77,4 @@ public class SpanContext {
   public Duration duration() {
     return Duration.between(opened, closed);
   }
-
-  // For testing
-  public static SpanContext create(String kind, Map<String, String> labels, Instant opened, Instant closed, boolean failed) {
-    return new SpanContext(kind, labels, opened, closed, failed);
-  }
-
 }
