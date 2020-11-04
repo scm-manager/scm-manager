@@ -28,7 +28,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.io.SVNRepository;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 @Slf4j
@@ -41,7 +40,7 @@ public class SvnLookupCommand extends AbstractSvnCommand implements LookupComman
   @Override
   public <T> Optional<T> lookup(LookupCommandRequest request) {
     try {
-      if (requestContainsArg(request, "props")) {
+      if ("propget".equalsIgnoreCase(request.getArgs()[0])) {
         return lookupProps(request);
       }
     } catch (SVNException e) {
@@ -52,15 +51,11 @@ public class SvnLookupCommand extends AbstractSvnCommand implements LookupComman
   }
 
   private <T> Optional<T> lookupProps(LookupCommandRequest request) throws SVNException {
-    if (requestContainsArg(request, "uuid")) {
+    if (request.getArgs()[1].equalsIgnoreCase("uuid")) {
       SVNRepository repository = context.open();
       return Optional.of((T) repository.getRepositoryUUID(true));
     }
     log.debug("No result found on lookup");
     return Optional.empty();
-  }
-
-  private boolean requestContainsArg(LookupCommandRequest request, String props) {
-    return Arrays.stream(request.getArgs()).anyMatch(a -> a.equalsIgnoreCase(props));
   }
 }
