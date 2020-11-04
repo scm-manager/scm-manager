@@ -257,6 +257,17 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
     return self();
   }
 
+  /**
+   * Disables tracing for the request.
+   * This should only be done for internal requests.
+   *
+   * @return request instance
+   */
+  public T disableTracing() {
+    this.spanKind = null;
+    return self();
+  }
+
   //~--- get methods ----------------------------------------------------------
 
   /**
