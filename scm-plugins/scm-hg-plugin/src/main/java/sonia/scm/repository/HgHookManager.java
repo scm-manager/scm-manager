@@ -28,6 +28,8 @@ package sonia.scm.repository;
 
 import com.github.legman.Subscribe;
 import com.google.common.base.MoreObjects;
+import com.google.common.base.Strings;
+import com.google.common.hash.Hashing;
 import com.google.inject.Inject;
 import com.google.inject.OutOfScopeException;
 import com.google.inject.Provider;
@@ -38,6 +40,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.config.ScmConfigurationChangedEvent;
 import sonia.scm.net.ahc.AdvancedHttpClient;
+import sonia.scm.net.ahc.AdvancedHttpResponse;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.util.HttpUtil;
@@ -45,6 +48,8 @@ import sonia.scm.util.Util;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.security.SecureRandom;
 import java.util.UUID;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -294,49 +299,62 @@ public class HgHookManager {
     return request;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param url
-   *
-   * @return
-   */
-  private boolean isUrlWorking(String url)
-  {
+  private boolean isUrlWorking(String url) {
     boolean result = false;
 
-    try
-    {
-      url = url.concat("?ping=true");
+    try {
+      String pingChallenge = UUID.randomUUID().toString();
+      url = url.concat("?ping=true&challenge=").concat(pingChallenge);
 
       logger.trace("check hook url {}", url);
-      //J-
-      int sc = httpClient.get(url)
-                         .disableHostnameValidation(true)
-                         .disableCertificateValidation(true)
-                         .ignoreProxySettings(true)
-                         .disableTracing()
-                         .request()
-                         .getStatus();
-      //J+
-      result = sc == 204;
-    }
-    catch (IOException ex)
-    {
-      if (logger.isTraceEnabled())
-      {
-        logger.trace("url test failed for url ".concat(url), ex);
+      AdvancedHttpResponse response = httpClient.get(url)
+         .disableHostnameValidation(true)
+         .disableCertificateValidation(true)
+         .ignoreProxySettings(true)
+         .disableTracing()
+         .request();
+
+      if (response.isSuccessful()) {
+        String signature = response.contentAsString();
+        if (verify(pingChallenge, signature)) {
+          result = true;
+        } else {
+          logger.warn("hook callback {} returned wrong challenge", url);
+        }
       }
     }
-
+    catch (IOException ex) {
+      logger.trace("url test failed for url {}", url, ex);
+    }
     return result;
   }
 
-  //~--- fields ---------------------------------------------------------------
+  @SuppressWarnings("UnstableApiUsage")
+  public String sign(String content) {
+    return Hashing.hmacSha256(signingKey)
+      .hashString(content, StandardCharsets.UTF_8)
+      .toString();
+  }
+
+  public boolean verify(String content, String signature) {
+    return sign(content).equals(signature);
+  }
+
+  private byte[] createSigningKey() {
+    SecureRandom random = new SecureRandom();
+    byte[] data = new byte[64];
+    random.nextBytes(data);
+    return data;
+  }
+
+  public boolean isHookUrlConfigured() {
+    return !Strings.isNullOrEmpty(hookUrl);
+  }
 
   /** Field description */
-  private String challenge = UUID.randomUUID().toString();
+  private final String challenge = UUID.randomUUID().toString();
+
+  private final byte[] signingKey = createSigningKey();
 
   /** Field description */
   private ScmConfiguration configuration;

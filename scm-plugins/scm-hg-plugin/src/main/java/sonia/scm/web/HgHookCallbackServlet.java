@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.io.Closeables;
@@ -81,8 +82,8 @@ public class HgHookCallbackServlet extends HttpServlet
   /** Field description */
   public static final String PARAM_REPOSITORYID = "repositoryId";
 
-  /** Field description */
-  private static final String PARAM_CHALLENGE = "challenge";
+  @VisibleForTesting
+  static final String PARAM_CHALLENGE = "challenge";
 
   /** Field description */
   private static final String PARAM_TOKEN = "token";
@@ -90,8 +91,8 @@ public class HgHookCallbackServlet extends HttpServlet
   /** Field description */
   private static final String PARAM_NODE = "node";
 
-  /** Field description */
-  private static final String PARAM_PING = "ping";
+  @VisibleForTesting
+  static final String PARAM_PING = "ping";
 
   /** Field description */
   private static final Pattern REGEX_URL =
@@ -126,26 +127,36 @@ public class HgHookCallbackServlet extends HttpServlet
    * @param request
    * @param response
    *
-   * @throws IOException
    * @throws ServletException
    */
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response)
-  {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) {
     String ping = request.getParameter(PARAM_PING);
-
-    if (Util.isNotEmpty(ping) && Boolean.parseBoolean(ping))
-    {
-      response.setStatus(HttpServletResponse.SC_NO_CONTENT);
-    }
-    else
-    {
+    if (Util.isNotEmpty(ping) && Boolean.parseBoolean(ping)) {
+      ping(request, response);
+    } else {
       response.setStatus(HttpServletResponse.SC_NOT_FOUND);
     }
   }
 
+  private void ping(HttpServletRequest request, HttpServletResponse response) {
+    String challenge = request.getParameter(PARAM_CHALLENGE);
+    if (!Strings.isNullOrEmpty(challenge)) {
+      String signature = hookManager.sign(challenge);
+      response.setStatus(HttpServletResponse.SC_OK);
+      try (PrintWriter writer = response.getWriter()) {
+        writer.print(signature);
+      } catch (IOException ex) {
+        logger.warn("failed to write ping response", ex);
+        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+      }
+    } else {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+    }
+  }
+
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) {
     try {
       handlePostRequest(request, response);
     }  catch (IOException ex) {
