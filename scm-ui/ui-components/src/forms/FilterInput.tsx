@@ -21,73 +21,60 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, FormEvent } from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC, FormEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { createAttributesForTesting } from "../devBuild";
 
-type Props = WithTranslation & {
+type Props = {
   filter: (p: string) => void;
   value?: string;
   testId?: string;
-};
-
-type State = {
-  value: string;
+  placeholder?: string;
 };
 
 const FixedHeightInput = styled.input`
   height: 2.5rem;
 `;
 
-class FilterInput extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      value: this.props.value ? this.props.value : ""
-    };
-  }
+const FilterInput: FC<Props> = ({ filter, value, testId, placeholder }) => {
+  const [stateValue, setStateValue] = useState(value || "");
+  const [timeoutId, setTimeoutId] = useState(0);
+  const [t] = useTranslation("commons");
 
-  handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    this.setState({
-      value: event.target.value
-    });
-  };
+  useEffect(() => {
+    clearTimeout(timeoutId);
+    if (!stateValue) {
+      // no delay if filter input was deleted
+      filter(stateValue);
+    } else {
+      // with delay while typing
+      const id = setTimeout(() => filter(stateValue), 1000);
+      setTimeoutId(id);
+    }
+  }, [stateValue]);
 
-  handleSubmit = (event: FormEvent) => {
-    this.props.filter(this.state.value);
+  const handleSubmit = (event: FormEvent) => {
+    filter(stateValue);
     event.preventDefault();
   };
 
-  componentDidUpdate = ({ value: oldValue }: Props) => {
-    const { value: newValue } = this.props;
-    const { value: stateValue } = this.state;
-    if (oldValue !== newValue && newValue !== stateValue) {
-      this.setState({
-        value: newValue || ""
-      });
-    }
-  };
+  return (
+    <form className="input-field" onSubmit={handleSubmit} {...createAttributesForTesting(testId)}>
+      <div className="control has-icons-left">
+        <FixedHeightInput
+          className="input"
+          type="search"
+          placeholder={placeholder || t("filterEntries")}
+          value={stateValue}
+          onChange={event => setStateValue(event.target.value)}
+        />
+        <span className="icon is-small is-left">
+          <i className="fas fa-search" />
+        </span>
+      </div>
+    </form>
+  );
+};
 
-  render() {
-    const { t, testId } = this.props;
-    return (
-      <form className="input-field" onSubmit={this.handleSubmit} {...createAttributesForTesting(testId)}>
-        <div className="control has-icons-left">
-          <FixedHeightInput
-            className="input"
-            type="search"
-            placeholder={t("filterEntries")}
-            value={this.state.value}
-            onChange={this.handleChange}
-          />
-          <span className="icon is-small is-left">
-            <i className="fas fa-search" />
-          </span>
-        </div>
-      </form>
-    );
-  }
-}
-
-export default withTranslation("commons")(FilterInput);
+export default FilterInput;

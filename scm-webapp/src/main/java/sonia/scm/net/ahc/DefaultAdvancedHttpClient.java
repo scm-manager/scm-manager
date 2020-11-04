@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.net.ahc;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -38,8 +38,11 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.net.Proxies;
 import sonia.scm.net.TrustAllHostnameVerifier;
 import sonia.scm.net.TrustAllTrustManager;
+import sonia.scm.trace.Span;
+import sonia.scm.trace.Tracer;
 import sonia.scm.util.HttpUtil;
 
+import javax.annotation.Nonnull;
 import javax.inject.Provider;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
@@ -99,9 +102,10 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
    */
   @Inject
   public DefaultAdvancedHttpClient(ScmConfiguration configuration,
-    Set<ContentTransformer> contentTransformers, Provider<SSLContext> sslContextProvider)
+    Tracer tracer, Set<ContentTransformer> contentTransformers, Provider<SSLContext> sslContextProvider)
   {
     this.configuration = configuration;
+    this.tracer = tracer;
     this.contentTransformers = contentTransformers;
     this.sslContextProvider = sslContextProvider;
   }
@@ -185,45 +189,65 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
    * @throws IOException
    */
   @Override
-  protected AdvancedHttpResponse request(BaseHttpRequest<?> request)
-    throws IOException
-  {
-    HttpURLConnection connection = openConnection(request,
-                                     new URL(request.getUrl()));
+  protected AdvancedHttpResponse request(BaseHttpRequest<?> request) throws IOException {
+    String spanKind = request.getSpanKind();
+    if (Strings.isNullOrEmpty(spanKind)) {
+      logger.debug("execute request {} without tracing", request.getUrl());
+      return doRequest(request);
+    }
+    return doRequestWithTracing(request);
+  }
+
+  @Nonnull
+  private DefaultAdvancedHttpResponse doRequestWithTracing(BaseHttpRequest<?> request) throws IOException {
+    try (Span span = tracer.span(request.getSpanKind())) {
+      span.label("url", request.getUrl());
+      span.label("method", request.getMethod());
+      try {
+        DefaultAdvancedHttpResponse response = doRequest(request);
+        span.label("status", response.getStatus());
+        if (!response.isSuccessful()) {
+          span.failed();
+        }
+        return response;
+      } catch (IOException ex) {
+        span.label("exception", ex.getClass().getName());
+        span.label("message", ex.getMessage());
+        span.failed();
+        throw ex;
+      }
+    }
+  }
+
+  @Nonnull
+  private DefaultAdvancedHttpResponse doRequest(BaseHttpRequest<?> request) throws IOException {
+    HttpURLConnection connection = openConnection(request, new URL(request.getUrl()));
 
     applyBaseSettings(request, connection);
 
-    if (connection instanceof HttpsURLConnection)
-    {
+    if (connection instanceof HttpsURLConnection) {
       applySSLSettings(request, (HttpsURLConnection) connection);
     }
 
     Content content = null;
 
-    if (request instanceof AdvancedHttpRequestWithBody)
-    {
+    if (request instanceof AdvancedHttpRequestWithBody) {
       AdvancedHttpRequestWithBody ahrwb = (AdvancedHttpRequestWithBody) request;
 
       content = ahrwb.getContent();
 
-      if (content != null)
-      {
+      if (content != null) {
         content.prepare(ahrwb);
-      }
-      else
-      {
+      } else {
         request.header(HttpUtil.HEADER_CONTENT_LENGTH, "0");
       }
-    }
-    else
-    {
+    } else {
       request.header(HttpUtil.HEADER_CONTENT_LENGTH, "0");
     }
 
     applyHeaders(request, connection);
 
-    if (content != null)
-    {
+    if (content != null) {
       applyContent(connection, content);
     }
 
@@ -300,7 +324,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
       {
         TrustManager[] trustAllCerts = new TrustManager[] {
                                          new TrustAllTrustManager() };
-        SSLContext sc = SSLContext.getInstance("SSL");
+        SSLContext sc = SSLContext.getInstance("TLS");
 
         sc.init(null, trustAllCerts, new java.security.SecureRandom());
         connection.setSSLSocketFactory(sc.getSocketFactory());
@@ -309,10 +333,10 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
       {
         logger.error("could not disable certificate validation", ex);
       }
-    } 
-    else 
+    }
+    else
     {
-      logger.trace("set ssl socker factory from provider");
+      logger.trace("set ssl socket factory from provider");
       connection.setSSLSocketFactory(sslContextProvider.get().getSocketFactory());
     }
 
@@ -330,7 +354,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
 
     if (isProxyEnabled(request))
     {
-      connection = openProxyConnection(request, url);
+      connection = openProxyConnection(url);
       appendProxyAuthentication(connection);
     }
     else
@@ -340,7 +364,9 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
         logger.trace("ignore proxy settings");
       }
 
-      logger.debug("fetch {}", url.toExternalForm());
+      if (logger.isDebugEnabled()) {
+        logger.debug("fetch {}", url.toExternalForm());
+      }
 
       connection = createConnection(url);
     }
@@ -348,8 +374,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
     return connection;
   }
 
-  private HttpURLConnection openProxyConnection(BaseHttpRequest<?> request,
-    URL url)
+  private HttpURLConnection openProxyConnection(URL url)
     throws IOException
   {
     if (logger.isDebugEnabled())
@@ -380,7 +405,10 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
 
   /** set of content transformers */
   private final Set<ContentTransformer> contentTransformers;
-  
+
   /** ssl context provider */
   private final Provider<SSLContext> sslContextProvider;
+
+  /** tracer used for request tracing */
+  private final Tracer tracer;
 }

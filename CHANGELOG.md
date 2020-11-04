@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
+- Tracing api ([#1393](https://github.com/scm-manager/scm-manager/pull/#1393))
 - Automatic user converter for external users ([#1380](https://github.com/scm-manager/scm-manager/pull/1380))
 - Create _authenticated group on setup ([#1396](https://github.com/scm-manager/scm-manager/pull/1396))
 - The name of the initial git branch can be configured and is set to `main` by default ([#1399](https://github.com/scm-manager/scm-manager/pull/1399))
