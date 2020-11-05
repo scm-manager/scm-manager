@@ -24,6 +24,7 @@
 
 package sonia.scm.admin;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,9 @@ public class ReleaseFeedParser {
   public static final int DEFAULT_TIMEOUT_IN_MILLIS = 1000;
 
   private static final Logger LOG = LoggerFactory.getLogger(ReleaseFeedParser.class);
+  
+  @VisibleForTesting
+  static final String SPAN_KIND = "Release Feed";
 
   private final AdvancedHttpClient client;
   private final ExecutorService executorService;
@@ -103,7 +107,10 @@ public class ReleaseFeedParser {
       if (Strings.isNullOrEmpty(url)) {
         return Optional.empty();
       }
-      ReleaseFeedDto releaseFeed = client.get(url).request().contentFromXml(ReleaseFeedDto.class);
+      ReleaseFeedDto releaseFeed = client.get(url)
+        .spanKind(SPAN_KIND)
+        .request()
+        .contentFromXml(ReleaseFeedDto.class);
       return filterForLatestRelease(releaseFeed);
     } catch (Exception e) {
       LOG.error("Could not parse release feed from {}", url, e);

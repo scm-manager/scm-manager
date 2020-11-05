@@ -32,6 +32,7 @@ import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.net.ahc.AdvancedHttpClient;
+import sonia.scm.net.ahc.AdvancedHttpResponse;
 
 import java.io.IOException;
 import java.util.Date;
@@ -44,6 +45,7 @@ import java.util.concurrent.Semaphore;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
+import static sonia.scm.admin.ReleaseFeedParser.SPAN_KIND;
 
 @ExtendWith(MockitoExtension.class)
 class ReleaseFeedParserTest {
@@ -62,7 +64,7 @@ class ReleaseFeedParserTest {
   void shouldFindLatestRelease() throws IOException {
     String url = "https://www.scm-manager.org/download/rss.xml";
 
-    when(client.get(url).request().contentFromXml(ReleaseFeedDto.class)).thenReturn(createReleaseFeedDto());
+    when(request(url).contentFromXml(ReleaseFeedDto.class)).thenReturn(createReleaseFeedDto());
 
     Optional<UpdateInfo> update = releaseFeedParser.findLatestRelease(url);
 
@@ -71,13 +73,17 @@ class ReleaseFeedParserTest {
     assertThat(update.get().getLink()).isEqualTo("download-3");
   }
 
+  private AdvancedHttpResponse request(String url) throws IOException {
+    return client.get(url).spanKind(SPAN_KIND).request();
+  }
+
   @Test
   void shouldHandleTimeout() throws IOException {
     String url = "https://www.scm-manager.org/download/rss.xml";
 
     Semaphore waitWithResultUntilTimeout = new Semaphore(0);
 
-    when(client.get(url).request().contentFromXml(ReleaseFeedDto.class)).thenAnswer(invocation -> {
+    when(request(url).contentFromXml(ReleaseFeedDto.class)).thenAnswer(invocation -> {
       waitWithResultUntilTimeout.acquire();
       return createReleaseFeedDto();
     });
@@ -95,7 +101,7 @@ class ReleaseFeedParserTest {
 
     Semaphore waitWithResultUntilBothTriggered = new Semaphore(0);
 
-    when(client.get(url).request().contentFromXml(ReleaseFeedDto.class)).thenAnswer(invocation -> {
+    when(request(url).contentFromXml(ReleaseFeedDto.class)).thenAnswer(invocation -> {
       waitWithResultUntilBothTriggered.acquire();
       return createReleaseFeedDto();
     });
