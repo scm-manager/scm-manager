@@ -40,9 +40,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -71,7 +69,6 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
   private Instant refreshExpiration;
   private String parentKeyId;
   private Scope scope = Scope.empty();
-  private Set<String> groups = new HashSet<>();
 
   private final Map<String,Object> custom = Maps.newHashMap();
 
@@ -155,8 +152,13 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
   @Override
   public JwtAccessToken build() {
-    if (SecurityUtils.getSubject().getPrincipals().getRealmNames().contains(ApiKeyRealm.NAME)) {
-      throw new AuthorizationException("Cannot create access token for api keys");
+    final Scope principalScope = SecurityUtils.getSubject().getPrincipals().oneByType(Scope.class);
+    if (principalScope != null && !principalScope.isEmpty()) {
+      if (scope != null && !scope.isEmpty()) {
+        throw new AuthorizationException(String.format("cannot merge builder scope (%s) with principal scope (%s)", scope, principalScope));
+      }
+      LOG.debug("using existing scope for new access token: {}", principalScope);
+      scope = principalScope;
     }
     String id = keyGenerator.createKey();
 

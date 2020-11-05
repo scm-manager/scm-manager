@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Internal server error for git sub modules without tree object ([#1397](https://github.com/scm-manager/scm-manager/pull/1397))
 - Do not expose subversion commit with id 0 ([#1395](https://github.com/scm-manager/scm-manager/pull/1395))
+- Cloning of Mercurial repositories with api keys ([#1407](https://github.com/scm-manager/scm-manager/pull/1407))
 - Disable cloning repositories via ssh for anonymous users ([#1403](https://github.com/scm-manager/scm-manager/pull/1403))
 - Support anonymous file download through rest api for non-browser clients (e.g. curl or postman) when anonymous mode is set to protocol-only ([#1402](https://github.com/scm-manager/scm-manager/pull/1402))
 - SVN diff with property changes ([#1400](https://github.com/scm-manager/scm-manager/pull/1400))

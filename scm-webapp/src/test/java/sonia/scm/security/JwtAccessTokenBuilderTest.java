@@ -39,6 +39,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Collection;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
@@ -135,14 +136,27 @@ class JwtAccessTokenBuilderTest {
   @Nested
   class FromApiKeyRealm {
 
+    private Scope scope;
+
     @BeforeEach
     void mockApiKeyRealm() {
+      scope = Scope.valueOf("dummy:scope:*");
       lenient().when(principalCollection.getRealmNames()).thenReturn(singleton("ApiTokenRealm"));
+      lenient().when(principalCollection.oneByType(Scope.class)).thenReturn(scope);
     }
 
     @Test
-    void testRejectedRequest() {
+    void shouldCreateJwtAndUsePreviousScope() {
       JwtAccessTokenBuilder builder = factory.create().subject("dent");
+      final JwtAccessToken accessToken = builder.build();
+      assertThat(accessToken).isNotNull();
+      assertThat(accessToken.getSubject()).isEqualTo("dent");
+      assertThat((Collection<String>) accessToken.getCustom("scope").get()).containsExactly("dummy:scope:*");
+    }
+
+    @Test
+    void shouldThrowExceptionWhenScopeAlreadyDefinedInBuilder() {
+      JwtAccessTokenBuilder builder = factory.create().scope(Scope.valueOf("an:incompatible:scope")).subject("dent");
       assertThrows(AuthorizationException.class, builder::build);
     }
   }
