@@ -61,25 +61,21 @@ import java.util.UUID;
 @Singleton
 public class HgHookManager {
 
+  private static final Logger LOG = LoggerFactory.getLogger(HgHookManager.class);
+
   @SuppressWarnings("java:S1075") // this url is fixed
   private static final String URL_HOOKPATH = "/hook/hg/";
 
-  /**
-   * the logger for HgHookManager
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(HgHookManager.class);
+  private final ScmConfiguration configuration;
+  private final Provider<HttpServletRequest> httpServletRequestProvider;
+  private final AdvancedHttpClient httpClient;
+  private final AccessTokenBuilderFactory accessTokenBuilderFactory;
 
-  //~--- constructors ---------------------------------------------------------
+  private final String challenge = UUID.randomUUID().toString();
+  private final byte[] signingKey = createSigningKey();
 
-  /**
-   * Constructs ...
-   *
-   *  @param configuration
-   * @param httpServletRequestProvider
-   * @param httpClient
-   * @param accessTokenBuilderFactory
-   */
+  private volatile String hookUrl;
+
   @Inject
   public HgHookManager(ScmConfiguration configuration,
                        Provider<HttpServletRequest> httpServletRequestProvider,
@@ -91,128 +87,72 @@ public class HgHookManager {
     this.accessTokenBuilderFactory = accessTokenBuilderFactory;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param config
-   */
   @Subscribe(async = false)
-  public void configChanged(ScmConfigurationChangedEvent config)
-  {
+  public void configChanged(ScmConfigurationChangedEvent config) {
     hookUrl = null;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  public String createUrl(HttpServletRequest request)
-  {
-    if (hookUrl == null)
-    {
-      synchronized (this)
-      {
-        if (hookUrl == null)
-        {
+  public String createUrl(HttpServletRequest request) {
+    if (hookUrl == null) {
+      synchronized (this) {
+        if (hookUrl == null) {
           buildHookUrl(request);
-
-          if (logger.isInfoEnabled() && Util.isNotEmpty(hookUrl))
-          {
-            logger.info("use {} for mercurial hooks", hookUrl);
+          if (Util.isNotEmpty(hookUrl)) {
+            LOG.info("use {} for mercurial hooks", hookUrl);
           }
         }
       }
     }
-
     return hookUrl;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String createUrl()
-  {
+  public String createUrl() {
     String url = hookUrl;
 
-    if (url == null)
-    {
+    if (url == null) {
       HttpServletRequest request = getHttpServletRequest();
 
-      if (request != null)
-      {
+      if (request != null) {
         url = createUrl(request);
-      }
-      else
-      {
+      } else {
         url = createConfiguredUrl();
-        logger.warn(
-          "created url {} without request, in some cases this could cause problems",
-          url);
+        LOG.warn("created url {} without request, in some cases this could cause problems", url);
       }
     }
 
     return url;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getChallenge()
-  {
+  public String getChallenge() {
     return challenge;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param challenge
-   *
-   * @return
-   */
-  public boolean isAcceptAble(String challenge)
-  {
+  public boolean isAcceptAble(String challenge) {
     return this.challenge.equals(challenge);
   }
 
-  public AccessToken getAccessToken()
-  {
+  public AccessToken getAccessToken() {
     return accessTokenBuilderFactory.create().build();
   }
 
   private void buildHookUrl(HttpServletRequest request) {
     if (configuration.isForceBaseUrl()) {
-      logger.debug("create hook url from configured base url because force base url is enabled");
+      LOG.debug("create hook url from configured base url because force base url is enabled");
 
       hookUrl = createConfiguredUrl();
       if (!isUrlWorking(hookUrl)) {
         disableHooks();
       }
     } else {
-      logger.debug("create hook url from request");
+      LOG.debug("create hook url from request");
 
       hookUrl = HttpUtil.getCompleteUrl(request, URL_HOOKPATH);
       if (!isUrlWorking(hookUrl)) {
-        logger.warn("hook url {} from request does not work, try now localhost", hookUrl);
+        LOG.warn("hook url {} from request does not work, try now localhost", hookUrl);
 
         hookUrl = createLocalUrl(request);
         if (!isUrlWorking(hookUrl)) {
-          logger.warn("localhost hook url {} does not work, try now from configured base url", hookUrl);
+          LOG.warn("localhost hook url {} does not work, try now from configured base url", hookUrl);
 
           hookUrl = createConfiguredUrl();
           if (!isUrlWorking(hookUrl)) {
@@ -223,34 +163,12 @@ public class HgHookManager {
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private String createConfiguredUrl()
-  {
-    //J-
-    return HttpUtil.getUriWithoutEndSeperator(
-      MoreObjects.firstNonNull(
-        configuration.getBaseUrl(),
-        "http://localhost:8080/scm"
-      )
-    ).concat(URL_HOOKPATH);
-    //J+
+  private String createConfiguredUrl() {
+    String url = MoreObjects.firstNonNull(configuration.getBaseUrl(), "http://localhost:8080/scm");
+    return HttpUtil.getUriWithoutEndSeperator(url).concat(URL_HOOKPATH);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  private String createLocalUrl(HttpServletRequest request)
-  {
+  private String createLocalUrl(HttpServletRequest request) {
     StringBuilder sb = new StringBuilder(request.getScheme());
 
     sb.append("://localhost:").append(request.getLocalPort());
@@ -259,41 +177,18 @@ public class HgHookManager {
     return sb.toString();
   }
 
-  /**
-   * Method description
-   *
-   */
-  private void disableHooks()
-  {
-    if (logger.isErrorEnabled())
-    {
-      logger.error(
-        "disabling mercurial hooks, because hook url {} seems not to work",
-        hookUrl);
-    }
-
+  private void disableHooks() {
+    LOG.error("disabling mercurial hooks, because hook url {} seems not to work", hookUrl);
     hookUrl = Util.EMPTY_STRING;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private HttpServletRequest getHttpServletRequest()
-  {
+  private HttpServletRequest getHttpServletRequest() {
     HttpServletRequest request = null;
 
-    try
-    {
+    try {
       request = httpServletRequestProvider.get();
-    }
-    catch (ProvisionException | OutOfScopeException ex)
-    {
-      logger.debug("http servlet request is not available");
+    } catch (ProvisionException | OutOfScopeException ex) {
+      LOG.debug("http servlet request is not available");
     }
 
     return request;
@@ -306,7 +201,7 @@ public class HgHookManager {
       String pingChallenge = UUID.randomUUID().toString();
       url = url.concat("?ping=true&challenge=").concat(pingChallenge);
 
-      logger.trace("check hook url {}", url);
+      LOG.trace("check hook url {}", url);
       AdvancedHttpResponse response = httpClient.get(url)
          .disableHostnameValidation(true)
          .disableCertificateValidation(true)
@@ -319,13 +214,14 @@ public class HgHookManager {
         if (verify(pingChallenge, signature)) {
           result = true;
         } else {
-          logger.warn("hook callback {} returned wrong challenge", url);
+          LOG.warn("hook callback {} returned wrong challenge", url);
         }
       }
     }
     catch (IOException ex) {
-      logger.trace("url test failed for url {}", url, ex);
+      LOG.trace("url test failed for url {}", url, ex);
     }
+
     return result;
   }
 
@@ -350,23 +246,4 @@ public class HgHookManager {
   public boolean isHookUrlConfigured() {
     return !Strings.isNullOrEmpty(hookUrl);
   }
-
-  /** Field description */
-  private final String challenge = UUID.randomUUID().toString();
-
-  private final byte[] signingKey = createSigningKey();
-
-  /** Field description */
-  private ScmConfiguration configuration;
-
-  /** Field description */
-  private volatile String hookUrl;
-
-  /** Field description */
-  private AdvancedHttpClient httpClient;
-
-  /** Field description */
-  private Provider<HttpServletRequest> httpServletRequestProvider;
-
-  private final AccessTokenBuilderFactory accessTokenBuilderFactory;
 }
