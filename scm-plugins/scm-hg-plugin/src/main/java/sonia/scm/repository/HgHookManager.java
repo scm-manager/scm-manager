@@ -135,6 +135,10 @@ public class HgHookManager {
     return accessTokenBuilderFactory.create().build();
   }
 
+  // the security issue claims the usage of user controlled data (headers from request),
+  // but this is safe now because we check the url with a challenge and a signature.
+  // see isUrlWorking for more details.
+  @SuppressWarnings("javasecurity:S5144")
   private void buildHookUrl(HttpServletRequest request) {
     if (configuration.isForceBaseUrl()) {
       LOG.debug("create hook url from configured base url because force base url is enabled");
