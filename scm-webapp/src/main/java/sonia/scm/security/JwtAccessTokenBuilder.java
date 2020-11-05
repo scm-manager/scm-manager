@@ -153,7 +153,7 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
   @Override
   public JwtAccessToken build() {
     final Scope principalScope = SecurityUtils.getSubject().getPrincipals().oneByType(Scope.class);
-    if (principalScope != null) {
+    if (principalScope != null && !principalScope.isEmpty()) {
       if (scope != null && !scope.isEmpty()) {
         throw new AuthorizationException(String.format("cannot merge builder scope (%s) with principal scope (%s)", scope, principalScope));
       }
