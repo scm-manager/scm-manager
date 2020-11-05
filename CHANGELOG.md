@@ -12,6 +12,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Create _authenticated group on setup ([#1396](https://github.com/scm-manager/scm-manager/pull/1396))
 - The name of the initial git branch can be configured and is set to `main` by default ([#1399](https://github.com/scm-manager/scm-manager/pull/1399))
 
+### Changed
+- Block mercurial push if no hook url could be configured ([#1411](https://github.com/scm-manager/scm-manager/pull/1411))
+
 ### Fixed
 - Internal server error for git sub modules without tree object ([#1397](https://github.com/scm-manager/scm-manager/pull/1397))
 - Do not expose subversion commit with id 0 ([#1395](https://github.com/scm-manager/scm-manager/pull/1395))
@@ -20,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Support anonymous file download through rest api for non-browser clients (e.g. curl or postman) when anonymous mode is set to protocol-only ([#1402](https://github.com/scm-manager/scm-manager/pull/1402))
 - SVN diff with property changes ([#1400](https://github.com/scm-manager/scm-manager/pull/1400))
 - Branches link in repository overview ([#1404](https://github.com/scm-manager/scm-manager/pull/1404))
+- Vulnerability in Mercurial hook url auto configuration ([#1411](https://github.com/scm-manager/scm-manager/pull/1411))
 
 ## [2.8.0] - 2020-10-27
 ### Added
