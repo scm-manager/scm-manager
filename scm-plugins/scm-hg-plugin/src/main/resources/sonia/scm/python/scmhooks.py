@@ -122,7 +122,6 @@ def callback(ui, repo, hooktype, node=None):
       abort = callHookUrl(ui, repo, hooktype, node)
     else:
       ui.warn(b"ERROR: scm-manager hooks are disabled, please check your configuration and the scm-manager log for details\n")
-      abort = False
   else:
     ui.warn(b"changeset node is not available")
   return abort
