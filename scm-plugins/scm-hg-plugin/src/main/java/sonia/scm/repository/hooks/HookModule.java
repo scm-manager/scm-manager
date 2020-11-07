@@ -21,30 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository;
 
-//~--- JDK imports ------------------------------------------------------------
+package sonia.scm.repository.hooks;
 
-import java.io.File;
-import java.io.IOException;
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import sonia.scm.plugin.Extension;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class HgVersionHandler extends AbstractHgHandler
-{
-
-  public HgVersionHandler(HgRepositoryHandler handler, HgContext context,
-                          File directory)
-  {
-    super(handler, context, null, directory);
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  public HgVersion getVersion() throws IOException {
-    return getResultFromScript(HgVersion.class, HgPythonScript.VERSION);
+@Extension
+public class HookModule extends AbstractModule {
+  @Override
+  protected void configure() {
+    install(new FactoryModuleBuilder()
+      .implement(HookHandler.class, DefaultHookHandler.class)
+      .build(HookHandlerFactory.class)
+    );
   }
 }

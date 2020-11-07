@@ -29,12 +29,10 @@ import com.google.inject.util.Providers;
 import org.junit.Before;
 import org.junit.Test;
 import sonia.scm.repository.Branch;
-import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
-import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import java.util.List;
 
@@ -47,10 +45,8 @@ public class HgBranchCommandTest extends AbstractHgCommandTestBase {
 
   @Before
   public void initWorkingCopyFactory() {
-    HgRepositoryEnvironmentBuilder hgRepositoryEnvironmentBuilder =
-      new HgRepositoryEnvironmentBuilder(handler, HgTestUtil.createHookManager());
 
-    workingCopyFactory = new SimpleHgWorkingCopyFactory(Providers.of(hgRepositoryEnvironmentBuilder), new NoneCachingWorkingCopyPool(new WorkdirProvider())) {
+    workingCopyFactory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())) {
       @Override
       public void configure(PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test

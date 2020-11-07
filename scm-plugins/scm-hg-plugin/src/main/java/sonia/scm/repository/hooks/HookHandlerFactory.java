@@ -24,14 +24,11 @@
 
 package sonia.scm.repository.hooks;
 
-import com.google.inject.ImplementedBy;
-
 import java.net.Socket;
 
 @FunctionalInterface
-@ImplementedBy(DefaultHookHandlerFactory.class)
 interface HookHandlerFactory {
 
-  Runnable create(Socket socket);
+  HookHandler create(Socket socket);
 
 }

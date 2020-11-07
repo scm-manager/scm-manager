@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import com.google.inject.Inject;
 import sonia.scm.plugin.Extension;
-import sonia.scm.repository.HgHookManager;
+import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 
@@ -35,18 +35,15 @@ import sonia.scm.repository.Repository;
  * @author Sebastian Sdorra
  */
 @Extension
-public class HgRepositoryServiceResolver implements RepositoryServiceResolver
-{
+public class HgRepositoryServiceResolver implements RepositoryServiceResolver {
 
   private final HgRepositoryHandler handler;
-  private final HgHookManager hookManager;
+  private final HgRepositoryFactory factory;
 
   @Inject
-  public HgRepositoryServiceResolver(HgRepositoryHandler handler,
-                                     HgHookManager hookManager)
-  {
+  public HgRepositoryServiceResolver(HgRepositoryHandler handler, HgRepositoryFactory factory) {
     this.handler = handler;
-    this.hookManager = hookManager;
+    this.factory = factory;
   }
 
   @Override
@@ -54,7 +51,7 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver
     HgRepositoryServiceProvider provider = null;
 
     if (HgRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new HgRepositoryServiceProvider(handler, hookManager, repository);
+      provider = new HgRepositoryServiceProvider(handler, factory, repository);
     }
 
     return provider;

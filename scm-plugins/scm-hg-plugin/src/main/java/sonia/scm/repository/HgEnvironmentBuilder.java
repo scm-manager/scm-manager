@@ -22,30 +22,14 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.hooks;
+package sonia.scm.repository;
 
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.spi.HookEventFacade;
+import com.google.inject.ImplementedBy;
 
-import javax.inject.Inject;
-import javax.inject.Provider;
-import java.net.Socket;
+import java.util.Map;
 
-public class DefaultHookHandlerFactory implements HookHandlerFactory {
-
-  private final HgRepositoryHandler handler;
-  private final HookEventFacade hookEventFacade;
-  private final Provider<HookEnvironment> hookEnvironment;
-
-  @Inject
-  public DefaultHookHandlerFactory(HgRepositoryHandler handler, HookEventFacade hookEventFacade, Provider<HookEnvironment> hookEnvironment) {
-    this.handler = handler;
-    this.hookEventFacade = hookEventFacade;
-    this.hookEnvironment = hookEnvironment;
-  }
-
-  @Override
-  public HgHookHandler create(Socket socket) {
-    return new HgHookHandler(handler, hookEventFacade, hookEnvironment, socket);
-  }
+@ImplementedBy(DefaultHgEnvironmentBuilder.class)
+public interface HgEnvironmentBuilder {
+  Map<String, String> read(Repository repository);
+  Map<String, String> write(Repository repository);
 }

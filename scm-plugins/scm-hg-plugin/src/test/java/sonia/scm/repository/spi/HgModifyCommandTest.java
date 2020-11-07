@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-import com.google.inject.util.Providers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,12 +31,9 @@ import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
-import sonia.scm.repository.HgHookManager;
-import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
-import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,9 +50,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
   @Before
   public void initHgModifyCommand() {
-    HgHookManager hookManager = HgTestUtil.createHookManager();
-    HgRepositoryEnvironmentBuilder environmentBuilder = new HgRepositoryEnvironmentBuilder(handler, hookManager);
-    SimpleHgWorkingCopyFactory workingCopyFactory = new SimpleHgWorkingCopyFactory(Providers.of(environmentBuilder), new NoneCachingWorkingCopyPool(new WorkdirProvider())) {
+    SimpleHgWorkingCopyFactory workingCopyFactory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())) {
       @Override
       public void configure(com.aragost.javahg.commands.PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test

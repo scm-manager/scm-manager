@@ -22,30 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.hooks;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-
-/**
- *
- * @author Sebastian Sdorra
- */
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public final class HgHookMessage implements Serializable {
-
-  private static final long serialVersionUID = 1804492842452344326L;
-
-  private Severity severity;
-  private String message;
-
-  public enum Severity { NOTE, ERROR }
+public interface HookHandler extends Runnable {
 }

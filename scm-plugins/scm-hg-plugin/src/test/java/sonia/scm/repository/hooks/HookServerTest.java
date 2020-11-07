@@ -89,7 +89,7 @@ class HookServerTest {
     }
   }
 
-  public static class HelloHandler implements Runnable {
+  public static class HelloHandler implements HookHandler {
 
     private final Socket socket;
 

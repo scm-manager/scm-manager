@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -29,16 +29,13 @@ package sonia.scm.repository;
 import org.junit.Assume;
 import sonia.scm.SCMContext;
 import sonia.scm.TempDirRepositoryLocationResolver;
-import sonia.scm.security.AccessToken;
+import sonia.scm.repository.hooks.HookEnvironment;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import java.io.File;
-import java.nio.file.Path;
 
 import static org.mockito.Mockito.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -80,49 +77,26 @@ public final class HgTestUtil
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   */
-  public static HgRepositoryHandler createHandler(File directory)  {
-    TempSCMContextProvider context =
-      (TempSCMContextProvider) SCMContext.getContext();
+  public static HgRepositoryHandler createHandler(File directory) {
+    TempSCMContextProvider context = (TempSCMContextProvider) SCMContext.getContext();
 
     context.setBaseDirectory(directory);
 
-    RepositoryDAO repoDao = mock(RepositoryDAO.class);
-
     RepositoryLocationResolver repositoryLocationResolver = new TempDirRepositoryLocationResolver(directory);
-    HgRepositoryHandler handler =
-      new HgRepositoryHandler(new InMemoryConfigurationStoreFactory(), new HgContextProvider(), repositoryLocationResolver, null, null);
+    HgRepositoryHandler handler = new HgRepositoryHandler(
+      new InMemoryConfigurationStoreFactory(),
+      repositoryLocationResolver,
+      null,
+      null
+    );
     handler.init(context);
 
     return handler;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static HgHookManager createHookManager()
-  {
-    HgHookManager hookManager = mock(HgHookManager.class);
-
-    when(hookManager.getChallenge()).thenReturn("challenge");
-    when(hookManager.createUrl()).thenReturn(
-      "http://localhost:8081/scm/hook/hg/");
-    when(hookManager.createUrl(any(HttpServletRequest.class))).thenReturn(
-      "http://localhost:8081/scm/hook/hg/");
-    AccessToken accessToken = mock(AccessToken.class);
-    when(accessToken.compact()).thenReturn("");
-    when(hookManager.getAccessToken()).thenReturn(accessToken);
-
-    return hookManager;
+  public static HgRepositoryFactory createFactory(HgRepositoryHandler handler, File directory) {
+    return new HgRepositoryFactory(
+      handler, new HookEnvironment(), new EmptyHgEnvironmentBuilder(), repository -> directory
+    );
   }
 }

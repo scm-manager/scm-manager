@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.hooks;
 
+import com.google.inject.assistedinject.Assisted;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.shiro.SecurityUtils;
@@ -31,7 +32,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.HgHookMessage;
 import sonia.scm.repository.spi.HgHookContextProvider;
@@ -39,9 +40,7 @@ import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.security.BearerToken;
 import sonia.scm.security.CipherUtil;
 
-import javax.annotation.Nonnull;
-import javax.inject.Provider;
-import java.io.File;
+import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -50,19 +49,20 @@ import java.util.List;
 
 import static java.util.Collections.singletonList;
 
-class HgHookHandler implements Runnable {
+class DefaultHookHandler implements HookHandler {
 
-  private static final Logger LOG = LoggerFactory.getLogger(HgHookHandler.class);
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultHookHandler.class);
 
-  private final HgRepositoryHandler handler;
   private final HookEventFacade hookEventFacade;
-  private final Provider<HookEnvironment> environmentProvider;
+  private final HookEnvironment environment;
+  private final HookContextProviderFactory hookContextProviderFactory;
   private final Socket socket;
 
-  HgHookHandler(HgRepositoryHandler handler, HookEventFacade hookEventFacade, Provider<HookEnvironment> environmentProvider, Socket socket) {
-    this.handler = handler;
+  @Inject
+  public DefaultHookHandler(HookContextProviderFactory hookContextProviderFactory, HookEventFacade hookEventFacade, HookEnvironment environment, @Assisted Socket socket) {
+    this.hookContextProviderFactory = hookContextProviderFactory;
     this.hookEventFacade = hookEventFacade;
-    this.environmentProvider = environmentProvider;
+    this.environment = environment;
     this.socket = socket;
   }
 
@@ -84,7 +84,6 @@ class HgHookHandler implements Runnable {
   }
 
   private Response handleHookRequest(Request request) {
-    HookEnvironment environment = environmentProvider.get();
     try {
       if (!environment.isAcceptAble(request.getChallenge())) {
         return error("invalid hook challenge");
@@ -93,27 +92,22 @@ class HgHookHandler implements Runnable {
       authenticate(request);
       environment.setPending(request.getType() == RepositoryHookType.PRE_RECEIVE);
 
-      HgHookContextProvider context = createHookContextProvider(request);
+      HgHookContextProvider context = hookContextProviderFactory.create(request.getRepositoryId(), request.getNode());
       hookEventFacade.handle(request.getRepositoryId()).fireHookEvent(request.getType(), context);
 
       return new Response(context.getHgMessageProvider().getMessages(), false);
     } catch (AuthenticationException ex) {
       LOG.warn("hook authentication failed", ex);
       return error("hook authentication failed");
+    } catch (NotFoundException ex) {
+      LOG.warn("could not find repository with id {}", request.getRepositoryId(), ex);
+      return error("repository not found");
     } catch (Exception ex) {
       LOG.warn("unknown error on hook occurred", ex);
       return error("unknown error");
     } finally {
       environment.clearPendingState();
     }
-  }
-
-  @Nonnull
-  private HgHookContextProvider createHookContextProvider(Request request) {
-    File repositoryDirectory = handler.getDirectory(request.getRepositoryId());
-    return new HgHookContextProvider(
-      handler, repositoryDirectory, null, request.node, request.type
-    );
   }
 
   private void authenticate(Request request) {

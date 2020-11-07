@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.hooks;
 
-import com.google.inject.util.Providers;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
@@ -35,10 +34,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.Repository;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.HgHookMessage;
+import sonia.scm.repository.api.HgHookMessageProvider;
 import sonia.scm.repository.spi.HgHookContextProvider;
 import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.security.CipherUtil;
@@ -48,6 +47,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -55,10 +55,13 @@ import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class HgHookHandlerTest {
+class DefaultHookHandlerTest {
 
   @Mock
-  private HgRepositoryHandler repositoryHandler;
+  private HookContextProviderFactory hookContextProviderFactory;
+
+  @Mock
+  private HgHookContextProvider contextProvider;
 
   @Mock
   private HookEventFacade hookEventFacade;
@@ -71,7 +74,7 @@ class HgHookHandlerTest {
 
   private HookEnvironment hookEnvironment;
 
-  private HgHookHandler handler;
+  private DefaultHookHandler handler;
 
   @Mock
   private Subject subject;
@@ -81,11 +84,13 @@ class HgHookHandlerTest {
     ThreadContext.bind(subject);
 
     hookEnvironment = new HookEnvironment();
-    DefaultHookHandlerFactory factory = new DefaultHookHandlerFactory(
-      repositoryHandler, hookEventFacade, Providers.of(hookEnvironment)
-    );
 
-    handler = factory.create(socket);
+    handler = new DefaultHookHandler(hookContextProviderFactory, hookEventFacade, hookEnvironment, socket);
+  }
+
+  private void mockMessageProvider() {
+    when(hookContextProviderFactory.create("42", "abc")).thenReturn(contextProvider);
+    when(contextProvider.getHgMessageProvider()).thenReturn(new HgHookMessageProvider());
   }
 
   @AfterEach
@@ -95,10 +100,11 @@ class HgHookHandlerTest {
 
   @Test
   void shouldFireHook() throws IOException {
+    mockMessageProvider();
     when(hookEventFacade.handle("42")).thenReturn(hookEventHandler);
 
-    HgHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
-    HgHookHandler.Response response = send(request);
+    DefaultHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
+    DefaultHookHandler.Response response = send(request);
 
     assertSuccess(response, RepositoryHookType.POST_RECEIVE);
     assertThat(hookEnvironment.isPending()).isFalse();
@@ -106,13 +112,22 @@ class HgHookHandlerTest {
 
   @Test
   void shouldSetPendingStateOnPreReceiveHooks() throws IOException {
+    mockMessageProvider();
     when(hookEventFacade.handle("42")).thenReturn(hookEventHandler);
 
-    HgHookHandler.Request request = createRequest(RepositoryHookType.PRE_RECEIVE);
-    HgHookHandler.Response response = send(request);
+    // we have to capture the pending state, when the hook is fired
+    // because the state is cleared before the method ends
+    AtomicReference<Boolean> ref = new AtomicReference<>(Boolean.FALSE);
+    doAnswer(ic -> {
+      ref.set(hookEnvironment.isPending());
+      return null;
+    }).when(hookEventHandler).fireHookEvent(RepositoryHookType.PRE_RECEIVE, contextProvider);
+
+    DefaultHookHandler.Request request = createRequest(RepositoryHookType.PRE_RECEIVE);
+    DefaultHookHandler.Response response = send(request);
 
     assertSuccess(response, RepositoryHookType.PRE_RECEIVE);
-    assertThat(hookEnvironment.isPending()).isTrue();
+    assertThat(ref.get()).isTrue();
   }
 
   @Test
@@ -121,8 +136,8 @@ class HgHookHandlerTest {
       .when(hookEventFacade)
       .handle("42");
 
-    HgHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
-    HgHookHandler.Response response = send(request);
+    DefaultHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
+    DefaultHookHandler.Response response = send(request);
 
     assertError(response, "unknown");
   }
@@ -133,28 +148,40 @@ class HgHookHandlerTest {
       .when(subject)
       .login(any(AuthenticationToken.class));
 
-    HgHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
-    HgHookHandler.Response response = send(request);
+    DefaultHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
+    DefaultHookHandler.Response response = send(request);
 
     assertError(response, "authentication");
   }
 
   @Test
+  void shouldHandleNotFoundException() throws IOException {
+    doThrow(NotFoundException.class)
+      .when(hookEventFacade)
+      .handle("42");
+
+    DefaultHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
+    DefaultHookHandler.Response response = send(request);
+
+    assertError(response, "not found");
+  }
+
+  @Test
   void shouldReturnErrorWithInvalidChallenge() throws IOException {
-    HgHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE, "something-different");
-    HgHookHandler.Response response = send(request);
+    DefaultHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE, "something-different");
+    DefaultHookHandler.Response response = send(request);
 
     assertError(response, "challenge");
   }
 
-  private void assertSuccess(HgHookHandler.Response response, RepositoryHookType type) {
+  private void assertSuccess(DefaultHookHandler.Response response, RepositoryHookType type) {
     assertThat(response.getMessages()).isEmpty();
     assertThat(response.isAbort()).isFalse();
 
     verify(hookEventHandler).fireHookEvent(eq(type), any(HgHookContextProvider.class));
   }
 
-  private void assertError(HgHookHandler.Response response, String message) {
+  private void assertError(DefaultHookHandler.Response response, String message) {
     assertThat(response.isAbort()).isTrue();
     assertThat(response.getMessages()).hasSize(1);
     HgHookMessage hgHookMessage = response.getMessages().get(0);
@@ -163,19 +190,19 @@ class HgHookHandlerTest {
   }
 
   @Nonnull
-  private HgHookHandler.Request createRequest(RepositoryHookType type) {
+  private DefaultHookHandler.Request createRequest(RepositoryHookType type) {
     return createRequest(type, hookEnvironment.getChallenge());
   }
 
   @Nonnull
-  private HgHookHandler.Request createRequest(RepositoryHookType type, String challenge) {
+  private DefaultHookHandler.Request createRequest(RepositoryHookType type, String challenge) {
     String secret = CipherUtil.getInstance().encode("secret");
-    return new HgHookHandler.Request(
+    return new DefaultHookHandler.Request(
       secret, type, "42", challenge, "abc"
     );
   }
 
-  private HgHookHandler.Response send(HgHookHandler.Request request) throws IOException {
+  private DefaultHookHandler.Response send(DefaultHookHandler.Request request) throws IOException {
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     Sockets.send(buffer, request);
     ByteArrayInputStream input = new ByteArrayInputStream(buffer.toByteArray());
@@ -185,7 +212,7 @@ class HgHookHandlerTest {
 
     handler.run();
 
-    return Sockets.read(new ByteArrayInputStream(output.toByteArray()), HgHookHandler.Response.class);
+    return Sockets.read(new ByteArrayInputStream(output.toByteArray()), DefaultHookHandler.Response.class);
   }
 
 }

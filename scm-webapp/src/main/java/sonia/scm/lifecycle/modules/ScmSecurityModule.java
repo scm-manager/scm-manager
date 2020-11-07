@@ -114,14 +114,14 @@ public class ScmSecurityModule extends ShiroWebModule
     }
 
     // bind constant
-    bindConstant().annotatedWith(Names.named("shiro.loginUrl")).to(
-      "/index.html");
+    bindConstant().annotatedWith(Names.named("shiro.loginUrl")).to("/index.html");
 
     // disable access to mustache resources
     addFilterChain("/**.mustache", filterConfig(ROLES, "nobody"));
 
     // disable session
     addFilterChain("/**", NO_SESSION_CREATION);
+    bindConstant().annotatedWith(Names.named("shiro.sessionStorageEnabled")).to(false);
   }
 
   /**

@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.repository.HgHookManager;
+import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.RepositoryHookType;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.HgHookBranchProvider;
 import sonia.scm.repository.api.HgHookMessageProvider;
 import sonia.scm.repository.api.HgHookTagProvider;
@@ -37,7 +37,6 @@ import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookMessageProvider;
 import sonia.scm.repository.api.HookTagProvider;
 
-import java.io.File;
 import java.util.EnumSet;
 import java.util.Set;
 
@@ -45,55 +44,40 @@ import java.util.Set;
 
 /**
  * Mercurial implementation of {@link HookContextProvider}.
- * 
+ *
  * @author Sebastian Sdorra
  */
-public class HgHookContextProvider extends HookContextProvider
-{
+public class HgHookContextProvider extends HookContextProvider {
 
-  private static final Set<HookFeature> SUPPORTED_FEATURES =
-    EnumSet.of(HookFeature.CHANGESET_PROVIDER, HookFeature.MESSAGE_PROVIDER,
-      HookFeature.BRANCH_PROVIDER, HookFeature.TAG_PROVIDER);
+  private static final Set<HookFeature> SUPPORTED_FEATURES = EnumSet.of(
+    HookFeature.CHANGESET_PROVIDER,
+    HookFeature.MESSAGE_PROVIDER,
+    HookFeature.BRANCH_PROVIDER,
+    HookFeature.TAG_PROVIDER
+  );
 
-  //~--- constructors ---------------------------------------------------------
+  private final HgHookChangesetProvider hookChangesetProvider;
+  private HgHookMessageProvider hgMessageProvider;
+  private HgHookBranchProvider hookBranchProvider;
+  private HgHookTagProvider hookTagProvider;
 
-  /**
-   * Constructs a new instance.
-   *
-   * @param handler mercurial repository handler
-   * @param repositoryDirectory the directory of the changed repository
-   * @param hookManager mercurial hook manager
-   * @param startRev start revision
-   * @param type type of hook
-   */
-  public HgHookContextProvider(HgRepositoryHandler handler,
-                               File repositoryDirectory, HgHookManager hookManager, String startRev,
-                               RepositoryHookType type)
-  {
-    this.hookChangesetProvider = new HgHookChangesetProvider(handler, repositoryDirectory, hookManager, startRev, type);
+  public HgHookContextProvider(HgRepositoryHandler handler, HgRepositoryFactory factory, Repository repository, String startRev) {
+    this.hookChangesetProvider = new HgHookChangesetProvider(handler, factory, repository, startRev);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   @Override
-  public HookBranchProvider getBranchProvider()
-  {
-    if (hookBranchProvider == null)
-    {
+  public HookBranchProvider getBranchProvider() {
+    if (hookBranchProvider == null) {
       hookBranchProvider = new HgHookBranchProvider(hookChangesetProvider);
     }
-
     return hookBranchProvider;
   }
 
   @Override
-  public HookTagProvider getTagProvider() 
-  {
-    if (hookTagProvider == null)
-    {
+  public HookTagProvider getTagProvider() {
+    if (hookTagProvider == null) {
       hookTagProvider = new HgHookTagProvider(hookChangesetProvider);
     }
-    
     return hookTagProvider;
   }
 
@@ -102,14 +86,11 @@ public class HgHookContextProvider extends HookContextProvider
   {
     return hookChangesetProvider;
   }
-  
-  public HgHookMessageProvider getHgMessageProvider()
-  {
-    if (hgMessageProvider == null)
-    {
+
+  public HgHookMessageProvider getHgMessageProvider() {
+    if (hgMessageProvider == null) {
       hgMessageProvider = new HgHookMessageProvider();
     }
-
     return hgMessageProvider;
   }
 
@@ -119,21 +100,9 @@ public class HgHookContextProvider extends HookContextProvider
     return SUPPORTED_FEATURES;
   }
 
-  //~--- methods --------------------------------------------------------------
-
   @Override
   protected HookMessageProvider createMessageProvider()
   {
     return getHgMessageProvider();
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  private final HgHookChangesetProvider hookChangesetProvider;
-
-  private HgHookMessageProvider hgMessageProvider;
-
-  private HgHookBranchProvider hookBranchProvider;
-  
-  private HgHookTagProvider hookTagProvider;
 }

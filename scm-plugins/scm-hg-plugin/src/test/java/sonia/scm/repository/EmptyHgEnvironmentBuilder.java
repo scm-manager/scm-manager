@@ -21,28 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-import com.google.inject.servlet.RequestScoped;
+import java.util.Collections;
+import java.util.Map;
 
-/**
- * Holds an instance of {@link HgContext} in the request scope.
- *
- * <p>The problem seems to be that guice had multiple options for injecting HgContext. {@link HgContextProvider}
- * bound via Module and {@link HgContext} bound void {@link RequestScoped} annotation. It looks like that Guice 4
- * injects randomly the one or the other, in SCMv1 (Guice 3) everything works as expected.</p>
- *
- * <p>To fix the problem we have created this class annotated with {@link RequestScoped}, which holds an instance
- * of {@link HgContext}. This way only the {@link HgContextProvider} is used for injection.</p>
- */
-@RequestScoped
-public class HgContextRequestStore {
-
-  private final HgContext context = new HgContext();
-
-  public HgContext get() {
-    return context;
+public class EmptyHgEnvironmentBuilder implements HgEnvironmentBuilder {
+  @Override
+  public Map<String, String> read(Repository repository) {
+    return Collections.emptyMap();
   }
 
+  @Override
+  public Map<String, String> write(Repository repository) {
+    return Collections.emptyMap();
+  }
 }

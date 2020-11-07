@@ -24,10 +24,8 @@
 
 package sonia.scm.repository;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -37,13 +35,14 @@ import javax.xml.bind.annotation.XmlRootElement;
  *
  * @author Sebastian Sdorra
  */
+@Data
+@AllArgsConstructor
 @XmlRootElement(name = "version")
 @XmlAccessorType(XmlAccessType.FIELD)
-@EqualsAndHashCode
-@Getter
-@Setter
-@ToString
 public class HgVersion {
+
+  public static final String UNKNOWN = "x.y.z (unknown)";
+
   private String mercurial;
   private String python;
 }

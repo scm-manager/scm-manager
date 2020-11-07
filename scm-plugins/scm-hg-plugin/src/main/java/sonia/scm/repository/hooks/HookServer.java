@@ -25,7 +25,9 @@
 package sonia.scm.repository.hooks;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import org.apache.shiro.concurrent.SubjectAwareExecutorService;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.SecurityManager;
+import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +40,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadFactory;
 
 @Singleton
 public class HookServer implements AutoCloseable {
@@ -56,16 +59,22 @@ public class HookServer implements AutoCloseable {
   }
 
   private ExecutorService createAcceptor() {
-    return new SubjectAwareExecutorService(Executors.newSingleThreadExecutor(
-      new ThreadFactoryBuilder().setNameFormat("HgHookAcceptor").build()
-    ));
+    return Executors.newSingleThreadExecutor(
+      createThreadFactory("HgHookAcceptor")
+    );
   }
 
   private ExecutorService createWorkerPool() {
-    return new SubjectAwareExecutorService(Executors.newCachedThreadPool(
-        new ThreadFactoryBuilder().setNameFormat("HgHookWorker-%d").build()
-      )
+    return Executors.newCachedThreadPool(
+      createThreadFactory("HgHookWorker-%d")
     );
+  }
+
+  @Nonnull
+  private ThreadFactory createThreadFactory(String hgHookAcceptor) {
+    return new ThreadFactoryBuilder()
+      .setNameFormat(hgHookAcceptor)
+      .build();
   }
 
   public int start() throws IOException {
@@ -83,17 +92,31 @@ public class HookServer implements AutoCloseable {
   }
 
   private void accept() {
+    SecurityManager securityManager = SecurityUtils.getSecurityManager();
     acceptor.submit(() -> {
       while (!serverSocket.isClosed()) {
         try {
           Socket clientSocket = serverSocket.accept();
           LOG.trace("accept incoming hook client from {}", clientSocket.getInetAddress());
-          workerPool.submit(handlerFactory.create(clientSocket));
+          HookHandler hookHandler = handlerFactory.create(clientSocket);
+          workerPool.submit(associateSecurityManager(securityManager, hookHandler));
         } catch (IOException ex) {
           LOG.debug("failed to accept socket, possible closed", ex);
         }
       }
     });
+  }
+
+  private Runnable associateSecurityManager(SecurityManager securityManager, HookHandler hookHandler) {
+    return () -> {
+      ThreadContext.bind(securityManager);
+      try {
+        hookHandler.run();
+      } finally {
+        ThreadContext.unbindSubject();
+        ThreadContext.unbindSecurityManager();
+      }
+    };
   }
 
   @Nonnull
