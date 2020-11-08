@@ -99,7 +99,7 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
 
   @Override
   public void configure(PullCommand pullCommand) {
-    pullCommand.cmdAppend("--config", "hooks.changegroup.scm=python:scmhooks.postHook");
-    pullCommand.cmdAppend("--config", "hooks.pretxnchangegroup.scm=python:scmhooks.preHook");
+    pullCommand.cmdAppend("--config", "hooks.changegroup.scm=python:scmhooks.post_hook");
+    pullCommand.cmdAppend("--config", "hooks.pretxnchangegroup.scm=python:scmhooks.pre_hook");
   }
 }

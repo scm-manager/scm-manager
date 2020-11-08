@@ -39,7 +39,8 @@ repositoryId = os.environ['SCM_REPOSITORY_ID']
 
 def print_messages(ui, messages):
   for message in messages:
-    ui.warn(b'%s: %s\n' % message['severity'], message['message'])
+    msg = "%s: %s\n" % (message['severity'], message['message'])
+    ui.warn(msg.encode('utf-8'))
 
 def fire_hook(ui, repo, hooktype, node):
   abort = True
@@ -52,12 +53,12 @@ def fire_hook(ui, repo, hooktype, node):
     s.sendall(b'\0')
 
     received = []
-    received = s.recv(1)
-    while b != b'\0':
-      received.append(b)
-      received = s.recv(1)
+    byte = s.recv(1)
+    while byte != b'\0':
+      received.append(byte)
+      byte = s.recv(1)
 
-    message = b''.join(bytes).decode('utf-8')
+    message = b''.join(received).decode('utf-8')
     response = json.loads(message)
 
     abort = response['abort']
@@ -75,7 +76,6 @@ def callback(ui, repo, hooktype, node=None):
       abort = fire_hook(ui, repo, hooktype, node)
     else:
       ui.warn(b"ERROR: scm-manager hooks are disabled, please check your configuration and the scm-manager log for details\n")
-      abort = False
   else:
     ui.warn(b"changeset node is not available")
   return abort
