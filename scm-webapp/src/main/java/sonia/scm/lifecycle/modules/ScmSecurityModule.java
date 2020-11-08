@@ -36,6 +36,9 @@ import org.apache.shiro.authc.pam.ModularRealmAuthenticator;
 import org.apache.shiro.authz.permission.PermissionResolver;
 import org.apache.shiro.crypto.hash.DefaultHashService;
 import org.apache.shiro.guice.web.ShiroWebModule;
+import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
+import org.apache.shiro.mgt.DefaultSubjectDAO;
+import org.apache.shiro.mgt.SubjectDAO;
 import org.apache.shiro.realm.Realm;
 
 import org.slf4j.Logger;
@@ -120,8 +123,18 @@ public class ScmSecurityModule extends ShiroWebModule
     addFilterChain("/**.mustache", filterConfig(ROLES, "nobody"));
 
     // disable session
+    disableSession();
+  }
+
+  private void disableSession() {
     addFilterChain("/**", NO_SESSION_CREATION);
     bindConstant().annotatedWith(Names.named("shiro.sessionStorageEnabled")).to(false);
+
+    DefaultSubjectDAO subjectDAO = new DefaultSubjectDAO();
+    DefaultSessionStorageEvaluator sessionStorageEvaluator = new DefaultSessionStorageEvaluator();
+    sessionStorageEvaluator.setSessionStorageEnabled(false);
+    subjectDAO.setSessionStorageEvaluator(sessionStorageEvaluator);
+    bind(SubjectDAO.class).toInstance(subjectDAO);
   }
 
   /**
