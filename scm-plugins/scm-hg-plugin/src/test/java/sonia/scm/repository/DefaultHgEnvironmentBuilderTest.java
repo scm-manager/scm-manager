@@ -38,6 +38,7 @@ import sonia.scm.repository.hooks.HookServer;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.CipherUtil;
+import sonia.scm.security.Xsrf;
 
 import javax.annotation.Nonnull;
 import java.io.File;
@@ -118,7 +119,7 @@ class DefaultHgEnvironmentBuilderTest {
 
   private void applyAccessToken(String compact) {
     AccessToken accessToken = mock(AccessToken.class);
-    when(accessTokenBuilderFactory.create().build()).thenReturn(accessToken);
+    when(accessTokenBuilderFactory.create().custom(Xsrf.TOKEN_KEY, null).build()).thenReturn(accessToken);
     when(accessToken.compact()).thenReturn(compact);
   }
 

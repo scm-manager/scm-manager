@@ -30,6 +30,7 @@ import com.google.common.collect.Maps;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
@@ -87,8 +88,6 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
   @Override
   public JwtAccessTokenBuilder custom(String key, Object value) {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(key), "null or empty value not allowed");
-    Preconditions.checkArgument(value != null, "null or empty value not allowed");
     this.custom.put(key, value);
     return this;
   }
@@ -183,8 +182,8 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
 
     if (refreshableFor > 0) {
-      long refreshExpiration = refreshableForUnit.toMillis(refreshableFor);
-      claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, new Date(now.toEpochMilli() + refreshExpiration).getTime());
+      long re = refreshableForUnit.toMillis(refreshableFor);
+      claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, new Date(now.toEpochMilli() + re).getTime());
     } else if (refreshExpiration != null) {
       claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, Date.from(refreshExpiration));
     }
@@ -198,10 +197,11 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
       claims.setIssuer(issuer);
     }
 
+
     // sign token and create compact version
     String compact = Jwts.builder()
         .setClaims(claims)
-        .signWith(SignatureAlgorithm.HS256, key.getBytes())
+        .signWith(Keys.hmacShaKeyFor(key.getBytes()), SignatureAlgorithm.HS256)
         .compact();
 
     return new JwtAccessToken(claims, compact);

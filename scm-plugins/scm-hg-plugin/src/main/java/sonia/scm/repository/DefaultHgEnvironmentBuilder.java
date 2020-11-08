@@ -32,6 +32,7 @@ import sonia.scm.repository.hooks.HookServer;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.CipherUtil;
+import sonia.scm.security.Xsrf;
 import sonia.scm.web.HgUtil;
 
 import javax.inject.Inject;
@@ -109,9 +110,16 @@ public class DefaultHgEnvironmentBuilder implements HgEnvironmentBuilder {
 
   private void write(ImmutableMap.Builder<String, String> env) {
     env.put(ENV_HOOK_PORT, String.valueOf(getHookPort()));
-    AccessToken accessToken = accessTokenBuilderFactory.create().build();
-    env.put(ENV_BEARER_TOKEN, CipherUtil.getInstance().encode(accessToken.compact()));
+    env.put(ENV_BEARER_TOKEN, accessToken());
     env.put(ENV_CHALLENGE, hookEnvironment.getChallenge());
+  }
+
+  private String accessToken() {
+    AccessToken accessToken = accessTokenBuilderFactory.create()
+      // disable xsrf protection, because we can not access the http servlet request for verification
+      .custom(Xsrf.TOKEN_KEY, null)
+      .build();
+    return CipherUtil.getInstance().encode(accessToken.compact());
   }
 
   private synchronized int getHookPort() {
