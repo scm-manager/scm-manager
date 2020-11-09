@@ -691,7 +691,7 @@
     <jjwt.version>0.11.2</jjwt.version>
     <selenium.version>2.53.1</selenium.version>
     <wagon.version>1.0</wagon.version>
-    <mustache.version>0.9.6-scm1</mustache.version>
+    <mustache.version>0.9.7</mustache.version>
     <netbeans.hint.deploy.server>Tomcat</netbeans.hint.deploy.server>
     <sonar.issue.ignore.multicriteria>e1</sonar.issue.ignore.multicriteria>
     <sonar.issue.ignore.multicriteria.e1.ruleKey>javascript:S3827</sonar.issue.ignore.multicriteria.e1.ruleKey>
