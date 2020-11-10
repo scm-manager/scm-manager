@@ -53,7 +53,7 @@ class SvnLookupCommandTest {
   void shouldReturnEmptyOptional() {
     LookupCommandRequest request = new LookupCommandRequest();
     request.setType(String.class);
-    request.setArgs(new String[]{"props"});
+    request.setArgs(new String[]{"propget"});
 
     Optional<Object> result = command.lookup(request);
 
@@ -68,7 +68,7 @@ class SvnLookupCommandTest {
 
     LookupCommandRequest request = new LookupCommandRequest();
     request.setType(String.class);
-    request.setArgs(new String[]{"props", "uuid"});
+    request.setArgs(new String[]{"propget", "uuid", "/"});
 
     Optional<Object> result = command.lookup(request);
 

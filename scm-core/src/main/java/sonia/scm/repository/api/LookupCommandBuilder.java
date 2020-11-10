@@ -32,7 +32,7 @@ import java.util.Optional;
 /**
  * The lookup command executes a lookup for additional repository information.
  *
- * @since 2.8.0
+ * @since 2.10.0
  */
 public class LookupCommandBuilder {
 

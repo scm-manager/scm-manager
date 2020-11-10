@@ -436,7 +436,7 @@ public final class RepositoryService implements Closeable {
    * @return instance of {@link LookupCommandBuilder}
    * @throws CommandNotSupportedException if the command is not supported
    *                                      by the implementation of the repository service provider.
-   * @since 2.8.0
+   * @since 2.10.0
    */
   public LookupCommandBuilder getLookupCommand() {
     LOG.debug("create lookup command for repository {}",

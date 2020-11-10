@@ -60,7 +60,7 @@ public enum Command
   MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
 
   /**
-   * @since 2.8.0
+   * @since 2.10.0
    */
   LOOKUP;
 }

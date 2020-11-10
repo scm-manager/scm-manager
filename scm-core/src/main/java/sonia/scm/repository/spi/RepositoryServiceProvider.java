@@ -276,7 +276,7 @@ public abstract class RepositoryServiceProvider implements Closeable
   }
 
   /**
-   * @since 2.8.0
+   * @since 2.10.0
    */
   public LookupCommand getLookupCommand()
   {
