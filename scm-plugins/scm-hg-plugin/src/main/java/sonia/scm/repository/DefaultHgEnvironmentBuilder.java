@@ -36,10 +36,12 @@ import sonia.scm.security.Xsrf;
 import sonia.scm.web.HgUtil;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.util.Map;
 
+@Singleton
 public class DefaultHgEnvironmentBuilder implements HgEnvironmentBuilder {
 
   @VisibleForTesting
