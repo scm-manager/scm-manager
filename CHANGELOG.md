@@ -7,6 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Fixed
+- Missing close of hg diff command ([#1417](https://github.com/scm-manager/scm-manager/pull/1417))
 - Error on repository initialization with least-privilege user ([#1414](https://github.com/scm-manager/scm-manager/pull/1414))
 
 ## [2.9.0] - 2020-11-06
