@@ -24,8 +24,8 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.google.inject.util.Providers;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
@@ -56,11 +56,12 @@ import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.ws.rs.core.MediaType;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.time.Instant;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
@@ -68,6 +69,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -269,6 +271,62 @@ public class BranchRootResourceTest extends RepositoryTestBase {
 
     assertEquals(404, response.getStatus());
     verify(branchCommandBuilder, never()).branch(anyString());
+  }
+
+  @Test
+  public void shouldNotDeleteBranchIfNotPermitted() throws IOException, URISyntaxException {
+    doThrow(AuthorizationException.class).when(subject).checkPermission("repository:modify:repoId");
+    when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(Branch.normalBranch("suspicious", "0")));
+
+    MockHttpRequest request = MockHttpRequest
+      .delete("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/branches/suspicious");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(403, response.getStatus());
+    verify(branchCommandBuilder, never()).delete("suspicious");
+  }
+
+  @Test
+  public void shouldNotDeleteDefaultBranch() throws IOException, URISyntaxException {
+    when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(Branch.defaultBranch("main", "0")));
+
+    MockHttpRequest request = MockHttpRequest
+      .delete("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/branches/main");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(400, response.getStatus());
+  }
+
+  @Test
+  public void shouldDeleteBranch() throws IOException, URISyntaxException {
+    when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(Branch.normalBranch("suspicious", "0")));
+
+    MockHttpRequest request = MockHttpRequest
+      .delete("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/branches/suspicious");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(204, response.getStatus());
+    verify(branchCommandBuilder).delete("suspicious");
+  }
+
+  @Test
+  public void shouldAnswer204IfNothingWasDeleted() throws IOException, URISyntaxException {
+    when(branchesCommandBuilder.getBranches()).thenReturn(new Branches());
+
+    MockHttpRequest request = MockHttpRequest
+      .delete("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/branches/suspicious");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(204, response.getStatus());
+    verify(branchCommandBuilder, never()).delete(anyString());
   }
 
   private Branch createBranch(String existing_branch) {

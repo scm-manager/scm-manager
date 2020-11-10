@@ -47,6 +47,7 @@ import sonia.scm.web.VndMediaType;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -57,6 +58,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Optional;
 
 import static sonia.scm.AlreadyExistsException.alreadyExists;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -308,4 +310,50 @@ public class BranchRootResource {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
   }
+
+  /**
+   * Deletes a branch.
+   *
+   * <strong>Note:</strong> This method requires "repository" privilege.
+   *
+   * @param branch the name of the branch to delete.
+   */
+  @DELETE
+  @Path("{branch}")
+  @Operation(summary = "Delete branch", description = "Deletes the given branch.", tags = "Repository")
+  @ApiResponse(responseCode = "204", description = "delete success or nothing to delete")
+  @ApiResponse(responseCode = "400", description = "the default branch cannot be deleted")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to modify the repository")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response delete(@PathParam("namespace") String namespace,
+                         @PathParam("name") String name,
+                         @PathParam("branch") String branch) {
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      RepositoryPermissions.modify(repositoryService.getRepository()).check();
+
+      Optional<Branch> branchToBeDeleted = repositoryService.getBranchesCommand().getBranches().getBranches().stream()
+        .filter(b -> b.getName().equalsIgnoreCase(branch))
+        .findFirst();
+
+      if (branchToBeDeleted.isPresent()) {
+        if (branchToBeDeleted.get().isDefaultBranch()) {
+          return Response.status(400).build();
+        } else {
+          repositoryService.getBranchCommand().delete(branch);
+        }
+      }
+    } catch (IOException e) {
+      return Response.serverError().build();
+    }
+    return Response.noContent().build();
+  }
+
 }
