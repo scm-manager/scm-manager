@@ -156,6 +156,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
     return new SvnModifyCommand(context, workingCopyFactory);
   }
 
+  @Override
   public LookupCommand getLookupCommand() { return new SvnLookupCommand(context);}
 
   /**

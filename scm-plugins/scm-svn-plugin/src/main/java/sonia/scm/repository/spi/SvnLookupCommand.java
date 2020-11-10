@@ -40,7 +40,7 @@ public class SvnLookupCommand extends AbstractSvnCommand implements LookupComman
   @Override
   public <T> Optional<T> lookup(LookupCommandRequest request) {
     try {
-      if ("propget".equalsIgnoreCase(request.getArgs()[0])) {
+      if (request.getArgs().length > 1 && "propget".equalsIgnoreCase(request.getArgs()[0])) {
         return lookupProps(request);
       }
     } catch (SVNException e) {
