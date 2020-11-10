@@ -138,6 +138,7 @@ class Content extends React.Component<Props, State> {
             <OpenInFullscreenButton
               modalTitle={file?.name}
               modalBody={<BorderLessDiv className="panel">{content}</BorderLessDiv>}
+              tooltipStyle="htmlTitle"
             />
             <ExtensionPoint
               name="repos.sources.content.actionbar"

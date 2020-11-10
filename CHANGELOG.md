@@ -5,13 +5,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [2.9.0] - 2020-11-06
+### Added
+- Tracing api ([#1393](https://github.com/scm-manager/scm-manager/pull/#1393))
+- Automatic user converter for external users ([#1380](https://github.com/scm-manager/scm-manager/pull/1380))
+- Create _authenticated group on setup ([#1396](https://github.com/scm-manager/scm-manager/pull/1396))
+- The name of the initial git branch can be configured and is set to `main` by default ([#1399](https://github.com/scm-manager/scm-manager/pull/1399))
+
+### Fixed
+- Internal server error for git sub modules without tree object ([#1397](https://github.com/scm-manager/scm-manager/pull/1397))
+- Do not expose subversion commit with id 0 ([#1395](https://github.com/scm-manager/scm-manager/pull/1395))
+- Cloning of Mercurial repositories with api keys ([#1407](https://github.com/scm-manager/scm-manager/pull/1407))
+- Disable cloning repositories via ssh for anonymous users ([#1403](https://github.com/scm-manager/scm-manager/pull/1403))
+- Support anonymous file download through rest api for non-browser clients (e.g. curl or postman) when anonymous mode is set to protocol-only ([#1402](https://github.com/scm-manager/scm-manager/pull/1402))
+- SVN diff with property changes ([#1400](https://github.com/scm-manager/scm-manager/pull/1400))
+- Branches link in repository overview ([#1404](https://github.com/scm-manager/scm-manager/pull/1404))
+
+## [2.8.0] - 2020-10-27
 ### Added
 - Generation of email addresses for users, where none is configured ([#1370](https://github.com/scm-manager/scm-manager/pull/1370))
 - Source code fullscreen view ([#1376](https://github.com/scm-manager/scm-manager/pull/1376))
+- Plugins can now expose ui components to be shared with other plugins ([#1382](https://github.com/scm-manager/scm-manager/pull/1382))
+
+### Changed
+- Reduce logging of ApiTokenRealm ([#1385](https://github.com/scm-manager/scm-manager/pull/1385))
+- Centralise syntax highlighting ([#1382](https://github.com/scm-manager/scm-manager/pull/1382))
 
 ### Fixed
-- Missing default permission to manage public gpg keys ([#1377](https://github.com/scm-manager/scm-manager/pull/1377))
+- Handling of snapshot plugin dependencies ([#1384](https://github.com/scm-manager/scm-manager/pull/1384))
+- SyntaxHighlighting for GoLang ([#1386](https://github.com/scm-manager/scm-manager/pull/1386))
+- Privilege escalation for api keys ([#1388](https://github.com/scm-manager/scm-manager/pull/1388))
 
 ## [2.6.3] - 2020-10-16
 ### Fixed

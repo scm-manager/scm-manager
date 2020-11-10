@@ -22,39 +22,53 @@
  * SOFTWARE.
  */
 
-import lowlight from "lowlight/lib/core";
+import refractor from "refractor/core";
 
-// adapter to let lowlight look like refractor
-// this is required because react-diff-view does only support refractor,
-// but we want same highlighting as in the source code browser.
-
-const isLanguageRegistered = (lang: string) => {
-  // @ts-ignore listLanguages seems unknown to type
-  const registeredLanguages = lowlight.listLanguages();
-  return !!registeredLanguages[lang];
+type RunHookEnv = {
+  classes: string[];
 };
 
-const loadLanguage = (lang: string, callback: () => void) => {
-  if (isLanguageRegistered(lang)) {
-    callback();
-  } else {
-    import(
-      /* webpackChunkName: "tokenizer-lowlight-[request]" */
-      `highlight.js/lib/languages/${lang}`
-    ).then(loadedLanguage => {
-      lowlight.registerLanguage(lang, loadedLanguage.default);
+export type RefractorAdapter = typeof refractor & {
+  isLanguageRegistered: (lang: string) => boolean;
+  loadLanguage: (lang: string, callback: () => void) => void;
+};
+
+const createAdapter = (theme: { [key: string]: string }): RefractorAdapter => {
+  const isLanguageRegistered = (lang: string) => {
+    const registeredLanguages = refractor.listLanguages();
+    return registeredLanguages.includes(lang);
+  };
+
+  const loadLanguage = (lang: string, callback: () => void) => {
+    if (isLanguageRegistered(lang)) {
       callback();
-    });
-  }
+    } else {
+      import(
+        /* webpackChunkName: "tokenizer-refractor-[request]" */
+        `refractor/lang/${lang}`
+      ).then(loadedLanguage => {
+        refractor.register(loadedLanguage.default);
+        callback();
+      });
+    }
+  };
+
+  // @ts-ignore hooks are not in the type definition
+  const originalRunHook = refractor.hooks.run;
+  const runHook = (name: string, env: RunHookEnv) => {
+    originalRunHook.apply(name, env);
+    if (env.classes) {
+      env.classes = env.classes.map(className => theme[className] || className);
+    }
+  };
+  // @ts-ignore hooks are not in the type definition
+  refractor.hooks.run = runHook;
+
+  return {
+    isLanguageRegistered,
+    loadLanguage,
+    ...refractor
+  };
 };
 
-const refractorAdapter = {
-  ...lowlight,
-  isLanguageRegistered,
-  loadLanguage,
-  highlight: (value: string, language: string) => {
-    return lowlight.highlight(language, value).value;
-  }
-};
-
-export default refractorAdapter;
+export default createAdapter;

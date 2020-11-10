@@ -8,6 +8,7 @@ Im Bereich Administration kann die SCM-Manager Instanz administriert werden. Von
 * [Plugins](plugins/)
 * [Berechtigungsrollen](roles/)
 * [Einstellungen](settings/)
+* [Git](git/)
 <!--- AppendLinkContentEnd -->
 
 ### Information

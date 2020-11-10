@@ -31,7 +31,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Test;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.GitChangesetConverterFactory;
+import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
@@ -99,7 +99,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
     commit(outgoing, "added a");
 
     GitPushCommand push = new GitPushCommand(handler,
-      new GitContext(outgoingDirectory, outgoingRepository, null)
+      new GitContext(outgoingDirectory, outgoingRepository, null, new GitConfig())
     );
     PushCommandRequest req = new PushCommandRequest();
 
@@ -154,7 +154,7 @@ public class GitOutgoingCommandTest extends AbstractRemoteCommandTestBase
   private GitOutgoingCommand createCommand()
   {
     return new GitOutgoingCommand(
-      new GitContext(outgoingDirectory, outgoingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory())),
+      new GitContext(outgoingDirectory, outgoingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory()), new GitConfig()),
       handler,
       GitTestHelper.createConverterFactory()
     );

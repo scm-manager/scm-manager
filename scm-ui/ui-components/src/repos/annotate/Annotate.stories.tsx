@@ -67,7 +67,7 @@ const commitImplementMain = {
 };
 
 const source: AnnotatedSource = {
-  language: "go",
+  language: "golang",
   lines: [
     {
       lineNumber: 1,
@@ -112,6 +112,52 @@ const source: AnnotatedSource = {
   ]
 };
 
+const markdownSource: AnnotatedSource = {
+  language: "markdown",
+  lines: [
+    {
+      lineNumber: 1,
+      code: "# Title",
+      ...commitCreateNewApp
+    },
+    {
+      lineNumber: 2,
+      code: "",
+      ...commitCreateNewApp
+    },
+    {
+      lineNumber: 3,
+      code: "This is a short Markdown text.",
+      ...commitFixedMissingImport
+    },
+    {
+      lineNumber: 4,
+      code: "",
+      ...commitFixedMissingImport
+    },
+    {
+      lineNumber: 5,
+      code: "With **bold** and __italic__ words.",
+      ...commitCreateNewApp
+    },
+    {
+      lineNumber: 6,
+      code: "",
+      ...commitImplementMain
+    },
+    {
+      lineNumber: 7,
+      code: "> This should be a quote",
+      ...commitCreateNewApp
+    },
+    {
+      lineNumber: 8,
+      code: "",
+      ...commitCreateNewApp
+    }
+  ]
+};
+
 const Robohash: FC = ({ children }) => {
   const binder = new Binder("robohash");
   binder.bind("avatar.factory", (person: Person) => `https://robohash.org/${person.mail}.png`);
@@ -123,6 +169,9 @@ storiesOf("Annotate", module)
   .addDecorator(storyFn => <Wrapper className="box">{storyFn()}</Wrapper>)
   .add("Default", () => (
     <Annotate source={source} repository={repository} baseDate={new Date("2020-04-16T09:22:42Z")} />
+  ))
+  .add("Markdown", () => (
+    <Annotate source={markdownSource} repository={repository} baseDate={new Date("2020-04-15T09:47:42Z")} />
   ))
   .add("With Avatars", () => (
     <Robohash>

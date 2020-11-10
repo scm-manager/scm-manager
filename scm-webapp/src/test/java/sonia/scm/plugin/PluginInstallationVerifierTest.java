@@ -146,6 +146,17 @@ class PluginInstallationVerifierTest {
 
   @Test
   @SuppressWarnings("squid:S2699") // we are happy if no exception is thrown
+  void shouldVerifyPluginWithSnapshotDependencies() {
+    matchConditions();
+
+    PluginInstallationContext context = mockInstallationOf(IID_PLUGIN, "1.0.0-SNAPSHOT");
+    mockDependingOf(IID_PLUGIN, "1.0.0-20201022.094711-15");
+
+    PluginInstallationVerifier.verify(context, descriptor);
+  }
+
+  @Test
+  @SuppressWarnings("squid:S2699") // we are happy if no exception is thrown
   void shouldVerifyPluginWithOptionalDependency() {
     matchConditions();
 

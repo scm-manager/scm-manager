@@ -34,6 +34,7 @@ import sonia.scm.security.AnonymousMode;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -42,9 +43,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
   @InjectMocks
   private ConfigDtoToScmConfigurationMapperImpl mapper;
 
-  private String[] expectedUsers = {"trillian", "arthur"};
-  private String[] expectedGroups = {"admin", "plebs"};
-  private String[] expectedExcludes = {"ex", "clude"};
+  private final String[] expectedExcludes = {"ex", "clude"};
 
   @Before
   public void init() {
@@ -73,6 +72,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
     assertEquals("https://plug.ins", config.getPluginUrl());
     assertEquals(40, config.getLoginAttemptLimitTimeout());
     assertTrue(config.isEnabledXsrfProtection());
+    assertFalse(config.isEnabledUserConverter());
     assertEquals("username", config.getNamespaceStrategy());
     assertEquals("https://scm-manager.org/login-info", config.getLoginInfoUrl());
     assertEquals("hitchhiker.mail", config.getMailDomainName());
@@ -115,6 +115,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
     configDto.setNamespaceStrategy("username");
     configDto.setLoginInfoUrl("https://scm-manager.org/login-info");
     configDto.setMailDomainName("hitchhiker.mail");
+    configDto.setEnabledUserConverter(false);
 
     return configDto;
   }

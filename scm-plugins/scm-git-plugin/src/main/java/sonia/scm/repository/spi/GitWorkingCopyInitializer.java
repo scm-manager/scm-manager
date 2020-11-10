@@ -67,7 +67,11 @@ class GitWorkingCopyInitializer {
       Ref head = clone.exactRef(Constants.HEAD);
 
       if (head == null || !head.isSymbolic() || (initialBranch != null && !head.getTarget().getName().endsWith(initialBranch))) {
-        throw notFound(entity("Branch", initialBranch).in(context.getRepository()));
+        if (clone.getRefDatabase().getRefs().isEmpty()) {
+          LOG.warn("could not initialize empty clone with given branch {}; this has to be handled later on", initialBranch);
+        } else {
+          throw notFound(entity("Branch", initialBranch).in(context.getRepository()));
+        }
       }
 
       return new ParentAndClone<>(null, clone, target);

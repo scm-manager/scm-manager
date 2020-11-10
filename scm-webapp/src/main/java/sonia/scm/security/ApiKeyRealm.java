@@ -24,6 +24,7 @@
 
 package sonia.scm.security;
 
+import com.google.common.io.BaseEncoding;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -45,6 +46,8 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Extension
 public class ApiKeyRealm extends AuthenticatingRealm {
 
+  public static final String NAME = "ApiTokenRealm";
+
   private static final Logger LOG = LoggerFactory.getLogger(ApiKeyRealm.class);
 
   private final ApiKeyService apiKeyService;
@@ -54,20 +57,21 @@ public class ApiKeyRealm extends AuthenticatingRealm {
   @Inject
   public ApiKeyRealm(ApiKeyService apiKeyService, DAORealmHelperFactory helperFactory, RepositoryRoleManager repositoryRoleManager) {
     this.apiKeyService = apiKeyService;
-    this.helper = helperFactory.create("ApiTokenRealm");
+    this.helper = helperFactory.create(NAME);
     this.repositoryRoleManager = repositoryRoleManager;
     setAuthenticationTokenClass(BearerToken.class);
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
   }
 
   @Override
+  @SuppressWarnings("java:S4738") // java.util.Base64 has no canDecode method
   public boolean supports(AuthenticationToken token) {
     if (token instanceof UsernamePasswordToken || token instanceof BearerToken) {
-      boolean containsDot = getPassword(token).contains(".");
-      if (containsDot) {
-        LOG.debug("Ignoring token with at least one dot ('.'); this is probably a JWT token");
+      boolean isBase64 = BaseEncoding.base64().canDecode(getPassword(token));
+      if (!isBase64) {
+        LOG.debug("Ignoring non base 64 token; this is probably a JWT token or a normal password");
       }
-      return !containsDot;
+      return isBase64;
     }
     return false;
   }

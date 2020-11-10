@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import com.google.common.base.Preconditions;
@@ -31,6 +31,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,9 +40,7 @@ import java.time.Clock;
 import java.time.Instant;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -70,7 +69,6 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
   private Instant refreshExpiration;
   private String parentKeyId;
   private Scope scope = Scope.empty();
-  private Set<String> groups = new HashSet<>();
 
   private final Map<String,Object> custom = Maps.newHashMap();
 
@@ -154,6 +152,14 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
   @Override
   public JwtAccessToken build() {
+    final Scope principalScope = SecurityUtils.getSubject().getPrincipals().oneByType(Scope.class);
+    if (principalScope != null && !principalScope.isEmpty()) {
+      if (scope != null && !scope.isEmpty()) {
+        throw new AuthorizationException(String.format("cannot merge builder scope (%s) with principal scope (%s)", scope, principalScope));
+      }
+      LOG.debug("using existing scope for new access token: {}", principalScope);
+      scope = principalScope;
+    }
     String id = keyGenerator.createKey();
 
     String sub = getSubject();

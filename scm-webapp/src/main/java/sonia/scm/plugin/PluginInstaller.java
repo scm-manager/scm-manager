@@ -38,6 +38,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Optional;
 
+import static sonia.scm.plugin.Tracing.SPAN_KIND;
+
 @SuppressWarnings("UnstableApiUsage")
   // guava hash is marked as unstable
 class PluginInstaller {
@@ -126,7 +128,7 @@ class PluginInstaller {
   }
 
   private InputStream download(AvailablePlugin plugin) throws IOException {
-    return client.get(plugin.getDescriptor().getUrl()).request().contentAsStream();
+    return client.get(plugin.getDescriptor().getUrl()).spanKind(SPAN_KIND).request().contentAsStream();
   }
 
   private Path createFile(AvailablePlugin plugin) throws IOException {

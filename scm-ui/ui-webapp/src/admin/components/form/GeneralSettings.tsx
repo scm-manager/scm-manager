@@ -38,6 +38,7 @@ type Props = WithTranslation & {
   releaseFeedUrl: string;
   mailDomainName: string;
   enabledXsrfProtection: boolean;
+  enabledUserConverter: boolean;
   namespaceStrategy: string;
   namespaceStrategies?: NamespaceStrategies;
   onChange: (p1: boolean, p2: any, p3: string) => void;
@@ -54,6 +55,7 @@ class GeneralSettings extends React.Component<Props> {
       releaseFeedUrl,
       mailDomainName,
       enabledXsrfProtection,
+      enabledUserConverter,
       anonymousMode,
       namespaceStrategy,
       hasUpdatePermission,
@@ -141,6 +143,18 @@ class GeneralSettings extends React.Component<Props> {
             />
           </div>
           <div className="column is-half">
+            <Checkbox
+              label={t("general-settings.enabled-user-converter")}
+              onChange={this.handleEnabledUserConverterChange}
+              checked={enabledUserConverter}
+              title={t("general-settings.enabled-user-converter")}
+              disabled={!hasUpdatePermission}
+              helpText={t("help.enabledUserConverterHelpText")}
+            />
+          </div>
+        </div>
+        <div className="columns">
+          <div className="column is-half">
             <InputField
               label={t("general-settings.mail-domain-name")}
               onChange={this.handleMailDomainNameChange}
@@ -162,6 +176,9 @@ class GeneralSettings extends React.Component<Props> {
   };
   handleEnabledXsrfProtectionChange = (value: boolean) => {
     this.props.onChange(true, value, "enabledXsrfProtection");
+  };
+  handleEnabledUserConverterChange = (value: boolean) => {
+    this.props.onChange(true, value, "enabledUserConverter");
   };
   handleAnonymousMode = (value: string) => {
     this.props.onChange(true, value, "anonymousMode");

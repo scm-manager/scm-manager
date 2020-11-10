@@ -77,10 +77,11 @@ const Line = styled.div`
 
 const Metadata = styled(LineElement)`
   cursor: help;
+  width: 217px;
 `;
 
 const EmptyMetadata = styled(LineElement)`
-  width: 16.7em;
+  width: 217px;
 `;
 
 const dispatchDeferred = (dispatch: Dispatch<Action>, action: Action) => {

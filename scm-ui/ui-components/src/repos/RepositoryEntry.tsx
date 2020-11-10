@@ -44,7 +44,7 @@ class RepositoryEntry extends React.Component<Props> {
 
   renderBranchesLink = (repository: Repository, repositoryLink: string) => {
     if (repository._links["branches"]) {
-      return <RepositoryEntryLink icon="code-branch" to={repositoryLink + "/branches"} />;
+      return <RepositoryEntryLink icon="code-branch" to={repositoryLink + "/branches/"} />;
     }
     return null;
   };

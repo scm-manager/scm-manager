@@ -145,4 +145,11 @@ class VersionTest {
   void testUnparseable() {
     assertThrows(VersionParseException.class, () -> Version.parse("aaaa"));
   }
+
+  @Test
+  void shouldDetectUniqueMavenSnapshotVersion() {
+    Version version = Version.parse("1.0.0-20201022.094711-15");
+    assertThat(version.isSnapshot()).isTrue();
+    assertThat(version).hasToString("1.0.0-SNAPSHOT");
+  }
 }

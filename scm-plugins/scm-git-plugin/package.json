@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/scm-git-plugin",
   "private": true,
-  "version": "2.8.0-SNAPSHOT",
+  "version": "2.10.0-SNAPSHOT",
   "license": "MIT",
   "main": "./src/main/js/index.ts",
   "scripts": {
@@ -20,6 +20,6 @@
   },
   "prettier": "@scm-manager/prettier-config",
   "dependencies": {
-    "@scm-manager/ui-plugins": "^2.8.0-SNAPSHOT"
+    "@scm-manager/ui-plugins": "^2.10.0-SNAPSHOT"
   }
 }

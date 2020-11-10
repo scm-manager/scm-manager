@@ -49,6 +49,7 @@
     "release-feed-url": "Release Feed URL",
     "mail-domain-name": "Fallback E-Mail Domain Name",
     "enabled-xsrf-protection": "XSRF Protection aktivieren",
+    "enabled-user-converter": "Benutzer Konverter aktivieren",
     "namespace-strategy": "Namespace Strategie",
     "login-info-url": "Login Info URL"
   },
@@ -81,6 +82,7 @@
     "proxyUserHelpText": "Der Benutzername für die Proxy Server Anmeldung.",
     "proxyExcludesHelpText": "Glob patterns für Hostnamen, die von den Proxy-Einstellungen ausgeschlossen werden sollen.",
     "enableXsrfProtectionHelpText": "Xsrf Cookie Protection aktivieren. Hinweis: Dieses Feature befindet sich noch im Experimentalstatus.",
+    "enabledUserConverterHelpText": "Benutzer Konverter aktivieren. Interne Benutzer werden beim Einloggen über ein Fremdsystem zu externen Benutzern konvertiert.",
     "nameSpaceStrategyHelpText": "Strategie für Namespaces.",
     "loginInfoUrlHelpText": "URL zu der Login Information (Plugin und Feature Tipps auf der Login Seite). Um die Login Information zu deaktivieren, kann das Feld leer gelassen werden."
   }
