@@ -318,15 +318,14 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     env.set(ENV_SERVER_SOFTWARE,
       SERVER_SOFTWARE_PREFIX.concat(SCMContext.getContext().getVersion()));
 
-    Enumeration enm = request.getHeaderNames();
+    Enumeration<String> enm = request.getHeaderNames();
 
     while (enm.hasMoreElements())
     {
-      String name = (String) enm.nextElement();
+      String name = enm.nextElement();
       String value = request.getHeader(name);
 
-      env.set(ENV_HTTP_HEADER_PREFIX + name.toUpperCase().replace('-', '_'),
-        value);
+      env.set(ENV_HTTP_HEADER_PREFIX + name.toUpperCase().replace('-', '_'), value);
     }
 
     // these extra ones were from printenv on www.dev.nomura.co.uk
@@ -383,6 +382,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    *
    * @throws IOException
    */
+  @SuppressWarnings("UnstableApiUsage")
   private void execute(Process process) throws IOException
   {
     InputStream processIS = null;
@@ -407,66 +407,44 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param is
-   *
-   *
-   * @throws IOException
-   */
-  private void parseHeaders(InputStream is) throws IOException
-  {
+  private void parseHeaders(InputStream is) throws IOException {
     String line = null;
 
-    while ((line = getTextLineFromStream(is)).length() > 0)
-    {
-      if (logger.isTraceEnabled())
-      {
+    while ((line = getTextLineFromStream(is)).length() > 0) {
+      if (logger.isTraceEnabled()) {
         logger.trace("  ".concat(line));
       }
 
-      if (!line.startsWith(RESPONSE_HEADER_HTTP_PREFIX))
-      {
+      if (!line.startsWith(RESPONSE_HEADER_HTTP_PREFIX)) {
         int k = line.indexOf(':');
 
-        if (k > 0)
-        {
+        if (k > 0) {
           String key = line.substring(0, k).trim();
           String value = line.substring(k + 1).trim();
 
-          if (RESPONSE_HEADER_LOCATION.equalsIgnoreCase(key))
-          {
+          if (RESPONSE_HEADER_LOCATION.equalsIgnoreCase(key)) {
             response.sendRedirect(response.encodeRedirectURL(value));
-          }
-          else if (RESPONSE_HEADER_STATUS.equalsIgnoreCase(key))
-          {
-            String[] token = value.split(" ");
-            int status = Integer.parseInt(token[0]);
-
-            if (logger.isDebugEnabled())
-            {
-              logger.debug("CGI returned with status {}", status);
-            }
-
-            if (status < 304)
-            {
-              response.setStatus(status);
-            }
-            else
-            {
-              response.sendError(status);
-            }
-          }
-          else
-          {
-
+          } else if (RESPONSE_HEADER_STATUS.equalsIgnoreCase(key)) {
+            handleStatus(value);
+          } else {
             // add remaining header items to our response header
             response.addHeader(key, value);
           }
         }
       }
+    }
+  }
+
+  private void handleStatus(String value) throws IOException {
+    String[] token = value.split(" ");
+    int status = Integer.parseInt(token[0]);
+
+    logger.debug("CGI returned with status {}", status);
+
+    if (status < 304) {
+      response.setStatus(status);
+    } else {
+      response.sendError(status);
     }
   }
 
@@ -502,26 +480,21 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
    */
   private void processErrorStreamAsync(final Process process)
   {
-    executor.execute(new Runnable()
-    {
-      @Override
-      public void run()
-      {
-        InputStream errorStream = null;
+    executor.execute(() -> {
+      InputStream errorStream = null;
 
-        try
-        {
-          errorStream = process.getErrorStream();
-          processErrorStream(errorStream);
-        }
-        catch (IOException ex)
-        {
-          logger.error("could not read errorstream", ex);
-        }
-        finally
-        {
-          IOUtil.close(errorStream);
-        }
+      try
+      {
+        errorStream = process.getErrorStream();
+        processErrorStream(errorStream);
+      }
+      catch (IOException ex)
+      {
+        logger.error("could not read errorstream", ex);
+      }
+      finally
+      {
+        IOUtil.close(errorStream);
       }
     });
   }
@@ -604,6 +577,7 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     catch (InterruptedException ex)
     {
       getExceptionHandler().handleException(request, response, ex);
+      Thread.currentThread().interrupt();
     }
   }
 
