@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 import com.google.common.base.Stopwatch;
@@ -37,23 +37,20 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
-import sonia.scm.util.AssertUtil;
 import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
-import sonia.scm.web.cgi.EnvList;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.IOException;
-
-import java.util.Enumeration;
-
+import javax.annotation.Nonnull;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -62,9 +59,6 @@ import javax.servlet.http.HttpSession;
 @Singleton
 public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
 {
-
-  /** Field description */
-  public static final String ENV_SESSION_PREFIX = "SCM_";
 
   /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
@@ -88,7 +82,7 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
     this.requestListenerUtil = requestListenerUtil;
     this.hgRepositoryEnvironmentBuilder = hgRepositoryEnvironmentBuilder;
     this.exceptionHandler = new HgCGIExceptionHandler();
-    this.command = HgPythonScript.HGWEB.getFile(SCMContext.getContext());
+    this.extension = HgPythonScript.CGISERVE.getFile(SCMContext.getContext());
   }
 
   //~--- methods --------------------------------------------------------------
@@ -108,11 +102,7 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
       {
         handleRequest(request, response, repository);
       }
-      catch (ServletException ex)
-      {
-        exceptionHandler.handleException(request, response, ex);
-      }
-      catch (IOException ex)
+      catch (ServletException | IOException ex)
       {
         exceptionHandler.handleException(request, response, ex);
       }
@@ -146,40 +136,6 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param env
-   * @param session
-   */
-  @SuppressWarnings("unchecked")
-  private void passSessionAttributes(EnvList env, HttpSession session)
-  {
-    Enumeration<String> enm = session.getAttributeNames();
-
-    while (enm.hasMoreElements())
-    {
-      String key = enm.nextElement();
-
-      if (key.startsWith(ENV_SESSION_PREFIX))
-      {
-        env.set(key, session.getAttribute(key).toString());
-      }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param repository
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   private void process(HttpServletRequest request,
     HttpServletResponse response, Repository repository)
     throws IOException, ServletException
@@ -192,40 +148,34 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
     executor.setExceptionHandler(exceptionHandler);
     executor.setStatusCodeHandler(exceptionHandler);
     executor.setContentLengthWorkaround(true);
+
+    File directory = handler.getDirectory(repository.getId());
+    executor.setWorkDirectory(directory);
+
     hgRepositoryEnvironmentBuilder.buildFor(repository, request, executor.getEnvironment().asMutableMap());
 
-    String interpreter = getInterpreter();
+    executor.setArgs(createArgs());
 
-    if (interpreter != null)
-    {
-      executor.setInterpreter(interpreter);
-    }
-
-    executor.execute(command.getAbsolutePath());
+    HgConfig config = handler.getConfig();
+    executor.execute(config.getHgBinary());
   }
 
-  //~--- get methods ----------------------------------------------------------
+  @Nonnull
+  private List<String> createArgs() {
+    List<String> args = new ArrayList<>();
+    config(args, "extensions.cgiserve", extension.getAbsolutePath());
+    config(args, "hooks.pretxnchangegroup.scm", "python:scmhooks.preHook");
+    config(args, "hooks.changegroup.scm", "python:scmhooks.postHook");
+    config(args, "web.push_ssl", "false");
+    config(args, "web.allow_read", "*");
+    config(args, "web.allow_push", "*");
+    args.add("cgiserve");
+    return args;
+  }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private String getInterpreter()
-  {
-    HgConfig config = handler.getConfig();
-
-    AssertUtil.assertIsNotNull(config);
-
-    String python = config.getPythonBinary();
-
-    if ((python != null) && config.isUseOptimizedBytecode())
-    {
-      python = python.concat(" -O");
-    }
-
-    return python;
+  private void config(List<String> args, String key, String value) {
+    args.add("--config");
+    args.add(key + "=" + value);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -234,7 +184,7 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
   private final CGIExecutorFactory cgiExecutorFactory;
 
   /** Field description */
-  private final File command;
+  private final File extension;
 
   /** Field description */
   private final ScmConfiguration configuration;

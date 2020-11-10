@@ -38,7 +38,10 @@ import java.io.File;
  */
 public enum HgPythonScript {
 
-  HOOK("scmhooks.py"), HGWEB("hgweb.py"), VERSION("version.py");
+  HOOK("scmhooks.py"),
+  HGWEB("hgweb.py"),
+  VERSION("version.py"),
+  CGISERVE("cgiserve.py");
 
   /** Field description */
   private static final String BASE_DIRECTORY =
