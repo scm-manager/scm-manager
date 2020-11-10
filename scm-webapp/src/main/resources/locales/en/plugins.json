@@ -197,7 +197,7 @@
     },
     "CHRM7IQzo1": {
       "displayName": "Could not modify repository",
-      "description": "The requested modification to the repository was rejected. Most probably this was due to plugins with repository hooks or native hooks."
+      "description": "The requested modification to the repository was rejected. Most probably this was due to plugins with repository hooks or native hooks. Following are potential additional messages."
     },
     "thbsUFokjk": {
       "displayName": "Illegal change of an identifier",

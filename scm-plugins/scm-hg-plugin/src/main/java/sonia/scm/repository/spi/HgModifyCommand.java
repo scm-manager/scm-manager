@@ -114,8 +114,10 @@ public class HgModifyCommand implements ModifyCommand {
       com.aragost.javahg.commands.PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
       workingCopyFactory.configure(pullCommand);
       return pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
-    } catch (Exception e) {
-      throw new IntegrateChangesFromWorkdirException(context.getScmRepository(),
+    } catch (ExecutionException e) {
+      throw IntegrateChangesFromWorkdirException.forMessage(context.getScmRepository(), e.getMessage());
+    } catch (IOException e) {
+      throw new InternalRepositoryException(context.getScmRepository(),
         String.format("Could not pull modify changes from working copy to central repository for branch %s", request.getBranch()),
         e);
     }

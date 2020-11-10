@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import org.apache.shiro.SecurityUtils;
 import org.tmatesoft.svn.core.SVNCommitInfo;
 import org.tmatesoft.svn.core.SVNDepth;
+import org.tmatesoft.svn.core.SVNErrorCode;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.SVNWCClient;
@@ -40,8 +41,13 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.regex.Pattern;
+
+import static sonia.scm.repository.spi.IntegrateChangesFromWorkdirException.withPattern;
 
 public class SvnModifyCommand implements ModifyCommand {
+
+  public static final Pattern SVN_ERROR_PATTERN = Pattern.compile(".*E" + SVNErrorCode.CANCELLED.getCode() + ": (.*)");
 
   private final SvnContext context;
   private final SvnWorkingCopyFactory workingCopyFactory;
@@ -81,7 +87,7 @@ public class SvnModifyCommand implements ModifyCommand {
       );
       return String.valueOf(svnCommitInfo.getNewRevision());
     } catch (SVNException e) {
-      throw new InternalRepositoryException(repository, "could not commit changes on repository");
+      throw withPattern(SVN_ERROR_PATTERN).forMessage(repository, e.getMessage());
     }
   }
 

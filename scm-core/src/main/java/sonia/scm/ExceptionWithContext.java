@@ -24,6 +24,7 @@
 
 package sonia.scm;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,15 +35,26 @@ public abstract class ExceptionWithContext extends RuntimeException {
   private static final long serialVersionUID = 4327413456580409224L;
 
   private final List<ContextEntry> context;
+  private final List<AdditionalMessage> additionalMessages;
 
   public ExceptionWithContext(List<ContextEntry> context, String message) {
+    this(context, null, message);
+  }
+
+  public ExceptionWithContext(List<ContextEntry> context, List<AdditionalMessage> additionalMessages, String message) {
     super(message);
     this.context = context;
+    this.additionalMessages = additionalMessages;
   }
 
   public ExceptionWithContext(List<ContextEntry> context, String message, Exception cause) {
+    this(context, null, message, cause);
+  }
+
+  public ExceptionWithContext(List<ContextEntry> context, List<AdditionalMessage> additionalMessages, String message, Exception cause) {
     super(message, cause);
     this.context = context;
+    this.additionalMessages = additionalMessages;
   }
 
   public List<ContextEntry> getContext() {
@@ -60,5 +72,27 @@ public abstract class ExceptionWithContext extends RuntimeException {
    */
   public Optional<String> getUrl() {
     return Optional.empty();
+  }
+
+  public List<AdditionalMessage> getAdditionalMessages() {
+    return additionalMessages;
+  }
+
+  public static class AdditionalMessage implements Serializable {
+    private final String key;
+    private final String message;
+
+    public AdditionalMessage(String key, String message) {
+      this.key = key;
+      this.message = message;
+    }
+
+    public String getKey() {
+      return key;
+    }
+
+    public String getMessage() {
+      return message;
+    }
   }
 }
