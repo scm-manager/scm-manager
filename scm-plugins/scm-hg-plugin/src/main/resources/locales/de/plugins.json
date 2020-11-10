@@ -25,8 +25,6 @@
       "showRevisionInIdHelpText": "Die Revision als Teil der Node ID anzeigen.",
       "enableHttpPostArgs": "HttpPostArgs Protocol aktivieren",
       "enableHttpPostArgsHelpText": "Aktiviert das experimentelle HttpPostArgs Protokoll von Mercurial. Das HttpPostArgs Protokoll verwendet den Post Request Body anstatt des HTTP Headers um Meta Informationen zu versenden. Dieses Vorgehen reduziert die Header Größe der Mercurial Requests. HttpPostArgs wird seit Mercurial 3.8 unterstützt.",
-      "disableHookSSLValidation": "SSL Validierung für Hooks deaktivieren",
-      "disableHookSSLValidationHelpText": "Deaktiviert die Validierung von SSL Zertifikaten für den Mercurial Hook, der die Repositoryänderungen wieder zurück an den SCM-Manager leitet. Diese Option sollte nur benutzt werden, wenn der SCM-Manager ein selbstsigniertes Zertifikat verwendet.",
       "disabled": "Deaktiviert",
       "disabledHelpText": "Aktiviert oder deaktiviert das Mercurial Plugin.",
       "required": "Dieser Konfigurationswert wird benötigt"
