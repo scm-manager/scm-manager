@@ -44,19 +44,20 @@ def print_messages(ui, messages):
 
 def fire_hook(ui, repo, hooktype, node):
   abort = True
+  ui.debug( b"send scm-hook for " + node + b"\n" )
+  connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   try:
     values = {'token': token, 'type': hooktype, 'repositoryId': repositoryId, 'challenge': challenge, 'node': node.decode('utf8') }
-    ui.debug( b"send scm-hook for " + node + b"\n" )
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    s.connect(("127.0.0.1", int(port)))
-    s.sendall(json.dumps(values).encode('utf-8'))
-    s.sendall(b'\0')
+
+    connection.connect(("127.0.0.1", int(port)))
+    connection.send(json.dumps(values).encode('utf-8'))
+    connection.sendall(b'\0')
 
     received = []
-    byte = s.recv(1)
+    byte = connection.recv(1)
     while byte != b'\0':
       received.append(byte)
-      byte = s.recv(1)
+      byte = connection.recv(1)
 
     message = b''.join(received).decode('utf-8')
     response = json.loads(message)
@@ -67,6 +68,8 @@ def fire_hook(ui, repo, hooktype, node):
   except ValueError:
     ui.warn( b"scm-hook failed with an exception\n" )
     ui.traceback()
+  finally:
+    connection.close()
   return abort
 
 def callback(ui, repo, hooktype, node=None):
@@ -103,3 +106,4 @@ def pre_hook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs)
 
 def post_hook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):
   return callback(ui, repo, "POST_RECEIVE", node)
+
