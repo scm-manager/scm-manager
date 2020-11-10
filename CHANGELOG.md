@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Changed
-- Send mercurial hook callbacks over separate tcp socket instead of http ([#1415](https://github.com/scm-manager/scm-manager/pull/1415))
+- Send mercurial hook callbacks over separate tcp socket instead of http ([#1416](https://github.com/scm-manager/scm-manager/pull/1416))
 
 ### Fixed
 - Error on repository initialization with least-privilege user ([#1414](https://github.com/scm-manager/scm-manager/pull/1414))
