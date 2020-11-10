@@ -31,6 +31,8 @@ import com.aragost.javahg.commands.ExecutionException;
 import com.aragost.javahg.commands.PullCommand;
 import com.aragost.javahg.commands.RemoveCommand;
 import com.aragost.javahg.commands.StatusCommand;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.work.WorkingCopy;
@@ -40,9 +42,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
+@SuppressWarnings("java:S3252") // it is ok for javahg classes to access static method of subtype
 public class HgModifyCommand implements ModifyCommand {
 
-  private HgCommandContext context;
+  private static final Logger LOG = LoggerFactory.getLogger(HgModifyCommand.class);
+
+  private final HgCommandContext context;
   private final HgWorkingCopyFactory workingCopyFactory;
 
   public HgModifyCommand(HgCommandContext context, HgWorkingCopyFactory workingCopyFactory) {
@@ -52,7 +57,6 @@ public class HgModifyCommand implements ModifyCommand {
 
   @Override
   public String execute(ModifyCommandRequest request) {
-
     try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workingCopyFactory.createWorkingCopy(context, request.getBranch())) {
       Repository workingRepository = workingCopy.getWorkingRepository();
       request.getRequests().forEach(
@@ -97,12 +101,21 @@ public class HgModifyCommand implements ModifyCommand {
           }
         }
       );
+
       if (StatusCommand.on(workingRepository).lines().isEmpty()) {
         throw new NoChangesMadeException(context.getScmRepository());
       }
-      CommitCommand.on(workingRepository).user(String.format("%s <%s>", request.getAuthor().getName(), request.getAuthor().getMail())).message(request.getCommitMessage()).execute();
+
+      LOG.trace("commit changes in working copy");
+      CommitCommand.on(workingRepository)
+        .user(String.format("%s <%s>", request.getAuthor().getName(), request.getAuthor().getMail()))
+        .message(request.getCommitMessage()).execute();
+
       List<Changeset> execute = pullModifyChangesToCentralRepository(request, workingCopy);
-      return execute.get(0).getNode();
+
+      String node = execute.get(0).getNode();
+      LOG.debug("successfully pulled changes from working copy, new node {}", node);
+      return node;
     } catch (ExecutionException e) {
       throwInternalRepositoryException("could not execute command on repository", e);
       return null;
@@ -110,6 +123,7 @@ public class HgModifyCommand implements ModifyCommand {
   }
 
   private List<Changeset> pullModifyChangesToCentralRepository(ModifyCommandRequest request, WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy) {
+    LOG.trace("pull changes from working copy");
     try {
       com.aragost.javahg.commands.PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
       workingCopyFactory.configure(pullCommand);

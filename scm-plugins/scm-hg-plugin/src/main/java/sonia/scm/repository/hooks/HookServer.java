@@ -96,6 +96,7 @@ public class HookServer implements AutoCloseable {
     acceptor.submit(() -> {
       while (!serverSocket.isClosed()) {
         try {
+          LOG.trace("wait for next hook connection");
           Socket clientSocket = serverSocket.accept();
           LOG.trace("accept incoming hook client from {}", clientSocket.getInetAddress());
           HookHandler hookHandler = handlerFactory.create(clientSocket);
@@ -104,6 +105,7 @@ public class HookServer implements AutoCloseable {
           LOG.debug("failed to accept socket, possible closed", ex);
         }
       }
+      LOG.warn("ServerSocket is closed");
     });
   }
 

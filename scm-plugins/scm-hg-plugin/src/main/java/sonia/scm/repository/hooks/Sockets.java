@@ -42,6 +42,7 @@ class Sockets {
     byte[] bytes = objectMapper.writeValueAsBytes(object);
     out.write(bytes);
     out.write('\0');
+    out.flush();
   }
 
   static <T> T read(InputStream in, Class<T> type) throws IOException {

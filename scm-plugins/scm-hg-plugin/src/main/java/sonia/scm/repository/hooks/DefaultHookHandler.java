@@ -68,11 +68,13 @@ class DefaultHookHandler implements HookHandler {
 
   @Override
   public void run() {
+    LOG.trace("start handling hook protocol");
     try (InputStream input = socket.getInputStream(); OutputStream output = socket.getOutputStream()) {
       handleHookRequest(input, output);
     } catch (IOException e) {
       LOG.warn("failed to read hook request", e);
     } finally {
+      LOG.trace("close client socket");
       close();
     }
   }
@@ -84,8 +86,10 @@ class DefaultHookHandler implements HookHandler {
   }
 
   private Response handleHookRequest(Request request) {
+    LOG.trace("process {} hook for node {}", request.getType(), request.getNode());
     try {
       if (!environment.isAcceptAble(request.getChallenge())) {
+        LOG.warn("received hook with invalid challenge: {}", request.getChallenge());
         return error("invalid hook challenge");
       }
 
@@ -111,6 +115,7 @@ class DefaultHookHandler implements HookHandler {
   }
 
   private void authenticate(Request request) {
+    LOG.trace("authenticate hook request");
     String token = CipherUtil.getInstance().decode(request.getToken());
     BearerToken bearer = BearerToken.valueOf(token);
     Subject subject = SecurityUtils.getSubject();
