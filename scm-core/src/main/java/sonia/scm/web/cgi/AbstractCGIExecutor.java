@@ -21,12 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.cgi;
 
 //~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
@@ -233,7 +235,19 @@ public abstract class AbstractCGIExecutor implements CGIExecutor
     this.workDirectory = workDirectory;
   }
 
+  @Override
+  public void setArgs(List<String> args) {
+    this.args = args;
+  }
+
+  @Override
+  public List<String> getArgs() {
+    return args;
+  }
+
   //~--- fields ---------------------------------------------------------------
+
+  protected List<String> args = Collections.emptyList();
 
   /** Field description */
   protected int bufferSize;

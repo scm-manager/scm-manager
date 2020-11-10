@@ -21,76 +21,53 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.cgi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Strings;
-import com.google.common.collect.ForwardingMap;
 import com.google.common.collect.ImmutableSet;
 
-import sonia.scm.util.Util;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.HashMap;
-import java.util.Iterator;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class EnvList
-{
+public class EnvList {
 
-  /** Field description */
   private static final ImmutableSet<String> SENSITIVE =
     ImmutableSet.of("HTTP_AUTHORIZATION", "SCM_CHALLENGE", "SCM_CREDENTIALS");
 
-  //~--- constructors ---------------------------------------------------------
+  private final Map<String, String> envMap;
+
+  public EnvList() {
+    envMap = new LinkedHashMap<>();
+  }
+
+  public EnvList(EnvList list) {
+    envMap = new LinkedHashMap<>(list.envMap);
+  }
+
 
   /**
-   *    Constructs ...
+   * Set a name/value pair, null values will be treated as an empty String
    *
+   * @param name name of environment variable
+   * @param value value of environment variable
    */
-  public EnvList()
-  {
-    envMap = new HashMap<>();
+  public void set(String name, String value) {
+    envMap.put(name, Strings.nullToEmpty(value));
   }
 
   /**
-   * Constructs ...
+   * Return {@code true} if the list contains an environment variable with the given key.
    *
-   *
-   * @param l
-   */
-  public EnvList(EnvList l)
-  {
-    envMap = new HashMap<>(l.envMap);
-  }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Returns environment as mutable map.
-   *
-   * @return environment as mutable map
-   * @since 1.31
-   */
-  public Map<String, String> asMutableMap()
-  {
-    return new MapDelegate(envMap);
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
+   * @param key name of environment variable
+   * @return {@code true} if contains environment variable
    */
   public boolean containsKey(String key)
   {
@@ -98,143 +75,70 @@ public class EnvList
   }
 
   /**
-   * Method description
+   * Representation suitable for passing to exec.
    *
-   *
-   * @return
+   * @return array of environment variables
+   * @since 2.10.0
    */
+  public String[] asArray() {
+    List<String> env = new ArrayList<>();
+    for (Map.Entry<String, String> e : envMap.entrySet()) {
+      env.add(e.getKey() + "=" + e.getValue());
+    }
+    return env.toArray(new String[0]);
+  }
+
+  /**
+   * Representation suitable for passing to process builder.
+   *
+   * @return environment as immutable map
+   * @since 2.10.0
+   */
+  public Map<String, String> asMap() {
+    return Collections.unmodifiableMap(envMap);
+  }
+
   @Override
-  public String toString()
-  {
+  public String toString() {
     String s = System.getProperty("line.separator");
     StringBuilder out = new StringBuilder("Environment:");
-
-    Iterator<String> it = envMap.values().iterator();
-
-    String v;
-
-    while (it.hasNext())
-    {
-      v = converSensitive(it.next());
-      out.append(s).append("  ").append(v);
+    for (Map.Entry<String, String> e : envMap.entrySet()) {
+      out
+        .append(s).append("  ")
+        .append(e.getKey()).append("=").append(convertSensitive(e.getKey(), e.getValue()));
     }
-
     return out.toString();
   }
 
-  //~--- get methods ----------------------------------------------------------
+  private String convertSensitive(String name, String value) {
+    if (SENSITIVE.contains(name)) {
+      return "(is set)";
+    }
+    return value;
+  }
 
   /**
    * Get representation suitable for passing to exec.
    *
-   * @return
+   * @return array of environment variables
+   * @deprecated use {@link #asArray()} instead
    */
-  public String[] getEnvArray()
-  {
-    return envMap.values().toArray(new String[envMap.size()]);
+  @Deprecated
+  public String[] getEnvArray() {
+    return asArray();
   }
-
-  //~--- set methods ----------------------------------------------------------
 
   /**
-   * Set a name/value pair, null values will be treated as an empty String
+   * Returns environment as mutable map.
    *
-   * @param name
-   * @param value
+   * @return environment as mutable map
+   * @since 1.31
+   *
+   * @deprecated the environment should only be modified by {@link #set(String, String)}.
+   *             Of a {@link Map} is required, a immutable {@link Map} can be created with {@link #asMap()}.
    */
-  public void set(String name, String value)
-  {
-    envMap.put(name, name.concat("=").concat(Util.nonNull(value)));
+  @Deprecated
+  public Map<String, String> asMutableMap() {
+    return envMap;
   }
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param v
-   *
-   * @return
-   */
-  private String converSensitive(String v)
-  {
-    String result = v;
-
-    for (String s : SENSITIVE)
-    {
-      if (v.startsWith(s))
-      {
-        result = s.concat("=(is set)");
-
-        break;
-      }
-    }
-
-    return result;
-  }
-
-  //~--- inner classes --------------------------------------------------------
-
-  /**
-   * Class description
-   *
-   *
-   * @version        Enter version here..., 13/05/15
-   * @author         Enter your name here...
-   */
-  private static class MapDelegate extends ForwardingMap<String, String>
-  {
-
-    /**
-     * Constructs ...
-     *
-     *
-     * @param delegate
-     */
-    private MapDelegate(Map<String, String> delegate)
-    {
-      this.delegate = delegate;
-    }
-
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param key
-     * @param value
-     *
-     * @return
-     */
-    @Override
-    public String put(String key, String value)
-    {
-      return super.put(key, key.concat("=").concat(Strings.nullToEmpty(value)));
-    }
-
-    /**
-     * Method description
-     *
-     *
-     * @return
-     */
-    @Override
-    protected Map<String, String> delegate()
-    {
-      return delegate;
-    }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private Map<String, String> delegate;
-  }
-
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Map<String, String> envMap;
 }

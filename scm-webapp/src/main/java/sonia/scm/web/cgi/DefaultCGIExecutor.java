@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Joiner;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
 
@@ -48,7 +49,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
@@ -110,18 +113,8 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   *
-   *
-   * @param cmd
-   *
-   * @throws IOException
-   */
   @Override
-  public void execute(String cmd) throws IOException
+  public void execute(String cmd)
   {
     File command = new File(cmd);
     EnvList env = new EnvList(environment);
@@ -150,21 +143,16 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
 
     env.set(ENV_PATH_TRANSLATED, pathTranslated);
 
-    String execCmd = path;
-
-    if ((execCmd.charAt(0) != '"') && (execCmd.indexOf(' ') >= 0))
-    {
-      execCmd = "\"".concat(execCmd).concat("\"");
+    List<String> execCmd = new ArrayList<>();
+    if (interpreter != null) {
+      execCmd.add(interpreter);
     }
-
-    if (interpreter != null)
-    {
-      execCmd = interpreter.concat(" ").concat(execCmd);
-    }
+    execCmd.add(command.getAbsolutePath());
+    execCmd.addAll(getArgs());
 
     if (logger.isDebugEnabled())
     {
-      logger.debug("execute cgi: {}", execCmd);
+      logger.debug("execute cgi: {}", Joiner.on(' ').join(execCmd));
 
       if (logger.isTraceEnabled())
       {
@@ -173,10 +161,11 @@ public class DefaultCGIExecutor extends AbstractCGIExecutor
     }
 
     Process p = null;
-
-    try
-    {
-      p = Runtime.getRuntime().exec(execCmd, env.getEnvArray(), workDirectory);
+    try {
+      ProcessBuilder builder = new ProcessBuilder(execCmd);
+      builder.directory(workDirectory);
+      builder.environment().putAll(env.asMap());
+      p = builder.start();
       execute(p);
     }
     catch (IOException ex)
