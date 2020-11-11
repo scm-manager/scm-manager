@@ -38,8 +38,6 @@ const DeleteBranch: FC<Props> = ({ repository, branch }: Props) => {
   const [t] = useTranslation("repos");
   const history = useHistory();
 
-  console.log("branchview", repository, branch);
-
   const deleteBranch = () => {
     apiClient
       .delete((branch._links.delete as Link).href)
@@ -51,27 +49,24 @@ const DeleteBranch: FC<Props> = ({ repository, branch }: Props) => {
     return null;
   }
 
-  let confirmAlert = null;
-  if (showConfirmAlert) {
-    confirmAlert = (
-      <ConfirmAlert
-        title={t("branch.delete.confirmAlert.title")}
-        message={t("branch.delete.confirmAlert.message")}
-        buttons={[
-          {
-            className: "is-outlined",
-            label: t("branch.delete.confirmAlert.submit"),
-            onClick: () => deleteBranch()
-          },
-          {
-            label: t("branch.delete.confirmAlert.cancel"),
-            onClick: () => null
-          }
-        ]}
-        close={() => setShowConfirmAlert(false)}
-      />
-    );
-  }
+  const confirmAlert = (
+    <ConfirmAlert
+      title={t("branch.delete.confirmAlert.title")}
+      message={t("branch.delete.confirmAlert.message")}
+      buttons={[
+        {
+          className: "is-outlined",
+          label: t("branch.delete.confirmAlert.submit"),
+          onClick: () => deleteBranch()
+        },
+        {
+          label: t("branch.delete.confirmAlert.cancel"),
+          onClick: () => null
+        }
+      ]}
+      close={() => setShowConfirmAlert(false)}
+    />
+  );
 
   return (
     <>

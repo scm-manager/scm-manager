@@ -24,15 +24,14 @@
 
 package sonia.scm.api.v2.resources;
 
-import sonia.scm.repository.NamespaceAndName;
-import sonia.scm.repository.Repository;
 import sonia.scm.security.gpg.UserPublicKeyResource;
 
 import javax.inject.Inject;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-@SuppressWarnings("squid:S1192") // string literals should not be duplicated
+@SuppressWarnings("squid:S1192")
+  // string literals should not be duplicated
 class ResourceLinks {
 
   private final ScmPathInfoStore scmPathInfoStore;
@@ -274,13 +273,13 @@ class ResourceLinks {
   }
 
   AutoCompleteLinks autoComplete() {
-    return new AutoCompleteLinks (scmPathInfoStore.get());
+    return new AutoCompleteLinks(scmPathInfoStore.get());
   }
 
-  static class AutoCompleteLinks  {
+  static class AutoCompleteLinks {
     private final LinkBuilder linkBuilder;
 
-    AutoCompleteLinks (ScmPathInfo pathInfo) {
+    AutoCompleteLinks(ScmPathInfo pathInfo) {
       linkBuilder = new LinkBuilder(pathInfo, AutoCompleteResource.class);
     }
 
@@ -515,11 +514,11 @@ class ResourceLinks {
     }
 
     public String changesets(String namespace, String name) {
-      return toTemplateParams(incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingChangesets").parameters("source","target").href());
+      return toTemplateParams(incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingChangesets").parameters("source", "target").href());
     }
 
     public String changesets(String namespace, String name, String source, String target) {
-      return incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingChangesets").parameters(source,target).href();
+      return incomingLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("incoming").parameters().method("incomingChangesets").parameters(source, target).href();
     }
 
     public String diff(String namespace, String name) {
@@ -596,6 +595,7 @@ class ResourceLinks {
     ModificationsLinks(ScmPathInfo pathInfo) {
       modificationsLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, ModificationsRootResource.class);
     }
+
     String self(String namespace, String name, String revision) {
       return modificationsLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("modifications").parameters().method("get").parameters(revision).href();
     }
