@@ -21,46 +21,64 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React, { FC } from "react";
-import { Link as ReactLink } from "react-router-dom";
-import { Branch, Link } from "@scm-manager/ui-types";
-import DefaultBranchTag from "./DefaultBranchTag";
-import { Icon } from "@scm-manager/ui-components";
+import { Repository, Links } from "@scm-manager/ui-types";
+import RenameRepository from "./RenameRepository";
+import DeleteRepo from "./DeleteRepo";
+import styled from "styled-components";
+import { Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 
 type Props = {
-  baseUrl: string;
-  branch: Branch;
-  onDelete: (url: string) => void;
+  repository: Repository;
+  indexLinks: Links;
 };
 
-const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete }) => {
-  const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
+export const DangerZoneContainer = styled.div`
+  padding: 1.5rem 1rem;
+  border: 1px solid #ff6a88;
+  border-radius: 5px;
+  > .level {
+    flex-flow: wrap;
+
+    .level-left {
+      max-width: 100%;
+    }
+
+    .level-right {
+      margin-top: 0.75rem;
+    }
+  }
+  > *:not(:last-child) {
+    padding-bottom: 1.5rem;
+    border-bottom: solid 2px whitesmoke;
+  }
+`;
+
+const RepositoryDangerZone: FC<Props> = ({ repository, indexLinks }) => {
   const [t] = useTranslation("repos");
 
-  let deleteButton;
-  if ((branch?._links?.delete as Link)?.href) {
-    const url = (branch._links.delete as Link).href;
-    deleteButton = (
-      <a className="level-item" onClick={() => onDelete(url)}>
-        <span className="icon is-small">
-          <Icon name="trash" className="fas" title={t("branch.delete.button")} />
-        </span>
-      </a>
-    );
+  const dangerZone = [];
+  if (repository?._links?.rename || repository?._links?.renameWithNamespace) {
+    dangerZone.push(<RenameRepository repository={repository} indexLinks={indexLinks} />);
+  }
+  if (repository?._links?.delete) {
+    // @ts-ignore
+    dangerZone.push(<DeleteRepo repository={repository} />);
+  }
+
+  if (dangerZone.length === 0) {
+    return null;
   }
 
   return (
-    <tr>
-      <td>
-        <ReactLink to={to} title={branch.name}>
-          {branch.name}
-          <DefaultBranchTag defaultBranch={branch.defaultBranch} />
-        </ReactLink>
-      </td>
-      <td className="is-darker">{deleteButton}</td>
-    </tr>
+    <>
+      <hr />
+      <Subtitle subtitle={t("repositoryForm.dangerZone")} />
+      <DangerZoneContainer>{dangerZone}</DangerZoneContainer>
+    </>
   );
 };
 
-export default BranchRow;
+export default RepositoryDangerZone;

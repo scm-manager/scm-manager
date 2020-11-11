@@ -68,7 +68,19 @@
     "name": "Name:",
     "commits": "Commits",
     "sources": "Sources",
-    "defaultTag": "Default"
+    "defaultTag": "Default",
+    "dangerZone": "Delete branch",
+    "delete": {
+      "button": "Delete branch",
+      "subtitle": "Delete branch",
+      "description": "Deleted branches can not be restored.",
+      "confirmAlert": {
+        "title": "Delete branch",
+        "message": "Do you really want to delete the branch?",
+        "cancel": "No",
+        "submit": "Yes"
+      }
+    }
   },
   "tags": {
     "overview": {

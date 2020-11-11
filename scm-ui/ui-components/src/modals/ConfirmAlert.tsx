@@ -62,11 +62,11 @@ export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
 
   const footer = (
     <div className="field is-grouped">
-      {buttons.map((button, i) => (
-        <p className="control">
+      {buttons.map((button, index) => (
+        <p className="control" key={index}>
           <a
             className={classNames("button", "is-info", button.className)}
-            key={i}
+            key={index}
             onClick={() => handleClickButton(button)}
           >
             {button.label}

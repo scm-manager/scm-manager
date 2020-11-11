@@ -21,19 +21,40 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import BranchRow from "./BranchRow";
 import { Branch } from "@scm-manager/ui-types";
+import { apiClient, ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 
 type Props = {
   baseUrl: string;
   branches: Branch[];
-  onDelete: (url: string) => void;
+  fetchBranches: () => void;
 };
 
-const BranchTable: FC<Props> = ({ baseUrl, branches, onDelete }) => {
+const BranchTable: FC<Props> = ({ baseUrl, branches, fetchBranches }) => {
   const [t] = useTranslation("repos");
+  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const [error, setError] = useState<Error | undefined>();
+  const [deleteBranchUrl, setDeleteBranchUrl] = useState("");
+
+  const onDelete = (url: string) => {
+    setDeleteBranchUrl(url);
+    setShowConfirmAlert(true);
+  };
+
+  const abortDelete = () => {
+    setDeleteBranchUrl("");
+    setShowConfirmAlert(false);
+  };
+
+  const deleteBranch = () => {
+    apiClient
+      .delete(deleteBranchUrl)
+      .then(() => fetchBranches())
+      .catch(setError);
+  };
 
   const renderRow = () => {
     let rowContent = null;
@@ -44,15 +65,39 @@ const BranchTable: FC<Props> = ({ baseUrl, branches, onDelete }) => {
     }
     return rowContent;
   };
+
+  const confirmAlert = (
+    <ConfirmAlert
+      title={t("branch.delete.confirmAlert.title")}
+      message={t("branch.delete.confirmAlert.message")}
+      buttons={[
+        {
+          className: "is-outlined",
+          label: t("branch.delete.confirmAlert.submit"),
+          onClick: () => deleteBranch()
+        },
+        {
+          label: t("branch.delete.confirmAlert.cancel"),
+          onClick: () => abortDelete()
+        }
+      ]}
+      close={() => abortDelete()}
+    />
+  );
+
   return (
-    <table className="card-table table is-hoverable is-fullwidth is-word-break">
-      <thead>
-        <tr>
-          <th>{t("branches.table.branches")}</th>
-        </tr>
-      </thead>
-      <tbody>{renderRow()}</tbody>
-    </table>
+    <>
+      {showConfirmAlert && confirmAlert}
+      {error && <ErrorNotification error={error} />}
+      <table className="card-table table is-hoverable is-fullwidth is-word-break">
+        <thead>
+          <tr>
+            <th>{t("branches.table.branches")}</th>
+          </tr>
+        </thead>
+        <tbody>{renderRow()}</tbody>
+      </table>
+    </>
   );
 };
 
