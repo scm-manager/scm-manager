@@ -37,7 +37,8 @@ import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 public class IntegrateChangesFromWorkdirException extends ExceptionWithContext {
 
-  private static final String CODE = "CHRM7IQzo1";
+  static final String CODE_WITH_ADDITIONAL_MESSAGES = "CHRM7IQzo1";
+  static final String CODE_WITHOUT_ADDITIONAL_MESSAGES = "ASSG1ehZ01";
 
   private static final Pattern SCM_MESSAGE_PATTERN = Pattern.compile(".*\\[SCM\\] (.*)");
 
@@ -55,7 +56,7 @@ public class IntegrateChangesFromWorkdirException extends ExceptionWithContext {
 
   @Override
   public String getCode() {
-    return CODE;
+    return getAdditionalMessages().isEmpty()? CODE_WITHOUT_ADDITIONAL_MESSAGES : CODE_WITH_ADDITIONAL_MESSAGES;
   }
 
   public static class MessageExtractor {

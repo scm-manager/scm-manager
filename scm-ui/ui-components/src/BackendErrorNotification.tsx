@@ -71,7 +71,17 @@ class BackendErrorNotification extends React.Component<Props> {
   renderAdditionalMessages = () => {
     const { error, t } = this.props;
     if (error.additionalMessages) {
-      return error.additionalMessages.map(a => a.key ? t(`errors.${a.key}.description`) : a.message).map(m => <p>{m}</p>);
+      return (
+        <>
+          <hr />
+          {error.additionalMessages
+            .map(a => (a.key ? t(`errors.${a.key}.description`) : a.message))
+            .map(m => (
+              <p>{m}</p>
+            ))}
+          <hr />
+        </>
+      );
     }
   };
 

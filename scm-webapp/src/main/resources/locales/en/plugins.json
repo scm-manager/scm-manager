@@ -197,7 +197,11 @@
     },
     "CHRM7IQzo1": {
       "displayName": "Could not modify repository",
-      "description": "The requested modification to the repository was rejected. Most probably this was due to plugins with repository hooks or native hooks. Following are potential additional messages."
+      "description": "The requested modification to the repository was rejected. The most likely reason for this are checks from plugins. Please check your settings. See the following messages for more details:"
+    },
+    "ASSG1ehZ01": {
+      "displayName": "Could not modify repository",
+      "description": "The requested modification to the repository was rejected. There were no more messages."
     },
     "thbsUFokjk": {
       "displayName": "Illegal change of an identifier",
@@ -205,7 +209,7 @@
     },
     "40RaYIeeR1": {
       "displayName": "No changes were made",
-      "description": "No changes were made to the files of the repository. Therefor no new commit could be created. Possibly changes cannot be applied due to an .ignore-File definition."
+      "description": "No changes were made to the files of the repository. Therefore no new commit could be created. Possibly changes cannot be applied due to an .ignore-File definition."
     },
     "ERS2vYb7U1": {
       "displayName": "Illegal change of namespace",
@@ -213,7 +217,7 @@
     },
     "4iRct4avG1": {
       "displayName": "The revisions have unrelated histories",
-      "description": "The revisions have unrelated histories. Therefor there is no common commit to compare with."
+      "description": "The revisions have unrelated histories. Therefore there is no common commit to compare with."
     },
     "65RdZ5atX1": {
       "displayName": "Error removing plugin files",

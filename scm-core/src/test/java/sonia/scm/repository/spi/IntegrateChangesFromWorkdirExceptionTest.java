@@ -30,6 +30,8 @@ import sonia.scm.repository.Repository;
 import java.util.regex.Pattern;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static sonia.scm.repository.spi.IntegrateChangesFromWorkdirException.CODE_WITHOUT_ADDITIONAL_MESSAGES;
+import static sonia.scm.repository.spi.IntegrateChangesFromWorkdirException.CODE_WITH_ADDITIONAL_MESSAGES;
 import static sonia.scm.repository.spi.IntegrateChangesFromWorkdirException.forMessage;
 import static sonia.scm.repository.spi.IntegrateChangesFromWorkdirException.withPattern;
 
@@ -39,11 +41,13 @@ class IntegrateChangesFromWorkdirExceptionTest {
 
   @Test
   void shouldExtractMessagesWithDefaultPrefix() {
-    IntegrateChangesFromWorkdirException exception = forMessage(REPOSITORY, "prefix [SCM] line 1\nprefix [SCM] line 2\nirrelevant line\n");
+    IntegrateChangesFromWorkdirException exception =
+      forMessage(REPOSITORY, "prefix [SCM] line 1\nprefix [SCM] line 2\nirrelevant line\n");
 
     assertThat(exception.getAdditionalMessages())
       .extracting("message")
       .containsExactly("line 1", "line 2");
+    assertThat(exception.getCode()).isEqualTo(CODE_WITH_ADDITIONAL_MESSAGES);
   }
 
   @Test
@@ -55,5 +59,15 @@ class IntegrateChangesFromWorkdirExceptionTest {
     assertThat(exception.getAdditionalMessages())
       .extracting("message")
       .containsExactly("line");
+    assertThat(exception.getCode()).isEqualTo(CODE_WITH_ADDITIONAL_MESSAGES);
+  }
+
+  @Test
+  void shouldCreateSpecialMessageForMissingAdditionalMessages() {
+    IntegrateChangesFromWorkdirException exception =
+      forMessage(REPOSITORY, "There is no message");
+
+    assertThat(exception.getAdditionalMessages()).isEmpty();
+    assertThat(exception.getCode()).isEqualTo(CODE_WITHOUT_ADDITIONAL_MESSAGES);
   }
 }
