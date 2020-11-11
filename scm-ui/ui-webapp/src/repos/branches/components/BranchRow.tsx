@@ -22,25 +22,43 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Link } from "react-router-dom";
-import { Branch } from "@scm-manager/ui-types";
+import { Link as ReactLink } from "react-router-dom";
+import { Branch, Link } from "@scm-manager/ui-types";
 import DefaultBranchTag from "./DefaultBranchTag";
+import { Icon } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   baseUrl: string;
   branch: Branch;
+  onDelete: (url: string) => void;
 };
 
-const BranchRow: FC<Props> = ({ baseUrl, branch }) => {
+const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete }) => {
   const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
+  const [t] = useTranslation("repos");
+
+  let deleteButton;
+  if ((branch?._links?.delete as Link)?.href) {
+    const url = (branch._links.delete as Link).href;
+    deleteButton = (
+      <a className="level-item" onClick={() => onDelete(url)}>
+        <span className="icon is-small">
+          <Icon name="trash" className="fas" title={t("branch.delete")} />
+        </span>
+      </a>
+    );
+  }
+
   return (
     <tr>
       <td>
-        <Link to={to} title={branch.name}>
+        <ReactLink to={to} title={branch.name}>
           {branch.name}
           <DefaultBranchTag defaultBranch={branch.defaultBranch} />
-        </Link>
+        </ReactLink>
       </td>
+      <td className="is-darker">{deleteButton}</td>
     </tr>
   );
 };

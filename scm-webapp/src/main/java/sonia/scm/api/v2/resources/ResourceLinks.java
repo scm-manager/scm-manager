@@ -25,6 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Repository;
 import sonia.scm.security.gpg.UserPublicKeyResource;
 
 import javax.inject.Inject;
@@ -485,16 +486,20 @@ class ResourceLinks {
       branchLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, BranchRootResource.class);
     }
 
-    String self(NamespaceAndName namespaceAndName, String branch) {
-      return branchLinkBuilder.method("getRepositoryResource").parameters(namespaceAndName.getNamespace(), namespaceAndName.getName()).method("branches").parameters().method("get").parameters(branch).href();
+    String self(String namespace, String name, String branch) {
+      return branchLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branches").parameters().method("get").parameters(branch).href();
     }
 
-    public String history(NamespaceAndName namespaceAndName, String branch) {
-      return branchLinkBuilder.method("getRepositoryResource").parameters(namespaceAndName.getNamespace(), namespaceAndName.getName()).method("branches").parameters().method("history").parameters(branch).href();
+    public String history(String namespace, String name, String branch) {
+      return branchLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branches").parameters().method("history").parameters(branch).href();
     }
 
     public String create(String namespace, String name) {
       return branchLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branches").parameters().method("create").parameters().href();
+    }
+
+    public String delete(String namespace, String name, String branch) {
+      return branchLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branches").parameters().method("delete").parameters(branch).href();
     }
   }
 

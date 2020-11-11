@@ -134,7 +134,7 @@ public class BranchRootResource {
         .stream()
         .filter(branch -> branchName.equals(branch.getName()))
         .findFirst()
-        .map(branch -> branchToDtoMapper.map(branch, namespaceAndName))
+        .map(branch -> branchToDtoMapper.map(branch, repositoryService.getRepository()))
         .map(Response::ok)
         .orElseThrow(() -> notFound(entity("branch", branchName).in(namespaceAndName)))
         .build();
@@ -249,7 +249,7 @@ public class BranchRootResource {
         branchCommand.from(parentName);
       }
       Branch newBranch = branchCommand.branch(branchName);
-      return Response.created(URI.create(resourceLinks.branch().self(namespaceAndName, newBranch.getName()))).build();
+      return Response.created(URI.create(resourceLinks.branch().self(namespace, name, newBranch.getName()))).build();
     }
   }
 

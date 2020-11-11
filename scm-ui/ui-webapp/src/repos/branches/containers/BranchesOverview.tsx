@@ -37,6 +37,7 @@ import {
 } from "../modules/branches";
 import { orderBranches } from "../util/orderBranches";
 import BranchTable from "../components/BranchTable";
+import { apiClient } from "@scm-manager/ui-components/src";
 
 type Props = WithTranslation & {
   repository: Repository;
@@ -80,11 +81,15 @@ class BranchesOverview extends React.Component<Props> {
     );
   }
 
+  onDelete(url: string) {
+    apiClient.delete(url).catch(error => this.setState({ error }));
+  }
+
   renderBranchesTable() {
     const { baseUrl, branches, t } = this.props;
     if (branches && branches.length > 0) {
       orderBranches(branches);
-      return <BranchTable baseUrl={baseUrl} branches={branches} />;
+      return <BranchTable baseUrl={baseUrl} branches={branches} onDelete={this.onDelete} />;
     }
     return <Notification type="info">{t("branches.overview.noBranches")}</Notification>;
   }

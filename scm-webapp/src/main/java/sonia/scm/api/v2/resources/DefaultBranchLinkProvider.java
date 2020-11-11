@@ -39,6 +39,6 @@ public class DefaultBranchLinkProvider implements BranchLinkProvider {
 
   @Override
   public String get(NamespaceAndName namespaceAndName, String branch) {
-    return resourceLinks.branch().self(namespaceAndName, branch);
+    return resourceLinks.branch().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), branch);
   }
 }

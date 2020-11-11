@@ -21,41 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import BranchRow from "./BranchRow";
 import { Branch } from "@scm-manager/ui-types";
 
-type Props = WithTranslation & {
+type Props = {
   baseUrl: string;
   branches: Branch[];
+  onDelete: (url: string) => void;
 };
 
-class BranchTable extends React.Component<Props> {
-  render() {
-    const { t } = this.props;
-    return (
-      <table className="card-table table is-hoverable is-fullwidth is-word-break">
-        <thead>
-          <tr>
-            <th>{t("branches.table.branches")}</th>
-          </tr>
-        </thead>
-        <tbody>{this.renderRow()}</tbody>
-      </table>
-    );
-  }
+const BranchTable: FC<Props> = ({ baseUrl, branches, onDelete }) => {
+  const [t] = useTranslation("repos");
 
-  renderRow() {
-    const { baseUrl, branches } = this.props;
+  const renderRow = () => {
     let rowContent = null;
     if (branches) {
       rowContent = branches.map((branch, index) => {
-        return <BranchRow key={index} baseUrl={baseUrl} branch={branch} />;
+        return <BranchRow key={index} baseUrl={baseUrl} branch={branch} onDelete={onDelete} />;
       });
     }
     return rowContent;
-  }
-}
+  };
+  return (
+    <table className="card-table table is-hoverable is-fullwidth is-word-break">
+      <thead>
+        <tr>
+          <th>{t("branches.table.branches")}</th>
+        </tr>
+      </thead>
+      <tbody>{renderRow()}</tbody>
+    </table>
+  );
+};
 
-export default withTranslation("repos")(BranchTable);
+export default BranchTable;
