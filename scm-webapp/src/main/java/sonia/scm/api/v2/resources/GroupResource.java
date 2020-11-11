@@ -144,7 +144,7 @@ public class GroupResource {
     requestBody = @RequestBody(
       content = @Content(
         mediaType = VndMediaType.GROUP,
-        schema = @Schema(implementation = GroupDto.class),
+        schema = @Schema(implementation = UpdateGroupDto.class),
         examples = @ExampleObject(
           name = "Update a group description",
           value = "{\n  \"name\":\"manager\",\n  \"description\":\"Group of managers with full read access\",\n  \"lastModified\":\"2020-06-05T14:42:49.000Z\",\n  \"type\":\"xml\"\n}",

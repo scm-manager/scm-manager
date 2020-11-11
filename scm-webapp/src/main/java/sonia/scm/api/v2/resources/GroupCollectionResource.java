@@ -131,7 +131,7 @@ public class GroupCollectionResource {
     requestBody = @RequestBody(
       content = @Content(
         mediaType = VndMediaType.GROUP,
-        schema = @Schema(implementation = GroupDto.class),
+        schema = @Schema(implementation = CreateGroupDto.class),
         examples = {
           @ExampleObject(
             name = "Create an group with a description",
