@@ -140,7 +140,7 @@ public class AuthorizationChangedEventProducer {
    *
    * @param event repository event
    */
-  @Subscribe
+  @Subscribe(async = false)
   public void onEvent(RepositoryEvent event) {
     if (event.getEventType().isPost()) {
       if (isModificationEvent(event)) {
