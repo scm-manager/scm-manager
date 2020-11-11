@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Lookup command which provides further repository information ([#1415](https://github.com/scm-manager/scm-manager/pull/1415))
+- Include messages from scm protocol in modification or merge errors ([#1420](https://github.com/scm-manager/scm-manager/pull/1420))
 
 ### Fixed
 - Error on repository initialization with least-privilege user ([#1414](https://github.com/scm-manager/scm-manager/pull/1414))
