@@ -52,7 +52,7 @@ const DeleteBranch: FC<Props> = ({ repository, branch }: Props) => {
   const confirmAlert = (
     <ConfirmAlert
       title={t("branch.delete.confirmAlert.title")}
-      message={t("branch.delete.confirmAlert.message")}
+      message={t("branch.delete.confirmAlert.message", { branch: branch.name })}
       buttons={[
         {
           className: "is-outlined",

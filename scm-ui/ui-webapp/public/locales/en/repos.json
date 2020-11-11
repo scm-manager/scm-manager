@@ -76,7 +76,7 @@
       "description": "Deleted branches can not be restored.",
       "confirmAlert": {
         "title": "Delete branch",
-        "message": "Do you really want to delete the branch?",
+        "message": "Do you really want to delete the branch \"{{branch}}\"?",
         "cancel": "No",
         "submit": "Yes"
       }

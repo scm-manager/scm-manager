@@ -31,7 +31,7 @@ import { useTranslation } from "react-i18next";
 type Props = {
   baseUrl: string;
   branch: Branch;
-  onDelete: (url: string) => void;
+  onDelete: (branch: Branch) => void;
 };
 
 const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete }) => {
@@ -40,9 +40,8 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete }) => {
 
   let deleteButton;
   if ((branch?._links?.delete as Link)?.href) {
-    const url = (branch._links.delete as Link).href;
     deleteButton = (
-      <a className="level-item" onClick={() => onDelete(url)}>
+      <a className="level-item" onClick={() => onDelete(branch)}>
         <span className="icon is-small">
           <Icon name="trash" className="fas" title={t("branch.delete.button")} />
         </span>

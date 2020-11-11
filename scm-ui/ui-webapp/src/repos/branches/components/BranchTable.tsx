@@ -24,7 +24,7 @@
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 import BranchRow from "./BranchRow";
-import { Branch } from "@scm-manager/ui-types";
+import { Branch, Link } from "@scm-manager/ui-types";
 import { apiClient, ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 
 type Props = {
@@ -37,21 +37,21 @@ const BranchTable: FC<Props> = ({ baseUrl, branches, fetchBranches }) => {
   const [t] = useTranslation("repos");
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [error, setError] = useState<Error | undefined>();
-  const [deleteBranchUrl, setDeleteBranchUrl] = useState("");
+  const [branchToBeDeleted, setBranchToBeDeleted] = useState<Branch | undefined>();
 
-  const onDelete = (url: string) => {
-    setDeleteBranchUrl(url);
+  const onDelete = (branch: Branch) => {
+    setBranchToBeDeleted(branch);
     setShowConfirmAlert(true);
   };
 
   const abortDelete = () => {
-    setDeleteBranchUrl("");
+    setBranchToBeDeleted(undefined);
     setShowConfirmAlert(false);
   };
 
   const deleteBranch = () => {
     apiClient
-      .delete(deleteBranchUrl)
+      .delete((branchToBeDeleted?._links.delete as Link).href)
       .then(() => fetchBranches())
       .catch(setError);
   };
@@ -69,7 +69,7 @@ const BranchTable: FC<Props> = ({ baseUrl, branches, fetchBranches }) => {
   const confirmAlert = (
     <ConfirmAlert
       title={t("branch.delete.confirmAlert.title")}
-      message={t("branch.delete.confirmAlert.message")}
+      message={t("branch.delete.confirmAlert.message", { branch: branchToBeDeleted?.name })}
       buttons={[
         {
           className: "is-outlined",

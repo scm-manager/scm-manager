@@ -76,7 +76,7 @@
       "description": "Gelöschte Branches können nicht wiederhergestellt werden.",
       "confirmAlert": {
         "title": "Branch löschen",
-        "message": "Möchten Sie diesen Branch wirklich löschen?",
+        "message": "Möchten Sie den Branch \"{{branch}}\" wirklich löschen?",
         "cancel": "Nein",
         "submit": "Ja"
       }
