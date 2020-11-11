@@ -87,7 +87,7 @@ public class SvnModifyCommand implements ModifyCommand {
       );
       return String.valueOf(svnCommitInfo.getNewRevision());
     } catch (SVNException e) {
-      throw withPattern(SVN_ERROR_PATTERN).forMessage(repository, e.getMessage());
+      throw withPattern(SVN_ERROR_PATTERN).forMessage(repository, e.getErrorMessage().getRootErrorMessage().getFullMessage());
     }
   }
 
