@@ -10,6 +10,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Error on repository initialization with least-privilege user ([#1414](https://github.com/scm-manager/scm-manager/pull/1414))
 - Adhere to git quiet flag ([#1421](https://github.com/scm-manager/scm-manager/pull/1421))
 
+## [2.9.1] - 2020-11-11
+### Fixed
+- German translation for repositories view
+
+
 ## [2.9.0] - 2020-11-06
 ### Added
 - Tracing api ([#1393](https://github.com/scm-manager/scm-manager/pull/#1393))
