@@ -29,7 +29,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class LookupCommandRequest {
-  private Class<?> type;
+public class LookupCommandRequest<T> {
+  private Class<T> type;
   private String[] args;
 }

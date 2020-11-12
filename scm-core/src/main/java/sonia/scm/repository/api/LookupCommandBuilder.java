@@ -37,13 +37,13 @@ import java.util.Optional;
 public class LookupCommandBuilder {
 
   private final LookupCommand lookupCommand;
-  private final LookupCommandRequest request = new LookupCommandRequest();
 
   public LookupCommandBuilder(LookupCommand lookupCommand) {
     this.lookupCommand = lookupCommand;
   }
 
   public <T> Optional<T> lookup(Class<T> type, String... args) {
+    LookupCommandRequest<T> request = new LookupCommandRequest<>();
     request.setType(type);
     request.setArgs(args);
     return lookupCommand.lookup(request);

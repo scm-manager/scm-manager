@@ -38,7 +38,7 @@ public class SvnLookupCommand extends AbstractSvnCommand implements LookupComman
   }
 
   @Override
-  public <T> Optional<T> lookup(LookupCommandRequest request) {
+  public <T> Optional<T> lookup(LookupCommandRequest<T> request) {
     try {
       if (request.getArgs().length > 1 && "propget".equalsIgnoreCase(request.getArgs()[0])) {
         return lookupProps(request);
@@ -50,8 +50,11 @@ public class SvnLookupCommand extends AbstractSvnCommand implements LookupComman
     return Optional.empty();
   }
 
-  private <T> Optional<T> lookupProps(LookupCommandRequest request) throws SVNException {
+  private <T> Optional<T> lookupProps(LookupCommandRequest<T> request) throws SVNException {
     if (request.getArgs()[1].equalsIgnoreCase("uuid")) {
+      if (!request.getType().equals(String.class)) {
+        throw new IllegalArgumentException("uuid can only be returned as String");
+      }
       SVNRepository repository = context.open();
       return Optional.of((T) repository.getRepositoryUUID(true));
     }

@@ -34,5 +34,5 @@ public interface LookupCommand {
    * @param request Arguments provided for the lookup.
    * @return Result of provided type.
    */
-  <T> Optional<T> lookup(LookupCommandRequest request);
+  <T> Optional<T> lookup(LookupCommandRequest<T> request);
 }
