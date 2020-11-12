@@ -46,7 +46,7 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   //J-
   public static final Set<Command> COMMANDS = ImmutableSet.of(
     Command.BLAME, Command.BROWSE, Command.CAT, Command.DIFF,
-    Command.LOG, Command.BUNDLE, Command.UNBUNDLE, Command.MODIFY
+    Command.LOG, Command.BUNDLE, Command.UNBUNDLE, Command.MODIFY, Command.LOOKUP
   );
   //J+
 
@@ -148,12 +148,19 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
     return new SvnLogCommand(context);
   }
 
+  @Override
   public ModificationsCommand getModificationsCommand() {
     return new SvnModificationsCommand(context);
   }
 
+  @Override
   public ModifyCommand getModifyCommand() {
     return new SvnModifyCommand(context, workingCopyFactory);
+  }
+
+  @Override
+  public LookupCommand getLookupCommand() {
+    return new SvnLookupCommand(context);
   }
 
   /**
