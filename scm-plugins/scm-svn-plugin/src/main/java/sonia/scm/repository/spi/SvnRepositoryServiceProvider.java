@@ -148,16 +148,20 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
     return new SvnLogCommand(context);
   }
 
+  @Override
   public ModificationsCommand getModificationsCommand() {
     return new SvnModificationsCommand(context);
   }
 
+  @Override
   public ModifyCommand getModifyCommand() {
     return new SvnModifyCommand(context, workingCopyFactory);
   }
 
   @Override
-  public LookupCommand getLookupCommand() { return new SvnLookupCommand(context);}
+  public LookupCommand getLookupCommand() {
+    return new SvnLookupCommand(context);
+  }
 
   /**
    * Method description
