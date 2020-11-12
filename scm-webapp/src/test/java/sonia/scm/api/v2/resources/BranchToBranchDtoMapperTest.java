@@ -24,27 +24,48 @@
 
 package sonia.scm.api.v2.resources;
 
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryTestData;
 
 import java.net.URI;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BranchToBranchDtoMapperTest {
 
-  private final URI baseUri = URI.create("https://hitchhiker.com");
+  private final URI baseUri = URI.create("https://hitchhiker.com/api/");
 
   @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
+  @Mock
+  private Subject subject;
+
   @InjectMocks
   private BranchToBranchDtoMapperImpl mapper;
+
+  @BeforeEach
+  void setupSubject() {
+    ThreadContext.bind(subject);
+  }
+
+  @AfterEach
+  void tearDown() {
+    ThreadContext.unbindSubject();
+  }
 
   @Test
   void shouldAppendLinks() {
@@ -59,7 +80,37 @@ class BranchToBranchDtoMapperTest {
 
     Branch branch = Branch.normalBranch("master", "42");
 
-    BranchDto dto = mapper.map(branch, new NamespaceAndName("hitchhiker", "heart-of-gold"));
-    assertThat(dto.getLinks().getLinkBy("ka").get().getHref()).isEqualTo("http://hitchhiker/heart-of-gold/master");
+    BranchDto dto = mapper.map(branch, RepositoryTestData.createHeartOfGold());
+    assertThat(dto.getLinks().getLinkBy("ka").get().getHref()).isEqualTo("http://hitchhiker/HeartOfGold/master");
   }
+
+  @Test
+  void shouldAppendDeleteLink() {
+    Repository repository = RepositoryTestData.createHeartOfGold();
+    when(subject.isPermitted("repository:modify:" + repository.getId())).thenReturn(true);
+    Branch branch = Branch.normalBranch("master", "42");
+
+    BranchDto dto = mapper.map(branch, repository);
+    assertThat(dto.getLinks().getLinkBy("delete").get().getHref()).isEqualTo("https://hitchhiker.com/api/v2/repositories/hitchhiker/HeartOfGold/branches/master");
+  }
+
+  @Test
+  void shouldNotAppendDeleteLinkIfDefaultBranch() {
+    Repository repository = RepositoryTestData.createHeartOfGold();
+    Branch branch = Branch.defaultBranch("master", "42");
+
+    BranchDto dto = mapper.map(branch, repository);
+    assertThat(dto.getLinks().getLinkBy("delete")).isNotPresent();
+  }
+
+  @Test
+  void shouldNotAppendDeleteLinkIfNotPermitted() {
+    Repository repository = RepositoryTestData.createHeartOfGold();
+    when(subject.isPermitted("repository:modify:" + repository.getId())).thenReturn(false);
+    Branch branch = Branch.normalBranch("master", "42");
+
+    BranchDto dto = mapper.map(branch, repository);
+    assertThat(dto.getLinks().getLinkBy("delete")).isNotPresent();
+  }
+
 }

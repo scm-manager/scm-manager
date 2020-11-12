@@ -23,49 +23,24 @@
  */
 
 import React, { FC } from "react";
-import { Repository, Links } from "@scm-manager/ui-types";
-import RenameRepository from "./RenameRepository";
-import DeleteRepo from "./DeleteRepo";
-import styled from "styled-components";
+import { Branch, Repository } from "@scm-manager/ui-types";
 import { Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
+import { DangerZoneContainer } from "../../containers/RepositoryDangerZone";
+import DeleteBranch from "./DeleteBranch";
 
 type Props = {
   repository: Repository;
-  indexLinks: Links;
+  branch: Branch;
 };
 
-const DangerZoneContainer = styled.div`
-  padding: 1.5rem 1rem;
-  border: 1px solid #ff6a88;
-  border-radius: 5px;
-  > .level {
-    flex-flow: wrap;
-
-    .level-left {
-      max-width: 100%;
-    }
-
-    .level-right {
-      margin-top: 0.75rem;
-    }
-  }
-  > *:not(:last-child) {
-    padding-bottom: 1.5rem;
-    border-bottom: solid 2px whitesmoke;
-  }
-`;
-
-const DangerZone: FC<Props> = ({ repository, indexLinks }) => {
+const BranchDangerZone: FC<Props> = ({ repository, branch }) => {
   const [t] = useTranslation("repos");
 
   const dangerZone = [];
-  if (repository?._links?.rename || repository?._links?.renameWithNamespace) {
-    dangerZone.push(<RenameRepository repository={repository} indexLinks={indexLinks} />);
-  }
-  if (repository?._links?.delete) {
-    // @ts-ignore
-    dangerZone.push(<DeleteRepo repository={repository} />);
+
+  if (branch?._links?.delete) {
+    dangerZone.push(<DeleteBranch repository={repository} branch={branch} key={dangerZone.length} />);
   }
 
   if (dangerZone.length === 0) {
@@ -75,10 +50,10 @@ const DangerZone: FC<Props> = ({ repository, indexLinks }) => {
   return (
     <>
       <hr />
-      <Subtitle subtitle={t("repositoryForm.dangerZone")} />
+      <Subtitle subtitle={t("branch.dangerZone")} />
       <DangerZoneContainer>{dangerZone}</DangerZoneContainer>
     </>
   );
 };
 
-export default DangerZone;
+export default BranchDangerZone;

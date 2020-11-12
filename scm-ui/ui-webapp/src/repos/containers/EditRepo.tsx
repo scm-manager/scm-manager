@@ -31,7 +31,7 @@ import { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { compose } from "redux";
-import DangerZone from "./DangerZone";
+import RepositoryDangerZone from "./RepositoryDangerZone";
 import { getLinks } from "../../modules/indexResource";
 import { urls } from "@scm-manager/ui-components";
 
@@ -80,7 +80,7 @@ class EditRepo extends React.Component<Props> {
           }}
         />
         <ExtensionPoint name="repo-config.route" props={extensionProps} renderAll={true} />
-        <DangerZone repository={repository} indexLinks={indexLinks} />
+        <RepositoryDangerZone repository={repository} indexLinks={indexLinks} />
       </>
     );
   }
