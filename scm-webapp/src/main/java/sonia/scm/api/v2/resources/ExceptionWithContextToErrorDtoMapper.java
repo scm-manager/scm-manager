@@ -34,20 +34,22 @@ import sonia.scm.ExceptionWithContext;
 import java.util.Optional;
 
 @Mapper
-public abstract class ExceptionWithContextToErrorDtoMapper {
+public interface ExceptionWithContextToErrorDtoMapper {
 
   @Mapping(target = "errorCode", source = "code")
   @Mapping(target = "transactionId", ignore = true)
   @Mapping(target = "violations", ignore = true)
-  public abstract ErrorDto map(ExceptionWithContext exception);
+  ErrorDto map(ExceptionWithContext exception);
 
   @SuppressWarnings("OptionalUsedAsFieldOrParameterType") // is ok for mapping
-  public String mapOptional(Optional<String> optionalString) {
+  default String mapOptional(Optional<String> optionalString) {
     return optionalString.orElse(null);
   }
 
   @AfterMapping
-  void setTransactionId(@MappingTarget ErrorDto dto) {
+  default void setTransactionId(@MappingTarget ErrorDto dto) {
     dto.setTransactionId(MDC.get("transaction_id"));
   }
+
+  ErrorDto.AdditionalMessageDto map(ExceptionWithContext.AdditionalMessage message);
 }

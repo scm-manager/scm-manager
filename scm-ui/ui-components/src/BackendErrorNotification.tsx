@@ -42,6 +42,7 @@ class BackendErrorNotification extends React.Component<Props> {
         <div className="content">
           <p className="subtitle">{this.renderErrorName()}</p>
           <p>{this.renderErrorDescription()}</p>
+          {this.renderAdditionalMessages()}
           <p>{this.renderViolations()}</p>
           {this.renderMetadata()}
         </div>
@@ -51,7 +52,7 @@ class BackendErrorNotification extends React.Component<Props> {
 
   renderErrorName = () => {
     const { error, t } = this.props;
-    const translation = t("errors." + error.errorCode + ".displayName");
+    const translation = t(`errors.${error.errorCode}.displayName`);
     if (translation === error.errorCode) {
       return error.message;
     }
@@ -60,11 +61,30 @@ class BackendErrorNotification extends React.Component<Props> {
 
   renderErrorDescription = () => {
     const { error, t } = this.props;
-    const translation = t("errors." + error.errorCode + ".description");
+    const translation = t(`errors.${error.errorCode}.description`);
     if (translation === error.errorCode) {
       return "";
     }
     return translation;
+  };
+
+  renderAdditionalMessages = () => {
+    const { error, t } = this.props;
+    if (error.additionalMessages) {
+      return (
+        <>
+          <hr />
+          {error.additionalMessages
+            .map(additionalMessage =>
+              additionalMessage.key ? t(`errors.${additionalMessage.key}.description`) : additionalMessage.message
+            )
+            .map(message => (
+              <p>{message}</p>
+            ))}
+          <hr />
+        </>
+      );
+    }
   };
 
   renderViolations = () => {
