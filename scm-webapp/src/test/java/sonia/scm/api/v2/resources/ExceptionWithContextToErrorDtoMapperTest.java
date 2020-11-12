@@ -31,6 +31,7 @@ import sonia.scm.ExceptionWithContext;
 
 import java.util.Optional;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class ExceptionWithContextToErrorDtoMapperTest {
@@ -51,9 +52,27 @@ class ExceptionWithContextToErrorDtoMapperTest {
     assertThat(dto.getUrl()).isNull();
   }
 
+  @Test
+  void shouldMapAdditionalMessages() {
+    ExceptionWithUrl exception = new ExceptionWithUrl();
+    ErrorDto dto = mapper.map(exception);
+    assertThat(dto.getAdditionalMessages())
+      .extracting("message")
+      .containsExactly("line 1", "line 2", null);
+    assertThat(dto.getAdditionalMessages())
+      .extracting("key")
+      .containsExactly(null, null, "KEY");
+  }
+
   private static class ExceptionWithUrl extends ExceptionWithContext {
     public ExceptionWithUrl() {
-      super(ContextEntry.ContextBuilder.noContext(), "With Url");
+      super(
+        ContextEntry.ContextBuilder.noContext(),
+        asList(
+          new AdditionalMessage(null, "line 1"),
+          new AdditionalMessage(null, "line 2"),
+          new AdditionalMessage("KEY", null)),
+        "With Url");
     }
 
     @Override

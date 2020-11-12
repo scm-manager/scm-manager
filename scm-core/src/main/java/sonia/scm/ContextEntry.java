@@ -21,22 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.util.AssertUtil;
 
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ContextEntry {
+public class ContextEntry implements Serializable {
   private final String type;
   private final String id;
 
-  ContextEntry(Class type, String id) {
+  ContextEntry(Class<?> type, String id) {
     this(type.getSimpleName(), id);
   }
 
@@ -91,7 +92,7 @@ public class ContextEntry {
       return this.in(Repository.class, namespaceAndName.logString());
     }
 
-    public ContextBuilder in(Class type, String id) {
+    public ContextBuilder in(Class<?> type, String id) {
       context.add(new ContextEntry(type, id));
       return this;
     }

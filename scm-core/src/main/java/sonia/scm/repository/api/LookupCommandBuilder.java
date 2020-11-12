@@ -22,43 +22,30 @@
  * SOFTWARE.
  */
 
-package sonia.scm;
+package sonia.scm.repository.api;
 
-import java.util.Collections;
-import java.util.List;
+import sonia.scm.repository.spi.LookupCommand;
+import sonia.scm.repository.spi.LookupCommandRequest;
 
-import static java.util.stream.Collectors.joining;
+import java.util.Optional;
 
-public class NotFoundException extends ExceptionWithContext {
+/**
+ * The lookup command executes a lookup for additional repository information.
+ *
+ * @since 2.10.0
+ */
+public class LookupCommandBuilder {
 
-  private static final long serialVersionUID = 1710455380886499111L;
+  private final LookupCommand lookupCommand;
 
-  private static final String CODE = "AGR7UzkhA1";
-
-  public NotFoundException(Class<?> type, String id) {
-    this(Collections.singletonList(new ContextEntry(type, id)));
+  public LookupCommandBuilder(LookupCommand lookupCommand) {
+    this.lookupCommand = lookupCommand;
   }
 
-  public NotFoundException(String type, String id) {
-    this(Collections.singletonList(new ContextEntry(type, id)));
-  }
-
-  public static NotFoundException notFound(ContextEntry.ContextBuilder contextBuilder) {
-    return new NotFoundException(contextBuilder.build());
-  }
-
-  private NotFoundException(List<ContextEntry> context) {
-    super(context, createMessage(context));
-  }
-
-  @Override
-  public String getCode() {
-    return CODE;
-  }
-
-  private static String createMessage(List<ContextEntry> context) {
-    return context.stream()
-      .map(c -> c.getType().toLowerCase() + " with id " + c.getId())
-      .collect(joining(" in ", "could not find ", ""));
+  public <T> Optional<T> lookup(Class<T> type, String... args) {
+    LookupCommandRequest<T> request = new LookupCommandRequest<>();
+    request.setType(type);
+    request.setArgs(args);
+    return lookupCommand.lookup(request);
   }
 }
