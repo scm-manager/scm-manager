@@ -37,21 +37,21 @@ public abstract class ExceptionWithContext extends RuntimeException {
   private final List<ContextEntry> context;
   private final List<AdditionalMessage> additionalMessages;
 
-  public ExceptionWithContext(List<ContextEntry> context, String message) {
+  protected ExceptionWithContext(List<ContextEntry> context, String message) {
     this(context, null, message);
   }
 
-  public ExceptionWithContext(List<ContextEntry> context, List<AdditionalMessage> additionalMessages, String message) {
+  protected ExceptionWithContext(List<ContextEntry> context, List<AdditionalMessage> additionalMessages, String message) {
     super(message);
     this.context = context;
     this.additionalMessages = additionalMessages;
   }
 
-  public ExceptionWithContext(List<ContextEntry> context, String message, Exception cause) {
+  protected ExceptionWithContext(List<ContextEntry> context, String message, Exception cause) {
     this(context, null, message, cause);
   }
 
-  public ExceptionWithContext(List<ContextEntry> context, List<AdditionalMessage> additionalMessages, String message, Exception cause) {
+  protected ExceptionWithContext(List<ContextEntry> context, List<AdditionalMessage> additionalMessages, String message, Exception cause) {
     super(message, cause);
     this.context = context;
     this.additionalMessages = additionalMessages;

@@ -75,9 +75,11 @@ class BackendErrorNotification extends React.Component<Props> {
         <>
           <hr />
           {error.additionalMessages
-            .map(a => (a.key ? t(`errors.${a.key}.description`) : a.message))
-            .map(m => (
-              <p>{m}</p>
+            .map(additionalMessage =>
+              additionalMessage.key ? t(`errors.${additionalMessage.key}.description`) : additionalMessage.message
+            )
+            .map(message => (
+              <p>{message}</p>
             ))}
           <hr />
         </>
