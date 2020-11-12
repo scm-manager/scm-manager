@@ -39,8 +39,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class HgModifyCommand implements ModifyCommand {
+
+  static final Pattern HG_MESSAGE_PATTERN = Pattern.compile(".*\\[SCM\\](?: Error:)? (.*)");
 
   private HgCommandContext context;
   private final HgWorkingCopyFactory workingCopyFactory;
@@ -115,7 +118,9 @@ public class HgModifyCommand implements ModifyCommand {
       workingCopyFactory.configure(pullCommand);
       return pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
     } catch (ExecutionException e) {
-      throw IntegrateChangesFromWorkdirException.forMessage(context.getScmRepository(), e.getMessage());
+      throw IntegrateChangesFromWorkdirException
+        .withPattern(HG_MESSAGE_PATTERN)
+        .forMessage(context.getScmRepository(), e.getMessage());
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getScmRepository(),
         String.format("Could not pull modify changes from working copy to central repository for branch %s", request.getBranch()),
