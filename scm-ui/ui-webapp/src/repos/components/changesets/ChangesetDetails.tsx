@@ -174,8 +174,8 @@ class ChangesetDetails extends React.Component<Props, State> {
     const description = changesets.parseDescription(changeset.description);
     const id = <ChangesetId repository={repository} changeset={changeset} link={false} />;
     const date = <DateFromNow date={changeset.date} />;
-    const parents = changeset._embedded.parents.map((parent: ParentChangeset) => (
-      <ReactLink title={parent.id} to={parent.id}>
+    const parents = changeset._embedded.parents.map((parent: ParentChangeset, index: number) => (
+      <ReactLink title={parent.id} to={parent.id} key={index}>
         {parent.id.substring(0, 7)}
       </ReactLink>
     ));
