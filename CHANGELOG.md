@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Include messages from scm protocol in modification or merge errors ([#1420](https://github.com/scm-manager/scm-manager/pull/1420))
 
 ### Fixed
+- Missing close of hg diff command ([#1417](https://github.com/scm-manager/scm-manager/pull/1417))
 - Error on repository initialization with least-privilege user ([#1414](https://github.com/scm-manager/scm-manager/pull/1414))
 - Adhere to git quiet flag ([#1421](https://github.com/scm-manager/scm-manager/pull/1421))
 

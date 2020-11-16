@@ -24,71 +24,65 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
+import com.aragost.javahg.Repository;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteStreams;
-import com.google.common.io.Closeables;
 import sonia.scm.repository.api.DiffCommandBuilder;
 import sonia.scm.repository.api.DiffFormat;
 import sonia.scm.repository.spi.javahg.HgDiffInternalCommand;
 import sonia.scm.web.HgUtil;
 
+import javax.annotation.Nonnull;
+import java.io.IOException;
 import java.io.InputStream;
-
-//~--- JDK imports ------------------------------------------------------------
+import java.io.OutputStream;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgDiffCommand extends AbstractCommand implements DiffCommand
-{
+public class HgDiffCommand extends AbstractCommand implements DiffCommand {
 
-  /**
-   * Constructs ...
-   *
-   *  @param context
-   *
-   */
-  HgDiffCommand(HgCommandContext context)
-  {
+  HgDiffCommand(HgCommandContext context) {
     super(context);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   @Override
-  public DiffCommandBuilder.OutputStreamConsumer getDiffResult(DiffCommandRequest request)
-  {
+  public DiffCommandBuilder.OutputStreamConsumer getDiffResult(DiffCommandRequest request) {
     return output -> {
-      com.aragost.javahg.Repository hgRepo = open();
-
-      HgDiffInternalCommand cmd = HgDiffInternalCommand.on(hgRepo);
-      DiffFormat format = request.getFormat();
-
-      if (format == DiffFormat.GIT)
-      {
-        cmd.git();
-      }
-
-      cmd.change(HgUtil.getRevision(request.getRevision()));
-
-      InputStream inputStream = null;
-
+      Repository hgRepo = open();
       try {
-
-        if (!Strings.isNullOrEmpty(request.getPath())) {
-          inputStream = cmd.stream(hgRepo.file(request.getPath()));
-        } else {
-          inputStream = cmd.stream();
-        }
-
-        ByteStreams.copy(inputStream, output);
-
+        diff(hgRepo, request, output);
       } finally {
-        Closeables.close(inputStream, true);
+        getContext().close();
       }
     };
+  }
+
+  @SuppressWarnings("UnstableApiUsage")
+  private void diff(Repository hgRepo, DiffCommandRequest request, OutputStream output) throws IOException {
+    HgDiffInternalCommand cmd = createDiffCommand(hgRepo, request);
+    try (InputStream inputStream = streamDiff(hgRepo, cmd, request.getPath())) {
+      ByteStreams.copy(inputStream, output);
+    }
+  }
+
+  @Nonnull
+  private HgDiffInternalCommand createDiffCommand(Repository hgRepo, DiffCommandRequest request) {
+    HgDiffInternalCommand cmd = HgDiffInternalCommand.on(hgRepo);
+    DiffFormat format = request.getFormat();
+    if (format == DiffFormat.GIT) {
+      cmd.git();
+    }
+    cmd.change(HgUtil.getRevision(request.getRevision()));
+    return cmd;
+  }
+
+  private InputStream streamDiff(Repository hgRepo, HgDiffInternalCommand cmd, String path) {
+    if (!Strings.isNullOrEmpty(path)) {
+      return cmd.stream(hgRepo.file(path));
+    } else {
+      return cmd.stream();
+    }
   }
 }
