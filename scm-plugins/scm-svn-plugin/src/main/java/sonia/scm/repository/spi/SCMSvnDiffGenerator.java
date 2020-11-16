@@ -565,6 +565,8 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
       }
       if (!useGitFormat){
         displayBinary(mimeType1, mimeType2, outputStream, leftIsBinary, rightIsBinary);
+      } else {
+        displayBinaryGit(target, operation, outputStream);
       }
 
       return;
@@ -587,6 +589,18 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
       runExternalDiffCommand(outputStream, diffCommand, leftFile, rightFile, label1, label2);
     } else {
       internalDiff(target, outputStream, displayPath, leftFile, rightFile, label1, label2, operation, copyFromPath == null ? null : copyFromPath.getPath(), revision1, revision2);
+    }
+  }
+
+  private void displayBinaryGit(SvnTarget target, SvnDiffCallback.OperationKind operation, OutputStream outputStream) throws SVNException {
+    String path1 = operation == SvnDiffCallback.OperationKind.Added ? "/dev/null" : getRelativeToRootPath(target, originalTarget1);
+    String path2 = operation == SvnDiffCallback.OperationKind.Deleted ? "/dev/null" : getRelativeToRootPath(target, originalTarget2);
+    try {
+      displayString(outputStream, String.format("--- a/%s\n", path1));
+      displayString(outputStream, String.format("+++ b/%s\n", path2));
+      displayString(outputStream, "Binary files differ");
+    } catch (IOException e) {
+      wrapException(e);
     }
   }
 
