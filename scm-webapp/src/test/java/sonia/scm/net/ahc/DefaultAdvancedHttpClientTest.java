@@ -318,13 +318,24 @@ public class DefaultAdvancedHttpClientTest
   }
 
   @Test
-  public void shouldNotTraceRequestIfUntracedResponseCode() throws IOException {
+  public void shouldNotTraceRequestIfAcceptedResponseCode() throws IOException {
     when(connection.getResponseCode()).thenReturn(400);
 
     new AdvancedHttpRequest(client, HttpMethod.GET, "https://www.scm-manager.org").acceptStatusCodes(400).request();
     verify(tracer).span("HTTP Request");
     verify(span).label("status", 400);
     verify(span, never()).failed();
+    verify(span).close();
+  }
+
+  @Test
+  public void shouldTraceRequestAsFailedIfAcceptedResponseCodeDoesntMatch() throws IOException {
+    when(connection.getResponseCode()).thenReturn(401);
+
+    new AdvancedHttpRequest(client, HttpMethod.GET, "https://www.scm-manager.org").acceptStatusCodes(400).request();
+    verify(tracer).span("HTTP Request");
+    verify(span).label("status", 401);
+    verify(span).failed();
     verify(span).close();
   }
 
