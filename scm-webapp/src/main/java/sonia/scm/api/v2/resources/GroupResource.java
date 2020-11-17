@@ -26,7 +26,9 @@ package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
@@ -135,7 +137,22 @@ public class GroupResource {
   @PUT
   @Path("")
   @Consumes(VndMediaType.GROUP)
-  @Operation(summary = "Update group", description = "Modifies a group.", tags = "Group")
+  @Operation(
+    summary = "Update group",
+    description = "Modifies a group.",
+    tags = "Group",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.GROUP,
+        schema = @Schema(implementation = UpdateGroupDto.class),
+        examples = @ExampleObject(
+          name = "Update a group description",
+          value = "{\n  \"name\":\"manager\",\n  \"description\":\"Group of managers with full read access\",\n  \"lastModified\":\"2020-06-05T14:42:49.000Z\",\n  \"type\":\"xml\"\n}",
+          summary = "Update a group"
+        )
+      )
+    )
+  )
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "400", description = "invalid body, e.g. illegal change of id/group name")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
@@ -147,6 +164,7 @@ public class GroupResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
+  @ApiResponse(responseCode = "409", description = "conflict, group has been modified concurrently")
   @ApiResponse(
     responseCode = "500",
     description = "internal server error",

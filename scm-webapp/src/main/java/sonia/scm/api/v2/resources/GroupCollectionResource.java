@@ -27,7 +27,9 @@ package sonia.scm.api.v2.resources;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
@@ -121,7 +123,30 @@ public class GroupCollectionResource {
   @POST
   @Path("")
   @Consumes(VndMediaType.GROUP)
-  @Operation(summary = "Create group", description = "Creates a new group.", tags = "Group", operationId = "group_create")
+  @Operation(
+    summary = "Create group",
+    description = "Creates a new group.",
+    tags = "Group",
+    operationId = "group_create",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.GROUP,
+        schema = @Schema(implementation = CreateGroupDto.class),
+        examples = {
+          @ExampleObject(
+            name = "Create an group with a description",
+            value = "{\n  \"name\":\"manager\",\n  \"description\":\"Manager group with full read access\"\n}",
+            summary = "Create a simple group"
+          ),
+          @ExampleObject(
+            name = "Create an internal group with two members",
+            value = "{\n  \"name\":\"Admins\",\n  \"description\":\"SCM-Manager admins\",\n  \"external\":false,\n  \"members\":[\"scmadmin\",\"c.body\"]\n}",
+            summary = "Create group with members"
+          )
+        }
+      )
+    )
+  )
   @ApiResponse(
     responseCode = "201",
     description = "create success",
