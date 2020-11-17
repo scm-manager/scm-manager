@@ -596,11 +596,19 @@ public class SCMSvnDiffGenerator implements ISvnDiffGenerator {
     String path1 = operation == SvnDiffCallback.OperationKind.Added ? "/dev/null" : getRelativeToRootPath(target, originalTarget1);
     String path2 = operation == SvnDiffCallback.OperationKind.Deleted ? "/dev/null" : getRelativeToRootPath(target, originalTarget2);
     try {
-      displayString(outputStream, String.format("--- a/%s\n", path1));
-      displayString(outputStream, String.format("+++ b/%s\n", path2));
+      displayString(outputStream, formatPath(path1, "---", "a"));
+      displayString(outputStream, formatPath(path2, "+++", "b"));
       displayString(outputStream, "Binary files differ");
     } catch (IOException e) {
       wrapException(e);
+    }
+  }
+
+  private String formatPath(String path, String start, String aOrB) {
+    if (path.equals("/dev/null")) {
+      return String.format("%s %s\n", start, path);
+    } else {
+      return String.format("%s %s/%s\n", start, aOrB, path);
     }
   }
 
