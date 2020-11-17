@@ -926,7 +926,7 @@
 
     <!-- webserver -->
     <jetty.version>9.4.34.v20201102</jetty.version>
-    <jetty.maven.version>9.4.30.v20200611</jetty.maven.version>
+    <jetty.maven.version>9.4.34.v20201102</jetty.maven.version>
 
     <!-- security libraries -->
     <ssp.version>1.2.0</ssp.version>
