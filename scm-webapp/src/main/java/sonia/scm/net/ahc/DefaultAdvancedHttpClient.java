@@ -52,6 +52,7 @@ import java.io.OutputStream;
 import java.net.*;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Set;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -206,7 +207,7 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
       try {
         DefaultAdvancedHttpResponse response = doRequest(request);
         span.label("status", response.getStatus());
-        if (!response.isSuccessful()) {
+        if (isFailedRequest(request, response)) {
           span.failed();
         }
         return response;
@@ -217,6 +218,13 @@ public class DefaultAdvancedHttpClient extends AdvancedHttpClient
         throw ex;
       }
     }
+  }
+
+  private boolean isFailedRequest(BaseHttpRequest<?> request, AdvancedHttpResponse responseStatus) {
+    if (Arrays.stream(request.getAcceptedStatus()).anyMatch(code -> code == responseStatus.getStatus())) {
+      return false;
+    }
+     return !responseStatus.isSuccessful();
   }
 
   @Nonnull

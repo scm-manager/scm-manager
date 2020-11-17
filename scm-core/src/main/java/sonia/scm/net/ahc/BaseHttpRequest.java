@@ -258,6 +258,22 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
   }
 
   /**
+   * Sets the response codes which should be traced as successful.
+   *
+   * Example: If 400 is set as {@link #acceptedStatusCodes} then all requests
+   * which get a response with status code 400 will be traced as successful (not failed) request
+   *
+   * @param codes status codes which should be traced as successful
+   * @return request instance
+   *
+   * @since 2.10.0
+   */
+  public T acceptStatusCodes(int... codes) {
+    this.acceptedStatusCodes = codes;
+    return self();
+  }
+
+  /**
    * Disables tracing for the request.
    * This should only be done for internal requests.
    *
@@ -312,6 +328,18 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
    */
   public String getSpanKind() {
     return spanKind;
+  }
+
+
+  /**
+   * Returns the response codes which are accepted as successful by tracer.
+   *
+   * @return codes
+   *
+   * @since 2.10.0
+   */
+  public int[] getAcceptedStatus() {
+    return acceptedStatusCodes;
   }
 
   /**
@@ -434,4 +462,7 @@ public abstract class BaseHttpRequest<T extends BaseHttpRequest>
 
   /** kind of span for trace api */
   private String spanKind = "HTTP Request";
+
+  /** codes which will be marked as successful by tracer */
+  private int[] acceptedStatusCodes = new int[]{};
 }

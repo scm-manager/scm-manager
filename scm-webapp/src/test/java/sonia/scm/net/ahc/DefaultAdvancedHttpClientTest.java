@@ -317,6 +317,17 @@ public class DefaultAdvancedHttpClientTest
     verify(tracer, never()).span(anyString());
   }
 
+  @Test
+  public void shouldNotTraceRequestIfUntracedResponseCode() throws IOException {
+    when(connection.getResponseCode()).thenReturn(400);
+
+    new AdvancedHttpRequest(client, HttpMethod.GET, "https://www.scm-manager.org").acceptStatusCodes(400).request();
+    verify(tracer).span("HTTP Request");
+    verify(span).label("status", 400);
+    verify(span, never()).failed();
+    verify(span).close();
+  }
+
 
   //~--- set methods ----------------------------------------------------------
 
@@ -328,7 +339,7 @@ public class DefaultAdvancedHttpClientTest
   public void setUp()
   {
     configuration = new ScmConfiguration();
-    transformers = new HashSet<ContentTransformer>();
+    transformers = new HashSet<>();
     client = new TestingAdvacedHttpClient(configuration, transformers);
     when(tracer.span(anyString())).thenReturn(span);
   }
