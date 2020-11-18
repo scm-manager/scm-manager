@@ -47758,9 +47758,8 @@ exports[`Storyshots MarkdownView Default 1`] = `
       className="content is-word-break"
     >
       <h1>
-        <a
-          name="top"
-        />
+        &lt;a name="top"&gt;
+        &lt;/a&gt;
         Markdown Test Page
       </h1>
       <ul>
@@ -47823,9 +47822,8 @@ exports[`Storyshots MarkdownView Default 1`] = `
       </ul>
       <hr />
       <h1>
-        <a
-          name="Headings"
-        />
+        &lt;a name="Headings"&gt;
+        &lt;/a&gt;
         Headings
       </h1>
       <h1>
@@ -47872,9 +47870,8 @@ exports[`Storyshots MarkdownView Default 1`] = `
         </a>
       </p>
       <h1>
-        <a
-          name="Paragraphs"
-        />
+        &lt;a name="Paragraphs"&gt;
+        &lt;/a&gt;
         Paragraphs
       </h1>
       <p>
@@ -47894,9 +47891,8 @@ exports[`Storyshots MarkdownView Default 1`] = `
         </a>
       </p>
       <h1>
-        <a
-          name="Blockquotes"
-        />
+        &lt;a name="Blockquotes"&gt;
+        &lt;/a&gt;
         Blockquotes
       </h1>
       <p>
@@ -47934,9 +47930,8 @@ exports[`Storyshots MarkdownView Default 1`] = `
         </a>
       </p>
       <h1>
-        <a
-          name="Lists"
-        />
+        &lt;a name="Lists"&gt;
+        &lt;/a&gt;
         Lists
       </h1>
       <h3>
@@ -48013,9 +48008,8 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
         </a>
       </p>
       <h1>
-        <a
-          name="Horizontal"
-        />
+        &lt;a name="Horizontal"&gt;
+        &lt;/a&gt;
         Horizontal rule
       </h1>
       <p>
@@ -48033,302 +48027,22 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
         </a>
       </p>
       <h1>
-        <a
-          name="Table"
-        />
+        &lt;a name="Table"&gt;
+        &lt;/a&gt;
         Table
       </h1>
       <p>
         Duis sunt ut pariatur reprehenderit mollit mollit magna dolore in pariatur nulla commodo sit dolor ad fugiat. Laboris amet ea occaecat duis eu enim exercitation deserunt ea laborum occaecat reprehenderit. Et incididunt dolor commodo consequat mollit nisi proident non pariatur in et incididunt id. Eu ut et Lorem ea ex magna minim ipsum ipsum do.
       </p>
-      <table>
-        <thead>
-          <tr>
-            <th
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Table Heading 1
-            </th>
-            <th
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Table Heading 2
-            </th>
-            <th
-              style={
-                Object {
-                  "textAlign": "center",
-                }
-              }
-            >
-              Center align
-            </th>
-            <th
-              style={
-                Object {
-                  "textAlign": "right",
-                }
-              }
-            >
-              Right align
-            </th>
-            <th
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Table Heading 5
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 1
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 2
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "center",
-                }
-              }
-            >
-              Item 3
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "right",
-                }
-              }
-            >
-              Item 4
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 5
-            </td>
-          </tr>
-          <tr>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 1
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 2
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "center",
-                }
-              }
-            >
-              Item 3
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "right",
-                }
-              }
-            >
-              Item 4
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 5
-            </td>
-          </tr>
-          <tr>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 1
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 2
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "center",
-                }
-              }
-            >
-              Item 3
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "right",
-                }
-              }
-            >
-              Item 4
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 5
-            </td>
-          </tr>
-          <tr>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 1
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 2
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "center",
-                }
-              }
-            >
-              Item 3
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "right",
-                }
-              }
-            >
-              Item 4
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 5
-            </td>
-          </tr>
-          <tr>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 1
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 2
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "center",
-                }
-              }
-            >
-              Item 3
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "right",
-                }
-              }
-            >
-              Item 4
-            </td>
-            <td
-              style={
-                Object {
-                  "textAlign": "left",
-                }
-              }
-            >
-              Item 5
-            </td>
-          </tr>
-        </tbody>
-      </table>
+      <p>
+        | Table Heading 1 | Table Heading 2 | Center align    | Right align     | Table Heading 5 |
+| :-------------- | :-------------- | :-------------: | --------------: | :-------------- |
+| Item 1          | Item 2          | Item 3          | Item 4          | Item 5          |
+| Item 1          | Item 2          | Item 3          | Item 4          | Item 5          |
+| Item 1          | Item 2          | Item 3          | Item 4          | Item 5          |
+| Item 1          | Item 2          | Item 3          | Item 4          | Item 5          |
+| Item 1          | Item 2          | Item 3          | Item 4          | Item 5          |
+      </p>
       <p>
         Minim id consequat adipisicing cupidatat laborum culpa veniam non consectetur et duis pariatur reprehenderit eu ex consectetur. Sunt nisi qui eiusmod ut cillum laborum Lorem officia aliquip laboris ullamco nostrud laboris non irure laboris. Cillum dolore labore Lorem deserunt mollit voluptate esse incididunt ex dolor.
       </p>
@@ -48340,9 +48054,8 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
         </a>
       </p>
       <h1>
-        <a
-          name="Code"
-        />
+        &lt;a name="Code"&gt;
+        &lt;/a&gt;
         Code
       </h1>
       <h2>
@@ -48575,9 +48288,8 @@ func main() {
         </a>
       </p>
       <h1>
-        <a
-          name="Inline"
-        />
+        &lt;a name="Inline"&gt;
+        &lt;/a&gt;
         Inline elements
       </h1>
       <p>
@@ -48685,43 +48397,270 @@ exports[`Storyshots MarkdownView Inline Xml 1`] = `
   >
     Inline xml outside of a code block is not supported
   </h2>
-  <div
-    className="notification is-danger"
-  >
-    
+  <div>
     <div
-      className="content"
+      className="content is-word-break"
     >
-      <p
-        className="subtitle"
-      >
-        markdownErrorNotification.title
+      <h1>
+        Xml in Markdown
+      </h1>
+      <p>
+        &lt;project [...]&gt;
       </p>
       <p>
-        markdownErrorNotification.description
+        [...]
       </p>
-      <pre>
-        <code>
-          \`\`\`xml
-&lt;your&gt;
-  &lt;xml&gt;
-    &lt;content/&gt;
-  &lt;/xml&gt;
-&lt;/your&gt;
-\`\`\`
+        &lt;build&gt;
+    &lt;plugins&gt;
+      <pre
+        style={
+          Object {
+            "MozHyphens": "none",
+            "MozTabSize": "4",
+            "OTabSize": "4",
+            "WebkitHyphens": "none",
+            "background": "#ffffff",
+            "color": "#363636",
+            "direction": "ltr",
+            "fontFamily": "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+            "fontSize": "13px",
+            "hyphens": "none",
+            "lineHeight": "1.5",
+            "margin": ".5em 0",
+            "msHyphens": "none",
+            "overflow": "auto",
+            "padding": "1em",
+            "tabSize": "4",
+            "textAlign": "left",
+            "textShadow": "none",
+            "whiteSpace": "pre",
+            "wordBreak": "normal",
+            "wordSpacing": "normal",
+          }
+        }
+      >
+        <code
+          className="language-text"
+          style={
+            Object {
+              "MozHyphens": "none",
+              "MozTabSize": "4",
+              "OTabSize": "4",
+              "WebkitHyphens": "none",
+              "color": "#363636",
+              "direction": "ltr",
+              "fontFamily": "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
+              "fontSize": "13px",
+              "hyphens": "none",
+              "lineHeight": "1.5",
+              "msHyphens": "none",
+              "tabSize": "4",
+              "textAlign": "left",
+              "textShadow": "none",
+              "whiteSpace": "pre",
+              "wordBreak": "normal",
+              "wordSpacing": "normal",
+            }
+          }
+        >
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            style={
+              Object {
+                "color": "#9a9a9a",
+                "display": "inline-block",
+                "minWidth": "1em",
+                "paddingRight": "1em",
+                "textAlign": "right",
+                "userSelect": "none",
+              }
+            }
+          >
+            1
+          </span>
+          <span
+            style={Object {}}
+          >
+              [...]
+
+          </span>
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            style={
+              Object {
+                "color": "#9a9a9a",
+                "display": "inline-block",
+                "minWidth": "1em",
+                "paddingRight": "1em",
+                "textAlign": "right",
+                "userSelect": "none",
+              }
+            }
+          >
+            2
+          </span>
+          
+
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            style={
+              Object {
+                "color": "#9a9a9a",
+                "display": "inline-block",
+                "minWidth": "1em",
+                "paddingRight": "1em",
+                "textAlign": "right",
+                "userSelect": "none",
+              }
+            }
+          >
+            3
+          </span>
+            &lt;plugin&gt;
+
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            style={
+              Object {
+                "color": "#9a9a9a",
+                "display": "inline-block",
+                "minWidth": "1em",
+                "paddingRight": "1em",
+                "textAlign": "right",
+                "userSelect": "none",
+              }
+            }
+          >
+            4
+          </span>
+              &lt;groupId&gt;org.apache.maven.plugins&lt;/groupId&gt;
+
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            style={
+              Object {
+                "color": "#9a9a9a",
+                "display": "inline-block",
+                "minWidth": "1em",
+                "paddingRight": "1em",
+                "textAlign": "right",
+                "userSelect": "none",
+              }
+            }
+          >
+            5
+          </span>
+              &lt;artifactId&gt;maven-enforcer-plugin&lt;/artifactId&gt;
+
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            style={
+              Object {
+                "color": "#9a9a9a",
+                "display": "inline-block",
+                "minWidth": "1em",
+                "paddingRight": "1em",
+                "textAlign": "right",
+                "userSelect": "none",
+              }
+            }
+          >
+            6
+          </span>
+            &lt;/plugin&gt;
+
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            style={
+              Object {
+                "color": "#9a9a9a",
+                "display": "inline-block",
+                "minWidth": "1em",
+                "paddingRight": "1em",
+                "textAlign": "right",
+                "userSelect": "none",
+              }
+            }
+          >
+            7
+          </span>
+            &lt;plugin&gt;
+
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            style={
+              Object {
+                "color": "#9a9a9a",
+                "display": "inline-block",
+                "minWidth": "1em",
+                "paddingRight": "1em",
+                "textAlign": "right",
+                "userSelect": "none",
+              }
+            }
+          >
+            8
+          </span>
+              &lt;groupId&gt;org.codehaus.mojo&lt;/groupId&gt;
+
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            style={
+              Object {
+                "color": "#9a9a9a",
+                "display": "inline-block",
+                "minWidth": "1em",
+                "paddingRight": "1em",
+                "textAlign": "right",
+                "userSelect": "none",
+              }
+            }
+          >
+            9
+          </span>
+              &lt;artifactId&gt;animal-sniffer-maven-plugin&lt;/artifactId&gt;
+
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            style={
+              Object {
+                "color": "#9a9a9a",
+                "display": "inline-block",
+                "minWidth": "1em",
+                "paddingRight": "1em",
+                "textAlign": "right",
+                "userSelect": "none",
+              }
+            }
+          >
+            10
+          </span>
+            &lt;/plugin&gt;
+
+          <span
+            className="linenumber react-syntax-highlighter-line-number"
+            style={
+              Object {
+                "color": "#9a9a9a",
+                "display": "inline-block",
+                "minWidth": "1em",
+                "paddingRight": "1em",
+                "textAlign": "right",
+                "userSelect": "none",
+              }
+            }
+          >
+            11
+          </span>
+          &lt;/plugins&gt;
+
         </code>
       </pre>
+        &lt;/build&gt;
       <p>
-        markdownErrorNotification.spec
-        :
-         
-        <a
-          href="https://github.github.com/gfm/"
-          target="_blank"
-        >
-          GitHub Flavored Markdown Spec
-        </a>
+        [...]
       </p>
+      &lt;/project&gt;
     </div>
   </div>
 </div>
@@ -48739,8 +48678,8 @@ exports[`Storyshots MarkdownView Links 1`] = `
         Links
       </h1>
       <p>
-        Show case for different style of markdown links. 
-Please note that some of the links may not work in storybook, 
+        Show case for different style of markdown links.
+Please note that some of the links may not work in storybook,
 the story is mostly for checking if the links are rendered correct.
       </p>
       <h2>
