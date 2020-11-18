@@ -26,7 +26,9 @@ package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;
@@ -128,7 +130,22 @@ public class RepositoryRoleResource {
   @PUT
   @Path("")
   @Consumes(VndMediaType.REPOSITORY_ROLE)
-  @Operation(summary = "Update repository role", description = "Modifies the repository role for the given name.", tags = "Repository role")
+  @Operation(
+    summary = "Update repository role",
+    description = "Modifies the repository role for the given name.",
+    tags = "Repository role",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.REPOSITORY_ROLE,
+        schema = @Schema(implementation = UpdateRepositoryRoleDto.class),
+        examples = @ExampleObject(
+          name = "Update repository role named hero with this verbs",
+          value = "{\n  \"name\":\"hero\",\n  \"system\":false,\n  \"verbs\":[\"read\",\"pull\",\"write\",\"push\",\"delete\"],\n  \"lastModified\":\"2020-06-05T14:42:49.000Z\"\n}",
+          summary = "Update a repository role"
+        )
+      )
+    )
+  )
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "400", description = "invalid body, e.g. illegal change of repository role name")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")

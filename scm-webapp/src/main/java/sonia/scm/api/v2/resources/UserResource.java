@@ -26,7 +26,9 @@ package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.user.User;
@@ -137,7 +139,22 @@ public class UserResource {
   @PUT
   @Path("")
   @Consumes(VndMediaType.USER)
-  @Operation(summary = "Update user", description = "Modifies the user for the given id.", tags = "User")
+  @Operation(
+    summary = "Update user",
+    description = "Modifies the user for the given id.",
+    tags = "User",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.USER,
+        schema = @Schema(implementation = UpdateUserDto.class),
+        examples = @ExampleObject(
+          name = "Update the email address of user mustermann.",
+          value = "{\n  \"name\":\"mustermann\",\n  \"displayName\":\"Max Mustermann\",\n  \"mail\":\"maxmustermann@scm-manager.org\",\n  \"external\":false,\n  \"active\":true,\n  \"lastModified\":\"2020-06-05T14:42:49.000Z\"\n}",
+          summary = "Update a user"
+        )
+      )
+    )
+  )
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "400", description = "invalid body, e.g. illegal change of id/user name")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
@@ -168,7 +185,22 @@ public class UserResource {
   @PUT
   @Path("password")
   @Consumes(VndMediaType.PASSWORD_OVERWRITE)
-  @Operation(summary = "Modifies a user password", description = "Lets admins modifies the user password for the given id.", tags = "User")
+  @Operation(
+    summary = "Modifies a user password",
+    description = "Lets admins modifies the user password for the given id.",
+    tags = "User",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.PASSWORD_OVERWRITE,
+        schema = @Schema(implementation = PasswordOverwriteDto.class),
+        examples = @ExampleObject(
+          name = "Overwrites current password with a more difficult one",
+          value = "{  \"newPassword\":\"5cm4dm1n\"\n}",
+          summary = "Set new password"
+        )
+      )
+    )
+  )
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "400", description = "invalid body, e.g. the user type is not xml or the given oldPassword do not match the stored one")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
@@ -199,7 +231,22 @@ public class UserResource {
   @PUT
   @Path("convert-to-internal")
   @Consumes(VndMediaType.USER)
-  @Operation(summary = "Converts an external user to internal", description = "Converts an external user to an internal one and set the new password.", tags = "User")
+  @Operation(
+    summary = "Converts an external user to internal",
+    description = "Converts an external user to an internal one and set the new password.",
+    tags = "User",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.USER,
+        schema = @Schema(implementation = PasswordOverwriteDto.class),
+        examples = @ExampleObject(
+          name = "Converts an external user to an internal one and set the new password.",
+          value = "{  \"newPassword\":\"5cm4dm1n\"\n}",
+          summary = "Simple converts an user"
+        )
+      )
+    )
+  )
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "400", description = "invalid body, e.g. the new password is missing")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")

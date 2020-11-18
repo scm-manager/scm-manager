@@ -26,7 +26,9 @@ package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -151,7 +153,22 @@ public class RepositoryResource {
   @PUT
   @Path("")
   @Consumes(VndMediaType.REPOSITORY)
-  @Operation(summary = "Update repository", description = "Modifies the repository for the given namespace and name.", tags = "Repository")
+  @Operation(
+    summary = "Update repository",
+    description = "Modifies the repository for the given namespace and name.",
+    tags = "Repository",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.REPOSITORY,
+        schema = @Schema(implementation = UpdateRepositoryDto.class),
+        examples = @ExampleObject(
+          name = "Update repository description",
+          value = "{\n  \"namespace\":\"scmadmin\",\n  \"name\":\"scm-manager\",\n  \"description\":\"The easiest way to share and manage your Git, Mercurial and Subversion repositories.\",\n  \"type\":\"git\",\n  \"lastModified\":\"2020-06-05T14:42:49.000Z\"\n}",
+          summary = "Update a repository"
+        )
+      )
+    )
+  )
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "400", description = "invalid body, e.g. illegal change of namespace or name")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")

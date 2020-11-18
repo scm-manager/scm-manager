@@ -27,7 +27,9 @@ package sonia.scm.api.v2.resources;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.AlreadyExistsException;
@@ -91,7 +93,22 @@ public class RepositoryPermissionRootResource {
   @POST
   @Path("")
   @Consumes(VndMediaType.REPOSITORY_PERMISSION)
-  @Operation(summary = "Create repository-specific permission", description = "Adds a new permission to the user or group managed by the repository.", tags = {"Repository", "Permissions"})
+  @Operation(
+    summary = "Create repository-specific permission",
+    description = "Adds a new permission to the user or group managed by the repository.",
+    tags = {"Repository", "Permissions"},
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.REPOSITORY_PERMISSION,
+        schema = @Schema(implementation = PermissionListDto.class),
+        examples = @ExampleObject(
+          name = "Add read permissions for repository and pull requests to manager group",
+          value = "{\n  \"name\":\"manager\",\n  \"verbs\":[\"read\",\"readPullRequest\"],\n  \"groupPermission\":true\n}",
+          summary = "Add a permission"
+        )
+      )
+    )
+  )
   @ApiResponse(
     responseCode = "201",
     description = "creates",
@@ -228,7 +245,21 @@ public class RepositoryPermissionRootResource {
   @PUT
   @Path("{permission-name}")
   @Consumes(VndMediaType.REPOSITORY_PERMISSION)
-  @Operation(summary = "Update repository-specific permission", description = "Update a permission to the user or group managed by the repository.", tags = {"Repository", "Permissions"})
+  @Operation(
+    summary = "Update repository-specific permission",
+    description = "Update a permission to the user or group managed by the repository.",
+    tags = {"Repository", "Permissions"},
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.REPOSITORY_PERMISSION,
+        schema = @Schema(implementation = PermissionListDto.class),
+        examples = @ExampleObject(
+          name = "Update permissions of manager group",
+          value = "{\n  \"name\":\"manager\",\n  \"verbs\":[\"read\",\"permissionRead\",\"readPullRequest\"],\n  \"groupPermission\":true\n}",
+          summary = "Update a permission"
+        )
+      )
+    ))
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(

@@ -27,7 +27,9 @@ package sonia.scm.api.v2.resources;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.apache.shiro.authc.credential.PasswordService;
@@ -105,7 +107,22 @@ public class MeResource {
   @PUT
   @Path("password")
   @Consumes(VndMediaType.PASSWORD_CHANGE)
-  @Operation(summary = "Change password", description = "Change password of the current user.", tags = "Current user")
+  @Operation(
+    summary = "Change password",
+    description = "Change password of the current user.",
+    tags = "Current user",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.PASSWORD_CHANGE,
+        schema = @Schema(implementation = PasswordChangeDto.class),
+        examples = @ExampleObject(
+          name = "Change password to a more difficult one",
+          value = "{  \"oldPassword\":\"scmadmin\",\n  \"newPassword\":\"5cm4dm1n\"\n}",
+          summary = "Simple change password"
+        )
+      )
+    )
+  )
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(
