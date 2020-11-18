@@ -146,7 +146,6 @@ class MarkdownView extends React.Component<Props, State> {
           <Markdown
             className="content is-word-break"
             skipHtml={skipHtml}
-            escapeHtml={skipHtml}
             source={content}
             renderers={rendererList}
             astPlugins={[createTransformer(t)]}
