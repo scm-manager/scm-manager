@@ -10,7 +10,7 @@
   "dependencies": {
     "babel-jest": "^24.9.0",
     "babel-plugin-require-context-hook": "^1.0.0",
-    "jest": "^24.9.0",
+    "jest": "^26.0.0",
     "jest-junit": "^8.0.0"
   },
   "publishConfig": {
