@@ -139,7 +139,7 @@ public class RepositoryRoleResource {
         mediaType = VndMediaType.REPOSITORY_ROLE,
         schema = @Schema(implementation = UpdateRepositoryRoleDto.class),
         examples = @ExampleObject(
-          name = "Update repository role named hero with this verbs",
+          name = "Update repository role named hero with this verbs.",
           value = "{\n  \"name\":\"hero\",\n  \"system\":false,\n  \"verbs\":[\"read\",\"pull\",\"write\",\"push\",\"delete\"],\n  \"lastModified\":\"2020-06-05T14:42:49.000Z\"\n}",
           summary = "Update a repository role"
         )

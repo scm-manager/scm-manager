@@ -194,7 +194,7 @@ public class UserResource {
         mediaType = VndMediaType.PASSWORD_OVERWRITE,
         schema = @Schema(implementation = PasswordOverwriteDto.class),
         examples = @ExampleObject(
-          name = "Overwrites current password with a more difficult one",
+          name = "Overwrites current password with a more difficult one.",
           value = "{  \"newPassword\":\"5cm4dm1n\"\n}",
           summary = "Set new password"
         )

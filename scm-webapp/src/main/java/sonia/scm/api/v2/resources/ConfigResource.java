@@ -134,7 +134,7 @@ public class ConfigResource {
         mediaType = VndMediaType.CONFIG,
         schema = @Schema(implementation = UpdateConfigDto.class),
         examples = @ExampleObject(
-          name = "Overwrites current configuration with this one",
+          name = "Overwrites current configuration with this one.",
           value = "{\n  \"realmDescription\":\"SONIA :: SCM-Manager\",\n  \"dateFormat\":\"YYYY-MM-DD HH:mm:ss\",\n  \"baseUrl\":\"http://localhost:8081/scm\",\n  \"loginAttemptLimit\":-1,\n  \"pluginUrl\":\"https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}\",\n  \"loginAttemptLimitTimeout\":500,\n  \"namespaceStrategy\":\"CustomNamespaceStrategy\",\n  \"loginInfoUrl\":\"https://login-info.scm-manager.org/api/v1/login-info\",\n  \"releaseFeedUrl\":\"https://scm-manager.org/download/rss.xml\",\n  \"mailDomainName\":\"scm-manager.local\"\n}",
           summary = "Simple update configuration"
         )

@@ -21,19 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
+    
 package sonia.scm.api.v2.resources;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import sonia.scm.util.ValidationUtil;
+import lombok.Setter;
 
-import javax.validation.constraints.Pattern;
+import javax.validation.constraints.NotNull;
 
+/**
+ * This class is currently only used in the openapi scheme
+ */
 @Getter
+@Setter
 @NoArgsConstructor
-public class RepositoryRenameDto {
-  private String namespace;
-  @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
-  private String name;
+public class UpdatePermissionListDto {
+
+  @NotNull
+  private String[] permissions;
 }

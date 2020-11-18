@@ -115,9 +115,9 @@ public class UserPermissionResource {
     requestBody = @RequestBody(
       content = @Content(
         mediaType = VndMediaType.PERMISSION_COLLECTION,
-        schema = @Schema(implementation = PermissionListDto.class),
+        schema = @Schema(implementation = UpdatePermissionListDto.class),
         examples = @ExampleObject(
-          name = "Add read permissions for all repositories and pull requests",
+          name = "Add read permissions for all repositories and pull requests.",
           value = "{\n  \"permissions\":[\"repository:read,pull:*\",\"repository:readPullRequest:*\"]\n}",
           summary = "Simple update user permissions"
         )

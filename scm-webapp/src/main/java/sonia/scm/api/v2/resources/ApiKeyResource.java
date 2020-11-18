@@ -142,7 +142,7 @@ public class  ApiKeyResource {
         mediaType = VndMediaType.API_KEY,
         schema = @Schema(implementation = CreateApiKeyDto.class),
         examples = @ExampleObject(
-          name = "Create a new api key named readKey with READ permission role",
+          name = "Create a new api key named readKey with READ permission role.",
           value = "{\n  \"displayName\":\"readKey\",\n  \"permissionRole\":\"READ\"\n}",
           summary = "Create new api key"
         )

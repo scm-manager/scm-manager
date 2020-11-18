@@ -171,9 +171,9 @@ public class RepositoryCollectionResource {
         mediaType = VndMediaType.REPOSITORY,
         schema = @Schema(implementation = CreateRepositoryDto.class),
         examples = @ExampleObject(
-          name = "Create a new git repository named scm-manager in scmadmin namespace",
+          name = "Create a new git repository named scm-manager in scmadmin namespace.",
           value = "{\n  \"namespace\":\"scmadmin\",\n  \"name\":\"scm-manager\",\n  \"type\":\"git\"\n}",
-          summary = "Create a simple git repository"
+          summary = "Create a git repository"
         )
       )
     )

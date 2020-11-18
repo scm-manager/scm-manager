@@ -162,7 +162,7 @@ public class RepositoryResource {
         mediaType = VndMediaType.REPOSITORY,
         schema = @Schema(implementation = UpdateRepositoryDto.class),
         examples = @ExampleObject(
-          name = "Update repository description",
+          name = "Update repository description.",
           value = "{\n  \"namespace\":\"scmadmin\",\n  \"name\":\"scm-manager\",\n  \"description\":\"The easiest way to share and manage your Git, Mercurial and Subversion repositories.\",\n  \"type\":\"git\",\n  \"lastModified\":\"2020-06-05T14:42:49.000Z\"\n}",
           summary = "Update a repository"
         )

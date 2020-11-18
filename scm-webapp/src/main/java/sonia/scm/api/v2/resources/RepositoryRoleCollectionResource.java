@@ -125,7 +125,7 @@ public class RepositoryRoleCollectionResource {
         mediaType = VndMediaType.REPOSITORY_ROLE,
         schema = @Schema(implementation = CreateRepositoryRoleDto.class),
         examples = @ExampleObject(
-          name = "Create repository role named hero with read and delete repository permission",
+          name = "Create repository role named hero with read and delete repository permission.",
           value = "{\n  \"name\":\"hero\",\n  \"system\":false,\n  \"verbs\":[\"read\",\"delete\"]\n}",
           summary = "Add a repository role"
         )

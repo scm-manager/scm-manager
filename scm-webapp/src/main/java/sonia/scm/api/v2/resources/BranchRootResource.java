@@ -220,7 +220,7 @@ public class BranchRootResource {
         mediaType = VndMediaType.BRANCH_REQUEST,
         schema = @Schema(implementation = BranchRequestDto.class),
         examples = @ExampleObject(
-          name = "Branch a new develop branch from main",
+          name = "Branch a new develop branch from main.",
           value = "{\n  \"parent\":\"main\",\n  \"name\":\"develop\"\n}",
           summary = "Create a branch"
         )

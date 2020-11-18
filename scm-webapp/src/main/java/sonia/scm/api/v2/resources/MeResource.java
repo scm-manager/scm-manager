@@ -116,7 +116,7 @@ public class MeResource {
         mediaType = VndMediaType.PASSWORD_CHANGE,
         schema = @Schema(implementation = PasswordChangeDto.class),
         examples = @ExampleObject(
-          name = "Change password to a more difficult one",
+          name = "Change password to a more difficult one.",
           value = "{  \"oldPassword\":\"scmadmin\",\n  \"newPassword\":\"5cm4dm1n\"\n}",
           summary = "Simple change password"
         )
