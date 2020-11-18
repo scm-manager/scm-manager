@@ -32,6 +32,10 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.Length;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.GitRepositoryHandler;
@@ -41,12 +45,16 @@ import sonia.scm.web.VndMediaType;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+
+import static sonia.scm.repository.Branch.VALID_BRANCH_NAMES;
 
 /**
  * RESTful Web Service Resource to manage the configuration of the git plugin.
@@ -160,5 +168,20 @@ public class GitConfigResource {
   @Path("{namespace}/{name}")
   public GitRepositoryConfigResource getRepositoryConfig() {
     return gitRepositoryConfigResource.get();
+  }
+
+  /**
+   * This class is currently only used in the openapi scheme
+   */
+  @Getter
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  private static final class UpdateGitConfigDto {
+    private boolean disabled = false;
+    private String gcExpression;
+    private boolean nonFastForwardDisallowed;
+    @NotEmpty
+    @Length(min = 1, max = 100)
+    @Pattern(regexp = VALID_BRANCH_NAMES)
+    private String defaultBranch;
   }
 }

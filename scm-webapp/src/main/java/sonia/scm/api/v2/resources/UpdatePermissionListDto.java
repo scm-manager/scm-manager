@@ -21,12 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.validation.constraints.NotNull;
 
@@ -34,10 +34,8 @@ import javax.validation.constraints.NotNull;
  * This class is currently only used in the openapi scheme
  */
 @Getter
-@Setter
-@NoArgsConstructor
-public class UpdatePermissionListDto {
-
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+final class UpdatePermissionListDto {
   @NotNull
   private String[] permissions;
 }

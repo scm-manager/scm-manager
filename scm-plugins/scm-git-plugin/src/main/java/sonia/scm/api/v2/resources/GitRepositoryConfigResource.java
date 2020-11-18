@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitRepositoryConfig;
@@ -165,5 +166,15 @@ public class GitRepositoryConfigResource {
 
   private ConfigurationStore<GitRepositoryConfig> getStore(Repository repository) {
     return gitRepositoryConfigStoreProvider.get(repository);
+  }
+
+  /**
+   * This class is currently only used in the openapi scheme
+   */
+  @Getter
+  private static final class UpdateGitRepositoryConfigDto {
+    private UpdateGitRepositoryConfigDto() {
+    }
+    private String defaultBranch;
   }
 }

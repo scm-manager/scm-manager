@@ -21,20 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 /**
  * This class is currently only used in the openapi scheme
  */
-@NoArgsConstructor
 @Getter
-@Setter
-public class UpdateHgConfigDto {
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
+final class UpdateHgConfigDto {
   private boolean disabled;
   private String hgBinary;
   private String pythonBinary;

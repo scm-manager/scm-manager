@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -30,12 +30,16 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -44,6 +48,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import java.time.Instant;
+import java.util.Collection;
 
 public class RepositoryRoleResource {
 
@@ -160,5 +166,20 @@ public class RepositoryRoleResource {
   @ApiResponse(responseCode = "500", description = "internal server error")
   public Response update(@PathParam("name") String name, @Valid RepositoryRoleDto repositoryRole) {
     return adapter.update(name, existing -> dtoToRepositoryRoleMapper.map(repositoryRole));
+  }
+
+  /**
+   * This class is currently only used in the openapi scheme
+   */
+  @Getter
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  private static final class UpdateRepositoryRoleDto {
+    @NotEmpty
+    private String name;
+    private boolean system;
+    @NoBlankStrings @NotEmpty
+    private Collection<String> verbs;
+    private String type;
+    private Instant lastModified;
   }
 }

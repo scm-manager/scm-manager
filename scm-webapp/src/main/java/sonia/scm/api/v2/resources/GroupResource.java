@@ -21,21 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
+import sonia.scm.util.ValidationUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -44,6 +50,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+import java.time.Instant;
+import java.util.List;
 
 public class GroupResource {
 
@@ -180,5 +188,21 @@ public class GroupResource {
   @Path("permissions")
   public GroupPermissionResource permissions() {
     return groupPermissionResource;
+  }
+
+  /**
+   * This class is currently only used in the openapi scheme
+   */
+  @Getter
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  private static final class UpdateGroupDto {
+    @Pattern(regexp = ValidationUtil.REGEX_NAME)
+    private String name;
+    private String description;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Instant lastModified;
+    private String type;
+    private List<String> members;
+    private boolean external;
   }
 }

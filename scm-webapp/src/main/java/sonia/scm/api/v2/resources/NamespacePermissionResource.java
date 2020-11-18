@@ -357,6 +357,5 @@ public class NamespacePermissionResource {
       .stream()
       .anyMatch(p -> p.getName().equals(permission.getName()) && p.isGroupPermission() == permission.isGroupPermission());
   }
+
 }
-
-

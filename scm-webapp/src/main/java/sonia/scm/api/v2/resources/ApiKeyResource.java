@@ -32,6 +32,9 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import sonia.scm.ContextEntry;
 import sonia.scm.security.ApiKey;
 import sonia.scm.security.ApiKeyService;
@@ -39,6 +42,7 @@ import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -186,5 +190,17 @@ public class  ApiKeyResource {
   @ApiResponse(responseCode = "500", description = "internal server error")
   public void delete(@PathParam("id") String id) {
     apiKeyService.remove(id);
+  }
+
+  /**
+   * This class is currently only used in the openapi scheme
+   */
+  @Getter
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  private static final class CreateApiKeyDto {
+    @NotEmpty
+    private String displayName;
+    @NotEmpty
+    private String permissionRole;
   }
 }

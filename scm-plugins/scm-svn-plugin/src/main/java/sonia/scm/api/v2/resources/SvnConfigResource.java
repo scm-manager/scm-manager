@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -32,7 +32,11 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import sonia.scm.config.ConfigurationPermissions;
+import sonia.scm.repository.Compatibility;
 import sonia.scm.repository.SvnConfig;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.web.SvnVndMediaType;
@@ -156,4 +160,14 @@ public class SvnConfigResource {
     return Response.noContent().build();
   }
 
+  /**
+   * This class is currently only used in the openapi scheme
+   */
+  @Getter
+  @NoArgsConstructor(access = AccessLevel.PRIVATE)
+  private static final class UpdateSvnConfigDto {
+    private boolean disabled;
+    private Compatibility compatibility;
+    private boolean enabledGZip;
+  }
 }
