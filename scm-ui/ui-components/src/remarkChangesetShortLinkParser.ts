@@ -22,11 +22,10 @@
  * SOFTWARE.
  */
 
-import { MarkdownAbstractSyntaxTree, MdastPlugin } from "react-markdown";
 import { nameRegex } from "./validation";
-// @ts-ignore No types available
 import visit from "unist-util-visit";
 import { TFunction } from "i18next";
+import { Node } from "hast";
 
 const namePartRegex = nameRegex.source.substring(1, nameRegex.source.length - 1);
 
@@ -43,10 +42,10 @@ function match(value: string): RegExpMatchArray[] {
   return matches;
 }
 
-export const createTransformer = (t: TFunction): MdastPlugin => {
-  return (tree: MarkdownAbstractSyntaxTree) => {
-    visit(tree, "text", (node: MarkdownAbstractSyntaxTree, index: number, parent: MarkdownAbstractSyntaxTree) => {
-      if (parent.type === "link" || !node.value) {
+export const createTransformer = (t: TFunction) => {
+  return (tree: Node) => {
+    visit<Node & { value?: string }>(tree, "text", (node, index: number, parent) => {
+      if (parent?.type === "link" || !node.value) {
         return;
       }
 
@@ -90,10 +89,12 @@ export const createTransformer = (t: TFunction): MdastPlugin => {
           });
         }
 
-        parent.children![index] = {
-          type: "text",
-          children
-        };
+        if (parent && parent.children) {
+          parent.children[index] = {
+            type: "text",
+            children
+          };
+        }
       }
     });
     return tree;

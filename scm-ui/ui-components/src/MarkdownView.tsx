@@ -148,6 +148,8 @@ class MarkdownView extends React.Component<Props, State> {
             skipHtml={skipHtml}
             source={content}
             renderers={rendererList}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+            // @ts-ignore
             astPlugins={[createTransformer(t)]}
           />
         </div>
