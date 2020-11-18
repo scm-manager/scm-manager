@@ -34,7 +34,7 @@ import DeletePermissionButton from "./DeletePermissionButton";
 
 jest.mock("@scm-manager/ui-components", () => ({
   ConfirmAlert: (({ children }) => <div className="modal">{children}</div>) as FC<never>,
-  DeleteButton: require.requireActual("@scm-manager/ui-components").DeleteButton
+  DeleteButton: jest.requireActual("@scm-manager/ui-components").DeleteButton
 }));
 
 describe("DeletePermissionButton", () => {
