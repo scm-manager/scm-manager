@@ -56,7 +56,7 @@ class ChangesetCollectionToDtoMapperBase extends PagedCollectionToDtoMapper<Chan
   private BranchReferenceDto createBranchReferenceDto(Repository repository, String branchName) {
     BranchReferenceDto branchReferenceDto = new BranchReferenceDto();
     branchReferenceDto.setName(branchName);
-    branchReferenceDto.add(Links.linkingTo().self(resourceLinks.branch().self(repository.getNamespaceAndName(), branchName)).build());
+    branchReferenceDto.add(Links.linkingTo().self(resourceLinks.branch().self(repository.getNamespace(), repository.getName(), branchName)).build());
     return branchReferenceDto;
   }
 }

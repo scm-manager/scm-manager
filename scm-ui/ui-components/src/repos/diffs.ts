@@ -41,5 +41,5 @@ export function createHunkIdentifierFromContext(ctx: BaseContext) {
 }
 
 export function escapeWhitespace(path: string) {
-  return path.toLowerCase().replace(/\W/g, "-");
+  return path?.toLowerCase().replace(/\W/g, "-");
 }

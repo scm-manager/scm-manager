@@ -22,43 +22,43 @@
  * SOFTWARE.
  */
 
-package sonia.scm;
+package sonia.scm.repository.spi;
 
-import java.util.Collections;
-import java.util.List;
+import lombok.extern.slf4j.Slf4j;
+import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.io.SVNRepository;
 
-import static java.util.stream.Collectors.joining;
+import java.util.Optional;
 
-public class NotFoundException extends ExceptionWithContext {
+@Slf4j
+public class SvnLookupCommand extends AbstractSvnCommand implements LookupCommand {
 
-  private static final long serialVersionUID = 1710455380886499111L;
-
-  private static final String CODE = "AGR7UzkhA1";
-
-  public NotFoundException(Class<?> type, String id) {
-    this(Collections.singletonList(new ContextEntry(type, id)));
-  }
-
-  public NotFoundException(String type, String id) {
-    this(Collections.singletonList(new ContextEntry(type, id)));
-  }
-
-  public static NotFoundException notFound(ContextEntry.ContextBuilder contextBuilder) {
-    return new NotFoundException(contextBuilder.build());
-  }
-
-  private NotFoundException(List<ContextEntry> context) {
-    super(context, createMessage(context));
+  protected SvnLookupCommand(SvnContext context) {
+    super(context);
   }
 
   @Override
-  public String getCode() {
-    return CODE;
+  public <T> Optional<T> lookup(LookupCommandRequest<T> request) {
+    try {
+      if (request.getArgs().length > 1 && "propget".equalsIgnoreCase(request.getArgs()[0])) {
+        return lookupProps(request);
+      }
+    } catch (SVNException e) {
+      log.error("Lookup failed: ", e);
+    }
+
+    return Optional.empty();
   }
 
-  private static String createMessage(List<ContextEntry> context) {
-    return context.stream()
-      .map(c -> c.getType().toLowerCase() + " with id " + c.getId())
-      .collect(joining(" in ", "could not find ", ""));
+  private <T> Optional<T> lookupProps(LookupCommandRequest<T> request) throws SVNException {
+    if (request.getArgs()[1].equalsIgnoreCase("uuid")) {
+      if (!request.getType().equals(String.class)) {
+        throw new IllegalArgumentException("uuid can only be returned as String");
+      }
+      SVNRepository repository = context.open();
+      return Optional.of((T) repository.getRepositoryUUID(true));
+    }
+    log.debug("No result found on lookup");
+    return Optional.empty();
   }
 }

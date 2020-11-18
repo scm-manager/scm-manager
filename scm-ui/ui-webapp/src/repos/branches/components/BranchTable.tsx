@@ -21,41 +21,84 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 import BranchRow from "./BranchRow";
-import { Branch } from "@scm-manager/ui-types";
+import { Branch, Link } from "@scm-manager/ui-types";
+import { apiClient, ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
+type Props = {
   baseUrl: string;
   branches: Branch[];
+  fetchBranches: () => void;
 };
 
-class BranchTable extends React.Component<Props> {
-  render() {
-    const { t } = this.props;
-    return (
+const BranchTable: FC<Props> = ({ baseUrl, branches, fetchBranches }) => {
+  const [t] = useTranslation("repos");
+  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const [error, setError] = useState<Error | undefined>();
+  const [branchToBeDeleted, setBranchToBeDeleted] = useState<Branch | undefined>();
+
+  const onDelete = (branch: Branch) => {
+    setBranchToBeDeleted(branch);
+    setShowConfirmAlert(true);
+  };
+
+  const abortDelete = () => {
+    setBranchToBeDeleted(undefined);
+    setShowConfirmAlert(false);
+  };
+
+  const deleteBranch = () => {
+    apiClient
+      .delete((branchToBeDeleted?._links.delete as Link).href)
+      .then(() => fetchBranches())
+      .catch(setError);
+  };
+
+  const renderRow = () => {
+    let rowContent = null;
+    if (branches) {
+      rowContent = branches.map((branch, index) => {
+        return <BranchRow key={index} baseUrl={baseUrl} branch={branch} onDelete={onDelete} />;
+      });
+    }
+    return rowContent;
+  };
+
+  const confirmAlert = (
+    <ConfirmAlert
+      title={t("branch.delete.confirmAlert.title")}
+      message={t("branch.delete.confirmAlert.message", { branch: branchToBeDeleted?.name })}
+      buttons={[
+        {
+          className: "is-outlined",
+          label: t("branch.delete.confirmAlert.submit"),
+          onClick: () => deleteBranch()
+        },
+        {
+          label: t("branch.delete.confirmAlert.cancel"),
+          onClick: () => abortDelete()
+        }
+      ]}
+      close={() => abortDelete()}
+    />
+  );
+
+  return (
+    <>
+      {showConfirmAlert && confirmAlert}
+      {error && <ErrorNotification error={error} />}
       <table className="card-table table is-hoverable is-fullwidth is-word-break">
         <thead>
           <tr>
             <th>{t("branches.table.branches")}</th>
           </tr>
         </thead>
-        <tbody>{this.renderRow()}</tbody>
+        <tbody>{renderRow()}</tbody>
       </table>
-    );
-  }
+    </>
+  );
+};
 
-  renderRow() {
-    const { baseUrl, branches } = this.props;
-    let rowContent = null;
-    if (branches) {
-      rowContent = branches.map((branch, index) => {
-        return <BranchRow key={index} baseUrl={baseUrl} branch={branch} />;
-      });
-    }
-    return rowContent;
-  }
-}
-
-export default withTranslation("repos")(BranchTable);
+export default BranchTable;

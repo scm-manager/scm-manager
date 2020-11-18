@@ -140,13 +140,13 @@ public class ResourceLinksTest {
 
   @Test
   public void shouldCreateCorrectBranchUrl() {
-    String url = resourceLinks.branch().self(new NamespaceAndName("space", "name"), "master");
+    String url = resourceLinks.branch().self("space", "name", "master");
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/name/branches/master", url);
   }
 
   @Test
   public void shouldCreateCorrectBranchHiostoryUrl() {
-    String url = resourceLinks.branch().history(new NamespaceAndName("space", "name"), "master");
+    String url = resourceLinks.branch().history("space", "name", "master");
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/name/branches/master/changesets/", url);
   }
 

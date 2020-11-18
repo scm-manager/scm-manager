@@ -38,6 +38,7 @@ import sonia.scm.repository.work.WorkdirProvider;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.regex.Matcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -179,5 +180,19 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   @Test(expected = NoChangesMadeException.class)
   public void shouldThrowNoChangesMadeExceptionIfEmptyLocalChangesetAfterRequest() {
     hgModifyCommand.execute(new ModifyCommandRequest());
+  }
+
+  @Test
+  public void shouldExtractSimpleMessage() {
+    Matcher matcher = HgModifyCommand.HG_MESSAGE_PATTERN.matcher("[SCM] This is a simple message");
+    matcher.matches();
+    assertThat(matcher.group(1)).isEqualTo("This is a simple message");
+  }
+
+  @Test
+  public void shouldExtractErrorMessage() {
+    Matcher matcher = HgModifyCommand.HG_MESSAGE_PATTERN.matcher("[SCM] Error: This is an error message");
+    matcher.matches();
+    assertThat(matcher.group(1)).isEqualTo("This is an error message");
   }
 }

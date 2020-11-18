@@ -431,6 +431,20 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
+   * The lookup command executes a lookup which returns additional information for the repository.
+   *
+   * @return instance of {@link LookupCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @since 2.10.0
+   */
+  public LookupCommandBuilder getLookupCommand() {
+    LOG.debug("create lookup command for repository {}",
+      repository.getNamespaceAndName());
+    return new LookupCommandBuilder(provider.getLookupCommand());
+  }
+
+  /**
    * Returns true if the command is supported by the repository service.
    *
    * @param command command

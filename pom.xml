@@ -903,7 +903,7 @@
 
   <properties>
     <!-- test libraries -->
-    <mockito.version>3.5.13</mockito.version>
+    <mockito.version>3.5.15</mockito.version>
     <hamcrest.version>2.1</hamcrest.version>
     <junit.version>5.7.0</junit.version>
 
@@ -925,8 +925,8 @@
     <legman.version>1.6.2</legman.version>
 
     <!-- webserver -->
-    <jetty.version>9.4.33.v20201020</jetty.version>
-    <jetty.maven.version>9.4.30.v20200611</jetty.maven.version>
+    <jetty.version>9.4.34.v20201102</jetty.version>
+    <jetty.maven.version>9.4.34.v20201102</jetty.maven.version>
 
     <!-- security libraries -->
     <ssp.version>1.2.0</ssp.version>

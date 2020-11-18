@@ -37,6 +37,8 @@ import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.work.WorkingCopy;
 import sonia.scm.user.User;
 
+import java.io.IOException;
+
 /**
  * Mercurial implementation of the {@link BranchCommand}.
  * Note that this creates an empty commit to "persist" the new branch.
@@ -106,9 +108,8 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
       PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
       workingCopyFactory.configure(pullCommand);
       pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
-    } catch (Exception e) {
-      // TODO handle failed update
-      throw new IntegrateChangesFromWorkdirException(getRepository(),
+    } catch (IOException e) {
+      throw new InternalRepositoryException(getRepository(),
         String.format("Could not pull changes '%s' into central repository", branch),
         e);
     }

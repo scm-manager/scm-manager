@@ -197,7 +197,11 @@
     },
     "CHRM7IQzo1": {
       "displayName": "Änderung des Repositories nicht möglich",
-      "description": "Die gewünschte Änderung am Repository konnte nicht durchgeführt werden. Höchst wahrscheinlich liegt dieses an installierten Plugins mit Hooks oder nativen Hooks."
+      "description": "Die gewünschte Änderung am Repository konnte nicht durchgeführt werden. Höchst wahrscheinlich liegt dieses an Prüfungen von Plugins. Bitte prüfen Sie die Einstellungen. Im Folgenden finden Sie weitere Meldungen zu dem Fehler:"
+    },
+    "ASSG1ehZ01": {
+      "displayName": "Änderung des Repositories nicht möglich",
+      "description": "Die gewünschte Änderung am Repository konnte nicht durchgeführt werden. Es gab keine weiteren Meldungen."
     },
     "thbsUFokjk": {
       "displayName": "Unerlaubte Änderung eines Schlüsselwerts",

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -71,7 +71,9 @@ public final class GitHookMessageProvider implements HookMessageProvider
   @Override
   public void sendMessage(String message)
   {
-    GitHooks.sendPrefixedMessage(receivePack, message);
+    if (!receivePack.isQuiet()) {
+      GitHooks.sendPrefixedMessage(receivePack, message);
+    }
   }
 
   //~--- fields ---------------------------------------------------------------

@@ -26,7 +26,9 @@ package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
@@ -104,7 +106,22 @@ public class GroupPermissionResource {
   @PUT
   @Path("")
   @Consumes(VndMediaType.PERMISSION_COLLECTION)
-  @Operation(summary = "Update Group permissions", description = "Sets permissions for a group. Overwrites all existing permissions.", tags = {"Group", "Permissions"})
+  @Operation(
+    summary = "Update Group permissions",
+    description = "Sets permissions for a group. Overwrites all existing permissions.",
+    tags = {"Group", "Permissions"},
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.PERMISSION_COLLECTION,
+        schema = @Schema(implementation = PermissionListDto.class),
+        examples = @ExampleObject(
+          name = "Add read permissions for all repositories and pull requests",
+          value = "{\n  \"permissions\":[\"repository:read,pull:*\",\"repository:readPullRequest:*\"]\n}",
+          summary = "Simple update group permissions"
+        )
+      )
+    )
+  )
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "400", description = "invalid body")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
@@ -116,6 +133,7 @@ public class GroupPermissionResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
+  @ApiResponse(responseCode = "409", description = "conflict, group has been modified concurrently")
   @ApiResponse(
     responseCode = "500",
     description = "internal server error",

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import java.util.Collections;
@@ -33,7 +33,7 @@ public class ConcurrentModificationException extends ExceptionWithContext {
 
   private static final String CODE = "2wR7UzpPG1";
 
-  public ConcurrentModificationException(Class type, String id) {
+  public ConcurrentModificationException(Class<?> type, String id) {
     this(Collections.singletonList(new ContextEntry(type, id)));
   }
 
@@ -56,4 +56,4 @@ public class ConcurrentModificationException extends ExceptionWithContext {
       .collect(joining(" in ", "", " has been modified concurrently"));
   }
 }
-                                                                                        
+

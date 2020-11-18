@@ -68,7 +68,19 @@
     "name": "Name:",
     "commits": "Commits",
     "sources": "Sources",
-    "defaultTag": "Default"
+    "defaultTag": "Default",
+    "dangerZone": "Branch löschen",
+    "delete": {
+      "button": "Branch löschen",
+      "subtitle": "Branch löschen",
+      "description": "Gelöschte Branches können nicht wiederhergestellt werden.",
+      "confirmAlert": {
+        "title": "Branch löschen",
+        "message": "Möchten Sie den Branch \"{{branch}}\" wirklich löschen?",
+        "cancel": "Nein",
+        "submit": "Ja"
+      }
+    }
   },
   "tags": {
     "overview": {
@@ -279,4 +291,4 @@
     "clickHere": "Klicken Sie hier um Ihre Datei hochzuladen.",
     "dragAndDrop": "Sie können Ihre Datei auch direkt in die Dropzone ziehen."
   }
-},
+}
