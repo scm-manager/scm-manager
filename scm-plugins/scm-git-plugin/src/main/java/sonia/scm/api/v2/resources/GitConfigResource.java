@@ -27,7 +27,9 @@ package sonia.scm.api.v2.resources;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.config.ConfigurationPermissions;
@@ -116,7 +118,23 @@ public class GitConfigResource {
   @PUT
   @Path("")
   @Consumes(GitVndMediaType.GIT_CONFIG)
-  @Operation(summary = "Modify git configuration", description = "Modifies the global git configuration.", tags = "Git", operationId = "git_put_config")
+  @Operation(
+    summary = "Modify git configuration",
+    description = "Modifies the global git configuration.",
+    tags = "Git",
+    operationId = "git_put_config",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = GitVndMediaType.GIT_CONFIG,
+        schema = @Schema(implementation = UpdateGitConfigDto.class),
+        examples = @ExampleObject(
+          name = "Overwrites current configuration with this one.",
+          value = "{\n  \"disabled\":false,\n  \"gcExpression\":null,\n  \"nonFastForwardDisallowed\":false,\n  \"defaultBranch\":\"main\"\n}",
+          summary = "Simple update configuration"
+        )
+      )
+    )
+  )
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"configuration:write:git\" privilege")
