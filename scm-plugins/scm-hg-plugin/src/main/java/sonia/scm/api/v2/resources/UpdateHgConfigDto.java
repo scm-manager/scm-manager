@@ -39,7 +39,5 @@ interface UpdateHgConfigDto {
 
   boolean isShowRevisionInId();
 
-  boolean isDisableHookSSLValidation();
-
   boolean isEnableHttpPostArgs();
 }
