@@ -29,6 +29,7 @@ import com.github.sdorra.ssp.PermissionCheck;
 import org.apache.shiro.authz.AuthorizationException;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 
 /**
@@ -36,14 +37,23 @@ import java.util.HashSet;
  */
 public final class RepositoryPermissions {
 
-  private static final Collection<String> ARCHIVED_REPOSITORIES = new HashSet<>();
-  private static final Collection<String> READ_ONLY_PERMISSIONS = new HashSet<>();
-
-  static {
-    ARCHIVED_REPOSITORIES.add("B2S6bSg2t2");
-  }
+  private static final Collection<String> ARCHIVED_REPOSITORIES = Collections.synchronizedSet(new HashSet<>());
+  private static final Collection<String> READ_ONLY_VERBS = Collections.synchronizedSet(new HashSet<>());
 
   private RepositoryPermissions(){}
+
+  static void setAsArchived(String repositoryId) {
+    ARCHIVED_REPOSITORIES.add(repositoryId);
+  }
+
+  static void removeFromArchived(String repositoryId) {
+    ARCHIVED_REPOSITORIES.remove(repositoryId);
+  }
+
+  static void setReadOnlyVerbs(Collection<String> readOnlyVerbs) {
+    READ_ONLY_VERBS.addAll(readOnlyVerbs);
+  }
+
   /**
    * Returns permission check for create action.
    *
@@ -351,7 +361,7 @@ public final class RepositoryPermissions {
    * @return permission check for a custom action
    */
    public static PermissionCheck custom(String customAction, String id) {
-     if (READ_ONLY_PERMISSIONS.contains(customAction)) {
+     if (READ_ONLY_VERBS.contains(customAction)) {
        return RepositoryAccessPermissions.custom(customAction, id);
      } else {
        return failForArchived(RepositoryAccessPermissions.custom(customAction, id), id);
@@ -367,7 +377,7 @@ public final class RepositoryPermissions {
    * @return permission check for custom action
    */
    public static PermissionCheck custom(String customAction, Repository item) {
-     if (READ_ONLY_PERMISSIONS.contains(customAction)) {
+     if (READ_ONLY_VERBS.contains(customAction)) {
        return RepositoryAccessPermissions.custom(customAction, item);
      } else {
        return failForArchived(RepositoryAccessPermissions.custom(customAction, item), item.getId());
@@ -382,7 +392,7 @@ public final class RepositoryPermissions {
    * @return permission action check for custom action
    */
    public static PermissionActionCheck<RepositoryAccess> customActionCheck(String customAction) {
-     if (READ_ONLY_PERMISSIONS.contains(customAction)) {
+     if (READ_ONLY_VERBS.contains(customAction)) {
        return RepositoryAccessPermissions.customActionCheck(customAction);
      } else {
        return failForArchived(RepositoryAccessPermissions.customActionCheck(customAction));
