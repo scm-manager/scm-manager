@@ -26,6 +26,7 @@ package sonia.scm.repository;
 
 import com.github.sdorra.ssp.PermissionActionCheck;
 import com.github.sdorra.ssp.PermissionCheck;
+import org.apache.shiro.authz.AuthorizationException;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -36,6 +37,11 @@ import java.util.HashSet;
 public final class RepositoryPermissions {
 
   private static final Collection<String> ARCHIVED_REPOSITORIES = new HashSet<>();
+  private static final Collection<String> READ_ONLY_PERMISSIONS = new HashSet<>();
+
+  static {
+    ARCHIVED_REPOSITORIES.add("B2S6bSg2t2");
+  }
 
   private RepositoryPermissions(){}
   /**
@@ -86,8 +92,8 @@ public final class RepositoryPermissions {
    * @return permission check for modify action
    */
   public static PermissionCheck modify(String id) {
-    // TODO
-    return RepositoryAccessPermissions.modify(id);
+    return failForArchived(RepositoryAccessPermissions.modify(id), id);
+
   }
 
   /**
@@ -98,8 +104,7 @@ public final class RepositoryPermissions {
    * @return permission check for modify action
    */
   public static PermissionCheck modify(Repository item) {
-    // TODO
-    return RepositoryAccessPermissions.modify(item);
+    return failForArchived(RepositoryAccessPermissions.modify(item), item.getId());
   }
 
   /**
@@ -108,7 +113,7 @@ public final class RepositoryPermissions {
    * @return permission action check for modify action
    */
   public static PermissionActionCheck<RepositoryAccess> modify() {
-    return RepositoryAccessPermissions.modify();
+    return failForArchived(RepositoryAccessPermissions.modify());
   }
 
   /**
@@ -150,7 +155,7 @@ public final class RepositoryPermissions {
    * @return permission check for rename action
    */
   public static PermissionCheck rename(String id) {
-    return RepositoryAccessPermissions.rename(id);
+    return failForArchived(RepositoryAccessPermissions.rename(id), id);
   }
 
   /**
@@ -161,7 +166,7 @@ public final class RepositoryPermissions {
    * @return permission check for rename action
    */
   public static PermissionCheck rename(Repository item) {
-    return RepositoryAccessPermissions.rename(item);
+    return failForArchived(RepositoryAccessPermissions.rename(item), item.getId());
   }
 
   /**
@@ -170,7 +175,7 @@ public final class RepositoryPermissions {
    * @return permission action check for rename action
    */
   public static PermissionActionCheck<RepositoryAccess> rename() {
-    return RepositoryAccessPermissions.rename();
+    return failForArchived(RepositoryAccessPermissions.rename());
   }
 
   /**
@@ -243,8 +248,7 @@ public final class RepositoryPermissions {
    * @return permission check for push action
    */
   public static PermissionCheck push(String id) {
-    // TODO
-    return RepositoryAccessPermissions.push(id);
+    return failForArchived(RepositoryAccessPermissions.push(id), id);
   }
 
   /**
@@ -255,8 +259,7 @@ public final class RepositoryPermissions {
    * @return permission check for push action
    */
   public static PermissionCheck push(Repository item) {
-    // TODO
-    return RepositoryAccessPermissions.push(item);
+    return failForArchived(RepositoryAccessPermissions.push(item), item.getId());
   }
 
   /**
@@ -265,7 +268,7 @@ public final class RepositoryPermissions {
    * @return permission action check for push action
    */
   public static PermissionActionCheck<RepositoryAccess> push() {
-    return RepositoryAccessPermissions.push();
+    return failForArchived(RepositoryAccessPermissions.push());
   }
 
   /**
@@ -307,8 +310,7 @@ public final class RepositoryPermissions {
    * @return permission check for permissionWrite action
    */
   public static PermissionCheck permissionWrite(String id) {
-    // TODO
-    return RepositoryAccessPermissions.permissionWrite(id);
+    return failForArchived(RepositoryAccessPermissions.permissionWrite(id), id);
   }
 
   /**
@@ -319,8 +321,7 @@ public final class RepositoryPermissions {
    * @return permission check for permissionWrite action
    */
   public static PermissionCheck permissionWrite(Repository item) {
-    // TODO
-    return RepositoryAccessPermissions.permissionWrite(item);
+    return failForArchived(RepositoryAccessPermissions.permissionWrite(item), item.getId());
   }
 
   /**
@@ -329,7 +330,7 @@ public final class RepositoryPermissions {
    * @return permission action check for permissionWrite action
    */
   public static PermissionActionCheck<RepositoryAccess> permissionWrite() {
-    return RepositoryAccessPermissions.permissionWrite();
+    return failForArchived(RepositoryAccessPermissions.permissionWrite());
   }
 
   /**
@@ -338,7 +339,6 @@ public final class RepositoryPermissions {
    * @return permission check for the given custom global action
    */
    public static PermissionCheck custom(String customAction) {
-     // TODO
      return RepositoryAccessPermissions.custom(customAction);
    }
 
@@ -351,8 +351,11 @@ public final class RepositoryPermissions {
    * @return permission check for a custom action
    */
    public static PermissionCheck custom(String customAction, String id) {
-     // TODO
-     return RepositoryAccessPermissions.custom(customAction, id);
+     if (READ_ONLY_PERMISSIONS.contains(customAction)) {
+       return RepositoryAccessPermissions.custom(customAction, id);
+     } else {
+       return failForArchived(RepositoryAccessPermissions.custom(customAction, id), id);
+     }
    }
 
   /**
@@ -364,8 +367,11 @@ public final class RepositoryPermissions {
    * @return permission check for custom action
    */
    public static PermissionCheck custom(String customAction, Repository item) {
-     // TODO
-     return RepositoryAccessPermissions.custom(customAction, item);
+     if (READ_ONLY_PERMISSIONS.contains(customAction)) {
+       return RepositoryAccessPermissions.custom(customAction, item);
+     } else {
+       return failForArchived(RepositoryAccessPermissions.custom(customAction, item), item.getId());
+     }
    }
 
   /**
@@ -376,7 +382,74 @@ public final class RepositoryPermissions {
    * @return permission action check for custom action
    */
    public static PermissionActionCheck<RepositoryAccess> customActionCheck(String customAction) {
-     // TODO
-     return RepositoryAccessPermissions.customActionCheck(customAction);
+     if (READ_ONLY_PERMISSIONS.contains(customAction)) {
+       return RepositoryAccessPermissions.customActionCheck(customAction);
+     } else {
+       return failForArchived(RepositoryAccessPermissions.customActionCheck(customAction));
+     }
    }
+
+  private static PermissionActionCheck<RepositoryAccess> failForArchived(PermissionActionCheck<RepositoryAccess> originalCheck) {
+    return new PermissionActionCheck<RepositoryAccess>() {
+      @Override
+      public void check(String id) {
+        originalCheck.check(id);
+        if (ARCHIVED_REPOSITORIES.contains(id)) {
+          throw new AuthorizationException("repository is archived");
+        }
+      }
+
+      @Override
+      public void check(RepositoryAccess item) {
+        originalCheck.check(item);
+        if (ARCHIVED_REPOSITORIES.contains(item.getId())) {
+          throw new AuthorizationException("repository is archived");
+        }
+      }
+
+      @Override
+      public boolean isPermitted(String id) {
+        return !ARCHIVED_REPOSITORIES.contains(id) && originalCheck.isPermitted(id);
+      }
+
+      @Override
+      public boolean isPermitted(RepositoryAccess item) {
+        return !ARCHIVED_REPOSITORIES.contains(item.getId()) && originalCheck.isPermitted(item);
+      }
+
+      @Override
+      public String asShiroString(RepositoryAccess item) {
+        return originalCheck.asShiroString(item);
+      }
+
+      @Override
+      public String asShiroString(String id) {
+        return originalCheck.asShiroString(id);
+      }
+    };
+  }
+
+  public static PermissionCheck failForArchived(PermissionCheck originalCheck, String id) {
+    if (ARCHIVED_REPOSITORIES.contains(id)) {
+      return new PermissionCheck() {
+        @Override
+        public void check() {
+          originalCheck.check();
+          throw new AuthorizationException("repository is archived");
+        }
+
+        @Override
+        public boolean isPermitted() {
+          return false;
+        }
+
+        @Override
+        public String asShiroString() {
+          return originalCheck.asShiroString();
+        }
+      };
+    } else {
+      return originalCheck;
+    }
+  }
 }
