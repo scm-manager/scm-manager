@@ -36,6 +36,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.ExceptionWithContext;
 import sonia.scm.NotFoundException;
+import sonia.scm.TransactionId;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.HgHookMessage;
 import sonia.scm.repository.api.HgHookMessageProvider;
@@ -189,6 +190,23 @@ class DefaultHookHandlerTest {
   }
 
   @Test
+  void shouldSetAndClearTransactionId() throws IOException {
+    mockMessageProvider();
+
+    AtomicReference<String> ref = new AtomicReference<>();
+    doAnswer(ic -> {
+      TransactionId.get().ifPresent(ref::set);
+      return null;
+    }).when(hookEventFacade).handle("42");
+
+    DefaultHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
+    send(request);
+
+    assertThat(ref).hasValue("ti21");
+    assertThat(TransactionId.get()).isEmpty();
+  }
+
+  @Test
   void shouldHandleAuthenticationFailure() throws IOException {
     doThrow(AuthenticationException.class)
       .when(subject)
@@ -244,7 +262,7 @@ class DefaultHookHandlerTest {
   private DefaultHookHandler.Request createRequest(RepositoryHookType type, String challenge) {
     String secret = CipherUtil.getInstance().encode("secret");
     return new DefaultHookHandler.Request(
-      secret, type, "42", challenge, "abc"
+      secret, type, "ti21", "42", challenge, "abc"
     );
   }
 

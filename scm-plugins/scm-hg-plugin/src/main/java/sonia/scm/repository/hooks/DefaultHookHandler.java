@@ -34,6 +34,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ExceptionWithContext;
 import sonia.scm.NotFoundException;
+import sonia.scm.TransactionId;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.HgHookMessage;
 import sonia.scm.repository.spi.HgHookContextProvider;
@@ -90,6 +91,7 @@ class DefaultHookHandler implements HookHandler {
 
   private Response handleHookRequest(Request request) {
     LOG.trace("process {} hook for node {}", request.getType(), request.getNode());
+    TransactionId.set(request.getTransactionId());
 
     HgHookContextProvider context = hookContextProviderFactory.create(request.getRepositoryId(), request.getNode());
 
@@ -119,6 +121,7 @@ class DefaultHookHandler implements HookHandler {
       return error(context, ex);
     } finally {
       environment.clearPendingState();
+      TransactionId.clear();
     }
   }
 
@@ -161,6 +164,7 @@ class DefaultHookHandler implements HookHandler {
   public static class Request {
     private String token;
     private RepositoryHookType type;
+    private String transactionId;
     private String repositoryId;
     private String challenge;
     private String node;

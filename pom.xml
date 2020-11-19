@@ -506,7 +506,7 @@
       <!-- xml -->
 
       <dependency>
-      <groupId>jakarta.xml.bind</groupId>
+        <groupId>jakarta.xml.bind</groupId>
         <artifactId>jakarta.xml.bind-api</artifactId>
         <version>${jaxb.version}</version>
       </dependency>

@@ -33,6 +33,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContext;
+import sonia.scm.TransactionId;
 import sonia.scm.repository.hooks.HookEnvironment;
 import sonia.scm.repository.hooks.HookServer;
 import sonia.scm.security.AccessToken;
@@ -100,6 +101,14 @@ class DefaultHgEnvironmentBuilderTest {
     assertThat(env)
       .containsEntry(ENV_CHALLENGE, "challenge")
       .containsEntry(ENV_HOOK_PORT, "2042");
+  }
+
+  @Test
+  void shouldSetTransactionId() throws IOException {
+    TransactionId.set("ti42");
+    Repository heartOfGold = prepareForWrite("/opt/python", "21");
+    Map<String, String> env = builder.write(heartOfGold);
+    assertThat(env).containsEntry(ENV_TRANSACTION_ID, "ti42");
   }
 
   @Test

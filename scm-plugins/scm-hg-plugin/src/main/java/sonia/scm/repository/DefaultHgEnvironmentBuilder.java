@@ -27,6 +27,7 @@ package sonia.scm.repository;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableMap;
+import sonia.scm.TransactionId;
 import sonia.scm.repository.hooks.HookEnvironment;
 import sonia.scm.repository.hooks.HookServer;
 import sonia.scm.security.AccessToken;
@@ -60,6 +61,8 @@ public class DefaultHgEnvironmentBuilder implements HgEnvironmentBuilder {
   static final String ENV_REPOSITORY_ID = "SCM_REPOSITORY_ID";
   @VisibleForTesting
   static final String ENV_HTTP_POST_ARGS = "SCM_HTTP_POST_ARGS";
+  @VisibleForTesting
+  static final String ENV_TRANSACTION_ID = "SCM_TRANSACTION_ID";
 
   private final AccessTokenBuilderFactory accessTokenBuilderFactory;
   private final HgRepositoryHandler repositoryHandler;
@@ -114,6 +117,7 @@ public class DefaultHgEnvironmentBuilder implements HgEnvironmentBuilder {
     env.put(ENV_HOOK_PORT, String.valueOf(getHookPort()));
     env.put(ENV_BEARER_TOKEN, accessToken());
     env.put(ENV_CHALLENGE, hookEnvironment.getChallenge());
+    TransactionId.get().ifPresent(transactionId -> env.put(ENV_TRANSACTION_ID, transactionId));
   }
 
   private String accessToken() {

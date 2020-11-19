@@ -36,6 +36,7 @@ port = os.environ['SCM_HOOK_PORT']
 challenge = os.environ['SCM_CHALLENGE']
 token = os.environ['SCM_BEARER_TOKEN']
 repositoryId = os.environ['SCM_REPOSITORY_ID']
+transactionId = os.environ['SCM_TRANSACTION_ID']
 
 def print_messages(ui, messages):
   for message in messages:
@@ -50,7 +51,7 @@ def fire_hook(ui, repo, hooktype, node):
   ui.debug( b"send scm-hook for " + node + b"\n" )
   connection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
   try:
-    values = {'token': token, 'type': hooktype, 'repositoryId': repositoryId, 'challenge': challenge, 'node': node.decode('utf8') }
+    values = {'token': token, 'type': hooktype, 'repositoryId': repositoryId, 'transactionId': transactionId, 'challenge': challenge, 'node': node.decode('utf8') }
 
     connection.connect(("127.0.0.1", int(port)))
     connection.send(json.dumps(values).encode('utf-8'))
