@@ -40,11 +40,13 @@ import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.security.BearerToken;
 import sonia.scm.security.CipherUtil;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.Socket;
+import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Collections.singletonList;
@@ -87,6 +89,9 @@ class DefaultHookHandler implements HookHandler {
 
   private Response handleHookRequest(Request request) {
     LOG.trace("process {} hook for node {}", request.getType(), request.getNode());
+
+    HgHookContextProvider context = hookContextProviderFactory.create(request.getRepositoryId(), request.getNode());
+
     try {
       if (!environment.isAcceptAble(request.getChallenge())) {
         LOG.warn("received hook with invalid challenge: {}", request.getChallenge());
@@ -96,7 +101,6 @@ class DefaultHookHandler implements HookHandler {
       authenticate(request);
       environment.setPending(request.getType() == RepositoryHookType.PRE_RECEIVE);
 
-      HgHookContextProvider context = hookContextProviderFactory.create(request.getRepositoryId(), request.getNode());
       hookEventFacade.handle(request.getRepositoryId()).fireHookEvent(request.getType(), context);
 
       return new Response(context.getHgMessageProvider().getMessages(), false);
@@ -108,7 +112,7 @@ class DefaultHookHandler implements HookHandler {
       return error("repository not found");
     } catch (Exception ex) {
       LOG.warn("unknown error on hook occurred", ex);
-      return error("unknown error");
+      return error(context, ex);
     } finally {
       environment.clearPendingState();
     }
@@ -122,11 +126,22 @@ class DefaultHookHandler implements HookHandler {
     subject.login(bearer);
   }
 
+  private Response error(HgHookContextProvider context, Exception ex) {
+    List<HgHookMessage> messages = new ArrayList<>(context.getHgMessageProvider().getMessages());
+    messages.add(createErrorMessage(ex.getMessage()));
+    return new Response(messages, true);
+  }
+
   private Response error(String message) {
     return new Response(
-      singletonList(new HgHookMessage(HgHookMessage.Severity.ERROR, message)),
+      singletonList(createErrorMessage(message)),
       true
     );
+  }
+
+  @Nonnull
+  private HgHookMessage createErrorMessage(String message) {
+    return new HgHookMessage(HgHookMessage.Severity.ERROR, message);
   }
 
   private void close() {

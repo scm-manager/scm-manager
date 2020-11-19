@@ -39,7 +39,10 @@ repositoryId = os.environ['SCM_REPOSITORY_ID']
 
 def print_messages(ui, messages):
   for message in messages:
-    msg = "%s: %s\n" % (message['severity'], message['message'])
+    msg = "[SCM]"
+    if message['severity'] == "ERROR":
+      msg += " Error"
+    msg += ": " + message['message'] + "\n"
     ui.warn(msg.encode('utf-8'))
 
 def fire_hook(ui, repo, hooktype, node):

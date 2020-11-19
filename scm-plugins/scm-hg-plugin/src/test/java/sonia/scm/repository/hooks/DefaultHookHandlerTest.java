@@ -47,7 +47,9 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -89,8 +91,12 @@ class DefaultHookHandlerTest {
   }
 
   private void mockMessageProvider() {
+    mockMessageProvider(new HgHookMessageProvider());
+  }
+
+  private void mockMessageProvider(HgHookMessageProvider messageProvider) {
     when(hookContextProviderFactory.create("42", "abc")).thenReturn(contextProvider);
-    when(contextProvider.getHgMessageProvider()).thenReturn(new HgHookMessageProvider());
+    when(contextProvider.getHgMessageProvider()).thenReturn(messageProvider);
   }
 
   @AfterEach
@@ -131,19 +137,43 @@ class DefaultHookHandlerTest {
   }
 
   @Test
-  void shouldHandleAuthenticationFailure() throws IOException {
-    doThrow(IllegalStateException.class)
+  void shouldHandleUnknownFailure() throws IOException {
+    mockMessageProvider();
+
+    doThrow(new IllegalStateException("Something went wrong"))
       .when(hookEventFacade)
       .handle("42");
 
     DefaultHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
     DefaultHookHandler.Response response = send(request);
 
-    assertError(response, "unknown");
+    assertError(response, "Something went wrong");
   }
 
   @Test
-  void shouldHandleUnknownFailure() throws IOException {
+  void shouldSendMessagesOnException() throws IOException {
+    HgHookMessageProvider messageProvider = new HgHookMessageProvider();
+    messageProvider.sendMessage("Some note");
+    messageProvider.sendMessage("Some error");
+    mockMessageProvider(messageProvider);
+
+    doThrow(new IllegalStateException("Abort it"))
+      .when(hookEventFacade)
+      .handle("42");
+
+    DefaultHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
+    DefaultHookHandler.Response response = send(request);
+
+    List<String> received = response.getMessages()
+      .stream()
+      .map(HgHookMessage::getMessage)
+      .collect(Collectors.toList());
+
+    assertThat(received).containsExactly("Some note", "Some error", "Abort it");
+  }
+
+  @Test
+  void shouldHandleAuthenticationFailure() throws IOException {
     doThrow(AuthenticationException.class)
       .when(subject)
       .login(any(AuthenticationToken.class));
