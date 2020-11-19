@@ -21,13 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitRepositoryConfig;
@@ -106,7 +109,22 @@ public class GitRepositoryConfigResource {
   @PUT
   @Path("/")
   @Consumes(GitVndMediaType.GIT_REPOSITORY_CONFIG)
-  @Operation(summary = "Modifies git repository configuration", description = "Modifies the repository related git configuration.", tags = "Git")
+  @Operation(
+    summary = "Modifies git repository configuration",
+    description = "Modifies the repository related git configuration.",
+    tags = "Git",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = GitVndMediaType.GIT_REPOSITORY_CONFIG,
+        schema = @Schema(implementation = UpdateGitRepositoryConfigDto.class),
+        examples = @ExampleObject(
+          name = "Overwrites current configuration with this one.",
+          value = "{\n  \"defaultBranch\":\"main\"\n}",
+          summary = "Simple update configuration"
+        )
+      )
+    )
+  )
   @ApiResponse(
     responseCode = "204",
     description = "update success"

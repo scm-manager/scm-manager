@@ -21,13 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;
@@ -114,7 +116,22 @@ public class RepositoryRoleCollectionResource {
   @POST
   @Path("")
   @Consumes(VndMediaType.REPOSITORY_ROLE)
-  @Operation(summary = "Create repository role", description = "Creates a new repository role.", tags = "Repository role")
+  @Operation(
+    summary = "Create repository role",
+    description = "Creates a new repository role.",
+    tags = "Repository role",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.REPOSITORY_ROLE,
+        schema = @Schema(implementation = CreateRepositoryRoleDto.class),
+        examples = @ExampleObject(
+          name = "Create repository role named hero with read and delete repository permission.",
+          value = "{\n  \"name\":\"hero\",\n  \"system\":false,\n  \"verbs\":[\"read\",\"delete\"]\n}",
+          summary = "Add a repository role"
+        )
+      )
+    )
+  )
   @ApiResponse(
     responseCode = "201",
     description = "create success",
@@ -137,4 +154,5 @@ public class RepositoryRoleCollectionResource {
   public Response create(@Valid RepositoryRoleDto repositoryRole) {
     return adapter.create(repositoryRole, () -> dtoToRepositoryRoleMapper.map(repositoryRole), u -> resourceLinks.repositoryRole().self(u.getName()));
   }
+
 }

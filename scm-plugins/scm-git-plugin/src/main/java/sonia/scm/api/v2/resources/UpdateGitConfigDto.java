@@ -24,43 +24,23 @@
 
 package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import javax.validation.constraints.NotEmpty;
-import sonia.scm.util.ValidationUtil;
+import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
-import java.util.Collection;
+import static sonia.scm.repository.Branch.VALID_BRANCH_NAMES;
 
-@Getter @Setter @ToString @NoArgsConstructor
-@EitherRoleOrVerbs
-public class RepositoryPermissionDto extends HalRepresentation implements UpdateRepositoryPermissionDto {
+interface UpdateGitConfigDto {
 
-  public static final String GROUP_PREFIX = "@";
+  boolean isDisabled();
 
-  @Pattern(regexp = ValidationUtil.REGEX_NAME)
-  private String name;
+  String getGcExpression();
 
-  @NoBlankStrings
-  private Collection<String> verbs;
+  boolean isNonFastForwardDisallowed();
 
-  private String role;
-
-  private boolean groupPermission = false;
-
-  public RepositoryPermissionDto(String permissionName, boolean groupPermission) {
-    name = permissionName;
-    this.groupPermission = groupPermission;
-  }
-
-  @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
-  }
+  @NotEmpty
+  @Length(min = 1, max = 100)
+  @Pattern(regexp = VALID_BRANCH_NAMES)
+  String getDefaultBranch();
 }

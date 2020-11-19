@@ -25,29 +25,26 @@
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import sonia.scm.util.ValidationUtil;
 
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import java.time.Instant;
 import java.util.List;
 
-/**
- * This class is currently only used in the openapi scheme
- */
-@Getter
-@Setter
-@NoArgsConstructor
-public class UpdateGroupDto {
+interface UpdateGroupDto {
 
   @Pattern(regexp = ValidationUtil.REGEX_NAME)
-  private String name;
-  private String description;
+  String getName();
+
+  String getDescription();
+
   @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Instant lastModified;
-  private String type;
-  private List<String> members;
-  private boolean external;
+  Instant getLastModified();
+
+  String getType();
+
+  List<String> getMembers();
+
+  boolean isExternal();
 }

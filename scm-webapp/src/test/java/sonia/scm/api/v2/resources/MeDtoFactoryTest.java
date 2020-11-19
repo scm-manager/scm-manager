@@ -156,34 +156,11 @@ class MeDtoFactoryTest {
   }
 
   @Test
-  void shouldGetPasswordLinkOnlyForDefaultUserType() {
-    User user = UserTestData.createTrillian();
-    prepareSubject(user);
-
-    when(subject.isPermitted("user:changePassword:trillian")).thenReturn(true);
-    when(userManager.isTypeDefault(user)).thenReturn(true);
-
-    MeDto dto = meDtoFactory.create();
-    assertThat(dto.getLinks().getLinkBy("password").get().getHref()).isEqualTo("https://scm.hitchhiker.com/scm/v2/me/password");
-  }
-
-  @Test
-  void shouldNotGetPasswordLinkWithoutPermision() {
+  void shouldNotGetPasswordLinkWithoutPermission() {
     User user = UserTestData.createTrillian();
     prepareSubject(user);
 
     when(userManager.isTypeDefault(user)).thenReturn(true);
-
-    MeDto dto = meDtoFactory.create();
-    assertThat(dto.getLinks().getLinkBy("password")).isNotPresent();
-  }
-
-  @Test
-  void shouldNotGetPasswordLinkForNonDefaultUsers() {
-    User user = UserTestData.createTrillian();
-    prepareSubject(user);
-
-    when(subject.isPermitted("user:changePassword:trillian")).thenReturn(true);
 
     MeDto dto = meDtoFactory.create();
     assertThat(dto.getLinks().getLinkBy("password")).isNotPresent();

@@ -28,7 +28,9 @@ import de.otto.edison.hal.HalRepresentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.extern.slf4j.Slf4j;
 import sonia.scm.NotFoundException;
@@ -89,7 +91,22 @@ public class NamespacePermissionResource {
   @POST
   @Path("")
   @Consumes(VndMediaType.REPOSITORY_PERMISSION)
-  @Operation(summary = "Create namespace-specific permission", description = "Adds a new permission to the namespace for the user or group.", tags = {"Namespace", "Permissions"})
+  @Operation(
+    summary = "Create namespace-specific permission",
+    description = "Adds a new permission to the namespace for the user or group.",
+    tags = {"Namespace", "Permissions"},
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.REPOSITORY_PERMISSION,
+        schema = @Schema(implementation = UpdateRepositoryPermissionDto.class),
+        examples = @ExampleObject(
+          name = "Add read permissions for repositories and pull requests to manager group.",
+          value = "{\n  \"name\":\"manager\",\n  \"verbs\":[\"read\",\"readPullRequest\"],\n  \"groupPermission\":true\n}",
+          summary = "Add a permission"
+        )
+      )
+    )
+  )
   @ApiResponse(
     responseCode = "201",
     description = "creates",
@@ -135,7 +152,7 @@ public class NamespacePermissionResource {
   @GET
   @Path("{permission-name}")
   @Produces(VndMediaType.REPOSITORY_PERMISSION)
-  @Operation(summary = "Get single repository-specific permission", description = "Get the searched permission with permission name related to a repository.", tags = {"Repository", "Permissions"})
+  @Operation(summary = "Get single namespace-specific permission", description = "Get the searched permission with permission name related to a repository.", tags = {"Namespace", "Permissions"})
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -180,7 +197,7 @@ public class NamespacePermissionResource {
   @GET
   @Path("")
   @Produces(VndMediaType.REPOSITORY_PERMISSION)
-  @Operation(summary = "List of namespace-specific permissions", description = "Get all permissions related to a namespace.", tags = {"Repository", "Permissions"})
+  @Operation(summary = "List of namespace-specific permissions", description = "Get all permissions related to a namespace.", tags = {"Namespace", "Permissions"})
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -220,7 +237,22 @@ public class NamespacePermissionResource {
   @PUT
   @Path("{permission-name}")
   @Consumes(VndMediaType.REPOSITORY_PERMISSION)
-  @Operation(summary = "Update repository-specific permission", description = "Update a permission to the user or group managed by the repository.", tags = {"Repository", "Permissions"})
+  @Operation(
+    summary = "Update namespace-specific permission",
+    description = "Update a permission to the user or group managed by the repository.",
+    tags = {"Namespace", "Permissions"},
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.REPOSITORY_PERMISSION,
+        schema = @Schema(implementation = UpdateRepositoryPermissionDto.class),
+        examples = @ExampleObject(
+          name = "Update permissions of manager group.",
+          value = "{\n  \"name\":\"manager\",\n  \"verbs\":[\"read\",\"permissionRead\",\"readPullRequest\"],\n  \"groupPermission\":true\n}",
+          summary = "Update a permission"
+        )
+      )
+    )
+  )
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(
@@ -266,7 +298,7 @@ public class NamespacePermissionResource {
    */
   @DELETE
   @Path("{permission-name}")
-  @Operation(summary = "Delete repository-specific permission", description = "Delete a permission with the given name.", tags = {"Repository", "Permissions"})
+  @Operation(summary = "Delete namespace-specific permission", description = "Delete a permission with the given name.", tags = {"Namespace", "Permissions"})
   @ApiResponse(responseCode = "204", description = "delete success or nothing to delete")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized")
@@ -325,6 +357,5 @@ public class NamespacePermissionResource {
       .stream()
       .anyMatch(p -> p.getName().equals(permission.getName()) && p.isGroupPermission() == permission.isGroupPermission());
   }
+
 }
-
-
