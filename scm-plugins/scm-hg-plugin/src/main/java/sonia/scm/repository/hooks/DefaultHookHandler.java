@@ -32,6 +32,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ExceptionWithContext;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.HgHookMessage;
@@ -110,6 +111,9 @@ class DefaultHookHandler implements HookHandler {
     } catch (NotFoundException ex) {
       LOG.warn("could not find repository with id {}", request.getRepositoryId(), ex);
       return error("repository not found");
+    } catch (ExceptionWithContext ex) {
+      LOG.debug("scm exception on hook occurred", ex);
+      return error(context, ex);
     } catch (Exception ex) {
       LOG.warn("unknown error on hook occurred", ex);
       return error(context, ex);

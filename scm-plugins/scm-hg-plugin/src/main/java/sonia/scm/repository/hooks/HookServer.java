@@ -58,25 +58,6 @@ public class HookServer implements AutoCloseable {
     this.handlerFactory = handlerFactory;
   }
 
-  private ExecutorService createAcceptor() {
-    return Executors.newSingleThreadExecutor(
-      createThreadFactory("HgHookAcceptor")
-    );
-  }
-
-  private ExecutorService createWorkerPool() {
-    return Executors.newCachedThreadPool(
-      createThreadFactory("HgHookWorker-%d")
-    );
-  }
-
-  @Nonnull
-  private ThreadFactory createThreadFactory(String hgHookAcceptor) {
-    return new ThreadFactoryBuilder()
-      .setNameFormat(hgHookAcceptor)
-      .build();
-  }
-
   public int start() throws IOException {
     acceptor = createAcceptor();
     workerPool = createWorkerPool();
@@ -126,13 +107,40 @@ public class HookServer implements AutoCloseable {
     return new ServerSocket(0, 0, InetAddress.getLoopbackAddress());
   }
 
+  private ExecutorService createAcceptor() {
+    return Executors.newSingleThreadExecutor(
+      createThreadFactory("HgHookAcceptor")
+    );
+  }
+
+  private ExecutorService createWorkerPool() {
+    return Executors.newCachedThreadPool(
+      createThreadFactory("HgHookWorker-%d")
+    );
+  }
+
+  @Nonnull
+  private ThreadFactory createThreadFactory(String hgHookAcceptor) {
+    return new ThreadFactoryBuilder()
+      .setNameFormat(hgHookAcceptor)
+      .build();
+  }
+
   @Override
-  public void close() throws IOException {
-    if (serverSocket != null) {
-      serverSocket.close();
-    }
+  public void close() {
+    closeSocket();
     shutdown(acceptor);
     shutdown(workerPool);
+  }
+
+  private void closeSocket() {
+    if (serverSocket != null) {
+      try {
+        serverSocket.close();
+      } catch (IOException ex) {
+        LOG.warn("failed to close server socket", ex);
+      }
+    }
   }
 
   private void shutdown(ExecutorService acceptor) {
