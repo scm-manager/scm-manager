@@ -28,7 +28,9 @@ import com.google.common.base.Strings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.PageResult;
 import sonia.scm.repository.Branch;
@@ -209,7 +211,22 @@ public class BranchRootResource {
   @POST
   @Path("")
   @Consumes(VndMediaType.BRANCH_REQUEST)
-  @Operation(summary = "Create branch", description = "Creates a new branch.", tags = "Repository")
+  @Operation(
+    summary = "Create branch",
+    description = "Creates a new branch.",
+    tags = "Repository",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.BRANCH_REQUEST,
+        schema = @Schema(implementation = BranchRequestDto.class),
+        examples = @ExampleObject(
+          name = "Branch a new develop branch from main.",
+          value = "{\n  \"parent\":\"main\",\n  \"name\":\"develop\"\n}",
+          summary = "Create a branch"
+        )
+      )
+    )
+  )
   @ApiResponse(
     responseCode = "201",
     description = "create success",

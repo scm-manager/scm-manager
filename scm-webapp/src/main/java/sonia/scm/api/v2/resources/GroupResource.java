@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -181,4 +181,5 @@ public class GroupResource {
   public GroupPermissionResource permissions() {
     return groupPermissionResource;
   }
+
 }

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
@@ -38,7 +38,7 @@ import java.util.Collection;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RepositoryRoleDto extends HalRepresentation {
+public class RepositoryRoleDto extends HalRepresentation implements CreateRepositoryRoleDto, UpdateRepositoryRoleDto {
   @NotEmpty
   private String name;
   @NoBlankStrings @NotEmpty

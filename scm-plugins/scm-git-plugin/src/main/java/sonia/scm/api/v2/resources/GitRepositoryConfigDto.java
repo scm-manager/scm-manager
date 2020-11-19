@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
@@ -36,7 +36,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @SuppressWarnings("squid:S2160") // there is no proper semantic for equals on this dto
-public class GitRepositoryConfigDto extends HalRepresentation {
+public class GitRepositoryConfigDto extends HalRepresentation implements UpdateGitRepositoryConfigDto {
 
   private String defaultBranch;
 

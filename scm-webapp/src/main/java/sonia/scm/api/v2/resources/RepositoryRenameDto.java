@@ -33,7 +33,7 @@ import javax.validation.constraints.Pattern;
 @Getter
 @NoArgsConstructor
 public class RepositoryRenameDto {
+  private String namespace;
   @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
   private String name;
-  private String namespace;
 }

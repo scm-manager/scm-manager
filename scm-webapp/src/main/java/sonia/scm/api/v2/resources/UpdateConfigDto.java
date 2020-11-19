@@ -24,43 +24,54 @@
 
 package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import javax.validation.constraints.NotEmpty;
-import sonia.scm.util.ValidationUtil;
+import sonia.scm.security.AnonymousMode;
 
-import javax.validation.constraints.Pattern;
+import java.util.Set;
 
-import java.util.Collection;
+interface UpdateConfigDto {
+  String getProxyPassword();
 
-@Getter @Setter @ToString @NoArgsConstructor
-@EitherRoleOrVerbs
-public class RepositoryPermissionDto extends HalRepresentation implements UpdateRepositoryPermissionDto {
+  int getProxyPort();
 
-  public static final String GROUP_PREFIX = "@";
+  String getProxyServer();
 
-  @Pattern(regexp = ValidationUtil.REGEX_NAME)
-  private String name;
+  String getProxyUser();
 
-  @NoBlankStrings
-  private Collection<String> verbs;
+  boolean isEnableProxy();
 
-  private String role;
+  String getRealmDescription();
 
-  private boolean groupPermission = false;
+  boolean isDisableGroupingGrid();
 
-  public RepositoryPermissionDto(String permissionName, boolean groupPermission) {
-    name = permissionName;
-    this.groupPermission = groupPermission;
-  }
+  String getDateFormat();
 
-  @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
-  }
+  boolean isAnonymousAccessEnabled();
+
+  AnonymousMode getAnonymousMode();
+
+  String getBaseUrl();
+
+  boolean isForceBaseUrl();
+
+  int getLoginAttemptLimit();
+
+  Set<String> getProxyExcludes();
+
+  boolean isSkipFailedAuthenticators();
+
+  String getPluginUrl();
+
+  long getLoginAttemptLimitTimeout();
+
+  boolean isEnabledXsrfProtection();
+
+  boolean isEnabledUserConverter();
+
+  String getNamespaceStrategy();
+
+  String getLoginInfoUrl();
+
+  String getReleaseFeedUrl();
+
+  String getMailDomainName();
 }

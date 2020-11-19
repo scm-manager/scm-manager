@@ -27,7 +27,9 @@ package sonia.scm.api.v2.resources;
 import com.google.inject.Inject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.repository.HgConfig;
@@ -83,7 +85,22 @@ public class HgConfigAutoConfigurationResource {
   @PUT
   @Path("")
   @Consumes(HgVndMediaType.CONFIG)
-  @Operation(summary = "Modifies hg configuration and installs hg binary", description = "Modifies the mercurial config and installs the mercurial binary.", tags = "Mercurial")
+  @Operation(
+    summary = "Modifies hg configuration and installs hg binary",
+    description = "Modifies the mercurial config and installs the mercurial binary.",
+    tags = "Mercurial",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = HgVndMediaType.CONFIG,
+        schema = @Schema(implementation = UpdateHgConfigDto.class),
+        examples = @ExampleObject(
+          name = "Overwrites current configuration with this one and installs the mercurial binary.",
+          value = "{\n  \"disabled\":false,\n  \"hgBinary\":\"hg\",\n  \"pythonBinary\":\"python\",\n  \"pythonPath\":\"\",\n  \"encoding\":\"UTF-8\",\n  \"useOptimizedBytecode\":false,\n  \"showRevisionInId\":false,\n  \"disableHookSSLValidation\":false,\n  \"enableHttpPostArgs\":false\n}",
+          summary = "Simple update configuration and installs binary"
+        )
+      )
+    )
+  )
   @ApiResponse(
     responseCode = "204",
     description = "update success"
