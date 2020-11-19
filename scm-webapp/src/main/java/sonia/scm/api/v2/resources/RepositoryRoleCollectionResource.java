@@ -31,16 +31,12 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.validation.constraints.NotEmpty;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -49,7 +45,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import java.util.Collection;
 
 public class RepositoryRoleCollectionResource {
 
@@ -160,17 +155,4 @@ public class RepositoryRoleCollectionResource {
     return adapter.create(repositoryRole, () -> dtoToRepositoryRoleMapper.map(repositoryRole), u -> resourceLinks.repositoryRole().self(u.getName()));
   }
 
-  /**
-   * This class is currently only used in the openapi scheme
-   */
-  @Getter
-  @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  private static final class CreateRepositoryRoleDto {
-    @NotEmpty
-    private String name;
-    private boolean system;
-    @NoBlankStrings @NotEmpty
-    private Collection<String> verbs;
-    private String type;
-  }
 }

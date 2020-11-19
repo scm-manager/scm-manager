@@ -24,23 +24,22 @@
 
 package sonia.scm.api.v2.resources;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+interface UpdateHgConfigDto {
+  boolean isDisabled();
 
-/**
- * This class is currently only used in the openapi scheme
- */
-@Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-final class UpdateHgConfigDto {
-  private boolean disabled;
-  private String hgBinary;
-  private String pythonBinary;
-  private String pythonPath;
-  private String encoding;
-  private boolean useOptimizedBytecode;
-  private boolean showRevisionInId;
-  private boolean disableHookSSLValidation;
-  private boolean enableHttpPostArgs;
+  String getHgBinary();
+
+  String getPythonBinary();
+
+  String getPythonPath();
+
+  String getEncoding();
+
+  boolean isUseOptimizedBytecode();
+
+  boolean isShowRevisionInId();
+
+  boolean isDisableHookSSLValidation();
+
+  boolean isEnableHttpPostArgs();
 }

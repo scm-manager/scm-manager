@@ -24,27 +24,19 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
-import sonia.scm.util.ValidationUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -53,7 +45,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import java.time.Instant;
 
 public class UserResource {
 
@@ -312,25 +303,4 @@ public class UserResource {
     return userPermissionResource;
   }
 
-  /**
-   * This class is currently only used in the openapi scheme
-   */
-  @Getter
-  @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  private static final class UpdateUserDto {
-    @Pattern(regexp = ValidationUtil.REGEX_NAME)
-    private String name;
-    @NotEmpty
-    private String displayName;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Email
-    private String mail;
-    private boolean external;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String password;
-    private boolean active;
-    private String type;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Instant lastModified;
-  }
 }

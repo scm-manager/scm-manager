@@ -24,27 +24,19 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.util.ValidationUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -54,8 +46,6 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import java.time.Instant;
-import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
@@ -301,22 +291,4 @@ public class RepositoryResource {
     return changed -> name.equals(changed.getName()) && namespace.equals(changed.getNamespace());
   }
 
-  /**
-   * This class is currently only used in the openapi scheme
-   */
-  @Getter
-  @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  private static final class UpdateRepositoryDto {
-    private String namespace;
-    @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
-    private String name;
-    @NotEmpty
-    private String type;
-    @Email
-    private String contact;
-    private String description;
-    private List<HealthCheckFailureDto> healthCheckFailures;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Instant lastModified;
-  }
 }

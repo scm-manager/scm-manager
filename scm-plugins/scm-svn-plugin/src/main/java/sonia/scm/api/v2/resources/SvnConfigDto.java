@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
@@ -34,7 +34,7 @@ import sonia.scm.repository.Compatibility;
 @NoArgsConstructor
 @Getter
 @Setter
-public class SvnConfigDto extends HalRepresentation {
+public class SvnConfigDto extends HalRepresentation implements UpdateSvnConfigDto {
 
   private boolean disabled;
 

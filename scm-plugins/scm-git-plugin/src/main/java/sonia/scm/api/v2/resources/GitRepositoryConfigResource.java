@@ -167,14 +167,4 @@ public class GitRepositoryConfigResource {
   private ConfigurationStore<GitRepositoryConfig> getStore(Repository repository) {
     return gitRepositoryConfigStoreProvider.get(repository);
   }
-
-  /**
-   * This class is currently only used in the openapi scheme
-   */
-  @Getter
-  private static final class UpdateGitRepositoryConfigDto {
-    private UpdateGitRepositoryConfigDto() {
-    }
-    private String defaultBranch;
-  }
 }

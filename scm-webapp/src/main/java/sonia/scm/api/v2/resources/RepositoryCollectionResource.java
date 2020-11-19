@@ -24,7 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,9 +31,6 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryInitializer;
@@ -43,14 +39,10 @@ import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.user.User;
-import sonia.scm.util.ValidationUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -60,8 +52,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
-import java.time.Instant;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Predicate;
 
@@ -248,22 +238,4 @@ public class RepositoryCollectionResource {
     return repository -> SearchUtil.matchesOne(searchRequest, repository.getName(), repository.getNamespace(), repository.getDescription());
   }
 
-  /**
-   * This class is currently only used in the openapi scheme
-   */
-  @Getter
-  @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  private static final class CreateRepositoryDto {
-    private String namespace;
-    @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
-    private String name;
-    @NotEmpty
-    private String type;
-    @Email
-    private String contact;
-    private String description;
-    private List<HealthCheckFailureDto> healthCheckFailures;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private Instant lastModified;
-  }
 }

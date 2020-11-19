@@ -24,26 +24,19 @@
 
 package sonia.scm.api.v2.resources;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import sonia.scm.util.ValidationUtil;
 
 import javax.validation.constraints.Pattern;
 import java.util.List;
 
-/**
- * This class is currently only used in the openapi scheme
- */
-@Getter
-@Setter
-@NoArgsConstructor
-public class CreateGroupDto {
+interface CreateGroupDto {
 
   @Pattern(regexp = ValidationUtil.REGEX_NAME)
-  private String name;
-  private String description;
-  private String type;
-  private List<String> members;
-  private boolean external;
+  String getName();
+
+  String getDescription();
+
+  List<String> getMembers();
+
+  boolean isExternal();
 }

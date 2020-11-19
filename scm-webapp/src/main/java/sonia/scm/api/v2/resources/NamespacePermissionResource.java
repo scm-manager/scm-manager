@@ -98,7 +98,7 @@ public class NamespacePermissionResource {
     requestBody = @RequestBody(
       content = @Content(
         mediaType = VndMediaType.REPOSITORY_PERMISSION,
-        schema = @Schema(implementation = UpdatePermissionListDto.class),
+        schema = @Schema(implementation = UpdateRepositoryPermissionDto.class),
         examples = @ExampleObject(
           name = "Add read permissions for repositories and pull requests to manager group.",
           value = "{\n  \"name\":\"manager\",\n  \"verbs\":[\"read\",\"readPullRequest\"],\n  \"groupPermission\":true\n}",
@@ -244,7 +244,7 @@ public class NamespacePermissionResource {
     requestBody = @RequestBody(
       content = @Content(
         mediaType = VndMediaType.REPOSITORY_PERMISSION,
-        schema = @Schema(implementation = UpdatePermissionListDto.class),
+        schema = @Schema(implementation = UpdateRepositoryPermissionDto.class),
         examples = @ExampleObject(
           name = "Update permissions of manager group.",
           value = "{\n  \"name\":\"manager\",\n  \"verbs\":[\"read\",\"permissionRead\",\"readPullRequest\"],\n  \"groupPermission\":true\n}",

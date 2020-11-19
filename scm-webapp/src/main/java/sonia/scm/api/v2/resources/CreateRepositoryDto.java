@@ -24,43 +24,30 @@
 
 package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import javax.validation.constraints.NotEmpty;
 import sonia.scm.util.ValidationUtil;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
+import java.time.Instant;
+import java.util.List;
 
-import java.util.Collection;
+interface CreateRepositoryDto {
 
-@Getter @Setter @ToString @NoArgsConstructor
-@EitherRoleOrVerbs
-public class RepositoryPermissionDto extends HalRepresentation implements UpdateRepositoryPermissionDto {
+  String getNamespace();
 
-  public static final String GROUP_PREFIX = "@";
+  @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
+  String getName();
 
-  @Pattern(regexp = ValidationUtil.REGEX_NAME)
-  private String name;
+  @NotEmpty
+  String getType();
 
-  @NoBlankStrings
-  private Collection<String> verbs;
+  @Email
+  String getContact();
 
-  private String role;
+  String getDescription();
 
-  private boolean groupPermission = false;
+  List<HealthCheckFailureDto> getHealthCheckFailures();
 
-  public RepositoryPermissionDto(String permissionName, boolean groupPermission) {
-    name = permissionName;
-    this.groupPermission = groupPermission;
-  }
-
-  @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
-  }
+  Instant getLastModified();
 }

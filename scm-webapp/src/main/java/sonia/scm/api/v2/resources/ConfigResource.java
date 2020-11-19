@@ -33,13 +33,9 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
-import sonia.scm.security.AnonymousMode;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.VndMediaType;
 
@@ -51,7 +47,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
-import java.util.Set;
 import java.util.function.Consumer;
 
 /**
@@ -173,34 +168,4 @@ public class ConfigResource {
     return Response.noContent().build();
   }
 
-  /**
-   * This class is currently only used in the openapi scheme
-   */
-  @Getter
-  @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  private static final class UpdateConfigDto {
-    private String proxyPassword;
-    private int proxyPort;
-    private String proxyServer;
-    private String proxyUser;
-    private boolean enableProxy;
-    private String realmDescription;
-    private boolean disableGroupingGrid;
-    private String dateFormat;
-    private boolean anonymousAccessEnabled;
-    private AnonymousMode anonymousMode;
-    private String baseUrl;
-    private boolean forceBaseUrl;
-    private int loginAttemptLimit;
-    private Set<String> proxyExcludes;
-    private boolean skipFailedAuthenticators;
-    private String pluginUrl;
-    private long loginAttemptLimitTimeout;
-    private boolean enabledXsrfProtection;
-    private boolean enabledUserConverter;
-    private String namespaceStrategy;
-    private String loginInfoUrl;
-    private String releaseFeedUrl;
-    private String mailDomainName;
-  }
 }

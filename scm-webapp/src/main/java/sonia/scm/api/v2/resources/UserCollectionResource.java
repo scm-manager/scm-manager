@@ -24,7 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,23 +31,16 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.search.SearchRequest;
 import sonia.scm.search.SearchUtil;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.UserPermissions;
-import sonia.scm.util.ValidationUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -182,23 +174,4 @@ public class UserCollectionResource {
     return user -> SearchUtil.matchesOne(searchRequest, user.getName(), user.getDisplayName(), user.getMail());
   }
 
-  /**
-   * This class is currently only used in the openapi scheme
-   */
-  @Getter
-  @NoArgsConstructor(access = AccessLevel.PRIVATE)
-  private static final class CreateUserDto {
-    @Pattern(regexp = ValidationUtil.REGEX_NAME)
-    private String name;
-    @NotEmpty
-    private String displayName;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    @Email
-    private String mail;
-    private boolean external;
-    @JsonInclude(JsonInclude.Include.NON_NULL)
-    private String password;
-    private boolean active;
-    private String type;
-  }
 }

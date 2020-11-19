@@ -24,18 +24,10 @@
 
 package sonia.scm.api.v2.resources;
 
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
 import javax.validation.constraints.NotNull;
 
-/**
- * This class is currently only used in the openapi scheme
- */
-@Getter
-@NoArgsConstructor(access = AccessLevel.PRIVATE)
-final class UpdatePermissionListDto {
+interface UpdatePermissionListDto {
+
   @NotNull
-  private String[] permissions;
+  String[] getPermissions();
 }
