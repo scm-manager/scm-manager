@@ -126,6 +126,8 @@ class Overview extends React.Component<Props> {
             link="repos"
             label={t("overview.createButton")}
             testId="repository-overview"
+            searchPlaceholder={t("overview.searchRepository")}
+            filterPlaceholder={t("overview.filterNamespace")}
           />
         </PageActions>
       </Page>

@@ -32,6 +32,7 @@ type Props = {
   preselectedOption?: string;
   className?: string;
   disabled?: boolean;
+  placeholder?: string;
 };
 
 const FullWidthSelect = styled.select`
@@ -40,7 +41,7 @@ const FullWidthSelect = styled.select`
 
 class DropDown extends React.Component<Props> {
   render() {
-    const { options, optionValues, preselectedOption, className, disabled } = this.props;
+    const { options, optionValues, preselectedOption, className, disabled, placeholder } = this.props;
 
     if (preselectedOption && options.filter(o => o === preselectedOption).length === 0) {
       options.push(preselectedOption);
@@ -48,7 +49,12 @@ class DropDown extends React.Component<Props> {
 
     return (
       <div className={classNames(className, "select", disabled ? "disabled" : "")}>
-        <FullWidthSelect value={preselectedOption ? preselectedOption : ""} onChange={this.change} disabled={disabled}>
+        <FullWidthSelect
+          value={preselectedOption ? preselectedOption : ""}
+          onChange={this.change}
+          disabled={disabled}
+          placeholder={placeholder}
+        >
           {options.map((option, index) => {
             const value = optionValues && optionValues[index] ? optionValues[index] : option;
             return (

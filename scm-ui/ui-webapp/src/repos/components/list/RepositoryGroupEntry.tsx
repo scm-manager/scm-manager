@@ -22,22 +22,26 @@
  * SOFTWARE.
  */
 import React from "react";
-import { Link } from "react-router-dom";
-import { CardColumnGroup, RepositoryEntry } from "@scm-manager/ui-components";
-import { RepositoryGroup } from "@scm-manager/ui-types";
-import { Icon } from "@scm-manager/ui-components";
-import { WithTranslation, withTranslation } from "react-i18next";
+import {Link} from "react-router-dom";
+import {CardColumnGroup, Icon, RepositoryEntry} from "@scm-manager/ui-components";
+import {RepositoryGroup} from "@scm-manager/ui-types";
+import {WithTranslation, withTranslation} from "react-i18next";
+import styled from "styled-components";
 
 type Props = WithTranslation & {
   group: RepositoryGroup;
 };
+
+const SizedIcon = styled(Icon)`
+  font-size: 1.33rem;
+`;
 
 class RepositoryGroupEntry extends React.Component<Props> {
   render() {
     const { group, t } = this.props;
     const settingsLink = group.namespace?._links?.permissions && (
       <Link to={`/namespace/${group.name}/settings`}>
-        <Icon color={"is-link"} name={"cog"} title={t("repositoryOverview.settings.tooltip")} />
+        <SizedIcon color={"is-link"} name={"cog"} title={t("repositoryOverview.settings.tooltip")} />
       </Link>
     );
     const namespaceHeader = (
