@@ -51,14 +51,9 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
-@StaticPermissions(
-  value = "repository",
-  permissions = {"read", "modify", "delete", "rename", "healthCheck", "pull", "push", "permissionRead", "permissionWrite"},
-  custom = true, customGlobal = true
-)
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "repositories")
-public class Repository extends BasicPropertiesAware implements ModelObject, PermissionObject{
+public class Repository extends BasicPropertiesAware implements ModelObject, PermissionObject, RepositoryAccess {
 
   private static final long serialVersionUID = 3486560714961909711L;
 
@@ -75,6 +70,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   @XmlElement(name = "permission")
   private Set<RepositoryPermission> permissions = new HashSet<>();
   private String type;
+  private boolean archived;
 
 
   /**
@@ -205,6 +201,15 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   }
 
   /**
+   * Returns <code>true</code>, when the repository is marked as "archived". An archived repository cannot be modified.
+   *
+   * @since 2.11.0
+   */
+  public boolean isArchived() {
+    return archived;
+  }
+
+  /**
    * Returns {@code true} if the repository is healthy.
    *
    * @return {@code true} if the repository is healthy
@@ -274,6 +279,15 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
 
   public void setType(String type) {
     this.type = type;
+  }
+
+  /**
+   * Set this to <code>true</code> to mark the repository as "archived". An archived repository cannot be modified.
+   *
+   * @since 2.11.0
+   */
+  public void setArchived(boolean archived) {
+    this.archived = archived;
   }
 
   public void setHealthCheckFailures(List<HealthCheckFailure> healthCheckFailures) {
