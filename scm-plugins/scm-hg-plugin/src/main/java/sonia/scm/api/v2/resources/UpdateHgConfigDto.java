@@ -24,43 +24,22 @@
 
 package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-import javax.validation.constraints.NotEmpty;
-import sonia.scm.util.ValidationUtil;
+interface UpdateHgConfigDto {
+  boolean isDisabled();
 
-import javax.validation.constraints.Pattern;
+  String getHgBinary();
 
-import java.util.Collection;
+  String getPythonBinary();
 
-@Getter @Setter @ToString @NoArgsConstructor
-@EitherRoleOrVerbs
-public class RepositoryPermissionDto extends HalRepresentation implements UpdateRepositoryPermissionDto {
+  String getPythonPath();
 
-  public static final String GROUP_PREFIX = "@";
+  String getEncoding();
 
-  @Pattern(regexp = ValidationUtil.REGEX_NAME)
-  private String name;
+  boolean isUseOptimizedBytecode();
 
-  @NoBlankStrings
-  private Collection<String> verbs;
+  boolean isShowRevisionInId();
 
-  private String role;
+  boolean isDisableHookSSLValidation();
 
-  private boolean groupPermission = false;
-
-  public RepositoryPermissionDto(String permissionName, boolean groupPermission) {
-    name = permissionName;
-    this.groupPermission = groupPermission;
-  }
-
-  @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
-  }
+  boolean isEnableHttpPostArgs();
 }

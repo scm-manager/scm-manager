@@ -36,7 +36,7 @@ import java.util.Set;
 @NoArgsConstructor
 @Getter
 @Setter
-public class ConfigDto extends HalRepresentation {
+public class ConfigDto extends HalRepresentation implements UpdateConfigDto {
 
   private String proxyPassword;
   private int proxyPort;

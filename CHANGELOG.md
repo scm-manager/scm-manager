@@ -12,6 +12,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Lookup command which provides further repository information ([#1415](https://github.com/scm-manager/scm-manager/pull/1415))
 - Include messages from scm protocol in modification or merge errors ([#1420](https://github.com/scm-manager/scm-manager/pull/1420))
 - Enhance trace api to accepted status codes ([#1430](https://github.com/scm-manager/scm-manager/pull/1430))
+- Add examples to core resources to simplify usage of rest api ([#1434](https://github.com/scm-manager/scm-manager/pull/1434))
 
 ### Changed
 - Send mercurial hook callbacks over separate tcp socket instead of http ([#1416](https://github.com/scm-manager/scm-manager/pull/1416))

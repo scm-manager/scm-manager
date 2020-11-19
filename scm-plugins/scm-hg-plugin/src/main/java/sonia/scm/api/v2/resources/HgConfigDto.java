@@ -34,7 +34,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @SuppressWarnings("java:S2160") // we don't need equals for dto
-public class HgConfigDto extends HalRepresentation {
+public class HgConfigDto extends HalRepresentation implements UpdateHgConfigDto {
+
 
   private boolean disabled;
 

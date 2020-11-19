@@ -28,7 +28,9 @@ import de.otto.edison.hal.HalRepresentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.ContextEntry;
 import sonia.scm.security.ApiKey;
@@ -131,7 +133,22 @@ public class  ApiKeyResource {
   @Path("")
   @Consumes(VndMediaType.API_KEY)
   @Produces(MediaType.TEXT_PLAIN)
-  @Operation(summary = "Create new api key for the current user", description = "Creates a new api key for the given user with the role specified in the given key.", tags = "User")
+  @Operation(
+    summary = "Create new api key for the current user",
+    description = "Creates a new api key for the given user with the role specified in the given key.",
+    tags = "User",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.API_KEY,
+        schema = @Schema(implementation = CreateApiKeyDto.class),
+        examples = @ExampleObject(
+          name = "Create a new api key named readKey with READ permission role.",
+          value = "{\n  \"displayName\":\"readKey\",\n  \"permissionRole\":\"READ\"\n}",
+          summary = "Create new api key"
+        )
+      )
+    )
+  )
   @ApiResponse(
     responseCode = "201",
     description = "create success",
@@ -170,4 +187,5 @@ public class  ApiKeyResource {
   public void delete(@PathParam("id") String id) {
     apiKeyService.remove(id);
   }
+
 }
