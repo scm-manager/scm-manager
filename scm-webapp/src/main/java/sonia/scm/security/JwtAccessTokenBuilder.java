@@ -24,6 +24,7 @@
 
 package sonia.scm.security;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
@@ -57,6 +58,12 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
    */
   private static final Logger LOG = LoggerFactory.getLogger(JwtAccessTokenBuilder.class);
 
+  @VisibleForTesting
+  static final long DEFAULT_REFRESHABLE = 12L;
+
+  @VisibleForTesting
+  static final TimeUnit DEFAULT_REFRESHABLE_UNIT = TimeUnit.HOURS;
+
   private final KeyGenerator keyGenerator;
   private final SecureKeyResolver keyResolver;
   private final Clock clock;
@@ -65,8 +72,8 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
   private String issuer;
   private long expiresIn = 1;
   private TimeUnit expiresInUnit = TimeUnit.HOURS;
-  private long refreshableFor = 12;
-  private TimeUnit refreshableForUnit = TimeUnit.HOURS;
+  private long refreshableFor = DEFAULT_REFRESHABLE;
+  private TimeUnit refreshableForUnit = DEFAULT_REFRESHABLE_UNIT;
   private Instant refreshExpiration;
   private String parentKeyId;
   private Scope scope = Scope.empty();
@@ -183,7 +190,7 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
     if (refreshableFor > 0) {
       long re = refreshableForUnit.toMillis(refreshableFor);
-      claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, new Date(now.toEpochMilli() + re).getTime());
+      claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, Date.from(now.plusMillis(re)));
     } else if (refreshExpiration != null) {
       claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, Date.from(refreshExpiration));
     }

@@ -52,10 +52,61 @@ public class HookServer implements AutoCloseable {
   private ExecutorService acceptor;
   private ExecutorService workerPool;
   private ServerSocket serverSocket;
+  private SecurityManager securityManager;
 
   @Inject
   public HookServer(HookHandlerFactory handlerFactory) {
     this.handlerFactory = handlerFactory;
+  }
+
+  public int start() throws IOException {
+    securityManager = SecurityUtils.getSecurityManager();
+
+    acceptor = createAcceptor();
+    workerPool = createWorkerPool();
+    serverSocket = createServerSocket();
+    // set timeout to 2 min, to avoid blocking clients
+    serverSocket.setSoTimeout(2 * 60 * 1000);
+
+    accept();
+
+    int port = serverSocket.getLocalPort();
+    LOG.info("open hg hook server on port {}", port);
+    return port;
+  }
+
+  private void accept() {
+    acceptor.submit(() -> {
+      while (!serverSocket.isClosed()) {
+        try {
+          LOG.trace("wait for next hook connection");
+          Socket clientSocket = serverSocket.accept();
+          LOG.trace("accept incoming hook client from {}", clientSocket.getInetAddress());
+          HookHandler hookHandler = handlerFactory.create(clientSocket);
+          workerPool.submit(associateSecurityManager(hookHandler));
+        } catch (IOException ex) {
+          LOG.debug("failed to accept socket, possible closed", ex);
+        }
+      }
+      LOG.warn("ServerSocket is closed");
+    });
+  }
+
+  private Runnable associateSecurityManager(HookHandler hookHandler) {
+    return () -> {
+      ThreadContext.bind(securityManager);
+      try {
+        hookHandler.run();
+      } finally {
+        ThreadContext.unbindSubject();
+        ThreadContext.unbindSecurityManager();
+      }
+    };
+  }
+
+  @Nonnull
+  private ServerSocket createServerSocket() throws IOException {
+    return new ServerSocket(0, 0, InetAddress.getLoopbackAddress());
   }
 
   private ExecutorService createAcceptor() {
@@ -77,62 +128,21 @@ public class HookServer implements AutoCloseable {
       .build();
   }
 
-  public int start() throws IOException {
-    acceptor = createAcceptor();
-    workerPool = createWorkerPool();
-    serverSocket = createServerSocket();
-    // set timeout to 2 min, to avoid blocking clients
-    serverSocket.setSoTimeout(2 * 60 * 1000);
-
-    accept();
-
-    int port = serverSocket.getLocalPort();
-    LOG.info("open hg hook server on port {}", port);
-    return port;
-  }
-
-  private void accept() {
-    SecurityManager securityManager = SecurityUtils.getSecurityManager();
-    acceptor.submit(() -> {
-      while (!serverSocket.isClosed()) {
-        try {
-          LOG.trace("wait for next hook connection");
-          Socket clientSocket = serverSocket.accept();
-          LOG.trace("accept incoming hook client from {}", clientSocket.getInetAddress());
-          HookHandler hookHandler = handlerFactory.create(clientSocket);
-          workerPool.submit(associateSecurityManager(securityManager, hookHandler));
-        } catch (IOException ex) {
-          LOG.debug("failed to accept socket, possible closed", ex);
-        }
-      }
-      LOG.warn("ServerSocket is closed");
-    });
-  }
-
-  private Runnable associateSecurityManager(SecurityManager securityManager, HookHandler hookHandler) {
-    return () -> {
-      ThreadContext.bind(securityManager);
-      try {
-        hookHandler.run();
-      } finally {
-        ThreadContext.unbindSubject();
-        ThreadContext.unbindSecurityManager();
-      }
-    };
-  }
-
-  @Nonnull
-  private ServerSocket createServerSocket() throws IOException {
-    return new ServerSocket(0, 0, InetAddress.getLoopbackAddress());
-  }
-
   @Override
-  public void close() throws IOException {
-    if (serverSocket != null) {
-      serverSocket.close();
-    }
+  public void close() {
+    closeSocket();
     shutdown(acceptor);
     shutdown(workerPool);
+  }
+
+  private void closeSocket() {
+    if (serverSocket != null) {
+      try {
+        serverSocket.close();
+      } catch (IOException ex) {
+        LOG.warn("failed to close server socket", ex);
+      }
+    }
   }
 
   private void shutdown(ExecutorService acceptor) {

@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.ExceptionWithContext;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.api.HgHookMessage;
@@ -47,6 +48,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.Socket;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -151,6 +153,20 @@ class DefaultHookHandlerTest {
   }
 
   @Test
+  void shouldHandleExceptionWithContext() throws IOException {
+    mockMessageProvider();
+
+    doThrow(new TestingException("Exception with Context"))
+      .when(hookEventFacade)
+      .handle("42");
+
+    DefaultHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
+    DefaultHookHandler.Response response = send(request);
+
+    assertError(response, "Exception with Context");
+  }
+
+  @Test
   void shouldSendMessagesOnException() throws IOException {
     HgHookMessageProvider messageProvider = new HgHookMessageProvider();
     messageProvider.sendMessage("Some note");
@@ -243,6 +259,18 @@ class DefaultHookHandlerTest {
     handler.run();
 
     return Sockets.read(new ByteArrayInputStream(output.toByteArray()), DefaultHookHandler.Response.class);
+  }
+
+  private static class TestingException extends ExceptionWithContext {
+
+    private TestingException(String message) {
+      super(Collections.emptyList(), message);
+    }
+
+    @Override
+    public String getCode() {
+      return "42";
+    }
   }
 
 }
