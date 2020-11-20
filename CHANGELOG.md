@@ -6,16 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
+### Changed
+- Send mercurial hook callbacks over separate tcp socket instead of http ([#1416](https://github.com/scm-manager/scm-manager/pull/1416))
 
+## [2.10.0] - 2020-11-20
 ### Added
 - Delete branches directly in the UI ([#1422](https://github.com/scm-manager/scm-manager/pull/1422))
 - Lookup command which provides further repository information ([#1415](https://github.com/scm-manager/scm-manager/pull/1415))
 - Include messages from scm protocol in modification or merge errors ([#1420](https://github.com/scm-manager/scm-manager/pull/1420))
 - Enhance trace api to accepted status codes ([#1430](https://github.com/scm-manager/scm-manager/pull/1430))
 - Add examples to core resources to simplify usage of rest api ([#1434](https://github.com/scm-manager/scm-manager/pull/1434))
-
-### Changed
-- Send mercurial hook callbacks over separate tcp socket instead of http ([#1416](https://github.com/scm-manager/scm-manager/pull/1416))
 
 ### Fixed
 - Missing close of hg diff command ([#1417](https://github.com/scm-manager/scm-manager/pull/1417))
