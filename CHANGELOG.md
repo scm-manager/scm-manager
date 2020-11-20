@@ -415,3 +415,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.6.3]: https://www.scm-manager.org/download/2.6.3
 [2.7.0]: https://www.scm-manager.org/download/2.7.0
 [2.7.1]: https://www.scm-manager.org/download/2.7.1
+[2.8.0]: https://www.scm-manager.org/download/2.8.0
+[2.9.0]: https://www.scm-manager.org/download/2.9.0
+[2.9.1]: https://www.scm-manager.org/download/2.9.1
+[2.10.0]: https://www.scm-manager.org/download/2.10.0
