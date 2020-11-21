@@ -150,7 +150,7 @@ class DefaultHookHandlerTest {
     DefaultHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
     DefaultHookHandler.Response response = send(request);
 
-    assertError(response, "Something went wrong");
+    assertError(response, "unknown error");
   }
 
   @Test
@@ -168,11 +168,8 @@ class DefaultHookHandlerTest {
   }
 
   @Test
-  void shouldSendMessagesOnException() throws IOException {
-    HgHookMessageProvider messageProvider = new HgHookMessageProvider();
-    messageProvider.sendMessage("Some note");
-    messageProvider.sendMessage("Some error");
-    mockMessageProvider(messageProvider);
+  void shouldSendMessagesOnUnknownException() throws IOException {
+    mockMessageProviderWithMessages();
 
     doThrow(new IllegalStateException("Abort it"))
       .when(hookEventFacade)
@@ -181,12 +178,37 @@ class DefaultHookHandlerTest {
     DefaultHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
     DefaultHookHandler.Response response = send(request);
 
+    assertMessages(response, "unknown error");
+  }
+
+  @Test
+  void shouldSendMessagesOnExceptionWithContext() throws IOException {
+    mockMessageProviderWithMessages();
+
+    doThrow(new TestingException("Exception with Context"))
+      .when(hookEventFacade)
+      .handle("42");
+
+    DefaultHookHandler.Request request = createRequest(RepositoryHookType.POST_RECEIVE);
+    DefaultHookHandler.Response response = send(request);
+
+    assertMessages(response, "Exception with Context");
+  }
+
+  private void assertMessages(DefaultHookHandler.Response response, String errorMessage) {
     List<String> received = response.getMessages()
       .stream()
       .map(HgHookMessage::getMessage)
       .collect(Collectors.toList());
 
-    assertThat(received).containsExactly("Some note", "Some error", "Abort it");
+    assertThat(received).containsExactly("Some note", "Some error", errorMessage);
+  }
+
+  private void mockMessageProviderWithMessages() {
+    HgHookMessageProvider messageProvider = new HgHookMessageProvider();
+    messageProvider.sendMessage("Some note");
+    messageProvider.sendMessage("Some error");
+    mockMessageProvider(messageProvider);
   }
 
   @Test

@@ -115,10 +115,10 @@ class DefaultHookHandler implements HookHandler {
       return error("repository not found");
     } catch (ExceptionWithContext ex) {
       LOG.debug("scm exception on hook occurred", ex);
-      return error(context, ex);
+      return error(context, ex.getMessage());
     } catch (Exception ex) {
       LOG.warn("unknown error on hook occurred", ex);
-      return error(context, ex);
+      return error(context, "unknown error");
     } finally {
       environment.clearPendingState();
       TransactionId.clear();
@@ -133,9 +133,9 @@ class DefaultHookHandler implements HookHandler {
     subject.login(bearer);
   }
 
-  private Response error(HgHookContextProvider context, Exception ex) {
+  private Response error(HgHookContextProvider context, String message) {
     List<HgHookMessage> messages = new ArrayList<>(context.getHgMessageProvider().getMessages());
-    messages.add(createErrorMessage(ex.getMessage()));
+    messages.add(createErrorMessage(message));
     return new Response(messages, true);
   }
 
