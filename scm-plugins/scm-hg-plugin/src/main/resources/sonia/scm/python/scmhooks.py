@@ -29,7 +29,7 @@
 # changegroup.scm = python:scmhooks.callback
 #
 
-import os, sys, json, socket
+import os, sys, json, socket, struct
 
 # read environment
 port = os.environ['SCM_HOOK_PORT']
@@ -54,17 +54,19 @@ def fire_hook(ui, repo, hooktype, node):
     values = {'token': token, 'type': hooktype, 'repositoryId': repositoryId, 'transactionId': transactionId, 'challenge': challenge, 'node': node.decode('utf8') }
 
     connection.connect(("127.0.0.1", int(port)))
-    connection.send(json.dumps(values).encode('utf-8'))
-    connection.sendall(b'\0')
 
-    received = []
-    byte = connection.recv(1)
-    while byte != b'\0':
-      received.append(byte)
-      byte = connection.recv(1)
+    data = json.dumps(values).encode('utf-8')
+    connection.send(struct.pack('>i', len(data)))
+    connection.sendall(data)
 
-    message = b''.join(received).decode('utf-8')
-    response = json.loads(message)
+    d = connection.recv(4, socket.MSG_WAITALL)
+    length = struct.unpack('>i', bytearray(d))[0]
+    if length > 8192:
+      ui.warn( b"scm-hook received message with exceeds the limit of 8192\n" )
+      return True
+
+    d = connection.recv(length, socket.MSG_WAITALL)
+    response = json.loads(d.decode("utf-8"))
 
     abort = response['abort']
     print_messages(ui, response['messages'])
@@ -94,7 +96,7 @@ def pre_hook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs)
 
   # newer mercurial version
   # we have to make in-memory changes visible to external process
-  # this does not happen automatically, because mercurial treat our hooks as internal hooks
+  # this does not happen automatically, because mercurial treat our hooks as internal hook
   # see hook.py at mercurial sources _exthook
   try:
     if repo is not None:
@@ -103,7 +105,7 @@ def pre_hook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs)
       if tr and not tr.writepending():
         ui.warn(b"no pending write transaction found")
   except AttributeError:
-    ui.debug(b"mercurial does not support currenttransation")
+    ui.debug(b"mercurial does not support currenttransaction")
     # do nothing
 
   return callback(ui, repo, "PRE_RECEIVE", node)

@@ -291,14 +291,16 @@ class DefaultHookHandlerTest {
   private DefaultHookHandler.Response send(DefaultHookHandler.Request request) throws IOException {
     ByteArrayOutputStream buffer = new ByteArrayOutputStream();
     Sockets.send(buffer, request);
+
     ByteArrayInputStream input = new ByteArrayInputStream(buffer.toByteArray());
     when(socket.getInputStream()).thenReturn(input);
+
     ByteArrayOutputStream output = new ByteArrayOutputStream();
     when(socket.getOutputStream()).thenReturn(output);
 
     handler.run();
 
-    return Sockets.read(new ByteArrayInputStream(output.toByteArray()), DefaultHookHandler.Response.class);
+    return Sockets.receive(new ByteArrayInputStream(output.toByteArray()), DefaultHookHandler.Response.class);
   }
 
   private static class TestingException extends ExceptionWithContext {

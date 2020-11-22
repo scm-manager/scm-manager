@@ -82,7 +82,7 @@ class HookServerTest {
         OutputStream output = socket.getOutputStream()
       ) {
         Sockets.send(output, request);
-        return Sockets.read(input, Response.class);
+        return Sockets.receive(input, Response.class);
       } catch (IOException ex) {
         throw new RuntimeException("failed", ex);
       }
@@ -100,7 +100,7 @@ class HookServerTest {
     @Override
     public void run() {
       try (InputStream input = socket.getInputStream(); OutputStream output = socket.getOutputStream()) {
-        Request request = Sockets.read(input, Request.class);
+        Request request = Sockets.receive(input, Request.class);
         Subject subject = SecurityUtils.getSubject();
         Sockets.send(output, new Response("Hello " + request.getName(), subject.getPrincipal().toString()));
       } catch (IOException ex) {

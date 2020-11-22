@@ -79,37 +79,47 @@ class DefaultHookHandler implements HookHandler {
       LOG.warn("failed to read hook request", e);
     } finally {
       LOG.trace("close client socket");
+      TransactionId.clear();
       close();
     }
   }
 
   private void handleHookRequest(InputStream input, OutputStream output) throws IOException {
-    Request request = Sockets.read(input, Request.class);
+    Request request = Sockets.receive(input, Request.class);
+    TransactionId.set(request.getTransactionId());
     Response response = handleHookRequest(request);
     Sockets.send(output, response);
   }
 
   private Response handleHookRequest(Request request) {
     LOG.trace("process {} hook for node {}", request.getType(), request.getNode());
-    TransactionId.set(request.getTransactionId());
 
+    if (!environment.isAcceptAble(request.getChallenge())) {
+      LOG.warn("received hook with invalid challenge: {}", request.getChallenge());
+      return error("invalid hook challenge");
+    }
+
+    try {
+      authenticate(request);
+
+      return fireHook(request);
+    } catch (AuthenticationException ex) {
+      LOG.warn("hook authentication failed", ex);
+      return error("hook authentication failed");
+    }
+  }
+
+  @Nonnull
+  private Response fireHook(Request request) {
     HgHookContextProvider context = hookContextProviderFactory.create(request.getRepositoryId(), request.getNode());
 
     try {
-      if (!environment.isAcceptAble(request.getChallenge())) {
-        LOG.warn("received hook with invalid challenge: {}", request.getChallenge());
-        return error("invalid hook challenge");
-      }
-
-      authenticate(request);
       environment.setPending(request.getType() == RepositoryHookType.PRE_RECEIVE);
 
       hookEventFacade.handle(request.getRepositoryId()).fireHookEvent(request.getType(), context);
 
       return new Response(context.getHgMessageProvider().getMessages(), false);
-    } catch (AuthenticationException ex) {
-      LOG.warn("hook authentication failed", ex);
-      return error("hook authentication failed");
+
     } catch (NotFoundException ex) {
       LOG.warn("could not find repository with id {}", request.getRepositoryId(), ex);
       return error("repository not found");
@@ -121,7 +131,6 @@ class DefaultHookHandler implements HookHandler {
       return error(context, "unknown error");
     } finally {
       environment.clearPendingState();
-      TransactionId.clear();
     }
   }
 

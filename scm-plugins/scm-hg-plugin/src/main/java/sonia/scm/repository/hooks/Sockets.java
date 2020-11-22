@@ -25,13 +25,19 @@
 package sonia.scm.repository.hooks;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 class Sockets {
+
+  private static final Logger LOG = LoggerFactory.getLogger(Sockets.class);
+
+  private static final int READ_LIMIT = 8192;
 
   private static final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -40,18 +46,54 @@ class Sockets {
 
   static void send(OutputStream out, Object object) throws IOException {
     byte[] bytes = objectMapper.writeValueAsBytes(object);
+    LOG.trace("send message length of {} to socket", bytes.length);
+    writeInt(out, bytes.length);
+    LOG.trace("send message to socket");
     out.write(bytes);
-    out.write('\0');
+    LOG.trace("flush socket");
     out.flush();
   }
 
-  static <T> T read(InputStream in, Class<T> type) throws IOException {
-    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-    int c = in.read();
-    while (c != '\0') {
-      buffer.write(c);
-      c = in.read();
+  static <T> T receive(InputStream in, Class<T> type) throws IOException {
+    LOG.trace("read {} from socket", type);
+    int length = readInt(in);
+    LOG.trace("read message length of {} from socket", length);
+    if (length > READ_LIMIT) {
+      String message = String.format("received length of %d, which exceeds the limit of %d", length, READ_LIMIT);
+      throw new IOException(message);
     }
-    return objectMapper.readValue(buffer.toByteArray(), type);
+    byte[] data = read(in, length);
+    LOG.trace("convert message to {}", type);
+    return objectMapper.readValue(data, type);
   }
+
+  private static void writeInt(OutputStream out, int value) throws IOException {
+    out.write((value >>> 24) & 0xFF);
+    out.write((value >>> 16) & 0xFF);
+    out.write((value >>>  8) & 0xFF);
+    out.write(value & 0xFF);
+  }
+
+  private static int readInt(InputStream in) throws IOException {
+    int b1 = in.read();
+    int b2 = in.read();
+    int b3 = in.read();
+    int b4 = in.read();
+
+    if ((b1 | b2 | b3 | b4) < 0) {
+      throw new EOFException("failed to read int from socket");
+    }
+
+    return ((b1 << 24) + (b2 << 16) + (b3 << 8) + b4);
+  }
+
+  private static byte[] read(InputStream in, int length) throws IOException {
+    byte[] buffer = new byte[length];
+    int read = in.read(buffer);
+    if (read < length) {
+      throw new EOFException("failed to read bytes from socket");
+    }
+    return buffer;
+  }
+
 }
