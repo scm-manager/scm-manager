@@ -30,10 +30,11 @@ import { apiClient, ConfirmAlert, ErrorNotification } from "@scm-manager/ui-comp
 type Props = {
   baseUrl: string;
   branches: Branch[];
+  type: string;
   fetchBranches: () => void;
 };
 
-const BranchTable: FC<Props> = ({ baseUrl, branches, fetchBranches }) => {
+const BranchTable: FC<Props> = ({ baseUrl, branches, type, fetchBranches }) => {
   const [t] = useTranslation("repos");
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [error, setError] = useState<Error | undefined>();
@@ -92,7 +93,7 @@ const BranchTable: FC<Props> = ({ baseUrl, branches, fetchBranches }) => {
       <table className="card-table table is-hoverable is-fullwidth is-word-break">
         <thead>
           <tr>
-            <th>{t("branches.table.branches")}</th>
+            <th>{t(`branches.table.branches.${type}`)}</th>
           </tr>
         </thead>
         <tbody>{renderRow()}</tbody>

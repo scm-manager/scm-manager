@@ -84,7 +84,28 @@ class BranchesOverview extends React.Component<Props> {
     const { baseUrl, branches, repository, fetchBranches, t } = this.props;
     if (branches && branches.length > 0) {
       orderBranches(branches);
-      return <BranchTable baseUrl={baseUrl} branches={branches} fetchBranches={() => fetchBranches(repository)} />;
+      const staleBranches = branches.filter(b => b.stale);
+      const activeBranches = branches.filter(b => !b.stale);
+      return (
+        <>
+          {activeBranches.length > 0 && (
+            <BranchTable
+              baseUrl={baseUrl}
+              type={"active"}
+              branches={activeBranches}
+              fetchBranches={() => fetchBranches(repository)}
+            />
+          )}
+          {staleBranches.length > 0 && (
+            <BranchTable
+              baseUrl={baseUrl}
+              type={"stale"}
+              branches={staleBranches}
+              fetchBranches={() => fetchBranches(repository)}
+            />
+          )}
+        </>
+      );
     }
     return <Notification type="info">{t("branches.overview.noBranches")}</Notification>;
   }

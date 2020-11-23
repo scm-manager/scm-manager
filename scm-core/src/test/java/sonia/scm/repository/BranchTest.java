@@ -22,24 +22,41 @@
  * SOFTWARE.
  */
 
-import { storiesOf } from "@storybook/react";
-import { BranchSelector } from "./index";
-import { Branch } from "@scm-manager/ui-types";
-import * as React from "react";
-import styled from "styled-components";
+package sonia.scm.repository;
 
-const master = { name: "master", revision: "1", defaultBranch: true, _links: {} };
-const develop = { name: "develop", revision: "2", defaultBranch: false, _links: {} };
+import org.junit.jupiter.api.Test;
 
-const branchSelected = (branch?: Branch) => null;
+import java.time.temporal.ChronoUnit;
 
-const branches = [master, develop];
+import static java.time.Instant.now;
+import static org.assertj.core.api.Assertions.assertThat;
+import static sonia.scm.repository.Branch.normalBranch;
 
-const Wrapper = styled.div`
-  margin: 2rem;
-  max-width: 400px;
-`;
+class BranchTest {
 
-storiesOf("BranchSelector", module)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
-  .add("Default", () => <BranchSelector branches={branches} onSelectBranch={branchSelected} label="Select branch:" />);
+  @Test
+  void shouldTagOldBranchAsStale() {
+    long moreThanTwoWeeksAgo =
+      now()
+        .minus(14, ChronoUnit.DAYS)
+        .minus(1, ChronoUnit.MINUTES)
+        .toEpochMilli();
+
+    Branch branch = normalBranch("hog", "42", moreThanTwoWeeksAgo);
+
+    assertThat(branch.isStale()).isTrue();
+  }
+
+  @Test
+  void shouldNotTagNotSoOldBranchAsStale() {
+    long moreThanTwoWeeksAgo =
+      now()
+        .minus(14, ChronoUnit.DAYS)
+        .plus(1, ChronoUnit.MINUTES)
+        .toEpochMilli();
+
+    Branch branch = normalBranch("hog", "42", moreThanTwoWeeksAgo);
+
+    assertThat(branch.isStale()).isFalse();
+  }
+}

@@ -32,8 +32,12 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Optional;
 import java.util.regex.Pattern;
+
+import static java.time.Instant.now;
 
 /**
  * Represents a branch in a repository.
@@ -189,5 +193,14 @@ public final class Branch implements Serializable, Validateable {
    */
   public Optional<Long> getLastCommitDate() {
     return Optional.ofNullable(lastCommitDate);
+  }
+
+  public boolean isStale() {
+    return getLastCommitDate()
+      .map(Instant::ofEpochMilli)
+      .map(d -> Duration.between(d, now()))
+      .map(d -> d.toDays())
+      .map(d -> d >= 14)
+      .orElse(false);
   }
 }

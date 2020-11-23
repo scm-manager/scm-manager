@@ -29,6 +29,7 @@ export type Branch = {
   revision: string;
   defaultBranch?: boolean;
   lastCommitDate?: string;
+  stale?: boolean;
   _links: Links;
 };
 
