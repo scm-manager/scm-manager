@@ -42,8 +42,8 @@ public class HgBranchesCommandTest extends AbstractHgCommandTestBase {
     List<Branch> branches = command.getBranches();
 
     assertThat(branches).contains(
-      defaultBranch("default", "2baab8e80280ef05a9aa76c49c76feca2872afb7"),
-      normalBranch("test-branch", "79b6baf49711ae675568e0698d730b97ef13e84a")
+      defaultBranch("default", "2baab8e80280ef05a9aa76c49c76feca2872afb7", 1339586381000L),
+      normalBranch("test-branch", "79b6baf49711ae675568e0698d730b97ef13e84a", 1339586299000L)
     );
   }
 }

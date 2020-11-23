@@ -79,10 +79,11 @@ public class HgBranchesCommand extends AbstractCommand
           node = changeset.getNode();
         }
 
+        long lastCommitDate = changeset.getTimestamp().getDate().getTime();
         if (DEFAULT_BRANCH_NAME.equals(hgBranch.getName())) {
-          return Branch.defaultBranch(hgBranch.getName(), node);
+          return Branch.defaultBranch(hgBranch.getName(), node, lastCommitDate);
         } else {
-          return Branch.normalBranch(hgBranch.getName(), node);
+          return Branch.normalBranch(hgBranch.getName(), node, lastCommitDate);
         }
       }
     });
