@@ -24,8 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import sonia.scm.Validateable;
@@ -34,9 +32,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
+import java.util.Optional;
 import java.util.regex.Pattern;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Represents a branch in a repository.
@@ -46,73 +43,94 @@ import java.util.regex.Pattern;
  */
 @XmlRootElement(name = "branch")
 @XmlAccessorType(XmlAccessType.FIELD)
-public final class Branch implements Serializable, Validateable
-{
+public final class Branch implements Serializable, Validateable {
 
   private static final String VALID_CHARACTERS_AT_START_AND_END = "\\w-,;\\]{}@&+=$#`|<>";
   private static final String VALID_CHARACTERS = VALID_CHARACTERS_AT_START_AND_END + "/.";
   public static final String VALID_BRANCH_NAMES = "[" + VALID_CHARACTERS_AT_START_AND_END + "]([" + VALID_CHARACTERS + "]*[" + VALID_CHARACTERS_AT_START_AND_END + "])?";
   public static final Pattern VALID_BRANCH_NAME_PATTERN = Pattern.compile(VALID_BRANCH_NAMES);
 
-  /** Field description */
   private static final long serialVersionUID = -4602244691711222413L;
 
-  //~--- constructors ---------------------------------------------------------
+  private String name;
+
+  private String revision;
+
+  private boolean defaultBranch;
+
+  private Long lastCommitDate;
 
   /**
    * Constructs a new instance of branch.
    * This constructor should only be called from JAXB.
-   *
    */
   Branch() {}
 
   /**
    * Constructs a new branch.
    *
+   * @param name name of the branch
+   * @param revision latest revision of the branch
+   * @param defaultBranch Whether this branch is the default branch for the repository
+   *
+   * @deprecated Use {@link Branch#Branch(String, String, boolean, Long)} instead.
+   */
+  @Deprecated
+  Branch(String name, String revision, boolean defaultBranch) {
+    this(name, revision, defaultBranch, null);
+  }
+
+  /**
+   * Constructs a new branch.
    *
    * @param name name of the branch
    * @param revision latest revision of the branch
+   * @param defaultBranch Whether this branch is the default branch for the repository
+   * @param lastCommitDate The date of the commit this branch points to (if computed). May be <code>null</code>
    */
-  Branch(String name, String revision, boolean defaultBranch)
-  {
+  Branch(String name, String revision, boolean defaultBranch, Long lastCommitDate) {
     this.name = name;
     this.revision = revision;
     this.defaultBranch = defaultBranch;
+    this.lastCommitDate = lastCommitDate;
   }
 
+  /**
+   * @deprecated Use {@link #normalBranch(String, String, Long)} instead to set the date of the last commit, too.
+   */
+  @Deprecated
   public static Branch normalBranch(String name, String revision) {
-    return new Branch(name, revision, false);
+    return normalBranch(name, revision, null);
   }
 
+  public static Branch normalBranch(String name, String revision, Long lastCommitDate) {
+    return new Branch(name, revision, false, lastCommitDate);
+  }
+
+  /**
+   * @deprecated Use {@link #defaultBranch(String, String, Long)} instead to set the date of the last commit, too.
+   */
+  @Deprecated
   public static Branch defaultBranch(String name, String revision) {
-    return new Branch(name, revision, true);
+    return defaultBranch(name, revision, null);
   }
 
-  //~--- methods --------------------------------------------------------------
+  public static Branch defaultBranch(String name, String revision, Long lastCommitDate) {
+    return new Branch(name, revision, true, lastCommitDate);
+  }
 
   @Override
   public boolean isValid() {
     return VALID_BRANCH_NAME_PATTERN.matcher(name).matches();
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param obj
-   *
-   * @return
-   */
   @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
+  public boolean equals(Object obj) {
+    if (obj == null) {
       return false;
     }
 
-    if (getClass() != obj.getClass())
-    {
+    if (getClass() != obj.getClass()) {
       return false;
     }
 
@@ -120,48 +138,31 @@ public final class Branch implements Serializable, Validateable
 
     return Objects.equal(name, other.name)
       && Objects.equal(revision, other.revision)
-      && Objects.equal(defaultBranch, other.defaultBranch);
+      && Objects.equal(defaultBranch, other.defaultBranch)
+      && Objects.equal(lastCommitDate, other.lastCommitDate);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
   @Override
-  public int hashCode()
-  {
+  public int hashCode() {
     return Objects.hashCode(name, revision);
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @return
-   */
   @Override
-  public String toString()
-  {
-    //J-
+  public String toString() {
     return MoreObjects.toStringHelper(this)
                   .add("name", name)
                   .add("revision", revision)
+                  .add("defaultBranch", defaultBranch)
+                  .add("lastCommitDate", lastCommitDate)
                   .toString();
-    //J+
   }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the name of the branch
    *
-   *
    * @return name of the branch
    */
-  public String getName()
-  {
+  public String getName() {
     return name;
   }
 
@@ -170,22 +171,23 @@ public final class Branch implements Serializable, Validateable
    *
    * @return latest revision of branch
    */
-  public String getRevision()
-  {
+  public String getRevision() {
     return revision;
   }
 
+  /**
+   * Flag whether this branch is configured as the default branch.
+   */
   public boolean isDefaultBranch() {
     return defaultBranch;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** name of the branch */
-  private String name;
-
-  /** Field description */
-  private String revision;
-
-  private boolean defaultBranch;
+  /**
+   * The date of the commit this branch points to, if this was computed (can be empty).
+   *
+   * @since 2.11.0
+   */
+  public Optional<Long> getLastCommitDate() {
+    return Optional.ofNullable(lastCommitDate);
+  }
 }
