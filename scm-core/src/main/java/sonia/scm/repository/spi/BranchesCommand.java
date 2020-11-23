@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -50,4 +50,13 @@ public interface BranchesCommand
    * @throws IOException
    */
   List<Branch> getBranches() throws IOException;
+
+  default List<Branch> getBranchesWithStaleFlags() throws IOException {
+    List<Branch> branches = getBranches();
+    branches.stream()
+      .filter(Branch::isDefaultBranch)
+      .findFirst()
+      .ifPresent(defaultBranch -> branches.forEach(branch -> branch.markAsStaleDependingOn(defaultBranch)));
+    return branches;
+  }
 }

@@ -22,62 +22,52 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.repository.spi;
 
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
+import sonia.scm.repository.Branch;
 
+import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import static java.time.Instant.now;
-import static org.assertj.core.api.Assertions.assertThat;
-import static sonia.scm.repository.Branch.defaultBranch;
-import static sonia.scm.repository.Branch.normalBranch;
+import static java.util.Arrays.asList;
 
-class BranchTest {
+class BranchesCommandTest {
 
   @Test
-  void shouldTagOldBranchAsStale() {
+  void shouldMarkEachBranchDependingOnDefaultBranch() throws IOException {
     Instant now = now();
     long staleTime =
       now
         .minus(30, ChronoUnit.DAYS)
         .minus(1, ChronoUnit.MINUTES)
         .toEpochMilli();
-
-    Branch branch = normalBranch("hog", "42", staleTime);
-    branch.markAsStaleDependingOn(defaultBranch("default", "23", now.toEpochMilli()));
-
-    assertThat(branch.isStale()).isTrue();
-  }
-
-  @Test
-  void shouldNotTagNotSoOldBranchAsStale() {
-    Instant now = now();
     long activeTime =
       now
         .minus(30, ChronoUnit.DAYS)
         .plus(1, ChronoUnit.MINUTES)
         .toEpochMilli();
 
-    Branch branch = normalBranch("hog", "42", activeTime);
-    branch.markAsStaleDependingOn(defaultBranch("default", "23", now.toEpochMilli()));
+    List<Branch> branches = asList(
+      Branch.normalBranch("arthur", "42", staleTime),
+      Branch.normalBranch("marvin", "42", staleTime),
+      Branch.defaultBranch("hog", "42", now.toEpochMilli()),
+      Branch.normalBranch("trillian", "42", activeTime)
+    );
 
-    assertThat(branch.isStale()).isFalse();
-  }
+    List<Branch> branchesWithStaleFlags = new BranchesCommand() {
+      @Override
+      public List<Branch> getBranches() {
+        return branches;
+      }
+    }.getBranchesWithStaleFlags();
 
-  @Test
-  void shouldNotTagDefaultBranchAsStale() {
-    Instant now = now();
-    long staleTime =
-      now
-        .minus(30, ChronoUnit.DAYS)
-        .minus(1, ChronoUnit.MINUTES)
-        .toEpochMilli();
-
-    Branch branch = defaultBranch("hog", "42", staleTime);
-    branch.markAsStaleDependingOn(defaultBranch("default", "23", now.toEpochMilli()));
-
-    assertThat(branch.isStale()).isFalse();
+    Assertions.assertThat(branchesWithStaleFlags)
+      .extracting("stale")
+      .containsExactly(true, true, false, false);
   }
 }
