@@ -30,6 +30,7 @@ import java.time.temporal.ChronoUnit;
 
 import static java.time.Instant.now;
 import static org.assertj.core.api.Assertions.assertThat;
+import static sonia.scm.repository.Branch.defaultBranch;
 import static sonia.scm.repository.Branch.normalBranch;
 
 class BranchTest {
@@ -49,13 +50,26 @@ class BranchTest {
 
   @Test
   void shouldNotTagNotSoOldBranchAsStale() {
-    long moreThanTwoWeeksAgo =
+    long notYetTwoWeeksAgo =
       now()
         .minus(14, ChronoUnit.DAYS)
         .plus(1, ChronoUnit.MINUTES)
         .toEpochMilli();
 
-    Branch branch = normalBranch("hog", "42", moreThanTwoWeeksAgo);
+    Branch branch = normalBranch("hog", "42", notYetTwoWeeksAgo);
+
+    assertThat(branch.isStale()).isFalse();
+  }
+
+  @Test
+  void shouldNotTagDefaultBranchAsStale() {
+    long moreThanTwoWeeksAgo =
+      now()
+        .minus(14, ChronoUnit.DAYS)
+        .minus(1, ChronoUnit.MINUTES)
+        .toEpochMilli();
+
+    Branch branch = defaultBranch("hog", "42", moreThanTwoWeeksAgo);
 
     assertThat(branch.isStale()).isFalse();
   }

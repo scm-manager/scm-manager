@@ -196,7 +196,8 @@ public final class Branch implements Serializable, Validateable {
   }
 
   public boolean isStale() {
-    return getLastCommitDate()
+    return !isDefaultBranch()
+      && getLastCommitDate()
       .map(Instant::ofEpochMilli)
       .map(d -> Duration.between(d, now()))
       .map(d -> d.toDays())
