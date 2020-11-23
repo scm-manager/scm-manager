@@ -64,7 +64,8 @@
       "createButton": "Create Branch"
     },
     "table": {
-      "branches": "Branches"
+      "branches": "Branches",
+      "lastCommit": "Last commit"
     },
     "create": {
       "title": "Create Branch",

@@ -25,14 +25,20 @@ import React, { FC } from "react";
 import { Link as ReactLink } from "react-router-dom";
 import { Branch, Link } from "@scm-manager/ui-types";
 import DefaultBranchTag from "./DefaultBranchTag";
-import { Icon } from "@scm-manager/ui-components";
+import { DateFromNow, Icon } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
+import styled from "styled-components";
 
 type Props = {
   baseUrl: string;
   branch: Branch;
   onDelete: (branch: Branch) => void;
 };
+
+const Created = styled.span`
+  margin-left: 1rem;
+  font-size: 0.8rem;
+`;
 
 const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete }) => {
   const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
@@ -56,6 +62,9 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete }) => {
           {branch.name}
           <DefaultBranchTag defaultBranch={branch.defaultBranch} />
         </ReactLink>
+        <Created className="has-text-grey is-ellipsis-overflow">
+          {t("branches.table.lastCommit")} <DateFromNow date={branch.lastCommitDate} />
+        </Created>
       </td>
       <td className="is-darker">{deleteButton}</td>
     </tr>
