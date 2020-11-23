@@ -42,7 +42,7 @@
     "title": "Repositories",
     "subtitle": "Übersicht aller verfügbaren Repositories",
     "noRepositories": "Keine Repositories gefunden.",
-    "createButton": "Repository erstellen"
+    "createButton": "Repository hinzufügen"
   },
   "create": {
     "title": "Repository erstellen",
