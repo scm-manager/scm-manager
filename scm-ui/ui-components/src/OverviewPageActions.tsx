@@ -36,7 +36,6 @@ type Props = {
   label?: string;
   testId?: string;
   searchPlaceholder?: string;
-  filterPlaceholder?: string;
 };
 
 const OverviewPageActions: FC<Props> = ({
@@ -47,8 +46,7 @@ const OverviewPageActions: FC<Props> = ({
   groupSelected,
   label,
   testId,
-  searchPlaceholder,
-  filterPlaceholder
+  searchPlaceholder
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -59,7 +57,6 @@ const OverviewPageActions: FC<Props> = ({
         options={groups}
         preselectedOption={currentGroup}
         optionSelected={groupSelected}
-        placeholder={filterPlaceholder}
       />
     </div>
   );

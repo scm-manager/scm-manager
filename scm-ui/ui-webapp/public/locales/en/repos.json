@@ -44,7 +44,7 @@
     "noRepositories": "No repositories found.",
     "createButton": "Create Repository",
     "searchRepository": "Search repository",
-    "filterNamespace": "Filter by namespace"
+    "allNamespaces": "All namespaces"
   },
   "create": {
     "title": "Create Repository",

@@ -30,6 +30,9 @@
     "noUsers": "Keine Benutzer gefunden.",
     "createButton": "Benutzer erstellen"
   },
+  "overview": {
+    "searchUser": "Benutzer suchen"
+  },
   "singleUser": {
     "errorTitle": "Fehler",
     "errorSubtitle": "Unbekannter Benutzer Fehler",

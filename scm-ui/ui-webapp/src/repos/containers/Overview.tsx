@@ -101,8 +101,12 @@ class Overview extends React.Component<Props> {
     }
   };
 
+  getNamespaceFilterPlaceholder = () => {
+    return this.props.t("overview.allNamespaces");
+  };
+
   namespaceSelected = (newNamespace: string) => {
-    if (newNamespace === "") {
+    if (newNamespace === this.getNamespaceFilterPlaceholder()) {
       this.props.history.push("/repos/");
     } else {
       this.props.history.push(`/repos/${newNamespace}/`);
@@ -111,8 +115,10 @@ class Overview extends React.Component<Props> {
 
   render() {
     const { error, loading, showCreateButton, namespace, namespaces, t } = this.props;
-
-    const namespacesToRender = namespaces ? ["", ...namespaces._embedded.namespaces.map(n => n.namespace).sort()] : [];
+    const namespaceFilterPlaceholder = this.getNamespaceFilterPlaceholder();
+    const namespacesToRender = namespaces
+      ? [namespaceFilterPlaceholder, ...namespaces._embedded.namespaces.map(n => n.namespace).sort()]
+      : [];
 
     return (
       <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={loading} error={error}>
@@ -127,7 +133,6 @@ class Overview extends React.Component<Props> {
             label={t("overview.createButton")}
             testId="repository-overview"
             searchPlaceholder={t("overview.searchRepository")}
-            filterPlaceholder={t("overview.filterNamespace")}
           />
         </PageActions>
       </Page>

@@ -65,7 +65,7 @@ const FilterInput: FC<Props> = ({ filter, value, testId, placeholder }) => {
         <FixedHeightInput
           className="input"
           type="search"
-          placeholder={placeholder || t("overviewAction.filterEntries")}
+          placeholder={placeholder || t("filterEntries")}
           value={stateValue}
           onChange={event => setStateValue(event.target.value)}
         />
