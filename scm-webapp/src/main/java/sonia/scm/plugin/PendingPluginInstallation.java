@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import org.slf4j.Logger;
@@ -50,10 +50,14 @@ class PendingPluginInstallation {
   void cancel() {
     String name = plugin.getDescriptor().getInformation().getName();
     LOG.info("cancel installation of plugin {}", name);
-    try {
-      Files.delete(file);
-    } catch (IOException ex) {
-      throw new PluginFailedToCancelInstallationException("failed to cancel plugin installation ", name, ex);
+    if (Files.exists(file)) {
+      try {
+        Files.delete(file);
+      } catch (IOException ex) {
+        throw new PluginFailedToCancelInstallationException("failed to cancel plugin installation ", name, ex);
+      }
+    } else {
+      LOG.info("plugin file {} did not exists for plugin {}; nothing deleted", file, name);
     }
   }
 }
