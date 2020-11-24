@@ -11,7 +11,7 @@ Here the password for the current account can be changed when it is a local acco
 external system). To authorize the change, the current password has to be put first. Then the new password has to be
 entered twice.
 
-## Öffentliche Schlüssel
+## Public Keys
 
 To check signatures for example for commits, public keys can be stored here. Additionally the keys created by
 SCM-Manager can be accessed here, too.
