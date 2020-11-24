@@ -59,8 +59,13 @@ class PendingPluginInstallationTest {
   }
 
   @Test
-  void shouldThrowExceptionIfCancelFailed(@TempDir Path directory) {
+  void shouldThrowExceptionIfCancelFailed(@TempDir Path directory) throws IOException {
     Path file = directory.resolve("file");
+    Files.createDirectory(file);
+
+    Path makeFileNotDeletable = file.resolve("not_deletable");
+    Files.write(makeFileNotDeletable, "42".getBytes());
+
     when(plugin.getDescriptor().getInformation().getName()).thenReturn("scm-awesome-plugin");
 
     PendingPluginInstallation installation = new PendingPluginInstallation(plugin, file);
