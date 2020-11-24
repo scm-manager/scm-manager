@@ -62,9 +62,11 @@ const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete }) => {
           {branch.name}
           <DefaultBranchTag defaultBranch={branch.defaultBranch} />
         </ReactLink>
-        <Created className="has-text-grey is-ellipsis-overflow">
-          {t("branches.table.lastCommit")} <DateFromNow date={branch.lastCommitDate} />
-        </Created>
+        {branch.lastCommitDate && (
+          <Created className="has-text-grey is-ellipsis-overflow">
+            {t("branches.table.lastCommit")} <DateFromNow date={branch.lastCommitDate} />
+          </Created>
+        )}
       </td>
       <td className="is-darker">{deleteButton}</td>
     </tr>
