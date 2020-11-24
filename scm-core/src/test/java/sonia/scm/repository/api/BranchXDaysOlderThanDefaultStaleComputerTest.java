@@ -22,9 +22,11 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.repository.api;
 
 import org.junit.jupiter.api.Test;
+import sonia.scm.repository.Branch;
+import sonia.scm.repository.spi.BranchStaleComputer;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -34,11 +36,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static sonia.scm.repository.Branch.defaultBranch;
 import static sonia.scm.repository.Branch.normalBranch;
 
-class BranchTest {
+class BranchXDaysOlderThanDefaultStaleComputerTest {
+
+  Instant now = now();
+
+  BranchXDaysOlderThanDefaultStaleComputer computer = new BranchXDaysOlderThanDefaultStaleComputer(30);
 
   @Test
   void shouldTagOldBranchAsStale() {
-    Instant now = now();
     long staleTime =
       now
         .minus(30, ChronoUnit.DAYS)
@@ -46,14 +51,13 @@ class BranchTest {
         .toEpochMilli();
 
     Branch branch = normalBranch("hog", "42", staleTime);
-    branch.markAsStaleDependingOn(defaultBranch("default", "23", now.toEpochMilli()));
+    boolean stale = computer.computeStale(branch, createStaleContext());
 
-    assertThat(branch.isStale()).isTrue();
+    assertThat(stale).isTrue();
   }
 
   @Test
   void shouldNotTagNotSoOldBranchAsStale() {
-    Instant now = now();
     long activeTime =
       now
         .minus(30, ChronoUnit.DAYS)
@@ -61,14 +65,13 @@ class BranchTest {
         .toEpochMilli();
 
     Branch branch = normalBranch("hog", "42", activeTime);
-    branch.markAsStaleDependingOn(defaultBranch("default", "23", now.toEpochMilli()));
+    boolean stale = computer.computeStale(branch, createStaleContext());
 
-    assertThat(branch.isStale()).isFalse();
+    assertThat(stale).isFalse();
   }
 
   @Test
   void shouldNotTagDefaultBranchAsStale() {
-    Instant now = now();
     long staleTime =
       now
         .minus(30, ChronoUnit.DAYS)
@@ -76,8 +79,14 @@ class BranchTest {
         .toEpochMilli();
 
     Branch branch = defaultBranch("hog", "42", staleTime);
-    branch.markAsStaleDependingOn(defaultBranch("default", "23", now.toEpochMilli()));
+    boolean stale = computer.computeStale(branch, createStaleContext());
 
-    assertThat(branch.isStale()).isFalse();
+    assertThat(stale).isFalse();
+  }
+
+  BranchStaleComputer.StaleContext createStaleContext() {
+    BranchStaleComputer.StaleContext staleContext = new BranchStaleComputer.StaleContext();
+    staleContext.setDefaultBranch(defaultBranch("default", "23", now.toEpochMilli()));
+    return staleContext;
   }
 }

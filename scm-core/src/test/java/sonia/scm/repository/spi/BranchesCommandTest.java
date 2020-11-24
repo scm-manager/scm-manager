@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import sonia.scm.repository.Branch;
+import sonia.scm.repository.api.BranchXDaysOlderThanDefaultStaleComputer;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -64,7 +65,7 @@ class BranchesCommandTest {
       public List<Branch> getBranches() {
         return branches;
       }
-    }.getBranchesWithStaleFlags();
+    }.getBranchesWithStaleFlags(new BranchXDaysOlderThanDefaultStaleComputer());
 
     Assertions.assertThat(branchesWithStaleFlags)
       .extracting("stale")

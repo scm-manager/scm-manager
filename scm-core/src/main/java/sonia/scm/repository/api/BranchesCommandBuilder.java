@@ -165,7 +165,7 @@ public final class BranchesCommandBuilder
   private Branches getBranchesFromCommand()
     throws IOException
   {
-    return new Branches(branchesCommand.getBranchesWithStaleFlags());
+    return new Branches(branchesCommand.getBranchesWithStaleFlags(new BranchXDaysOlderThanDefaultStaleComputer()));
   }
 
   //~--- inner classes --------------------------------------------------------

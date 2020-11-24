@@ -125,15 +125,8 @@ public final class Branch implements Serializable, Validateable {
     return new Branch(name, revision, true, lastCommitDate);
   }
 
-  @SuppressWarnings("java:S3655") // we check "isPresent" for both dates, but due to the third check sonar does not get it
-  public void markAsStaleDependingOn(Branch defaultBranch) {
-    if (!isDefaultBranch() && getLastCommitDate().isPresent() && defaultBranch.getLastCommitDate().isPresent()) {
-      Instant defaultCommitDate = ofEpochMilli(defaultBranch.getLastCommitDate().get());
-      Instant thisCommitDate = ofEpochMilli(getLastCommitDate().get());
-      stale = thisCommitDate.plus(30, ChronoUnit.DAYS).isBefore(defaultCommitDate);
-    } else {
-      stale = false;
-    }
+  public void setStale(boolean stale) {
+    this.stale = stale;
   }
 
   @Override

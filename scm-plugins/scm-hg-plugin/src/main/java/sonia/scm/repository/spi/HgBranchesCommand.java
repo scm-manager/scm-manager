@@ -27,7 +27,6 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.aragost.javahg.Changeset;
-import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import sonia.scm.repository.Branch;
 
@@ -63,14 +62,8 @@ public class HgBranchesCommand extends AbstractCommand
     List<com.aragost.javahg.Branch> hgBranches =
       com.aragost.javahg.commands.BranchesCommand.on(open()).execute();
 
-    List<Branch> branches = Lists.transform(hgBranches,
-                              new Function<com.aragost.javahg.Branch,
-                                Branch>()
-    {
-
-      @Override
-      public Branch apply(com.aragost.javahg.Branch hgBranch)
-      {
+    return Lists.transform(hgBranches,
+      hgBranch -> {
         String node = null;
         Changeset changeset = hgBranch.getBranchTip();
 
@@ -85,9 +78,6 @@ public class HgBranchesCommand extends AbstractCommand
         } else {
           return Branch.normalBranch(hgBranch.getName(), node, lastCommitDate);
         }
-      }
-    });
-
-    return branches;
+      });
   }
 }

@@ -24,33 +24,15 @@
 
 package sonia.scm.repository.spi;
 
+import lombok.Data;
 import sonia.scm.repository.Branch;
 
-import java.io.IOException;
-import java.util.List;
-import java.util.function.Function;
+public interface BranchStaleComputer {
 
-/**
- *
- * @author Sebastian Sdorra
- * @since 1.18
- */
-public interface BranchesCommand
-{
+  boolean computeStale(Branch branch, StaleContext context);
 
-  List<Branch> getBranches() throws IOException;
-
-  default List<Branch> getBranchesWithStaleFlags(BranchStaleComputer computer) throws IOException {
-    Function<Branch, BranchStaleComputer.StaleContext> createContext = branch -> {
-      BranchStaleComputer.StaleContext staleContext = new BranchStaleComputer.StaleContext();
-      staleContext.setDefaultBranch(branch);
-      return staleContext;
-    };
-    List<Branch> branches = getBranches();
-    branches.stream()
-      .filter(Branch::isDefaultBranch)
-      .findFirst()
-      .ifPresent(defaultBranch -> branches.forEach(branch -> branch.setStale(computer.computeStale(branch, createContext.apply(defaultBranch)))));
-    return branches;
+  @Data
+  class StaleContext {
+    private Branch defaultBranch;
   }
 }
