@@ -78,6 +78,7 @@ class Main extends React.Component<Props> {
             <Redirect exact strict from="/repos" to="/repos/" />
             <ProtectedRoute exact path="/repos/" component={Overview} authenticated={authenticated} />
             <ProtectedRoute exact path="/repos/create" component={Create} authenticated={authenticated} />
+            <ProtectedRoute exact path="/repos/import" component={Create} authenticated={authenticated} />
             <ProtectedRoute exact path="/repos/:namespace" component={Overview} authenticated={authenticated} />
             <ProtectedRoute exact path="/repos/:namespace/:page" component={Overview} authenticated={authenticated} />
             <ProtectedRoute path="/repo/:namespace/:name" component={RepositoryRoot} authenticated={authenticated} />

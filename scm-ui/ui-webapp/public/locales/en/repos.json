@@ -22,7 +22,10 @@
     "typeHelpText": "The type of the repository (e.g. Mercurial, Git or Subversion).",
     "contactHelpText": "Email address of the person who is responsible for this repository.",
     "descriptionHelpText": "A short description of the repository.",
-    "initializeRepository": "Creates an initial branch and commits a basic README.md."
+    "initializeRepository": "Creates an initial branch and commits a basic README.md.",
+    "importUrlHelpText": "Import the whole repository including all branches and tags via remote url",
+    "usernameHelpText": "Username may be required to import the remote repository. Will be ignored if not provided.",
+    "passwordHelpText": "Password may be required to import the remote repository. Will be ignored if not provided."
   },
   "repositoryRoot": {
     "errorTitle": "Error",
@@ -46,7 +49,13 @@
   },
   "create": {
     "title": "Add Repository",
-    "subtitle": "Create a new repository"
+    "createSubtitle": "Create a new repository",
+    "importSubtitle": "Import existing repository",
+    "importUrl": "Remote repository url",
+    "username": "Username",
+    "password": "Password",
+    "createButton": "Create new repository",
+    "importButton": "Import repository"
   },
   "branches": {
     "overview": {
@@ -155,7 +164,8 @@
   },
   "repositoryForm": {
     "subtitle": "Edit Repository",
-    "submit": "Save",
+    "submitCreate": "Save",
+    "submitImport": "Import",
     "initializeRepository": "Initialize repository",
     "dangerZone": "Rename and delete"
   },

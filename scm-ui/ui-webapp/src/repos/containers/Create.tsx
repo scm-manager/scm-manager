@@ -95,7 +95,6 @@ class Create extends React.Component<Props> {
     return (
       <Page
         title={t("create.title")}
-        subtitle={t("create.subtitle")}
         loading={pageLoading}
         error={error}
         showContentOnError={true}
@@ -104,7 +103,7 @@ class Create extends React.Component<Props> {
           repositoryTypes={repositoryTypes}
           loading={createLoading}
           namespaceStrategy={namespaceStrategies.current}
-          submitForm={(repo, initRepository) => {
+          createRepository={(repo, initRepository) => {
             createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
           }}
           indexResources={indexResources}
