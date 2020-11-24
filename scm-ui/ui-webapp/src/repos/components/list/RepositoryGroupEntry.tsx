@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 import React from "react";
-import {Link} from "react-router-dom";
-import {CardColumnGroup, Icon, RepositoryEntry} from "@scm-manager/ui-components";
-import {RepositoryGroup} from "@scm-manager/ui-types";
-import {WithTranslation, withTranslation} from "react-i18next";
+import { Link } from "react-router-dom";
+import { CardColumnGroup, Icon, RepositoryEntry } from "@scm-manager/ui-components";
+import { RepositoryGroup } from "@scm-manager/ui-types";
+import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 
 type Props = WithTranslation & {
