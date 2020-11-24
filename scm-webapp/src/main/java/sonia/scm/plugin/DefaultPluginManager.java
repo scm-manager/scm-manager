@@ -192,10 +192,16 @@ public class DefaultPluginManager implements PluginManager {
         dependencyTracker.addInstalled(plugin.getDescriptor());
         pendingInstallations.add(pending);
         eventBus.post(new PluginEvent(PluginEvent.PluginEventType.INSTALLED, plugin));
-      } catch (PluginInstallException ex) {
-        cancelPending(pendingInstallations);
-        eventBus.post(new PluginEvent(PluginEvent.PluginEventType.INSTALLATION_FAILED, plugin));
-        throw ex;
+      } catch (PluginInstallException installException) {
+        try {
+          cancelPending(pendingInstallations);
+        } catch (PluginFailedToCancelInstallationException cancelInstallationException) {
+          LOG.error("could not install plugin {}; uninstallation failed (see next exception)", plugin.getDescriptor().getInformation().getName(), installException);
+          throw cancelInstallationException;
+        } finally {
+          eventBus.post(new PluginEvent(PluginEvent.PluginEventType.INSTALLATION_FAILED, plugin));
+        }
+        throw installException;
       }
     }
 
