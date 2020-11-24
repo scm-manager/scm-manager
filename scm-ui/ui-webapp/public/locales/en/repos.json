@@ -45,7 +45,7 @@
     "createButton": "Add Repository"
   },
   "create": {
-    "title": "Create Repository",
+    "title": "Add Repository",
     "subtitle": "Create a new repository"
   },
   "branches": {

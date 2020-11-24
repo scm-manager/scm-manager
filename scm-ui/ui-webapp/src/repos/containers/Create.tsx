@@ -81,7 +81,15 @@ class Create extends React.Component<Props> {
   };
 
   render() {
-    const { pageLoading, createLoading, repositoryTypes, namespaceStrategies, createRepo, error, indexResources } = this.props;
+    const {
+      pageLoading,
+      createLoading,
+      repositoryTypes,
+      namespaceStrategies,
+      createRepo,
+      error,
+      indexResources
+    } = this.props;
 
     const { t, repoLink } = this.props;
     return (
