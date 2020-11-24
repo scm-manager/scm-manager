@@ -24,9 +24,10 @@
 
 import { Collection, Link, Links, User, Me } from "@scm-manager/ui-types";
 import React, { FC, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import AddPublicKey from "./AddPublicKey";
 import PublicKeyTable from "./PublicKeyTable";
-import { apiClient, ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { apiClient, ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
 
 export type PublicKeysCollection = Collection & {
   _embedded: {
@@ -49,6 +50,7 @@ type Props = {
 };
 
 const SetPublicKeys: FC<Props> = ({ user }) => {
+  const [t] = useTranslation("users");
   const [error, setError] = useState<undefined | Error>();
   const [loading, setLoading] = useState(false);
   const [publicKeys, setPublicKeys] = useState<PublicKeysCollection | undefined>(undefined);
@@ -86,6 +88,9 @@ const SetPublicKeys: FC<Props> = ({ user }) => {
 
   return (
     <>
+      <Subtitle subtitle={t("publicKey.subtitle")} />
+      <p>{t("publicKey.description")}</p>
+      <br />
       <PublicKeyTable publicKeys={publicKeys} onDelete={onDelete} />
       {createLink && <AddPublicKey createLink={createLink} refresh={fetchPublicKeys} />}
     </>

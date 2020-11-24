@@ -39,8 +39,8 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
   if (apiKey?._links?.delete) {
     deleteButton = (
       <a className="level-item" onClick={() => onDelete((apiKey._links.delete as Link).href)}>
-        <span className="icon is-small">
-          <Icon name="trash" className="fas" title={t("apiKey.delete")} />
+        <span className="icon">
+          <Icon name="trash" title={t("apiKey.delete")} color="inherit" />
         </span>
       </a>
     );
@@ -52,7 +52,7 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
         <td>{apiKey.displayName}</td>
         <td>{apiKey.permissionRole}</td>
         <td className="is-hidden-mobile">
-          <DateFromNow date={apiKey.created}/>
+          <DateFromNow date={apiKey.created} />
         </td>
         <td className="is-darker">{deleteButton}</td>
       </tr>
