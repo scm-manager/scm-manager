@@ -29,6 +29,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.api.Command;
+import sonia.scm.security.GPG;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -61,12 +62,14 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   protected static final Set<Feature> FEATURES = EnumSet.of(Feature.INCOMING_REVISION);
 
   private final GitContext context;
+  private final GPG gpg;
   private final Injector commandInjector;
 
   //~--- constructors ---------------------------------------------------------
 
-  GitRepositoryServiceProvider(Injector injector, GitContext context) {
+  GitRepositoryServiceProvider(Injector injector, GitContext context, GPG gpg) {
     this.context = context;
+    this.gpg = gpg;
     commandInjector = injector.createChildInjector(new AbstractModule() {
       @Override
       protected void configure() {
@@ -142,7 +145,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public TagsCommand getTagsCommand() {
-    return new GitTagsCommand(context);
+    return new GitTagsCommand(context, gpg);
   }
 
   @Override

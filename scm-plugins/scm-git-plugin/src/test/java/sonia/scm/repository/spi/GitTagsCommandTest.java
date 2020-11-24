@@ -29,14 +29,22 @@ import com.github.sdorra.shiro.SubjectAware;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
+import org.junit.runner.RunWith;
+import org.mockito.ArgumentMatchers;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.Tag;
+import sonia.scm.security.GPG;
 
 import java.io.IOException;
 import java.util.List;
 
+import static org.assertj.core.api.Assertions.anyOf;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini", username = "admin", password = "secret")
+@RunWith(MockitoJUnitRunner.class)
 public class GitTagsCommandTest extends AbstractGitCommandTestBase {
 
   @Rule
@@ -48,22 +56,39 @@ public class GitTagsCommandTest extends AbstractGitCommandTestBase {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
+  @Mock
+  GPG gpg;
+
   @Test
   public void shouldGetDatesCorrectly() throws IOException {
     final GitContext gitContext = createContext();
-    final GitTagsCommand tagsCommand = new GitTagsCommand(gitContext);
+    final GitTagsCommand tagsCommand = new GitTagsCommand(gitContext, gpg);
     final List<Tag> tags = tagsCommand.getTags();
-    assertThat(tags).hasSize(2);
+    assertThat(tags).hasSize(3);
 
     Tag annotatedTag = tags.get(0);
     assertThat(annotatedTag.getName()).isEqualTo("1.0.0");
     assertThat(annotatedTag.getDate()).contains(1598348105000L); // Annotated - Take tag date
     assertThat(annotatedTag.getRevision()).isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
 
-    Tag lightweightTag = tags.get(1);
+    Tag lightweightTag = tags.get(2);
     assertThat(lightweightTag.getName()).isEqualTo("test-tag");
     assertThat(lightweightTag.getDate()).contains(1339416344000L); // Lightweight - Take commit date
     assertThat(lightweightTag.getRevision()).isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
+  }
+
+  @Test
+  public void shouldGetSignatures() throws IOException {
+    Mockito.when(gpg.findPublicKeyId(ArgumentMatchers.any())).thenReturn("2BA27721F113C005CC16F06BAE63EFBC49F140CF");
+
+    final GitContext gitContext = createContext();
+    final GitTagsCommand tagsCommand = new GitTagsCommand(gitContext, gpg);
+    final List<Tag> tags = tagsCommand.getTags();
+
+    assertThat(tags).hasSize(3);
+
+    Tag signedTag = tags.get(1);
+    assertThat(signedTag.getSignatures()).isNotEmpty();
   }
 
   @Override

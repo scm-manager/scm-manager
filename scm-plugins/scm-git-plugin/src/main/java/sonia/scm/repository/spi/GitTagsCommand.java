@@ -30,17 +30,22 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevObject;
+import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.Signature;
 import sonia.scm.repository.Tag;
+import sonia.scm.security.GPG;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -49,20 +54,23 @@ import java.util.List;
  */
 public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
 
+  private final GPG gpg;
+
   /**
    * Constructs ...
    *
    * @param context
    */
-  public GitTagsCommand(GitContext context) {
+  public GitTagsCommand(GitContext context, GPG gpp) {
     super(context);
+    this.gpg = gpp;
   }
 
   //~--- get methods ----------------------------------------------------------
 
   @Override
   public List<Tag> getTags() throws IOException {
-    List<Tag> tags = null;
+    List<Tag> tags;
 
     RevWalk revWalk = null;
 
@@ -74,7 +82,7 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
       List<Ref> tagList = git.tagList().call();
 
       tags = Lists.transform(tagList,
-        new TransformFuntion(git.getRepository(), revWalk));
+        new TransformFuntion(git.getRepository(), revWalk, gpg, git));
     } catch (GitAPIException ex) {
       throw new InternalRepositoryException(repository, "could not read tags from repository", ex);
     } finally {
@@ -109,9 +117,13 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
      * @param revWalk
      */
     public TransformFuntion(org.eclipse.jgit.lib.Repository repository,
-                            RevWalk revWalk) {
+                            RevWalk revWalk,
+                            GPG gpg,
+                            Git git) {
       this.repository = repository;
       this.revWalk = revWalk;
+      this.gpg = gpg;
+      this.git = git;
     }
 
     //~--- methods ------------------------------------------------------------
@@ -133,6 +145,18 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
           String name = GitUtil.getTagName(ref);
 
           tag = new Tag(name, revObject.getId().name(), GitUtil.getTagTime(revWalk, ref.getObjectId()));
+
+          try {
+            RevTag revTag = GitUtil.getTag(repository, revWalk, ref);
+
+            final Optional<Signature> tagSignature = GitUtil.getTagSignature(revTag, gpg);
+            if (tagSignature.isPresent()) {
+              tag.addSignature(tagSignature.get());
+            }
+          } catch (IncorrectObjectTypeException e) {
+            // Ignore, this must be a lightweight tag
+          }
+
         }
 
       } catch (IOException ex) {
@@ -153,5 +177,7 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
      * Field description
      */
     private RevWalk revWalk;
+    private final GPG gpg;
+    private final Git git;
   }
 }

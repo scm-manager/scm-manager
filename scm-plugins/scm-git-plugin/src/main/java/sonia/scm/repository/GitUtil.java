@@ -30,6 +30,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Multimap;
+import org.checkerframework.checker.nullness.Opt;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -52,17 +53,23 @@ import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.FS;
 import org.eclipse.jgit.util.LfsFactory;
+import org.eclipse.jgit.util.RawParseUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
+import sonia.scm.security.GPG;
+import sonia.scm.security.PublicKey;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.GitUserAgentProvider;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -451,6 +458,26 @@ public final class GitUtil
     return commit;
   }
 
+  public static RevTag getTag(org.eclipse.jgit.lib.Repository repository,
+                                    RevWalk revWalk, Ref ref)
+    throws IOException
+  {
+    RevTag tag = null;
+    ObjectId id = ref.getObjectId();
+
+    if (id != null)
+    {
+      if (revWalk == null)
+      {
+        revWalk = new RevWalk(repository);
+      }
+
+      tag = revWalk.parseTag(id);
+    }
+
+    return tag;
+  }
+
   /**
    * Method description
    *
@@ -681,6 +708,59 @@ public final class GitUtil
     }
 
     return name;
+  }
+
+  private static final byte[] GPG_HEADER = {'P', 'G', 'P'};
+
+  public static Optional<Signature> getTagSignature(RevObject revObject, GPG gpg)  {
+    if (revObject instanceof RevTag) {
+      RevTag tag = (RevTag) revObject;
+      byte[] raw = tag.getFullMessage().getBytes();
+
+      int start = RawParseUtils.headerStart(GPG_HEADER, raw, 0);
+      if (start < 0) {
+        return Optional.empty();
+      }
+
+      int end = RawParseUtils.headerEnd(raw, start);
+      byte[] signature = Arrays.copyOfRange(raw, start, end);
+
+      String publicKeyId = gpg.findPublicKeyId(signature);
+      if (Strings.isNullOrEmpty(publicKeyId)) {
+        // key not found
+        return Optional.of(new Signature(publicKeyId, "gpg", SignatureStatus.NOT_FOUND, null, Collections.emptySet()));
+      }
+
+      Optional<PublicKey> publicKeyById = gpg.findPublicKey(publicKeyId);
+      if (!publicKeyById.isPresent()) {
+        // key not found
+        return Optional.of(new Signature(publicKeyId, "gpg", SignatureStatus.NOT_FOUND, null, Collections.emptySet()));
+      }
+
+      PublicKey publicKey = publicKeyById.get();
+
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      try {
+        byte[] headerPrefix = Arrays.copyOfRange(raw, 0, start - GPG_HEADER.length - 1);
+        baos.write(headerPrefix);
+
+        byte[] headerSuffix = Arrays.copyOfRange(raw, end + 1, raw.length);
+        baos.write(headerSuffix);
+      } catch (IOException ex) {
+        // this will never happen, because we are writing into memory
+        throw new IllegalStateException("failed to write into memory", ex);
+      }
+
+      boolean verified = publicKey.verify(baos.toByteArray(), signature);
+      return Optional.of(new Signature(
+        publicKeyId,
+        "gpg",
+        verified ? SignatureStatus.VERIFIED : SignatureStatus.INVALID,
+        publicKey.getOwner().orElse(null),
+        publicKey.getContacts()
+      ));
+    }
+    return Optional.empty();
   }
 
   /**

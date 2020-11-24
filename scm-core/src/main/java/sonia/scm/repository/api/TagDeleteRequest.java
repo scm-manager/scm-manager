@@ -22,40 +22,15 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.Repository;
-import sonia.scm.security.GPG;
-
-/**
- *
- * @author Sebastian Sdorra
- */
-@Extension
-public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
-
-  private final Injector injector;
-  private final GitContextFactory contextFactory;
-  private final GPG gpg;
-
-  @Inject
-  public GitRepositoryServiceResolver(Injector injector, GitContextFactory contextFactory, GPG gpg) {
-    this.injector = injector;
-    this.contextFactory = contextFactory;
-    this.gpg = gpg;
-  }
-
-  @Override
-  public GitRepositoryServiceProvider resolve(Repository repository) {
-    if (GitRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      return new GitRepositoryServiceProvider(injector, contextFactory.create(repository), gpg);
-    }
-    return null;
-  }
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class TagDeleteRequest {
+  private String name;
 }

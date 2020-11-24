@@ -24,38 +24,16 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
+import sonia.scm.repository.Tag;
+import sonia.scm.repository.api.TagDeleteRequest;
+import sonia.scm.repository.api.TagCreateRequest;
 
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.Repository;
-import sonia.scm.security.GPG;
+import java.io.IOException;
 
 /**
- *
- * @author Sebastian Sdorra
+ * @since 2.11
  */
-@Extension
-public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
-
-  private final Injector injector;
-  private final GitContextFactory contextFactory;
-  private final GPG gpg;
-
-  @Inject
-  public GitRepositoryServiceResolver(Injector injector, GitContextFactory contextFactory, GPG gpg) {
-    this.injector = injector;
-    this.contextFactory = contextFactory;
-    this.gpg = gpg;
-  }
-
-  @Override
-  public GitRepositoryServiceProvider resolve(Repository repository) {
-    if (GitRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      return new GitRepositoryServiceProvider(injector, contextFactory.create(repository), gpg);
-    }
-    return null;
-  }
+public interface TagCommand {
+  Tag create(TagCreateRequest request) throws IOException;
+  void delete(TagDeleteRequest request) throws IOException;
 }

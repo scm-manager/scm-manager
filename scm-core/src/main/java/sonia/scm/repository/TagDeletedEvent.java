@@ -22,40 +22,19 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.Inject;
-import com.google.inject.Injector;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.Repository;
-import sonia.scm.security.GPG;
+import lombok.Value;
+import sonia.scm.event.Event;
 
 /**
- *
- * @author Sebastian Sdorra
+ * This event is fired when a tag was deleted by the SCM-Manager.
+ * Warning: This event will not be fired if a tag was removed by a push of a git client.
+ * @since 2.10.0
  */
-@Extension
-public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
-
-  private final Injector injector;
-  private final GitContextFactory contextFactory;
-  private final GPG gpg;
-
-  @Inject
-  public GitRepositoryServiceResolver(Injector injector, GitContextFactory contextFactory, GPG gpg) {
-    this.injector = injector;
-    this.contextFactory = contextFactory;
-    this.gpg = gpg;
-  }
-
-  @Override
-  public GitRepositoryServiceProvider resolve(Repository repository) {
-    if (GitRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      return new GitRepositoryServiceProvider(injector, contextFactory.create(repository), gpg);
-    }
-    return null;
-  }
+@Event
+@Value
+public class TagDeletedEvent {
+  Repository repository;
+  String tagName;
 }

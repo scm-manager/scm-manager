@@ -28,6 +28,8 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -44,6 +46,7 @@ public final class Tag {
   private final String name;
   private final String revision;
   private final Long date;
+  private final List<Signature> signatures = new ArrayList<>();
 
   /**
    * Constructs a new tag.
@@ -88,5 +91,9 @@ public final class Tag {
    */
   public Optional<Long> getDate() {
     return Optional.ofNullable(date);
+  }
+
+  public void addSignature(Signature signature) {
+    this.signatures.add(signature);
   }
 }
