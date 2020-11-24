@@ -48,12 +48,15 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Enumeration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.fail;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -237,6 +240,30 @@ class I18nServletTest {
 
     verifyHeaders(response);
     assertJson(json);
+  }
+
+  @Test
+  void shouldNotHaveInvalidPluginsJsonFiles() throws IOException {
+    String path = getClass().getClassLoader().getResource("locales/en/plugins.json").getPath();
+    assertThat(path).isNotNull();
+
+    Path filePath = Paths.get(path);
+    Path translationRootPath = filePath.getParent().getParent();
+    assertThat(translationRootPath).isDirectoryContaining("glob:**/en");
+
+    Files
+      .list(translationRootPath)
+      .filter(Files::isDirectory)
+      .map(localePath -> localePath.resolve("plugins.json"))
+      .forEach(this::validatePluginsJson);
+  }
+
+  private void validatePluginsJson(Path path) {
+    try {
+      new ObjectMapper().readTree(path.toFile());
+    } catch (IOException e) {
+      fail("error while parsing translation file " + path, e);
+    }
   }
 
   private void verifyHeaders(HttpServletResponse response) {
