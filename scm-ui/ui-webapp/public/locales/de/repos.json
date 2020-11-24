@@ -36,6 +36,13 @@
       "settingsNavLink": "Einstellungen",
       "generalNavLink": "Generell",
       "permissionsNavLink": "Berechtigungen"
+    },
+    "tooltip": {
+      "branches": "Branches",
+      "tags": "Tags",
+      "commits": "Commits",
+      "sources": "Sources",
+      "settings": "Einstellungen"
     }
   },
   "overview": {
