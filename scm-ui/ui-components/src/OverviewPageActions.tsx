@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import React, { FC } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import classNames from "classnames";
 import { Button, DropDown, urls } from "./index";
 import { FilterInput } from "./forms";
 
-type Props = RouteComponentProps & {
+type Props = {
   showCreateButton: boolean;
   currentGroup: string;
   groups: string[];
@@ -35,41 +35,33 @@ type Props = RouteComponentProps & {
   groupSelected: (namespace: string) => void;
   label?: string;
   testId?: string;
+  searchPlaceholder?: string;
 };
 
-class OverviewPageActions extends React.Component<Props> {
-  render() {
-    const { history, currentGroup, groups, location, link, testId, groupSelected } = this.props;
-    const groupSelector = groups && (
-      <div className={"column is-flex"}>
-        <DropDown
-          className={"is-fullwidth"}
-          options={groups}
-          preselectedOption={currentGroup}
-          optionSelected={groupSelected}
-        />
-      </div>
-    );
+const OverviewPageActions: FC<Props> = ({
+  groups,
+  currentGroup,
+  showCreateButton,
+  link,
+  groupSelected,
+  label,
+  testId,
+  searchPlaceholder
+}) => {
+  const history = useHistory();
+  const location = useLocation();
+  const groupSelector = groups && (
+    <div className={"column is-flex"}>
+      <DropDown
+        className={"is-fullwidth"}
+        options={groups}
+        preselectedOption={currentGroup}
+        optionSelected={groupSelected}
+      />
+    </div>
+  );
 
-    return (
-      <div className={"columns is-tablet"}>
-        {groupSelector}
-        <div className={"column"}>
-          <FilterInput
-            value={urls.getQueryStringFromLocation(location)}
-            filter={filter => {
-              history.push(`/${link}/?q=${filter}`);
-            }}
-            testId={testId + "-filter"}
-          />
-        </div>
-        {this.renderCreateButton()}
-      </div>
-    );
-  }
-
-  renderCreateButton() {
-    const { showCreateButton, link, label } = this.props;
+  const renderCreateButton = () => {
     if (showCreateButton) {
       return (
         <div className={classNames("input-button", "control", "column")}>
@@ -78,7 +70,24 @@ class OverviewPageActions extends React.Component<Props> {
       );
     }
     return null;
-  }
-}
+  };
 
-export default withRouter(OverviewPageActions);
+  return (
+    <div className={"columns is-tablet"}>
+      {groupSelector}
+      <div className={"column"}>
+        <FilterInput
+          placeholder={searchPlaceholder}
+          value={urls.getQueryStringFromLocation(location)}
+          filter={filter => {
+            history.push(`/${link}/?q=${filter}`);
+          }}
+          testId={testId + "-filter"}
+        />
+      </div>
+      {renderCreateButton()}
+    </div>
+  );
+};
+
+export default OverviewPageActions;
