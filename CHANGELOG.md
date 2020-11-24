@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add tooltips to short links on repository overview ([#1441](https://github.com/scm-manager/scm-manager/pull/1441))
 - Show the date of the last commit for branches in the frontend ([#1439](https://github.com/scm-manager/scm-manager/pull/1439))
+- Unify and add description to key view across user settings ([#1440](https://github.com/scm-manager/scm-manager/pull/1440))
 
 ## [2.10.1] - 2020-11-24
 ### Fixed
