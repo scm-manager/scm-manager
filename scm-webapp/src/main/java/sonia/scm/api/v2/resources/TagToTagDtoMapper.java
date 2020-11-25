@@ -52,6 +52,7 @@ public abstract class TagToTagDtoMapper extends HalAppenderMapper {
 
   @Mapping(target = "date", source = "date", qualifiedByName = "mapDate")
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
+  @Mapping(target = "signatures")
   public abstract TagDto map(Tag tag, @Context NamespaceAndName namespaceAndName);
 
   @ObjectFactory

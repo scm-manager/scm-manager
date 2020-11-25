@@ -24,33 +24,22 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.validator.constraints.Length;
 
-import java.time.Instant;
-import java.util.List;
+import javax.validation.constraints.NotEmpty;
 
 @Getter
 @Setter
-@NoArgsConstructor
-public class TagDto extends HalRepresentation {
-
-  private String name;
-
+public class TagRequestDto {
+  // TODO: Validate revision via regex
+  @NotEmpty
+  @Length(min = 1, max = 100)
   private String revision;
 
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Instant date;
-
-  private List<SignatureDto> signatures;
-
-  TagDto(Links links, Embedded embedded) {
-    super(links, embedded);
-  }
-
+  // TODO: Validate name via regex
+  @NotEmpty
+  @Length(min = 1, max = 100)
+  private String name;
 }

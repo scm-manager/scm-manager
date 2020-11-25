@@ -44,35 +44,43 @@ public class TagCommandBuilder {
     this.eventBus = ScmEventBus.getInstance();
   }
 
-  TagCreateCommandBuilder create() {
+  public TagCreateCommandBuilder create() {
     return new TagCreateCommandBuilder();
   }
 
-  TagDeleteCommandBuilder delete() {
+  public TagDeleteCommandBuilder delete() {
     return new TagDeleteCommandBuilder();
   }
 
-  private class TagCreateCommandBuilder {
+  public class TagCreateCommandBuilder {
     private TagCreateRequest request = new TagCreateRequest();
 
-    void setRevision(String revision) {
+    public TagCreateCommandBuilder setRevision(String revision) {
       request.setRevision(revision);
+      return this;
     }
 
-    void setName(String name) {
+    public TagCreateCommandBuilder setName(String name) {
       request.setName(name);
+      return this;
     }
 
-    Tag execute() throws IOException {
+    public Tag execute() throws IOException {
       Tag tag = command.create(request);
       eventBus.post(new TagCreatedEvent(repository, request.getRevision(), request.getName()));
       return tag;
     }
   }
 
-  private class TagDeleteCommandBuilder {
+  public class TagDeleteCommandBuilder {
     private TagDeleteRequest request = new TagDeleteRequest();
-    void execute() throws IOException {
+
+    public TagDeleteCommandBuilder setName(String name) {
+      request.setName(name);
+      return this;
+    }
+
+    public void execute() throws IOException {
       command.delete(request);
       eventBus.post(new TagDeletedEvent(repository, request.getName()));
     }

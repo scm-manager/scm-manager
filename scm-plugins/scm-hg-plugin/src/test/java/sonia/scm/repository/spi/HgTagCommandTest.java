@@ -22,35 +22,32 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.repository.spi;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.junit.Test;
+import sonia.scm.repository.Tag;
+import sonia.scm.repository.api.TagCreateRequest;
+import sonia.scm.repository.api.TagDeleteRequest;
 
-import java.time.Instant;
 import java.util.List;
 
-@Getter
-@Setter
-@NoArgsConstructor
-public class TagDto extends HalRepresentation {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  private String name;
+public class HgTagCommandTest extends AbstractHgCommandTestBase {
 
-  private String revision;
+  @Test
+  public void shouldCreateAndDeleteTagCorrectly() {
+    // Create
+    new HgTagCommand(cmdContext).create(new TagCreateRequest("79b6baf49711", "newtag"));
+    List<Tag> tags = new HgTagsCommand(cmdContext).getTags();
+    assertThat(tags).hasSize(2);
+    final Tag newTag = tags.get(1);
+    assertThat(newTag.getName()).isEqualTo("newtag");
 
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Instant date;
-
-  private List<SignatureDto> signatures;
-
-  TagDto(Links links, Embedded embedded) {
-    super(links, embedded);
+    // Delete
+    new HgTagCommand(cmdContext).delete(new TagDeleteRequest("newtag"));
+    tags = new HgTagsCommand(cmdContext).getTags();
+    assertThat(tags).hasSize(1);
   }
 
 }

@@ -149,6 +149,11 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   }
 
   @Override
+  public TagCommand getTagCommand() {
+    return new GitTagCommand(context, gpg);
+  }
+
+  @Override
   public MergeCommand getMergeCommand() {
     return commandInjector.getInstance(GitMergeCommand.class);
   }

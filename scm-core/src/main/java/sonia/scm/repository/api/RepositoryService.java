@@ -378,6 +378,18 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
+   * The tag command allows the management of repository tags.
+   *
+   * @return instance of {@link TagCommandBuilder}
+   *
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   */
+  public TagCommandBuilder getTagCommand() {
+    return new TagCommandBuilder(repository, provider.getTagCommand());
+  }
+
+  /**
    * The unbundle command restores a repository from the given bundle.
    *
    * @return instance of {@link UnbundleCommandBuilder}

@@ -29,10 +29,13 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Signature;
+import sonia.scm.repository.SignatureStatus;
 import sonia.scm.repository.Tag;
 
 import java.net.URI;
 import java.time.Instant;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -64,6 +67,20 @@ class TagToTagDtoMapperTest {
     final long now = Instant.now().getEpochSecond() * 1000;
     TagDto dto = mapper.map(new Tag("1.0.0", "42", now), new NamespaceAndName("hitchhiker", "hog"));
     assertThat(dto.getDate()).isEqualTo(Instant.ofEpochMilli(now));
+  }
+
+  @Test
+  void shouldContainSignatureArray() {
+    TagDto dto = mapper.map(new Tag("1.0.0", "42"), new NamespaceAndName("hitchhiker", "hog"));
+    assertThat(dto.getSignatures()).isNotNull();
+  }
+
+  @Test
+  void shouldMapSignatures() {
+    final Tag tag = new Tag("1.0.0", "42");
+    tag.addSignature(new Signature("29v391239v", "gpg", SignatureStatus.VERIFIED, "me", Collections.emptySet()));
+    TagDto dto = mapper.map(tag, new NamespaceAndName("hitchhiker", "hog"));
+    assertThat(dto.getSignatures()).isNotEmpty();
   }
 
 }

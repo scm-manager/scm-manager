@@ -22,35 +22,40 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.repository.spi;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.aragost.javahg.Repository;
+import com.google.common.base.Strings;
+import sonia.scm.repository.Tag;
+import sonia.scm.repository.api.TagCreateRequest;
+import sonia.scm.repository.api.TagDeleteRequest;
 
-import java.time.Instant;
-import java.util.List;
+public class HgTagCommand extends AbstractCommand implements TagCommand {
 
-@Getter
-@Setter
-@NoArgsConstructor
-public class TagDto extends HalRepresentation {
-
-  private String name;
-
-  private String revision;
-
-  @JsonInclude(JsonInclude.Include.NON_NULL)
-  private Instant date;
-
-  private List<SignatureDto> signatures;
-
-  TagDto(Links links, Embedded embedded) {
-    super(links, embedded);
+  public HgTagCommand(HgCommandContext context) {
+    super(context);
   }
 
+  @Override
+  public Tag create(TagCreateRequest request) {
+    Repository repository = getContext().open();
+    String rev = request.getRevision();
+    if (Strings.isNullOrEmpty(rev)) {
+      rev = repository.tip().getNode();
+    }
+    com.aragost.javahg.commands.TagCommand.on(repository)
+      .rev(rev)
+      .user("SCM-Manager")
+      .execute(request.getName());
+    return new Tag(request.getName(), rev);
+  }
+
+  @Override
+  public void delete(TagDeleteRequest request) {
+    Repository repository = getContext().open();
+    com.aragost.javahg.commands.TagCommand.on(repository)
+      .user("SCM-Manager")
+      .remove()
+      .execute(request.getName());
+  }
 }

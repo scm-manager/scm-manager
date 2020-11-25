@@ -62,5 +62,10 @@ public enum Command
   /**
    * @since 2.10.0
    */
-  LOOKUP;
+  LOOKUP,
+
+  /**
+   * @since 2.11.0
+   */
+  TAG;
 }

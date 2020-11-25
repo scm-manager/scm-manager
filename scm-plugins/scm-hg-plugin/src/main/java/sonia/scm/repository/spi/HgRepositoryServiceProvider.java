@@ -271,6 +271,11 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
     return new HgTagsCommand(context);
   }
 
+  @Override
+  public TagCommand getTagCommand() {
+    return new HgTagCommand(context);
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */

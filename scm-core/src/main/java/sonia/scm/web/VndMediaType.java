@@ -51,6 +51,7 @@ public class VndMediaType {
   public static final String MODIFICATIONS = PREFIX + "modifications" + SUFFIX;
   public static final String TAG = PREFIX + "tag" + SUFFIX;
   public static final String TAG_COLLECTION = PREFIX + "tagCollection" + SUFFIX;
+  public static final String TAG_REQUEST = PREFIX + "tagRequest" + SUFFIX;
   public static final String BRANCH = PREFIX + "branch" + SUFFIX;
   public static final String BRANCH_REQUEST = PREFIX + "branchRequest" + SUFFIX;
   public static final String DIFF = PLAIN_TEXT_PREFIX + "diff" + PLAIN_TEXT_SUFFIX;
