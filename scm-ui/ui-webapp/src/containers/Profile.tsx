@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React from "react";
-import { Route, RouteComponentProps, withRouter } from "react-router-dom";
+import { Redirect, Route, RouteComponentProps, Switch, withRouter } from "react-router-dom";
 import { getMe } from "../modules/auth";
 import { compose } from "redux";
 import { connect } from "react-redux";
@@ -37,16 +37,16 @@ import {
   SecondaryNavigationColumn,
   SecondaryNavigation,
   SubNavigation,
-  StateMenuContextProvider
+  StateMenuContextProvider,
+  urls
 } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import SetPublicKeys from "../users/components/publicKeys/SetPublicKeys";
-import SetPublicKeyNavLink from "../users/components/navLinks/SetPublicKeysNavLink";
+import SetPublicKeysNavLink from "../users/components/navLinks/SetPublicKeysNavLink";
 import SetApiKeys from "../users/components/apiKeys/SetApiKeys";
-import SetApiKeyNavLink from "../users/components/navLinks/SetApiKeysNavLink";
-import { urls } from "@scm-manager/ui-components";
+import SetApiKeysNavLink from "../users/components/navLinks/SetApiKeysNavLink";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -72,9 +72,18 @@ class Profile extends React.Component<Props> {
     return !!me?._links?.apiKeys;
   };
 
+  canManageSomething = () => {
+    const { me } = this.props;
+    return (
+      !!me?._links?.password ||
+      !!me?._links?.publicKeys ||
+      !!me?._links?.apiKeys ||
+      binder.hasExtension("profile.route")
+    );
+  };
+
   render() {
     const url = urls.matchedUrl(this.props);
-
     const { me, t } = this.props;
 
     if (!me) {
@@ -101,6 +110,19 @@ class Profile extends React.Component<Props> {
           <CustomQueryFlexWrappedColumns>
             <PrimaryContentColumn>
               <Route path={url} exact render={() => <ProfileInfo me={me} />} />
+              {this.canManageSomething() && (
+                <Switch>
+                  {this.mayChangePassword() && (
+                    <Redirect exact from={`${url}/settings/`} to={`${url}/settings/password`} />
+                  )}
+                  {this.canManagePublicKeys() && (
+                    <Redirect exact from={`${url}/settings/`} to={`${url}/settings/publicKeys`} />
+                  )}
+                  {this.canManageApiKeys() && (
+                    <Redirect exact from={`${url}/settings/`} to={`${url}/settings/apiKeys`} />
+                  )}
+                </Switch>
+              )}
               {this.mayChangePassword() && (
                 <Route path={`${url}/settings/password`} render={() => <ChangeUserPassword me={me} />} />
               )}
@@ -120,15 +142,17 @@ class Profile extends React.Component<Props> {
                   label={t("profile.informationNavLink")}
                   title={t("profile.informationNavLink")}
                 />
-                {this.mayChangePassword() && (
+                {this.canManageSomething() && (
                   <SubNavigation
-                    to={`${url}/settings/password`}
+                    to={`${url}/settings/`}
                     label={t("profile.settingsNavLink")}
                     title={t("profile.settingsNavLink")}
                   >
-                    <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
-                    <SetPublicKeyNavLink user={me} publicKeyUrl={`${url}/settings/publicKeys`} />
-                    <SetApiKeyNavLink user={me} apiKeyUrl={`${url}/settings/apiKeys`} />
+                    {this.mayChangePassword() && (
+                      <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
+                    )}
+                    <SetPublicKeysNavLink user={me} publicKeyUrl={`${url}/settings/publicKeys`} />
+                    <SetApiKeysNavLink user={me} apiKeyUrl={`${url}/settings/apiKeys`} />
                     <ExtensionPoint name="profile.setting" props={extensionProps} renderAll={true} />
                   </SubNavigation>
                 )}
