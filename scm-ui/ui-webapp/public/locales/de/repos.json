@@ -49,13 +49,17 @@
   },
   "create": {
     "title": "Repository hinzufügen",
-    "createSubtitle": "Neues Repository erstellen",
-    "importSubtitle": "Bestehendes Repository importieren",
-    "importUrl": "Remote repository url",
+    "subtitle": "Neues Repository erstellen"
+  },
+  "import": {
+    "subtitle": "Bestehendes Repository importieren",
+    "importUrl": "Remote Repository URL",
     "username": "Benutzername",
     "password": "Passwort",
-    "createButton": "Neues Repository erstellen",
-    "importButton": "Repository importieren"
+    "pending": {
+      "subtitle": "Repository wird importiert...",
+      "infoText": "Ihr Repository wird gerade importiert. Dies kann einen Moment dauern. Sie werden weitergeleitet, sobald der Import abgeschlossen ist. Wenn Sie diese Seite verlassen, können Sie nicht zurückkehren, um den Import-Status zu erfahren."
+    }
   },
   "branches": {
     "overview": {
@@ -167,7 +171,9 @@
     "submitCreate": "Speichern",
     "submitImport": "Importieren",
     "initializeRepository": "Repository initiieren",
-    "dangerZone": "Umbenennen und Löschen"
+    "dangerZone": "Umbenennen und Löschen",
+    "createButton": "Neues Repository erstellen",
+    "importButton": "Repository importieren"
   },
   "sources": {
     "fileTree": {

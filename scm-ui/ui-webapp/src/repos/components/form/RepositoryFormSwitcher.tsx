@@ -59,9 +59,9 @@ const RepositoryFormSwitcher: FC<Props> = ({ repository, createMode }) => {
     if (repository) {
       subtitle = "repositoryForm.subtitle";
     } else if (isImportMode()) {
-      subtitle = "create.importSubtitle";
+      subtitle = "create.subtitle";
     } else {
-      subtitle = "create.createSubtitle";
+      subtitle = "import.subtitle";
     }
 
     return <Subtitle subtitle={t(subtitle)} />;
@@ -73,13 +73,13 @@ const RepositoryFormSwitcher: FC<Props> = ({ repository, createMode }) => {
       right={
         <ButtonAddons>
           <SmallButton
-            label={t("create.createButton")}
+            label={t("repositoryForm.createButton")}
             icon="fa fa-plus"
             color={isCreateMode() ? "link is-selected" : undefined}
             link={isImportMode() ? "/repos/create" : undefined}
           />
           <SmallButton
-            label={t("create.importButton")}
+            label={t("repositoryForm.importButton")}
             icon="fa fa-file-upload"
             color={isImportMode() ? "link is-selected" : undefined}
             link={isCreateMode() ? "/repos/import" : undefined}

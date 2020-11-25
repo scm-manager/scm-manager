@@ -32,7 +32,7 @@ import {
   RepositoryImport,
   RepositoryType
 } from "@scm-manager/ui-types";
-import { Page } from "@scm-manager/ui-components";
+import { Loading, Page, Notification, Subtitle } from "@scm-manager/ui-components";
 import {
   fetchRepositoryTypesIfNeeded,
   getFetchRepositoryTypesFailure,
@@ -44,8 +44,10 @@ import {
   createRepo,
   createRepoReset,
   getCreateRepoFailure,
+  getImportRepoFailure,
   importRepoFromUrl,
-  isCreateRepoPending
+  isCreateRepoPending,
+  isImportRepoPending
 } from "../modules/repos";
 import { getRepositoriesLink } from "../../modules/indexResource";
 import {
@@ -60,6 +62,7 @@ type Props = WithTranslation & {
   namespaceStrategies: NamespaceStrategies;
   pageLoading: boolean;
   createLoading: boolean;
+  importLoading: boolean;
   error: Error;
   repoLink: string;
   indexResources: any;
@@ -97,6 +100,7 @@ class AddRepository extends React.Component<Props> {
     const {
       pageLoading,
       createLoading,
+      importLoading,
       repositoryTypes,
       namespaceStrategies,
       createRepo,
@@ -109,18 +113,26 @@ class AddRepository extends React.Component<Props> {
 
     return (
       <Page title={t("create.title")} loading={pageLoading} error={error} showContentOnError={true}>
-        <RepositoryForm
-          repositoryTypes={repositoryTypes}
-          loading={createLoading}
-          namespaceStrategy={namespaceStrategies.current}
-          createRepository={(repo, initRepository) => {
-            createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
-          }}
-          importRepository={repo => {
-            importRepoFromUrl(repoLink, repo, (repo: Repository) => this.repoCreated(repo));
-          }}
-          indexResources={indexResources}
-        />
+        {importLoading ? (
+          <>
+            <Subtitle subtitle={t("import.pending.subtitle")}/>
+            <Notification type="info">{t("import.pending.infoText")}</Notification>
+            <Loading />
+          </>
+        ) : (
+          <RepositoryForm
+            repositoryTypes={repositoryTypes}
+            loading={createLoading}
+            namespaceStrategy={namespaceStrategies.current}
+            createRepository={(repo, initRepository) => {
+              createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
+            }}
+            importRepository={repo => {
+              importRepoFromUrl(repoLink, repo, (repo: Repository) => this.repoCreated(repo));
+            }}
+            indexResources={indexResources}
+          />
+        )}
       </Page>
     );
   }
@@ -131,8 +143,12 @@ const mapStateToProps = (state: any) => {
   const namespaceStrategies = getNamespaceStrategies(state);
   const pageLoading = isFetchRepositoryTypesPending(state) || isFetchNamespaceStrategiesPending(state);
   const createLoading = isCreateRepoPending(state);
+  const importLoading = isImportRepoPending(state);
   const error =
-    getFetchRepositoryTypesFailure(state) || getCreateRepoFailure(state) || getFetchNamespaceStrategiesFailure(state);
+    getFetchRepositoryTypesFailure(state) ||
+    getCreateRepoFailure(state) ||
+    getFetchNamespaceStrategiesFailure(state) ||
+    getImportRepoFailure(state);
   const repoLink = getRepositoriesLink(state);
   const indexResources = state?.indexResources;
 
@@ -141,6 +157,7 @@ const mapStateToProps = (state: any) => {
     namespaceStrategies,
     pageLoading,
     createLoading,
+    importLoading,
     error,
     repoLink,
     indexResources

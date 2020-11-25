@@ -45,17 +45,22 @@
     "title": "Repositories",
     "subtitle": "Overview of available repositories",
     "noRepositories": "No repositories found.",
-    "createButton": "Add Repository"
+    "createButton": "Add repository"
   },
   "create": {
     "title": "Add Repository",
-    "createSubtitle": "Create a new repository",
-    "importSubtitle": "Import existing repository",
+    "subtitle": "Create a new repository",
+    "createButton": "Create new repository"
+  },
+  "import": {
+    "subtitle": "Import existing repository",
     "importUrl": "Remote repository url",
     "username": "Username",
     "password": "Password",
-    "createButton": "Create new repository",
-    "importButton": "Import repository"
+    "pending": {
+      "subtitle": "Importing Repository...",
+      "infoText": "Your repository is currently being imported. This may take a moment. You will be forwarded as soon as the import is finished. If you leave this page you cannot return to find out the import status."
+    }
   },
   "branches": {
     "overview": {
@@ -167,7 +172,9 @@
     "submitCreate": "Save",
     "submitImport": "Import",
     "initializeRepository": "Initialize repository",
-    "dangerZone": "Rename and delete"
+    "dangerZone": "Rename and delete",
+    "createButton": "Create Repository",
+    "importButton": "Import repository"
   },
   "sources": {
     "fileTree": {

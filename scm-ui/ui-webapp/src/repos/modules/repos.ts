@@ -268,19 +268,19 @@ export function importRepoFromUrl(link: string, repository: RepositoryImport, ca
 
 export function importRepoPending(): Action {
   return {
-    type: CREATE_REPO_PENDING
+    type: IMPORT_REPO_PENDING
   };
 }
 
 export function importRepoSuccess(): Action {
   return {
-    type: CREATE_REPO_SUCCESS
+    type: IMPORT_REPO_SUCCESS
   };
 }
 
 export function importRepoFailure(err: Error): Action {
   return {
-    type: CREATE_REPO_FAILURE,
+    type: IMPORT_REPO_FAILURE,
     payload: err
   };
 }
@@ -641,6 +641,14 @@ export function getNamespace(state: object, namespaceName: string) {
 
 export function isAbleToCreateRepos(state: object) {
   return !!(state.repos && state.repos.list && state.repos.list._links && state.repos.list._links.create);
+}
+
+export function isImportRepoPending(state: object) {
+  return isPending(state, IMPORT_REPO);
+}
+
+export function getImportRepoFailure(state: object) {
+  return getFailure(state, IMPORT_REPO);
 }
 
 export function isCreateRepoPending(state: object) {

@@ -204,7 +204,7 @@ const RepositoryForm: FC<Props> = ({
         <Columns className="columns is-multiline">
           <Column className="column is-full">
             <InputField
-              label={t("create.importUrl")}
+              label={t("import.importUrl")}
               onChange={handleImportUrlChange}
               value={importUrl}
               helpText={t("help.importUrlHelpText")}
@@ -212,7 +212,7 @@ const RepositoryForm: FC<Props> = ({
           </Column>
           <Column className="column is-half">
             <InputField
-              label={t("create.username")}
+              label={t("import.username")}
               onChange={setUsername}
               value={username}
               helpText={t("help.usernameHelpText")}
@@ -220,7 +220,7 @@ const RepositoryForm: FC<Props> = ({
           </Column>
           <Column className="column is-half">
             <InputField
-              label={t("create.password")}
+              label={t("import.password")}
               onChange={setPassword}
               value={password}
               type="password"
