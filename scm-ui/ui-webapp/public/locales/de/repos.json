@@ -95,7 +95,18 @@
   "tag": {
     "name": "Name",
     "commit": "Commit",
-    "sources": "Sources"
+    "sources": "Sources",
+    "delete": {
+      "button": "Tag löschen",
+      "subtitle": "Tag löschen",
+      "description": "Gelöschte Tags können nicht wiederhergestellt werden.",
+      "confirmAlert": {
+        "title": "Tag löschen",
+        "message": "Möchten Sie den Tag \"{{tag}}\" wirklich löschen?",
+        "cancel": "Nein",
+        "submit": "Ja"
+      }
+    }
   },
   "code": {
     "sources": "Sources",

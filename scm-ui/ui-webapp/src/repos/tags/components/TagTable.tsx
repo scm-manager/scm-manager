@@ -22,30 +22,74 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { Tag } from "@scm-manager/ui-types";
+import React, {FC, useState} from "react";
+import {Link, Tag} from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import TagRow from "./TagRow";
+import {apiClient, ConfirmAlert, ErrorNotification} from "@scm-manager/ui-components";
 
 type Props = {
   baseUrl: string;
   tags: Tag[];
+  fetchTags: () => void;
 };
 
-const TagTable: FC<Props> = ({ baseUrl, tags }) => {
+const TagTable: FC<Props> = ({ baseUrl, tags, fetchTags }) => {
   const [t] = useTranslation("repos");
+  const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const [error, setError] = useState<Error | undefined>();
+  const [tagToBeDeleted, setTagToBeDeleted] = useState<Tag | undefined>();
+
+  const onDelete = (tag: Tag) => {
+    setTagToBeDeleted(tag);
+    setShowConfirmAlert(true);
+  };
+
+  const abortDelete = () => {
+    setTagToBeDeleted(undefined);
+    setShowConfirmAlert(false);
+  };
+
+  const deleteTag = () => {
+    apiClient
+      .delete((tagToBeDeleted?._links.delete as Link).href)
+      .then(() => fetchTags())
+      .catch(setError);
+  };
 
   const renderRow = () => {
     let rowContent = null;
     if (tags) {
       rowContent = tags.map((tag, index) => {
-        return <TagRow key={index} baseUrl={baseUrl} tag={tag} />;
+        return <TagRow key={index} baseUrl={baseUrl} tag={tag} onDelete={onDelete} />;
       });
     }
     return rowContent;
   };
 
+  const confirmAlert = (
+    <ConfirmAlert
+      title={t("tag.delete.confirmAlert.title")}
+      message={t("tag.delete.confirmAlert.message", { tag: tagToBeDeleted?.name })}
+      buttons={[
+        {
+          className: "is-outlined",
+          label: t("tag.delete.confirmAlert.submit"),
+          onClick: () => deleteTag()
+        },
+        {
+          label: t("tag.delete.confirmAlert.cancel"),
+          onClick: () => abortDelete()
+        }
+      ]}
+      close={() => abortDelete()}
+    />
+  );
+
   return (
+    <>
+    {showConfirmAlert && confirmAlert}
+    {error && <ErrorNotification error={error} />}
     <table className="card-table table is-hoverable is-fullwidth is-word-break">
       <thead>
         <tr>
@@ -54,7 +98,7 @@ const TagTable: FC<Props> = ({ baseUrl, tags }) => {
       </thead>
       <tbody>{renderRow()}</tbody>
     </table>
-  );
+  </>);
 };
 
 export default TagTable;

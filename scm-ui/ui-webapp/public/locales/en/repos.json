@@ -95,7 +95,18 @@
   "tag": {
     "name": "Name",
     "commit": "Commit",
-    "sources": "Sources"
+    "sources": "Sources",
+    "delete": {
+      "button": "Delete tag",
+      "subtitle": "Delete tag",
+      "description": "Deleted tag can not be restored.",
+      "confirmAlert": {
+        "title": "Delete tag",
+        "message": "Do you really want to delete the tag \"{{tag}}\"?",
+        "cancel": "No",
+        "submit": "Yes"
+      }
+    }
   },
   "code": {
     "sources": "Sources",

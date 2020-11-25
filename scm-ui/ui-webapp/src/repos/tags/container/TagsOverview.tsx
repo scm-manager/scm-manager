@@ -40,7 +40,7 @@ const TagsOverview: FC<Props> = ({ repository, baseUrl }) => {
   const [error, setError] = useState<Error | undefined>(undefined);
   const [tags, setTags] = useState<Tag[]>([]);
 
-  useEffect(() => {
+  const fetchTags = () => {
     const link = (repository._links?.tags as Link)?.href;
     if (link) {
       setLoading(true);
@@ -51,12 +51,16 @@ const TagsOverview: FC<Props> = ({ repository, baseUrl }) => {
         .then(() => setLoading(false))
         .catch(setError);
     }
+  };
+
+  useEffect(() => {
+    fetchTags();
   }, [repository]);
 
   const renderTagsTable = () => {
     if (!loading && tags?.length > 0) {
       orderTags(tags);
-      return <TagTable baseUrl={baseUrl} tags={tags} />;
+      return <TagTable baseUrl={baseUrl} tags={tags} fetchTags={() => fetchTags()} />;
     }
     return <Notification type="info">{t("tags.overview.noTags")}</Notification>;
   };

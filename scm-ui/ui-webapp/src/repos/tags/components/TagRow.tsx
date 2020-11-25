@@ -24,14 +24,15 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import { Tag } from "@scm-manager/ui-types";
+import { Link as RouterLink } from "react-router-dom";
+import { Tag, Link } from "@scm-manager/ui-types";
 import styled from "styled-components";
-import { DateFromNow } from "@scm-manager/ui-components";
+import { DateFromNow, Icon } from "@scm-manager/ui-components";
 
 type Props = {
   tag: Tag;
   baseUrl: string;
+  onDelete: (tag: Tag) => void;
 };
 
 const Created = styled.span`
@@ -39,20 +40,32 @@ const Created = styled.span`
   font-size: 0.8rem;
 `;
 
-const TagRow: FC<Props> = ({ tag, baseUrl }) => {
+const TagRow: FC<Props> = ({ tag, baseUrl, onDelete }) => {
   const [t] = useTranslation("repos");
+
+  let deleteButton;
+  if ((tag?._links?.delete as Link)?.href) {
+    deleteButton = (
+      <a className="level-item" onClick={() => onDelete(tag)}>
+        <span className="icon is-small">
+          <Icon name="trash" className="fas" title={t("tag.delete.button")} />
+        </span>
+      </a>
+    );
+  }
 
   const to = `${baseUrl}/${encodeURIComponent(tag.name)}/info`;
   return (
     <tr>
       <td>
-        <Link to={to} title={tag.name}>
+        <RouterLink to={to} title={tag.name}>
           {tag.name}
           <Created className="has-text-grey is-ellipsis-overflow">
             {t("tags.overview.created")} <DateFromNow date={tag.date} />
           </Created>
-        </Link>
+        </RouterLink>
       </td>
+      <td className="is-darker">{deleteButton}</td>
     </tr>
   );
 };

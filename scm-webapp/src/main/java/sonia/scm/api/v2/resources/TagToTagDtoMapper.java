@@ -60,7 +60,8 @@ public abstract class TagToTagDtoMapper extends HalAppenderMapper {
     Links.Builder linksBuilder = linkingTo()
       .self(resourceLinks.tag().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getName()))
       .single(link("sources", resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getRevision())))
-      .single(link("changeset", resourceLinks.changeset().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getRevision())));
+      .single(link("changeset", resourceLinks.changeset().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getRevision())))
+      .single(link("delete", resourceLinks.tag().delete(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getName())));
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), tag, namespaceAndName);

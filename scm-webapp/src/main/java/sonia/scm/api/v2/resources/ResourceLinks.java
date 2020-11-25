@@ -445,6 +445,10 @@ class ResourceLinks {
       return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("get").parameters(tagName).href();
     }
 
+    String delete(String namespace, String name, String tagName) {
+      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("delete").parameters(tagName).href();
+    }
+
     String all(String namespace, String name) {
       return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("getAll").parameters().href();
     }
