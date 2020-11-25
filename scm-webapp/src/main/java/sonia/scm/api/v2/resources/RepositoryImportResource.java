@@ -46,6 +46,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.PullCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
@@ -58,7 +59,6 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.io.IOException;
 import java.net.URI;
 import java.util.Set;
 
@@ -208,9 +208,17 @@ public class RepositoryImportResource {
     Repository repository = create(request.getNamespace(), request.getName(), type);
 
     try (RepositoryService service = serviceFactory.create(repository)) {
-      service.getPullCommand().pull(request.getUrl());
-    } catch (IOException ex) {
+      PullCommandBuilder pullCommand = service.getPullCommand();
+      if (!Strings.isNullOrEmpty(request.getUsername()) && !Strings.isNullOrEmpty(request.getPassword())) {
+        pullCommand
+          .withUsername(request.getUsername())
+          .withPassword(request.getPassword());
+      }
+
+      pullCommand.pull(request.getUrl());
+    } catch (Exception ex) {
       handleImportFailure(ex, repository);
+      throw new InternalRepositoryException(repository, "Import failed. Most likely the credentials are wrong or missing.", ex);
     }
 
     return Response.created(URI.create(resourceLinks.repository().self(repository.getNamespace(), repository.getName()))).build();
@@ -496,9 +504,6 @@ public class RepositoryImportResource {
     } catch (InternalRepositoryException | NotFoundException e) {
       logger.error("can not delete repository after import failure", e);
     }
-
-    throw new WebApplicationException(ex,
-      Response.Status.INTERNAL_SERVER_ERROR);
   }
 
 //  /**

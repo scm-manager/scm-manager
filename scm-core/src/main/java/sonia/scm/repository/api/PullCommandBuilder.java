@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.repository.api;
 
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
@@ -38,50 +36,62 @@ import sonia.scm.repository.spi.PullCommandRequest;
 import java.io.IOException;
 import java.net.URL;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * The pull command pull changes from a other repository.
  *
  * @author Sebastian Sdorra
  * @since 1.31
  */
-public final class PullCommandBuilder
-{
+public final class PullCommandBuilder {
 
-  /**
-   * the logger for PullCommandBuilder
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(PullCommandBuilder.class);
+  private static final Logger logger = LoggerFactory.getLogger(PullCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final PullCommand command;
+  private final Repository localRepository;
+  private final PullCommandRequest request = new PullCommandRequest();
 
   /**
    * Constructs a new PullCommandBuilder.
    *
-   *
-   * @param command pull command implementation
+   * @param command         pull command implementation
    * @param localRepository local repository
    */
-  PullCommandBuilder(PullCommand command, Repository localRepository)
-  {
+  PullCommandBuilder(PullCommand command, Repository localRepository) {
     this.command = command;
     this.localRepository = localRepository;
+    request.reset();
   }
 
-  //~--- methods --------------------------------------------------------------
+  /**
+   * Set username for authentication
+   *
+   * @param username username
+   * @return this builder instance.
+   * @since 2.11.0
+   */
+  public PullCommandBuilder withUsername(String username) {
+    request.setUsername(username);
+    return this;
+  }
+
+  /**
+   * Set password for authentication
+   *
+   * @param password password
+   * @return this builder instance.
+   * @since 2.11.0
+   */
+  public PullCommandBuilder withPassword(String password) {
+    request.setPassword(password);
+    return this;
+  }
 
   /**
    * Pull all changes from the given remote url.
    *
-   *
    * @param url remote url
-   *
    * @return informations over the executed pull command
-   *
    * @throws IOException
-   *
    * @since 1.43
    */
   public PullResponse pull(String url) throws IOException {
@@ -89,24 +99,21 @@ public final class PullCommandBuilder
     //J-
     subject.isPermitted(RepositoryPermissions.push(localRepository).asShiroString());
     //J+
-    
+
     URL remoteUrl = new URL(url);
-    request.reset();
+//    request.reset();
     request.setRemoteUrl(remoteUrl);
-    
+
     logger.info("pull changes from url {}", url);
-    
+
     return command.pull(request);
   }
-  
+
   /**
    * Pull all changes from the given remote repository.
    *
-   *
    * @param remoteRepository remote repository
-   *
    * @return informations over the executed pull command
-   *
    * @throws IOException
    */
   public PullResponse pull(Repository remoteRepository) throws IOException {
@@ -124,15 +131,4 @@ public final class PullCommandBuilder
 
     return command.pull(request);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** pull command implementation */
-  private PullCommand command;
-
-  /** local repository */
-  private Repository localRepository;
-
-  /** pull command request */
-  private PullCommandRequest request = new PullCommandRequest();
 }
