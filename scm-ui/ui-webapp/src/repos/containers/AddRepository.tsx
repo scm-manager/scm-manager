@@ -25,7 +25,13 @@ import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
-import { NamespaceStrategies, Repository, RepositoryCreation, RepositoryType } from "@scm-manager/ui-types";
+import {
+  NamespaceStrategies,
+  Repository,
+  RepositoryCreation,
+  RepositoryImport,
+  RepositoryType
+} from "@scm-manager/ui-types";
 import { Page } from "@scm-manager/ui-components";
 import {
   fetchRepositoryTypesIfNeeded,
@@ -34,7 +40,13 @@ import {
   isFetchRepositoryTypesPending
 } from "../modules/repositoryTypes";
 import RepositoryForm from "../components/form";
-import { createRepo, createRepoReset, getCreateRepoFailure, isCreateRepoPending } from "../modules/repos";
+import {
+  createRepo,
+  createRepoReset,
+  getCreateRepoFailure,
+  importRepoFromUrl,
+  isCreateRepoPending
+} from "../modules/repos";
 import { getRepositoriesLink } from "../../modules/indexResource";
 import {
   fetchNamespaceStrategiesIfNeeded,
@@ -61,13 +73,14 @@ type Props = WithTranslation & {
     initRepository: boolean,
     callback: (repo: Repository) => void
   ) => void;
+  importRepoFromUrl: (link: string, repository: RepositoryImport, callback: (repo: Repository) => void) => void;
   resetForm: () => void;
 
   // context props
   history: History;
 };
 
-class Create extends React.Component<Props> {
+class AddRepository extends React.Component<Props> {
   componentDidMount() {
     this.props.resetForm();
     this.props.fetchRepositoryTypesIfNeeded();
@@ -87,24 +100,24 @@ class Create extends React.Component<Props> {
       repositoryTypes,
       namespaceStrategies,
       createRepo,
+      importRepoFromUrl,
       error,
-      indexResources
+      indexResources,
+      repoLink,
+      t
     } = this.props;
 
-    const { t, repoLink } = this.props;
     return (
-      <Page
-        title={t("create.title")}
-        loading={pageLoading}
-        error={error}
-        showContentOnError={true}
-      >
+      <Page title={t("create.title")} loading={pageLoading} error={error} showContentOnError={true}>
         <RepositoryForm
           repositoryTypes={repositoryTypes}
           loading={createLoading}
           namespaceStrategy={namespaceStrategies.current}
           createRepository={(repo, initRepository) => {
             createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
+          }}
+          importRepository={repo => {
+            importRepoFromUrl(repoLink, repo, (repo: Repository) => this.repoCreated(repo));
           }}
           indexResources={indexResources}
         />
@@ -145,10 +158,13 @@ const mapDispatchToProps = (dispatch: any) => {
     createRepo: (link: string, repository: RepositoryCreation, initRepository: boolean, callback: () => void) => {
       dispatch(createRepo(link, repository, initRepository, callback));
     },
+    importRepoFromUrl: (link: string, repository: RepositoryImport, callback: () => void) => {
+      dispatch(importRepoFromUrl(link, repository, callback));
+    },
     resetForm: () => {
       dispatch(createRepoReset());
     }
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("repos")(Create));
+export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("repos")(AddRepository));

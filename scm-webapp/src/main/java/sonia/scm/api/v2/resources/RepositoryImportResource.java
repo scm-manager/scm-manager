@@ -25,17 +25,18 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.common.base.Strings;
-import com.google.common.io.Files;
 import com.google.inject.Inject;
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.Links;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import lombok.ToString;
-import lombok.Value;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.FeatureNotSupportedException;
 import sonia.scm.NotFoundException;
 import sonia.scm.Type;
 import sonia.scm.repository.InternalRepositoryException;
@@ -47,7 +48,6 @@ import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.util.IOUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.ws.rs.Consumes;
@@ -56,19 +56,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 import java.util.Set;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -80,12 +71,14 @@ public class RepositoryImportResource {
 
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
+  private final ResourceLinks resourceLinks;
 
   @Inject
   public RepositoryImportResource(RepositoryManager manager,
-                                  RepositoryServiceFactory serviceFactory) {
+                                  RepositoryServiceFactory serviceFactory, ResourceLinks resourceLinks) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
+    this.resourceLinks = resourceLinks;
   }
 
 //  /**
@@ -171,7 +164,7 @@ public class RepositoryImportResource {
    */
   @POST
   @Path("{type}/url")
-  @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+  @Consumes(VndMediaType.REPOSITORY)
   @Operation(summary = "Import repository from url", description = "Imports the repository for the given url.", tags = "Repository")
   @ApiResponse(
     responseCode = "201",
@@ -198,7 +191,7 @@ public class RepositoryImportResource {
     )
   )
   public Response importFromUrl(@Context UriInfo uriInfo,
-                                @PathParam("type") String type, UrlImportRequest request) {
+                                @PathParam("type") String type, RepositoryImportDto request) {
     RepositoryPermissions.create().check();
     checkNotNull(request, "request is required");
     checkArgument(!Strings.isNullOrEmpty(request.getName()),
@@ -220,17 +213,7 @@ public class RepositoryImportResource {
       handleImportFailure(ex, repository);
     }
 
-    return Response.created(createRepositoryLocation(uriInfo, repository)).build();
-  }
-
-  private URI createRepositoryLocation(UriInfo uriInfo, Repository repository) {
-    return URI.create(
-      String.format(
-        "%s/repos/%s",
-        uriInfo.getBaseUri().toString().replace("/api/", "/"),
-        repository.getNamespaceAndName()
-      )
-    );
+    return Response.created(URI.create(resourceLinks.repository().self(repository.getNamespace(), repository.getName()))).build();
   }
 
 //  /**
@@ -408,81 +391,81 @@ public class RepositoryImportResource {
     return repository;
   }
 
-  /**
-   * Start bundle import.
-   *
-   * @param type        repository type
-   * @param name        name of the repository
-   * @param inputStream bundle stream
-   * @param compressed  true if the bundle is gzip compressed
-   * @return imported repository
-   */
-  private Repository doImportFromBundle(String type, String namespace, String name,
-                                        InputStream inputStream, boolean compressed) {
-    RepositoryPermissions.create().check();
-
-    checkArgument(!Strings.isNullOrEmpty(name),
-      "request does not contain name of the repository");
-    checkNotNull(inputStream, "bundle inputStream is required");
-
-    Repository repository;
-
-    try {
-      Type t = type(type);
-      checkSupport(t, Command.UNBUNDLE, "bundle");
-      repository = create(namespace, name, type);
-      importFromBundle(repository, inputStream, compressed);
-    } catch (IOException ex) {
-      logger.warn("could not create temporary file", ex);
-
-      throw new WebApplicationException(ex);
-    }
-
-    return repository;
-  }
-
-  private void importFromBundle(Repository repository, InputStream inputStream, boolean compressed) throws IOException {
-    File file = File.createTempFile("scm-import-", ".bundle");
-
-    try (RepositoryService service = serviceFactory.create(repository)) {
-      long length = Files.asByteSink(file).writeFrom(inputStream);
-
-      logger.info("copied {} bytes to temp, start bundle import", length);
-      service.getUnbundleCommand().setCompressed(compressed).unbundle(file);
-    } catch (InternalRepositoryException ex) {
-      handleImportFailure(ex, repository);
-    } finally {
-      IOUtil.delete(file);
-    }
-  }
-
-  private List<Type> findImportableTypes() {
-    List<Type> types = new ArrayList<>();
-    Collection<Type> handlerTypes = manager.getTypes();
-
-    for (Type t : handlerTypes) {
-      RepositoryHandler handler = manager.getHandler(t.getName());
-
-      if (handler != null) {
-        try {
-          if (handler.getImportHandler() != null) {
-            types.add(t);
-          }
-        } catch (FeatureNotSupportedException ex) {
-          if (logger.isTraceEnabled()) {
-            logger.trace("import handler is not supported", ex);
-          } else if (logger.isInfoEnabled()) {
-            logger.info("{} handler does not support import of repositories",
-              t.getName());
-          }
-        }
-      } else if (logger.isWarnEnabled()) {
-        logger.warn("could not find handler for type {}", t.getName());
-      }
-    }
-
-    return types;
-  }
+//  /**
+//   * Start bundle import.
+//   *
+//   * @param type        repository type
+//   * @param name        name of the repository
+//   * @param inputStream bundle stream
+//   * @param compressed  true if the bundle is gzip compressed
+//   * @return imported repository
+//   */
+//  private Repository doImportFromBundle(String type, String namespace, String name,
+//                                        InputStream inputStream, boolean compressed) {
+//    RepositoryPermissions.create().check();
+//
+//    checkArgument(!Strings.isNullOrEmpty(name),
+//      "request does not contain name of the repository");
+//    checkNotNull(inputStream, "bundle inputStream is required");
+//
+//    Repository repository;
+//
+//    try {
+//      Type t = type(type);
+//      checkSupport(t, Command.UNBUNDLE, "bundle");
+//      repository = create(namespace, name, type);
+//      importFromBundle(repository, inputStream, compressed);
+//    } catch (IOException ex) {
+//      logger.warn("could not create temporary file", ex);
+//
+//      throw new WebApplicationException(ex);
+//    }
+//
+//    return repository;
+//  }
+//
+//  private void importFromBundle(Repository repository, InputStream inputStream, boolean compressed) throws IOException {
+//    File file = File.createTempFile("scm-import-", ".bundle");
+//
+//    try (RepositoryService service = serviceFactory.create(repository)) {
+//      long length = Files.asByteSink(file).writeFrom(inputStream);
+//
+//      logger.info("copied {} bytes to temp, start bundle import", length);
+//      service.getUnbundleCommand().setCompressed(compressed).unbundle(file);
+//    } catch (InternalRepositoryException ex) {
+//      handleImportFailure(ex, repository);
+//    } finally {
+//      IOUtil.delete(file);
+//    }
+//  }
+//
+//  private List<Type> findImportableTypes() {
+//    List<Type> types = new ArrayList<>();
+//    Collection<Type> handlerTypes = manager.getTypes();
+//
+//    for (Type t : handlerTypes) {
+//      RepositoryHandler handler = manager.getHandler(t.getName());
+//
+//      if (handler != null) {
+//        try {
+//          if (handler.getImportHandler() != null) {
+//            types.add(t);
+//          }
+//        } catch (FeatureNotSupportedException ex) {
+//          if (logger.isTraceEnabled()) {
+//            logger.trace("import handler is not supported", ex);
+//          } else if (logger.isInfoEnabled()) {
+//            logger.info("{} handler does not support import of repositories",
+//              t.getName());
+//          }
+//        }
+//      } else if (logger.isWarnEnabled()) {
+//        logger.warn("could not find handler for type {}", t.getName());
+//      }
+//    }
+//
+//    return types;
+//  }
 
   /**
    * Handle creation failures.
@@ -518,49 +501,49 @@ public class RepositoryImportResource {
       Response.Status.INTERNAL_SERVER_ERROR);
   }
 
-  /**
-   * Import repositories from a specific type.
-   *
-   * @param repositories repository list
-   * @param type         type of repository
-   */
-  private void importFromDirectory(List<Repository> repositories, String type) {
-    RepositoryHandler handler = manager.getHandler(type);
-
-    if (handler != null) {
-      logger.info("start directory import for repository type {}", type);
-
-      try {
-        List<String> repositoryNames =
-          handler.getImportHandler().importRepositories(manager);
-
-        if (repositoryNames != null) {
-          for (String repositoryName : repositoryNames) {
-            // TODO #8783
-            /*Repository repository = null; //manager.get(type, repositoryName);
-
-            if (repository != null)
-            {
-              repositories.add(repository);
-            }
-            else if (logger.isWarnEnabled())
-            {
-              logger.warn("could not find imported repository {}",
-                repositoryName);
-            }*/
-          }
-        }
-      } catch (FeatureNotSupportedException ex) {
-        throw new WebApplicationException(ex, Response.Status.BAD_REQUEST);
-      } catch (IOException ex) {
-        throw new WebApplicationException(ex);
-      } catch (InternalRepositoryException ex) {
-        throw new WebApplicationException(ex);
-      }
-    } else {
-      throw new WebApplicationException(Response.Status.BAD_REQUEST);
-    }
-  }
+//  /**
+//   * Import repositories from a specific type.
+//   *
+//   * @param repositories repository list
+//   * @param type         type of repository
+//   */
+//  private void importFromDirectory(List<Repository> repositories, String type) {
+//    RepositoryHandler handler = manager.getHandler(type);
+//
+//    if (handler != null) {
+//      logger.info("start directory import for repository type {}", type);
+//
+//      try {
+//        List<String> repositoryNames =
+//          handler.getImportHandler().importRepositories(manager);
+//
+//        if (repositoryNames != null) {
+//          for (String repositoryName : repositoryNames) {
+//            // TODO #8783
+//            /*Repository repository = null; //manager.get(type, repositoryName);
+//
+//            if (repository != null)
+//            {
+//              repositories.add(repository);
+//            }
+//            else if (logger.isWarnEnabled())
+//            {
+//              logger.warn("could not find imported repository {}",
+//                repositoryName);
+//            }*/
+//          }
+//        }
+//      } catch (FeatureNotSupportedException ex) {
+//        throw new WebApplicationException(ex, Response.Status.BAD_REQUEST);
+//      } catch (IOException ex) {
+//        throw new WebApplicationException(ex);
+//      } catch (InternalRepositoryException ex) {
+//        throw new WebApplicationException(ex);
+//      }
+//    } else {
+//      throw new WebApplicationException(Response.Status.BAD_REQUEST);
+//    }
+//  }
 
   private Type type(String type) {
     RepositoryHandler handler = manager.getHandler(type);
@@ -574,18 +557,17 @@ public class RepositoryImportResource {
     return handler.getType();
   }
 
-  /**
-   * Request for importing external repositories which are accessible via url.
-   */
-  @XmlRootElement(name = "import")
-  @XmlAccessorType(XmlAccessType.FIELD)
-  @Value
-  @ToString
-  public static class UrlImportRequest {
-    private String namespace;
-    private String name;
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @SuppressWarnings("java:S2160")
+  public static class RepositoryImportDto extends RepositoryDto {
     private String url;
     private String username;
     private String password;
+
+    RepositoryImportDto(Links links, Embedded embedded) {
+      super(links, embedded);
+    }
   }
 }

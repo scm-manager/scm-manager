@@ -39,6 +39,12 @@ export type RepositoryCreation = Repository & {
   contextEntries: { [key: string]: any };
 };
 
+export type RepositoryImport = Repository & {
+  importUrl?: string;
+  username?: string;
+  password?: string;
+};
+
 export type Namespace = {
   namespace: string;
   _links: Links;

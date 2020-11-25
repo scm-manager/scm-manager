@@ -75,7 +75,7 @@ class EditRepo extends React.Component<Props> {
         <RepositoryForm
           repository={this.props.repository}
           loading={loading}
-          createRepository={repo => {
+          modifyRepository={repo => {
             this.props.modifyRepo(repo, this.repoModified);
           }}
         />

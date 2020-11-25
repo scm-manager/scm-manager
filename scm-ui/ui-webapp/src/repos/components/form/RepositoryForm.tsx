@@ -25,7 +25,7 @@ import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository, RepositoryType } from "@scm-manager/ui-types";
+import { Repository, RepositoryType, RepositoryImport } from "@scm-manager/ui-types";
 import { Checkbox, InputField, Level, Select, SubmitButton, Textarea } from "@scm-manager/ui-components";
 import * as validator from "./repositoryValidation";
 import { CUSTOM_NAMESPACE_STRATEGY } from "../../modules/repos";
@@ -56,13 +56,13 @@ const Columns = styled.div`
 
 type Props = {
   createRepository?: (repo: RepositoryCreation, shouldInit: boolean) => void;
-  modifyRepository?: (repo: RepositoryCreation) => void;
-  importRepository?: (repo: RepositoryCreation) => void;
+  importRepository?: (repo: RepositoryImport) => void;
+  modifyRepository?: (repo: Repository) => void;
   repository?: Repository;
   repositoryTypes?: RepositoryType[];
   namespaceStrategy?: string;
   loading?: boolean;
-  indexResources: any;
+  indexResources?: any;
 };
 
 type RepositoryCreation = Repository & {
@@ -118,19 +118,14 @@ const RepositoryForm: FC<Props> = ({
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const submitForm = evaluateSubmit();
-    if (isValid() && submitForm) {
-      submitForm(repo, initRepository);
-    }
-  };
-
-  const evaluateSubmit = () => {
-    if (isImportPage()) {
-      return importRepository;
-    } else if (isCreatePage()) {
-      return createRepository;
-    } else {
-      return modifyRepository;
+    if (isValid()) {
+      if (importRepository && isImportPage()) {
+        importRepository({ ...repo, url: importUrl, username, password });
+      } else if (createRepository && isCreatePage()) {
+        createRepository(repo, initRepository);
+      } else if (modifyRepository) {
+        modifyRepository(repo);
+      }
     }
   };
 
@@ -167,13 +162,8 @@ const RepositoryForm: FC<Props> = ({
     return "";
   };
 
-  const isImportPage = () => {
-    return resolveLocation() === "import";
-  };
-
-  const isCreatePage = () => {
-    return resolveLocation() === "create";
-  };
+  const isImportPage = () => resolveLocation() === "import";
+  const isCreatePage = () => resolveLocation() === "create";
 
   const createSelectOptions = (repositoryTypes?: RepositoryType[]) => {
     if (repositoryTypes) {
@@ -311,7 +301,7 @@ const RepositoryForm: FC<Props> = ({
     if (!repo.name) {
       const match = url.match(/([^\/]+)\.git/i);
       if (match && match[1]) {
-        setRepo({ ...repo, name: match[1] });
+        handleNameChange(match[1]);
       }
     }
     setImportUrl(url);
@@ -319,9 +309,8 @@ const RepositoryForm: FC<Props> = ({
 
   const disabled = !isModifiable() && isEditMode();
 
-  const getSubmitButtonTranslationKey = () => {
-    return isImportPage() ? "repositoryForm.submitImport" : "repositoryForm.submitCreate";
-  };
+  const getSubmitButtonTranslationKey = () =>
+    isImportPage() ? "repositoryForm.submitImport" : "repositoryForm.submitCreate";
 
   const submitButton = disabled ? null : (
     <Level

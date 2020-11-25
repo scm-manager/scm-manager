@@ -25,11 +25,14 @@
 import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../modules/types";
 import {
-  Action, Namespace,
+  Action,
+  Namespace,
   NamespaceCollection,
   Repository,
   RepositoryCollection,
-  RepositoryCreation
+  RepositoryCreation,
+  RepositoryImport,
+  Link
 } from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
@@ -54,6 +57,12 @@ export const CREATE_REPO_PENDING = `${CREATE_REPO}_${types.PENDING_SUFFIX}`;
 export const CREATE_REPO_SUCCESS = `${CREATE_REPO}_${types.SUCCESS_SUFFIX}`;
 export const CREATE_REPO_FAILURE = `${CREATE_REPO}_${types.FAILURE_SUFFIX}`;
 export const CREATE_REPO_RESET = `${CREATE_REPO}_${types.RESET_SUFFIX}`;
+
+export const IMPORT_REPO = "scm/repos/IMPORT_REPO";
+export const IMPORT_REPO_PENDING = `${IMPORT_REPO}_${types.PENDING_SUFFIX}`;
+export const IMPORT_REPO_SUCCESS = `${IMPORT_REPO}_${types.SUCCESS_SUFFIX}`;
+export const IMPORT_REPO_FAILURE = `${IMPORT_REPO}_${types.FAILURE_SUFFIX}`;
+export const IMPORT_REPO_RESET = `${IMPORT_REPO}_${types.RESET_SUFFIX}`;
 
 export const MODIFY_REPO = "scm/repos/MODIFY_REPO";
 export const MODIFY_REPO_PENDING = `${MODIFY_REPO}_${types.PENDING_SUFFIX}`;
@@ -178,7 +187,7 @@ export function fetchNamespacesFailure(err: Error): Action {
 
 // fetch repo
 export function fetchRepoByLink(repo: Repository) {
-  return fetchRepo(repo._links.self.href, repo.namespace, repo.name);
+  return fetchRepo((repo._links.self as Link).href, repo.namespace, repo.name);
 }
 
 export function fetchRepoByName(link: string, namespace: string, name: string) {
@@ -229,6 +238,50 @@ export function fetchRepoFailure(namespace: string, name: string, error: Error):
       error
     },
     itemId: namespace + "/" + name
+  };
+}
+
+// import repo
+
+export function importRepoFromUrl(link: string, repository: RepositoryImport, callback?: (repo: Repository) => void) {
+  const importLink = link + `import/${repository.type}/url`;
+  return function(dispatch: any) {
+    dispatch(importRepoPending());
+    return apiClient
+      .post(importLink, repository, CONTENT_TYPE)
+      .then(response => {
+        const location = response.headers.get("Location");
+        dispatch(importRepoSuccess());
+        return apiClient.get(location);
+      })
+      .then(response => response.json())
+      .then(response => {
+        if (callback) {
+          callback(response);
+        }
+      })
+      .catch(err => {
+        dispatch(importRepoFailure(err));
+      });
+  };
+}
+
+export function importRepoPending(): Action {
+  return {
+    type: CREATE_REPO_PENDING
+  };
+}
+
+export function importRepoSuccess(): Action {
+  return {
+    type: CREATE_REPO_SUCCESS
+  };
+}
+
+export function importRepoFailure(err: Error): Action {
+  return {
+    type: CREATE_REPO_FAILURE,
+    payload: err
   };
 }
 
@@ -294,7 +347,7 @@ export function modifyRepo(repository: Repository, callback?: () => void) {
     dispatch(modifyRepoPending(repository));
 
     return apiClient
-      .put(repository._links.update.href, repository, CONTENT_TYPE)
+      .put((repository._links.update as Link).href, repository, CONTENT_TYPE)
       .then(() => {
         dispatch(modifyRepoSuccess(repository));
         if (callback) {
@@ -353,7 +406,7 @@ export function deleteRepo(repository: Repository, callback?: () => void) {
   return function(dispatch: any) {
     dispatch(deleteRepoPending(repository));
     return apiClient
-      .delete(repository._links.delete.href)
+      .delete((repository._links.delete as Link).href)
       .then(() => {
         dispatch(deleteRepoSuccess(repository));
         if (callback) {
