@@ -27,10 +27,11 @@ import { CardColumn, DateFromNow } from "@scm-manager/ui-components";
 import RepositoryEntryLink from "./RepositoryEntryLink";
 import RepositoryAvatar from "./RepositoryAvatar";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
+import { withTranslation, WithTranslation } from "react-i18next";
 
 type DateProp = Date | string;
 
-type Props = {
+type Props = WithTranslation & {
   repository: Repository;
   // @VisibleForTesting
   // the baseDate is only to avoid failing snapshot tests
@@ -43,29 +44,67 @@ class RepositoryEntry extends React.Component<Props> {
   };
 
   renderBranchesLink = (repository: Repository, repositoryLink: string) => {
+    const { t } = this.props;
     if (repository._links["branches"]) {
-      return <RepositoryEntryLink icon="code-branch" to={repositoryLink + "/branches/"} />;
+      return (
+        <RepositoryEntryLink
+          icon="code-branch"
+          to={repositoryLink + "/branches/"}
+          tooltip={t("repositoryRoot.tooltip.branches")}
+        />
+      );
+    }
+    return null;
+  };
+
+  renderTagsLink = (repository: Repository, repositoryLink: string) => {
+    const { t } = this.props;
+    if (repository._links["tags"]) {
+      return (
+        <RepositoryEntryLink icon="tags" to={repositoryLink + "/tags/"} tooltip={t("repositoryRoot.tooltip.tags")} />
+      );
     }
     return null;
   };
 
   renderChangesetsLink = (repository: Repository, repositoryLink: string) => {
+    const { t } = this.props;
     if (repository._links["changesets"]) {
-      return <RepositoryEntryLink icon="exchange-alt" to={repositoryLink + "/code/changesets/"} />;
+      return (
+        <RepositoryEntryLink
+          icon="exchange-alt"
+          to={repositoryLink + "/code/changesets/"}
+          tooltip={t("repositoryRoot.tooltip.commits")}
+        />
+      );
     }
     return null;
   };
 
   renderSourcesLink = (repository: Repository, repositoryLink: string) => {
+    const { t } = this.props;
     if (repository._links["sources"]) {
-      return <RepositoryEntryLink icon="code" to={repositoryLink + "/code/sources/"} />;
+      return (
+        <RepositoryEntryLink
+          icon="code"
+          to={repositoryLink + "/code/sources/"}
+          tooltip={t("repositoryRoot.tooltip.sources")}
+        />
+      );
     }
     return null;
   };
 
   renderModifyLink = (repository: Repository, repositoryLink: string) => {
+    const { t } = this.props;
     if (repository._links["update"]) {
-      return <RepositoryEntryLink icon="cog" to={repositoryLink + "/settings/general"} />;
+      return (
+        <RepositoryEntryLink
+          icon="cog"
+          to={repositoryLink + "/settings/general"}
+          tooltip={t("repositoryRoot.tooltip.settings")}
+        />
+      );
     }
     return null;
   };
@@ -74,6 +113,7 @@ class RepositoryEntry extends React.Component<Props> {
     return (
       <>
         {this.renderBranchesLink(repository, repositoryLink)}
+        {this.renderTagsLink(repository, repositoryLink)}
         {this.renderChangesetsLink(repository, repositoryLink)}
         {this.renderSourcesLink(repository, repositoryLink)}
         <ExtensionPoint name={"repository.card.quickLink"} props={{ repository, repositoryLink }} renderAll={true} />
@@ -118,4 +158,4 @@ class RepositoryEntry extends React.Component<Props> {
   }
 }
 
-export default RepositoryEntry;
+export default withTranslation("repos")(RepositoryEntry);

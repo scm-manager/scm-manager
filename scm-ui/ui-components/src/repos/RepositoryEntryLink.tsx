@@ -25,10 +25,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { Icon } from "@scm-manager/ui-components";
+import Tooltip from "../Tooltip";
 
 type Props = {
   to: string;
   icon: string;
+  tooltip?: string;
 };
 
 const PointerEventsLink = styled(Link)`
@@ -37,10 +39,20 @@ const PointerEventsLink = styled(Link)`
 
 class RepositoryEntryLink extends React.Component<Props> {
   render() {
-    const { to, icon } = this.props;
+    const { to, icon, tooltip } = this.props;
+
+    let content = <Icon className="fa-lg" name={icon} color="inherit" />;
+    if (tooltip) {
+      content = (
+        <Tooltip message={tooltip} location="top">
+          {content}
+        </Tooltip>
+      );
+    }
+
     return (
       <PointerEventsLink className="level-item" to={to}>
-        <Icon className="fa-lg" name={icon} color="inherit" />
+        {content}
       </PointerEventsLink>
     );
   }
