@@ -25,17 +25,11 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { Button, ButtonAddons, Level, Subtitle } from "@scm-manager/ui-components";
-import { Repository } from "@scm-manager/ui-types";
+import { Button, ButtonAddons, Level } from "@scm-manager/ui-components";
 
 type Props = {
-  repository?: Repository;
-  createMode: "CREATE" | "IMPORT";
+  creationMode: "CREATE" | "IMPORT";
 };
-
-const TopLevel = styled(Level)`
-  margin-top: -2rem;
-`;
 
 const SmallButton = styled(Button)`
   border-radius: 4px;
@@ -43,33 +37,25 @@ const SmallButton = styled(Button)`
   font-weight: 600;
 `;
 
-const RepositoryFormSwitcher: FC<Props> = ({ repository, createMode }) => {
+const TopLevel = styled(Level)`
+  margin-top: -2.75rem;
+  margin-bottom: 2.75rem !important; //TODO Try to remove important
+  height: 0;
+`;
+
+const RepositoryFormSwitcher: FC<Props> = ({ creationMode }) => {
   const [t] = useTranslation("repos");
 
   const isImportMode = () => {
-    return createMode === "IMPORT";
+    return creationMode === "IMPORT";
   };
 
   const isCreateMode = () => {
-    return createMode === "CREATE";
-  };
-
-  const renderSubtitle = () => {
-    let subtitle;
-    if (repository) {
-      subtitle = "repositoryForm.subtitle";
-    } else if (isImportMode()) {
-      subtitle = "create.subtitle";
-    } else {
-      subtitle = "import.subtitle";
-    }
-
-    return <Subtitle subtitle={t(subtitle)} />;
+    return creationMode === "CREATE";
   };
 
   return (
     <TopLevel
-      left={renderSubtitle()}
       right={
         <ButtonAddons>
           <SmallButton

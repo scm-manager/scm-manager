@@ -25,12 +25,10 @@ import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository, RepositoryType, RepositoryImport } from "@scm-manager/ui-types";
+import { Repository, RepositoryImport, RepositoryType } from "@scm-manager/ui-types";
 import { Checkbox, InputField, Level, Select, SubmitButton, Textarea } from "@scm-manager/ui-components";
 import * as validator from "./repositoryValidation";
 import { CUSTOM_NAMESPACE_STRATEGY } from "../../modules/repos";
-import { useLocation } from "react-router-dom";
-import RepositoryFormSwitcher from "./RepositoryFormSwitcher";
 
 const CheckboxWrapper = styled.div`
   margin-top: 2em;
@@ -63,6 +61,7 @@ type Props = {
   namespaceStrategy?: string;
   loading?: boolean;
   indexResources?: any;
+  creationMode?: "CREATE" | "IMPORT";
 };
 
 type RepositoryCreation = Repository & {
@@ -77,7 +76,8 @@ const RepositoryForm: FC<Props> = ({
   repositoryTypes,
   namespaceStrategy,
   loading,
-  indexResources
+  indexResources,
+  creationMode
 }) => {
   const [repo, setRepo] = useState<RepositoryCreation>({
     name: "",
@@ -96,7 +96,6 @@ const RepositoryForm: FC<Props> = ({
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
-  const location = useLocation();
   const [t] = useTranslation("repos");
 
   useEffect(() => {
@@ -105,6 +104,9 @@ const RepositoryForm: FC<Props> = ({
     }
   }, [repository]);
 
+  const isImportMode = () => creationMode === "IMPORT";
+  const isCreateMode = () => creationMode === "CREATE";
+
   const isValid = () => {
     return !(
       namespaceValidationError ||
@@ -112,16 +114,16 @@ const RepositoryForm: FC<Props> = ({
       contactValidationError ||
       !repo.name ||
       (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY && !repo.namespace) ||
-      (isImportPage() && !importUrl)
+      (isImportMode() && !importUrl)
     );
   };
 
   const submit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (isValid()) {
-      if (importRepository && isImportPage()) {
+      if (importRepository && isImportMode()) {
         importRepository({ ...repo, url: importUrl, username, password });
-      } else if (createRepository && isCreatePage()) {
+      } else if (createRepository && isCreateMode()) {
         createRepository(repo, initRepository);
       } else if (modifyRepository) {
         modifyRepository(repo);
@@ -150,20 +152,6 @@ const RepositoryForm: FC<Props> = ({
       }
     });
   };
-
-  const resolveLocation = () => {
-    const currentUrl = location.pathname;
-    if (currentUrl.includes("/repos/create")) {
-      return "create";
-    }
-    if (currentUrl.includes("/repos/import")) {
-      return "import";
-    }
-    return "";
-  };
-
-  const isImportPage = () => resolveLocation() === "import";
-  const isCreatePage = () => resolveLocation() === "create";
 
   const createSelectOptions = (repositoryTypes?: RepositoryType[]) => {
     if (repositoryTypes) {
@@ -195,7 +183,7 @@ const RepositoryForm: FC<Props> = ({
   };
 
   const renderUrlImportFields = () => {
-    if (!isImportPage()) {
+    if (!isImportMode()) {
       return null;
     }
 
@@ -264,7 +252,7 @@ const RepositoryForm: FC<Props> = ({
               helpText={t("help.typeHelpText")}
             />
           </SelectWrapper>
-          {!isImportPage() && (
+          {!isImportMode() && (
             <CheckboxWrapper>
               <Checkbox
                 label={t("repositoryForm.initializeRepository")}
@@ -310,7 +298,7 @@ const RepositoryForm: FC<Props> = ({
   const disabled = !isModifiable() && isEditMode();
 
   const getSubmitButtonTranslationKey = () =>
-    isImportPage() ? "repositoryForm.submitImport" : "repositoryForm.submitCreate";
+    isImportMode() ? "repositoryForm.submitImport" : "repositoryForm.submitCreate";
 
   const submitButton = disabled ? null : (
     <Level
@@ -320,9 +308,6 @@ const RepositoryForm: FC<Props> = ({
 
   return (
     <>
-      {!isEditMode() && (
-        <RepositoryFormSwitcher repository={repository} createMode={isImportPage() ? "IMPORT" : "CREATE"} />
-      )}
       <form onSubmit={submit}>
         {renderCreateOnlyFields()}
         <InputField

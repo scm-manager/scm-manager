@@ -32,7 +32,7 @@ import {
   RepositoryImport,
   RepositoryType
 } from "@scm-manager/ui-types";
-import { Loading, Page, Notification, Subtitle } from "@scm-manager/ui-components";
+import { Loading, Notification, Page } from "@scm-manager/ui-components";
 import {
   fetchRepositoryTypesIfNeeded,
   getFetchRepositoryTypesFailure,
@@ -40,12 +40,14 @@ import {
   isFetchRepositoryTypesPending
 } from "../modules/repositoryTypes";
 import RepositoryForm from "../components/form";
+import RepositoryFormSwitcher from "../components/form/RepositoryFormSwitcher";
 import {
   createRepo,
   createRepoReset,
   getCreateRepoFailure,
   getImportRepoFailure,
   importRepoFromUrl,
+  importRepoReset,
   isCreateRepoPending,
   isImportRepoPending
 } from "../modules/repos";
@@ -56,32 +58,35 @@ import {
   getNamespaceStrategies,
   isFetchNamespaceStrategiesPending
 } from "../../admin/modules/namespaceStrategies";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import { compose } from "redux";
 
-type Props = WithTranslation & {
-  repositoryTypes: RepositoryType[];
-  namespaceStrategies: NamespaceStrategies;
-  pageLoading: boolean;
-  createLoading: boolean;
-  importLoading: boolean;
-  error: Error;
-  repoLink: string;
-  indexResources: any;
+type Props = WithTranslation &
+  RouteComponentProps & {
+    repositoryTypes: RepositoryType[];
+    namespaceStrategies: NamespaceStrategies;
+    pageLoading: boolean;
+    createLoading: boolean;
+    importLoading: boolean;
+    error: Error;
+    repoLink: string;
+    indexResources: any;
 
-  // dispatch functions
-  fetchNamespaceStrategiesIfNeeded: () => void;
-  fetchRepositoryTypesIfNeeded: () => void;
-  createRepo: (
-    link: string,
-    repository: RepositoryCreation,
-    initRepository: boolean,
-    callback: (repo: Repository) => void
-  ) => void;
-  importRepoFromUrl: (link: string, repository: RepositoryImport, callback: (repo: Repository) => void) => void;
-  resetForm: () => void;
+    // dispatch functions
+    fetchNamespaceStrategiesIfNeeded: () => void;
+    fetchRepositoryTypesIfNeeded: () => void;
+    createRepo: (
+      link: string,
+      repository: RepositoryCreation,
+      initRepository: boolean,
+      callback: (repo: Repository) => void
+    ) => void;
+    importRepoFromUrl: (link: string, repository: RepositoryImport, callback: (repo: Repository) => void) => void;
+    resetForm: () => void;
 
-  // context props
-  history: History;
-};
+    // context props
+    history: History;
+  };
 
 class AddRepository extends React.Component<Props> {
   componentDidMount() {
@@ -94,6 +99,34 @@ class AddRepository extends React.Component<Props> {
     const { history } = this.props;
 
     history.push("/repo/" + repo.namespace + "/" + repo.name);
+  };
+
+  resolveLocation = () => {
+    const currentUrl = this.props.location.pathname;
+    if (currentUrl.includes("/repos/create")) {
+      return "create";
+    }
+    if (currentUrl.includes("/repos/import")) {
+      return "import";
+    }
+    return "";
+  };
+
+  isImportPage = () => this.resolveLocation() === "import";
+  isCreatePage = () => this.resolveLocation() === "create";
+
+  getSubtitle = () => {
+    const { importLoading, t } = this.props;
+    let subtitle;
+    if (this.isCreatePage()) {
+      subtitle = t("create.subtitle");
+    } else if (!importLoading) {
+      subtitle = t("import.subtitle");
+    } else {
+      subtitle = t("import.pending.subtitle");
+    }
+
+    return subtitle;
   };
 
   render() {
@@ -112,26 +145,35 @@ class AddRepository extends React.Component<Props> {
     } = this.props;
 
     return (
-      <Page title={t("create.title")} loading={pageLoading} error={error} showContentOnError={true}>
+      <Page
+        title={t("create.title")}
+        subtitle={this.getSubtitle()}
+        loading={pageLoading}
+        error={error}
+        showContentOnError={true}
+      >
         {importLoading ? (
           <>
-            <Subtitle subtitle={t("import.pending.subtitle")}/>
             <Notification type="info">{t("import.pending.infoText")}</Notification>
             <Loading />
           </>
         ) : (
-          <RepositoryForm
-            repositoryTypes={repositoryTypes}
-            loading={createLoading}
-            namespaceStrategy={namespaceStrategies.current}
-            createRepository={(repo, initRepository) => {
-              createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
-            }}
-            importRepository={repo => {
-              importRepoFromUrl(repoLink, repo, (repo: Repository) => this.repoCreated(repo));
-            }}
-            indexResources={indexResources}
-          />
+          <>
+            {!error && <RepositoryFormSwitcher creationMode={this.isImportPage() ? "IMPORT" : "CREATE"} />}
+            <RepositoryForm
+              repositoryTypes={repositoryTypes}
+              loading={createLoading}
+              namespaceStrategy={namespaceStrategies.current}
+              createRepository={(repo, initRepository) => {
+                createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
+              }}
+              importRepository={repo => {
+                importRepoFromUrl(repoLink, repo, (repo: Repository) => this.repoCreated(repo));
+              }}
+              indexResources={indexResources}
+              creationMode={this.isImportPage() ? "IMPORT" : "CREATE"}
+            />
+          </>
         )}
       </Page>
     );
@@ -180,8 +222,13 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     resetForm: () => {
       dispatch(createRepoReset());
+      dispatch(importRepoReset());
     }
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("repos")(AddRepository));
+export default compose(
+  withRouter,
+  withTranslation("repos"),
+  connect(mapStateToProps, mapDispatchToProps)
+)(AddRepository);

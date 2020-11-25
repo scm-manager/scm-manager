@@ -285,6 +285,12 @@ export function importRepoFailure(err: Error): Action {
   };
 }
 
+export function importRepoReset(): Action {
+  return {
+    type: IMPORT_REPO_RESET
+  };
+}
+
 // create repo
 
 export function createRepo(
