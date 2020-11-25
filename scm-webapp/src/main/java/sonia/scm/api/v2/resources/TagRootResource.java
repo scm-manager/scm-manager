@@ -239,6 +239,8 @@ public class TagRootResource {
       }
 
       return Response.noContent().build();
+    } catch (IOException e) {
+      return Response.serverError().build();
     }
   }
 
