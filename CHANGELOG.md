@@ -11,6 +11,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show the date of the last commit for branches in the frontend ([#1439](https://github.com/scm-manager/scm-manager/pull/1439))
 - Unify and add description to key view across user settings ([#1440](https://github.com/scm-manager/scm-manager/pull/1440))
 
+### Fixed
+- Language detection of files with interpreter parameters e.g.: `#!/usr/bin/make -f` ([#1450](https://github.com/scm-manager/scm-manager/issues/1450))
+
 ## [2.10.1] - 2020-11-24
 ### Fixed
 - Improved logging of failures during plugin installation ([#1442](https://github.com/scm-manager/scm-manager/pull/1442))
