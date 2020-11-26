@@ -82,7 +82,7 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
       List<Ref> tagList = git.tagList().call();
 
       tags = Lists.transform(tagList,
-        new TransformFuntion(git.getRepository(), revWalk, gpg, git));
+        new TransformFunction(git.getRepository(), revWalk, gpg, git));
     } catch (GitAPIException ex) {
       throw new InternalRepositoryException(repository, "could not read tags from repository", ex);
     } finally {
@@ -100,13 +100,13 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
    * @author Enter your name here...
    * @version Enter version here..., 12/07/06
    */
-  private static class TransformFuntion implements Function<Ref, Tag> {
+  private static class TransformFunction implements Function<Ref, Tag> {
 
     /**
      * the logger for TransformFuntion
      */
     private static final Logger logger =
-      LoggerFactory.getLogger(TransformFuntion.class);
+      LoggerFactory.getLogger(TransformFunction.class);
 
     //~--- constructors -------------------------------------------------------
 
@@ -116,10 +116,10 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
      * @param repository
      * @param revWalk
      */
-    public TransformFuntion(org.eclipse.jgit.lib.Repository repository,
-                            RevWalk revWalk,
-                            GPG gpg,
-                            Git git) {
+    public TransformFunction(org.eclipse.jgit.lib.Repository repository,
+                             RevWalk revWalk,
+                             GPG gpg,
+                             Git git) {
       this.repository = repository;
       this.revWalk = revWalk;
       this.gpg = gpg;
@@ -149,12 +149,12 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
           try {
             RevTag revTag = GitUtil.getTag(repository, revWalk, ref);
 
-            final Optional<Signature> tagSignature = GitUtil.getTagSignature(revTag, gpg);
+            final Optional<Signature> tagSignature = GitUtil.getTagSignature(revTag, gpg, revWalk);
             if (tagSignature.isPresent()) {
               tag.addSignature(tagSignature.get());
             }
           } catch (IncorrectObjectTypeException e) {
-            // Ignore, this must be a lightweight tag
+            // Ignore because it is a lightweight tag which cannot have signatures
           }
 
         }

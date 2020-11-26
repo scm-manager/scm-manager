@@ -111,7 +111,7 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
 
       try (RevWalk walk = new RevWalk(git.getRepository())) {
         revObject = walk.parseTag(ref.getObjectId());
-        final Optional<Signature> tagSignature = GitUtil.getTagSignature(revObject, gpg);
+        final Optional<Signature> tagSignature = GitUtil.getTagSignature(revObject, gpg, walk);
         tagSignature.ifPresent(tag::addSignature);
       }
 

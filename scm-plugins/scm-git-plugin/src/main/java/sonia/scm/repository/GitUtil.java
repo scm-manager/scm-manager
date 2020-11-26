@@ -422,16 +422,8 @@ public final class GitUtil
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param revWalk
-   * @param ref
-   *
-   * @return
-   *
-   * @throws IOException
+   * Returns the commit for the given ref.
+   * If the given ref is for a tag, the commit that this tag belongs to is returned instead.
    */
   public static RevCommit getCommit(org.eclipse.jgit.lib.Repository repository,
     RevWalk revWalk, Ref ref)
@@ -710,22 +702,20 @@ public final class GitUtil
     return name;
   }
 
-  private static final byte[] GPG_HEADER = {'P', 'G', 'P'};
+  private static final String GPG_HEADER = "-----BEGIN PGP SIGNATURE-----";
 
-  public static Optional<Signature> getTagSignature(RevObject revObject, GPG gpg)  {
+  public static Optional<Signature> getTagSignature(RevObject revObject, GPG gpg, RevWalk revWalk) throws IOException {
     if (revObject instanceof RevTag) {
-      RevTag tag = (RevTag) revObject;
-      byte[] raw = tag.getFullMessage().getBytes();
-
-      int start = RawParseUtils.headerStart(GPG_HEADER, raw, 0);
-      if (start < 0) {
+      final byte[] bytes = revWalk.getObjectReader().open(revObject.getId()).getBytes();
+      final String message = new String(bytes);
+      final int signatureStartIndex = message.indexOf(GPG_HEADER);
+      if (signatureStartIndex < 0) {
         return Optional.empty();
       }
 
-      int end = RawParseUtils.headerEnd(raw, start);
-      byte[] signature = Arrays.copyOfRange(raw, start, end);
+      final String signature = message.substring(signatureStartIndex);
 
-      String publicKeyId = gpg.findPublicKeyId(signature);
+      String publicKeyId = gpg.findPublicKeyId(signature.getBytes());
       if (Strings.isNullOrEmpty(publicKeyId)) {
         // key not found
         return Optional.of(new Signature(publicKeyId, "gpg", SignatureStatus.NOT_FOUND, null, Collections.emptySet()));
@@ -739,19 +729,7 @@ public final class GitUtil
 
       PublicKey publicKey = publicKeyById.get();
 
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      try {
-        byte[] headerPrefix = Arrays.copyOfRange(raw, 0, start - GPG_HEADER.length - 1);
-        baos.write(headerPrefix);
-
-        byte[] headerSuffix = Arrays.copyOfRange(raw, end + 1, raw.length);
-        baos.write(headerSuffix);
-      } catch (IOException ex) {
-        // this will never happen, because we are writing into memory
-        throw new IllegalStateException("failed to write into memory", ex);
-      }
-
-      boolean verified = publicKey.verify(baos.toByteArray(), signature);
+      boolean verified = publicKey.verify(message.substring(0, signatureStartIndex - 1).getBytes(), signature.getBytes());
       return Optional.of(new Signature(
         publicKeyId,
         "gpg",

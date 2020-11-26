@@ -24,40 +24,32 @@
 
 package sonia.scm.repository.spi;
 
-import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.Tag;
 import sonia.scm.security.GPG;
+import sonia.scm.security.PublicKey;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.anyOf;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini", username = "admin", password = "secret")
 @RunWith(MockitoJUnitRunner.class)
 public class GitTagsCommandTest extends AbstractGitCommandTestBase {
 
-  @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
-
-  @Rule
-  public BindTransportProtocolRule transportProtocolRule = new BindTransportProtocolRule();
-
-  @Rule
-  public ShiroRule shiro = new ShiroRule();
-
   @Mock
   GPG gpg;
+
+  @Mock
+  PublicKey publicKey;
 
   @Test
   public void shouldGetDatesCorrectly() throws IOException {
@@ -79,7 +71,24 @@ public class GitTagsCommandTest extends AbstractGitCommandTestBase {
 
   @Test
   public void shouldGetSignatures() throws IOException {
-    Mockito.when(gpg.findPublicKeyId(ArgumentMatchers.any())).thenReturn("2BA27721F113C005CC16F06BAE63EFBC49F140CF");
+    when(gpg.findPublicKeyId(ArgumentMatchers.any())).thenReturn("2BA27721F113C005CC16F06BAE63EFBC49F140CF");
+    when(gpg.findPublicKey("2BA27721F113C005CC16F06BAE63EFBC49F140CF")).thenReturn(Optional.of(publicKey));
+    String signature = "-----BEGIN PGP SIGNATURE-----\n" +
+      "\n" +
+      "iQEzBAABCgAdFiEEK6J3IfETwAXMFvBrrmPvvEnxQM8FAl+9acoACgkQrmPvvEnx\n" +
+      "QM9abwgAnGP+Y/Ijli+PAsimfOmZQWYepjptoOv9m7i3bnHv8V+Qg6cm51I3E0YV\n" +
+      "R2QaxxzW9PgS4hcES+L1qs8Lwo18RurF469eZEmNb8DcUFJ3sEWeHlIl5wZNNo/v\n" +
+      "jJm0d9LNcSmtAIiQ8eDMoGdFXJzHewGickLOSsQGmfZgZus4Qlsh7r3BZTI1Zwd/\n" +
+      "6jaBFctX13FuepCTxq2SjEfRaQHIYkyFQq2o6mjL5S2qfYJ/S//gcCCzxllQrisF\n" +
+      "5fRW3LzLI4eXFH0vua7+UzNS2Rwpifg2OENJA/Kn+3R36LWEGxFK9pNqjVPRAcQj\n" +
+      "1vSkcjK26RqhAqCjNLSagM8ATZrh+g==\n" +
+      "=kUKm\n" +
+      "-----END PGP SIGNATURE-----\n";
+    String signedContent = "Tagger: Arthur Dent <arthur.dent@hitchhiker.com>\n" +
+      "Date:   Tue Nov 24 21:37:46 2020 +0100\n" +
+      "\n" +
+      "this tag is signed";
+    when(publicKey.verify(signedContent.getBytes(), signature.getBytes())).thenReturn(true);
 
     final GitContext gitContext = createContext();
     final GitTagsCommand tagsCommand = new GitTagsCommand(gitContext, gpg);
