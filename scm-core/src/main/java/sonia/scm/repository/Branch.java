@@ -32,12 +32,8 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
-import java.time.Instant;
-import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.regex.Pattern;
-
-import static java.time.Instant.ofEpochMilli;
 
 /**
  * Represents a branch in a repository.
