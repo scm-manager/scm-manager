@@ -253,6 +253,7 @@ export function importRepoFromUrl(link: string, repository: RepositoryImport, ca
       .then(response => {
         const location = response.headers.get("Location");
         dispatch(importRepoSuccess());
+        // @ts-ignore Location is always set if the repository import was successful
         return apiClient.get(location);
       })
       .then(response => response.json())
@@ -308,6 +309,7 @@ export function createRepo(
       .then(response => {
         const location = response.headers.get("Location");
         dispatch(createRepoSuccess());
+        // @ts-ignore Location is always set if the repository creation was successful
         return apiClient.get(location);
       })
       .then(response => response.json())

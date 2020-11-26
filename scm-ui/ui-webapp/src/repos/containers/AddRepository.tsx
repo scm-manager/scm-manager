@@ -96,9 +96,7 @@ class AddRepository extends React.Component<Props> {
   }
 
   repoCreated = (repo: Repository) => {
-    const { history } = this.props;
-
-    history.push("/repo/" + repo.namespace + "/" + repo.name);
+    this.props.history.push("/repo/" + repo.namespace + "/" + repo.name);
   };
 
   resolveLocation = () => {

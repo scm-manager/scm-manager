@@ -79,19 +79,19 @@ const RepositoryForm: FC<Props> = ({
   indexResources,
   creationMode
 }) => {
-  const [repo, setRepo] = useState<RepositoryCreation>({
+  const [repo, setRepo] = useState<Repository>({
     name: "",
     namespace: "",
     type: "",
     contact: "",
     description: "",
-    contextEntries: {},
     _links: {}
   });
   const [initRepository, setInitRepository] = useState(false);
   const [namespaceValidationError, setNamespaceValidationError] = useState(false);
   const [nameValidationError, setNameValidationError] = useState(false);
   const [contactValidationError, setContactValidationError] = useState(false);
+  const [contextEntries, setContextEntries] = useState({});
   const [importUrl, setImportUrl] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -100,12 +100,14 @@ const RepositoryForm: FC<Props> = ({
 
   useEffect(() => {
     if (repository) {
-      setRepo({ ...repository, contextEntries: {} });
+      setRepo({ ...repository });
     }
   }, [repository]);
 
   const isImportMode = () => creationMode === "IMPORT";
   const isCreateMode = () => creationMode === "CREATE";
+  const isEditMode = () => !!repository;
+  const isModifiable = () => !!repository && !!repository._links.update;
 
   const isValid = () => {
     return !(
@@ -124,33 +126,11 @@ const RepositoryForm: FC<Props> = ({
       if (importRepository && isImportMode()) {
         importRepository({ ...repo, url: importUrl, username, password });
       } else if (createRepository && isCreateMode()) {
-        createRepository(repo, initRepository);
+        createRepository({ ...repo, contextEntries }, initRepository);
       } else if (modifyRepository) {
         modifyRepository(repo);
       }
     }
-  };
-
-  const isEditMode = () => {
-    return !!repository;
-  };
-
-  const isModifiable = () => {
-    return !!repository && !!repository._links.update;
-  };
-
-  const toggleInitCheckbox = () => {
-    setInitRepository(!initRepository);
-  };
-
-  const setCreationContextEntry = (key: string, value: any) => {
-    setRepo({
-      ...repo,
-      contextEntries: {
-        ...repo.contextEntries,
-        [key]: value
-      }
-    });
   };
 
   const createSelectOptions = (repositoryTypes?: RepositoryType[]) => {
@@ -270,6 +250,17 @@ const RepositoryForm: FC<Props> = ({
     );
   };
 
+  const toggleInitCheckbox = () => {
+    setInitRepository(!initRepository);
+  };
+
+  const setCreationContextEntry = (key: string, value: any) => {
+    setContextEntries({
+      ...contextEntries,
+      [key]: value
+    });
+  };
+
   const handleNamespaceChange = (namespace: string) => {
     setNamespaceValidationError(!validator.isNamespaceValid(namespace));
     setRepo({ ...repo, namespace });
@@ -287,6 +278,7 @@ const RepositoryForm: FC<Props> = ({
 
   const handleImportUrlChange = (url: string) => {
     if (!repo.name) {
+      // If the repository name is not fill we set a name suggestion
       const match = url.match(/([^\/]+)\.git/i);
       if (match && match[1]) {
         handleNameChange(match[1]);
@@ -297,14 +289,15 @@ const RepositoryForm: FC<Props> = ({
 
   const disabled = !isModifiable() && isEditMode();
 
-  const getSubmitButtonTranslationKey = () =>
-    isImportMode() ? "repositoryForm.submitImport" : "repositoryForm.submitCreate";
-
-  const submitButton = disabled ? null : (
-    <Level
-      right={<SubmitButton disabled={!isValid()} loading={loading} label={t(getSubmitButtonTranslationKey())} />}
-    />
-  );
+  const submitButton = () => {
+    if (disabled) {
+      return null;
+    }
+    const translationKey = isImportMode() ? "repositoryForm.submitImport" : "repositoryForm.submitCreate";
+    return <Level
+      right={<SubmitButton disabled={!isValid()} loading={loading} label={t(translationKey)} />}
+    />;
+  };
 
   return (
     <>
@@ -326,7 +319,7 @@ const RepositoryForm: FC<Props> = ({
           helpText={t("help.descriptionHelpText")}
           disabled={disabled}
         />
-        {submitButton}
+        {submitButton()}
       </form>
     </>
   );
