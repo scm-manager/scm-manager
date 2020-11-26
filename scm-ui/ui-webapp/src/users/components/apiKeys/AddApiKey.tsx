@@ -23,7 +23,7 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { apiClient, ErrorNotification, InputField, Level, Loading, SubmitButton } from "@scm-manager/ui-components";
+import { apiClient, ErrorNotification, InputField, Level, Loading, SubmitButton, Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { CONTENT_TYPE_API_KEY } from "./SetApiKeys";
 import { connect } from "react-redux";
@@ -105,6 +105,8 @@ const AddApiKey: FC<Props> = ({
 
   return (
     <>
+      <hr />
+      <Subtitle subtitle={t("apiKey.addSubtitle")} />
       {newKeyModal}
       <InputField label={t("apiKey.displayName")} value={displayName} onChange={setDisplayName} />
       <RoleSelector
