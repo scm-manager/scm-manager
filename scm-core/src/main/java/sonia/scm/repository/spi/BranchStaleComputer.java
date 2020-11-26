@@ -22,24 +22,17 @@
  * SOFTWARE.
  */
 
-import { storiesOf } from "@storybook/react";
-import { BranchSelector } from "./index";
-import { Branch } from "@scm-manager/ui-types";
-import * as React from "react";
-import styled from "styled-components";
+package sonia.scm.repository.spi;
 
-const master = { name: "master", revision: "1", defaultBranch: true, _links: {} };
-const develop = { name: "develop", revision: "2", defaultBranch: false, _links: {} };
+import lombok.Data;
+import sonia.scm.repository.Branch;
 
-const branchSelected = (branch?: Branch) => null;
+public interface BranchStaleComputer {
 
-const branches = [master, develop];
+  boolean computeStale(Branch branch, StaleContext context);
 
-const Wrapper = styled.div`
-  margin: 2rem;
-  max-width: 400px;
-`;
-
-storiesOf("BranchSelector", module)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
-  .add("Default", () => <BranchSelector branches={branches} onSelectBranch={branchSelected} label="Select branch:" />);
+  @Data
+  class StaleContext {
+    private Branch defaultBranch;
+  }
+}

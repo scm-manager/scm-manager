@@ -22,24 +22,28 @@
  * SOFTWARE.
  */
 
-import { storiesOf } from "@storybook/react";
-import { BranchSelector } from "./index";
-import { Branch } from "@scm-manager/ui-types";
-import * as React from "react";
-import styled from "styled-components";
+package sonia.scm.repository.spi;
 
-const master = { name: "master", revision: "1", defaultBranch: true, _links: {} };
-const develop = { name: "develop", revision: "2", defaultBranch: false, _links: {} };
+import org.junit.Test;
+import sonia.scm.repository.Branch;
 
-const branchSelected = (branch?: Branch) => null;
+import java.util.List;
 
-const branches = [master, develop];
+import static org.assertj.core.api.Assertions.assertThat;
+import static sonia.scm.repository.Branch.defaultBranch;
+import static sonia.scm.repository.Branch.normalBranch;
 
-const Wrapper = styled.div`
-  margin: 2rem;
-  max-width: 400px;
-`;
+public class HgBranchesCommandTest extends AbstractHgCommandTestBase {
 
-storiesOf("BranchSelector", module)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
-  .add("Default", () => <BranchSelector branches={branches} onSelectBranch={branchSelected} label="Select branch:" />);
+  @Test
+  public void shouldReadBranches() {
+    HgBranchesCommand command = new HgBranchesCommand(cmdContext);
+
+    List<Branch> branches = command.getBranches();
+
+    assertThat(branches).contains(
+      defaultBranch("default", "2baab8e80280ef05a9aa76c49c76feca2872afb7", 1339586381000L),
+      normalBranch("test-branch", "79b6baf49711ae675568e0698d730b97ef13e84a", 1339586299000L)
+    );
+  }
+}

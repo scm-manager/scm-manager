@@ -24,26 +24,51 @@
 
 package sonia.scm.repository.spi;
 
-import org.junit.Test;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 import sonia.scm.repository.Branch;
+import sonia.scm.repository.api.BranchXDaysOlderThanDefaultStaleComputer;
 
 import java.io.IOException;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static java.time.Instant.now;
+import static java.util.Arrays.asList;
 
-public class GitBranchesCommandTest extends AbstractGitCommandTestBase {
+class BranchesCommandTest {
 
   @Test
-  public void shouldReadBranches() throws IOException {
-    GitBranchesCommand branchesCommand = new GitBranchesCommand(createContext());
+  void shouldMarkEachBranchDependingOnDefaultBranch() throws IOException {
+    Instant now = now();
+    long staleTime =
+      now
+        .minus(30, ChronoUnit.DAYS)
+        .minus(1, ChronoUnit.MINUTES)
+        .toEpochMilli();
+    long activeTime =
+      now
+        .minus(30, ChronoUnit.DAYS)
+        .plus(1, ChronoUnit.MINUTES)
+        .toEpochMilli();
 
-    List<Branch> branches = branchesCommand.getBranches();
-
-    assertThat(branches).contains(
-      Branch.defaultBranch("master", "fcd0ef1831e4002ac43ea539f4094334c79ea9ec", 1339428655000L),
-      Branch.normalBranch("mergeable", "91b99de908fcd04772798a31c308a64aea1a5523", 1541586052000L),
-      Branch.normalBranch("rename", "383b954b27e052db6880d57f1c860dc208795247", 1589203061000L)
+    List<Branch> branches = asList(
+      Branch.normalBranch("arthur", "42", staleTime),
+      Branch.normalBranch("marvin", "42", staleTime),
+      Branch.defaultBranch("hog", "42", now.toEpochMilli()),
+      Branch.normalBranch("trillian", "42", activeTime)
     );
+
+    List<Branch> branchesWithStaleFlags = new BranchesCommand() {
+      @Override
+      public List<Branch> getBranches() {
+        return branches;
+      }
+    }.getBranchesWithStaleFlags(new BranchXDaysOlderThanDefaultStaleComputer());
+
+    Assertions.assertThat(branchesWithStaleFlags)
+      .extracting("stale")
+      .containsExactly(true, true, false, false);
   }
 }

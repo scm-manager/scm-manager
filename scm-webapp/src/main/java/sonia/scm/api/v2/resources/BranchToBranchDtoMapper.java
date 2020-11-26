@@ -38,11 +38,14 @@ import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
 
+import java.time.Instant;
+import java.util.Optional;
+
 import static de.otto.edison.hal.Link.linkBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class BranchToBranchDtoMapper extends HalAppenderMapper {
+public abstract class BranchToBranchDtoMapper extends HalAppenderMapper implements InstantAttributeMapper {
 
   @Inject
   private ResourceLinks resourceLinks;
@@ -67,5 +70,9 @@ public abstract class BranchToBranchDtoMapper extends HalAppenderMapper {
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), branch, namespaceAndName);
 
     return new BranchDto(linksBuilder.build(), embeddedBuilder.build());
+  }
+
+  Instant mapOptionalTime(Optional<Long> date) {
+    return date.map(this::mapTime).orElse(null);
   }
 }

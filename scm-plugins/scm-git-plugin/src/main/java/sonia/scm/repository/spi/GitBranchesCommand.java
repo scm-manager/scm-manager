@@ -24,14 +24,14 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import org.checkerframework.checker.nullness.qual.Nullable;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Branch;
@@ -44,12 +44,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-//~--- JDK imports ------------------------------------------------------------
+import static sonia.scm.repository.GitUtil.getCommit;
+import static sonia.scm.repository.GitUtil.getCommitTime;
 
-/**
- *
- * @author Sebastian Sdorra
- */
 public class GitBranchesCommand extends AbstractGitCommand implements BranchesCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(GitBranchesCommand.class);
@@ -60,23 +57,22 @@ public class GitBranchesCommand extends AbstractGitCommand implements BranchesCo
     super(context);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
   @Override
   public List<Branch> getBranches() throws IOException {
     Git git = createGit();
 
     String defaultBranchName = determineDefaultBranchName(git);
 
-    try {
+    Repository repository = git.getRepository();
+    try (RevWalk refWalk = new RevWalk(repository)) {
       return git
         .branchList()
         .call()
         .stream()
-        .map(ref -> createBranchObject(defaultBranchName, ref))
+        .map(ref -> createBranchObject(repository, refWalk, defaultBranchName, ref))
         .collect(Collectors.toList());
     } catch (GitAPIException ex) {
-      throw new InternalRepositoryException(repository, "could not read branches", ex);
+      throw new InternalRepositoryException(this.repository, "could not read branches", ex);
     }
   }
 
@@ -86,18 +82,28 @@ public class GitBranchesCommand extends AbstractGitCommand implements BranchesCo
   }
 
   @Nullable
-  private Branch createBranchObject(String defaultBranchName, Ref ref) {
+  private Branch createBranchObject(Repository repository, RevWalk refWalk, String defaultBranchName, Ref ref) {
     String branchName = GitUtil.getBranch(ref);
 
     if (branchName == null) {
       LOG.warn("could not determine branch name for branch name {} at revision {}", ref.getName(), ref.getObjectId());
       return null;
     } else {
+      Long lastCommitDate = getCommitDate(repository, refWalk, branchName, ref);
       if (branchName.equals(defaultBranchName)) {
-        return Branch.defaultBranch(branchName, GitUtil.getId(ref.getObjectId()));
+        return Branch.defaultBranch(branchName, GitUtil.getId(ref.getObjectId()), lastCommitDate);
       } else {
-        return Branch.normalBranch(branchName, GitUtil.getId(ref.getObjectId()));
+        return Branch.normalBranch(branchName, GitUtil.getId(ref.getObjectId()), lastCommitDate);
       }
+    }
+  }
+
+  private Long getCommitDate(Repository repository, RevWalk refWalk, String branchName, Ref ref) {
+    try {
+      return getCommitTime(getCommit(repository, refWalk, ref));
+    } catch (IOException e) {
+      LOG.info("failed to read commit date of branch {} with revision {}", branchName, ref.getName());
+      return null;
     }
   }
 

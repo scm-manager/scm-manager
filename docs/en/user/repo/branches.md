@@ -4,6 +4,8 @@ subtitle: Branches
 ---
 ### Overview
 The branches overview shows the branches that are already existing. By clicking on a branch, the details page of the branch is shown.
+Branches are split into two lists: Branches whose last commits are at most 30 days older than the head of the default
+branch are listed in "Active Branches". The older ones can be found in "Stale Branches".
 
 The tag "Default" shows which branch is currently set as the default branch of the repository in SCM-Manager. The default branch is always shown first when opening the repository in SCM-Manager.
 All branches except the default branch of the repository can be deleted by clicking on the trash bin icon.
