@@ -28,29 +28,45 @@ import sonia.scm.repository.Branch;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.function.Function;
+import java.util.Optional;
 
 /**
- *
  * @author Sebastian Sdorra
  * @since 1.18
  */
-public interface BranchesCommand
-{
+public interface BranchesCommand {
 
   List<Branch> getBranches() throws IOException;
 
   default List<Branch> getBranchesWithStaleFlags(BranchStaleComputer computer) throws IOException {
-    Function<Branch, BranchStaleComputer.StaleContext> createContext = branch -> {
-      BranchStaleComputer.StaleContext staleContext = new BranchStaleComputer.StaleContext();
-      staleContext.setDefaultBranch(branch);
-      return staleContext;
-    };
     List<Branch> branches = getBranches();
-    branches.stream()
-      .filter(Branch::isDefaultBranch)
-      .findFirst()
-      .ifPresent(defaultBranch -> branches.forEach(branch -> branch.setStale(computer.computeStale(branch, createContext.apply(defaultBranch)))));
+    new StaleProcessor(computer, branches).process();
     return branches;
+  }
+
+  final class StaleProcessor {
+
+    private final BranchStaleComputer computer;
+    private final List<Branch> branches;
+
+    private StaleProcessor(BranchStaleComputer computer, List<Branch> branches) {
+      this.computer = computer;
+      this.branches = branches;
+    }
+
+    private void process() {
+      Optional<Branch> defaultBranch = branches.stream()
+        .filter(Branch::isDefaultBranch)
+        .findFirst();
+
+      defaultBranch.ifPresent(this::process);
+    }
+
+    private void process(Branch defaultBranch) {
+      BranchStaleComputer.StaleContext staleContext = new BranchStaleComputer.StaleContext();
+      staleContext.setDefaultBranch(defaultBranch);
+
+      branches.forEach(branch -> branch.setStale(computer.computeStale(branch, staleContext)));
+    }
   }
 }

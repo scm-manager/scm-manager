@@ -50,12 +50,16 @@ public class BranchXDaysOlderThanDefaultStaleComputer implements BranchStaleComp
   @SuppressWarnings("java:S3655") // we check "isPresent" for both dates, but due to the third check sonar does not get it
   public boolean computeStale(Branch branch, StaleContext context) {
     Branch defaultBranch = context.getDefaultBranch();
-    if (!branch.isDefaultBranch() && branch.getLastCommitDate().isPresent() && defaultBranch.getLastCommitDate().isPresent()) {
+    if (shouldCompute(branch, defaultBranch)) {
       Instant defaultCommitDate = ofEpochMilli(defaultBranch.getLastCommitDate().get());
       Instant thisCommitDate = ofEpochMilli(branch.getLastCommitDate().get());
       return thisCommitDate.plus(amountOfDays, ChronoUnit.DAYS).isBefore(defaultCommitDate);
     } else {
       return false;
     }
+  }
+
+  public boolean shouldCompute(Branch branch, Branch defaultBranch) {
+    return !branch.isDefaultBranch() && branch.getLastCommitDate().isPresent() && defaultBranch.getLastCommitDate().isPresent();
   }
 }
