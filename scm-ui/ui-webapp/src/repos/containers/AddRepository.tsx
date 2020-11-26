@@ -150,29 +150,30 @@ class AddRepository extends React.Component<Props> {
         error={error}
         showContentOnError={true}
       >
-        {importLoading ? (
-          <>
-            <Notification type="info">{t("import.pending.infoText")}</Notification>
-            <Loading />
-          </>
-        ) : (
-          <>
-            {!error && <RepositoryFormSwitcher creationMode={this.isImportPage() ? "IMPORT" : "CREATE"} />}
-            <RepositoryForm
-              repositoryTypes={repositoryTypes}
-              loading={createLoading}
-              namespaceStrategy={namespaceStrategies.current}
-              createRepository={(repo, initRepository) => {
-                createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
-              }}
-              importRepository={repo => {
-                importRepoFromUrl(repoLink, repo, (repo: Repository) => this.repoCreated(repo));
-              }}
-              indexResources={indexResources}
-              creationMode={this.isImportPage() ? "IMPORT" : "CREATE"}
-            />
-          </>
-        )}
+        <>
+          {/*//TODO fix this CSS*/}
+          {!error && <RepositoryFormSwitcher creationMode={this.isImportPage() ? "IMPORT" : "CREATE"} />}
+          {importLoading && (
+            <>
+              <Notification type="info">{t("import.pending.infoText")}</Notification>
+              <Loading />
+              <hr/>
+            </>
+          )}
+          <RepositoryForm
+            repositoryTypes={repositoryTypes}
+            loading={createLoading || importLoading}
+            namespaceStrategy={namespaceStrategies.current}
+            createRepository={(repo, initRepository) => {
+              createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
+            }}
+            importRepository={repo => {
+              importRepoFromUrl(repoLink, repo, (repo: Repository) => this.repoCreated(repo));
+            }}
+            indexResources={indexResources}
+            creationMode={this.isImportPage() ? "IMPORT" : "CREATE"}
+          />
+        </>
       </Page>
     );
   }

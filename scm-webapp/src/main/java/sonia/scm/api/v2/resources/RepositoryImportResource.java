@@ -46,6 +46,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -216,9 +217,12 @@ public class RepositoryImportResource {
       }
 
       pullCommand.pull(request.getUrl());
+    } catch (ImportFailedException ex) {
+      handleImportFailure(ex, repository);
+      throw ex;
     } catch (Exception ex) {
       handleImportFailure(ex, repository);
-      throw new InternalRepositoryException(repository, "Import failed. Most likely the credentials are wrong or missing.", ex);
+      throw new InternalRepositoryException(repository, "Repository Import failed.", ex);
     }
 
     return Response.created(URI.create(resourceLinks.repository().self(repository.getNamespace(), repository.getName()))).build();

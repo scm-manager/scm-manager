@@ -108,6 +108,7 @@ const RepositoryForm: FC<Props> = ({
   const isCreateMode = () => creationMode === "CREATE";
   const isEditMode = () => !!repository;
   const isModifiable = () => !!repository && !!repository._links.update;
+  const disabled = (!isModifiable() && isEditMode()) || loading;
 
   const isValid = () => {
     return !(
@@ -176,6 +177,7 @@ const RepositoryForm: FC<Props> = ({
               onChange={handleImportUrlChange}
               value={importUrl}
               helpText={t("help.importUrlHelpText")}
+              disabled={disabled}
             />
           </Column>
           <Column className="column is-half">
@@ -184,6 +186,7 @@ const RepositoryForm: FC<Props> = ({
               onChange={setUsername}
               value={username}
               helpText={t("help.usernameHelpText")}
+              disabled={disabled}
             />
           </Column>
           <Column className="column is-half">
@@ -193,6 +196,7 @@ const RepositoryForm: FC<Props> = ({
               value={password}
               type="password"
               helpText={t("help.passwordHelpText")}
+              disabled={disabled}
             />
           </Column>
         </Columns>
@@ -221,6 +225,7 @@ const RepositoryForm: FC<Props> = ({
           validationError={nameValidationError}
           errorMessage={t("validation.name-invalid")}
           helpText={t("help.nameHelpText")}
+          disabled={disabled}
         />
         <SpaceBetween>
           <SelectWrapper>
@@ -230,6 +235,7 @@ const RepositoryForm: FC<Props> = ({
               value={repo ? repo.type : ""}
               options={createSelectOptions(repositoryTypes)}
               helpText={t("help.typeHelpText")}
+              disabled={disabled}
             />
           </SelectWrapper>
           {!isImportMode() && (
@@ -239,6 +245,7 @@ const RepositoryForm: FC<Props> = ({
                 checked={initRepository}
                 onChange={toggleInitCheckbox}
                 helpText={t("help.initializeRepository")}
+                disabled={disabled}
               />
               {initRepository && (
                 <ExtensionPoint name="repos.create.initialize" props={extensionProps} renderAll={true} />
@@ -287,16 +294,12 @@ const RepositoryForm: FC<Props> = ({
     setImportUrl(url);
   };
 
-  const disabled = !isModifiable() && isEditMode();
-
   const submitButton = () => {
     if (disabled) {
       return null;
     }
     const translationKey = isImportMode() ? "repositoryForm.submitImport" : "repositoryForm.submitCreate";
-    return <Level
-      right={<SubmitButton disabled={!isValid()} loading={loading} label={t(translationKey)} />}
-    />;
+    return <Level right={<SubmitButton disabled={!isValid()} loading={loading} label={t(translationKey)} />} />;
   };
 
   return (

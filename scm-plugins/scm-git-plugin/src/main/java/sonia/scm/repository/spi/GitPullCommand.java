@@ -29,7 +29,6 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
-import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -41,10 +40,12 @@ import org.eclipse.jgit.transport.TrackingRefUpdate;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullResponse;
 
 import javax.inject.Inject;
@@ -200,15 +201,13 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
     try {
       //J-
-      FetchCommand fetchCommand = git.fetch();
-
-      if (!Strings.isNullOrEmpty(request.getUsername()) && !Strings.isNullOrEmpty(request.getPassword())) {
-        fetchCommand.setCredentialsProvider(
-          new UsernamePasswordCredentialsProvider(request.getUsername(), request.getPassword())
-        );
-      }
-
-      FetchResult result = fetchCommand
+      FetchResult result = git.fetch()
+        .setCredentialsProvider(
+          new UsernamePasswordCredentialsProvider(
+            Strings.nullToEmpty(request.getUsername()),
+            Strings.nullToEmpty(request.getPassword())
+          )
+        )
         .setRefSpecs(new RefSpec(REF_SPEC))
         .setRemote(request.getRemoteUrl().toExternalForm())
         .setTagOpt(TagOpt.FETCH_TAGS)
@@ -216,7 +215,16 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
       //J+
 
       response = convert(git, result);
-    } catch (GitAPIException ex) {
+    } catch
+    (GitAPIException ex) {
+      if (ex.getMessage().contains("not authorized")) {
+        throw new ImportFailedException(
+          ContextEntry.ContextBuilder.entity(repository).build(),
+          "Repository import failed. The credentials are wrong or missing.",
+          ex
+        );
+      }
+
       throw new InternalRepositoryException(repository, "error during pull", ex);
     }
 
