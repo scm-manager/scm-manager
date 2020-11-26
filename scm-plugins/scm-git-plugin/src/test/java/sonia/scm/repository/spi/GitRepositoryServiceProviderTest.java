@@ -31,7 +31,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.security.GPG;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,6 +51,12 @@ class GitRepositoryServiceProviderTest {
   @Mock
   private GPG gpg;
 
+  @Mock
+  private HookContextFactory hookContextFactory;
+
+  @Mock
+  private ScmEventBus eventBus;
+
   @Test
   void shouldCreatePushCommand() {
     GitRepositoryServiceProvider provider = createProvider();
@@ -63,7 +71,7 @@ class GitRepositoryServiceProviderTest {
   }
 
   private GitRepositoryServiceProvider createProvider() {
-    return new GitRepositoryServiceProvider(createParentInjector(), context, gpg);
+    return new GitRepositoryServiceProvider(createParentInjector(), context, gpg, hookContextFactory, eventBus);
   }
 
   private Injector createParentInjector() {

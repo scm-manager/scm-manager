@@ -28,10 +28,17 @@ import org.eclipse.jgit.lib.GpgSigner;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
+import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.GitTestHelper;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.PreReceiveRepositoryHookEvent;
 import sonia.scm.repository.Tag;
+import sonia.scm.repository.api.HookContext;
+import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.TagDeleteRequest;
 import sonia.scm.repository.api.TagCreateRequest;
 import sonia.scm.security.GPG;
@@ -41,12 +48,22 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class GitTagCommandTest extends AbstractGitCommandTestBase {
 
   @Mock
   private GPG gpg;
+
+  @Mock
+  private HookContextFactory hookContextFactory;
+
+  @Mock
+  private ScmEventBus eventBus;
 
   @Before
   public void setSigner() {
@@ -61,6 +78,23 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldPostCreateEvent() {
+      ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
+      doNothing().when(eventBus).post(captor.capture());
+      when(hookContextFactory.createContext(any(), any())).thenAnswer(this::createMockedContext);
+
+      createCommand().create(new TagCreateRequest("592d797cd36432e591416e8b2b98154f4f163411", "newtag"));
+
+      List<Object> events = captor.getAllValues();
+      assertThat(events.get(0)).isInstanceOf(PreReceiveRepositoryHookEvent.class);
+      assertThat(events.get(1)).isInstanceOf(PostReceiveRepositoryHookEvent.class);
+
+      PreReceiveRepositoryHookEvent event = (PreReceiveRepositoryHookEvent) events.get(0);
+      assertThat(event.getContext().getTagProvider().getCreatedTags().get(0).getName()).isEqualTo("newtag");
+      assertThat(event.getContext().getTagProvider().getDeletedTags()).isEmpty();
+  }
+
+  @Test
   public void shouldDeleteATag() throws IOException {
     final GitContext context = createContext();
     Optional<Tag> tag = findTag(context, "test-tag");
@@ -72,8 +106,27 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
     assertThat(tag).isEmpty();
   }
 
+  @Test
+  public void shouldPostDeleteEvent() {
+    ArgumentCaptor<Object> captor = ArgumentCaptor.forClass(Object.class);
+    doNothing().when(eventBus).post(captor.capture());
+    when(hookContextFactory.createContext(any(), any())).thenAnswer(this::createMockedContext);
+
+    createCommand().delete(new TagDeleteRequest("test-tag"));
+
+    List<Object> events = captor.getAllValues();
+    assertThat(events.get(0)).isInstanceOf(PreReceiveRepositoryHookEvent.class);
+    assertThat(events.get(1)).isInstanceOf(PostReceiveRepositoryHookEvent.class);
+
+    PreReceiveRepositoryHookEvent event = (PreReceiveRepositoryHookEvent) events.get(0);
+    assertThat(event.getContext().getTagProvider().getCreatedTags()).isEmpty();
+    final Tag deletedTag = event.getContext().getTagProvider().getDeletedTags().get(0);
+    assertThat(deletedTag.getName()).isEqualTo("test-tag");
+    assertThat(deletedTag.getRevision()).isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
+  }
+
   private GitTagCommand createCommand() {
-    return new GitTagCommand(createContext(), gpg);
+    return new GitTagCommand(createContext(), gpg, hookContextFactory, eventBus);
   }
 
   private List<Tag> readTags(GitContext context) throws IOException {
@@ -83,5 +136,11 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
   private Optional<Tag> findTag(GitContext context, String name) throws IOException {
     List<Tag> branches = readTags(context);
     return branches.stream().filter(b -> name.equals(b.getName())).findFirst();
+  }
+
+  private HookContext createMockedContext(InvocationOnMock invocation) {
+    HookContext mock = mock(HookContext.class);
+    when(mock.getTagProvider()).thenReturn(((HookContextProvider) invocation.getArgument(0)).getTagProvider());
+    return mock;
   }
 }

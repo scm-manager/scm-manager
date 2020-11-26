@@ -30,77 +30,92 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevObject;
-import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.util.RawParseUtils;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.PreReceiveRepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.Signature;
-import sonia.scm.repository.SignatureStatus;
 import sonia.scm.repository.Tag;
-import sonia.scm.repository.api.TagDeleteRequest;
+import sonia.scm.repository.api.HookContext;
+import sonia.scm.repository.api.HookContextFactory;
+import sonia.scm.repository.api.HookFeature;
+import sonia.scm.repository.api.HookTagProvider;
 import sonia.scm.repository.api.TagCreateRequest;
+import sonia.scm.repository.api.TagDeleteRequest;
 import sonia.scm.security.GPG;
-import sonia.scm.security.PublicKey;
 
-import java.io.ByteArrayOutputStream;
+import javax.inject.Inject;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+
+import static java.util.Collections.emptyList;
+import static java.util.Collections.singleton;
+import static java.util.Collections.singletonList;
 
 public class GitTagCommand extends AbstractGitCommand implements TagCommand {
   private final GPG gpg;
+  private final HookContextFactory hookContextFactory;
+  private final ScmEventBus eventBus;
 
-  GitTagCommand(GitContext context, GPG gpg) {
+  @Inject
+  GitTagCommand(GitContext context, GPG gpg, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
     super(context);
     this.gpg = gpg;
+    this.hookContextFactory = hookContextFactory;
+    this.eventBus = eventBus;
   }
 
   @Override
   public Tag create(TagCreateRequest request) {
     try (Git git = new Git(context.open())) {
-      Tag tag;
       String revision = request.getRevision();
 
-      RevObject revObject = null;
-      Long tagTime = null;
+      RevObject revObject;
+      Long tagTime;
 
-      if (!Strings.isNullOrEmpty(revision)) {
-        ObjectId id = git.getRepository().resolve(revision);
-
-        try (RevWalk walk = new RevWalk(git.getRepository())) {
-          revObject = walk.parseAny(id);
-          tagTime = GitUtil.getTagTime(walk, id);
-        }
+      if (Strings.isNullOrEmpty(revision)) {
+        throw new IllegalArgumentException("Revision is required");
       }
 
-      Ref ref;
+      ObjectId taggedCommitObjectId = git.getRepository().resolve(revision);
 
-      if (revObject != null) {
-        ref =
-          git.tag()
-            .setObjectId(revObject)
-            .setTagger(new PersonIdent("SCM-Manager", "noreply@scm-manager.org"))
-            .setName(request.getName())
-            .call();
-      } else {
+      try (RevWalk walk = new RevWalk(git.getRepository())) {
+        revObject = walk.parseAny(taggedCommitObjectId);
+        tagTime = GitUtil.getTagTime(walk, taggedCommitObjectId);
+      }
+
+      Tag tag = new Tag(request.getName(), revision, tagTime);
+
+      if (revObject == null) {
         throw new InternalRepositoryException(repository, "could not create tag because revision does not exist");
       }
 
-      ObjectId objectId;
-      if (ref.isPeeled()) {
-        objectId = ref.getPeeledObjectId();
-      } else {
-        objectId = ref.getObjectId();
-      }
-      tag = new Tag(request.getName(), objectId.toString(), tagTime);
+      RepositoryHookEvent hookEvent = createTagHookEvent(TagHookContextProvider.createHookEvent(tag));
+      eventBus.post(new PreReceiveRepositoryHookEvent(hookEvent));
+
+      Ref ref =
+        git.tag()
+          .setObjectId(revObject)
+          .setTagger(new PersonIdent("SCM-Manager", "noreply@scm-manager.org"))
+          .setName(request.getName())
+          .call();
 
       try (RevWalk walk = new RevWalk(git.getRepository())) {
-        revObject = walk.parseTag(objectId);
-        tag.addSignature(getTagSignature((RevTag) revObject));
+        revObject = walk.parseTag(ref.getObjectId());
+        final Optional<Signature> tagSignature = GitUtil.getTagSignature(revObject, gpg);
+        tagSignature.ifPresent(tag::addSignature);
       }
+
+      eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
 
       return tag;
     } catch (IOException | GitAPIException ex) {
@@ -111,58 +126,76 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
   @Override
   public void delete(TagDeleteRequest request) {
     try (Git git = new Git(context.open())) {
-      git.tagDelete().setTags(request.getName()).call();
+      String name = request.getName();
+      final Repository repository = git.getRepository();
+      Ref tagRef = findTagRef(git, name);
+      Tag tag;
+
+      try (RevWalk walk = new RevWalk(repository)) {
+        final RevCommit commit = GitUtil.getCommit(repository, walk, tagRef);
+        Long tagTime = GitUtil.getTagTime(walk, commit.toObjectId());
+        tag = new Tag(name, commit.name(), tagTime);
+      }
+
+      RepositoryHookEvent hookEvent = createTagHookEvent(TagHookContextProvider.deleteHookEvent(tag));
+      eventBus.post(new PreReceiveRepositoryHookEvent(hookEvent));
+      git.tagDelete().setTags(name).call();
+      eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
     } catch (GitAPIException | IOException e) {
       throw new InternalRepositoryException(repository, "could not delete tag", e);
     }
   }
 
-  private static final byte[] GPG_HEADER = {'g', 'p', 'g', 's', 'i', 'g'};
+  private Ref findTagRef(Git git, String name) throws GitAPIException {
+    final String tagRef = "refs/tags/" + name;
+    return git.tagList().call().stream().filter(it -> it.getName().equals(tagRef)).findAny().get();
+  }
 
-  private Signature getTagSignature(RevTag tag) {
-    byte[] raw = tag.getFullMessage().getBytes();
+  private RepositoryHookEvent createTagHookEvent(TagHookContextProvider hookEvent) {
+    HookContext context = hookContextFactory.createContext(hookEvent, this.context.getRepository());
+    return new RepositoryHookEvent(context, this.context.getRepository(), RepositoryHookType.PRE_RECEIVE);
+  }
 
-    int start = RawParseUtils.headerStart(GPG_HEADER, raw, 0);
-    if (start < 0) {
-      return null;
+  private static class TagHookContextProvider extends HookContextProvider {
+    private final List<Tag> newTags;
+    private final List<Tag> deletedTags;
+
+    private TagHookContextProvider(List<Tag> newTags, List<Tag> deletedTags) {
+      this.newTags = newTags;
+      this.deletedTags = deletedTags;
     }
 
-    int end = RawParseUtils.headerEnd(raw, start);
-    byte[] signature = Arrays.copyOfRange(raw, start, end);
-
-    String publicKeyId = gpg.findPublicKeyId(signature);
-    if (Strings.isNullOrEmpty(publicKeyId)) {
-      // key not found
-      return new Signature(publicKeyId, "gpg", SignatureStatus.NOT_FOUND, null, Collections.emptySet());
+    static TagHookContextProvider createHookEvent(Tag newTag) {
+      return new TagHookContextProvider(singletonList(newTag), emptyList());
     }
 
-    Optional<PublicKey> publicKeyById = gpg.findPublicKey(publicKeyId);
-    if (!publicKeyById.isPresent()) {
-      // key not found
-      return new Signature(publicKeyId, "gpg", SignatureStatus.NOT_FOUND, null, Collections.emptySet());
+    static TagHookContextProvider deleteHookEvent(Tag deletedTag) {
+      return new TagHookContextProvider(emptyList(), singletonList(deletedTag));
     }
 
-    PublicKey publicKey = publicKeyById.get();
-
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    try {
-      byte[] headerPrefix = Arrays.copyOfRange(raw, 0, start - GPG_HEADER.length - 1);
-      baos.write(headerPrefix);
-
-      byte[] headerSuffix = Arrays.copyOfRange(raw, end + 1, raw.length);
-      baos.write(headerSuffix);
-    } catch (IOException ex) {
-      // this will never happen, because we are writing into memory
-      throw new IllegalStateException("failed to write into memory", ex);
+    @Override
+    public Set<HookFeature> getSupportedFeatures() {
+      return singleton(HookFeature.BRANCH_PROVIDER);
     }
 
-    boolean verified = publicKey.verify(baos.toByteArray(), signature);
-    return new Signature(
-      publicKeyId,
-      "gpg",
-      verified ? SignatureStatus.VERIFIED : SignatureStatus.INVALID,
-      publicKey.getOwner().orElse(null),
-      publicKey.getContacts()
-    );
+    @Override
+    public HookTagProvider getTagProvider() {
+      return new HookTagProvider() {
+        @Override
+        public List<Tag> getCreatedTags() {
+          return newTags;
+        }
+
+        @Override
+        public List<Tag> getDeletedTags() {
+          return deletedTags;
+        }
+      };
+    }
+
+    @Override
+    public HookChangesetProvider getChangesetProvider() {
+      return r -> new HookChangesetResponse(emptyList());
+    }
   }
 }

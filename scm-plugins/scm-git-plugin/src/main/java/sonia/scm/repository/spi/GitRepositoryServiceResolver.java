@@ -28,9 +28,11 @@ package sonia.scm.repository.spi;
 
 import com.google.inject.Inject;
 import com.google.inject.Injector;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.security.GPG;
 
 /**
@@ -43,18 +45,22 @@ public class GitRepositoryServiceResolver implements RepositoryServiceResolver {
   private final Injector injector;
   private final GitContextFactory contextFactory;
   private final GPG gpg;
+  private final HookContextFactory hookContextFactory;
+  private final ScmEventBus scmEventBus;
 
   @Inject
-  public GitRepositoryServiceResolver(Injector injector, GitContextFactory contextFactory, GPG gpg) {
+  public GitRepositoryServiceResolver(Injector injector, GitContextFactory contextFactory, GPG gpg, HookContextFactory hookContextFactory) {
     this.injector = injector;
     this.contextFactory = contextFactory;
     this.gpg = gpg;
+    this.hookContextFactory = hookContextFactory;
+    this.scmEventBus = ScmEventBus.getInstance();
   }
 
   @Override
   public GitRepositoryServiceProvider resolve(Repository repository) {
     if (GitRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      return new GitRepositoryServiceProvider(injector, contextFactory.create(repository), gpg);
+      return new GitRepositoryServiceProvider(injector, contextFactory.create(repository), gpg, hookContextFactory, scmEventBus);
     }
     return null;
   }
