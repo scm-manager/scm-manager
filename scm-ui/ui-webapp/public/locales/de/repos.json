@@ -39,13 +39,22 @@
       "settingsNavLink": "Einstellungen",
       "generalNavLink": "Generell",
       "permissionsNavLink": "Berechtigungen"
+    },
+    "tooltip": {
+      "branches": "Branches",
+      "tags": "Tags",
+      "commits": "Commits",
+      "sources": "Sources",
+      "settings": "Einstellungen"
     }
   },
   "overview": {
     "title": "Repositories",
     "subtitle": "Übersicht aller verfügbaren Repositories",
     "noRepositories": "Keine Repositories gefunden.",
-    "createButton": "Repository hinzufügen"
+    "createButton": "Repository hinzufügen",
+    "searchRepository": "Repository suchen",
+    "allNamespaces": "Alle Namespaces"
   },
   "create": {
     "title": "Repository hinzufügen",
@@ -68,7 +77,11 @@
       "createButton": "Branch erstellen"
     },
     "table": {
-      "branches": "Branches"
+      "branches": {
+        "active": "Aktive Branches",
+        "stale": "Alte Branches"
+      },
+      "lastCommit": "Letzter Commit"
     },
     "create": {
       "title": "Branch erstellen",

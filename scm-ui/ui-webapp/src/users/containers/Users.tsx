@@ -93,7 +93,12 @@ class Users extends React.Component<Props> {
         {this.renderUserTable()}
         {this.renderCreateButton()}
         <PageActions>
-          <OverviewPageActions showCreateButton={canAddUsers} link="users" label={t("users.createButton")} />
+          <OverviewPageActions
+            showCreateButton={canAddUsers}
+            link="users"
+            label={t("users.createButton")}
+            searchPlaceholder={t("overview.searchUser")}
+          />
         </PageActions>
       </Page>
     );

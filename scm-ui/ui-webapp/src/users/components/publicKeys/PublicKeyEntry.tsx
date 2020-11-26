@@ -22,24 +22,28 @@
  * SOFTWARE.
  */
 
-import React, {FC} from "react";
-import {DateFromNow, DeleteButton} from "@scm-manager/ui-components";
-import {PublicKey} from "./SetPublicKeys";
-import {useTranslation} from "react-i18next";
-import {Link} from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import { DateFromNow, Icon } from "@scm-manager/ui-components";
+import { PublicKey } from "./SetPublicKeys";
+import { useTranslation } from "react-i18next";
+import { Link } from "@scm-manager/ui-types";
 
 type Props = {
   publicKey: PublicKey;
   onDelete: (link: string) => void;
 };
 
-export const PublicKeyEntry: FC<Props> = ({publicKey, onDelete}) => {
+export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
   const [t] = useTranslation("users");
 
   let deleteButton;
   if (publicKey?._links?.delete) {
     deleteButton = (
-      <DeleteButton label={t("publicKey.delete")} action={() => onDelete((publicKey._links.delete as Link).href)}/>
+      <a className="level-item" onClick={() => onDelete((publicKey._links.delete as Link).href)}>
+        <span className="icon">
+          <Icon name="trash" title={t("publicKey.delete")} color="inherit" />
+        </span>
+      </a>
     );
   }
 
@@ -48,11 +52,18 @@ export const PublicKeyEntry: FC<Props> = ({publicKey, onDelete}) => {
       <tr>
         <td>{publicKey.displayName}</td>
         <td className="is-hidden-mobile">
-          <DateFromNow date={publicKey.created}/>
+          <DateFromNow date={publicKey.created} />
         </td>
-        <td className="is-hidden-mobile">{publicKey._links?.raw ?
-          <a href={(publicKey._links.raw as Link).href}>{publicKey.id}</a> : publicKey.id}</td>
-        <td>{deleteButton}</td>
+        <td className="is-hidden-mobile">
+          {publicKey._links?.raw ? (
+            <a title={t("publicKey.download")} href={(publicKey._links.raw as Link).href}>
+              {publicKey.id}
+            </a>
+          ) : (
+            publicKey.id
+          )}
+        </td>
+        <td className="is-darker">{deleteButton}</td>
       </tr>
     </>
   );

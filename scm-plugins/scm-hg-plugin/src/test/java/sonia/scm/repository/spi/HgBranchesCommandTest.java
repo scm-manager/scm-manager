@@ -22,42 +22,28 @@
  * SOFTWARE.
  */
 
-package sonia.scm.plugin;
+package sonia.scm.repository.spi;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.Test;
+import sonia.scm.repository.Branch;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.List;
 
-class PendingPluginInstallation {
+import static org.assertj.core.api.Assertions.assertThat;
+import static sonia.scm.repository.Branch.defaultBranch;
+import static sonia.scm.repository.Branch.normalBranch;
 
-  private static final Logger LOG = LoggerFactory.getLogger(PendingPluginInstallation.class);
+public class HgBranchesCommandTest extends AbstractHgCommandTestBase {
 
-  private final AvailablePlugin plugin;
-  private final Path file;
+  @Test
+  public void shouldReadBranches() {
+    HgBranchesCommand command = new HgBranchesCommand(cmdContext);
 
-  PendingPluginInstallation(AvailablePlugin plugin, Path file) {
-    this.plugin = plugin;
-    this.file = file;
-  }
+    List<Branch> branches = command.getBranches();
 
-  public AvailablePlugin getPlugin() {
-    return plugin;
-  }
-
-  void cancel() {
-    String name = plugin.getDescriptor().getInformation().getName();
-    LOG.info("cancel installation of plugin {}", name);
-    if (Files.exists(file)) {
-      try {
-        Files.delete(file);
-      } catch (IOException ex) {
-        throw new PluginFailedToCancelInstallationException("failed to cancel plugin installation ", name, ex);
-      }
-    } else {
-      LOG.info("plugin file {} did not exists for plugin {}; nothing deleted", file, name);
-    }
+    assertThat(branches).contains(
+      defaultBranch("default", "2baab8e80280ef05a9aa76c49c76feca2872afb7", 1339586381000L),
+      normalBranch("test-branch", "79b6baf49711ae675568e0698d730b97ef13e84a", 1339586299000L)
+    );
   }
 }
