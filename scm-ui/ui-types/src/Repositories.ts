@@ -39,8 +39,8 @@ export type RepositoryCreation = Repository & {
   contextEntries: { [key: string]: any };
 };
 
-export type RepositoryImport = Repository & {
-  importUrl?: string;
+export type RepositoryUrlImport = Repository & {
+  importUrl: string;
   username?: string;
   password?: string;
 };

@@ -244,7 +244,8 @@ export function fetchRepoFailure(namespace: string, name: string, error: Error):
 // import repo
 
 export function importRepoFromUrl(link: string, repository: RepositoryImport, callback?: (repo: Repository) => void) {
-  const importLink = link + `import/${repository.type}/url`;
+  const baseLink = link.endsWith("/") ? link : link + "/";
+  const importLink = baseLink + `import/${repository.type}/url`;
   return function(dispatch: any) {
     dispatch(importRepoPending());
     return apiClient

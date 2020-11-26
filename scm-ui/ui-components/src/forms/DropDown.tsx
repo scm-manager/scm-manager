@@ -42,7 +42,7 @@ class DropDown extends React.Component<Props> {
   render() {
     const { options, optionValues, preselectedOption, className, disabled } = this.props;
 
-    if (preselectedOption && options.some(o => o === preselectedOption)) {
+    if (preselectedOption && options.filter(o => o === preselectedOption).length === 0) {
       options.push(preselectedOption);
     }
 

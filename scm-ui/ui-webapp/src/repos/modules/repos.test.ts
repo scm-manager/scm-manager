@@ -59,6 +59,8 @@ import reducer, {
   getPermissionsLink,
   getRepository,
   getRepositoryCollection,
+  IMPORT_REPO_PENDING,
+  IMPORT_REPO_SUCCESS,
   isAbleToCreateRepos,
   isCreateRepoPending,
   isDeleteRepoPending,
@@ -69,9 +71,10 @@ import reducer, {
   MODIFY_REPO_FAILURE,
   MODIFY_REPO_PENDING,
   MODIFY_REPO_SUCCESS,
-  modifyRepo
+  modifyRepo,
+  importRepoFromUrl
 } from "./repos";
-import { Repository, RepositoryCollection } from "@scm-manager/ui-types";
+import { Repository, RepositoryCollection, Link } from "@scm-manager/ui-types";
 
 const hitchhikerPuzzle42: Repository = {
   contact: "fourtytwo@hitchhiker.com",
@@ -411,6 +414,70 @@ describe("repos fetch", () => {
     });
   });
 
+  it("should successfully import repo hitchhiker/restatend", () => {
+    const importUrl = REPOS_URL + "/import/git/url";
+    const importRequest = {
+      ...hitchhikerRestatend,
+      url: "https://scm-manager.org/scm/repo/secret/puzzle42",
+      username: "trillian",
+      password: "secret"
+    };
+
+    fetchMock.postOnce(importUrl, {
+      status: 201,
+      headers: {
+        location: "repositories/hitchhiker/restatend"
+      }
+    });
+
+    fetchMock.getOnce(REPOS_URL + "/hitchhiker/restatend", hitchhikerRestatend);
+
+    const expectedActions = [
+      {
+        type: IMPORT_REPO_PENDING
+      },
+      {
+        type: IMPORT_REPO_SUCCESS
+      }
+    ];
+
+    const store = mockStore({});
+    return store.dispatch(importRepoFromUrl(URL, importRequest)).then(() => {
+      expect(store.getActions()).toEqual(expectedActions);
+    });
+  });
+
+  it("should successfully import repo hitchhiker/restatend and call the callback", () => {
+    const importUrl = REPOS_URL + "/import/git/url";
+    const importRequest = {
+      ...hitchhikerRestatend,
+      url: "https://scm-manager.org/scm/repo/secret/puzzle42",
+      username: "trillian",
+      password: "secret"
+    };
+
+    fetchMock.postOnce(importUrl, {
+      status: 201,
+      headers: {
+        location: "repositories/hitchhiker/restatend"
+      }
+    });
+
+    fetchMock.getOnce(REPOS_URL + "/hitchhiker/restatend", hitchhikerRestatend);
+
+    let callMe = "not yet";
+
+    const callback = (r: any) => {
+      expect(r).toEqual(hitchhikerRestatend);
+      callMe = "yeah";
+    };
+
+    const store = mockStore({});
+    return store.dispatch(importRepoFromUrl(URL, importRequest, callback)).then(() => {
+      expect(callMe).toBe("yeah");
+    });
+  });
+
   it("should successfully create repo slarti/fjords", () => {
     fetchMock.postOnce(REPOS_URL, {
       status: 201,
@@ -431,7 +498,7 @@ describe("repos fetch", () => {
     ];
 
     const store = mockStore({});
-    return store.dispatch(createRepo(URL, slartiFjords)).then(() => {
+    return store.dispatch(createRepo(URL, { ...slartiFjords, contextEntries: {} }, false)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -454,7 +521,7 @@ describe("repos fetch", () => {
     };
 
     const store = mockStore({});
-    return store.dispatch(createRepo(URL, slartiFjords, false, callback)).then(() => {
+    return store.dispatch(createRepo(URL, { ...slartiFjords, contextEntries: {} }, false, callback)).then(() => {
       expect(callMe).toBe("yeah");
     });
   });
@@ -465,7 +532,7 @@ describe("repos fetch", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(createRepo(URL, slartiFjords, false)).then(() => {
+    return store.dispatch(createRepo(URL, { ...slartiFjords, contextEntries: {} }, false)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(CREATE_REPO_PENDING);
       expect(actions[1].type).toEqual(CREATE_REPO_FAILURE);
@@ -530,7 +597,7 @@ describe("repos fetch", () => {
   });
 
   it("should successfully modify slarti/fjords repo", () => {
-    fetchMock.putOnce(slartiFjords._links.update.href, {
+    fetchMock.putOnce((slartiFjords._links.update as Link).href, {
       status: 204
     });
     fetchMock.getOnce("http://localhost:8081/api/v2/repositories/slarti/fjords", {
@@ -553,7 +620,7 @@ describe("repos fetch", () => {
   });
 
   it("should successfully modify slarti/fjords repo and call the callback", () => {
-    fetchMock.putOnce(slartiFjords._links.update.href, {
+    fetchMock.putOnce((slartiFjords._links.update as Link).href, {
       status: 204
     });
     fetchMock.getOnce("http://localhost:8081/api/v2/repositories/slarti/fjords", {
@@ -582,7 +649,7 @@ describe("repos fetch", () => {
   });
 
   it("should fail modifying on HTTP 500", () => {
-    fetchMock.putOnce(slartiFjords._links.update.href, {
+    fetchMock.putOnce((slartiFjords._links.update as Link).href, {
       status: 500
     });
 

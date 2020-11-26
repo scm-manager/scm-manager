@@ -101,7 +101,6 @@ public final class PullCommandBuilder {
     //J+
 
     URL remoteUrl = new URL(url);
-//    request.reset();
     request.setRemoteUrl(remoteUrl);
 
     logger.info("pull changes from url {}", url);
