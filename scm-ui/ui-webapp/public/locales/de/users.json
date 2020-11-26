@@ -80,7 +80,7 @@
   },
   "publicKey": {
     "subtitle": "Öffentliche Schlüssel",
-    "description": "Zum Prüfen von Signaturen für z. B. Commits können hier die entsprechenden öffentlichen Schlüssel hinterlegt werden. Zudem können hier die vom SCM-Manager erstellten Signaturschlüssel heruntergeladen werden.",
+    "description": "Zum Prüfen von Signaturen für z. B. Commits können hier die entsprechenden öffentlichen GPG Schlüssel hinterlegt werden. Zudem können hier die vom SCM-Manager erstellten Signaturschlüssel heruntergeladen werden.",
     "noStoredKeys": "Es wurden keine Schlüssel gefunden.",
     "displayName": "Anzeigename",
     "created": "Eingetragen an",

@@ -80,7 +80,7 @@
   },
   "publicKey": {
     "subtitle": "Public Keys",
-    "description": "To check signatures for example for commits, public keys can be stored here. Additionally the keys created by SCM-Manager can be accessed here, too.",
+    "description": "To check signatures (for example for commits), gpg public keys can be stored here. Additionally the keys created by SCM-Manager can be accessed here, too.",
     "noStoredKeys": "No keys found.",
     "displayName": "Display Name",
     "created": "Created on",

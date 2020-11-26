@@ -13,7 +13,7 @@ entered twice.
 
 ## Public Keys
 
-To check signatures for example for commits, public keys can be stored here. Additionally the keys created by
+To check signatures (for example for commits), gpg public keys can be stored here. Additionally the keys created by
 SCM-Manager can be accessed here, too.
 
 ## API keys
