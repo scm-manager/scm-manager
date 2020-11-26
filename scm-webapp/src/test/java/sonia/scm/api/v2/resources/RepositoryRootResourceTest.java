@@ -28,7 +28,6 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
-import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -42,6 +41,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.CustomNamespaceStrategy;
 import sonia.scm.repository.ImportHandler;
 import sonia.scm.repository.NamespaceAndName;
@@ -127,6 +127,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private ScmConfiguration configuration;
   @Mock
   private Set<NamespaceStrategy> strategies;
+  @Mock
+  private ScmEventBus eventBus;
 
   @Captor
   private ArgumentCaptor<Predicate<Repository>> filterCaptor;
@@ -147,7 +149,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     super.manager = repositoryManager;
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
-    super.repositoryImportResource = new RepositoryImportResource(repositoryManager, serviceFactory, resourceLinks);
+    super.repositoryImportResource = new RepositoryImportResource(repositoryManager, serviceFactory, resourceLinks, eventBus);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);

@@ -37,11 +37,14 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.HandlerEventType;
 import sonia.scm.NotFoundException;
 import sonia.scm.Type;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHandler;
+import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RepositoryType;
@@ -73,13 +76,17 @@ public class RepositoryImportResource {
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
   private final ResourceLinks resourceLinks;
+  private final ScmEventBus eventBus;
 
   @Inject
   public RepositoryImportResource(RepositoryManager manager,
-                                  RepositoryServiceFactory serviceFactory, ResourceLinks resourceLinks) {
+                                  RepositoryServiceFactory serviceFactory,
+                                  ResourceLinks resourceLinks,
+                                  ScmEventBus eventBus) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.resourceLinks = resourceLinks;
+    this.eventBus = eventBus;
   }
 
 //  /**
@@ -217,6 +224,7 @@ public class RepositoryImportResource {
       }
 
       pullCommand.pull(request.getUrl());
+      eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, false));
     } catch (ImportFailedException ex) {
       handleImportFailure(ex, repository);
       throw ex;
@@ -504,6 +512,7 @@ public class RepositoryImportResource {
     logger.error("import for repository failed, delete repository", ex);
 
     try {
+      eventBus.post(new RepositoryImportEvent(HandlerEventType.BEFORE_DELETE, repository, true));
       manager.delete(repository);
     } catch (InternalRepositoryException | NotFoundException e) {
       logger.error("can not delete repository after import failure", e);
