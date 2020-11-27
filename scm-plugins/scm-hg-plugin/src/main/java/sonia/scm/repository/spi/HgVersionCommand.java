@@ -78,6 +78,9 @@ public class HgVersionCommand {
       }
     } catch (IOException ex) {
       LOG.warn("failed to get python version", ex);
+    } catch (InterruptedException ex) {
+      LOG.warn("failed to get python version", ex);
+      Thread.currentThread().interrupt();
     }
     return HgVersion.UNKNOWN;
   }
@@ -88,19 +91,22 @@ public class HgVersionCommand {
       return exec(config.getHgBinary(), HG_ARGS).trim();
     } catch (IOException ex) {
       LOG.warn("failed to get mercurial version", ex);
-      return HgVersion.UNKNOWN;
+    } catch (InterruptedException ex) {
+      LOG.warn("failed to get mercurial version", ex);
+      Thread.currentThread().interrupt();
     }
+    return HgVersion.UNKNOWN;
   }
 
   @SuppressWarnings("UnstableApiUsage")
-  private String exec(String command, String[] args) throws IOException {
+  private String exec(String command, String[] args) throws IOException, InterruptedException {
     List<String> cmd = new ArrayList<>();
     cmd.add(command);
     cmd.addAll(Arrays.asList(args));
 
     Process process = executor.execute(cmd);
     byte[] bytes = ByteStreams.toByteArray(process.getInputStream());
-    int exitCode = process.exitValue();
+    int exitCode = process.waitFor();
     if (exitCode != 0) {
       throw new IOException("process ends with exit code " + exitCode);
     }

@@ -62,7 +62,7 @@ class HgVersionCommandTest {
   }
 
   @Test
-  void shouldReturnHgVersion() {
+  void shouldReturnHgVersion() throws InterruptedException {
     command("/usr/local/bin/hg", HgVersionCommand.HG_ARGS, "5.5.2", 0);
     command("/opt/python/bin/python", HgVersionCommand.PYTHON_ARGS, PYTHON_OUTPUT, 0);
 
@@ -72,7 +72,7 @@ class HgVersionCommandTest {
   }
 
   @Test
-  void shouldReturnUnknownMercurialVersionOnNonZeroExitCode() {
+  void shouldReturnUnknownMercurialVersionOnNonZeroExitCode() throws InterruptedException {
     command("hg", HgVersionCommand.HG_ARGS, "", 1);
     command("python", HgVersionCommand.PYTHON_ARGS, PYTHON_OUTPUT, 0);
 
@@ -82,7 +82,7 @@ class HgVersionCommandTest {
   }
 
   @Test
-  void shouldReturnUnknownPythonVersionOnNonZeroExitCode() {
+  void shouldReturnUnknownPythonVersionOnNonZeroExitCode() throws InterruptedException {
     command("hg", HgVersionCommand.HG_ARGS, "4.4.2", 0);
     command("python", HgVersionCommand.PYTHON_ARGS, "", 1);
 
@@ -92,7 +92,7 @@ class HgVersionCommandTest {
   }
 
   @Test
-  void shouldReturnUnknownForInvalidPythonOutput() {
+  void shouldReturnUnknownForInvalidPythonOutput() throws InterruptedException {
     command("hg", HgVersionCommand.HG_ARGS, "1.0.0", 0);
     command("python", HgVersionCommand.PYTHON_ARGS, "abcdef", 0);
 
@@ -112,10 +112,10 @@ class HgVersionCommandTest {
     assertThat(hgVersion.getPython()).isEqualTo(HgVersion.UNKNOWN);
   }
 
-  private Process command(String command, String[] args, String content, int exitValue) {
+  private Process command(String command, String[] args, String content, int exitValue) throws InterruptedException {
     Process process = mock(Process.class);
     when(process.getInputStream()).thenReturn(new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8)));
-    when(process.exitValue()).thenReturn(exitValue);
+    when(process.waitFor()).thenReturn(exitValue);
 
     List<String> cmdLine = new ArrayList<>();
     cmdLine.add(command);
