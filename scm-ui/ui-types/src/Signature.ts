@@ -22,13 +22,16 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
-import {Signature} from "./Signature";
+import { Person } from "./Person";
+import { Link } from "./hal";
 
-export type Tag = {
-  name: string;
-  revision: string;
-  date?: Date;
-  signatures: Signature[];
-  _links: Links;
+export type Signature = {
+  keyId: string;
+  type: string;
+  status: "VERIFIED" | "NOT_FOUND" | "INVALID";
+  owner?: string;
+  contacts?: Person[];
+  _links?: {
+    rawKey?: Link;
+  };
 };
