@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import org.junit.Test;
@@ -52,7 +52,6 @@ public class HgConfigDtoToHgConfigMapperTest {
     assertEquals("/etc/", config.getPythonPath());
     assertTrue(config.isShowRevisionInId());
     assertTrue(config.isUseOptimizedBytecode());
-    assertTrue(config.isDisableHookSSLValidation());
     assertTrue(config.isEnableHttpPostArgs());
   }
 
@@ -65,7 +64,6 @@ public class HgConfigDtoToHgConfigMapperTest {
     configDto.setPythonPath("/etc/");
     configDto.setShowRevisionInId(true);
     configDto.setUseOptimizedBytecode(true);
-    configDto.setDisableHookSSLValidation(true);
     configDto.setEnableHttpPostArgs(true);
 
     return configDto;

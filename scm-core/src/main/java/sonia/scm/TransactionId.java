@@ -22,30 +22,50 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm;
 
-//~--- JDK imports ------------------------------------------------------------
+import com.google.common.annotations.VisibleForTesting;
+import org.slf4j.MDC;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
+import java.util.Optional;
 
 /**
+ * Id of the current transaction.
+ * The transaction id is mainly used for logging and debugging.
  *
- * @author Sebastian Sdorra
+ * @since 2.10.0
  */
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public final class HgHookMessage implements Serializable {
+public final class TransactionId {
 
-  private static final long serialVersionUID = 1804492842452344326L;
+  @VisibleForTesting
+  public static final String KEY = "transaction_id";
 
-  private Severity severity;
-  private String message;
+  private TransactionId() {
+  }
 
-  public enum Severity { NOTE, ERROR }
+  /**
+   * Binds the given transaction id to the current thread.
+   *
+   * @param transactionId transaction id
+   */
+  public static void set(String transactionId) {
+    MDC.put(KEY, transactionId);
+  }
+
+  /**
+   * Returns an optional transaction id.
+   * If there is no transaction id bound to the thread, the method will return an empty optional.
+   *
+   * @return optional transaction id
+   */
+  public static Optional<String> get() {
+    return Optional.ofNullable(MDC.get(KEY));
+  }
+
+  /**
+   * Removes a bound transaction id from the current thread.
+   */
+  public static void clear() {
+    MDC.remove(KEY);
+  }
 }

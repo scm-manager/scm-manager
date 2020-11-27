@@ -39,8 +39,8 @@ u.setconfig(b'web', b'push_ssl', b'false')
 u.setconfig(b'web', b'allow_read', b'*')
 u.setconfig(b'web', b'allow_push', b'*')
 
-u.setconfig(b'hooks', b'changegroup.scm', b'python:scmhooks.postHook')
-u.setconfig(b'hooks', b'pretxnchangegroup.scm', b'python:scmhooks.preHook')
+u.setconfig(b'hooks', b'changegroup.scm', b'python:scmhooks.post_hook')
+u.setconfig(b'hooks', b'pretxnchangegroup.scm', b'python:scmhooks.pre_hook')
 
 # pass SCM_HTTP_POST_ARGS to enable experimental httppostargs protocol of mercurial
 # SCM_HTTP_POST_ARGS is set by HgCGIServlet

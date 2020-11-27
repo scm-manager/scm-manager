@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 import com.google.common.base.Stopwatch;
@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgEnvironmentBuilder;
 import sonia.scm.repository.HgPythonScript;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
@@ -42,29 +43,21 @@ import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 import sonia.scm.web.cgi.EnvList;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-import java.io.IOException;
-
-import java.util.Enumeration;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
+import java.io.File;
+import java.io.IOException;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
-{
-
-  /** Field description */
-  public static final String ENV_SESSION_PREFIX = "SCM_";
+public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet {
 
   /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
@@ -80,13 +73,13 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
                       ScmConfiguration configuration,
                       HgRepositoryHandler handler,
                       RepositoryRequestListenerUtil requestListenerUtil,
-                      HgRepositoryEnvironmentBuilder hgRepositoryEnvironmentBuilder)
+                      HgEnvironmentBuilder environmentBuilder)
   {
     this.cgiExecutorFactory = cgiExecutorFactory;
     this.configuration = configuration;
     this.handler = handler;
     this.requestListenerUtil = requestListenerUtil;
-    this.hgRepositoryEnvironmentBuilder = hgRepositoryEnvironmentBuilder;
+    this.environmentBuilder = environmentBuilder;
     this.exceptionHandler = new HgCGIExceptionHandler();
     this.command = HgPythonScript.HGWEB.getFile(SCMContext.getContext());
   }
@@ -108,11 +101,7 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
       {
         handleRequest(request, response, repository);
       }
-      catch (ServletException ex)
-      {
-        exceptionHandler.handleException(request, response, ex);
-      }
-      catch (IOException ex)
+      catch (ServletException | IOException ex)
       {
         exceptionHandler.handleException(request, response, ex);
       }
@@ -150,29 +139,6 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
    * Method description
    *
    *
-   * @param env
-   * @param session
-   */
-  @SuppressWarnings("unchecked")
-  private void passSessionAttributes(EnvList env, HttpSession session)
-  {
-    Enumeration<String> enm = session.getAttributeNames();
-
-    while (enm.hasMoreElements())
-    {
-      String key = enm.nextElement();
-
-      if (key.startsWith(ENV_SESSION_PREFIX))
-      {
-        env.set(key, session.getAttribute(key).toString());
-      }
-    }
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param request
    * @param response
    * @param repository
@@ -192,7 +158,9 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
     executor.setExceptionHandler(exceptionHandler);
     executor.setStatusCodeHandler(exceptionHandler);
     executor.setContentLengthWorkaround(true);
-    hgRepositoryEnvironmentBuilder.buildFor(repository, request, executor.getEnvironment().asMutableMap());
+
+    EnvList env = executor.getEnvironment();
+    environmentBuilder.write(repository).forEach(env::set);
 
     String interpreter = getInterpreter();
 
@@ -248,5 +216,5 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
   /** Field description */
   private final RepositoryRequestListenerUtil requestListenerUtil;
 
-  private final HgRepositoryEnvironmentBuilder hgRepositoryEnvironmentBuilder;
+  private final HgEnvironmentBuilder environmentBuilder;
 }

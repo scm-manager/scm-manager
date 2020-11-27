@@ -39,15 +39,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.Clock;
+import java.time.Instant;
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
-import static org.mockito.Mockito.anyString;
-import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.*;
 import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 
 /**
@@ -85,52 +87,107 @@ class JwtAccessTokenBuilderTest {
     ThreadContext.unbindSubject();
   }
 
-  /**
-   * Prepare mocks and set up object under test.
-   */
   @BeforeEach
-  void setUpObjectUnderTest() {
+  void setUpDependencies() {
     lenient().when(keyGenerator.createKey()).thenReturn("42");
     lenient().when(secureKeyResolver.getSecureKey(anyString())).thenReturn(createSecureKey());
     enrichers = Sets.newHashSet();
     factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers);
   }
 
-  /**
-   * Tests {@link JwtAccessTokenBuilder#build()}.
-   */
-  @Test
-  void testBuild() {
-    JwtAccessToken token = factory.create().subject("dent")
-      .issuer("https://www.scm-manager.org")
-      .expiresIn(1, TimeUnit.MINUTES)
-      .custom("a", "b")
-      .scope(Scope.valueOf("repo:*"))
-      .build();
+  @Nested
+  class SimpleTests {
 
-    // assert claims
-    assertClaims(token);
+    /**
+     * Prepare mocks and set up object under test.
+     */
+    @BeforeEach
+    void setUpObjectUnderTest() {
+      factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers);
+    }
 
-    // reparse and assert again
-    String compact = token.compact();
-    assertThat(compact).isNotEmpty();
-    Claims claims = Jwts.parser()
-      .setSigningKey(secureKeyResolver.getSecureKey("dent").getBytes())
-      .parseClaimsJws(compact)
-      .getBody();
-    assertClaims(new JwtAccessToken(claims, compact));
+    /**
+     * Tests {@link JwtAccessTokenBuilder#build()}.
+     */
+    @Test
+    void testBuild() {
+      JwtAccessToken token = factory.create().subject("dent")
+        .issuer("https://www.scm-manager.org")
+        .expiresIn(1, TimeUnit.MINUTES)
+        .custom("a", "b")
+        .scope(Scope.valueOf("repo:*"))
+        .build();
+
+      // assert claims
+      assertClaims(token);
+
+      // reparse and assert again
+      String compact = token.compact();
+      assertThat(compact).isNotEmpty();
+      Claims claims = Jwts.parser()
+        .setSigningKey(secureKeyResolver.getSecureKey("dent").getBytes())
+        .parseClaimsJws(compact)
+        .getBody();
+      assertClaims(new JwtAccessToken(claims, compact));
+    }
+
+    private void assertClaims(JwtAccessToken token) {
+      assertThat(token.getId()).isNotEmpty();
+      assertThat(token.getIssuedAt()).isNotNull();
+      assertThat(token.getExpiration()).isNotNull();
+      assertThat(token.getExpiration().getTime() > token.getIssuedAt().getTime()).isTrue();
+      assertThat(token.getSubject()).isEqualTo("dent");
+      assertThat(token.getIssuer()).isNotEmpty();
+      assertThat(token.getIssuer()).get().isEqualTo("https://www.scm-manager.org");
+      assertThat(token.getCustom("a")).get().isEqualTo("b");
+      assertThat(token.getScope()).hasToString("[\"repo:*\"]");
+    }
+
   }
 
-  private void assertClaims(JwtAccessToken token) {
-    assertThat(token.getId()).isNotEmpty();
-    assertThat(token.getIssuedAt()).isNotNull();
-    assertThat(token.getExpiration()).isNotNull();
-    assertThat(token.getExpiration().getTime() > token.getIssuedAt().getTime()).isTrue();
-    assertThat(token.getSubject()).isEqualTo("dent");
-    assertThat(token.getIssuer()).isNotEmpty();
-    assertThat(token.getIssuer()).get().isEqualTo("https://www.scm-manager.org");
-    assertThat(token.getCustom("a")).get().isEqualTo("b");
-    assertThat(token.getScope()).hasToString("[\"repo:*\"]");
+  @Nested
+  class ClockTests {
+
+    @Mock
+    private Clock clock;
+
+    @BeforeEach
+    void setUpObjectUnderTest() {
+      factory = new JwtAccessTokenBuilderFactory(keyGenerator, secureKeyResolver, enrichers, clock);
+    }
+
+    @Test
+    void shouldSetRefreshExpiration() {
+      Instant now = Instant.now();
+      when(clock.instant()).thenReturn(now);
+
+      JwtAccessToken token = factory.create()
+        .subject("dent")
+        .refreshableFor(2, TimeUnit.SECONDS)
+        .build();
+
+      assertThat(token.getRefreshExpiration()).isPresent();
+      Date date = token.getRefreshExpiration().get();
+
+      assertThat(date).hasSameTimeAs(Date.from(now.plusSeconds(2L)));
+    }
+
+    @Test
+    void shouldSetDefaultRefreshExpiration() {
+      Instant now = Instant.now();
+      when(clock.instant()).thenReturn(now);
+
+      JwtAccessToken token = factory.create()
+        .subject("dent")
+        .build();
+
+      assertThat(token.getRefreshExpiration()).isPresent();
+      Date date = token.getRefreshExpiration().get();
+
+      long defaultRefresh = JwtAccessTokenBuilder.DEFAULT_REFRESHABLE_UNIT.toMillis(JwtAccessTokenBuilder.DEFAULT_REFRESHABLE);
+      assertThat(date).hasSameTimeAs(Date.from(now.plusMillis(defaultRefresh)));
+    }
+
   }
 
   @Nested

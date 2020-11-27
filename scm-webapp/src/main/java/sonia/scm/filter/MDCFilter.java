@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.filter;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -34,6 +34,7 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.MDC;
 
 import sonia.scm.SCMContext;
+import sonia.scm.TransactionId;
 import sonia.scm.security.DefaultKeyGenerator;
 import sonia.scm.web.filter.HttpFilter;
 
@@ -72,9 +73,6 @@ public class MDCFilter extends HttpFilter
   @VisibleForTesting
   static final String MDC_USERNAME = "username";
 
-  @VisibleForTesting
-  static final String MDC_TRANSACTION_ID = "transaction_id";
-
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -98,7 +96,7 @@ public class MDCFilter extends HttpFilter
     MDC.put(MDC_CLIENT_HOST, request.getRemoteHost());
     MDC.put(MDC_REQUEST_METHOD, request.getMethod());
     MDC.put(MDC_REQUEST_URI, request.getRequestURI());
-    MDC.put(MDC_TRANSACTION_ID, TRANSACTION_KEY_GENERATOR.createKey());
+    TransactionId.set(TRANSACTION_KEY_GENERATOR.createKey());
 
     try
     {
@@ -111,7 +109,7 @@ public class MDCFilter extends HttpFilter
       MDC.remove(MDC_CLIENT_HOST);
       MDC.remove(MDC_REQUEST_METHOD);
       MDC.remove(MDC_REQUEST_URI);
-      MDC.remove(MDC_TRANSACTION_ID);
+      TransactionId.clear();
     }
   }
 

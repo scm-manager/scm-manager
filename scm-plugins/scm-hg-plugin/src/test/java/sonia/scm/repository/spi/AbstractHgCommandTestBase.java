@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -29,13 +29,16 @@ package sonia.scm.repository.spi;
 import org.junit.After;
 import org.junit.Before;
 
+import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.repository.hooks.HookEnvironment;
 import sonia.scm.util.MockUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -49,31 +52,22 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
    * Method description
    *
    *
-   * @throws IOException
    */
   @After
-  public void close() throws IOException
-  {
+  public void close() {
     if (cmdContext != null)
     {
       cmdContext.close();
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Before
   public void initHgHandler() throws IOException {
     this.handler = HgTestUtil.createHandler(tempFolder.newFolder());
-
     HgTestUtil.checkForSkip(handler);
 
-    cmdContext = new HgCommandContext(HgTestUtil.createHookManager(), handler,
-      RepositoryTestData.createHeartOfGold(), repositoryDirectory);
+    HgRepositoryFactory factory = HgTestUtil.createFactory(handler, repositoryDirectory);
+    cmdContext = new HgCommandContext(handler, factory, RepositoryTestData.createHeartOfGold());
   }
 
   //~--- set methods ----------------------------------------------------------

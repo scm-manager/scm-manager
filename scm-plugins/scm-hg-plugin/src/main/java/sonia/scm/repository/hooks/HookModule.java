@@ -22,30 +22,19 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.hooks;
 
-//~--- JDK imports ------------------------------------------------------------
+import com.google.inject.AbstractModule;
+import com.google.inject.assistedinject.FactoryModuleBuilder;
+import sonia.scm.plugin.Extension;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
-
-/**
- *
- * @author Sebastian Sdorra
- */
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public final class HgHookMessage implements Serializable {
-
-  private static final long serialVersionUID = 1804492842452344326L;
-
-  private Severity severity;
-  private String message;
-
-  public enum Severity { NOTE, ERROR }
+@Extension
+public class HookModule extends AbstractModule {
+  @Override
+  protected void configure() {
+    install(new FactoryModuleBuilder()
+      .implement(HookHandler.class, DefaultHookHandler.class)
+      .build(HookHandlerFactory.class)
+    );
+  }
 }

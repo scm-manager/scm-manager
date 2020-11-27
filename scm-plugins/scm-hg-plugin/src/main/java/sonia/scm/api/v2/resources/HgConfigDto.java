@@ -30,10 +30,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @Getter
 @Setter
+@NoArgsConstructor
+@SuppressWarnings("java:S2160") // we don't need equals for dto
 public class HgConfigDto extends HalRepresentation implements UpdateHgConfigDto {
+
 
   private boolean disabled;
 
@@ -44,7 +46,6 @@ public class HgConfigDto extends HalRepresentation implements UpdateHgConfigDto 
   private boolean useOptimizedBytecode;
   private boolean showRevisionInId;
   private boolean enableHttpPostArgs;
-  private boolean disableHookSSLValidation;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

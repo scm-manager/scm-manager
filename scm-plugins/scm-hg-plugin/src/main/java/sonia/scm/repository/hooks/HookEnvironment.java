@@ -22,30 +22,39 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.hooks;
 
-//~--- JDK imports ------------------------------------------------------------
+import javax.inject.Singleton;
+import java.util.UUID;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+@Singleton
+public class HookEnvironment {
 
-import java.io.Serializable;
+  private final ThreadLocal<Boolean> threadEnvironment = new ThreadLocal<>();
+  private final String challenge = UUID.randomUUID().toString();
 
-/**
- *
- * @author Sebastian Sdorra
- */
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
-public final class HgHookMessage implements Serializable {
+  public String getChallenge() {
+    return challenge;
+  }
 
-  private static final long serialVersionUID = 1804492842452344326L;
+  public boolean isAcceptAble(String challenge) {
+    return this.challenge.equals(challenge);
+  }
 
-  private Severity severity;
-  private String message;
+  void setPending(boolean pending) {
+    threadEnvironment.set(pending);
+  }
 
-  public enum Severity { NOTE, ERROR }
+  void clearPendingState() {
+    threadEnvironment.remove();
+  }
+
+  public boolean isPending() {
+    Boolean threadState = threadEnvironment.get();
+    if (threadState != null) {
+      return threadState;
+    }
+    return false;
+  }
+
 }
