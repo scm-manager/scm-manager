@@ -72,7 +72,7 @@ def fire_hook(ui, repo, hooktype, node):
 
     length = read_int(connection)
     if length > 8192:
-      ui.warn( b"scm-hook received message with exceeds the limit of 8192\n" )
+      ui.warn( b"scm-hook received message which exceeds the limit of 8192\n" )
       return True
 
     d = read_bytes(connection, length)
