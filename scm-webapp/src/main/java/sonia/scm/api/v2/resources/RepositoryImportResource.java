@@ -235,10 +235,14 @@ public class RepositoryImportResource {
         }
 
         pullCommand.pull(request.getUrl());
-        eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, false));
       } catch (IOException e) {
+        eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, true));
         throw new InternalRepositoryException(repository, "Failed to import from remote url", e);
+      } catch (Exception e) {
+        eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, true));
+        throw e;
       }
+      eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, false));
     };
   }
 
@@ -471,38 +475,6 @@ public class RepositoryImportResource {
 //
 //    return types;
 //  }
-
-  /**
-   * Handle creation failures.
-   *
-   * @param ex   exception
-   * @param type repository type
-   * @param name name of the repository
-   */
-  private void handleGenericCreationFailure(Exception ex, String type,
-                                            String name) {
-    logger.error(String.format("could not create repository %s with type %s",
-      type, name), ex);
-
-    throw new WebApplicationException(ex);
-  }
-
-  /**
-   * Handle import failures.
-   *
-   * @param ex         exception
-   * @param repository repository
-   */
-  private void handleImportFailure(Exception ex, Repository repository) {
-    logger.error("import for repository failed, delete repository", ex);
-
-    try {
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.BEFORE_DELETE, repository, true));
-    } catch (InternalRepositoryException | NotFoundException e) {
-      logger.error("can not delete repository after import failure", e);
-    }
-  }
-
 //  /**
 //   * Import repositories from a specific type.
 //   *
