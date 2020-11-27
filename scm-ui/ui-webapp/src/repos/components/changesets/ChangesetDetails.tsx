@@ -26,7 +26,7 @@ import { Trans, useTranslation, WithTranslation, withTranslation } from "react-i
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Changeset, Link, ParentChangeset, Repository } from "@scm-manager/ui-types";
+import {Changeset, Link, ParentChangeset, Repository, Tag} from "@scm-manager/ui-types";
 import {
   AvatarImage,
   AvatarWrapper,
@@ -42,22 +42,18 @@ import {
   Icon,
   Level,
   SignatureIcon,
-  Modal,
-  InputField,
-  apiClient
+  Tooltip,
+  ErrorNotification
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
 import { Link as ReactLink } from "react-router-dom";
+import CreateTagModal from "./CreateTagModal";
 
 type Props = WithTranslation & {
   changeset: Changeset;
   repository: Repository;
   fileControlFactory?: FileControlFactory;
-  refetchChangeset?: (re) => void;
-};
-
-type State = {
-  collapsed: boolean;
+  refetchChangeset?: () => void;
 };
 
 const RightMarginP = styled.p`
@@ -91,7 +87,6 @@ const ContributorColumn = styled.p`
   text-overflow: ellipsis;
   white-space: nowrap;
   min-width: 0;
-  margin-right: 16px;
 `;
 
 const CountColumn = styled.p`
@@ -113,7 +108,6 @@ const ContributorToggleLine = styled.p`
 
 const ChangesetSummary = styled.div`
   display: flex;
-  justify-content: space-between;
 `;
 
 const SeparatedParents = styled.div`
@@ -152,7 +146,7 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
           <Icon name="angle-right" /> <ChangesetAuthor changeset={changeset} />
         </ContributorColumn>
         {signatureIcon}
-        <CountColumn className={"is-hidden-mobile"}>
+        <CountColumn className={"is-hidden-mobile is-hidden-tablet-only is-hidden-desktop-only"}>
           (
           <span className="has-text-link">
             {t("changeset.contributors.count", { count: countContributors(changeset) })}
@@ -164,10 +158,10 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
   );
 };
 
-const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory, t , refetchChangeset}) => {
+const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory, t, refetchChangeset }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [isTagCreationModalVisible, setTagCreationModalVisible] = useState(false);
-  const [newTagName, setNewTagName] = useState("");
+  const [error, setError] = useState<Error | undefined>();
 
   const description = changesets.parseDescription(changeset.description);
   const id = <ChangesetId repository={repository} changeset={changeset} link={false} />;
@@ -183,22 +177,9 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
     setCollapsed(!collapsed);
   };
 
-  const createTag = () => {
-    apiClient
-      .post((changeset._links["tag"] as Link).href, {
-        revision: changeset.id,
-        name: newTagName
-      })
-      .then(() => {
-        refetchChangeset?.();
-        closeTagCreationModal();
-      });
-  };
-
-  const closeTagCreationModal = () => {
-    setNewTagName("");
-    setTagCreationModalVisible(false);
-  };
+  if (error) {
+    return <ErrorNotification error={error} />;
+  }
 
   return (
     <>
@@ -238,43 +219,33 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
           <div className="media-right">
             <ChangesetTags changeset={changeset} />
           </div>
-          <div className="media-right">
-            {showCreateButton && (
-              <Button
-                color="success"
-                className="tag"
-                label={(changeset._embedded["tags"]?.length <= 1 && t("changeset.tag.create")) || ""}
-                icon="plus"
-                action={() => setTagCreationModalVisible(true)}
-              />
-            )}
-            {isTagCreationModalVisible && (
-              <Modal
-                title={t("tags.create.title")}
-                active={true}
-                body={
-                  <>
-                    <InputField
-                      name="name"
-                      label={t("tags.create.form.field.name.label")}
-                      onChange={val => setNewTagName(val)}
-                      value={newTagName}
-                    />
-                    <div>{t("tags.create.hint")}</div>
-                  </>
-                }
-                footer={
-                  <>
-                    <Button action={() => closeTagCreationModal()}>{t("tags.create.cancel")}</Button>
-                    <Button color="success" action={() => createTag()}>
-                      {t("tags.create.confirm")}
-                    </Button>
-                  </>
-                }
-                closeFunction={() => closeTagCreationModal()}
-              />
-            )}
-          </div>
+
+          {showCreateButton && (
+            <div className="media-right">
+              <Tooltip message={t("changeset.tag.create")} location="top">
+                <Button
+                  color="success"
+                  className="tag"
+                  label={(changeset._embedded["tags"]?.length <= 1 && t("changeset.tag.create")) || ""}
+                  icon="plus"
+                  action={() => setTagCreationModalVisible(true)}
+                />
+              </Tooltip>
+            </div>
+          )}
+          {isTagCreationModalVisible && (
+            <CreateTagModal
+              revision={changeset.id}
+              tagNames={changeset._embedded["tags"].map((tag: Tag) => tag.name)}
+              onClose={() => setTagCreationModalVisible(false)}
+              onCreated={() => {
+                refetchChangeset?.();
+                setTagCreationModalVisible(false);
+              }}
+              onError={setError}
+              tagCreationLink={(changeset._links["tag"] as Link).href}
+            />
+          )}
         </article>
         <p>
           {description.message.split("\n").map((item, key) => {

@@ -95,7 +95,8 @@
       "form": {
         "field": {
           "name": {
-            "label": "Name"
+            "label": "Name",
+            "error": "Dieser Tag existiert bereits."
           }
         }
       },
