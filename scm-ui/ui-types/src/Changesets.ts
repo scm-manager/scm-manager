@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-import {Collection, Link, Links} from "./hal";
+import { Collection, Links } from "./hal";
 import { Tag } from "./Tags";
 import { Branch } from "./Branches";
 import { Person } from "./Person";
-import {Signature} from "./Signature";
+import { Signature } from "./Signature";
 
 export type Changeset = Collection & {
   id: string;
@@ -42,8 +42,6 @@ export type Changeset = Collection & {
     parents?: ParentChangeset[];
   };
 };
-
-
 
 export type Contributor = {
   person: Person;
