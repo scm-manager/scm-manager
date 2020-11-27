@@ -39,11 +39,11 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.HandlerEventType;
 import sonia.scm.PageResult;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.CustomNamespaceStrategy;
-import sonia.scm.repository.ImportHandler;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
@@ -51,6 +51,7 @@ import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryInitializer;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.ImportFailedException;
@@ -68,6 +69,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
@@ -85,7 +87,6 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyObject;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.RETURNS_SELF;
 import static org.mockito.Mockito.doReturn;
@@ -118,8 +119,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private RepositoryService service;
   @Mock
   private RepositoryHandler repositoryHandler;
-  @Mock
-  private ImportHandler importHandler;
   @Mock
   private ScmPathInfoStore scmPathInfoStore;
   @Mock
@@ -466,9 +465,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldImportRepositoryFromUrl() throws URISyntaxException, IOException {
     when(manager.getHandler("git")).thenReturn(repositoryHandler);
-    when(repositoryHandler.getImportHandler()).thenReturn(importHandler);
     when(repositoryHandler.getType()).thenReturn(new RepositoryType("git", "git", ImmutableSet.of(Command.PULL)));
-    when(service.getPullCommand()).thenReturn(mock(PullCommandBuilder.class, RETURNS_SELF));
+    when(manager.create(any(Repository.class), any())).thenReturn(RepositoryTestData.create42Puzzle());
 
     URL url = Resources.getResource("sonia/scm/api/v2/import-repo.json");
     byte[] importRequest = Resources.toByteArray(url);
@@ -487,11 +485,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldImportRepositoryFromUrlWithCredentials() throws URISyntaxException, IOException {
     when(manager.getHandler("git")).thenReturn(repositoryHandler);
-    when(repositoryHandler.getImportHandler()).thenReturn(importHandler);
     when(repositoryHandler.getType()).thenReturn(new RepositoryType("git", "git", ImmutableSet.of(Command.PULL)));
-    PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
-    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
-
+    when(manager.create(any(Repository.class), any())).thenReturn(RepositoryTestData.create42Puzzle());
 
     URL url = Resources.getResource("sonia/scm/api/v2/import-repo-with-credentials.json");
     byte[] importRequest = Resources.toByteArray(url);
@@ -505,24 +500,13 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(SC_CREATED, response.getStatus());
-    verify(pullCommandBuilder).withUsername("trillian");
-    verify(pullCommandBuilder).withPassword("secret");
-
-    ArgumentCaptor<RepositoryImportEvent> eventCaptor = ArgumentCaptor.forClass(RepositoryImportEvent.class);
-    verify(eventBus).post(eventCaptor.capture());
-
-    assertThat(eventCaptor.getValue().isFailed()).isFalse();
   }
 
   @Test
   public void shouldFailOnImportRepositoryFromUrl() throws URISyntaxException, IOException {
     when(manager.getHandler("git")).thenReturn(repositoryHandler);
-    when(repositoryHandler.getImportHandler()).thenReturn(importHandler);
     when(repositoryHandler.getType()).thenReturn(new RepositoryType("git", "git", ImmutableSet.of(Command.PULL)));
-    PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
-    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
-    doThrow(ImportFailedException.class).when(pullCommandBuilder).pull(anyString());
-
+    doThrow(ImportFailedException.class).when(manager).create(any(Repository.class), any());
 
     URL url = Resources.getResource("sonia/scm/api/v2/import-repo.json");
     byte[] importRequest = Resources.toByteArray(url);
@@ -536,11 +520,44 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(500, response.getStatus());
+  }
 
-    ArgumentCaptor<RepositoryImportEvent> eventCaptor = ArgumentCaptor.forClass(RepositoryImportEvent.class);
-    verify(eventBus).post(eventCaptor.capture());
+  @Test
+  public void shouldPullChangesFromRemoteUrl() {
+    PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
+    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
 
-    assertThat(eventCaptor.getValue().isFailed()).isTrue();
+    Repository repository = RepositoryTestData.createHeartOfGold();
+    RepositoryImportResource.RepositoryImportDto repositoryImportDto = new RepositoryImportResource.RepositoryImportDto();
+    repositoryImportDto.setUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+    repositoryImportDto.setNamespace("scmadmin");
+    repositoryImportDto.setName("scm-manager");
+
+    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportDto);
+    repositoryConsumer.accept(repository);
+
+    verify(eventBus).post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, false));
+  }
+
+  @Test
+  public void shouldPullChangesFromRemoteUrlWithCredentials() {
+    PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
+    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
+
+    Repository repository = RepositoryTestData.createHeartOfGold();
+    RepositoryImportResource.RepositoryImportDto repositoryImportDto = new RepositoryImportResource.RepositoryImportDto();
+    repositoryImportDto.setUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+    repositoryImportDto.setNamespace("scmadmin");
+    repositoryImportDto.setName("scm-manager");
+    repositoryImportDto.setUsername("trillian");
+    repositoryImportDto.setPassword("secret");
+
+    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportDto);
+    repositoryConsumer.accept(repository);
+
+    verify(pullCommandBuilder).withUsername("trillian");
+    verify(pullCommandBuilder).withPassword("secret");
+    verify(eventBus).post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, false));
   }
 
   private PageResult<Repository> createSingletonPageResult(Repository repository) {

@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import de.otto.edison.hal.Embedded;
@@ -49,7 +50,6 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
-import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -63,8 +63,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.io.IOException;
 import java.net.URI;
 import java.util.Set;
+import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
@@ -213,27 +215,31 @@ public class RepositoryImportResource {
 
     logger.info("start {} import for external url {}", type, request.getUrl());
 
-    Repository repository = create(request.getNamespace(), request.getName(), type);
-
-    try (RepositoryService service = serviceFactory.create(repository)) {
-      PullCommandBuilder pullCommand = service.getPullCommand();
-      if (!Strings.isNullOrEmpty(request.getUsername()) && !Strings.isNullOrEmpty(request.getPassword())) {
-        pullCommand
-          .withUsername(request.getUsername())
-          .withPassword(request.getPassword());
-      }
-
-      pullCommand.pull(request.getUrl());
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, false));
-    } catch (ImportFailedException ex) {
-      handleImportFailure(ex, repository);
-      throw ex;
-    } catch (Exception ex) {
-      handleImportFailure(ex, repository);
-      throw new InternalRepositoryException(repository, "Repository Import failed.", ex);
-    }
+    Repository repository = manager.create(
+      new Repository(null, type, request.getNamespace(), request.getName()),
+      pullChangesFromRemoteUrl(request)
+    );
 
     return Response.created(URI.create(resourceLinks.repository().self(repository.getNamespace(), repository.getName()))).build();
+  }
+
+  @VisibleForTesting
+  Consumer<Repository> pullChangesFromRemoteUrl(RepositoryImportDto request) {
+    return repository -> {
+      try (RepositoryService service = serviceFactory.create(repository)) {
+        PullCommandBuilder pullCommand = service.getPullCommand();
+        if (!Strings.isNullOrEmpty(request.getUsername()) && !Strings.isNullOrEmpty(request.getPassword())) {
+          pullCommand
+            .withUsername(request.getUsername())
+            .withPassword(request.getPassword());
+        }
+
+        pullCommand.pull(request.getUrl());
+        eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, false));
+      } catch (IOException e) {
+        throw new InternalRepositoryException(repository, "Failed to import from remote url", e);
+      }
+    };
   }
 
 //  /**
@@ -390,27 +396,6 @@ public class RepositoryImportResource {
     }
   }
 
-  /**
-   * Creates a new repository with the given namespace, name and type.
-   *
-   * @param namespace repository namespace
-   * @param name      repository name
-   * @param type      repository type
-   * @return newly created repository
-   */
-  private Repository create(String namespace, String name, String type) {
-    Repository repository = null;
-
-    try {
-      repository = new Repository(null, type, namespace, name);
-      manager.create(repository);
-    } catch (InternalRepositoryException ex) {
-      handleGenericCreationFailure(ex, type, name);
-    }
-
-    return repository;
-  }
-
 //  /**
 //   * Start bundle import.
 //   *
@@ -513,7 +498,6 @@ public class RepositoryImportResource {
 
     try {
       eventBus.post(new RepositoryImportEvent(HandlerEventType.BEFORE_DELETE, repository, true));
-      manager.delete(repository);
     } catch (InternalRepositoryException | NotFoundException e) {
       logger.error("can not delete repository after import failure", e);
     }

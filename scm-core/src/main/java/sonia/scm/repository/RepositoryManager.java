@@ -28,6 +28,7 @@ import sonia.scm.TypeManager;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * The central class for managing {@link Repository} objects.
@@ -96,4 +97,11 @@ public interface RepositoryManager
    * @return all namespaces
    */
   Collection<String> getAllNamespaces();
+
+
+  default Repository create(Repository repository, Consumer<Repository> afterCreation) {
+    Repository newRepository = create(repository);
+    afterCreation.accept(newRepository);
+    return newRepository;
+  }
 }
