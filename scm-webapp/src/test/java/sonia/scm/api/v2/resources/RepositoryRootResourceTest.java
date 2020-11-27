@@ -48,10 +48,12 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHandler;
+import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryInitializer;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -83,6 +85,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyObject;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.RETURNS_SELF;
 import static org.mockito.Mockito.doReturn;
@@ -489,6 +492,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
     when(service.getPullCommand()).thenReturn(pullCommandBuilder);
 
+
     URL url = Resources.getResource("sonia/scm/api/v2/import-repo-with-credentials.json");
     byte[] importRequest = Resources.toByteArray(url);
 
@@ -503,6 +507,40 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     assertEquals(SC_CREATED, response.getStatus());
     verify(pullCommandBuilder).withUsername("trillian");
     verify(pullCommandBuilder).withPassword("secret");
+
+    ArgumentCaptor<RepositoryImportEvent> eventCaptor = ArgumentCaptor.forClass(RepositoryImportEvent.class);
+    verify(eventBus).post(eventCaptor.capture());
+
+    assertThat(eventCaptor.getValue().isFailed()).isFalse();
+  }
+
+  @Test
+  public void shouldFailOnImportRepositoryFromUrl() throws URISyntaxException, IOException {
+    when(manager.getHandler("git")).thenReturn(repositoryHandler);
+    when(repositoryHandler.getImportHandler()).thenReturn(importHandler);
+    when(repositoryHandler.getType()).thenReturn(new RepositoryType("git", "git", ImmutableSet.of(Command.PULL)));
+    PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
+    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
+    doThrow(ImportFailedException.class).when(pullCommandBuilder).pull(anyString());
+
+
+    URL url = Resources.getResource("sonia/scm/api/v2/import-repo.json");
+    byte[] importRequest = Resources.toByteArray(url);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "import/git/url")
+      .contentType(VndMediaType.REPOSITORY)
+      .content(importRequest);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(500, response.getStatus());
+
+    ArgumentCaptor<RepositoryImportEvent> eventCaptor = ArgumentCaptor.forClass(RepositoryImportEvent.class);
+    verify(eventBus).post(eventCaptor.capture());
+
+    assertThat(eventCaptor.getValue().isFailed()).isTrue();
   }
 
   private PageResult<Repository> createSingletonPageResult(Repository repository) {
