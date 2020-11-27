@@ -46,6 +46,17 @@ def print_messages(ui, messages):
     msg += ": " + message['message'] + "\n"
     ui.warn(msg.encode('utf-8'))
 
+def read_bytes(connection, length):
+  received = bytearray()
+  while len(received) < length:
+    buffer = connection.recv(length - len(received))
+    received = received + buffer
+  return received
+
+def read_int(connection):
+  data = read_bytes(connection, 4)
+  return struct.unpack('>i', bytearray(data))[0]
+
 def fire_hook(ui, repo, hooktype, node):
   abort = True
   ui.debug( b"send scm-hook for " + node + b"\n" )
@@ -59,13 +70,12 @@ def fire_hook(ui, repo, hooktype, node):
     connection.send(struct.pack('>i', len(data)))
     connection.sendall(data)
 
-    d = connection.recv(4, socket.MSG_WAITALL)
-    length = struct.unpack('>i', bytearray(d))[0]
+    length = read_int(connection)
     if length > 8192:
       ui.warn( b"scm-hook received message with exceeds the limit of 8192\n" )
       return True
 
-    d = connection.recv(length, socket.MSG_WAITALL)
+    d = read_bytes(connection, length)
     response = json.loads(d.decode("utf-8"))
 
     abort = response['abort']
@@ -112,4 +122,3 @@ def pre_hook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs)
 
 def post_hook(ui, repo, hooktype, node=None, source=None, pending=None, **kwargs):
   return callback(ui, repo, "POST_RECEIVE", node)
-
