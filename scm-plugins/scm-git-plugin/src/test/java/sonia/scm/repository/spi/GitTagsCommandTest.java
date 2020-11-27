@@ -30,6 +30,7 @@ import org.junit.runner.RunWith;
 import org.mockito.ArgumentMatchers;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.repository.SignatureStatus;
 import sonia.scm.repository.Tag;
 import sonia.scm.security.GPG;
 import sonia.scm.security.PublicKey;
@@ -89,18 +90,7 @@ public class GitTagsCommandTest extends AbstractGitCommandTestBase {
       "tag signedtag\n" +
       "tagger Arthur Dent <arthur.dent@hitchhiker.com> 1606248906 +0100\n" +
       "\n" +
-      "this tag is signed\n" +
-      "-----BEGIN PGP SIGNATURE-----\n" +
-      "\n" +
-      "iQEzBAABCgAdFiEEK6J3IfETwAXMFvBrrmPvvEnxQM8FAl+9acoACgkQrmPvvEnx\n" +
-      "QM9abwgAnGP+Y/Ijli+PAsimfOmZQWYepjptoOv9m7i3bnHv8V+Qg6cm51I3E0YV\n" +
-      "R2QaxxzW9PgS4hcES+L1qs8Lwo18RurF469eZEmNb8DcUFJ3sEWeHlIl5wZNNo/v\n" +
-      "jJm0d9LNcSmtAIiQ8eDMoGdFXJzHewGickLOSsQGmfZgZus4Qlsh7r3BZTI1Zwd/\n" +
-      "6jaBFctX13FuepCTxq2SjEfRaQHIYkyFQq2o6mjL5S2qfYJ/S//gcCCzxllQrisF\n" +
-      "5fRW3LzLI4eXFH0vua7+UzNS2Rwpifg2OENJA/Kn+3R36LWEGxFK9pNqjVPRAcQj\n" +
-      "1vSkcjK26RqhAqCjNLSagM8ATZrh+g==\n" +
-      "=kUKm\n" +
-      "-----END PGP SIGNATURE-----\n";
+      "this tag is signed\n";
     when(publicKey.verify(signedContent.getBytes(), signature.getBytes())).thenReturn(true);
 
     final GitContext gitContext = createContext();
@@ -111,6 +101,7 @@ public class GitTagsCommandTest extends AbstractGitCommandTestBase {
 
     Tag signedTag = tags.get(1);
     assertThat(signedTag.getSignatures()).isNotEmpty();
+    assertThat(signedTag.getSignatures().get(0).getStatus()).isEqualTo(SignatureStatus.VERIFIED);
   }
 
   @Override

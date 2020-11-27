@@ -65,6 +65,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
@@ -637,7 +638,8 @@ public final class GitUtil {
 
       PublicKey publicKey = publicKeyById.get();
 
-      boolean verified = publicKey.verify(messageBytes, signature.getBytes());
+      String rawMessage = message.substring(0, signatureStartIndex);
+      boolean verified = publicKey.verify(rawMessage.getBytes(), signature.getBytes());
       return Optional.of(new Signature(
         publicKeyId,
         "gpg",
