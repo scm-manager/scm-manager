@@ -94,9 +94,11 @@ class Button extends React.Component<Props> {
           <span className="icon is-medium">
             <Icon name={icon} color="inherit" />
           </span>
-          <span>
-            {label} {children}
-          </span>
+          {(label || children) && (
+            <span>
+              {label} {children}
+            </span>
+          )}
         </button>
       );
     }

@@ -26,7 +26,7 @@ import { Trans, useTranslation, WithTranslation, withTranslation } from "react-i
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Changeset, ParentChangeset, Repository } from "@scm-manager/ui-types";
+import { Changeset, Link, ParentChangeset, Repository } from "@scm-manager/ui-types";
 import {
   AvatarImage,
   AvatarWrapper,
@@ -41,7 +41,10 @@ import {
   FileControlFactory,
   Icon,
   Level,
-  SignatureIcon
+  SignatureIcon,
+  Modal,
+  InputField,
+  apiClient
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
 import { Link as ReactLink } from "react-router-dom";
@@ -50,6 +53,7 @@ type Props = WithTranslation & {
   changeset: Changeset;
   repository: Repository;
   fileControlFactory?: FileControlFactory;
+  refetchChangeset?: (re) => void;
 };
 
 type State = {
@@ -82,11 +86,12 @@ const ContributorLine = styled.div`
 `;
 
 const ContributorColumn = styled.p`
-  flex-grow: 1;
+  flex-grow: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   min-width: 0;
+  margin-right: 16px;
 `;
 
 const CountColumn = styled.p`
@@ -159,109 +164,154 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
   );
 };
 
-class ChangesetDetails extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      collapsed: false
-    };
-  }
+const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory, t , refetchChangeset}) => {
+  const [collapsed, setCollapsed] = useState(false);
+  const [isTagCreationModalVisible, setTagCreationModalVisible] = useState(false);
+  const [newTagName, setNewTagName] = useState("");
 
-  render() {
-    const { changeset, repository, fileControlFactory, t } = this.props;
-    const { collapsed } = this.state;
+  const description = changesets.parseDescription(changeset.description);
+  const id = <ChangesetId repository={repository} changeset={changeset} link={false} />;
+  const date = <DateFromNow date={changeset.date} />;
+  const parents = changeset._embedded.parents.map((parent: ParentChangeset, index: number) => (
+    <ReactLink title={parent.id} to={parent.id} key={index}>
+      {parent.id.substring(0, 7)}
+    </ReactLink>
+  ));
+  const showCreateButton = "tag" in changeset._links;
 
-    const description = changesets.parseDescription(changeset.description);
-    const id = <ChangesetId repository={repository} changeset={changeset} link={false} />;
-    const date = <DateFromNow date={changeset.date} />;
-    const parents = changeset._embedded.parents.map((parent: ParentChangeset, index: number) => (
-      <ReactLink title={parent.id} to={parent.id} key={index}>
-        {parent.id.substring(0, 7)}
-      </ReactLink>
-    ));
-
-    return (
-      <>
-        <div className={classNames("content", "is-marginless")}>
-          <h4>
-            <ExtensionPoint
-              name="changeset.description"
-              props={{
-                changeset,
-                value: description.title
-              }}
-              renderAll={false}
-            >
-              <ChangesetDescription changeset={changeset} value={description.title} />
-            </ExtensionPoint>
-          </h4>
-          <article className="media">
-            <AvatarWrapper>
-              <RightMarginP className={classNames("image", "is-64x64")}>
-                <AvatarImage person={changeset.author} />
-              </RightMarginP>
-            </AvatarWrapper>
-            <div className="media-content">
-              <Contributors changeset={changeset} />
-              <ChangesetSummary className="is-ellipsis-overflow">
-                <p>
-                  <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
-                </p>
-                {parents?.length > 0 && (
-                  <SeparatedParents>
-                    {t("changeset.parents.label", { count: parents?.length }) + ": "}
-                    {parents}
-                  </SeparatedParents>
-                )}
-              </ChangesetSummary>
-            </div>
-            <div className="media-right">
-              <ChangesetTags changeset={changeset} />
-            </div>
-          </article>
-          <p>
-            {description.message.split("\n").map((item, key) => {
-              return (
-                <span key={key}>
-                  <ExtensionPoint
-                    name="changeset.description"
-                    props={{
-                      changeset,
-                      value: item
-                    }}
-                    renderAll={false}
-                  >
-                    <ChangesetDescription changeset={changeset} value={item} />
-                  </ExtensionPoint>
-                  <br />
-                </span>
-              );
-            })}
-          </p>
-        </div>
-        <div>
-          <BottomMarginLevel
-            right={
-              <Button
-                action={this.collapseDiffs}
-                color="default"
-                icon={collapsed ? "eye" : "eye-slash"}
-                label={t("changesets.collapseDiffs")}
-                reducedMobile={true}
-              />
-            }
-          />
-          <ChangesetDiff changeset={changeset} fileControlFactory={fileControlFactory} defaultCollapse={collapsed} />
-        </div>
-      </>
-    );
-  }
-
-  collapseDiffs = () => {
-    this.setState(state => ({
-      collapsed: !state.collapsed
-    }));
+  const collapseDiffs = () => {
+    setCollapsed(!collapsed);
   };
-}
+
+  const createTag = () => {
+    apiClient
+      .post((changeset._links["tag"] as Link).href, {
+        revision: changeset.id,
+        name: newTagName
+      })
+      .then(() => {
+        refetchChangeset?.();
+        closeTagCreationModal();
+      });
+  };
+
+  const closeTagCreationModal = () => {
+    setNewTagName("");
+    setTagCreationModalVisible(false);
+  };
+
+  return (
+    <>
+      <div className={classNames("content", "is-marginless")}>
+        <h4>
+          <ExtensionPoint
+            name="changeset.description"
+            props={{
+              changeset,
+              value: description.title
+            }}
+            renderAll={false}
+          >
+            <ChangesetDescription changeset={changeset} value={description.title} />
+          </ExtensionPoint>
+        </h4>
+        <article className="media">
+          <AvatarWrapper>
+            <RightMarginP className={classNames("image", "is-64x64")}>
+              <AvatarImage person={changeset.author} />
+            </RightMarginP>
+          </AvatarWrapper>
+          <div className="media-content">
+            <Contributors changeset={changeset} />
+            <ChangesetSummary className="is-ellipsis-overflow">
+              <p>
+                <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
+              </p>
+              {parents?.length > 0 && (
+                <SeparatedParents>
+                  {t("changeset.parents.label", { count: parents?.length }) + ": "}
+                  {parents}
+                </SeparatedParents>
+              )}
+            </ChangesetSummary>
+          </div>
+          <div className="media-right">
+            <ChangesetTags changeset={changeset} />
+          </div>
+          <div className="media-right">
+            {showCreateButton && (
+              <Button
+                color="success"
+                className="tag"
+                label={(changeset._embedded["tags"]?.length <= 1 && t("changeset.tag.create")) || ""}
+                icon="plus"
+                action={() => setTagCreationModalVisible(true)}
+              />
+            )}
+            {isTagCreationModalVisible && (
+              <Modal
+                title={t("tags.create.title")}
+                active={true}
+                body={
+                  <>
+                    <InputField
+                      name="name"
+                      label={t("tags.create.form.field.name.label")}
+                      onChange={val => setNewTagName(val)}
+                      value={newTagName}
+                    />
+                    <div>{t("tags.create.hint")}</div>
+                  </>
+                }
+                footer={
+                  <>
+                    <Button action={() => closeTagCreationModal()}>{t("tags.create.cancel")}</Button>
+                    <Button color="success" action={() => createTag()}>
+                      {t("tags.create.confirm")}
+                    </Button>
+                  </>
+                }
+                closeFunction={() => closeTagCreationModal()}
+              />
+            )}
+          </div>
+        </article>
+        <p>
+          {description.message.split("\n").map((item, key) => {
+            return (
+              <span key={key}>
+                <ExtensionPoint
+                  name="changeset.description"
+                  props={{
+                    changeset,
+                    value: item
+                  }}
+                  renderAll={false}
+                >
+                  <ChangesetDescription changeset={changeset} value={item} />
+                </ExtensionPoint>
+                <br />
+              </span>
+            );
+          })}
+        </p>
+      </div>
+      <div>
+        <BottomMarginLevel
+          right={
+            <Button
+              action={collapseDiffs}
+              color="default"
+              icon={collapsed ? "eye" : "eye-slash"}
+              label={t("changesets.collapseDiffs")}
+              reducedMobile={true}
+            />
+          }
+        />
+        <ChangesetDiff changeset={changeset} fileControlFactory={fileControlFactory} defaultCollapse={collapsed} />
+      </div>
+    </>
+  );
+};
 
 export default withTranslation("repos")(ChangesetDetails);

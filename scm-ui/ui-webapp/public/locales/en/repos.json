@@ -90,6 +90,19 @@
     },
     "table": {
       "tags": "Tags"
+    },
+    "create": {
+      "form": {
+        "field": {
+          "name": {
+            "label": "Name"
+          }
+        }
+      },
+      "title": "Create a new tag",
+      "hint": "The tag will be automatically signed with your default key by the SCM-Manager.",
+      "confirm": "Create Tag",
+      "cancel": "Cancel"
     }
   },
   "tag": {
@@ -156,6 +169,9 @@
       "more": "{{count}} more",
       "count": "{{count}} Contributor",
       "count_plural": "{{count}} Contributors"
+    },
+    "tag": {
+      "create": "Create Tag"
     }
   },
   "commit": {

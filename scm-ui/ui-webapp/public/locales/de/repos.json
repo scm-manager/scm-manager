@@ -90,6 +90,19 @@
     },
     "table": {
       "tags": "Tags"
+    },
+    "create": {
+      "form": {
+        "field": {
+          "name": {
+            "label": "Name"
+          }
+        }
+      },
+      "title": "Neuen Tag anlegen",
+      "hint": "Der Tag wird automatisch mit ihrem Standardschlüssel vom SCM-Manager signiert.",
+      "confirm": "Tag erstellen",
+      "cancel": "Abbrechen"
     }
   },
   "tag": {
@@ -156,6 +169,9 @@
     "buttons": {
       "details": "Details",
       "sources": "Sources"
+    },
+    "tag": {
+      "create": "Tag erstellen"
     }
   },
   "commit": {
