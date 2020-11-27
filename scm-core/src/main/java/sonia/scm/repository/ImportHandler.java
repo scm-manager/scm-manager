@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -33,20 +33,20 @@ import java.util.List;
  * Searches and import existing repositories.
  *
  * @author Sebastian Sdorra
- * @since 1.12
+ * @since 2.11.0
+ * @deprecated
  */
-public interface ImportHandler
-{
+@Deprecated
+public interface ImportHandler {
 
   /**
    * Import existing and non managed repositories.
    *
-   *
    * @param manager The global {@link RepositoryManager}
-   *
-   *
    * @return a {@link List} names of imported repositories
    * @throws IOException
+   * @since 2.11.0
+   * @deprecated
    */
   public List<String> importRepositories(RepositoryManager manager) throws IOException;
 }

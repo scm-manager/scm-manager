@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -30,16 +30,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class GitImportHandler extends AbstactImportHandler
-{
+@Deprecated
+public class GitImportHandler extends AbstactImportHandler {
 
-  /** Field description */
+  /**
+   * Field description
+   */
   public static final String GIT_DIR = ".git";
 
-  /** Field description */
+  /**
+   * Field description
+   */
   public static final String GIT_DIR_REFS = "refs";
 
   /**
@@ -53,11 +56,9 @@ public class GitImportHandler extends AbstactImportHandler
   /**
    * Constructs ...
    *
-   *
    * @param handler
    */
-  public GitImportHandler(GitRepositoryHandler handler)
-  {
+  public GitImportHandler(GitRepositoryHandler handler) {
     this.handler = handler;
   }
 
@@ -66,29 +67,27 @@ public class GitImportHandler extends AbstactImportHandler
   /**
    * Method description
    *
-   *
    * @return
    */
   @Override
-  protected String[] getDirectoryNames()
-  {
-    return new String[] { GIT_DIR, GIT_DIR_REFS };
+  protected String[] getDirectoryNames() {
+    return new String[]{GIT_DIR, GIT_DIR_REFS};
   }
 
   /**
    * Method description
    *
-   *
    * @return
    */
   @Override
-  protected AbstractRepositoryHandler<?> getRepositoryHandler()
-  {
+  protected AbstractRepositoryHandler<?> getRepositoryHandler() {
     return handler;
   }
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private GitRepositoryHandler handler;
 }
