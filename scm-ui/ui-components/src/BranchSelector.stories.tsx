@@ -24,14 +24,14 @@
 
 import { storiesOf } from "@storybook/react";
 import { BranchSelector } from "./index";
-import { Branch } from "@scm-manager/ui-types/src";
+import { Branch } from "@scm-manager/ui-types";
 import * as React from "react";
 import styled from "styled-components";
 
 const master = { name: "master", revision: "1", defaultBranch: true, _links: {} };
 const develop = { name: "develop", revision: "2", defaultBranch: false, _links: {} };
 
-const branchSelected = (branch?: Branch) => {};
+const branchSelected = (branch?: Branch) => null;
 
 const branches = [master, develop];
 
@@ -42,6 +42,4 @@ const Wrapper = styled.div`
 
 storiesOf("BranchSelector", module)
   .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
-  .add("Default", () => (
-  <BranchSelector branches={branches} onSelectBranch={branchSelected} label="Select branch:" />
-));
+  .add("Default", () => <BranchSelector branches={branches} onSelectBranch={branchSelected} label="Select branch:" />);

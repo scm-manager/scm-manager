@@ -22,42 +22,35 @@
  * SOFTWARE.
  */
 
-package sonia.scm.plugin;
+const fs = require("fs");
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+const dirs = fs.readdirSync("public/locales");
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+describe("locales folder", () => {
+  it("should contain folder en", () => {
+    expect(dirs).toContain("en");
+  });
+});
 
-class PendingPluginInstallation {
-
-  private static final Logger LOG = LoggerFactory.getLogger(PendingPluginInstallation.class);
-
-  private final AvailablePlugin plugin;
-  private final Path file;
-
-  PendingPluginInstallation(AvailablePlugin plugin, Path file) {
-    this.plugin = plugin;
-    this.file = file;
-  }
-
-  public AvailablePlugin getPlugin() {
-    return plugin;
-  }
-
-  void cancel() {
-    String name = plugin.getDescriptor().getInformation().getName();
-    LOG.info("cancel installation of plugin {}", name);
-    if (Files.exists(file)) {
-      try {
-        Files.delete(file);
-      } catch (IOException ex) {
-        throw new PluginFailedToCancelInstallationException("failed to cancel plugin installation ", name, ex);
-      }
-    } else {
-      LOG.info("plugin file {} did not exists for plugin {}; nothing deleted", file, name);
-    }
-  }
-}
+dirs.forEach(languageDirName => {
+  const languageDir = `public/locales/${languageDirName}`;
+  const languageDirFiles = fs.readdirSync(languageDir);
+  languageDirFiles
+    .filter(fileName => fileName.endsWith(".json"))
+    .forEach(translationFileName => {
+      const translationFile = `${languageDir}/${translationFileName}`;
+      describe(`translation file ${translationFile}`, () => {
+        it("should contain only valid json", () => {
+          const jsonContent = fs.readFileSync(translationFile);
+          let json;
+          try {
+            json = JSON.parse(jsonContent);
+          } catch (ex) {
+            // eslint-disable-next-line no-undef
+            fail(new Error(`invalid json: ${ex}`));
+          }
+          expect(json).not.toBe({});
+        });
+      });
+    });
+});

@@ -25,11 +25,10 @@
 import { Collection, Links, User, Me } from "@scm-manager/ui-types";
 import React, { FC, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { apiClient, ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { apiClient, ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
 import ApiKeyTable from "./ApiKeyTable";
 import AddApiKey from "./AddApiKey";
 import { useTranslation } from "react-i18next";
-import styled from "styled-components";
 
 export type ApiKeysCollection = Collection & {
   _embedded: {
@@ -50,10 +49,6 @@ export const CONTENT_TYPE_API_KEY = "application/vnd.scmm-apiKey+json;v=2";
 type Props = {
   user: User | Me;
 };
-
-const Subtitle = styled.div`
-  margin-bottom: 1rem;
-`;
 
 const SetApiKeys: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
@@ -94,14 +89,13 @@ const SetApiKeys: FC<Props> = ({ user }) => {
 
   return (
     <>
-      <div className={"media-content"}>
-        <p>{t("apiKey.text1")} <Link to={"/admin/roles/"}>{t("apiKey.manageRoles")}</Link></p>
-        <p>{t("apiKey.text2")}</p>
-      </div>
-      <hr />
+      <Subtitle subtitle={t("apiKey.subtitle")} />
+      <p>
+        {t("apiKey.text1")} <Link to={"/admin/roles/"}>{t("apiKey.manageRoles")}</Link>
+      </p>
+      <p>{t("apiKey.text2")}</p>
+      <br />
       <ApiKeyTable apiKeys={apiKeys} onDelete={onDelete} />
-      <hr />
-      <Subtitle className={"media-content"}><h2 className={"title is-4"}>Create new key</h2></Subtitle>
       {createLink && <AddApiKey createLink={createLink} refresh={fetchApiKeys} />}
     </>
   );

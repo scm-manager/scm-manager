@@ -25,6 +25,9 @@
       "setPermissionsNavLink": "Permissions"
     }
   },
+  "overview": {
+    "searchGroup": "Search group"
+  },
   "add-group": {
     "title": "Create Group",
     "subtitle": "Create a new group"
