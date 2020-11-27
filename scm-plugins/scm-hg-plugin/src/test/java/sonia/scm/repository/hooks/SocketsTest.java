@@ -30,8 +30,12 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
+import java.io.InputStream;
 
+import static java.util.stream.Collectors.joining;
+import static java.util.stream.Stream.generate;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -53,8 +57,7 @@ class SocketsTest {
     output.write((512 >>> 16) & 0xFF);
 
     ByteArrayInputStream input = new ByteArrayInputStream(output.toByteArray());
-    IOException ex = assertThrows(IOException.class, () -> Sockets.receive(input, TestValue.class));
-    assertThat(ex.getMessage()).contains("int");
+    assertThrows(EOFException.class, () -> Sockets.receive(input, TestValue.class));
   }
 
   @Test
@@ -66,8 +69,7 @@ class SocketsTest {
     output.write(16 & 0xFF);
 
     ByteArrayInputStream input = new ByteArrayInputStream(output.toByteArray());
-    IOException ex = assertThrows(IOException.class, () -> Sockets.receive(input, TestValue.class));
-    assertThat(ex.getMessage()).contains("bytes");
+    assertThrows(EOFException.class, () -> Sockets.receive(input, TestValue.class));
   }
 
   @Test
@@ -81,6 +83,22 @@ class SocketsTest {
     ByteArrayInputStream input = new ByteArrayInputStream(output.toByteArray());
     IOException ex = assertThrows(IOException.class, () -> Sockets.receive(input, TestValue.class));
     assertThat(ex.getMessage()).contains("9216");
+  }
+
+  @Test
+  void shouldSendAndReceiveWithChunks() throws IOException {
+    String stringValue = generate(() -> "a").limit(1024).collect(joining());
+
+    ByteArrayOutputStream output = new ByteArrayOutputStream();
+    Sockets.send(output, new TestValue(stringValue));
+    InputStream input = new ByteArrayInputStream(output.toByteArray()) {
+      @Override
+      public synchronized int read(byte[] b, int off, int len) {
+        return super.read(b, off, Math.min(8, len));
+      }
+    };
+    TestValue value = Sockets.receive(input, TestValue.class);
+    assertThat(value.value).hasSize(1024);
   }
 
   @Data
