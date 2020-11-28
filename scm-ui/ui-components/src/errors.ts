@@ -31,6 +31,10 @@ export type Violation = {
   message: string;
   key?: string;
 };
+export type AdditionalMessage = {
+  key?: string;
+  message?: string;
+};
 
 export type BackendErrorContent = {
   transactionId: string;
@@ -39,6 +43,7 @@ export type BackendErrorContent = {
   url?: string;
   context: Context;
   violations: Violation[];
+  additionalMessages?: AdditionalMessage[];
 };
 
 export class BackendError extends Error {
@@ -48,6 +53,7 @@ export class BackendError extends Error {
   context: Context = [];
   statusCode: number;
   violations: Violation[];
+  additionalMessages?: AdditionalMessage[];
 
   constructor(content: BackendErrorContent, name: string, statusCode: number) {
     super(content.message);
@@ -58,6 +64,7 @@ export class BackendError extends Error {
     this.context = content.context;
     this.statusCode = statusCode;
     this.violations = content.violations;
+    this.additionalMessages = content.additionalMessages;
   }
 }
 

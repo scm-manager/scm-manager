@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.HalRepresentation;
@@ -39,7 +39,7 @@ import java.util.Collection;
 
 @Getter @Setter @ToString @NoArgsConstructor
 @EitherRoleOrVerbs
-public class RepositoryPermissionDto extends HalRepresentation {
+public class RepositoryPermissionDto extends HalRepresentation implements UpdateRepositoryPermissionDto {
 
   public static final String GROUP_PREFIX = "@";
 

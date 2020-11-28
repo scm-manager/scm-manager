@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -40,7 +40,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-public class GroupDto extends HalRepresentation {
+public class GroupDto extends HalRepresentation implements UpdateGroupDto, CreateGroupDto {
 
   private Instant creationDate;
   private String description;

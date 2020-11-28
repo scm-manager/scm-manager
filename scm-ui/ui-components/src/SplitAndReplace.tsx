@@ -52,7 +52,13 @@ const SplitAndReplace: FC<Props> = ({ text, replacements }) => {
   if (parts.length === 0) {
     return <>{parts[0]}</>;
   }
-  return <>{parts}</>;
+  return (
+    <>
+      {parts.map((part, index) => (
+        <React.Fragment key={index}>{part}</React.Fragment>
+      ))}
+    </>
+  );
 };
 
 export default SplitAndReplace;

@@ -32,6 +32,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgEnvironmentBuilder;
 import sonia.scm.repository.HgPythonScript;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
@@ -41,6 +42,8 @@ import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
 
 import javax.annotation.Nonnull;
+import sonia.scm.web.cgi.EnvList;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -50,15 +53,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  *
  * @author Sebastian Sdorra
  */
 @Singleton
-public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
-{
+public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet {
 
   /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
@@ -74,13 +74,13 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
                       ScmConfiguration configuration,
                       HgRepositoryHandler handler,
                       RepositoryRequestListenerUtil requestListenerUtil,
-                      HgRepositoryEnvironmentBuilder hgRepositoryEnvironmentBuilder)
+                      HgEnvironmentBuilder environmentBuilder)
   {
     this.cgiExecutorFactory = cgiExecutorFactory;
     this.configuration = configuration;
     this.handler = handler;
     this.requestListenerUtil = requestListenerUtil;
-    this.hgRepositoryEnvironmentBuilder = hgRepositoryEnvironmentBuilder;
+    this.environmentBuilder = environmentBuilder;
     this.exceptionHandler = new HgCGIExceptionHandler();
     this.extension = HgPythonScript.CGISERVE.getFile(SCMContext.getContext());
   }
@@ -109,17 +109,6 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param repository
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   private void handleRequest(HttpServletRequest request,
     HttpServletResponse response, Repository repository)
     throws ServletException, IOException
@@ -149,11 +138,11 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
     executor.setStatusCodeHandler(exceptionHandler);
     executor.setContentLengthWorkaround(true);
 
+    EnvList env = executor.getEnvironment();
+    environmentBuilder.write(repository).forEach(env::set);
+
     File directory = handler.getDirectory(repository.getId());
     executor.setWorkDirectory(directory);
-
-    hgRepositoryEnvironmentBuilder.buildFor(repository, request, executor.getEnvironment().asMutableMap());
-
     executor.setArgs(createArgs());
 
     HgConfig config = handler.getConfig();
@@ -164,8 +153,8 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
   private List<String> createArgs() {
     List<String> args = new ArrayList<>();
     config(args, "extensions.cgiserve", extension.getAbsolutePath());
-    config(args, "hooks.pretxnchangegroup.scm", "python:scmhooks.preHook");
-    config(args, "hooks.changegroup.scm", "python:scmhooks.postHook");
+    config(args, "hooks.pretxnchangegroup.scm", "python:scmhooks.pre_hook");
+    config(args, "hooks.changegroup.scm", "python:scmhooks.post_hook");
     config(args, "web.push_ssl", "false");
     config(args, "web.allow_read", "*");
     config(args, "web.allow_push", "*");
@@ -198,5 +187,5 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet
   /** Field description */
   private final RepositoryRequestListenerUtil requestListenerUtil;
 
-  private final HgRepositoryEnvironmentBuilder hgRepositoryEnvironmentBuilder;
+  private final HgEnvironmentBuilder environmentBuilder;
 }

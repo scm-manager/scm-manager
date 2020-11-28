@@ -27,7 +27,9 @@ package sonia.scm.api.v2.resources;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.shiro.authc.credential.PasswordService;
 import sonia.scm.search.SearchRequest;
@@ -125,7 +127,22 @@ public class UserCollectionResource {
   @POST
   @Path("")
   @Consumes(VndMediaType.USER)
-  @Operation(summary = "Create user", description = "Creates a new user.", tags = "User")
+  @Operation(
+    summary = "Create user",
+    description = "Creates a new user.",
+    tags = "User",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.USER,
+        schema = @Schema(implementation = CreateUserDto.class),
+        examples = @ExampleObject(
+          name = "Create an internal user.",
+          value = "{\n  \"name\":\"mustermann\",\n  \"displayName\":\"Max Mustermann\",\n  \"mail\":\"m.mustermann@scm-manager.org\",\n  \"external\":false,\n  \"password\":\"muster42*\",\n  \"active\":true\n}",
+          summary = "Create a simple user"
+        )
+      )
+    )
+  )
   @ApiResponse(
     responseCode = "201",
     description = "create success",
@@ -156,4 +173,5 @@ public class UserCollectionResource {
     SearchRequest searchRequest = new SearchRequest(search, true);
     return user -> SearchUtil.matchesOne(searchRequest, user.getName(), user.getDisplayName(), user.getMail());
   }
+
 }

@@ -50439,36 +50439,70 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
             href="/repo/hitchhiker/heartOfGold/branches/"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-code-branch has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.branches"
+            >
+              <i
+                className="fas fa-code-branch has-text-inherit fa-lg"
+              />
+            </span>
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
+            href="/repo/hitchhiker/heartOfGold/tags/"
+            onClick={[Function]}
+          >
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.tags"
+            >
+              <i
+                className="fas fa-tags has-text-inherit fa-lg"
+              />
+            </span>
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
             href="/repo/hitchhiker/heartOfGold/code/changesets/"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-exchange-alt has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.commits"
+            >
+              <i
+                className="fas fa-exchange-alt has-text-inherit fa-lg"
+              />
+            </span>
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
             href="/repo/hitchhiker/heartOfGold/code/sources/"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-code has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.sources"
+            >
+              <i
+                className="fas fa-code has-text-inherit fa-lg"
+              />
+            </span>
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
             href="/repo/hitchhiker/heartOfGold/settings/general"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-cog has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.settings"
+            >
+              <i
+                className="fas fa-cog has-text-inherit fa-lg"
+              />
+            </span>
           </a>
         </div>
         <div
@@ -50553,36 +50587,70 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
             href="/repo/hitchhiker/heartOfGold/branches/"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-code-branch has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.branches"
+            >
+              <i
+                className="fas fa-code-branch has-text-inherit fa-lg"
+              />
+            </span>
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
+            href="/repo/hitchhiker/heartOfGold/tags/"
+            onClick={[Function]}
+          >
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.tags"
+            >
+              <i
+                className="fas fa-tags has-text-inherit fa-lg"
+              />
+            </span>
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
             href="/repo/hitchhiker/heartOfGold/code/changesets/"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-exchange-alt has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.commits"
+            >
+              <i
+                className="fas fa-exchange-alt has-text-inherit fa-lg"
+              />
+            </span>
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
             href="/repo/hitchhiker/heartOfGold/code/sources/"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-code has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.sources"
+            >
+              <i
+                className="fas fa-code has-text-inherit fa-lg"
+              />
+            </span>
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
             href="/repo/hitchhiker/heartOfGold/settings/general"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-cog has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.settings"
+            >
+              <i
+                className="fas fa-cog has-text-inherit fa-lg"
+              />
+            </span>
           </a>
         </div>
         <div
@@ -50664,36 +50732,70 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
             href="/repo/hitchhiker/heartOfGold/branches/"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-code-branch has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.branches"
+            >
+              <i
+                className="fas fa-code-branch has-text-inherit fa-lg"
+              />
+            </span>
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
+            href="/repo/hitchhiker/heartOfGold/tags/"
+            onClick={[Function]}
+          >
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.tags"
+            >
+              <i
+                className="fas fa-tags has-text-inherit fa-lg"
+              />
+            </span>
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
             href="/repo/hitchhiker/heartOfGold/code/changesets/"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-exchange-alt has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.commits"
+            >
+              <i
+                className="fas fa-exchange-alt has-text-inherit fa-lg"
+              />
+            </span>
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
             href="/repo/hitchhiker/heartOfGold/code/sources/"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-code has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.sources"
+            >
+              <i
+                className="fas fa-code has-text-inherit fa-lg"
+              />
+            </span>
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
             href="/repo/hitchhiker/heartOfGold/settings/general"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-cog has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.settings"
+            >
+              <i
+                className="fas fa-cog has-text-inherit fa-lg"
+              />
+            </span>
           </a>
         </div>
         <div
@@ -50775,27 +50877,56 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
             href="/repo/hitchhiker/heartOfGold/branches/"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-code-branch has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.branches"
+            >
+              <i
+                className="fas fa-code-branch has-text-inherit fa-lg"
+              />
+            </span>
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
+            href="/repo/hitchhiker/heartOfGold/tags/"
+            onClick={[Function]}
+          >
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.tags"
+            >
+              <i
+                className="fas fa-tags has-text-inherit fa-lg"
+              />
+            </span>
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
             href="/repo/hitchhiker/heartOfGold/code/changesets/"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-exchange-alt has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.commits"
+            >
+              <i
+                className="fas fa-exchange-alt has-text-inherit fa-lg"
+              />
+            </span>
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 iZuqoP level-item"
             href="/repo/hitchhiker/heartOfGold/code/sources/"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-code has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.sources"
+            >
+              <i
+                className="fas fa-code has-text-inherit fa-lg"
+              />
+            </span>
           </a>
           <a
             className="level-item"
@@ -50809,9 +50940,14 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
             href="/repo/hitchhiker/heartOfGold/settings/general"
             onClick={[Function]}
           >
-            <i
-              className="fas fa-cog has-text-inherit fa-lg"
-            />
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.settings"
+            >
+              <i
+                className="fas fa-cog has-text-inherit fa-lg"
+              />
+            </span>
           </a>
         </div>
         <div

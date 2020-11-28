@@ -22,25 +22,53 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { Link } from "react-router-dom";
-import { Branch } from "@scm-manager/ui-types";
+import { Link as ReactLink } from "react-router-dom";
+import { Branch, Link } from "@scm-manager/ui-types";
 import DefaultBranchTag from "./DefaultBranchTag";
+import { DateFromNow, Icon } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
+import styled from "styled-components";
 
 type Props = {
   baseUrl: string;
   branch: Branch;
+  onDelete: (branch: Branch) => void;
 };
 
-const BranchRow: FC<Props> = ({ baseUrl, branch }) => {
+const Created = styled.span`
+  margin-left: 1rem;
+  font-size: 0.8rem;
+`;
+
+const BranchRow: FC<Props> = ({ baseUrl, branch, onDelete }) => {
   const to = `${baseUrl}/${encodeURIComponent(branch.name)}/info`;
+  const [t] = useTranslation("repos");
+
+  let deleteButton;
+  if ((branch?._links?.delete as Link)?.href) {
+    deleteButton = (
+      <a className="level-item" onClick={() => onDelete(branch)}>
+        <span className="icon is-small">
+          <Icon name="trash" className="fas" title={t("branch.delete.button")} />
+        </span>
+      </a>
+    );
+  }
+
   return (
     <tr>
       <td>
-        <Link to={to} title={branch.name}>
+        <ReactLink to={to} title={branch.name}>
           {branch.name}
           <DefaultBranchTag defaultBranch={branch.defaultBranch} />
-        </Link>
+        </ReactLink>
+        {branch.lastCommitDate && (
+          <Created className="has-text-grey is-ellipsis-overflow">
+            {t("branches.table.lastCommit")} <DateFromNow date={branch.lastCommitDate} />
+          </Created>
+        )}
       </td>
+      <td className="is-darker">{deleteButton}</td>
     </tr>
   );
 };

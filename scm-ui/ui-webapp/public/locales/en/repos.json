@@ -36,13 +36,22 @@
       "settingsNavLink": "Settings",
       "generalNavLink": "General",
       "permissionsNavLink": "Permissions"
+    },
+    "tooltip": {
+      "branches": "Branches",
+      "tags": "Tags",
+      "commits": "Commits",
+      "sources": "Sources",
+      "settings": "Settings"
     }
   },
   "overview": {
     "title": "Repositories",
     "subtitle": "Overview of available repositories",
     "noRepositories": "No repositories found.",
-    "createButton": "Create Repository"
+    "createButton": "Create Repository",
+    "searchRepository": "Search repository",
+    "allNamespaces": "All namespaces"
   },
   "create": {
     "title": "Create Repository",
@@ -55,7 +64,11 @@
       "createButton": "Create Branch"
     },
     "table": {
-      "branches": "Branches"
+      "branches": {
+        "active": "Active Branches",
+        "stale": "Stale Branches"
+      },
+      "lastCommit": "Last commit"
     },
     "create": {
       "title": "Create Branch",
@@ -68,7 +81,19 @@
     "name": "Name:",
     "commits": "Commits",
     "sources": "Sources",
-    "defaultTag": "Default"
+    "defaultTag": "Default",
+    "dangerZone": "Delete branch",
+    "delete": {
+      "button": "Delete branch",
+      "subtitle": "Delete branch",
+      "description": "Deleted branches can not be restored.",
+      "confirmAlert": {
+        "title": "Delete branch",
+        "message": "Do you really want to delete the branch \"{{branch}}\"?",
+        "cancel": "No",
+        "submit": "Yes"
+      }
+    }
   },
   "tags": {
     "overview": {

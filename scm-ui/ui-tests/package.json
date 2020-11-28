@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-tests",
-  "version": "2.10.0-SNAPSHOT",
+  "version": "2.11.0-SNAPSHOT",
   "description": "UI-Tests helpers",
   "author": "Sebastian Sdorra <sebastian.sdorra@cloudogu.com>",
   "license": "MIT",
@@ -14,7 +14,7 @@
     "enzyme-adapter-react-16": "^1.15.0",
     "enzyme-context": "^1.1.2",
     "enzyme-context-react-router-4": "^2.0.0",
-    "jest": "^24.9.0",
+    "jest": "^26.0.0",
     "raf": "^3.4.1",
     "react-test-renderer": "^16.10.2"
   },

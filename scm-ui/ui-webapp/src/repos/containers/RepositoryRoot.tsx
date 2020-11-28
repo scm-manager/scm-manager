@@ -154,11 +154,11 @@ class RepositoryRoot extends React.Component<Props> {
 
     const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = changeset => file => {
       const baseUrl = `${url}/code/sources`;
-      const sourceLink = {
+      const sourceLink = file.newPath && {
         url: `${baseUrl}/${changeset.id}/${file.newPath}/`,
         label: t("diff.jumpToSource")
       };
-      const targetLink = changeset._embedded?.parents?.length === 1 && {
+      const targetLink = file.oldPath && changeset._embedded?.parents?.length === 1 && {
         url: `${baseUrl}/${changeset._embedded.parents[0].id}/${file.oldPath}`,
         label: t("diff.jumpToTarget")
       };
@@ -166,7 +166,9 @@ class RepositoryRoot extends React.Component<Props> {
       const links = [];
       switch (file.type) {
         case "add":
-          links.push(sourceLink);
+          if (sourceLink) {
+            links.push(sourceLink);
+          }
           break;
         case "delete":
           if (targetLink) {
@@ -174,17 +176,24 @@ class RepositoryRoot extends React.Component<Props> {
           }
           break;
         default:
-          if (targetLink) {
+          if (targetLink && sourceLink) {
             links.push(targetLink, sourceLink); // Target link first because its the previous file
-          } else {
+          } else if (sourceLink) {
             links.push(sourceLink);
           }
       }
 
-      return links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />);
+      return links ? links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />) : null;
     };
 
-    const titleComponent = <><Link to={`/repos/${repository.namespace}/`} className={"has-text-dark"}>{repository.namespace}</Link>/{repository.name}</>;
+    const titleComponent = (
+      <>
+        <Link to={`/repos/${repository.namespace}/`} className={"has-text-dark"}>
+          {repository.namespace}
+        </Link>
+        /{repository.name}
+      </>
+    );
 
     return (
       <StateMenuContextProvider>

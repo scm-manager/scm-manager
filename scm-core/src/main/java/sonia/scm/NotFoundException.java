@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 import java.util.Collections;
@@ -35,7 +35,7 @@ public class NotFoundException extends ExceptionWithContext {
 
   private static final String CODE = "AGR7UzkhA1";
 
-  public NotFoundException(Class type, String id) {
+  public NotFoundException(Class<?> type, String id) {
     this(Collections.singletonList(new ContextEntry(type, id)));
   }
 

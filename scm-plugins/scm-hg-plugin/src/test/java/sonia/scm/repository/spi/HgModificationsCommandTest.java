@@ -40,12 +40,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
 
-
   private HgModificationsCommand outgoingModificationsCommand;
 
   @Before
   public void init() {
-    HgCommandContext outgoingContext = new HgCommandContext(HgTestUtil.createHookManager(), handler, outgoingRepository, outgoingDirectory);
+    HgCommandContext outgoingContext = new HgCommandContext(handler, HgTestUtil.createFactory(handler, outgoingDirectory), outgoingRepository);
     outgoingModificationsCommand = new HgModificationsCommand(outgoingContext);
   }
 
@@ -116,10 +115,10 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
       assertThat(modifications).isNotNull();
       assertThat(modifications.getAdded())
         .as("added files modifications")
-        .hasSize(0);
+        .isEmpty();
       assertThat(modifications.getModified())
         .as("modified files modifications")
-        .hasSize(0);
+        .isEmpty();
       assertThat(modifications.getRemoved())
         .as("removed files modifications")
         .hasSize(1)
@@ -136,10 +135,10 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
       assertThat(modifications).isNotNull();
       assertThat(modifications.getAdded())
         .as("added files modifications")
-        .hasSize(0);
+        .isEmpty();
       assertThat(modifications.getModified())
         .as("modified files modifications")
-        .hasSize(0);
+        .isEmpty();
       assertThat(modifications.getRemoved())
         .as("removed files modifications")
         .isEmpty();
@@ -161,10 +160,10 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
       assertThat(modifications).isNotNull();
       assertThat(modifications.getAdded())
         .as("added files modifications")
-        .hasSize(0);
+        .isEmpty();
       assertThat(modifications.getModified())
         .as("modified files modifications")
-        .hasSize(0);
+        .isEmpty();
       assertThat(modifications.getRemoved())
         .as("removed files modifications")
         .isEmpty();
@@ -189,7 +188,7 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
       assertThat(modifications).isNotNull();
       assertThat(modifications.getAdded())
         .as("added files modifications")
-        .hasSize(0);
+        .isEmpty();
       assertThat(modifications.getModified())
         .as("modified files modifications")
         .hasSize(1)
@@ -197,10 +196,10 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
         .containsOnly(file);
       assertThat(modifications.getRemoved())
         .as("removed files modifications")
-        .hasSize(0);
+        .isEmpty();
       assertThat(modifications.getRenamed())
         .as("renamed files modifications")
-        .hasSize(0);
+        .isEmpty();
     };
   }
 
@@ -214,13 +213,13 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
         .containsOnly(addedFile);
       assertThat(modifications.getModified())
         .as("modified files modifications")
-        .hasSize(0);
+        .isEmpty();
       assertThat(modifications.getRemoved())
         .as("removed files modifications")
-        .hasSize(0);
+        .isEmpty();
       assertThat(modifications.getRenamed())
         .as("renamed files modifications")
-        .hasSize(0);
+        .isEmpty();
     };
   }
 }

@@ -176,7 +176,13 @@ const ChangesetAuthor: FC<Props> = ({ changeset }) => {
     authorLine.push(...extensions);
   }
 
-  return <CommaSeparatedList>{authorLine}</CommaSeparatedList>;
+  return (
+    <CommaSeparatedList>
+      {authorLine.map((line, index) => (
+        <React.Fragment key={index}>{line}</React.Fragment>
+      ))}
+    </CommaSeparatedList>
+  );
 };
 
 export default ChangesetAuthor;

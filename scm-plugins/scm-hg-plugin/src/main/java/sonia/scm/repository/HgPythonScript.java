@@ -38,83 +38,30 @@ import java.io.File;
  */
 public enum HgPythonScript {
 
-  HOOK("scmhooks.py"),
-  HGWEB("hgweb.py"),
-  VERSION("version.py"),
-  CGISERVE("cgiserve.py");
+  HOOK("scmhooks.py"), CGISERVE("cgiserve.py");
 
-  /** Field description */
-  private static final String BASE_DIRECTORY =
-    "lib".concat(File.separator).concat("python");
-
-  /** Field description */
+  private static final String BASE_DIRECTORY = "lib".concat(File.separator).concat("python");
   private static final String BASE_RESOURCE = "/sonia/scm/python/";
 
-  //~--- constructors ---------------------------------------------------------
+  private final String name;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param name
-   */
-  private HgPythonScript(String name)
-  {
+  HgPythonScript(String name) {
     this.name = name;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   *
-   * @return
-   */
-  public static File getScriptDirectory(SCMContextProvider context)
-  {
+  public static File getScriptDirectory(SCMContextProvider context) {
     return new File(context.getBaseDirectory(), BASE_DIRECTORY);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param context
-   *
-   * @return
-   */
-  public File getFile(SCMContextProvider context)
-  {
+  public File getFile(SCMContextProvider context) {
     return new File(getScriptDirectory(context), name);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getName()
-  {
+  public String getName() {
     return name;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getResourcePath()
-  {
+  public String getResourcePath() {
     return BASE_RESOURCE.concat(name);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private String name;
 }

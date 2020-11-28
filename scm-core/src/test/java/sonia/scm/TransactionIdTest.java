@@ -21,30 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository;
 
-//~--- JDK imports ------------------------------------------------------------
+package sonia.scm;
 
-import java.io.File;
-import java.io.IOException;
+import org.junit.jupiter.api.Test;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class HgVersionHandler extends AbstractHgHandler
-{
+import static org.assertj.core.api.Assertions.assertThat;
 
-  public HgVersionHandler(HgRepositoryHandler handler, HgContext context,
-                          File directory)
-  {
-    super(handler, context, null, directory);
+class TransactionIdTest {
+
+  @Test
+  void shouldSetGetAndClear() {
+    TransactionId.set("42");
+
+    assertThat(TransactionId.get()).contains("42");
+    TransactionId.clear();
+    assertThat(TransactionId.get()).isEmpty();
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  public HgVersion getVersion() throws IOException {
-    return getResultFromScript(HgVersion.class, HgPythonScript.VERSION);
-  }
 }

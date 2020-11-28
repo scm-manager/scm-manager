@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -39,7 +39,6 @@ import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.AbstractTestBase;
 import sonia.scm.repository.HgConfig;
-import sonia.scm.repository.HgContext;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.user.User;
@@ -88,7 +87,6 @@ public abstract class IncomingOutgoingTestBase extends AbstractTestBase
     when(handler.getDirectory(outgoingRepository.getId())).thenReturn(
       outgoingDirectory);
     when(handler.getConfig()).thenReturn(temp.getConfig());
-    when(handler.getHgContext()).thenReturn(new HgContext());
   }
 
   //~--- set methods ----------------------------------------------------------

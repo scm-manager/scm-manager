@@ -28,7 +28,9 @@ import com.google.common.base.Strings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.PageResult;
 import sonia.scm.repository.Branch;
@@ -47,6 +49,7 @@ import sonia.scm.web.VndMediaType;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -57,6 +60,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
+import java.util.Optional;
 
 import static sonia.scm.AlreadyExistsException.alreadyExists;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -132,7 +136,7 @@ public class BranchRootResource {
         .stream()
         .filter(branch -> branchName.equals(branch.getName()))
         .findFirst()
-        .map(branch -> branchToDtoMapper.map(branch, namespaceAndName))
+        .map(branch -> branchToDtoMapper.map(branch, repositoryService.getRepository()))
         .map(Response::ok)
         .orElseThrow(() -> notFound(entity("branch", branchName).in(namespaceAndName)))
         .build();
@@ -207,7 +211,22 @@ public class BranchRootResource {
   @POST
   @Path("")
   @Consumes(VndMediaType.BRANCH_REQUEST)
-  @Operation(summary = "Create branch", description = "Creates a new branch.", tags = "Repository")
+  @Operation(
+    summary = "Create branch",
+    description = "Creates a new branch.",
+    tags = "Repository",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.BRANCH_REQUEST,
+        schema = @Schema(implementation = BranchRequestDto.class),
+        examples = @ExampleObject(
+          name = "Branch a new develop branch from main.",
+          value = "{\n  \"parent\":\"main\",\n  \"name\":\"develop\"\n}",
+          summary = "Create a branch"
+        )
+      )
+    )
+  )
   @ApiResponse(
     responseCode = "201",
     description = "create success",
@@ -247,7 +266,7 @@ public class BranchRootResource {
         branchCommand.from(parentName);
       }
       Branch newBranch = branchCommand.branch(branchName);
-      return Response.created(URI.create(resourceLinks.branch().self(namespaceAndName, newBranch.getName()))).build();
+      return Response.created(URI.create(resourceLinks.branch().self(namespace, name, newBranch.getName()))).build();
     }
   }
 
@@ -308,4 +327,50 @@ public class BranchRootResource {
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
   }
+
+  /**
+   * Deletes a branch.
+   *
+   * <strong>Note:</strong> This method requires "repository" privilege.
+   *
+   * @param branch the name of the branch to delete.
+   */
+  @DELETE
+  @Path("{branch}")
+  @Operation(summary = "Delete branch", description = "Deletes the given branch.", tags = "Repository")
+  @ApiResponse(responseCode = "204", description = "delete success or nothing to delete")
+  @ApiResponse(responseCode = "400", description = "the default branch cannot be deleted")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to modify the repository")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response delete(@PathParam("namespace") String namespace,
+                         @PathParam("name") String name,
+                         @PathParam("branch") String branch) {
+    try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
+      RepositoryPermissions.modify(repositoryService.getRepository()).check();
+
+      Optional<Branch> branchToBeDeleted = repositoryService.getBranchesCommand().getBranches().getBranches().stream()
+        .filter(b -> b.getName().equalsIgnoreCase(branch))
+        .findFirst();
+
+      if (branchToBeDeleted.isPresent()) {
+        if (branchToBeDeleted.get().isDefaultBranch()) {
+          return Response.status(400).build();
+        } else {
+          repositoryService.getBranchCommand().delete(branch);
+        }
+      }
+    } catch (IOException e) {
+      return Response.serverError().build();
+    }
+    return Response.noContent().build();
+  }
+
 }

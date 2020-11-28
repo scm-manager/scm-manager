@@ -45,6 +45,6 @@ public class BranchChangesetCollectionToDtoMapper extends ChangesetCollectionToD
   }
 
   private String createSelfLink(Repository repository, String branch) {
-    return resourceLinks.branch().history(repository.getNamespaceAndName(), branch);
+    return resourceLinks.branch().history(repository.getNamespace(), repository.getName(), branch);
   }
 }

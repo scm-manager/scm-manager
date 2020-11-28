@@ -59,6 +59,7 @@ import static java.util.Optional.of;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 import static sonia.scm.repository.GitUtil.getBranchIdOrCurrentHead;
+import static sonia.scm.repository.spi.IntegrateChangesFromWorkdirException.forMessage;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -255,7 +256,7 @@ class AbstractGitCommand {
           .findAny()
           .ifPresent(remoteRefUpdate -> {
             logger.info("message for failed push: {}", pushResult.getMessages());
-            throw new IntegrateChangesFromWorkdirException(repository, "could not push changes into central repository: " + remoteRefUpdate.getStatus());
+            throw forMessage(repository, pushResult.getMessages());
           });
       } catch (GitAPIException e) {
         throw new InternalRepositoryException(repository, "could not push changes into central repository", e);

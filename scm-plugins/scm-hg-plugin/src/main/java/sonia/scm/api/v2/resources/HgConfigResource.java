@@ -27,7 +27,9 @@ package sonia.scm.api.v2.resources;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.config.ConfigurationPermissions;
@@ -121,7 +123,23 @@ public class HgConfigResource {
   @PUT
   @Path("")
   @Consumes(HgVndMediaType.CONFIG)
-  @Operation(summary = "Modify hg configuration", description = "Modifies the global mercurial configuration.", tags = "Mercurial", operationId = "hg_put_config")
+  @Operation(
+    summary = "Modify hg configuration",
+    description = "Modifies the global mercurial configuration.",
+    tags = "Mercurial",
+    operationId = "hg_put_config",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = HgVndMediaType.CONFIG,
+        schema = @Schema(implementation = UpdateHgConfigDto.class),
+        examples = @ExampleObject(
+          name = "Overwrites current configuration with this one.",
+          value = "{\n  \"disabled\":false,\n  \"hgBinary\":\"hg\",\n  \"pythonBinary\":\"python\",\n  \"pythonPath\":\"\",\n  \"encoding\":\"UTF-8\",\n  \"useOptimizedBytecode\":false,\n  \"showRevisionInId\":false,\n  \"disableHookSSLValidation\":false,\n  \"enableHttpPostArgs\":false\n}",
+          summary = "Simple update configuration"
+        )
+      )
+    )
+  )
   @ApiResponse(
     responseCode = "204",
     description = "update success"

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import com.google.common.base.Objects;
@@ -165,7 +165,7 @@ public final class BranchesCommandBuilder
   private Branches getBranchesFromCommand()
     throws IOException
   {
-    return new Branches(branchesCommand.getBranches());
+    return new Branches(branchesCommand.getBranchesWithStaleFlags(new BranchXDaysOlderThanDefaultStaleComputer()));
   }
 
   //~--- inner classes --------------------------------------------------------

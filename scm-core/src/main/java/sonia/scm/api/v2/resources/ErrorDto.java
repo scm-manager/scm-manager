@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -40,7 +40,10 @@ public class ErrorDto {
   private List<ContextEntry> context;
   private String message;
 
-  @JsonInclude(JsonInclude.Include.NON_NULL)
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
+  private List<AdditionalMessageDto> additionalMessages;
+
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
   @XmlElementWrapper(name = "violations")
   private List<ConstraintViolationDto> violations;
 
@@ -51,6 +54,12 @@ public class ErrorDto {
   @Getter @Setter
   public static class ConstraintViolationDto {
     private String path;
+    private String message;
+  }
+
+  @Getter @Setter
+  public static class AdditionalMessageDto {
+    private String key;
     private String message;
   }
 }

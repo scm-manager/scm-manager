@@ -26,11 +26,32 @@ import { Branch, Repository } from "@scm-manager/ui-types";
 import { WithTranslation, withTranslation } from "react-i18next";
 import BranchButtonGroup from "./BranchButtonGroup";
 import DefaultBranchTag from "./DefaultBranchTag";
+import { DateFromNow } from "@scm-manager/ui-components";
+import styled from "styled-components";
 
 type Props = WithTranslation & {
   repository: Repository;
   branch: Branch;
 };
+
+const FlexRow = styled.div`
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+`;
+
+const Created = styled.div`
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+`;
+
+const Label = styled.strong`
+  margin-right: 0.3rem;
+`;
+
+const Date = styled(DateFromNow)`
+  font-size: 0.8rem;
+`;
 
 class BranchDetail extends React.Component<Props> {
   render() {
@@ -38,9 +59,12 @@ class BranchDetail extends React.Component<Props> {
 
     return (
       <div className="media">
-        <div className="media-content subtitle">
-          <strong>{t("branch.name")}</strong> {branch.name} <DefaultBranchTag defaultBranch={branch.defaultBranch} />
-        </div>
+        <FlexRow className="media-content subtitle">
+          <Label>{t("branch.name")}</Label> {branch.name} <DefaultBranchTag defaultBranch={branch.defaultBranch} />
+          <Created className="is-ellipsis-overflow">
+            {t("tags.overview.created")} <Date date={branch.lastCommitDate} className="has-text-grey" />
+          </Created>
+        </FlexRow>
         <div className="media-right">
           <BranchButtonGroup repository={repository} branch={branch} />
         </div>

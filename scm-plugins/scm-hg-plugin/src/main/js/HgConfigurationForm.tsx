@@ -33,7 +33,6 @@ type Configuration = {
   encoding: string;
   useOptimizedBytecode: boolean;
   showRevisionInId: boolean;
-  disableHookSSLValidation: boolean;
   enableHttpPostArgs: boolean;
   _links: Links;
 };
@@ -139,7 +138,6 @@ class HgConfigurationForm extends React.Component<Props, State> {
           {this.checkbox("showRevisionInId")}
         </div>
         <div className="column is-half">
-          {this.checkbox("disableHookSSLValidation")}
           {this.checkbox("enableHttpPostArgs")}
         </div>
       </div>

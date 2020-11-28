@@ -32,33 +32,47 @@ import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
+
+import java.time.Instant;
+import java.util.Optional;
 
 import static de.otto.edison.hal.Link.linkBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
-public abstract class BranchToBranchDtoMapper extends HalAppenderMapper {
+public abstract class BranchToBranchDtoMapper extends HalAppenderMapper implements InstantAttributeMapper {
 
   @Inject
   private ResourceLinks resourceLinks;
 
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
-  public abstract BranchDto map(Branch branch, @Context NamespaceAndName namespaceAndName);
+  public abstract BranchDto map(Branch branch, @Context Repository repository);
 
   @ObjectFactory
-  BranchDto createDto(@Context NamespaceAndName namespaceAndName, Branch branch) {
+  BranchDto createDto(@Context Repository repository, Branch branch) {
+    NamespaceAndName namespaceAndName = new NamespaceAndName(repository.getNamespace(), repository.getName());
     Links.Builder linksBuilder = linkingTo()
-      .self(resourceLinks.branch().self(namespaceAndName, branch.getName()))
-      .single(linkBuilder("history", resourceLinks.branch().history(namespaceAndName, branch.getName())).build())
+      .self(resourceLinks.branch().self(repository.getNamespace(), repository.getName(), branch.getName()))
+      .single(linkBuilder("history", resourceLinks.branch().history(repository.getNamespace(), repository.getName(), branch.getName())).build())
       .single(linkBuilder("changeset", resourceLinks.changeset().changeset(namespaceAndName.getNamespace(), namespaceAndName.getName(), branch.getRevision())).build())
       .single(linkBuilder("source", resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), branch.getRevision())).build());
+
+    if (!branch.isDefaultBranch() && RepositoryPermissions.modify(repository).isPermitted()) {
+      linksBuilder.single(linkBuilder("delete", resourceLinks.branch().delete(repository.getNamespace(), repository.getName(), branch.getName())).build());
+    }
 
     Embedded.Builder embeddedBuilder = Embedded.embeddedBuilder();
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), branch, namespaceAndName);
 
     return new BranchDto(linksBuilder.build(), embeddedBuilder.build());
+  }
+
+  Instant mapOptionalTime(Optional<Long> date) {
+    return date.map(this::mapTime).orElse(null);
   }
 }

@@ -32,10 +32,14 @@ export function orderBranches(branches: Branch[]) {
       return -20;
     } else if (!a.defaultBranch && b.defaultBranch) {
       return 20;
-    } else if (a.name === "master" && b.name !== "master") {
+    } else if (a.name === "main" && b.name !== "main") {
       return -10;
-    } else if (a.name !== "master" && b.name === "master") {
+    } else if (a.name !== "main" && b.name === "main") {
       return 10;
+    } else if (a.name === "master" && b.name !== "master") {
+      return -9;
+    } else if (a.name !== "master" && b.name === "master") {
+      return 9;
     } else if (a.name === "default" && b.name !== "default") {
       return -10;
     } else if (a.name !== "default" && b.name === "default") {

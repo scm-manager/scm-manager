@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-import com.google.inject.util.Providers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -32,16 +31,14 @@ import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
-import sonia.scm.repository.HgHookManager;
-import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
-import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.regex.Matcher;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -54,9 +51,7 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
   @Before
   public void initHgModifyCommand() {
-    HgHookManager hookManager = HgTestUtil.createHookManager();
-    HgRepositoryEnvironmentBuilder environmentBuilder = new HgRepositoryEnvironmentBuilder(handler, hookManager);
-    SimpleHgWorkingCopyFactory workingCopyFactory = new SimpleHgWorkingCopyFactory(Providers.of(environmentBuilder), new NoneCachingWorkingCopyPool(new WorkdirProvider())) {
+    SimpleHgWorkingCopyFactory workingCopyFactory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())) {
       @Override
       public void configure(com.aragost.javahg.commands.PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test
@@ -185,5 +180,19 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
   @Test(expected = NoChangesMadeException.class)
   public void shouldThrowNoChangesMadeExceptionIfEmptyLocalChangesetAfterRequest() {
     hgModifyCommand.execute(new ModifyCommandRequest());
+  }
+
+  @Test
+  public void shouldExtractSimpleMessage() {
+    Matcher matcher = HgModifyCommand.HG_MESSAGE_PATTERN.matcher("[SCM] This is a simple message");
+    matcher.matches();
+    assertThat(matcher.group(1)).isEqualTo("This is a simple message");
+  }
+
+  @Test
+  public void shouldExtractErrorMessage() {
+    Matcher matcher = HgModifyCommand.HG_MESSAGE_PATTERN.matcher("[SCM] Error: This is an error message");
+    matcher.matches();
+    assertThat(matcher.group(1)).isEqualTo("This is an error message");
   }
 }

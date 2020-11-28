@@ -28,10 +28,9 @@ import { compose } from "redux";
 import { Redirect, Route, Switch, withRouter } from "react-router-dom";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import { fetchBranch, getBranch, getFetchBranchFailure, isFetchBranchPending } from "../modules/branches";
-import { ErrorNotification, Loading, NotFoundError } from "@scm-manager/ui-components";
+import { ErrorNotification, Loading, NotFoundError, urls } from "@scm-manager/ui-components";
 import { History } from "history";
 import queryString from "query-string";
-import { urls } from "@scm-manager/ui-components";
 
 type Props = {
   repository: Repository;
