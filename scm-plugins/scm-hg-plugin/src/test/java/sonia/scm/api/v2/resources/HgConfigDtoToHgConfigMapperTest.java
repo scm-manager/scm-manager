@@ -48,10 +48,7 @@ public class HgConfigDtoToHgConfigMapperTest {
 
     assertEquals("ABC", config.getEncoding());
     assertEquals("/etc/hg", config.getHgBinary());
-    assertEquals("/py", config.getPythonBinary());
-    assertEquals("/etc/", config.getPythonPath());
     assertTrue(config.isShowRevisionInId());
-    assertTrue(config.isUseOptimizedBytecode());
     assertTrue(config.isEnableHttpPostArgs());
   }
 
@@ -60,10 +57,7 @@ public class HgConfigDtoToHgConfigMapperTest {
     configDto.setDisabled(true);
     configDto.setEncoding("ABC");
     configDto.setHgBinary("/etc/hg");
-    configDto.setPythonBinary("/py");
-    configDto.setPythonPath("/etc/");
     configDto.setShowRevisionInId(true);
-    configDto.setUseOptimizedBytecode(true);
     configDto.setEnableHttpPostArgs(true);
 
     return configDto;

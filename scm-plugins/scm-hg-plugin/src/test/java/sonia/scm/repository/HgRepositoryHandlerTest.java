@@ -85,7 +85,6 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
     HgConfig hgConfig = new HgConfig();
     hgConfig.setHgBinary("hg");
-    hgConfig.setPythonBinary("python");
     repositoryHandler.setConfig(hgConfig);
 
     initRepository();
@@ -99,7 +98,7 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
     when(pluginLoader.getUberClassLoader()).thenReturn(HgRepositoryHandler.class.getClassLoader());
 
     HgVersionCommand versionCommand = mock(HgVersionCommand.class);
-    when(versionCommand.get()).thenReturn(new HgVersion("5.2.0", "3.7.2"));
+    when(versionCommand.get()).thenReturn("python/3.7.2 mercurial/5.2.0");
 
     HgRepositoryHandler handler = new HgRepositoryHandler(
       factory, locationResolver, pluginLoader, null

@@ -38,7 +38,7 @@ import java.io.File;
  */
 public enum HgPythonScript {
 
-  HOOK("scmhooks.py"), CGISERVE("cgiserve.py");
+  HOOK("scmhooks.py"), CGISERVE("cgiserve.py"), VERSION("scmversion.py");
 
   private static final String BASE_DIRECTORY = "lib".concat(File.separator).concat("python");
   private static final String BASE_RESOURCE = "/sonia/scm/python/";

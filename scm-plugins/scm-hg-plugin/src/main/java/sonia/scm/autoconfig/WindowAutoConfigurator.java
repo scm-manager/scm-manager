@@ -21,42 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+package sonia.scm.autoconfig;
 
-import java.util.List;
+import sonia.scm.repository.HgConfig;
 
-@NoArgsConstructor
-@Getter
-@Setter
-public class HgConfigPackagesDto extends HalRepresentation {
+import java.nio.file.Path;
 
-  private List<HgConfigPackageDto> packages;
+// TODO implement
 
+public class WindowAutoConfigurator implements AutoConfigurator {
   @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
+  public HgConfig configure() {
+    return null;
   }
 
-  @NoArgsConstructor
-  @Getter
-  @Setter
-  public static class HgConfigPackageDto {
-
-    private String arch;
-    private HgConfigDto hgConfigTemplate;
-    private String hgVersion;
-    private String id;
-    private String platform;
-    private String pythonVersion;
-    private long size;
-    private String url;
+  @Override
+  public HgConfig configure(Path hg) {
+    return null;
   }
 }

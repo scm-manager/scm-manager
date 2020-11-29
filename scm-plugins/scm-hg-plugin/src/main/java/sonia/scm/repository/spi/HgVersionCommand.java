@@ -24,93 +24,71 @@
 
 package sonia.scm.repository.spi;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.ByteStreams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.SCMContext;
 import sonia.scm.repository.HgConfig;
-import sonia.scm.repository.HgVersion;
+import sonia.scm.repository.HgPythonScript;
 
-import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class HgVersionCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgVersionCommand.class);
-
-  @VisibleForTesting
-  static final String[] HG_ARGS = {
-    "version", "--template", "{ver}"
-  };
-
-  @VisibleForTesting
-  static final String[] PYTHON_ARGS = {
-    "-c", "import sys; print(sys.version)"
-  };
+  public static final String UNKNOWN = "python/x.y.z mercurial/x.y.z";
 
   private final HgConfig config;
+  private final String extension;
   private final ProcessExecutor executor;
 
   public HgVersionCommand(HgConfig config) {
-    this(config, command -> new ProcessBuilder(command).start());
+    this(config, extension(), command -> new ProcessBuilder(command).start());
   }
 
-  HgVersionCommand(HgConfig config, ProcessExecutor executor) {
+  HgVersionCommand(HgConfig config, String extension, ProcessExecutor executor) {
     this.config = config;
+    this.extension = extension;
     this.executor = executor;
   }
 
-  public HgVersion get() {
-    return new HgVersion(getHgVersion(), getPythonVersion());
+  private static String extension() {
+    return HgPythonScript.VERSION.getFile(SCMContext.getContext()).getAbsolutePath();
   }
 
-  @Nonnull
-  private String getPythonVersion() {
+  public String get() {
+    List<String> command = createCommand();
     try {
-      String content = exec(config.getPythonBinary(), PYTHON_ARGS);
-      int index = content.indexOf(' ');
-      if (index > 0) {
-        return content.substring(0, index);
-      }
-    } catch (IOException ex) {
-      LOG.warn("failed to get python version", ex);
-    } catch (InterruptedException ex) {
-      LOG.warn("failed to get python version", ex);
-      Thread.currentThread().interrupt();
-    }
-    return HgVersion.UNKNOWN;
-  }
-
-  @Nonnull
-  private String getHgVersion() {
-    try {
-      return exec(config.getHgBinary(), HG_ARGS).trim();
+      return exec(command).trim();
     } catch (IOException ex) {
       LOG.warn("failed to get mercurial version", ex);
     } catch (InterruptedException ex) {
       LOG.warn("failed to get mercurial version", ex);
       Thread.currentThread().interrupt();
     }
-    return HgVersion.UNKNOWN;
+    return UNKNOWN;
   }
 
-  @SuppressWarnings("UnstableApiUsage")
-  private String exec(String command, String[] args) throws IOException, InterruptedException {
-    List<String> cmd = new ArrayList<>();
-    cmd.add(command);
-    cmd.addAll(Arrays.asList(args));
+  private List<String> createCommand() {
+    List<String> command = new ArrayList<>();
+    command.add(config.getHgBinary());
+    command.add("--config");
+    command.add("extensions.scmversion=" + extension);
+    command.add("scmversion");
+    return command;
+  }
 
-    Process process = executor.execute(cmd);
+  private String exec(List<String> command) throws IOException, InterruptedException {
+    Process process = executor.execute(command);
     byte[] bytes = ByteStreams.toByteArray(process.getInputStream());
     int exitCode = process.waitFor();
     if (exitCode != 0) {
       throw new IOException("process ends with exit code " + exitCode);
     }
-    return new String(bytes, StandardCharsets.UTF_8);
+    return new String(bytes, StandardCharsets.UTF_8).trim();
   }
 
   @FunctionalInterface

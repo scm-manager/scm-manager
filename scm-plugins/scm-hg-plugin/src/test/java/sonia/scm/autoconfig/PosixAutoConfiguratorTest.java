@@ -56,7 +56,6 @@ class PosixAutoConfiguratorTest {
     HgConfig config = configurator.configure();
 
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
-    assertThat(config.getPythonBinary()).isEqualTo(python.toString());
   }
 
   private PosixAutoConfigurator create(@TempDir Path directory) {
@@ -79,7 +78,6 @@ class PosixAutoConfiguratorTest {
     HgConfig config = configurator.configure();
 
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
-    assertThat(config.getPythonBinary()).isEqualTo(python.toString());
   }
 
   @Test
@@ -94,7 +92,6 @@ class PosixAutoConfiguratorTest {
     HgConfig config = configurator.configure();
 
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
-    assertThat(config.getPythonBinary()).isEqualTo(python.toString());
   }
 
   @Test
@@ -109,7 +106,6 @@ class PosixAutoConfiguratorTest {
     HgConfig config = configurator.configure();
 
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
-    assertThat(config.getPythonBinary()).isEqualTo(python.toString());
   }
 
   @Test
@@ -131,7 +127,6 @@ class PosixAutoConfiguratorTest {
 
     HgConfig config = configurator.configure();
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
-    assertThat(config.getPythonBinary()).isEqualTo(python.toString());
   }
 
   @Test
@@ -147,20 +142,9 @@ class PosixAutoConfiguratorTest {
     Files.createDirectories(mercurialModule);
 
     PosixAutoConfigurator configurator = create(directory);
-    configurator.setExecutor((Path binary, String... args) -> {
-      String content = String.join("\n",
-        "checking Python executable (/python3.8)",
-        "checking Python lib (/python3.8)...",
-        "checking installed modules (" + mercurialModule.toString() + ")...",
-        "checking templates (/mercurial/templates)...",
-        "checking default template (/mercurial/templates/map-cmdline.default))"
-      );
-      return new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
-    });
     HgConfig config = configurator.configure();
 
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
-    assertThat(config.getPythonPath()).isEqualTo(modules.toString());
   }
 
 }

@@ -33,6 +33,8 @@ import java.util.Optional;
 
 public interface AutoConfigurator {
 
+  // TODO check api. Why do we need both methods?
+
   HgConfig configure();
 
   HgConfig configure(Path hg);

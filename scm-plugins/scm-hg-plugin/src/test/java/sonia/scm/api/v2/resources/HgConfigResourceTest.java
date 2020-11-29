@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -82,21 +82,14 @@ public class HgConfigResourceTest {
   private HgRepositoryHandler repositoryHandler;
 
   @Mock
-  private Provider<HgConfigPackageResource> packagesResource;
-
-  @Mock
   private Provider<HgConfigAutoConfigurationResource> autoconfigResource;
-
-  @Mock
-  private Provider<HgConfigInstallationsResource> installationsResource;
 
   @Before
   public void prepareEnvironment() {
     HgConfig gitConfig = createConfiguration();
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
     HgConfigResource gitConfigResource =
-      new HgConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler, packagesResource,
-                           autoconfigResource, installationsResource);
+      new HgConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler, autoconfigResource);
     dispatcher.addSingletonResource(gitConfigResource);
     when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
   }

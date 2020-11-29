@@ -53,7 +53,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static sonia.scm.repository.DefaultHgEnvironmentBuilder.*;
 
-
 @ExtendWith(MockitoExtension.class)
 class DefaultHgEnvironmentBuilderTest {
 
@@ -83,18 +82,18 @@ class DefaultHgEnvironmentBuilderTest {
 
   @Test
   void shouldReturnReadEnvironment() {
-    Repository heartOfGold = prepareForRead("/usr/lib/python", "42");
+    Repository heartOfGold = prepareForRead("42");
 
     Map<String, String> env = builder.read(heartOfGold);
-    assertReadEnv(env, "/usr/lib/python", "42");
+    assertReadEnv(env, "42");
   }
 
   @Test
   void shouldReturnWriteEnvironment() throws IOException {
-    Repository heartOfGold = prepareForWrite("/opt/python", "21");
+    Repository heartOfGold = prepareForWrite("21");
 
     Map<String, String> env = builder.write(heartOfGold);
-    assertReadEnv(env, "/opt/python", "21");
+    assertReadEnv(env, "21");
 
     String bearer = CipherUtil.getInstance().decode(env.get(ENV_BEARER_TOKEN));
     assertThat(bearer).isEqualTo("secretAC");
@@ -106,7 +105,7 @@ class DefaultHgEnvironmentBuilderTest {
   @Test
   void shouldSetTransactionId() throws IOException {
     TransactionId.set("ti42");
-    Repository heartOfGold = prepareForWrite("/opt/python", "21");
+    Repository heartOfGold = prepareForWrite("21");
     Map<String, String> env = builder.write(heartOfGold);
     assertThat(env).containsEntry(ENV_TRANSACTION_ID, "ti42");
   }
@@ -114,12 +113,12 @@ class DefaultHgEnvironmentBuilderTest {
   @Test
   void shouldThrowIllegalStateIfServerCouldNotBeStarted() throws IOException {
     when(server.start()).thenThrow(new IOException("failed to start"));
-    Repository repository = prepareForRead("/usr", "42");
+    Repository repository = prepareForRead("42");
     assertThrows(IllegalStateException.class, () -> builder.write(repository));
   }
 
-  private Repository prepareForWrite(String pythonPath, String id) throws IOException {
-    Repository heartOfGold = prepareForRead(pythonPath, id);
+  private Repository prepareForWrite(String id) throws IOException {
+    Repository heartOfGold = prepareForRead(id);
     applyAccessToken("secretAC");
     when(server.start()).thenReturn(2042);
     when(hookEnvironment.getChallenge()).thenReturn("challenge");
@@ -133,21 +132,19 @@ class DefaultHgEnvironmentBuilderTest {
   }
 
 
-  private void assertReadEnv(Map<String, String> env, String pythonPath, String repositoryId) {
+  private void assertReadEnv(Map<String, String> env, String repositoryId) {
     assertThat(env)
       .containsEntry(ENV_REPOSITORY_ID, repositoryId)
       .containsEntry(ENV_REPOSITORY_NAME, "hitchhiker/HeartOfGold")
       .containsEntry(ENV_HTTP_POST_ARGS, "false")
-      .containsEntry(ENV_REPOSITORY_PATH, directory.resolve("repo").toAbsolutePath().toString())
-      .containsEntry(ENV_PYTHON_PATH, pythonPath + File.pathSeparator + directory.resolve("home/lib/python"));
+      .containsEntry(ENV_REPOSITORY_PATH, directory.resolve("repo").toAbsolutePath().toString());
   }
 
   @Nonnull
-  private Repository prepareForRead(String pythonPath, String id) {
+  private Repository prepareForRead(String id) {
     when(repositoryHandler.getDirectory(id)).thenReturn(directory.resolve("repo").toFile());
 
     HgConfig config = new HgConfig();
-    config.setPythonPath(pythonPath);
     when(repositoryHandler.getConfig()).thenReturn(config);
 
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();

@@ -30,10 +30,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.autoconfig.AutoConfigurator;
-import sonia.scm.installer.HgInstaller;
-import sonia.scm.installer.HgInstallerFactory;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationWriter;
@@ -61,7 +60,6 @@ import java.util.Optional;
 public class HgRepositoryHandler
   extends AbstractSimpleRepositoryHandler<HgConfig> {
 
-  public static final String RESOURCE_VERSION = "sonia/scm/version/scm-hg-plugin";
   public static final String TYPE_DISPLAYNAME = "Mercurial";
   public static final String TYPE_NAME = "hg";
   public static final RepositoryType TYPE = new RepositoryType(
@@ -88,22 +86,7 @@ public class HgRepositoryHandler
   }
 
   public void doAutoConfiguration(HgConfig autoConfig) {
-    HgInstaller installer = HgInstallerFactory.createInstaller();
-
-    try {
-      if (logger.isDebugEnabled()) {
-        logger.debug("installing mercurial with {}", installer.getClass().getName());
-      }
-
-      installer.install(baseDirectory, autoConfig);
-      config = autoConfig;
-      storeConfig();
-    } catch (IOException ioe) {
-      if (logger.isErrorEnabled()) {
-        logger.error("Could not write Hg CGI for inital config.  "
-          + "HgWeb may not function until a new Hg config is set", ioe);
-      }
-    }
+    // TODO check if we use auto configuration resource from ui
   }
 
   @Override
@@ -111,6 +94,7 @@ public class HgRepositoryHandler
     super.init(context);
     writePythonScripts(context);
 
+    // TODO do we still need this?
     // fix wrong hg.bat from package installation
     if (SystemUtil.isWindows()) {
       HgWindowsPackageFix.fixHgPackage(context, getConfig());
@@ -123,6 +107,9 @@ public class HgRepositoryHandler
 
     if (config == null) {
       HgConfig config = null;
+
+      // TODO check
+
       Optional<AutoConfigurator> autoConfigurator = AutoConfigurator.get();
       if (autoConfigurator.isPresent()) {
         config = autoConfigurator.get().configure();
@@ -154,10 +141,10 @@ public class HgRepositoryHandler
   }
 
   String getVersionInformation(HgVersionCommand command) {
-    String version = getStringFromResource(RESOURCE_VERSION, DEFAULT_VERSION_INFORMATION);
-    HgVersion hgVersion = command.get();
-    logger.debug("mercurial/python informations: {}", hgVersion);
-    return MessageFormat.format(version, hgVersion.getPython(), hgVersion.getMercurial());
+    return String.format("scm-hg-version/%s %s",
+      SCMContext.getContext().getVersion(),
+      command.get()
+    );
   }
 
   @Override

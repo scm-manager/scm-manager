@@ -26,7 +26,14 @@ from mercurial import registrar
 from mercurial.hgweb import hgweb, wsgicgi
 
 cmdtable = {}
-command = registrar.command(cmdtable)
+
+try:
+    from mercurial import registrar
+    command = registrar.command(cmdtable)
+except (AttributeError, ImportError):
+    # Fallback to hg < 4.3 support
+    from mercurial import cmdutil
+    command = cmdutil.command(cmdtable)
 
 @command(b'cgiserve')
 def cgiserve(ui, repo, **opts):
