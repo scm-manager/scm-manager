@@ -128,11 +128,17 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
     try (Git git = new Git(context.open())) {
       String name = request.getName();
       final Repository repository = git.getRepository();
-      Ref tagRef = findTagRef(git, name);
+      Optional<Ref> tagRef = findTagRef(git, name);
       Tag tag;
 
+      // Deleting a non-existent tag is a valid action and simply succeeds without
+      // anything happening.
+      if (!tagRef.isPresent()) {
+        return;
+      }
+
       try (RevWalk walk = new RevWalk(repository)) {
-        final RevCommit commit = GitUtil.getCommit(repository, walk, tagRef);
+        final RevCommit commit = GitUtil.getCommit(repository, walk, tagRef.get());
         Long tagTime = GitUtil.getTagTime(walk, commit.toObjectId());
         tag = new Tag(name, commit.name(), tagTime);
       }
@@ -146,9 +152,9 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
     }
   }
 
-  private Ref findTagRef(Git git, String name) throws GitAPIException {
+  private Optional<Ref> findTagRef(Git git, String name) throws GitAPIException {
     final String tagRef = "refs/tags/" + name;
-    return git.tagList().call().stream().filter(it -> it.getName().equals(tagRef)).findAny().get();
+    return git.tagList().call().stream().filter(it -> it.getName().equals(tagRef)).findAny();
   }
 
   private RepositoryHookEvent createTagHookEvent(TagHookContextProvider hookEvent) {
