@@ -29,7 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.repository.HgConfig;
-import sonia.scm.repository.HgPythonScript;
+import sonia.scm.repository.HgExtensions;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -56,7 +56,7 @@ public class HgVersionCommand {
   }
 
   private static String extension() {
-    return HgPythonScript.VERSION.getFile(SCMContext.getContext()).getAbsolutePath();
+    return HgExtensions.VERSION.getFile(SCMContext.getContext()).getAbsolutePath();
   }
 
   public String get() {

@@ -52,7 +52,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.MessageFormat;
 import java.util.Optional;
 
 @Singleton
@@ -92,7 +91,7 @@ public class HgRepositoryHandler
   @Override
   public void init(SCMContextProvider context) {
     super.init(context);
-    writePythonScripts(context);
+    writeHgExtensions(context);
 
     // TODO do we still need this?
     // fix wrong hg.bat from package installation
@@ -163,8 +162,7 @@ public class HgRepositoryHandler
   }
 
   /**
-   * Writes .hg/hgrc, disables hg access control and added scm hook support.
-   * see HgPermissionFilter
+   * Writes repository to .hg/hgrc.
    *
    * @param repository
    * @param directory
@@ -192,10 +190,10 @@ public class HgRepositoryHandler
     return HgConfig.class;
   }
 
-  private void writePythonScripts(SCMContextProvider context) {
-    IOUtil.mkdirs(HgPythonScript.getScriptDirectory(context));
+  private void writeHgExtensions(SCMContextProvider context) {
+    IOUtil.mkdirs(HgExtensions.getScriptDirectory(context));
 
-    for (HgPythonScript script : HgPythonScript.values()) {
+    for (HgExtensions script : HgExtensions.values()) {
       if (logger.isDebugEnabled()) {
         logger.debug("write python script {}", script.getName());
       }
@@ -208,11 +206,11 @@ public class HgRepositoryHandler
     }
   }
 
-  private InputStream input(HgPythonScript script) {
+  private InputStream input(HgExtensions script) {
     return HgRepositoryHandler.class.getResourceAsStream(script.getResourcePath());
   }
 
-  private OutputStream output(SCMContextProvider context, HgPythonScript script) throws FileNotFoundException {
+  private OutputStream output(SCMContextProvider context, HgExtensions script) throws FileNotFoundException {
     return new FileOutputStream(script.getFile(context));
   }
 

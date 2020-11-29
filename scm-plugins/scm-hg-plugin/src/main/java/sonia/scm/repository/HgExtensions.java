@@ -26,6 +26,7 @@ package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -36,21 +37,28 @@ import java.io.File;
  *
  * @author Sebastian Sdorra
  */
-public enum HgPythonScript {
+public enum HgExtensions {
 
-  HOOK("scmhooks.py"), CGISERVE("cgiserve.py"), VERSION("scmversion.py");
+  HOOK("scmhooks.py"),
+  CGISERVE("cgiserve.py"),
+  VERSION("scmversion.py"),
+  FILEVIEW("fileview.py");
 
   private static final String BASE_DIRECTORY = "lib".concat(File.separator).concat("python");
   private static final String BASE_RESOURCE = "/sonia/scm/python/";
 
   private final String name;
 
-  HgPythonScript(String name) {
+  HgExtensions(String name) {
     this.name = name;
   }
 
   public static File getScriptDirectory(SCMContextProvider context) {
     return new File(context.getBaseDirectory(), BASE_DIRECTORY);
+  }
+
+  public File getFile() {
+    return getFile(SCMContext.getContext());
   }
 
   public File getFile(SCMContextProvider context) {

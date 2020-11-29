@@ -33,7 +33,7 @@ import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgEnvironmentBuilder;
-import sonia.scm.repository.HgPythonScript;
+import sonia.scm.repository.HgExtensions;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
@@ -82,7 +82,7 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
     this.requestListenerUtil = requestListenerUtil;
     this.environmentBuilder = environmentBuilder;
     this.exceptionHandler = new HgCGIExceptionHandler();
-    this.extension = HgPythonScript.CGISERVE.getFile(SCMContext.getContext());
+    this.extension = HgExtensions.CGISERVE.getFile(SCMContext.getContext());
   }
 
   //~--- methods --------------------------------------------------------------
