@@ -75,6 +75,7 @@ export { default as SyntaxHighlighter } from "./SyntaxHighlighter";
 export { default as ErrorBoundary } from "./ErrorBoundary";
 export { default as OverviewPageActions } from "./OverviewPageActions";
 export { default as CardColumnGroup } from "./CardColumnGroup";
+export { default as CreateTagModal } from "./modals/CreateTagModal";
 export { default as CardColumn } from "./CardColumn";
 export { default as CardColumnSmall } from "./CardColumnSmall";
 export { default as CommaSeparatedList } from "./CommaSeparatedList";

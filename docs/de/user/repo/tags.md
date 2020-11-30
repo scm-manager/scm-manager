@@ -7,7 +7,24 @@ Auf der Tags-Übersicht sind die existierenden Tags nach Erstelldatum absteigend
 
 ![Tags Übersicht](assets/repository-tags-overview.png)
 
+#### Tags löschen
+Tags können direkt von der Übersicht aus gelöscht werden.
+
 ### Tag Detailseite
 Hier wird ein Befehl zum Arbeiten mit dem Tag auf einer Kommandozeile aufgeführt.
 
 ![Tag Detailseite](assets/repository-tag-detailView.png)
+
+#### Tag-Signaturen
+Der Verifizierungsstatus eines Tags wird als Schlüsselsymbol hinter dessen Namen in der Detailansicht dargestellt.
+
+Ein Tag kann mehrere Signaturen haben.
+
+Abhängig vom Status der einzelnen Signaturen, wird das Symbol entsprechend eingefärbt:
+- wenn mindestens eine Signatur ungültig ist, wird der Schlüssel `rot` dargestellt ANDERNFALLS
+- wenn mindestens eine Signatur gültigt ist, wird der Schlüssel `grün` dargestellt ANDERNFALLS
+- wird der Schlüssel `grau` dargestellt
+
+Wird der Mauszeiger über das Symbol bewegt, erscheint eine Liste aller Signaturen des Tags.
+
+![Tag Signatures](assets/repository-tag-signatures.png)

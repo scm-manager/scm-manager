@@ -96,7 +96,10 @@
         "field": {
           "name": {
             "label": "Name",
-            "error": "Dieser Tag existiert bereits."
+            "error": {
+              "exists": "Dieser Tag existiert bereits in diesem Repository.",
+              "format": "Der Tag entspricht nicht dem korrekten Format."
+            }
           }
         }
       },

@@ -43,11 +43,11 @@ import {
   Level,
   SignatureIcon,
   Tooltip,
-  ErrorNotification
+  ErrorNotification,
+  CreateTagModal
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
 import { Link as ReactLink } from "react-router-dom";
-import CreateTagModal from "./CreateTagModal";
 
 type Props = WithTranslation & {
   changeset: Changeset;
@@ -226,7 +226,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
                 <Button
                   color="success"
                   className="tag"
-                  label={(changeset._embedded["tags"]?.length <= 1 && t("changeset.tag.create")) || ""}
+                  label={(changeset._embedded["tags"]?.length === 0 && t("changeset.tag.create")) || ""}
                   icon="plus"
                   action={() => setTagCreationModalVisible(true)}
                 />
@@ -236,7 +236,6 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
           {isTagCreationModalVisible && (
             <CreateTagModal
               revision={changeset.id}
-              tagNames={changeset._embedded["tags"].map((tag: Tag) => tag.name)}
               onClose={() => setTagCreationModalVisible(false)}
               onCreated={() => {
                 refetchChangeset?.();
@@ -244,6 +243,7 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
               }}
               onError={setError}
               tagCreationLink={(changeset._links["tag"] as Link).href}
+              existingTagsLink={(repository._links["tags"] as Link).href}
             />
           )}
         </article>

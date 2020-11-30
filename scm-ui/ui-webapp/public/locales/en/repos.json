@@ -96,7 +96,10 @@
         "field": {
           "name": {
             "label": "Name",
-            "error": "This tag already exists."
+            "error": {
+              "exists": "This tag already exists in this repository.",
+              "format": "The tag name does not match the correct format."
+            }
           }
         }
       },

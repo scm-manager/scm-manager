@@ -25,19 +25,29 @@
 import React, {FC, useEffect, useState} from "react";
 import { Modal, InputField, Button, apiClient } from "@scm-manager/ui-components";
 import { WithTranslation, withTranslation } from "react-i18next";
+import {Tag} from "@scm-manager/ui-types";
+import {isBranchValid} from "../validation";
 
 type Props = WithTranslation & {
+  existingTagsLink: string;
   tagCreationLink: string;
-  tagNames: string[];
   onClose: () => void;
   onCreated: () => void;
   onError: (error: Error) => void;
   revision: string;
 };
 
-const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, onCreated, onError, revision, tagNames }) => {
+const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, existingTagsLink, onCreated, onError, revision }) => {
   const [newTagName, setNewTagName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [tagNames, setTagNames] = useState<string[]>([]);
+
+  useEffect(() => {
+    apiClient
+      .get(existingTagsLink)
+      .then(response => response.json())
+      .then(json => setTagNames(json._embedded.tags.map((tag: Tag) => tag.name)));
+  }, [existingTagsLink]);
 
   const createTag = () => {
     setLoading(true);
@@ -51,9 +61,15 @@ const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, onCreated, onE
       .finally(() => setLoading(false));
   };
 
-  const isInvalid = () => {
-    return tagNames.includes(newTagName);
-  };
+  let validationError = "";
+
+  if (newTagName !== "") {
+    if (tagNames.includes(newTagName)) {
+      validationError = "tags.create.form.field.name.error.exists";
+    } else if (!isBranchValid(newTagName)) {
+      validationError = "tags.create.form.field.name.error.format";
+    }
+  }
 
   return (
     <Modal
@@ -66,16 +82,16 @@ const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, onCreated, onE
             label={t("tags.create.form.field.name.label")}
             onChange={val => setNewTagName(val)}
             value={newTagName}
-            validationError={isInvalid()}
-            errorMessage={t("tags.create.form.field.name.error")}
+            validationError={!!validationError}
+            errorMessage={t(validationError)}
           />
-          <div className="mt-5">{t("tags.create.hint")}</div>
+          <div className="mt-6">{t("tags.create.hint")}</div>
         </>
       }
       footer={
         <>
           <Button action={onClose}>{t("tags.create.cancel")}</Button>
-          <Button color="success" action={() => createTag()} loading={loading} disabled={isInvalid()}>
+          <Button color="success" action={() => createTag()} loading={loading} disabled={!!validationError || newTagName.length === 0}>
             {t("tags.create.confirm")}
           </Button>
         </>
