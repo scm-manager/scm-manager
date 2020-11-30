@@ -44,7 +44,6 @@ import sonia.scm.repository.spi.HgVersionCommand;
 import sonia.scm.repository.spi.HgWorkingCopyFactory;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.SystemUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -93,12 +92,6 @@ public class HgRepositoryHandler
   public void init(SCMContextProvider context) {
     super.init(context);
     writeHgExtensions(context);
-
-    // TODO do we still need this?
-    // fix wrong hg.bat from package installation
-    if (SystemUtil.isWindows()) {
-      HgWindowsPackageFix.fixHgPackage(context, getConfig());
-    }
   }
 
   @Override
@@ -197,8 +190,7 @@ public class HgRepositoryHandler
       try (InputStream content = input(script); OutputStream output = output(context, script)) {
         IOUtil.copy(content, output);
       } catch (IOException ex) {
-        // TODO is logging enough?
-        logger.error("could not write script", ex);
+        throw new IllegalStateException("could not write hg extension", ex);
       }
     }
   }
