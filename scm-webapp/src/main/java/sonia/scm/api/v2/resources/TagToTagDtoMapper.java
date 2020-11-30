@@ -32,6 +32,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.Tag;
 import sonia.scm.web.EdisonHalAppender;
 
@@ -60,8 +62,12 @@ public abstract class TagToTagDtoMapper extends HalAppenderMapper {
     Links.Builder linksBuilder = linkingTo()
       .self(resourceLinks.tag().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getName()))
       .single(link("sources", resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getRevision())))
-      .single(link("changeset", resourceLinks.changeset().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getRevision())))
-      .single(link("delete", resourceLinks.tag().delete(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getName())));
+      .single(link("changeset", resourceLinks.changeset().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getRevision())));
+
+    if (tag.getDeletable()) {
+      linksBuilder
+        .single(link("delete", resourceLinks.tag().delete(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getName())));
+    }
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), tag, namespaceAndName);

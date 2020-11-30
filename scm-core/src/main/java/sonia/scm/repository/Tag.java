@@ -47,6 +47,7 @@ public final class Tag {
   private final String revision;
   private final Long date;
   private final List<Signature> signatures = new ArrayList<>();
+  private final Boolean deletable;
 
   /**
    * Constructs a new tag.
@@ -68,9 +69,24 @@ public final class Tag {
    * @since 2.5.0
    */
   public Tag(String name, String revision, Long date) {
+    this(name, revision, date, true);
+  }
+
+  /**
+   * Constructs a new tag.
+   *
+   * @param name     name of the tag
+   * @param revision tagged revision
+   * @param date     the creation timestamp (milliseconds) of the tag
+   * @param deletable whether this tag can be deleted
+   *
+   * @since 2.11.0
+   */
+  public Tag(String name, String revision, Long date, Boolean deletable) {
     this.name = name;
     this.revision = revision;
     this.date = date;
+    this.deletable = deletable;
   }
 
   /**

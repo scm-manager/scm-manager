@@ -39,6 +39,8 @@ import java.util.List;
  */
 public class HgTagsCommand extends AbstractCommand implements TagsCommand {
 
+  public static final String DEFAULT_TAG_NAME = "default";
+
   /**
    * Constructs ...
    *
@@ -99,7 +101,7 @@ public class HgTagsCommand extends AbstractCommand implements TagsCommand {
 
       if ((f != null) && !Strings.isNullOrEmpty(f.getName())
         && (f.getChangeset() != null)) {
-        t = new Tag(f.getName(), f.getChangeset().getNode(), f.getChangeset().getTimestamp().getDate().getTime());
+        t = new Tag(f.getName(), f.getChangeset().getNode(), f.getChangeset().getTimestamp().getDate().getTime(), !f.getName().equals(DEFAULT_TAG_NAME));
       }
 
       return t;

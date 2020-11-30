@@ -24,10 +24,17 @@
 
 package sonia.scm.repository.spi;
 
+import com.aragost.javahg.commands.PullCommand;
+import com.google.inject.util.Providers;
+import org.junit.Before;
 import org.junit.Test;
+import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.TagCreateRequest;
 import sonia.scm.repository.api.TagDeleteRequest;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
+import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import java.util.List;
 
@@ -35,17 +42,32 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class HgTagCommandTest extends AbstractHgCommandTestBase {
 
+  private SimpleHgWorkingCopyFactory workingCopyFactory;
+
+  @Before
+  public void initWorkingCopyFactory() {
+    HgRepositoryEnvironmentBuilder hgRepositoryEnvironmentBuilder =
+      new HgRepositoryEnvironmentBuilder(handler, HgTestUtil.createHookManager());
+
+    workingCopyFactory = new SimpleHgWorkingCopyFactory(Providers.of(hgRepositoryEnvironmentBuilder), new NoneCachingWorkingCopyPool(new WorkdirProvider())) {
+      @Override
+      public void configure(PullCommand pullCommand) {
+        // we do not want to configure http hooks in this unit test
+      }
+    };
+  }
+
   @Test
   public void shouldCreateAndDeleteTagCorrectly() {
     // Create
-    new HgTagCommand(cmdContext).create(new TagCreateRequest("79b6baf49711", "newtag"));
+    new HgTagCommand(cmdContext, workingCopyFactory).create(new TagCreateRequest("79b6baf49711", "newtag"));
     List<Tag> tags = new HgTagsCommand(cmdContext).getTags();
     assertThat(tags).hasSize(2);
     final Tag newTag = tags.get(1);
     assertThat(newTag.getName()).isEqualTo("newtag");
 
     // Delete
-    new HgTagCommand(cmdContext).delete(new TagDeleteRequest("newtag"));
+    new HgTagCommand(cmdContext, workingCopyFactory).delete(new TagDeleteRequest("newtag"));
     tags = new HgTagsCommand(cmdContext).getTags();
     assertThat(tags).hasSize(1);
   }

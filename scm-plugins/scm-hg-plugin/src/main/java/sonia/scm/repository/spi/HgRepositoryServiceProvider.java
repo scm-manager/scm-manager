@@ -273,7 +273,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public TagCommand getTagCommand() {
-    return new HgTagCommand(context);
+    return new HgTagCommand(context, handler.getWorkingCopyFactory());
   }
 
   //~--- fields ---------------------------------------------------------------

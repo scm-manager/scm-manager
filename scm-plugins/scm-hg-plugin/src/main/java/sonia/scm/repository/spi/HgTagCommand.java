@@ -25,37 +25,63 @@
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Repository;
+import com.aragost.javahg.commands.PullCommand;
 import com.google.common.base.Strings;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.TagCreateRequest;
 import sonia.scm.repository.api.TagDeleteRequest;
+import sonia.scm.repository.work.WorkingCopy;
+
+import java.io.IOException;
 
 public class HgTagCommand extends AbstractCommand implements TagCommand {
 
-  public HgTagCommand(HgCommandContext context) {
+  private final HgWorkingCopyFactory workingCopyFactory;
+
+  public HgTagCommand(HgCommandContext context, HgWorkingCopyFactory workingCopyFactory) {
     super(context);
+    this.workingCopyFactory = workingCopyFactory;
   }
 
   @Override
   public Tag create(TagCreateRequest request) {
-    Repository repository = getContext().open();
-    String rev = request.getRevision();
-    if (Strings.isNullOrEmpty(rev)) {
-      rev = repository.tip().getNode();
+    try (WorkingCopy<Repository, Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), "default")) {
+      Repository repository = getContext().open();
+      String rev = request.getRevision();
+      if (Strings.isNullOrEmpty(rev)) {
+        rev = repository.tip().getNode();
+      }
+      com.aragost.javahg.commands.TagCommand.on(workingCopy.getWorkingRepository())
+        .rev(rev)
+        .user("SCM-Manager")
+        .execute(request.getName());
+      pullChangesIntoCentralRepository(workingCopy, "default");
+      return new Tag(request.getName(), rev);
     }
-    com.aragost.javahg.commands.TagCommand.on(repository)
-      .rev(rev)
-      .user("SCM-Manager")
-      .execute(request.getName());
-    return new Tag(request.getName(), rev);
   }
 
   @Override
   public void delete(TagDeleteRequest request) {
-    Repository repository = getContext().open();
-    com.aragost.javahg.commands.TagCommand.on(repository)
-      .user("SCM-Manager")
-      .remove()
-      .execute(request.getName());
+    try (WorkingCopy<Repository, Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), "default")) {
+      com.aragost.javahg.commands.TagCommand.on(workingCopy.getWorkingRepository())
+        .user("SCM-Manager")
+        .remove()
+        .execute(request.getName());
+
+      pullChangesIntoCentralRepository(workingCopy, "default");
+    }
+  }
+
+  private void pullChangesIntoCentralRepository(WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy, String branch) {
+    try {
+      com.aragost.javahg.commands.PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
+      workingCopyFactory.configure(pullCommand);
+      pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
+    } catch (IOException e) {
+      throw new InternalRepositoryException(getRepository(),
+        String.format("Could not pull changes '%s' into central repository", branch),
+        e);
+    }
   }
 }

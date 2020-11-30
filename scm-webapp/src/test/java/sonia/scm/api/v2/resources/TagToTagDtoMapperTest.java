@@ -83,4 +83,18 @@ class TagToTagDtoMapperTest {
     assertThat(dto.getSignatures()).isNotEmpty();
   }
 
+  @Test
+  void shouldAddDeleteLinksByDefault() {
+    final Tag tag = new Tag("1.0.0", "42");
+    TagDto dto = mapper.map(tag, new NamespaceAndName("hitchhiker", "hog"));
+    assertThat(dto.getLinks().getLinkBy("delete")).isNotEmpty();
+  }
+
+  @Test
+  void shouldNotAddDeleteLinksForUndeletableTags() {
+    final Tag tag = new Tag("1.0.0", "42", null, false);
+    TagDto dto = mapper.map(tag, new NamespaceAndName("hitchhiker", "hog"));
+    assertThat(dto.getLinks().getLinkBy("delete")).isEmpty();
+  }
+
 }
