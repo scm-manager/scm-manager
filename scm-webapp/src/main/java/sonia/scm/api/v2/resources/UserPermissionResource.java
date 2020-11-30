@@ -26,7 +26,9 @@ package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
@@ -106,7 +108,22 @@ public class UserPermissionResource {
   @PUT
   @Path("")
   @Consumes(VndMediaType.PERMISSION_COLLECTION)
-  @Operation(summary = "Update user permissions", description = "Sets permissions for a user. Overwrites all existing permissions.", tags = {"User", "Permissions"})
+  @Operation(
+    summary = "Update user permissions",
+    description = "Sets permissions for a user. Overwrites all existing permissions.",
+    tags = {"User", "Permissions"},
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.PERMISSION_COLLECTION,
+        schema = @Schema(implementation = UpdatePermissionListDto.class),
+        examples = @ExampleObject(
+          name = "Add read permissions for all repositories and pull requests.",
+          value = "{\n  \"permissions\":[\"repository:read,pull:*\",\"repository:readPullRequest:*\"]\n}",
+          summary = "Simple update user permissions"
+        )
+      )
+    )
+  )
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "400", description = "invalid body")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")

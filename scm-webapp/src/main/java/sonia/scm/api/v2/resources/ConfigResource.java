@@ -27,9 +27,10 @@ package sonia.scm.api.v2.resources;
 import com.google.common.annotations.VisibleForTesting;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.config.ConfigurationPermissions;
@@ -122,7 +123,22 @@ public class ConfigResource {
   @PUT
   @Path("")
   @Consumes(VndMediaType.CONFIG)
-  @Operation(summary = "Update instance configuration", description = "Modifies the instance configuration.", tags = "Instance configuration")
+  @Operation(
+    summary = "Update instance configuration",
+    description = "Modifies the instance configuration.",
+    tags = "Instance configuration",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.CONFIG,
+        schema = @Schema(implementation = UpdateConfigDto.class),
+        examples = @ExampleObject(
+          name = "Overwrites current configuration with this one.",
+          value = "{\n  \"realmDescription\":\"SONIA :: SCM-Manager\",\n  \"dateFormat\":\"YYYY-MM-DD HH:mm:ss\",\n  \"baseUrl\":\"http://localhost:8081/scm\",\n  \"loginAttemptLimit\":-1,\n  \"pluginUrl\":\"https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}\",\n  \"loginAttemptLimitTimeout\":500,\n  \"namespaceStrategy\":\"CustomNamespaceStrategy\",\n  \"loginInfoUrl\":\"https://login-info.scm-manager.org/api/v1/login-info\",\n  \"releaseFeedUrl\":\"https://scm-manager.org/download/rss.xml\",\n  \"mailDomainName\":\"scm-manager.local\"\n}",
+          summary = "Simple update configuration"
+        )
+      )
+    )
+  )
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"configuration:write\" privilege")
@@ -151,4 +167,5 @@ public class ConfigResource {
 
     return Response.noContent().build();
   }
+
 }

@@ -21,60 +21,37 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.repository.hooks;
 
-import sonia.scm.repository.AbstractHgHandler;
-import sonia.scm.repository.HgContext;
+import sonia.scm.NotFoundException;
+import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.spi.HgHookContextProvider;
 
-//~--- JDK imports ------------------------------------------------------------
+import javax.inject.Inject;
 
-import java.io.File;
+public class HookContextProviderFactory {
 
-import java.util.Map;
+  private final RepositoryManager repositoryManager;
+  private final HgRepositoryHandler repositoryHandler;
+  private final HgRepositoryFactory repositoryFactory;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class AbstractHgCommand extends AbstractHgHandler
-{
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param handler
-   * @param context
-   * @param repository
-   * @param repositoryDirectory
-   */
-  protected AbstractHgCommand(HgRepositoryHandler handler, HgContext context,
-                              Repository repository, File repositoryDirectory)
-  {
-    super(handler, context, repository, repositoryDirectory);
+  @Inject
+  public HookContextProviderFactory(RepositoryManager repositoryManager, HgRepositoryHandler repositoryHandler, HgRepositoryFactory repositoryFactory) {
+    this.repositoryManager = repositoryManager;
+    this.repositoryHandler = repositoryHandler;
+    this.repositoryFactory = repositoryFactory;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param revision
-   * @param path
-   *
-   * @param request
-   *
-   * @return
-   */
-  protected Map<String,
-                String> createEnvironment(FileBaseCommandRequest request)
-  {
-    return createEnvironment(request.getRevision(), request.getPath());
+  HgHookContextProvider create(String repositoryId, String node) {
+    Repository repository = repositoryManager.get(repositoryId);
+    if (repository == null) {
+      throw new NotFoundException(Repository.class, repositoryId);
+    }
+    return new HgHookContextProvider(repositoryHandler, repositoryFactory, repository, node);
   }
+
 }

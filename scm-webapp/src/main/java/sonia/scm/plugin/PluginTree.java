@@ -108,8 +108,8 @@ public final class PluginTree
         throw new PluginConditionFailedException(
           condition,
           String.format(
-            "could not load plugin %s, the plugin condition does not match",
-            plugin.getInformation().getId()
+            "could not load plugin %s, the plugin condition does not match: %s",
+            plugin.getInformation().getId(), condition
           )
         );
         //J+

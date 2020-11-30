@@ -47,9 +47,14 @@ const developBranch = {
   revision: "revision5",
   defaultBranch: false
 };
+const mainBranch = {
+  name: "main",
+  revision: "revision6",
+  defaultBranch: false
+};
 const masterBranch = {
   name: "master",
-  revision: "revision6",
+  revision: "revision7",
   defaultBranch: false
 };
 
@@ -66,10 +71,10 @@ describe("order branches", () => {
     expect(branches).toEqual([branch3, branch1, branch2]);
   });
 
-  it("should order special branches as follows: master > default > develop", () => {
-    const branches = [defaultBranch, developBranch, masterBranch];
+  it("should order special branches as follows: main > master > default > develop", () => {
+    const branches = [defaultBranch, mainBranch, developBranch, masterBranch];
     orderBranches(branches);
-    expect(branches).toEqual([masterBranch, defaultBranch, developBranch]);
+    expect(branches).toEqual([mainBranch, masterBranch, defaultBranch, developBranch]);
   });
 
   it("should order special branches but starting with defaultBranch", () => {

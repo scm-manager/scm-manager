@@ -21,13 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.config.ConfigurationPermissions;
@@ -112,7 +114,23 @@ public class SvnConfigResource {
   @PUT
   @Path("")
   @Consumes(SvnVndMediaType.SVN_CONFIG)
-  @Operation(summary = "Modify svn configuration", description = "Modifies the global subversion configuration.", tags = "Subversion", operationId = "svn_put_config")
+  @Operation(
+    summary = "Modify svn configuration",
+    description = "Modifies the global subversion configuration.",
+    tags = "Subversion",
+    operationId = "svn_put_config",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = SvnVndMediaType.SVN_CONFIG,
+        schema = @Schema(implementation = UpdateSvnConfigDto.class),
+        examples = @ExampleObject(
+          name = "Overwrites current configuration with this one.",
+          value = "{\n  \"disabled\":false,\n  \"compatibility\":\"NONE\",\n  \"enabledGZip\":false\n}",
+          summary = "Simple update configuration"
+        )
+      )
+    )
+  )
   @ApiResponse(
     responseCode = "204",
     description = "update success"

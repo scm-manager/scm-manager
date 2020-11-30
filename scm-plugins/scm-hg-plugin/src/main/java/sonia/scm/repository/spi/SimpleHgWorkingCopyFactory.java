@@ -36,27 +36,21 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
 import sonia.scm.repository.work.WorkingCopyPool;
 import sonia.scm.util.IOUtil;
-import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
-import java.util.function.BiConsumer;
 
 public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Repository, Repository, HgCommandContext> implements HgWorkingCopyFactory {
 
-  private final Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder;
-
   @Inject
-  public SimpleHgWorkingCopyFactory(Provider<HgRepositoryEnvironmentBuilder> hgRepositoryEnvironmentBuilder, WorkingCopyPool workdirProvider) {
+  public SimpleHgWorkingCopyFactory(WorkingCopyPool workdirProvider) {
     super(workdirProvider);
-    this.hgRepositoryEnvironmentBuilder = hgRepositoryEnvironmentBuilder;
   }
+
   @Override
   public ParentAndClone<Repository, Repository> initialize(HgCommandContext context, File target, String initialBranch) {
-    Repository centralRepository = openCentral(context);
+    Repository centralRepository = context.openForWrite();
     CloneCommand cloneCommand = CloneCommandFlags.on(centralRepository);
     if (initialBranch != null) {
       cloneCommand.updaterev(initialBranch);
@@ -76,7 +70,7 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
   // The hg api to create a command is meant to be used from the command classes, not from their "flags" base classes.
   @SuppressWarnings("java:S3252")
   protected ParentAndClone<Repository, Repository> reclaim(HgCommandContext context, File target, String initialBranch) throws ReclaimFailedException {
-    Repository centralRepository = openCentral(context);
+    Repository centralRepository = context.openForWrite();
     try {
       BaseRepository clone = Repository.open(target);
       for (String unknown : StatusCommand.on(clone).execute().getUnknown()) {
@@ -87,12 +81,6 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
     } catch (ExecutionException | IOException e) {
       throw new ReclaimFailedException(e);
     }
-  }
-
-  public Repository openCentral(HgCommandContext context) {
-    BiConsumer<sonia.scm.repository.Repository, Map<String, String>> repositoryMapBiConsumer =
-      (repository, environment) -> hgRepositoryEnvironmentBuilder.get().buildFor(repository, null, environment);
-    return context.openWithSpecialEnvironment(repositoryMapBiConsumer);
   }
 
   private void delete(File directory, String unknownFile) throws IOException {
@@ -111,7 +99,7 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
 
   @Override
   public void configure(PullCommand pullCommand) {
-    pullCommand.cmdAppend("--config", "hooks.changegroup.scm=python:scmhooks.postHook");
-    pullCommand.cmdAppend("--config", "hooks.pretxnchangegroup.scm=python:scmhooks.preHook");
+    pullCommand.cmdAppend("--config", "hooks.changegroup.scm=python:scmhooks.post_hook");
+    pullCommand.cmdAppend("--config", "hooks.pretxnchangegroup.scm=python:scmhooks.pre_hook");
   }
 }

@@ -39,7 +39,7 @@ import javax.validation.constraints.Pattern;
 import java.time.Instant;
 
 @NoArgsConstructor @Getter @Setter
-public class UserDto extends HalRepresentation {
+public class UserDto extends HalRepresentation implements CreateUserDto, UpdateUserDto {
   private boolean active;
   private boolean external;
   private Instant creationDate;

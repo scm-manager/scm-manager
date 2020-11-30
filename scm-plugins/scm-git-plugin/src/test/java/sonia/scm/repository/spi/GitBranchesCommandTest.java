@@ -24,117 +24,26 @@
 
 package sonia.scm.repository.spi;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.ListBranchCommand;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.ObjectId;
-import org.eclipse.jgit.lib.Ref;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.Test;
 import sonia.scm.repository.Branch;
-import sonia.scm.repository.GitRepositoryConfig;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
-import static java.util.Arrays.asList;
-import static java.util.Collections.emptyList;
-import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class GitBranchesCommandTest {
-
-  @Mock
-  GitContext context;
-  @Mock
-  Git git;
-  @Mock
-  ListBranchCommand listBranchCommand;
-  @Mock
-  GitRepositoryConfig gitRepositoryConfig;
-
-  GitBranchesCommand branchesCommand;
-  private Ref master;
-
-  @BeforeEach
-  void initContext() {
-    when(context.getConfig()).thenReturn(gitRepositoryConfig);
-  }
-
-  @BeforeEach
-  void initCommand() {
-    master = createRef("master", "0000");
-    branchesCommand = new GitBranchesCommand(context) {
-      @Override
-      Git createGit() {
-        return git;
-      }
-
-      @Override
-      Optional<Ref> getRepositoryHeadRef(Git git) {
-        return of(master);
-      }
-    };
-    when(git.branchList()).thenReturn(listBranchCommand);
-  }
+public class GitBranchesCommandTest extends AbstractGitCommandTestBase {
 
   @Test
-  void shouldCreateEmptyListWithoutBranches() throws IOException, GitAPIException {
-    when(listBranchCommand.call()).thenReturn(emptyList());
+  public void shouldReadBranches() throws IOException {
+    GitBranchesCommand branchesCommand = new GitBranchesCommand(createContext());
 
     List<Branch> branches = branchesCommand.getBranches();
 
-    assertThat(branches).isEmpty();
-  }
-
-  @Test
-  void shouldMapNormalBranch() throws IOException, GitAPIException {
-    Ref branch = createRef("branch", "1337");
-    when(listBranchCommand.call()).thenReturn(asList(branch));
-
-    List<Branch> branches = branchesCommand.getBranches();
-
-    assertThat(branches).containsExactly(Branch.normalBranch("branch", "1337"));
-  }
-
-  @Test
-  void shouldMarkMasterBranchWithMasterFromConfig() throws IOException, GitAPIException {
-    Ref branch = createRef("branch", "1337");
-    when(listBranchCommand.call()).thenReturn(asList(branch));
-    when(gitRepositoryConfig.getDefaultBranch()).thenReturn("branch");
-
-    List<Branch> branches = branchesCommand.getBranches();
-
-    assertThat(branches).containsExactlyInAnyOrder(Branch.defaultBranch("branch", "1337"));
-  }
-
-  @Test
-  void shouldMarkMasterBranchWithMasterFromHead() throws IOException, GitAPIException {
-    Ref branch = createRef("branch", "1337");
-    when(listBranchCommand.call()).thenReturn(asList(branch, master));
-
-    List<Branch> branches = branchesCommand.getBranches();
-
-    assertThat(branches).containsExactlyInAnyOrder(
-      Branch.normalBranch("branch", "1337"),
-      Branch.defaultBranch("master", "0000")
+    assertThat(branches).contains(
+      Branch.defaultBranch("master", "fcd0ef1831e4002ac43ea539f4094334c79ea9ec", 1339428655000L),
+      Branch.normalBranch("mergeable", "91b99de908fcd04772798a31c308a64aea1a5523", 1541586052000L),
+      Branch.normalBranch("rename", "383b954b27e052db6880d57f1c860dc208795247", 1589203061000L)
     );
-  }
-
-  private Ref createRef(String branchName, String revision) {
-    Ref ref = mock(Ref.class);
-    lenient().when(ref.getName()).thenReturn("refs/heads/" + branchName);
-    ObjectId objectId = mock(ObjectId.class);
-    lenient().when(objectId.name()).thenReturn(revision);
-    lenient().when(ref.getObjectId()).thenReturn(objectId);
-    return ref;
   }
 }

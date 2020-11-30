@@ -26,13 +26,12 @@ package sonia.scm.repository.spi;
 
 import com.google.common.io.Closeables;
 import sonia.scm.repository.Feature;
-import sonia.scm.repository.HgHookManager;
+import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.CommandNotSupportedException;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.EnumSet;
 import java.util.Set;
@@ -41,11 +40,8 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
-public class HgRepositoryServiceProvider extends RepositoryServiceProvider
-{
+public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
-  /** Field description */
-  //J-
   public static final Set<Command> COMMANDS = EnumSet.of(
     Command.BLAME,
     Command.BROWSE,
@@ -61,24 +57,18 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
     Command.PULL,
     Command.MODIFY
   );
-  //J+
 
-  /** Field description */
-  public static final Set<Feature> FEATURES =
-    EnumSet.of(Feature.COMBINED_DEFAULT_BRANCH);
+  public static final Set<Feature> FEATURES = EnumSet.of(Feature.COMBINED_DEFAULT_BRANCH);
 
-  //~--- constructors ---------------------------------------------------------
+  private final HgRepositoryHandler handler;
+  private final HgCommandContext context;
 
-  HgRepositoryServiceProvider(HgRepositoryHandler handler,
-                              HgHookManager hookManager, Repository repository)
-  {
+  HgRepositoryServiceProvider(HgRepositoryHandler handler, HgRepositoryFactory factory, Repository repository) {
     this.handler = handler;
-    this.repositoryDirectory = handler.getDirectory(repository.getId());
-    this.context = new HgCommandContext(hookManager, handler, repository,
-      repositoryDirectory);
+    this.context = new HgCommandContext(handler, factory, repository);
   }
-
   //~--- methods --------------------------------------------------------------
+
 
   /**
    * Method description
@@ -91,8 +81,8 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider
   {
     Closeables.close(context, true);
   }
-
   //~--- get methods ----------------------------------------------------------
+
 
   /**
    * Method description

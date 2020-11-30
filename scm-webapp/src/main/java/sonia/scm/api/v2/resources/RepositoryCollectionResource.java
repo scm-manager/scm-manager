@@ -27,7 +27,9 @@ package sonia.scm.api.v2.resources;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.repository.Repository;
@@ -160,7 +162,22 @@ public class RepositoryCollectionResource {
   @POST
   @Path("")
   @Consumes(VndMediaType.REPOSITORY)
-  @Operation(summary = "Create repository", description = "Creates a new repository.", tags = "Repository")
+  @Operation(
+    summary = "Create repository",
+    description = "Creates a new repository.",
+    tags = "Repository",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.REPOSITORY,
+        schema = @Schema(implementation = CreateRepositoryDto.class),
+        examples = @ExampleObject(
+          name = "Create a new git repository named scm-manager in scmadmin namespace.",
+          value = "{\n  \"namespace\":\"scmadmin\",\n  \"name\":\"scm-manager\",\n  \"type\":\"git\"\n}",
+          summary = "Create a git repository"
+        )
+      )
+    )
+  )
   @ApiResponse(
     responseCode = "201",
     description = "create success",
@@ -220,4 +237,5 @@ public class RepositoryCollectionResource {
     SearchRequest searchRequest = new SearchRequest(search, true);
     return repository -> SearchUtil.matchesOne(searchRequest, repository.getName(), repository.getNamespace(), repository.getDescription());
   }
+
 }

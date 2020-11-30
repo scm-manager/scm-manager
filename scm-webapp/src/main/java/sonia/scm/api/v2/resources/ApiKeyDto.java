@@ -36,7 +36,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
-public class ApiKeyDto extends HalRepresentation {
+public class ApiKeyDto extends HalRepresentation implements CreateApiKeyDto {
   @NotEmpty
   private String displayName;
   @NotEmpty
