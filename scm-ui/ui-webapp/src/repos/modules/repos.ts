@@ -26,13 +26,12 @@ import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../modules/types";
 import {
   Action,
+  Link,
   Namespace,
   NamespaceCollection,
   Repository,
   RepositoryCollection,
-  RepositoryCreation,
-  RepositoryImport,
-  Link
+  RepositoryCreation
 } from "@scm-manager/ui-types";
 import { isPending } from "../../modules/pending";
 import { getFailure } from "../../modules/failure";
@@ -238,58 +237,6 @@ export function fetchRepoFailure(namespace: string, name: string, error: Error):
       error
     },
     itemId: namespace + "/" + name
-  };
-}
-
-// import repo
-
-export function importRepoFromUrl(link: string, repository: RepositoryImport, callback?: (repo: Repository) => void) {
-  const baseLink = link.endsWith("/") ? link : link + "/";
-  const importLink = baseLink + `import/${repository.type}/url`;
-  return function(dispatch: any) {
-    dispatch(importRepoPending());
-    return apiClient
-      .post(importLink, repository, CONTENT_TYPE)
-      .then(response => {
-        const location = response.headers.get("Location");
-        dispatch(importRepoSuccess());
-        // @ts-ignore Location is always set if the repository import was successful
-        return apiClient.get(location);
-      })
-      .then(response => response.json())
-      .then(response => {
-        if (callback) {
-          callback(response);
-        }
-      })
-      .catch(err => {
-        dispatch(importRepoFailure(err));
-      });
-  };
-}
-
-export function importRepoPending(): Action {
-  return {
-    type: IMPORT_REPO_PENDING
-  };
-}
-
-export function importRepoSuccess(): Action {
-  return {
-    type: IMPORT_REPO_SUCCESS
-  };
-}
-
-export function importRepoFailure(err: Error): Action {
-  return {
-    type: IMPORT_REPO_FAILURE,
-    payload: err
-  };
-}
-
-export function importRepoReset(): Action {
-  return {
-    type: IMPORT_REPO_RESET
   };
 }
 

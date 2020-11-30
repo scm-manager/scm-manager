@@ -25,14 +25,8 @@ import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { History } from "history";
-import {
-  NamespaceStrategies,
-  Repository,
-  RepositoryCreation,
-  RepositoryImport,
-  RepositoryType
-} from "@scm-manager/ui-types";
-import { Loading, Notification, Page } from "@scm-manager/ui-components";
+import { NamespaceStrategies, Repository, RepositoryCreation, RepositoryType } from "@scm-manager/ui-types";
+import { Page } from "@scm-manager/ui-components";
 import {
   fetchRepositoryTypesIfNeeded,
   getFetchRepositoryTypesFailure,
@@ -45,11 +39,7 @@ import {
   createRepo,
   createRepoReset,
   getCreateRepoFailure,
-  getImportRepoFailure,
-  importRepoFromUrl,
-  importRepoReset,
-  isCreateRepoPending,
-  isImportRepoPending
+  isCreateRepoPending
 } from "../modules/repos";
 import { getRepositoriesLink } from "../../modules/indexResource";
 import {
@@ -68,7 +58,6 @@ type Props = WithTranslation &
     namespaceStrategies: NamespaceStrategies;
     pageLoading: boolean;
     createLoading: boolean;
-    importLoading: boolean;
     error: Error;
     repoLink: string;
     indexResources: any;
@@ -82,7 +71,6 @@ type Props = WithTranslation &
       initRepository: boolean,
       callback: (repo: Repository) => void
     ) => void;
-    importRepoFromUrl: (link: string, repository: RepositoryImport, callback: (repo: Repository) => void) => void;
     resetForm: () => void;
 
     // context props
@@ -114,29 +102,13 @@ class AddRepository extends React.Component<Props> {
   isImportPage = () => this.resolveLocation() === "import";
   isCreatePage = () => this.resolveLocation() === "create";
 
-  getSubtitle = () => {
-    const { importLoading, t } = this.props;
-    let subtitle;
-    if (this.isCreatePage()) {
-      subtitle = t("create.subtitle");
-    } else if (!importLoading) {
-      subtitle = t("import.subtitle");
-    } else {
-      subtitle = t("import.pending.subtitle");
-    }
-
-    return subtitle;
-  };
-
   render() {
     const {
       pageLoading,
       createLoading,
-      importLoading,
       repositoryTypes,
       namespaceStrategies,
       createRepo,
-      importRepoFromUrl,
       error,
       indexResources,
       repoLink,
@@ -146,37 +118,24 @@ class AddRepository extends React.Component<Props> {
     return (
       <Page
         title={t("create.title")}
-        subtitle={this.getSubtitle()}
+        subtitle={t("create.subtitle")}
         loading={pageLoading}
         error={error}
         showContentOnError={true}
       >
-        <>
-          {/*//TODO fix this CSS*/}
-          {!error && !importLoading && <RepositoryFormSwitcher creationMode={this.isImportPage() ? "IMPORT" : "CREATE"} />}
-          {importLoading && (
-            <>
-              <Notification type="info">{t("import.pending.infoText")}</Notification>
-              <Loading />
-              <hr/>
-            </>
-          )}
-          <ImportRepository repositoryTypes={repositoryTypes}/>
+        {!error && <RepositoryFormSwitcher creationMode={this.isImportPage() ? "IMPORT" : "CREATE"} />}
+        {this.isImportPage() && <ImportRepository repositoryTypes={repositoryTypes} />}
+        {this.isCreatePage() && (
           <RepositoryForm
             repositoryTypes={repositoryTypes}
-            loading={createLoading || importLoading}
+            loading={createLoading}
             namespaceStrategy={namespaceStrategies.current}
             createRepository={(repo, initRepository) => {
               createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
             }}
-            importRepository={repo => {
-              //TODO Reset error if import started again
-              importRepoFromUrl(repoLink, repo, (repo: Repository) => this.repoCreated(repo));
-            }}
             indexResources={indexResources}
-            creationMode={this.isImportPage() ? "IMPORT" : "CREATE"}
           />
-        </>
+        )}
       </Page>
     );
   }
@@ -187,12 +146,8 @@ const mapStateToProps = (state: any) => {
   const namespaceStrategies = getNamespaceStrategies(state);
   const pageLoading = isFetchRepositoryTypesPending(state) || isFetchNamespaceStrategiesPending(state);
   const createLoading = isCreateRepoPending(state);
-  const importLoading = isImportRepoPending(state);
   const error =
-    getFetchRepositoryTypesFailure(state) ||
-    getCreateRepoFailure(state) ||
-    getFetchNamespaceStrategiesFailure(state) ||
-    getImportRepoFailure(state);
+    getFetchRepositoryTypesFailure(state) || getCreateRepoFailure(state) || getFetchNamespaceStrategiesFailure(state);
   const repoLink = getRepositoriesLink(state);
   const indexResources = state?.indexResources;
 
@@ -201,7 +156,6 @@ const mapStateToProps = (state: any) => {
     namespaceStrategies,
     pageLoading,
     createLoading,
-    importLoading,
     error,
     repoLink,
     indexResources
@@ -219,12 +173,8 @@ const mapDispatchToProps = (dispatch: any) => {
     createRepo: (link: string, repository: RepositoryCreation, initRepository: boolean, callback: () => void) => {
       dispatch(createRepo(link, repository, initRepository, callback));
     },
-    importRepoFromUrl: (link: string, repository: RepositoryImport, callback: () => void) => {
-      dispatch(importRepoFromUrl(link, repository, callback));
-    },
     resetForm: () => {
       dispatch(createRepoReset());
-      dispatch(importRepoReset());
     }
   };
 };

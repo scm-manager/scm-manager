@@ -519,7 +519,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     Repository repository = RepositoryTestData.createHeartOfGold();
     RepositoryImportResource.RepositoryImportDto repositoryImportDto = new RepositoryImportResource.RepositoryImportDto();
-    repositoryImportDto.setUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+    repositoryImportDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
     repositoryImportDto.setNamespace("scmadmin");
     repositoryImportDto.setName("scm-manager");
 
@@ -536,7 +536,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     Repository repository = RepositoryTestData.createHeartOfGold();
     RepositoryImportResource.RepositoryImportDto repositoryImportDto = new RepositoryImportResource.RepositoryImportDto();
-    repositoryImportDto.setUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+    repositoryImportDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
     repositoryImportDto.setNamespace("scmadmin");
     repositoryImportDto.setName("scm-manager");
     repositoryImportDto.setUsername("trillian");
@@ -557,7 +557,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     Repository repository = RepositoryTestData.createHeartOfGold();
     RepositoryImportResource.RepositoryImportDto repositoryImportDto = new RepositoryImportResource.RepositoryImportDto();
-    repositoryImportDto.setUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+    repositoryImportDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
     repositoryImportDto.setNamespace("scmadmin");
     repositoryImportDto.setName("scm-manager");
 

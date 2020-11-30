@@ -205,19 +205,19 @@ public class RepositoryImportResource {
     checkNotNull(request, "request is required");
     checkArgument(!Strings.isNullOrEmpty(request.getName()),
       "request does not contain name of the repository");
-    checkArgument(!Strings.isNullOrEmpty(request.getUrl()),
+    checkArgument(!Strings.isNullOrEmpty(request.getImportUrl()),
       "request does not contain url of the remote repository");
 
     Type t = type(type);
 
     checkSupport(t, Command.PULL, request);
 
-    logger.info("start {} import for external url {}", type, request.getUrl());
+    logger.info("start {} import for external url {}", type, request.getImportUrl());
 
-    Repository repository = null;
+    Repository repository = new Repository(null, type, request.getNamespace(), request.getName());
     try {
       repository = manager.create(
-        new Repository(null, type, request.getNamespace(), request.getName()),
+        repository,
         pullChangesFromRemoteUrl(request)
       );
     } catch (Exception e) {
@@ -240,7 +240,7 @@ public class RepositoryImportResource {
             .withPassword(request.getPassword());
         }
 
-        pullCommand.pull(request.getUrl());
+        pullCommand.pull(request.getImportUrl());
       } catch (IOException e) {
         throw new InternalRepositoryException(repository, "Failed to import from remote url", e);
       }
@@ -537,7 +537,7 @@ public class RepositoryImportResource {
   @NoArgsConstructor
   @SuppressWarnings("java:S2160")
   public static class RepositoryImportDto extends RepositoryDto {
-    private String url;
+    private String importUrl;
     private String username;
     private String password;
 

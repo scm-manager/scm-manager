@@ -59,8 +59,6 @@ import reducer, {
   getPermissionsLink,
   getRepository,
   getRepositoryCollection,
-  IMPORT_REPO_PENDING,
-  IMPORT_REPO_SUCCESS,
   isAbleToCreateRepos,
   isCreateRepoPending,
   isDeleteRepoPending,
@@ -71,10 +69,9 @@ import reducer, {
   MODIFY_REPO_FAILURE,
   MODIFY_REPO_PENDING,
   MODIFY_REPO_SUCCESS,
-  modifyRepo,
-  importRepoFromUrl
+  modifyRepo
 } from "./repos";
-import { Repository, RepositoryCollection, Link } from "@scm-manager/ui-types";
+import { Link, Repository, RepositoryCollection } from "@scm-manager/ui-types";
 
 const hitchhikerPuzzle42: Repository = {
   contact: "fourtytwo@hitchhiker.com",
@@ -411,70 +408,6 @@ describe("repos fetch", () => {
       expect(actions[1].payload.name).toBe("fjords");
       expect(actions[1].payload.error).toBeDefined();
       expect(actions[1].itemId).toBe("slarti/fjords");
-    });
-  });
-
-  it("should successfully import repo hitchhiker/restatend", () => {
-    const importUrl = REPOS_URL + "/import/git/url";
-    const importRequest = {
-      ...hitchhikerRestatend,
-      url: "https://scm-manager.org/scm/repo/secret/puzzle42",
-      username: "trillian",
-      password: "secret"
-    };
-
-    fetchMock.postOnce(importUrl, {
-      status: 201,
-      headers: {
-        location: "repositories/hitchhiker/restatend"
-      }
-    });
-
-    fetchMock.getOnce(REPOS_URL + "/hitchhiker/restatend", hitchhikerRestatend);
-
-    const expectedActions = [
-      {
-        type: IMPORT_REPO_PENDING
-      },
-      {
-        type: IMPORT_REPO_SUCCESS
-      }
-    ];
-
-    const store = mockStore({});
-    return store.dispatch(importRepoFromUrl(URL, importRequest)).then(() => {
-      expect(store.getActions()).toEqual(expectedActions);
-    });
-  });
-
-  it("should successfully import repo hitchhiker/restatend and call the callback", () => {
-    const importUrl = REPOS_URL + "/import/git/url";
-    const importRequest = {
-      ...hitchhikerRestatend,
-      url: "https://scm-manager.org/scm/repo/secret/puzzle42",
-      username: "trillian",
-      password: "secret"
-    };
-
-    fetchMock.postOnce(importUrl, {
-      status: 201,
-      headers: {
-        location: "repositories/hitchhiker/restatend"
-      }
-    });
-
-    fetchMock.getOnce(REPOS_URL + "/hitchhiker/restatend", hitchhikerRestatend);
-
-    let callMe = "not yet";
-
-    const callback = (r: any) => {
-      expect(r).toEqual(hitchhikerRestatend);
-      callMe = "yeah";
-    };
-
-    const store = mockStore({});
-    return store.dispatch(importRepoFromUrl(URL, importRequest, callback)).then(() => {
-      expect(callMe).toBe("yeah");
     });
   });
 

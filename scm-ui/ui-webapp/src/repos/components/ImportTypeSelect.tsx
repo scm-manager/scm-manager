@@ -24,6 +24,7 @@
 import React, { FC } from "react";
 import { RepositoryType, Link } from "@scm-manager/ui-types";
 import { Radio } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   repositoryType: RepositoryType;
@@ -31,7 +32,8 @@ type Props = {
   setImportType: (type: string) => void;
 };
 
-const ImportTypeSelect: FC<Props> = ({repositoryType, importType, setImportType}) => {
+const ImportTypeSelect: FC<Props> = ({ repositoryType, importType, setImportType }) => {
+  const [t] = useTranslation("repos");
 
   const changeImportType = (checked: boolean, name?: string) => {
     if (name && checked) {
@@ -39,16 +41,17 @@ const ImportTypeSelect: FC<Props> = ({repositoryType, importType, setImportType}
     }
   };
 
-  //TODO Add helptext translation
   return (
     <>
-      {(repositoryType._links.import as Link[]).map(type => (
+      {(repositoryType._links.import as Link[]).map((type, index) => (
         <Radio
           name={type.name}
           checked={importType === type.name}
           value={type.name}
-          label={type.name}
+          label={t(`import.importTypes.${type.name}.label`)}
+          helpText={t(`import.importTypes.${type.name}.helpText`)}
           onChange={changeImportType}
+          key={index}
         />
       ))}
     </>

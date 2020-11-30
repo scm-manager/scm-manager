@@ -12,6 +12,7 @@
     "namespace-invalid": "Der Namespace des Repository ist ungültig",
     "name-invalid": "Der Name des Repository ist ungültig",
     "contact-invalid": "Der Kontakt muss eine gültige E-Mail Adresse sein",
+    "url-invalid": "Die URL ist ungültig",
     "branch": {
       "nameInvalid": "Der Name des Branches ist ungültig"
     }
@@ -68,6 +69,12 @@
     "pending": {
       "subtitle": "Repository wird importiert...",
       "infoText": "Ihr Repository wird gerade importiert. Dies kann einen Moment dauern. Sie werden weitergeleitet, sobald der Import abgeschlossen ist. Wenn Sie diese Seite verlassen, können Sie nicht zurückkehren, um den Import-Status zu erfahren."
+    },
+    "importTypes": {
+      "url": {
+        "label": "Import via URL",
+        "helpText": "Das Repository wird über eine URL importiert."
+      }
     }
   },
   "branches": {

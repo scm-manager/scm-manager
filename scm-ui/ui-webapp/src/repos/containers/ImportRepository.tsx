@@ -28,27 +28,30 @@ import { RepositoryType, Link } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import ImportRepositoryTypeSelect from "../components/ImportRepositoryTypeSelect";
 import ImportTypeSelect from "../components/ImportTypeSelect";
-import RepositoryImportFromUrl from "../components/RepositoryImportFromUrl";
+import ImportRepositoryFromUrl from "../components/ImportRepositoryFromUrl";
+import { Loading, Notification } from "@scm-manager/ui-components";
 
 type Props = {
   repositoryTypes: RepositoryType[];
 };
 
 const ImportRepository: FC<Props> = ({ repositoryTypes }) => {
+  const [importPending, setImportPending] = useState(false);
   const [repositoryType, setRepositoryType] = useState<RepositoryType | undefined>();
   const [importType, setImportType] = useState("");
   const [t] = useTranslation("repos");
 
   const changeRepositoryType = (repositoryType: RepositoryType) => {
-    setImportType(((repositoryType!._links.import as Link[])[0] as Link).name!);
     setRepositoryType(repositoryType);
+    setImportType(repositoryType?._links ? ((repositoryType!._links?.import as Link[])[0] as Link).name! : "");
   };
 
   const renderImportComponent = () => {
     if (importType === "url") {
       return (
-        <RepositoryImportFromUrl
+        <ImportRepositoryFromUrl
           url={((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "url") as Link).href}
+          setImportPending={setImportPending}
         />
       );
     }
@@ -58,6 +61,13 @@ const ImportRepository: FC<Props> = ({ repositoryTypes }) => {
 
   return (
     <div>
+      {importPending && (
+        <>
+          <Notification type="info">{t("import.pending.infoText")}</Notification>
+          <Loading />
+          <hr />
+        </>
+      )}
       <ImportRepositoryTypeSelect
         repositoryTypes={repositoryTypes}
         repositoryType={repositoryType}
@@ -67,6 +77,7 @@ const ImportRepository: FC<Props> = ({ repositoryTypes }) => {
         <>
           <hr />
           <ImportTypeSelect repositoryType={repositoryType} importType={importType} setImportType={setImportType} />
+          <hr />
         </>
       )}
       {importType && renderImportComponent()}
