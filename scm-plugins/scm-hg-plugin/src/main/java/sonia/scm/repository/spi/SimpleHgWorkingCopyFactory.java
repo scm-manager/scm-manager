@@ -32,6 +32,7 @@ import com.aragost.javahg.commands.PullCommand;
 import com.aragost.javahg.commands.StatusCommand;
 import com.aragost.javahg.commands.UpdateCommand;
 import com.aragost.javahg.commands.flags.CloneCommandFlags;
+import sonia.scm.repository.HgExtensions;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
 import sonia.scm.repository.work.WorkingCopyPool;
@@ -99,7 +100,8 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
 
   @Override
   public void configure(PullCommand pullCommand) {
-    pullCommand.cmdAppend("--config", "hooks.changegroup.scm=python:scmhooks.post_hook");
-    pullCommand.cmdAppend("--config", "hooks.pretxnchangegroup.scm=python:scmhooks.pre_hook");
+    String hooks = HgExtensions.HOOK.getFile().getAbsolutePath();
+    pullCommand.cmdAppend("--config", String.format("hooks.pretxnchangegroup.scm=python:%s:pre_hook", hooks));
+    pullCommand.cmdAppend("--config", String.format("hooks.changegroup.scm=python:%s:post_hook", hooks));
   }
 }

@@ -153,8 +153,11 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
   private List<String> createArgs() {
     List<String> args = new ArrayList<>();
     config(args, "extensions.cgiserve", extension.getAbsolutePath());
-    config(args, "hooks.pretxnchangegroup.scm", "python:scmhooks.pre_hook");
-    config(args, "hooks.changegroup.scm", "python:scmhooks.post_hook");
+
+    String hooks = HgExtensions.HOOK.getFile().getAbsolutePath();
+    config(args, "hooks.pretxnchangegroup.scm", String.format("python:%s:pre_hook", hooks));
+    config(args, "hooks.changegroup.scm", String.format("python:%s:post_hook", hooks));
+
     config(args, "web.push_ssl", "false");
     config(args, "web.allow_read", "*");
     config(args, "web.allow_push", "*");
