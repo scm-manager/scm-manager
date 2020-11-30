@@ -45,9 +45,9 @@ public class WindowsAutoConfigurator implements AutoConfigurator {
   private static final Logger LOG = LoggerFactory.getLogger(WindowsAutoConfigurator.class);
 
   @VisibleForTesting
-  static final String REGISTRY_KEY_TORTOISE_HG = "HKEY_CURRENT_USER\\Software\\TortoiseHg";
+  static final String REGISTRY_KEY_TORTOISE_HG = "HKEY_LOCAL_MACHINE\\Software\\TortoiseHg";
   @VisibleForTesting
-  static final String REGISTRY_KEY_MERCURIAL = "HKEY_CURRENT_USER\\Software\\Mercurial\\InstallDir";
+  static final String REGISTRY_KEY_MERCURIAL = "HKEY_LOCAL_MACHINE\\Software\\Mercurial\\InstallDir";
 
   private static final String[] REGISTRY_KEYS = {REGISTRY_KEY_TORTOISE_HG, REGISTRY_KEY_MERCURIAL};
 
