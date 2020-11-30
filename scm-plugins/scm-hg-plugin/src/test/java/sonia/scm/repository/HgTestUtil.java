@@ -29,6 +29,7 @@ package sonia.scm.repository;
 import org.junit.Assume;
 import sonia.scm.SCMContext;
 import sonia.scm.TempDirRepositoryLocationResolver;
+import sonia.scm.autoconfig.AutoConfiguratorProvider;
 import sonia.scm.repository.hooks.HookEnvironment;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
@@ -87,7 +88,8 @@ public final class HgTestUtil
       new InMemoryConfigurationStoreFactory(),
       repositoryLocationResolver,
       null,
-      null
+      null,
+      new AutoConfiguratorProvider(new HgVerifier()).get()
     );
     handler.init(context);
 

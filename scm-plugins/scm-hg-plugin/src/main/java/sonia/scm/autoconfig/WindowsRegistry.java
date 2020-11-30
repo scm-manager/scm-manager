@@ -24,10 +24,16 @@
 
 package sonia.scm.autoconfig;
 
-import sonia.scm.repository.HgConfig;
+import sonia.scm.util.RegistryUtil;
 
-public interface AutoConfigurator {
+import java.util.Optional;
 
-  void configure(HgConfig config);
+public class WindowsRegistry {
+
+  public Optional<String> get(String key) {
+    return Optional.ofNullable(
+      RegistryUtil.getRegistryValue(key)
+    );
+  }
 
 }

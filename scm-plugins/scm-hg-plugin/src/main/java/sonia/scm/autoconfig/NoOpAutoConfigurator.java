@@ -26,8 +26,13 @@ package sonia.scm.autoconfig;
 
 import sonia.scm.repository.HgConfig;
 
-public interface AutoConfigurator {
+public class NoOpAutoConfigurator implements AutoConfigurator {
 
-  void configure(HgConfig config);
+  NoOpAutoConfigurator() {
+  }
 
+  @Override
+  public void configure(HgConfig config) {
+
+  }
 }

@@ -24,10 +24,38 @@
 
 package sonia.scm.autoconfig;
 
-import sonia.scm.repository.HgConfig;
+import com.google.common.annotations.VisibleForTesting;
+import sonia.scm.Platform;
+import sonia.scm.repository.HgVerifier;
+import sonia.scm.util.SystemUtil;
 
-public interface AutoConfigurator {
+import javax.inject.Inject;
+import javax.inject.Provider;
 
-  void configure(HgConfig config);
+public class AutoConfiguratorProvider implements Provider<AutoConfigurator> {
 
+  private final HgVerifier verifier;
+  private final Platform platform;
+
+  @Inject
+  public AutoConfiguratorProvider(HgVerifier verifier) {
+    this(verifier, SystemUtil.getPlatform());
+  }
+
+  @VisibleForTesting
+  AutoConfiguratorProvider(HgVerifier verifier, Platform platform) {
+    this.verifier = verifier;
+    this.platform = platform;
+  }
+
+  @Override
+  public AutoConfigurator get() {
+    if (platform.isPosix()) {
+      return new PosixAutoConfigurator(verifier, System.getenv());
+    } else if (platform.isWindows()) {
+      return new WindowsAutoConfigurator(verifier, new WindowsRegistry(), System.getenv());
+    } else {
+      return new NoOpAutoConfigurator();
+    }
+  }
 }

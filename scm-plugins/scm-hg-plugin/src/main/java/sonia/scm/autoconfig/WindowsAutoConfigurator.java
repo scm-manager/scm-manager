@@ -26,7 +26,6 @@ package sonia.scm.autoconfig;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.HgConfig;
@@ -35,53 +34,75 @@ import sonia.scm.repository.HgVerifier;
 import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collection;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
-public class PosixAutoConfigurator implements AutoConfigurator {
+public class WindowsAutoConfigurator implements AutoConfigurator {
 
-  private static final Logger LOG = LoggerFactory.getLogger(PosixAutoConfigurator.class);
-
-  private static final List<String> ADDITIONAL_PATH = ImmutableList.of(
-    "/usr/bin",
-    "/usr/local/bin",
-    "/opt/local/bin"
-  );
-
-  private final HgVerifier verifier;
-  private final Set<String> fsPaths;
-
-  PosixAutoConfigurator(HgVerifier verifier, Map<String, String> env) {
-    this(verifier, env, ADDITIONAL_PATH);
-  }
+  private static final Logger LOG = LoggerFactory.getLogger(WindowsAutoConfigurator.class);
 
   @VisibleForTesting
-  PosixAutoConfigurator(HgVerifier verifier, Map<String, String> env, List<String> additionalPaths) {
+  static final String REGISTRY_KEY_TORTOISE_HG = "HKEY_CURRENT_USER\\Software\\TortoiseHg";
+  @VisibleForTesting
+  static final String REGISTRY_KEY_MERCURIAL = "HKEY_CURRENT_USER\\Software\\Mercurial\\InstallDir";
+
+  private static final String[] REGISTRY_KEYS = {REGISTRY_KEY_TORTOISE_HG, REGISTRY_KEY_MERCURIAL};
+
+  @VisibleForTesting
+  static final String BINARY_HG_EXE = "hg.exe";
+  @VisibleForTesting
+  static final String BINARY_HG_BAT = "hg.bat";
+
+  private static final String[] BINARIES = {BINARY_HG_EXE, BINARY_HG_BAT};
+
+  private final HgVerifier verifier;
+  private final WindowsRegistry registry;
+  private final Map<String, String> env;
+
+  WindowsAutoConfigurator(HgVerifier verifier, WindowsRegistry registry, Map<String, String> env) {
     this.verifier = verifier;
-    String path = env.getOrDefault("PATH", "");
-    fsPaths = new LinkedHashSet<>();
-    fsPaths.addAll(Splitter.on(File.pathSeparator).splitToList(path));
-    fsPaths.addAll(additionalPaths);
+    this.registry = registry;
+    this.env = env;
   }
 
   @Override
   public void configure(HgConfig config) {
-    Optional<Path> hg = findInPath();
+    Set<String> fsPaths = new LinkedHashSet<>(pathFromEnv());
+    for (String registryKey : REGISTRY_KEYS) {
+      registry.get(registryKey).ifPresent(fsPaths::add);
+    }
+
+    Optional<String> hg = findInPath(fsPaths);
     if (hg.isPresent()) {
-      config.setHgBinary(hg.get().toAbsolutePath().toString());
+      config.setHgBinary(hg.get());
     } else {
       LOG.warn("could not find valid mercurial installation");
     }
   }
 
-  private Optional<Path> findInPath() {
+  private Collection<String> pathFromEnv() {
+    String path = env.getOrDefault("PATH", "");
+    return Splitter.on(File.pathSeparator).splitToList(path);
+  }
+
+  private Optional<String> findInPath(Set<String> fsPaths) {
     for (String directory : fsPaths) {
-      Path binaryPath = Paths.get(directory, "hg");
-      if (verifier.isValid(binaryPath)) {
-        return Optional.of(binaryPath);
+      Optional<String> binaryPath = findInDirectory(directory);
+      if (binaryPath.isPresent()) {
+        return binaryPath;
+      }
+    }
+    return Optional.empty();
+  }
+
+  private Optional<String> findInDirectory(String directory) {
+    for (String binary : BINARIES) {
+      Path hg = Paths.get(directory, binary);
+      if (verifier.isValid(hg)) {
+        return Optional.of(hg.toAbsolutePath().toString());
       }
     }
     return Optional.empty();

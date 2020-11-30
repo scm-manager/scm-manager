@@ -24,10 +24,45 @@
 
 package sonia.scm.autoconfig;
 
-import sonia.scm.repository.HgConfig;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.Platform;
+import sonia.scm.repository.HgVerifier;
 
-public interface AutoConfigurator {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
-  void configure(HgConfig config);
+@ExtendWith(MockitoExtension.class)
+class AutoConfiguratorProviderTest {
 
+  @Mock
+  private HgVerifier verifier;
+
+  @Mock
+  private Platform platform;
+
+  @InjectMocks
+  private AutoConfiguratorProvider provider;
+
+  @Test
+  void shouldReturnPosixAutoConfiguration() {
+    when(platform.isPosix()).thenReturn(true);
+
+    assertThat(provider.get()).isInstanceOf(PosixAutoConfigurator.class);
+  }
+
+  @Test
+  void shouldReturnWindowsAutoConfiguration() {
+    when(platform.isWindows()).thenReturn(true);
+
+    assertThat(provider.get()).isInstanceOf(WindowsAutoConfigurator.class);
+  }
+
+  @Test
+  void shouldReturnNoOpAutoConfiguration() {
+    assertThat(provider.get()).isInstanceOf(NoOpAutoConfigurator.class);
+  }
 }

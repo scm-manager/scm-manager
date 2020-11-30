@@ -52,7 +52,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Optional;
 
 @Singleton
 @Extension
@@ -75,17 +74,19 @@ public class HgRepositoryHandler
   private static final String CONFIG_KEY_REPOSITORY_ID = "repositoryid";
 
   private final HgWorkingCopyFactory workingCopyFactory;
+  private final AutoConfigurator configurator;
 
   @Inject
   public HgRepositoryHandler(ConfigurationStoreFactory storeFactory,
                              RepositoryLocationResolver repositoryLocationResolver,
-                             PluginLoader pluginLoader, HgWorkingCopyFactory workingCopyFactory) {
+                             PluginLoader pluginLoader, HgWorkingCopyFactory workingCopyFactory, AutoConfigurator configurator) {
     super(storeFactory, repositoryLocationResolver, pluginLoader);
     this.workingCopyFactory = workingCopyFactory;
+    this.configurator = configurator;
   }
 
   public void doAutoConfiguration(HgConfig autoConfig) {
-    // TODO check if we use auto configuration resource from ui
+    configurator.configure(autoConfig);
   }
 
   @Override
@@ -105,23 +106,18 @@ public class HgRepositoryHandler
     super.loadConfig();
 
     if (config == null) {
-      HgConfig config = null;
-
-      // TODO check
-
-      Optional<AutoConfigurator> autoConfigurator = AutoConfigurator.get();
-      if (autoConfigurator.isPresent()) {
-        config = autoConfigurator.get().configure();
-      }
-
-      if (config != null && config.isValid()) {
-        this.config = config;
-        storeConfig();
-      } else {
-        // do the old configuration
-        doAutoConfiguration(config != null ? config : new HgConfig());
-      }
+      config = new HgConfig();
+      storeConfig();
     }
+
+    if (!isConfigValid(config)) {
+      doAutoConfiguration(config);
+      storeConfig();
+    }
+  }
+
+  private boolean isConfigValid(HgConfig config) {
+    return config.isValid() && new HgVerifier().isValid(config);
   }
 
   @Override
@@ -201,6 +197,7 @@ public class HgRepositoryHandler
       try (InputStream content = input(script); OutputStream output = output(context, script)) {
         IOUtil.copy(content, output);
       } catch (IOException ex) {
+        // TODO is logging enough?
         logger.error("could not write script", ex);
       }
     }

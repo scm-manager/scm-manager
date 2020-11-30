@@ -24,20 +24,13 @@
 
 package sonia.scm.autoconfig;
 
-import sonia.scm.repository.HgConfig;
+import com.google.inject.AbstractModule;
+import sonia.scm.plugin.Extension;
 
-import java.nio.file.Path;
-
-// TODO implement
-
-public class WindowAutoConfigurator implements AutoConfigurator {
+@Extension
+public class AutoConfigModule extends AbstractModule {
   @Override
-  public HgConfig configure() {
-    return null;
-  }
-
-  @Override
-  public HgConfig configure(Path hg) {
-    return null;
+  protected void configure() {
+    bind(AutoConfigurator.class).toProvider(AutoConfiguratorProvider.class);
   }
 }

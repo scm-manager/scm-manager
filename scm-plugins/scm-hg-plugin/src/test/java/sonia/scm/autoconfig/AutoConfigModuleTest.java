@@ -24,10 +24,19 @@
 
 package sonia.scm.autoconfig;
 
-import sonia.scm.repository.HgConfig;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import org.junit.jupiter.api.Test;
 
-public interface AutoConfigurator {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  void configure(HgConfig config);
+class AutoConfigModuleTest {
+
+  @Test
+  void shouldBindAutoConfigurator() {
+    Injector injector = Guice.createInjector(new AutoConfigModule());
+    AutoConfigurator configurator = injector.getInstance(AutoConfigurator.class);
+    assertThat(configurator).isNotNull();
+  }
 
 }
