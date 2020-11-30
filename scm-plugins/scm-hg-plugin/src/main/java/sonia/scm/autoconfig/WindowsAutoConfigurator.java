@@ -97,7 +97,8 @@ public class WindowsAutoConfigurator implements AutoConfigurator {
   }
 
   private Collection<String> pathFromEnv() {
-    String path = env.getOrDefault("PATH", "");
+    String path = env.getOrDefault("Path", "");
+    LOG.trace("try to find hg in PATH {}", path);
     return Splitter.on(File.pathSeparator).splitToList(path);
   }
 
