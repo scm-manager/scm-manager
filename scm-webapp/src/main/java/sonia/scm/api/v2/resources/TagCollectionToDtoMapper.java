@@ -29,6 +29,8 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.Tag;
 
 import java.util.Collection;
@@ -50,12 +52,13 @@ public class TagCollectionToDtoMapper {
     this.tagToTagDtoMapper = tagToTagDtoMapper;
   }
 
-  public HalRepresentation map(String namespace, String name, Collection<Tag> tags) {
-    return new HalRepresentation(createLinks(namespace, name), embedDtos(getTagDtoList(namespace, name, tags)));
+  public HalRepresentation map(String namespace, String name, Collection<Tag> tags, Repository repository) {
+    return new HalRepresentation(createLinks(namespace, name), embedDtos(getTagDtoList(namespace, name, tags, repository)));
   }
 
-  public List<TagDto> getTagDtoList(String namespace, String name, Collection<Tag> tags) {
-    return tags.stream().map(tag -> tagToTagDtoMapper.map(tag, new NamespaceAndName(namespace, name))).collect(toList());
+  public List<TagDto> getTagDtoList(String namespace, String name, Collection<Tag> tags, Repository repository) {
+    final NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
+    return tags.stream().map(tag -> tagToTagDtoMapper.map(tag, namespaceAndName, repository)).collect(toList());
   }
 
   private Links createLinks(String namespace, String name) {

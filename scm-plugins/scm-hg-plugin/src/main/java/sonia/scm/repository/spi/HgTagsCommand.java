@@ -39,7 +39,7 @@ import java.util.List;
  */
 public class HgTagsCommand extends AbstractCommand implements TagsCommand {
 
-  public static final String DEFAULT_TAG_NAME = "default";
+  public static final String DEFAULT_TAG_NAME = "tip";
 
   /**
    * Constructs ...

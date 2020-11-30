@@ -24,14 +24,33 @@
 
 package sonia.scm.repository.spi;
 
+import com.aragost.javahg.commands.PullCommand;
+import org.junit.Before;
 import org.junit.Test;
 import sonia.scm.repository.Tag;
+import sonia.scm.repository.api.TagCommandBuilder;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
+import sonia.scm.repository.work.WorkdirProvider;
 
+import java.io.IOException;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HgTagsCommandTest extends AbstractHgCommandTestBase {
+
+  private SimpleHgWorkingCopyFactory workingCopyFactory;
+
+  @Before
+  public void initWorkingCopyFactory() {
+
+    workingCopyFactory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())) {
+      @Override
+      public void configure(PullCommand pullCommand) {
+        // we do not want to configure http hooks in this unit test
+      }
+    };
+  }
 
   @Test
   public void shouldGetTagDatesCorrectly() {
@@ -40,6 +59,17 @@ public class HgTagsCommandTest extends AbstractHgCommandTestBase {
     assertThat(tags).hasSize(1);
     assertThat(tags.get(0).getName()).isEqualTo("tip");
     assertThat(tags.get(0).getDate()).contains(1339586381000L);
+  }
+
+  @Test
+  public void shouldNotDie() throws IOException {
+    HgTagCommand hgTagCommand = new HgTagCommand(cmdContext, workingCopyFactory);
+    new TagCommandBuilder(cmdContext.get(), hgTagCommand).create().setRevision("79b6baf49711").setName("newtag").execute();
+
+    HgTagsCommand hgTagsCommand = new HgTagsCommand(cmdContext);
+    final List<Tag> tags = hgTagsCommand.getTags();
+
+    assertThat(tags).isNotEmpty();
   }
 
 }

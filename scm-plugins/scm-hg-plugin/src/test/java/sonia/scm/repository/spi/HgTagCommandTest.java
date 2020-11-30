@@ -34,7 +34,6 @@ import sonia.scm.repository.api.TagCreateRequest;
 import sonia.scm.repository.api.TagDeleteRequest;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
-import sonia.scm.web.HgRepositoryEnvironmentBuilder;
 
 import java.util.List;
 
@@ -46,10 +45,8 @@ public class HgTagCommandTest extends AbstractHgCommandTestBase {
 
   @Before
   public void initWorkingCopyFactory() {
-    HgRepositoryEnvironmentBuilder hgRepositoryEnvironmentBuilder =
-      new HgRepositoryEnvironmentBuilder(handler, HgTestUtil.createHookManager());
 
-    workingCopyFactory = new SimpleHgWorkingCopyFactory(Providers.of(hgRepositoryEnvironmentBuilder), new NoneCachingWorkingCopyPool(new WorkdirProvider())) {
+    workingCopyFactory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())) {
       @Override
       public void configure(PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test

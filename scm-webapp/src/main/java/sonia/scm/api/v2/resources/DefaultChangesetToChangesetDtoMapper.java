@@ -36,6 +36,7 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Contributor;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.Signature;
 import sonia.scm.repository.Tags;
 import sonia.scm.repository.api.Command;
@@ -128,9 +129,11 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
         }
         if (tags != null) {
           embeddedBuilder.with("tags", tagCollectionToDtoMapper.getTagDtoList(namespace, name,
-            getListOfObjects(source.getTags(), tags::getTagByName)));
+            getListOfObjects(source.getTags(), tags::getTagByName), repository));
         }
-        linksBuilder.single(link("tag", resourceLinks.tag().create(namespace, name)));
+        if (RepositoryPermissions.push(repository).isPermitted()) {
+          linksBuilder.single(link("tag", resourceLinks.tag().create(namespace, name)));
+        }
       }
       if (repositoryService.isSupported(Command.BRANCHES)) {
         embeddedBuilder.with("branches", branchCollectionToDtoMapper.getBranchDtoList(repository,

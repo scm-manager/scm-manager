@@ -100,7 +100,7 @@ public class TagRootResource {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Tags tags = getTags(repositoryService);
       if (tags != null && tags.getTags() != null) {
-        return Response.ok(tagCollectionToDtoMapper.map(namespace, name, tags.getTags())).build();
+        return Response.ok(tagCollectionToDtoMapper.map(namespace, name, tags.getTags(), repositoryService.getRepository())).build();
       } else {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
           .entity("Error on getting tag from repository.")
@@ -194,7 +194,7 @@ public class TagRootResource {
           .filter(t -> tagName.equals(t.getName()))
           .findFirst()
           .orElseThrow(() -> createNotFoundException(namespace, name, tagName));
-        return Response.ok(tagToTagDtoMapper.map(tag, namespaceAndName)).build();
+        return Response.ok(tagToTagDtoMapper.map(tag, namespaceAndName, repositoryService.getRepository())).build();
       } else {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
           .entity("Error on getting tag from repository.")
@@ -230,7 +230,7 @@ public class TagRootResource {
   public Response delete(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("tagName") String tagName) {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
-      RepositoryPermissions.modify(repositoryService.getRepository()).check();
+      RepositoryPermissions.push(repositoryService.getRepository()).check();
 
       if (tagExists(tagName, repositoryService)) {
         repositoryService.getTagCommand().delete()
