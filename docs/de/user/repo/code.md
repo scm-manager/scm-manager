@@ -36,13 +36,13 @@ Beispielsweise wird der Text hitchhiker/HeartOfGold@1a2b3c4 zu einem Link zu dem
 
 #### Tags
 
-Alle tags eines Changesets werden in der oberen rechten Ecke der Detailseite angezeigt.
+Alle Tags eines Changesets werden in der oberen rechten Ecke der Detailseite angezeigt.
 
 ![Repository-Code-Changesets](assets/repository-code-changeset-with-tag.png)
 
 #### Tags erstellen
 
-Neue tags für ein Changeset können direkt in dessen Übersichtsseite erstellt werden.
+Neue Tags für ein Changeset können direkt in dessen Übersichtsseite erstellt werden.
 Es muss lediglich ein gewünschter Name angegeben werden, welcher die gleichen Formatierungsbeschränkungen wie Branches erfüllt.
 
 ![Repository-Code-Changeset-Create-Tag](assets/repository-code-changeset-create-tag.png)
