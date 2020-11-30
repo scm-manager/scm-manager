@@ -27,11 +27,8 @@ package sonia.scm.repository.spi;
 import com.google.common.collect.ImmutableSet;
 import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
-import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.api.Command;
-import sonia.scm.repository.api.HookContextFactory;
-import sonia.scm.security.GPG;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -65,18 +62,12 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   protected static final Set<Feature> FEATURES = EnumSet.of(Feature.INCOMING_REVISION);
 
   private final GitContext context;
-  private final GPG gpg;
-  private final HookContextFactory hookContextFactory;
-  private final ScmEventBus eventBus;
   private final Injector commandInjector;
 
   //~--- constructors ---------------------------------------------------------
 
-  GitRepositoryServiceProvider(Injector injector, GitContext context, GPG gpg, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
+  GitRepositoryServiceProvider(Injector injector, GitContext context) {
     this.context = context;
-    this.gpg = gpg;
-    this.hookContextFactory = hookContextFactory;
-    this.eventBus = eventBus;
     commandInjector = injector.createChildInjector(new AbstractModule() {
       @Override
       protected void configure() {
@@ -152,12 +143,12 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public TagsCommand getTagsCommand() {
-    return new GitTagsCommand(context, gpg);
+    return commandInjector.getInstance(GitTagsCommand.class);
   }
 
   @Override
   public TagCommand getTagCommand() {
-    return new GitTagCommand(context, gpg, hookContextFactory, eventBus);
+    return commandInjector.getInstance(GitTagCommand.class);
   }
 
   @Override

@@ -43,6 +43,7 @@ import sonia.scm.repository.Signature;
 import sonia.scm.repository.Tag;
 import sonia.scm.security.GPG;
 
+import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -61,6 +62,7 @@ public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
    *
    * @param context
    */
+  @Inject
   public GitTagsCommand(GitContext context, GPG gpp) {
     super(context);
     this.gpg = gpp;
