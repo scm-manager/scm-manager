@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Language detection of files with interpreter parameters e.g.: `#!/usr/bin/make -f` ([#1450](https://github.com/scm-manager/scm-manager/issues/1450))
+- Unexpected mercurial server pool stop ([#1446](https://github.com/scm-manager/scm-manager/issues/1446) and [#1457](https://github.com/scm-manager/scm-manager/issues/1457))
 
 ## [2.10.1] - 2020-11-24
 ### Fixed

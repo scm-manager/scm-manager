@@ -46,6 +46,10 @@ public class TagDto extends HalRepresentation {
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Instant date;
 
+  TagDto(Links links) {
+    super(links);
+  }
+
   TagDto(Links links, Embedded embedded) {
     super(links, embedded);
   }
