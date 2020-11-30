@@ -919,13 +919,13 @@
     <guice.version>4.2.3</guice.version>
     <jaxb.version>2.3.3</jaxb.version>
     <hibernate-validator.version>6.1.6.Final</hibernate-validator.version>
-    <bouncycastle.version>1.66</bouncycastle.version>
+    <bouncycastle.version>1.67</bouncycastle.version>
 
     <!-- event bus -->
     <legman.version>1.6.2</legman.version>
 
     <!-- webserver -->
-    <jetty.version>9.4.34.v20201102</jetty.version>
+    <jetty.version>9.4.35.v20201120</jetty.version>
     <jetty.maven.version>9.4.34.v20201102</jetty.maven.version>
 
     <!-- security libraries -->
