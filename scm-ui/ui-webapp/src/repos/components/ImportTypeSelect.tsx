@@ -21,17 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import React, { FC } from "react";
+import { RepositoryType, Link } from "@scm-manager/ui-types";
+import { Radio } from "@scm-manager/ui-components";
 
-import {Collection, Links} from "./hal";
-
-export type RepositoryType = {
-  name: string;
-  displayName: string;
-  _links: Links;
+type Props = {
+  repositoryType: RepositoryType;
+  importType: string;
+  setImportType: (type: string) => void;
 };
 
-export type RepositoryTypeCollection = Collection & {
-  _embedded: {
-    repositoryTypes: RepositoryType[];
+const ImportTypeSelect: FC<Props> = ({repositoryType, importType, setImportType}) => {
+
+  const changeImportType = (checked: boolean, name?: string) => {
+    if (name && checked) {
+      setImportType(name);
+    }
   };
+
+  //TODO Add helptext translation
+  return (
+    <>
+      {(repositoryType._links.import as Link[]).map(type => (
+        <Radio
+          name={type.name}
+          checked={importType === type.name}
+          value={type.name}
+          label={type.name}
+          onChange={changeImportType}
+        />
+      ))}
+    </>
+  );
 };
+
+export default ImportTypeSelect;

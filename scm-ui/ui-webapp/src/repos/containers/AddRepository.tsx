@@ -60,6 +60,7 @@ import {
 } from "../../admin/modules/namespaceStrategies";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { compose } from "redux";
+import ImportRepository from "./ImportRepository";
 
 type Props = WithTranslation &
   RouteComponentProps & {
@@ -152,7 +153,7 @@ class AddRepository extends React.Component<Props> {
       >
         <>
           {/*//TODO fix this CSS*/}
-          {!error && <RepositoryFormSwitcher creationMode={this.isImportPage() ? "IMPORT" : "CREATE"} />}
+          {!error && !importLoading && <RepositoryFormSwitcher creationMode={this.isImportPage() ? "IMPORT" : "CREATE"} />}
           {importLoading && (
             <>
               <Notification type="info">{t("import.pending.infoText")}</Notification>
@@ -160,6 +161,7 @@ class AddRepository extends React.Component<Props> {
               <hr/>
             </>
           )}
+          <ImportRepository repositoryTypes={repositoryTypes}/>
           <RepositoryForm
             repositoryTypes={repositoryTypes}
             loading={createLoading || importLoading}
@@ -168,6 +170,7 @@ class AddRepository extends React.Component<Props> {
               createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
             }}
             importRepository={repo => {
+              //TODO Reset error if import started again
               importRepoFromUrl(repoLink, repo, (repo: Repository) => this.repoCreated(repo));
             }}
             indexResources={indexResources}

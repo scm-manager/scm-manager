@@ -44,13 +44,6 @@ const SpaceBetween = styled.div`
   justify-content: space-between;
 `;
 
-const Column = styled.div`
-  padding: 0 0.75rem;
-`;
-
-const Columns = styled.div`
-  padding: 0.75rem 0 0;
-`;
 
 type Props = {
   createRepository?: (repo: RepositoryCreation, shouldInit: boolean) => void;
@@ -163,48 +156,6 @@ const RepositoryForm: FC<Props> = ({
     return <ExtensionPoint name="repos.create.namespace" props={props} renderAll={false} />;
   };
 
-  const renderUrlImportFields = () => {
-    if (!isImportMode()) {
-      return null;
-    }
-
-    return (
-      <>
-        <Columns className="columns is-multiline">
-          <Column className="column is-full">
-            <InputField
-              label={t("import.importUrl")}
-              onChange={handleImportUrlChange}
-              value={importUrl}
-              helpText={t("help.importUrlHelpText")}
-              disabled={disabled}
-            />
-          </Column>
-          <Column className="column is-half">
-            <InputField
-              label={t("import.username")}
-              onChange={setUsername}
-              value={username}
-              helpText={t("help.usernameHelpText")}
-              disabled={disabled}
-            />
-          </Column>
-          <Column className="column is-half">
-            <InputField
-              label={t("import.password")}
-              onChange={setPassword}
-              value={password}
-              type="password"
-              helpText={t("help.passwordHelpText")}
-              disabled={disabled}
-            />
-          </Column>
-        </Columns>
-        <hr />
-      </>
-    );
-  };
-
   const renderCreateOnlyFields = () => {
     if (isEditMode()) {
       return null;
@@ -216,7 +167,6 @@ const RepositoryForm: FC<Props> = ({
     };
     return (
       <>
-        {renderUrlImportFields()}
         {renderNamespaceField()}
         <InputField
           label={t("repository.name")}
@@ -281,17 +231,6 @@ const RepositoryForm: FC<Props> = ({
   const handleContactChange = (contact: string) => {
     setContactValidationError(!validator.isContactValid(contact));
     setRepo({ ...repo, contact });
-  };
-
-  const handleImportUrlChange = (url: string) => {
-    if (!repo.name) {
-      // If the repository name is not fill we set a name suggestion
-      const match = url.match(/([^\/]+)\.git/i);
-      if (match && match[1]) {
-        handleNameChange(match[1]);
-      }
-    }
-    setImportUrl(url);
   };
 
   const submitButton = () => {
