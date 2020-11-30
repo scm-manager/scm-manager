@@ -131,9 +131,9 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
           embeddedBuilder.with("tags", tagCollectionToDtoMapper.getTagDtoList(namespace, name,
             getListOfObjects(source.getTags(), tags::getTagByName), repository));
         }
-        if (RepositoryPermissions.push(repository).isPermitted()) {
-          linksBuilder.single(link("tag", resourceLinks.tag().create(namespace, name)));
-        }
+      }
+      if (repositoryService.isSupported(Command.TAG) && RepositoryPermissions.push(repository).isPermitted()) {
+        linksBuilder.single(link("tag", resourceLinks.tag().create(namespace, name)));
       }
       if (repositoryService.isSupported(Command.BRANCHES)) {
         embeddedBuilder.with("branches", branchCollectionToDtoMapper.getBranchDtoList(repository,
