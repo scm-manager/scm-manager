@@ -71,15 +71,28 @@ public class WindowsAutoConfigurator implements AutoConfigurator {
   @Override
   public void configure(HgConfig config) {
     Set<String> fsPaths = new LinkedHashSet<>(pathFromEnv());
-    for (String registryKey : REGISTRY_KEYS) {
-      registry.get(registryKey).ifPresent(fsPaths::add);
-    }
+    resolveRegistryKeys(fsPaths);
 
     Optional<String> hg = findInPath(fsPaths);
     if (hg.isPresent()) {
-      config.setHgBinary(hg.get());
+      String hgBinary = hg.get();
+      LOG.info("found hg at {}", hgBinary);
+      config.setHgBinary(hgBinary);
     } else {
       LOG.warn("could not find valid mercurial installation");
+    }
+  }
+
+  private void resolveRegistryKeys(Set<String> fsPaths) {
+    for (String registryKey : REGISTRY_KEYS) {
+      Optional<String> registryValue = registry.get(registryKey);
+      if (registryValue.isPresent()) {
+        String directory = registryValue.get();
+        LOG.trace("resolved registry key {} to directory {}", registryKey, directory);
+        fsPaths.add(directory);
+      } else {
+        LOG.trace("could not find value for registry key {}", registryKey);
+      }
     }
   }
 
@@ -99,6 +112,7 @@ public class WindowsAutoConfigurator implements AutoConfigurator {
   }
 
   private Optional<String> findInDirectory(String directory) {
+    LOG.trace("check directory {} for mercurial installations", directory);
     for (String binary : BINARIES) {
       Path hg = Paths.get(directory, binary);
       if (verifier.isValid(hg)) {

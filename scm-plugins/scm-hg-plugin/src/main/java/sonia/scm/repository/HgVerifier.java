@@ -56,6 +56,7 @@ public class HgVerifier {
   }
 
   public boolean isValid(Path hg) {
+    LOG.trace("check if hg binary {} is valid", hg);
     if (!Files.isRegularFile(hg)) {
       LOG.warn("{} is not a regular file", hg);
       return false;
