@@ -50,6 +50,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.DIFF,
     Command.DIFF_RESULT,
     Command.LOG,
+    Command.TAG,
     Command.TAGS,
     Command.BRANCH,
     Command.BRANCHES,
