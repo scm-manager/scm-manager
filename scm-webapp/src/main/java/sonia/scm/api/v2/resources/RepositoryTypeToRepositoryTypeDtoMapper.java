@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -34,7 +35,6 @@ import sonia.scm.repository.api.Command;
 
 import javax.inject.Inject;
 
-import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
@@ -48,7 +48,7 @@ public abstract class RepositoryTypeToRepositoryTypeDtoMapper extends BaseMapper
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.repositoryType().self(repositoryType.getName()));
 
     if (RepositoryPermissions.create().isPermitted() && repositoryType.getSupportedCommands().contains(Command.PULL)) {
-      linksBuilder.single(link("importFromUrl", resourceLinks.repository().importFromUrl(repositoryType.getName())));
+      linksBuilder.array(Link.linkBuilder("import", resourceLinks.repository().importFromUrl(repositoryType.getName())).withName("url").build());
     }
 
     target.add(linksBuilder.build());

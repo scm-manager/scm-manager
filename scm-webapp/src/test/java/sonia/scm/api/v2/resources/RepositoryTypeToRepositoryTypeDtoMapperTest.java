@@ -94,7 +94,7 @@ public class RepositoryTypeToRepositoryTypeDtoMapperTest {
     RepositoryTypeDto dto = mapper.map(type);
     assertEquals(
       "https://scm-manager.org/scm/v2/repositories/import/hk/url",
-      dto.getLinks().getLinkBy("importFromUrl").get().getHref()
+      dto.getLinks().getLinkBy("import").get().getHref()
     );
   }
 
@@ -102,7 +102,7 @@ public class RepositoryTypeToRepositoryTypeDtoMapperTest {
   public void shouldNotAppendImportFromUrlLinkIfCommandNotSupported() {
     when(subject.isPermitted("repository:create")).thenReturn(true);
     RepositoryTypeDto dto = mapper.map(type);
-    assertFalse(dto.getLinks().getLinkBy("importFromUrl").isPresent());
+    assertFalse(dto.getLinks().getLinkBy("import").isPresent());
   }
 
   @Test
@@ -110,6 +110,6 @@ public class RepositoryTypeToRepositoryTypeDtoMapperTest {
     RepositoryType type = new RepositoryType("hk", "Hitchhiker", ImmutableSet.of(Command.PULL));
 
     RepositoryTypeDto dto = mapper.map(type);
-    assertFalse(dto.getLinks().getLinkBy("importFromUrl").isPresent());
+    assertFalse(dto.getLinks().getLinkBy("import").isPresent());
   }
 }
