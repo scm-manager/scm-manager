@@ -266,14 +266,4 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
     return new HgTagCommand(context, handler.getWorkingCopyFactory());
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private HgCommandContext context;
-
-  /** Field description */
-  private HgRepositoryHandler handler;
-
-  /** Field description */
-  private File repositoryDirectory;
 }
