@@ -39,7 +39,6 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEventType;
-import sonia.scm.NotFoundException;
 import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.InternalRepositoryException;
@@ -215,10 +214,17 @@ public class RepositoryImportResource {
 
     logger.info("start {} import for external url {}", type, request.getUrl());
 
-    Repository repository = manager.create(
-      new Repository(null, type, request.getNamespace(), request.getName()),
-      pullChangesFromRemoteUrl(request)
-    );
+    Repository repository = null;
+    try {
+      repository = manager.create(
+        new Repository(null, type, request.getNamespace(), request.getName()),
+        pullChangesFromRemoteUrl(request)
+      );
+    } catch (Exception e) {
+      eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, true));
+      throw e;
+    }
+    eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, false));
 
     return Response.created(URI.create(resourceLinks.repository().self(repository.getNamespace(), repository.getName()))).build();
   }
@@ -236,13 +242,8 @@ public class RepositoryImportResource {
 
         pullCommand.pull(request.getUrl());
       } catch (IOException e) {
-        eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, true));
         throw new InternalRepositoryException(repository, "Failed to import from remote url", e);
-      } catch (Exception e) {
-        eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, true));
-        throw e;
       }
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, false));
     };
   }
 

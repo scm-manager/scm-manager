@@ -466,6 +466,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldImportRepositoryFromUrl() throws URISyntaxException, IOException {
+    ArgumentCaptor<RepositoryImportEvent> captor = ArgumentCaptor.forClass(RepositoryImportEvent.class);
     when(manager.getHandler("git")).thenReturn(repositoryHandler);
     when(repositoryHandler.getType()).thenReturn(new RepositoryType("git", "git", ImmutableSet.of(Command.PULL)));
     when(manager.create(any(Repository.class), any())).thenReturn(RepositoryTestData.create42Puzzle());
@@ -482,10 +483,14 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(SC_CREATED, response.getStatus());
+    verify(eventBus).post(captor.capture());
+
+    assertThat(captor.getValue().isFailed()).isFalse();
   }
 
   @Test
   public void shouldFailOnImportRepositoryFromUrl() throws URISyntaxException, IOException {
+    ArgumentCaptor<RepositoryImportEvent> captor = ArgumentCaptor.forClass(RepositoryImportEvent.class);
     when(manager.getHandler("git")).thenReturn(repositoryHandler);
     when(repositoryHandler.getType()).thenReturn(new RepositoryType("git", "git", ImmutableSet.of(Command.PULL)));
     doThrow(ImportFailedException.class).when(manager).create(any(Repository.class), any());
@@ -502,10 +507,13 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(500, response.getStatus());
+    verify(eventBus).post(captor.capture());
+
+    assertThat(captor.getValue().isFailed()).isTrue();
   }
 
   @Test
-  public void shouldPullChangesFromRemoteUrl() {
+  public void shouldPullChangesFromRemoteUrl() throws IOException {
     PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
     when(service.getPullCommand()).thenReturn(pullCommandBuilder);
 
@@ -518,7 +526,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportDto);
     repositoryConsumer.accept(repository);
 
-    verify(eventBus).post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, false));
+    verify(pullCommandBuilder).pull("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
   }
 
   @Test
@@ -539,7 +547,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     verify(pullCommandBuilder).withUsername("trillian");
     verify(pullCommandBuilder).withPassword("secret");
-    verify(eventBus).post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, false));
   }
 
   @Test
@@ -556,8 +563,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportDto);
     assertThrows(ImportFailedException.class, () -> repositoryConsumer.accept(repository));
-
-    verify(eventBus).post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, true));
   }
 
   private PageResult<Repository> createSingletonPageResult(Repository repository) {
