@@ -40,7 +40,7 @@ import java.util.Map;
 public class EnvList {
 
   private static final ImmutableSet<String> SENSITIVE =
-    ImmutableSet.of("HTTP_AUTHORIZATION", "SCM_CHALLENGE", "SCM_CREDENTIALS");
+    ImmutableSet.of("HTTP_AUTHORIZATION", "SCM_CHALLENGE", "SCM_CREDENTIALS", "SCM_BEARER_TOKEN");
 
   private final Map<String, String> envMap;
 

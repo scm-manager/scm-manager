@@ -34,13 +34,16 @@ class EnvListTest {
     EnvList env = new EnvList();
     env.set("HTTP_AUTHORIZATION", "Basic xxx");
     env.set("SOME_OTHER", "other");
+    env.set("SCM_BEARER_TOKEN", "secret");
 
     String value = env.toString();
 
     assertThat(value)
       .contains("SOME_OTHER=other")
       .contains("HTTP_AUTHORIZATION=(is set)")
-      .doesNotContain("HTTP_AUTHORIZATION=Basic xxx");
+      .contains("SCM_BEARER_TOKEN=(is set)")
+      .doesNotContain("HTTP_AUTHORIZATION=Basic xxx")
+      .doesNotContain("SCM_BEARER_TOKEN=secret");
   }
 
   @Test
