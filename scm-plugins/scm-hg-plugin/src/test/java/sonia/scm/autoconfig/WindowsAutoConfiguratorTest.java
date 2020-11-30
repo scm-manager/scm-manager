@@ -136,7 +136,7 @@ class WindowsAutoConfiguratorTest {
 
   private WindowsAutoConfigurator configurator(String path) {
     Map<String, String> env = new HashMap<>();
-    env.put("PATH", path);
+    env.put(ENV_PATH, path);
     return new WindowsAutoConfigurator(verifier, registry, env);
   }
 

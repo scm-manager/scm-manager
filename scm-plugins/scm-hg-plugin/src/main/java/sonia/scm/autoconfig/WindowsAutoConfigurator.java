@@ -58,6 +58,9 @@ public class WindowsAutoConfigurator implements AutoConfigurator {
 
   private static final String[] BINARIES = {BINARY_HG_EXE, BINARY_HG_BAT};
 
+  @VisibleForTesting
+  static final String ENV_PATH = "Path";
+
   private final HgVerifier verifier;
   private final WindowsRegistry registry;
   private final Map<String, String> env;
@@ -97,7 +100,7 @@ public class WindowsAutoConfigurator implements AutoConfigurator {
   }
 
   private Collection<String> pathFromEnv() {
-    String path = env.getOrDefault("Path", "");
+    String path = env.getOrDefault(ENV_PATH, "");
     LOG.trace("try to find hg in PATH {}", path);
     return Splitter.on(File.pathSeparator).splitToList(path);
   }
