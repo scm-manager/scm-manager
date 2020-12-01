@@ -46,17 +46,13 @@ import java.util.regex.Pattern;
 import static sonia.scm.repository.spi.UserFormatter.getUserStringFor;
 
 @SuppressWarnings("java:S3252") // it is ok for javahg classes to access static method of subtype
-public class HgModifyCommand implements ModifyCommand {
+public class HgModifyCommand extends AbstractWorkingCopyCommand implements ModifyCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgModifyCommand.class);
-  static final Pattern HG_MESSAGE_PATTERN = Pattern.compile(".*\\[SCM\\](?: Error:)? (.*)");
 
-  private final HgCommandContext context;
-  private final HgWorkingCopyFactory workingCopyFactory;
 
   public HgModifyCommand(HgCommandContext context, HgWorkingCopyFactory workingCopyFactory) {
-    this.context = context;
-    this.workingCopyFactory = workingCopyFactory;
+    super(context, workingCopyFactory);
   }
 
   @Override
@@ -115,7 +111,7 @@ public class HgModifyCommand implements ModifyCommand {
         .user(getUserStringFor(request.getAuthor()))
         .message(request.getCommitMessage()).execute();
 
-      List<Changeset> execute = pullModifyChangesToCentralRepository(request, workingCopy);
+      List<Changeset> execute = pullChangesIntoCentralRepository(workingCopy, request.getBranch());
 
       String node = execute.get(0).getNode();
       LOG.debug("successfully pulled changes from working copy, new node {}", node);
@@ -126,24 +122,7 @@ public class HgModifyCommand implements ModifyCommand {
     }
   }
 
-  private List<Changeset> pullModifyChangesToCentralRepository(ModifyCommandRequest request, WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy) {
-    LOG.trace("pull changes from working copy");
-    try {
-      com.aragost.javahg.commands.PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
-      workingCopyFactory.configure(pullCommand);
-      return pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
-    } catch (ExecutionException e) {
-      throw IntegrateChangesFromWorkdirException
-        .withPattern(HG_MESSAGE_PATTERN)
-        .forMessage(context.getScmRepository(), e.getMessage());
-    } catch (IOException e) {
-      throw new InternalRepositoryException(context.getScmRepository(),
-        String.format("Could not pull modify changes from working copy to central repository for branch %s", request.getBranch()),
-        e);
-    }
-  }
-
-  private String throwInternalRepositoryException(String message, Exception e) {
+  private void throwInternalRepositoryException(String message, Exception e) {
     throw new InternalRepositoryException(context.getScmRepository(), message, e);
   }
 }

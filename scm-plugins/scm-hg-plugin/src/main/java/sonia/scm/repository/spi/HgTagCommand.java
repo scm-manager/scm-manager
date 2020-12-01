@@ -25,28 +25,22 @@
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Repository;
-import com.aragost.javahg.commands.PullCommand;
 import com.google.common.base.Strings;
 import org.apache.shiro.SecurityUtils;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.TagCreateRequest;
 import sonia.scm.repository.api.TagDeleteRequest;
 import sonia.scm.repository.work.WorkingCopy;
 import sonia.scm.user.User;
 
-import java.io.IOException;
-
 import static sonia.scm.repository.spi.UserFormatter.getUserStringFor;
 
-public class HgTagCommand extends AbstractCommand implements TagCommand {
+public class HgTagCommand extends AbstractWorkingCopyCommand implements TagCommand {
 
   public static final String DEFAULT_BRANCH_NAME = "default";
-  private final HgWorkingCopyFactory workingCopyFactory;
 
   public HgTagCommand(HgCommandContext context, HgWorkingCopyFactory workingCopyFactory) {
-    super(context);
-    this.workingCopyFactory = workingCopyFactory;
+    super(context, workingCopyFactory);
   }
 
   @Override
@@ -75,18 +69,6 @@ public class HgTagCommand extends AbstractCommand implements TagCommand {
         .execute(request.getName());
 
       pullChangesIntoCentralRepository(workingCopy, DEFAULT_BRANCH_NAME);
-    }
-  }
-
-  private void pullChangesIntoCentralRepository(WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy, String branch) {
-    try {
-      com.aragost.javahg.commands.PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
-      workingCopyFactory.configure(pullCommand);
-      pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
-    } catch (IOException e) {
-      throw new InternalRepositoryException(getRepository(),
-        String.format("Could not pull changes '%s' into central repository", branch),
-        e);
     }
   }
 }

@@ -43,15 +43,12 @@ import java.io.IOException;
  * Mercurial implementation of the {@link BranchCommand}.
  * Note that this creates an empty commit to "persist" the new branch.
  */
-public class HgBranchCommand extends AbstractCommand implements BranchCommand {
+public class HgBranchCommand extends AbstractWorkingCopyCommand implements BranchCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgBranchCommand.class);
 
-  private final HgWorkingCopyFactory workingCopyFactory;
-
   HgBranchCommand(HgCommandContext context, HgWorkingCopyFactory workingCopyFactory) {
-    super(context);
-    this.workingCopyFactory = workingCopyFactory;
+    super(context, workingCopyFactory);
   }
 
   @Override
@@ -103,15 +100,4 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
       .execute();
   }
 
-  private void pullChangesIntoCentralRepository(WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy, String branch) {
-    try {
-      PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
-      workingCopyFactory.configure(pullCommand);
-      pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
-    } catch (IOException e) {
-      throw new InternalRepositoryException(getRepository(),
-        String.format("Could not pull changes '%s' into central repository", branch),
-        e);
-    }
-  }
 }
