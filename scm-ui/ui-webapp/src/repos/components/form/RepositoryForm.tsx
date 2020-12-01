@@ -51,7 +51,7 @@ type Props = {
   repository?: Repository;
   repositoryTypes?: RepositoryType[];
   namespaceStrategy?: string;
-  loading?: boolean;
+  loading: boolean;
   indexResources?: any;
 };
 
@@ -193,7 +193,7 @@ const RepositoryForm: FC<Props> = ({
       <RepositoryInformationForm
         repository={repo}
         onChange={setRepo}
-        disabled={!(isModifiable() || createRepository)}
+        disabled={disabled}
         setValid={contact => setValid({ ...valid, contact })}
       />
       {submitButton()}

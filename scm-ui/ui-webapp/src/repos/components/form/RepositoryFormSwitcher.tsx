@@ -43,7 +43,7 @@ const SmallButton = styled(Button)`
 
 const TopLevel = styled(Level)`
   margin-top: 1.5rem;
-  margin-bottom: -1.5rem !important;
+  margin-bottom: -1.5rem;
   height: 0;
   position: absolute;
   right: 0;
@@ -71,7 +71,7 @@ const RepositoryFormSwitcher: FC<Props> = ({ creationMode }) => {
             color={isCreateMode() ? "link is-selected" : undefined}
             link={isImportMode() ? "/repos/create" : undefined}
           >
-            <MarginIcon name="fa fa-plus" color={isCreateMode() ? "white" : "default"} />{" "}
+            <MarginIcon name="fa fa-plus" color={isCreateMode() ? "white" : "default"} />
             <p className="is-hidden-mobile is-hidden-tablet-only">{t("repositoryForm.createButton")}</p>
           </SmallButton>
           <SmallButton

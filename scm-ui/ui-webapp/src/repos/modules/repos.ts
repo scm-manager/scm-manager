@@ -57,12 +57,6 @@ export const CREATE_REPO_SUCCESS = `${CREATE_REPO}_${types.SUCCESS_SUFFIX}`;
 export const CREATE_REPO_FAILURE = `${CREATE_REPO}_${types.FAILURE_SUFFIX}`;
 export const CREATE_REPO_RESET = `${CREATE_REPO}_${types.RESET_SUFFIX}`;
 
-export const IMPORT_REPO = "scm/repos/IMPORT_REPO";
-export const IMPORT_REPO_PENDING = `${IMPORT_REPO}_${types.PENDING_SUFFIX}`;
-export const IMPORT_REPO_SUCCESS = `${IMPORT_REPO}_${types.SUCCESS_SUFFIX}`;
-export const IMPORT_REPO_FAILURE = `${IMPORT_REPO}_${types.FAILURE_SUFFIX}`;
-export const IMPORT_REPO_RESET = `${IMPORT_REPO}_${types.RESET_SUFFIX}`;
-
 export const MODIFY_REPO = "scm/repos/MODIFY_REPO";
 export const MODIFY_REPO_PENDING = `${MODIFY_REPO}_${types.PENDING_SUFFIX}`;
 export const MODIFY_REPO_SUCCESS = `${MODIFY_REPO}_${types.SUCCESS_SUFFIX}`;
@@ -597,14 +591,6 @@ export function getNamespace(state: object, namespaceName: string) {
 
 export function isAbleToCreateRepos(state: object) {
   return !!(state.repos && state.repos.list && state.repos.list._links && state.repos.list._links.create);
-}
-
-export function isImportRepoPending(state: object) {
-  return isPending(state, IMPORT_REPO);
-}
-
-export function getImportRepoFailure(state: object) {
-  return getFailure(state, IMPORT_REPO);
 }
 
 export function isCreateRepoPending(state: object) {
