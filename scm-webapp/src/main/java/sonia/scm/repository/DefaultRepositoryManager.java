@@ -41,6 +41,8 @@ import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.security.AuthorizationChangedEvent;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
@@ -147,13 +149,14 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
         if (initRepository) {
           try {
             getHandler(newRepository).create(newRepository);
+            invalidateRepositoryPermissions();
             afterCreation.accept(newRepository);
-            //TODO check if this is okay
           } catch (Exception e) {
             delete(repository);
             throw e;
           }
         } else {
+          invalidateRepositoryPermissions();
           afterCreation.accept(newRepository);
         }
         fireEvent(HandlerEventType.CREATE, newRepository);
@@ -164,6 +167,10 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
         }
       }
     );
+  }
+
+  private void invalidateRepositoryPermissions() {
+    ScmEventBus.getInstance().post(AuthorizationChangedEvent.createForEveryUser());
   }
 
   @Override

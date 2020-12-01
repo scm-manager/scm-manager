@@ -36,6 +36,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEventType;
@@ -46,6 +47,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
@@ -69,6 +71,7 @@ import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
+import static java.util.Collections.singletonList;
 
 public class RepositoryImportResource {
 
@@ -215,6 +218,8 @@ public class RepositoryImportResource {
     logger.info("start {} import for external url {}", type, request.getImportUrl());
 
     Repository repository = new Repository(null, type, request.getNamespace(), request.getName());
+    repository.setPermissions(singletonList(new RepositoryPermission(SecurityUtils.getSubject().getPrincipal().toString(), "OWNER", false)));
+
     try {
       repository = manager.create(
         repository,
