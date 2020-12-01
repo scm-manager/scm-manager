@@ -930,7 +930,7 @@
 
     <!-- security libraries -->
     <ssp.version>1.2.0</ssp.version>
-    <shiro.version>1.6.0</shiro.version>
+    <shiro.version>1.7.0</shiro.version>
 
     <!-- repository libraries -->
     <jgit.version>5.6.1.202002131546-r-scm1</jgit.version>
