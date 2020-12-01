@@ -33,8 +33,11 @@ import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.TagCreateRequest;
 import sonia.scm.repository.api.TagDeleteRequest;
 import sonia.scm.repository.work.WorkingCopy;
+import sonia.scm.user.User;
 
 import java.io.IOException;
+
+import static sonia.scm.repository.spi.UserFormatter.getUserStringFor;
 
 public class HgTagCommand extends AbstractCommand implements TagCommand {
 
@@ -56,7 +59,7 @@ public class HgTagCommand extends AbstractCommand implements TagCommand {
       }
       com.aragost.javahg.commands.TagCommand.on(workingCopy.getWorkingRepository())
         .rev(rev)
-        .user(SecurityUtils.getSubject().getPrincipal().toString())
+        .user(getUserStringFor(SecurityUtils.getSubject().getPrincipals().oneByType(User.class)))
         .execute(request.getName());
       pullChangesIntoCentralRepository(workingCopy, DEFAULT_BRANCH_NAME);
       return new Tag(request.getName(), rev);
@@ -67,7 +70,7 @@ public class HgTagCommand extends AbstractCommand implements TagCommand {
   public void delete(TagDeleteRequest request) {
     try (WorkingCopy<Repository, Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), DEFAULT_BRANCH_NAME)) {
       com.aragost.javahg.commands.TagCommand.on(workingCopy.getWorkingRepository())
-        .user(SecurityUtils.getSubject().getPrincipal().toString())
+        .user(getUserStringFor(SecurityUtils.getSubject().getPrincipals().oneByType(User.class)))
         .remove()
         .execute(request.getName());
 

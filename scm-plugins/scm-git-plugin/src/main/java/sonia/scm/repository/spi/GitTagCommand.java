@@ -35,7 +35,6 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevWalk;
-import sonia.scm.NotFoundException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
@@ -62,6 +61,8 @@ import java.util.Set;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 public class GitTagCommand extends AbstractGitCommand implements TagCommand {
   private final GPG gpg;
@@ -97,7 +98,7 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
       ObjectId taggedCommitObjectId = git.getRepository().resolve(revision);
 
       if (taggedCommitObjectId == null) {
-        throw new NotFoundException("revision", revision);
+        throw notFound(entity("revision", revision).in(repository));
       }
 
       try (RevWalk walk = new RevWalk(git.getRepository())) {
@@ -179,46 +180,46 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
     return new RepositoryHookEvent(context, this.context.getRepository(), RepositoryHookType.PRE_RECEIVE);
   }
 
-private static class TagHookContextProvider extends HookContextProvider {
-  private final List<Tag> newTags;
-  private final List<Tag> deletedTags;
+  private static class TagHookContextProvider extends HookContextProvider {
+    private final List<Tag> newTags;
+    private final List<Tag> deletedTags;
 
-  private TagHookContextProvider(List<Tag> newTags, List<Tag> deletedTags) {
-    this.newTags = newTags;
-    this.deletedTags = deletedTags;
+    private TagHookContextProvider(List<Tag> newTags, List<Tag> deletedTags) {
+      this.newTags = newTags;
+      this.deletedTags = deletedTags;
+    }
+
+    static TagHookContextProvider createHookEvent(Tag newTag) {
+      return new TagHookContextProvider(singletonList(newTag), emptyList());
+    }
+
+    static TagHookContextProvider deleteHookEvent(Tag deletedTag) {
+      return new TagHookContextProvider(emptyList(), singletonList(deletedTag));
+    }
+
+    @Override
+    public Set<HookFeature> getSupportedFeatures() {
+      return singleton(HookFeature.TAG_PROVIDER);
+    }
+
+    @Override
+    public HookTagProvider getTagProvider() {
+      return new HookTagProvider() {
+        @Override
+        public List<Tag> getCreatedTags() {
+          return newTags;
+        }
+
+        @Override
+        public List<Tag> getDeletedTags() {
+          return deletedTags;
+        }
+      };
+    }
+
+    @Override
+    public HookChangesetProvider getChangesetProvider() {
+      return r -> new HookChangesetResponse(emptyList());
+    }
   }
-
-  static TagHookContextProvider createHookEvent(Tag newTag) {
-    return new TagHookContextProvider(singletonList(newTag), emptyList());
-  }
-
-  static TagHookContextProvider deleteHookEvent(Tag deletedTag) {
-    return new TagHookContextProvider(emptyList(), singletonList(deletedTag));
-  }
-
-  @Override
-  public Set<HookFeature> getSupportedFeatures() {
-    return singleton(HookFeature.TAG_PROVIDER);
-  }
-
-  @Override
-  public HookTagProvider getTagProvider() {
-    return new HookTagProvider() {
-      @Override
-      public List<Tag> getCreatedTags() {
-        return newTags;
-      }
-
-      @Override
-      public List<Tag> getDeletedTags() {
-        return deletedTags;
-      }
-    };
-  }
-
-  @Override
-  public HookChangesetProvider getChangesetProvider() {
-    return r -> new HookChangesetResponse(emptyList());
-  }
-}
 }

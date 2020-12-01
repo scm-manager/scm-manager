@@ -43,6 +43,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import static sonia.scm.repository.spi.UserFormatter.getUserStringFor;
+
 @SuppressWarnings("java:S3252") // it is ok for javahg classes to access static method of subtype
 public class HgModifyCommand implements ModifyCommand {
 
@@ -110,7 +112,7 @@ public class HgModifyCommand implements ModifyCommand {
 
       LOG.trace("commit changes in working copy");
       CommitCommand.on(workingRepository)
-        .user(String.format("%s <%s>", request.getAuthor().getName(), request.getAuthor().getMail()))
+        .user(getUserStringFor(request.getAuthor()))
         .message(request.getCommitMessage()).execute();
 
       List<Changeset> execute = pullModifyChangesToCentralRepository(request, workingCopy);
