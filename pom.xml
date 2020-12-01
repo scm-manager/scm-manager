@@ -243,7 +243,6 @@
         <groupId>org.mapstruct</groupId>
         <artifactId>mapstruct-processor</artifactId>
         <version>${org.mapstruct.version}</version>
-        <scope>provided</scope>
       </dependency>
 
       <dependency>
@@ -256,7 +255,14 @@
         <groupId>org.projectlombok</groupId>
         <artifactId>lombok</artifactId>
         <version>1.18.10</version>
-        <scope>provided</scope>
+      </dependency>
+
+      <!-- servlet api -->
+
+      <dependency>
+        <groupId>javax.servlet</groupId>
+        <artifactId>javax.servlet-api</artifactId>
+        <version>${servlet.version}</version>
       </dependency>
 
       <!-- rest api -->
