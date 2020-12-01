@@ -24,24 +24,16 @@
 
 package sonia.scm.repository.api;
 
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tag;
-import sonia.scm.repository.TagCreatedEvent;
-import sonia.scm.repository.TagDeletedEvent;
 import sonia.scm.repository.spi.TagCommand;
 
 import java.io.IOException;
 
 public class TagCommandBuilder {
-  private final Repository repository;
   private final TagCommand command;
-  private final ScmEventBus eventBus;
 
-  public TagCommandBuilder(Repository repository, TagCommand command) {
-    this.repository = repository;
+  public TagCommandBuilder(TagCommand command) {
     this.command = command;
-    this.eventBus = ScmEventBus.getInstance();
   }
 
   public TagCreateCommandBuilder create() {
@@ -53,7 +45,7 @@ public class TagCommandBuilder {
   }
 
   public class TagCreateCommandBuilder {
-    private TagCreateRequest request = new TagCreateRequest();
+    private final TagCreateRequest request = new TagCreateRequest();
 
     public TagCreateCommandBuilder setRevision(String revision) {
       request.setRevision(revision);
@@ -66,14 +58,12 @@ public class TagCommandBuilder {
     }
 
     public Tag execute() throws IOException {
-      Tag tag = command.create(request);
-      eventBus.post(new TagCreatedEvent(repository, request.getRevision(), request.getName()));
-      return tag;
+      return command.create(request);
     }
   }
 
   public class TagDeleteCommandBuilder {
-    private TagDeleteRequest request = new TagDeleteRequest();
+    private final TagDeleteRequest request = new TagDeleteRequest();
 
     public TagDeleteCommandBuilder setName(String name) {
       request.setName(name);
@@ -82,7 +72,6 @@ public class TagCommandBuilder {
 
     public void execute() throws IOException {
       command.delete(request);
-      eventBus.post(new TagDeletedEvent(repository, request.getName()));
     }
   }
 }

@@ -386,7 +386,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public TagCommandBuilder getTagCommand() {
-    return new TagCommandBuilder(repository, provider.getTagCommand());
+    return new TagCommandBuilder(provider.getTagCommand());
   }
 
   /**

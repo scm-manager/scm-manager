@@ -27,7 +27,9 @@ package sonia.scm.api.v2.resources;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.headers.Header;
 import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Branch;
@@ -100,7 +102,7 @@ public class TagRootResource {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       Tags tags = getTags(repositoryService);
       if (tags != null && tags.getTags() != null) {
-        return Response.ok(tagCollectionToDtoMapper.map(namespace, name, tags.getTags(), repositoryService.getRepository())).build();
+        return Response.ok(tagCollectionToDtoMapper.map(tags.getTags(), repositoryService.getRepository())).build();
       } else {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
           .entity("Error on getting tag from repository.")
@@ -112,7 +114,20 @@ public class TagRootResource {
   @POST
   @Path("")
   @Produces(VndMediaType.TAG_REQUEST)
-  @Operation(summary = "Create tag", description = "Creates a new tag and returns it", tags = "Repository")
+  @Operation(summary = "Create tag",
+    description = "Creates a new tag.",
+    tags = "Repository",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.TAG_REQUEST,
+        schema = @Schema(implementation = TagRequestDto.class),
+        examples = @ExampleObject(
+          name = "Create a new tag for a revision",
+          value = "{\n  \"revision\":\"734713bc047d87bf7eac9674765ae793478c50d3\",\n  \"name\":\"v1.1.0\"\n}",
+          summary = "Create a tag"
+        )
+      )
+    ))
   @ApiResponse(
     responseCode = "201",
     description = "create success",
@@ -144,7 +159,7 @@ public class TagRootResource {
     String tagName = tagRequest.getName();
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       if (tagExists(tagName, repositoryService)) {
-        throw alreadyExists(entity(Tag.class, tagName).in(Repository.class, namespace + "/" + name));
+        throw alreadyExists(entity(Tag.class, tagName).in(repositoryService.getRepository()));
       }
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.push(repository).check();
@@ -194,7 +209,7 @@ public class TagRootResource {
           .filter(t -> tagName.equals(t.getName()))
           .findFirst()
           .orElseThrow(() -> createNotFoundException(namespace, name, tagName));
-        return Response.ok(tagToTagDtoMapper.map(tag, namespaceAndName, repositoryService.getRepository())).build();
+        return Response.ok(tagToTagDtoMapper.map(tag, repositoryService.getRepository())).build();
       } else {
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR)
           .entity("Error on getting tag from repository.")
@@ -227,7 +242,7 @@ public class TagRootResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response delete(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("tagName") String tagName) {
+  public Response delete(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("tagName") String tagName) throws IOException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       RepositoryPermissions.push(repositoryService.getRepository()).check();
@@ -239,8 +254,6 @@ public class TagRootResource {
       }
 
       return Response.noContent().build();
-    } catch (IOException e) {
-      return Response.serverError().build();
     }
   }
 

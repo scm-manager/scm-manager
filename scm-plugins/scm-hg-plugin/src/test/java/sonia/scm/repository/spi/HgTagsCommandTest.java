@@ -64,7 +64,7 @@ public class HgTagsCommandTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldNotDie() throws IOException {
     HgTagCommand hgTagCommand = new HgTagCommand(cmdContext, workingCopyFactory);
-    new TagCommandBuilder(cmdContext.get(), hgTagCommand).create().setRevision("79b6baf49711").setName("newtag").execute();
+    new TagCommandBuilder(hgTagCommand).create().setRevision("79b6baf49711").setName("newtag").execute();
 
     HgTagsCommand hgTagsCommand = new HgTagsCommand(cmdContext);
     final List<Tag> tags = hgTagsCommand.getTags();

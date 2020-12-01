@@ -254,7 +254,7 @@ public abstract class RepositoryServiceProvider implements Closeable
    */
   public TagCommand getTagCommand()
   {
-    throw new CommandNotSupportedException(Command.TAGS);
+    throw new CommandNotSupportedException(Command.TAG);
   }
 
   /**

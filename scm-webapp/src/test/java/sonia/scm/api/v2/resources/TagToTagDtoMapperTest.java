@@ -74,26 +74,27 @@ class TagToTagDtoMapperTest {
   void shouldAppendLinks() {
     HalEnricherRegistry registry = new HalEnricherRegistry();
     registry.register(Tag.class, (ctx, appender) -> {
-      NamespaceAndName repository = ctx.oneRequireByType(NamespaceAndName.class);
+      Repository repository = ctx.oneRequireByType(Repository.class);
       Tag tag = ctx.oneRequireByType(Tag.class);
-      appender.appendLink("yo", "http://" + repository.logString() + "/" + tag.getName());
+
+      appender.appendLink("yo", "http://" + repository.getNamespace() + "/" + repository.getName() + "/" + tag.getName());
     });
     mapper.setRegistry(registry);
 
-    TagDto dto = mapper.map(new Tag("1.0.0", "42"), new NamespaceAndName("hitchhiker", "hog"), RepositoryTestData.createHeartOfGold());
-    assertThat(dto.getLinks().getLinkBy("yo").get().getHref()).isEqualTo("http://hitchhiker/hog/1.0.0");
+    TagDto dto = mapper.map(new Tag("1.0.0", "42"), RepositoryTestData.createHeartOfGold());
+    assertThat(dto.getLinks().getLinkBy("yo").get().getHref()).isEqualTo("http://hitchhiker/HeartOfGold/1.0.0");
   }
 
   @Test
   void shouldMapDate() {
     final long now = Instant.now().getEpochSecond() * 1000;
-    TagDto dto = mapper.map(new Tag("1.0.0", "42", now), new NamespaceAndName("hitchhiker", "hog"), RepositoryTestData.createHeartOfGold());
+    TagDto dto = mapper.map(new Tag("1.0.0", "42", now), RepositoryTestData.createHeartOfGold());
     assertThat(dto.getDate()).isEqualTo(Instant.ofEpochMilli(now));
   }
 
   @Test
   void shouldContainSignatureArray() {
-    TagDto dto = mapper.map(new Tag("1.0.0", "42"), new NamespaceAndName("hitchhiker", "hog"), RepositoryTestData.createHeartOfGold());
+    TagDto dto = mapper.map(new Tag("1.0.0", "42"), RepositoryTestData.createHeartOfGold());
     assertThat(dto.getSignatures()).isNotNull();
   }
 
@@ -101,7 +102,7 @@ class TagToTagDtoMapperTest {
   void shouldMapSignatures() {
     final Tag tag = new Tag("1.0.0", "42");
     tag.addSignature(new Signature("29v391239v", "gpg", SignatureStatus.VERIFIED, "me", Collections.emptySet()));
-    TagDto dto = mapper.map(tag, new NamespaceAndName("hitchhiker", "hog"), RepositoryTestData.createHeartOfGold());
+    TagDto dto = mapper.map(tag, RepositoryTestData.createHeartOfGold());
     assertThat(dto.getSignatures()).isNotEmpty();
   }
 
@@ -110,21 +111,21 @@ class TagToTagDtoMapperTest {
     Repository repository = RepositoryTestData.createHeartOfGold();
     when(subject.isPermitted("repository:push:" + repository.getId())).thenReturn(true);
     final Tag tag = new Tag("1.0.0", "42");
-    TagDto dto = mapper.map(tag, new NamespaceAndName(repository.getNamespace(), repository.getName()), repository);
+    TagDto dto = mapper.map(tag, repository);
     assertThat(dto.getLinks().getLinkBy("delete")).isNotEmpty();
   }
 
   @Test
   void shouldNotAddDeleteLinkIfPermissionsAreMissing() {
     final Tag tag = new Tag("1.0.0", "42");
-    TagDto dto = mapper.map(tag, new NamespaceAndName("hitchhiker", "hog"), RepositoryTestData.createHeartOfGold());
+    TagDto dto = mapper.map(tag, RepositoryTestData.createHeartOfGold());
     assertThat(dto.getLinks().getLinkBy("delete")).isEmpty();
   }
 
   @Test
   void shouldNotAddDeleteLinksForUndeletableTags() {
     final Tag tag = new Tag("1.0.0", "42", null, false);
-    TagDto dto = mapper.map(tag, new NamespaceAndName("hitchhiker", "hog"), RepositoryTestData.createHeartOfGold());
+    TagDto dto = mapper.map(tag, RepositoryTestData.createHeartOfGold());
     assertThat(dto.getLinks().getLinkBy("delete")).isEmpty();
   }
 

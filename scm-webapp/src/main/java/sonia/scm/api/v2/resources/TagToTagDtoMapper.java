@@ -55,22 +55,22 @@ public abstract class TagToTagDtoMapper extends HalAppenderMapper {
   @Mapping(target = "date", source = "date", qualifiedByName = "mapDate")
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   @Mapping(target = "signatures")
-  public abstract TagDto map(Tag tag, @Context NamespaceAndName namespaceAndName, @Context Repository repository);
+  public abstract TagDto map(Tag tag, @Context Repository repository);
 
   @ObjectFactory
-  TagDto createDto(@Context NamespaceAndName namespaceAndName, @Context Repository repository, Tag tag) {
+  TagDto createDto(@Context Repository repository, Tag tag) {
     Links.Builder linksBuilder = linkingTo()
-      .self(resourceLinks.tag().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getName()))
-      .single(link("sources", resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getRevision())))
-      .single(link("changeset", resourceLinks.changeset().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getRevision())));
+      .self(resourceLinks.tag().self(repository.getNamespace(), repository.getName(), tag.getName()))
+      .single(link("sources", resourceLinks.source().self(repository.getNamespace(), repository.getName(), tag.getRevision())))
+      .single(link("changeset", resourceLinks.changeset().self(repository.getNamespace(), repository.getName(), tag.getRevision())));
 
     if (tag.getDeletable() && RepositoryPermissions.push(repository).isPermitted()) {
       linksBuilder
-        .single(link("delete", resourceLinks.tag().delete(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getName())));
+        .single(link("delete", resourceLinks.tag().delete(repository.getNamespace(), repository.getName(), tag.getName())));
     }
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();
-    applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), tag, namespaceAndName);
+    applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), tag, repository);
 
     return new TagDto(linksBuilder.build(), embeddedBuilder.build());
   }
