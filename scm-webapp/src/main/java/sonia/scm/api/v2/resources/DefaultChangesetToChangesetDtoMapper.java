@@ -114,6 +114,9 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
       .single(link("modifications", resourceLinks.modifications().self(namespace, name, source.getId())));
 
     try (RepositoryService repositoryService = serviceFactory.create(repository)) {
+      if (repositoryService.isSupported(Command.TAGS)) {
+        embeddedBuilder.with("tags", tagCollectionToDtoMapper.getMinimalEmbeddedTagDtoList(namespace, name, source.getTags()));
+      }
       if (repositoryService.isSupported(Command.TAG) && RepositoryPermissions.push(repository).isPermitted()) {
         linksBuilder.single(link("tag", resourceLinks.tag().create(namespace, name)));
       }
