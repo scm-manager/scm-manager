@@ -114,7 +114,7 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
 
     try (RepositoryService repositoryService = serviceFactory.create(repository)) {
       if (repositoryService.isSupported(Command.TAGS)) {
-        embeddedBuilder.with("tags", tagCollectionToDtoMapper.getEmbeddedTagDtoList(namespace, name, source.getTags()));
+        embeddedBuilder.with("tags", tagCollectionToDtoMapper.getMinimalEmbeddedTagDtoList(namespace, name, source.getTags()));
       }
       if (repositoryService.isSupported(Command.BRANCHES)) {
         embeddedBuilder.with("branches", branchCollectionToDtoMapper.getBranchDtoList(repository,

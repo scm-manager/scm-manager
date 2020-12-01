@@ -58,7 +58,7 @@ public class TagCollectionToDtoMapper {
     return tags.stream().map(tag -> tagToTagDtoMapper.map(tag, new NamespaceAndName(namespace, name))).collect(toList());
   }
 
-  public List<TagDto> getEmbeddedTagDtoList(String namespace, String name, Collection<String> tags) {
+  public List<TagDto> getMinimalEmbeddedTagDtoList(String namespace, String name, Collection<String> tags) {
     return tags.stream()
       .map(tag -> {
         Links links = linkingTo().self(resourceLinks.tag().self(namespace, name, tag)).build();
