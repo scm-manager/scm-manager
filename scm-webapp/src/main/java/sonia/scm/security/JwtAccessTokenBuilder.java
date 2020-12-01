@@ -24,12 +24,14 @@
 
 package sonia.scm.security;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Maps;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
@@ -56,6 +58,12 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
    */
   private static final Logger LOG = LoggerFactory.getLogger(JwtAccessTokenBuilder.class);
 
+  @VisibleForTesting
+  static final long DEFAULT_REFRESHABLE = 12L;
+
+  @VisibleForTesting
+  static final TimeUnit DEFAULT_REFRESHABLE_UNIT = TimeUnit.HOURS;
+
   private final KeyGenerator keyGenerator;
   private final SecureKeyResolver keyResolver;
   private final Clock clock;
@@ -64,8 +72,8 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
   private String issuer;
   private long expiresIn = 1;
   private TimeUnit expiresInUnit = TimeUnit.HOURS;
-  private long refreshableFor = 12;
-  private TimeUnit refreshableForUnit = TimeUnit.HOURS;
+  private long refreshableFor = DEFAULT_REFRESHABLE;
+  private TimeUnit refreshableForUnit = DEFAULT_REFRESHABLE_UNIT;
   private Instant refreshExpiration;
   private String parentKeyId;
   private Scope scope = Scope.empty();
@@ -87,8 +95,6 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
   @Override
   public JwtAccessTokenBuilder custom(String key, Object value) {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(key), "null or empty value not allowed");
-    Preconditions.checkArgument(value != null, "null or empty value not allowed");
     this.custom.put(key, value);
     return this;
   }
@@ -183,8 +189,8 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
 
 
     if (refreshableFor > 0) {
-      long refreshExpiration = refreshableForUnit.toMillis(refreshableFor);
-      claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, new Date(now.toEpochMilli() + refreshExpiration).getTime());
+      long re = refreshableForUnit.toMillis(refreshableFor);
+      claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, Date.from(now.plusMillis(re)));
     } else if (refreshExpiration != null) {
       claims.put(JwtAccessToken.REFRESHABLE_UNTIL_CLAIM_KEY, Date.from(refreshExpiration));
     }
@@ -198,10 +204,11 @@ public final class JwtAccessTokenBuilder implements AccessTokenBuilder {
       claims.setIssuer(issuer);
     }
 
+
     // sign token and create compact version
     String compact = Jwts.builder()
         .setClaims(claims)
-        .signWith(SignatureAlgorithm.HS256, key.getBytes())
+        .signWith(Keys.hmacShaKeyFor(key.getBytes()), SignatureAlgorithm.HS256)
         .compact();
 
     return new JwtAccessToken(claims, compact);

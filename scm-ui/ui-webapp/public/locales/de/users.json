@@ -79,15 +79,22 @@
     }
   },
   "publicKey": {
+    "subtitle": "Öffentliche Schlüssel",
+    "description": "Zum Prüfen von Signaturen für z. B. Commits können hier die entsprechenden öffentlichen GPG Schlüssel hinterlegt werden. Zudem können hier die vom SCM-Manager erstellten Signaturschlüssel heruntergeladen werden.",
     "noStoredKeys": "Es wurden keine Schlüssel gefunden.",
     "displayName": "Anzeigename",
-    "raw": "Schlüssel",
     "created": "Eingetragen an",
-    "addKey": "Schlüssel hinzufügen",
+    "raw": "Schlüssel",
+    "download": "Herunterladen",
     "delete": "Löschen",
-    "download": "Herunterladen"
+    "addSubtitle": "Neuen Schlüssel hinzufügen",
+    "addKey": "Schlüssel hinzufügen"
   },
   "apiKey": {
+    "subtitle": "API Schlüssel",
+    "text1": "Erstelle und verwalte Personal Access Token um auf die REST API zuzugreifen oder diese als Passwort für SCM-Clients zu nutzen. Die Rechte der Token sind auf Repositories und die gewählte Rolle beschränkt.",
+    "manageRoles": "Sie können die Rollenberechtigungen in der Administration unter „Berechtigungsrollen“ einsehen und neue Rollen anlegen.",
+    "text2": "Um den Token in REST-Abfragen zu nutzen, übergeben Sie diesen als Cookie mit dem Namen „X-Bearer-Token“. Sie können den Token auch anstelle Ihres Passworts nutzen, um sich mit SCM-Clients anzumelden.",
     "noStoredKeys": "Es wurden keine Schlüssel gefunden.",
     "displayName": "Anzeigename",
     "permissionRole": {
@@ -95,12 +102,10 @@
       "help": "Mit der Rolle können Sie die Berechtigung für diesen Schlüssel einschränken"
     },
     "created": "Eingetragen an",
+    "addSubtitle": "Neuen Schlüssel hinzufügen",
     "addKey": "Schlüssel hinzufügen",
     "delete": "Löschen",
     "download": "Herunterladen",
-    "text1": "Erstelle und verwalte Personal Access Token um auf die REST API zuzugreifen oder diese als Passwort für SCM-Clients zu nutzen. Die Rechte der Token sind auf Repositories und die gewählte Rolle beschränkt.",
-    "manageRoles": "Sie können die Rollenberechtigungen in der Administration unter „Berechtigungsrollen“ einsehen und neue Rollen anlegen.",
-    "text2": "Um den Token in REST-Abfragen zu nutzen, übergeben Sie diesen als Cookie mit dem Namen „X-Bearer-Token“. Sie können den Token auch anstelle Ihres Passworts nutzen, um sich mit SCM-Clients anzumelden.",
     "modal": {
       "title": "Schlüssel erzeugt",
       "text1": "Ihr neuer API-Schlüssel ist bereit. Sie können diesen als Token für Zugriffe auf die REST-Schnittstelle nutzen oder anstelle Ihres Passworts zum Login mit SCM-Clients nutzen.",

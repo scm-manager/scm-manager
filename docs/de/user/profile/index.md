@@ -13,7 +13,7 @@ eingegeben werden. Danach muss das neue Passwort zweimal eingegeben werden.
 
 ## Öffentliche Schlüssel
 
-Zum Prüfen von Signaturen für z. B. Commits können hier die entsprechenden öffentlichen Schlüssel hinterlegt werden.
+Zum Prüfen von Signaturen für z. B. Commits können hier die entsprechenden öffentlichen GPG Schlüssel hinterlegt werden.
 Zudem können hier die vom SCM-Manager erstellten Signaturschlüssel heruntergeladen werden.
 
 ## API Schlüssel

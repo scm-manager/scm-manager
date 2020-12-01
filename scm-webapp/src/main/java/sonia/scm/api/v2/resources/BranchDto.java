@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
@@ -31,11 +32,14 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
+import sonia.scm.repository.Branch;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
-import static sonia.scm.repository.Branch.VALID_BRANCH_NAMES;
+import java.time.Instant;
+
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_NULL;
 
 @Getter
 @Setter
@@ -45,10 +49,13 @@ public class BranchDto extends HalRepresentation {
 
   @NotEmpty
   @Length(min = 1, max = 100)
-  @Pattern(regexp = VALID_BRANCH_NAMES)
+  @Pattern(regexp = Branch.VALID_BRANCH_NAMES)
   private String name;
   private String revision;
   private boolean defaultBranch;
+  @JsonInclude(NON_NULL)
+  private Instant lastCommitDate;
+  private boolean stale;
 
   BranchDto(Links links, Embedded embedded) {
     super(links, embedded);

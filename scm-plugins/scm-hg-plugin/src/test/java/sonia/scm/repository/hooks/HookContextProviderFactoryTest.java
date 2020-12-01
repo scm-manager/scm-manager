@@ -21,58 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository;
 
+package sonia.scm.repository.hooks;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.security.AccessToken;
-import sonia.scm.security.Xsrf;
+import sonia.scm.NotFoundException;
+import sonia.scm.repository.HgRepositoryFactory;
+import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.repository.spi.HgHookContextProvider;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.entry;
-import static org.mockito.Mockito.mock;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class HgEnvironmentTest {
+class HookContextProviderFactoryTest {
 
   @Mock
-  HgRepositoryHandler handler;
+  private RepositoryManager repositoryManager;
+
   @Mock
-  HgHookManager hookManager;
+  private HgRepositoryHandler repositoryHandler;
+
+  @Mock
+  private HgRepositoryFactory repositoryFactory;
+
+  @InjectMocks
+  private HookContextProviderFactory factory;
 
   @Test
-  void shouldExtractXsrfTokenWhenSet() {
-    AccessToken accessToken = mock(AccessToken.class);
-    when(accessToken.compact()).thenReturn("");
-    when(accessToken.getCustom(Xsrf.TOKEN_KEY)).thenReturn(of("XSRF Token"));
-    when(hookManager.getAccessToken()).thenReturn(accessToken);
-
-    Map<String, String> environment = new HashMap<>();
-    HgEnvironment.prepareEnvironment(environment, handler, hookManager);
-
-    assertThat(environment).contains(entry("SCM_XSRF", "XSRF Token"));
+  void shouldCreateHookContextProvider() {
+    when(repositoryManager.get("42")).thenReturn(RepositoryTestData.create42Puzzle());
+    HgHookContextProvider provider = factory.create("42", "xyz");
+    assertThat(provider).isNotNull();
   }
 
   @Test
-  void shouldIgnoreXsrfWhenNotSetButStillContainDummy() {
-    AccessToken accessToken = mock(AccessToken.class);
-    when(accessToken.compact()).thenReturn("");
-    when(accessToken.getCustom(Xsrf.TOKEN_KEY)).thenReturn(empty());
-    when(hookManager.getAccessToken()).thenReturn(accessToken);
-
-    Map<String, String> environment = new HashMap<>();
-    HgEnvironment.prepareEnvironment(environment, handler, hookManager);
-
-    assertThat(environment).containsKeys("SCM_XSRF");
+  void shouldThrowNotFoundExceptionWithoutRepository() {
+    assertThrows(NotFoundException.class, () -> factory.create("42", "xyz"));
   }
+
 }

@@ -21,28 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository;
 
-import com.google.inject.servlet.RequestScoped;
+package sonia.scm;
 
-/**
- * Holds an instance of {@link HgContext} in the request scope.
- *
- * <p>The problem seems to be that guice had multiple options for injecting HgContext. {@link HgContextProvider}
- * bound via Module and {@link HgContext} bound void {@link RequestScoped} annotation. It looks like that Guice 4
- * injects randomly the one or the other, in SCMv1 (Guice 3) everything works as expected.</p>
- *
- * <p>To fix the problem we have created this class annotated with {@link RequestScoped}, which holds an instance
- * of {@link HgContext}. This way only the {@link HgContextProvider} is used for injection.</p>
- */
-@RequestScoped
-public class HgContextRequestStore {
+import org.junit.jupiter.api.Test;
 
-  private final HgContext context = new HgContext();
+import static org.assertj.core.api.Assertions.assertThat;
 
-  public HgContext get() {
-    return context;
+class TransactionIdTest {
+
+  @Test
+  void shouldSetGetAndClear() {
+    TransactionId.set("42");
+
+    assertThat(TransactionId.get()).contains("42");
+    TransactionId.clear();
+    assertThat(TransactionId.get()).isEmpty();
   }
 
 }

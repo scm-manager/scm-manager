@@ -34,9 +34,6 @@ import sonia.scm.api.v2.resources.HgConfigPackagesToDtoMapper;
 import sonia.scm.api.v2.resources.HgConfigToHgConfigDtoMapper;
 import sonia.scm.installer.HgPackageReader;
 import sonia.scm.plugin.Extension;
-import sonia.scm.repository.HgContext;
-import sonia.scm.repository.HgContextProvider;
-import sonia.scm.repository.HgHookManager;
 import sonia.scm.repository.spi.HgWorkingCopyFactory;
 import sonia.scm.repository.spi.SimpleHgWorkingCopyFactory;
 
@@ -45,35 +42,16 @@ import sonia.scm.repository.spi.SimpleHgWorkingCopyFactory;
  * @author Sebastian Sdorra
  */
 @Extension
-public class HgServletModule extends ServletModule
-{
+public class HgServletModule extends ServletModule {
 
-  /** Field description */
-  public static final String MAPPING_HG = "/hg/*";
-
-  /** Field description */
-  public static final String MAPPING_HOOK = "/hook/hg/*";
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
   @Override
-  protected void configureServlets()
-  {
-    bind(HgContext.class).toProvider(HgContextProvider.class);
-    bind(HgHookManager.class);
+  protected void configureServlets() {
     bind(HgPackageReader.class);
 
     bind(HgConfigDtoToHgConfigMapper.class).to(Mappers.getMapper(HgConfigDtoToHgConfigMapper.class).getClass());
     bind(HgConfigToHgConfigDtoMapper.class).to(Mappers.getMapper(HgConfigToHgConfigDtoMapper.class).getClass());
     bind(HgConfigPackagesToDtoMapper.class).to(Mappers.getMapper(HgConfigPackagesToDtoMapper.class).getClass());
     bind(HgConfigInstallationsToDtoMapper.class);
-
-    // bind servlets
-    serve(MAPPING_HOOK).with(HgHookCallbackServlet.class);
 
     bind(HgWorkingCopyFactory.class).to(SimpleHgWorkingCopyFactory.class);
   }

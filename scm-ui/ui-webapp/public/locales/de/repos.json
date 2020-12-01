@@ -36,6 +36,13 @@
       "settingsNavLink": "Einstellungen",
       "generalNavLink": "Generell",
       "permissionsNavLink": "Berechtigungen"
+    },
+    "tooltip": {
+      "branches": "Branches",
+      "tags": "Tags",
+      "commits": "Commits",
+      "sources": "Sources",
+      "settings": "Einstellungen"
     }
   },
   "overview": {
@@ -57,7 +64,11 @@
       "createButton": "Branch erstellen"
     },
     "table": {
-      "branches": "Branches"
+      "branches": {
+        "active": "Aktive Branches",
+        "stale": "Stale Branches"
+      },
+      "lastCommit": "Letzter Commit"
     },
     "create": {
       "title": "Branch erstellen",

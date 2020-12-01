@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 
@@ -36,19 +36,9 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "config")
-public class HgConfig extends RepositoryConfig
-{
+public class HgConfig extends RepositoryConfig {
 
   public static final String PERMISSION = "hg";
-
-  /**
-   * Constructs ...
-   *
-   */
-  public HgConfig() {}
-
-  //~--- get methods ----------------------------------------------------------
-
 
   @Override
   @XmlTransient // Only for permission checks, don't serialize to XML
@@ -121,10 +111,6 @@ public class HgConfig extends RepositoryConfig
   public boolean isUseOptimizedBytecode()
   {
     return useOptimizedBytecode;
-  }
-
-  public boolean isDisableHookSSLValidation() {
-    return disableHookSSLValidation;
   }
 
   public boolean isEnableHttpPostArgs() {
@@ -216,10 +202,6 @@ public class HgConfig extends RepositoryConfig
     this.useOptimizedBytecode = useOptimizedBytecode;
   }
 
-  public void setDisableHookSSLValidation(boolean disableHookSSLValidation) {
-    this.disableHookSSLValidation = disableHookSSLValidation;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -242,9 +224,4 @@ public class HgConfig extends RepositoryConfig
 
   private boolean enableHttpPostArgs = false;
 
-  /**
-   * disable validation of ssl certificates for mercurial hook
-   * @see <a href="https://goo.gl/zH5eY8">Issue 959</a>
-   */
-  private boolean disableHookSSLValidation = false;
 }

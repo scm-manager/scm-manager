@@ -23,7 +23,6 @@
  */
 
 import React, { FC, useState } from "react";
-import { User, Link, Links, Collection } from "@scm-manager/ui-types/src";
 import {
   ErrorNotification,
   InputField,
@@ -31,7 +30,8 @@ import {
   Textarea,
   SubmitButton,
   apiClient,
-  Loading
+  Loading,
+  Subtitle
 } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { CONTENT_TYPE_PUBLIC_KEY } from "./SetPublicKeys";
@@ -77,6 +77,8 @@ const AddPublicKey: FC<Props> = ({ createLink, refresh }) => {
 
   return (
     <>
+      <hr />
+      <Subtitle subtitle={t("publicKey.addSubtitle")} />
       <InputField label={t("publicKey.displayName")} value={displayName} onChange={setDisplayName} />
       <Textarea name="raw" label={t("publicKey.raw")} value={raw} onChange={setRaw} />
       <Level
