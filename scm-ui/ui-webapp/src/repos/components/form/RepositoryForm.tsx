@@ -136,6 +136,7 @@ const RepositoryForm: FC<Props> = ({
           repository={repo}
           onChange={setRepo}
           setValid={namespaceAndName => setValid({ ...valid, namespaceAndName })}
+          disabled={disabled}
         />
         <SpaceBetween>
           <SelectWrapper>
