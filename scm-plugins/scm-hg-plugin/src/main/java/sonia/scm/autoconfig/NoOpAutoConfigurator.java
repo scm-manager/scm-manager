@@ -33,6 +33,7 @@ public class NoOpAutoConfigurator implements AutoConfigurator {
 
   @Override
   public void configure(HgConfig config) {
-
+    // do nothing
+    // if we do not know the environment, we could not configure mercurial
   }
 }
