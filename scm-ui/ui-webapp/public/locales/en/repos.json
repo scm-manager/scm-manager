@@ -86,7 +86,7 @@
     "delete": {
       "button": "Delete branch",
       "subtitle": "Delete branch",
-      "description": "Deleted branches can not be restored.",
+      "description": "Deleted branches cannot be restored.",
       "confirmAlert": {
         "title": "Delete branch",
         "message": "Do you really want to delete the branch \"{{branch}}\"?",

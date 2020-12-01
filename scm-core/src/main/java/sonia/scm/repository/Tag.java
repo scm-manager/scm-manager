@@ -31,6 +31,7 @@ import lombok.ToString;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * Represents a tag in a repository.
@@ -42,6 +43,9 @@ import java.util.Optional;
 @ToString
 @Getter
 public final class Tag {
+
+  public static final String VALID_REV = "[0-9a-z]+";
+  public static final Pattern VALID_REV_PATTERN = Pattern.compile(VALID_REV);
 
   private final String name;
   private final String revision;

@@ -134,8 +134,8 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
   }
 
   private Optional<Tag> findTag(GitContext context, String name) throws IOException {
-    List<Tag> branches = readTags(context);
-    return branches.stream().filter(b -> name.equals(b.getName())).findFirst();
+    List<Tag> tags = readTags(context);
+    return tags.stream().filter(t -> name.equals(t.getName())).findFirst();
   }
 
   private HookContext createMockedContext(InvocationOnMock invocation) {

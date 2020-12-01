@@ -29,29 +29,52 @@ import sonia.scm.repository.spi.TagCommand;
 
 import java.io.IOException;
 
-public class TagCommandBuilder {
+/**
+ * @since 2.11.0
+ */
+public final class TagCommandBuilder {
   private final TagCommand command;
 
   public TagCommandBuilder(TagCommand command) {
     this.command = command;
   }
 
+  /**
+   * Initialize a command to tag a revision.
+   *
+   * Set parameters and call {@link TagCreateCommandBuilder#execute()}.
+   *
+   * @since 2.11.0
+   */
   public TagCreateCommandBuilder create() {
     return new TagCreateCommandBuilder();
   }
 
+  /**
+   * Initialize a command to delete a tag.
+   *
+   * Set parameters and call {@link TagDeleteCommandBuilder#execute()}.
+   *
+   * @since 2.11.0
+   */
   public TagDeleteCommandBuilder delete() {
     return new TagDeleteCommandBuilder();
   }
 
-  public class TagCreateCommandBuilder {
+  public final class TagCreateCommandBuilder {
     private final TagCreateRequest request = new TagCreateRequest();
 
+    /**
+     * @param revision The revision identifier for which to create the tag
+     */
     public TagCreateCommandBuilder setRevision(String revision) {
       request.setRevision(revision);
       return this;
     }
 
+    /**
+     * @param name The name of the tag
+     */
     public TagCreateCommandBuilder setName(String name) {
       request.setName(name);
       return this;
@@ -62,9 +85,12 @@ public class TagCommandBuilder {
     }
   }
 
-  public class TagDeleteCommandBuilder {
+  public final class TagDeleteCommandBuilder {
     private final TagDeleteRequest request = new TagDeleteRequest();
 
+    /**
+     * @param name The name of the tag that should be deleted
+     */
     public TagDeleteCommandBuilder setName(String name) {
       request.setName(name);
       return this;

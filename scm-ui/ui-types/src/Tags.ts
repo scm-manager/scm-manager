@@ -23,7 +23,7 @@
  */
 
 import { Links } from "./hal";
-import {Signature} from "./Signature";
+import { Signature } from "./Signature";
 
 export type Tag = {
   name: string;

@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-import React, {FC, useState} from "react";
-import {Link, Tag} from "@scm-manager/ui-types";
+import React, { FC, useState } from "react";
+import { Link, Tag } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import TagRow from "./TagRow";
-import {apiClient, ConfirmAlert, ErrorNotification} from "@scm-manager/ui-components";
+import { apiClient, ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 
 type Props = {
   baseUrl: string;
@@ -88,17 +88,18 @@ const TagTable: FC<Props> = ({ baseUrl, tags, fetchTags }) => {
 
   return (
     <>
-    {showConfirmAlert && confirmAlert}
-    {error && <ErrorNotification error={error} />}
-    <table className="card-table table is-hoverable is-fullwidth is-word-break">
-      <thead>
-        <tr>
-          <th>{t("tags.table.tags")}</th>
-        </tr>
-      </thead>
-      <tbody>{renderRow()}</tbody>
-    </table>
-  </>);
+      {showConfirmAlert && confirmAlert}
+      {error && <ErrorNotification error={error} />}
+      <table className="card-table table is-hoverable is-fullwidth is-word-break">
+        <thead>
+          <tr>
+            <th>{t("tags.table.tags")}</th>
+          </tr>
+        </thead>
+        <tbody>{renderRow()}</tbody>
+      </table>
+    </>
+  );
 };
 
 export default TagTable;

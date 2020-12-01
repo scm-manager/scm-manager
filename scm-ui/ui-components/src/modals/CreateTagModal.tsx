@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-import React, {FC, useEffect, useState} from "react";
+import React, { FC, useEffect, useState } from "react";
 import { Modal, InputField, Button, apiClient } from "@scm-manager/ui-components";
 import { WithTranslation, withTranslation } from "react-i18next";
-import {Tag} from "@scm-manager/ui-types";
-import {isBranchValid} from "../validation";
+import { Tag } from "@scm-manager/ui-types";
+import { isBranchValid } from "../validation";
 
 type Props = WithTranslation & {
   existingTagsLink: string;
@@ -91,7 +91,12 @@ const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, existingTagsLi
       footer={
         <>
           <Button action={onClose}>{t("tags.create.cancel")}</Button>
-          <Button color="success" action={() => createTag()} loading={loading} disabled={!!validationError || newTagName.length === 0}>
+          <Button
+            color="success"
+            action={() => createTag()}
+            loading={loading}
+            disabled={!!validationError || newTagName.length === 0}
+          >
             {t("tags.create.confirm")}
           </Button>
         </>

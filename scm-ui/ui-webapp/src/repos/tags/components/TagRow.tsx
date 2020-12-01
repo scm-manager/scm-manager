@@ -33,6 +33,7 @@ type Props = {
   tag: Tag;
   baseUrl: string;
   onDelete: (tag: Tag) => void;
+  // deleting: boolean;
 };
 
 const Created = styled.span`

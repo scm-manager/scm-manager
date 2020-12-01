@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.base.Strings;
+import org.apache.shiro.SecurityUtils;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
@@ -34,6 +35,7 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevWalk;
+import sonia.scm.NotFoundException;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
@@ -41,7 +43,6 @@ import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreReceiveRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
-import sonia.scm.repository.Signature;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
@@ -50,6 +51,7 @@ import sonia.scm.repository.api.HookTagProvider;
 import sonia.scm.repository.api.TagCreateRequest;
 import sonia.scm.repository.api.TagDeleteRequest;
 import sonia.scm.security.GPG;
+import sonia.scm.user.User;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -76,53 +78,72 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
 
   @Override
   public Tag create(TagCreateRequest request) {
+    final String name = request.getName();
+    final String revision = request.getRevision();
+
+    if (Strings.isNullOrEmpty(revision)) {
+      throw new IllegalArgumentException("Revision is required");
+    }
+
+    if (Strings.isNullOrEmpty(name)) {
+      throw new IllegalArgumentException("Name is required");
+    }
+
     try (Git git = new Git(context.open())) {
-      String revision = request.getRevision();
 
       RevObject revObject;
       Long tagTime;
 
-      if (Strings.isNullOrEmpty(revision)) {
-        throw new IllegalArgumentException("Revision is required");
-      }
-
       ObjectId taggedCommitObjectId = git.getRepository().resolve(revision);
+
+      if (taggedCommitObjectId == null) {
+        throw new NotFoundException("revision", revision);
+      }
 
       try (RevWalk walk = new RevWalk(git.getRepository())) {
         revObject = walk.parseAny(taggedCommitObjectId);
         tagTime = GitUtil.getTagTime(walk, taggedCommitObjectId);
       }
 
-      Tag tag = new Tag(request.getName(), revision, tagTime);
+      Tag tag = new Tag(name, revision, tagTime);
 
       RepositoryHookEvent hookEvent = createTagHookEvent(TagHookContextProvider.createHookEvent(tag));
       eventBus.post(new PreReceiveRepositoryHookEvent(hookEvent));
 
-      Ref ref =
-        git.tag()
-          .setObjectId(revObject)
-          .setTagger(new PersonIdent("SCM-Manager", "noreply@scm-manager.org"))
-          .setName(request.getName())
-          .call();
+      User user = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
+      PersonIdent taggerIdent = new PersonIdent(user.getDisplayName(), user.getMail());
 
-      try (RevWalk walk = new RevWalk(git.getRepository())) {
-        revObject = walk.parseTag(ref.getObjectId());
-        final Optional<Signature> tagSignature = GitUtil.getTagSignature(revObject, gpg, walk);
-        tagSignature.ifPresent(tag::addSignature);
-      }
+//      Ref ref =
+      git.tag()
+        .setObjectId(revObject)
+        .setTagger(taggerIdent)
+        .setName(name)
+        .call();
+
+//      Uncomment lines once jgit added support for signing tags
+//      try (RevWalk walk = new RevWalk(git.getRepository())) {
+//        revObject = walk.parseTag(ref.getObjectId());
+//        final Optional<Signature> tagSignature = GitUtil.getTagSignature(revObject, gpg, walk);
+//        tagSignature.ifPresent(tag::addSignature);
+//      }
 
       eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
 
       return tag;
     } catch (IOException | GitAPIException ex) {
-      throw new InternalRepositoryException(repository, "could not create tag " + request.getName(), ex);
+      throw new InternalRepositoryException(repository, "could not create tag " + name + " for revision " + revision, ex);
     }
   }
 
   @Override
   public void delete(TagDeleteRequest request) {
+    String name = request.getName();
+
+    if (Strings.isNullOrEmpty(name)) {
+      throw new IllegalArgumentException("Name is required");
+    }
+
     try (Git git = new Git(context.open())) {
-      String name = request.getName();
       final Repository repository = git.getRepository();
       Optional<Ref> tagRef = findTagRef(git, name);
       Tag tag;
@@ -135,7 +156,7 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
 
       try (RevWalk walk = new RevWalk(repository)) {
         final RevCommit commit = GitUtil.getCommit(repository, walk, tagRef.get());
-        Long tagTime = GitUtil.getTagTime(walk, commit.toObjectId());
+        Long tagTime = GitUtil.getTagTime(walk, tagRef.get().getObjectId());
         tag = new Tag(name, commit.name(), tagTime);
       }
 
@@ -144,7 +165,7 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
       git.tagDelete().setTags(name).call();
       eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
     } catch (GitAPIException | IOException e) {
-      throw new InternalRepositoryException(repository, "could not delete tag", e);
+      throw new InternalRepositoryException(repository, "could not delete tag " + name, e);
     }
   }
 
@@ -158,46 +179,46 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
     return new RepositoryHookEvent(context, this.context.getRepository(), RepositoryHookType.PRE_RECEIVE);
   }
 
-  private static class TagHookContextProvider extends HookContextProvider {
-    private final List<Tag> newTags;
-    private final List<Tag> deletedTags;
+private static class TagHookContextProvider extends HookContextProvider {
+  private final List<Tag> newTags;
+  private final List<Tag> deletedTags;
 
-    private TagHookContextProvider(List<Tag> newTags, List<Tag> deletedTags) {
-      this.newTags = newTags;
-      this.deletedTags = deletedTags;
-    }
-
-    static TagHookContextProvider createHookEvent(Tag newTag) {
-      return new TagHookContextProvider(singletonList(newTag), emptyList());
-    }
-
-    static TagHookContextProvider deleteHookEvent(Tag deletedTag) {
-      return new TagHookContextProvider(emptyList(), singletonList(deletedTag));
-    }
-
-    @Override
-    public Set<HookFeature> getSupportedFeatures() {
-      return singleton(HookFeature.BRANCH_PROVIDER);
-    }
-
-    @Override
-    public HookTagProvider getTagProvider() {
-      return new HookTagProvider() {
-        @Override
-        public List<Tag> getCreatedTags() {
-          return newTags;
-        }
-
-        @Override
-        public List<Tag> getDeletedTags() {
-          return deletedTags;
-        }
-      };
-    }
-
-    @Override
-    public HookChangesetProvider getChangesetProvider() {
-      return r -> new HookChangesetResponse(emptyList());
-    }
+  private TagHookContextProvider(List<Tag> newTags, List<Tag> deletedTags) {
+    this.newTags = newTags;
+    this.deletedTags = deletedTags;
   }
+
+  static TagHookContextProvider createHookEvent(Tag newTag) {
+    return new TagHookContextProvider(singletonList(newTag), emptyList());
+  }
+
+  static TagHookContextProvider deleteHookEvent(Tag deletedTag) {
+    return new TagHookContextProvider(emptyList(), singletonList(deletedTag));
+  }
+
+  @Override
+  public Set<HookFeature> getSupportedFeatures() {
+    return singleton(HookFeature.TAG_PROVIDER);
+  }
+
+  @Override
+  public HookTagProvider getTagProvider() {
+    return new HookTagProvider() {
+      @Override
+      public List<Tag> getCreatedTags() {
+        return newTags;
+      }
+
+      @Override
+      public List<Tag> getDeletedTags() {
+        return deletedTags;
+      }
+    };
+  }
+
+  @Override
+  public HookChangesetProvider getChangesetProvider() {
+    return r -> new HookChangesetResponse(emptyList());
+  }
+}
 }

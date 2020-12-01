@@ -26,7 +26,7 @@ import { Trans, useTranslation, WithTranslation, withTranslation } from "react-i
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import {Changeset, Link, ParentChangeset, Repository, Tag} from "@scm-manager/ui-types";
+import { Changeset, Link, ParentChangeset, Repository, Tag } from "@scm-manager/ui-types";
 import {
   AvatarImage,
   AvatarWrapper,

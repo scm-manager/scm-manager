@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import com.aragost.javahg.Repository;
 import com.aragost.javahg.commands.PullCommand;
 import com.google.common.base.Strings;
+import org.apache.shiro.SecurityUtils;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.TagCreateRequest;
@@ -37,6 +38,7 @@ import java.io.IOException;
 
 public class HgTagCommand extends AbstractCommand implements TagCommand {
 
+  public static final String DEFAULT_BRANCH_NAME = "default";
   private final HgWorkingCopyFactory workingCopyFactory;
 
   public HgTagCommand(HgCommandContext context, HgWorkingCopyFactory workingCopyFactory) {
@@ -46,7 +48,7 @@ public class HgTagCommand extends AbstractCommand implements TagCommand {
 
   @Override
   public Tag create(TagCreateRequest request) {
-    try (WorkingCopy<Repository, Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), "default")) {
+    try (WorkingCopy<Repository, Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), DEFAULT_BRANCH_NAME)) {
       Repository repository = getContext().open();
       String rev = request.getRevision();
       if (Strings.isNullOrEmpty(rev)) {
@@ -54,22 +56,22 @@ public class HgTagCommand extends AbstractCommand implements TagCommand {
       }
       com.aragost.javahg.commands.TagCommand.on(workingCopy.getWorkingRepository())
         .rev(rev)
-        .user("SCM-Manager")
+        .user(SecurityUtils.getSubject().getPrincipal().toString())
         .execute(request.getName());
-      pullChangesIntoCentralRepository(workingCopy, "default");
+      pullChangesIntoCentralRepository(workingCopy, DEFAULT_BRANCH_NAME);
       return new Tag(request.getName(), rev);
     }
   }
 
   @Override
   public void delete(TagDeleteRequest request) {
-    try (WorkingCopy<Repository, Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), "default")) {
+    try (WorkingCopy<Repository, Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), DEFAULT_BRANCH_NAME)) {
       com.aragost.javahg.commands.TagCommand.on(workingCopy.getWorkingRepository())
-        .user("SCM-Manager")
+        .user(SecurityUtils.getSubject().getPrincipal().toString())
         .remove()
         .execute(request.getName());
 
-      pullChangesIntoCentralRepository(workingCopy, "default");
+      pullChangesIntoCentralRepository(workingCopy, DEFAULT_BRANCH_NAME);
     }
   }
 

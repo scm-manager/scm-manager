@@ -29,16 +29,20 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
+
+import static sonia.scm.repository.Branch.VALID_BRANCH_NAMES;
+import static sonia.scm.repository.Tag.VALID_REV;
 
 @Getter
 @Setter
 public class TagRequestDto {
-  // TODO: Validate revision via regex
+  @Pattern(regexp = VALID_REV)
   @NotEmpty
   @Length(min = 1, max = 100)
   private String revision;
 
-  // TODO: Validate name via regex
+  @Pattern(regexp = VALID_BRANCH_NAMES)
   @NotEmpty
   @Length(min = 1, max = 100)
   private String name;

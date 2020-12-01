@@ -82,60 +82,16 @@ import static java.util.Optional.of;
 public final class GitUtil {
 
   private static final GitUserAgentProvider GIT_USER_AGENT_PROVIDER = new GitUserAgentProvider();
-
-  /**
-   * Field description
-   */
   public static final String REF_HEAD = "HEAD";
-
-  /**
-   * Field description
-   */
   public static final String REF_HEAD_PREFIX = "refs/heads/";
-
-  /**
-   * Field description
-   */
   public static final String REF_MASTER = "master";
-
-  /**
-   * Field description
-   */
   private static final String DIRECTORY_DOTGIT = ".git";
-
-  /**
-   * Field description
-   */
   private static final String DIRECTORY_OBJETCS = "objects";
-
-  /**
-   * Field description
-   */
   private static final String DIRECTORY_REFS = "refs";
-
-  /**
-   * Field description
-   */
   private static final String PREFIX_HEADS = "refs/heads/";
-
-  /**
-   * Field description
-   */
   private static final String PREFIX_TAG = "refs/tags/";
-
-  /**
-   * Field description
-   */
   private static final String REFSPEC = "+refs/heads/*:refs/remote/scm/%s/*";
-
-  /**
-   * Field description
-   */
   private static final String REMOTE_REF = "refs/remote/scm/%s/%s";
-
-  /**
-   * Field description
-   */
   private static final int TIMEOUT = 5;
 
   /**
@@ -145,19 +101,11 @@ public final class GitUtil {
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   */
   private GitUtil() {
   }
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   * @param repo
-   */
   public static void close(org.eclipse.jgit.lib.Repository repo) {
     if (repo != null) {
       repo.close();
@@ -186,7 +134,7 @@ public final class GitUtil {
 
           if (c != null) {
             tags.put(c.getId(), e.getKey());
-          } else if (logger.isWarnEnabled()) {
+          } else {
             logger.warn("could not find commit for tag {}", e.getKey());
           }
 
@@ -214,13 +162,6 @@ public final class GitUtil {
     }
   }
 
-  /**
-   * Method description
-   *
-   * @param directory
-   * @return
-   * @throws IOException
-   */
   public static org.eclipse.jgit.lib.Repository open(File directory)
     throws IOException {
     FS fs = FS.DETECTED;
@@ -239,33 +180,18 @@ public final class GitUtil {
     return builder.build();
   }
 
-  /**
-   * Method description
-   *
-   * @param formatter
-   */
   public static void release(DiffFormatter formatter) {
     if (formatter != null) {
       formatter.close();
     }
   }
 
-  /**
-   * Method description
-   *
-   * @param walk
-   */
   public static void release(TreeWalk walk) {
     if (walk != null) {
       walk.close();
     }
   }
 
-  /**
-   * Method description
-   *
-   * @param walk
-   */
   public static void release(RevWalk walk) {
     if (walk != null) {
       walk.close();
@@ -274,12 +200,6 @@ public final class GitUtil {
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   * @param ref
-   * @return
-   */
   public static String getBranch(Ref ref) {
     String branch = null;
 
@@ -290,12 +210,6 @@ public final class GitUtil {
     return branch;
   }
 
-  /**
-   * Method description
-   *
-   * @param name
-   * @return
-   */
   public static String getBranch(String name) {
     String branch = null;
 

@@ -60,7 +60,7 @@ const TagsOverview: FC<Props> = ({ repository, baseUrl }) => {
   const renderTagsTable = () => {
     if (!loading && tags?.length > 0) {
       orderTags(tags);
-      return <TagTable baseUrl={baseUrl} tags={tags} fetchTags={() => fetchTags()} />;
+      return <TagTable baseUrl={baseUrl} tags={tags} fetchTags={fetchTags} />;
     }
     return <Notification type="info">{t("tags.overview.noTags")}</Notification>;
   };
