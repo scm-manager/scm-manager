@@ -49,6 +49,10 @@ public class TagDto extends HalRepresentation {
 
   private List<SignatureDto> signatures;
 
+  TagDto(Links links) {
+    super(links);
+  }
+
   TagDto(Links links, Embedded embedded) {
     super(links, embedded);
   }

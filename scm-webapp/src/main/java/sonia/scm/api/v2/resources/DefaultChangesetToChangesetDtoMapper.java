@@ -29,8 +29,6 @@ import de.otto.edison.hal.Links;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.ObjectFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Contributor;
@@ -38,7 +36,6 @@ import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.Signature;
-import sonia.scm.repository.Tags;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -48,7 +45,6 @@ import sonia.scm.security.gpg.RawGpgKey;
 import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
-import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -60,8 +56,6 @@ import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
 public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMapper implements InstantAttributeMapper, ChangesetToChangesetDtoMapper {
-
-  private static Logger LOG = LoggerFactory.getLogger(DefaultChangesetToChangesetDtoMapper.class);
 
   @Inject
   private RepositoryServiceFactory serviceFactory;
@@ -120,18 +114,6 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
       .single(link("modifications", resourceLinks.modifications().self(namespace, name, source.getId())));
 
     try (RepositoryService repositoryService = serviceFactory.create(repository)) {
-      if (repositoryService.isSupported(Command.TAGS)) {
-        Tags tags = null;
-        try {
-          tags = repositoryService.getTagsCommand().getTags();
-        } catch (IOException e) {
-          LOG.error("Error while retrieving tags from repository", e);
-        }
-        if (tags != null) {
-          embeddedBuilder.with("tags", tagCollectionToDtoMapper.getTagDtoList(namespace, name,
-            getListOfObjects(source.getTags(), tags::getTagByName), repository));
-        }
-      }
       if (repositoryService.isSupported(Command.TAG) && RepositoryPermissions.push(repository).isPermitted()) {
         linksBuilder.single(link("tag", resourceLinks.tag().create(namespace, name)));
       }
@@ -139,7 +121,6 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
         embeddedBuilder.with("branches", branchCollectionToDtoMapper.getBranchDtoList(repository,
           getListOfObjects(source.getBranches(), branchName -> Branch.normalBranch(branchName, source.getId()))));
       }
-
       if (repositoryService.isSupported(Command.DIFF_RESULT)) {
         linksBuilder.single(link("diffParsed", resourceLinks.diff().parsed(namespace, name, source.getId())));
       }
