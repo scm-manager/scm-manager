@@ -101,10 +101,12 @@ class ResourceLinks {
   static class UserLinks {
     private final LinkBuilder userLinkBuilder;
     private final LinkBuilder publicKeyLinkBuilder;
+    private final LinkBuilder apiKeyLinkBuilder;
 
     UserLinks(ScmPathInfo pathInfo) {
       userLinkBuilder = new LinkBuilder(pathInfo, UserRootResource.class, UserResource.class);
       publicKeyLinkBuilder = new LinkBuilder(pathInfo, UserPublicKeyResource.class);
+      apiKeyLinkBuilder = new LinkBuilder(pathInfo, UserApiKeyResource.class);
     }
 
     String self(String name) {
@@ -133,6 +135,10 @@ class ResourceLinks {
 
     public String publicKeys(String name) {
       return publicKeyLinkBuilder.method("findAll").parameters(name).href();
+    }
+
+    public String apiKeys(String name) {
+      return apiKeyLinkBuilder.method("findAll").parameters(name).href();
     }
   }
 

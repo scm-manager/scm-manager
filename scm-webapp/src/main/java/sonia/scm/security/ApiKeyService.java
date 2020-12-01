@@ -81,7 +81,10 @@ public class ApiKeyService {
   }
 
   public CreationResult createNewKey(String name, String permissionRole) {
-    String user = currentUser();
+    return createNewKey(name, permissionRole, currentUser());
+  }
+
+  public CreationResult createNewKey(String name, String permissionRole, String user) {
     UserPermissions.changeApiKeys(user).check();
     String passphrase = passphraseGenerator.get();
     String hashedPassphrase = passwordService.encryptPassword(passphrase);
@@ -155,7 +158,11 @@ public class ApiKeyService {
   }
 
   public Collection<ApiKey> getKeys() {
-    return store.getOptional(currentUser())
+    return getKeys(currentUser());
+  }
+
+  public Collection<ApiKey> getKeys(String user) {
+    return store.getOptional(user)
       .map(ApiKeyCollection::getKeys)
       .map(Collection::stream)
       .orElse(Stream.empty())
