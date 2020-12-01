@@ -95,10 +95,6 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
 
       Tag tag = new Tag(request.getName(), revision, tagTime);
 
-      if (revObject == null) {
-        throw new InternalRepositoryException(repository, "could not create tag because revision does not exist");
-      }
-
       RepositoryHookEvent hookEvent = createTagHookEvent(TagHookContextProvider.createHookEvent(tag));
       eventBus.post(new PreReceiveRepositoryHookEvent(hookEvent));
 
