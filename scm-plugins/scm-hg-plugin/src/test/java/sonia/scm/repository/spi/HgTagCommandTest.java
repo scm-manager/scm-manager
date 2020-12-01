@@ -55,18 +55,21 @@ public class HgTagCommandTest extends AbstractHgCommandTestBase {
   }
 
   @Test
-  public void shouldCreateAndDeleteTagCorrectly() {
+  public void shouldCreateTagCorrectly() {
     // Create
-    new HgTagCommand(cmdContext, workingCopyFactory).create(new TagCreateRequest("79b6baf49711", "newtag"));
+    new HgTagCommand(cmdContext, workingCopyFactory).create(new TagCreateRequest("79b6baf49711", "tagtag"));
     List<Tag> tags = new HgTagsCommand(cmdContext).getTags();
-    assertThat(tags).hasSize(2);
+    assertThat(tags).hasSize(4);
     final Tag newTag = tags.get(1);
-    assertThat(newTag.getName()).isEqualTo("newtag");
+    assertThat(newTag.getName()).isEqualTo("tagtag");
+  }
 
+  @Test
+  public void shouldDeleteTagCorrectly() {
     // Delete
     new HgTagCommand(cmdContext, workingCopyFactory).delete(new TagDeleteRequest("newtag"));
-    tags = new HgTagsCommand(cmdContext).getTags();
-    assertThat(tags).hasSize(1);
+    List<Tag> tags = new HgTagsCommand(cmdContext).getTags();
+    assertThat(tags).hasSize(2);
   }
 
 }
