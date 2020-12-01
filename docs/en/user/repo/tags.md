@@ -7,20 +7,15 @@ The tag overview shows the tags that exist for this repository. By clicking on a
 
 ![Tags Overview](assets/repository-tags-overview.png)
 
-### Deleting Tags
-Tags can be deleted directly on the tags overview page.
-
-![Tag Delete](assets/repository-tag-delete.png)
-
 ### Tag Details Page
 This page shows a command to work with the tag on the command line.
 
 ![Tag Details Page](assets/repository-tag-detailView.png)
 
 #### Tag Signatures
-The signature status of a tag is displayed as a key after its name on its details page.
+If there is at least one signature on the tag, the verification status is displayed as a key icon after its name on its details page.
 
-There can be more than one signature on a tag.
+A tag can have multiple signatures.
 
 Depending on the status of the individual signatures, the key will have a distinct color indicator:
 - if at least one signature on the tag is invalid, the key will be `red` OTHERWISE
@@ -30,3 +25,6 @@ Depending on the status of the individual signatures, the key will have a distin
 If you hover the key icon, a list of all signatures on the tag will pop up.
 
 ![Tag Signatures](assets/repository-tag-signatures.png)
+
+### Deleting Tags
+Tags can be deleted directly on the tags overview page or on the details page of the tag.

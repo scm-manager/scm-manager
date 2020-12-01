@@ -126,6 +126,7 @@
     "name": "Name",
     "commit": "Commit",
     "sources": "Sources",
+    "dangerZone": "Tag löschen",
     "delete": {
       "button": "Tag löschen",
       "subtitle": "Tag löschen",

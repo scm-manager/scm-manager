@@ -24,33 +24,36 @@
 
 import React, { FC } from "react";
 import { Repository, Tag } from "@scm-manager/ui-types";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import TagDetail from "./TagDetail";
-import TagDangerZone from "../container/TagDangerZone";
+import { Subtitle } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
+import { DangerZoneContainer } from "../../containers/RepositoryDangerZone";
+import DeleteTag from "./DeleteTag";
 
 type Props = {
   repository: Repository;
   tag: Tag;
 };
 
-const TagView: FC<Props> = ({ repository, tag }) => {
+const TagDangerZone: FC<Props> = ({ repository, tag }) => {
+  const [t] = useTranslation("repos");
+
+  const dangerZone = [];
+
+  if (tag?._links?.delete) {
+    dangerZone.push(<DeleteTag repository={repository} tag={tag} key={dangerZone.length} />);
+  }
+
+  if (dangerZone.length === 0) {
+    return null;
+  }
+
   return (
     <>
-      <TagDetail tag={tag} repository={repository} />
       <hr />
-      <div className="content">
-        <ExtensionPoint
-          name="repos.tag-details.information"
-          renderAll={true}
-          props={{
-            repository,
-            tag
-          }}
-        />
-      </div>
-      <TagDangerZone repository={repository} tag={tag} />
+      <Subtitle subtitle={t("tag.dangerZone")} />
+      <DangerZoneContainer>{dangerZone}</DangerZoneContainer>
     </>
   );
 };
 
-export default TagView;
+export default TagDangerZone;
