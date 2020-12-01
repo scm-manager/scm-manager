@@ -71,6 +71,7 @@
       "infoText": "Ihr Repository wird gerade importiert. Dies kann einen Moment dauern. Sie werden weitergeleitet, sobald der Import abgeschlossen ist. Wenn Sie diese Seite verlassen, können Sie nicht zurückkehren, um den Import-Status zu erfahren."
     },
     "importTypes": {
+      "label": "Import Modus",
       "url": {
         "label": "Import via URL",
         "helpText": "Das Repository wird über eine URL importiert."

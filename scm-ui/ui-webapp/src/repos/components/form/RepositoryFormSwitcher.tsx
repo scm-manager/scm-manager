@@ -25,11 +25,15 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
-import { Button, ButtonAddons, Level } from "@scm-manager/ui-components";
+import { Button, ButtonAddons, Icon, Level } from "@scm-manager/ui-components";
 
 type Props = {
   creationMode: "CREATE" | "IMPORT";
 };
+
+const MarginIcon = styled(Icon)`
+  padding-right: 0.5rem;
+`;
 
 const SmallButton = styled(Button)`
   border-radius: 4px;
@@ -38,9 +42,14 @@ const SmallButton = styled(Button)`
 `;
 
 const TopLevel = styled(Level)`
-  margin-top: -2.75rem;
-  margin-bottom: 2.75rem !important; //TODO Try to remove important
+  margin-top: 1.5rem;
+  margin-bottom: -1.5rem !important;
   height: 0;
+  position: absolute;
+  right: 0;
+  @media (max-width: 785px) {
+    margin-top: 4.5rem;
+  }
 `;
 
 const RepositoryFormSwitcher: FC<Props> = ({ creationMode }) => {
@@ -59,17 +68,20 @@ const RepositoryFormSwitcher: FC<Props> = ({ creationMode }) => {
       right={
         <ButtonAddons>
           <SmallButton
-            label={t("repositoryForm.createButton")}
-            icon="fa fa-plus"
             color={isCreateMode() ? "link is-selected" : undefined}
             link={isImportMode() ? "/repos/create" : undefined}
-          />
+          >
+            <MarginIcon name="fa fa-plus" color={isCreateMode() ? "white" : "default"} />{" "}
+            <p className="is-hidden-mobile is-hidden-tablet-only">{t("repositoryForm.createButton")}</p>
+          </SmallButton>
           <SmallButton
-            label={t("repositoryForm.importButton")}
-            icon="fa fa-file-upload"
             color={isImportMode() ? "link is-selected" : undefined}
             link={isCreateMode() ? "/repos/import" : undefined}
-          />
+            className="has-text-left-desktop"
+          >
+            <MarginIcon name="fa fa-file-upload" color={isImportMode() ? "white" : "default"} />
+            <p className="is-hidden-mobile is-hidden-tablet-only">{t("repositoryForm.importButton")}</p>
+          </SmallButton>
         </ButtonAddons>
       }
     />

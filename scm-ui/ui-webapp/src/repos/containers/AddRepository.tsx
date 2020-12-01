@@ -35,12 +35,7 @@ import {
 } from "../modules/repositoryTypes";
 import RepositoryForm from "../components/form";
 import RepositoryFormSwitcher from "../components/form/RepositoryFormSwitcher";
-import {
-  createRepo,
-  createRepoReset,
-  getCreateRepoFailure,
-  isCreateRepoPending
-} from "../modules/repos";
+import { createRepo, createRepoReset, getCreateRepoFailure, isCreateRepoPending } from "../modules/repos";
 import { getRepositoriesLink } from "../../modules/indexResource";
 import {
   fetchNamespaceStrategiesIfNeeded,
@@ -77,7 +72,19 @@ type Props = WithTranslation &
     history: History;
   };
 
-class AddRepository extends React.Component<Props> {
+type State = {
+  importPending: boolean;
+};
+
+class AddRepository extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      importPending: false
+    };
+  }
+
   componentDidMount() {
     this.props.resetForm();
     this.props.fetchRepositoryTypesIfNeeded();
@@ -102,6 +109,16 @@ class AddRepository extends React.Component<Props> {
   isImportPage = () => this.resolveLocation() === "import";
   isCreatePage = () => this.resolveLocation() === "create";
 
+  getSubtitle = () => {
+    if (this.isCreatePage()) {
+      return "create.subtitle";
+    } else if (this.isImportPage() && this.state.importPending) {
+      return "import.pending.subtitle";
+    } else {
+      return "import.subtitle";
+    }
+  };
+
   render() {
     const {
       pageLoading,
@@ -118,13 +135,18 @@ class AddRepository extends React.Component<Props> {
     return (
       <Page
         title={t("create.title")}
-        subtitle={t("create.subtitle")}
+        subtitle={t(this.getSubtitle())}
+        afterTitle={<RepositoryFormSwitcher creationMode={this.isImportPage() ? "IMPORT" : "CREATE"} />}
         loading={pageLoading}
         error={error}
         showContentOnError={true}
       >
-        {!error && <RepositoryFormSwitcher creationMode={this.isImportPage() ? "IMPORT" : "CREATE"} />}
-        {this.isImportPage() && <ImportRepository repositoryTypes={repositoryTypes} />}
+        {this.isImportPage() && (
+          <ImportRepository
+            repositoryTypes={repositoryTypes}
+            setPending={(importPending: boolean) => this.setState({ importPending })}
+          />
+        )}
         {this.isCreatePage() && (
           <RepositoryForm
             repositoryTypes={repositoryTypes}

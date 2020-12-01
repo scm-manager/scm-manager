@@ -78,7 +78,6 @@ const RepositoryForm: FC<Props> = ({
   });
   const [initRepository, setInitRepository] = useState(false);
   const [contextEntries, setContextEntries] = useState({});
-  //TODO fix validation
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true });
   const [t] = useTranslation("repos");
 
@@ -194,7 +193,7 @@ const RepositoryForm: FC<Props> = ({
       <RepositoryInformationForm
         repository={repo}
         onChange={setRepo}
-        disabled={!createRepository}
+        disabled={!(isModifiable() || createRepository)}
         setValid={contact => setValid({ ...valid, contact })}
       />
       {submitButton()}

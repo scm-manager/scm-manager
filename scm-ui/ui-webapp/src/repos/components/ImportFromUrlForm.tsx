@@ -32,6 +32,7 @@ type Props = {
   repository: RepositoryUrlImport;
   onChange: (repository: RepositoryUrlImport) => void;
   setValid: (valid: boolean) => void;
+  disabled?: boolean;
 };
 
 const Column = styled.div`
@@ -42,7 +43,7 @@ const Columns = styled.div`
   padding: 0.75rem 0 0;
 `;
 
-const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid }) => {
+const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid, disabled }) => {
   const [t] = useTranslation("repos");
   const [urlValidationError, setUrlValidationError] = useState(false);
 
@@ -72,6 +73,7 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid }) => {
           helpText={t("help.importUrlHelpText")}
           validationError={urlValidationError}
           errorMessage={t("validation.url-invalid")}
+          disabled={disabled}
         />
       </Column>
       <Column className="column is-half">
@@ -80,6 +82,7 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid }) => {
           onChange={username => onChange({ ...repository, username })}
           value={repository.username}
           helpText={t("help.usernameHelpText")}
+          disabled={disabled}
         />
       </Column>
       <Column className="column is-half">
@@ -89,6 +92,7 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid }) => {
           value={repository.password}
           type="password"
           helpText={t("help.passwordHelpText")}
+          disabled={disabled}
         />
       </Column>
     </Columns>

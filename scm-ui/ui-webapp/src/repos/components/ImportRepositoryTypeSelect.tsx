@@ -30,18 +30,21 @@ type Props = {
   repositoryTypes: RepositoryType[];
   repositoryType?: RepositoryType;
   setRepositoryType: (repositoryType: RepositoryType) => void;
+  disabled?: boolean;
 };
 
-const ImportRepositoryTypeSelect: FC<Props> = ({ repositoryTypes, repositoryType, setRepositoryType }) => {
+const ImportRepositoryTypeSelect: FC<Props> = ({ repositoryTypes, repositoryType, setRepositoryType, disabled }) => {
   const [t] = useTranslation("repos");
 
   const createSelectOptions = () => {
-    const options = repositoryTypes.filter(repoType => !!repoType._links.import).map(repositoryType => {
-      return {
-        label: repositoryType.displayName,
-        value: repositoryType.name
-      };
-    });
+    const options = repositoryTypes
+      .filter(repoType => !!repoType._links.import)
+      .map(repositoryType => {
+        return {
+          label: repositoryType.displayName,
+          value: repositoryType.name
+        };
+      });
     options.unshift({ label: "", value: "" });
     return options;
   };
@@ -52,13 +55,14 @@ const ImportRepositoryTypeSelect: FC<Props> = ({ repositoryTypes, repositoryType
   };
 
   return (
-      <Select
-        label={t("repository.type")}
-        onChange={onChangeType}
-        value={repositoryType ? repositoryType.name : ""}
-        options={createSelectOptions()}
-        helpText={t("help.typeHelpText")}
-      />
+    <Select
+      label={t("repository.type")}
+      onChange={onChangeType}
+      value={repositoryType ? repositoryType.name : ""}
+      options={createSelectOptions()}
+      helpText={t("help.typeHelpText")}
+      disabled={disabled}
+    />
   );
 };
 

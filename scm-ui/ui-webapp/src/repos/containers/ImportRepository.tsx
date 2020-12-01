@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import React, { FC, useState } from "react";
-import { RepositoryType, Link } from "@scm-manager/ui-types";
+import React, { FC, useEffect, useState } from "react";
+import { Link, RepositoryType } from "@scm-manager/ui-types";
 
 import { useTranslation } from "react-i18next";
 import ImportRepositoryTypeSelect from "../components/ImportRepositoryTypeSelect";
@@ -33,13 +33,18 @@ import { Loading, Notification } from "@scm-manager/ui-components";
 
 type Props = {
   repositoryTypes: RepositoryType[];
+  setPending: (pending: boolean) => void;
 };
 
-const ImportRepository: FC<Props> = ({ repositoryTypes }) => {
+const ImportRepository: FC<Props> = ({ repositoryTypes, setPending }) => {
   const [importPending, setImportPending] = useState(false);
   const [repositoryType, setRepositoryType] = useState<RepositoryType | undefined>();
   const [importType, setImportType] = useState("");
   const [t] = useTranslation("repos");
+
+  useEffect(() => {
+    setPending(importPending);
+  }, [importPending]);
 
   const changeRepositoryType = (repositoryType: RepositoryType) => {
     setRepositoryType(repositoryType);
@@ -72,11 +77,17 @@ const ImportRepository: FC<Props> = ({ repositoryTypes }) => {
         repositoryTypes={repositoryTypes}
         repositoryType={repositoryType}
         setRepositoryType={changeRepositoryType}
+        disabled={importPending}
       />
       {repositoryType && (
         <>
           <hr />
-          <ImportTypeSelect repositoryType={repositoryType} importType={importType} setImportType={setImportType} />
+          <ImportTypeSelect
+            repositoryType={repositoryType}
+            importType={importType}
+            setImportType={setImportType}
+            disabled={importPending}
+          />
           <hr />
         </>
       )}

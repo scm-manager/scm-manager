@@ -22,17 +22,18 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { RepositoryType, Link } from "@scm-manager/ui-types";
-import { Radio } from "@scm-manager/ui-components";
+import { Link, RepositoryType } from "@scm-manager/ui-types";
+import { LabelWithHelpIcon, Radio } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 
 type Props = {
   repositoryType: RepositoryType;
   importType: string;
   setImportType: (type: string) => void;
+  disabled?: boolean;
 };
 
-const ImportTypeSelect: FC<Props> = ({ repositoryType, importType, setImportType }) => {
+const ImportTypeSelect: FC<Props> = ({ repositoryType, importType, setImportType, disabled }) => {
   const [t] = useTranslation("repos");
 
   const changeImportType = (checked: boolean, name?: string) => {
@@ -43,6 +44,7 @@ const ImportTypeSelect: FC<Props> = ({ repositoryType, importType, setImportType
 
   return (
     <>
+      <LabelWithHelpIcon label={t("import.importTypes.label")} key="import.importTypes.label" />
       {(repositoryType._links.import as Link[]).map((type, index) => (
         <Radio
           name={type.name}
@@ -52,6 +54,7 @@ const ImportTypeSelect: FC<Props> = ({ repositoryType, importType, setImportType
           helpText={t(`import.importTypes.${type.name}.helpText`)}
           onChange={changeImportType}
           key={index}
+          disabled={disabled}
         />
       ))}
     </>

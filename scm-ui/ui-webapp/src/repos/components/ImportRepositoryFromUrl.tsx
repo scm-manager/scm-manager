@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
+import React, { FC, FormEvent, useState } from "react";
 import NamespaceAndNameFields from "./NamespaceAndNameFields";
 import { Repository, RepositoryUrlImport } from "@scm-manager/ui-types";
 import ImportFromUrlForm from "./ImportFromUrlForm";
@@ -62,7 +62,9 @@ const ImportRepositoryFromUrl: FC<Props> = ({ url, setImportPending }) => {
     setImportPending(loading);
   };
 
-  const submit = () => {
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const currentPath = history.location.pathname;
     handleImportLoading(true);
     apiClient
       .post(url, repo, "application/vnd.scmm-repository+json;v=2")
@@ -72,7 +74,11 @@ const ImportRepositoryFromUrl: FC<Props> = ({ url, setImportPending }) => {
         return apiClient.get(location);
       })
       .then(response => response.json())
-      .then(repo => history.push(`/repo/${repo.namespace}/${repo.name}/code/sources`))
+      .then(repo => {
+        if (history.location.pathname === currentPath) {
+          history.push(`/repo/${repo.namespace}/${repo.name}/code/sources`);
+        }
+      })
       .catch(error => {
         setError(error);
         handleImportLoading(false);
@@ -81,22 +87,24 @@ const ImportRepositoryFromUrl: FC<Props> = ({ url, setImportPending }) => {
 
   return (
     <form onSubmit={submit}>
-      <ErrorNotification error={error} />
       <ImportFromUrlForm
         repository={repo}
         onChange={setRepo}
         setValid={(importUrl: boolean) => setValid({ ...valid, importUrl })}
+        disabled={loading}
       />
+      <ErrorNotification error={error} />
       <hr />
       <NamespaceAndNameFields
         repository={repo}
         onChange={setRepo as React.Dispatch<React.SetStateAction<Repository>>}
         setValid={(namespaceAndName: boolean) => setValid({ ...valid, namespaceAndName })}
+        disabled={loading}
       />
       <RepositoryInformationForm
         repository={repo}
         onChange={setRepo as React.Dispatch<React.SetStateAction<Repository>>}
-        disabled={false}
+        disabled={loading}
         setValid={(contact: boolean) => setValid({ ...valid, contact })}
       />
       <Level

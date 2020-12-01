@@ -36,43 +36,43 @@ type Props = {
   onChange: (repository: Repository) => void;
   namespaceStrategy: string;
   setValid: (valid: boolean) => void;
+  disabled?: boolean;
 };
 
-const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, namespaceStrategy, setValid }) => {
+const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, namespaceStrategy, setValid, disabled }) => {
   const [t] = useTranslation("repos");
   const [namespaceValidationError, setNamespaceValidationError] = useState(false);
   const [nameValidationError, setNameValidationError] = useState(false);
 
   useEffect(() => {
-    //TODO fix validation
     if (repository.name) {
-      const valid = validator.isNameValid(repository.name);
-      setNameValidationError(!valid);
-      onFieldChange();
+      const nameValid = validator.isNameValid(repository.name);
+      setNameValidationError(!nameValid);
+      if (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY) {
+        if (repository.namespace) {
+          const namespaceValid = validator.isNamespaceValid(repository.namespace);
+          setValid(!(!namespaceValid || !nameValid));
+        } else {
+          setValid(false);
+        }
+      } else {
+        setValid(nameValid);
+      }
+    } else {
+      setValid(false);
     }
-  }, [repository.name]);
+  }, [repository.name, repository.namespace]);
 
   const handleNamespaceChange = (namespace: string) => {
     const valid = validator.isNamespaceValid(namespace);
     setNamespaceValidationError(!valid);
-    onFieldChange(valid);
     onChange({ ...repository, namespace });
   };
 
   const handleNameChange = (name: string) => {
     const valid = validator.isNameValid(name);
     setNameValidationError(!valid);
-    onFieldChange();
     onChange({ ...repository, name });
-  };
-
-  //TODO fix validation
-  const onFieldChange = (namespaceValid?: boolean) => {
-    if (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY && !validator.isNamespaceValid(repository.namespace)) {
-      setValid(false);
-    } else {
-      setValid(!nameValidationError && !namespaceValidationError);
-    }
   };
 
   const renderNamespaceField = () => {
@@ -82,7 +82,8 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, namespaceStra
       value: repository ? repository.namespace : "",
       onChange: handleNamespaceChange,
       errorMessage: t("validation.namespace-invalid"),
-      validationError: namespaceValidationError
+      validationError: namespaceValidationError,
+      disabled: disabled
     };
 
     if (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY) {
@@ -102,6 +103,7 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, namespaceStra
         validationError={nameValidationError}
         errorMessage={t("validation.name-invalid")}
         helpText={t("help.nameHelpText")}
+        disabled={disabled}
       />
     </>
   );
