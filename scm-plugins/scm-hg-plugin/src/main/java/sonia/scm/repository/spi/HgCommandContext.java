@@ -27,18 +27,12 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.aragost.javahg.Repository;
-import com.google.common.base.Strings;
 import sonia.scm.repository.HgConfig;
-import sonia.scm.repository.HgHookManager;
+import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.RepositoryProvider;
-import sonia.scm.web.HgUtil;
 
 import java.io.Closeable;
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-import java.util.function.BiConsumer;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -46,105 +40,32 @@ import java.util.function.BiConsumer;
  *
  * @author Sebastian Sdorra
  */
-public class HgCommandContext implements Closeable, RepositoryProvider
-{
+public class HgCommandContext implements Closeable, RepositoryProvider {
 
-  /** Field description */
-  private static final String PROPERTY_ENCODING = "hg.encoding";
+  private final HgRepositoryHandler handler;
+  private final HgRepositoryFactory factory;
+  private final sonia.scm.repository.Repository scmRepository;
 
-  //~--- constructors ---------------------------------------------------------
+  private Repository repository;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param hookManager
-   * @param handler
-   * @param repository
-   * @param directory
-   */
-  public HgCommandContext(HgHookManager hookManager,
-                          HgRepositoryHandler handler, sonia.scm.repository.Repository repository,
-                          File directory)
-  {
-    this(hookManager, handler, repository, directory,
-      handler.getHgContext().isPending());
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param hookManager
-   * @param handler
-   * @param repository
-   * @param directory
-   * @param pending
-   */
-  public HgCommandContext(HgHookManager hookManager,
-                          HgRepositoryHandler handler, sonia.scm.repository.Repository repository,
-                          File directory, boolean pending)
-  {
-    this.hookManager = hookManager;
+  public HgCommandContext(HgRepositoryHandler handler, HgRepositoryFactory factory, sonia.scm.repository.Repository scmRepository) {
     this.handler = handler;
-    this.directory = directory;
-    this.scmRepository = repository;
-    this.encoding = repository.getProperty(PROPERTY_ENCODING);
-    this.pending = pending;
-
-    if (Strings.isNullOrEmpty(encoding))
-    {
-      encoding = handler.getConfig().getEncoding();
-    }
+    this.factory = factory;
+    this.scmRepository = scmRepository;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
-  @Override
-  public void close() throws IOException
-  {
-    if (repository != null)
-    {
-      repository.close();
+  public Repository open() {
+    if (repository == null) {
+      repository = factory.openForRead(scmRepository);
     }
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Repository open()
-  {
-    if (repository == null)
-    {
-      repository = HgUtil.open(handler, hookManager, directory, encoding, pending);
-    }
-
     return repository;
   }
 
-  public Repository openWithSpecialEnvironment(BiConsumer<sonia.scm.repository.Repository, Map<String, String>> prepareEnvironment)
-  {
-    return HgUtil.open(handler, directory, encoding,
-      pending, environment -> prepareEnvironment.accept(scmRepository, environment));
+  public Repository openForWrite() {
+    return factory.openForWrite(scmRepository);
   }
 
-  //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public HgConfig getConfig()
   {
     return handler.getConfig();
@@ -159,25 +80,12 @@ public class HgCommandContext implements Closeable, RepositoryProvider
     return getScmRepository();
   }
 
-  //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private File directory;
+  @Override
+  public void close() {
+    if (repository != null) {
+      repository.close();
+    }
+  }
 
-  /** Field description */
-  private String encoding;
-
-  /** Field description */
-  private HgRepositoryHandler handler;
-
-  /** Field description */
-  private HgHookManager hookManager;
-
-  /** Field description */
-  private boolean pending;
-
-  /** Field description */
-  private Repository repository;
-
-  private final sonia.scm.repository.Repository scmRepository;
 }

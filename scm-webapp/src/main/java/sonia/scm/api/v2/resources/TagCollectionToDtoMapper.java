@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
@@ -56,6 +56,17 @@ public class TagCollectionToDtoMapper {
 
   public List<TagDto> getTagDtoList(String namespace, String name, Collection<Tag> tags) {
     return tags.stream().map(tag -> tagToTagDtoMapper.map(tag, new NamespaceAndName(namespace, name))).collect(toList());
+  }
+
+  public List<TagDto> getMinimalEmbeddedTagDtoList(String namespace, String name, Collection<String> tags) {
+    return tags.stream()
+      .map(tag -> {
+        Links links = linkingTo().self(resourceLinks.tag().self(namespace, name, tag)).build();
+        TagDto dto = new TagDto(links);
+        dto.setName(tag);
+        return dto;
+      })
+      .collect(toList());
   }
 
   private Links createLinks(String namespace, String name) {

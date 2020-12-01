@@ -27,11 +27,9 @@ package sonia.scm.repository;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.Inject;
-import com.google.inject.Provider;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.ConfigurationException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.autoconfig.AutoConfigurator;
 import sonia.scm.installer.HgInstaller;
@@ -43,14 +41,14 @@ import sonia.scm.io.INISection;
 import sonia.scm.plugin.Extension;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.spi.HgRepositoryServiceProvider;
+import sonia.scm.repository.spi.HgVersionCommand;
 import sonia.scm.repository.spi.HgWorkingCopyFactory;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.SystemUtil;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,14 +61,15 @@ import java.util.Optional;
 public class HgRepositoryHandler
   extends AbstractSimpleRepositoryHandler<HgConfig> {
 
-  public static final String PATH_HOOK = ".hook-1.8";
   public static final String RESOURCE_VERSION = "sonia/scm/version/scm-hg-plugin";
   public static final String TYPE_DISPLAYNAME = "Mercurial";
   public static final String TYPE_NAME = "hg";
-  public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME,
+  public static final RepositoryType TYPE = new RepositoryType(
+    TYPE_NAME,
     TYPE_DISPLAYNAME,
     HgRepositoryServiceProvider.COMMANDS,
-    HgRepositoryServiceProvider.FEATURES);
+    HgRepositoryServiceProvider.FEATURES
+  );
 
   private static final Logger logger = LoggerFactory.getLogger(HgRepositoryHandler.class);
 
@@ -78,28 +77,14 @@ public class HgRepositoryHandler
   private static final String CONFIG_SECTION_SCMM = "scmm";
   private static final String CONFIG_KEY_REPOSITORY_ID = "repositoryid";
 
-  private final Provider<HgContext> hgContextProvider;
-
   private final HgWorkingCopyFactory workingCopyFactory;
-
-  private final JAXBContext jaxbContext;
 
   @Inject
   public HgRepositoryHandler(ConfigurationStoreFactory storeFactory,
-                             Provider<HgContext> hgContextProvider,
                              RepositoryLocationResolver repositoryLocationResolver,
                              PluginLoader pluginLoader, HgWorkingCopyFactory workingCopyFactory) {
     super(storeFactory, repositoryLocationResolver, pluginLoader);
-    this.hgContextProvider = hgContextProvider;
     this.workingCopyFactory = workingCopyFactory;
-
-    try {
-      this.jaxbContext = JAXBContext.newInstance(BrowserResult.class,
-        BlameResult.class, Changeset.class, ChangesetPagingResult.class,
-        HgVersion.class);
-    } catch (JAXBException ex) {
-      throw new ConfigurationException("could not create jaxbcontext", ex);
-    }
   }
 
   public void doAutoConfiguration(HgConfig autoConfig) {
@@ -107,8 +92,7 @@ public class HgRepositoryHandler
 
     try {
       if (logger.isDebugEnabled()) {
-        logger.debug("installing mercurial with {}",
-          installer.getClass().getName());
+        logger.debug("installing mercurial with {}", installer.getClass().getName());
       }
 
       installer.install(baseDirectory, autoConfig);
@@ -154,16 +138,6 @@ public class HgRepositoryHandler
     }
   }
 
-  public HgContext getHgContext() {
-    HgContext context = hgContextProvider.get();
-
-    if (context == null) {
-      context = new HgContext();
-    }
-
-    return context;
-  }
-
   @Override
   public ImportHandler getImportHandler() {
     return new HgImportHandler(this);
@@ -176,28 +150,14 @@ public class HgRepositoryHandler
 
   @Override
   public String getVersionInformation() {
-    String version = getStringFromResource(RESOURCE_VERSION,
-      DEFAULT_VERSION_INFORMATION);
+    return getVersionInformation(new HgVersionCommand(getConfig()));
+  }
 
-    try {
-      HgVersion hgVersion = new HgVersionHandler(this, hgContextProvider.get(),
-        baseDirectory).getVersion();
-
-      if (hgVersion != null) {
-        if (logger.isDebugEnabled()) {
-          logger.debug("mercurial/python informations: {}", hgVersion);
-        }
-
-        version = MessageFormat.format(version, hgVersion.getPython(),
-          hgVersion.getMercurial());
-      } else if (logger.isWarnEnabled()) {
-        logger.warn("could not retrieve version informations");
-      }
-    } catch (Exception ex) {
-      logger.error("could not read version informations", ex);
-    }
-
-    return version;
+  String getVersionInformation(HgVersionCommand command) {
+    String version = getStringFromResource(RESOURCE_VERSION, DEFAULT_VERSION_INFORMATION);
+    HgVersion hgVersion = command.get();
+    logger.debug("mercurial/python informations: {}", hgVersion);
+    return MessageFormat.format(version, hgVersion.getPython(), hgVersion.getMercurial());
   }
 
   @Override
@@ -253,28 +213,24 @@ public class HgRepositoryHandler
         logger.debug("write python script {}", script.getName());
       }
 
-      InputStream content = null;
-      OutputStream output = null;
-
-      try {
-        content = HgRepositoryHandler.class.getResourceAsStream(
-          script.getResourcePath());
-        output = new FileOutputStream(script.getFile(context));
+      try (InputStream content = input(script); OutputStream output = output(context, script)) {
         IOUtil.copy(content, output);
       } catch (IOException ex) {
         logger.error("could not write script", ex);
-      } finally {
-        IOUtil.close(content);
-        IOUtil.close(output);
       }
     }
+  }
+
+  private InputStream input(HgPythonScript script) {
+    return HgRepositoryHandler.class.getResourceAsStream(script.getResourcePath());
+  }
+
+  private OutputStream output(SCMContextProvider context, HgPythonScript script) throws FileNotFoundException {
+    return new FileOutputStream(script.getFile(context));
   }
 
   public HgWorkingCopyFactory getWorkingCopyFactory() {
     return workingCopyFactory;
   }
 
-  public JAXBContext getJaxbContext() {
-    return jaxbContext;
-  }
 }

@@ -87,7 +87,7 @@
     "table": {
       "branches": {
         "active": "Aktive Branches",
-        "stale": "Alte Branches"
+        "stale": "Stale Branches"
       },
       "lastCommit": "Letzter Commit"
     },

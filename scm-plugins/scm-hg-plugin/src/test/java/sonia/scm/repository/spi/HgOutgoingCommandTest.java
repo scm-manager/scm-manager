@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -106,17 +106,10 @@ public class HgOutgoingCommandTest extends IncomingOutgoingTestBase
     System.out.println(cpr.getChangesets());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private HgOutgoingCommand createOutgoingCommand()
-  {
+  private HgOutgoingCommand createOutgoingCommand() {
     return new HgOutgoingCommand(
-      new HgCommandContext(
-        HgTestUtil.createHookManager(), handler, outgoingRepository,
-          outgoingDirectory), handler);
+      new HgCommandContext(handler, HgTestUtil.createFactory(handler, outgoingDirectory), outgoingRepository),
+      handler
+    );
   }
 }

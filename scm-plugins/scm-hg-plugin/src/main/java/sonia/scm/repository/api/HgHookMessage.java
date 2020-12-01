@@ -21,10 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
@@ -32,64 +37,15 @@ import java.io.Serializable;
  *
  * @author Sebastian Sdorra
  */
-public final class HgHookMessage implements Serializable
-{
+@Getter
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public final class HgHookMessage implements Serializable {
 
-  /** Field description */
   private static final long serialVersionUID = 1804492842452344326L;
 
-  //~--- constant enums -------------------------------------------------------
-
-  /**
-   * Enum description
-   *
-   */
-  public static enum Severity { NOTE, ERROR; }
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param severity
-   * @param message
-   */
-  public HgHookMessage(Severity severity, String message)
-  {
-    this.severity = severity;
-    this.message = message;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getMessage()
-  {
-    return message;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Severity getSeverity()
-  {
-    return severity;
-  }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
+  private Severity severity;
   private String message;
 
-  /** Field description */
-  private Severity severity;
+  public enum Severity { NOTE, ERROR }
 }

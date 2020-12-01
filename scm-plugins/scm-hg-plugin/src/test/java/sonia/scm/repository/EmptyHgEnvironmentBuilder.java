@@ -21,30 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-//~--- JDK imports ------------------------------------------------------------
+import java.util.Collections;
+import java.util.Map;
 
-import java.io.File;
-import java.io.IOException;
-
-/**
- *
- * @author Sebastian Sdorra
- */
-public class HgVersionHandler extends AbstractHgHandler
-{
-
-  public HgVersionHandler(HgRepositoryHandler handler, HgContext context,
-                          File directory)
-  {
-    super(handler, context, null, directory);
+public class EmptyHgEnvironmentBuilder implements HgEnvironmentBuilder {
+  @Override
+  public Map<String, String> read(Repository repository) {
+    return Collections.emptyMap();
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  public HgVersion getVersion() throws IOException {
-    return getResultFromScript(HgVersion.class, HgPythonScript.VERSION);
+  @Override
+  public Map<String, String> write(Repository repository) {
+    return Collections.emptyMap();
   }
 }
