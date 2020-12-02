@@ -48,6 +48,20 @@ type Props = {
   fetchNamespaceStrategiesIfNeeded: () => void;
 };
 
+const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => {
+  const [t] = useTranslation("repos");
+  if (!importPending) {
+    return null;
+  }
+  return (
+    <>
+      <Notification type="info">{t("import.pending.infoText")}</Notification>
+      <Loading />
+      <hr />
+    </>
+  );
+};
+
 const ImportRepository: FC<Props> = ({
   repositoryTypes,
   pageLoading,
@@ -92,13 +106,7 @@ const ImportRepository: FC<Props> = ({
       error={error}
       showContentOnError={true}
     >
-      {importPending && (
-        <>
-          <Notification type="info">{t("import.pending.infoText")}</Notification>
-          <Loading />
-          <hr />
-        </>
-      )}
+      <ImportPendingLoading importPending={importPending} />
       <ImportRepositoryTypeSelect
         repositoryTypes={repositoryTypes}
         repositoryType={repositoryType}
