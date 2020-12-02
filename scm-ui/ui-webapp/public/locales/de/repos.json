@@ -124,12 +124,41 @@
     },
     "table": {
       "tags": "Tags"
+    },
+    "create": {
+      "form": {
+        "field": {
+          "name": {
+            "label": "Name",
+            "error": {
+              "exists": "Dieser Tag existiert bereits in diesem Repository.",
+              "format": "Der Tag entspricht nicht dem korrekten Format."
+            }
+          }
+        }
+      },
+      "title": "Neuen Tag anlegen",
+      "hint": "Der Tag wird automatisch mit ihrem Standardschlüssel vom SCM-Manager signiert.",
+      "confirm": "Tag erstellen",
+      "cancel": "Abbrechen"
     }
   },
   "tag": {
     "name": "Name",
     "commit": "Commit",
-    "sources": "Sources"
+    "sources": "Sources",
+    "dangerZone": "Tag löschen",
+    "delete": {
+      "button": "Tag löschen",
+      "subtitle": "Tag löschen",
+      "description": "Gelöschte Tags können nicht wiederhergestellt werden.",
+      "confirmAlert": {
+        "title": "Tag löschen",
+        "message": "Möchten Sie den Tag \"{{tag}}\" wirklich löschen?",
+        "cancel": "Nein",
+        "submit": "Ja"
+      }
+    }
   },
   "code": {
     "sources": "Sources",
@@ -179,6 +208,9 @@
     "buttons": {
       "details": "Details",
       "sources": "Sources"
+    },
+    "tag": {
+      "create": "Tag erstellen"
     }
   },
   "commit": {

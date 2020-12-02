@@ -47,6 +47,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.DIFF,
     Command.DIFF_RESULT,
     Command.LOG,
+    Command.TAG,
     Command.TAGS,
     Command.BRANCH,
     Command.BRANCHES,
@@ -142,7 +143,12 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
 
   @Override
   public TagsCommand getTagsCommand() {
-    return new GitTagsCommand(context);
+    return commandInjector.getInstance(GitTagsCommand.class);
+  }
+
+  @Override
+  public TagCommand getTagCommand() {
+    return commandInjector.getInstance(GitTagCommand.class);
   }
 
   @Override

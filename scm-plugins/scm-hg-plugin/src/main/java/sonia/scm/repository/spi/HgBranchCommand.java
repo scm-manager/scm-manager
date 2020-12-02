@@ -26,7 +26,6 @@ package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.CommitCommand;
-import com.aragost.javahg.commands.PullCommand;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,21 +36,16 @@ import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.work.WorkingCopy;
 import sonia.scm.user.User;
 
-import java.io.IOException;
-
 /**
  * Mercurial implementation of the {@link BranchCommand}.
  * Note that this creates an empty commit to "persist" the new branch.
  */
-public class HgBranchCommand extends AbstractCommand implements BranchCommand {
+public class HgBranchCommand extends AbstractWorkingCopyCommand implements BranchCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgBranchCommand.class);
 
-  private final HgWorkingCopyFactory workingCopyFactory;
-
   HgBranchCommand(HgCommandContext context, HgWorkingCopyFactory workingCopyFactory) {
-    super(context);
-    this.workingCopyFactory = workingCopyFactory;
+    super(context, workingCopyFactory);
   }
 
   @Override
@@ -103,15 +97,4 @@ public class HgBranchCommand extends AbstractCommand implements BranchCommand {
       .execute();
   }
 
-  private void pullChangesIntoCentralRepository(WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy, String branch) {
-    try {
-      PullCommand pullCommand = PullCommand.on(workingCopy.getCentralRepository());
-      workingCopyFactory.configure(pullCommand);
-      pullCommand.execute(workingCopy.getDirectory().getAbsolutePath());
-    } catch (IOException e) {
-      throw new InternalRepositoryException(getRepository(),
-        String.format("Could not pull changes '%s' into central repository", branch),
-        e);
-    }
-  }
 }

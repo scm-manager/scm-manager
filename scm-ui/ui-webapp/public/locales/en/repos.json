@@ -108,7 +108,7 @@
     "delete": {
       "button": "Delete branch",
       "subtitle": "Delete branch",
-      "description": "Deleted branches can not be restored.",
+      "description": "Deleted branches cannot be restored.",
       "confirmAlert": {
         "title": "Delete branch",
         "message": "Do you really want to delete the branch \"{{branch}}\"?",
@@ -125,12 +125,41 @@
     },
     "table": {
       "tags": "Tags"
+    },
+    "create": {
+      "form": {
+        "field": {
+          "name": {
+            "label": "Name",
+            "error": {
+              "exists": "This tag already exists in this repository.",
+              "format": "The tag name does not match the correct format."
+            }
+          }
+        }
+      },
+      "title": "Create a new tag",
+      "hint": "The tag will be automatically signed with your default key by the SCM-Manager.",
+      "confirm": "Create Tag",
+      "cancel": "Cancel"
     }
   },
   "tag": {
     "name": "Name",
     "commit": "Commit",
-    "sources": "Sources"
+    "sources": "Sources",
+    "dangerZone": "Delete tag",
+    "delete": {
+      "button": "Delete tag",
+      "subtitle": "Delete tag",
+      "description": "Deleted tag can not be restored.",
+      "confirmAlert": {
+        "title": "Delete tag",
+        "message": "Do you really want to delete the tag \"{{tag}}\"?",
+        "cancel": "No",
+        "submit": "Yes"
+      }
+    }
   },
   "code": {
     "sources": "Sources",
@@ -180,6 +209,9 @@
       "more": "{{count}} more",
       "count": "{{count}} Contributor",
       "count_plural": "{{count}} Contributors"
+    },
+    "tag": {
+      "create": "Create Tag"
     }
   },
   "commit": {

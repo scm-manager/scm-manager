@@ -175,12 +175,12 @@ public class RepositoryAccessITCase {
       .as("assert tag size")
       .isNotNull()
       .size()
-      .isGreaterThan(0);
+      .isPositive();
 
     assertThat(response.body().jsonPath().getMap("_embedded.tags.find{it.name=='" + tagName + "'}"))
       .as("assert tag has attributes for name, revision, date and links")
       .isNotNull()
-      .hasSize(4)
+      .hasSize(5)
       .containsEntry("name", tagName)
       .containsEntry("revision", changeset.getId());
 

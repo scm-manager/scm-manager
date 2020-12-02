@@ -32,7 +32,6 @@ import org.mockito.invocation.InvocationOnMock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Branch;
-import sonia.scm.repository.BranchCreatedEvent;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreReceiveRepositoryHookEvent;
 import sonia.scm.repository.api.BranchRequest;

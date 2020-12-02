@@ -36,7 +36,7 @@ class BranchView extends React.Component<Props> {
   render() {
     const { repository, branch } = this.props;
     return (
-      <div>
+      <>
         <BranchDetail repository={repository} branch={branch} />
         <hr />
         <div className="content">
@@ -50,7 +50,7 @@ class BranchView extends React.Component<Props> {
           />
         </div>
         <BranchDangerZone repository={repository} branch={branch} />
-      </div>
+      </>
     );
   }
 }

@@ -354,7 +354,7 @@ public class BranchRootResource {
                          @PathParam("name") String name,
                          @PathParam("branch") String branch) {
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      RepositoryPermissions.modify(repositoryService.getRepository()).check();
+      RepositoryPermissions.push(repositoryService.getRepository()).check();
 
       Optional<Branch> branchToBeDeleted = repositoryService.getBranchesCommand().getBranches().getBranches().stream()
         .filter(b -> b.getName().equalsIgnoreCase(branch))

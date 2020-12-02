@@ -33,6 +33,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -45,6 +46,8 @@ public class TagDto extends HalRepresentation {
 
   @JsonInclude(JsonInclude.Include.NON_NULL)
   private Instant date;
+
+  private List<SignatureDto> signatures;
 
   TagDto(Links links) {
     super(links);
