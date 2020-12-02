@@ -29,22 +29,41 @@ import { useTranslation } from "react-i18next";
 import ImportRepositoryTypeSelect from "../components/ImportRepositoryTypeSelect";
 import ImportTypeSelect from "../components/ImportTypeSelect";
 import ImportRepositoryFromUrl from "../components/ImportRepositoryFromUrl";
-import { Loading, Notification } from "@scm-manager/ui-components";
+import { Loading, Notification, Page } from "@scm-manager/ui-components";
+import RepositoryFormSwitcher from "../components/form/RepositoryFormSwitcher";
+import {
+  fetchRepositoryTypesIfNeeded,
+  getFetchRepositoryTypesFailure,
+  getRepositoryTypes,
+  isFetchRepositoryTypesPending
+} from "../modules/repositoryTypes";
+import { connect } from "react-redux";
+import { fetchNamespaceStrategiesIfNeeded } from "../../admin/modules/namespaceStrategies";
 
 type Props = {
   repositoryTypes: RepositoryType[];
-  setPending: (pending: boolean) => void;
+  pageLoading: boolean;
+  error?: Error;
+  fetchRepositoryTypesIfNeeded: () => void;
+  fetchNamespaceStrategiesIfNeeded: () => void;
 };
 
-const ImportRepository: FC<Props> = ({ repositoryTypes, setPending }) => {
+const ImportRepository: FC<Props> = ({
+  repositoryTypes,
+  pageLoading,
+  error,
+  fetchRepositoryTypesIfNeeded,
+  fetchNamespaceStrategiesIfNeeded
+}) => {
   const [importPending, setImportPending] = useState(false);
   const [repositoryType, setRepositoryType] = useState<RepositoryType | undefined>();
   const [importType, setImportType] = useState("");
   const [t] = useTranslation("repos");
 
   useEffect(() => {
-    setPending(importPending);
-  }, [importPending]);
+    fetchRepositoryTypesIfNeeded();
+    fetchNamespaceStrategiesIfNeeded();
+  }, [repositoryTypes]);
 
   const changeRepositoryType = (repositoryType: RepositoryType) => {
     setRepositoryType(repositoryType);
@@ -65,7 +84,14 @@ const ImportRepository: FC<Props> = ({ repositoryTypes, setPending }) => {
   };
 
   return (
-    <div>
+    <Page
+      title={t("create.title")}
+      subtitle={t("import.subtitle")}
+      afterTitle={<RepositoryFormSwitcher creationMode={"IMPORT"} />}
+      loading={pageLoading}
+      error={error}
+      showContentOnError={true}
+    >
       {importPending && (
         <>
           <Notification type="info">{t("import.pending.infoText")}</Notification>
@@ -92,8 +118,31 @@ const ImportRepository: FC<Props> = ({ repositoryTypes, setPending }) => {
         </>
       )}
       {importType && renderImportComponent()}
-    </div>
+    </Page>
   );
 };
 
-export default ImportRepository;
+const mapStateToProps = (state: any) => {
+  const repositoryTypes = getRepositoryTypes(state);
+  const pageLoading = isFetchRepositoryTypesPending(state);
+  const error = getFetchRepositoryTypesFailure(state);
+
+  return {
+    repositoryTypes,
+    pageLoading,
+    error
+  };
+};
+
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    fetchRepositoryTypesIfNeeded: () => {
+      dispatch(fetchRepositoryTypesIfNeeded());
+    },
+    fetchNamespaceStrategiesIfNeeded: () => {
+      dispatch(fetchNamespaceStrategiesIfNeeded());
+    }
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(ImportRepository);

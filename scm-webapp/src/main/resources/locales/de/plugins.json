@@ -289,7 +289,7 @@
     },
     "D6SHRfqQw1": {
       "displayName": "Repository Import fehlgeschlagen",
-      "description": "Das Repository konnte nicht importiert werden. Entweder wurden die Zugangsdaten (Benutzername/Passwort) nicht gesetzt oder sind fehlerhaft. Bitte prüfen Sie Ihre Eingaben."
+      "description": "Das Repository konnte nicht importiert werden. Möglicherweise wurden die Zugangsdaten (Benutzername/Passwort) nicht gesetzt oder sind fehlerhaft. Bitte prüfen Sie Ihre Eingaben."
     }
   },
   "namespaceStrategies": {

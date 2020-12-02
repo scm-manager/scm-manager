@@ -45,7 +45,6 @@ import {
 } from "../../admin/modules/namespaceStrategies";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { compose } from "redux";
-import ImportRepository from "./ImportRepository";
 
 type Props = WithTranslation &
   RouteComponentProps & {
@@ -72,19 +71,7 @@ type Props = WithTranslation &
     history: History;
   };
 
-type State = {
-  importPending: boolean;
-};
-
-class AddRepository extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      importPending: false
-    };
-  }
-
+class CreateRepository extends React.Component<Props> {
   componentDidMount() {
     this.props.resetForm();
     this.props.fetchRepositoryTypesIfNeeded();
@@ -93,30 +80,6 @@ class AddRepository extends React.Component<Props, State> {
 
   repoCreated = (repo: Repository) => {
     this.props.history.push("/repo/" + repo.namespace + "/" + repo.name);
-  };
-
-  resolveLocation = () => {
-    const currentUrl = this.props.location.pathname;
-    if (currentUrl.includes("/repos/create")) {
-      return "create";
-    }
-    if (currentUrl.includes("/repos/import")) {
-      return "import";
-    }
-    return "";
-  };
-
-  isImportPage = () => this.resolveLocation() === "import";
-  isCreatePage = () => this.resolveLocation() === "create";
-
-  getSubtitle = () => {
-    if (this.isCreatePage()) {
-      return "create.subtitle";
-    } else if (this.isImportPage() && this.state.importPending) {
-      return "import.pending.subtitle";
-    } else {
-      return "import.subtitle";
-    }
   };
 
   render() {
@@ -135,29 +98,21 @@ class AddRepository extends React.Component<Props, State> {
     return (
       <Page
         title={t("create.title")}
-        subtitle={t(this.getSubtitle())}
-        afterTitle={<RepositoryFormSwitcher creationMode={this.isImportPage() ? "IMPORT" : "CREATE"} />}
+        subtitle={t("create.subtitle")}
+        afterTitle={<RepositoryFormSwitcher creationMode={"CREATE"} />}
         loading={pageLoading}
         error={error}
         showContentOnError={true}
       >
-        {this.isImportPage() && (
-          <ImportRepository
-            repositoryTypes={repositoryTypes}
-            setPending={(importPending: boolean) => this.setState({ importPending })}
-          />
-        )}
-        {this.isCreatePage() && (
-          <RepositoryForm
-            repositoryTypes={repositoryTypes}
-            loading={createLoading}
-            namespaceStrategy={namespaceStrategies.current}
-            createRepository={(repo, initRepository) => {
-              createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
-            }}
-            indexResources={indexResources}
-          />
-        )}
+        <RepositoryForm
+          repositoryTypes={repositoryTypes}
+          loading={createLoading}
+          namespaceStrategy={namespaceStrategies.current}
+          createRepository={(repo, initRepository) => {
+            createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
+          }}
+          indexResources={indexResources}
+        />
       </Page>
     );
   }
@@ -205,4 +160,4 @@ export default compose(
   withRouter,
   withTranslation("repos"),
   connect(mapStateToProps, mapDispatchToProps)
-)(AddRepository);
+)(CreateRepository);

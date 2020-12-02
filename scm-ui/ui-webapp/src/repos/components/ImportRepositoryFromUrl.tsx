@@ -49,21 +49,21 @@ const ImportRepositoryFromUrl: FC<Props> = ({ url, setImportPending }) => {
   });
 
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, importUrl: false });
-  const isValid = () => {
-    return Object.values(valid).every(v => v);
-  };
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | undefined>();
   const history = useHistory();
   const [t] = useTranslation("repos");
 
+  const isValid = () => Object.values(valid).every(v => v);
+
   const handleImportLoading = (loading: boolean) => {
-    setLoading(loading);
     setImportPending(loading);
+    setLoading(loading);
   };
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    setError(undefined);
     const currentPath = history.location.pathname;
     handleImportLoading(true);
     apiClient
