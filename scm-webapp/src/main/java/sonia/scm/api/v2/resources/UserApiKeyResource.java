@@ -53,7 +53,7 @@ import java.net.URI;
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static sonia.scm.NotFoundException.notFound;
 
-@Path("v2/users/{username}/api_keys")
+@Path("v2/users/{id}/api_keys")
 public class UserApiKeyResource {
 
   private final ApiKeyService apiKeyService;
@@ -89,7 +89,7 @@ public class UserApiKeyResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public HalRepresentation findAll(@PathParam("username") String id) {
+  public HalRepresentation findAll(@PathParam("id") String id) {
     return apiKeyCollectionMapper.map(apiKeyService.getKeys(id), id);
   }
 
@@ -171,11 +171,11 @@ public class UserApiKeyResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response create(@Valid ApiKeyDto apiKey, @PathParam("username") String username) {
-    final ApiKeyService.CreationResult newKey = apiKeyService.createNewKey(apiKey.getDisplayName(), apiKey.getPermissionRole(), username);
+  public Response create(@Valid ApiKeyDto apiKey, @PathParam("id") String id) {
+    final ApiKeyService.CreationResult newKey = apiKeyService.createNewKey(apiKey.getDisplayName(), apiKey.getPermissionRole(), id);
     return Response.status(CREATED)
       .entity(newKey.getToken())
-      .location(URI.create(resourceLinks.apiKey().self(newKey.getId(), username)))
+      .location(URI.create(resourceLinks.apiKey().self(newKey.getId(), id)))
       .build();
   }
 
