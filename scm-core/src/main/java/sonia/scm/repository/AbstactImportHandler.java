@@ -41,8 +41,8 @@ import java.util.List;
  * {@link AdvancedImportHandler}.
  *
  * @author Sebastian Sdorra
+ * @since 1.12
  * @deprecated
- * @since 2.11.0
  */
 @Deprecated
 public abstract class AbstactImportHandler implements AdvancedImportHandler

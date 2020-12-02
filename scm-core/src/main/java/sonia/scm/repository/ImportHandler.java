@@ -33,7 +33,7 @@ import java.util.List;
  * Searches and import existing repositories.
  *
  * @author Sebastian Sdorra
- * @since 2.11.0
+ * @since 1.12
  * @deprecated
  */
 @Deprecated

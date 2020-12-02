@@ -48,11 +48,12 @@ public interface RepositoryHandler
    *
    *
    * @return {@link ImportHandler} for the repository type of this handler
+   * @since 1.12
    * @deprecated
-   * @since 2.11.0
    *
    * @throws FeatureNotSupportedException
    */
+  @Deprecated
   public ImportHandler getImportHandler() throws FeatureNotSupportedException;
 
   /**

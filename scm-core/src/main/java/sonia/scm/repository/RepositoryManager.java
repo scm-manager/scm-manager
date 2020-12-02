@@ -99,6 +99,15 @@ public interface RepositoryManager
   Collection<String> getAllNamespaces();
 
 
+  /**
+   * Creates a new repository and afterwards executes the logic from the {@param afterCreation}.
+   *
+   * @param repository    the repository {@link Repository}
+   * @param afterCreation consumer which expects a repository {@link Repository}
+   * @return {@link Repository} the created repository
+   *
+   * @since 2.11.0
+   */
   default Repository create(Repository repository, Consumer<Repository> afterCreation) {
     Repository newRepository = create(repository);
     afterCreation.accept(newRepository);

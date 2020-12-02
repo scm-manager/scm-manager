@@ -70,8 +70,7 @@ const ImportRepositoryFromUrl: FC<Props> = ({ url, setImportPending }) => {
       .post(url, repo, "application/vnd.scmm-repository+json;v=2")
       .then(response => {
         const location = response.headers.get("Location");
-        // @ts-ignore Location is always set if the repository import was successful
-        return apiClient.get(location);
+        return apiClient.get(location!);
       })
       .then(response => response.json())
       .then(repo => {

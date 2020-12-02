@@ -43,7 +43,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullResponse;
@@ -217,15 +216,11 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
       response = convert(git, result);
     } catch
     (GitAPIException ex) {
-      if (ex.getMessage().contains("not authorized")) {
-        throw new ImportFailedException(
-          ContextEntry.ContextBuilder.entity(repository).build(),
-          "Repository import failed. The credentials are wrong or missing.",
-          ex
-        );
-      }
-
-      throw new InternalRepositoryException(repository, "error during pull", ex);
+      throw new ImportFailedException(
+        ContextEntry.ContextBuilder.entity(repository).build(),
+        "Repository import failed. The credentials are wrong or missing.",
+        ex
+      );
     }
 
     return response;

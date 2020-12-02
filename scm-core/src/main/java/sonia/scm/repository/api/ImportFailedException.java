@@ -29,6 +29,11 @@ import sonia.scm.ExceptionWithContext;
 
 import java.util.List;
 
+/**
+ * This exception is thrown if the repository import fails.
+ *
+ * @since 2.11.0
+ */
 public class ImportFailedException extends ExceptionWithContext {
 
   private static final String CODE = "D6SHRfqQw1";

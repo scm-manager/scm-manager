@@ -31,6 +31,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Sebastian Sdorra
+ * @deprecated
  */
 @Deprecated
 public class GitImportHandler extends AbstactImportHandler {

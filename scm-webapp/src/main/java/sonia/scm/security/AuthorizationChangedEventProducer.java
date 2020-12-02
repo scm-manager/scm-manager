@@ -193,7 +193,8 @@ public class AuthorizationChangedEventProducer {
     }
   }
 
-  private boolean isAuthorizationDataModified(Collection<RepositoryPermission> newPermissions, Collection<RepositoryPermission> permissionsBeforeModification) {
+  private boolean isAuthorizationDataModified
+    (Collection<RepositoryPermission> newPermissions, Collection<RepositoryPermission> permissionsBeforeModification) {
     return !(newPermissions.containsAll(permissionsBeforeModification) && permissionsBeforeModification.containsAll(newPermissions));
   }
 
@@ -201,7 +202,7 @@ public class AuthorizationChangedEventProducer {
     sendEvent(AuthorizationChangedEvent.createForEveryUser());
   }
 
-  private void handleRepositoryEvent(RepositoryEvent event){
+  private void handleRepositoryEvent(RepositoryEvent event) {
     logger.debug(
       "fire authorization changed event, because of received {} event for repository {}",
       event.getEventType(), event.getItem().getName()
@@ -237,8 +238,8 @@ public class AuthorizationChangedEventProducer {
 
   private void handleUserPermissionChange(AssignedPermission permission) {
     logger.debug(
-        "fire authorization changed event for user {}, because permission {} has changed",
-        permission.getName(), permission.getPermission()
+      "fire authorization changed event for user {}, because permission {} has changed",
+      permission.getName(), permission.getPermission()
     );
     fireEventForUser(permission.getName());
   }
@@ -281,7 +282,7 @@ public class AuthorizationChangedEventProducer {
     return !group.getMembers().equals(beforeModification.getMembers());
   }
 
-  private void handleGroupEvent(GroupEvent event){
+  private void handleGroupEvent(GroupEvent event) {
     logger.debug(
       "fire authorization changed event, because of received group event {} for group {}",
       event.getEventType(),
@@ -294,5 +295,4 @@ public class AuthorizationChangedEventProducer {
   protected void sendEvent(AuthorizationChangedEvent event) {
     ScmEventBus.getInstance().post(event);
   }
-
 }

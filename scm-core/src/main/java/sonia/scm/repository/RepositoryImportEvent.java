@@ -29,6 +29,11 @@ import lombok.Getter;
 import sonia.scm.HandlerEventType;
 import sonia.scm.event.Event;
 
+/**
+ * Event which is fired whenever repository import is successful or failed.
+ *
+ * @since 2.11.0
+ */
 @Event
 @Getter
 @EqualsAndHashCode(callSuper = true)
