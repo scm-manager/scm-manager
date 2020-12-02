@@ -28,3 +28,9 @@ There is a tooltip for each permission that provide some more details about the 
 Add public keys to users to enable changeset signature verification.
 
 ![Public keys](assets/user-settings-publickeys.png)
+
+### API Keys
+To access SCM-Manager from other systems like for example CI servers, API keys can be created. They can be used to call
+the REST API and for the access with SCM clients. Read more about API keys in the [Profile section](../profile/#api-keys).
+
+![API Keys](assets/user-settings-apikeys.png)
