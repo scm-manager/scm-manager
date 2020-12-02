@@ -28,7 +28,6 @@ import com.aragost.javahg.Changeset;
 import com.aragost.javahg.Repository;
 import com.aragost.javahg.commands.CommitCommand;
 import com.aragost.javahg.commands.ExecutionException;
-import com.aragost.javahg.commands.PullCommand;
 import com.aragost.javahg.commands.RemoveCommand;
 import com.aragost.javahg.commands.StatusCommand;
 import org.slf4j.Logger;
@@ -41,7 +40,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import static sonia.scm.repository.spi.UserFormatter.getUserStringFor;
 

@@ -49,7 +49,6 @@ import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.HookTagProvider;
 import sonia.scm.repository.api.TagCreateRequest;
 import sonia.scm.repository.api.TagDeleteRequest;
-import sonia.scm.security.GPG;
 import sonia.scm.user.User;
 
 import javax.inject.Inject;

@@ -30,7 +30,6 @@ import com.google.common.base.Function;
 import com.google.common.collect.Lists;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.errors.IncorrectObjectTypeException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -42,14 +41,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Signature;
 import sonia.scm.repository.Tag;
 import sonia.scm.security.GPG;
 
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 //~--- JDK imports ------------------------------------------------------------
 

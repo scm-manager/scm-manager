@@ -28,9 +28,7 @@ import com.google.inject.Inject;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
-import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.Tag;
 
 import java.util.Collection;
@@ -41,7 +39,6 @@ import static de.otto.edison.hal.Links.linkingTo;
 import static java.util.stream.Collectors.toList;
 
 public class TagCollectionToDtoMapper {
-
 
   private final ResourceLinks resourceLinks;
   private final TagToTagDtoMapper tagToTagDtoMapper;

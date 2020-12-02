@@ -26,7 +26,6 @@ package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.CommitCommand;
-import com.aragost.javahg.commands.PullCommand;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,8 +35,6 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.BranchRequest;
 import sonia.scm.repository.work.WorkingCopy;
 import sonia.scm.user.User;
-
-import java.io.IOException;
 
 /**
  * Mercurial implementation of the {@link BranchCommand}.

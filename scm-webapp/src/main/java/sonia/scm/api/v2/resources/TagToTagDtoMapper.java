@@ -31,14 +31,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ObjectFactory;
-import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.Tag;
 import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
-
 import java.time.Instant;
 import java.util.Optional;
 
