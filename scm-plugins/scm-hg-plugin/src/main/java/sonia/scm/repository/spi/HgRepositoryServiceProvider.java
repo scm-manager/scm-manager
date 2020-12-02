@@ -49,6 +49,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.DIFF,
     Command.LOG,
     Command.TAGS,
+    Command.TAG,
     Command.BRANCH,
     Command.BRANCHES,
     Command.INCOMING,
@@ -259,6 +260,11 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
   public TagsCommand getTagsCommand()
   {
     return new HgTagsCommand(context);
+  }
+
+  @Override
+  public TagCommand getTagCommand() {
+    return new HgTagCommand(context, handler.getWorkingCopyFactory());
   }
 
 }

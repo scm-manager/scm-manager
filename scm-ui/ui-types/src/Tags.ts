@@ -23,10 +23,12 @@
  */
 
 import { Links } from "./hal";
+import { Signature } from "./Signature";
 
 export type Tag = {
   name: string;
   revision: string;
   date?: Date;
+  signatures: Signature[];
   _links: Links;
 };

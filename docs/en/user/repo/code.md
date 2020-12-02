@@ -32,8 +32,19 @@ You can expand the diffs gradually or completely by clicking on the blue bars.
 If commit links formatted like "namespace/name@commitId" are used in the changeset description they will be rendered to internal links.
 For example the text hitchhiker/HeartOfGold@1a2b3c4 will be transformed to a link directing to the commit 1a2b3c4 of the repository hitchhiker/heartOfGold.
 
-
 ![Repository-Code-Changesets](assets/repository-code-changesetDetails.png)
+
+#### Tags
+
+All tags for a changeset are displayed in the top-right corner of the details page.
+
+![Repository-Code-Changesets](assets/repository-code-changeset-with-tag.png)
+
+#### Creating Tags
+New tags for a changeset can be created directly on its details page.
+Only a name has to be provided that meets the same formatting conditions as branches.
+
+![Repository-Code-Changeset-Create-Tag](assets/repository-code-changeset-create-tag.png)
 
 ### File Details
 After clicking on a file in the sources, the details of the file are shown. Depending on the format of the file, there are different views:
