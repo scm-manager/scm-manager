@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Unify and add description to key view across user settings ([#1440](https://github.com/scm-manager/scm-manager/pull/1440))
 - Healthcheck for docker image ([#1428](https://github.com/scm-manager/scm-manager/issues/1428) and [#1454](https://github.com/scm-manager/scm-manager/issues/1454))
 - Repository import via URL for git ([#1460](https://github.com/scm-manager/scm-manager/pull/1460))
+- Repository import via URL for hg ([#1463](https://github.com/scm-manager/scm-manager/pull/1463))
 
 ### Changed
 - Send mercurial hook callbacks over separate tcp socket instead of http ([#1416](https://github.com/scm-manager/scm-manager/pull/1416))

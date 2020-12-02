@@ -24,67 +24,45 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.ExecutionException;
+import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullResponse;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
-//~--- JDK imports ------------------------------------------------------------
+public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCommand {
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class HgPullCommand extends AbstractHgPushOrPullCommand
-  implements PullCommand
-{
+  private static final Logger logger = LoggerFactory.getLogger(HgPullCommand.class);
 
-  /** Field description */
-  private static final Logger logger =
-    LoggerFactory.getLogger(HgPullCommand.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *  @param handler
-   * @param context
-   */
-  public HgPullCommand(HgRepositoryHandler handler, HgCommandContext context)
-  {
+  public HgPullCommand(HgRepositoryHandler handler, HgCommandContext context) {
     super(handler, context);
   }
-
-  //~--- methods --------------------------------------------------------------
 
   @Override
   @SuppressWarnings("unchecked")
   public PullResponse pull(PullCommandRequest request)
-    throws IOException
-  {
+    throws IOException {
     String url = getRemoteUrl(request);
 
-    logger.debug("pull changes from {} to {}", url, getRepository().getId());
+    logger.debug("pull changes from {} to {}", url, getContext().getScmRepository().getId());
 
-    List<Changeset> result = Collections.EMPTY_LIST;
+    List<Changeset> result;
 
-    try
-    {
-      result = com.aragost.javahg.commands.PullCommand.on(open()).execute(url);
+    if (!Strings.isNullOrEmpty(request.getUsername()) && !Strings.isNullOrEmpty(request.getPassword())) {
+      url = url.replace("://", String.format("://%s:%s@", request.getUsername(), request.getPassword()));
     }
-    catch (ExecutionException ex)
-    {
-      throw new InternalRepositoryException(getRepository(), "could not execute push command", ex);
+
+    try {
+      result = com.aragost.javahg.commands.PullCommand.on(open()).execute(url);
+    } catch (ExecutionException ex) {
+      throw new ImportFailedException(ContextEntry.ContextBuilder.entity(getRepository()).build(), "could not execute pull command", ex);
     }
 
     return new PullResponse(result.size());
