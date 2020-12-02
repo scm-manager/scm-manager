@@ -184,14 +184,14 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
 
   @Test
   public void shouldExtractSimpleMessage() {
-    Matcher matcher = HgModifyCommand.HG_MESSAGE_PATTERN.matcher("[SCM] This is a simple message");
+    Matcher matcher = AbstractWorkingCopyCommand.HG_MESSAGE_PATTERN.matcher("[SCM] This is a simple message");
     matcher.matches();
     assertThat(matcher.group(1)).isEqualTo("This is a simple message");
   }
 
   @Test
   public void shouldExtractErrorMessage() {
-    Matcher matcher = HgModifyCommand.HG_MESSAGE_PATTERN.matcher("[SCM] Error: This is an error message");
+    Matcher matcher = AbstractWorkingCopyCommand.HG_MESSAGE_PATTERN.matcher("[SCM] Error: This is an error message");
     matcher.matches();
     assertThat(matcher.group(1)).isEqualTo("This is an error message");
   }
