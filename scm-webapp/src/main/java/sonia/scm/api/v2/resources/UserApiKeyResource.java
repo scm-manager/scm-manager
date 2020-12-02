@@ -90,7 +90,7 @@ public class UserApiKeyResource {
       schema = @Schema(implementation = ErrorDto.class)
     ))
   public HalRepresentation findAll(@PathParam("username") String id) {
-    return apiKeyCollectionMapper.map(apiKeyService.getKeys(id));
+    return apiKeyCollectionMapper.map(apiKeyService.getKeys(id), id);
   }
 
   @GET
@@ -175,7 +175,7 @@ public class UserApiKeyResource {
     final ApiKeyService.CreationResult newKey = apiKeyService.createNewKey(apiKey.getDisplayName(), apiKey.getPermissionRole(), username);
     return Response.status(CREATED)
       .entity(newKey.getToken())
-      .location(URI.create(resourceLinks.apiKey().self(newKey.getId())))
+      .location(URI.create(resourceLinks.apiKey().self(newKey.getId(), username)))
       .build();
   }
 

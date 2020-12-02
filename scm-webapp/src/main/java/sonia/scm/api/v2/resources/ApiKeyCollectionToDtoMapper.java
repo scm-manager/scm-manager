@@ -47,11 +47,11 @@ public class ApiKeyCollectionToDtoMapper {
     this.resourceLinks = resourceLinks;
   }
 
-  public HalRepresentation map(Collection<ApiKey> keys) {
+  public HalRepresentation map(Collection<ApiKey> keys, String user) {
     List<ApiKeyDto> dtos = keys.stream().map(apiKeyDtoMapper::map).collect(toList());
     final Links.Builder links = Links.linkingTo()
-      .self(resourceLinks.apiKeyCollection().self())
-      .single(link("create", resourceLinks.apiKeyCollection().create()));
+      .self(resourceLinks.apiKeyCollection().self(user))
+      .single(link("create", resourceLinks.apiKeyCollection().create(user)));
     return new HalRepresentation(links.build(), Embedded.embedded("keys", dtos));
   }
 }

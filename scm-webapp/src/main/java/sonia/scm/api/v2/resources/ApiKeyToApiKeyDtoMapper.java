@@ -28,6 +28,7 @@ import de.otto.edison.hal.Links;
 import org.mapstruct.Mapper;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.security.ApiKey;
+import sonia.scm.user.User;
 
 import javax.inject.Inject;
 
@@ -42,10 +43,10 @@ public abstract class ApiKeyToApiKeyDtoMapper {
   abstract ApiKeyDto map(ApiKey key);
 
   @ObjectFactory
-  ApiKeyDto createDto(ApiKey key) {
+  ApiKeyDto createDto(ApiKey key, User user) {
     Links.Builder links = Links.linkingTo()
-      .self(resourceLinks.apiKey().self(key.getId()))
-      .single(link("delete", resourceLinks.apiKey().delete(key.getId())));
+      .self(resourceLinks.apiKey().self(key.getId(), user.getDisplayName()))
+      .single(link("delete", resourceLinks.apiKey().delete(key.getId(), user.getDisplayName())));
     return new ApiKeyDto(links.build());
   }
 }

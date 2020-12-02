@@ -37,7 +37,6 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -64,14 +63,11 @@ public class MeResource {
   private final UserManager userManager;
   private final PasswordService passwordService;
 
-  private final Provider<ApiKeyResource> apiKeyResource;
-
   @Inject
-  public MeResource(MeDtoFactory meDtoFactory, UserManager userManager, PasswordService passwordService, Provider<ApiKeyResource> apiKeyResource) {
+  public MeResource(MeDtoFactory meDtoFactory, UserManager userManager, PasswordService passwordService) {
     this.meDtoFactory = meDtoFactory;
     this.userManager = userManager;
     this.passwordService = passwordService;
-    this.apiKeyResource = apiKeyResource;
   }
 
   /**
@@ -138,10 +134,5 @@ public class MeResource {
       passwordService.encryptPassword(passwordChange.getNewPassword())
     );
     return Response.noContent().build();
-  }
-
-  @Path("api_keys")
-  public ApiKeyResource apiKeys() {
-    return apiKeyResource.get();
   }
 }

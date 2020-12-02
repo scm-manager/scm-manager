@@ -28,7 +28,6 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.io.Resources;
 import com.google.inject.util.Providers;
-import com.sun.mail.iap.Argument;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
@@ -42,6 +41,7 @@ import org.mockito.Mock;
 import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
+import sonia.scm.security.ApiKeyService;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.user.ChangePasswordNotAllowedException;
@@ -92,6 +92,8 @@ public class UserRootResourceTest {
   @Mock
   private UserManager userManager;
   @Mock
+  private ApiKeyService apiKeyService;
+  @Mock
   private PermissionAssigner permissionAssigner;
   @InjectMocks
   private UserDtoToUserMapperImpl dtoToUserMapper;
@@ -99,6 +101,8 @@ public class UserRootResourceTest {
   private UserToUserDtoMapperImpl userToDtoMapper;
   @InjectMocks
   private PermissionCollectionToDtoMapper permissionCollectionToDtoMapper;
+  @InjectMocks
+  private ApiKeyToApiKeyDtoMapperImpl apiKeyMapper;
 
   @Captor
   private ArgumentCaptor<User> userCaptor;
@@ -122,8 +126,10 @@ public class UserRootResourceTest {
       userCollectionToDtoMapper, resourceLinks, passwordService);
     UserPermissionResource userPermissionResource = new UserPermissionResource(permissionAssigner, permissionCollectionToDtoMapper);
     UserResource userResource = new UserResource(dtoToUserMapper, userToDtoMapper, userManager, passwordService, userPermissionResource);
+    ApiKeyCollectionToDtoMapper apiKeyCollectionToDtoMapper = new ApiKeyCollectionToDtoMapper(apiKeyMapper, resourceLinks);
+    UserApiKeyResource userApiKeyResource = new UserApiKeyResource(apiKeyService, apiKeyCollectionToDtoMapper, apiKeyMapper, resourceLinks);
     UserRootResource userRootResource = new UserRootResource(Providers.of(userCollectionResource),
-      Providers.of(userResource));
+      Providers.of(userResource), Providers.of(userApiKeyResource));
 
     dispatcher.addSingletonResource(userRootResource);
   }

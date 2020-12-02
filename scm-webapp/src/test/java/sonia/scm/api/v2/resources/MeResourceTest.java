@@ -55,7 +55,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static com.google.inject.util.Providers.of;
 import static java.time.Instant.now;
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -123,9 +122,7 @@ public class MeResourceTest {
     when(groupCollector.collect("trillian")).thenReturn(ImmutableSet.of("group1", "group2"));
     when(userManager.isTypeDefault(userCaptor.capture())).thenCallRealMethod();
     when(userManager.getDefaultType()).thenReturn("xml");
-    ApiKeyCollectionToDtoMapper apiKeyCollectionMapper = new ApiKeyCollectionToDtoMapper(apiKeyMapper, resourceLinks);
-    ApiKeyResource apiKeyResource = new ApiKeyResource(apiKeyService, apiKeyCollectionMapper, apiKeyMapper, resourceLinks);
-    MeResource meResource = new MeResource(meDtoFactory, userManager, passwordService, of(apiKeyResource));
+    MeResource meResource = new MeResource(meDtoFactory, userManager, passwordService);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/"));
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
     dispatcher.addSingletonResource(meResource);
