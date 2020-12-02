@@ -24,7 +24,12 @@
 
 package sonia.scm.repository.spi;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.mgt.DefaultSecurityManager;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
 import org.eclipse.jgit.lib.GpgSigner;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +47,7 @@ import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.TagDeleteRequest;
 import sonia.scm.repository.api.TagCreateRequest;
 import sonia.scm.security.GPG;
+import sonia.scm.util.MockUtil;
 
 import java.io.IOException;
 import java.util.List;
@@ -65,16 +71,34 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
   @Mock
   private ScmEventBus eventBus;
 
+  private Subject subject;
+
   @Before
   public void setSigner() {
     GpgSigner.setDefault(new GitTestHelper.SimpleGpgSigner());
   }
 
+  @Before
+  public void bindThreadContext() {
+    SecurityUtils.setSecurityManager(new DefaultSecurityManager());
+    subject = MockUtil.createUserSubject(SecurityUtils.getSecurityManager());
+    ThreadContext.bind(subject);
+  }
+
+  @After
+  public void unbindThreadContext() {
+    ThreadContext.unbindSubject();
+    ThreadContext.unbindSecurityManager();
+  }
+
   @Test
   public void shouldCreateATag() throws IOException {
     createCommand().create(new TagCreateRequest("592d797cd36432e591416e8b2b98154f4f163411", "newtag"));
-    Optional<Tag> tag = findTag(createContext(), "newtag");
-    assertThat(tag).isNotEmpty();
+    Optional<Tag> optionalTag = findTag(createContext(), "newtag");
+    assertThat(optionalTag).isNotEmpty();
+    final Tag tag = optionalTag.get();
+    assertThat(tag.getName()).isEqualTo("newtag");
+    assertThat(tag.getRevision()).isEqualTo("592d797cd36432e591416e8b2b98154f4f163411");
   }
 
   @Test
@@ -126,7 +150,7 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
   }
 
   private GitTagCommand createCommand() {
-    return new GitTagCommand(createContext(), gpg, hookContextFactory, eventBus);
+    return new GitTagCommand(createContext(), hookContextFactory, eventBus);
   }
 
   private List<Tag> readTags(GitContext context) throws IOException {

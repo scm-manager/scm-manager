@@ -65,14 +65,12 @@ import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
 public class GitTagCommand extends AbstractGitCommand implements TagCommand {
-  private final GPG gpg;
   private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
 
   @Inject
-  GitTagCommand(GitContext context, GPG gpg, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
+  GitTagCommand(GitContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
     super(context);
-    this.gpg = gpg;
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
   }
@@ -114,19 +112,11 @@ public class GitTagCommand extends AbstractGitCommand implements TagCommand {
       User user = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
       PersonIdent taggerIdent = new PersonIdent(user.getDisplayName(), user.getMail());
 
-//      Ref ref =
       git.tag()
         .setObjectId(revObject)
         .setTagger(taggerIdent)
         .setName(name)
         .call();
-
-//      Uncomment lines once jgit added support for signing tags
-//      try (RevWalk walk = new RevWalk(git.getRepository())) {
-//        revObject = walk.parseTag(ref.getObjectId());
-//        final Optional<Signature> tagSignature = GitUtil.getTagSignature(revObject, gpg, walk);
-//        tagSignature.ifPresent(tag::addSignature);
-//      }
 
       eventBus.post(new PostReceiveRepositoryHookEvent(hookEvent));
 
