@@ -102,9 +102,9 @@ public interface RepositoryManager
   /**
    * Creates a new repository and afterwards executes the logic from the {@param afterCreation}.
    *
-   * @param repository    the repository {@link Repository}
-   * @param afterCreation consumer which expects a repository {@link Repository}
-   * @return {@link Repository} the created repository
+   * @param repository the repository to create
+   * @param afterCreation consumer which is executed after the repository was created
+   * @return created repository
    *
    * @since 2.11.0
    */
