@@ -32,14 +32,15 @@ import { useHistory } from "react-router-dom";
 
 type Props = {
   url: string;
+  repositoryType: string;
   setImportPending: (pending: boolean) => void;
 };
 
-const ImportRepositoryFromUrl: FC<Props> = ({ url, setImportPending }) => {
+const ImportRepositoryFromUrl: FC<Props> = ({ url, repositoryType, setImportPending }) => {
   const [repo, setRepo] = useState<RepositoryUrlImport>({
     name: "",
     namespace: "",
-    type: "",
+    type: repositoryType,
     contact: "",
     description: "",
     importUrl: "",

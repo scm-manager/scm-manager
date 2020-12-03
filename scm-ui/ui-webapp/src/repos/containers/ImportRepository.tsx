@@ -89,6 +89,7 @@ const ImportRepository: FC<Props> = ({
       return (
         <ImportRepositoryFromUrl
           url={((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "url") as Link).href}
+          repositoryType={repositoryType!.name}
           setImportPending={setImportPending}
         />
       );
