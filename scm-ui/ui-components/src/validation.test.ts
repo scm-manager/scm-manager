@@ -141,7 +141,6 @@ describe("test path validation", () => {
 
 describe("test url validation", () => {
   const invalid = [
-    "file:///blah/index.html",
     "http://",
     "http://.",
     "http://..",
@@ -158,12 +157,9 @@ describe("test url validation", () => {
     "///a",
     "///",
     "foo.com",
-    "rdar://1234",
-    "h://test",
     "http:// shouldfail.com",
     ":// should fail",
     "http://foo.bar/foo(bar)baz quux",
-    "ftps://foo.bar/",
     "http://.www.foo.bar/",
     "http://.www.foo.bar./"
   ];
@@ -173,9 +169,12 @@ describe("test url validation", () => {
     });
   }
   const valid = [
+    "ftps://foo.bar/",
+    "h://test",
+    "rdar://1234",
+    "file:///blah/index.html",
     "https://foo.com/blah_blah",
     "ssh://foo.com/blah_blah",
-    "ftp://foo.com/blah_blah",
     "https://foo.com/blah_blah/",
     "https://foo.com/blah_blah_(wikipedia)",
     "https://foo.com/blah_blah_(wikipedia)_(again)",
