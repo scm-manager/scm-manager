@@ -58,7 +58,7 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
     throws IOException {
     String url = getRemoteUrl(request);
 
-    LOG.debug("pull changes from {} to {}", url, getContext().getScmRepository().getId());
+    LOG.debug("pull changes from {} to {}", url, getContext().getScmRepository());
 
     List<Changeset> result;
 

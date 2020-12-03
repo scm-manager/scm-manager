@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.lfs;
 
 import org.eclipse.jgit.lfs.lib.AnyLongObjectId;
@@ -79,7 +79,7 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   @Override
   public ExpiringAction getDownloadAction(AnyLongObjectId id) {
     if (accessToken == null) {
-      LOG.trace("create access token to download lfs object {} from repository {}", id, repository.getNamespaceAndName());
+      LOG.trace("create access token to download lfs object {} from repository {}", id, repository);
       accessToken = tokenFactory.createReadAccessToken(repository);
     }
     return getAction(id, accessToken);
@@ -88,7 +88,7 @@ public class ScmBlobLfsRepository implements LargeFileRepository {
   @Override
   public ExpiringAction getUploadAction(AnyLongObjectId id, long size) {
     if (accessToken == null) {
-      LOG.trace("create access token to upload lfs object {} to repository {}", id, repository.getNamespaceAndName());
+      LOG.trace("create access token to upload lfs object {} to repository {}", id, repository);
       accessToken = tokenFactory.createWriteAccessToken(repository);
     }
     return getAction(id, accessToken);

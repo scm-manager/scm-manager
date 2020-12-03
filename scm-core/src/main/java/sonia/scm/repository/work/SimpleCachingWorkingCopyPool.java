@@ -84,10 +84,10 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
       Stopwatch stopwatch = Stopwatch.createStarted();
       try {
         WorkingCopy<R, W> reclaimed = workingCopyContext.reclaim(existingWorkdir);
-        LOG.debug("reclaimed workdir for {} in path {} in {}", workingCopyContext.getScmRepository().getNamespaceAndName(), existingWorkdir, stopwatch.stop());
+        LOG.debug("reclaimed workdir for {} in path {} in {}", workingCopyContext.getScmRepository(), existingWorkdir, stopwatch.stop());
         return reclaimed;
       } catch (SimpleWorkingCopyFactory.ReclaimFailedException e) {
-        LOG.debug("failed to reclaim workdir for {} in path {} in {}", workingCopyContext.getScmRepository().getNamespaceAndName(), existingWorkdir, stopwatch.stop(), e);
+        LOG.debug("failed to reclaim workdir for {} in path {} in {}", workingCopyContext.getScmRepository(), existingWorkdir, stopwatch.stop(), e);
         deleteWorkdir(existingWorkdir);
       }
     }
@@ -98,7 +98,7 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
     Stopwatch stopwatch = Stopwatch.createStarted();
     File newWorkdir = workdirProvider.createNewWorkdir();
     WorkingCopy<R, W> parentAndClone = workingCopyContext.initialize(newWorkdir);
-    LOG.debug("initialized new workdir for {} in path {} in {}", workingCopyContext.getScmRepository().getNamespaceAndName(), newWorkdir, stopwatch.stop());
+    LOG.debug("initialized new workdir for {} in path {} in {}", workingCopyContext.getScmRepository(), newWorkdir, stopwatch.stop());
     return parentAndClone;
   }
 

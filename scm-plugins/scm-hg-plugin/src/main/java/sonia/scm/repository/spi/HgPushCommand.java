@@ -74,7 +74,7 @@ public class HgPushCommand extends AbstractHgPushOrPullCommand
   {
     String url = getRemoteUrl(request);
 
-    logger.debug("push changes from {} to {}", getRepository().getId(), url);
+    logger.debug("push changes from {} to {}", getRepository(), url);
 
     List<Changeset> result = Collections.EMPTY_LIST;
 
