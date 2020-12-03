@@ -298,9 +298,9 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   @Subscribe(async = false)
   public void invalidateCache(AuthorizationChangedEvent event) {
     if (event.isEveryUserAffected()) {
-      invalidateUserCache(event.getNameOfAffectedUser());
-    } else {
       invalidateCache();
+    } else {
+      invalidateUserCache(event.getNameOfAffectedUser());
     }
   }
 

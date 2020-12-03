@@ -28,25 +28,27 @@ import RepositoryForm from "../components/form";
 import { Repository, Links } from "@scm-manager/ui-types";
 import { getModifyRepoFailure, isModifyRepoPending, modifyRepo, modifyRepoReset } from "../modules/repos";
 import { History } from "history";
-import { ErrorNotification } from "@scm-manager/ui-components";
+import { ErrorNotification, Subtitle } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { compose } from "redux";
 import RepositoryDangerZone from "./RepositoryDangerZone";
 import { getLinks } from "../../modules/indexResource";
 import { urls } from "@scm-manager/ui-components";
+import { TranslationProps, withTranslation } from "react-i18next";
 
-type Props = RouteComponentProps & {
-  loading: boolean;
-  error: Error;
-  indexLinks: Links;
+type Props = TranslationProps &
+  RouteComponentProps & {
+    loading: boolean;
+    error: Error;
+    indexLinks: Links;
 
-  modifyRepo: (p1: Repository, p2: () => void) => void;
-  modifyRepoReset: (p: Repository) => void;
+    modifyRepo: (p1: Repository, p2: () => void) => void;
+    modifyRepoReset: (p: Repository) => void;
 
-  // context props
-  repository: Repository;
-  history: History;
-};
+    // context props
+    repository: Repository;
+    history: History;
+  };
 
 class EditRepo extends React.Component<Props> {
   componentDidMount() {
@@ -60,7 +62,7 @@ class EditRepo extends React.Component<Props> {
   };
 
   render() {
-    const { loading, error, repository, indexLinks } = this.props;
+    const { loading, error, repository, indexLinks, t } = this.props;
 
     const url = urls.matchedUrl(this.props);
 
@@ -71,11 +73,12 @@ class EditRepo extends React.Component<Props> {
 
     return (
       <>
+        <Subtitle subtitle={t("repositoryForm.subtitle")} />
         <ErrorNotification error={error} />
         <RepositoryForm
           repository={this.props.repository}
           loading={loading}
-          submitForm={repo => {
+          modifyRepository={repo => {
             this.props.modifyRepo(repo, this.repoModified);
           }}
         />
@@ -110,4 +113,4 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter)(EditRepo);
+export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter)(withTranslation("repos")(EditRepo));

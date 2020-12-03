@@ -34,22 +34,22 @@ import javax.ws.rs.Path;
 /**
  * RESTful Web Service Resource to manage repositories.
  */
-@OpenAPIDefinition(
-  tags = {
-    @Tag(name = "Repository", description = "Repository related endpoints")
-  }
-)
+@OpenAPIDefinition(tags = {
+  @Tag(name = "Repository", description = "Repository related endpoints")
+})
 @Path(RepositoryRootResource.REPOSITORIES_PATH_V2)
 public class RepositoryRootResource {
   static final String REPOSITORIES_PATH_V2 = "v2/repositories/";
 
   private final Provider<RepositoryResource> repositoryResource;
   private final Provider<RepositoryCollectionResource> repositoryCollectionResource;
+  private final Provider<RepositoryImportResource> repositoryImportResource;
 
   @Inject
-  public RepositoryRootResource(Provider<RepositoryResource> repositoryResource, Provider<RepositoryCollectionResource> repositoryCollectionResource) {
+  public RepositoryRootResource(Provider<RepositoryResource> repositoryResource, Provider<RepositoryCollectionResource> repositoryCollectionResource, Provider<RepositoryImportResource> repositoryImportResource) {
     this.repositoryResource = repositoryResource;
     this.repositoryCollectionResource = repositoryCollectionResource;
+    this.repositoryImportResource = repositoryImportResource;
   }
 
   @Path("{namespace}/{name}")
@@ -60,5 +60,10 @@ public class RepositoryRootResource {
   @Path("")
   public RepositoryCollectionResource getRepositoryCollectionResource() {
     return repositoryCollectionResource.get();
+  }
+
+  @Path("import")
+  public RepositoryImportResource getRepositoryImportResource() {
+    return repositoryImportResource.get();
   }
 }

@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-import { Collection } from "./hal";
+import { Collection, Links } from "./hal";
 
 export type RepositoryType = {
   name: string;
   displayName: string;
+  _links: Links;
 };
 
 export type RepositoryTypeCollection = Collection & {

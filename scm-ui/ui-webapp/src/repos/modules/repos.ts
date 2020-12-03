@@ -25,7 +25,9 @@
 import { apiClient } from "@scm-manager/ui-components";
 import * as types from "../../modules/types";
 import {
-  Action, Namespace,
+  Action,
+  Link,
+  Namespace,
   NamespaceCollection,
   Repository,
   RepositoryCollection,
@@ -178,7 +180,7 @@ export function fetchNamespacesFailure(err: Error): Action {
 
 // fetch repo
 export function fetchRepoByLink(repo: Repository) {
-  return fetchRepo(repo._links.self.href, repo.namespace, repo.name);
+  return fetchRepo((repo._links.self as Link).href, repo.namespace, repo.name);
 }
 
 export function fetchRepoByName(link: string, namespace: string, name: string) {
@@ -248,6 +250,7 @@ export function createRepo(
       .then(response => {
         const location = response.headers.get("Location");
         dispatch(createRepoSuccess());
+        // @ts-ignore Location is always set if the repository creation was successful
         return apiClient.get(location);
       })
       .then(response => response.json())
@@ -294,7 +297,7 @@ export function modifyRepo(repository: Repository, callback?: () => void) {
     dispatch(modifyRepoPending(repository));
 
     return apiClient
-      .put(repository._links.update.href, repository, CONTENT_TYPE)
+      .put((repository._links.update as Link).href, repository, CONTENT_TYPE)
       .then(() => {
         dispatch(modifyRepoSuccess(repository));
         if (callback) {
@@ -353,7 +356,7 @@ export function deleteRepo(repository: Repository, callback?: () => void) {
   return function(dispatch: any) {
     dispatch(deleteRepoPending(repository));
     return apiClient
-      .delete(repository._links.delete.href)
+      .delete((repository._links.delete as Link).href)
       .then(() => {
         dispatch(deleteRepoSuccess(repository));
         if (callback) {

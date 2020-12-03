@@ -12,6 +12,7 @@
     "namespace-invalid": "The repository namespace is invalid",
     "name-invalid": "The repository name is invalid",
     "contact-invalid": "Contact must be a valid mail address",
+    "url-invalid": "The URL is invalid",
     "branch": {
       "nameInvalid": "The branch name is invalid"
     }
@@ -22,7 +23,10 @@
     "typeHelpText": "The type of the repository (e.g. Mercurial, Git or Subversion).",
     "contactHelpText": "Email address of the person who is responsible for this repository.",
     "descriptionHelpText": "A short description of the repository.",
-    "initializeRepository": "Creates an initial branch and commits a basic README.md."
+    "initializeRepository": "Creates an initial branch and commits a basic README.md.",
+    "importUrlHelpText": "Import the whole repository including all branches and tags via remote url",
+    "usernameHelpText": "Username may be required to import the remote repository. Will be ignored if not provided.",
+    "passwordHelpText": "Password may be required to import the remote repository. Will be ignored if not provided."
   },
   "repositoryRoot": {
     "errorTitle": "Error",
@@ -49,13 +53,31 @@
     "title": "Repositories",
     "subtitle": "Overview of available repositories",
     "noRepositories": "No repositories found.",
-    "createButton": "Create Repository",
+    "createButton": "Add Repository",
     "searchRepository": "Search repository",
     "allNamespaces": "All namespaces"
   },
   "create": {
-    "title": "Create Repository",
-    "subtitle": "Create a new repository"
+    "title": "Add Repository",
+    "subtitle": "Create a new repository",
+    "createButton": "Create new repository"
+  },
+  "import": {
+    "subtitle": "Import existing repository",
+    "importUrl": "Remote repository url",
+    "username": "Username",
+    "password": "Password",
+    "pending": {
+      "subtitle": "Importing Repository...",
+      "infoText": "Your repository is currently being imported. This may take a moment. You will be forwarded as soon as the import is finished. If you leave this page you cannot return to find out the import status."
+    },
+    "importTypes": {
+      "label": "Import Mode",
+      "url": {
+        "label": "Import via URL",
+        "helpText": "The Repository will be imported via the provided URL."
+      }
+    }
   },
   "branches": {
     "overview": {
@@ -200,9 +222,12 @@
   },
   "repositoryForm": {
     "subtitle": "Edit Repository",
-    "submit": "Save",
+    "submitCreate": "Save",
+    "submitImport": "Import",
     "initializeRepository": "Initialize repository",
-    "dangerZone": "Rename and delete"
+    "dangerZone": "Rename and delete",
+    "createButton": "Create Repository",
+    "importButton": "Import repository"
   },
   "sources": {
     "fileTree": {

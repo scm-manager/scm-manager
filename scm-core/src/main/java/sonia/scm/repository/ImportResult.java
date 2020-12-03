@@ -39,10 +39,12 @@ import static com.google.common.base.Preconditions.checkNotNull;
  *
  * @author Sebastian Sdorra
  * @since 1.43
+ * @deprecated
  */
 @EqualsAndHashCode
 @ToString
 @Getter
+@Deprecated
 public final class ImportResult {
 
   /**

@@ -27,7 +27,9 @@ package sonia.scm.repository;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated
  */
+@Deprecated
 public class SvnImportHandler extends AbstactImportHandler
 {
 

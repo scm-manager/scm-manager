@@ -35,7 +35,8 @@ export {
   RepositoryGroup,
   RepositoryCreation,
   Namespace,
-  NamespaceCollection
+  NamespaceCollection,
+  RepositoryUrlImport
 } from "./Repositories";
 export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
 

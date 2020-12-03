@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Healthcheck for docker image ([#1428](https://github.com/scm-manager/scm-manager/issues/1428) and [#1454](https://github.com/scm-manager/scm-manager/issues/1454))
 - Tags can now be added and deleted through the ui ([#1456](https://github.com/scm-manager/scm-manager/pull/1456))
 - The ui now displays tag signatures ([#1456](https://github.com/scm-manager/scm-manager/pull/1456))
+- Repository import via URL for git ([#1460](https://github.com/scm-manager/scm-manager/pull/1460))
 
 ### Changed
 - Send mercurial hook callbacks over separate tcp socket instead of http ([#1416](https://github.com/scm-manager/scm-manager/pull/1416))

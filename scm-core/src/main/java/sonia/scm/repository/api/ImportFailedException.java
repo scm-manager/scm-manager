@@ -21,50 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.repository.api;
 
-import sonia.scm.Handler;
-import sonia.scm.FeatureNotSupportedException;
-import sonia.scm.plugin.ExtensionPoint;
+import sonia.scm.ContextEntry;
+import sonia.scm.ExceptionWithContext;
+
+import java.util.List;
 
 /**
- * Handler class for a specific {@link Repository} type.
- * These classes are singletons.
+ * This exception is thrown if the repository import fails.
  *
- * @author Sebastian Sdorra
+ * @since 2.11.0
  */
-@ExtensionPoint
-public interface RepositoryHandler
-        extends Handler<Repository>
-{
+public class ImportFailedException extends ExceptionWithContext {
 
-  //~--- get methods ----------------------------------------------------------
+  private static final String CODE = "D6SHRfqQw1";
 
-  /**
-   * Returns the {@link ImportHandler} for the repository type of this handler.
-   *
-   *
-   * @return {@link ImportHandler} for the repository type of this handler
-   * @since 1.12
-   * @deprecated
-   *
-   * @throws FeatureNotSupportedException
-   */
-  @Deprecated
-  public ImportHandler getImportHandler() throws FeatureNotSupportedException;
-
-  /**
-   * Returns informations about the version of the RepositoryHandler.
-   *
-   *
-   * @return version informations
-   * @since 1.15
-   */
-  public String getVersionInformation();
+  public ImportFailedException(List<ContextEntry> context, String message, Exception cause) {
+    super(context, message, cause);
+  }
 
   @Override
-  RepositoryType getType();
+  public String getCode() {
+    return CODE;
+  }
 }

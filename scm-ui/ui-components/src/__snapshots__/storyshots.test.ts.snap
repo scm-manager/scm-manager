@@ -46248,6 +46248,7 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
       >
         <input
           className="input"
+          onBlur={[Function]}
           onChange={[Function]}
           onKeyPress={[Function]}
           placeholder=""
@@ -46271,6 +46272,7 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
       >
         <input
           className="input"
+          onBlur={[Function]}
           onChange={[Function]}
           onKeyPress={[Function]}
           placeholder=""
@@ -46324,6 +46326,7 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Disabled 1`] = `
         <input
           className="input"
           disabled={true}
+          onBlur={[Function]}
           onChange={[Function]}
           onKeyPress={[Function]}
           placeholder=""
@@ -46348,6 +46351,7 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Disabled 1`] = `
         <input
           className="input"
           disabled={true}
+          onBlur={[Function]}
           onChange={[Function]}
           onKeyPress={[Function]}
           placeholder=""

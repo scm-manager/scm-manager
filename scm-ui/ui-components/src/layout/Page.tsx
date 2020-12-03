@@ -61,6 +61,7 @@ const MarginLeft = styled.div`
 const FlexContainer = styled.div`
   display: flex;
   flex-direction: row;
+  height: 2.25rem;
 `;
 
 export default class Page extends React.Component<Props> {

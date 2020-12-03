@@ -28,6 +28,7 @@ import sonia.scm.TypeManager;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 /**
  * The central class for managing {@link Repository} objects.
@@ -96,4 +97,20 @@ public interface RepositoryManager
    * @return all namespaces
    */
   Collection<String> getAllNamespaces();
+
+
+  /**
+   * Creates a new repository and afterwards executes the logic from the {@param afterCreation}.
+   *
+   * @param repository the repository to create
+   * @param afterCreation consumer which is executed after the repository was created
+   * @return created repository
+   *
+   * @since 2.11.0
+   */
+  default Repository create(Repository repository, Consumer<Repository> afterCreation) {
+    Repository newRepository = create(repository);
+    afterCreation.accept(newRepository);
+    return newRepository;
+  }
 }

@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -36,33 +37,34 @@ import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.TagOpt;
 import org.eclipse.jgit.transport.TrackingRefUpdate;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullResponse;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.net.URL;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
 public class GitPullCommand extends AbstractGitPushOrPullCommand
-  implements PullCommand
-{
+  implements PullCommand {
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private static final String REF_SPEC = "refs/heads/*:refs/heads/*";
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private static final Logger logger =
     LoggerFactory.getLogger(GitPullCommand.class);
 
@@ -71,12 +73,11 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   /**
    * Constructs ...
    *
-   *  @param handler
+   * @param handler
    * @param context
    */
   @Inject
-  public GitPullCommand(GitRepositoryHandler handler, GitContext context)
-  {
+  public GitPullCommand(GitRepositoryHandler handler, GitContext context) {
     super(handler, context);
   }
 
@@ -85,30 +86,21 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   /**
    * Method description
    *
-   *
    * @param request
-   *
    * @return
-   *
    * @throws IOException
    */
   @Override
   public PullResponse pull(PullCommandRequest request)
-    throws IOException
-  {
+    throws IOException {
     PullResponse response;
     Repository sourceRepository = request.getRemoteRepository();
 
-    if (sourceRepository != null)
-    {
+    if (sourceRepository != null) {
       response = pullFromScmRepository(sourceRepository);
-    }
-    else if (request.getRemoteUrl() != null)
-    {
-      response = pullFromUrl(request.getRemoteUrl());
-    }
-    else
-    {
+    } else if (request.getRemoteUrl() != null) {
+      response = pullFromUrl(request);
+    } else {
       throw new IllegalArgumentException("repository or url is required");
     }
 
@@ -118,8 +110,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   private PullResponse convert(Git git, FetchResult fetch) {
     long counter = 0l;
 
-    for (TrackingRefUpdate tru : fetch.getTrackingRefUpdates())
-    {
+    for (TrackingRefUpdate tru : fetch.getTrackingRefUpdates()) {
       counter += count(git, tru);
     }
 
@@ -131,52 +122,40 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   /**
    * Method description
    *
-   *
    * @param git
    * @param tru
-   *
    * @return
    */
-  private long count(Git git, TrackingRefUpdate tru)
-  {
+  private long count(Git git, TrackingRefUpdate tru) {
     long counter = 0;
 
-    if (GitUtil.isHead(tru.getLocalName()))
-    {
-      try
-      {
+    if (GitUtil.isHead(tru.getLocalName())) {
+      try {
         org.eclipse.jgit.api.LogCommand log = git.log();
 
         ObjectId oldId = tru.getOldObjectId();
 
-        if (GitUtil.isValidObjectId(oldId))
-        {
+        if (GitUtil.isValidObjectId(oldId)) {
           log.not(oldId);
         }
 
         ObjectId newId = tru.getNewObjectId();
 
-        if (GitUtil.isValidObjectId(newId))
-        {
+        if (GitUtil.isValidObjectId(newId)) {
           log.add(newId);
         }
 
         Iterable<RevCommit> commits = log.call();
 
-        if (commits != null)
-        {
+        if (commits != null) {
           counter += Iterables.size(commits);
         }
 
         logger.trace("counting {} commits for ref update {}", counter, tru);
-      }
-      catch (Exception ex)
-      {
+      } catch (Exception ex) {
         logger.error("could not count pushed/pulled changesets", ex);
       }
-    }
-    else
-    {
+    } else {
       logger.debug("do not count non branch ref update {}", tru);
     }
 
@@ -184,8 +163,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   }
 
   private PullResponse pullFromScmRepository(Repository sourceRepository)
-    throws IOException
-  {
+    throws IOException {
     File sourceDirectory = handler.getDirectory(sourceRepository.getId());
 
     Preconditions.checkArgument(sourceDirectory.exists(),
@@ -203,42 +181,46 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
     org.eclipse.jgit.lib.Repository source = null;
 
-    try
-    {
+    try {
       source = Git.open(sourceDirectory).getRepository();
       response = new PullResponse(push(source, getRemoteUrl(targetDirectory)));
-    }
-    finally
-    {
+    } finally {
       GitUtil.close(source);
     }
 
     return response;
   }
 
-  private PullResponse pullFromUrl(URL url)
-    throws IOException
-  {
-    logger.debug("pull changes from {} to {}", url, repository.getId());
+  private PullResponse pullFromUrl(PullCommandRequest request)
+    throws IOException {
+    logger.debug("pull changes from {} to {}", request.getRemoteUrl(), repository.getId());
 
     PullResponse response;
     Git git = Git.wrap(open());
 
-    try
-    {
+    try {
       //J-
       FetchResult result = git.fetch()
+        .setCredentialsProvider(
+          new UsernamePasswordCredentialsProvider(
+            Strings.nullToEmpty(request.getUsername()),
+            Strings.nullToEmpty(request.getPassword())
+          )
+        )
         .setRefSpecs(new RefSpec(REF_SPEC))
-        .setRemote(url.toExternalForm())
+        .setRemote(request.getRemoteUrl().toExternalForm())
         .setTagOpt(TagOpt.FETCH_TAGS)
         .call();
       //J+
 
       response = convert(git, result);
-    }
-    catch (GitAPIException ex)
-    {
-      throw new InternalRepositoryException(repository, "error during pull", ex);
+    } catch
+    (GitAPIException ex) {
+      throw new ImportFailedException(
+        ContextEntry.ContextBuilder.entity(repository).build(),
+        "Repository import failed. The credentials are wrong or missing.",
+        ex
+      );
     }
 
     return response;

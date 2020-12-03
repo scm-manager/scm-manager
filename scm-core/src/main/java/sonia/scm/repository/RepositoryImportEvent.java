@@ -21,50 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import sonia.scm.Handler;
-import sonia.scm.FeatureNotSupportedException;
-import sonia.scm.plugin.ExtensionPoint;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import sonia.scm.HandlerEventType;
+import sonia.scm.event.Event;
 
 /**
- * Handler class for a specific {@link Repository} type.
- * These classes are singletons.
+ * Event which is fired whenever repository import is successful or failed.
  *
- * @author Sebastian Sdorra
+ * @since 2.11.0
  */
-@ExtensionPoint
-public interface RepositoryHandler
-        extends Handler<Repository>
-{
+@Event
+@Getter
+@EqualsAndHashCode(callSuper = true)
+public class RepositoryImportEvent extends RepositoryEvent {
 
-  //~--- get methods ----------------------------------------------------------
+  private final boolean failed;
 
-  /**
-   * Returns the {@link ImportHandler} for the repository type of this handler.
-   *
-   *
-   * @return {@link ImportHandler} for the repository type of this handler
-   * @since 1.12
-   * @deprecated
-   *
-   * @throws FeatureNotSupportedException
-   */
-  @Deprecated
-  public ImportHandler getImportHandler() throws FeatureNotSupportedException;
-
-  /**
-   * Returns informations about the version of the RepositoryHandler.
-   *
-   *
-   * @return version informations
-   * @since 1.15
-   */
-  public String getVersionInformation();
-
-  @Override
-  RepositoryType getType();
+  public RepositoryImportEvent(HandlerEventType eventType, Repository repository, boolean failed) {
+    super(eventType, repository);
+    this.failed = failed;
+  }
 }

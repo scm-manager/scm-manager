@@ -31,7 +31,9 @@ package sonia.scm.repository;
  *
  * @author Sebastian Sdorra
  * @since 1.43
+ * @deprecated
  */
+@Deprecated
 public interface AdvancedImportHandler extends ImportHandler
 {
 
