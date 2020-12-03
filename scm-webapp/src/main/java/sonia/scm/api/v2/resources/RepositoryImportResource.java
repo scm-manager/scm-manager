@@ -57,6 +57,7 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.ValidationUtil;
 import sonia.scm.web.VndMediaType;
 
+import javax.validation.Valid;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
@@ -70,13 +71,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.net.URI;
-import java.time.Instant;
-import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static java.util.Collections.singletonList;
 
 public class RepositoryImportResource {
@@ -84,16 +81,19 @@ public class RepositoryImportResource {
   private static final Logger logger = LoggerFactory.getLogger(RepositoryImportResource.class);
 
   private final RepositoryManager manager;
+  private final RepositoryDtoToRepositoryMapper mapper;
   private final RepositoryServiceFactory serviceFactory;
   private final ResourceLinks resourceLinks;
   private final ScmEventBus eventBus;
 
   @Inject
   public RepositoryImportResource(RepositoryManager manager,
+                                  RepositoryDtoToRepositoryMapper mapper,
                                   RepositoryServiceFactory serviceFactory,
                                   ResourceLinks resourceLinks,
                                   ScmEventBus eventBus) {
     this.manager = manager;
+    this.mapper = mapper;
     this.serviceFactory = serviceFactory;
     this.resourceLinks = resourceLinks;
     this.eventBus = eventBus;
@@ -141,21 +141,19 @@ public class RepositoryImportResource {
     )
   )
   public Response importFromUrl(@Context UriInfo uriInfo,
-                                @PathParam("type") String type, RepositoryImportDto request) {
+                                @PathParam("type") String type, @Valid RepositoryImportDto request) {
     RepositoryPermissions.create().check();
-    checkNotNull(request, "request is required");
-    checkArgument(!Strings.isNullOrEmpty(request.getName()),
-      "request does not contain name of the repository");
-    checkArgument(!Strings.isNullOrEmpty(request.getImportUrl()),
-      "request does not contain url of the remote repository");
 
     Type t = type(type);
+    if (!t.getName().equals(request.getType())) {
+      throw new WebApplicationException("type of import url and repository does not match", Response.Status.BAD_REQUEST);
+    }
 
     checkSupport(t, Command.PULL, request);
 
     logger.info("start {} import for external url {}", type, request.getImportUrl());
 
-    Repository repository = new Repository(null, type, request.getNamespace(), request.getName());
+    Repository repository = mapper.map(request);
     repository.setPermissions(singletonList(new RepositoryPermission(SecurityUtils.getSubject().getPrincipal().toString(), "OWNER", false)));
 
     try {
@@ -231,6 +229,7 @@ public class RepositoryImportResource {
   @NoArgsConstructor
   @SuppressWarnings("java:S2160")
   public static class RepositoryImportDto extends RepositoryDto implements ImportRepositoryDto {
+    @NotEmpty
     private String importUrl;
     private String username;
     private String password;
@@ -241,7 +240,6 @@ public class RepositoryImportResource {
   }
 
   interface ImportRepositoryDto {
-
     String getNamespace();
     @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
     String getName();
@@ -250,6 +248,7 @@ public class RepositoryImportResource {
     @Email
     String getContact();
     String getDescription();
+    @NotEmpty
     String getImportUrl();
     String getUsername();
     String getPassword();

@@ -153,7 +153,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     super.manager = repositoryManager;
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
-    super.repositoryImportResource = new RepositoryImportResource(repositoryManager, serviceFactory, resourceLinks, eventBus);
+    super.repositoryImportResource = new RepositoryImportResource(repositoryManager, dtoToRepositoryMapper, serviceFactory, resourceLinks, eventBus);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
