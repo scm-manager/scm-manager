@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Tags can now be added and deleted through the ui ([#1456](https://github.com/scm-manager/scm-manager/pull/1456))
 - The ui now displays tag signatures ([#1456](https://github.com/scm-manager/scm-manager/pull/1456))
 - Repository import via URL for git ([#1460](https://github.com/scm-manager/scm-manager/pull/1460))
+- Repository import via URL for hg ([#1463](https://github.com/scm-manager/scm-manager/pull/1463))
 
 ### Changed
 - Send mercurial hook callbacks over separate tcp socket instead of http ([#1416](https://github.com/scm-manager/scm-manager/pull/1416))
