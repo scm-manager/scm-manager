@@ -48,19 +48,20 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid, disabled
   const [urlValidationError, setUrlValidationError] = useState(false);
 
   const handleImportUrlChange = (importUrl: string) => {
-    const changedRepo = { ...repository, importUrl };
+    onChange({ ...repository, importUrl });
+    const valid = validation.isUrlValid(importUrl);
+    setUrlValidationError(!valid);
+    setValid(valid);
+  };
 
+  const handleImportUrlBlur = (importUrl: string) => {
     if (!repository.name) {
       // If the repository name is not fill we set a name suggestion
       const match = importUrl.match(/([^\/]+?)(?:.git)?$/);
       if (match && match[1]) {
-        changedRepo.name = match[1];
+        onChange({ ...repository, name: match[1] });
       }
     }
-    onChange(changedRepo);
-    const valid = validation.isUrlValid(importUrl);
-    setUrlValidationError(!valid);
-    setValid(valid);
   };
 
   return (
@@ -74,6 +75,7 @@ const ImportFromUrlForm: FC<Props> = ({ repository, onChange, setValid, disabled
           validationError={urlValidationError}
           errorMessage={t("validation.url-invalid")}
           disabled={disabled}
+          onBlur={handleImportUrlBlur}
         />
       </Column>
       <Column className="column is-half">
