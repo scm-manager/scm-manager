@@ -82,7 +82,8 @@
     "overview": {
       "title": "Übersicht aller verfügbaren Branches",
       "noBranches": "Keine Branches gefunden.",
-      "createButton": "Branch erstellen"
+      "createButton": "Branch erstellen",
+      "lastCommit": "Letzter Commit"
     },
     "table": {
       "branches": {
