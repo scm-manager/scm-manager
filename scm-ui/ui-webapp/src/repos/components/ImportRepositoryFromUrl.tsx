@@ -86,13 +86,13 @@ const ImportRepositoryFromUrl: FC<Props> = ({ url, setImportPending }) => {
 
   return (
     <form onSubmit={submit}>
+      <ErrorNotification error={error} />
       <ImportFromUrlForm
         repository={repo}
         onChange={setRepo}
         setValid={(importUrl: boolean) => setValid({ ...valid, importUrl })}
         disabled={loading}
       />
-      <ErrorNotification error={error} />
       <hr />
       <NamespaceAndNameFields
         repository={repo}

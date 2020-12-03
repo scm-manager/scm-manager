@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import {Collection, Links} from "./hal";
+import { Collection, Links } from "./hal";
 
 export type RepositoryType = {
   name: string;

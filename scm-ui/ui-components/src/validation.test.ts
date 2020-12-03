@@ -174,6 +174,8 @@ describe("test url validation", () => {
   }
   const valid = [
     "https://foo.com/blah_blah",
+    "ssh://foo.com/blah_blah",
+    "ftp://foo.com/blah_blah",
     "https://foo.com/blah_blah/",
     "https://foo.com/blah_blah_(wikipedia)",
     "https://foo.com/blah_blah_(wikipedia)_(again)",

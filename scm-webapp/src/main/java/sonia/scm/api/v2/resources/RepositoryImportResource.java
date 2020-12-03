@@ -250,8 +250,6 @@ public class RepositoryImportResource {
     @Email
     String getContact();
     String getDescription();
-    List<HealthCheckFailureDto> getHealthCheckFailures();
-    Instant getLastModified();
     String getImportUrl();
     String getUsername();
     String getPassword();

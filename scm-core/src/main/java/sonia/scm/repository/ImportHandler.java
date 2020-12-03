@@ -45,7 +45,6 @@ public interface ImportHandler {
    * @param manager The global {@link RepositoryManager}
    * @return a {@link List} names of imported repositories
    * @throws IOException
-   * @since 2.11.0
    * @deprecated
    */
   public List<String> importRepositories(RepositoryManager manager) throws IOException;

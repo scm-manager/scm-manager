@@ -50,7 +50,7 @@ export const isPathValid = (path: string) => {
   return pathRegex.test(path);
 };
 
-const urlRegex = /^(ftp|https?):\/\/[^\s$.?#].[^\s]*$/;
+const urlRegex = /^(ssh|ftp|https?):\/\/[^\s$.?#].[^\s]*$/;
 
 export const isUrlValid = (url: string) => {
   return urlRegex.test(url);
