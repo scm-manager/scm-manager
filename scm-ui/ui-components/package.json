@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-components",
-  "version": "2.11.0",
+  "version": "2.12.0-SNAPSHOT",
   "description": "UI Components for SCM-Manager and its plugins",
   "main": "src/index.ts",
   "files": [
@@ -18,7 +18,7 @@
     "update-storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false -u"
   },
   "devDependencies": {
-    "@scm-manager/ui-tests": "^2.11.0",
+    "@scm-manager/ui-tests": "^2.12.0-SNAPSHOT",
     "@storybook/addon-actions": "^6.0.28",
     "@storybook/addon-storyshots": "^6.0.28",
     "@storybook/react": "^6.0.28",
@@ -50,8 +50,8 @@
     "worker-plugin": "^3.2.0"
   },
   "dependencies": {
-    "@scm-manager/ui-extensions": "^2.11.0",
-    "@scm-manager/ui-types": "^2.11.0",
+    "@scm-manager/ui-extensions": "^2.12.0-SNAPSHOT",
+    "@scm-manager/ui-types": "^2.12.0-SNAPSHOT",
     "classnames": "^2.2.6",
     "date-fns": "^2.4.1",
     "gitdiff-parser": "^0.1.2",
