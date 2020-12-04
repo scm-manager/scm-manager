@@ -208,7 +208,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
     if (!hasPermission && logger.isTraceEnabled())
     {
-      logger.trace("no permission for user {} defined at repository {}", user.getName(), repository.getNamespaceAndName());
+      logger.trace("no permission for user {} defined at repository {}", user.getName(), repository);
     }
   }
 

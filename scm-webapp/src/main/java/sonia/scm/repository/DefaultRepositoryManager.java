@@ -139,7 +139,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     repository.setId(keyGenerator.createKey());
     repository.setNamespace(namespaceStrategyProvider.get().createNamespace(repository));
 
-    logger.info("create repository {}/{} of type {} in namespace {}", repository.getNamespace(), repository.getName(), repository.getType(), repository.getNamespace());
+    logger.info("create repository {} of type {}", repository, repository.getType());
 
     return managerDaoAdapter.create(
       repository,
@@ -175,7 +175,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   @Override
   public void delete(Repository repository) {
-    logger.info("delete repository {}/{} of type {}", repository.getNamespace(), repository.getName(), repository.getType());
+    logger.info("delete repository {} of type {}", repository, repository.getType());
     managerDaoAdapter.delete(
       repository,
       () -> RepositoryPermissions.delete(repository),
@@ -201,7 +201,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   @Override
   public void modify(Repository repository) {
-    logger.info("modify repository {}/{} of type {}", repository.getNamespace(), repository.getName(), repository.getType());
+    logger.info("modify repository {} of type {}", repository, repository.getType());
 
     managerDaoAdapter.modify(
       repository,

@@ -162,18 +162,17 @@ public class AuthorizationChangedEventProducer {
     Repository repository = event.getItem();
     if (isAuthorizationDataModified(repository.getPermissions(), event.getItemBeforeModification().getPermissions())) {
       logger.debug(
-        "fire authorization changed event, because the permissions of repository {}/{} have changed", repository.getNamespace(), repository.getName()
+        "fire authorization changed event, because the permissions of repository {} have changed", repository
       );
       fireEventForEveryUser();
     } else if (!event.getItem().getNamespace().equals(event.getItemBeforeModification().getNamespace())) {
       logger.debug(
-        "fire authorization changed event, because the namespace of repository {}/{} has changed", repository.getNamespace(), repository.getName()
+        "fire authorization changed event, because the namespace of repository {} has changed", repository
       );
       fireEventForEveryUser();
     } else {
       logger.debug(
-        "authorization changed event is not fired, because non relevant field of repository {}/{} has changed",
-        repository.getNamespace(), repository.getName()
+        "authorization changed event is not fired, because non relevant field of repository {} has changed", repository
       );
     }
   }

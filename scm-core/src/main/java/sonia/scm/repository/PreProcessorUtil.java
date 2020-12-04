@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -132,12 +132,12 @@ public class PreProcessorUtil
    */
   public void prepareForReturn(Repository repository, Changeset changeset)
   {
-    logger.trace("prepare changeset {} of repository {} for return", changeset.getId(), repository.getName());
+    logger.trace("prepare changeset {} of repository {} for return", changeset.getId(), repository);
     handlePreProcess(repository, changeset, changesetPreProcessorFactorySet, changesetPreProcessorSet);
   }
 
   public void prepareForReturn(Repository repository, Modifications modifications) {
-    logger.trace("prepare modifications {} of repository {} for return", modifications, repository.getName());
+    logger.trace("prepare modifications {} of repository {} for return", modifications, repository);
     handlePreProcess(repository, modifications, modificationsPreProcessorFactorySet, modificationsPreProcessorSet);
   }
 
@@ -152,7 +152,7 @@ public class PreProcessorUtil
   {
     if (logger.isTraceEnabled())
     {
-      logger.trace("prepare browser result of repository {} for return", repository.getName());
+      logger.trace("prepare browser result of repository {} for return", repository);
     }
 
     PreProcessorHandler<FileObject> handler = new PreProcessorHandler<>(fileObjectPreProcessorFactorySet, fileObjectPreProcessorSet, repository);

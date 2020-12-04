@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import com.github.sdorra.ssp.PermissionActionCheck;
@@ -84,32 +84,32 @@ public final class HealthChecker {
       } else {
         logger.debug(
           "no permissions to execute health check for repository {}",
-          repository.getId());
+          repository);
       }
     }
   }
 
   private void doCheck(Repository repository){
-    logger.info("start health check for repository {}", repository.getName());
+    logger.info("start health check for repository {}", repository);
 
     HealthCheckResult result = HealthCheckResult.healthy();
 
     for (HealthCheck check : checks) {
       logger.trace("execute health check {} for repository {}",
-        check.getClass(), repository.getName());
+        check.getClass(), repository);
       result = result.merge(check.check(repository));
     }
 
     if (result.isUnhealthy()) {
-      logger.warn("repository {} is unhealthy: {}", repository.getName(),
+      logger.warn("repository {} is unhealthy: {}", repository,
         result);
     } else {
-      logger.info("repository {} is healthy", repository.getName());
+      logger.info("repository {} is healthy", repository);
     }
 
     if (!(repository.isHealthy() && result.isHealthy())) {
       logger.trace("store health check results for repository {}",
-        repository.getName());
+        repository);
       repository.setHealthCheckFailures(
         ImmutableList.copyOf(result.getFailures()));
       repositoryManager.modify(repository);

@@ -69,7 +69,7 @@ public class HgBranchCommand extends AbstractWorkingCopyCommand implements Branc
     try (WorkingCopy<com.aragost.javahg.Repository, com.aragost.javahg.Repository> workingCopy = workingCopyFactory.createWorkingCopy(getContext(), branchName)) {
       User currentUser = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
 
-      LOG.debug("Closing branch '{}' in repository {}", branchName, getRepository().getNamespaceAndName());
+      LOG.debug("Closing branch '{}' in repository {}", branchName, getRepository());
 
       com.aragost.javahg.commands.CommitCommand
         .on(workingCopy.getWorkingRepository())

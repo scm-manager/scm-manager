@@ -80,7 +80,7 @@ public class GitPushCommand extends AbstractGitPushOrPullCommand
   {
     String remoteUrl = getRemoteUrl(request);
 
-    logger.debug("push changes from {} to {}", repository.getId(), remoteUrl);
+    logger.debug("push changes from {} to {}", repository, remoteUrl);
 
     return new PushResponse(push(open(), remoteUrl));
   }

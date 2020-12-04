@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -38,16 +38,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Executes git gc on every git repository. Statistics of the gc process are logged to the info level. The task is 
+ * Executes git gc on every git repository. Statistics of the gc process are logged to the info level. The task is
  * disabled by default and must be enabled through the global git configuration.
- * 
+ *
  * @author Sebastian Sdorra
  * @since 1.47
  */
 public class GitGcTask implements Runnable {
 
   private static final String SP = System.getProperty("line.seperator", "\n");
-  
+
   private static final Logger logger = LoggerFactory.getLogger(GitGcTask.class);
 
   private final RepositoryManager repositoryManager;
@@ -74,19 +74,19 @@ public class GitGcTask implements Runnable {
     {
       if (repository.isValid() && repository.isHealthy())
       {
-        logger.info("start git gc for repository {}", repository.getNamespaceAndName());
+        logger.info("start git gc for repository {}", repository);
         Stopwatch sw = Stopwatch.createStarted();
         gc(repository);
-        logger.debug("gc of repository {} has finished after {}", repository.getNamespaceAndName(), sw.stop());
-      } 
-      else 
-      {
-        logger.debug("skip non valid/healthy repository {}", repository.getNamespaceAndName());
+        logger.debug("gc of repository {} has finished after {}", repository, sw.stop());
       }
-    } 
-    else 
+      else
+      {
+        logger.debug("skip non valid/healthy repository {}", repository);
+      }
+    }
+    else
     {
-      logger.trace("skip non git repository {}", repository.getNamespaceAndName());
+      logger.trace("skip non git repository {}", repository);
     }
   }
 
@@ -123,31 +123,31 @@ public class GitGcTask implements Runnable {
       // jgit returns the statistics after gc has finished
       statistics(repository, gcc);
       execute(repository, gcc);
-    } 
-    catch (IOException ex) 
+    }
+    catch (IOException ex)
     {
       logger.warn("failed to open git repository", ex);
-    } 
+    }
     catch (GitAPIException ex)
     {
       logger.warn("failed running git gc command", ex);
     }
-    finally 
+    finally
     {
       if (git != null){
         git.close();
       }
     }
   }
-  
+
   /**
    * Opens the git repository. This method is only visible for testing purposes.
-   * 
+   *
    * @param file repository directory
-   * 
+   *
    * @return git for repository
-   * 
-   * @throws IOException 
+   *
+   * @throws IOException
    */
   @VisibleForTesting
   protected Git open(File file) throws IOException {

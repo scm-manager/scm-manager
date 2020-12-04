@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -119,7 +119,7 @@ public final class TagsCommandBuilder
       {
         if (logger.isDebugEnabled())
         {
-          logger.debug("get tags for repository {}", repository.getName());
+          logger.debug("get tags for repository {}", repository);
         }
 
         tags = getTagsFromCommand();

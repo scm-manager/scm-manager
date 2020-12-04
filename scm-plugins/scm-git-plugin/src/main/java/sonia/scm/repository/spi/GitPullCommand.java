@@ -193,7 +193,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
   private PullResponse pullFromUrl(PullCommandRequest request)
     throws IOException {
-    logger.debug("pull changes from {} to {}", request.getRemoteUrl(), repository.getId());
+    logger.debug("pull changes from {} to {}", request.getRemoteUrl(), repository);
 
     PullResponse response;
     Git git = Git.wrap(open());
