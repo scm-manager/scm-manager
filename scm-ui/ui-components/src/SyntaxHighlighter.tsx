@@ -21,12 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC, useEffect, useState } from "react";
 
-import { PrismAsyncLight as ReactSyntaxHighlighter } from "react-syntax-highlighter";
+// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+// @ts-ignore
+import { createElement, PrismAsyncLight as ReactSyntaxHighlighter } from "react-syntax-highlighter";
 import { defaultLanguage, determineLanguage } from "./languages";
 // eslint-disable-next-line no-restricted-imports
 import highlightingTheme from "./syntax-highlighting";
+import styled from "styled-components";
+import { useLocation } from "react-router-dom";
+import { escapeWhitespace } from "./repos/diffs";
+import { withContextPath } from "./urls";
+
+const RowContainer = styled.div`
+  .linenumber {
+    display: inline-block;
+    min-width: 3em;
+    padding-right: 1em;
+    text-align: right;
+    user-select: none;
+    color: rgb(154, 154, 154);
+  }
+  span.linenumber:hover {
+    cursor: pointer;
+  }
+  &.focused {
+    background-color: blue;
+  }
+`;
 
 type Props = {
   language?: string;
@@ -34,24 +57,63 @@ type Props = {
   showLineNumbers?: boolean;
 };
 
-class SyntaxHighlighter extends React.Component<Props> {
-  static defaultProps: Partial<Props> = {
-    language: defaultLanguage,
-    showLineNumbers: true
+const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumbers = true, value }) => {
+  const location = useLocation();
+  const [rowToHighlight, setRowToHighlight] = useState<number | undefined>(undefined);
+
+  useEffect(() => {
+    const hash = location.hash;
+    const match = hash && hash.match(/^#line-(.*)$/);
+    if (match) {
+      const lineNumber = match[1];
+      setRowToHighlight(Number(lineNumber));
+    }
+  }, [value, location.hash]);
+
+  const lineNumberClick = (lineNumber: number) => {
+    const permaLink = withContextPath(location.pathname + "#line-" + lineNumber);
+    // eslint-disable-next-line no-console
+    console.log(permaLink);
   };
 
-  render() {
-    const { showLineNumbers, language } = this.props;
-    return (
-      <ReactSyntaxHighlighter
-        showLineNumbers={showLineNumbers}
-        language={determineLanguage(language)}
-        style={highlightingTheme}
-      >
-        {this.props.value}
-      </ReactSyntaxHighlighter>
-    );
-  }
-}
+  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+  // @ts-ignore
+  const defaultRenderer = ({ rows, stylesheet, useInlineStyles }) => {
+    return rows.map((node: React.ReactNode, i: number) => {
+      const lineNumber = i + 1;
+      const line = createElement({
+        node,
+        stylesheet,
+        useInlineStyles,
+        key: `code-segment${i}`
+      });
+      return (
+        <RowContainer id={`line-${lineNumber}`} className={(rowToHighlight === lineNumber && "focused") || undefined}>
+          {showLineNumbers && (
+            <a
+              className="linenumber react-syntax-highlighter-line-number"
+              onClick={() => lineNumberClick(lineNumber)}
+              href={withContextPath(location.pathname + "#line-" + lineNumber)}
+            >
+              {lineNumber}
+            </a>
+          )}
+          {line}
+        </RowContainer>
+      );
+    });
+  };
+
+  return (
+    <ReactSyntaxHighlighter
+      showLineNumbers={false}
+      language={determineLanguage(language)}
+      style={highlightingTheme}
+      renderer={defaultRenderer}
+    >
+      {value}
+    </ReactSyntaxHighlighter>
+  );
+};
 
 export default SyntaxHighlighter;
