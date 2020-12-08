@@ -303,7 +303,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public ModificationsCommandBuilder getModificationsCommand() {
-    LOG.debug("create modifications command for repository {}", repository.getNamespaceAndName());
+    LOG.debug("create modifications command for repository {}", repository);
     return new ModificationsCommandBuilder(provider.getModificationsCommand(),repository, cacheManager.getCache(ModificationsCommandBuilder.CACHE_NAME), preProcessorUtil);
   }
 

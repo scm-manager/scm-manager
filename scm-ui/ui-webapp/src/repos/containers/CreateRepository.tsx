@@ -34,6 +34,7 @@ import {
   isFetchRepositoryTypesPending
 } from "../modules/repositoryTypes";
 import RepositoryForm from "../components/form";
+import RepositoryFormSwitcher from "../components/form/RepositoryFormSwitcher";
 import { createRepo, createRepoReset, getCreateRepoFailure, isCreateRepoPending } from "../modules/repos";
 import { getRepositoriesLink } from "../../modules/indexResource";
 import {
@@ -42,32 +43,35 @@ import {
   getNamespaceStrategies,
   isFetchNamespaceStrategiesPending
 } from "../../admin/modules/namespaceStrategies";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import { compose } from "redux";
 
-type Props = WithTranslation & {
-  repositoryTypes: RepositoryType[];
-  namespaceStrategies: NamespaceStrategies;
-  pageLoading: boolean;
-  createLoading: boolean;
-  error: Error;
-  repoLink: string;
-  indexResources: any;
+type Props = WithTranslation &
+  RouteComponentProps & {
+    repositoryTypes: RepositoryType[];
+    namespaceStrategies: NamespaceStrategies;
+    pageLoading: boolean;
+    createLoading: boolean;
+    error: Error;
+    repoLink: string;
+    indexResources: any;
 
-  // dispatch functions
-  fetchNamespaceStrategiesIfNeeded: () => void;
-  fetchRepositoryTypesIfNeeded: () => void;
-  createRepo: (
-    link: string,
-    repository: RepositoryCreation,
-    initRepository: boolean,
-    callback: (repo: Repository) => void
-  ) => void;
-  resetForm: () => void;
+    // dispatch functions
+    fetchNamespaceStrategiesIfNeeded: () => void;
+    fetchRepositoryTypesIfNeeded: () => void;
+    createRepo: (
+      link: string,
+      repository: RepositoryCreation,
+      initRepository: boolean,
+      callback: (repo: Repository) => void
+    ) => void;
+    resetForm: () => void;
 
-  // context props
-  history: History;
-};
+    // context props
+    history: History;
+  };
 
-class Create extends React.Component<Props> {
+class CreateRepository extends React.Component<Props> {
   componentDidMount() {
     this.props.resetForm();
     this.props.fetchRepositoryTypesIfNeeded();
@@ -75,19 +79,27 @@ class Create extends React.Component<Props> {
   }
 
   repoCreated = (repo: Repository) => {
-    const { history } = this.props;
-
-    history.push("/repo/" + repo.namespace + "/" + repo.name);
+    this.props.history.push("/repo/" + repo.namespace + "/" + repo.name);
   };
 
   render() {
-    const { pageLoading, createLoading, repositoryTypes, namespaceStrategies, createRepo, error, indexResources } = this.props;
+    const {
+      pageLoading,
+      createLoading,
+      repositoryTypes,
+      namespaceStrategies,
+      createRepo,
+      error,
+      indexResources,
+      repoLink,
+      t
+    } = this.props;
 
-    const { t, repoLink } = this.props;
     return (
       <Page
         title={t("create.title")}
         subtitle={t("create.subtitle")}
+        afterTitle={<RepositoryFormSwitcher creationMode={"CREATE"} />}
         loading={pageLoading}
         error={error}
         showContentOnError={true}
@@ -96,7 +108,7 @@ class Create extends React.Component<Props> {
           repositoryTypes={repositoryTypes}
           loading={createLoading}
           namespaceStrategy={namespaceStrategies.current}
-          submitForm={(repo, initRepository) => {
+          createRepository={(repo, initRepository) => {
             createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
           }}
           indexResources={indexResources}
@@ -144,4 +156,8 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("repos")(Create));
+export default compose(
+  withRouter,
+  withTranslation("repos"),
+  connect(mapStateToProps, mapDispatchToProps)
+)(CreateRepository);

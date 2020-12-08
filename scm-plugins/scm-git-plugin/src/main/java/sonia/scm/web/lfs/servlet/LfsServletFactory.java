@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.lfs.servlet;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -71,7 +71,7 @@ public class LfsServletFactory {
    * @return The {@link LfsProtocolServlet} to provide the LFS Batch API for a SCM Repository.
    */
   public LfsProtocolServlet createProtocolServletFor(Repository repository, HttpServletRequest request) {
-    LOG.trace("create lfs protocol servlet for repository {}", repository.getNamespaceAndName());
+    LOG.trace("create lfs protocol servlet for repository {}", repository);
     BlobStore blobStore = lfsBlobStoreFactory.getLfsBlobStore(repository);
     String baseUri = buildBaseUri(repository, request);
 
@@ -87,7 +87,7 @@ public class LfsServletFactory {
    * @return The {@link FileLfsServlet} to provide the LFS Upload / Download API for a SCM Repository.
    */
   public HttpServlet createFileLfsServletFor(Repository repository, HttpServletRequest request) {
-    LOG.trace("create lfs file servlet for repository {}", repository.getNamespaceAndName());
+    LOG.trace("create lfs file servlet for repository {}", repository);
     return new ScmFileTransferServlet(lfsBlobStoreFactory.getLfsBlobStore(repository));
   }
 

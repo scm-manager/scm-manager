@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.debug;
 
 import com.github.legman.ReferenceType;
@@ -38,7 +38,7 @@ import javax.inject.Inject;
 
 /**
  * {@link PostReceiveRepositoryHookEvent} which stores receives data and passes it to the {@link DebugService}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 @EagerSingleton
@@ -48,12 +48,12 @@ public final class DebugHook
    * the logger for DebugHook
    */
   private static final Logger LOG = LoggerFactory.getLogger(DebugHook.class);
-  
+
   private final DebugService debugService;
 
   /**
    * Constructs a new instance.
-   * 
+   *
    * @param debugService debug service
    */
   @Inject
@@ -61,23 +61,23 @@ public final class DebugHook
   {
     this.debugService = debugService;
   }
-  
+
   /**
-   * Processes the received {@link PostReceiveRepositoryHookEvent} and transforms it to a {@link DebugHookData} and 
+   * Processes the received {@link PostReceiveRepositoryHookEvent} and transforms it to a {@link DebugHookData} and
    * passes it to the {@link DebugService}.
-   * 
+   *
    * @param event received event
    */
   @Subscribe(referenceType = ReferenceType.STRONG)
   public void processEvent(PostReceiveRepositoryHookEvent event){
-    LOG.trace("store changeset ids from repository", event.getRepository().getId());
-    
+    LOG.trace("store changeset ids from repository {}", event.getRepository());
+
     debugService.put(
       event.getRepository().getNamespaceAndName(),
       new DebugHookData(Collections2.transform(
         event.getContext().getChangesetProvider().getChangesetList(), IDEXTRACTOR)
       ));
   }
-  
+
   private static final Function<Changeset, String> IDEXTRACTOR = (Changeset changeset) -> changeset.getId();
 }

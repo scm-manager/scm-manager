@@ -21,14 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RepositoryType;
+import sonia.scm.repository.api.Command;
 
 import javax.inject.Inject;
 
@@ -43,6 +46,11 @@ public abstract class RepositoryTypeToRepositoryTypeDtoMapper extends BaseMapper
   @AfterMapping
   void appendLinks(RepositoryType repositoryType, @MappingTarget RepositoryTypeDto target) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.repositoryType().self(repositoryType.getName()));
+
+    if (RepositoryPermissions.create().isPermitted() && repositoryType.getSupportedCommands().contains(Command.PULL)) {
+      linksBuilder.array(Link.linkBuilder("import", resourceLinks.repository().importFromUrl(repositoryType.getName())).withName("url").build());
+    }
+
     target.add(linksBuilder.build());
   }
 

@@ -41,6 +41,8 @@ import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.security.AuthorizationChangedEvent;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.util.AssertUtil;
 import sonia.scm.util.CollectionAppender;
@@ -59,6 +61,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static java.util.stream.Collectors.toSet;
@@ -123,29 +126,40 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   @Override
   public Repository create(Repository repository) {
-    return create(repository, true);
+    return create(repository, r -> {
+    }, true);
   }
 
-  public Repository create(Repository repository, boolean initRepository) {
+  @Override
+  public Repository create(Repository repository, Consumer<Repository> afterCreation) {
+    return create(repository, afterCreation, true);
+  }
+
+  public Repository create(Repository repository, Consumer<Repository> afterCreation, boolean initRepository) {
     repository.setId(keyGenerator.createKey());
     repository.setNamespace(namespaceStrategyProvider.get().createNamespace(repository));
 
-    logger.info("create repository {}/{} of type {} in namespace {}", repository.getNamespace(), repository.getName(), repository.getType(), repository.getNamespace());
+    logger.info("create repository {} of type {}", repository, repository.getType());
 
     return managerDaoAdapter.create(
       repository,
       RepositoryPermissions::create,
       newRepository -> fireEvent(HandlerEventType.BEFORE_CREATE, newRepository),
       newRepository -> {
-        fireEvent(HandlerEventType.CREATE, newRepository);
         if (initRepository) {
           try {
             getHandler(newRepository).create(newRepository);
-          } catch (InternalRepositoryException e) {
+            invalidateRepositoryPermissions();
+            afterCreation.accept(newRepository);
+          } catch (Exception e) {
             delete(repository);
             throw e;
           }
+        } else {
+          invalidateRepositoryPermissions();
+          afterCreation.accept(newRepository);
         }
+        fireEvent(HandlerEventType.CREATE, newRepository);
       },
       newRepository -> {
         if (repositoryDAO.contains(newRepository.getNamespaceAndName())) {
@@ -155,9 +169,13 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     );
   }
 
+  private void invalidateRepositoryPermissions() {
+    ScmEventBus.getInstance().post(AuthorizationChangedEvent.createForEveryUser());
+  }
+
   @Override
   public void delete(Repository repository) {
-    logger.info("delete repository {}/{} of type {}", repository.getNamespace(), repository.getName(), repository.getType());
+    logger.info("delete repository {} of type {}", repository, repository.getType());
     managerDaoAdapter.delete(
       repository,
       () -> RepositoryPermissions.delete(repository),
@@ -173,7 +191,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   @Override
   public void importRepository(Repository repository) {
-    create(repository, false);
+    create(repository, r -> {
+    }, false);
   }
 
   @Override
@@ -182,7 +201,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
   @Override
   public void modify(Repository repository) {
-    logger.info("modify repository {}/{} of type {}", repository.getNamespace(), repository.getName(), repository.getType());
+    logger.info("modify repository {} of type {}", repository, repository.getType());
 
     managerDaoAdapter.modify(
       repository,

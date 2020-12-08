@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import com.github.sdorra.ssp.PermissionObject;
@@ -352,6 +352,16 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
 
   @Override
   public String toString() {
+    String idString = id == null ? "no-id" : id;
+    if (name == null) {
+      return "unnamed repository (" + idString + ")";
+    } else if (namespace == null) {
+      return "no-namespace/" + name + " (" + idString + ")";
+    }
+    return namespace + "/" + name + " (" + id + ")";
+  }
+
+  public String toFullString() {
     return MoreObjects.toStringHelper(this)
       .add("id", id)
       .add("namespace", namespace)

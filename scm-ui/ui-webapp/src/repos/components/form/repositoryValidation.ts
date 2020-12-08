@@ -25,7 +25,7 @@
 import { validation } from "@scm-manager/ui-components";
 
 const nameRegex = /(?!^\.\.$)(?!^\.$)(?!.*[.]git$)(?!.*[\\\[\]])^[A-Za-z0-9\.][A-Za-z0-9\.\-_]*$/;
-const namespaceExceptionsRegex = /^(([0-9]{1,3})|(create))$/;
+const namespaceExceptionsRegex = /^(([0-9]{1,3})|(create)|(import))$/;
 
 export const isNamespaceValid = (name: string) => {
   return nameRegex.test(name) && !namespaceExceptionsRegex.test(name);

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -112,7 +112,7 @@ public final class BundleCommandBuilder
   {
     checkNotNull(outputStream, "output stream is required");
 
-    logger.info("bundle {} to output stream", repository.getId());
+    logger.info("bundle {} to output stream", repository);
 
     return bundleCommand.bundle(
       new BundleCommandRequest(asByteSink(outputStream)));

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -85,7 +85,7 @@ public final class PushCommandBuilder
     subject.isPermitted(RepositoryPermissions.push(remoteRepository).asShiroString());
     //J+
 
-    logger.info("push changes to repository {}", remoteRepository.getId());
+    logger.info("push changes to repository {}", remoteRepository);
 
     request.reset();
     request.setRemoteRepository(remoteRepository);
