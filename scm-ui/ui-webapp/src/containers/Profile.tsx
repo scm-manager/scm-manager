@@ -57,22 +57,11 @@ type Props = RouteComponentProps &
   };
 
 class Profile extends React.Component<Props> {
-  mayChangePassword = () => {
-    const { me } = this.props;
-    return !!me?._links?.password;
-  };
+  mayChangePassword = () => !!this.props.me?._links?.password;
+  canManagePublicKeys = () => !!this.props.me?._links?.publicKeys;
+  canManageApiKeys = () => !!this.props.me?._links?.apiKeys;
 
-  canManagePublicKeys = () => {
-    const { me } = this.props;
-    return !!me?._links?.publicKeys;
-  };
-
-  canManageApiKeys = () => {
-    const { me } = this.props;
-    return !!me?._links?.apiKeys;
-  };
-
-  canManageSomething = () => {
+  shouldRenderNavigation = () => {
     const { me } = this.props;
     return (
       !!me?._links?.password ||
@@ -110,7 +99,7 @@ class Profile extends React.Component<Props> {
           <CustomQueryFlexWrappedColumns>
             <PrimaryContentColumn>
               <Route path={url} exact render={() => <ProfileInfo me={me} />} />
-              {this.canManageSomething() && (
+              {this.shouldRenderNavigation() && (
                 <Switch>
                   {this.mayChangePassword() && (
                     <Redirect exact from={`${url}/settings/`} to={`${url}/settings/password`} />
@@ -142,7 +131,7 @@ class Profile extends React.Component<Props> {
                   label={t("profile.informationNavLink")}
                   title={t("profile.informationNavLink")}
                 />
-                {this.canManageSomething() && (
+                {this.shouldRenderNavigation() && (
                   <SubNavigation
                     to={`${url}/settings/`}
                     label={t("profile.settingsNavLink")}

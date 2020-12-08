@@ -125,7 +125,7 @@ public class UserApiKeyResource {
       .getKeys()
       .stream()
       .filter(key -> key.getId().equals(id))
-      .map(apiKeyMapper::map).findAny()
+      .map(key -> apiKeyMapper.map(key, id)).findAny()
       .orElseThrow(() -> notFound(ContextEntry.ContextBuilder.entity(ApiKey.class, id)));
   }
 

@@ -48,7 +48,7 @@ public class ApiKeyCollectionToDtoMapper {
   }
 
   public HalRepresentation map(Collection<ApiKey> keys, String user) {
-    List<ApiKeyDto> dtos = keys.stream().map(apiKeyDtoMapper::map).collect(toList());
+    List<ApiKeyDto> dtos = keys.stream().map(key -> apiKeyDtoMapper.map(key, user)).collect(toList());
     final Links.Builder links = Links.linkingTo()
       .self(resourceLinks.apiKeyCollection().self(user))
       .single(link("create", resourceLinks.apiKeyCollection().create(user)));
