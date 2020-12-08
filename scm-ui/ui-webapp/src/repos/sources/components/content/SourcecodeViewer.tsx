@@ -24,6 +24,7 @@
 import React, { FC, useEffect, useState } from "react";
 import { apiClient, ErrorNotification, Loading, SyntaxHighlighter } from "@scm-manager/ui-components";
 import { File, Link } from "@scm-manager/ui-types";
+import { useLocation } from "react-router-dom";
 
 type Props = {
   file: File;
@@ -35,6 +36,7 @@ const SourcecodeViewer: FC<Props> = ({ file, language }) => {
   const [error, setError] = useState<Error | undefined>(undefined);
   const [loading, setLoading] = useState(true);
   const [currentFileRevision, setCurrentFileRevision] = useState("");
+  const location = useLocation();
 
   useEffect(() => {
     if (file.revision !== currentFileRevision) {
@@ -60,7 +62,12 @@ const SourcecodeViewer: FC<Props> = ({ file, language }) => {
     return null;
   }
 
-  return <SyntaxHighlighter language={getLanguage(language)} value={content} />;
+  const pathParts = location.pathname.split("/");
+  pathParts[6] = currentFileRevision;
+  const permaLink: string = pathParts.join("/");
+  const createPermalink = () => permaLink;
+
+  return <SyntaxHighlighter language={getLanguage(language)} value={content} createPermaLink={createPermalink} />;
 };
 
 export function getLanguage(language: string) {

@@ -31,8 +31,8 @@ import { defaultLanguage, determineLanguage } from "./languages";
 import highlightingTheme from "./syntax-highlighting";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
-import { escapeWhitespace } from "./repos/diffs";
 import { withContextPath } from "./urls";
+import { Toast } from "./toast";
 
 const RowContainer = styled.div`
   .linenumber {
@@ -55,26 +55,72 @@ type Props = {
   language?: string;
   value: string;
   showLineNumbers?: boolean;
+  createPermaLink?: () => string;
 };
 
-const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumbers = true, value }) => {
+const SyntaxHighlighter: FC<Props> = ({
+  language = defaultLanguage,
+  showLineNumbers = true,
+  value,
+  createPermaLink
+}) => {
   const location = useLocation();
   const [rowToHighlight, setRowToHighlight] = useState<number | undefined>(undefined);
+  const [contentRef, setContentRef] = useState<HTMLElement | null>();
+  const [copySuccess, setCopySuccess] = useState<boolean>(false);
 
   useEffect(() => {
     const hash = location.hash;
     const match = hash && hash.match(/^#line-(.*)$/);
-    if (match) {
+    if (contentRef && match) {
       const lineNumber = match[1];
       setRowToHighlight(Number(lineNumber));
+      // We defer the content check until after the syntax-highlighter has rendered
+      setTimeout(() => {
+        const element = contentRef.querySelector(`#line-${lineNumber}`);
+        if (element && element.scrollIntoView) {
+          element.scrollIntoView();
+        }
+      });
     }
-  }, [value, location.hash]);
+  }, [value, contentRef, location.hash]);
 
-  const lineNumberClick = (lineNumber: number) => {
-    const permaLink = withContextPath(location.pathname + "#line-" + lineNumber);
-    // eslint-disable-next-line no-console
-    console.log(permaLink);
-  };
+  const createLinePermaLink = (lineNumber: number) =>
+    window.location.protocol +
+    "//" +
+    window.location.host +
+    withContextPath(((createPermaLink && createPermaLink()) || location.pathname) + "#line-" + lineNumber);
+
+  const lineNumberClick = (lineNumber: number) => copyToClipboard(createLinePermaLink(lineNumber));
+
+  function copyToClipboard(text: string) {
+    if (navigator.clipboard) {
+      navigator.clipboard.writeText(text).then(
+        function() {
+          setCopySuccess(true);
+        },
+        function(err) {
+          setCopySuccess(false);
+        }
+      );
+    } else {
+      const textArea = document.createElement("textarea");
+      textArea.value = text;
+      textArea.style.position = "fixed"; //avoid scrolling to bottom
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+
+      try {
+        document.execCommand("copy");
+        setCopySuccess(true);
+      } catch (err) {
+        setCopySuccess(false);
+      }
+
+      document.body.removeChild(textArea);
+    }
+  }
 
   // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
   // @ts-ignore
@@ -88,7 +134,11 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
         key: `code-segment${i}`
       });
       return (
-        <RowContainer id={`line-${lineNumber}`} className={(rowToHighlight === lineNumber && "focused") || undefined}>
+        <RowContainer
+          id={`line-${lineNumber}`}
+          className={(rowToHighlight === lineNumber && "focused") || undefined}
+          key={`line-${lineNumber}`}
+        >
           {showLineNumbers && (
             <a
               className="linenumber react-syntax-highlighter-line-number"
@@ -105,14 +155,17 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
   };
 
   return (
-    <ReactSyntaxHighlighter
-      showLineNumbers={false}
-      language={determineLanguage(language)}
-      style={highlightingTheme}
-      renderer={defaultRenderer}
-    >
-      {value}
-    </ReactSyntaxHighlighter>
+    <div ref={setContentRef}>
+      <ReactSyntaxHighlighter
+        showLineNumbers={false}
+        language={determineLanguage(language)}
+        style={highlightingTheme}
+        renderer={defaultRenderer}
+      >
+        {value}
+      </ReactSyntaxHighlighter>
+      {copySuccess && <Toast type="success" title={"Copied"} />}
+    </div>
   );
 };
 
