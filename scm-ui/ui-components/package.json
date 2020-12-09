@@ -18,6 +18,11 @@
     "update-storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false -u"
   },
   "devDependencies": {
+    "@scm-manager/babel-preset": "^2.10.1",
+    "@scm-manager/eslint-config": "^2.10.1",
+    "@scm-manager/jest-preset": "^2.10.1",
+    "@scm-manager/prettier-config": "^2.10.1",
+    "@scm-manager/tsconfig": "^2.10.1",
     "@scm-manager/ui-tests": "^2.12.0-SNAPSHOT",
     "@storybook/addon-actions": "^6.0.28",
     "@storybook/addon-storyshots": "^6.0.28",
