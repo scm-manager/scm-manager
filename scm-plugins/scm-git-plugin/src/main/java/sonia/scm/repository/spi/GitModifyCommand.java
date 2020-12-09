@@ -113,11 +113,17 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
       String branch = StringUtils.isNotBlank(request.getBranch()) ? request.getBranch() : context.getGlobalConfig().getDefaultBranch();
       if (StringUtils.isNotBlank(branch)) {
         try {
-          getClone().checkout().setName(branch).setCreateBranch(true).call();
-          setBranchInConfig(branch);
-        } catch (GitAPIException e) {
+          createBranchIfNotThere(branch);
+        } catch (GitAPIException | IOException e) {
           throw new InternalRepositoryException(repository, "could not create default branch for initial commit", e);
         }
+      }
+    }
+
+    private void createBranchIfNotThere(String branch) throws IOException, GitAPIException {
+      if (!branch.equals(getClone().getRepository().getBranch())) {
+        getClone().checkout().setName(branch).setCreateBranch(true).call();
+        setBranchInConfig(branch);
       }
     }
 

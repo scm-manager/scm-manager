@@ -25,7 +25,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
+import { NamespaceCollection, RepositoryCollection, Link } from "@scm-manager/ui-types";
 import {
   CreateButton,
   LinkPaginator,
@@ -95,7 +95,8 @@ class Overview extends React.Component<Props> {
   getReposLink = () => {
     const { namespace, namespaces, reposLink } = this.props;
     if (namespace) {
-      return namespaces?._embedded.namespaces.find(n => n.namespace === namespace)?._links?.repositories?.href;
+      return (namespaces?._embedded.namespaces.find(n => n.namespace === namespace)?._links?.repositories as Link)
+        ?.href;
     } else {
       return reposLink;
     }

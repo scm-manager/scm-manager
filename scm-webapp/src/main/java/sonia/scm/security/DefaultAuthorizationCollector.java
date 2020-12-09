@@ -208,7 +208,7 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
 
     if (!hasPermission && logger.isTraceEnabled())
     {
-      logger.trace("no permission for user {} defined at repository {}", user.getName(), repository.getNamespaceAndName());
+      logger.trace("no permission for user {} defined at repository {}", user.getName(), repository);
     }
   }
 
@@ -298,9 +298,9 @@ public class DefaultAuthorizationCollector implements AuthorizationCollector
   @Subscribe(async = false)
   public void invalidateCache(AuthorizationChangedEvent event) {
     if (event.isEveryUserAffected()) {
-      invalidateUserCache(event.getNameOfAffectedUser());
-    } else {
       invalidateCache();
+    } else {
+      invalidateUserCache(event.getNameOfAffectedUser());
     }
   }
 

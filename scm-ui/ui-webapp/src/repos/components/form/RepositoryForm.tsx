@@ -21,14 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository, RepositoryCreation, RepositoryType } from "@scm-manager/ui-types";
-import { Checkbox, InputField, Level, Select, SubmitButton, Subtitle, Textarea } from "@scm-manager/ui-components";
-import * as validator from "./repositoryValidation";
+import { Repository, RepositoryType } from "@scm-manager/ui-types";
+import { Checkbox, Level, Select, SubmitButton } from "@scm-manager/ui-components";
 import { CUSTOM_NAMESPACE_STRATEGY } from "../../modules/repos";
+import NamespaceAndNameFields from "../NamespaceAndNameFields";
+import RepositoryInformationForm from "../RepositoryInformationForm";
 
 const CheckboxWrapper = styled.div`
   margin-top: 2em;
@@ -44,150 +45,71 @@ const SpaceBetween = styled.div`
   justify-content: space-between;
 `;
 
-type Props = WithTranslation & {
-  submitForm: (repo: RepositoryCreation, shouldInit: boolean) => void;
+type Props = {
+  createRepository?: (repo: RepositoryCreation, shouldInit: boolean) => void;
+  modifyRepository?: (repo: Repository) => void;
   repository?: Repository;
   repositoryTypes?: RepositoryType[];
   namespaceStrategy?: string;
-  loading?: boolean;
-  indexResources: any;
+  loading: boolean;
+  indexResources?: any;
 };
 
-type State = {
-  repository: RepositoryCreation;
-  initRepository: boolean;
-  namespaceValidationError: boolean;
-  nameValidationError: boolean;
-  contactValidationError: boolean;
+type RepositoryCreation = Repository & {
+  contextEntries: object;
 };
 
-class RepositoryForm extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+const RepositoryForm: FC<Props> = ({
+  createRepository,
+  modifyRepository,
+  repository,
+  repositoryTypes,
+  namespaceStrategy,
+  loading,
+  indexResources
+}) => {
+  const [repo, setRepo] = useState<Repository>({
+    name: "",
+    namespace: "",
+    type: "",
+    contact: "",
+    description: "",
+    _links: {}
+  });
+  const [initRepository, setInitRepository] = useState(false);
+  const [contextEntries, setContextEntries] = useState({});
+  const [valid, setValid] = useState({ namespaceAndName: false, contact: true });
+  const [t] = useTranslation("repos");
 
-    this.state = {
-      repository: {
-        name: "",
-        namespace: "",
-        type: "",
-        contact: "",
-        description: "",
-        contextEntries: {},
-        _links: {}
-      },
-      initRepository: false,
-      namespaceValidationError: false,
-      nameValidationError: false,
-      contactValidationError: false
-    };
-  }
-
-  componentDidMount() {
-    const { repository } = this.props;
+  useEffect(() => {
     if (repository) {
-      this.setState({
-        repository: {
-          ...repository,
-          contextEntries: {}
-        }
-      });
+      setRepo({ ...repository });
     }
-  }
+  }, [repository]);
 
-  isFalsy(value: string) {
-    return !value;
-  }
+  const isEditMode = () => !!repository;
+  const isModifiable = () => !!repository && !!repository._links.update;
+  const disabled = (!isModifiable() && isEditMode()) || loading;
 
-  isValid = () => {
-    const { namespaceStrategy } = this.props;
-    const { repository } = this.state;
-    return !(
-      this.state.namespaceValidationError ||
-      this.state.nameValidationError ||
-      this.state.contactValidationError ||
-      this.isFalsy(repository.name) ||
-      (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY && this.isFalsy(repository.namespace))
-    );
-  };
-
-  submit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    if (this.isValid()) {
-      this.props.submitForm(this.state.repository, this.state.initRepository);
-    }
-  };
-
-  isCreateMode = () => {
-    return !this.props.repository;
-  };
-
-  isModifiable = () => {
-    return !!this.props.repository && !!this.props.repository._links.update;
-  };
-
-  toggleInitCheckbox = () => {
-    this.setState({
-      initRepository: !this.state.initRepository
-    });
-  };
-
-  setCreationContextEntry = (key: string, value: any) => {
-    this.setState({
-      repository: {
-        ...this.state.repository,
-        contextEntries: {
-          ...this.state.repository.contextEntries,
-          [key]: value
-        }
-      }
-    });
-  };
-
-  render() {
-    const { loading, t } = this.props;
-    const repository = this.state.repository;
-
-    const disabled = !this.isModifiable() && !this.isCreateMode();
-
-    const submitButton = disabled ? null : (
-      <Level right={<SubmitButton disabled={!this.isValid()} loading={loading} label={t("repositoryForm.submit")} />} />
-    );
-
-    let subtitle = null;
-    if (this.props.repository) {
-      // edit existing repo
-      subtitle = <Subtitle subtitle={t("repositoryForm.subtitle")} />;
-    }
-
+  const isValid = () => {
     return (
-      <>
-        {subtitle}
-        <form onSubmit={this.submit}>
-          {this.renderCreateOnlyFields()}
-          <InputField
-            label={t("repository.contact")}
-            onChange={this.handleContactChange}
-            value={repository ? repository.contact : ""}
-            validationError={this.state.contactValidationError}
-            errorMessage={t("validation.contact-invalid")}
-            helpText={t("help.contactHelpText")}
-            disabled={disabled}
-          />
-
-          <Textarea
-            label={t("repository.description")}
-            onChange={this.handleDescriptionChange}
-            value={repository ? repository.description : ""}
-            helpText={t("help.descriptionHelpText")}
-            disabled={disabled}
-          />
-          {submitButton}
-        </form>
-      </>
+      !(!repo.name || (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY && !repo.namespace)) &&
+      Object.values(valid).every(v => v)
     );
-  }
+  };
 
-  createSelectOptions(repositoryTypes?: RepositoryType[]) {
+  const submit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (isValid()) {
+      if (createRepository) {
+        createRepository({ ...repo, contextEntries }, initRepository);
+      } else if (modifyRepository) {
+        modifyRepository(repo);
+      }
+    }
+  };
+
+  const createSelectOptions = (repositoryTypes?: RepositoryType[]) => {
     if (repositoryTypes) {
       return repositoryTypes.map(repositoryType => {
         return {
@@ -197,122 +119,87 @@ class RepositoryForm extends React.Component<Props, State> {
       });
     }
     return [];
-  }
-
-  renderNamespaceField = () => {
-    const { namespaceStrategy, t } = this.props;
-    const repository = this.state.repository;
-    const props = {
-      label: t("repository.namespace"),
-      helpText: t("help.namespaceHelpText"),
-      value: repository ? repository.namespace : "",
-      onChange: this.handleNamespaceChange,
-      errorMessage: t("validation.namespace-invalid"),
-      validationError: this.state.namespaceValidationError
-    };
-
-    if (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY) {
-      return <InputField {...props} />;
-    }
-
-    return <ExtensionPoint name="repos.create.namespace" props={props} renderAll={false} />;
   };
 
-  renderCreateOnlyFields() {
-    if (!this.isCreateMode()) {
+  const renderCreateOnlyFields = () => {
+    if (isEditMode()) {
       return null;
     }
-    const { repositoryTypes, indexResources, t } = this.props;
-    const repository = this.state.repository;
     const extensionProps = {
-      repository,
-      setCreationContextEntry: this.setCreationContextEntry,
+      repository: repo,
+      setCreationContextEntry: setCreationContextEntry,
       indexResources
     };
     return (
       <>
-        {this.renderNamespaceField()}
-        <InputField
-          label={t("repository.name")}
-          onChange={this.handleNameChange}
-          value={repository ? repository.name : ""}
-          validationError={this.state.nameValidationError}
-          errorMessage={t("validation.name-invalid")}
-          helpText={t("help.nameHelpText")}
+        <NamespaceAndNameFields
+          repository={repo}
+          onChange={setRepo}
+          setValid={namespaceAndName => setValid({ ...valid, namespaceAndName })}
+          disabled={disabled}
         />
         <SpaceBetween>
           <SelectWrapper>
             <Select
               label={t("repository.type")}
-              onChange={this.handleTypeChange}
-              value={repository ? repository.type : ""}
-              options={this.createSelectOptions(repositoryTypes)}
+              onChange={type => setRepo({ ...repo, type })}
+              value={repo ? repo.type : ""}
+              options={createSelectOptions(repositoryTypes)}
               helpText={t("help.typeHelpText")}
+              disabled={disabled}
             />
           </SelectWrapper>
           <CheckboxWrapper>
             <Checkbox
               label={t("repositoryForm.initializeRepository")}
-              checked={this.state.initRepository}
-              onChange={this.toggleInitCheckbox}
+              checked={initRepository}
+              onChange={toggleInitCheckbox}
               helpText={t("help.initializeRepository")}
+              disabled={disabled}
             />
-            {this.state.initRepository && (
+            {initRepository && (
               <ExtensionPoint name="repos.create.initialize" props={extensionProps} renderAll={true} />
             )}
           </CheckboxWrapper>
         </SpaceBetween>
       </>
     );
-  }
+  };
 
-  handleNamespaceChange = (namespace: string) => {
-    this.setState({
-      namespaceValidationError: !validator.isNamespaceValid(namespace),
-      repository: {
-        ...this.state.repository,
-        namespace
-      }
+  const toggleInitCheckbox = () => {
+    setInitRepository(!initRepository);
+  };
+
+  const setCreationContextEntry = (key: string, value: any) => {
+    setContextEntries({
+      ...contextEntries,
+      [key]: value
     });
   };
 
-  handleNameChange = (name: string) => {
-    this.setState({
-      nameValidationError: !validator.isNameValid(name),
-      repository: {
-        ...this.state.repository,
-        name
-      }
-    });
+  const submitButton = () => {
+    if (disabled) {
+      return null;
+    }
+    return (
+      <Level
+        right={<SubmitButton disabled={!isValid()} loading={loading} label={t("repositoryForm.submitCreate")} />}
+      />
+    );
   };
 
-  handleTypeChange = (type: string) => {
-    this.setState({
-      repository: {
-        ...this.state.repository,
-        type
-      }
-    });
-  };
+  return (
+    <form onSubmit={submit}>
+      {renderCreateOnlyFields()}
+      <RepositoryInformationForm
+        repository={repo}
+        onChange={setRepo}
+        disabled={disabled}
+        setValid={contact => setValid({ ...valid, contact })}
+      />
+      {submitButton()}
+    </form>
+  );
+};
 
-  handleContactChange = (contact: string) => {
-    this.setState({
-      contactValidationError: !validator.isContactValid(contact),
-      repository: {
-        ...this.state.repository,
-        contact
-      }
-    });
-  };
-
-  handleDescriptionChange = (description: string) => {
-    this.setState({
-      repository: {
-        ...this.state.repository,
-        description
-      }
-    });
-  };
-}
-
-export default withTranslation("repos")(RepositoryForm);
+export default RepositoryForm;

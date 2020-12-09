@@ -48,7 +48,7 @@ public final class AuthorizationChangedEvent {
    * @return {@code true} if every user is affected
    */
   public boolean isEveryUserAffected(){
-    return nameOfAffectedUser != null;
+    return nameOfAffectedUser == null;
   }
   
   /**

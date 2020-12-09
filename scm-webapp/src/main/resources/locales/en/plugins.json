@@ -286,6 +286,10 @@
     "FVS9JY1T21": {
       "displayName": "Error in the request",
       "description": "While processing the request there was an error. Please check the http return status and the concrete error message."
+    },
+    "D6SHRfqQw1": {
+      "displayName": "Repository import failed",
+      "description": "The repository could not be imported. It's likely that either the credentials (username/password) are wrong or missing. Please check your inputs."
     }
   },
   "namespaceStrategies": {

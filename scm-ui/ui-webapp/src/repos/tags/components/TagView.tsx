@@ -26,6 +26,7 @@ import React, { FC } from "react";
 import { Repository, Tag } from "@scm-manager/ui-types";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import TagDetail from "./TagDetail";
+import TagDangerZone from "../container/TagDangerZone";
 
 type Props = {
   repository: Repository;
@@ -47,6 +48,7 @@ const TagView: FC<Props> = ({ repository, tag }) => {
           }}
         />
       </div>
+      <TagDangerZone repository={repository} tag={tag} />
     </>
   );
 };

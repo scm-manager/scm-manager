@@ -33,6 +33,7 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.RepositoryProvider;
 
 import java.io.Closeable;
+import java.io.File;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -69,6 +70,10 @@ public class HgCommandContext implements Closeable, RepositoryProvider {
   public HgConfig getConfig()
   {
     return handler.getConfig();
+  }
+
+  public File getDirectory() {
+    return handler.getDirectory(scmRepository.getId());
   }
 
   public sonia.scm.repository.Repository getScmRepository() {

@@ -70,7 +70,7 @@ public class RepositoryInitializer {
 
       modifyCommandBuilder.setCommitMessage("initialize repository");
       String revision = modifyCommandBuilder.execute();
-      LOG.info("initialized repository {} as revision {}", repository.getNamespaceAndName(), revision);
+      LOG.info("initialized repository {} as revision {}", repository, revision);
 
     } catch (IOException e) {
       throw new InternalRepositoryException(repository, "failed to initialize repository", e);

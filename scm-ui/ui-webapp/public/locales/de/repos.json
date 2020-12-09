@@ -12,6 +12,7 @@
     "namespace-invalid": "Der Namespace des Repository ist ungültig",
     "name-invalid": "Der Name des Repository ist ungültig",
     "contact-invalid": "Der Kontakt muss eine gültige E-Mail Adresse sein",
+    "url-invalid": "Die URL ist ungültig",
     "branch": {
       "nameInvalid": "Der Name des Branches ist ungültig"
     }
@@ -22,7 +23,10 @@
     "typeHelpText": "Der Typ des Repository (Mercurial, Git oder Subversion).",
     "contactHelpText": "E-Mail Adresse der Person, die für das Repository verantwortlich ist.",
     "descriptionHelpText": "Eine kurze Beschreibung des Repository.",
-    "initializeRepository": "Erstellt einen ersten Branch und committet eine README.md."
+    "initializeRepository": "Erstellt einen ersten Branch und committet eine README.md.",
+    "importUrlHelpText": "Importiert das gesamte Repository inkl. aller Branches und Tags über die Remote URL.",
+    "usernameHelpText": "Benutzername könnte für den Import benötigt werden. Wird ignoriert, falls nicht gesetzt.",
+    "passwordHelpText": "Password könnte für den Import benötigt werden. Wird ignoriert, falls nicht gesetzt."
   },
   "repositoryRoot": {
     "errorTitle": "Fehler",
@@ -49,19 +53,37 @@
     "title": "Repositories",
     "subtitle": "Übersicht aller verfügbaren Repositories",
     "noRepositories": "Keine Repositories gefunden.",
-    "createButton": "Repository erstellen",
+    "createButton": "Repository hinzufügen",
     "searchRepository": "Repository suchen",
     "allNamespaces": "Alle Namespaces"
   },
   "create": {
-    "title": "Repository erstellen",
-    "subtitle": "Erstellen eines neuen Repository"
+    "title": "Repository hinzufügen",
+    "subtitle": "Neues Repository erstellen"
+  },
+  "import": {
+    "subtitle": "Bestehendes Repository importieren",
+    "importUrl": "Remote Repository URL",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "pending": {
+      "subtitle": "Repository wird importiert...",
+      "infoText": "Ihr Repository wird gerade importiert. Dies kann einen Moment dauern. Sie werden weitergeleitet, sobald der Import abgeschlossen ist. Wenn Sie diese Seite verlassen, können Sie nicht zurückkehren, um den Import-Status zu erfahren."
+    },
+    "importTypes": {
+      "label": "Import Modus",
+      "url": {
+        "label": "Import via URL",
+        "helpText": "Das Repository wird über eine URL importiert."
+      }
+    }
   },
   "branches": {
     "overview": {
       "title": "Übersicht aller verfügbaren Branches",
       "noBranches": "Keine Branches gefunden.",
-      "createButton": "Branch erstellen"
+      "createButton": "Branch erstellen",
+      "lastCommit": "Letzter Commit"
     },
     "table": {
       "branches": {
@@ -103,12 +125,41 @@
     },
     "table": {
       "tags": "Tags"
+    },
+    "create": {
+      "form": {
+        "field": {
+          "name": {
+            "label": "Name",
+            "error": {
+              "exists": "Dieser Tag existiert bereits in diesem Repository.",
+              "format": "Der Tag entspricht nicht dem korrekten Format."
+            }
+          }
+        }
+      },
+      "title": "Neuen Tag anlegen",
+      "hint": "Der Tag wird automatisch mit ihrem Standardschlüssel vom SCM-Manager signiert.",
+      "confirm": "Tag erstellen",
+      "cancel": "Abbrechen"
     }
   },
   "tag": {
     "name": "Name",
     "commit": "Commit",
-    "sources": "Sources"
+    "sources": "Sources",
+    "dangerZone": "Tag löschen",
+    "delete": {
+      "button": "Tag löschen",
+      "subtitle": "Tag löschen",
+      "description": "Gelöschte Tags können nicht wiederhergestellt werden.",
+      "confirmAlert": {
+        "title": "Tag löschen",
+        "message": "Möchten Sie den Tag \"{{tag}}\" wirklich löschen?",
+        "cancel": "Nein",
+        "submit": "Ja"
+      }
+    }
   },
   "code": {
     "sources": "Sources",
@@ -158,6 +209,9 @@
     "buttons": {
       "details": "Details",
       "sources": "Sources"
+    },
+    "tag": {
+      "create": "Tag erstellen"
     }
   },
   "commit": {
@@ -168,9 +222,12 @@
   },
   "repositoryForm": {
     "subtitle": "Repository bearbeiten",
-    "submit": "Speichern",
+    "submitCreate": "Speichern",
+    "submitImport": "Importieren",
     "initializeRepository": "Repository initiieren",
-    "dangerZone": "Umbenennen und Löschen"
+    "dangerZone": "Umbenennen und Löschen",
+    "createButton": "Neues Repository erstellen",
+    "importButton": "Repository importieren"
   },
   "sources": {
     "fileTree": {

@@ -41,7 +41,9 @@ import java.io.IOException;
 /**
  *
  * @author Sebastian Sdorra
+ * @deprecated
  */
+@Deprecated
 public class HgImportHandler extends AbstactImportHandler
 {
 

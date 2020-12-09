@@ -35,9 +35,18 @@ Im SCM-Manager können neue Git, Mercurial & Subersion (SVN) Repositories über 
 Optional kann man das Repository beim Erstellen direkt initialisieren. Damit werden für Git und Mercurial jeweils der Standard-Branch (master bzw. default) angelegt. Außerdem wird ein initialer Commit ausgeführt, der eine README.md erzeugt. 
 Für Subversion Repositories wird die README.md in einen Ordner `trunk` abgelegt.
 
-Ist die Namespace-Strategie auf "Benutzerdefiniert" eingestellt, muss noch ein Namespace eingetragen werden. Für den Namespace gelten dieselben Regeln wie für den Namen des Repositories. Darüber hinaus darf ein Namespace nicht nur aus bis zu drei Ziffern (z. B. "123") oder dem Wort "create" bestehen. 
+Ist die Namespace-Strategie auf "Benutzerdefiniert" eingestellt, muss noch ein Namespace eingetragen werden. Für den Namespace gelten dieselben Regeln wie für den Namen des Repositories. Darüber hinaus darf ein Namespace nicht nur aus bis zu drei Ziffern (z. B. "123") oder den Wörter "create" und "import" bestehen. 
 
 ![Repository erstellen](assets/create-repository.png)
+
+### Repository importieren
+Neben dem Erstellen von neuen Repository können auch bestehende Repository in SCM-Manager importiert werden.
+Wechseln Sie über den Schalter oben rechts auf die Importseite und füllen Sie die benötigten Informationen aus.
+
+Das gewählte Repository wird zum SCM-Manager hinzugefügt und sämtliche Repository Daten inklusive aller Branches und Tags werden importiert.
+
+![Repository importieren](assets/import-repository.png)
+
 
 ### Repository Informationen
 Die Informationsseite eines Repository zeigt die Metadaten zum Repository an. Darunter befinden sich Beschreibungen zu den unterschiedlichen Möglichkeiten wie man mit diesem Repository arbeiten kann. In der Überschrift kann der Namespace angeklickt werden, um alle Repositories aus diesem Namespace anzuzeigen.

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.xml;
 
 import org.slf4j.Logger;
@@ -64,7 +64,7 @@ public class MetadataStore implements UpdateStepRepositoryMetadataAccess<Path> {
   }
 
   void write(Path path, Repository repository) {
-    LOG.trace("write repository metadata of {} to {}", repository.getNamespaceAndName(), path);
+    LOG.trace("write repository metadata of {} to {}", repository, path);
     try {
       Marshaller marshaller = jaxbContext.createMarshaller();
       marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, Boolean.TRUE);

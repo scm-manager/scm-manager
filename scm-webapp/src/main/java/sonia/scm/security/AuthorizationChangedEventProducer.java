@@ -162,18 +162,17 @@ public class AuthorizationChangedEventProducer {
     Repository repository = event.getItem();
     if (isAuthorizationDataModified(repository.getPermissions(), event.getItemBeforeModification().getPermissions())) {
       logger.debug(
-        "fire authorization changed event, because the permissions of repository {}/{} have changed", repository.getNamespace(), repository.getName()
+        "fire authorization changed event, because the permissions of repository {} have changed", repository
       );
       fireEventForEveryUser();
     } else if (!event.getItem().getNamespace().equals(event.getItemBeforeModification().getNamespace())) {
       logger.debug(
-        "fire authorization changed event, because the namespace of repository {}/{} has changed", repository.getNamespace(), repository.getName()
+        "fire authorization changed event, because the namespace of repository {} has changed", repository
       );
       fireEventForEveryUser();
     } else {
       logger.debug(
-        "authorization changed event is not fired, because non relevant field of repository {}/{} has changed",
-        repository.getNamespace(), repository.getName()
+        "authorization changed event is not fired, because non relevant field of repository {} has changed", repository
       );
     }
   }
@@ -193,7 +192,8 @@ public class AuthorizationChangedEventProducer {
     }
   }
 
-  private boolean isAuthorizationDataModified(Collection<RepositoryPermission> newPermissions, Collection<RepositoryPermission> permissionsBeforeModification) {
+  private boolean isAuthorizationDataModified
+    (Collection<RepositoryPermission> newPermissions, Collection<RepositoryPermission> permissionsBeforeModification) {
     return !(newPermissions.containsAll(permissionsBeforeModification) && permissionsBeforeModification.containsAll(newPermissions));
   }
 
@@ -201,7 +201,7 @@ public class AuthorizationChangedEventProducer {
     sendEvent(AuthorizationChangedEvent.createForEveryUser());
   }
 
-  private void handleRepositoryEvent(RepositoryEvent event){
+  private void handleRepositoryEvent(RepositoryEvent event) {
     logger.debug(
       "fire authorization changed event, because of received {} event for repository {}",
       event.getEventType(), event.getItem().getName()
@@ -237,8 +237,8 @@ public class AuthorizationChangedEventProducer {
 
   private void handleUserPermissionChange(AssignedPermission permission) {
     logger.debug(
-        "fire authorization changed event for user {}, because permission {} has changed",
-        permission.getName(), permission.getPermission()
+      "fire authorization changed event for user {}, because permission {} has changed",
+      permission.getName(), permission.getPermission()
     );
     fireEventForUser(permission.getName());
   }
@@ -281,7 +281,7 @@ public class AuthorizationChangedEventProducer {
     return !group.getMembers().equals(beforeModification.getMembers());
   }
 
-  private void handleGroupEvent(GroupEvent event){
+  private void handleGroupEvent(GroupEvent event) {
     logger.debug(
       "fire authorization changed event, because of received group event {} for group {}",
       event.getEventType(),
@@ -294,5 +294,4 @@ public class AuthorizationChangedEventProducer {
   protected void sendEvent(AuthorizationChangedEvent event) {
     ScmEventBus.getInstance().post(event);
   }
-
 }

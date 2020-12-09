@@ -62,7 +62,7 @@ class BranchDetail extends React.Component<Props> {
         <FlexRow className="media-content subtitle">
           <Label>{t("branch.name")}</Label> {branch.name} <DefaultBranchTag defaultBranch={branch.defaultBranch} />
           <Created className="is-ellipsis-overflow">
-            {t("tags.overview.created")} <Date date={branch.lastCommitDate} className="has-text-grey" />
+            {t("branches.overview.lastCommit")} <Date date={branch.lastCommitDate} className="has-text-grey" />
           </Created>
         </FlexRow>
         <div className="media-right">

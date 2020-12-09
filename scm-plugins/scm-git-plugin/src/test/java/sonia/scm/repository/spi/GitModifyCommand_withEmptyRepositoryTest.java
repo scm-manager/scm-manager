@@ -38,6 +38,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@SuppressWarnings("java:S5976") // using parameterized tests in this class is not useful because we would miss the descriptions
 public class GitModifyCommand_withEmptyRepositoryTest extends GitModifyCommandTestBase {
 
   @Test
@@ -61,6 +62,18 @@ public class GitModifyCommand_withEmptyRepositoryTest extends GitModifyCommandTe
   @Test
   public void shouldCreateCommitOnMasterByDefault() throws IOException, GitAPIException {
     createContext().getGlobalConfig().setDefaultBranch("");
+
+    executeModifyCommand();
+
+    try (Git git = new Git(createContext().open())) {
+      List<Ref> branches = git.branchList().call();
+      assertThat(branches).extracting("name").containsExactly("refs/heads/master");
+    }
+  }
+
+  @Test
+  public void shouldCreateCommitOnMasterIfSetExplicitly() throws IOException, GitAPIException {
+    createContext().getGlobalConfig().setDefaultBranch("master");
 
     executeModifyCommand();
 

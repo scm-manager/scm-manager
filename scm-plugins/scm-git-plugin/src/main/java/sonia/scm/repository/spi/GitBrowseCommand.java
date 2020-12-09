@@ -134,7 +134,7 @@ public class GitBrowseCommand extends AbstractGitCommand
       browserResult = new BrowserResult(revId.getName(), request.getRevision(), getEntry());
       return browserResult;
     } else {
-      logger.warn("could not find head of repository {}, empty?", repository.getNamespaceAndName());
+      logger.warn("could not find head of repository {}, empty?", repository);
       return new BrowserResult(Constants.HEAD, request.getRevision(), createEmptyRoot());
     }
   }
@@ -209,7 +209,7 @@ public class GitBrowseCommand extends AbstractGitCommand
 
   private void updateCache() {
     request.updateCache(browserResult);
-    logger.info("updated browser result for repository {}", repository.getNamespaceAndName());
+    logger.info("updated browser result for repository {}", repository);
   }
 
   private FileObject getEntry() throws IOException {
@@ -330,7 +330,7 @@ public class GitBrowseCommand extends AbstractGitCommand
   private Map<String, SubRepository> getSubRepositories()
     throws IOException {
 
-    logger.debug("read submodules of {} at {}", repository.getName(), revId);
+    logger.debug("read submodules of {} at {}", repository, revId);
 
     try ( ByteArrayOutputStream baos = new ByteArrayOutputStream() ) {
       new GitCatCommand(context, lfsBlobStoreFactory).getContent(repo, revId, PATH_MODULES, baos);
@@ -375,7 +375,7 @@ public class GitBrowseCommand extends AbstractGitCommand
     String oid = lfsPointer.getOid().getName();
     Blob blob = lfsBlobStore.get(oid);
     if (blob == null) {
-      logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository.getNamespaceAndName());
+      logger.error("lfs blob for lob id {} not found in lfs store of repository {}", oid, repository);
       file.setLength(null);
     } else {
       file.setLength(blob.getSize());

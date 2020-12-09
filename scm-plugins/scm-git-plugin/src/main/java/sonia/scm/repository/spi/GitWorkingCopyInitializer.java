@@ -54,7 +54,7 @@ class GitWorkingCopyInitializer {
   }
 
   public ParentAndClone<Repository, Repository> initialize(File target, String initialBranch) {
-    LOG.trace("clone repository {}", context.getRepository().getId());
+    LOG.trace("clone repository {}", context.getRepository());
     Stopwatch stopwatch = Stopwatch.createStarted();
     try {
       Repository clone = Git.cloneRepository()
@@ -78,7 +78,7 @@ class GitWorkingCopyInitializer {
     } catch (GitAPIException | IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "could not clone working copy of repository", e);
     } finally {
-      LOG.trace("took {} to clone repository {}", stopwatch.stop(), context.getRepository().getId());
+      LOG.trace("took {} to clone repository {}", stopwatch.stop(), context.getRepository());
     }
   }
 }

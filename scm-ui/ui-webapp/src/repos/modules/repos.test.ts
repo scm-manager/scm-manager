@@ -71,7 +71,7 @@ import reducer, {
   MODIFY_REPO_SUCCESS,
   modifyRepo
 } from "./repos";
-import { Repository, RepositoryCollection } from "@scm-manager/ui-types";
+import { Link, Repository, RepositoryCollection } from "@scm-manager/ui-types";
 
 const hitchhikerPuzzle42: Repository = {
   contact: "fourtytwo@hitchhiker.com",
@@ -431,7 +431,7 @@ describe("repos fetch", () => {
     ];
 
     const store = mockStore({});
-    return store.dispatch(createRepo(URL, slartiFjords)).then(() => {
+    return store.dispatch(createRepo(URL, { ...slartiFjords, contextEntries: {} }, false)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
     });
   });
@@ -454,7 +454,7 @@ describe("repos fetch", () => {
     };
 
     const store = mockStore({});
-    return store.dispatch(createRepo(URL, slartiFjords, false, callback)).then(() => {
+    return store.dispatch(createRepo(URL, { ...slartiFjords, contextEntries: {} }, false, callback)).then(() => {
       expect(callMe).toBe("yeah");
     });
   });
@@ -465,7 +465,7 @@ describe("repos fetch", () => {
     });
 
     const store = mockStore({});
-    return store.dispatch(createRepo(URL, slartiFjords, false)).then(() => {
+    return store.dispatch(createRepo(URL, { ...slartiFjords, contextEntries: {} }, false)).then(() => {
       const actions = store.getActions();
       expect(actions[0].type).toEqual(CREATE_REPO_PENDING);
       expect(actions[1].type).toEqual(CREATE_REPO_FAILURE);
@@ -530,7 +530,7 @@ describe("repos fetch", () => {
   });
 
   it("should successfully modify slarti/fjords repo", () => {
-    fetchMock.putOnce(slartiFjords._links.update.href, {
+    fetchMock.putOnce((slartiFjords._links.update as Link).href, {
       status: 204
     });
     fetchMock.getOnce("http://localhost:8081/api/v2/repositories/slarti/fjords", {
@@ -553,7 +553,7 @@ describe("repos fetch", () => {
   });
 
   it("should successfully modify slarti/fjords repo and call the callback", () => {
-    fetchMock.putOnce(slartiFjords._links.update.href, {
+    fetchMock.putOnce((slartiFjords._links.update as Link).href, {
       status: 204
     });
     fetchMock.getOnce("http://localhost:8081/api/v2/repositories/slarti/fjords", {
@@ -582,7 +582,7 @@ describe("repos fetch", () => {
   });
 
   it("should fail modifying on HTTP 500", () => {
-    fetchMock.putOnce(slartiFjords._links.update.href, {
+    fetchMock.putOnce((slartiFjords._links.update as Link).href, {
       status: 500
     });
 

@@ -116,7 +116,7 @@ public final class BranchesCommandBuilder
       {
         if (logger.isDebugEnabled())
         {
-          logger.debug("get branches for repository {}", repository.getName());
+          logger.debug("get branches for repository {}", repository);
         }
 
         branches = getBranchesFromCommand();

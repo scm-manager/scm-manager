@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -95,7 +95,7 @@ public final class UnbundleCommandBuilder
     UnbundleCommandRequest request =
       createRequest(Files.asByteSource(inputFile));
 
-    logger.info("unbundle archive {} at {}", inputFile, repository.getId());
+    logger.info("unbundle archive {} at {}", inputFile, repository);
 
     return unbundleCommand.unbundle(request);
   }

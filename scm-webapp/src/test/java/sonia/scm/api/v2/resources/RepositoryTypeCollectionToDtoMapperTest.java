@@ -29,10 +29,14 @@ import com.google.common.collect.Sets;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Link;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.RepositoryType;
 
@@ -50,10 +54,13 @@ public class RepositoryTypeCollectionToDtoMapperTest {
   @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
+  @Mock
+  private Subject subject;
+
   @InjectMocks
   private RepositoryTypeToRepositoryTypeDtoMapperImpl mapper;
 
-  private List<RepositoryType> types = Lists.newArrayList(
+  private final List<RepositoryType> types = Lists.newArrayList(
     new RepositoryType("hk", "Hitchhiker", Sets.newHashSet()),
     new RepositoryType("hog", "Heart of Gold", Sets.newHashSet())
   );
@@ -63,6 +70,12 @@ public class RepositoryTypeCollectionToDtoMapperTest {
   @Before
   public void setUpEnvironment() {
     collectionMapper = new RepositoryTypeCollectionToDtoMapper(mapper, resourceLinks);
+    ThreadContext.bind(subject);
+  }
+
+  @After
+  public void tearDown() {
+    ThreadContext.unbindSubject();
   }
 
   @Test

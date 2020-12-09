@@ -28,7 +28,10 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 /**
  * Represents a tag in a repository.
@@ -41,9 +44,14 @@ import java.util.Optional;
 @Getter
 public final class Tag {
 
+  public static final String VALID_REV = "[0-9a-z]+";
+  public static final Pattern VALID_REV_PATTERN = Pattern.compile(VALID_REV);
+
   private final String name;
   private final String revision;
   private final Long date;
+  private final List<Signature> signatures = new ArrayList<>();
+  private final Boolean deletable;
 
   /**
    * Constructs a new tag.
@@ -65,9 +73,24 @@ public final class Tag {
    * @since 2.5.0
    */
   public Tag(String name, String revision, Long date) {
+    this(name, revision, date, true);
+  }
+
+  /**
+   * Constructs a new tag.
+   *
+   * @param name     name of the tag
+   * @param revision tagged revision
+   * @param date     the creation timestamp (milliseconds) of the tag
+   * @param deletable whether this tag can be deleted
+   *
+   * @since 2.11.0
+   */
+  public Tag(String name, String revision, Long date, Boolean deletable) {
     this.name = name;
     this.revision = revision;
     this.date = date;
+    this.deletable = deletable;
   }
 
   /**
@@ -88,5 +111,9 @@ public final class Tag {
    */
   public Optional<Long> getDate() {
     return Optional.ofNullable(date);
+  }
+
+  public void addSignature(Signature signature) {
+    this.signatures.add(signature);
   }
 }

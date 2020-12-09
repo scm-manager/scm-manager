@@ -31,13 +31,13 @@ import Users from "../users/containers/Users";
 import Login from "../containers/Login";
 import Logout from "../containers/Logout";
 
-import { ProtectedRoute, ErrorBoundary } from "@scm-manager/ui-components";
+import { ErrorBoundary, ProtectedRoute } from "@scm-manager/ui-components";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 
 import CreateUser from "../users/containers/CreateUser";
 import SingleUser from "../users/containers/SingleUser";
 import RepositoryRoot from "../repos/containers/RepositoryRoot";
-import Create from "../repos/containers/Create";
+import CreateRepository from "../repos/containers/CreateRepository";
 
 import Groups from "../groups/containers/Groups";
 import SingleGroup from "../groups/containers/SingleGroup";
@@ -47,6 +47,7 @@ import Admin from "../admin/containers/Admin";
 
 import Profile from "./Profile";
 import NamespaceRoot from "../repos/namespaces/containers/NamespaceRoot";
+import ImportRepository from "../repos/containers/ImportRepository";
 
 type Props = {
   me: Me;
@@ -77,7 +78,8 @@ class Main extends React.Component<Props> {
             <Route path="/logout" component={Logout} />
             <Redirect exact strict from="/repos" to="/repos/" />
             <ProtectedRoute exact path="/repos/" component={Overview} authenticated={authenticated} />
-            <ProtectedRoute exact path="/repos/create" component={Create} authenticated={authenticated} />
+            <ProtectedRoute exact path="/repos/create" component={CreateRepository} authenticated={authenticated} />
+            <ProtectedRoute exact path="/repos/import" component={ImportRepository} authenticated={authenticated} />
             <ProtectedRoute exact path="/repos/:namespace" component={Overview} authenticated={authenticated} />
             <ProtectedRoute exact path="/repos/:namespace/:page" component={Overview} authenticated={authenticated} />
             <ProtectedRoute path="/repo/:namespace/:name" component={RepositoryRoot} authenticated={authenticated} />
