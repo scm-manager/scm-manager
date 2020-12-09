@@ -94,7 +94,7 @@ public class UserApiKeyResource {
   }
 
   @GET
-  @Path("{id}")
+  @Path("{keyId}")
   @Produces(VndMediaType.API_KEY)
   @Operation(summary = "Get single api key for user", description = "Returns a single registered api key with the given id for user.", tags = "User", operationId = "get_single_api_key")
   @ApiResponse(
@@ -120,13 +120,13 @@ public class UserApiKeyResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public ApiKeyDto get(@PathParam("id") String id) {
+  public ApiKeyDto get(@PathParam("keyId") String keyId) {
     return apiKeyService
       .getKeys()
       .stream()
-      .filter(key -> key.getId().equals(id))
-      .map(key -> apiKeyMapper.map(key, id)).findAny()
-      .orElseThrow(() -> notFound(ContextEntry.ContextBuilder.entity(ApiKey.class, id)));
+      .filter(key -> key.getId().equals(keyId))
+      .map(key -> apiKeyMapper.map(key, keyId)).findAny()
+      .orElseThrow(() -> notFound(ContextEntry.ContextBuilder.entity(ApiKey.class, keyId)));
   }
 
   @POST
@@ -180,13 +180,13 @@ public class UserApiKeyResource {
   }
 
   @DELETE
-  @Path("{id}")
+  @Path("{keyId}")
   @Operation(summary = "Delete api key", description = "Deletes the api key with the given id for user.", tags = "User", operationId = "delete_api_key")
   @ApiResponse(responseCode = "204", description = "delete success or nothing to delete")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "500", description = "internal server error")
-  public void delete(@PathParam("id") String id) {
-    apiKeyService.remove(id);
+  public void delete(@PathParam("keyId") String keyId) {
+    apiKeyService.remove(keyId);
   }
 
 }
