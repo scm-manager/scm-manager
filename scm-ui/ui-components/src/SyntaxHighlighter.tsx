@@ -33,6 +33,8 @@ import styled from "styled-components";
 import { useHistory, useLocation } from "react-router-dom";
 import { withContextPath } from "./urls";
 import Icon from "./Icon";
+import Tooltip from "./Tooltip";
+import { useTranslation } from "react-i18next";
 
 const RowContainer = styled.div`
   .linenumber {
@@ -78,6 +80,7 @@ const SyntaxHighlighter: FC<Props> = ({
   const [rowToHighlight, setRowToHighlight] = useState<number | undefined>(undefined);
   const [contentRef, setContentRef] = useState<HTMLElement | null>();
   const [copying, setCopying] = useState(false);
+  const [t] = useTranslation("repos");
 
   useEffect(() => {
     const hash = location.hash;
@@ -155,8 +158,19 @@ const SyntaxHighlighter: FC<Props> = ({
         >
           {showLineNumbers && (
             <>
-              {copying ? <Icon name="spinner" /> : <Icon name="link" onClick={() => lineNumberClick(lineNumber)} />}
-              <span onClick={() => history.push(location.pathname + "#line-" + lineNumber)} className="linenumber react-syntax-highlighter-line-number">{lineNumber}</span>
+              {copying ? (
+                <Icon name="spinner" />
+              ) : (
+                <Tooltip message={t("sources.content.copyPermalink")}>
+                  <Icon name="link" onClick={() => lineNumberClick(lineNumber)} />
+                </Tooltip>
+              )}
+              <span
+                onClick={() => history.push(location.pathname + "#line-" + lineNumber)}
+                className="linenumber react-syntax-highlighter-line-number"
+              >
+                {lineNumber}
+              </span>
             </>
           )}
           {line}
