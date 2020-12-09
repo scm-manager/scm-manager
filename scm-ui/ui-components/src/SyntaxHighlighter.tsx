@@ -30,9 +30,9 @@ import { defaultLanguage, determineLanguage } from "./languages";
 // eslint-disable-next-line no-restricted-imports
 import highlightingTheme from "./syntax-highlighting";
 import styled from "styled-components";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import { withContextPath } from "./urls";
-import { Toast } from "./toast";
+import Icon from "./Icon";
 
 const RowContainer = styled.div`
   .linenumber {
@@ -47,7 +47,16 @@ const RowContainer = styled.div`
     cursor: pointer;
   }
   &.focused {
-    background-color: blue;
+    background-color: rgb(229, 245, 252);
+  }
+  i {
+    visibility: hidden;
+  }
+  i:hover {
+    cursor: pointer;
+  }
+  &:hover i {
+    visibility: visible;
   }
 `;
 
@@ -65,16 +74,25 @@ const SyntaxHighlighter: FC<Props> = ({
   createPermaLink
 }) => {
   const location = useLocation();
+  const history = useHistory();
   const [rowToHighlight, setRowToHighlight] = useState<number | undefined>(undefined);
   const [contentRef, setContentRef] = useState<HTMLElement | null>();
-  const [copySuccess, setCopySuccess] = useState<boolean>(false);
+  const [copying, setCopying] = useState(false);
+
+  useEffect(() => {
+    const hash = location.hash;
+    const match = hash && hash.match(/^#line-(.*)$/);
+    if (match) {
+      const lineNumber = match[1];
+      setRowToHighlight(Number(lineNumber));
+    }
+  }, [location.hash]);
 
   useEffect(() => {
     const hash = location.hash;
     const match = hash && hash.match(/^#line-(.*)$/);
     if (contentRef && match) {
       const lineNumber = match[1];
-      setRowToHighlight(Number(lineNumber));
       // We defer the content check until after the syntax-highlighter has rendered
       setTimeout(() => {
         const element = contentRef.querySelector(`#line-${lineNumber}`);
@@ -83,7 +101,7 @@ const SyntaxHighlighter: FC<Props> = ({
         }
       });
     }
-  }, [value, contentRef, location.hash]);
+  }, [value, contentRef]);
 
   const createLinePermaLink = (lineNumber: number) =>
     window.location.protocol +
@@ -91,18 +109,15 @@ const SyntaxHighlighter: FC<Props> = ({
     window.location.host +
     withContextPath(((createPermaLink && createPermaLink()) || location.pathname) + "#line-" + lineNumber);
 
-  const lineNumberClick = (lineNumber: number) => copyToClipboard(createLinePermaLink(lineNumber));
+  const lineNumberClick = (lineNumber: number) => {
+    history.push(location.pathname + "#line-" + lineNumber);
+    copyToClipboard(createLinePermaLink(lineNumber));
+  };
 
   function copyToClipboard(text: string) {
+    setCopying(true);
     if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).then(
-        function() {
-          setCopySuccess(true);
-        },
-        function(err) {
-          setCopySuccess(false);
-        }
-      );
+      navigator.clipboard.writeText(text).finally(() => setCopying(false));
     } else {
       const textArea = document.createElement("textarea");
       textArea.value = text;
@@ -113,9 +128,8 @@ const SyntaxHighlighter: FC<Props> = ({
 
       try {
         document.execCommand("copy");
-        setCopySuccess(true);
-      } catch (err) {
-        setCopySuccess(false);
+      } finally {
+        setCopying(false);
       }
 
       document.body.removeChild(textArea);
@@ -140,13 +154,10 @@ const SyntaxHighlighter: FC<Props> = ({
           key={`line-${lineNumber}`}
         >
           {showLineNumbers && (
-            <a
-              className="linenumber react-syntax-highlighter-line-number"
-              onClick={() => lineNumberClick(lineNumber)}
-              href={withContextPath(location.pathname + "#line-" + lineNumber)}
-            >
-              {lineNumber}
-            </a>
+            <>
+              {copying ? <Icon name="spinner" /> : <Icon name="link" onClick={() => lineNumberClick(lineNumber)} />}
+              <span onClick={() => history.push(location.pathname + "#line-" + lineNumber)} className="linenumber react-syntax-highlighter-line-number">{lineNumber}</span>
+            </>
           )}
           {line}
         </RowContainer>
@@ -164,7 +175,6 @@ const SyntaxHighlighter: FC<Props> = ({
       >
         {value}
       </ReactSyntaxHighlighter>
-      {copySuccess && <Toast type="success" title={"Copied"} />}
     </div>
   );
 };
