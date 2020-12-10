@@ -47,8 +47,6 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartInputImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.BadRequestException;
-import sonia.scm.ContextEntry;
 import sonia.scm.HandlerEventType;
 import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
@@ -83,12 +81,10 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -217,10 +213,10 @@ public class RepositoryImportResource {
    * method will return a location header with the url to the imported
    * repository.
    *
-   * @param uriInfo     uri info
-   * @param type        repository type
-   * @param input       multi part form data which should contain a valid repository dto and the input stream of the bundle
-   * @param compressed  true if the bundle is gzip compressed
+   * @param uriInfo    uri info
+   * @param type       repository type
+   * @param input      multi part form data which should contain a valid repository dto and the input stream of the bundle
+   * @param compressed true if the bundle is gzip compressed
    * @return empty response with location header which points to the imported
    * repository
    * @since 2.12.0
@@ -262,9 +258,9 @@ public class RepositoryImportResource {
   /**
    * Start bundle import.
    *
-   * @param type        repository type
-   * @param input       multi part form data
-   * @param compressed  true if the bundle is gzip compressed
+   * @param type       repository type
+   * @param input      multi part form data
+   * @param compressed true if the bundle is gzip compressed
    * @return imported repository
    */
   private Repository doImportFromBundle(String type, MultipartFormDataInput input, boolean compressed) {
@@ -324,15 +320,15 @@ public class RepositoryImportResource {
   private <T> T extractFromInputPart(List<InputPart> input, Class<T> type) {
     try {
       if (input != null && !input.isEmpty()) {
+        if (type == InputStream.class) {
+          return (T) ((MultipartInputImpl.PartImpl) input.get(0)).getBody();
+        }
         String content = new ByteSource() {
           @Override
           public InputStream openStream() throws IOException {
             return ((MultipartInputImpl.PartImpl) input.get(0)).getBody();
           }
         }.asCharSource(UTF_8).read();
-        if (type == InputStream.class) {
-          return (T) new ByteArrayInputStream(StandardCharsets.UTF_8.encode(content).array());
-        }
         try (JsonParser parser = new JsonFactory().createParser(content)) {
           parser.setCodec(new ObjectMapper());
           return parser.readValueAs(type);
