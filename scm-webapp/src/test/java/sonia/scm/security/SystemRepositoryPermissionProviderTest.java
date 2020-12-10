@@ -36,7 +36,9 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -56,7 +58,7 @@ class SystemRepositoryPermissionProviderTest {
       .filter(field -> field.getName().startsWith("ACTION_"))
       .filter(field -> !field.getName().equals("ACTION_HEALTHCHECK"))
       .map(this::getString)
-      .filter(verb -> !"create".equals(verb))
+      .filter(verb -> !asList("create", "archive").contains(verb))
       .toArray(String[]::new);
   }
 
