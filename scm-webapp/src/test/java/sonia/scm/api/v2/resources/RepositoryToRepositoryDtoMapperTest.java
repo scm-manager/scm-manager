@@ -276,7 +276,9 @@ public class RepositoryToRepositoryDtoMapperTest {
 
   @Test
   public void shouldCreateUnArchiveLink() {
-    RepositoryDto dto = mapper.map(createTestRepository());
+    Repository repository = createTestRepository();
+    repository.setArchived(true);
+    RepositoryDto dto = mapper.map(repository);
     assertEquals(
       "http://example.com/base/v2/repositories/testspace/test/unarchive",
       dto.getLinks().getLinkBy("unarchive").get().getHref());

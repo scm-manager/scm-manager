@@ -228,7 +228,6 @@ public class RepositoryResource {
    */
   @POST
   @Path("archive")
-  @Consumes(VndMediaType.REPOSITORY)
   @Operation(summary = "Mark repository as \"archived\"", description = "Marks the repository as \"archived\".", tags = "Repository")
   @ApiResponse(responseCode = "204", description = "update success")
   @ApiResponse(responseCode = "400", description = "invalid request, e.g. when the repository already is marked as archived")
