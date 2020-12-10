@@ -199,7 +199,7 @@ class RepositoryRoot extends React.Component<Props> {
     const archivedFlag = repository.archived && (
       <>
         {" "}
-        <Icon name={"archive fa-2x"} /> <Smaller>archiviert</Smaller>
+        <Icon name={"archive fa-2x"} /> <Smaller>{t("repository.archived")}</Smaller>
       </>
     );
 

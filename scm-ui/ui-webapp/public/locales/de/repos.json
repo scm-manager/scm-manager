@@ -6,7 +6,8 @@
     "contact": "Kontakt",
     "description": "Beschreibung",
     "creationDate": "Erstellt",
-    "lastModified": "Zuletzt bearbeitet"
+    "lastModified": "Zuletzt bearbeitet",
+    "archived":  "archiviert"
   },
   "validation": {
     "namespace-invalid": "Der Namespace des Repository ist ungültig",

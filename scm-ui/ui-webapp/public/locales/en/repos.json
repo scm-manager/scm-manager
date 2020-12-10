@@ -6,7 +6,8 @@
     "contact": "Contact",
     "description": "Description",
     "creationDate": "Creation Date",
-    "lastModified": "Last Modified"
+    "lastModified": "Last Modified",
+    "archived": "archived"
   },
   "validation": {
     "namespace-invalid": "The repository namespace is invalid",
