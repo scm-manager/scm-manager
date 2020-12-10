@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sonia.scm.plugin.PluginLoader;
+import sonia.scm.repository.RepositoryAccessPermissions;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.util.ClassLoaders;
@@ -51,7 +52,7 @@ class SystemRepositoryPermissionProviderTest {
     PluginLoader pluginLoader = mock(PluginLoader.class);
     when(pluginLoader.getUberClassLoader()).thenReturn(ClassLoaders.getContextClassLoader(DefaultSecuritySystem.class));
     repositoryPermissionProvider = new SystemRepositoryPermissionProvider(pluginLoader);
-    allVerbsFromRepositoryClass = Arrays.stream(RepositoryPermissions.class.getDeclaredFields())
+    allVerbsFromRepositoryClass = Arrays.stream(RepositoryAccessPermissions.class.getDeclaredFields())
       .filter(field -> field.getName().startsWith("ACTION_"))
       .filter(field -> !field.getName().equals("ACTION_HEALTHCHECK"))
       .map(this::getString)
