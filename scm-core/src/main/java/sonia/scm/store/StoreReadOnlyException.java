@@ -30,18 +30,18 @@ import sonia.scm.ExceptionWithContext;
 
 import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 
-class StoreReadOnlyException extends ExceptionWithContext {
+public class StoreReadOnlyException extends ExceptionWithContext {
 
   private static final Logger LOG = LoggerFactory.getLogger(StoreReadOnlyException.class);
 
   public static final String CODE = "3FSIYtBJw1";
 
-  StoreReadOnlyException(String location) {
+  public StoreReadOnlyException(String location) {
     super(noContext(), String.format("Store is read only, could not write location %s", location));
     LOG.error(getMessage());
   }
 
-  StoreReadOnlyException(Object object) {
+  public StoreReadOnlyException(Object object) {
     super(noContext(), String.format("Store is read only, could not write object of type %s: %s", object.getClass(), object));
     LOG.error(getMessage());
   }

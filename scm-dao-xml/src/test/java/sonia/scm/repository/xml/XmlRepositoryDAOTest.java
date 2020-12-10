@@ -43,6 +43,7 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.store.StoreReadOnlyException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -55,6 +56,7 @@ import java.util.function.Consumer;
 import static java.util.Arrays.asList;
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
@@ -234,6 +236,16 @@ class XmlRepositoryDAOTest {
     }
 
     @Test
+    void shouldNotModifyArchivedRepository() {
+      REPOSITORY.setArchived(true);
+      dao.add(REPOSITORY);
+
+      Repository heartOfGold = createRepository("42");
+      heartOfGold.setArchived(true);
+      assertThrows(StoreReadOnlyException.class, () -> dao.modify(heartOfGold));
+    }
+
+    @Test
     void shouldRemoveRepository() {
       dao.add(REPOSITORY);
       assertThat(dao.contains("42")).isTrue();
@@ -245,6 +257,15 @@ class XmlRepositoryDAOTest {
       Path storePath = metadataFile(REPOSITORY.getId());
 
       assertThat(storePath).doesNotExist();
+    }
+
+    @Test
+    void shouldNotRemoveArchivedRepository() {
+      REPOSITORY.setArchived(true);
+      dao.add(REPOSITORY);
+      assertThat(dao.contains("42")).isTrue();
+
+      assertThrows(StoreReadOnlyException.class, () -> dao.delete(REPOSITORY));
     }
 
     @Test
