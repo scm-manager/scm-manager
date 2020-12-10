@@ -51,7 +51,8 @@ const RowContainer = styled.div`
   span.linenumber + span > span.linenumber {
     display: none !important;
   }
-  &.focused {
+  &.focused,
+  &.focused > span:last-child {
     background-color: rgb(229, 245, 252);
   }
   i {
