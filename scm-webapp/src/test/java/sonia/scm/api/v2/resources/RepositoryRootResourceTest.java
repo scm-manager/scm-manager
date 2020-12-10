@@ -24,6 +24,8 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
@@ -58,17 +60,29 @@ import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.repository.api.UnbundleCommandBuilder;
+import sonia.scm.repository.api.UnbundleResponse;
 import sonia.scm.user.User;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStreamWriter;
+import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -565,6 +579,81 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     assertThrows(ImportFailedException.class, () -> repositoryConsumer.accept(repository));
   }
 
+  @Test
+  public void shouldImportRepositoryFromBundle() throws IOException, URISyntaxException {
+    when(manager.getHandler("svn")).thenReturn(repositoryHandler);
+    when(repositoryHandler.getType()).thenReturn(new RepositoryType("svn", "svn", ImmutableSet.of(Command.UNBUNDLE)));
+    when(repositoryManager.create(any(), any())).thenReturn(RepositoryTestData.createHeartOfGold());
+
+    RepositoryDto repositoryDto = new RepositoryDto();
+    repositoryDto.setName("HeartOfGold");
+    repositoryDto.setNamespace("hitchhiker");
+    repositoryDto.setType("svn");
+
+    URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump");
+    byte[] svnDump = Resources.toByteArray(dumpUrl);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "import/svn/bundle");
+    MockHttpResponse response = new MockHttpResponse();
+
+    multipartRequest(request, Collections.singletonMap("bundle", new ByteArrayInputStream(svnDump)), repositoryDto);
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
+    assertEquals("/v2/repositories/hitchhiker/HeartOfGold", response.getOutputHeaders().get("Location").get(0).toString());
+    ArgumentCaptor<RepositoryImportEvent> event = ArgumentCaptor.forClass(RepositoryImportEvent.class);
+    verify(eventBus).post(event.capture());
+    assertFalse(event.getValue().isFailed());
+  }
+
+  @Test
+  public void shouldThrowFailedEventOnImportRepositoryFromBundle() throws IOException, URISyntaxException {
+    when(manager.getHandler("svn")).thenReturn(repositoryHandler);
+    when(repositoryHandler.getType()).thenReturn(new RepositoryType("svn", "svn", ImmutableSet.of(Command.UNBUNDLE)));
+    doThrow(ImportFailedException.class).when(repositoryManager).create(any(), any());
+
+    RepositoryDto repositoryDto = new RepositoryDto();
+    repositoryDto.setName("HeartOfGold");
+    repositoryDto.setNamespace("hitchhiker");
+    repositoryDto.setType("svn");
+
+    URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump");
+    byte[] svnDump = Resources.toByteArray(dumpUrl);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "import/svn/bundle");
+    MockHttpResponse response = new MockHttpResponse();
+
+    multipartRequest(request, Collections.singletonMap("bundle", new ByteArrayInputStream(svnDump)), repositoryDto);
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
+    ArgumentCaptor<RepositoryImportEvent> event = ArgumentCaptor.forClass(RepositoryImportEvent.class);
+    verify(eventBus).post(event.capture());
+    assertTrue(event.getValue().isFailed());
+  }
+
+  @Test
+  public void shouldImportCompressedBundle() throws IOException {
+    URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump.gz");
+    byte[] svnDump = Resources.toByteArray(dumpUrl);
+
+    UnbundleCommandBuilder ubc = mock(UnbundleCommandBuilder.class);
+    when(ubc.setCompressed(any())).thenReturn(ubc);
+    when(ubc.unbundle(any(File.class))).thenReturn(new UnbundleResponse(42));
+    RepositoryService service = mock(RepositoryService.class);
+    when(serviceFactory.create(any(Repository.class))).thenReturn(service);
+    when(service.getUnbundleCommand()).thenReturn(ubc);
+    InputStream in = new ByteArrayInputStream(svnDump);
+    repositoryImportResource.unbundleImport(in, true);
+
+    verify(ubc).setCompressed(true);
+    //TODO Enhance test
+  }
+
   private PageResult<Repository> createSingletonPageResult(Repository repository) {
     return new PageResult<>(singletonList(repository), 0);
   }
@@ -585,5 +674,50 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(repositoryManager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     when(repositoryManager.get(id)).thenReturn(repository);
     return repository;
+  }
+
+
+  /**
+   * This method is a slightly adapted copy of Lin Zaho's gist at https://gist.github.com/lin-zhao/9985191
+   */
+  private MockHttpRequest multipartRequest(MockHttpRequest request, Map<String, InputStream> files, RepositoryDto repository) throws IOException {
+    String boundary = UUID.randomUUID().toString();
+    request.contentType("multipart/form-data; boundary=" + boundary);
+
+    //Make sure this is deleted in afterTest()
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    try (OutputStreamWriter formWriter = new OutputStreamWriter(buffer)) {
+      formWriter.append("--").append(boundary);
+
+      for (Map.Entry<String, InputStream> entry : files.entrySet()) {
+        formWriter.append("\n");
+        formWriter.append(String.format("Content-Disposition: form-data; name=\"%s\"; filename=\"%s\"",
+          entry.getKey(), entry.getKey())).append("\n");
+        formWriter.append("Content-Type: application/octet-stream").append("\n\n");
+
+        InputStream stream = entry.getValue();
+        int b = stream.read();
+        while (b >= 0) {
+          formWriter.write(b);
+          b = stream.read();
+        }
+        stream.close();
+        formWriter.append("\n").append("--").append(boundary);
+      }
+
+      if (repository != null) {
+        formWriter.append("\n");
+        formWriter.append("Content-Disposition: form-data; name=\"repository\"").append("\n\n");
+        StringWriter repositoryWriter = new StringWriter();
+        new JsonFactory().createGenerator(repositoryWriter).setCodec(new ObjectMapper()).writeObject(repository);
+        formWriter.append(repositoryWriter.getBuffer().toString()).append("\n");
+        formWriter.append("--").append(boundary);
+      }
+
+      formWriter.append("--");
+      formWriter.flush();
+    }
+    request.setInputStream(new ByteArrayInputStream(buffer.toByteArray()));
+    return request;
   }
 }

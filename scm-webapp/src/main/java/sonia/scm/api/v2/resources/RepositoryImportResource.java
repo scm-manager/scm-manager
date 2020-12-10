@@ -24,8 +24,13 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import com.google.common.io.ByteSource;
+import com.google.common.io.Files;
 import com.google.inject.Inject;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
@@ -37,8 +42,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.shiro.SecurityUtils;
+import org.jboss.resteasy.plugins.providers.multipart.InputPart;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
+import org.jboss.resteasy.plugins.providers.multipart.MultipartInputImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.BadRequestException;
+import sonia.scm.ContextEntry;
 import sonia.scm.HandlerEventType;
 import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
@@ -54,6 +64,7 @@ import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.PullCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.util.IOUtil;
 import sonia.scm.util.ValidationUtil;
 import sonia.scm.web.VndMediaType;
 
@@ -62,18 +73,30 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
+import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Consumer;
 
+import static com.google.common.base.Preconditions.checkArgument;
+import static com.google.common.base.Preconditions.checkNotNull;
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singletonList;
 
 public class RepositoryImportResource {
@@ -189,6 +212,139 @@ public class RepositoryImportResource {
   }
 
   /**
+   * Imports a external repository via dump. The method can
+   * only be used, if the repository type supports the {@link Command#UNBUNDLE}. The
+   * method will return a location header with the url to the imported
+   * repository.
+   *
+   * @param uriInfo     uri info
+   * @param type        repository type
+   * @param input       multi part form data which should contain a valid repository dto and the input stream of the bundle
+   * @param compressed  true if the bundle is gzip compressed
+   * @return empty response with location header which points to the imported
+   * repository
+   * @since 2.12.0
+   */
+  @POST
+  @Path("{type}/bundle")
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Operation(summary = "Import repository from bundle", description = "Imports the repository from the provided bundle.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "201",
+    description = "Repository import was successful"
+  )
+  @ApiResponse(
+    responseCode = "401",
+    description = "not authenticated / invalid credentials"
+  )
+  @ApiResponse(
+    responseCode = "403",
+    description = "not authorized, the current user has no privileges to read the repository"
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response importFromBundle(@Context UriInfo uriInfo,
+                                   @PathParam("type") String type,
+                                   MultipartFormDataInput input,
+                                   @QueryParam("compressed") @DefaultValue("false") boolean compressed) {
+    RepositoryPermissions.create().check();
+    Repository repository = doImportFromBundle(type, input, compressed);
+
+    return Response.created(URI.create(resourceLinks.repository().self(repository.getNamespace(), repository.getName()))).build();
+  }
+
+  /**
+   * Start bundle import.
+   *
+   * @param type        repository type
+   * @param input       multi part form data
+   * @param compressed  true if the bundle is gzip compressed
+   * @return imported repository
+   */
+  private Repository doImportFromBundle(String type, MultipartFormDataInput input, boolean compressed) {
+    Map<String, List<InputPart>> formParts = input.getFormDataMap();
+    RepositoryDto repositoryDto = extractFromInputPart(formParts.get("repository"), RepositoryDto.class);
+    InputStream inputStream = extractFromInputPart(formParts.get("bundle"), InputStream.class);
+
+    checkNotNull(repositoryDto, "repository data is required");
+    checkNotNull(inputStream, "bundle inputStream is required");
+    checkArgument(!Strings.isNullOrEmpty(repositoryDto.getName()), "request does not contain name of the repository");
+
+    Type t = type(type);
+
+    checkSupport(t, Command.UNBUNDLE, "bundle");
+
+    Repository repository = mapper.map(repositoryDto);
+    repository.setPermissions(singletonList(
+      new RepositoryPermission(SecurityUtils.getSubject().getPrincipal().toString(), "OWNER", false)
+    ));
+
+    try {
+      repository = manager.create(
+        repository,
+        unbundleImport(inputStream, compressed)
+      );
+      eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, false));
+
+    } catch (Exception e) {
+      eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, true));
+      throw e;
+    }
+
+    return repository;
+  }
+
+  @VisibleForTesting
+  Consumer<Repository> unbundleImport(InputStream inputStream, boolean compressed) {
+    return repository -> {
+      File file = null;
+      try (RepositoryService service = serviceFactory.create(repository)) {
+        file = File.createTempFile("scm-import-", ".bundle");
+        long length = Files.asByteSink(file).writeFrom(inputStream);
+        logger.info("copied {} bytes to temp, start bundle import", length);
+        service.getUnbundleCommand().setCompressed(compressed).unbundle(file);
+      } catch (IOException e) {
+        throw new InternalRepositoryException(repository, "Failed to import from bundle", e);
+      } finally {
+        try {
+          IOUtil.delete(file);
+        } catch (IOException ex) {
+          logger.warn("could not delete temporary file", ex);
+        }
+      }
+    };
+  }
+
+  private <T> T extractFromInputPart(List<InputPart> input, Class<T> type) {
+    try {
+      if (input != null && !input.isEmpty()) {
+        String content = new ByteSource() {
+          @Override
+          public InputStream openStream() throws IOException {
+            return ((MultipartInputImpl.PartImpl) input.get(0)).getBody();
+          }
+        }.asCharSource(UTF_8).read();
+        if (type == InputStream.class) {
+          return (T) new ByteArrayInputStream(StandardCharsets.UTF_8.encode(content).array());
+        }
+        try (JsonParser parser = new JsonFactory().createParser(content)) {
+          parser.setCodec(new ObjectMapper());
+          return parser.readValueAs(type);
+        }
+      }
+    } catch (IOException ex) {
+      logger.debug("Could not extract repository from input");
+    }
+    return null;
+  }
+
+  /**
    * Check repository type for support for the given command.
    *
    * @param type    repository type
@@ -241,16 +397,23 @@ public class RepositoryImportResource {
 
   interface ImportRepositoryDto {
     String getNamespace();
+
     @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
     String getName();
+
     @NotEmpty
     String getType();
+
     @Email
     String getContact();
+
     String getDescription();
+
     @NotEmpty
     String getImportUrl();
+
     String getUsername();
+
     String getPassword();
   }
 }
