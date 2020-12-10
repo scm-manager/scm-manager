@@ -45,6 +45,9 @@
     <value>repository:create</value>
   </permission>
   <permission>
+    <value>repository:archive</value>
+  </permission>
+  <permission>
     <value>namespace:permissionRead</value>
   </permission>
   <permission>

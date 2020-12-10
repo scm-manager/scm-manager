@@ -57,6 +57,15 @@ public final class RepositoryPermissions {
   }
 
   /**
+   * Returns permission check for archive action.
+   *
+   * @return permission check for archive action
+   */
+  public static PermissionCheck archive() {
+    return RepositoryAccessPermissions.archive();
+  }
+
+  /**
    * Returns permission check for read action.
    *
    * @param id id of permission object

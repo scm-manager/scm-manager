@@ -30,6 +30,7 @@ import com.github.sdorra.ssp.StaticPermissions;
 @StaticPermissions(
   value = "repository",
   permissions = {"read", "modify", "delete", "rename", "healthCheck", "pull", "push", "permissionRead", "permissionWrite"},
+  globalPermissions = {"create", "archive"},
   custom = true, customGlobal = true
 )
 interface RepositoryAccess extends PermissionObject {

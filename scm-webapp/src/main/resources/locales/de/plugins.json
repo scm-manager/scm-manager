@@ -41,6 +41,10 @@
       "create": {
         "displayName": "Repositories erstellen",
         "description": "Darf Repositories erstellen."
+      },
+      "archive": {
+        "displayName": "Repositories archivieren",
+        "description": "Darf Repositories als \"archiviert\" und somit als schreibgeschützt markieren."
       }
     },
     "user": {

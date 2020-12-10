@@ -473,6 +473,19 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   }
 
   @Test
+  @SubjectAware(username = "dent")
+  public void shouldNotMarkRepositoryAsArchivedWithoutPermission() {
+    Repository repository = RepositoryTestData.createHeartOfGold();
+    when(repositoryDAO.get(repository.getNamespaceAndName())).thenReturn(repository);
+    when(repositoryDAO.get(repository.getId())).thenReturn(repository);
+    RepositoryManager repoManager = (RepositoryManager) manager;
+
+    assertThrows(UnauthorizedException.class, () -> repoManager.archive(repository));
+
+    verify(repositoryDAO, never()).modify(any());
+  }
+
+  @Test
   public void shouldNotMarkRepositoryAsArchivedTwice() {
     Repository repository = RepositoryTestData.createHeartOfGold();
     repository.setArchived(true);
@@ -494,6 +507,20 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     repoManager.unarchive(repository);
 
     verify(repositoryDAO).modify(argThat(r -> !r.isArchived()));
+  }
+
+  @Test
+  @SubjectAware(username = "dent")
+  public void shouldNotRemoveArchiveMarkFromRepositoryWithoutPermission() {
+    Repository repository = RepositoryTestData.createHeartOfGold();
+    when(repositoryDAO.get(repository.getNamespaceAndName())).thenReturn(repository);
+    when(repositoryDAO.get(repository.getId())).thenReturn(repository);
+    repository.setArchived(true);
+    RepositoryManager repoManager = (RepositoryManager) manager;
+
+    assertThrows(UnauthorizedException.class, () -> repoManager.unarchive(repository));
+
+    verify(repositoryDAO, never()).modify(any());
   }
 
   @Test
