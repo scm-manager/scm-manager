@@ -217,7 +217,7 @@
     },
     "4iRct4avG1": {
       "displayName": "Die Revisionen haben keinen gemeinsamen Ursprung",
-      "description": "Die Historie der Revisionen hat keinen gemeinsamen Urspung und kann somit auch nicht gegen einen solchen verglichen werden."
+      "description": "Die Historie der Revisionen hat keinen gemeinsamen Ursprung und kann somit auch nicht gegen einen solchen verglichen werden."
     },
     "65RdZ5atX1": {
       "displayName": "Fehler beim Löschen von Plugin-Dateien",
@@ -241,7 +241,7 @@
     },
     "4GRrgkSC01": {
       "displayName": "Unerwartetes Merge-Ergebnis",
-      "description": "Der Merge hatte ein unerwartetes Ergebis, das nicht automatisiert behandelt werden konnte. Nähere Details sind im Log zu finden. Führen Sie den Merge ggf. manuell durch."
+      "description": "Der Merge hatte ein unerwartetes Ergebnis, das nicht automatisiert behandelt werden konnte. Nähere Details sind im Log zu finden. Führen Sie den Merge ggf. manuell durch."
     },
     "6mRuFxaWM1": {
       "displayName": "Falsche Checksumme",
@@ -256,12 +256,12 @@
       "description": "Ein fehlerhaft heruntergeladenes Plugin konnte nicht gelöscht werden. Bitte prüfen Sie die Server Logs und löschen die Datei manuell."
     },
     "5GS6lwvWF1": {
-      "displayName": "Abhänigkeit konnte nicht gefunden werden",
-      "description": "Eine der Abhänigkeiten des Plugins konnte nicht gefunden werden. Bitte prüfen Sie die Logs für weitere Informationen."
+      "displayName": "Abhängigkeit konnte nicht gefunden werden",
+      "description": "Eine der Abhängigkeiten des Plugins konnte nicht gefunden werden. Bitte prüfen Sie die Logs für weitere Informationen."
     },
     "E5S6niWwi1": {
-      "displayName": "Version einer Abhänigkeit zu niedrig",
-      "description": "Die Version einer Abhänigkeit des Plugin ist zu niedrig. Bitte prüfen Sie die Logs für weitere Informationen."
+      "displayName": "Version einer Abhängigkeit zu niedrig",
+      "description": "Die Version einer Abhängigkeit des Plugin ist zu niedrig. Bitte prüfen Sie die Logs für weitere Informationen."
     },
     "4RS6niPRX1": {
       "displayName": "Plugin information stimmen nicht überein",
@@ -269,7 +269,7 @@
     },
     "2qRyyaVcJ1": {
       "displayName": "Ungültig formatiertes Element",
-      "description": "Die Eingabe beinhaltete unfültige Formate. Bitte prüfen Sie die Server Logs für genauere Informationen."
+      "description": "Die Eingabe beinhaltete ungültige Formate. Bitte prüfen Sie die Server Logs für genauere Informationen."
     },
     "3tS0mjSoo1": {
       "displayName": "Fehler bei der Erstellung eines Arbeitsverzeichnisses",
@@ -281,7 +281,7 @@
     },
     "BxS5wX2v71": {
       "displayName": "Inkorrekter Schlüssel",
-      "description": "Der bereitgestellte Schlüssel ist kein korrekt formartierter öffentlicher Schlüssel."
+      "description": "Der bereitgestellte Schlüssel ist kein korrekt formatierter öffentlicher Schlüssel."
     },
     "FVS9JY1T21": {
       "displayName": "Fehler bei der Anfrage",
@@ -294,6 +294,10 @@
     "3FSIYtBJw1": {
       "displayName": "Ein Datensatz konnte nicht gespeichert werden",
       "description": "Ein Datensatz konnte nicht gespeichert werden, da der entsprechende Speicher als schreibgeschützt markiert wurde. Weitere Hinweise finden sich im Log."
+    },
+    "3hSIlptme1": {
+      "displayName": "Repository ist archiviert",
+      "description": "Das Repository ist als \"archiviert\" markiert und darf nicht modifiziert werden."
     }
   },
   "namespaceStrategies": {

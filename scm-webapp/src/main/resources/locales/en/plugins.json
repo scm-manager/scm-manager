@@ -294,6 +294,10 @@
     "3FSIYtBJw1": {
       "displayName": "An entity could not be stored",
       "description": "An entity could not be stored, because the corresponding store was set to read only. Please see the log for more information."
+    },
+    "3hSIlptme1": {
+      "displayName": "Repository is archived",
+      "description": "The repository is marked as \"archived\" and therefore must noch be modified."
     }
   },
   "namespaceStrategies": {

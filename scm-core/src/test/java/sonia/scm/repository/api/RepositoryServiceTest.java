@@ -109,6 +109,19 @@ class RepositoryServiceTest {
     assertThrows(IllegalArgumentException.class, () -> repositoryService.getProtocol(UnknownScmProtocol.class));
   }
 
+  @Test
+  void shouldFailForArchivedRepository() {
+    repository.setArchived(true);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
+
+    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getModifyCommand());
+    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getBranchCommand());
+    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getPullCommand());
+    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getTagCommand());
+    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getMergeCommand());
+    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getModifyCommand());
+  }
+
   private static class DummyHttpProtocol extends HttpScmProtocol {
 
     private final boolean anonymousEnabled;
