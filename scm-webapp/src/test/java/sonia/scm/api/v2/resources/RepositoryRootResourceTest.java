@@ -41,7 +41,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import sonia.scm.HandlerEventType;
 import sonia.scm.PageResult;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
@@ -67,7 +66,6 @@ import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.core.MediaType;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -100,6 +98,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -641,17 +640,37 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump.gz");
     byte[] svnDump = Resources.toByteArray(dumpUrl);
 
-    UnbundleCommandBuilder ubc = mock(UnbundleCommandBuilder.class);
-    when(ubc.setCompressed(any())).thenReturn(ubc);
+    UnbundleCommandBuilder ubc = mock(UnbundleCommandBuilder.class, RETURNS_SELF);
     when(ubc.unbundle(any(File.class))).thenReturn(new UnbundleResponse(42));
     RepositoryService service = mock(RepositoryService.class);
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(service.getUnbundleCommand()).thenReturn(ubc);
     InputStream in = new ByteArrayInputStream(svnDump);
-    repositoryImportResource.unbundleImport(in, true);
+
+    Consumer<Repository> repositoryConsumer = repositoryImportResource.unbundleImport(in, true);
+    repositoryConsumer.accept(RepositoryTestData.createHeartOfGold("svn"));
 
     verify(ubc).setCompressed(true);
-    //TODO Enhance test
+    verify(ubc).unbundle(any(File.class));
+  }
+
+  @Test
+  public void shouldImportNonCompressedBundle() throws IOException {
+    URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump");
+    byte[] svnDump = Resources.toByteArray(dumpUrl);
+
+    UnbundleCommandBuilder ubc = mock(UnbundleCommandBuilder.class, RETURNS_SELF);
+    when(ubc.unbundle(any(File.class))).thenReturn(new UnbundleResponse(21));
+    RepositoryService service = mock(RepositoryService.class);
+    when(serviceFactory.create(any(Repository.class))).thenReturn(service);
+    when(service.getUnbundleCommand()).thenReturn(ubc);
+    InputStream in = new ByteArrayInputStream(svnDump);
+
+    Consumer<Repository> repositoryConsumer = repositoryImportResource.unbundleImport(in, false);
+    repositoryConsumer.accept(RepositoryTestData.createHeartOfGold("svn"));
+
+    verify(ubc, never()).setCompressed(true);
+    verify(ubc).unbundle(any(File.class));
   }
 
   private PageResult<Repository> createSingletonPageResult(Repository repository) {
