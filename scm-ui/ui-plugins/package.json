@@ -18,11 +18,11 @@
     "styled-components": "^5.1.0"
   },
   "devDependencies": {
-    "@scm-manager/babel-preset": "^2.12.0-SNAPSHOT",
-    "@scm-manager/eslint-config": "^2.12.0-SNAPSHOT",
-    "@scm-manager/jest-preset": "^2.12.0-SNAPSHOT",
-    "@scm-manager/prettier-config": "^2.12.0-SNAPSHOT",
-    "@scm-manager/tsconfig": "^2.12.0-SNAPSHOT",
+    "@scm-manager/babel-preset": "^2.10.1",
+    "@scm-manager/eslint-config": "^2.10.1",
+    "@scm-manager/jest-preset": "^2.10.1",
+    "@scm-manager/prettier-config": "^2.10.1",
+    "@scm-manager/tsconfig": "^2.10.1",
     "@scm-manager/ui-scripts": "^2.12.0-SNAPSHOT",
     "@scm-manager/ui-tests": "^2.12.0-SNAPSHOT",
     "@scm-manager/ui-types": "^2.12.0-SNAPSHOT",
