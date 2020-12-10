@@ -352,6 +352,28 @@
       }
     }
   },
+  "archiveRepo": {
+    "button": "Archive Repository",
+    "subtitle": "Archive this repository",
+    "description": "An archived repository can no longer be modified.",
+    "confirmAlert": {
+      "title": "Archive Repository",
+      "message": "Shall the repository really be archived?",
+      "submit": "Yes",
+      "cancel": "No"
+    }
+  },
+  "unarchiveRepo": {
+    "button": "Remove Archive Mark",
+    "subtitle": "Remove Archive Mark",
+    "description": "When the archive mark is removed, this repository can be modified again.",
+    "confirmAlert": {
+      "title": "Remove Archive Mark",
+      "message": "Shall the archive mark really be removed?",
+      "submit": "Yes",
+      "cancel": "No"
+    }
+  },
   "diff": {
     "changes": {
       "add": "added",

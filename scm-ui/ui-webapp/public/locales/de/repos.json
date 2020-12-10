@@ -351,6 +351,28 @@
       }
     }
   },
+  "archiveRepo": {
+    "button": "Repository archivieren",
+    "subtitle": "Repository archivieren",
+    "description": "Archivierte Repositories können nicht mehr verändert werden.",
+    "confirmAlert": {
+      "title": "Repository archivieren",
+      "message": "Soll das Repository wirklich archiviert werden?",
+      "submit": "Ja",
+      "cancel": "Nein"
+    }
+  },
+  "unarchiveRepo": {
+    "button": "Archivierung zurücknehmen",
+    "subtitle": "Archivierung zurücknehmen",
+    "description": "Wenn das Repository nicht mehr archiviert ist, kann es wieder verändert werden.",
+    "confirmAlert": {
+      "title": "Archivierung zurücknehmen",
+      "message": "Soll die Archivierung des Repositorys wirklich rückgängig gemacht werden?",
+      "submit": "Ja",
+      "cancel": "Nein"
+    }
+  },
   "diff": {
     "jumpToSource": "Zur Quelldatei springen",
     "jumpToTarget": "Zur vorherigen Version der Datei springen",
