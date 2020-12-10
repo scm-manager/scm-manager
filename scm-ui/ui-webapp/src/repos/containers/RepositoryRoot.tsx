@@ -29,7 +29,7 @@ import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Changeset, Repository } from "@scm-manager/ui-types";
 import {
   CustomQueryFlexWrappedColumns,
-  ErrorPage,
+  ErrorPage, Icon,
   Loading,
   NavLink,
   Page,
@@ -57,6 +57,7 @@ import { FileControlFactory, JumpToFileButton } from "@scm-manager/ui-components
 import TagsOverview from "../tags/container/TagsOverview";
 import TagRoot from "../tags/container/TagRoot";
 import { urls } from "@scm-manager/ui-components";
+import styled from "styled-components";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -71,6 +72,15 @@ type Props = RouteComponentProps &
     // dispatch functions
     fetchRepoByName: (link: string, namespace: string, name: string) => void;
   };
+
+const Smaller = styled.span`
+  font-size: 1rem;
+  color: gray;
+`;
+
+const Archived = styled.span`
+  color: gray;
+`;
 
 class RepositoryRoot extends React.Component<Props> {
   componentDidMount() {
@@ -186,21 +196,34 @@ class RepositoryRoot extends React.Component<Props> {
       return links ? links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />) : null;
     };
 
-    const titleComponent = (
+    const archivedFlag = repository.archived && (
+      <>
+        {" "}
+        <Icon name={"archive fa-2x"} /> <Smaller>archiviert</Smaller>
+      </>
+    );
+
+    const namespaceLinkContent = repository.archived ?
+      <Archived>{repository.namespace}</Archived> : repository.namespace;
+
+    let titleComponent = (
       <>
         <Link to={`/repos/${repository.namespace}/`} className={"has-text-dark"}>
-          {repository.namespace}
+          {namespaceLinkContent}
         </Link>
         /{repository.name}
       </>
     );
+    if (repository.archived) {
+      titleComponent = <Archived>{titleComponent}</Archived>;
+    }
 
     return (
       <StateMenuContextProvider>
         <Page
           title={titleComponent}
           documentTitle={`${repository.namespace}/${repository.name}`}
-          afterTitle={<ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />}
+          afterTitle={<><ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />{archivedFlag}</>}
         >
           <CustomQueryFlexWrappedColumns>
             <PrimaryContentColumn>
