@@ -108,7 +108,7 @@ public class UserApiKeyResourceTest {
 
   @Test
   public void shouldCreateNewApiKey() throws URISyntaxException, UnsupportedEncodingException {
-    when(apiKeyService.createNewKey("guide", "READ", "trillian")).thenReturn(new ApiKeyService.CreationResult("abc", "1"));
+    when(apiKeyService.createNewKey("trillian", "guide", "READ")).thenReturn(new ApiKeyService.CreationResult("abc", "1"));
 
     final MockHttpRequest request = MockHttpRequest
       .post("/" + UserRootResource.USERS_PATH_V2 + "trillian/api_keys/")
@@ -124,7 +124,7 @@ public class UserApiKeyResourceTest {
 
   @Test
   public void shouldIgnoreInvalidNewApiKey() throws URISyntaxException {
-    when(apiKeyService.createNewKey("guide", "READ", "trillian")).thenReturn(new ApiKeyService.CreationResult("abc", "1"));
+    when(apiKeyService.createNewKey("trillian", "guide", "READ")).thenReturn(new ApiKeyService.CreationResult("abc", "1"));
 
     final MockHttpRequest request = MockHttpRequest
       .post("/" + UserRootResource.USERS_PATH_V2 + "trillian/api_keys/")
@@ -142,6 +142,6 @@ public class UserApiKeyResourceTest {
     dispatcher.invoke(request, response);
 
     assertThat(response.getStatus()).isEqualTo(204);
-    verify(apiKeyService).remove("1");
+    verify(apiKeyService).remove("trillian", "1");
   }
 }

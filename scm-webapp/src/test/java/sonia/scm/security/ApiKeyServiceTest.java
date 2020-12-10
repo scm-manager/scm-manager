@@ -89,7 +89,7 @@ class ApiKeyServiceTest {
 
     @Test
     void shouldCreateNewKeyAndStoreItHashed() {
-      service.createNewKey("1", "READ");
+      service.createNewKey("dent","1", "READ");
 
       ApiKeyCollection apiKeys = store.get("dent");
 
@@ -105,7 +105,7 @@ class ApiKeyServiceTest {
 
     @Test
     void shouldReturnRoleForKey() {
-      String newKey = service.createNewKey("1", "READ").getToken();
+      String newKey = service.createNewKey("dent","1", "READ").getToken();
 
       ApiKeyService.CheckResult role = service.check(newKey);
 
@@ -114,20 +114,20 @@ class ApiKeyServiceTest {
 
     @Test
     void shouldHandleNewUser() {
-      assertThat(service.getKeys()).isEmpty();
+      assertThat(service.getKeys("zaphod")).isEmpty();
     }
 
     @Test
     void shouldNotReturnAnythingWithWrongKey() {
-      service.createNewKey("1", "READ");
+      service.createNewKey("dent","1", "READ");
 
       assertThrows(AuthorizationException.class, () -> service.check("dent", "1", "wrong"));
     }
 
     @Test
     void shouldAddSecondKey() {
-      ApiKeyService.CreationResult firstKey = service.createNewKey("1", "READ");
-      ApiKeyService.CreationResult secondKey = service.createNewKey("2", "WRITE");
+      ApiKeyService.CreationResult firstKey = service.createNewKey("dent","1", "READ");
+      ApiKeyService.CreationResult secondKey = service.createNewKey("dent","2", "WRITE");
 
       ApiKeyCollection apiKeys = store.get("dent");
 
@@ -136,16 +136,16 @@ class ApiKeyServiceTest {
       assertThat(service.check(firstKey.getToken())).extracting("permissionRole").isEqualTo("READ");
       assertThat(service.check(secondKey.getToken())).extracting("permissionRole").isEqualTo("WRITE");
 
-      assertThat(service.getKeys()).extracting("id")
+      assertThat(service.getKeys("dent")).extracting("id")
         .contains(firstKey.getId(), secondKey.getId());
     }
 
     @Test
     void shouldRemoveKey() {
-      String firstKey = service.createNewKey("first", "READ").getToken();
-      String secondKey = service.createNewKey("second", "WRITE").getToken();
+      String firstKey = service.createNewKey("dent","first", "READ").getToken();
+      String secondKey = service.createNewKey("dent","second", "WRITE").getToken();
 
-      service.remove("1");
+      service.remove("dent","1");
 
       assertThrows(AuthorizationException.class, () -> service.check(firstKey));
       assertThat(service.check(secondKey)).extracting("permissionRole").isEqualTo("WRITE");
@@ -153,23 +153,23 @@ class ApiKeyServiceTest {
 
     @Test
     void shouldFailWhenAddingSameNameTwice() {
-      String firstKey = service.createNewKey("1", "READ").getToken();
+      String firstKey = service.createNewKey("dent","1", "READ").getToken();
 
-      assertThrows(AlreadyExistsException.class, () -> service.createNewKey("1", "WRITE"));
+      assertThrows(AlreadyExistsException.class, () -> service.createNewKey("dent","1", "WRITE"));
 
       assertThat(service.check(firstKey)).extracting("permissionRole").isEqualTo("READ");
     }
 
     @Test
     void shouldIgnoreCorrectPassphraseWithWrongName() {
-      String firstKey = service.createNewKey("1", "READ").getToken();
+      String firstKey = service.createNewKey("dent","1", "READ").getToken();
 
       assertThrows(AuthorizationException.class, () -> service.check("dent", "other", firstKey));
     }
 
     @Test
     void shouldDeleteTokensWhenUserIsDeleted() {
-      service.createNewKey("1", "READ").getToken();
+      service.createNewKey("dent","1", "READ").getToken();
 
       assertThat(store.get("dent").getKeys()).hasSize(1);
 

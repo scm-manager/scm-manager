@@ -83,7 +83,7 @@ public class UserRootResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private RestDispatcher dispatcher = new RestDispatcher();
+  private final RestDispatcher dispatcher = new RestDispatcher();
 
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 

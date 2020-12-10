@@ -61,8 +61,8 @@ public class ApiKeyCollectionToDtoMapperTest {
 
     HalRepresentation halRepresentation = apiKeyCollectionToDtoMapper.map(Collections.singletonList(API_KEY), "user");
 
-    assertThat(halRepresentation.getLinks().getLinkBy("self").isPresent()).isTrue();
-    assertThat(halRepresentation.getLinks().getLinkBy("create").isPresent()).isTrue();
+    assertThat(halRepresentation.getLinks().getLinkBy("self")).isPresent();
+    assertThat(halRepresentation.getLinks().getLinkBy("create")).isPresent();
   }
 
 }

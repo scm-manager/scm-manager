@@ -28,7 +28,6 @@ import de.otto.edison.hal.Links;
 import org.mapstruct.Mapper;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.security.ApiKey;
-import sonia.scm.user.User;
 
 import javax.inject.Inject;
 

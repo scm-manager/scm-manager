@@ -325,7 +325,7 @@ public class TagRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldNotDeleteTagIfNotPermitted() throws IOException, URISyntaxException {
-    doThrow(AuthorizationException.class).when(subject).checkPermission("repository:modify:repoId");
+    doThrow(AuthorizationException.class).when(subject).checkPermission("repository:push:repoId");
     Tags tags = new Tags();
     tags.setTags(Collections.singletonList(new Tag("newtag", "592d797cd36432e591416e8b2b98154f4f163411")));
     when(tagsCommandBuilder.getTags()).thenReturn(tags);

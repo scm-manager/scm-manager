@@ -30,7 +30,6 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.shiro.authc.credential.PasswordService;
 import org.apache.shiro.authz.AuthorizationException;
-import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
@@ -80,22 +79,18 @@ public class ApiKeyService {
     this.passphraseGenerator = passphraseGenerator;
   }
 
-  public CreationResult createNewKey(String name, String permissionRole) {
-    return createNewKey(name, permissionRole, currentUser());
-  }
-
-  public CreationResult createNewKey(String name, String permissionRole, String user) {
-    UserPermissions.changeApiKeys(user).check();
+  public CreationResult createNewKey(String username, String keyDisplayName, String permissionRole) {
+    UserPermissions.changeApiKeys(username).check();
     String passphrase = passphraseGenerator.get();
     String hashedPassphrase = passwordService.encryptPassword(passphrase);
     String id = keyGenerator.createKey();
-    ApiKeyWithPassphrase key = new ApiKeyWithPassphrase(id, name, permissionRole, hashedPassphrase, now());
-    doSynchronized(user, true, () -> {
-      persistKey(name, user, key);
+    ApiKeyWithPassphrase key = new ApiKeyWithPassphrase(id, keyDisplayName, permissionRole, hashedPassphrase, now());
+    doSynchronized(username, true, () -> {
+      persistKey(keyDisplayName, username, key);
       return null;
     });
-    String token = tokenHandler.createToken(user, new ApiKey(key), passphrase);
-    LOG.info("created new api key for user {} with role {}", user, permissionRole);
+    String token = tokenHandler.createToken(username, new ApiKey(key), passphrase);
+    LOG.info("created new api key for user {} with role {}", username, permissionRole);
     return new CreationResult(token, id);
   }
 
@@ -108,18 +103,17 @@ public class ApiKeyService {
     store.put(user, newApiKeyCollection);
   }
 
-  public void remove(String id) {
-    String user = currentUser();
-    UserPermissions.changeApiKeys(user).check();
-    doSynchronized(user, true, () -> {
-      if (!containsId(user, id)) {
+  public void remove(String username, String id) {
+    UserPermissions.changeApiKeys(username).check();
+    doSynchronized(username, true, () -> {
+      if (!containsId(username, id)) {
         return null;
       }
-      store.getOptional(user).ifPresent(
+      store.getOptional(username).ifPresent(
         apiKeyCollection -> {
           ApiKeyCollection newApiKeyCollection = apiKeyCollection.remove(key -> id.equals(key.getId()));
-          store.put(user, newApiKeyCollection);
-          LOG.info("removed api key for user {}", user);
+          store.put(username, newApiKeyCollection);
+          LOG.info("removed api key for user {}", username);
         }
       );
       return null;
@@ -157,10 +151,6 @@ public class ApiKeyService {
     return result;
   }
 
-  public Collection<ApiKey> getKeys() {
-    return getKeys(currentUser());
-  }
-
   public Collection<ApiKey> getKeys(String user) {
     return store.getOptional(user)
       .map(ApiKeyCollection::getKeys)
@@ -168,10 +158,6 @@ public class ApiKeyService {
       .orElse(Stream.empty())
       .map(ApiKey::new)
       .collect(toList());
-  }
-
-  private String currentUser() {
-    return ThreadContext.getSubject().getPrincipals().getPrimaryPrincipal().toString();
   }
 
   private boolean containsId(String user, String id) {

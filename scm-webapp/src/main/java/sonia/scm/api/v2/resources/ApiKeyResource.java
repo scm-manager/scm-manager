@@ -32,6 +32,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.apache.shiro.SecurityUtils;
 import sonia.scm.ContextEntry;
 import sonia.scm.security.ApiKey;
 import sonia.scm.security.ApiKeyService;
@@ -53,8 +54,12 @@ import java.net.URI;
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static sonia.scm.NotFoundException.notFound;
 
-@Path("v2/users/{id}/api_keys")
-public class UserApiKeyResource {
+/**
+ * Use {@link UserApiKeyResource} instead.
+ * @deprecated
+ */
+@Deprecated
+public class ApiKeyResource {
 
   private final ApiKeyService apiKeyService;
   private final ApiKeyCollectionToDtoMapper apiKeyCollectionMapper;
@@ -62,7 +67,7 @@ public class UserApiKeyResource {
   private final ResourceLinks resourceLinks;
 
   @Inject
-  public UserApiKeyResource(ApiKeyService apiKeyService, ApiKeyCollectionToDtoMapper apiKeyCollectionMapper, ApiKeyToApiKeyDtoMapper apiKeyMapper, ResourceLinks links) {
+  public ApiKeyResource(ApiKeyService apiKeyService, ApiKeyCollectionToDtoMapper apiKeyCollectionMapper, ApiKeyToApiKeyDtoMapper apiKeyMapper, ResourceLinks links) {
     this.apiKeyService = apiKeyService;
     this.apiKeyCollectionMapper = apiKeyCollectionMapper;
     this.apiKeyMapper = apiKeyMapper;
@@ -72,7 +77,7 @@ public class UserApiKeyResource {
   @GET
   @Path("")
   @Produces(VndMediaType.API_KEY_COLLECTION)
-  @Operation(summary = "Get all api keys for user", description = "Returns all registered api keys for the given username.", tags = "User", operationId = "get_all_api_keys")
+  @Operation(summary = "Get the api keys for the current user", description = "Returns the registered api keys for the logged in user.", tags = "User")
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -89,14 +94,15 @@ public class UserApiKeyResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public HalRepresentation findAll(@PathParam("id") String id) {
-    return apiKeyCollectionMapper.map(apiKeyService.getKeys(id), id);
+  public HalRepresentation getForCurrentUser() {
+    String currentUser = getCurrentUser();
+    return apiKeyCollectionMapper.map(apiKeyService.getKeys(currentUser), currentUser);
   }
 
   @GET
-  @Path("{keyId}")
+  @Path("{id}")
   @Produces(VndMediaType.API_KEY)
-  @Operation(summary = "Get single api key for user", description = "Returns a single registered api key with the given id for user.", tags = "User", operationId = "get_single_api_key")
+  @Operation(summary = "Get one api key for the current user", description = "Returns the registered api key with the given id for the logged in user.", tags = "User")
   @ApiResponse(
     responseCode = "200",
     description = "success",
@@ -108,7 +114,7 @@ public class UserApiKeyResource {
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(
     responseCode = "404",
-    description = "not found / key for given id not available",
+    description = "not found, no api key with the given id for the current user available",
     content = @Content(
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
@@ -120,14 +126,15 @@ public class UserApiKeyResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public ApiKeyDto get(@PathParam("id") String id, @PathParam("keyId") String keyId) {
+  public ApiKeyDto get(@PathParam("id") String id) {
+    String currentUser = getCurrentUser();
+
     return apiKeyService
-      .getKeys(id)
+      .getKeys(currentUser)
       .stream()
-      .filter(key -> key.getId().equals(keyId))
-      .map(key -> apiKeyMapper.map(key, id))
-      .findAny()
-      .orElseThrow(() -> notFound(ContextEntry.ContextBuilder.entity(ApiKey.class, keyId)));
+      .filter(key -> key.getId().equals(id))
+      .map(key -> apiKeyMapper.map(key, currentUser)).findAny()
+      .orElseThrow(() -> notFound(ContextEntry.ContextBuilder.entity(ApiKey.class, id)));
   }
 
   @POST
@@ -135,10 +142,9 @@ public class UserApiKeyResource {
   @Consumes(VndMediaType.API_KEY)
   @Produces(MediaType.TEXT_PLAIN)
   @Operation(
-    summary = "Create new api key for user",
+    summary = "Create new api key for the current user",
     description = "Creates a new api key for the given user with the role specified in the given key.",
     tags = "User",
-    operationId = "create_api_key",
     requestBody = @RequestBody(
       content = @Content(
         mediaType = VndMediaType.API_KEY,
@@ -172,21 +178,27 @@ public class UserApiKeyResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response create(@Valid ApiKeyDto apiKey, @PathParam("id") String id) {
-    final ApiKeyService.CreationResult newKey = apiKeyService.createNewKey(id, apiKey.getDisplayName(), apiKey.getPermissionRole());
+  public Response create(@Valid ApiKeyDto apiKey) {
+    String currentUser = getCurrentUser();
+
+    final ApiKeyService.CreationResult newKey = apiKeyService.createNewKey(currentUser, apiKey.getDisplayName(), apiKey.getPermissionRole());
     return Response.status(CREATED)
       .entity(newKey.getToken())
-      .location(URI.create(resourceLinks.apiKey().self(newKey.getId(), id)))
+      .location(URI.create(resourceLinks.apiKey().self(newKey.getId(), currentUser)))
       .build();
   }
 
   @DELETE
-  @Path("{keyId}")
-  @Operation(summary = "Delete api key", description = "Deletes the api key with the given id for user.", tags = "User", operationId = "delete_api_key")
+  @Path("{id}")
+  @Operation(summary = "Delete api key", description = "Deletes the api key with the given id for the current user.", tags = "User")
   @ApiResponse(responseCode = "204", description = "delete success or nothing to delete")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "500", description = "internal server error")
-  public void delete( @PathParam("id") String id, @PathParam("keyId") String keyId) {
-    apiKeyService.remove(id, keyId);
+  public void delete(@PathParam("id") String id) {
+    apiKeyService.remove(getCurrentUser(), id);
+  }
+
+  private String getCurrentUser() {
+    return SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal().toString();
   }
 }
