@@ -112,4 +112,31 @@ public class RepositoryTypeToRepositoryTypeDtoMapperTest {
     RepositoryTypeDto dto = mapper.map(type);
     assertFalse(dto.getLinks().getLinkBy("import").isPresent());
   }
+
+  @Test
+  public void shouldAppendImportFromBundleLink() {
+    RepositoryType type = new RepositoryType("hk", "Hitchhiker", ImmutableSet.of(Command.UNBUNDLE));
+    when(subject.isPermitted("repository:create")).thenReturn(true);
+
+    RepositoryTypeDto dto = mapper.map(type);
+    assertEquals(
+      "https://scm-manager.org/scm/v2/repositories/import/hk/bundle",
+      dto.getLinks().getLinkBy("import").get().getHref()
+    );
+  }
+
+  @Test
+  public void shouldNotAppendImportFromBundleLinkIfCommandNotSupported() {
+    when(subject.isPermitted("repository:create")).thenReturn(true);
+    RepositoryTypeDto dto = mapper.map(type);
+    assertFalse(dto.getLinks().getLinkBy("import").isPresent());
+  }
+
+  @Test
+  public void shouldNotAppendImportFromBundleLinkIfNotPermitted() {
+    RepositoryType type = new RepositoryType("hk", "Hitchhiker", ImmutableSet.of(Command.UNBUNDLE));
+
+    RepositoryTypeDto dto = mapper.map(type);
+    assertFalse(dto.getLinks().getLinkBy("import").isPresent());
+  }
 }

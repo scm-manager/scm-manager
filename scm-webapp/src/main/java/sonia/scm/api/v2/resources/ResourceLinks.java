@@ -360,6 +360,10 @@ class ResourceLinks {
     String importFromUrl(String type) {
       return repositoryImportLinkBuilder.method("getRepositoryImportResource").parameters().method("importFromUrl").parameters(type).href();
     }
+
+    String importFromBundle(String type) {
+      return repositoryImportLinkBuilder.method("getRepositoryImportResource").parameters().method("importFromBundle").parameters(type).href();
+    }
   }
 
   RepositoryCollectionLinks repositoryCollection() {
