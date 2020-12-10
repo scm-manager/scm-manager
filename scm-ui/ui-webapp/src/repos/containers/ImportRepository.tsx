@@ -35,10 +35,11 @@ import {
   fetchRepositoryTypesIfNeeded,
   getFetchRepositoryTypesFailure,
   getRepositoryTypes,
-  isFetchRepositoryTypesPending
+  isFetchRepositoryTypesPending,
 } from "../modules/repositoryTypes";
 import { connect } from "react-redux";
 import { fetchNamespaceStrategiesIfNeeded } from "../../admin/modules/namespaceStrategies";
+import ImportRepositoryFromBundle from "../components/ImportRepositoryFromBundle";
 
 type Props = {
   repositoryTypes: RepositoryType[];
@@ -67,7 +68,7 @@ const ImportRepository: FC<Props> = ({
   pageLoading,
   error,
   fetchRepositoryTypesIfNeeded,
-  fetchNamespaceStrategiesIfNeeded
+  fetchNamespaceStrategiesIfNeeded,
 }) => {
   const [importPending, setImportPending] = useState(false);
   const [repositoryType, setRepositoryType] = useState<RepositoryType | undefined>();
@@ -89,6 +90,16 @@ const ImportRepository: FC<Props> = ({
       return (
         <ImportRepositoryFromUrl
           url={((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "url") as Link).href}
+          repositoryType={repositoryType!.name}
+          setImportPending={setImportPending}
+        />
+      );
+    }
+
+    if (importType === "bundle") {
+      return (
+        <ImportRepositoryFromBundle
+          url={((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "bundle") as Link).href}
           repositoryType={repositoryType!.name}
           setImportPending={setImportPending}
         />
@@ -139,7 +150,7 @@ const mapStateToProps = (state: any) => {
   return {
     repositoryTypes,
     pageLoading,
-    error
+    error,
   };
 };
 
@@ -150,7 +161,7 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     fetchNamespaceStrategiesIfNeeded: () => {
       dispatch(fetchNamespaceStrategiesIfNeeded());
-    }
+    },
   };
 };
 

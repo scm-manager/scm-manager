@@ -76,6 +76,10 @@
       "url": {
         "label": "Import via URL",
         "helpText": "The Repository will be imported via the provided URL."
+      },
+      "bundle": {
+        "label": "Import from dump",
+        "helpText": "The repository will be imported from a dump file."
       }
     }
   },
