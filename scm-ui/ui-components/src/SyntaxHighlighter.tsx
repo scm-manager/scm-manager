@@ -48,6 +48,9 @@ const RowContainer = styled.div`
   span.linenumber:hover {
     cursor: pointer;
   }
+  span.linenumber + span > span.linenumber {
+    display: none !important;
+  }
   &.focused {
     background-color: rgb(229, 245, 252);
   }
