@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-import com.github.sdorra.ssp.PermissionActionCheck;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
@@ -292,6 +291,35 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
       notModified -> fireEvent(HandlerEventType.MODIFY, changedRepository, repository));
 
     return changedRepository;
+  }
+
+  @Override
+  public void archive(Repository repository) {
+    setArchived(repository, true);
+  }
+
+  @Override
+  public void unarchive(Repository repository) {
+    setArchived(repository, false);
+  }
+
+  private void setArchived(Repository repository, boolean archived) {
+    Repository originalRepository = repositoryDAO.get(repository.getNamespaceAndName());
+
+    if (archived == originalRepository.isArchived()) {
+      throw new NoChangesMadeException(repository);
+    }
+
+    Repository changedRepository = originalRepository.clone();
+
+    changedRepository.setArchived(archived);
+
+    managerDaoAdapter.modify(
+      changedRepository,
+      RepositoryPermissions::modify,
+      notModified -> {
+      },
+      notModified -> fireEvent(HandlerEventType.MODIFY, changedRepository, originalRepository));
   }
 
   private boolean hasNamespaceOrNameNotChanged(Repository repository, String newNamespace, String newName) {

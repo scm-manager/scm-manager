@@ -364,6 +364,13 @@ class ResourceLinks {
     String importFromBundle(String type) {
       return repositoryImportLinkBuilder.method("getRepositoryImportResource").parameters().method("importFromBundle").parameters(type).href();
     }
+    String archive(String namespace, String name) {
+      return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("archive").parameters().href();
+    }
+
+    String unarchive(String namespace, String name) {
+      return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("unarchive").parameters().href();
+    }
   }
 
   RepositoryCollectionLinks repositoryCollection() {

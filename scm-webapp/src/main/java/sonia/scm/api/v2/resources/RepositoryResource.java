@@ -215,10 +215,61 @@ public class RepositoryResource {
       schema = @Schema(implementation = ErrorDto.class)
     ))
   @ApiResponse(responseCode = "500", description = "internal server error")
-  public Response rename(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryRenameDto renameDto) {
+  public void rename(@PathParam("namespace") String namespace, @PathParam("name") String name, @Valid RepositoryRenameDto renameDto) {
     Repository repository = loadBy(namespace, name).get();
     manager.rename(repository, renameDto.getNamespace(), renameDto.getName());
-    return Response.status(204).build();
+  }
+
+  /**
+   * Marks the given repository as "archived".
+   *
+   * @param namespace the namespace of the repository to be marked
+   * @param name      the name of the repository to be marked
+   */
+  @POST
+  @Path("archive")
+  @Consumes(VndMediaType.REPOSITORY)
+  @Operation(summary = "Mark repository as \"archived\"", description = "Marks the repository as \"archived\".", tags = "Repository")
+  @ApiResponse(responseCode = "204", description = "update success")
+  @ApiResponse(responseCode = "400", description = "invalid request, e.g. when the repository already is marked as archived")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"repository:archive\" privilege")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no repository with the specified namespace and name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(responseCode = "500", description = "internal server error")
+  public void archive(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+    Repository repository = loadBy(namespace, name).get();
+    manager.archive(repository);
+  }
+  /**
+   * Marks the given repository as not "archived".
+   *
+   * @param namespace the namespace of the repository to remove the mark from
+   * @param name      the name of the repository to remove the mark from
+   */
+  @POST
+  @Path("unarchive")
+  @Operation(summary = "Mark repository as \"not archived\"", description = "Removes the \"archived\" mark from the repository.", tags = "Repository")
+  @ApiResponse(responseCode = "204", description = "update success")
+  @ApiResponse(responseCode = "400", description = "invalid request, e.g. when the repository already is marked as archived")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"repository:archive\" privilege")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no repository with the specified namespace and name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(responseCode = "500", description = "internal server error")
+  public void unarchive(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+    Repository repository = loadBy(namespace, name).get();
+    manager.unarchive(repository);
   }
 
   private Repository processUpdate(RepositoryDto repositoryDto, Repository existing) {

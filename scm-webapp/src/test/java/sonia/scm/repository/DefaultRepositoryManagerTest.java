@@ -78,13 +78,16 @@ import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.spy;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -100,6 +103,8 @@ import static org.mockito.Mockito.when;
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
 public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
+
+  private RepositoryDAO repositoryDAO;
 
   {
     ThreadContext.unbindSubject();
@@ -457,6 +462,50 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
       .contains("default_namespace");
   }
 
+  @Test
+  public void shouldMarkRepositoryAsArchived() {
+    Repository repository = createTestRepository();
+    RepositoryManager repoManager = (RepositoryManager) manager;
+
+    repoManager.archive(repository);
+
+    verify(repositoryDAO).modify(argThat(Repository::isArchived));
+  }
+
+  @Test
+  public void shouldNotMarkRepositoryAsArchivedTwice() {
+    Repository repository = RepositoryTestData.createHeartOfGold();
+    repository.setArchived(true);
+    createRepository(repository);
+    RepositoryManager repoManager = (RepositoryManager) manager;
+
+    assertThrows(NoChangesMadeException.class, () -> repoManager.archive(repository));
+
+    verify(repositoryDAO, never()).modify(any());
+  }
+
+  @Test
+  public void shouldRemoveArchiveMarkFromRepository() {
+    Repository repository = RepositoryTestData.createHeartOfGold();
+    repository.setArchived(true);
+    createRepository(repository);
+    RepositoryManager repoManager = (RepositoryManager) manager;
+
+    repoManager.unarchive(repository);
+
+    verify(repositoryDAO).modify(argThat(r -> !r.isArchived()));
+  }
+
+  @Test
+  public void shouldNotRemoveArchiveMarkFromNotArchivedRepository() {
+    Repository repository = createTestRepository();
+    RepositoryManager repoManager = (RepositoryManager) manager;
+
+    assertThrows(NoChangesMadeException.class, () -> repoManager.unarchive(repository));
+
+    verify(repositoryDAO, never()).modify(any());
+  }
+
   //~--- methods --------------------------------------------------------------
 
   @Override
@@ -466,7 +515,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
 
   private DefaultRepositoryManager createRepositoryManager(KeyGenerator keyGenerator) {
     Set<RepositoryHandler> handlerSet = new HashSet<>();
-    RepositoryDAO repositoryDAO = createRepositoryDaoMock();
+    repositoryDAO = createRepositoryDaoMock();
     mock(ConfigurationStoreFactory.class);
     handlerSet.add(createRepositoryHandler("dummy", "Dummy"));
     handlerSet.add(createRepositoryHandler("git", "Git"));

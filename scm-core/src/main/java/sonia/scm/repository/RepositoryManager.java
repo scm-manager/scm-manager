@@ -113,4 +113,18 @@ public interface RepositoryManager
     afterCreation.accept(newRepository);
     return newRepository;
   }
+
+  /**
+   * @param repository the repository {@link Repository}
+   *
+   * @since 2.12.0
+   */
+  void archive(Repository repository);
+
+  /**
+   * @param repository the repository {@link Repository}
+   *
+   * @since 2.12.0
+   */
+  void unarchive(Repository repository);
 }

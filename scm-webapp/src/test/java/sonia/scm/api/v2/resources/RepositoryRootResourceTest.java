@@ -673,6 +673,43 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     verify(ubc).unbundle(any(File.class));
   }
 
+  @Test
+  public void shouldMarkRepositoryAsArchived() throws Exception {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = mockRepository(namespace, name);
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/archive")
+      .content(new byte[]{});
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_NO_CONTENT, response.getStatus());
+    verify(repositoryManager).archive(repository);
+  }
+
+  @Test
+  public void shouldRemoveArchiveMarkFromRepository() throws Exception {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = mockRepository(namespace, name);
+    repository.setArchived(true);
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/unarchive")
+      .content(new byte[]{});
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_NO_CONTENT, response.getStatus());
+    verify(repositoryManager).unarchive(repository);
+  }
+
   private PageResult<Repository> createSingletonPageResult(Repository repository) {
     return new PageResult<>(singletonList(repository), 0);
   }
