@@ -111,5 +111,8 @@
   },
   "commaSeparatedList": {
     "lastDivider": "and"
+  },
+  "fileUpload": {
+    "label": "Upload file"
   }
 }
