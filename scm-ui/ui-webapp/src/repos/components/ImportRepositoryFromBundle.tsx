@@ -23,11 +23,12 @@
  */
 import React, { FC, FormEvent, useState } from "react";
 import NamespaceAndNameFields from "./NamespaceAndNameFields";
-import {File, Repository} from "@scm-manager/ui-types";
+import { File, Repository } from "@scm-manager/ui-types";
 import RepositoryInformationForm from "./RepositoryInformationForm";
-import { apiClient, ErrorNotification, FileUpload, Level, SubmitButton } from "@scm-manager/ui-components";
+import { apiClient, ErrorNotification, Level, SubmitButton } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import ImportFromBundleForm from "./ImportFromBundleForm";
 
 type Props = {
   url: string;
@@ -49,6 +50,7 @@ const ImportRepositoryFromBundle: FC<Props> = ({ url, repositoryType, setImportP
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | undefined>();
   const [file, setFile] = useState<File | null>(null);
+  const [compressed, setCompressed] = useState(false);
   const history = useHistory();
   const [t] = useTranslation("repos");
 
@@ -65,9 +67,9 @@ const ImportRepositoryFromBundle: FC<Props> = ({ url, repositoryType, setImportP
     setError(undefined);
     handleImportLoading(true);
     apiClient
-      .postBinary(url, (formdata) => {
-        formdata.append("bundle", file!, file?.name);
-        formdata.append("repository", JSON.stringify(repo));
+      .postBinary(compressed ? url + "?compressed=true" : url, (formData) => {
+        formData.append("bundle", file, file?.name);
+        formData.append("repository", JSON.stringify(repo));
       })
       .then((response) => {
         const location = response.headers.get("Location");
@@ -88,11 +90,12 @@ const ImportRepositoryFromBundle: FC<Props> = ({ url, repositoryType, setImportP
   return (
     <form onSubmit={submit}>
       <ErrorNotification error={error} />
-      <FileUpload
-        handleFile={(file: File) => {
-          setFile(file);
-          setValid({ ...valid, file: !!file });
-        }}
+      <ImportFromBundleForm
+        setFile={setFile}
+        setValid={(file: boolean) => setValid({ ...valid, file })}
+        compressed={compressed}
+        setCompressed={setCompressed}
+        disabled={loading}
       />
       <hr />
       <NamespaceAndNameFields
