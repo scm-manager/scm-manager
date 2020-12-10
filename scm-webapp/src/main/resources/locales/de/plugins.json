@@ -290,6 +290,10 @@
     "D6SHRfqQw1": {
       "displayName": "Repository Import fehlgeschlagen",
       "description": "Das Repository konnte nicht importiert werden. Möglicherweise wurden die Zugangsdaten (Benutzername/Passwort) nicht gesetzt oder sind fehlerhaft. Bitte prüfen Sie Ihre Eingaben."
+    },
+    "3FSIYtBJw1": {
+      "displayName": "Ein Datensatz konnte nicht gespeichert werden",
+      "description": "Ein Datensatz konnte nicht gespeichert werden, da der entsprechende Speicher als schreibgeschützt markiert wurde. Weitere Hinweise finden sich im Log."
     }
   },
   "namespaceStrategies": {

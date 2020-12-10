@@ -22,59 +22,13 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.repository;
 
-/**
- * Base class for {@link ConfigurationStore}.
- *
- * @author Sebastian Sdorra
- * @since 1.16
- *
- * @param <T> type of store objects
- */
-public abstract class AbstractStore<T> implements ConfigurationStore<T> {
+public interface RepositoryArchivedCheck {
 
-  /**
-   * stored object
-   */
-  protected T storeObject;
-  private final boolean readOnly;
+  boolean isArchived(String repositoryId);
 
-  protected AbstractStore(boolean readOnly) {
-    this.readOnly = readOnly;
+  default boolean isArchived(Repository repository) {
+    return isArchived(repository.getId());
   }
-
-  @Override
-  public T get() {
-    if (storeObject == null) {
-      storeObject = readObject();
-    }
-
-    return storeObject;
-  }
-
-  @Override
-  public void set(T object) {
-    if (readOnly) {
-      throw new StoreReadOnlyException(object);
-    }
-    writeObject(object);
-    this.storeObject = object;
-  }
-
-  /**
-   * Read the stored object.
-   *
-   *
-   * @return stored object
-   */
-  protected abstract T readObject();
-
-  /**
-   * Write object to the store.
-   *
-   *
-   * @param object object to write
-   */
-  protected abstract void writeObject(T object);
 }

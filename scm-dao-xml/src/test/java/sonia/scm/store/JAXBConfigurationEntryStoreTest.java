@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -85,7 +85,7 @@ public class JAXBConfigurationEntryStoreTest
 
     assertEquals("tuser3", a3.getName());
   }
-  
+
   /**
    * Method description
    *
@@ -154,7 +154,7 @@ public class JAXBConfigurationEntryStoreTest
   @Override
   protected ConfigurationEntryStoreFactory  createConfigurationStoreFactory()
   {
-    return new JAXBConfigurationEntryStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator());
+    return new JAXBConfigurationEntryStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator(), null);
   }
 
   /**

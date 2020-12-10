@@ -46,7 +46,8 @@ public class JAXBConfigurationStore<T> extends AbstractStore<T> {
   private final Class<T> type;
   private final File configFile;
 
-  public JAXBConfigurationStore(TypedStoreContext<T> context, Class<T> type, File configFile) {
+  public JAXBConfigurationStore(TypedStoreContext<T> context, Class<T> type, File configFile, boolean readOnly) {
+    super(readOnly);
     this.context = context;
     this.type = type;
     this.configFile = configFile;

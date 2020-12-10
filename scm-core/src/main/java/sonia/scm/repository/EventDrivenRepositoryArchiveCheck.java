@@ -22,59 +22,30 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.repository;
 
-/**
- * Base class for {@link ConfigurationStore}.
- *
- * @author Sebastian Sdorra
- * @since 1.16
- *
- * @param <T> type of store objects
- */
-public abstract class AbstractStore<T> implements ConfigurationStore<T> {
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 
-  /**
-   * stored object
-   */
-  protected T storeObject;
-  private final boolean readOnly;
+public final class EventDrivenRepositoryArchiveCheck implements RepositoryArchivedCheck {
 
-  protected AbstractStore(boolean readOnly) {
-    this.readOnly = readOnly;
+  private static final Collection<String> ARCHIVED_REPOSITORIES = Collections.synchronizedSet(new HashSet<>());
+
+  static void setAsArchived(String repositoryId) {
+    ARCHIVED_REPOSITORIES.add(repositoryId);
+  }
+
+  static void removeFromArchived(String repositoryId) {
+    ARCHIVED_REPOSITORIES.remove(repositoryId);
+  }
+
+  static boolean isRepositoryArchived(String repositoryId) {
+    return ARCHIVED_REPOSITORIES.contains(repositoryId);
   }
 
   @Override
-  public T get() {
-    if (storeObject == null) {
-      storeObject = readObject();
-    }
-
-    return storeObject;
+  public boolean isArchived(String repositoryId) {
+    return isRepositoryArchived(repositoryId);
   }
-
-  @Override
-  public void set(T object) {
-    if (readOnly) {
-      throw new StoreReadOnlyException(object);
-    }
-    writeObject(object);
-    this.storeObject = object;
-  }
-
-  /**
-   * Read the stored object.
-   *
-   *
-   * @return stored object
-   */
-  protected abstract T readObject();
-
-  /**
-   * Write object to the store.
-   *
-   *
-   * @param object object to write
-   */
-  protected abstract void writeObject(T object);
 }

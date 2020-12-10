@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -58,8 +58,8 @@ public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore {
 
   private final KeyGenerator keyGenerator;
 
-  FileBlobStore(KeyGenerator keyGenerator, File directory) {
-    super(directory, SUFFIX);
+  FileBlobStore(KeyGenerator keyGenerator, File directory, boolean readOnly) {
+    super(directory, SUFFIX, readOnly);
     this.keyGenerator = keyGenerator;
   }
 
@@ -73,6 +73,8 @@ public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(id),
       "id argument is required");
     LOG.debug("create new blob with id {}", id);
+
+    assertNotReadOnly();
 
     File file = getFile(id);
 
@@ -94,6 +96,7 @@ public class FileBlobStore extends FileBasedStore<Blob> implements BlobStore {
 
   @Override
   public void remove(Blob blob) {
+    assertNotReadOnly();
     Preconditions.checkNotNull(blob, "blob argument is required");
     remove(blob.getId());
   }

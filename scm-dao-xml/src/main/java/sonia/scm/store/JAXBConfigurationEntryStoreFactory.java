@@ -29,6 +29,7 @@ package sonia.scm.store;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.RepositoryArchivedCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.security.KeyGenerator;
 
@@ -45,8 +46,8 @@ public class JAXBConfigurationEntryStoreFactory extends FileBasedStoreFactory
   private KeyGenerator keyGenerator;
 
   @Inject
-  public JAXBConfigurationEntryStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator) {
-    super(contextProvider, repositoryLocationResolver, Store.CONFIG);
+  public JAXBConfigurationEntryStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator, RepositoryArchivedCheck archivedCheck) {
+    super(contextProvider, repositoryLocationResolver, Store.CONFIG, archivedCheck);
     this.keyGenerator = keyGenerator;
   }
 

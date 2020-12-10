@@ -32,23 +32,16 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
+import static sonia.scm.repository.EventDrivenRepositoryArchiveCheck.isRepositoryArchived;
+
 /**
  * Permission checks for repository related permissions.
  */
 public final class RepositoryPermissions {
 
-  private static final Collection<String> ARCHIVED_REPOSITORIES = Collections.synchronizedSet(new HashSet<>());
   private static final Collection<String> READ_ONLY_VERBS = Collections.synchronizedSet(new HashSet<>());
 
   private RepositoryPermissions(){}
-
-  static void setAsArchived(String repositoryId) {
-    ARCHIVED_REPOSITORIES.add(repositoryId);
-  }
-
-  static void removeFromArchived(String repositoryId) {
-    ARCHIVED_REPOSITORIES.remove(repositoryId);
-  }
 
   static void setReadOnlyVerbs(Collection<String> readOnlyVerbs) {
     READ_ONLY_VERBS.addAll(readOnlyVerbs);
@@ -404,7 +397,7 @@ public final class RepositoryPermissions {
       @Override
       public void check(String id) {
         originalCheck.check(id);
-        if (ARCHIVED_REPOSITORIES.contains(id)) {
+        if (isRepositoryArchived(id)) {
           throw new AuthorizationException("repository is archived");
         }
       }
@@ -412,19 +405,19 @@ public final class RepositoryPermissions {
       @Override
       public void check(RepositoryAccess item) {
         originalCheck.check(item);
-        if (ARCHIVED_REPOSITORIES.contains(item.getId())) {
+        if (isRepositoryArchived(item.getId())) {
           throw new AuthorizationException("repository is archived");
         }
       }
 
       @Override
       public boolean isPermitted(String id) {
-        return !ARCHIVED_REPOSITORIES.contains(id) && originalCheck.isPermitted(id);
+        return !isRepositoryArchived(id) && originalCheck.isPermitted(id);
       }
 
       @Override
       public boolean isPermitted(RepositoryAccess item) {
-        return !ARCHIVED_REPOSITORIES.contains(item.getId()) && originalCheck.isPermitted(item);
+        return !isRepositoryArchived(item.getId()) && originalCheck.isPermitted(item);
       }
 
       @Override
@@ -440,7 +433,7 @@ public final class RepositoryPermissions {
   }
 
   public static PermissionCheck failForArchived(PermissionCheck originalCheck, String id) {
-    if (ARCHIVED_REPOSITORIES.contains(id)) {
+    if (isRepositoryArchived(id)) {
       return new PermissionCheck() {
         @Override
         public void check() {

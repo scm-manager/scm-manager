@@ -290,6 +290,10 @@
     "D6SHRfqQw1": {
       "displayName": "Repository import failed",
       "description": "The repository could not be imported. It's likely that either the credentials (username/password) are wrong or missing. Please check your inputs."
+    },
+    "3FSIYtBJw1": {
+      "displayName": "An entity could not be stored",
+      "description": "An entity could not be stored, because the corresponding store was set to read only. Please see the log for more information."
     }
   },
   "namespaceStrategies": {

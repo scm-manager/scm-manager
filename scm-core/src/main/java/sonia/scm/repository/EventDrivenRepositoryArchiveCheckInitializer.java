@@ -34,13 +34,13 @@ import javax.inject.Inject;
 
 @Extension
 @EagerSingleton
-public class RepositoryPermissionsInitializer implements Initable {
+final class EventDrivenRepositoryArchiveCheckInitializer implements Initable {
 
   private final RepositoryDAO repositoryDAO;
   private final PermissionProvider permissionProvider;
 
   @Inject
-  public RepositoryPermissionsInitializer(RepositoryDAO repositoryDAO, PermissionProvider permissionProvider) {
+  EventDrivenRepositoryArchiveCheckInitializer(RepositoryDAO repositoryDAO, PermissionProvider permissionProvider) {
     this.repositoryDAO = repositoryDAO;
     this.permissionProvider = permissionProvider;
   }
@@ -51,7 +51,7 @@ public class RepositoryPermissionsInitializer implements Initable {
       .stream()
       .filter(Repository::isArchived)
       .map(Repository::getId)
-      .forEach(RepositoryPermissions::setAsArchived);
+      .forEach(EventDrivenRepositoryArchiveCheck::setAsArchived);
 
     RepositoryPermissions.setReadOnlyVerbs(permissionProvider.readOnlyVerbs());
   }
@@ -60,9 +60,9 @@ public class RepositoryPermissionsInitializer implements Initable {
   public void updateListener(RepositoryModificationEvent event) {
     Repository repository = event.getItem();
     if (repository.isArchived()) {
-      RepositoryPermissions.setAsArchived(repository.getId());
+      EventDrivenRepositoryArchiveCheck.setAsArchived(repository.getId());
     } else {
-      RepositoryPermissions.removeFromArchived(repository.getId());
+      EventDrivenRepositoryArchiveCheck.removeFromArchived(repository.getId());
     }
   }
 }

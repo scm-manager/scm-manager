@@ -24,57 +24,30 @@
 
 package sonia.scm.store;
 
-/**
- * Base class for {@link ConfigurationStore}.
- *
- * @author Sebastian Sdorra
- * @since 1.16
- *
- * @param <T> type of store objects
- */
-public abstract class AbstractStore<T> implements ConfigurationStore<T> {
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.ExceptionWithContext;
 
-  /**
-   * stored object
-   */
-  protected T storeObject;
-  private final boolean readOnly;
+import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 
-  protected AbstractStore(boolean readOnly) {
-    this.readOnly = readOnly;
+class StoreReadOnlyException extends ExceptionWithContext {
+
+  private static final Logger LOG = LoggerFactory.getLogger(StoreReadOnlyException.class);
+
+  public static final String CODE = "3FSIYtBJw1";
+
+  StoreReadOnlyException(String location) {
+    super(noContext(), String.format("Store is read only, could not write location %s", location));
+    LOG.error(getMessage());
   }
 
-  @Override
-  public T get() {
-    if (storeObject == null) {
-      storeObject = readObject();
+  StoreReadOnlyException(Object object) {
+    super(noContext(), String.format("Store is read only, could not write object of type %s: %s", object.getClass(), object));
+    LOG.error(getMessage());
+  }
+
+    @Override
+    public String getCode () {
+      return CODE;
     }
-
-    return storeObject;
   }
-
-  @Override
-  public void set(T object) {
-    if (readOnly) {
-      throw new StoreReadOnlyException(object);
-    }
-    writeObject(object);
-    this.storeObject = object;
-  }
-
-  /**
-   * Read the stored object.
-   *
-   *
-   * @return stored object
-   */
-  protected abstract T readObject();
-
-  /**
-   * Write object to the store.
-   *
-   *
-   * @param object object to write
-   */
-  protected abstract void writeObject(T object);
-}

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -32,11 +32,12 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.LifecycleUtils;
 import org.apache.shiro.util.ThreadState;
-
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
-
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
 import sonia.scm.repository.RepositoryDAO;
@@ -44,16 +45,13 @@ import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.MockUtil;
 
-import static org.junit.Assert.*;
-import static org.mockito.Mockito.mock;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
-
 import java.io.IOException;
 import java.util.UUID;
 import java.util.logging.Logger;
+
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
 
 /**
  *
@@ -73,6 +71,7 @@ public class AbstractTestBase
   protected RepositoryDAO repositoryDAO = mock(RepositoryDAO.class);
   protected RepositoryLocationResolver repositoryLocationResolver;
 
+  @BeforeEach
   @Before
   public void setUpTest() throws Exception
   {
@@ -90,6 +89,7 @@ public class AbstractTestBase
    * Method description
    *
    */
+  @AfterAll
   @AfterClass
   public static void tearDownShiro()
   {
@@ -162,6 +162,7 @@ public class AbstractTestBase
    *
    * @throws Exception
    */
+  @AfterEach
   @After
   public void tearDownTest() throws Exception
   {
