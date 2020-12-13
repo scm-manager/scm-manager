@@ -23,81 +23,34 @@
  */
 import React, { FC, useEffect, useState } from "react";
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-// @ts-ignore
-import { createElement, PrismAsyncLight as ReactSyntaxHighlighter } from "react-syntax-highlighter";
+import { PrismAsyncLight as ReactSyntaxHighlighter } from "react-syntax-highlighter";
 import { defaultLanguage, determineLanguage } from "./languages";
 // eslint-disable-next-line no-restricted-imports
 import highlightingTheme from "./syntax-highlighting";
-import styled from "styled-components";
-import { useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { withContextPath } from "./urls";
-import Icon from "./Icon";
-import Tooltip from "./Tooltip";
-import { useTranslation } from "react-i18next";
+import createSyntaxHighlighterRenderer from "./SyntaxHighlighterRenderer";
 
-const RowContainer = styled.div`
-  .linenumber {
-    display: inline-block;
-    min-width: 3em;
-    padding-right: 1em;
-    text-align: right;
-    user-select: none;
-    color: rgb(154, 154, 154);
-  }
-  span.linenumber:hover {
-    cursor: pointer;
-  }
-  span.linenumber + span > span.linenumber {
-    display: none !important;
-  }
-  &.focused,
-  &.focused > span:last-child {
-    background-color: rgb(229, 245, 252);
-  }
-  i {
-    visibility: hidden;
-  }
-  i:hover {
-    cursor: pointer;
-  }
-  &:hover i {
-    visibility: visible;
-  }
-`;
+const LINE_NUMBER_URL_HASH_REGEX = /^#line-(.*)$/;
 
 type Props = {
   language?: string;
   value: string;
   showLineNumbers?: boolean;
-  createPermaLink?: () => string;
+  permalink?: string;
 };
 
 const SyntaxHighlighter: FC<Props> = ({
   language = defaultLanguage,
   showLineNumbers = true,
   value,
-  createPermaLink
+  permalink
 }) => {
   const location = useLocation();
-  const history = useHistory();
-  const [rowToHighlight, setRowToHighlight] = useState<number | undefined>(undefined);
   const [contentRef, setContentRef] = useState<HTMLElement | null>();
-  const [copying, setCopying] = useState(false);
-  const [t] = useTranslation("repos");
 
   useEffect(() => {
-    const hash = location.hash;
-    const match = hash && hash.match(/^#line-(.*)$/);
-    if (match) {
-      const lineNumber = match[1];
-      setRowToHighlight(Number(lineNumber));
-    }
-  }, [location.hash]);
-
-  useEffect(() => {
-    const hash = location.hash;
-    const match = hash && hash.match(/^#line-(.*)$/);
+    const match = location.hash.match(LINE_NUMBER_URL_HASH_REGEX);
     if (contentRef && match) {
       const lineNumber = match[1];
       // We defer the content check until after the syntax-highlighter has rendered
@@ -114,74 +67,9 @@ const SyntaxHighlighter: FC<Props> = ({
     window.location.protocol +
     "//" +
     window.location.host +
-    withContextPath(((createPermaLink && createPermaLink()) || location.pathname) + "#line-" + lineNumber);
+    withContextPath((permalink || location.pathname) + "#line-" + lineNumber);
 
-  const lineNumberClick = (lineNumber: number) => {
-    history.push(location.pathname + "#line-" + lineNumber);
-    copyToClipboard(createLinePermaLink(lineNumber));
-  };
-
-  function copyToClipboard(text: string) {
-    setCopying(true);
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText(text).finally(() => setCopying(false));
-    } else {
-      const textArea = document.createElement("textarea");
-      textArea.value = text;
-      textArea.style.position = "fixed"; //avoid scrolling to bottom
-      document.body.appendChild(textArea);
-      textArea.focus();
-      textArea.select();
-
-      try {
-        document.execCommand("copy");
-      } finally {
-        setCopying(false);
-      }
-
-      document.body.removeChild(textArea);
-    }
-  }
-
-  // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-  // @ts-ignore
-  const defaultRenderer = ({ rows, stylesheet, useInlineStyles }) => {
-    return rows.map((node: React.ReactNode, i: number) => {
-      const lineNumber = i + 1;
-      const line = createElement({
-        node,
-        stylesheet,
-        useInlineStyles,
-        key: `code-segment${i}`
-      });
-      return (
-        <RowContainer
-          id={`line-${lineNumber}`}
-          className={(rowToHighlight === lineNumber && "focused") || undefined}
-          key={`line-${lineNumber}`}
-        >
-          {showLineNumbers && (
-            <>
-              {copying ? (
-                <Icon name="spinner" />
-              ) : (
-                <Tooltip message={t("sources.content.copyPermalink")}>
-                  <Icon name="link" onClick={() => lineNumberClick(lineNumber)} />
-                </Tooltip>
-              )}
-              <span
-                onClick={() => history.push(location.pathname + "#line-" + lineNumber)}
-                className="linenumber react-syntax-highlighter-line-number"
-              >
-                {lineNumber}
-              </span>
-            </>
-          )}
-          {line}
-        </RowContainer>
-      );
-    });
-  };
+  const defaultRenderer = createSyntaxHighlighterRenderer(createLinePermaLink, showLineNumbers);
 
   return (
     <div ref={setContentRef}>

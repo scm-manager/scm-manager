@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {ReactNode} from "react";
+import React, { ReactNode } from "react";
 import { storiesOf } from "@storybook/react";
 import styled from "styled-components";
 import SyntaxHighlighter from "./SyntaxHighlighter";
@@ -31,7 +31,7 @@ import GoHttpServer from "./__resources__/HttpServer.go";
 import JsHttpServer from "./__resources__/HttpServer.js";
 import PyHttpServer from "./__resources__/HttpServer.py";
 import Markdown from "./__resources__/test-page.md";
-import {MemoryRouter} from "react-router-dom";
+import { MemoryRouter } from "react-router-dom";
 
 const Spacing = styled.div`
   padding: 1em;

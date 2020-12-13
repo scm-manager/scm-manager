@@ -62,13 +62,16 @@ const SourcecodeViewer: FC<Props> = ({ file, language }) => {
     return null;
   }
 
-  const pathParts = location.pathname.split("/");
-  pathParts[6] = currentFileRevision;
-  const permaLink: string = pathParts.join("/");
-  const createPermalink = () => permaLink;
+  const permalink = replaceBranchWithRevision(location.pathname, currentFileRevision);
 
-  return <SyntaxHighlighter language={getLanguage(language)} value={content} createPermaLink={createPermalink} />;
+  return <SyntaxHighlighter language={getLanguage(language)} value={content} permalink={permalink} />;
 };
+
+export function replaceBranchWithRevision(path: string, revision: string) {
+  const pathParts = path.split("/");
+  pathParts[6] = revision; // The branch is at the 7th position in the url
+  return pathParts.join("/");
+}
 
 export function getLanguage(language: string) {
   return language.toLowerCase();
