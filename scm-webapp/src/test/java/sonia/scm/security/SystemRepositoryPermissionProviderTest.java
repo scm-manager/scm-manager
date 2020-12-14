@@ -27,7 +27,6 @@ package sonia.scm.security;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.repository.RepositoryAccessPermissions;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.util.ClassLoaders;
@@ -38,7 +37,6 @@ import java.util.Collection;
 
 import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.util.Arrays.asList;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -54,7 +52,7 @@ class SystemRepositoryPermissionProviderTest {
     PluginLoader pluginLoader = mock(PluginLoader.class);
     when(pluginLoader.getUberClassLoader()).thenReturn(ClassLoaders.getContextClassLoader(DefaultSecuritySystem.class));
     repositoryPermissionProvider = new SystemRepositoryPermissionProvider(pluginLoader);
-    allVerbsFromRepositoryClass = Arrays.stream(RepositoryAccessPermissions.class.getDeclaredFields())
+    allVerbsFromRepositoryClass = Arrays.stream(RepositoryPermissions.class.getDeclaredFields())
       .filter(field -> field.getName().startsWith("ACTION_"))
       .filter(field -> !field.getName().equals("ACTION_HEALTHCHECK"))
       .map(this::getString)

@@ -53,7 +53,7 @@ final class EventDrivenRepositoryArchiveCheckInitializer implements Initable {
       .map(Repository::getId)
       .forEach(EventDrivenRepositoryArchiveCheck::setAsArchived);
 
-    RepositoryPermissions.setReadOnlyVerbs(permissionProvider.readOnlyVerbs());
+    RepositoryPermissionGuard.setReadOnlyVerbs(permissionProvider.readOnlyVerbs());
   }
 
   @Subscribe(async = false)

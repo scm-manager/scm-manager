@@ -24,6 +24,7 @@
 
 package sonia.scm.repository;
 
+import com.github.sdorra.ssp.Guard;
 import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
 import com.google.common.base.MoreObjects;
@@ -53,7 +54,16 @@ import java.util.Set;
  */
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "repositories")
-public class Repository extends BasicPropertiesAware implements ModelObject, PermissionObject, RepositoryAccess {
+@StaticPermissions(
+  value = "repository",
+  permissions = {"read", "modify", "delete", "rename", "healthCheck", "pull", "push", "permissionRead", "permissionWrite"},
+  globalPermissions = {"create", "archive"},
+  custom = true, customGlobal = true,
+  guards = {
+    @Guard(guard = RepositoryPermissionGuard.class)
+  }
+)
+public class Repository extends BasicPropertiesAware implements ModelObject, PermissionObject {
 
   private static final long serialVersionUID = 3486560714961909711L;
 
