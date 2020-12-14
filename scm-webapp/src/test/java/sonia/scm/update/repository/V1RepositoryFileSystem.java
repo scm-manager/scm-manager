@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update.repository;
 
 import sonia.scm.repository.spi.ZippedRepositoryTestBase;
@@ -52,7 +52,7 @@ class V1RepositoryFileSystem {
    *     <id>c1597b4f-a9f0-49f7-ad1f-37d3aae1c55f</id>
    *     <name>some/more/directories/than/one</name>
    *     <public>false</public>
-   *     <archived>false</archived>
+   *     <archived>true</archived>
    *     <type>git</type>
    * </repository>
    * <repository>
