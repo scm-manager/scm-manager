@@ -3346,15 +3346,16 @@
     eslint-plugin-react "^7.16.0"
     eslint-plugin-react-hooks "^2.1.2"
 
-"@scm-manager/jest-preset@^2.10.1":
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/@scm-manager/jest-preset/-/jest-preset-2.10.1.tgz#94cf4463d944f9ae51f0d831813cc3eb3e4c43d3"
-  integrity sha512-VrKoPD4RomMx2okHtN6/MPwTyjztAA46+Oq1ZnzXZqcki9KpsDn8/M4igXl4gpcn11GKJjGfryPZ2seWEdenuQ==
+"@scm-manager/jest-preset@^2.12.1":
+  version "2.12.1"
+  resolved "https://registry.yarnpkg.com/@scm-manager/jest-preset/-/jest-preset-2.12.1.tgz#e620a2de6c83d23495359f3e7140bdeaa2928f69"
+  integrity sha512-EyQTzrI9sVjeWt+UpyL6jymJJ9OldgGI8e9mUoQOyv0eIR2cW+KvwOyTSrEKXU30V7OTETb1TIaRD8iGX6WKCQ==
   dependencies:
-    babel-jest "^24.9.0"
+    babel-jest "^26.6.3"
     babel-plugin-require-context-hook "^1.0.0"
-    jest "^26.0.0"
-    jest-junit "^8.0.0"
+    is-ci "^2.0.0"
+    jest "^26.6.3"
+    jest-junit "^12.0.0"
 
 "@scm-manager/prettier-config@^2.10.1":
   version "2.10.1"
@@ -11543,14 +11544,14 @@ jest-jasmine2@^26.6.3:
     pretty-format "^26.6.2"
     throat "^5.0.0"
 
-jest-junit@^8.0.0:
-  version "8.0.0"
-  resolved "https://registry.yarnpkg.com/jest-junit/-/jest-junit-8.0.0.tgz#d4f7ff67e292a5426dc60bc38694c9f77cb94178"
-  integrity sha512-cuD2XM2youMjrOxOu/7H2pLfsO8LfAG4D3WsBxd9fFyI9U0uPpmr/CORH64kbIyZ47X5x1Rbzb9ovUkAEvhEEA==
+jest-junit@^12.0.0:
+  version "12.0.0"
+  resolved "https://registry.yarnpkg.com/jest-junit/-/jest-junit-12.0.0.tgz#3ebd4a6a84b50c4ab18323a8f7d9cceb9d845df6"
+  integrity sha512-+8K35LlboWiPuCnXSyiid7rFdxNlpCWWM20WEYe6IZH6psfUWKZmSpSRQ5tk0C0cBeDsvsnIzcef5mYhyJsbug==
   dependencies:
-    jest-validate "^24.0.0"
-    mkdirp "^0.5.1"
-    strip-ansi "^4.0.0"
+    mkdirp "^1.0.4"
+    strip-ansi "^5.2.0"
+    uuid "^3.3.3"
     xml "^1.0.1"
 
 jest-leak-detector@^24.9.0:
@@ -11974,7 +11975,7 @@ jest-util@^26.6.2:
     is-ci "^2.0.0"
     micromatch "^4.0.2"
 
-jest-validate@^24.0.0, jest-validate@^24.9.0:
+jest-validate@^24.9.0:
   version "24.9.0"
   resolved "https://registry.yarnpkg.com/jest-validate/-/jest-validate-24.9.0.tgz#0775c55360d173cd854e40180756d4ff52def8ab"
   integrity sha512-HPIt6C5ACwiqSiwi+OfSSHbK8sG7akG8eATl+IPKaeIjtPOeBUd/g3J7DghugzxrGjI93qS/+RPKe1H6PqvhRQ==
@@ -12058,7 +12059,7 @@ jest@^24.9.0:
     import-local "^2.0.0"
     jest-cli "^24.9.0"
 
-jest@^26.0.0:
+jest@^26.0.0, jest@^26.6.3:
   version "26.6.3"
   resolved "https://registry.yarnpkg.com/jest/-/jest-26.6.3.tgz#40e8fdbe48f00dfa1f0ce8121ca74b88ac9148ef"
   integrity sha512-lGS5PXGAzR4RF7V5+XObhqz2KZIDUA1yD0DG6pBVmy10eh0ZIXQImRuzocsI/N2XZ1GrLFwTS27In2i2jlpq1Q==
@@ -18247,7 +18248,7 @@ utils-merge@1.0.1:
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
   integrity sha1-n5VxD1CiZ5R7LMwSR0HBAoQn5xM=
 
-uuid@^3.0.1, uuid@^3.1.0, uuid@^3.3.2, uuid@^3.4.0:
+uuid@^3.0.1, uuid@^3.1.0, uuid@^3.3.2, uuid@^3.3.3, uuid@^3.4.0:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
   integrity sha512-HjSDRw6gZE5JMggctHBcjVak08+KEVhSIiDzFnT9S9aegmp85S/bReBVTb4QTFaRNptJ9kuYaNhnbNEOkbKb/A==
