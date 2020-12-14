@@ -285,7 +285,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
     managerDaoAdapter.modify(
       changedRepository,
-      r -> RepositoryPermissions.archive(repository),
+      RepositoryPermissions::rename,
       notModified -> {
       },
       notModified -> fireEvent(HandlerEventType.MODIFY, changedRepository, repository));
@@ -316,7 +316,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
     managerDaoAdapter.modify(
       changedRepository,
-      r -> RepositoryPermissions.archive(repository),
+      RepositoryPermissions::archive,
       notModified -> {
       },
       notModified -> fireEvent(HandlerEventType.MODIFY, changedRepository, originalRepository));
