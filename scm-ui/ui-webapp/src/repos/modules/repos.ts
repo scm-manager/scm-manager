@@ -143,7 +143,7 @@ export function fetchReposFailure(err: Error): Action {
 }
 
 // fetch namespaces
-export function fetchNamespaces(link: string) {
+export function fetchNamespaces(link: string, callback?: () => void) {
   return function(dispatch: any) {
     dispatch(fetchNamespacesPending());
     return apiClient
@@ -152,6 +152,7 @@ export function fetchNamespaces(link: string) {
       .then(namespaces => {
         dispatch(fetchNamespacesSuccess(namespaces));
       })
+      .then(callback)
       .catch(err => {
         dispatch(fetchNamespacesFailure(err));
       });
