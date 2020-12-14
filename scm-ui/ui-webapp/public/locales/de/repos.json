@@ -254,7 +254,8 @@
       "branch": "Branch",
       "commitDate": "Commitdatum",
       "description": "Beschreibung",
-      "size": "Größe"
+      "size": "Größe",
+      "copyPermalink": "Link in Zwischenablage kopieren"
     },
     "noSources": "Keine Sources in diesem Branch gefunden.",
     "extension": {
