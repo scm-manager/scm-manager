@@ -33,21 +33,17 @@ import javax.inject.Inject;
 
 @Extension
 @EagerSingleton
-final class EventDrivenRepositoryArchiveCheckInitializer implements Initable {
+final class RepositoryPermissionGuardInitializer implements Initable {
 
-  private final RepositoryDAO repositoryDAO;
+  private final PermissionProvider permissionProvider;
 
   @Inject
-  EventDrivenRepositoryArchiveCheckInitializer(RepositoryDAO repositoryDAO) {
-    this.repositoryDAO = repositoryDAO;
+  RepositoryPermissionGuardInitializer(PermissionProvider permissionProvider) {
+    this.permissionProvider = permissionProvider;
   }
 
   @Override
   public void init(SCMContextProvider context) {
-    repositoryDAO.getAll()
-      .stream()
-      .filter(Repository::isArchived)
-      .map(Repository::getId)
-      .forEach(EventDrivenRepositoryArchiveCheck::setAsArchived);
+    RepositoryPermissionGuard.setReadOnlyVerbs(permissionProvider.readOnlyVerbs());
   }
 }

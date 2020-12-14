@@ -24,10 +24,16 @@
 
 package sonia.scm.repository;
 
+import com.github.legman.Subscribe;
+import sonia.scm.EagerSingleton;
+import sonia.scm.plugin.Extension;
+
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
+@Extension
+@EagerSingleton
 public final class EventDrivenRepositoryArchiveCheck implements RepositoryArchivedCheck {
 
   private static final Collection<String> ARCHIVED_REPOSITORIES = Collections.synchronizedSet(new HashSet<>());
@@ -47,5 +53,15 @@ public final class EventDrivenRepositoryArchiveCheck implements RepositoryArchiv
   @Override
   public boolean isArchived(String repositoryId) {
     return isRepositoryArchived(repositoryId);
+  }
+
+  @Subscribe(async = false)
+  public void updateListener(RepositoryModificationEvent event) {
+    Repository repository = event.getItem();
+    if (repository.isArchived()) {
+      EventDrivenRepositoryArchiveCheck.setAsArchived(repository.getId());
+    } else {
+      EventDrivenRepositoryArchiveCheck.removeFromArchived(repository.getId());
+    }
   }
 }
