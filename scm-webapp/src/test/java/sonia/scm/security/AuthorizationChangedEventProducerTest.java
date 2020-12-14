@@ -85,13 +85,13 @@ public class AuthorizationChangedEventProducerTest {
 
   private void assertUserEventIsFired(String username){
     assertNotNull(producer.event);
-    assertTrue(producer.event.isEveryUserAffected());
+    assertFalse(producer.event.isEveryUserAffected());
     assertEquals(username, producer.event.getNameOfAffectedUser());
   }
 
   private void assertGlobalEventIsFired(){
     assertNotNull(producer.event);
-    assertFalse(producer.event.isEveryUserAffected());
+    assertTrue(producer.event.isEveryUserAffected());
   }
 
   /**

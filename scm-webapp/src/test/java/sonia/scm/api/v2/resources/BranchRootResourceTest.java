@@ -275,7 +275,7 @@ public class BranchRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldNotDeleteBranchIfNotPermitted() throws IOException, URISyntaxException {
-    doThrow(AuthorizationException.class).when(subject).checkPermission("repository:modify:repoId");
+    doThrow(AuthorizationException.class).when(subject).checkPermission("repository:push:repoId");
     when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(Branch.normalBranch("suspicious", "0")));
 
     MockHttpRequest request = MockHttpRequest
