@@ -40,7 +40,7 @@ public class RepositoryPermissionGuard implements PermissionGuard<Repository> {
 
   private static final Collection<String> READ_ONLY_VERBS = Collections.synchronizedSet(new HashSet<>());
 
-  public static void setReadOnlyVerbs(Collection<String> readOnlyVerbs) {
+  static void setReadOnlyVerbs(Collection<String> readOnlyVerbs) {
     READ_ONLY_VERBS.addAll(readOnlyVerbs);
   }
 
