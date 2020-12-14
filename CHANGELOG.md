@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Add repository import via dump file for Subversion ([#1471](https://github.com/scm-manager/scm-manager/pull/1471))
 - Add support for permalinks to lines in source code view ([#1472](https://github.com/scm-manager/scm-manager/pull/1472))
+- Add "archive" flag for repositories to make them immutable ([#1477](https://github.com/scm-manager/scm-manager/pull/1477))
 
 ## [2.11.1] - 2020-12-07
 ### Fixed
