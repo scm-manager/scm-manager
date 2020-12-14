@@ -21,37 +21,68 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC, useEffect, useState } from "react";
 
 import { PrismAsyncLight as ReactSyntaxHighlighter } from "react-syntax-highlighter";
 import { defaultLanguage, determineLanguage } from "./languages";
 // eslint-disable-next-line no-restricted-imports
 import highlightingTheme from "./syntax-highlighting";
+import { useLocation } from "react-router-dom";
+import { withContextPath } from "./urls";
+import createSyntaxHighlighterRenderer from "./SyntaxHighlighterRenderer";
+
+const LINE_NUMBER_URL_HASH_REGEX = /^#line-(.*)$/;
 
 type Props = {
   language?: string;
   value: string;
   showLineNumbers?: boolean;
+  permalink?: string;
 };
 
-class SyntaxHighlighter extends React.Component<Props> {
-  static defaultProps: Partial<Props> = {
-    language: defaultLanguage,
-    showLineNumbers: true
-  };
+const SyntaxHighlighter: FC<Props> = ({
+  language = defaultLanguage,
+  showLineNumbers = true,
+  value,
+  permalink
+}) => {
+  const location = useLocation();
+  const [contentRef, setContentRef] = useState<HTMLElement | null>();
 
-  render() {
-    const { showLineNumbers, language } = this.props;
-    return (
+  useEffect(() => {
+    const match = location.hash.match(LINE_NUMBER_URL_HASH_REGEX);
+    if (contentRef && match) {
+      const lineNumber = match[1];
+      // We defer the content check until after the syntax-highlighter has rendered
+      setTimeout(() => {
+        const element = contentRef.querySelector(`#line-${lineNumber}`);
+        if (element && element.scrollIntoView) {
+          element.scrollIntoView();
+        }
+      });
+    }
+  }, [value, contentRef]);
+
+  const createLinePermaLink = (lineNumber: number) =>
+    window.location.protocol +
+    "//" +
+    window.location.host +
+    withContextPath((permalink || location.pathname) + "#line-" + lineNumber);
+
+  const defaultRenderer = createSyntaxHighlighterRenderer(createLinePermaLink, showLineNumbers);
+
+  return (
+    <div ref={setContentRef}>
       <ReactSyntaxHighlighter
-        showLineNumbers={showLineNumbers}
+        showLineNumbers={false}
         language={determineLanguage(language)}
         style={highlightingTheme}
+        renderer={defaultRenderer}
       >
-        {this.props.value}
+        {value}
       </ReactSyntaxHighlighter>
-    );
-  }
-}
+    </div>
+  );
+};
 
 export default SyntaxHighlighter;
