@@ -38,3 +38,4 @@ export { default as Textarea } from "./Textarea";
 export { default as PasswordConfirmation } from "./PasswordConfirmation";
 export { default as LabelWithHelpIcon } from "./LabelWithHelpIcon";
 export { default as DropDown } from "./DropDown";
+export { default as FileUpload } from "./FileUpload";

@@ -66,6 +66,14 @@
     "importUrl": "Remote Repository URL",
     "username": "Benutzername",
     "password": "Passwort",
+    "compressed": {
+      "label": "Komprimiert",
+      "helpText": "Anwählen, wenn die Datei komprimiert ist."
+    },
+    "bundle": {
+      "title": "Wählen Sie Ihre Datei aus",
+      "helpText": "Wählen Sie die Datei aus der das Repository importiert werden soll."
+    },
     "pending": {
       "subtitle": "Repository wird importiert...",
       "infoText": "Ihr Repository wird gerade importiert. Dies kann einen Moment dauern. Sie werden weitergeleitet, sobald der Import abgeschlossen ist. Wenn Sie diese Seite verlassen, können Sie nicht zurückkehren, um den Import-Status zu erfahren."
@@ -75,6 +83,10 @@
       "url": {
         "label": "Import via URL",
         "helpText": "Das Repository wird über eine URL importiert."
+      },
+      "bundle": {
+        "label": "Import aus Dump",
+        "helpText": "Das Repository wird aus einen Datei Dump importiert."
       }
     }
   },
