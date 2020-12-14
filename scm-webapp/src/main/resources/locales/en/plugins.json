@@ -43,8 +43,10 @@
         "description": "May create repositories"
       },
       "archive": {
-        "displayName": "Archive repositories",
-        "description": "May mark repositories as \"archived\" and therefore unmodifiable"
+        "*": {
+          "displayName": "Archive repositories",
+          "description": "May mark repositories as \"archived\" and therefore unmodifiable"
+        }
       }
     },
     "user": {
@@ -142,6 +144,10 @@
       "permissionWrite": {
         "displayName": "modify permissions",
         "description": "May modify the permissions of the repository"
+      },
+      "archive": {
+        "displayName": "archive repository",
+        "description": "May mark the repository as \"archived\" and therefore unmodifiable"
       },
       "*": {
         "displayName": "own repository",

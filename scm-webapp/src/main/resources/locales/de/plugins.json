@@ -43,8 +43,10 @@
         "description": "Darf Repositories erstellen."
       },
       "archive": {
-        "displayName": "Repositories archivieren",
-        "description": "Darf Repositories als \"archiviert\" und somit als schreibgeschützt markieren."
+        "*": {
+          "displayName": "Repositories archivieren",
+          "description": "Darf Repositories als \"archiviert\" und somit als schreibgeschützt markieren."
+        }
       }
     },
     "user": {
@@ -142,6 +144,10 @@
       "permissionWrite": {
         "displayName": "Berechtigungen modifizieren",
         "description": "Darf die Berechtigungen des Repository bearbeiten."
+      },
+      "archive": {
+        "displayName": "Repository archivieren",
+        "description": "Darf das Repository als \"archiviert\" und somit als schreibgeschützt markieren."
       },
       "*": {
         "displayName": "Alle Repository Rechte",

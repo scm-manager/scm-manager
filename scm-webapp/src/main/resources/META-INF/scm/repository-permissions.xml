@@ -33,6 +33,7 @@
     <verb>push</verb>
     <verb read-only="true">permissionRead</verb>
     <verb>permissionWrite</verb>
+    <verb read-only="true">archive</verb>
     <verb>*</verb>
   </verbs>
   <roles>
