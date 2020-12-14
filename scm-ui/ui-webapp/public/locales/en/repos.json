@@ -267,7 +267,8 @@
       "branch": "Branch",
       "commitDate": "Commit date",
       "description": "Description",
-      "size": "Size"
+      "size": "Size",
+      "copyPermalink": "Copy Permalink to Clipboard"
     },
     "noSources": "No sources found for this branch.",
     "extension": {
