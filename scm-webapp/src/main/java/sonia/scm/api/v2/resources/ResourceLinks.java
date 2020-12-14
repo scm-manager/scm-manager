@@ -137,8 +137,8 @@ class ResourceLinks {
       return publicKeyLinkBuilder.method("findAll").parameters(name).href();
     }
 
-    public String apiKeys(String name) {
-      return apiKeyLinkBuilder.method("findAll").parameters(name).href();
+    public String apiKeys(String username) {
+      return apiKeyLinkBuilder.method("findAll").parameters(username).href();
     }
   }
 

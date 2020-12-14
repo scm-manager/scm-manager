@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Fixed
-- Page navigation with apiKey entry in User and Me section ([#1464](https://github.com/scm-manager/scm-manager/pull/1464))
+- Add "Api Key" page link to sub-navigation of "User" and "Me" sections ([#1464](https://github.com/scm-manager/scm-manager/pull/1464))
 
 ## [2.11.1] - 2020-12-07
 
