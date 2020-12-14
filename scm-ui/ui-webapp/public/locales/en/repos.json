@@ -67,6 +67,14 @@
     "importUrl": "Remote repository url",
     "username": "Username",
     "password": "Password",
+    "compressed": {
+      "label": "Compressed",
+      "helpText": "Check if your dump file is compressed."
+    },
+    "bundle": {
+      "title": "Select your dump file",
+      "helpText": "Select your dump file from which the repository should be imported."
+    },
     "pending": {
       "subtitle": "Importing Repository...",
       "infoText": "Your repository is currently being imported. This may take a moment. You will be forwarded as soon as the import is finished. If you leave this page you cannot return to find out the import status."
@@ -76,6 +84,10 @@
       "url": {
         "label": "Import via URL",
         "helpText": "The Repository will be imported via the provided URL."
+      },
+      "bundle": {
+        "label": "Import from dump",
+        "helpText": "The repository will be imported from a dump file."
       }
     }
   },
@@ -198,7 +210,7 @@
       "sources": "Sources"
     },
     "parents": {
-      "label" : "Parent",
+      "label": "Parent",
       "label_plural": "Parents"
     },
     "contributors": {
@@ -255,7 +267,8 @@
       "branch": "Branch",
       "commitDate": "Commit date",
       "description": "Description",
-      "size": "Size"
+      "size": "Size",
+      "copyPermalink": "Copy Permalink to Clipboard"
     },
     "noSources": "No sources found for this branch.",
     "extension": {

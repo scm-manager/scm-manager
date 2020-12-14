@@ -1,0 +1,83 @@
+SVN-fs-dump-format-version: 2
+
+UUID: dcaa635c-9a8d-4cd6-918f-250ca2f765ea
+
+Revision-number: 0
+Prop-content-length: 56
+Content-length: 56
+
+K 8
+svn:date
+V 27
+2020-12-09T13:42:16.879000Z
+PROPS-END
+
+Revision-number: 1
+Prop-content-length: 124
+Content-length: 124
+
+K 10
+svn:author
+V 8
+scmadmin
+K 8
+svn:date
+V 27
+2020-12-09T13:42:18.270000Z
+K 7
+svn:log
+V 21
+initialize repository
+PROPS-END
+
+Node-path: trunk
+Node-kind: dir
+Node-action: add
+Prop-content-length: 10
+Content-length: 10
+
+PROPS-END
+
+
+Node-path: trunk/README.md
+Node-kind: file
+Node-action: add
+Text-content-md5: fe6869009516b5517b13036294d05f83
+Text-content-sha1: 4e51754688703c31980541dbbb884671d92cf846
+Prop-content-length: 10
+Text-content-length: 9
+Content-length: 19
+
+PROPS-END
+# dump_me
+
+Revision-number: 2
+Prop-content-length: 106
+Content-length: 106
+
+K 10
+svn:author
+V 8
+scmadmin
+K 8
+svn:date
+V 27
+2020-12-09T13:42:38.170000Z
+K 7
+svn:log
+V 4
+test
+PROPS-END
+
+Node-path: trunk/second_one.txt
+Node-kind: file
+Node-action: add
+Text-content-md5: 098f6bcd4621d373cade4e832627b4f6
+Text-content-sha1: a94a8fe5ccb19ba61c4c0873d391e987982fbbd3
+Prop-content-length: 10
+Text-content-length: 4
+Content-length: 14
+
+PROPS-END
+test
+

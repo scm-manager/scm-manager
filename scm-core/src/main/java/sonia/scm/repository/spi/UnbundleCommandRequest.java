@@ -89,7 +89,7 @@ public final class UnbundleCommandRequest
    *
    * @return {@link ByteSource} archive
    */
-  ByteSource getArchive()
+  public ByteSource getArchive()
   {
     return archive;
   }

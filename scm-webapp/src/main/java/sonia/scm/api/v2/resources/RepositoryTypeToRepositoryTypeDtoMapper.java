@@ -47,8 +47,13 @@ public abstract class RepositoryTypeToRepositoryTypeDtoMapper extends BaseMapper
   void appendLinks(RepositoryType repositoryType, @MappingTarget RepositoryTypeDto target) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.repositoryType().self(repositoryType.getName()));
 
-    if (RepositoryPermissions.create().isPermitted() && repositoryType.getSupportedCommands().contains(Command.PULL)) {
-      linksBuilder.array(Link.linkBuilder("import", resourceLinks.repository().importFromUrl(repositoryType.getName())).withName("url").build());
+    if (RepositoryPermissions.create().isPermitted()) {
+      if (repositoryType.getSupportedCommands().contains(Command.PULL)) {
+        linksBuilder.array(Link.linkBuilder("import", resourceLinks.repository().importFromUrl(repositoryType.getName())).withName("url").build());
+      }
+      if (repositoryType.getSupportedCommands().contains(Command.UNBUNDLE)) {
+        linksBuilder.array(Link.linkBuilder("import", resourceLinks.repository().importFromBundle(repositoryType.getName())).withName("bundle").build());
+      }
     }
 
     target.add(linksBuilder.build());

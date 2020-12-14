@@ -22,20 +22,24 @@
  * SOFTWARE.
  */
 
-// @create-index
+export default async function copyToClipboard(text: string) {
+  if (navigator.clipboard) {
+    return navigator.clipboard.writeText(text);
+  } else {
+    const textArea = document.createElement("textarea");
+    textArea.value = text;
+    textArea.style.position = "fixed"; //avoid scrolling to bottom
+    document.body.appendChild(textArea);
+    textArea.focus();
+    textArea.select();
 
-export { default as AddEntryToTableField } from "./AddEntryToTableField";
-export { default as AddKeyValueEntryToTableField } from "./AddKeyValueEntryToTableField";
-export { default as AutocompleteAddEntryToTableField } from "./AutocompleteAddEntryToTableField";
-export { default as TagGroup } from "./TagGroup";
-export { default as MemberNameTagGroup } from "./MemberNameTagGroup";
-export { default as Checkbox } from "./Checkbox";
-export { default as Radio } from "./Radio";
-export { default as FilterInput } from "./FilterInput";
-export { default as InputField } from "./InputField";
-export { default as Select, SelectItem } from "./Select";
-export { default as Textarea } from "./Textarea";
-export { default as PasswordConfirmation } from "./PasswordConfirmation";
-export { default as LabelWithHelpIcon } from "./LabelWithHelpIcon";
-export { default as DropDown } from "./DropDown";
-export { default as FileUpload } from "./FileUpload";
+    try {
+      document.execCommand("copy");
+      return Promise.resolve();
+    } catch (e) {
+      return Promise.reject(e);
+    } finally {
+      document.body.removeChild(textArea);
+    }
+  }
+}
