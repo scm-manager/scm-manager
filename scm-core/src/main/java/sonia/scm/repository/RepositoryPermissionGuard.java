@@ -64,7 +64,7 @@ public class RepositoryPermissionGuard implements PermissionGuard<Repository> {
 
     @Override
     public boolean isPermitted(Subject subject, String id, BooleanSupplier delegate) {
-      return false;
+      return !isRepositoryArchived(id) && delegate.getAsBoolean();
     }
   }
 }
