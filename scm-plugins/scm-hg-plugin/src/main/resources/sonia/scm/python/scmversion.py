@@ -38,4 +38,4 @@ except (AttributeError, ImportError):
 @command(b'scmversion', norepo=True)
 def scmversion(ui, **opts):
   pythonVersion = platform.python_version().encode("utf-8")
-  ui.write(b"python/%s mercurial/%s\n" % (util.version(), pythonVersion) )
+  ui.write(b"python/%s mercurial/%s\n" % (pythonVersion, util.version()))
