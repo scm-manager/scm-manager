@@ -151,7 +151,7 @@ public class GitRepositoryConfigResource {
     ConfigurationStore<GitRepositoryConfig> repositoryConfigStore = getStore(repository);
     GitRepositoryConfig config = repositoryConfigMapper.map(dto);
     repositoryConfigStore.set(config);
-    LOG.info("git default branch of repository {} has changed, sending clear cache event", repository.getNamespaceAndName());
+    LOG.info("git default branch of repository {} has changed, sending clear cache event", repository);
     return Response.noContent().build();
   }
 

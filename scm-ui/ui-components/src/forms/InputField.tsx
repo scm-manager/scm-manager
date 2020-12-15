@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, KeyboardEvent } from "react";
+import React, { ChangeEvent, KeyboardEvent, FocusEvent } from "react";
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import { createAttributesForTesting } from "../devBuild";
@@ -41,6 +41,7 @@ type Props = {
   helpText?: string;
   className?: string;
   testId?: string;
+  onBlur?: (value: string, name?: string) => void;
 };
 
 class InputField extends React.Component<Props> {
@@ -59,6 +60,12 @@ class InputField extends React.Component<Props> {
 
   handleInput = (event: ChangeEvent<HTMLInputElement>) => {
     this.props.onChange(event.target.value, this.props.name);
+  };
+
+  handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+    if (this.props.onBlur) {
+      this.props.onBlur(event.target.value, this.props.name);
+    }
   };
 
   handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
@@ -102,6 +109,7 @@ class InputField extends React.Component<Props> {
             onChange={this.handleInput}
             onKeyPress={this.handleKeyPress}
             disabled={disabled}
+            onBlur={this.handleBlur}
             {...createAttributesForTesting(testId)}
           />
         </div>

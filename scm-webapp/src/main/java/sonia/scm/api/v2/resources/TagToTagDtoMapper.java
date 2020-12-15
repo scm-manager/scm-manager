@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
@@ -31,12 +31,12 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
 import org.mapstruct.ObjectFactory;
-import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.Tag;
 import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
-
 import java.time.Instant;
 import java.util.Optional;
 
@@ -52,17 +52,23 @@ public abstract class TagToTagDtoMapper extends HalAppenderMapper {
 
   @Mapping(target = "date", source = "date", qualifiedByName = "mapDate")
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
-  public abstract TagDto map(Tag tag, @Context NamespaceAndName namespaceAndName);
+  @Mapping(target = "signatures")
+  public abstract TagDto map(Tag tag, @Context Repository repository);
 
   @ObjectFactory
-  TagDto createDto(@Context NamespaceAndName namespaceAndName, Tag tag) {
+  TagDto createDto(@Context Repository repository, Tag tag) {
     Links.Builder linksBuilder = linkingTo()
-      .self(resourceLinks.tag().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getName()))
-      .single(link("sources", resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getRevision())))
-      .single(link("changeset", resourceLinks.changeset().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), tag.getRevision())));
+      .self(resourceLinks.tag().self(repository.getNamespace(), repository.getName(), tag.getName()))
+      .single(link("sources", resourceLinks.source().self(repository.getNamespace(), repository.getName(), tag.getRevision())))
+      .single(link("changeset", resourceLinks.changeset().self(repository.getNamespace(), repository.getName(), tag.getRevision())));
+
+    if (tag.getDeletable() && RepositoryPermissions.push(repository).isPermitted()) {
+      linksBuilder
+        .single(link("delete", resourceLinks.tag().delete(repository.getNamespace(), repository.getName(), tag.getName())));
+    }
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();
-    applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), tag, namespaceAndName);
+    applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), tag, repository);
 
     return new TagDto(linksBuilder.build(), embeddedBuilder.build());
   }

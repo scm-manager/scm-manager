@@ -25,7 +25,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Repository, Tag } from "@scm-manager/ui-types";
-import { DateFromNow } from "@scm-manager/ui-components";
+import { DateFromNow, SignatureIcon } from "@scm-manager/ui-components";
 import styled from "styled-components";
 import TagButtonGroup from "./TagButtonGroup";
 
@@ -58,9 +58,10 @@ const TagDetail: FC<Props> = ({ tag, repository }) => {
 
   return (
     <div className="media">
-      <FlexRow className="media-content subtitle">
-        <Label>{t("tag.name") + ": "} </Label> {tag.name}
-        <Created className="is-ellipsis-overflow">
+      <FlexRow className="media-content">
+        <Label className="subtitle has-text-weight-bold has-text-black">{t("tag.name") + ": "} </Label> <span className="subtitle">{tag.name}</span>
+        <SignatureIcon signatures={tag.signatures} className="ml-2 mb-5" />
+        <Created className="is-ellipsis-overflow mb-5">
           {t("tags.overview.created")} <Date date={tag.date} className="has-text-grey" />
         </Created>
       </FlexRow>

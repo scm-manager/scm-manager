@@ -55,6 +55,8 @@ import org.eclipse.jgit.util.LfsFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
+import sonia.scm.security.GPG;
+import sonia.scm.security.PublicKey;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 import sonia.scm.web.GitUserAgentProvider;
@@ -63,6 +65,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
@@ -73,73 +76,37 @@ import static java.util.Optional.of;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public final class GitUtil
-{
+public final class GitUtil {
 
   private static final GitUserAgentProvider GIT_USER_AGENT_PROVIDER = new GitUserAgentProvider();
-
-  /** Field description */
   public static final String REF_HEAD = "HEAD";
-
-  /** Field description */
   public static final String REF_HEAD_PREFIX = "refs/heads/";
-
-  /** Field description */
   public static final String REF_MASTER = "master";
-
-  /** Field description */
   private static final String DIRECTORY_DOTGIT = ".git";
-
-  /** Field description */
   private static final String DIRECTORY_OBJETCS = "objects";
-
-  /** Field description */
   private static final String DIRECTORY_REFS = "refs";
-
-  /** Field description */
   private static final String PREFIX_HEADS = "refs/heads/";
-
-  /** Field description */
   private static final String PREFIX_TAG = "refs/tags/";
-
-  /** Field description */
   private static final String REFSPEC = "+refs/heads/*:refs/remote/scm/%s/*";
-
-  /** Field description */
   private static final String REMOTE_REF = "refs/remote/scm/%s/%s";
-
-  /** Field description */
   private static final int TIMEOUT = 5;
 
-  /** Field description */
-  private static final String USERAGENT_GIT = "git/";
-
-  /** the logger for GitUtil */
+  /**
+   * the logger for GitUtil
+   */
   private static final Logger logger = LoggerFactory.getLogger(GitUtil.class);
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   */
-  private GitUtil() {}
+  private GitUtil() {
+  }
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param repo
-   */
-  public static void close(org.eclipse.jgit.lib.Repository repo)
-  {
-    if (repo != null)
-    {
+  public static void close(org.eclipse.jgit.lib.Repository repo) {
+    if (repo != null) {
       repo.close();
     }
   }
@@ -147,42 +114,30 @@ public final class GitUtil
   /**
    * TODO cache
    *
-   *
    * @param repository
    * @param revWalk
-   *
-   *
    * @return
    */
   public static Multimap<ObjectId,
     String> createTagMap(org.eclipse.jgit.lib.Repository repository,
-      RevWalk revWalk)
-  {
+                         RevWalk revWalk) {
     Multimap<ObjectId, String> tags = ArrayListMultimap.create();
 
     Map<String, Ref> tagMap = repository.getTags();
 
-    if (tagMap != null)
-    {
-      for (Map.Entry<String, Ref> e : tagMap.entrySet())
-      {
-        try
-        {
+    if (tagMap != null) {
+      for (Map.Entry<String, Ref> e : tagMap.entrySet()) {
+        try {
 
           RevCommit c = getCommit(repository, revWalk, e.getValue());
 
-          if (c != null)
-          {
+          if (c != null) {
             tags.put(c.getId(), e.getKey());
-          }
-          else if (logger.isWarnEnabled())
-          {
+          } else {
             logger.warn("could not find commit for tag {}", e.getKey());
           }
 
-        }
-        catch (IOException ex)
-        {
+        } catch (IOException ex) {
           logger.error("could not read commit for ref", ex);
         }
 
@@ -193,8 +148,7 @@ public final class GitUtil
   }
 
   public static FetchResult fetch(Git git, File directory, Repository remoteRepository) {
-    try
-    {
+    try {
       FetchCommand fetch = git.fetch();
 
       fetch.setRemote(directory.getAbsolutePath());
@@ -202,123 +156,63 @@ public final class GitUtil
       fetch.setTimeout((int) TimeUnit.MINUTES.toSeconds(TIMEOUT));
 
       return fetch.call();
-    }
-    catch (GitAPIException ex)
-    {
+    } catch (GitAPIException ex) {
       throw new InternalRepositoryException(ContextEntry.ContextBuilder.entity("Remote", directory.toString()).in(remoteRepository), "could not fetch", ex);
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   public static org.eclipse.jgit.lib.Repository open(File directory)
-    throws IOException
-  {
+    throws IOException {
     FS fs = FS.DETECTED;
     FileRepositoryBuilder builder = new FileRepositoryBuilder();
 
     builder.setFS(fs);
 
-    if (isGitDirectory(fs, directory))
-    {
+    if (isGitDirectory(fs, directory)) {
 
       // bare repository
       builder.setGitDir(directory).setBare();
-    }
-    else
-    {
+    } else {
       builder.setWorkTree(directory);
     }
 
     return builder.build();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param formatter
-   */
-  public static void release(DiffFormatter formatter)
-  {
-    if (formatter != null)
-    {
+  public static void release(DiffFormatter formatter) {
+    if (formatter != null) {
       formatter.close();
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param walk
-   */
-  public static void release(TreeWalk walk)
-  {
-    if (walk != null)
-    {
+  public static void release(TreeWalk walk) {
+    if (walk != null) {
       walk.close();
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param walk
-   */
-  public static void release(RevWalk walk)
-  {
-    if (walk != null)
-    {
+  public static void release(RevWalk walk) {
+    if (walk != null) {
       walk.close();
     }
   }
 
   //~--- get methods ----------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @param ref
-   *
-   * @return
-   */
-  public static String getBranch(Ref ref)
-  {
+  public static String getBranch(Ref ref) {
     String branch = null;
 
-    if (ref != null)
-    {
+    if (ref != null) {
       branch = getBranch(ref.getName());
     }
 
     return branch;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param name
-   *
-   * @return
-   */
-  public static String getBranch(String name)
-  {
+  public static String getBranch(String name) {
     String branch = null;
 
-    if (Util.isNotEmpty(name) && name.startsWith(PREFIX_HEADS))
-    {
+    if (Util.isNotEmpty(name) && name.startsWith(PREFIX_HEADS)) {
       branch = name.substring(PREFIX_HEADS.length());
     }
 
@@ -329,18 +223,15 @@ public final class GitUtil
    * Returns {@code true} if the provided reference name is a branch name.
    *
    * @param refName reference name
-   *
    * @return {@code true} if the name is a branch name
-   *
    * @since 1.50
    */
-  public static boolean isBranch(String refName)
-  {
+  public static boolean isBranch(String refName) {
     return Strings.nullToEmpty(refName).startsWith(PREFIX_HEADS);
   }
 
   public static Ref getBranchIdOrCurrentHead(org.eclipse.jgit.lib.Repository gitRepository, String requestedBranch) throws IOException {
-    if ( Strings.isNullOrEmpty(requestedBranch) ) {
+    if (Strings.isNullOrEmpty(requestedBranch)) {
       logger.trace("no default branch configured, use repository head as default");
       Optional<Ref> repositoryHeadRef = GitUtil.getRepositoryHeadRef(gitRepository);
       return repositoryHeadRef.orElse(null);
@@ -352,37 +243,28 @@ public final class GitUtil
   /**
    * Method description
    *
-   *
    * @param repo
    * @param branchName
-   *
    * @return
-   *
    * @throws IOException
    */
   public static Ref getBranchId(org.eclipse.jgit.lib.Repository repo,
-    String branchName)
-    throws IOException
-  {
+                                String branchName)
+    throws IOException {
     Ref ref = null;
-    if (!branchName.startsWith(REF_HEAD))
-    {
+    if (!branchName.startsWith(REF_HEAD)) {
       branchName = PREFIX_HEADS.concat(branchName);
     }
 
     checkBranchName(repo, branchName);
 
-    try
-    {
+    try {
       ref = repo.findRef(branchName);
 
-      if (ref == null)
-      {
+      if (ref == null) {
         logger.warn("could not find branch for {}", branchName);
       }
-    }
-    catch (IOException ex)
-    {
+    } catch (IOException ex) {
       logger.warn("error occured during resolve of branch id", ex);
     }
 
@@ -415,33 +297,21 @@ public final class GitUtil
   }
 
   /**
-   * Method description
-   *
-   *
-   * @param repository
-   * @param revWalk
-   * @param ref
-   *
-   * @return
-   *
-   * @throws IOException
+   * Returns the commit for the given ref.
+   * If the given ref is for a tag, the commit that this tag belongs to is returned instead.
    */
   public static RevCommit getCommit(org.eclipse.jgit.lib.Repository repository,
-    RevWalk revWalk, Ref ref)
-    throws IOException
-  {
+                                    RevWalk revWalk, Ref ref)
+    throws IOException {
     RevCommit commit = null;
     ObjectId id = ref.getPeeledObjectId();
 
-    if (id == null)
-    {
+    if (id == null) {
       id = ref.getObjectId();
     }
 
-    if (id != null)
-    {
-      if (revWalk == null)
-      {
+    if (id != null) {
+      if (revWalk == null) {
         revWalk = new RevWalk(repository);
       }
 
@@ -451,16 +321,30 @@ public final class GitUtil
     return commit;
   }
 
+  public static RevTag getTag(org.eclipse.jgit.lib.Repository repository,
+                              RevWalk revWalk, Ref ref)
+    throws IOException {
+    RevTag tag = null;
+    ObjectId id = ref.getObjectId();
+
+    if (id != null) {
+      if (revWalk == null) {
+        revWalk = new RevWalk(repository);
+      }
+
+      tag = revWalk.parseTag(id);
+    }
+
+    return tag;
+  }
+
   /**
    * Method description
    *
-   *
    * @param commit
-   *
    * @return
    */
-  public static long getCommitTime(RevCommit commit)
-  {
+  public static long getCommitTime(RevCommit commit) {
     long date = commit.getCommitTime();
 
     date = date * 1000;
@@ -471,17 +355,13 @@ public final class GitUtil
   /**
    * Method description
    *
-   *
    * @param objectId
-   *
    * @return
    */
-  public static String getId(AnyObjectId objectId)
-  {
+  public static String getId(AnyObjectId objectId) {
     String id = Util.EMPTY_STRING;
 
-    if (objectId != null)
-    {
+    if (objectId != null) {
       id = objectId.name();
     }
 
@@ -491,43 +371,26 @@ public final class GitUtil
   /**
    * Method description
    *
-   *
    * @param repository
    * @param id
-   *
    * @return
-   *
    * @throws IOException
    */
   public static Ref getRefForCommit(org.eclipse.jgit.lib.Repository repository,
-    ObjectId id)
-    throws IOException
-  {
+                                    ObjectId id)
+    throws IOException {
     Ref ref = null;
-    RevWalk walk = null;
 
-    try
-    {
-      walk = new RevWalk(repository);
-
+    try (RevWalk walk = new RevWalk(repository)) {
       RevCommit commit = walk.parseCommit(id);
 
-      for (Map.Entry<String, Ref> e : repository.getAllRefs().entrySet())
-      {
-        if (e.getKey().startsWith(Constants.R_HEADS))
-        {
-          if (walk.isMergedInto(commit,
-            walk.parseCommit(e.getValue().getObjectId())))
-          {
-            ref = e.getValue();
-          }
+      for (Map.Entry<String, Ref> e : repository.getAllRefs().entrySet()) {
+        if (e.getKey().startsWith(Constants.R_HEADS) && walk.isMergedInto(commit,
+          walk.parseCommit(e.getValue().getObjectId()))) {
+          ref = e.getValue();
         }
       }
 
-    }
-    finally
-    {
-      release(walk);
     }
 
     return ref;
@@ -580,26 +443,19 @@ public final class GitUtil
   /**
    * Method description
    *
-   *
    * @param repo
    * @param revision
-   *
    * @return
-   *
    * @throws IOException
    */
   public static ObjectId getRevisionId(org.eclipse.jgit.lib.Repository repo,
-    String revision)
-    throws IOException
-  {
+                                       String revision)
+    throws IOException {
     ObjectId revId;
 
-    if (Util.isNotEmpty(revision))
-    {
+    if (Util.isNotEmpty(revision)) {
       revId = repo.resolve(revision);
-    }
-    else
-    {
+    } else {
       revId = getRepositoryHead(repo);
     }
 
@@ -609,34 +465,27 @@ public final class GitUtil
   /**
    * Method description
    *
-   *
    * @param repository
    * @param localBranch
-   *
    * @return
    */
   public static String getScmRemoteRefName(Repository repository,
-    Ref localBranch)
-  {
+                                           Ref localBranch) {
     return getScmRemoteRefName(repository, localBranch.getName());
   }
 
   /**
    * Method description
    *
-   *
    * @param repository
    * @param localBranch
-   *
    * @return
    */
   public static String getScmRemoteRefName(Repository repository,
-    String localBranch)
-  {
+                                           String localBranch) {
     String branch = localBranch;
 
-    if (localBranch.startsWith(REF_HEAD_PREFIX))
-    {
+    if (localBranch.startsWith(REF_HEAD_PREFIX)) {
       branch = localBranch.substring(REF_HEAD_PREFIX.length());
     }
 
@@ -647,16 +496,12 @@ public final class GitUtil
    * Returns the name of the tag or {@code null} if the the ref is not a tag.
    *
    * @param refName ref name
-   *
    * @return name of tag or {@link null}
-   *
    * @since 1.50
    */
-  public static String getTagName(String refName)
-  {
+  public static String getTagName(String refName) {
     String tagName = null;
-    if (refName.startsWith(PREFIX_TAG))
-    {
+    if (refName.startsWith(PREFIX_TAG)) {
       tagName = refName.substring(PREFIX_TAG.length());
     }
 
@@ -666,91 +511,112 @@ public final class GitUtil
   /**
    * Method description
    *
-   *
    * @param ref
-   *
    * @return
    */
-  public static String getTagName(Ref ref)
-  {
+  public static String getTagName(Ref ref) {
     String name = ref.getName();
 
-    if (name.startsWith(PREFIX_TAG))
-    {
+    if (name.startsWith(PREFIX_TAG)) {
       name = name.substring(PREFIX_TAG.length());
     }
 
     return name;
   }
 
+  private static final String GPG_HEADER = "-----BEGIN PGP SIGNATURE-----";
+
+  public static Optional<Signature> getTagSignature(RevObject revObject, GPG gpg, RevWalk revWalk) throws IOException {
+    if (revObject instanceof RevTag) {
+      final byte[] messageBytes = revWalk.getObjectReader().open(revObject.getId()).getBytes();
+      final String message = new String(messageBytes);
+      final int signatureStartIndex = message.indexOf(GPG_HEADER);
+      if (signatureStartIndex < 0) {
+        return Optional.empty();
+      }
+
+      final String signature = message.substring(signatureStartIndex);
+
+      String publicKeyId = gpg.findPublicKeyId(signature.getBytes());
+      if (Strings.isNullOrEmpty(publicKeyId)) {
+        // key not found
+        return Optional.of(new Signature(publicKeyId, "gpg", SignatureStatus.NOT_FOUND, null, Collections.emptySet()));
+      }
+
+      Optional<PublicKey> publicKeyById = gpg.findPublicKey(publicKeyId);
+      if (!publicKeyById.isPresent()) {
+        // key not found
+        return Optional.of(new Signature(publicKeyId, "gpg", SignatureStatus.NOT_FOUND, null, Collections.emptySet()));
+      }
+
+      PublicKey publicKey = publicKeyById.get();
+
+      String rawMessage = message.substring(0, signatureStartIndex);
+      boolean verified = publicKey.verify(rawMessage.getBytes(), signature.getBytes());
+      return Optional.of(new Signature(
+        publicKeyId,
+        "gpg",
+        verified ? SignatureStatus.VERIFIED : SignatureStatus.INVALID,
+        publicKey.getOwner().orElse(null),
+        publicKey.getContacts()
+      ));
+    }
+    return Optional.empty();
+  }
+
   /**
    * Returns true if the request comes from a git client.
    *
-   *
    * @param request servlet request
-   *
    * @return true if the client is git
    */
-  public static boolean isGitClient(HttpServletRequest request)
-  {
+  public static boolean isGitClient(HttpServletRequest request) {
     return GIT_USER_AGENT_PROVIDER.parseUserAgent(request.getHeader(HttpUtil.HEADER_USERAGENT)) != null;
   }
 
   /**
    * Method description
    *
-   *
    * @param dir
-   *
    * @return
    */
-  public static boolean isGitDirectory(File dir)
-  {
+  public static boolean isGitDirectory(File dir) {
     return isGitDirectory(FS.DETECTED, dir);
   }
 
   /**
    * Method description
    *
-   *
    * @param fs
    * @param dir
-   *
    * @return
    */
-  public static boolean isGitDirectory(FS fs, File dir)
-  {
+  public static boolean isGitDirectory(FS fs, File dir) {
     //J-
     return fs.resolve(dir, DIRECTORY_OBJETCS).exists()
       && fs.resolve(dir, DIRECTORY_REFS).exists()
-      &&!fs.resolve(dir, DIRECTORY_DOTGIT).exists();
+      && !fs.resolve(dir, DIRECTORY_DOTGIT).exists();
     //J+
   }
 
   /**
    * Method description
    *
-   *
    * @param ref
-   *
    * @return
    */
-  public static boolean isHead(String ref)
-  {
+  public static boolean isHead(String ref) {
     return ref.startsWith(REF_HEAD_PREFIX);
   }
 
   /**
    * Method description
    *
-   *
    * @param id
-   *
    * @return
    */
-  public static boolean isValidObjectId(ObjectId id)
-  {
-    return (id != null) &&!id.equals(ObjectId.zeroId());
+  public static boolean isValidObjectId(ObjectId id) {
+    return (id != null) && !id.equals(ObjectId.zeroId());
   }
 
   /**
@@ -792,25 +658,20 @@ public final class GitUtil
   /**
    * Method description
    *
-   *
    * @param repo
    * @param branchName
-   *
    * @throws IOException
    */
   @VisibleForTesting
   static void checkBranchName(org.eclipse.jgit.lib.Repository repo,
-    String branchName)
-    throws IOException
-  {
-    if (branchName.contains(".."))
-    {
+                              String branchName)
+    throws IOException {
+    if (branchName.contains("..")) {
       File repoDirectory = repo.getDirectory();
       File branchFile = new File(repoDirectory, branchName);
 
       if (!branchFile.getCanonicalPath().startsWith(
-        repoDirectory.getCanonicalPath()))
-      {
+        repoDirectory.getCanonicalPath())) {
         logger.error(
           "branch \"{}\" is outside of the repository. It looks like path traversal attack",
           branchName);
@@ -824,13 +685,10 @@ public final class GitUtil
   /**
    * Method description
    *
-   *
    * @param repository
-   *
    * @return
    */
-  private static RefSpec createRefSpec(Repository repository)
-  {
+  private static RefSpec createRefSpec(Repository repository) {
     return new RefSpec(String.format(REFSPEC, repository.getId()));
   }
 }

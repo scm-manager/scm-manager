@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update.repository;
 
 import com.google.inject.Injector;
@@ -175,7 +175,7 @@ public class XmlRepositoryV1UpdateStep implements CoreUpdateStep {
           v1Repository.getContact(),
           v1Repository.getDescription(),
           createPermissions(v1Repository));
-        LOG.info("creating new repository {} with id {} from old repository {} in directory {}", repository.getNamespaceAndName(), repository.getId(), v1Repository.getName(), newPath);
+        LOG.info("creating new repository {} from old repository {} in directory {}", repository, v1Repository.getName(), newPath);
         repositoryDao.add(repository, newPath);
         propertyStore.put(v1Repository.getId(), v1Repository.getProperties());
       }

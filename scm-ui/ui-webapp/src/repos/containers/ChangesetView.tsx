@@ -29,6 +29,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { Changeset, Repository } from "@scm-manager/ui-types";
 import { ErrorPage, Loading } from "@scm-manager/ui-components";
 import {
+  fetchChangeset,
   fetchChangesetIfNeeded,
   getChangeset,
   getFetchChangesetFailure,
@@ -45,6 +46,7 @@ type Props = WithTranslation & {
   loading: boolean;
   error: Error;
   fetchChangesetIfNeeded: (repository: Repository, id: string) => void;
+  refetchChangeset: (repository: Repository, id: string) => void;
   match: any;
 };
 
@@ -62,7 +64,7 @@ class ChangesetView extends React.Component<Props> {
   }
 
   render() {
-    const { changeset, loading, error, t, repository, fileControlFactoryFactory } = this.props;
+    const { changeset, loading, error, t, repository, fileControlFactoryFactory, refetchChangeset } = this.props;
 
     if (error) {
       return <ErrorPage title={t("changesets.errorTitle")} subtitle={t("changesets.errorSubtitle")} error={error} />;
@@ -75,6 +77,7 @@ class ChangesetView extends React.Component<Props> {
         changeset={changeset}
         repository={repository}
         fileControlFactory={fileControlFactoryFactory && fileControlFactoryFactory(changeset)}
+        refetchChangeset={() => refetchChangeset(repository, changeset.id)}
       />
     );
   }
@@ -98,6 +101,9 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchChangesetIfNeeded: (repository: Repository, id: string) => {
       dispatch(fetchChangesetIfNeeded(repository, id));
+    },
+    refetchChangeset: (repository: Repository, id: string) => {
+      dispatch(fetchChangeset(repository, id));
     }
   };
 };

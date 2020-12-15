@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import org.mapstruct.*;
@@ -29,6 +29,10 @@ import sonia.scm.repository.Repository;
 
 @Mapper
 public abstract class RepositoryDtoToRepositoryMapper extends BaseDtoMapper {
+
+  public Repository map(RepositoryDto repositoryDto) {
+    return map(repositoryDto, null);
+  }
 
   @Mapping(target = "creationDate", ignore = true)
   @Mapping(target = "id", ignore = true)

@@ -45,6 +45,7 @@ abstract class RepositoryTestBase {
   IncomingRootResource incomingRootResource;
   RepositoryCollectionResource repositoryCollectionResource;
   AnnotateResource annotateResource;
+  RepositoryImportResource repositoryImportResource;
 
   RepositoryRootResource getRepositoryRootResource() {
     RepositoryBasedResourceProvider repositoryBasedResourceProvider = new RepositoryBasedResourceProvider(
@@ -65,6 +66,6 @@ abstract class RepositoryTestBase {
         dtoToRepositoryMapper,
         manager,
         repositoryBasedResourceProvider)),
-            of(repositoryCollectionResource));
+            of(repositoryCollectionResource), of(repositoryImportResource));
   }
 }

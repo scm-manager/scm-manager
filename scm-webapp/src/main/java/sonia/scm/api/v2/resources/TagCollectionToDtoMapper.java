@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
-import sonia.scm.repository.NamespaceAndName;
+import sonia.scm.repository.Repository;
 import sonia.scm.repository.Tag;
 
 import java.util.Collection;
@@ -40,7 +40,6 @@ import static java.util.stream.Collectors.toList;
 
 public class TagCollectionToDtoMapper {
 
-
   private final ResourceLinks resourceLinks;
   private final TagToTagDtoMapper tagToTagDtoMapper;
 
@@ -50,12 +49,23 @@ public class TagCollectionToDtoMapper {
     this.tagToTagDtoMapper = tagToTagDtoMapper;
   }
 
-  public HalRepresentation map(String namespace, String name, Collection<Tag> tags) {
-    return new HalRepresentation(createLinks(namespace, name), embedDtos(getTagDtoList(namespace, name, tags)));
+  public HalRepresentation map(Collection<Tag> tags, Repository repository) {
+    return new HalRepresentation(createLinks(repository.getNamespace(), repository.getName()), embedDtos(getTagDtoList(tags, repository)));
   }
 
-  public List<TagDto> getTagDtoList(String namespace, String name, Collection<Tag> tags) {
-    return tags.stream().map(tag -> tagToTagDtoMapper.map(tag, new NamespaceAndName(namespace, name))).collect(toList());
+  public List<TagDto> getTagDtoList(Collection<Tag> tags, Repository repository) {
+    return tags.stream().map(tag -> tagToTagDtoMapper.map(tag, repository)).collect(toList());
+  }
+
+  public List<TagDto> getMinimalEmbeddedTagDtoList(String namespace, String name, Collection<String> tags) {
+    return tags.stream()
+      .map(tag -> {
+        Links links = linkingTo().self(resourceLinks.tag().self(namespace, name, tag)).build();
+        TagDto dto = new TagDto(links);
+        dto.setName(tag);
+        return dto;
+      })
+      .collect(toList());
   }
 
   private Links createLinks(String namespace, String name) {

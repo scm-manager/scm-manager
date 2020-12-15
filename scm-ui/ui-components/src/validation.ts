@@ -49,3 +49,9 @@ const pathRegex = /^((?!\/{2,}).)*$/;
 export const isPathValid = (path: string) => {
   return pathRegex.test(path);
 };
+
+const urlRegex = /^[A-Za-z0-9]+:\/\/[^\s$.?#].[^\s]*$/;
+
+export const isUrlValid = (url: string) => {
+  return urlRegex.test(url);
+};

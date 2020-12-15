@@ -303,7 +303,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public ModificationsCommandBuilder getModificationsCommand() {
-    LOG.debug("create modifications command for repository {}", repository.getNamespaceAndName());
+    LOG.debug("create modifications command for repository {}", repository);
     return new ModificationsCommandBuilder(provider.getModificationsCommand(),repository, cacheManager.getCache(ModificationsCommandBuilder.CACHE_NAME), preProcessorUtil);
   }
 
@@ -375,6 +375,18 @@ public final class RepositoryService implements Closeable {
 
     return new TagsCommandBuilder(cacheManager, provider.getTagsCommand(),
       repository);
+  }
+
+  /**
+   * The tag command allows the management of repository tags.
+   *
+   * @return instance of {@link TagCommandBuilder}
+   *
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   */
+  public TagCommandBuilder getTagCommand() {
+    return new TagCommandBuilder(provider.getTagCommand());
   }
 
   /**

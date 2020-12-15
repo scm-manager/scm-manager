@@ -35,60 +35,28 @@ import sonia.scm.repository.Repository;
 public class AbstractCommand
 {
 
-  /**
-   * Constructs ...
-   *
-   *  @param context
-   *
-   */
+  protected final HgCommandContext context;
+  protected final Repository repository;
+
   public AbstractCommand(HgCommandContext context)
   {
     this.context = context;
     this.repository = context.getScmRepository();
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public com.aragost.javahg.Repository open()
   {
     return context.open();
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public HgCommandContext getContext()
   {
     return context;
   }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public Repository getRepository()
   {
     return repository;
   }
 
-  //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private HgCommandContext context;
-
-  /** Field description */
-  private Repository repository;
 }

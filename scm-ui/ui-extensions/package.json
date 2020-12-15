@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-extensions",
-  "version": "2.11.0-SNAPSHOT",
+  "version": "2.12.0-SNAPSHOT",
   "main": "src/index.ts",
   "license": "MIT",
   "private": false,
@@ -13,6 +13,11 @@
     "react": "^16.10.2"
   },
   "devDependencies": {
+    "@scm-manager/babel-preset": "^2.10.1",
+    "@scm-manager/eslint-config": "^2.10.1",
+    "@scm-manager/jest-preset": "^2.12.1",
+    "@scm-manager/prettier-config": "^2.10.1",
+    "@scm-manager/tsconfig": "^2.10.1",
     "@types/enzyme": "^3.10.3",
     "@types/jest": "^24.0.19",
     "@types/react": "^16.9.9",

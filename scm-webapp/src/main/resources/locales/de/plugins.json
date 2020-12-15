@@ -286,12 +286,16 @@
     "FVS9JY1T21": {
       "displayName": "Fehler bei der Anfrage",
       "description": "Bei der Anfrage trat ein Fehler auf. Prüfen Sie bitte den Status der HTTP Antwort und die konkrete Meldung."
+    },
+    "D6SHRfqQw1": {
+      "displayName": "Repository Import fehlgeschlagen",
+      "description": "Das Repository konnte nicht importiert werden. Möglicherweise wurden die Zugangsdaten (Benutzername/Passwort) nicht gesetzt oder sind fehlerhaft. Bitte prüfen Sie Ihre Eingaben."
     }
   },
   "namespaceStrategies": {
-    "UsernameNamespaceStrategy":  "Benutzername",
-    "CustomNamespaceStrategy":  "Benutzerdefiniert",
-    "CurrentYearNamespaceStrategy":  "Aktuelles Jahr",
+    "UsernameNamespaceStrategy": "Benutzername",
+    "CustomNamespaceStrategy": "Benutzerdefiniert",
+    "CurrentYearNamespaceStrategy": "Aktuelles Jahr",
     "RepositoryTypeNamespaceStrategy": "Repository Typ"
   }
 }

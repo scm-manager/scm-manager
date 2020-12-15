@@ -334,9 +334,11 @@ class ResourceLinks {
 
   static class RepositoryLinks {
     private final LinkBuilder repositoryLinkBuilder;
+    private final LinkBuilder repositoryImportLinkBuilder;
 
     RepositoryLinks(ScmPathInfo pathInfo) {
       repositoryLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class);
+      repositoryImportLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryImportResource.class);
     }
 
     String self(String namespace, String name) {
@@ -353,6 +355,14 @@ class ResourceLinks {
 
     String rename(String namespace, String name) {
       return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("rename").parameters().href();
+    }
+
+    String importFromUrl(String type) {
+      return repositoryImportLinkBuilder.method("getRepositoryImportResource").parameters().method("importFromUrl").parameters(type).href();
+    }
+
+    String importFromBundle(String type) {
+      return repositoryImportLinkBuilder.method("getRepositoryImportResource").parameters().method("importFromBundle").parameters(type).href();
     }
   }
 
@@ -443,6 +453,14 @@ class ResourceLinks {
 
     String self(String namespace, String name, String tagName) {
       return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("get").parameters(tagName).href();
+    }
+
+    String delete(String namespace, String name, String tagName) {
+      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("delete").parameters(tagName).href();
+    }
+
+    String create(String namespace, String name) {
+      return tagLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("tags").parameters().method("create").parameters().href();
     }
 
     String all(String namespace, String name) {
