@@ -14,7 +14,7 @@
   },
   "logout": {
     "error": {
-      "title": "Logout failed",
+      "title": "Logout Failed",
       "subtitle": "Something went wrong during logout"
     }
   },
@@ -87,10 +87,10 @@
   },
   "password": {
     "label": "Password",
-    "newPassword": "New password",
-    "currentPassword": "Current password",
+    "newPassword": "New Password",
+    "currentPassword": "Current Password",
     "currentPasswordHelpText": "The password currently in use",
-    "confirmPassword": "Confirm password",
+    "confirmPassword": "Confirm Password",
     "passwordInvalid": "Password has to be between 6 and 32 characters",
     "passwordConfirmFailed": "Passwords have to be identical",
     "submit": "Submit",
@@ -113,6 +113,6 @@
     "lastDivider": "and"
   },
   "fileUpload": {
-    "label": "Upload file"
+    "label": "Upload File"
   }
 }

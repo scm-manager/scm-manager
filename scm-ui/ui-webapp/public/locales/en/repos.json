@@ -59,12 +59,11 @@
   },
   "create": {
     "title": "Add Repository",
-    "subtitle": "Create a new repository",
-    "createButton": "Create new repository"
+    "subtitle": "Create a new repository"
   },
   "import": {
     "subtitle": "Import existing repository",
-    "importUrl": "Remote repository url",
+    "importUrl": "Remote Repository Url",
     "username": "Username",
     "password": "Password",
     "compressed": {
@@ -72,7 +71,7 @@
       "helpText": "Check if your dump file is compressed."
     },
     "bundle": {
-      "title": "Select your dump file",
+      "title": "Dump File",
       "helpText": "Select your dump file from which the repository should be imported."
     },
     "pending": {
@@ -117,13 +116,13 @@
     "commits": "Commits",
     "sources": "Sources",
     "defaultTag": "Default",
-    "dangerZone": "Delete branch",
+    "dangerZone": "Delete Branch",
     "delete": {
-      "button": "Delete branch",
+      "button": "Delete Branch",
       "subtitle": "Delete branch",
       "description": "Deleted branches cannot be restored.",
       "confirmAlert": {
-        "title": "Delete branch",
+        "title": "Delete Branch",
         "message": "Do you really want to delete the branch \"{{branch}}\"?",
         "cancel": "No",
         "submit": "Yes"
@@ -151,7 +150,7 @@
           }
         }
       },
-      "title": "Create a new tag",
+      "title": "Create a New Tag",
       "hint": "The tag will be automatically signed with your default key by the SCM-Manager.",
       "confirm": "Create Tag",
       "cancel": "Cancel"
@@ -161,13 +160,13 @@
     "name": "Name",
     "commit": "Commit",
     "sources": "Sources",
-    "dangerZone": "Delete tag",
+    "dangerZone": "Delete Tag",
     "delete": {
-      "button": "Delete tag",
+      "button": "Delete Tag",
       "subtitle": "Delete tag",
       "description": "Deleted tag can not be restored.",
       "confirmAlert": {
-        "title": "Delete tag",
+        "title": "Delete Tag",
         "message": "Do you really want to delete the tag \"{{tag}}\"?",
         "cancel": "No",
         "submit": "Yes"
@@ -238,15 +237,15 @@
     "submitCreate": "Save",
     "submitImport": "Import",
     "initializeRepository": "Initialize repository",
-    "dangerZone": "Rename and delete",
+    "dangerZone": "Rename and Delete",
     "createButton": "Create Repository",
-    "importButton": "Import repository"
+    "importButton": "Import Repository"
   },
   "sources": {
     "fileTree": {
       "name": "Name",
       "length": "Length",
-      "commitDate": "Commit date",
+      "commitDate": "Commit Date",
       "description": "Description",
       "notYetComputed": "Not yet computed, will be updated in a short while",
       "computationAborted": "The computation took too long and was aborted",
@@ -265,7 +264,7 @@
       },
       "path": "Path",
       "branch": "Branch",
-      "commitDate": "Commit date",
+      "commitDate": "Commit Date",
       "description": "Description",
       "size": "Size",
       "copyPermalink": "Copy Permalink to Clipboard"
@@ -283,7 +282,7 @@
     "group": "Group",
     "error-title": "Error",
     "error-subtitle": "Unknown permissions error",
-    "name": "User or group",
+    "name": "User or Group",
     "role": "Role",
     "custom": "CUSTOM",
     "permissions": "Permissions",
@@ -299,14 +298,14 @@
     "delete-permission-button": {
       "label": "Delete",
       "confirm-alert": {
-        "title": "Delete permission",
+        "title": "Delete Permission",
         "message": "Do you really want to delete the permission?",
         "submit": "Yes",
         "cancel": "No"
       }
     },
     "add-permission": {
-      "add-permission-heading": "Add new Permission",
+      "add-permission-heading": "Add New Permission",
       "submit-button": "Submit",
       "name-input-invalid": "Permission is not allowed to be empty! If it is not empty, your input name is invalid or it already exists!"
     },
@@ -329,7 +328,7 @@
     "subtitle": "Delete repository",
     "description": "Deleted repositories can not be restored.",
     "confirmAlert": {
-      "title": "Delete repository",
+      "title": "Delete Repository",
       "message": "Do you really want to delete the repository?",
       "submit": "Yes",
       "cancel": "No"
@@ -341,10 +340,10 @@
     "description1": "The repository can only be accessed by its new name.",
     "description2": "Namespace Permissions must be set again if the namespace is changed.",
     "modal": {
-      "title": "Rename repository",
+      "title": "Rename Repository",
       "label": {
-        "repoName": "Repository name",
-        "repoNamespace": "Repository namespace"
+        "repoName": "Repository Name",
+        "repoNamespace": "Repository Namespace"
       },
       "button": {
         "rename": "Rename",

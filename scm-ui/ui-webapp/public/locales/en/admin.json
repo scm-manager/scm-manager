@@ -9,16 +9,16 @@
     "info": {
       "title": "Administration",
       "currentAppVersion": "Current Application Version",
-      "newAppVersion": "New SCM-Manager version available",
+      "newAppVersion": "New SCM-Manager Version Available",
       "newRelease": {
-        "title": "New SCM-Manager version available",
+        "title": "New SCM-Manager Version Available",
         "description": "Download the latest SCM-Manager version {{version}} from the official homepage.",
-        "downloadButton": "Get latest version"
+        "downloadButton": "Get Latest Version"
       },
       "communityTitle": "Community Support",
       "communityIconAlt": "Community Support Icon",
       "communityInfo": "Contact the SCM-Manager support team for questions about SCM-Manager, to report bugs or to request features through the official channels.",
-      "communityButton": "Contact our Team",
+      "communityButton": "Contact Our Team",
       "enterpriseTitle": "Enterprise Support",
       "enterpriseIconAlt": "Enterprise Support Icon",
       "enterpriseInfo": "You require support with the integration of SCM-Manager into your processes, with the customization of the tool or simply a service level agreement (SLA)?",
@@ -36,12 +36,12 @@
       "installedNavLink": "Installed",
       "availableNavLink": "Available"
     },
-    "showPending": "Show changes",
-    "executePending": "Execute changes",
-    "outdatedPlugins": "Update {{count}} plugin",
-    "outdatedPlugins_plural": "Update {{count}} plugins",
-    "updateAll": "Update all plugins",
-    "cancelPending": "Cancel changes",
+    "showPending": "Show Changes",
+    "executePending": "Execute Changes",
+    "outdatedPlugins": "Update {{count}} Plugin",
+    "outdatedPlugins_plural": "Update {{count}} Plugins",
+    "updateAll": "Update All Plugins",
+    "cancelPending": "Cancel Changes",
     "noPlugins": "No plugins found.",
     "modal": {
       "title": {
@@ -91,7 +91,7 @@
     "createSubtitle": "Create Permission Role",
     "editSubtitle": "Edit Permission Role",
     "overview": {
-      "title": "Overview of all Permission Roles",
+      "title": "Overview of All Permission Roles",
       "noPermissionRoles": "No Permission Roles found.",
       "createButton": "Create Permission Role"
     },

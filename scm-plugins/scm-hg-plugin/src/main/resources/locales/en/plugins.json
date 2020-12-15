@@ -2,11 +2,11 @@
   "scm-hg-plugin": {
     "information": {
       "clone" : "Clone the repository",
-      "create" : "Create a new repository",
-      "replace" : "Push an existing repository",
-      "fetch": "Get remote changes",
-      "checkout": "Switch branch",
-      "checkoutTag": "Checkout tag"
+      "create" : "Create a New Repository",
+      "replace" : "Push an Existing Repository",
+      "fetch": "Get Remote Changes",
+      "checkout": "Switch Branch",
+      "checkoutTag": "Checkout Tag"
     },
     "config": {
       "link": "Mercurial",
