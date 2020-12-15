@@ -117,6 +117,7 @@ class ProxySettings extends React.Component<Props> {
               disabled={!enableProxy || !hasUpdatePermission}
               buttonLabel={t("proxySettings.addExcludeButton")}
               fieldLabel={t("proxySettings.addExclude")}
+              helpText={t("proxySettings.excludesTable.helpText")}
               errorMessage={t("proxySettings.addExcludeError")}
             />
           </div>
