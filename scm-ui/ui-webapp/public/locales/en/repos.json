@@ -92,7 +92,7 @@
   },
   "branches": {
     "overview": {
-      "title": "Overview of all branches",
+      "title": "Overview of All Branches",
       "noBranches": "No branches found.",
       "createButton": "Create Branch",
       "lastCommit": "Last commit"
@@ -119,7 +119,7 @@
     "dangerZone": "Delete Branch",
     "delete": {
       "button": "Delete Branch",
-      "subtitle": "Delete branch",
+      "subtitle": "Delete Branch",
       "description": "Deleted branches cannot be restored.",
       "confirmAlert": {
         "title": "Delete Branch",
@@ -131,7 +131,7 @@
   },
   "tags": {
     "overview": {
-      "title": "Overview of all tags",
+      "title": "Overview of All Tags",
       "noTags": "No tags found.",
       "created": "Created"
     },
@@ -163,7 +163,7 @@
     "dangerZone": "Delete Tag",
     "delete": {
       "button": "Delete Tag",
-      "subtitle": "Delete tag",
+      "subtitle": "Delete Tag",
       "description": "Deleted tag can not be restored.",
       "confirmAlert": {
         "title": "Delete Tag",
@@ -325,7 +325,7 @@
   },
   "deleteRepo": {
     "button": "Delete Repository",
-    "subtitle": "Delete repository",
+    "subtitle": "Delete Repository",
     "description": "Deleted repositories can not be restored.",
     "confirmAlert": {
       "title": "Delete Repository",
@@ -336,7 +336,7 @@
   },
   "renameRepo": {
     "button": "Rename Repository",
-    "subtitle": "Renames this repository",
+    "subtitle": "Rename this Repository",
     "description1": "The repository can only be accessed by its new name.",
     "description2": "Namespace Permissions must be set again if the namespace is changed.",
     "modal": {

@@ -91,7 +91,7 @@
     "createSubtitle": "Create Permission Role",
     "editSubtitle": "Edit Permission Role",
     "overview": {
-      "title": "Overview of All Permission Roles",
+      "title": "Overview of all Permission Roles",
       "noPermissionRoles": "No Permission Roles found.",
       "createButton": "Create Permission Role"
     },
