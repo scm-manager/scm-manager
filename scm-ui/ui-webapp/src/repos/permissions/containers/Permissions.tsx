@@ -45,9 +45,8 @@ import {
   isFetchPermissionsPending,
   modifyPermissionReset
 } from "../modules/permissions";
-import { ErrorPage, LabelWithHelpIcon, Loading, Subtitle } from "@scm-manager/ui-components";
+import { ErrorPage, Loading, Subtitle } from "@scm-manager/ui-components";
 import { Permission, PermissionCollection, PermissionCreateEntry, RepositoryRole } from "@scm-manager/ui-types";
-import SinglePermission from "./SinglePermission";
 import CreatePermissionForm from "./CreatePermissionForm";
 import { History } from "history";
 import { getPermissionsLink } from "../../modules/repos";
@@ -57,6 +56,7 @@ import {
   getRepositoryVerbsLink,
   getUserAutoCompleteLink
 } from "../../../modules/indexResource";
+import PermissionsTable from "../components/PermissionsTable";
 type Props = WithTranslation & {
   availablePermissions: boolean;
   availableRepositoryRoles: RepositoryRole[];
@@ -147,7 +147,7 @@ class Permissions extends React.Component<Props> {
       <CreatePermissionForm
         availableRoles={availableRepositoryRoles}
         availableVerbs={availableVerbs}
-        createPermission={permission => this.createPermission(permission)}
+        createPermission={(permission) => this.createPermission(permission)}
         loading={loadingCreatePermission}
         currentPermissions={permissions}
         userAutocompleteLink={userAutocompleteLink}
@@ -158,39 +158,7 @@ class Permissions extends React.Component<Props> {
     return (
       <div>
         <Subtitle subtitle={t("permission.title")} />
-        <table className="card-table table is-hoverable is-fullwidth">
-          <thead>
-            <tr>
-              <th>
-                <LabelWithHelpIcon label={t("permission.name")} helpText={t("permission.help.nameHelpText")} />
-              </th>
-              <th>
-                <LabelWithHelpIcon label={t("permission.role")} helpText={t("permission.help.roleHelpText")} />
-              </th>
-              <th>
-                <LabelWithHelpIcon
-                  label={t("permission.permissions")}
-                  helpText={t("permission.help.permissionsHelpText")}
-                />
-              </th>
-              <th />
-            </tr>
-          </thead>
-          <tbody>
-            {permissions.map(permission => {
-              return (
-                <SinglePermission
-                  availableRepositoryRoles={availableRepositoryRoles}
-                  availableRepositoryVerbs={availableVerbs}
-                  key={permission.name + permission.groupPermission.toString()}
-                  namespace={namespace}
-                  repoName={repoName}
-                  permission={permission}
-                />
-              );
-            })}
-          </tbody>
-        </table>
+        <PermissionsTable {...this.props} />
         {createPermissionForm}
       </div>
     );

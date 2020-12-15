@@ -277,7 +277,8 @@
     "moreFilesAvailable": "Es werden nur die ersten {{count}} Dateien angezeigt. Es sind weitere Dateien vorhanden."
   },
   "permission": {
-    "title": "Berechtigungen bearbeiten",
+    "title": "Berechtigungen",
+    "noPermissions": "Keine Berechtigungen gefunden.",
     "user": "Benutzer",
     "group": "Gruppe",
     "error-title": "Fehler",

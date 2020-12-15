@@ -277,7 +277,8 @@
     "moreFilesAvailable": "These are just the first {{count}} files. There are more files available."
   },
   "permission": {
-    "title": "Edit Permissions",
+    "title": "Permissions",
+    "noPermissions": "No permissions found.",
     "user": "User",
     "group": "Group",
     "error-title": "Error",
