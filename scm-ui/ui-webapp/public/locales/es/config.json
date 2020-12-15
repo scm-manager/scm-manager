@@ -11,18 +11,27 @@
       "no-write-permission-notification": "Por favor, tenga en cuenta: ¡No tiene permiso para editar la configuración!"
     }
   },
-  "proxy-settings": {
-    "name": "Ajustes del proxy",
-    "proxy-password": "Contraseña del proxy",
-    "proxy-port": "Puerto del proxy",
-    "proxy-server": "Servidor proxy",
-    "proxy-user": "Usuario del proxy",
-    "enable-proxy": "Habilitar proxy",
-    "proxy-excludes": "Excepciones del proxy",
-    "remove-proxy-exclude-button": "Eliminar las excepciones del proxy",
-    "add-proxy-exclude-error": "La excepción que desea añadir al proxy es incorrecta",
-    "add-proxy-exclude-textfield": "Añada aquí las excepciones que desee incluir al proxy",
-    "add-proxy-exclude-button": "Añadir excepción al proxy"
+  "proxySettings": {
+    "subtitle": "Ajustes del proxy",
+    "enable": "Habilitar proxy",
+    "enableHelpText": "Habilitar proxy",
+    "password": "Contraseña del proxy",
+    "passwordHelpText": "La contraseña para la autenticación del servidor proxy.",
+    "port": "Puerto del proxy",
+    "portHelpText": "El puerto del proxy",
+    "server": "Servidor proxy",
+    "serverHelpText": "El servidor proxy",
+    "user": "Usuario del proxy",
+    "userHelpText": "El nombre de usuario para la autenticación del servidor proxy.",
+    "noExcludes": "No se encontraron exclusiones del proxy.",
+    "excludesTable": {
+      "label": "Excepciones del proxy",
+      "helpText": "Patrones globales para hostnames que deben excluirse de la configuración del proxy.",
+      "deleteButton": "Eliminar las excepciones del proxy"
+    },
+    "addExclude": "Añada aquí las excepciones que desee incluir al proxy",
+    "addExcludeButton": "Añadir excepción al proxy",
+    "addExcludeError": "La excepción que desea añadir al proxy es incorrecta"
   },
   "base-url-settings": {
     "name": "Ajustes de la URL base",
@@ -65,12 +74,6 @@
     "baseUrlHelpText": "La URL de la aplicación (con la ruta del contexto), por ejemplo: http://localhost:8080/scm",
     "loginAttemptLimitHelpText": "Máximo número permitido de intentos de inicio de sesión. Use -1 para deshabilitar este límite.",
     "loginAttemptLimitTimeoutHelpText": "Tiempo de espera en segundos para los usuarios que están deshabilitados temporalmente debido a demasiado intentos fallidos de inicio de sesión.",
-    "enableProxyHelpText": "Habilitar proxy",
-    "proxyPortHelpText": "El puerto del proxy",
-    "proxyPasswordHelpText": "La contraseña para la autenticación del servidor proxy.",
-    "proxyServerHelpText": "El servidor proxy",
-    "proxyUserHelpText": "El nombre de usuario para la autenticación del servidor proxy.",
-    "proxyExcludesHelpText": "Patrones globales para hostnames que deben excluirse de la configuración del proxy.",
     "enableXsrfProtectionHelpText": "Habilitar la protección de cookies XSRF. Nota: Esta funcionalidad todavía es experimental.",
     "nameSpaceStrategyHelpText": "La estrategia para el espacio de nombres.",
     "loginInfoUrlHelpText": "URL para la información en el inicio de sesión (consejos sobre complementos y funcionalidades en la página de inicio de sesión). Si esto se omite, no se mostrará información de inicio de sesión."

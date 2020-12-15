@@ -11,18 +11,27 @@
       "no-write-permission-notification": "Hinweis: Es fehlen Berechtigungen zum Bearbeiten der Einstellungen!"
     }
   },
-  "proxy-settings": {
-    "name": "Proxy Einstellungen",
-    "proxy-password": "Proxy Passwort",
-    "proxy-port": "Proxy Port",
-    "proxy-server": "Proxy Server",
-    "proxy-user": "Proxy Benutzer",
-    "enable-proxy": "Proxy aktivieren",
-    "proxy-excludes": "Proxy Excludes",
-    "remove-proxy-exclude-button": "Proxy Exclude löschen",
-    "add-proxy-exclude-error": "Der Proxy Exclude ist ungültig",
-    "add-proxy-exclude-textfield": "Neue Proxy Excludes hinzufügen",
-    "add-proxy-exclude-button": "Proxy Exclude hinzufügen"
+  "proxySettings": {
+    "subtitle": "Proxy Einstellungen",
+    "enable": "Proxy aktivieren",
+    "enableHelpText": "Proxy aktivieren",
+    "password": "Proxy Passwort",
+    "passwordHelpText": "Das Passwort für die Proxy Server Anmeldung.",
+    "port": "Proxy Port",
+    "portHelpText": "Der Proxy Port",
+    "server": "Proxy Server",
+    "serverHelpText": "Der Proxy Server",
+    "user": "Proxy Benutzer",
+    "userHelpText": "Der Benutzername für die Proxy Server Anmeldung.",
+    "noExcludes": "Es wurden keine Proxy Excludes gefunden.",
+    "excludesTable": {
+      "label": "Proxy Excludes",
+      "helpText": "Glob patterns für Hostnamen, die von den Proxy-Einstellungen ausgeschlossen werden sollen.",
+      "deleteButton": "Proxy Exclude löschen"
+    },
+    "addExclude": "Neue Proxy Excludes hinzufügen",
+    "addExcludeButton": "Proxy Exclude hinzufügen",
+    "addExcludeError": "Der Proxy Exclude ist ungültig"
   },
   "base-url-settings": {
     "name": "Base URL Einstellungen",
@@ -75,12 +84,6 @@
     "baseUrlHelpText": "Die URL der Applikation mit Kontextpfad, z.B. http://localhost:8080/scm",
     "loginAttemptLimitHelpText": "Maximale Anzahl von Anmeldeversuchen. Durch Verwendung von -1 wird die Begrenzung der Anmeldeversuche deaktiviert.",
     "loginAttemptLimitTimeoutHelpText": "Timeout in Sekunden für Benutzer, die vorübergehend wegen zu vieler fehlgeschlagener Anmeldeversuche, deaktiviert wurden.",
-    "enableProxyHelpText": "Proxy aktivieren",
-    "proxyPortHelpText": "Der Proxy Port",
-    "proxyPasswordHelpText": "Das Passwort für die Proxy Server Anmeldung.",
-    "proxyServerHelpText": "Der Proxy Server",
-    "proxyUserHelpText": "Der Benutzername für die Proxy Server Anmeldung.",
-    "proxyExcludesHelpText": "Glob patterns für Hostnamen, die von den Proxy-Einstellungen ausgeschlossen werden sollen.",
     "enableXsrfProtectionHelpText": "Xsrf Cookie Protection aktivieren. Hinweis: Dieses Feature befindet sich noch im Experimentalstatus.",
     "enabledUserConverterHelpText": "Benutzer Konverter aktivieren. Interne Benutzer werden beim Einloggen über ein Fremdsystem zu externen Benutzern konvertiert.",
     "nameSpaceStrategyHelpText": "Strategie für Namespaces.",

@@ -47,61 +47,61 @@ class ProxySettings extends React.Component<Props> {
       proxyUser,
       enableProxy,
       proxyExcludes,
-      hasUpdatePermission
+      hasUpdatePermission,
     } = this.props;
 
     return (
       <div>
-        <Subtitle subtitle={t("proxy-settings.name")} />
+        <Subtitle subtitle={t("proxySettings.subtitle")} />
         <div className="columns">
           <div className="column is-full">
             <Checkbox
               checked={enableProxy}
-              label={t("proxy-settings.enable-proxy")}
+              label={t("proxySettings.enable")}
               onChange={this.handleEnableProxyChange}
               disabled={!hasUpdatePermission}
-              helpText={t("help.enableProxyHelpText")}
+              helpText={t("proxySettings.enableHelpText")}
             />
           </div>
         </div>
         <div className="columns">
           <div className="column is-half">
             <InputField
-              label={t("proxy-settings.proxy-password")}
+              label={t("proxySettings.password")}
               onChange={this.handleProxyPasswordChange}
               value={proxyPassword}
               type="password"
               disabled={!enableProxy || !hasUpdatePermission}
-              helpText={t("help.proxyPasswordHelpText")}
+              helpText={t("proxySettings.passwordHelpText")}
             />
           </div>
           <div className="column is-half">
             <InputField
-              label={t("proxy-settings.proxy-port")}
+              label={t("proxySettings.port")}
               value={proxyPort}
               onChange={this.handleProxyPortChange}
               disabled={!enableProxy || !hasUpdatePermission}
-              helpText={t("help.proxyPortHelpText")}
+              helpText={t("proxySettings.portHelpText")}
             />
           </div>
         </div>
         <div className="columns">
           <div className="column is-half">
             <InputField
-              label={t("proxy-settings.proxy-server")}
+              label={t("proxySettings.server")}
               value={proxyServer}
               onChange={this.handleProxyServerChange}
               disabled={!enableProxy || !hasUpdatePermission}
-              helpText={t("help.proxyServerHelpText")}
+              helpText={t("proxySettings.serverHelpText")}
             />
           </div>
           <div className="column is-half">
             <InputField
-              label={t("proxy-settings.proxy-user")}
+              label={t("proxySettings.user")}
               value={proxyUser}
               onChange={this.handleProxyUserChange}
               disabled={!enableProxy || !hasUpdatePermission}
-              helpText={t("help.proxyUserHelpText")}
+              helpText={t("proxySettings.userHelpText")}
             />
           </div>
         </div>
@@ -115,9 +115,9 @@ class ProxySettings extends React.Component<Props> {
             <AddEntryToTableField
               addEntry={this.addProxyExclude}
               disabled={!enableProxy || !hasUpdatePermission}
-              buttonLabel={t("proxy-settings.add-proxy-exclude-button")}
-              fieldLabel={t("proxy-settings.add-proxy-exclude-textfield")}
-              errorMessage={t("proxy-settings.add-proxy-exclude-error")}
+              buttonLabel={t("proxySettings.addExcludeButton")}
+              fieldLabel={t("proxySettings.addExclude")}
+              errorMessage={t("proxySettings.addExcludeError")}
             />
           </div>
         </div>

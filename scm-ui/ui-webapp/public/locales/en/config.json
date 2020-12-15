@@ -11,18 +11,27 @@
       "no-write-permission-notification": "Please note: You do not have the permission to edit the config!"
     }
   },
-  "proxy-settings": {
-    "name": "Proxy Settings",
-    "proxy-password": "Proxy Password",
-    "proxy-port": "Proxy Port",
-    "proxy-server": "Proxy Server",
-    "proxy-user": "Proxy User",
-    "enable-proxy": "Enable Proxy",
-    "proxy-excludes": "Proxy Excludes",
-    "remove-proxy-exclude-button": "Remove Proxy Exclude",
-    "add-proxy-exclude-error": "The proxy exclude you want to add is not valid",
-    "add-proxy-exclude-textfield": "Add proxy exclude you want to add to proxy excludes here",
-    "add-proxy-exclude-button": "Add Proxy Exclude"
+  "proxySettings": {
+    "subtitle": "Proxy Settings",
+    "enable": "Enable Proxy",
+    "enableHelpText": "Enable Proxy",
+    "password": "Proxy Password",
+    "passwordHelpText": "The password for the proxy server authentication.",
+    "port": "Port",
+    "portHelpText": "The proxy port",
+    "server": "Proxy Server",
+    "serverHelpText": "The proxy server",
+    "user": "Proxy User",
+    "userHelpText": "The username for the proxy server authentication.",
+    "noExcludes": "No proxy excludes found.",
+    "excludesTable": {
+      "label": "Proxy Excludes",
+      "helpText": "Glob patterns for hostnames, which should be excluded from proxy settings.",
+      "deleteButton": "Remove Proxy Exclude"
+    },
+    "addExclude": "Add Proxy Exclude",
+    "addExcludeButton": "Add Proxy Exclude",
+    "addExcludeError": "The proxy exclude you want to add is not valid."
   },
   "base-url-settings": {
     "name": "Base URL Settings",
@@ -75,12 +84,6 @@
     "baseUrlHelpText": "The url of the application (with context path), i.e. http://localhost:8080/scm",
     "loginAttemptLimitHelpText": "Maximum allowed login attempts. Use -1 to disable the login attempt limit.",
     "loginAttemptLimitTimeoutHelpText": "Timeout in seconds for users which are temporary disabled, because of too many failed login attempts.",
-    "enableProxyHelpText": "Enable Proxy",
-    "proxyPortHelpText": "The proxy port",
-    "proxyPasswordHelpText": "The password for the proxy server authentication.",
-    "proxyServerHelpText": "The proxy server",
-    "proxyUserHelpText": "The username for the proxy server authentication.",
-    "proxyExcludesHelpText": "Glob patterns for hostnames, which should be excluded from proxy settings.",
     "enableXsrfProtectionHelpText": "Enable XSRF Cookie Protection. Note: This feature is still experimental.",
     "enabledUserConverterHelpText": "Enable User Converter. Internal users will automatically be converted to external on their first login using an external system.",
     "nameSpaceStrategyHelpText": "The namespace strategy.",
