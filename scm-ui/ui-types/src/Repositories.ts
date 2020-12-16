@@ -32,6 +32,7 @@ export type Repository = {
   description?: string;
   creationDate?: string;
   lastModified?: string;
+  archived?: boolean;
   _links: Links;
 };
 

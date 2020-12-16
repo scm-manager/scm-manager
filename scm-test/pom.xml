@@ -60,6 +60,12 @@
     </dependency>
 
     <dependency>
+      <groupId>org.junit.jupiter</groupId>
+      <artifactId>junit-jupiter-api</artifactId>
+      <scope>compile</scope>
+    </dependency>
+
+    <dependency>
       <groupId>com.github.sdorra</groupId>
       <artifactId>shiro-unit</artifactId>
       <!-- scm-test is test scoped in other modules and they might need shiro unit for their tests. -->

@@ -6,7 +6,8 @@
     "contact": "Kontakt",
     "description": "Beschreibung",
     "creationDate": "Erstellt",
-    "lastModified": "Zuletzt bearbeitet"
+    "lastModified": "Zuletzt bearbeitet",
+    "archived":  "archiviert"
   },
   "validation": {
     "namespace-invalid": "Der Namespace des Repository ist ungültig",
@@ -237,7 +238,7 @@
     "submitCreate": "Speichern",
     "submitImport": "Importieren",
     "initializeRepository": "Repository initiieren",
-    "dangerZone": "Umbenennen und Löschen",
+    "dangerZone": "Umbenennen, Archivieren und Löschen",
     "createButton": "Neues Repository erstellen",
     "importButton": "Repository importieren"
   },
@@ -351,6 +352,31 @@
         "cancel": "Abbrechen"
       }
     }
+  },
+  "archiveRepo": {
+    "button": "Repository archivieren",
+    "subtitle": "Repository archivieren",
+    "description": "Archivierte Repositories können nicht mehr verändert werden.",
+    "confirmAlert": {
+      "title": "Repository archivieren",
+      "message": "Soll das Repository wirklich archiviert werden?",
+      "submit": "Ja",
+      "cancel": "Nein"
+    }
+  },
+  "unarchiveRepo": {
+    "button": "Archivierung zurücknehmen",
+    "subtitle": "Archivierung zurücknehmen",
+    "description": "Wenn das Repository nicht mehr archiviert ist, kann es wieder verändert werden.",
+    "confirmAlert": {
+      "title": "Archivierung zurücknehmen",
+      "message": "Soll die Archivierung des Repositorys wirklich rückgängig gemacht werden?",
+      "submit": "Ja",
+      "cancel": "Nein"
+    }
+  },
+  "archive": {
+    "tooltip": "Nur lesender Zugriff möglich. Das Archiv kann nicht verändert werden."
   },
   "diff": {
     "jumpToSource": "Zur Quelldatei springen",

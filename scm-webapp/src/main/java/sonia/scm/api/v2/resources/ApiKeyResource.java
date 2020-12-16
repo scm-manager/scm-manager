@@ -32,6 +32,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.apache.shiro.SecurityUtils;
 import sonia.scm.ContextEntry;
 import sonia.scm.security.ApiKey;
 import sonia.scm.security.ApiKeyService;
@@ -48,13 +49,17 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-
 import java.net.URI;
 
 import static javax.ws.rs.core.Response.Status.CREATED;
 import static sonia.scm.NotFoundException.notFound;
 
-public class  ApiKeyResource {
+/**
+ * Use {@link UserApiKeyResource} instead.
+ * @deprecated
+ */
+@Deprecated
+public class ApiKeyResource {
 
   private final ApiKeyService apiKeyService;
   private final ApiKeyCollectionToDtoMapper apiKeyCollectionMapper;
@@ -90,7 +95,8 @@ public class  ApiKeyResource {
       schema = @Schema(implementation = ErrorDto.class)
     ))
   public HalRepresentation getForCurrentUser() {
-    return apiKeyCollectionMapper.map(apiKeyService.getKeys());
+    String currentUser = getCurrentUser();
+    return apiKeyCollectionMapper.map(apiKeyService.getKeys(currentUser), currentUser);
   }
 
   @GET
@@ -121,11 +127,13 @@ public class  ApiKeyResource {
       schema = @Schema(implementation = ErrorDto.class)
     ))
   public ApiKeyDto get(@PathParam("id") String id) {
+    String currentUser = getCurrentUser();
+
     return apiKeyService
-      .getKeys()
+      .getKeys(currentUser)
       .stream()
       .filter(key -> key.getId().equals(id))
-      .map(apiKeyMapper::map).findAny()
+      .map(key -> apiKeyMapper.map(key, currentUser)).findAny()
       .orElseThrow(() -> notFound(ContextEntry.ContextBuilder.entity(ApiKey.class, id)));
   }
 
@@ -171,10 +179,12 @@ public class  ApiKeyResource {
       schema = @Schema(implementation = ErrorDto.class)
     ))
   public Response create(@Valid ApiKeyDto apiKey) {
-    final ApiKeyService.CreationResult newKey = apiKeyService.createNewKey(apiKey.getDisplayName(), apiKey.getPermissionRole());
+    String currentUser = getCurrentUser();
+
+    final ApiKeyService.CreationResult newKey = apiKeyService.createNewKey(currentUser, apiKey.getDisplayName(), apiKey.getPermissionRole());
     return Response.status(CREATED)
       .entity(newKey.getToken())
-      .location(URI.create(resourceLinks.apiKey().self(newKey.getId())))
+      .location(URI.create(resourceLinks.apiKey().self(newKey.getId(), currentUser)))
       .build();
   }
 
@@ -185,7 +195,10 @@ public class  ApiKeyResource {
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "500", description = "internal server error")
   public void delete(@PathParam("id") String id) {
-    apiKeyService.remove(id);
+    apiKeyService.remove(getCurrentUser(), id);
   }
 
+  private String getCurrentUser() {
+    return SecurityUtils.getSubject().getPrincipals().getPrimaryPrincipal().toString();
+  }
 }

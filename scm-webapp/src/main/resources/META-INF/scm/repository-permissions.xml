@@ -25,14 +25,15 @@
 -->
 <repository-permissions>
   <verbs>
-    <verb>read</verb>
+    <verb read-only="true">read</verb>
     <verb>modify</verb>
     <verb>delete</verb>
     <verb>rename</verb>
-    <verb>pull</verb>
+    <verb read-only="true">pull</verb>
     <verb>push</verb>
-    <verb>permissionRead</verb>
+    <verb read-only="true">permissionRead</verb>
     <verb>permissionWrite</verb>
+    <verb read-only="true">archive</verb>
     <verb>*</verb>
   </verbs>
   <roles>

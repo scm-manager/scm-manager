@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import com.google.inject.Inject;
+import lombok.EqualsAndHashCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.PluginLoader;
@@ -34,8 +35,10 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlValue;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
@@ -54,17 +57,23 @@ public class SystemRepositoryPermissionProvider {
   private static final Logger logger = LoggerFactory.getLogger(SystemRepositoryPermissionProvider.class);
   private static final String REPOSITORY_PERMISSION_DESCRIPTOR = "META-INF/scm/repository-permissions.xml";
   private final List<String> availableVerbs;
+  private final List<String> readOnlyVerbs;
   private final List<RepositoryRole> availableRoles;
 
   @Inject
   public SystemRepositoryPermissionProvider(PluginLoader pluginLoader) {
     AvailableRepositoryPermissions availablePermissions = readAvailablePermissions(pluginLoader);
     this.availableVerbs = removeDuplicates(availablePermissions.availableVerbs);
-    this.availableRoles = removeDuplicates(availablePermissions.availableRoles.stream().map(r -> new RepositoryRole(r.name, r.verbs.verbs, "system")).collect(toList()));
+    this.readOnlyVerbs = removeDuplicates(availablePermissions.readOnlyVerbs);
+    this.availableRoles = removeDuplicates(availablePermissions.availableRoles.stream().map(r -> new RepositoryRole(r.name, r.verbs.verbs.stream().map(verb -> verb.value).collect(toList()), "system")).collect(toList()));
   }
 
   public List<String> availableVerbs() {
     return availableVerbs;
+  }
+
+  public List<String> readOnlyVerbs() {
+    return readOnlyVerbs;
   }
 
   public List<RepositoryRole> availableRoles() {
@@ -73,6 +82,7 @@ public class SystemRepositoryPermissionProvider {
 
   private static AvailableRepositoryPermissions readAvailablePermissions(PluginLoader pluginLoader) {
     Collection<String> availableVerbs = new ArrayList<>();
+    Collection<String> readOnlyVerbs = new ArrayList<>();
     Collection<RoleDescriptor> availableRoles = new ArrayList<>();
 
     try {
@@ -89,7 +99,8 @@ public class SystemRepositoryPermissionProvider {
         logger.debug("read repository permission descriptor from {}", descriptorUrl);
 
         RepositoryPermissionsRoot repositoryPermissionsRoot = parsePermissionDescriptor(context, descriptorUrl);
-        availableVerbs.addAll(repositoryPermissionsRoot.verbs.verbs);
+        repositoryPermissionsRoot.verbs.verbs.forEach(verb -> availableVerbs.add(verb.value));
+        repositoryPermissionsRoot.verbs.verbs.stream().filter(verb -> verb.readOnly).map(verb -> verb.value).forEach(readOnlyVerbs::add);
         mergeRolesInto(availableRoles, repositoryPermissionsRoot.roles.roles);
       }
     } catch (IOException ex) {
@@ -99,7 +110,7 @@ public class SystemRepositoryPermissionProvider {
         "could not create jaxb context to read permission descriptors", ex);
     }
 
-    return new AvailableRepositoryPermissions(availableVerbs, availableRoles);
+    return new AvailableRepositoryPermissions(availableVerbs, readOnlyVerbs, availableRoles);
   }
 
   private static void mergeRolesInto(Collection<RoleDescriptor> targetRoles, List<RoleDescriptor> additionalRoles) {
@@ -138,10 +149,12 @@ public class SystemRepositoryPermissionProvider {
 
   private static class AvailableRepositoryPermissions {
     private final Collection<String> availableVerbs;
+    private final Collection<String> readOnlyVerbs;
     private final Collection<RoleDescriptor> availableRoles;
 
-    private AvailableRepositoryPermissions(Collection<String> availableVerbs, Collection<RoleDescriptor> availableRoles) {
+    private AvailableRepositoryPermissions(Collection<String> availableVerbs, Collection<String> readOnlyVerbs, Collection<RoleDescriptor> availableRoles) {
       this.availableVerbs = unmodifiableCollection(availableVerbs);
+      this.readOnlyVerbs = unmodifiableCollection(readOnlyVerbs);
       this.availableRoles = unmodifiableCollection(availableRoles);
     }
   }
@@ -156,7 +169,18 @@ public class SystemRepositoryPermissionProvider {
   @XmlRootElement(name = "verbs")
   private static class VerbListDescriptor {
     @XmlElement(name = "verb")
-    private Set<String> verbs = new LinkedHashSet<>();
+    private Set<Verb> verbs = new LinkedHashSet<>();
+  }
+
+  @XmlAccessorType(XmlAccessType.FIELD)
+  @XmlRootElement(name = "verb")
+  @EqualsAndHashCode
+  private static class Verb {
+    @XmlValue
+    private String value;
+    @XmlAttribute(name = "read-only")
+    @EqualsAndHashCode.Exclude
+    private boolean readOnly;
   }
 
   @XmlRootElement(name = "roles")

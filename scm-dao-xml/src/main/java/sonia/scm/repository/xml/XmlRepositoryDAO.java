@@ -34,6 +34,7 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryLocationResolver;
+import sonia.scm.store.StoreReadOnlyException;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -139,6 +140,9 @@ public class XmlRepositoryDAO implements RepositoryDAO {
   @Override
   public void modify(Repository repository) {
     Repository clone = repository.clone();
+    if (clone.isArchived() && byId.get(clone.getId()).isArchived()) {
+      throw new StoreReadOnlyException(repository);
+    }
 
     synchronized (this) {
       // remove old namespaceAndName from map, in case of rename
@@ -158,6 +162,9 @@ public class XmlRepositoryDAO implements RepositoryDAO {
 
   @Override
   public void delete(Repository repository) {
+    if (repository.isArchived()) {
+      throw new StoreReadOnlyException(repository);
+    }
     Path path;
     synchronized (this) {
       Repository prev = byId.remove(repository.getId());

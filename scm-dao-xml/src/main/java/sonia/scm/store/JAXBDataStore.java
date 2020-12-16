@@ -52,8 +52,8 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> 
   private final KeyGenerator keyGenerator;
   private final TypedStoreContext<T> context;
 
-  JAXBDataStore(KeyGenerator keyGenerator, TypedStoreContext<T> context, File directory) {
-    super(directory, StoreConstants.FILE_EXTENSION);
+  JAXBDataStore(KeyGenerator keyGenerator, TypedStoreContext<T> context, File directory, boolean readOnly) {
+    super(directory, StoreConstants.FILE_EXTENSION, readOnly);
     this.keyGenerator = keyGenerator;
     this.directory = directory;
     this.context = context;
@@ -62,6 +62,8 @@ public class JAXBDataStore<T> extends FileBasedStore<T> implements DataStore<T> 
   @Override
   public void put(String id, T item) {
     LOG.debug("put item {} to store", id);
+
+    assertNotReadOnly();
 
     File file = getFile(id);
 

@@ -74,9 +74,11 @@ const QuickLink = (
   </a>
 );
 
+const archivedRepository = { ...repository, archived: true };
+
 storiesOf("RepositoryEntry", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator(storyFn => <Container>{storyFn()}</Container>)
+  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator((storyFn) => <Container>{storyFn()}</Container>)
   .add("Default", () => {
     return <RepositoryEntry repository={repository} baseDate={baseDate} />;
   })
@@ -94,4 +96,9 @@ storiesOf("RepositoryEntry", module)
     const binder = new Binder("title");
     bindQuickLink(binder, QuickLink);
     return withBinder(binder, repository);
+  })
+  .add("Archived", () => {
+    const binder = new Binder("title");
+    bindAvatar(binder, Git);
+    return withBinder(binder, archivedRepository);
   });

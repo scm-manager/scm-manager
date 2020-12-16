@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -31,6 +31,7 @@ import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.RepositoryArchivedCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.util.IOUtil;
@@ -59,8 +60,8 @@ public class FileBlobStoreFactory extends FileBasedStoreFactory implements BlobS
    * @param keyGenerator key generator
    */
   @Inject
-  public FileBlobStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator) {
-    super(contextProvider, repositoryLocationResolver, Store.BLOB);
+  public FileBlobStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator, RepositoryArchivedCheck archivedCheck) {
+    super(contextProvider, repositoryLocationResolver, Store.BLOB, archivedCheck);
     this.keyGenerator = keyGenerator;
   }
 
@@ -69,8 +70,6 @@ public class FileBlobStoreFactory extends FileBasedStoreFactory implements BlobS
   public BlobStore getStore(StoreParameters storeParameters) {
     File storeLocation = getStoreLocation(storeParameters);
     IOUtil.mkdirs(storeLocation);
-    return new FileBlobStore(keyGenerator, storeLocation);
+    return new FileBlobStore(keyGenerator, storeLocation, mustBeReadOnly(storeParameters));
   }
-
-
 }

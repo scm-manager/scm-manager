@@ -101,10 +101,12 @@ class ResourceLinks {
   static class UserLinks {
     private final LinkBuilder userLinkBuilder;
     private final LinkBuilder publicKeyLinkBuilder;
+    private final LinkBuilder apiKeyLinkBuilder;
 
     UserLinks(ScmPathInfo pathInfo) {
       userLinkBuilder = new LinkBuilder(pathInfo, UserRootResource.class, UserResource.class);
       publicKeyLinkBuilder = new LinkBuilder(pathInfo, UserPublicKeyResource.class);
+      apiKeyLinkBuilder = new LinkBuilder(pathInfo, UserApiKeyResource.class);
     }
 
     String self(String name) {
@@ -133,6 +135,10 @@ class ResourceLinks {
 
     public String publicKeys(String name) {
       return publicKeyLinkBuilder.method("findAll").parameters(name).href();
+    }
+
+    public String apiKeys(String name) {
+      return apiKeyLinkBuilder.method("findAll").parameters(name).href();
     }
   }
 
@@ -220,15 +226,15 @@ class ResourceLinks {
     private final LinkBuilder collectionLinkBuilder;
 
     ApiKeyCollectionLinks(ScmPathInfo pathInfo) {
-      this.collectionLinkBuilder = new LinkBuilder(pathInfo, MeResource.class, ApiKeyResource.class);
+      this.collectionLinkBuilder = new LinkBuilder(pathInfo, UserRootResource.class, UserApiKeyResource.class);
     }
 
-    String self() {
-      return collectionLinkBuilder.method("apiKeys").parameters().method("getForCurrentUser").parameters().href();
+    String self(String username) {
+      return collectionLinkBuilder.method("apiKeys").parameters().method("findAll").parameters(username).href();
     }
 
-    String create() {
-      return collectionLinkBuilder.method("apiKeys").parameters().method("create").parameters().href();
+    String create(String username) {
+      return collectionLinkBuilder.method("apiKeys").parameters().method("create").parameters(username).href();
     }
   }
 
@@ -240,15 +246,15 @@ class ResourceLinks {
     private final LinkBuilder apiKeyLinkBuilder;
 
     ApiKeyLinks(ScmPathInfo pathInfo) {
-      this.apiKeyLinkBuilder = new LinkBuilder(pathInfo, MeResource.class, ApiKeyResource.class);
+      this.apiKeyLinkBuilder = new LinkBuilder(pathInfo, UserRootResource.class, UserApiKeyResource.class);
     }
 
-    String self(String id) {
-      return apiKeyLinkBuilder.method("apiKeys").parameters().method("get").parameters(id).href();
+    String self(String id, String name) {
+      return apiKeyLinkBuilder.method("apiKeys").parameters(name).method("get").parameters(id).href();
     }
 
-    String delete(String id) {
-      return apiKeyLinkBuilder.method("apiKeys").parameters().method("delete").parameters(id).href();
+    String delete(String id, String name) {
+      return apiKeyLinkBuilder.method("apiKeys").parameters(name).method("delete").parameters(id).href();
     }
   }
 
@@ -363,6 +369,13 @@ class ResourceLinks {
 
     String importFromBundle(String type) {
       return repositoryImportLinkBuilder.method("getRepositoryImportResource").parameters().method("importFromBundle").parameters(type).href();
+    }
+    String archive(String namespace, String name) {
+      return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("archive").parameters().href();
+    }
+
+    String unarchive(String namespace, String name) {
+      return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("unarchive").parameters().href();
     }
   }
 

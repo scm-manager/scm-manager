@@ -6,7 +6,8 @@
     "contact": "Contact",
     "description": "Description",
     "creationDate": "Creation Date",
-    "lastModified": "Last Modified"
+    "lastModified": "Last Modified",
+    "archived": "archived"
   },
   "validation": {
     "namespace-invalid": "The repository namespace is invalid",
@@ -236,8 +237,8 @@
     "subtitle": "Edit Repository",
     "submitCreate": "Save",
     "submitImport": "Import",
-    "initializeRepository": "Initialize repository",
-    "dangerZone": "Rename and Delete",
+    "initializeRepository": "Initialize Repository",
+    "dangerZone": "Rename, Archive and Delete",
     "createButton": "Create Repository",
     "importButton": "Import Repository"
   },
@@ -351,6 +352,31 @@
         "cancel": "Cancel"
       }
     }
+  },
+  "archiveRepo": {
+    "button": "Archive Repository",
+    "subtitle": "Archive this repository",
+    "description": "An archived repository can no longer be modified.",
+    "confirmAlert": {
+      "title": "Archive Repository",
+      "message": "Shall the repository really be archived?",
+      "submit": "Yes",
+      "cancel": "No"
+    }
+  },
+  "unarchiveRepo": {
+    "button": "Remove Archive Mark",
+    "subtitle": "Remove Archive Mark",
+    "description": "When the archive mark is removed, this repository can be modified again.",
+    "confirmAlert": {
+      "title": "Remove Archive Mark",
+      "message": "Shall the archive mark really be removed?",
+      "submit": "Yes",
+      "cancel": "No"
+    }
+  },
+  "archive": {
+    "tooltip": "Read only. The archive cannot be changed."
   },
   "diff": {
     "changes": {
