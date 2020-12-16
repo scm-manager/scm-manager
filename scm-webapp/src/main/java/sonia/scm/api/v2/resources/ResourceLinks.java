@@ -137,8 +137,8 @@ class ResourceLinks {
       return publicKeyLinkBuilder.method("findAll").parameters(name).href();
     }
 
-    public String apiKeys(String username) {
-      return apiKeyLinkBuilder.method("findAll").parameters(username).href();
+    public String apiKeys(String name) {
+      return apiKeyLinkBuilder.method("findAll").parameters(name).href();
     }
   }
 
@@ -229,12 +229,12 @@ class ResourceLinks {
       this.collectionLinkBuilder = new LinkBuilder(pathInfo, UserRootResource.class, UserApiKeyResource.class);
     }
 
-    String self(String name) {
-      return collectionLinkBuilder.method("apiKeys").parameters().method("findAll").parameters(name).href();
+    String self(String username) {
+      return collectionLinkBuilder.method("apiKeys").parameters().method("findAll").parameters(username).href();
     }
 
-    String create(String name) {
-      return collectionLinkBuilder.method("apiKeys").parameters().method("create").parameters(name).href();
+    String create(String username) {
+      return collectionLinkBuilder.method("apiKeys").parameters().method("create").parameters(username).href();
     }
   }
 
