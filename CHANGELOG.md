@@ -11,6 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support for permalinks to lines in source code view ([#1472](https://github.com/scm-manager/scm-manager/pull/1472))
 
 ### Fixed
+- Add "Api Key" page link to sub-navigation of "User" and "Me" sections ([#1464](https://github.com/scm-manager/scm-manager/pull/1464))
 - Empty page on repository namespace filter ([#1476](https://github.com/scm-manager/scm-manager/pull/1476))
 - Usage of namespace filter and search action together on repository overview ([#1476](https://github.com/scm-manager/scm-manager/pull/1476))
 

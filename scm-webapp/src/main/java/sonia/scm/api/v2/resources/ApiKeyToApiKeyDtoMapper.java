@@ -39,13 +39,13 @@ public abstract class ApiKeyToApiKeyDtoMapper {
   @Inject
   private ResourceLinks resourceLinks;
 
-  abstract ApiKeyDto map(ApiKey key);
+  abstract ApiKeyDto map(ApiKey key, String user);
 
   @ObjectFactory
-  ApiKeyDto createDto(ApiKey key) {
+  ApiKeyDto createDto(ApiKey key, String user) {
     Links.Builder links = Links.linkingTo()
-      .self(resourceLinks.apiKey().self(key.getId()))
-      .single(link("delete", resourceLinks.apiKey().delete(key.getId())));
+      .self(resourceLinks.apiKey().self(key.getId(), user))
+      .single(link("delete", resourceLinks.apiKey().delete(key.getId(), user)));
     return new ApiKeyDto(links.build());
   }
 }

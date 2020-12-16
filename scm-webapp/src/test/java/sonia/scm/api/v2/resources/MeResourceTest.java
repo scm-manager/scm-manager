@@ -79,8 +79,9 @@ public class MeResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private RestDispatcher dispatcher = new RestDispatcher();
-
+  private final RestDispatcher dispatcher = new RestDispatcher();
+  private final MockHttpResponse response = new MockHttpResponse();
+  private final ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/"));
 
   @Mock
@@ -105,13 +106,10 @@ public class MeResourceTest {
   @InjectMocks
   private ApiKeyToApiKeyDtoMapperImpl apiKeyMapper;
 
-  private ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-
   @Mock
   private PasswordService passwordService;
   private User originalUser;
 
-  private MockHttpResponse response = new MockHttpResponse();
 
   @Before
   public void prepareEnvironment() {
@@ -144,7 +142,7 @@ public class MeResourceTest {
     assertThat(response.getContentAsString()).contains("\"name\":\"trillian\"");
     assertThat(response.getContentAsString()).contains("\"self\":{\"href\":\"/v2/me/\"}");
     assertThat(response.getContentAsString()).contains("\"delete\":{\"href\":\"/v2/users/trillian\"}");
-    assertThat(response.getContentAsString()).contains("\"apiKeys\":{\"href\":\"/v2/me/api_keys\"}");
+    assertThat(response.getContentAsString()).contains("\"apiKeys\":{\"href\":\"/v2/users/trillian/api_keys\"}");
   }
 
   private void applyUserToSubject(User user) {
@@ -233,7 +231,7 @@ public class MeResourceTest {
 
   @Test
   public void shouldGetAllApiKeys() throws URISyntaxException, UnsupportedEncodingException {
-    when(apiKeyService.getKeys())
+    when(apiKeyService.getKeys("trillian"))
       .thenReturn(asList(
         new ApiKey("1", "key 1", "READ", now()),
         new ApiKey("2", "key 2", "WRITE", now())));
@@ -245,13 +243,13 @@ public class MeResourceTest {
 
     assertThat(response.getContentAsString()).contains("\"displayName\":\"key 1\",\"permissionRole\":\"READ\"");
     assertThat(response.getContentAsString()).contains("\"displayName\":\"key 2\",\"permissionRole\":\"WRITE\"");
-    assertThat(response.getContentAsString()).contains("\"self\":{\"href\":\"/v2/me/api_keys\"}");
-    assertThat(response.getContentAsString()).contains("\"create\":{\"href\":\"/v2/me/api_keys\"}");
+    assertThat(response.getContentAsString()).contains("\"self\":{\"href\":\"/v2/users/trillian/api_keys\"}");
+    assertThat(response.getContentAsString()).contains("\"create\":{\"href\":\"/v2/users/trillian/api_keys\"}");
   }
 
   @Test
   public void shouldGetSingleApiKey() throws URISyntaxException, UnsupportedEncodingException {
-    when(apiKeyService.getKeys())
+    when(apiKeyService.getKeys("trillian"))
       .thenReturn(asList(
         new ApiKey("1", "key 1", "READ", now()),
         new ApiKey("2", "key 2", "WRITE", now())));
@@ -263,13 +261,14 @@ public class MeResourceTest {
 
     assertThat(response.getContentAsString()).contains("\"displayName\":\"key 1\"");
     assertThat(response.getContentAsString()).contains("\"permissionRole\":\"READ\"");
-    assertThat(response.getContentAsString()).contains("\"self\":{\"href\":\"/v2/me/api_keys/1\"}");
-    assertThat(response.getContentAsString()).contains("\"delete\":{\"href\":\"/v2/me/api_keys/1\"}");
+    assertThat(response.getContentAsString()).contains("\"self\":{\"href\":\"/v2/users/trillian/api_keys/1\"}");
+    assertThat(response.getContentAsString()).contains("\"delete\":{\"href\":\"/v2/users/trillian/api_keys/1\"}");
   }
 
   @Test
   public void shouldCreateNewApiKey() throws URISyntaxException, UnsupportedEncodingException {
-    when(apiKeyService.createNewKey("guide", "READ")).thenReturn(new ApiKeyService.CreationResult("abc", "1"));
+    when(apiKeyService.createNewKey("trillian","guide", "READ"))
+      .thenReturn(new ApiKeyService.CreationResult("abc", "1"));
 
     final MockHttpRequest request = MockHttpRequest
       .post("/" + MeResource.ME_PATH_V2 + "api_keys/")
@@ -280,12 +279,13 @@ public class MeResourceTest {
 
     assertThat(response.getStatus()).isEqualTo(201);
     assertThat(response.getContentAsString()).isEqualTo("abc");
-    assertThat(response.getOutputHeaders().get("Location")).containsExactly(URI.create("/v2/me/api_keys/1"));
+    assertThat(response.getOutputHeaders().get("Location")).containsExactly(URI.create("/v2/users/trillian/api_keys/1"));
   }
 
   @Test
   public void shouldIgnoreInvalidNewApiKey() throws URISyntaxException, UnsupportedEncodingException {
-    when(apiKeyService.createNewKey("guide", "READ")).thenReturn(new ApiKeyService.CreationResult("abc", "1"));
+    when(apiKeyService.createNewKey("trillian","guide", "READ"))
+      .thenReturn(new ApiKeyService.CreationResult("abc", "1"));
 
     final MockHttpRequest request = MockHttpRequest
       .post("/" + MeResource.ME_PATH_V2 + "api_keys/")
@@ -303,8 +303,9 @@ public class MeResourceTest {
     dispatcher.invoke(request, response);
 
     assertThat(response.getStatus()).isEqualTo(204);
-    verify(apiKeyService).remove("1");
+    verify(apiKeyService).remove("trillian","1");
   }
+
 
   private User createDummyUser(String name) {
     User user = new User();

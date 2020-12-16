@@ -21,14 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import sonia.scm.repository.NamespaceAndName;
 
 import java.net.URI;
 
@@ -76,6 +75,12 @@ public class ResourceLinksTest {
   public void shouldCreateCorrectUserCollectionUrl() {
     String url = resourceLinks.userCollection().self();
     assertEquals(BASE_URL + UserRootResource.USERS_PATH_V2, url);
+  }
+
+  @Test
+  public void shouldCreateCorrectUserApiKeysUrl() {
+    String url = resourceLinks.user().apiKeys("ich");
+    assertEquals(BASE_URL + UserRootResource.USERS_PATH_V2 + "ich/api_keys", url);
   }
 
   @Test
@@ -179,6 +184,7 @@ public class ResourceLinksTest {
     String url = resourceLinks.source().sourceWithPath("foo", "bar", "rev", "file");
     assertEquals(BASE_URL + RepositoryRootResource.REPOSITORIES_PATH_V2 + "foo/bar/sources/rev/file", url);
   }
+
   @Test
   public void shouldCreateCorrectPermissionCollectionUrl() {
     String url = resourceLinks.source().selfWithoutRevision("space", "repo");

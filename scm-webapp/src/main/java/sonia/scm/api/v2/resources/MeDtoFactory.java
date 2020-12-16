@@ -28,8 +28,6 @@ import com.google.common.base.Strings;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.subject.Subject;
 import sonia.scm.group.GroupCollector;
 import sonia.scm.user.EMail;
 import sonia.scm.user.User;
@@ -59,8 +57,7 @@ public class MeDtoFactory extends HalAppenderMapper {
   }
 
   public MeDto create() {
-    PrincipalCollection principals = getPrincipalCollection();
-    User user = principals.oneByType(User.class);
+    User user = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
 
     MeDto dto = createDto(user);
     mapUserProperties(user, dto);
@@ -79,17 +76,11 @@ public class MeDtoFactory extends HalAppenderMapper {
     dto.setMail(user.getMail());
   }
 
-  private PrincipalCollection getPrincipalCollection() {
-    Subject subject = SecurityUtils.getSubject();
-    return subject.getPrincipals();
-  }
-
   private void setGeneratedMail(User user, MeDto dto) {
     if (Strings.isNullOrEmpty(user.getMail())) {
       dto.setFallbackMail(eMail.getMailOrFallback(user));
     }
   }
-
 
   private MeDto createDto(User user) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.me().self());
@@ -106,7 +97,7 @@ public class MeDtoFactory extends HalAppenderMapper {
       linksBuilder.single(link("password", resourceLinks.me().passwordChange()));
     }
     if (UserPermissions.changeApiKeys(user).isPermitted()) {
-      linksBuilder.single(link("apiKeys", resourceLinks.apiKeyCollection().self()));
+      linksBuilder.single(link("apiKeys", resourceLinks.apiKeyCollection().self(user.getName())));
     }
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();
