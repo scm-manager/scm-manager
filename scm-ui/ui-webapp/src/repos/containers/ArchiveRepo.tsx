@@ -62,30 +62,29 @@ const ArchiveRepo: FC<Props> = ({ confirmDialog = true, repository, archiveRepo,
     return null;
   }
 
-  if (showConfirmAlert) {
-    return (
-      <ConfirmAlert
-        title={t("archiveRepo.confirmAlert.title")}
-        message={t("archiveRepo.confirmAlert.message")}
-        buttons={[
-          {
-            className: "is-outlined",
-            label: t("archiveRepo.confirmAlert.submit"),
-            onClick: () => archiveRepoCallback(),
-          },
-          {
-            label: t("archiveRepo.confirmAlert.cancel"),
-            onClick: () => null,
-          },
-        ]}
-        close={() => setShowConfirmAlert(false)}
-      />
-    );
-  }
+  const confirmAlert = (
+    <ConfirmAlert
+      title={t("archiveRepo.confirmAlert.title")}
+      message={t("archiveRepo.confirmAlert.message")}
+      buttons={[
+        {
+          className: "is-outlined",
+          label: t("archiveRepo.confirmAlert.submit"),
+          onClick: () => archiveRepoCallback(),
+        },
+        {
+          label: t("archiveRepo.confirmAlert.cancel"),
+          onClick: () => null,
+        },
+      ]}
+      close={() => setShowConfirmAlert(false)}
+    />
+  );
 
   return (
     <>
       <ErrorNotification error={error} />
+      {showConfirmAlert && confirmAlert}
       <Level
         left={
           <p>

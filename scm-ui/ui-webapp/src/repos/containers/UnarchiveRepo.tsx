@@ -62,30 +62,29 @@ const UnarchiveRepo: FC<Props> = ({ confirmDialog = true, repository, unarchiveR
     return null;
   }
 
-  if (showConfirmAlert) {
-    return (
-      <ConfirmAlert
-        title={t("unarchiveRepo.confirmAlert.title")}
-        message={t("unarchiveRepo.confirmAlert.message")}
-        buttons={[
-          {
-            className: "is-outlined",
-            label: t("unarchiveRepo.confirmAlert.submit"),
-            onClick: () => unarchiveRepoCallback(),
-          },
-          {
-            label: t("unarchiveRepo.confirmAlert.cancel"),
-            onClick: () => null,
-          },
-        ]}
-        close={() => setShowConfirmAlert(false)}
-      />
-    );
-  }
+  const confirmAlert = (
+    <ConfirmAlert
+      title={t("unarchiveRepo.confirmAlert.title")}
+      message={t("unarchiveRepo.confirmAlert.message")}
+      buttons={[
+        {
+          className: "is-outlined",
+          label: t("unarchiveRepo.confirmAlert.submit"),
+          onClick: () => unarchiveRepoCallback(),
+        },
+        {
+          label: t("unarchiveRepo.confirmAlert.cancel"),
+          onClick: () => null,
+        },
+      ]}
+      close={() => setShowConfirmAlert(false)}
+    />
+  );
 
   return (
     <>
       <ErrorNotification error={error} />
+      {showConfirmAlert && confirmAlert}
       <Level
         left={
           <p>
