@@ -36,6 +36,10 @@ import java.util.function.BooleanSupplier;
 
 import static sonia.scm.repository.EventDrivenRepositoryArchiveCheck.isRepositoryArchived;
 
+/**
+ * This intercepts permission checks for repositories and blocks write permissions for archived repositories.
+ * Read only permissions are set at startup by {@link RepositoryPermissionGuardInitializer}.
+ */
 public class RepositoryPermissionGuard implements PermissionGuard<Repository> {
 
   private static final Collection<String> READ_ONLY_VERBS = Collections.synchronizedSet(new HashSet<>());

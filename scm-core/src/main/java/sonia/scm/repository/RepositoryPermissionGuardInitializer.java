@@ -31,6 +31,9 @@ import sonia.scm.plugin.Extension;
 
 import javax.inject.Inject;
 
+/**
+ * Initializes read only permissions for {@link RepositoryPermissionGuard} at startup.
+ */
 @Extension
 @EagerSingleton
 final class RepositoryPermissionGuardInitializer implements Initable {
