@@ -833,9 +833,15 @@ form .field:not(.is-grouped) {
   cursor: pointer;
 }
 
-// until update to bulma version 0.7.5
-.has-text-weight-medium {
-  font-weight: 500 !important;
+// fix tooltip bug in firefox
+// for bulma-tooltip v3.0.0
+[data-tooltip]:not(.is-disabled).has-tooltip-right::after,
+[data-tooltip]:not(.is-loading).has-tooltip-right::after,
+[data-tooltip]:not([disabled]).has-tooltip-right::after,
+[data-tooltip]:not(.is-disabled).has-tooltip-left::after,
+[data-tooltip]:not(.is-loading).has-tooltip-left::after,
+[data-tooltip]:not([disabled]).has-tooltip-left::after {
+  height: 12px;
 }
 
 .diff-gutter-conflict {
