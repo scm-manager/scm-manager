@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -32,7 +32,7 @@ import javax.inject.Provider;
 import javax.ws.rs.Path;
 
 /**
- *  RESTful Web Service Resource to manage users.
+ * RESTful Web Service Resource to manage users.
  */
 @OpenAPIDefinition(tags = {
   @Tag(name = "User", description = "User related endpoints")
@@ -44,12 +44,14 @@ public class UserRootResource {
 
   private final Provider<UserCollectionResource> userCollectionResource;
   private final Provider<UserResource> userResource;
+  private final Provider<UserApiKeyResource> userApiKeyResource;
 
   @Inject
   public UserRootResource(Provider<UserCollectionResource> userCollectionResource,
-                          Provider<UserResource> userResource) {
+                          Provider<UserResource> userResource, Provider<UserApiKeyResource> userApiKeyResource) {
     this.userCollectionResource = userCollectionResource;
     this.userResource = userResource;
+    this.userApiKeyResource = userApiKeyResource;
   }
 
   @Path("")
@@ -60,5 +62,10 @@ public class UserRootResource {
   @Path("{id}")
   public UserResource getUserResource() {
     return userResource.get();
+  }
+
+  @Path("{id}/api_keys")
+  public UserApiKeyResource apiKeys() {
+    return userApiKeyResource.get();
   }
 }
