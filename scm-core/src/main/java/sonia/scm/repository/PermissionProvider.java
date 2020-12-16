@@ -26,11 +26,28 @@ package sonia.scm.repository;
 
 import java.util.Collection;
 
+/**
+ * Provider for available verbs and roles for repository permissions, such as "read", "modify", "pull", "push", etc.
+ * This collection of verbs can be extended by plugins and be grouped to roles, such as "READ", "WRITE", etc.
+ * The permissions are configured by "repository-permissions.xml" files from the core and from plugins.
+ *
+ * @since 2.12.0
+ */
 public interface PermissionProvider {
 
+  /**
+   * The collection of all registered verbs.
+   */
   Collection<String> availableVerbs();
 
+  /**
+   * The collection of verbs that are marked as "read only". These verbs are safe for archived or otherwise read only
+   * repositories.
+   */
   Collection<String> readOnlyVerbs();
 
+  /**
+   * The collection of roles defined and extended by core and plugins.
+   */
   Collection<RepositoryRole> availableRoles();
 }
