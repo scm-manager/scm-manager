@@ -6,13 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
-
 ### Added
 - Add repository import via dump file for Subversion ([#1471](https://github.com/scm-manager/scm-manager/pull/1471))
 - Add support for permalinks to lines in source code view ([#1472](https://github.com/scm-manager/scm-manager/pull/1472))
 
 ### Fixed
 - Add "Api Key" page link to sub-navigation of "User" and "Me" sections ([#1464](https://github.com/scm-manager/scm-manager/pull/1464))
+- Empty page on repository namespace filter ([#1476](https://github.com/scm-manager/scm-manager/pull/1476))
+- Usage of namespace filter and search action together on repository overview ([#1476](https://github.com/scm-manager/scm-manager/pull/1476))
 
 ## [2.11.1] - 2020-12-07
 ### Fixed
