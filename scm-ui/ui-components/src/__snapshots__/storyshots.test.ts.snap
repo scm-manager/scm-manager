@@ -50541,18 +50541,13 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
           <p
             className="shorten-text is-marginless"
           >
-             
             <strong>
               heartOfGold
             </strong>
              
-             
-            <i
-              className="fas fa-archive has-text-grey-light"
-            />
-             
             <span
-              className="RepositoryEntry__Smaller-sc-6jys82-0 lpzPr"
+              className="RepositoryEntry__ArchiveTag-sc-6jys82-0 lgBbpU"
+              title="archive.tooltip"
             >
               repository.archived
             </span>
@@ -50697,7 +50692,6 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
           <p
             className="shorten-text is-marginless"
           >
-             
             <strong>
               heartOfGold
             </strong>
@@ -50846,7 +50840,6 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
             <i
               className="far fa-star"
             />
-             
             <strong>
               heartOfGold
             </strong>
@@ -50992,7 +50985,6 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
           <p
             className="shorten-text is-marginless"
           >
-             
             <strong>
               heartOfGold
             </strong>
@@ -51138,7 +51130,6 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
           <p
             className="shorten-text is-marginless"
           >
-             
             <strong>
               heartOfGold
             </strong>
