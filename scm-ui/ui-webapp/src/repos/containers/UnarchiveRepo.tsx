@@ -23,11 +23,10 @@
  */
 import React, { FC, useState } from "react";
 import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
-import { unarchiveRepo, getModifyRepoFailure, isModifyRepoPending } from "../modules/repos";
+import { Button, ConfirmAlert, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { getModifyRepoFailure, isModifyRepoPending, unarchiveRepo } from "../modules/repos";
 
 type Props = {
   loading: boolean;
@@ -40,10 +39,9 @@ type Props = {
 const UnarchiveRepo: FC<Props> = ({ confirmDialog = true, repository, unarchiveRepo, loading, error }: Props) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("repos");
-  const history = useHistory();
 
   const unarchived = () => {
-    history.push(`/repo/${repository.namespace}/${repository.name}`);
+    window.location.reload();
   };
 
   const unarchiveRepoCallback = () => {
@@ -96,7 +94,9 @@ const UnarchiveRepo: FC<Props> = ({ confirmDialog = true, repository, unarchiveR
             {t("unarchiveRepo.description")}
           </p>
         }
-        right={<DeleteButton label={t("unarchiveRepo.button")} action={action} loading={loading} />}
+        right={
+          <Button color="warning" icon="box-open" label={t("unarchiveRepo.button")} action={action} loading={loading} />
+        }
       />
     </>
   );

@@ -23,7 +23,7 @@
  */
 import React from "react";
 import { Repository } from "@scm-manager/ui-types";
-import { CardColumn, DateFromNow, Icon } from "@scm-manager/ui-components";
+import { CardColumn, DateFromNow } from "@scm-manager/ui-components";
 import RepositoryEntryLink from "./RepositoryEntryLink";
 import RepositoryAvatar from "./RepositoryAvatar";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -39,9 +39,16 @@ type Props = WithTranslation & {
   baseDate?: DateProp;
 };
 
-const Smaller = styled.span`
+const ArchiveTag = styled.span`
+  margin-left: 0.2rem;
+  background-color: #9a9a9a;
+  padding: 0.25rem;
+  border-radius: 5px;
+  color: white;
+  overflow: visible;
+  pointer-events: all;
+  font-weight: bold;
   font-size: 0.7rem;
-  color: gray;
 `;
 
 class RepositoryEntry extends React.Component<Props> {
@@ -139,14 +146,12 @@ class RepositoryEntry extends React.Component<Props> {
   createTitle = () => {
     const { repository, t } = this.props;
     const archivedFlag = repository.archived && (
-      <>
-        {" "}
-        <Icon name={"archive"} /> <Smaller>{t("repository.archived")}</Smaller>
-      </>
+      <ArchiveTag title={t("archive.tooltip")}>{t("repository.archived")}</ArchiveTag>
     );
     return (
       <>
-        <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} /> <strong>{repository.name}</strong> {archivedFlag}
+        <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} />
+        <strong>{repository.name}</strong> {archivedFlag}
       </>
     );
   };

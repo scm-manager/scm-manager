@@ -238,7 +238,7 @@
     "submitCreate": "Speichern",
     "submitImport": "Importieren",
     "initializeRepository": "Repository initiieren",
-    "dangerZone": "Umbenennen und Löschen",
+    "dangerZone": "Umbenennen, Archivieren und Löschen",
     "createButton": "Neues Repository erstellen",
     "importButton": "Repository importieren"
   },
@@ -373,6 +373,9 @@
       "submit": "Ja",
       "cancel": "Nein"
     }
+  },
+  "archive": {
+    "tooltip": "Nur lesender Zugriff möglich. Das Archiv kann nicht verändert werden."
   },
   "diff": {
     "jumpToSource": "Zur Quelldatei springen",

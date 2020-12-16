@@ -239,7 +239,7 @@
     "submitCreate": "Save",
     "submitImport": "Import",
     "initializeRepository": "Initialize repository",
-    "dangerZone": "Rename and delete",
+    "dangerZone": "Rename, archive and delete",
     "createButton": "Create Repository",
     "importButton": "Import repository"
   },
@@ -374,6 +374,9 @@
       "submit": "Yes",
       "cancel": "No"
     }
+  },
+  "archive": {
+    "tooltip": "Read only. The archive cannot be changed."
   },
   "diff": {
     "changes": {

@@ -23,10 +23,9 @@
  */
 import React, { FC, useState } from "react";
 import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { Button, ConfirmAlert, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { archiveRepo, getModifyRepoFailure, isModifyRepoPending } from "../modules/repos";
 
 type Props = {
@@ -40,10 +39,9 @@ type Props = {
 const ArchiveRepo: FC<Props> = ({ confirmDialog = true, repository, archiveRepo, loading, error }: Props) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("repos");
-  const history = useHistory();
 
   const archived = () => {
-    history.push(`/repo/${repository.namespace}/${repository.name}`);
+    window.location.reload();
   };
 
   const archiveRepoCallback = () => {
@@ -96,7 +94,9 @@ const ArchiveRepo: FC<Props> = ({ confirmDialog = true, repository, archiveRepo,
             {t("archiveRepo.description")}
           </p>
         }
-        right={<DeleteButton label={t("archiveRepo.button")} action={action} loading={loading} />}
+        right={
+          <Button color="warning" icon="archive" label={t("archiveRepo.button")} action={action} loading={loading} />
+        }
       />
     </>
   );
