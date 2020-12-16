@@ -28,8 +28,8 @@ package sonia.scm.store;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-
 import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.RepositoryArchivedCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.util.IOUtil;
@@ -44,11 +44,11 @@ import java.io.File;
 public class JAXBDataStoreFactory extends FileBasedStoreFactory
   implements DataStoreFactory {
 
-  private KeyGenerator keyGenerator;
+  private final KeyGenerator keyGenerator;
 
   @Inject
-  public JAXBDataStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator) {
-    super(contextProvider, repositoryLocationResolver, Store.DATA);
+  public JAXBDataStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator, RepositoryArchivedCheck archivedCheck) {
+    super(contextProvider, repositoryLocationResolver, Store.DATA, archivedCheck);
     this.keyGenerator = keyGenerator;
   }
 
@@ -56,6 +56,6 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
   public <T> DataStore<T> getStore(TypedStoreParameters<T> storeParameters) {
     File storeLocation = getStoreLocation(storeParameters);
     IOUtil.mkdirs(storeLocation);
-    return new JAXBDataStore<>(keyGenerator, TypedStoreContext.of(storeParameters), storeLocation);
+    return new JAXBDataStore<>(keyGenerator, TypedStoreContext.of(storeParameters), storeLocation, mustBeReadOnly(storeParameters));
   }
 }

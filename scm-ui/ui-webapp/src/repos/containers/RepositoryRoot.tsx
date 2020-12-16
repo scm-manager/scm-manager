@@ -30,6 +30,8 @@ import { Changeset, Repository } from "@scm-manager/ui-types";
 import {
   CustomQueryFlexWrappedColumns,
   ErrorPage,
+  FileControlFactory,
+  JumpToFileButton,
   Loading,
   NavLink,
   Page,
@@ -37,7 +39,9 @@ import {
   SecondaryNavigation,
   SecondaryNavigationColumn,
   StateMenuContextProvider,
-  SubNavigation
+  SubNavigation,
+  Tooltip,
+  urls,
 } from "@scm-manager/ui-components";
 import { fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending } from "../modules/repos";
 import RepositoryDetails from "../components/RepositoryDetails";
@@ -53,10 +57,9 @@ import { getLinks, getRepositoriesLink } from "../../modules/indexResource";
 import CodeOverview from "../codeSection/containers/CodeOverview";
 import ChangesetView from "./ChangesetView";
 import SourceExtensions from "../sources/containers/SourceExtensions";
-import { FileControlFactory, JumpToFileButton } from "@scm-manager/ui-components";
 import TagsOverview from "../tags/container/TagsOverview";
 import TagRoot from "../tags/container/TagRoot";
-import { urls } from "@scm-manager/ui-components";
+import styled from "styled-components";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -71,6 +74,15 @@ type Props = RouteComponentProps &
     // dispatch functions
     fetchRepoByName: (link: string, namespace: string, name: string) => void;
   };
+
+const ArchiveTag = styled.span`
+  margin-left: 0.2rem;
+  background-color: #9a9a9a;
+  padding: 0.4rem;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+`;
 
 class RepositoryRoot extends React.Component<Props> {
   componentDidMount() {
@@ -141,7 +153,7 @@ class RepositoryRoot extends React.Component<Props> {
     const extensionProps = {
       repository,
       url,
-      indexLinks
+      indexLinks,
     };
 
     const redirectUrlFactory = binder.getExtension("repository.redirect", this.props);
@@ -152,16 +164,17 @@ class RepositoryRoot extends React.Component<Props> {
       redirectedUrl = url + "/info";
     }
 
-    const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = changeset => file => {
+    const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = (changeset) => (file) => {
       const baseUrl = `${url}/code/sources`;
       const sourceLink = file.newPath && {
         url: `${baseUrl}/${changeset.id}/${file.newPath}/`,
-        label: t("diff.jumpToSource")
+        label: t("diff.jumpToSource"),
       };
-      const targetLink = file.oldPath && changeset._embedded?.parents?.length === 1 && {
-        url: `${baseUrl}/${changeset._embedded.parents[0].id}/${file.oldPath}`,
-        label: t("diff.jumpToTarget")
-      };
+      const targetLink = file.oldPath &&
+        changeset._embedded?.parents?.length === 1 && {
+          url: `${baseUrl}/${changeset._embedded.parents[0].id}/${file.oldPath}`,
+          label: t("diff.jumpToTarget"),
+        };
 
       const links = [];
       switch (file.type) {
@@ -186,6 +199,12 @@ class RepositoryRoot extends React.Component<Props> {
       return links ? links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />) : null;
     };
 
+    const archivedFlag = repository.archived && (
+      <Tooltip message={t("archive.tooltip")}>
+        <ArchiveTag className="is-size-6">{t("repository.archived")}</ArchiveTag>
+      </Tooltip>
+    );
+
     const titleComponent = (
       <>
         <Link to={`/repos/${repository.namespace}/`} className={"has-text-dark"}>
@@ -200,7 +219,12 @@ class RepositoryRoot extends React.Component<Props> {
         <Page
           title={titleComponent}
           documentTitle={`${repository.namespace}/${repository.name}`}
-          afterTitle={<ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />}
+          afterTitle={
+            <>
+              <ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />
+              {archivedFlag}
+            </>
+          }
         >
           <CustomQueryFlexWrappedColumns>
             <PrimaryContentColumn>
@@ -336,7 +360,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
     loading,
     error,
     repoLink,
-    indexLinks
+    indexLinks,
   };
 };
 
@@ -344,7 +368,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchRepoByName: (link: string, namespace: string, name: string) => {
       dispatch(fetchRepoByName(link, namespace, name));
-    }
+    },
   };
 };
 

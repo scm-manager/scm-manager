@@ -28,10 +28,13 @@ package sonia.scm.store;
 
 import org.junit.Test;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryArchivedCheck;
 import sonia.scm.security.UUIDKeyGenerator;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  *
@@ -39,16 +42,12 @@ import static org.junit.Assert.assertNotNull;
  */
 public class JAXBDataStoreTest extends DataStoreTestBase {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  private final RepositoryArchivedCheck archivedCheck = mock(RepositoryArchivedCheck.class);
+
   @Override
   protected DataStoreFactory createDataStoreFactory()
   {
-    return new JAXBDataStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator());
+    return new JAXBDataStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator(), archivedCheck);
   }
 
   @Override
@@ -76,5 +75,12 @@ public class JAXBDataStoreTest extends DataStoreTestBase {
 
     assertNotNull(storeObject);
     assertEquals("abc_value", storeObject.getValue());
+  }
+
+  @Test(expected = StoreReadOnlyException.class)
+  public void shouldNotStoreForReadOnlyRepository()
+  {
+    when(archivedCheck.isArchived(repository.getId())).thenReturn(true);
+    getDataStore(StoreObject.class, repository).put("abc", new StoreObject("abc_value"));
   }
 }

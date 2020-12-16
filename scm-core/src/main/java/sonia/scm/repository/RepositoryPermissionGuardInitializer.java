@@ -22,59 +22,31 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.repository;
+
+import sonia.scm.EagerSingleton;
+import sonia.scm.Initable;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.plugin.Extension;
+
+import javax.inject.Inject;
 
 /**
- * Base class for {@link ConfigurationStore}.
- *
- * @author Sebastian Sdorra
- * @since 1.16
- *
- * @param <T> type of store objects
+ * Initializes read only permissions for {@link RepositoryPermissionGuard} at startup.
  */
-public abstract class AbstractStore<T> implements ConfigurationStore<T> {
+@Extension
+@EagerSingleton
+final class RepositoryPermissionGuardInitializer implements Initable {
 
-  /**
-   * stored object
-   */
-  protected T storeObject;
-  private final boolean readOnly;
+  private final PermissionProvider permissionProvider;
 
-  protected AbstractStore(boolean readOnly) {
-    this.readOnly = readOnly;
+  @Inject
+  RepositoryPermissionGuardInitializer(PermissionProvider permissionProvider) {
+    this.permissionProvider = permissionProvider;
   }
 
   @Override
-  public T get() {
-    if (storeObject == null) {
-      storeObject = readObject();
-    }
-
-    return storeObject;
+  public void init(SCMContextProvider context) {
+    RepositoryPermissionGuard.setReadOnlyVerbs(permissionProvider.readOnlyVerbs());
   }
-
-  @Override
-  public void set(T object) {
-    if (readOnly) {
-      throw new StoreReadOnlyException(object);
-    }
-    writeObject(object);
-    this.storeObject = object;
-  }
-
-  /**
-   * Read the stored object.
-   *
-   *
-   * @return stored object
-   */
-  protected abstract T readObject();
-
-  /**
-   * Write object to the store.
-   *
-   *
-   * @param object object to write
-   */
-  protected abstract void writeObject(T object);
 }

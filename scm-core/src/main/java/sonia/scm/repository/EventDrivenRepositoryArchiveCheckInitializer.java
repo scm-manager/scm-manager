@@ -22,59 +22,32 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.repository;
 
-/**
- * Base class for {@link ConfigurationStore}.
- *
- * @author Sebastian Sdorra
- * @since 1.16
- *
- * @param <T> type of store objects
- */
-public abstract class AbstractStore<T> implements ConfigurationStore<T> {
+import sonia.scm.EagerSingleton;
+import sonia.scm.Initable;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.plugin.Extension;
 
-  /**
-   * stored object
-   */
-  protected T storeObject;
-  private final boolean readOnly;
+import javax.inject.Inject;
 
-  protected AbstractStore(boolean readOnly) {
-    this.readOnly = readOnly;
+@Extension
+@EagerSingleton
+final class EventDrivenRepositoryArchiveCheckInitializer implements Initable {
+
+  private final RepositoryDAO repositoryDAO;
+
+  @Inject
+  EventDrivenRepositoryArchiveCheckInitializer(RepositoryDAO repositoryDAO) {
+    this.repositoryDAO = repositoryDAO;
   }
 
   @Override
-  public T get() {
-    if (storeObject == null) {
-      storeObject = readObject();
-    }
-
-    return storeObject;
+  public void init(SCMContextProvider context) {
+    repositoryDAO.getAll()
+      .stream()
+      .filter(Repository::isArchived)
+      .map(Repository::getId)
+      .forEach(EventDrivenRepositoryArchiveCheck::setAsArchived);
   }
-
-  @Override
-  public void set(T object) {
-    if (readOnly) {
-      throw new StoreReadOnlyException(object);
-    }
-    writeObject(object);
-    this.storeObject = object;
-  }
-
-  /**
-   * Read the stored object.
-   *
-   *
-   * @return stored object
-   */
-  protected abstract T readObject();
-
-  /**
-   * Write object to the store.
-   *
-   *
-   * @param object object to write
-   */
-  protected abstract void writeObject(T object);
 }

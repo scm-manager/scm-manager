@@ -175,6 +175,7 @@ public class XmlRepositoryV1UpdateStep implements CoreUpdateStep {
           v1Repository.getContact(),
           v1Repository.getDescription(),
           createPermissions(v1Repository));
+        repository.setArchived(v1Repository.isArchived());
         LOG.info("creating new repository {} from old repository {} in directory {}", repository, v1Repository.getName(), newPath);
         repositoryDao.add(repository, newPath);
         propertyStore.put(v1Repository.getId(), v1Repository.getProperties());

@@ -397,6 +397,42 @@ export function deleteRepoFailure(repository: Repository, error: Error): Action 
   };
 }
 
+// archive
+
+export function archiveRepo(repository: Repository, callback?: () => void) {
+  return function(dispatch: any) {
+    dispatch(modifyRepoPending(repository));
+    return apiClient
+      .post((repository._links.archive as Link).href)
+      .then(() => {
+        dispatch(modifyRepoSuccess(repository));
+        if (callback) {
+          callback();
+        }
+      })
+      .catch(err => {
+        dispatch(modifyRepoFailure(repository, err));
+      });
+  };
+}
+
+export function unarchiveRepo(repository: Repository, callback?: () => void) {
+  return function(dispatch: any) {
+    dispatch(modifyRepoPending(repository));
+    return apiClient
+      .post((repository._links.unarchive as Link).href)
+      .then(() => {
+        dispatch(modifyRepoSuccess(repository));
+        if (callback) {
+          callback();
+        }
+      })
+      .catch(err => {
+        dispatch(modifyRepoFailure(repository, err));
+      });
+  };
+}
+
 export function fetchNamespace(link: string, namespaceName: string) {
   return function(dispatch: any) {
     dispatch(fetchNamespacePending(namespaceName));

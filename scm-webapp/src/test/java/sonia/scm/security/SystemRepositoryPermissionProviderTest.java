@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +35,7 @@ import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Collection;
 
+import static java.util.Arrays.asList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.mock;
@@ -55,7 +56,7 @@ class SystemRepositoryPermissionProviderTest {
       .filter(field -> field.getName().startsWith("ACTION_"))
       .filter(field -> !field.getName().equals("ACTION_HEALTHCHECK"))
       .map(this::getString)
-      .filter(verb -> !"create".equals(verb))
+      .filter(verb -> !asList("create", "archive").contains(verb))
       .toArray(String[]::new);
   }
 

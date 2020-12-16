@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle.modules;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
+import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
@@ -36,6 +37,8 @@ import sonia.scm.io.FileSystem;
 import sonia.scm.lifecycle.DefaultRestarter;
 import sonia.scm.lifecycle.Restarter;
 import sonia.scm.plugin.PluginLoader;
+import sonia.scm.repository.EventDrivenRepositoryArchiveCheck;
+import sonia.scm.repository.RepositoryArchivedCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.xml.MetadataStore;
 import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
@@ -93,6 +96,7 @@ public class BootstrapModule extends AbstractModule {
     bind(CipherHandler.class).toInstance(CipherUtil.getInstance().getCipherHandler());
 
     // bind core
+    bind(RepositoryArchivedCheck.class, EventDrivenRepositoryArchiveCheck.class);
     bind(ConfigurationStoreFactory.class, JAXBConfigurationStoreFactory.class);
     bind(ConfigurationEntryStoreFactory.class, JAXBConfigurationEntryStoreFactory.class);
     bind(DataStoreFactory.class, JAXBDataStoreFactory.class);

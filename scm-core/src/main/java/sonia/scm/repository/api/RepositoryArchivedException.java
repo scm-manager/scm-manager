@@ -22,59 +22,24 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.repository.api;
 
-/**
- * Base class for {@link ConfigurationStore}.
- *
- * @author Sebastian Sdorra
- * @since 1.16
- *
- * @param <T> type of store objects
- */
-public abstract class AbstractStore<T> implements ConfigurationStore<T> {
+import sonia.scm.ExceptionWithContext;
+import sonia.scm.repository.Repository;
 
-  /**
-   * stored object
-   */
-  protected T storeObject;
-  private final boolean readOnly;
+import static java.lang.String.format;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-  protected AbstractStore(boolean readOnly) {
-    this.readOnly = readOnly;
+public class RepositoryArchivedException extends ExceptionWithContext {
+
+  public static final String CODE = "3hSIlptme1";
+
+  protected RepositoryArchivedException(Repository repository) {
+    super(entity(repository).build(), format("Repository %s is marked as archived and must not be modified", repository));
   }
 
   @Override
-  public T get() {
-    if (storeObject == null) {
-      storeObject = readObject();
-    }
-
-    return storeObject;
+  public String getCode() {
+    return CODE;
   }
-
-  @Override
-  public void set(T object) {
-    if (readOnly) {
-      throw new StoreReadOnlyException(object);
-    }
-    writeObject(object);
-    this.storeObject = object;
-  }
-
-  /**
-   * Read the stored object.
-   *
-   *
-   * @return stored object
-   */
-  protected abstract T readObject();
-
-  /**
-   * Write object to the store.
-   *
-   *
-   * @param object object to write
-   */
-  protected abstract void writeObject(T object);
 }

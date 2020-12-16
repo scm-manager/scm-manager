@@ -22,59 +22,32 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.repository;
+
+import java.util.Collection;
 
 /**
- * Base class for {@link ConfigurationStore}.
+ * Provider for available verbs and roles for repository permissions, such as "read", "modify", "pull", "push", etc.
+ * This collection of verbs can be extended by plugins and be grouped to roles, such as "READ", "WRITE", etc.
+ * The permissions are configured by "repository-permissions.xml" files from the core and from plugins.
  *
- * @author Sebastian Sdorra
- * @since 1.16
- *
- * @param <T> type of store objects
+ * @since 2.12.0
  */
-public abstract class AbstractStore<T> implements ConfigurationStore<T> {
+public interface PermissionProvider {
 
   /**
-   * stored object
+   * The collection of all registered verbs.
    */
-  protected T storeObject;
-  private final boolean readOnly;
-
-  protected AbstractStore(boolean readOnly) {
-    this.readOnly = readOnly;
-  }
-
-  @Override
-  public T get() {
-    if (storeObject == null) {
-      storeObject = readObject();
-    }
-
-    return storeObject;
-  }
-
-  @Override
-  public void set(T object) {
-    if (readOnly) {
-      throw new StoreReadOnlyException(object);
-    }
-    writeObject(object);
-    this.storeObject = object;
-  }
+  Collection<String> availableVerbs();
 
   /**
-   * Read the stored object.
-   *
-   *
-   * @return stored object
+   * The collection of verbs that are marked as "read only". These verbs are safe for archived or otherwise read only
+   * repositories.
    */
-  protected abstract T readObject();
+  Collection<String> readOnlyVerbs();
 
   /**
-   * Write object to the store.
-   *
-   *
-   * @param object object to write
+   * The collection of roles defined and extended by core and plugins.
    */
-  protected abstract void writeObject(T object);
+  Collection<RepositoryRole> availableRoles();
 }

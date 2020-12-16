@@ -22,59 +22,29 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.repository;
 
 /**
- * Base class for {@link ConfigurationStore}.
+ * Implementations of this class can be used to check whether a repository is archived.
  *
- * @author Sebastian Sdorra
- * @since 1.16
- *
- * @param <T> type of store objects
+ * @since 1.12.0
  */
-public abstract class AbstractStore<T> implements ConfigurationStore<T> {
+public interface RepositoryArchivedCheck {
 
   /**
-   * stored object
+   * Checks whether the repository with the given id is archived or not.
+   * @param repositoryId The id of the repository to check.
+   * @return <code>true</code> when the repository with the given id is archived, <code>false</code> otherwise.
    */
-  protected T storeObject;
-  private final boolean readOnly;
-
-  protected AbstractStore(boolean readOnly) {
-    this.readOnly = readOnly;
-  }
-
-  @Override
-  public T get() {
-    if (storeObject == null) {
-      storeObject = readObject();
-    }
-
-    return storeObject;
-  }
-
-  @Override
-  public void set(T object) {
-    if (readOnly) {
-      throw new StoreReadOnlyException(object);
-    }
-    writeObject(object);
-    this.storeObject = object;
-  }
+  boolean isArchived(String repositoryId);
 
   /**
-   * Read the stored object.
-   *
-   *
-   * @return stored object
+   * Checks whether the given repository is archived or not. This checks the status on behalf of the id of the
+   * repository, not by the archive flag provided by the repository itself.
+   * @param repository The repository to check.
+   * @return <code>true</code> when the given repository is archived, <code>false</code> otherwise.
    */
-  protected abstract T readObject();
-
-  /**
-   * Write object to the store.
-   *
-   *
-   * @param object object to write
-   */
-  protected abstract void writeObject(T object);
+  default boolean isArchived(Repository repository) {
+    return isArchived(repository.getId());
+  }
 }

@@ -29,6 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Stage;
+import sonia.scm.repository.RepositoryArchivedCheck;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.update.RepositoryV1PropertyReader;
@@ -37,6 +38,8 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+
+import static org.mockito.Mockito.mock;
 
 
 class XmlV1PropertyDAOTest {
@@ -108,7 +111,8 @@ class XmlV1PropertyDAOTest {
     Files.createDirectories(configPath);
     Path propFile = configPath.resolve("repository-properties-v1.xml");
     Files.write(propFile, PROPERTIES.getBytes());
-    XmlV1PropertyDAO dao = new XmlV1PropertyDAO(new JAXBConfigurationEntryStoreFactory(new SimpleContextProvider(temp), null, new SimpleKeyGenerator()));
+    RepositoryArchivedCheck archivedCheck = mock(RepositoryArchivedCheck.class);
+    XmlV1PropertyDAO dao = new XmlV1PropertyDAO(new JAXBConfigurationEntryStoreFactory(new SimpleContextProvider(temp), null, new SimpleKeyGenerator(), archivedCheck));
 
     dao.getProperties(new RepositoryV1PropertyReader())
       .forEachEntry((key, prop) -> {

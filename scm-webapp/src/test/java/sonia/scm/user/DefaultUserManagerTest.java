@@ -127,6 +127,6 @@ public class DefaultUserManagerTest extends UserManagerTestBase {
   //~--- methods --------------------------------------------------------------
 
   private XmlUserDAO createXmlUserDAO() {
-    return new XmlUserDAO(new JAXBConfigurationStoreFactory(contextProvider, locationResolver));
+    return new XmlUserDAO(new JAXBConfigurationStoreFactory(contextProvider, locationResolver, null));
   }
 }
