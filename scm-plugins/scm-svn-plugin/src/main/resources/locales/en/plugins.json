@@ -1,7 +1,7 @@
 {
   "scm-svn-plugin": {
     "information": {
-      "checkout": "Checkout repository"
+      "checkout": "Checkout Repository"
     },
     "config": {
       "link": "Subversion",

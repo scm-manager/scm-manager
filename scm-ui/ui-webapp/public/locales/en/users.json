@@ -70,12 +70,12 @@
     "userIsExternal": "This user is managed by an external system",
     "button": {
       "submit": "Submit",
-      "convertToExternal": "Convert user to external",
-      "convertToInternal": "Convert user to internal"
+      "convertToExternal": "Convert User to External",
+      "convertToInternal": "Convert User to Internal"
     },
     "modal": {
-      "passwordRequired": "Set new password for internal user",
-      "convertToInternal": "Convert to internal"
+      "passwordRequired": "Set New Password for Internal User",
+      "convertToInternal": "Convert to Internal"
     }
   },
   "publicKey": {
@@ -87,8 +87,8 @@
     "raw": "Key",
     "download": "Download",
     "delete": "Delete",
-    "addSubtitle": "Add new key",
-    "addKey": "Add key"
+    "addSubtitle": "Add New Key",
+    "addKey": "Add Key"
   },
   "apiKey": {
     "subtitle": "API Keys",
@@ -102,12 +102,12 @@
       "help": "The api key will be restricted to permissions of this role"
     },
     "created": "Created on",
-    "addSubtitle": "Add new key",
-    "addKey": "Add key",
+    "addSubtitle": "Add New Key",
+    "addKey": "Add Key",
     "delete": "Delete",
     "download": "Download",
     "modal": {
-      "title": "Key created",
+      "title": "Key Created",
       "text1": "Your new API key is ready. You can use it as a bearer token for REST calls or as a password for SCM clients.",
       "text2": "Store your API key in a safe place now! It is only displayed now and cannot be recovered later.",
       "clipboard": "Copy to clipboard",
