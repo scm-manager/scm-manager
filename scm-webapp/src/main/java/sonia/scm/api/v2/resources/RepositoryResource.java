@@ -255,7 +255,7 @@ public class RepositoryResource {
   @Path("unarchive")
   @Operation(summary = "Mark repository as \"not archived\"", description = "Removes the \"archived\" mark from the repository.", tags = "Repository")
   @ApiResponse(responseCode = "204", description = "update success")
-  @ApiResponse(responseCode = "400", description = "invalid request, e.g. when the repository already is marked as archived")
+  @ApiResponse(responseCode = "400", description = "invalid request, e.g. when the repository is not marked as archived")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"repository:archive\" privilege")
   @ApiResponse(

@@ -25,8 +25,7 @@
 package sonia.scm.security;
 
 import com.google.inject.Inject;
-import org.apache.commons.lang.builder.EqualsBuilder;
-import org.apache.commons.lang.builder.HashCodeBuilder;
+import lombok.EqualsAndHashCode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.plugin.PluginLoader;
@@ -175,31 +174,13 @@ public class SystemRepositoryPermissionProvider {
 
   @XmlAccessorType(XmlAccessType.FIELD)
   @XmlRootElement(name = "verb")
+  @EqualsAndHashCode
   private static class Verb {
     @XmlValue
     private String value;
     @XmlAttribute(name = "read-only")
+    @EqualsAndHashCode.Exclude
     private boolean readOnly;
-
-    @Override
-    public boolean equals(Object o) {
-      if (this == o) return true;
-
-      if (!(o instanceof Verb)) return false;
-
-      Verb verb = (Verb) o;
-
-      return new EqualsBuilder()
-        .append(value, verb.value)
-        .isEquals();
-    }
-
-    @Override
-    public int hashCode() {
-      return new HashCodeBuilder(17, 37)
-        .append(value)
-        .toHashCode();
-    }
   }
 
   @XmlRootElement(name = "roles")
