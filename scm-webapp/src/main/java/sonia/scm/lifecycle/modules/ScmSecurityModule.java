@@ -27,7 +27,6 @@ package sonia.scm.lifecycle.modules;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.inject.name.Names;
-
 import org.apache.shiro.authc.Authenticator;
 import org.apache.shiro.authc.credential.DefaultPasswordService;
 import org.apache.shiro.authc.credential.PasswordService;
@@ -118,6 +117,10 @@ public class ScmSecurityModule extends ShiroWebModule
 
     // bind constant
     bindConstant().annotatedWith(Names.named("shiro.loginUrl")).to("/index.html");
+
+    // do not block non ascii character,
+    // because this would exclude languages which are non ascii based
+    bindConstant().annotatedWith(Names.named("shiro.blockNonAscii")).to(false);
 
     // disable access to mustache resources
     addFilterChain("/**.mustache", filterConfig(ROLES, "nobody"));
