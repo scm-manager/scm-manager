@@ -27,10 +27,8 @@ package sonia.scm.web.cgi;
 import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableSet;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashMap;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -45,11 +43,11 @@ public class EnvList {
   private final Map<String, String> envMap;
 
   public EnvList() {
-    envMap = new LinkedHashMap<>();
+    envMap = new HashMap<>();
   }
 
   public EnvList(EnvList list) {
-    envMap = new LinkedHashMap<>(list.envMap);
+    envMap = new HashMap<>(list.envMap);
   }
 
 
@@ -81,11 +79,10 @@ public class EnvList {
    * @since 2.10.0
    */
   public String[] asArray() {
-    List<String> env = new ArrayList<>();
-    for (Map.Entry<String, String> e : envMap.entrySet()) {
-      env.add(e.getKey() + "=" + e.getValue());
-    }
-    return env.toArray(new String[0]);
+    return envMap.entrySet()
+      .stream()
+      .map(e -> e.getKey() + "=" + e.getValue())
+      .toArray(String[]::new);
   }
 
   /**
