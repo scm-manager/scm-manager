@@ -28,10 +28,7 @@ import { InputField, Checkbox } from "@scm-manager/ui-components";
 
 type Configuration = {
   hgBinary: string;
-  pythonBinary: string;
-  pythonPath?: string;
   encoding: string;
-  useOptimizedBytecode: boolean;
   showRevisionInId: boolean;
   enableHttpPostArgs: boolean;
   _links: Links;
@@ -58,7 +55,7 @@ class HgConfigurationForm extends React.Component<Props, State> {
   }
 
   updateValidationStatus = () => {
-    const requiredFields = ["hgBinary", "pythonBinary", "encoding"];
+    const requiredFields = ["hgBinary", "encoding"];
 
     const validationErrors = [];
     for (const field of requiredFields) {
@@ -130,11 +127,8 @@ class HgConfigurationForm extends React.Component<Props, State> {
     return (
       <div className="columns is-multiline">
         {this.inputField("hgBinary")}
-        {this.inputField("pythonBinary")}
-        {this.inputField("pythonPath")}
         {this.inputField("encoding")}
         <div className="column is-half">
-          {this.checkbox("useOptimizedBytecode")}
           {this.checkbox("showRevisionInId")}
         </div>
         <div className="column is-half">

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -60,21 +60,17 @@ public class HgConfigResource {
   private final HgConfigDtoToHgConfigMapper dtoToConfigMapper;
   private final HgConfigToHgConfigDtoMapper configToDtoMapper;
   private final HgRepositoryHandler repositoryHandler;
-  private final Provider<HgConfigPackageResource> packagesResource;
   private final Provider<HgConfigAutoConfigurationResource> autoconfigResource;
-  private final Provider<HgConfigInstallationsResource> installationsResource;
 
   @Inject
-  public HgConfigResource(HgConfigDtoToHgConfigMapper dtoToConfigMapper, HgConfigToHgConfigDtoMapper configToDtoMapper,
-                          HgRepositoryHandler repositoryHandler, Provider<HgConfigPackageResource> packagesResource,
-                          Provider<HgConfigAutoConfigurationResource> autoconfigResource,
-                          Provider<HgConfigInstallationsResource> installationsResource) {
+  public HgConfigResource(HgConfigDtoToHgConfigMapper dtoToConfigMapper,
+                          HgConfigToHgConfigDtoMapper configToDtoMapper,
+                          HgRepositoryHandler repositoryHandler,
+                          Provider<HgConfigAutoConfigurationResource> autoconfigResource) {
     this.dtoToConfigMapper = dtoToConfigMapper;
     this.configToDtoMapper = configToDtoMapper;
     this.repositoryHandler = repositoryHandler;
-    this.packagesResource = packagesResource;
     this.autoconfigResource = autoconfigResource;
-    this.installationsResource = installationsResource;
   }
 
   /**
@@ -134,7 +130,7 @@ public class HgConfigResource {
         schema = @Schema(implementation = UpdateHgConfigDto.class),
         examples = @ExampleObject(
           name = "Overwrites current configuration with this one.",
-          value = "{\n  \"disabled\":false,\n  \"hgBinary\":\"hg\",\n  \"pythonBinary\":\"python\",\n  \"pythonPath\":\"\",\n  \"encoding\":\"UTF-8\",\n  \"useOptimizedBytecode\":false,\n  \"showRevisionInId\":false,\n  \"disableHookSSLValidation\":false,\n  \"enableHttpPostArgs\":false\n}",
+          value = "{\n  \"disabled\":false,\n  \"hgBinary\":\"hg\",\n  \"encoding\":\"UTF-8\",\n  \"showRevisionInId\":false,\n  \"enableHttpPostArgs\":false\n}",
           summary = "Simple update configuration"
         )
       )
@@ -165,18 +161,8 @@ public class HgConfigResource {
     return Response.noContent().build();
   }
 
-  @Path("packages")
-  public HgConfigPackageResource getPackagesResource() {
-    return packagesResource.get();
-  }
-
   @Path("auto-configuration")
   public HgConfigAutoConfigurationResource getAutoConfigurationResource() {
     return autoconfigResource.get();
-  }
-
-  @Path("installations")
-  public HgConfigInstallationsResource getInstallationsResource() {
-    return installationsResource.get();
   }
 }

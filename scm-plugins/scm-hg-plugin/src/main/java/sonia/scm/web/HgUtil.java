@@ -24,12 +24,7 @@
 
 package sonia.scm.web;
 
-import sonia.scm.SCMContext;
-import sonia.scm.repository.HgConfig;
-import sonia.scm.repository.HgPythonScript;
 import sonia.scm.util.Util;
-
-import java.io.File;
 
 /**
  *
@@ -40,26 +35,6 @@ public final class HgUtil {
   public static final String REVISION_TIP = "tip";
 
   private HgUtil() {}
-
-  public static String getPythonPath(HgConfig config) {
-    String pythonPath = Util.EMPTY_STRING;
-
-    if (config != null) {
-      pythonPath = Util.nonNull(config.getPythonPath());
-    }
-
-    if (Util.isNotEmpty(pythonPath)) {
-      pythonPath = pythonPath.concat(File.pathSeparator);
-    }
-
-    pythonPath = pythonPath.concat(
-      HgPythonScript.getScriptDirectory(
-        SCMContext.getContext()
-      ).getAbsolutePath()
-    );
-
-    return pythonPath;
-  }
 
   public static String getRevision(String revision) {
     return Util.isEmpty(revision) ? REVISION_TIP : revision;

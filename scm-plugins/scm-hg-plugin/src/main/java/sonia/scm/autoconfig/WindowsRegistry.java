@@ -21,30 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.api.v2.resources;
 
+package sonia.scm.autoconfig;
 
-import javax.inject.Inject;
-import java.util.List;
+import sonia.scm.util.RegistryUtil;
 
-import static de.otto.edison.hal.Links.linkingTo;
+import java.util.Optional;
 
-public class HgConfigInstallationsToDtoMapper {
+public class WindowsRegistry {
 
-  private ScmPathInfoStore scmPathInfoStore;
-
-  @Inject
-  public HgConfigInstallationsToDtoMapper(ScmPathInfoStore scmPathInfoStore) {
-    this.scmPathInfoStore = scmPathInfoStore;
+  public Optional<String> get(String key) {
+    return Optional.ofNullable(
+      RegistryUtil.getRegistryValue(key)
+    );
   }
 
-  public HgConfigInstallationsDto map(List<String> installations, String path) {
-    return new HgConfigInstallationsDto(linkingTo().self(createSelfLink(path)).build(), installations);
-  }
-
-  private String createSelfLink(String path) {
-    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), HgConfigResource.class);
-    return linkBuilder.method("getInstallationsResource").parameters().href() + '/' + path;
-  }
 }

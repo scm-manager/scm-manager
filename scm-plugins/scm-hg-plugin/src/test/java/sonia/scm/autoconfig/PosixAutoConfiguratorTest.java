@@ -28,139 +28,101 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgVerifier;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class PosixAutoConfiguratorTest {
 
-  @Test
-  void shouldConfigureWithShebangPath(@TempDir Path directory) throws IOException {
-    Path hg = directory.resolve("hg");
-    Path python = directory.resolve("python");
+  @Mock
+  private HgVerifier verifier;
 
-    Files.write(hg, ("#!" + python.toAbsolutePath().toString()).getBytes(StandardCharsets.UTF_8));
-    Files.createFile(python);
+  @Test
+  void shouldConfigureMercurial(@TempDir Path directory) {
+    Path hg = directory.resolve("hg");
+    when(verifier.isValid(hg)).thenReturn(true);
 
     PosixAutoConfigurator configurator = create(directory);
-    HgConfig config = configurator.configure();
+
+    HgConfig config = new HgConfig();
+    configurator.configure(config);
 
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
-    assertThat(config.getPythonBinary()).isEqualTo(python.toString());
   }
 
-  private PosixAutoConfigurator create(@TempDir Path directory) {
-    return new PosixAutoConfigurator(createEnv(directory), Collections.emptyList());
+  private PosixAutoConfigurator create(Path directory) {
+    return new PosixAutoConfigurator(verifier, createEnv(directory), Collections.emptyList());
   }
 
   private Map<String, String> createEnv(Path... paths) {
     return ImmutableMap.of("PATH", Joiner.on(File.pathSeparator).join(paths));
   }
 
-  @Test
-  void shouldConfigureWithShebangEnv(@TempDir Path directory) throws IOException {
-    Path hg = directory.resolve("hg");
-    Path python = directory.resolve("python3.8");
-
-    Files.write(hg, "#!/usr/bin/env python3.8".getBytes(StandardCharsets.UTF_8));
-    Files.createFile(python);
-
-    PosixAutoConfigurator configurator = create(directory);
-    HgConfig config = configurator.configure();
-
-    assertThat(config.getHgBinary()).isEqualTo(hg.toString());
-    assertThat(config.getPythonBinary()).isEqualTo(python.toString());
-  }
 
   @Test
-  void shouldConfigureWithoutShebang(@TempDir Path directory) throws IOException {
-    Path hg = directory.resolve("hg");
-    Path python = directory.resolve("python");
-
-    Files.createFile(hg);
-    Files.createFile(python);
-
-    PosixAutoConfigurator configurator = create(directory);
-    HgConfig config = configurator.configure();
-
-    assertThat(config.getHgBinary()).isEqualTo(hg.toString());
-    assertThat(config.getPythonBinary()).isEqualTo(python.toString());
-  }
-
-  @Test
-  void shouldConfigureWithoutShebangButWithPython3(@TempDir Path directory) throws IOException {
-    Path hg = directory.resolve("hg");
-    Path python = directory.resolve("python3");
-
-    Files.createFile(hg);
-    Files.createFile(python);
-
-    PosixAutoConfigurator configurator = create(directory);
-    HgConfig config = configurator.configure();
-
-    assertThat(config.getHgBinary()).isEqualTo(hg.toString());
-    assertThat(config.getPythonBinary()).isEqualTo(python.toString());
-  }
-
-  @Test
-  void shouldConfigureFindPythonInAdditionalPath(@TempDir Path directory) throws IOException {
+  void shouldFindMercurialInAdditionalPath(@TempDir Path directory) {
     Path def = directory.resolve("default");
-    Files.createDirectory(def);
     Path additional = directory.resolve("additional");
-    Files.createDirectory(additional);
-
     Path hg = def.resolve("hg");
-    Path python = additional.resolve("python");
 
-    Files.createFile(hg);
-    Files.createFile(python);
+    when(verifier.isValid(hg)).thenReturn(true);
 
     PosixAutoConfigurator configurator = new PosixAutoConfigurator(
-      createEnv(def), ImmutableList.of(additional.toAbsolutePath().toString())
+      verifier, createEnv(def), ImmutableList.of(additional.toAbsolutePath().toString())
     );
 
-    HgConfig config = configurator.configure();
+    HgConfig config = new HgConfig();
+    configurator.configure(config);
+
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
-    assertThat(config.getPythonBinary()).isEqualTo(python.toString());
   }
 
   @Test
-  void shouldFindModulePathFromDebuginstallOutput(@TempDir Path directory) throws IOException {
-    Path hg = directory.resolve("hg");
-    Files.createFile(hg);
-    hg.toFile().setExecutable(true);
+  void shouldSkipInvalidMercurialInstallations(@TempDir Path directory) {
+    Path one = directory.resolve("one");
+    Path two = directory.resolve("two");
+    Path three = directory.resolve("three");
+    Path hg = three.resolve("hg");
 
-    Path modules = directory.resolve("modules");
-    Files.createDirectories(modules);
-
-    Path mercurialModule = modules.resolve("mercurial");
-    Files.createDirectories(mercurialModule);
-
-    PosixAutoConfigurator configurator = create(directory);
-    configurator.setExecutor((Path binary, String... args) -> {
-      String content = String.join("\n",
-        "checking Python executable (/python3.8)",
-        "checking Python lib (/python3.8)...",
-        "checking installed modules (" + mercurialModule.toString() + ")...",
-        "checking templates (/mercurial/templates)...",
-        "checking default template (/mercurial/templates/map-cmdline.default))"
-      );
-      return new ByteArrayInputStream(content.getBytes(StandardCharsets.UTF_8));
+    when(verifier.isValid(any(Path.class))).then(ic -> {
+      Path path = ic.getArgument(0, Path.class);
+      return path.equals(hg);
     });
-    HgConfig config = configurator.configure();
+
+    PosixAutoConfigurator configurator = new PosixAutoConfigurator(
+      verifier, createEnv(one), ImmutableList.of(
+        two.toAbsolutePath().toString(),
+        three.toAbsolutePath().toString()
+      )
+    );
+
+    HgConfig config = new HgConfig();
+    configurator.configure(config);
 
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
-    assertThat(config.getPythonPath()).isEqualTo(modules.toString());
+  }
+
+  @Test
+  void shouldNotConfigureMercurial(@TempDir Path directory) {
+    PosixAutoConfigurator configurator = create(directory);
+
+    HgConfig config = new HgConfig();
+    configurator.configure(config);
+
+    assertThat(config.getHgBinary()).isNull();
   }
 
 }

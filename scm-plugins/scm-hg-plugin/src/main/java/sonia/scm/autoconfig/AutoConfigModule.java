@@ -22,46 +22,15 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.autoconfig;
 
-//~--- non-JDK imports --------------------------------------------------------
+import com.google.inject.AbstractModule;
+import sonia.scm.plugin.Extension;
 
-import sonia.scm.SCMContextProvider;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.io.File;
-
-/**
- *
- * @author Sebastian Sdorra
- */
-public enum HgPythonScript {
-
-  HOOK("scmhooks.py"), HGWEB("hgweb.py");
-
-  private static final String BASE_DIRECTORY = "lib".concat(File.separator).concat("python");
-  private static final String BASE_RESOURCE = "/sonia/scm/python/";
-
-  private final String name;
-
-  HgPythonScript(String name) {
-    this.name = name;
-  }
-
-  public static File getScriptDirectory(SCMContextProvider context) {
-    return new File(context.getBaseDirectory(), BASE_DIRECTORY);
-  }
-
-  public File getFile(SCMContextProvider context) {
-    return new File(getScriptDirectory(context), name);
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public String getResourcePath() {
-    return BASE_RESOURCE.concat(name);
+@Extension
+public class AutoConfigModule extends AbstractModule {
+  @Override
+  protected void configure() {
+    bind(AutoConfigurator.class).toProvider(AutoConfiguratorProvider.class);
   }
 }

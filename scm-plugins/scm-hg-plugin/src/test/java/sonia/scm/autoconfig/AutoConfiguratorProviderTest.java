@@ -21,55 +21,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.api.v2.resources;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Answers;
+package sonia.scm.autoconfig;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import java.net.URI;
-import java.util.Arrays;
-import java.util.List;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.Platform;
+import sonia.scm.repository.HgVerifier;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class HgConfigInstallationsToDtoMapperTest {
+@ExtendWith(MockitoExtension.class)
+class AutoConfiguratorProviderTest {
 
+  @Mock
+  private HgVerifier verifier;
 
-  private URI baseUri = URI.create("http://example.com/base/");
-
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private ScmPathInfoStore scmPathInfoStore;
+  @Mock
+  private Platform platform;
 
   @InjectMocks
-  private HgConfigInstallationsToDtoMapper mapper;
+  private AutoConfiguratorProvider provider;
 
-  private URI expectedBaseUri;
+  @Test
+  void shouldReturnPosixAutoConfiguration() {
+    when(platform.isPosix()).thenReturn(true);
 
-  private String expectedPath = "path";
-
-  @Before
-  public void init() {
-    when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
-    expectedBaseUri = baseUri.resolve(HgConfigResource.HG_CONFIG_PATH_V2 + "/installations/" + expectedPath);
+    assertThat(provider.get()).isInstanceOf(PosixAutoConfigurator.class);
   }
 
   @Test
-  public void shouldMapFields() {
-    List<String> installations = Arrays.asList("/hg", "/bin/hg");
+  void shouldReturnWindowsAutoConfiguration() {
+    when(platform.isWindows()).thenReturn(true);
 
-    HgConfigInstallationsDto dto = mapper.map(installations, expectedPath);
+    assertThat(provider.get()).isInstanceOf(WindowsAutoConfigurator.class);
+  }
 
-    assertThat(dto.getPaths()).isEqualTo(installations);
-
-    assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
+  @Test
+  void shouldReturnNoOpAutoConfiguration() {
+    assertThat(provider.get()).isInstanceOf(NoOpAutoConfigurator.class);
   }
 }

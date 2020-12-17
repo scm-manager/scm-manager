@@ -75,42 +75,9 @@ public class HgConfig extends RepositoryConfig {
    *
    * @return
    */
-  public String getPythonBinary()
-  {
-    return pythonBinary;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getPythonPath()
-  {
-    return pythonPath;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public boolean isShowRevisionInId()
   {
     return showRevisionInId;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public boolean isUseOptimizedBytecode()
-  {
-    return useOptimizedBytecode;
   }
 
   public boolean isEnableHttpPostArgs() {
@@ -126,8 +93,7 @@ public class HgConfig extends RepositoryConfig {
   @Override
   public boolean isValid()
   {
-    return super.isValid() && Util.isNotEmpty(hgBinary)
-      && Util.isNotEmpty(pythonBinary);
+    return super.isValid() && Util.isNotEmpty(hgBinary);
   }
 
   //~--- set methods ----------------------------------------------------------
@@ -158,28 +124,6 @@ public class HgConfig extends RepositoryConfig {
    * Method description
    *
    *
-   * @param pythonBinary
-   */
-  public void setPythonBinary(String pythonBinary)
-  {
-    this.pythonBinary = pythonBinary;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param pythonPath
-   */
-  public void setPythonPath(String pythonPath)
-  {
-    this.pythonPath = pythonPath;
-  }
-
-  /**
-   * Method description
-   *
-   *
    * @param showRevisionInId
    */
   public void setShowRevisionInId(boolean showRevisionInId)
@@ -191,17 +135,6 @@ public class HgConfig extends RepositoryConfig {
     this.enableHttpPostArgs = enableHttpPostArgs;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param useOptimizedBytecode
-   */
-  public void setUseOptimizedBytecode(boolean useOptimizedBytecode)
-  {
-    this.useOptimizedBytecode = useOptimizedBytecode;
-  }
-
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -209,15 +142,6 @@ public class HgConfig extends RepositoryConfig {
 
   /** Field description */
   private String hgBinary;
-
-  /** Field description */
-  private String pythonBinary;
-
-  /** Field description */
-  private String pythonPath = "";
-
-  /** Field description */
-  private boolean useOptimizedBytecode = false;
 
   /** Field description */
   private boolean showRevisionInId = false;

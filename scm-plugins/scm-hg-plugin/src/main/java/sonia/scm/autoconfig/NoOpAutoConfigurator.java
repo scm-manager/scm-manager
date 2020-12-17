@@ -21,51 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.installer;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.autoconfig;
 
-import sonia.scm.util.SystemUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.repository.HgConfig;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public final class HgInstallerFactory
-{
+public class NoOpAutoConfigurator implements AutoConfigurator {
 
-  /**
-   * Constructs ...
-   *
-   */
-  private HgInstallerFactory() {}
+  private static final Logger LOG = LoggerFactory.getLogger(NoOpAutoConfigurator.class);
 
-  //~--- methods --------------------------------------------------------------
+  NoOpAutoConfigurator() {
+  }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static HgInstaller createInstaller()
-  {
-    HgInstaller installer = null;
-
-    if (SystemUtil.isWindows())
-    {
-      installer = new WindowsHgInstaller();
-    }
-    else if (SystemUtil.isMac())
-    {
-      installer = new MacOSHgInstaller();
-    }
-    else
-    {
-      installer = new UnixHgInstaller();
-    }
-
-    return installer;
+  @Override
+  public void configure(HgConfig config) {
+    // if we do not know the environment, we could not configure mercurial
+    LOG.debug("no mercurial autoconfiguration available on this platform");
   }
 }

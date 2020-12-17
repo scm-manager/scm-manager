@@ -21,42 +21,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+package sonia.scm.repository;
 
-import java.util.List;
+//~--- non-JDK imports --------------------------------------------------------
 
-@NoArgsConstructor
-@Getter
-@Setter
-public class HgConfigPackagesDto extends HalRepresentation {
+import sonia.scm.SCMContext;
+import sonia.scm.SCMContextProvider;
 
-  private List<HgConfigPackageDto> packages;
+//~--- JDK imports ------------------------------------------------------------
 
-  @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
+import java.io.File;
+
+/**
+ *
+ * @author Sebastian Sdorra
+ */
+public enum HgExtensions {
+
+  HOOK("scmhooks.py"),
+  CGISERVE("cgiserve.py"),
+  VERSION("scmversion.py"),
+  FILEVIEW("fileview.py");
+
+  private static final String BASE_DIRECTORY = "lib".concat(File.separator).concat("python");
+  private static final String BASE_RESOURCE = "/sonia/scm/python/";
+
+  private final String name;
+
+  HgExtensions(String name) {
+    this.name = name;
   }
 
-  @NoArgsConstructor
-  @Getter
-  @Setter
-  public static class HgConfigPackageDto {
+  public static File getScriptDirectory(SCMContextProvider context) {
+    return new File(context.getBaseDirectory(), BASE_DIRECTORY);
+  }
 
-    private String arch;
-    private HgConfigDto hgConfigTemplate;
-    private String hgVersion;
-    private String id;
-    private String platform;
-    private String pythonVersion;
-    private long size;
-    private String url;
+  public File getFile() {
+    return getFile(SCMContext.getContext());
+  }
+
+  public File getFile(SCMContextProvider context) {
+    return new File(getScriptDirectory(context), name);
+  }
+
+  public String getName() {
+    return name;
+  }
+
+  public String getResourcePath() {
+    return BASE_RESOURCE.concat(name);
   }
 }

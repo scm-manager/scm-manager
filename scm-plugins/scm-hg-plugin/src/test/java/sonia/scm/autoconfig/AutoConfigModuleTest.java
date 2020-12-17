@@ -22,27 +22,21 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.autoconfig;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import com.google.inject.Guice;
+import com.google.inject.Injector;
+import org.junit.jupiter.api.Test;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
+import static org.assertj.core.api.Assertions.assertThat;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-@Data
-@AllArgsConstructor
-@XmlRootElement(name = "version")
-@XmlAccessorType(XmlAccessType.FIELD)
-public class HgVersion {
+class AutoConfigModuleTest {
 
-  public static final String UNKNOWN = "x.y.z (unknown)";
+  @Test
+  void shouldBindAutoConfigurator() {
+    Injector injector = Guice.createInjector(new AutoConfigModule());
+    AutoConfigurator configurator = injector.getInstance(AutoConfigurator.class);
+    assertThat(configurator).isNotNull();
+  }
 
-  private String mercurial;
-  private String python;
 }
