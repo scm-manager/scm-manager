@@ -15,13 +15,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add "Api Key" page link to sub-navigation of "User" and "Me" sections ([#1464](https://github.com/scm-manager/scm-manager/pull/1464))
 - Empty page on repository namespace filter ([#1476](https://github.com/scm-manager/scm-manager/pull/1476))
 - Usage of namespace filter and search action together on repository overview ([#1476](https://github.com/scm-manager/scm-manager/pull/1476))
+- Fix tooltip arrow height in firefox ([#1479](https://github.com/scm-manager/scm-manager/pull/1479))
 
 ## [2.11.1] - 2020-12-07
 ### Fixed
 - Initialization of new git repository with master set as default branch ([#1467](https://github.com/scm-manager/scm-manager/issues/1467) and [#1470](https://github.com/scm-manager/scm-manager/pull/1470))
 
 ## [2.11.0] - 2020-12-04
-
 ### Added
 - Add tooltips to short links on repository overview ([#1441](https://github.com/scm-manager/scm-manager/pull/1441))
 - Show the date of the last commit for branches in the frontend ([#1439](https://github.com/scm-manager/scm-manager/pull/1439))
