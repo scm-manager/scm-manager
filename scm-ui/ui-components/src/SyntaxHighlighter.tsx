@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 
 import { PrismAsyncLight as ReactSyntaxHighlighter } from "react-syntax-highlighter";
 import { defaultLanguage, determineLanguage } from "./languages";
@@ -30,6 +30,7 @@ import highlightingTheme from "./syntax-highlighting";
 import { useLocation } from "react-router-dom";
 import { withContextPath } from "./urls";
 import createSyntaxHighlighterRenderer from "./SyntaxHighlighterRenderer";
+import useScrollToElement from "./useScrollToElement";
 
 const LINE_NUMBER_URL_HASH_REGEX = /^#line-(.*)$/;
 
@@ -44,27 +45,16 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
   const location = useLocation();
   const [contentRef, setContentRef] = useState<HTMLElement | null>();
 
-  useEffect(() => {
-    const match = location.hash.match(LINE_NUMBER_URL_HASH_REGEX);
-    if (contentRef && match) {
-      const lineNumber = match[1];
-      // We defer the content check until after the syntax-highlighter has rendered
-      setTimeout(() => {
-        let tries = 0;
-        let element = contentRef.querySelector(`#line-${lineNumber}`);
-        if (!element && tries < 10) {
-          setInterval(() => {
-            tries += 1;
-            element = contentRef.querySelector(`#line-${lineNumber}`);
-          }, 200);
-        }
-
-        if (element && element.scrollIntoView) {
-          element.scrollIntoView();
-        }
-      });
-    }
-  }, [value, contentRef]);
+  useScrollToElement(
+    contentRef,
+    () => {
+      const match = location.hash.match(LINE_NUMBER_URL_HASH_REGEX);
+      if (match) {
+        return `#line-${match[1]}`;
+      }
+    },
+    value
+  );
 
   const createLinePermaLink = (lineNumber: number) =>
     window.location.protocol +

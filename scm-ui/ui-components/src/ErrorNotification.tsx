@@ -36,7 +36,7 @@ type Props = WithTranslation & {
 const LoginLink: FC = () => {
   const [t] = useTranslation("commons");
   const location = useLocation();
-  const from = encodeURIComponent(location.pathname + location.hash);
+  const from = encodeURIComponent(location.hash ? location.pathname + location.hash : location.pathname);
 
   return <a href={withContextPath(`/login?from=${from}`)}>{t("errorNotification.loginLink")}</a>;
 };
