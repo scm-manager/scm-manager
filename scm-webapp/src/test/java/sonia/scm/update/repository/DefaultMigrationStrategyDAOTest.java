@@ -53,7 +53,7 @@ class DefaultMigrationStrategyDAOTest {
   @BeforeEach
   void initStore(@TempDir Path tempDir) {
     when(contextProvider.getBaseDirectory()).thenReturn(tempDir.toFile());
-    storeFactory = new JAXBConfigurationStoreFactory(contextProvider, null);
+    storeFactory = new JAXBConfigurationStoreFactory(contextProvider, null, null);
   }
 
   @Test

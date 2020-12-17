@@ -134,7 +134,8 @@
     }
   },
   "permission": {
-    "title": "Editar permisos",
+    "title": "Permisos",
+    "noPermissions": "No se han encontrado permisos.",
     "user": "Usuario",
     "group": "Grupo",
     "error-title": "Error",

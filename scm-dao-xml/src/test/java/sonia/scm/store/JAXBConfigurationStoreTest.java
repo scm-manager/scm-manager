@@ -21,14 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 import org.junit.Test;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryArchivedCheck;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * Unit tests for {@link JAXBConfigurationStore}.
@@ -37,10 +41,12 @@ import static org.junit.Assert.assertNotNull;
  */
 public class JAXBConfigurationStoreTest extends StoreTestBase {
 
+  private final RepositoryArchivedCheck archivedCheck = mock(RepositoryArchivedCheck.class);
+
   @Override
   protected ConfigurationStoreFactory createStoreFactory()
   {
-    return new JAXBConfigurationStoreFactory(contextProvider, repositoryLocationResolver);
+    return new JAXBConfigurationStoreFactory(contextProvider, repositoryLocationResolver, archivedCheck);
   }
 
 
@@ -48,10 +54,11 @@ public class JAXBConfigurationStoreTest extends StoreTestBase {
   @SuppressWarnings("unchecked")
   public void shouldStoreAndLoadInRepository()
   {
+    Repository repository = new Repository("id", "git", "ns", "n");
     ConfigurationStore<StoreObject> store = createStoreFactory()
       .withType(StoreObject.class)
       .withName("test")
-      .forRepository(new Repository("id", "git", "ns", "n"))
+      .forRepository(repository)
       .build();
 
     store.set(new StoreObject("value"));
@@ -59,5 +66,21 @@ public class JAXBConfigurationStoreTest extends StoreTestBase {
 
     assertNotNull(storeObject);
     assertEquals("value", storeObject.getValue());
+  }
+
+
+  @Test
+  @SuppressWarnings("unchecked")
+  public void shouldNotWriteArchivedRepository()
+  {
+    Repository repository = new Repository("id", "git", "ns", "n");
+    when(archivedCheck.isArchived("id")).thenReturn(true);
+    ConfigurationStore<StoreObject> store = createStoreFactory()
+      .withType(StoreObject.class)
+      .withName("test")
+      .forRepository(repository)
+      .build();
+
+    assertThrows(RuntimeException.class, () -> store.set(new StoreObject("value")));
   }
 }

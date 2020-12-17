@@ -25,7 +25,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { RouteComponentProps, withRouter } from "react-router-dom";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { NamespaceCollection, RepositoryCollection, Link } from "@scm-manager/ui-types";
+import { Link, NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
 import {
   CreateButton,
   LinkPaginator,
@@ -61,15 +61,14 @@ type Props = WithTranslation &
     namespacesLink: string;
 
     // dispatched functions
-    fetchReposByPage: (link: string, page: number, namespace?: string, filter?: string) => void;
-    fetchNamespaces: (link: string) => void;
+    fetchReposByPage: (link: string, page: number, filter?: string) => void;
+    fetchNamespaces: (link: string, callback?: () => void) => void;
   };
 
 class Overview extends React.Component<Props> {
   componentDidMount() {
     const { fetchNamespaces, namespacesLink } = this.props;
-    fetchNamespaces(namespacesLink);
-    this.fetchRepos();
+    fetchNamespaces(namespacesLink, () => this.fetchRepos());
   }
 
   componentDidUpdate = (prevProps: Props) => {
@@ -130,7 +129,7 @@ class Overview extends React.Component<Props> {
             currentGroup={namespace}
             groups={namespacesToRender}
             groupSelected={this.namespaceSelected}
-            link="repos"
+            link={namespace ? `repos/${namespace}` : "repos"}
             label={t("overview.createButton")}
             testId="repository-overview"
             searchPlaceholder={t("overview.searchRepository")}
@@ -204,8 +203,8 @@ const mapDispatchToProps = (dispatch: any) => {
     fetchReposByPage: (link: string, page: number, filter?: string) => {
       dispatch(fetchReposByPage(link, page, filter));
     },
-    fetchNamespaces: (link: string) => {
-      dispatch(fetchNamespaces(link));
+    fetchNamespaces: (link: string, callback?: () => void) => {
+      dispatch(fetchNamespaces(link, callback));
     }
   };
 };

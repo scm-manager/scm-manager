@@ -1,14 +1,14 @@
 {
   "scm-git-plugin": {
     "information": {
-      "clone": "Clone the repository",
-      "create": "Create a new repository",
-      "replace": "Push an existing repository",
-      "fetch": "Get remote changes",
-      "checkout": "Switch branch",
-      "checkoutTag": "Checkout tag as new branch",
+      "clone": "Clone the Repository",
+      "create": "Create a New Repository",
+      "replace": "Push an Existing Repository",
+      "fetch": "Get Remote Changes",
+      "checkout": "Switch Branch",
+      "checkoutTag": "Checkout Tag as New Branch",
       "merge": {
-        "heading": "How to merge source branch into target branch",
+        "heading": "How to Merge Source Branch into Target Branch",
         "checkout": "1. Make sure your workspace is clean and checkout target branch",
         "update": "2. Update workspace",
         "merge": "3. Merge source branch",
@@ -34,7 +34,7 @@
     "repo-config": {
       "link": "Configuration",
       "title": "Git Settings",
-      "default-branch": "Default branch",
+      "default-branch": "Default Branch",
       "submit": "Submit",
       "error": {
         "title": "Error",

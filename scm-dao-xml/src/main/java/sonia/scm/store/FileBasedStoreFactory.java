@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -29,6 +29,7 @@ package sonia.scm.store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.RepositoryArchivedCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.util.IOUtil;
 
@@ -48,14 +49,16 @@ public abstract class FileBasedStoreFactory {
    * the logger for FileBasedStoreFactory
    */
   private static final Logger LOG = LoggerFactory.getLogger(FileBasedStoreFactory.class);
-  private SCMContextProvider contextProvider;
-  private RepositoryLocationResolver repositoryLocationResolver;
-  private Store store;
+  private final SCMContextProvider contextProvider;
+  private final RepositoryLocationResolver repositoryLocationResolver;
+  private final Store store;
+  private final RepositoryArchivedCheck archivedCheck;
 
-  protected FileBasedStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, Store store) {
+  protected FileBasedStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, Store store, RepositoryArchivedCheck archivedCheck) {
     this.contextProvider = contextProvider;
     this.repositoryLocationResolver = repositoryLocationResolver;
     this.store = store;
+    this.archivedCheck = archivedCheck;
   }
 
   protected File getStoreLocation(StoreParameters storeParameters) {
@@ -77,6 +80,10 @@ public abstract class FileBasedStoreFactory {
     }
     IOUtil.mkdirs(storeDirectory);
     return new File(storeDirectory, name);
+  }
+
+  protected boolean mustBeReadOnly(StoreParameters storeParameters) {
+    return storeParameters.getRepositoryId() != null && archivedCheck.isArchived(storeParameters.getRepositoryId());
   }
 
   /**

@@ -29,6 +29,8 @@ import DeleteRepo from "./DeleteRepo";
 import styled from "styled-components";
 import { Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
+import ArchiveRepo from "./ArchiveRepo";
+import UnarchiveRepo from "./UnarchiveRepo";
 
 type Props = {
   repository: Repository;
@@ -66,6 +68,14 @@ const RepositoryDangerZone: FC<Props> = ({ repository, indexLinks }) => {
   if (repository?._links?.delete) {
     // @ts-ignore
     dangerZone.push(<DeleteRepo repository={repository} />);
+  }
+  if (repository?._links?.archive) {
+    // @ts-ignore
+    dangerZone.push(<ArchiveRepo repository={repository} />);
+  }
+  if (repository?._links?.unarchive) {
+    // @ts-ignore
+    dangerZone.push(<UnarchiveRepo repository={repository} />);
   }
 
   if (dangerZone.length === 0) {

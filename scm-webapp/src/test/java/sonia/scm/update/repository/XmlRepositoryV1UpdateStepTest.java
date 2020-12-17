@@ -136,7 +136,19 @@ class XmlRepositoryV1UpdateStepTest {
         .get()
         .hasFieldOrPropertyWithValue("type", "git")
         .hasFieldOrPropertyWithValue("contact", "arthur@dent.uk")
-        .hasFieldOrPropertyWithValue("description", "A repository with two folders.");
+        .hasFieldOrPropertyWithValue("description", "A repository with two folders.")
+        .hasFieldOrPropertyWithValue("archived", false);
+    }
+
+    @Test
+    void shouldMapArchivedAttribute() throws JAXBException {
+      updateStep.doUpdate();
+
+      Optional<Repository> repository = findByNamespace("namespace-c1597b4f-a9f0-49f7-ad1f-37d3aae1c55f");
+
+      assertThat(repository)
+        .get()
+        .hasFieldOrPropertyWithValue("archived", true);
     }
 
     @Test

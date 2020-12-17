@@ -72,6 +72,7 @@ import sonia.scm.repository.HealthCheckContextListener;
 import sonia.scm.repository.NamespaceManager;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.NamespaceStrategyProvider;
+import sonia.scm.repository.PermissionProvider;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
 import sonia.scm.repository.RepositoryManager;
@@ -92,6 +93,7 @@ import sonia.scm.security.ConfigurableLoginAttemptHandler;
 import sonia.scm.security.DefaultAccessTokenCookieIssuer;
 import sonia.scm.security.DefaultSecuritySystem;
 import sonia.scm.security.LoginAttemptHandler;
+import sonia.scm.security.RepositoryPermissionProvider;
 import sonia.scm.security.SecuritySystem;
 import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
@@ -247,6 +249,8 @@ class ScmServletModule extends ServletModule {
 
     // bind url helper
     bind(RootURL.class).to(DefaultRootURL.class);
+
+    bind(PermissionProvider.class).to(RepositoryPermissionProvider.class);
   }
 
   private <T> void bind(Class<T> clazz, Class<? extends T> defaultImplementation) {

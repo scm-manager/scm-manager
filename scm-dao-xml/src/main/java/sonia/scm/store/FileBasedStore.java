@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -60,10 +60,11 @@ public abstract class FileBasedStore<T> implements MultiEntryStore<T>
    * @param directory
    * @param suffix
    */
-  public FileBasedStore(File directory, String suffix)
+  public FileBasedStore(File directory, String suffix, boolean readOnly)
   {
     this.directory = directory;
     this.suffix = suffix;
+    this.readOnly = readOnly;
   }
 
   //~--- methods --------------------------------------------------------------
@@ -145,6 +146,8 @@ public abstract class FileBasedStore<T> implements MultiEntryStore<T>
   {
     logger.trace("delete store entry {}", file);
 
+    assertNotReadOnly();
+
     if (file.exists() &&!file.delete())
     {
       throw new StoreException(
@@ -185,6 +188,12 @@ public abstract class FileBasedStore<T> implements MultiEntryStore<T>
     return name.substring(0, name.length() - suffix.length());
   }
 
+  protected void assertNotReadOnly() {
+    if (readOnly) {
+      throw new StoreReadOnlyException(directory.getAbsoluteFile().toString());
+    }
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
@@ -192,4 +201,6 @@ public abstract class FileBasedStore<T> implements MultiEntryStore<T>
 
   /** Field description */
   private final String suffix;
+
+  private final boolean readOnly;
 }

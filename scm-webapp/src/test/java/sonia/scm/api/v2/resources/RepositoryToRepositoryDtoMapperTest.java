@@ -266,6 +266,24 @@ public class RepositoryToRepositoryDtoMapperTest {
     assertEquals("http://1", dto.getLinks().getLinkBy("id").get().getHref());
   }
 
+  @Test
+  public void shouldCreateArchiveLink() {
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals(
+      "http://example.com/base/v2/repositories/testspace/test/archive",
+      dto.getLinks().getLinkBy("archive").get().getHref());
+  }
+
+  @Test
+  public void shouldCreateUnArchiveLink() {
+    Repository repository = createTestRepository();
+    repository.setArchived(true);
+    RepositoryDto dto = mapper.map(repository);
+    assertEquals(
+      "http://example.com/base/v2/repositories/testspace/test/unarchive",
+      dto.getLinks().getLinkBy("unarchive").get().getHref());
+  }
+
   private ScmProtocol mockProtocol(String type, String protocol) {
     return new MockScmProtocol(type, protocol);
   }

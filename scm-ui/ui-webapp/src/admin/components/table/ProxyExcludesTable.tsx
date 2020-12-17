@@ -39,11 +39,11 @@ class ProxyExcludesTable extends React.Component<Props, State> {
     return (
       <ArrayConfigTable
         items={proxyExcludes}
-        label={t("proxy-settings.proxy-excludes")}
-        removeLabel={t("proxy-settings.remove-proxy-exclude-button")}
+        label={t("proxySettings.excludesTable.label")}
+        removeLabel={t("proxySettings.excludesTable.deleteButton")}
         onRemove={this.removeEntry}
         disabled={disabled}
-        helpText={t("help.proxyExcludesHelpText")}
+        helpText={t("proxySettings.excludesTable.helpText")}
       />
     );
   }

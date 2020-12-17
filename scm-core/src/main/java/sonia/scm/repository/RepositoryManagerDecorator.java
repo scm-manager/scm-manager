@@ -136,6 +136,16 @@ public class RepositoryManagerDecorator
     return decorated.getAllNamespaces();
   }
 
+  @Override
+  public void archive(Repository repository) {
+    decorated.archive(repository);
+  }
+
+  @Override
+  public void unarchive(Repository repository) {
+    decorated.unarchive(repository);
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /**

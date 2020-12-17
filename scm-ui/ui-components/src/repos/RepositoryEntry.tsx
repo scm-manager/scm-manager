@@ -28,6 +28,7 @@ import RepositoryEntryLink from "./RepositoryEntryLink";
 import RepositoryAvatar from "./RepositoryAvatar";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { withTranslation, WithTranslation } from "react-i18next";
+import styled from "styled-components";
 
 type DateProp = Date | string;
 
@@ -37,6 +38,18 @@ type Props = WithTranslation & {
   // the baseDate is only to avoid failing snapshot tests
   baseDate?: DateProp;
 };
+
+const ArchiveTag = styled.span`
+  margin-left: 0.2rem;
+  background-color: #9a9a9a;
+  padding: 0.25rem;
+  border-radius: 5px;
+  color: white;
+  overflow: visible;
+  pointer-events: all;
+  font-weight: bold;
+  font-size: 0.7rem;
+`;
 
 class RepositoryEntry extends React.Component<Props> {
   createLink = (repository: Repository) => {
@@ -131,10 +144,14 @@ class RepositoryEntry extends React.Component<Props> {
   };
 
   createTitle = () => {
-    const { repository } = this.props;
+    const { repository, t } = this.props;
+    const archivedFlag = repository.archived && (
+      <ArchiveTag title={t("archive.tooltip")}>{t("repository.archived")}</ArchiveTag>
+    );
     return (
       <>
-        <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} /> <strong>{repository.name}</strong>
+        <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} />
+        <strong>{repository.name}</strong> {archivedFlag}
       </>
     );
   };

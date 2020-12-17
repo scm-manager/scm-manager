@@ -182,6 +182,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public BranchCommandBuilder getBranchCommand() {
+    verifyNotArchived();
     RepositoryPermissions.push(getRepository()).check();
     LOG.debug("create branch command for repository {}",
       repository.getNamespaceAndName());
@@ -332,6 +333,7 @@ public final class RepositoryService implements Closeable {
    * @since 1.31
    */
   public PullCommandBuilder getPullCommand() {
+    verifyNotArchived();
     LOG.debug("create pull command for repository {}",
       repository.getNamespaceAndName());
 
@@ -386,6 +388,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public TagCommandBuilder getTagCommand() {
+    verifyNotArchived();
     return new TagCommandBuilder(provider.getTagCommand());
   }
 
@@ -415,6 +418,7 @@ public final class RepositoryService implements Closeable {
    * @since 2.0.0
    */
   public MergeCommandBuilder getMergeCommand() {
+    verifyNotArchived();
     LOG.debug("create merge command for repository {}",
       repository.getNamespaceAndName());
 
@@ -436,6 +440,7 @@ public final class RepositoryService implements Closeable {
    * @since 2.0.0
    */
   public ModifyCommandBuilder getModifyCommand() {
+    verifyNotArchived();
     LOG.debug("create modify command for repository {}",
       repository.getNamespaceAndName());
 
@@ -482,6 +487,12 @@ public final class RepositoryService implements Closeable {
       .filter(protocolProvider -> protocolProvider.getType().equals(getRepository().getType()))
       .map(this::createProviderInstanceForRepository)
       .filter(protocol -> !Authentications.isAuthenticatedSubjectAnonymous() || protocol.isAnonymousEnabled());
+  }
+
+  private void verifyNotArchived() {
+    if (getRepository().isArchived()) {
+      throw new RepositoryArchivedException(getRepository());
+    }
   }
 
   @SuppressWarnings({"rawtypes", "java:S3740"})

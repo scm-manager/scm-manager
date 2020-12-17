@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import com.google.inject.Inject;
+import sonia.scm.repository.PermissionProvider;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleDAO;
 
@@ -32,7 +33,7 @@ import java.util.AbstractList;
 import java.util.Collection;
 import java.util.List ;
 
-public class RepositoryPermissionProvider {
+public class RepositoryPermissionProvider implements PermissionProvider {
 
   private final SystemRepositoryPermissionProvider systemRepositoryPermissionProvider;
   private final RepositoryRoleDAO repositoryRoleDAO;
@@ -45,6 +46,10 @@ public class RepositoryPermissionProvider {
 
   public Collection<String> availableVerbs() {
     return systemRepositoryPermissionProvider.availableVerbs();
+  }
+
+  public Collection<String> readOnlyVerbs() {
+    return systemRepositoryPermissionProvider.readOnlyVerbs();
   }
 
   public Collection<RepositoryRole> availableRoles() {

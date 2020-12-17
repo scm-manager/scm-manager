@@ -143,7 +143,7 @@ export function fetchReposFailure(err: Error): Action {
 }
 
 // fetch namespaces
-export function fetchNamespaces(link: string) {
+export function fetchNamespaces(link: string, callback?: () => void) {
   return function(dispatch: any) {
     dispatch(fetchNamespacesPending());
     return apiClient
@@ -152,6 +152,7 @@ export function fetchNamespaces(link: string) {
       .then(namespaces => {
         dispatch(fetchNamespacesSuccess(namespaces));
       })
+      .then(callback)
       .catch(err => {
         dispatch(fetchNamespacesFailure(err));
       });
@@ -393,6 +394,42 @@ export function deleteRepoFailure(repository: Repository, error: Error): Action 
       repository
     },
     itemId: createIdentifier(repository)
+  };
+}
+
+// archive
+
+export function archiveRepo(repository: Repository, callback?: () => void) {
+  return function(dispatch: any) {
+    dispatch(modifyRepoPending(repository));
+    return apiClient
+      .post((repository._links.archive as Link).href)
+      .then(() => {
+        dispatch(modifyRepoSuccess(repository));
+        if (callback) {
+          callback();
+        }
+      })
+      .catch(err => {
+        dispatch(modifyRepoFailure(repository, err));
+      });
+  };
+}
+
+export function unarchiveRepo(repository: Repository, callback?: () => void) {
+  return function(dispatch: any) {
+    dispatch(modifyRepoPending(repository));
+    return apiClient
+      .post((repository._links.unarchive as Link).href)
+      .then(() => {
+        dispatch(modifyRepoSuccess(repository));
+        if (callback) {
+          callback();
+        }
+      })
+      .catch(err => {
+        dispatch(modifyRepoFailure(repository, err));
+      });
   };
 }
 

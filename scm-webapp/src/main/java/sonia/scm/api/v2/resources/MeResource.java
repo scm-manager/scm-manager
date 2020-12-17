@@ -64,14 +64,14 @@ public class MeResource {
   private final UserManager userManager;
   private final PasswordService passwordService;
 
-  private final Provider<ApiKeyResource> apiKeyResource;
+  private final Provider<ApiKeyResource> apiKeyResourceProvider;
 
   @Inject
-  public MeResource(MeDtoFactory meDtoFactory, UserManager userManager, PasswordService passwordService, Provider<ApiKeyResource> apiKeyResource) {
+  public MeResource(MeDtoFactory meDtoFactory, UserManager userManager, PasswordService passwordService, Provider<ApiKeyResource> apiKeyResourceProvider) {
     this.meDtoFactory = meDtoFactory;
     this.userManager = userManager;
     this.passwordService = passwordService;
-    this.apiKeyResource = apiKeyResource;
+    this.apiKeyResourceProvider = apiKeyResourceProvider;
   }
 
   /**
@@ -142,6 +142,6 @@ public class MeResource {
 
   @Path("api_keys")
   public ApiKeyResource apiKeys() {
-    return apiKeyResource.get();
+    return apiKeyResourceProvider.get();
   }
 }

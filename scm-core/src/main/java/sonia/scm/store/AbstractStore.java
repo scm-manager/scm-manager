@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 /**
@@ -38,6 +38,11 @@ public abstract class AbstractStore<T> implements ConfigurationStore<T> {
    * stored object
    */
   protected T storeObject;
+  private final boolean readOnly;
+
+  protected AbstractStore(boolean readOnly) {
+    this.readOnly = readOnly;
+  }
 
   @Override
   public T get() {
@@ -49,9 +54,12 @@ public abstract class AbstractStore<T> implements ConfigurationStore<T> {
   }
 
   @Override
-  public void set(T obejct) {
-    writeObject(obejct);
-    this.storeObject = obejct;
+  public void set(T object) {
+    if (readOnly) {
+      throw new StoreReadOnlyException(object);
+    }
+    writeObject(object);
+    this.storeObject = object;
   }
 
   /**

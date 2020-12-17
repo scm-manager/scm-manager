@@ -51,7 +51,7 @@
   },
   "groupForm": {
     "subtitle": "Edit Group",
-    "externalSubtitle": "Edit external group",
+    "externalSubtitle": "Edit External Group",
     "submit": "Submit",
     "nameError": "Group name is invalid",
     "descriptionError": "Description is invalid",
