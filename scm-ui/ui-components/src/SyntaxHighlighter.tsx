@@ -40,12 +40,7 @@ type Props = {
   permalink?: string;
 };
 
-const SyntaxHighlighter: FC<Props> = ({
-  language = defaultLanguage,
-  showLineNumbers = true,
-  value,
-  permalink
-}) => {
+const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumbers = true, value, permalink }) => {
   const location = useLocation();
   const [contentRef, setContentRef] = useState<HTMLElement | null>();
 
@@ -55,7 +50,15 @@ const SyntaxHighlighter: FC<Props> = ({
       const lineNumber = match[1];
       // We defer the content check until after the syntax-highlighter has rendered
       setTimeout(() => {
-        const element = contentRef.querySelector(`#line-${lineNumber}`);
+        let tries = 0;
+        let element = contentRef.querySelector(`#line-${lineNumber}`);
+        if (!element && tries < 10) {
+          setInterval(() => {
+            tries += 1;
+            element = contentRef.querySelector(`#line-${lineNumber}`);
+          }, 200);
+        }
+
         if (element && element.scrollIntoView) {
           element.scrollIntoView();
         }
