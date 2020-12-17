@@ -1,5 +1,6 @@
 ---
-title: Repository subtitle: Settings
+title: Repository
+subtitle: Settings
 ---
 By default, there are two items in the repository settings. Depending on additional plugins that are installed, there
 can be considerably more items.

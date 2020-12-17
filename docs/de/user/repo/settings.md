@@ -1,5 +1,6 @@
 ---
-title: Repository subtitle: Einstellungen
+title: Repository
+subtitle: Einstellungen
 ---
 Unter den Repository Einstellungen befinden sich zwei Einträge. Wenn weitere Plugins installiert sind, können es
 deutlich mehr Unterseiten sein.
