@@ -16,6 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Empty page on repository namespace filter ([#1476](https://github.com/scm-manager/scm-manager/pull/1476))
 - Usage of namespace filter and search action together on repository overview ([#1476](https://github.com/scm-manager/scm-manager/pull/1476))
 - Fix tooltip arrow height in firefox ([#1479](https://github.com/scm-manager/scm-manager/pull/1479))
+- Accidentally blocked requests with non ascii characters ([#1480](https://github.com/scm-manager/scm-manager/issues/1480) and [#1469](https://github.com/scm-manager/scm-manager/issues/1469))
 
 ## [2.11.1] - 2020-12-07
 ### Fixed
