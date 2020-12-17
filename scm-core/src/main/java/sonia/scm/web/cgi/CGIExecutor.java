@@ -21,103 +21,112 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.cgi;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import javax.servlet.ServletException;
 import java.io.File;
 import java.io.IOException;
-
-import javax.servlet.ServletException;
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public interface CGIExecutor
-{
+public interface CGIExecutor {
 
   /** Field description */
-  public static final String ENV_AUTH_TYPE = "AUTH_TYPE";
+  String ENV_AUTH_TYPE = "AUTH_TYPE";
 
   /** Field description */
-  public static final String ENV_CONTENT_LENGTH = "CONTENT_LENGTH";
+  String ENV_CONTENT_LENGTH = "CONTENT_LENGTH";
 
   /** Field description */
-  public static final String ENV_CONTENT_TYPE = "CONTENT_TYPE";
+  String ENV_CONTENT_TYPE = "CONTENT_TYPE";
 
   /** Field description */
-  public static final String ENV_GATEWAY_INTERFACE = "GATEWAY_INTERFACE";
+  String ENV_GATEWAY_INTERFACE = "GATEWAY_INTERFACE";
 
   /** Field description */
-  public static final String ENV_HTTPS = "HTTPS";
+  String ENV_HTTPS = "HTTPS";
 
   /** Field description */
-  public static final String ENV_HTTPS_VALUE_OFF = "OFF";
+  String ENV_HTTPS_VALUE_OFF = "OFF";
 
   /** Field description */
-  public static final String ENV_HTTPS_VALUE_ON = "ON";
+  String ENV_HTTPS_VALUE_ON = "ON";
 
   /** Field description */
-  public static final String ENV_HTTP_HEADER_PREFIX = "HTTP_";
+  String ENV_HTTP_HEADER_PREFIX = "HTTP_";
 
   /** Field description */
-  public static final String ENV_PATH_INFO = "PATH_INFO";
+  String ENV_PATH_INFO = "PATH_INFO";
 
   /** Field description */
-  public static final String ENV_PATH_TRANSLATED = "PATH_TRANSLATED";
+  String ENV_PATH_TRANSLATED = "PATH_TRANSLATED";
 
   /** Field description */
-  public static final String ENV_QUERY_STRING = "QUERY_STRING";
+  String ENV_QUERY_STRING = "QUERY_STRING";
 
   /** Field description */
-  public static final String ENV_REMOTE_ADDR = "REMOTE_ADDR";
+  String ENV_REMOTE_ADDR = "REMOTE_ADDR";
 
   /** Field description */
-  public static final String ENV_REMOTE_HOST = "REMOTE_HOST";
+  String ENV_REMOTE_HOST = "REMOTE_HOST";
 
   /** Field description */
-  public static final String ENV_REMOTE_USER = "REMOTE_USER";
+  String ENV_REMOTE_USER = "REMOTE_USER";
 
   /** Field description */
-  public static final String ENV_REQUEST_METHOD = "REQUEST_METHOD";
+  String ENV_REQUEST_METHOD = "REQUEST_METHOD";
 
   /** Field description */
-  public static final String ENV_SCRIPT_FILENAME = "SCRIPT_FILENAME";
+  String ENV_SCRIPT_FILENAME = "SCRIPT_FILENAME";
 
   /** Field description */
-  public static final String ENV_SCRIPT_NAME = "SCRIPT_NAME";
+  String ENV_SCRIPT_NAME = "SCRIPT_NAME";
 
   /** Field description */
-  public static final String ENV_SERVER_NAME = "SERVER_NAME";
+  String ENV_SERVER_NAME = "SERVER_NAME";
 
   /** Field description */
-  public static final String ENV_SERVER_PORT = "SERVER_PORT";
+  String ENV_SERVER_PORT = "SERVER_PORT";
 
   /** Field description */
-  public static final String ENV_SERVER_PROTOCOL = "SERVER_PROTOCOL";
+  String ENV_SERVER_PROTOCOL = "SERVER_PROTOCOL";
 
   /** Field description */
-  public static final String ENV_SERVER_SOFTWARE = "SERVER_SOFTWARE";
+  String ENV_SERVER_SOFTWARE = "SERVER_SOFTWARE";
 
   /** Field description */
-  public static final String ENV_SYSTEM_ROOT = "SystemRoot";
+  String ENV_SYSTEM_ROOT = "SystemRoot";
+
+  /**
+   * Content type header of response.
+   * @since 2.12.0
+   */
+  String RESPONSE_HEADER_CONTENT_TYPE = "Content-Type";
+
+  /**
+   * @deprecated use {@link #RESPONSE_HEADER_CONTENT_TYPE} instead.
+   */
+  @Deprecated
+  String REPSONSE_HEADER_CONTENT_TYPE = RESPONSE_HEADER_CONTENT_TYPE;
 
   /** Field description */
-  public static final String REPSONSE_HEADER_CONTENT_TYPE = "Content-Type";
+  String RESPONSE_HEADER_CONTENT_LENGTH = "Content-Length";
 
   /** Field description */
-  public static final String RESPONSE_HEADER_CONTENT_LENGTH = "Content-Length";
+  String RESPONSE_HEADER_HTTP_PREFIX = "HTTP";
 
   /** Field description */
-  public static final String RESPONSE_HEADER_HTTP_PREFIX = "HTTP";
+  String RESPONSE_HEADER_LOCATION = "Location";
 
   /** Field description */
-  public static final String RESPONSE_HEADER_LOCATION = "Location";
-
-  /** Field description */
-  public static final String RESPONSE_HEADER_STATUS = "Status";
+  String RESPONSE_HEADER_STATUS = "Status";
 
   //~--- methods --------------------------------------------------------------
 
@@ -130,7 +139,7 @@ public interface CGIExecutor
    * @throws IOException
    * @throws ServletException
    */
-  public void execute(String cmd) throws IOException, ServletException;
+  void execute(String cmd) throws IOException, ServletException;
 
   //~--- get methods ----------------------------------------------------------
 
@@ -140,7 +149,7 @@ public interface CGIExecutor
    *
    * @return
    */
-  public int getBufferSize();
+  int getBufferSize();
 
   /**
    * Method description
@@ -148,7 +157,7 @@ public interface CGIExecutor
    *
    * @return
    */
-  public EnvList getEnvironment();
+  EnvList getEnvironment();
 
   /**
    * Returns the cgi exception handler.
@@ -157,7 +166,7 @@ public interface CGIExecutor
    * @return cgi exception handler
    * @since 1.8
    */
-  public CGIExceptionHandler getExceptionHandler();
+  CGIExceptionHandler getExceptionHandler();
 
   /**
    * Method description
@@ -165,7 +174,7 @@ public interface CGIExecutor
    *
    * @return
    */
-  public String getInterpreter();
+  String getInterpreter();
 
   /**
    * Returns the status code handler.
@@ -174,7 +183,7 @@ public interface CGIExecutor
    * @return status code handler
    * @since 1.15
    */
-  public CGIStatusCodeHandler getStatusCodeHandler();
+  CGIStatusCodeHandler getStatusCodeHandler();
 
   /**
    * Method description
@@ -182,7 +191,7 @@ public interface CGIExecutor
    *
    * @return
    */
-  public File getWorkDirectory();
+  File getWorkDirectory();
 
   /**
    * Method description
@@ -191,7 +200,7 @@ public interface CGIExecutor
    * @return
    * @since 1.12
    */
-  public boolean isContentLengthWorkaround();
+  boolean isContentLengthWorkaround();
 
   /**
    * Method description
@@ -199,7 +208,7 @@ public interface CGIExecutor
    *
    * @return
    */
-  public boolean isIgnoreExitCode();
+  boolean isIgnoreExitCode();
 
   /**
    * Method description
@@ -207,7 +216,17 @@ public interface CGIExecutor
    *
    * @return
    */
-  public boolean isPassShellEnvironment();
+  boolean isPassShellEnvironment();
+
+  /**
+   * Returns command args as list.
+   *
+   * @return list of command args
+   * @since 2.12.0
+   */
+  default List<String> getArgs() {
+    return Collections.emptyList();
+  }
 
   //~--- set methods ----------------------------------------------------------
 
@@ -217,7 +236,7 @@ public interface CGIExecutor
    *
    * @param bufferSize
    */
-  public void setBufferSize(int bufferSize);
+  void setBufferSize(int bufferSize);
 
   /**
    * Method description
@@ -225,7 +244,7 @@ public interface CGIExecutor
    *
    * @param contentLengthWorkaround
    */
-  public void setContentLengthWorkaround(boolean contentLengthWorkaround);
+  void setContentLengthWorkaround(boolean contentLengthWorkaround);
 
   /**
    * Method description
@@ -233,7 +252,7 @@ public interface CGIExecutor
    *
    * @param environment
    */
-  public void setEnvironment(EnvList environment);
+  void setEnvironment(EnvList environment);
 
   /**
    * Sets the cgi exception handler.
@@ -242,7 +261,7 @@ public interface CGIExecutor
    * @param exceptionHandler cgi exception handler
    * @since 1.8
    */
-  public void setExceptionHandler(CGIExceptionHandler exceptionHandler);
+  void setExceptionHandler(CGIExceptionHandler exceptionHandler);
 
   /**
    * Method description
@@ -250,7 +269,7 @@ public interface CGIExecutor
    *
    * @param ignoreExitCode
    */
-  public void setIgnoreExitCode(boolean ignoreExitCode);
+  void setIgnoreExitCode(boolean ignoreExitCode);
 
   /**
    * Method description
@@ -258,7 +277,7 @@ public interface CGIExecutor
    *
    * @param interpreter
    */
-  public void setInterpreter(String interpreter);
+  void setInterpreter(String interpreter);
 
   /**
    * Method description
@@ -266,7 +285,7 @@ public interface CGIExecutor
    *
    * @param passShellEnvironment
    */
-  public void setPassShellEnvironment(boolean passShellEnvironment);
+  void setPassShellEnvironment(boolean passShellEnvironment);
 
   /**
    * Sets the status code handler.
@@ -275,7 +294,7 @@ public interface CGIExecutor
    * @param statusCodeHandler the handler to set
    * @since 1.15
    */
-  public void setStatusCodeHandler(CGIStatusCodeHandler statusCodeHandler);
+  void setStatusCodeHandler(CGIStatusCodeHandler statusCodeHandler);
 
   /**
    * Method description
@@ -283,5 +302,13 @@ public interface CGIExecutor
    *
    * @param workDirectory
    */
-  public void setWorkDirectory(File workDirectory);
+  void setWorkDirectory(File workDirectory);
+
+  /**
+   * Set command arguments.
+   * @param args command arguments
+   * @since 2.12.0
+   */
+  default void setArgs(List<String> args) {
+  }
 }

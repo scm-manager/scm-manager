@@ -29,13 +29,7 @@ interface UpdateHgConfigDto {
 
   String getHgBinary();
 
-  String getPythonBinary();
-
-  String getPythonPath();
-
   String getEncoding();
-
-  boolean isUseOptimizedBytecode();
 
   boolean isShowRevisionInId();
 

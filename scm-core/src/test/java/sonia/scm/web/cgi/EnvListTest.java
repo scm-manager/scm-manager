@@ -21,38 +21,39 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.cgi;
 
-//~--- non-JDK imports --------------------------------------------------------
+import org.junit.jupiter.api.Test;
+import static org.assertj.core.api.Assertions.assertThat;
 
-import org.junit.Test;
+class EnvListTest {
 
-import static org.junit.Assert.*;
-
-/**
- *
- * @author Sebastian Sdorra
- */
-public class EnvListTest
-{
-
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testToString()
-  {
-    EnvList envList = new EnvList();
+  void shouldNotPrintAuthorizationValue() {
+    EnvList env = new EnvList();
+    env.set("HTTP_AUTHORIZATION", "Basic xxx");
+    env.set("SOME_OTHER", "other");
+    env.set("SCM_BEARER_TOKEN", "secret");
 
-    envList.set("HTTP_AUTHORIZATION", "Basic xxx");
-    envList.set("SOME_OTHER", "other");
+    String value = env.toString();
 
-    String value = envList.toString();
+    assertThat(value)
+      .contains("SOME_OTHER=other")
+      .contains("HTTP_AUTHORIZATION=(is set)")
+      .contains("SCM_BEARER_TOKEN=(is set)")
+      .doesNotContain("HTTP_AUTHORIZATION=Basic xxx")
+      .doesNotContain("SCM_BEARER_TOKEN=secret");
+  }
 
-    assertTrue(value.contains("SOME_OTHER=other"));
-    assertFalse(value.contains("HTTP_AUTHORIZATION=Basic xxx"));
-    assertTrue(value.contains("HTTP_AUTHORIZATION=(is set)"));
+  @Test
+  void shouldReturnAsArray() {
+    EnvList env = new EnvList();
+    env.set("SPACESHIPT", "Heart of Gold");
+    env.set("DOMAIN", "hitchhiker.com");
+
+    assertThat(env.getEnvArray())
+      .contains("SPACESHIPT=Heart of Gold")
+      .contains("DOMAIN=hitchhiker.com");
   }
 }

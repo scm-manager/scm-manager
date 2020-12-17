@@ -41,9 +41,6 @@ public class HgConfigDto extends HalRepresentation implements UpdateHgConfigDto 
 
   private String encoding;
   private String hgBinary;
-  private String pythonBinary;
-  private String pythonPath;
-  private boolean useOptimizedBytecode;
   private boolean showRevisionInId;
   private boolean enableHttpPostArgs;
 

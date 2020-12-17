@@ -32,10 +32,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.autoconfig.AutoConfiguratorProvider;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.repository.spi.HgVersionCommand;
 import sonia.scm.store.ConfigurationStoreFactory;
 
+import javax.annotation.Nonnull;
 import java.io.File;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -71,7 +73,7 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Override
   protected RepositoryHandler createRepositoryHandler(ConfigurationStoreFactory factory, RepositoryLocationResolver locationResolver, File directory) {
-    HgRepositoryHandler handler = new HgRepositoryHandler(factory, locationResolver, null, null);
+    HgRepositoryHandler handler = createHandler(factory, locationResolver);
 
     handler.init(contextProvider);
     HgTestUtil.checkForSkip(handler);
@@ -81,16 +83,21 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
 
   @Test
   public void getDirectory() {
-    HgRepositoryHandler repositoryHandler = new HgRepositoryHandler(factory, locationResolver, null, null);
+    HgRepositoryHandler repositoryHandler = createHandler(factory, locationResolver);
 
     HgConfig hgConfig = new HgConfig();
     hgConfig.setHgBinary("hg");
-    hgConfig.setPythonBinary("python");
     repositoryHandler.setConfig(hgConfig);
 
     initRepository();
     File path = repositoryHandler.getDirectory(repository.getId());
     assertEquals(repoPath.toString() + File.separator + RepositoryDirectoryHandler.REPOSITORIES_NATIVE_DIRECTORY, path.getAbsolutePath());
+  }
+
+  @Nonnull
+  private HgRepositoryHandler createHandler(ConfigurationStoreFactory factory, RepositoryLocationResolver locationResolver) {
+    AutoConfiguratorProvider provider = new AutoConfiguratorProvider(new HgVerifier());
+    return new HgRepositoryHandler(factory, locationResolver, null, null, provider.get());
   }
 
   @Test
@@ -99,10 +106,10 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
     when(pluginLoader.getUberClassLoader()).thenReturn(HgRepositoryHandler.class.getClassLoader());
 
     HgVersionCommand versionCommand = mock(HgVersionCommand.class);
-    when(versionCommand.get()).thenReturn(new HgVersion("5.2.0", "3.7.2"));
+    when(versionCommand.get()).thenReturn("python/3.7.2 mercurial/5.2.0");
 
     HgRepositoryHandler handler = new HgRepositoryHandler(
-      factory, locationResolver, pluginLoader, null
+      factory, locationResolver, pluginLoader, null, new AutoConfiguratorProvider(new HgVerifier()).get()
     );
 
     String versionInformation = handler.getVersionInformation(versionCommand);

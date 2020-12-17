@@ -21,51 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.aragost.javahg.MercurialExtension;
-import com.aragost.javahg.internals.Utils;
+import sonia.scm.repository.HgExtensions;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class HgFileviewExtension extends MercurialExtension
-{
+public class HgFileviewExtension extends MercurialExtension {
 
-  /** Field description */
   static final String NAME = "fileview";
 
-  /** Field description */
-  private static final String PATH =
-    Utils.resourceAsFile("/sonia/scm/hg/ext/fileview.py").getAbsolutePath();
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public String getName()
-  {
+  public String getName() {
     return NAME;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public String getPath()
-  {
-    return PATH;
+  public String getPath() {
+    return HgExtensions.FILEVIEW.getFile().getAbsolutePath();
   }
 }

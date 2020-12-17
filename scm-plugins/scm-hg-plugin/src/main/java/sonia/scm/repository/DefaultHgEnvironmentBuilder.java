@@ -34,7 +34,6 @@ import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilderFactory;
 import sonia.scm.security.CipherUtil;
 import sonia.scm.security.Xsrf;
-import sonia.scm.web.HgUtil;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -45,8 +44,6 @@ import java.util.Map;
 @Singleton
 public class DefaultHgEnvironmentBuilder implements HgEnvironmentBuilder {
 
-  @VisibleForTesting
-  static final String ENV_PYTHON_PATH = "PYTHONPATH";
   @VisibleForTesting
   static final String ENV_HOOK_PORT = "SCM_HOOK_PORT";
   @VisibleForTesting
@@ -100,7 +97,6 @@ public class DefaultHgEnvironmentBuilder implements HgEnvironmentBuilder {
 
   private void read(ImmutableMap.Builder<String, String> env, Repository repository) {
     HgConfig config = repositoryHandler.getConfig();
-    env.put(ENV_PYTHON_PATH, HgUtil.getPythonPath(config));
 
     File directory = repositoryHandler.getDirectory(repository.getId());
 

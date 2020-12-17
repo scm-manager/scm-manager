@@ -21,45 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.installer;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.autoconfig;
 
-import sonia.scm.repository.HgRepositoryHandler;
+import com.google.common.annotations.VisibleForTesting;
+import sonia.scm.Platform;
+import sonia.scm.repository.HgVerifier;
+import sonia.scm.util.SystemUtil;
 
-//~--- JDK imports ------------------------------------------------------------
+import javax.inject.Inject;
+import javax.inject.Provider;
 
-import java.io.File;
+public class AutoConfiguratorProvider implements Provider<AutoConfigurator> {
 
-import sonia.scm.net.ahc.AdvancedHttpClient;
+  private final HgVerifier verifier;
+  private final Platform platform;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public abstract class AbstractHgInstaller implements HgInstaller
-{
+  @Inject
+  public AutoConfiguratorProvider(HgVerifier verifier) {
+    this(verifier, SystemUtil.getPlatform());
+  }
 
+  @VisibleForTesting
+  AutoConfiguratorProvider(HgVerifier verifier, Platform platform) {
+    this.verifier = verifier;
+    this.platform = platform;
+  }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   *
-   * @param client
-   * @param handler
-   * @param baseDirectory
-   * @param pkg
-   *
-   * @return
-   */
   @Override
-  public boolean installPackage(AdvancedHttpClient client, HgRepositoryHandler handler,
-                                File baseDirectory, HgPackage pkg)
-  {
-    return new HgPackageInstaller(client, handler, baseDirectory,
-                                  pkg).install();
+  public AutoConfigurator get() {
+    if (platform.isPosix()) {
+      return new PosixAutoConfigurator(verifier, System.getenv());
+    } else if (platform.isWindows()) {
+      return new WindowsAutoConfigurator(verifier, new WindowsRegistry(), System.getenv());
+    } else {
+      return new NoOpAutoConfigurator();
+    }
   }
 }

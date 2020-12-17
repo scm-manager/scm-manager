@@ -22,33 +22,20 @@
 # SOFTWARE.
 #
 
+from mercurial import util
+import platform
 
-import os
-from mercurial import demandimport, ui as uimod, hg
-from mercurial.hgweb import hgweb, wsgicgi
-
-demandimport.enable()
+cmdtable = {}
 
 try:
-    u = uimod.ui.load()
-except AttributeError:
-    # For installations earlier than Mercurial 4.1
-    u = uimod.ui()
+    from mercurial import registrar
+    command = registrar.command(cmdtable)
+except (AttributeError, ImportError):
+    # Fallback to hg < 4.3 support
+    from mercurial import cmdutil
+    command = cmdutil.command(cmdtable)
 
-u.setconfig(b'web', b'push_ssl', b'false')
-u.setconfig(b'web', b'allow_read', b'*')
-u.setconfig(b'web', b'allow_push', b'*')
-
-u.setconfig(b'hooks', b'changegroup.scm', b'python:scmhooks.post_hook')
-u.setconfig(b'hooks', b'pretxnchangegroup.scm', b'python:scmhooks.pre_hook')
-
-# pass SCM_HTTP_POST_ARGS to enable experimental httppostargs protocol of mercurial
-# SCM_HTTP_POST_ARGS is set by HgCGIServlet
-# Issue 970: https://goo.gl/poascp
-u.setconfig(b'experimental', b'httppostargs', os.environ['SCM_HTTP_POST_ARGS'].encode())
-
-# open repository
-# SCM_REPOSITORY_PATH contains the repository path and is set by HgCGIServlet
-r = hg.repository(u, os.environ['SCM_REPOSITORY_PATH'].encode())
-application = hgweb(r)
-wsgicgi.launch(application)
+@command(b'scmversion', norepo=True)
+def scmversion(ui, **opts):
+  pythonVersion = platform.python_version().encode("utf-8")
+  ui.write(b"python/%s mercurial/%s\n" % (pythonVersion, util.version()))

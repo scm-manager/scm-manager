@@ -30,10 +30,9 @@ import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.SCMContext;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.autoconfig.AutoConfigurator;
-import sonia.scm.installer.HgInstaller;
-import sonia.scm.installer.HgInstallerFactory;
 import sonia.scm.io.ExtendedCommand;
 import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationWriter;
@@ -45,7 +44,6 @@ import sonia.scm.repository.spi.HgVersionCommand;
 import sonia.scm.repository.spi.HgWorkingCopyFactory;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.SystemUtil;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -53,15 +51,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.MessageFormat;
-import java.util.Optional;
 
 @Singleton
 @Extension
 public class HgRepositoryHandler
   extends AbstractSimpleRepositoryHandler<HgConfig> {
 
-  public static final String RESOURCE_VERSION = "sonia/scm/version/scm-hg-plugin";
   public static final String TYPE_DISPLAYNAME = "Mercurial";
   public static final String TYPE_NAME = "hg";
   public static final RepositoryType TYPE = new RepositoryType(
@@ -78,43 +73,25 @@ public class HgRepositoryHandler
   private static final String CONFIG_KEY_REPOSITORY_ID = "repositoryid";
 
   private final HgWorkingCopyFactory workingCopyFactory;
+  private final AutoConfigurator configurator;
 
   @Inject
   public HgRepositoryHandler(ConfigurationStoreFactory storeFactory,
                              RepositoryLocationResolver repositoryLocationResolver,
-                             PluginLoader pluginLoader, HgWorkingCopyFactory workingCopyFactory) {
+                             PluginLoader pluginLoader, HgWorkingCopyFactory workingCopyFactory, AutoConfigurator configurator) {
     super(storeFactory, repositoryLocationResolver, pluginLoader);
     this.workingCopyFactory = workingCopyFactory;
+    this.configurator = configurator;
   }
 
   public void doAutoConfiguration(HgConfig autoConfig) {
-    HgInstaller installer = HgInstallerFactory.createInstaller();
-
-    try {
-      if (logger.isDebugEnabled()) {
-        logger.debug("installing mercurial with {}", installer.getClass().getName());
-      }
-
-      installer.install(baseDirectory, autoConfig);
-      config = autoConfig;
-      storeConfig();
-    } catch (IOException ioe) {
-      if (logger.isErrorEnabled()) {
-        logger.error("Could not write Hg CGI for inital config.  "
-          + "HgWeb may not function until a new Hg config is set", ioe);
-      }
-    }
+    configurator.configure(autoConfig);
   }
 
   @Override
   public void init(SCMContextProvider context) {
     super.init(context);
-    writePythonScripts(context);
-
-    // fix wrong hg.bat from package installation
-    if (SystemUtil.isWindows()) {
-      HgWindowsPackageFix.fixHgPackage(context, getConfig());
-    }
+    writeHgExtensions(context);
   }
 
   @Override
@@ -122,20 +99,18 @@ public class HgRepositoryHandler
     super.loadConfig();
 
     if (config == null) {
-      HgConfig config = null;
-      Optional<AutoConfigurator> autoConfigurator = AutoConfigurator.get();
-      if (autoConfigurator.isPresent()) {
-        config = autoConfigurator.get().configure();
-      }
-
-      if (config != null && config.isValid()) {
-        this.config = config;
-        storeConfig();
-      } else {
-        // do the old configuration
-        doAutoConfiguration(config != null ? config : new HgConfig());
-      }
+      config = new HgConfig();
+      storeConfig();
     }
+
+    if (!isConfigValid(config)) {
+      doAutoConfiguration(config);
+      storeConfig();
+    }
+  }
+
+  private boolean isConfigValid(HgConfig config) {
+    return config.isValid() && new HgVerifier().isValid(config);
   }
 
   @Override
@@ -154,10 +129,10 @@ public class HgRepositoryHandler
   }
 
   String getVersionInformation(HgVersionCommand command) {
-    String version = getStringFromResource(RESOURCE_VERSION, DEFAULT_VERSION_INFORMATION);
-    HgVersion hgVersion = command.get();
-    logger.debug("mercurial/python informations: {}", hgVersion);
-    return MessageFormat.format(version, hgVersion.getPython(), hgVersion.getMercurial());
+    return String.format("scm-hg-version/%s %s",
+      SCMContext.getContext().getVersion(),
+      command.get()
+    );
   }
 
   @Override
@@ -176,8 +151,7 @@ public class HgRepositoryHandler
   }
 
   /**
-   * Writes .hg/hgrc, disables hg access control and added scm hook support.
-   * see HgPermissionFilter
+   * Writes repository to .hg/hgrc.
    *
    * @param repository
    * @param directory
@@ -205,10 +179,10 @@ public class HgRepositoryHandler
     return HgConfig.class;
   }
 
-  private void writePythonScripts(SCMContextProvider context) {
-    IOUtil.mkdirs(HgPythonScript.getScriptDirectory(context));
+  private void writeHgExtensions(SCMContextProvider context) {
+    IOUtil.mkdirs(HgExtensions.getScriptDirectory(context));
 
-    for (HgPythonScript script : HgPythonScript.values()) {
+    for (HgExtensions script : HgExtensions.values()) {
       if (logger.isDebugEnabled()) {
         logger.debug("write python script {}", script.getName());
       }
@@ -216,16 +190,16 @@ public class HgRepositoryHandler
       try (InputStream content = input(script); OutputStream output = output(context, script)) {
         IOUtil.copy(content, output);
       } catch (IOException ex) {
-        logger.error("could not write script", ex);
+        throw new IllegalStateException("could not write hg extension", ex);
       }
     }
   }
 
-  private InputStream input(HgPythonScript script) {
+  private InputStream input(HgExtensions script) {
     return HgRepositoryHandler.class.getResourceAsStream(script.getResourcePath());
   }
 
-  private OutputStream output(SCMContextProvider context, HgPythonScript script) throws FileNotFoundException {
+  private OutputStream output(SCMContextProvider context, HgExtensions script) throws FileNotFoundException {
     return new FileOutputStream(script.getFile(context));
   }
 

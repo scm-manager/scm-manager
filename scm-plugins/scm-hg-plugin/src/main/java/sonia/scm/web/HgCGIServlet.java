@@ -33,14 +33,15 @@ import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgEnvironmentBuilder;
-import sonia.scm.repository.HgPythonScript;
+import sonia.scm.repository.HgExtensions;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
-import sonia.scm.util.AssertUtil;
 import sonia.scm.web.cgi.CGIExecutor;
 import sonia.scm.web.cgi.CGIExecutorFactory;
+
+import javax.annotation.Nonnull;
 import sonia.scm.web.cgi.EnvList;
 
 import javax.servlet.ServletException;
@@ -49,8 +50,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-
-//~--- JDK imports ------------------------------------------------------------
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -81,7 +82,7 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
     this.requestListenerUtil = requestListenerUtil;
     this.environmentBuilder = environmentBuilder;
     this.exceptionHandler = new HgCGIExceptionHandler();
-    this.command = HgPythonScript.HGWEB.getFile(SCMContext.getContext());
+    this.extension = HgExtensions.CGISERVE.getFile(SCMContext.getContext());
   }
 
   //~--- methods --------------------------------------------------------------
@@ -108,17 +109,6 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param repository
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   private void handleRequest(HttpServletRequest request,
     HttpServletResponse response, Repository repository)
     throws ServletException, IOException
@@ -135,17 +125,6 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param response
-   * @param repository
-   *
-   * @throws IOException
-   * @throws ServletException
-   */
   private void process(HttpServletRequest request,
     HttpServletResponse response, Repository repository)
     throws IOException, ServletException
@@ -162,38 +141,33 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
     EnvList env = executor.getEnvironment();
     environmentBuilder.write(repository).forEach(env::set);
 
-    String interpreter = getInterpreter();
+    File directory = handler.getDirectory(repository.getId());
+    executor.setWorkDirectory(directory);
+    executor.setArgs(createArgs());
 
-    if (interpreter != null)
-    {
-      executor.setInterpreter(interpreter);
-    }
-
-    executor.execute(command.getAbsolutePath());
+    HgConfig config = handler.getConfig();
+    executor.execute(config.getHgBinary());
   }
 
-  //~--- get methods ----------------------------------------------------------
+  @Nonnull
+  private List<String> createArgs() {
+    List<String> args = new ArrayList<>();
+    config(args, "extensions.cgiserve", extension.getAbsolutePath());
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  private String getInterpreter()
-  {
-    HgConfig config = handler.getConfig();
+    String hooks = HgExtensions.HOOK.getFile().getAbsolutePath();
+    config(args, "hooks.pretxnchangegroup.scm", String.format("python:%s:pre_hook", hooks));
+    config(args, "hooks.changegroup.scm", String.format("python:%s:post_hook", hooks));
 
-    AssertUtil.assertIsNotNull(config);
+    config(args, "web.push_ssl", "false");
+    config(args, "web.allow_read", "*");
+    config(args, "web.allow_push", "*");
+    args.add("cgiserve");
+    return args;
+  }
 
-    String python = config.getPythonBinary();
-
-    if ((python != null) && config.isUseOptimizedBytecode())
-    {
-      python = python.concat(" -O");
-    }
-
-    return python;
+  private void config(List<String> args, String key, String value) {
+    args.add("--config");
+    args.add(key + "=" + value);
   }
 
   //~--- fields ---------------------------------------------------------------
@@ -202,7 +176,7 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
   private final CGIExecutorFactory cgiExecutorFactory;
 
   /** Field description */
-  private final File command;
+  private final File extension;
 
   /** Field description */
   private final ScmConfiguration configuration;

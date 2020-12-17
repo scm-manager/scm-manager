@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
@@ -79,8 +79,8 @@ public class HgConfigAutoConfigurationResourceTest {
 
     when(resourceProvider.get()).thenReturn(resource);
     dispatcher.addSingletonResource(
-      new HgConfigResource(null, null, null, null,
-                           resourceProvider, null));
+      new HgConfigResource(null, null, null,
+        resourceProvider));
   }
 
   @Test
