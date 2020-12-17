@@ -76,7 +76,7 @@ public class EnvList {
    * Representation suitable for passing to exec.
    *
    * @return array of environment variables
-   * @since 2.10.0
+   * @since 2.12.0
    */
   public String[] asArray() {
     return envMap.entrySet()
@@ -89,7 +89,7 @@ public class EnvList {
    * Representation suitable for passing to process builder.
    *
    * @return environment as immutable map
-   * @since 2.10.0
+   * @since 2.12.0
    */
   public Map<String, String> asMap() {
     return Collections.unmodifiableMap(envMap);

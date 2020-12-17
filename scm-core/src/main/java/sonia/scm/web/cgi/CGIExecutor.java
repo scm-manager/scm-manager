@@ -106,7 +106,7 @@ public interface CGIExecutor {
 
   /**
    * Content type header of response.
-   * @since 2.10.0
+   * @since 2.12.0
    */
   String RESPONSE_HEADER_CONTENT_TYPE = "Content-Type";
 
@@ -222,7 +222,7 @@ public interface CGIExecutor {
    * Returns command args as list.
    *
    * @return list of command args
-   * @since 2.10.0
+   * @since 2.12.0
    */
   default List<String> getArgs() {
     return Collections.emptyList();
@@ -307,7 +307,7 @@ public interface CGIExecutor {
   /**
    * Set command arguments.
    * @param args command arguments
-   * @since 2.10.0
+   * @since 2.12.0
    */
   default void setArgs(List<String> args) {
   }
