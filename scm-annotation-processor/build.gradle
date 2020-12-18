@@ -23,28 +23,17 @@
  */
 
 plugins {
-  id 'java-platform'
+  id 'java-library'
 }
 
 dependencies {
-  constraints {
-    api 'com.google.inject:guice:4.2.3'
-    api 'javax.ws.rs:javax.ws.rs-api:2.1.1'
-    api 'com.github.legman:core:1.6.2'
-    api 'com.google.guava:guava:30.0-jre'
-  }
-}
+  implementation platform(project(':'))
+  implementation project(':scm-annotations')
+  implementation 'com.google.inject:guice'
+  implementation 'javax.ws.rs:javax.ws.rs-api'
+  implementation 'com.github.legman:core'
+  implementation 'com.google.guava:guava'
 
-subprojects {
-  repositories {
-    maven {
-      url 'https://packages.scm-manager.org/repository/public/'
-    }
-  }
-
-  project.tasks.withType(JavaCompile) {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
-  }
-
+  compileOnly 'org.kohsuke.metainf-services:metainf-services:1.8'
+  annotationProcessor 'org.kohsuke.metainf-services:metainf-services:1.8'
 }

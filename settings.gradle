@@ -25,3 +25,4 @@
 rootProject.name = 'scm'
 
 include('scm-annotations')
+include('scm-annotation-processor')
