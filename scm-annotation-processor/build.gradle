@@ -29,11 +29,20 @@ plugins {
 dependencies {
   implementation platform(project(':'))
   implementation project(':scm-annotations')
+
+  // injection
   implementation 'com.google.inject:guice'
+
+  // rest api
   implementation 'javax.ws.rs:javax.ws.rs-api'
+
+  // events
   implementation 'com.github.legman:core'
+
+  // utils
   implementation 'com.google.guava:guava'
 
+  // service registration
   compileOnly 'org.kohsuke.metainf-services:metainf-services:1.8'
   annotationProcessor 'org.kohsuke.metainf-services:metainf-services:1.8'
 }

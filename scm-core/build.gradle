@@ -1,0 +1,120 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+plugins {
+  id 'java-library'
+}
+
+// TODO
+// gradle has xerces on it classpath, which breaks our annotation processor
+// so we force jdk build in for now
+// @see https://stackoverflow.com/questions/53299280/java-and-xerces-cant-find-property-xmlconstants-access-external-dtd
+System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
+
+dependencies {
+  api platform(project(':'))
+
+  // scm annotations
+  api project(':scm-annotations')
+  annotationProcessor project(':scm-annotation-processor')
+
+  // lombok
+  compileOnly 'org.projectlombok:lombok'
+  annotationProcessor 'org.projectlombok:lombok'
+
+  // servlet api
+  implementation 'javax.servlet:javax.servlet-api'
+
+  // logging
+  api 'org.slf4j:slf4j-api'
+  api 'org.slf4j:jcl-over-slf4j' // is api here required?
+  testImplementation 'ch.qos.logback:logback-classic'
+
+  // injection
+  api 'com.google.inject:guice'
+  api 'com.google.inject.extensions:guice-multibindings'
+  api 'com.google.inject.extensions:guice-servlet'
+  api 'com.google.inject.extensions:guice-throwingproviders'
+  api 'com.google.inject.extensions:guice-assistedinject'
+
+  // rest api
+  api 'javax.ws.rs:javax.ws.rs-api'
+  testImplementation 'org.jboss.resteasy:resteasy-core'
+
+  // json
+  api 'com.fasterxml.jackson.core:jackson-core'
+  api 'com.fasterxml.jackson.core:jackson-annotations'
+  api 'com.fasterxml.jackson.core:jackson-databind'
+
+  // hypermedia
+  api 'de.otto.edison:edison-hal'
+
+  // dto mapping
+  api 'org.mapstruct:mapstruct-jdk8'
+  annotationProcessor 'org.mapstruct:mapstruct-processor'
+
+  // events
+  api 'com.github.legman:core'
+
+  // xml binding
+  api 'jakarta.xml.bind:jakarta.xml.bind-api'
+  api 'org.glassfish.jaxb:jaxb-runtime' // api ?
+
+  // validation
+  api 'org.hibernate.validator:hibernate-validator'
+  testImplementation 'javax.el:javax.el-api'
+  testImplementation 'org.glassfish:javax.el'
+
+  // utils
+  api 'com.google.guava:guava'
+  api 'commons-lang:commons-lang'
+
+  // security
+  api 'org.apache.shiro:shiro-core'
+  api 'com.github.sdorra:ssp-lib'
+  annotationProcessor 'com.github.sdorra:ssp-processor'
+  testImplementation 'com.github.sdorra:shiro-unit'
+
+  // tests
+  testImplementation 'org.junit.jupiter:junit-jupiter-api'
+  testImplementation 'org.junit.jupiter:junit-jupiter-params'
+  testRuntimeOnly 'org.junit.jupiter:junit-jupiter-engine'
+
+  // junit 4 support
+  testRuntimeOnly 'org.junit.vintage:junit-vintage-engine'
+  testImplementation 'junit:junit'
+
+  // assertions
+  testImplementation 'org.hamcrest:hamcrest-core'
+  testImplementation 'org.hamcrest:hamcrest-library'
+  testImplementation 'org.assertj:assertj-core'
+
+  // mocking
+  testImplementation 'org.mockito:mockito-core'
+  testImplementation 'org.mockito:mockito-junit-jupiter'
+}
+
+test {
+  useJUnitPlatform()
+}

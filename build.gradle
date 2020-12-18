@@ -28,10 +28,79 @@ plugins {
 
 dependencies {
   constraints {
+    // lombok
+    api 'org.projectlombok:lombok:1.18.10'
+
+    // servlet api
+    api 'javax.servlet:javax.servlet-api:3.1.0'
+
+    // logging
+    api 'org.slf4j:slf4j-api:1.7.30'
+    api 'org.slf4j:jcl-over-slf4j:1.7.30'
+    api 'ch.qos.logback:logback-classic:1.2.3'
+
+    // injection
     api 'com.google.inject:guice:4.2.3'
+    api 'com.google.inject.extensions:guice-multibindings:4.2.3'
+    api 'com.google.inject.extensions:guice-servlet:4.2.3'
+    api 'com.google.inject.extensions:guice-throwingproviders:4.2.3'
+    api 'com.google.inject.extensions:guice-assistedinject:4.2.3'
+
+    // rest api
     api 'javax.ws.rs:javax.ws.rs-api:2.1.1'
+    api 'org.jboss.resteasy:resteasy-core:4.5.8.Final'
+
+    // json
+    api 'com.fasterxml.jackson.core:jackson-core:2.11.3'
+    api 'com.fasterxml.jackson.core:jackson-annotations:2.11.3'
+    api 'com.fasterxml.jackson.core:jackson-databind:2.11.3'
+
+    // hypermedia
+    api 'de.otto.edison:edison-hal:2.1.0'
+
+    // dto mapping
+    api 'org.mapstruct:mapstruct-jdk8:1.3.1.Final'
+    api 'org.mapstruct:mapstruct-processor:1.3.1.Final'
+
+    // events
     api 'com.github.legman:core:1.6.2'
+
+    // xml binding
+    api 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.3'
+    api 'org.glassfish.jaxb:jaxb-runtime:2.3.3'
+
+    // validation
+    api 'org.hibernate.validator:hibernate-validator:6.1.6.Final'
+    api 'javax.el:javax.el-api:3.0.0'
+    api 'org.glassfish:javax.el:3.0.1-b11'
+
+    // utils
     api 'com.google.guava:guava:30.0-jre'
+    api 'commons-lang:commons-lang:2.6'
+
+    // security
+    api 'org.apache.shiro:shiro-core:1.7.0'
+    api 'com.github.sdorra:ssp-lib:1.3.0'
+    api 'com.github.sdorra:ssp-processor:1.3.0'
+    api 'com.github.sdorra:shiro-unit:1.0.1'
+
+    // tests
+    api 'org.junit.jupiter:junit-jupiter-api:5.7.0'
+    api 'org.junit.jupiter:junit-jupiter-params:5.7.0'
+    api 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+
+    // junit 4 support
+    api 'org.junit.vintage:junit-vintage-engine:5.7.0'
+    api 'junit:junit:4.13.1'
+
+    // assertions
+    api 'org.hamcrest:hamcrest-core:2.1'
+    api 'org.hamcrest:hamcrest-library:2.1'
+    api 'org.assertj:assertj-core:3.18.1'
+
+    // mocking
+    api 'org.mockito:mockito-core:3.6.28'
+    api 'org.mockito:mockito-junit-jupiter:3.6.28'
   }
 }
 
