@@ -41,7 +41,8 @@ dependencies {
 
   // lombok
   compileOnly 'org.projectlombok:lombok'
-  annotationProcessor 'org.projectlombok:lombok'
+  // TODO version from parent
+  annotationProcessor 'org.projectlombok:lombok:1.18.10'
 
   // servlet api
   implementation 'javax.servlet:javax.servlet-api'

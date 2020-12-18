@@ -22,12 +22,22 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'scm'
+plugins {
+  id 'java-library'
+}
 
-include('scm-annotations')
-include('scm-annotation-processor')
-include('scm-core')
-include('scm-test')
-// include('scm-ui')
-// include('scm-plugins')
-include('scm-dao-xml')
+dependencies {
+  api platform(project(':'))
+
+  api project(':scm-core')
+  testImplementation project(':scm-test')
+
+  // lombok
+  compileOnly 'org.projectlombok:lombok'
+  // TODO version from parent
+  annotationProcessor 'org.projectlombok:lombok:1.18.10'
+}
+
+test {
+  useJUnitPlatform()
+}
