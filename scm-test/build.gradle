@@ -22,9 +22,35 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'scm'
+plugins {
+  id 'java-library'
+}
 
-include('scm-annotations')
-include('scm-annotation-processor')
-include('scm-core')
-include('scm-test')
+dependencies {
+  api platform(project(':'))
+  api project(':scm-core')
+
+  // tests
+  api 'org.junit.jupiter:junit-jupiter-api'
+  api 'org.junit.jupiter:junit-jupiter-params'
+  api 'org.junit.jupiter:junit-jupiter-engine'
+
+  // junit 4 support
+  api 'org.junit.vintage:junit-vintage-engine'
+  api 'junit:junit'
+
+  // assertions
+  api 'org.hamcrest:hamcrest-core'
+  api 'org.hamcrest:hamcrest-library'
+  api 'org.assertj:assertj-core'
+
+  // mocking
+  api 'org.mockito:mockito-core'
+  api 'org.mockito:mockito-junit-jupiter'
+
+  // test rest api's
+  api 'org.jboss.resteasy:resteasy-core'
+
+  // test servlet api
+  api 'javax.servlet:javax.servlet-api'
+}
