@@ -29,6 +29,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.legman.EventBus;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
@@ -41,19 +42,23 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.lifecycle.RestartEventFactory;
 import sonia.scm.plugin.PluginLoader;
 
+import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLClassLoader;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Enumeration;
+import java.util.Collection;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
@@ -96,8 +101,12 @@ class I18nServletTest {
     "}"
   );
 
+  private static final String[] ALL_PLUGIN_JSON = new String[]{
+    GIT_PLUGIN_JSON, HG_PLUGIN_JSON, SVN_PLUGIN_JSON
+  };
+
   private static String json(String... parts) {
-    return String.join("\n", parts ).replaceAll("'", "\"");
+    return String.join("\n", parts).replaceAll("'", "\"");
   }
 
   @Mock
@@ -107,140 +116,10 @@ class I18nServletTest {
   private PluginLoader pluginLoader;
 
   @Mock
-  private ClassLoader classLoader;
-
-  @Mock
   private CacheManager cacheManager;
 
   @Mock
   private Cache<String, JsonNode> cache;
-
-  private I18nServlet servlet;
-
-
-  @BeforeEach
-  void init() {
-    when(pluginLoader.getUberClassLoader()).thenReturn(classLoader);
-    when(cacheManager.<String, JsonNode>getCache(I18nServlet.CACHE_NAME)).thenReturn(cache);
-    servlet = new I18nServlet(context, pluginLoader, cacheManager);
-  }
-
-  @Test
-  void shouldCleanCacheOnRestartEvent() {
-    EventBus eventBus = new EventBus("forTestingOnly");
-    eventBus.register(servlet);
-    eventBus.post(RestartEventFactory.create(I18nServlet.class, "Restart to reload the plugin resources"));
-
-    verify(cache).clear();
-  }
-
-  @Test
-  void shouldFailWith404OnMissingResources() throws IOException {
-    String path = "/locales/de/plugins.json";
-    HttpServletRequest request = mock(HttpServletRequest.class);
-    HttpServletResponse response = mock(HttpServletResponse.class);
-    when(request.getServletPath()).thenReturn(path);
-    when(classLoader.getResources("locales/de/plugins.json")).thenReturn(
-      I18nServlet.class.getClassLoader().getResources("something/not/available")
-    );
-
-    servlet.doGet(request, response);
-
-    verify(response).setStatus(404);
-  }
-
-  @Test
-  void shouldFailWith500OnIOException() throws IOException {
-    stage(Stage.DEVELOPMENT);
-    HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getServletPath()).thenReturn("/locales/de/plugins.json");
-    HttpServletResponse response = mock(HttpServletResponse.class);
-    when(classLoader.getResources("locales/de/plugins.json")).thenThrow(new IOException("failed"));
-
-    servlet.doGet(request, response);
-
-    verify(response).setStatus(500);
-  }
-
-  private void stage(Stage stage) {
-    when(context.getStage()).thenReturn(stage);
-  }
-
-  @Test
-  void inDevelopmentStageShouldNotUseCache(@TempDir Path temp) throws IOException {
-    stage(Stage.DEVELOPMENT);
-    mockResources(temp, "locales/de/plugins.json");
-    HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getServletPath()).thenReturn("/locales/de/plugins.json");
-
-    HttpServletResponse response = mock(HttpServletResponse.class);
-    String json = doGetString(request, response);
-
-    assertJson(json);
-    verify(cache, never()).get(any());
-  }
-
-  private String doGetString(HttpServletRequest request, HttpServletResponse response) throws IOException {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    PrintWriter writer = new PrintWriter(baos);
-    when(response.getWriter()).thenReturn(writer);
-
-    servlet.doGet(request, response);
-
-    writer.flush();
-    return baos.toString(StandardCharsets.UTF_8.name());
-  }
-
-  private void mockResources(Path directory, String resourcePath) throws IOException {
-    Enumeration<URL> resources = Collections.enumeration(
-      Arrays.asList(
-        toURL(directory, "git.json", GIT_PLUGIN_JSON),
-        toURL(directory, "hg.json", HG_PLUGIN_JSON),
-        toURL(directory, "svn.json", SVN_PLUGIN_JSON)
-      )
-    );
-    when(classLoader.getResources(resourcePath)).thenReturn(resources);
-  }
-
-  private URL toURL(Path directory, String name, String content) throws IOException {
-    Path file = directory.resolve(name);
-    java.nio.file.Files.write(file, content.getBytes(StandardCharsets.UTF_8));
-    return file.toUri().toURL();
-  }
-
-  @Test
-  void shouldGetFromCacheInProductionStage() throws IOException {
-    String path = "/locales/de/plugins.json";
-    stage(Stage.PRODUCTION);
-    HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getServletPath()).thenReturn(path);
-    HttpServletResponse response = mock(HttpServletResponse.class);
-
-    ObjectMapper mapper = new ObjectMapper();
-    JsonNode jsonNode = mapper.readTree(GIT_PLUGIN_JSON);
-    when(cache.get(path)).thenReturn(jsonNode);
-
-    String json = doGetString(request, response);
-    assertThat(json).contains("scm-git-plugin").doesNotContain("scm-hg-plugin");
-    verifyHeaders(response);
-  }
-
-  @Test
-  void shouldStoreToCacheInProductionStage(@TempDir Path temp) throws IOException {
-    String path = "/locales/de/plugins.json";
-    mockResources(temp, "locales/de/plugins.json");
-    stage(Stage.PRODUCTION);
-    HttpServletRequest request = mock(HttpServletRequest.class);
-    when(request.getServletPath()).thenReturn(path);
-    HttpServletResponse response = mock(HttpServletResponse.class);
-
-    String json = doGetString(request, response);
-
-    verify(cache).put(any(String.class), any(JsonNode.class));
-
-    verifyHeaders(response);
-    assertJson(json);
-  }
 
   @Test
   void shouldNotHaveInvalidPluginsJsonFiles() throws IOException {
@@ -264,6 +143,169 @@ class I18nServletTest {
     } catch (IOException e) {
       fail("error while parsing translation file " + path, e);
     }
+  }
+
+  @Nested
+  class WithCacheManager {
+
+    @BeforeEach
+    void init() {
+      when(cacheManager.<String, JsonNode>getCache(I18nServlet.CACHE_NAME)).thenReturn(cache);
+    }
+
+    @Test
+    void shouldFailWith404OnMissingResources(@TempDir Path directory) throws IOException {
+      String path = "/locales/de/plugins.json";
+      HttpServletRequest request = mock(HttpServletRequest.class);
+      when(request.getServletPath()).thenReturn(path);
+      HttpServletResponse response = mock(HttpServletResponse.class);
+
+      mockUberClassLoader(directory);
+
+      createServlet().doGet(request, response);
+      verify(response).setStatus(404);
+    }
+
+    private void mockUberClassLoader(Path... directories) throws MalformedURLException {
+      mockUberClassLoader(Arrays.asList(directories));
+    }
+
+    private void mockUberClassLoader(Collection<Path> directories) throws MalformedURLException {
+      List<URL> urls = new ArrayList<>();
+      for (Path directory : directories) {
+        urls.add(directory.toUri().toURL());
+      }
+      ClassLoader bootstrapLoader = ClassLoader.getSystemClassLoader().getParent();
+      URLClassLoader classLoader = new URLClassLoader(urls.toArray(new URL[0]), bootstrapLoader);
+      when(pluginLoader.getUberClassLoader()).thenReturn(classLoader);
+    }
+
+    @Test
+    void shouldFailWith500OnIOException(@TempDir Path directory) throws IOException {
+      stage(Stage.DEVELOPMENT);
+      HttpServletRequest request = mock(HttpServletRequest.class);
+      when(request.getServletPath()).thenReturn("/locales/de/plugins.json");
+      HttpServletResponse response = mock(HttpServletResponse.class);
+
+      mockResource(directory, "locales/de/plugins.json", "invalid json");
+
+      createServlet().doGet(request, response);
+
+      verify(response).setStatus(500);
+    }
+
+    private void mockResource(Path directory, String resourcePath, String content) throws IOException {
+      Path file = directory.resolve(resourcePath);
+      Files.createDirectories(file.getParent());
+      Files.write(file, content.getBytes(StandardCharsets.UTF_8));
+
+      mockUberClassLoader(directory);
+    }
+
+    private void stage(Stage stage) {
+      when(context.getStage()).thenReturn(stage);
+    }
+
+    @Test
+    void inDevelopmentStageShouldNotUseCache(@TempDir Path temp) throws IOException {
+      stage(Stage.DEVELOPMENT);
+      mockResources(temp, "locales/de/plugins.json");
+      HttpServletRequest request = mock(HttpServletRequest.class);
+      when(request.getServletPath()).thenReturn("/locales/de/plugins.json");
+      HttpServletResponse response = mock(HttpServletResponse.class);
+
+      I18nServlet servlet = createServlet();
+      String json = doGetString(servlet, request, response);
+
+      assertJson(json);
+      verify(cache, never()).get(any());
+    }
+
+    @Nonnull
+    private I18nServlet createServlet() {
+      return new I18nServlet(context, pluginLoader, cacheManager);
+    }
+
+    private String doGetString(I18nServlet servlet, HttpServletRequest request, HttpServletResponse response) throws IOException {
+      ByteArrayOutputStream baos = new ByteArrayOutputStream();
+      PrintWriter writer = new PrintWriter(baos);
+      when(response.getWriter()).thenReturn(writer);
+
+      servlet.doGet(request, response);
+
+      writer.flush();
+      return baos.toString(StandardCharsets.UTF_8.name());
+    }
+
+    private void mockResources(Path directory, String resourcePath) throws IOException {
+      List<Path> directories = new ArrayList<>();
+      for (int i = 0; i < ALL_PLUGIN_JSON.length; i++) {
+        Path pluginDirectory = directory.resolve("plugin-" + i);
+        Path file = pluginDirectory.resolve(resourcePath);
+        Files.createDirectories(file.getParent());
+        Files.write(file, ALL_PLUGIN_JSON[i].getBytes(StandardCharsets.UTF_8));
+        directories.add(pluginDirectory);
+      }
+      mockUberClassLoader(directories);
+    }
+
+    @Test
+    void shouldGetFromCacheInProductionStage() throws IOException {
+      String path = "/locales/de/plugins.json";
+      stage(Stage.PRODUCTION);
+      HttpServletRequest request = mock(HttpServletRequest.class);
+      when(request.getServletPath()).thenReturn(path);
+      HttpServletResponse response = mock(HttpServletResponse.class);
+
+      ObjectMapper mapper = new ObjectMapper();
+      JsonNode jsonNode = mapper.readTree(GIT_PLUGIN_JSON);
+      when(cache.get(path)).thenReturn(jsonNode);
+
+      I18nServlet servlet = createServlet();
+      String json = doGetString(servlet, request, response);
+      assertThat(json).contains("scm-git-plugin").doesNotContain("scm-hg-plugin");
+      verifyHeaders(response);
+    }
+
+    @Test
+    void shouldStoreToCacheInProductionStage(@TempDir Path temp) throws IOException {
+      String path = "/locales/de/plugins.json";
+      mockResources(temp, "locales/de/plugins.json");
+      stage(Stage.PRODUCTION);
+      HttpServletRequest request = mock(HttpServletRequest.class);
+      when(request.getServletPath()).thenReturn(path);
+      HttpServletResponse response = mock(HttpServletResponse.class);
+
+      I18nServlet servlet = createServlet();
+      String json = doGetString(servlet, request, response);
+
+      verify(cache).put(any(String.class), any(JsonNode.class));
+
+      verifyHeaders(response);
+      assertJson(json);
+    }
+
+
+    @Nested
+    class WithDefaultClassLoader {
+
+      @BeforeEach
+      void init() {
+        when(pluginLoader.getUberClassLoader()).thenReturn(I18nServletTest.class.getClassLoader());
+      }
+
+      @Test
+      void shouldCleanCacheOnRestartEvent() {
+        I18nServlet servlet = createServlet();
+        EventBus eventBus = new EventBus("forTestingOnly");
+        eventBus.register(servlet);
+        eventBus.post(RestartEventFactory.create(I18nServlet.class, "Restart to reload the plugin resources"));
+
+        verify(cache).clear();
+      }
+
+    }
+
   }
 
   private void verifyHeaders(HttpServletResponse response) {

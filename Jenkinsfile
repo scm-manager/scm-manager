@@ -204,7 +204,7 @@ String developmentBranch
 String mainBranch
 
 Maven setupMavenBuild() {
-  MavenWrapperInDocker mvn = new MavenWrapperInDocker(this, "scmmanager/java-build:8u275-b01")
+  MavenWrapperInDocker mvn = new MavenWrapperInDocker(this, "scmmanager/java-build:11.0.9_11.1")
   mvn.enableDockerHost = true
 
   // disable logging durring the build
