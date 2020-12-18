@@ -138,7 +138,6 @@ public class I18nServlet extends HttpServlet {
     return context.getStage() == Stage.PRODUCTION;
   }
 
-  @VisibleForTesting
   private Optional<JsonNode> collectJsonFile(String path) throws IOException {
     LOG.debug("Collect plugin translations from path {} for every plugin", path);
     JsonNode mergedJsonNode = null;

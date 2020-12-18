@@ -21,114 +21,125 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
+import com.google.common.io.Resources;
+import net.bytebuddy.ByteBuddy;
+import net.bytebuddy.implementation.FixedValue;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Collections;
+import java.net.URLClassLoader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
-import static org.junit.Assert.*;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
-import org.junit.runner.RunWith;
-import org.mockito.Mock;
-import static org.mockito.Mockito.*;
-import static org.hamcrest.Matchers.*;
-import org.mockito.invocation.InvocationOnMock;
-import org.mockito.junit.MockitoJUnitRunner;
-import org.mockito.stubbing.Answer;
+
+import static net.bytebuddy.matcher.ElementMatchers.named;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
-public class MultiParentClassLoaderTest
-{
-  
-  @Mock
-  private ClassLoader parent1;
-  
-  @Mock
-  private ClassLoader parent2;
+class MultiParentClassLoaderTest {
 
-  private MultiParentClassLoader classLoader;
-  
-  @Before
-  public void setUp(){
-     classLoader = new MultiParentClassLoader(parent1, parent2);
-  }
-  
-  @SuppressWarnings("unchecked")
-  @Test(expected = ClassNotFoundException.class)
-  public void testClassNotFoundException() throws ClassNotFoundException
-  {
-    when(parent1.loadClass("string")).thenThrow(ClassNotFoundException.class);
-    when(parent2.loadClass("string")).thenThrow(ClassNotFoundException.class);
-    classLoader.loadClass("string");
-  }
-  
-  @Rule
-  public TemporaryFolder tempFolder = new TemporaryFolder();
-  
   @Test
-  public void testGetResource() throws IOException
-  {
-    URL url1 = tempFolder.newFile().toURI().toURL();
-    URL url2 = tempFolder.newFile().toURI().toURL();
-    when(parent1.getResource("resource1")).thenReturn(url1);
-    when(parent2.getResource("resource2")).thenReturn(url2);
-    
-    assertEquals(url1, classLoader.getResource("resource1"));
-    assertEquals(url2, classLoader.getResource("resource2"));
-    assertNull(classLoader.getResource("resource3"));
-  }
-  
-  @Test
-  public void testGetResources() throws IOException{
-        URL url1 = tempFolder.newFile().toURI().toURL();
-    URL url2 = tempFolder.newFile().toURI().toURL();
-    URL url3 = tempFolder.newFile().toURI().toURL();
-    when(parent1.getResources("resources")).thenReturn(res(url1, url2));
-    when(parent2.getResources("resources")).thenReturn(res(url3));
-    
-    List<URL> enm = Collections.list(classLoader.getResources("resources"));
-    assertThat(enm, containsInAnyOrder(url1, url2, url3));
-  }
-  
-  @Test
-  public void testLoadClass() throws ClassNotFoundException{
-    when(parent1.loadClass("string")).then(new ClassAnswer(String.class));
-    when(parent1.loadClass("int")).then(new ClassAnswer(Integer.class));
-    
-    assertEquals(String.class, classLoader.loadClass("string"));
-    assertEquals(Integer.class, classLoader.loadClass("int"));
-  }
-  private static class ClassAnswer implements Answer<Object> {
-  
-    private final Class<?> clazz;
+  void shouldLoadClass(@TempDir Path directory) throws IOException, ClassNotFoundException, IllegalAccessException, InstantiationException {
+    byte[] classOneRaw = createDynamicClass("One", "Value of one");
+    ClassLoader one = createClassLoader(directory, "One.class", classOneRaw);
+    byte[] classTwoRaw = createDynamicClass("Two", "Value of two");
+    ClassLoader two = createClassLoader(directory, "Two.class", classTwoRaw);
 
-    public ClassAnswer(
-      Class<?> clazz)
-    {
-      this.clazz = clazz;
+    MultiParentClassLoader classLoader = new MultiParentClassLoader(one, two);
+    assertClassToString(classLoader, "One", "Value of one");
+    assertClassToString(classLoader, "Two", "Value of two");
+  }
+
+  private void assertClassToString(ClassLoader classLoader, String className, String toStringValue) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
+    Class<?> aClass = classLoader.loadClass(className);
+    assertThat(aClass.newInstance()).hasToString(toStringValue);
+  }
+
+  private byte[] createDynamicClass(String name, String toStringValue) {
+    return new ByteBuddy()
+      .subclass(Object.class)
+      .name(name)
+      .method(named("toString"))
+      .intercept(FixedValue.value(toStringValue))
+      .make()
+      .getBytes();
+  }
+
+  @Test
+  void shouldThrowClassNotFoundException(@TempDir Path directory) throws MalformedURLException {
+    URLClassLoader one = createClassLoader(directory.resolve("one"));
+    URLClassLoader two = createClassLoader(directory.resolve("two"));
+    MultiParentClassLoader classLoader = new MultiParentClassLoader(one, two);
+    assertThrows(ClassNotFoundException.class, () -> classLoader.loadClass("UnknownClass"));
+  }
+
+  @Test
+  void shouldReturnResource(@TempDir Path directory) throws IOException {
+    URLClassLoader one = createClassLoader(directory.resolve("one"), "one", "one");
+    URLClassLoader two = createClassLoader(directory.resolve("two"), "two", "two");
+    MultiParentClassLoader classLoader = new MultiParentClassLoader(one, two);
+
+    assertResource(classLoader, "one", "one");
+    assertResource(classLoader, "two", "two");
+  }
+
+  @Test
+  void shouldReturnResources(@TempDir Path directory) throws IOException {
+    URLClassLoader one = createClassLoader(directory.resolve("one"), "both", "one");
+    URLClassLoader two = createClassLoader(directory.resolve("two"), "both", "two");
+    MultiParentClassLoader classLoader = new MultiParentClassLoader(one, two);
+
+    Enumeration<URL> both = classLoader.getResources("both");
+    List<String> content = toStrings(both);
+
+    assertThat(content).containsOnly("one", "two");
+  }
+
+  @SuppressWarnings("UnstableApiUsage")
+  private List<String> toStrings(Enumeration<URL> urlEnumeration) throws IOException {
+    List<String> content = new ArrayList<>();
+    while (urlEnumeration.hasMoreElements()) {
+      URL url = urlEnumeration.nextElement();
+      content.add(Resources.toString(url, StandardCharsets.UTF_8));
     }
+    return content;
+  }
 
-    @Override
-    public Object answer(InvocationOnMock invocation) throws Throwable
-    {
-      return clazz;
-    }
-  
+  @SuppressWarnings("UnstableApiUsage")
+  private void assertResource(ClassLoader classLoader, String resource, String content) throws IOException {
+    URL url = classLoader.getResource(resource);
+    assertThat(url).isNotNull();
+    String urlContent = Resources.toString(url, StandardCharsets.UTF_8);
+    assertThat(urlContent).isEqualTo(content);
   }
-  
-  private Enumeration<URL> res(URL... urls){
-    return Collections.enumeration(Arrays.asList(urls));
+
+  private URLClassLoader createClassLoader(Path directory, String resource, String content) throws IOException {
+    return createClassLoader(directory, resource, content.getBytes(StandardCharsets.UTF_8));
   }
-  
+
+  private URLClassLoader createClassLoader(Path directory, String resource, byte[] content) throws IOException {
+    Path file = directory.resolve(resource);
+    Files.createDirectories(file.getParent());
+    Files.write(file, content);
+    return createClassLoader(directory);
+  }
+
+  private URLClassLoader createClassLoader(Path directory) throws MalformedURLException {
+    ClassLoader parent = ClassLoader.getSystemClassLoader().getParent();
+    return new URLClassLoader(new URL[]{directory.toUri().toURL()}, parent);
+  }
+
 }
