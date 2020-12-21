@@ -114,7 +114,7 @@ module.exports = [
       extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"]
     },
     output: {
-      path: path.join(root, "target", "assets"),
+      path: path.join(root, "build", "assets"),
       filename: "[name].bundle.js",
       chunkFilename: "[name].bundle.js"
     },
@@ -190,7 +190,7 @@ module.exports = [
       minimizer: [new OptimizeCSSAssetsPlugin({})]
     },
     output: {
-      path: path.join(root, "target", "assets"),
+      path: path.join(root, "build", "assets"),
       filename: "ui-styles.bundle.js"
     }
   },
@@ -200,7 +200,7 @@ module.exports = [
       polyfills: "./ui-polyfill/src/index.js"
     },
     output: {
-      path: path.resolve(root, "target", "assets"),
+      path: path.resolve(root, "build", "assets"),
       filename: "[name].bundle.js"
     }
   }

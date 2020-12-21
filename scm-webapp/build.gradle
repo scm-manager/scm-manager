@@ -28,12 +28,17 @@ plugins {
   id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.6'
 }
 
+configurations {
+  assets
+}
+
 dependencies {
   implementation platform(project(':'))
 
   corePlugin project(path: ':scm-plugins:scm-git-plugin', configuration: 'smp')
   corePlugin project(path: ':scm-plugins:scm-hg-plugin', configuration: 'smp')
   corePlugin project(path: ':scm-plugins:scm-svn-plugin', configuration: 'smp')
+  assets project(path: ':scm-ui', configuration: 'assets')
 
   implementation project(':scm-core')
   implementation project(':scm-dao-xml')
@@ -136,6 +141,7 @@ dependencies {
 
 war {
   from 'build/war'
+  from project.configurations.assets
   dependsOn 'copy-core-plugins'
 }
 /**

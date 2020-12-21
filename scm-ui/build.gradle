@@ -4,7 +4,7 @@
  * Copyright (c) 2020-present Cloudogu GmbH and Contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
+ * of this software and associated documentation files (the 'Software'), to deal
  * in the Software without restriction, including without limitation the rights
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
@@ -13,7 +13,7 @@
  * The above copyright notice and this permission notice shall be included in all
  * copies or substantial portions of the Software.
  *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * THE SOFTWARE IS PROVIDED 'AS IS', WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
  * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
@@ -30,30 +30,99 @@ node {
     download = true
     version = '14.15.1'
     yarnVersion = '1.22.5'
-    nodeModulesDir = file("${project.rootProject.projectDir}")
+    nodeModulesDir = file('${project.rootProject.projectDir}')
 }
 
 // TODO define inputs and outputs
 
 task typecheck(type: YarnTask) {
   args = ['run', 'typecheck']
+  inputs.files(fileTree(project.projectDir) {
+    include 'ui-*/src/**'
+    include 'ui-*/**/*.js'
+    include 'ui-*/**/*.jsx'
+    include 'ui-*/**/*.ts'
+    include 'ui-*/**/*.tsx'
+  })
+  .withPathSensitivity(PathSensitivity.RELATIVE)
+  outputs.file("build/tmp/typecheck/marker")
   dependsOn('yarn_install')
+  doLast {
+    File directory = new File(project.buildDir, 'tmp/typecheck')
+    directory.mkdirs()
+    File marker = new File(directory, "marker")
+    marker.createNewFile()
+  }
 }
 
 task test(type: YarnTask) {
   args = ['run', 'test']
+  inputs.files(fileTree(project.projectDir) {
+    include 'ui-*/src/**'
+    include 'ui-*/**/*.js'
+    include 'ui-*/**/*.jsx'
+    include 'ui-*/**/*.ts'
+    include 'ui-*/**/*.tsx'
+  })
+  .withPathSensitivity(PathSensitivity.RELATIVE)
+  outputs.dir('build/jest-reports')
   dependsOn('yarn_install')
 }
 
-
-task check(type: YarnTask) {
+task check {
   dependsOn('typecheck', 'test')
 }
 
-task build(type: YarnTask) {
+yarn_install {
+  inputs.files(fileTree(project.projectDir) {
+    include 'ui-*/package.json'
+  })
+  .withPathSensitivity(PathSensitivity.RELATIVE)
+
+  inputs.file(new File(project.rootProject.projectDir, 'package.json'))
+  inputs.file(new File(project.rootProject.projectDir, 'yarn.lock'))
+
+  outputs.dir(new File(project.rootProject.projectDir, 'node_modules'))
+}
+
+task build {
+  dependsOn 'check', 'bundle'
+}
+
+task bundle(type: YarnTask) {
   args = ['run', 'build']
+  inputs.files(fileTree(project.projectDir) {
+    include 'ui-*/src/**'
+    include 'ui-*/**/*.js'
+    include 'ui-*/**/*.jsx'
+    include 'ui-*/**/*.ts'
+    include 'ui-*/**/*.tsx'
+    include 'ui-*/**/*.css'
+    include 'ui-*/**/*.sass'
+    include 'ui-*/**/*.scss'
+
+    exclude '**/*.test.ts'
+    exclude '**/*.test.tsx'
+  })
+  .withPathSensitivity(PathSensitivity.RELATIVE)
+  outputs.dir('build/assets')
   dependsOn('yarn_install')
 }
+
+configurations {
+  assets {
+    canBeConsumed = true
+    canBeResolved = true
+  }
+}
+
+artifacts {
+  assets(project.layout.buildDirectory) {
+    builtBy(build)
+  }
+}
+
+// TODO
 
 task deploy(type: YarnTask) {
   args = ['run', 'deploy', project.version]
