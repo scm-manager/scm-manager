@@ -22,24 +22,41 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'scm'
 
-def includePlugin(String name) {
-  include ":${name}"
-  project(":${name}").projectDir = new File("scm-plugins/${name}")
+plugins {
+  id 'org.scm-manager.smp' version '0.5.1'
 }
 
-include('scm-annotations')
-include('scm-annotation-processor')
-include('scm-core')
-include('scm-test')
-// include('scm-ui')
-includePlugin('scm-git-plugin')
-includePlugin('scm-hg-plugin')
-includePlugin('scm-svn-plugin')
-includePlugin('scm-legacy-plugin')
-includePlugin('scm-integration-test-plugin')
-include('scm-dao-xml')
-include('scm-webapp')
-include('scm-server')
-includeBuild '../gradle-smp-plugin'
+dependencies {
+  implementation('sonia.svnkit:svnkit:1.10.1-scm2') {
+    exclude group: 'org.tmatesoft.svnkit', module: 'trilead-ssh2'
+  }
+  implementation 'sonia.svnkit:svnkit-dav:1.10.1-scm2'
+  testImplementation 'com.github.sdorra:shiro-unit'
+}
+
+scmPlugin {
+  scmVersion = project.version
+  core = true
+  name = 'scm-svn-plugin'
+  displayName = 'Subversion'
+  description = 'Plugin for the version control system Subversion'
+  author = 'Cloudogu GmbH'
+  category = 'Source Code Management'
+
+  openapi {
+    packages = [
+      'sonia.scm.api.v2.resources'
+    ]
+  }
+
+}
+
+/*
+<!--
+SCMSvnDiffGenerator is a copy of an internal SVNKit class, with small changes for SCM-Manger.
+If we refactor the class, it could become very hard to merge it with upstream.
+So we do not want a duplication report for this class.
+-->
+<sonar.cpd.exclusions>\*\*\/SCMSvnDiffGenerator.java</sonar.cpd.exclusions>
+*/

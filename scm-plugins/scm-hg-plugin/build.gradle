@@ -22,24 +22,33 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'scm'
 
-def includePlugin(String name) {
-  include ":${name}"
-  project(":${name}").projectDir = new File("scm-plugins/${name}")
+plugins {
+  id 'org.scm-manager.smp' version '0.5.1'
 }
 
-include('scm-annotations')
-include('scm-annotation-processor')
-include('scm-core')
-include('scm-test')
-// include('scm-ui')
-includePlugin('scm-git-plugin')
-includePlugin('scm-hg-plugin')
-includePlugin('scm-svn-plugin')
-includePlugin('scm-legacy-plugin')
-includePlugin('scm-integration-test-plugin')
-include('scm-dao-xml')
-include('scm-webapp')
-include('scm-server')
-includeBuild '../gradle-smp-plugin'
+dependencies {
+  implementation('com.aragost.javahg:javahg:0.16') {
+    exclude group: 'com.google.guava', module: 'guava'
+    exclude group: 'org.slf4j'
+  }
+  testImplementation 'com.github.sdorra:shiro-unit'
+  testImplementation 'ch.qos.logback:logback-classic'
+}
+
+scmPlugin {
+  scmVersion = project.version
+  core = true
+  name = 'scm-hg-plugin'
+  displayName = 'Mercurial'
+  description = 'Plugin for the version control system Mercurial'
+  author = 'Cloudogu GmbH'
+  category = 'Source Code Management'
+
+  openapi {
+    packages = [
+      'sonia.scm.api.v2.resources'
+    ]
+  }
+
+}

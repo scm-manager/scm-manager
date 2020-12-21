@@ -22,24 +22,27 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'scm'
 
-def includePlugin(String name) {
-  include ":${name}"
-  project(":${name}").projectDir = new File("scm-plugins/${name}")
+plugins {
+  id 'org.scm-manager.smp' version '0.5.1'
 }
 
-include('scm-annotations')
-include('scm-annotation-processor')
-include('scm-core')
-include('scm-test')
-// include('scm-ui')
-includePlugin('scm-git-plugin')
-includePlugin('scm-hg-plugin')
-includePlugin('scm-svn-plugin')
-includePlugin('scm-legacy-plugin')
-includePlugin('scm-integration-test-plugin')
-include('scm-dao-xml')
-include('scm-webapp')
-include('scm-server')
-includeBuild '../gradle-smp-plugin'
+dependencies {
+}
+
+scmPlugin {
+  scmVersion = project.version
+  core = true
+  name = 'scm-integration-test-plugin'
+  displayName = 'Integration Test Support'
+  description = 'Add functions for integration tests. This is not intended for production systems.'
+  author = 'Cloudogu GmbH'
+  category = 'Source Code Management'
+
+  openapi {
+    packages = [
+      'sonia.scm.it.resource'
+    ]
+  }
+
+}
