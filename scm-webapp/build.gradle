@@ -24,11 +24,16 @@
 
 plugins {
   id 'war'
+  id 'org.scm-manager.core-plugins'
   id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.6'
 }
 
 dependencies {
   implementation platform(project(':'))
+
+  corePlugin project(path: ':scm-plugins:scm-git-plugin', configuration: 'smp')
+  corePlugin project(path: ':scm-plugins:scm-hg-plugin', configuration: 'smp')
+  corePlugin project(path: ':scm-plugins:scm-svn-plugin', configuration: 'smp')
 
   implementation project(':scm-core')
   implementation project(':scm-dao-xml')
@@ -129,6 +134,10 @@ dependencies {
   testImplementation 'com.github.sdorra:shiro-unit:1.0.1'
 }
 
+war {
+  from 'build/war'
+  dependsOn 'copy-core-plugins'
+}
 /**
 WTF???
 
