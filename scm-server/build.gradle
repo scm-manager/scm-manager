@@ -22,14 +22,16 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'scm'
+plugins {
+  id 'java-library'
+}
 
-include('scm-annotations')
-include('scm-annotation-processor')
-include('scm-core')
-include('scm-test')
-// include('scm-ui')
-// include('scm-plugins')
-include('scm-dao-xml')
-include('scm-webapp')
-include('scm-server')
+dependencies {
+  api platform(project(':'))
+  
+  implementation 'commons-daemon:commons-daemon:1.2.3'
+  implementation 'org.eclipse.jetty:jetty-server:9.4.35.v20201120'
+  implementation 'org.eclipse.jetty:jetty-webapp:9.4.35.v20201120'
+  // TODO do we need jetty jmx?
+  implementation 'org.eclipse.jetty:jetty-jmx:9.4.35.v20201120'
+}
