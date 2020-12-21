@@ -90,6 +90,9 @@ import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+
+import sonia.scm.TempSCMContextProvider;
+
 //~--- JDK imports ------------------------------------------------------------
 
 /**

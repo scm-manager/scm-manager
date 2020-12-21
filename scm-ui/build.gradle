@@ -22,13 +22,45 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'scm'
+plugins {
+    id 'com.github.node-gradle.node' version '2.2.4'
+}
 
-include('scm-annotations')
-include('scm-annotation-processor')
-include('scm-core')
-include('scm-test')
-// include('scm-ui')
-// include('scm-plugins')
-include('scm-dao-xml')
-include('scm-webapp')
+node {
+    download = true
+    version = '14.15.1'
+    yarnVersion = '1.22.5'
+    nodeModulesDir = file("${project.rootProject.projectDir}")
+}
+
+// TODO define inputs and outputs
+
+task typecheck(type: YarnTask) {
+  args = ['run', 'typecheck']
+  dependsOn('yarn_install')
+}
+
+task test(type: YarnTask) {
+  args = ['run', 'test']
+  dependsOn('yarn_install')
+}
+
+
+task check(type: YarnTask) {
+  dependsOn('typecheck', 'test')
+}
+
+task build(type: YarnTask) {
+  args = ['run', 'build']
+  dependsOn('yarn_install')
+}
+
+task deploy(type: YarnTask) {
+  args = ['run', 'deploy', project.version]
+  dependsOn('yarn_install')
+}
+
+task setVersion(type: YarnTask) {
+  args = ['run', 'set-version', project.version]
+  dependsOn('yarn_install')
+}
