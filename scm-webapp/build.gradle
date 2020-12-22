@@ -25,6 +25,7 @@
 plugins {
   id 'war'
   id 'org.scm-manager.core-plugins'
+  id 'org.scm-manager.serve'
   id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.6'
 }
 
@@ -144,6 +145,18 @@ war {
   from project.configurations.assets
   dependsOn 'copy-core-plugins'
 }
+
+// war without assets for development and livereload
+task 'dev-war' (type: War) {
+  archiveName 'scm-webapp-dev.war'
+  from 'build/war'
+  dependsOn 'copy-core-plugins'
+}
+
+serve {
+  dependsOn 'dev-war'
+}
+
 /**
 WTF???
 

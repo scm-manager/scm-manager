@@ -26,6 +26,10 @@ plugins {
   id 'java-platform'
 }
 
+task('serve') {
+  dependsOn ':scm-ui:yarn_install', ':scm-webapp:serve'
+}
+
 dependencies {
   constraints {
     // lombok

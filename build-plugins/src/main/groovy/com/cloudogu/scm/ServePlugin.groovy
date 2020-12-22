@@ -22,21 +22,28 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'scm'
 
-includeBuild 'build-plugins'
-include 'scm-annotations'
-include 'scm-annotation-processor'
-include 'scm-core'
-include 'scm-test'
-include 'scm-ui'
-include 'scm-plugins:scm-git-plugin'
-include 'scm-plugins:scm-hg-plugin'
-include 'scm-plugins:scm-svn-plugin'
-include 'scm-plugins:scm-legacy-plugin'
-include 'scm-plugins:scm-integration-test-plugin'
-include 'scm-dao-xml'
-include 'scm-webapp'
-include 'scm-server'
+package com.cloudogu.scm
 
-includeBuild '../gradle-smp-plugin'
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import com.moowork.gradle.node.NodeExtension
+
+
+class ServePlugin implements Plugin<Project> {
+
+  void apply(Project project) {
+    project.plugins.apply("com.github.node-gradle.node")
+    def nodeExt = NodeExtension.get(project)
+    nodeExt.setDownload(true)
+    nodeExt.setVersion('14.15.1')
+    nodeExt.setYarnVersion('1.22.5')
+    nodeExt.setNodeModulesDir( project.rootProject.projectDir )
+
+    project.tasks.register('write-server-config', WriteServerConfigTask)
+    project.tasks.register("serve", ServeTask) {
+      dependsOn 'write-server-config', 'yarnSetup'
+    }
+  }
+
+}
