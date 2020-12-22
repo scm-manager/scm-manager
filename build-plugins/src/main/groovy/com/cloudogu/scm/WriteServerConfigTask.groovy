@@ -85,7 +85,8 @@ class WriteServerConfigTask extends DefaultTask {
       stage: 'DEVELOPMENT',
       headerSize: 16384,
       openBrowser: true,
-      warFile: getWarFile().toString()
+      warFile: getWarFile().toString(),
+      livereloadUrl: 'http://localhost:3000'
     ])
   }
 

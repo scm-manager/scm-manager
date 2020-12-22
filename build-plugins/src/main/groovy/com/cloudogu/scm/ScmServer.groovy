@@ -61,6 +61,9 @@ public class ScmServer {
     info('set stage %s', configuration.stage)
     System.setProperty('scm.stage', configuration.stage)
 
+    info('set livereload url', configuration.livereloadUrl)
+    System.setProperty('sonia.scm.ui.proxy', configuration.livereloadUrl)
+
     server = new Server()
     server.addConnector(createServerConnector(server))
     server.setHandler(createScmContext())
