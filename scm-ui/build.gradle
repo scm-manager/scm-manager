@@ -117,9 +117,10 @@ configurations {
 }
 
 artifacts {
-  assets(project.layout.buildDirectory) {
+  assets(project.layout.buildDirectory.dir('webapp')) {
     builtBy(build)
   }
+  assets(project.layout.projectDirectory.dir('ui-webapp/public'))
 }
 
 // TODO
