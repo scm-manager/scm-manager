@@ -24,6 +24,7 @@
 
 plugins {
   id 'java-library'
+  id 'org.scm-manager.build-info'
 }
 
 // TODO
@@ -114,6 +115,11 @@ dependencies {
   // mocking
   testImplementation 'org.mockito:mockito-core'
   testImplementation 'org.mockito:mockito-junit-jupiter'
+}
+
+jar {
+  from project.buildDirectory.dir('info')
+  dependsOn 'build-info'
 }
 
 test {

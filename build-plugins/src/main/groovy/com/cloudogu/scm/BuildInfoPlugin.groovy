@@ -23,42 +23,18 @@
  */
 
 
-plugins {
-  id 'java-gradle-plugin'
-  id 'groovy'
-}
+package com.cloudogu.scm
 
-dependencies {
-  implementation gradleApi()
-  implementation 'com.google.guava:guava:30.0-jre'
-  implementation 'com.github.node-gradle:gradle-node-plugin:2.2.4'
-  implementation 'org.eclipse.jetty:jetty-server:9.4.35.v20201120'
-  implementation 'org.eclipse.jetty:jetty-webapp:9.4.35.v20201120'
-}
+import org.gradle.api.Plugin
+import org.gradle.api.Project
 
-gradlePlugin {
-  // Define the plugin
-  plugins {
-    buildInfo {
-      id = 'org.scm-manager.build-info'
-      implementationClass = 'com.cloudogu.scm.BuildInfoPlugin'
-    }
-    corePlugins {
-      id = 'org.scm-manager.core-plugins'
-      implementationClass = 'com.cloudogu.scm.CorePluginsGradlePlugin'
-    }
-    serve {
-      id = 'org.scm-manager.serve'
-      implementationClass = 'com.cloudogu.scm.ServePlugin'
+class BuildInfoPlugin implements Plugin<Project> {
+
+  void apply(Project project) {
+    project.tasks.register('build-info', BuildInfoTask) {
+      targetDirectory = project.layout.buildDirectory.dir('info')
+      version = project.version
     }
   }
-}
 
-repositories {
-  maven {
-    url "https://packages.scm-manager.org/repository/public/"
-  }
-  maven {
-    url 'https://plugins.gradle.org/m2/'
-  }
 }
