@@ -71,7 +71,7 @@ public class BasicContextProvider implements SCMContextProvider
 
   /** Path to the maven properties file of the scm-core artifact */
   public static final String MAVEN_PROPERTIES =
-    "/META-INF/maven/sonia.scm/scm-core/pom.properties";
+    "/META-INF/scm/build-info.properties";
 
   /** Maven property for the version of the artifact */
   public static final String MAVEN_PROPERTY_VERSION = "version";
