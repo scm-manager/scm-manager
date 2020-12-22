@@ -39,5 +39,6 @@ include 'scm-dao-xml'
 include 'scm-webapp'
 include 'scm-server'
 include 'scm-packaging:unix'
+include 'scm-packaging:windows'
 
 includeBuild '../gradle-smp-plugin'

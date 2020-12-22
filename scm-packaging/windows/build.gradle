@@ -1,0 +1,87 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+import org.gradle.util.VersionNumber
+
+plugins {
+    id "de.undercouch.download" version "4.1.1"
+}
+
+configurations {
+  server
+  webapp
+}
+
+dependencies {
+  server project(':scm-server')
+  webapp project(path: ':scm-webapp', configuration: 'webapp')
+}
+
+// winsw dependency
+def winsw = [
+  name: 'WinSW.NETCore31.x86.exe',
+  version: '2.10.3',
+  checksum: 'd6ad842e104bfb200bca06d6724e3e1fb19d013fa62fa49a21298d2ee9b044b7'
+]
+
+task downloadWinSW(type: Download) {
+  src "https://github.com/winsw/winsw/releases/download/v${winsw.version}/${winsw.name}"
+  dest new File(project.buildDir, 'winsw/scm-server.exe')
+  onlyIfModified true
+}
+
+task verifyWinSW(type: Verify) {
+  src new File(project.buildDir, 'winsw/scm-server.exe')
+  algorithm 'SHA-256'
+  checksum winsw.checksum
+  dependsOn 'downloadWinSW'
+}
+
+task distribution(type: Zip) {
+  VersionNumber version = VersionNumber.parse(project.version)
+
+  archiveName = "windows-${project.version}.zip"
+  into('scm-server') {
+    into('conf') {
+      from 'src/main/fs/conf'
+      include 'server-config.xml'
+      expand([version: version])
+    }
+    from('src/main/fs') {
+      exclude('**/server-config.xml')
+    }
+    into('lib') {
+      from project.configurations.server
+    }
+    into('webapp') {
+      from project.configurations.webapp
+      rename {
+        'scm-webapp.war'
+      }
+    }
+    from 'build/winsw'
+  }
+
+  destinationDir file('build/libs')
+  dependsOn 'verifyWinSW'
+}
