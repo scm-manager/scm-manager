@@ -31,6 +31,10 @@ plugins {
 
 configurations {
   assets
+  webapp {
+    canBeConsumed = true
+    canBeResolved = false
+  }
 }
 
 dependencies {
@@ -144,6 +148,10 @@ war {
   from 'build/war'
   from project.configurations.assets
   dependsOn 'copy-core-plugins'
+}
+
+artifacts {
+  webapp(war)
 }
 
 // war without assets for development and livereload
