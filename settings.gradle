@@ -42,5 +42,6 @@ include 'scm-packaging:unix'
 include 'scm-packaging:windows'
 include 'scm-packaging:deb'
 include 'scm-packaging:rpm'
+include 'scm-packaging:docker'
 
 includeBuild '../gradle-smp-plugin'
