@@ -30,7 +30,6 @@ plugins {
 configurations {
   server
   webapp
-  jsvc
 }
 
 dependencies {
@@ -46,28 +45,26 @@ def createVersion() {
   return version
 }
 
-task distribution(type: Deb) {
+task distribution(type: Rpm) {
   packageName 'scm-server'
-  packageGroup 'devel'
+  packageGroup 'Development/Tools'
   summary 'SCM-Manager Server'
   packageDescription 'The easiest way to share and manage your Git, Mercurial and Subversion repositories'
   version createVersion()
-  arch 'all'
-  priority 'extra'
-  maintainer 'SCM-Team <scm-team@cloudogu.com>'
+  license 'MIT'
+  arch 'NOARCH'
+  os LINUX
   packager 'SCM-Team <scm-team@cloudogu.com>'
-  uploaders 'SCM-Team <scm-team@cloudogu.com>'
   url 'https://scm-manager.org'
 
-  requires 'adduser'
   requires 'procps'
-  requires 'psmisc'
-  requires 'net-tools'
-  recommends 'openjdk-11-jre-headless'
-  recommends 'mercurial'
+  // recommends (weak dependency) is not supported, 
+  // so we define a hard dependencies for java and mercurial
+  requires 'java-11-openjdk-headless'
+  requires 'mercurial'
 
-  preInstallFile file('src/main/scripts/preinst')
-  postInstallFile file('src/main/scripts/postinst')
+  preInstall file('src/main/scripts/before-installation.sh')
+  postInstall file('src/main/scripts/after-installation.sh')
 
   VersionNumber version = VersionNumber.parse(project.version)
 
