@@ -37,20 +37,12 @@ dependencies {
   webapp project(path: ':scm-webapp', configuration: 'webapp')
 }
 
-def createVersion() {
-  def version = project.version
-  if (version.contains('-SNAPSHOT')) {
-    version = version.replace('-SNAPSHOT', new Date().format('yyyyMMddHHmmSS'))
-  }
-  return version
-}
-
 task distribution(type: Rpm) {
   packageName 'scm-server'
   packageGroup 'Development/Tools'
   summary 'SCM-Manager Server'
   packageDescription 'The easiest way to share and manage your Git, Mercurial and Subversion repositories'
-  version createVersion()
+  version expandedVersionWithDot
   license 'MIT'
   arch 'NOARCH'
   os LINUX

@@ -26,6 +26,19 @@ plugins {
   id 'java-platform'
 }
 
+// set build props
+project.ext {
+  timestamp = new Date().format('yyyyMMddHHmmSS')
+  revision = "git rev-parse --short HEAD".execute().text.trim()
+  if (project.version.contains('-SNAPSHOT')) {
+    expandedVersion = project.version.replace('SNAPSHOT', timestamp)
+    expandedVersionWithDot = project.version.replace('-SNAPSHOT', ".${timestamp}")
+  } else {
+    expandedVersion = project.version
+    expandedVersionWithDot = project.version
+  }
+}
+
 task('serve') {
   dependsOn ':scm-ui:yarn_install', ':scm-webapp:serve'
 }
