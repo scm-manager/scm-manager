@@ -26,18 +26,6 @@ plugins {
   id 'java-platform'
 }
 
-// set build props
-project.ext {
-  timestamp = new Date().format('yyyyMMddHHmmSS')
-  revision = "git rev-parse --short HEAD".execute().text.trim()
-  if (project.version.contains('-SNAPSHOT')) {
-    expandedVersion = project.version.replace('SNAPSHOT', timestamp)
-    expandedVersionWithDot = project.version.replace('-SNAPSHOT', ".${timestamp}")
-  } else {
-    expandedVersion = project.version
-    expandedVersionWithDot = project.version
-  }
-}
 
 task('serve') {
   dependsOn ':scm-ui:yarn_install', ':scm-webapp:serve'
@@ -133,4 +121,26 @@ subprojects {
     targetCompatibility = JavaVersion.VERSION_1_8
   }
 
+}
+
+// set build props
+project.ext {
+  timestamp = new Date().format('yyyyMMddHHmmSS')
+  revision = "git rev-parse --short HEAD".execute().text.trim()
+  if (project.version.contains('-SNAPSHOT')) {
+    expandedVersion = project.version.replace('SNAPSHOT', timestamp)
+    expandedVersionWithDot = project.version.replace('-SNAPSHOT', ".${timestamp}")
+    dockerRepository = 'docker.io/cloudogu/scm-manager'
+    String snapshotVersion = revision
+    def buildNumber = System.getenv('BUILD_NUMBER')
+    if (buildNumber != null) {
+      snapshotVersion += "-${buildNumber}"
+    }
+    dockerTag =  version.replace('SNAPSHOT', snapshotVersion)
+  } else {
+    expandedVersion = project.version
+    expandedVersionWithDot = project.version
+    dockerRepository = 'docker.io/scmmanager/scm-manager'
+    dockerTag =  version.replace('SNAPSHOT', snapshotVersion)
+  }
 }

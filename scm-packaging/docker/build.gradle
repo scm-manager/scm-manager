@@ -75,21 +75,15 @@ task distribution(type: DockerBuildImage) {
 def images() {
   def version = project.version
   if (version.contains('-SNAPSHOT')) {
-    String snapshotVersion = revision
-    def buildNumber = System.getenv("BUILD_NUMBER")
-    if (buildNumber != null) {
-      snapshotVersion += "-${buildNumber}"
-    }
-    version = version.replace("SNAPSHOT", snapshotVersion)
     return [
-      "docker.io/cloudogu/scm-manager:${version}"
+      "${dockerRepository}:${dockerTag}"
     ]
   } else {
     // What about patch releases?
     // It is a good idea to push always latest
     return [
-      "docker.io/scmmanager/scm-manager:${version}",
-      'docker.io/scmmanager/scm-manager:latest'
+      "${dockerRepository}:${dockerTag}",
+      "${dockerRepository}:latest"
     ]
   }
 }

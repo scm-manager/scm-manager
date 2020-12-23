@@ -22,27 +22,38 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'scm'
+plugins {
+  id 'org.unbroken-dome.helm' version '1.4.0'
+}
 
-includeBuild 'build-plugins'
-include 'scm-annotations'
-include 'scm-annotation-processor'
-include 'scm-core'
-include 'scm-test'
-include 'scm-ui'
-include 'scm-plugins:scm-git-plugin'
-include 'scm-plugins:scm-hg-plugin'
-include 'scm-plugins:scm-svn-plugin'
-include 'scm-plugins:scm-legacy-plugin'
-include 'scm-plugins:scm-integration-test-plugin'
-include 'scm-dao-xml'
-include 'scm-webapp'
-include 'scm-server'
-include 'scm-packaging:unix'
-include 'scm-packaging:windows'
-include 'scm-packaging:deb'
-include 'scm-packaging:rpm'
-include 'scm-packaging:docker'
-include 'scm-packaging:helm'
 
-includeBuild '../gradle-smp-plugin'
+helm {
+  downloadClient {
+    enabled = true
+    version = '3.4.2'
+  }
+  charts {
+    scmServer {
+      chartName = "scm-manager"
+      chartVersion = expandedVersion
+      version = expandedVersion
+
+      sourceDir = file('src/main/chart')
+      filtering {
+        enabled = true
+        values = [
+          dockerRepository: dockerRepository,
+          dockerTag: dockerTag
+        ]
+      }
+    }
+  }
+}
+
+helmPackageScmServerChart {
+  appVersion = expandedVersion
+}
+
+task distribution {
+  dependsOn 'helmPackageScmServerChart'
+}

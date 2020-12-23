@@ -28,9 +28,9 @@
 
 image:
   # image.repository --  Name of SCM-Manager image
-  repository: ${docker.repository}
+  repository: ${dockerRepository}
   # image.tag -- Tag of SCM-Manager image
-  tag: ${docker.tag}
+  tag: ${dockerTag}
   # image.pullPolicy -- SCM-Manager image pull policy
   pullPolicy: IfNotPresent
 
