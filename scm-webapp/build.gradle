@@ -161,6 +161,12 @@ task 'dev-war' (type: War) {
   dependsOn 'copy-core-plugins'
 }
 
+scmServer {
+  liveReload = true
+  openBrowser = true
+  warFile = file('build/libs/scm-webapp-dev.war')
+}
+
 serve {
   dependsOn 'dev-war'
 }

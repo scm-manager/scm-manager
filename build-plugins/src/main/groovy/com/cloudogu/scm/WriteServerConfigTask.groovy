@@ -33,8 +33,9 @@ import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Classpath
-import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.Internal
+import org.gradle.api.GradleException
 
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
@@ -48,25 +49,15 @@ import groovy.json.JsonOutput
 
 class WriteServerConfigTask extends DefaultTask {
 
-  @Input
-  public String getHome() {
-    if (project.hasProperty('home')) {
-      return project.getProperty('home')
-    }
-    return new File(project.buildDir, 'scm-home').toString()
+  private ScmServerExtension extension
+
+  @Nested
+  ScmServerExtension getExtension() {
+    return extension
   }
 
-  @Input
-  public int getPort() {
-    if (project.hasProperty('port')) {
-      return Integer.parseInt(project.getProperty('port'))
-    }
-    return 8081
-  }
-
-  @InputFile
-  public File getWarFile() {
-    return new File(project.buildDir, 'libs/scm-webapp-dev.war')
+  void setExtension(ScmServerExtension extension) {
+    this.extension = extension
   }
 
   @OutputFile
@@ -76,17 +67,37 @@ class WriteServerConfigTask extends DefaultTask {
 
   @TaskAction
   void execute() {
+    File warFile = extension.getWarFile()
+    if (warFile == null) {
+      Configuration configuration = extension.getConfiguration()
+      if (configuration == null) {
+        throw new GradleException("warFile or configuration must be used")
+      }
+
+      def artificat = configuration.resolvedConfiguration
+        .resolvedArtifacts
+        .find {
+          it.extension == 'war'
+        }
+
+      if (artificat == null) {
+        throw new GradleException("could not find war file in configuration")
+      }
+
+      warFile = artificat.getFile()
+    }
+
     File serverConfig = getServerConfig()
     serverConfig.getParentFile().mkdirs()
     serverConfig.text = JsonOutput.toJson([
-      home: getHome(), 
-      port: getPort(), 
+      home: extension.getHome(), 
+      port: extension.getPort(), 
       contextPath: '/scm',
       stage: 'DEVELOPMENT',
       headerSize: 16384,
-      openBrowser: true,
-      warFile: getWarFile().toString(),
-      livereloadUrl: 'http://localhost:3000'
+      openBrowser: extension.openBrowser,
+      warFile: warFile.toString(),
+      livereloadUrl: extension.liveReload ? 'http://localhost:3000' : null
     ])
   }
 

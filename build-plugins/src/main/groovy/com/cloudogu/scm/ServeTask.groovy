@@ -29,18 +29,72 @@ import com.moowork.gradle.node.yarn.YarnTask
 import org.gradle.api.DefaultTask
 import org.gradle.api.tasks.JavaExec
 import org.gradle.api.tasks.Nested
+import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
+import org.gradle.api.GradleException
 
 class ServeTask extends DefaultTask {
+
+  private boolean frontend = true
+  private boolean waitForCompletion = true
+  private ScmServerExtension extension
+
+  @Nested
+  ScmServerExtension getExtension() {
+    return extension
+  }
+
+  void setExtension(ScmServerExtension extension) {
+    this.extension = extension
+  }
+
+  @Input
+  boolean isFrontend() {
+    return frontend
+  }
+
+  void setFrontend(boolean frontend) {
+    this.frontend = frontend
+  }
+
+  @Input
+  boolean isWaitForCompletion() {
+    return waitForCompletion
+  }
+
+  void setWaitForCompletion(boolean waitForCompletion) {
+    this.waitForCompletion = waitForCompletion
+  }
 
   @TaskAction
   void exec() {
     List<Closure<Void>> actions = new ArrayList<>();
     actions.add(createBackend())
-    actions.add(createFrontend())
-
+    if (frontend) {
+      actions.add(createFrontend())
+    }
     def threads = start(actions)
-    wait(threads)
+    if (waitForCompletion) {
+      wait(threads)
+    } else {
+      waitForPortToBeOpen()
+    }
+  }
+
+  private void waitForPortToBeOpen() {
+    int retries = 180
+    for (int i=0; i<retries; i++) {
+      try {
+        URL urlConnect = new URL("http://localhost:${extension.port}/scm/api/v2");
+        URLConnection conn = (HttpURLConnection) urlConnect.openConnection();
+        if (conn.getResponseCode() == 200) {
+          return
+        }
+      } catch (IOException ex) {
+        Thread.sleep(500)
+      }
+    }
+    throw new GradleException("scm-server not reachable")
   }
 
   private static void wait(List<Thread> threads) {

@@ -33,6 +33,9 @@ import org.eclipse.jetty.server.ServerConnector
 import org.eclipse.jetty.util.component.AbstractLifeCycle
 import org.eclipse.jetty.util.component.LifeCycle
 import org.eclipse.jetty.webapp.WebAppContext
+import org.eclipse.jetty.server.Handler
+import org.eclipse.jetty.server.handler.HandlerList
+import org.eclipse.jetty.server.handler.ShutdownHandler
 
 import java.awt.Desktop
 
@@ -61,12 +64,20 @@ public class ScmServer {
     info('set stage %s', configuration.stage)
     System.setProperty('scm.stage', configuration.stage)
 
-    info('set livereload url', configuration.livereloadUrl)
-    System.setProperty('sonia.scm.ui.proxy', configuration.livereloadUrl)
+    if (!Strings.isNullOrEmpty(configuration.livereloadUrl)) {
+      info('set livereload url', configuration.livereloadUrl)
+      System.setProperty('sonia.scm.ui.proxy', configuration.livereloadUrl)
+    }
 
     server = new Server()
     server.addConnector(createServerConnector(server))
-    server.setHandler(createScmContext())
+
+    HandlerList handlerList = new HandlerList()
+    handlerList.setHandlers([
+      createScmContext(),
+      createShutdownHandler()
+    ] as Handler[])
+    server.setHandler(handlerList)
     server.addLifeCycleListener(new AbstractLifeCycle.AbstractLifeCycleListener() {
       @Override
       void lifeCycleStarted(LifeCycle event) {
@@ -117,6 +128,10 @@ public class ScmServer {
     warContext.setWar(configuration.warFile)
 
     return warContext
+  }
+
+  private ShutdownHandler createShutdownHandler() {
+    return new ShutdownHandler("_shutdown_", true, false)
   }
 
   private ServerConnector createServerConnector(Server server) throws MalformedURLException {

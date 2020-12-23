@@ -33,6 +33,8 @@ import com.moowork.gradle.node.NodeExtension
 class ServePlugin implements Plugin<Project> {
 
   void apply(Project project) {
+    def extension = project.extensions.create("scmServer", ScmServerExtension, project)
+
     project.plugins.apply("com.github.node-gradle.node")
     def nodeExt = NodeExtension.get(project)
     nodeExt.setDownload(true)
@@ -40,8 +42,11 @@ class ServePlugin implements Plugin<Project> {
     nodeExt.setYarnVersion('1.22.5')
     nodeExt.setNodeModulesDir( project.rootProject.projectDir )
 
-    project.tasks.register('write-server-config', WriteServerConfigTask)
+    project.tasks.register('write-server-config', WriteServerConfigTask) {
+      it.extension = extension
+    }
     project.tasks.register("serve", ServeTask) {
+      it.extension = extension
       dependsOn 'write-server-config', 'yarnSetup'
     }
   }

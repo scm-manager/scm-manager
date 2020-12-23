@@ -22,28 +22,31 @@
  * SOFTWARE.
  */
 
-rootProject.name = 'scm'
 
-includeBuild 'build-plugins'
-include 'scm-annotations'
-include 'scm-annotation-processor'
-include 'scm-core'
-include 'scm-test'
-include 'scm-ui'
-include 'scm-plugins:scm-git-plugin'
-include 'scm-plugins:scm-hg-plugin'
-include 'scm-plugins:scm-svn-plugin'
-include 'scm-plugins:scm-legacy-plugin'
-include 'scm-plugins:scm-integration-test-plugin'
-include 'scm-dao-xml'
-include 'scm-webapp'
-include 'scm-server'
-include 'scm-packaging:unix'
-include 'scm-packaging:windows'
-include 'scm-packaging:deb'
-include 'scm-packaging:rpm'
-include 'scm-packaging:docker'
-include 'scm-packaging:helm'
-include 'scm-it'
+package com.cloudogu.scm
 
-includeBuild '../gradle-smp-plugin'
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+
+class IntegrationTestPlugin implements Plugin<Project> {
+
+  void apply(Project project) {      
+    def extension = project.extensions.create("scmServer", ScmServerExtension, project)
+
+    project.tasks.register('write-server-config', WriteServerConfigTask) {
+      it.extension = extension
+    }
+
+    project.tasks.register("startScmServer", ServeTask) {
+      it.extension = extension
+      it.waitForCompletion = false
+      it.frontend = false
+      dependsOn 'write-server-config'
+    }
+
+    project.tasks.register("stopScmServer", StopScmServer) {
+      it.extension = extension
+    }
+  }
+
+}
