@@ -40,5 +40,6 @@ include 'scm-webapp'
 include 'scm-server'
 include 'scm-packaging:unix'
 include 'scm-packaging:windows'
+include 'scm-packaging:deb'
 
 includeBuild '../gradle-smp-plugin'

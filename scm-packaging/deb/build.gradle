@@ -1,0 +1,133 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+import org.gradle.util.VersionNumber
+
+plugins {
+  id "nebula.ospackage" version "8.4.1"
+}
+
+configurations {
+  server
+  webapp
+  jsvc
+}
+
+dependencies {
+  server project(':scm-server')
+  webapp project(path: ':scm-webapp', configuration: 'webapp')
+}
+
+task distribution(type: Deb) {
+  packageName 'scm-server'
+  packageGroup 'devel'
+  packageDescription 'The easiest way to share and manage your Git, Mercurial and Subversion repositories'
+  version project.version
+  arch 'all'
+  priority 'extra'
+  maintainer 'SCM-Team <scm-team@cloudogu.com>'
+  packager 'SCM-Team <scm-team@cloudogu.com>'
+  uploaders 'SCM-Team <scm-team@cloudogu.com>'
+  url 'https://scm-manager.org'
+
+  requires 'adduser'
+  requires 'procps'
+  requires 'psmisc'
+  requires 'net-tools'
+  recommends 'openjdk-11-jre-headless'
+  recommends 'mercurial'
+
+  preInstallFile file('src/main/deb/preinst')
+  postInstallFile file('src/main/deb/postinst')
+
+  VersionNumber version = VersionNumber.parse(project.version)
+
+  from('src/main/bin') {
+    into '/opt/scm-server/bin'
+    user 'root'
+    permissionGroup 'scm'
+    fileMode 0750
+  }
+
+  from('src/main/fs/etc/default/scm-server') {
+    fileType CONFIG | NOREPLACE
+    into '/etc/default'
+    user 'root'
+    permissionGroup 'scm'
+    fileMode 0640
+  }
+
+  from('src/main/fs/etc/scm') {
+    fileType CONFIG | NOREPLACE
+    into '/etc/scm'
+    user 'root'
+    permissionGroup 'scm'
+    fileMode 0640
+    expand([version: version])
+  }
+
+  from('src/main/fs/etc/systemd') {
+    into '/etc/systemd'
+    user 'root'
+    permissionGroup 'root'
+    fileMode 0644
+  }
+
+  from('src/main/fs/opt') {
+    into '/opt'
+    user 'root'
+    permissionGroup 'scm'
+    fileMode 0644
+  }
+
+  from(project.configurations.server) {
+    into '/opt/scm-server/lib'
+    user 'root'
+    permissionGroup 'scm'
+    fileMode 0644
+  }
+
+  from(project.configurations.webapp) {
+    into '/opt/scm-server/var/webapp'
+    user 'root'
+    permissionGroup 'scm'
+    fileMode 0644
+    rename {
+      'scm-webapp.war'
+    }
+  }
+
+  ['/run/scm', '/var/log/scm', '/var/lib/scm', '/var/cache/scm', '/var/cache/scm/work'].each { dir ->
+    from('src/main/emptydir') {
+      into dir
+      user 'scm'
+      permissionGroup 'scm'
+      fileMode 0750
+      createDirectoryEntry true
+    }
+  }
+
+  link '/opt/scm-server/var/log', '/var/log/scm'
+  link '/opt/scm-server/conf', '/etc/scm'
+  link '/opt/scm-server/work', '/var/cache/scm/work'
+}
