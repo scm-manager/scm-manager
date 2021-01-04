@@ -45,6 +45,7 @@ scmPlugin {
   description = 'Plugin for the version control system Subversion'
   author = 'Cloudogu GmbH'
   category = 'Source Code Management'
+  avatarUrl = '/images/svn-logo.gif'
 
   openapi {
     packages = [

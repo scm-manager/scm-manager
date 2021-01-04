@@ -44,6 +44,7 @@ scmPlugin {
   description = 'Plugin for the version control system Mercurial'
   author = 'Cloudogu GmbH'
   category = 'Source Code Management'
+  avatarUrl = '/images/hg-logo.png'
 
   openapi {
     packages = [

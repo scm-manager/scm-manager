@@ -46,6 +46,7 @@ scmPlugin {
   description = 'Plugin for the version control system Git'
   author = 'Cloudogu GmbH'
   category = 'Source Code Management'
+  avatarUrl = '/images/git-logo.png'
 
   openapi {
     packages = [
