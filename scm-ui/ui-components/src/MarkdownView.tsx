@@ -33,6 +33,7 @@ import { create } from "./MarkdownLinkRenderer";
 import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
 import Notification from "./Notification";
 import { createTransformer } from "./remarkChangesetShortLinkParser";
+import MarkdownCodeRenderer from "./MarkdownCodeRenderer";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -81,13 +82,13 @@ const MarkdownErrorNotification: FC = () => {
 class MarkdownView extends React.Component<Props, State> {
   static defaultProps: Partial<Props> = {
     enableAnchorHeadings: false,
-    skipHtml: false
+    skipHtml: false,
   };
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      contentRef: null
+      contentRef: null,
     };
   }
 
@@ -137,12 +138,12 @@ class MarkdownView extends React.Component<Props, State> {
     }
 
     if (!rendererList.code) {
-      rendererList.code = SyntaxHighlighter;
+      rendererList.code = MarkdownCodeRenderer;
     }
 
     return (
       <ErrorBoundary fallback={MarkdownErrorNotification}>
-        <div ref={el => this.setState({ contentRef: el })}>
+        <div ref={(el) => this.setState({ contentRef: el })}>
           <Markdown
             className="content is-word-break"
             skipHtml={skipHtml}
