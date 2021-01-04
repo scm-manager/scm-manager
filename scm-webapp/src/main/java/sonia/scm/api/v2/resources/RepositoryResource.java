@@ -332,6 +332,11 @@ public class RepositoryResource {
     return resourceProvider.getAnnotateResource();
   }
 
+  @Path("export/")
+  public RepositoryExportResource export() {
+    return resourceProvider.getRepositoryExportResource();
+  }
+
   private Supplier<Repository> loadBy(String namespace, String name) {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     return () -> Optional.ofNullable(manager.get(namespaceAndName)).orElseThrow(() -> notFound(entity(namespaceAndName)));

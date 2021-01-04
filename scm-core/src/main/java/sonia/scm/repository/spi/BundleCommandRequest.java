@@ -89,7 +89,7 @@ public final class BundleCommandRequest
    *
    * @return {@link ByteSink} archive.
    */
-  ByteSink getArchive()
+  public ByteSink getArchive()
   {
     return archive;
   }

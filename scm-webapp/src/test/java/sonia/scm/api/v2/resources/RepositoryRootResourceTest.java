@@ -54,6 +54,7 @@ import sonia.scm.repository.RepositoryInitializer;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.RepositoryType;
+import sonia.scm.repository.api.BundleCommandBuilder;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullCommandBuilder;
@@ -167,6 +168,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
     super.repositoryImportResource = new RepositoryImportResource(repositoryManager, dtoToRepositoryMapper, serviceFactory, resourceLinks, eventBus);
+    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, resourceLinks, eventBus);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
@@ -709,6 +711,36 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     assertEquals(SC_NO_CONTENT, response.getStatus());
     verify(repositoryManager).unarchive(repository);
   }
+
+  @Test
+  public void shouldExportRepository() throws URISyntaxException {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = mockRepository(namespace, name);
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
+
+    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
+    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/svn");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_OK, response.getStatus());
+    verify(service).getBundleCommand();
+  }
+
+  private void mockRepositoryHandler(Set<Command> cmds) {
+    RepositoryHandler repositoryHandler = mock(RepositoryHandler.class);
+    RepositoryType repositoryType = mock(RepositoryType.class);
+    when(manager.getHandler("svn")).thenReturn(repositoryHandler);
+    when(repositoryHandler.getType()).thenReturn(repositoryType);
+    when(repositoryType.getSupportedCommands()).thenReturn(cmds);
+  }
+
 
   private PageResult<Repository> createSingletonPageResult(Repository repository) {
     return new PageResult<>(singletonList(repository), 0);
