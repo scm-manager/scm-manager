@@ -56,9 +56,9 @@ dependencies {
     api 'org.jboss.resteasy:resteasy-core:4.5.8.Final'
 
     // json
-    api 'com.fasterxml.jackson.core:jackson-core:2.11.3'
-    api 'com.fasterxml.jackson.core:jackson-annotations:2.11.3'
-    api 'com.fasterxml.jackson.core:jackson-databind:2.11.3'
+    api 'com.fasterxml.jackson.core:jackson-core:2.12.0'
+    api 'com.fasterxml.jackson.core:jackson-annotations:2.12.0'
+    api 'com.fasterxml.jackson.core:jackson-databind:2.12.0'
 
     // hypermedia
     api 'de.otto.edison:edison-hal:2.1.0'
