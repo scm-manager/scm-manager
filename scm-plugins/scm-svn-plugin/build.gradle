@@ -53,6 +53,13 @@ scmPlugin {
     ]
   }
 
+  sonar {
+    // SCMSvnDiffGenerator is a copy of an internal SVNKit class, with small changes for SCM-Manger.
+    // If we refactor the class, it could become very hard to merge it with upstream.
+    // So we do not want a duplication report for this class.
+    property 'sonar.cpd.exclusions', '**/SCMSvnDiffGenerator.java'
+  }
+
 }
 
 task testJar(type: Jar) {
@@ -70,12 +77,3 @@ configurations {
 artifacts {
   tests(testJar)
 }
-
-/*
-<!--
-SCMSvnDiffGenerator is a copy of an internal SVNKit class, with small changes for SCM-Manger.
-If we refactor the class, it could become very hard to merge it with upstream.
-So we do not want a duplication report for this class.
--->
-<sonar.cpd.exclusions>\*\*\/SCMSvnDiffGenerator.java</sonar.cpd.exclusions>
-*/
