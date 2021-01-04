@@ -35,6 +35,7 @@ import RepositoryDangerZone from "./RepositoryDangerZone";
 import { getLinks } from "../../modules/indexResource";
 import { urls } from "@scm-manager/ui-components";
 import { TranslationProps, withTranslation } from "react-i18next";
+import ExportRepository from "./ExportRepository";
 
 type Props = TranslationProps &
   RouteComponentProps & {
@@ -82,6 +83,7 @@ class EditRepo extends React.Component<Props> {
             this.props.modifyRepo(repo, this.repoModified);
           }}
         />
+        <ExportRepository repository={this.props.repository}/>
         <ExtensionPoint name="repo-config.route" props={extensionProps} renderAll={true} />
         <RepositoryDangerZone repository={repository} indexLinks={indexLinks} />
       </>

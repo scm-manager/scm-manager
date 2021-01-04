@@ -242,6 +242,14 @@
     "createButton": "Create Repository",
     "importButton": "Import Repository"
   },
+  "export": {
+    "subtitle": "Repository Export",
+    "compressed": {
+      "label": "Compress",
+      "helpText": "Compress the export dump size to reduce the download size."
+    },
+    "exportButton": "Export Repository"
+  },
   "sources": {
     "fileTree": {
       "name": "Name",

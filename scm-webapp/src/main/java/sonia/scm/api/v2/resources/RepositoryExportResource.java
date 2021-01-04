@@ -54,15 +54,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.util.Set;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 
 public class RepositoryExportResource {
 
@@ -118,7 +114,7 @@ public class RepositoryExportResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  public Response export(@Context UriInfo uriInfo,
+  public Response exportRepository(@Context UriInfo uriInfo,
                          @PathParam("namespace") String namespace,
                          @PathParam("name") String name,
                          @PathParam("type") String type,
@@ -131,7 +127,20 @@ public class RepositoryExportResource {
     checkSupport(repositoryType, Command.BUNDLE);
 
     logger.info("start {} export for repository {}/{}", repositoryType, namespace, name);
-    StreamingOutput output = exportRepositoryAsOutputStream(repository);
+//    if (compressed) {
+//      exportRepositoryCompressed(repository);
+//    }
+    return exportRepository(repository);
+  }
+
+  private Response exportRepository(Repository repository) {
+    StreamingOutput output = os -> {
+      try (RepositoryService service = serviceFactory.create(repository)) {
+        service.getBundleCommand().bundle(os);
+      } catch (IOException e) {
+        throw new InternalRepositoryException(repository, "repository export failed", e);
+      }
+    };
 
     return Response
       .ok(output)
@@ -139,27 +148,56 @@ public class RepositoryExportResource {
       .build();
   }
 
-  private StreamingOutput exportRepositoryAsOutputStream(Repository repository) {
-    return os -> {
-      try (RepositoryService service = serviceFactory.create(repository)) {
-        service.getBundleCommand().bundle(os);
-      } catch (IOException e) {
-        throw new InternalRepositoryException(repository, "repository export failed", e);
-      }
-    };
-  }
-
-  private StreamingOutput exportRepositoryAsZippedOutputStream(Repository repository) {
-    return os -> {
-      try (RepositoryService service = serviceFactory.create(repository)) {
-        service.getBundleCommand().bundle(os);
-
-
-      } catch (IOException e) {
-        throw new InternalRepositoryException(repository, "repository export failed", e);
-      }
-    };
-  }
+//  private Response exportRepositoryCompressed(Repository repository) {
+//    StreamingOutput output = os -> {
+//      try (RepositoryService service = serviceFactory.create(repository);
+//           OutputStream fOut = Files.newOutputStream(Paths.get("temp/export"));
+//           BufferedOutputStream buffOut = new BufferedOutputStream(fOut);
+//           GzipCompressorOutputStream gzOut = new GzipCompressorOutputStream(buffOut);
+//           TarArchiveOutputStream tOut = new TarArchiveOutputStream(gzOut)) {
+//
+//        service.getBundleCommand().bundle(os);
+//        createTarArchiveEntry(repository.getName(), os.toString(), tOut);
+//
+//        tOut.finish();
+//      } catch (IOException e) {
+//        throw new InternalRepositoryException(repository, "repository export failed", e);
+//      }
+//    };
+//    return Response
+//      .ok(output)
+//      .header("content-disposition", String.format("attachment; filename = %s-%s.tar.gz", repository.getId(), repository.getName()))
+//      .build();
+//  }
+//
+//  private static void createTarArchiveEntry(String fileName,
+//                                            String data,
+//                                            TarArchiveOutputStream tOut)
+//    throws IOException {
+//
+//    byte[] dataInBytes = data.getBytes();
+//
+//    // create a byte[] input stream
+//    ByteArrayInputStream baOut1 = new ByteArrayInputStream(dataInBytes);
+//
+//    TarArchiveEntry tarEntry = new TarArchiveEntry(fileName);
+//
+//    // need defined the file size, else error
+//    tarEntry.setSize(dataInBytes.length);
+//    // tarEntry.setSize(baOut1.available()); alternative
+//
+//    tOut.putArchiveEntry(tarEntry);
+//
+//    // copy ByteArrayInputStream to TarArchiveOutputStream
+//    byte[] buffer = new byte[1024];
+//    int len;
+//    while ((len = baOut1.read(buffer)) > 0) {
+//      tOut.write(buffer, 0, len);
+//    }
+//
+//    tOut.closeArchiveEntry();
+//
+//  }
 
   /**
    * Check repository type for support for the given command.
