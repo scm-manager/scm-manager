@@ -37,8 +37,6 @@ import Title from "./layout/Title";
 import { Subtitle } from "./layout";
 import { MemoryRouter } from "react-router-dom";
 import { Binder, BinderContext } from "@scm-manager/ui-extensions";
-import ChangesetRow from "./repos/changesets/ChangesetRow";
-import repository from "./__resources__/repository";
 
 const Spacing = styled.div`
   padding: 2em;

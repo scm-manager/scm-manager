@@ -27,7 +27,6 @@ import { RouteComponentProps, withRouter } from "react-router-dom";
 import Markdown from "react-markdown/with-html";
 import { binder } from "@scm-manager/ui-extensions";
 import ErrorBoundary from "./ErrorBoundary";
-import SyntaxHighlighter from "./SyntaxHighlighter";
 import MarkdownHeadingRenderer from "./MarkdownHeadingRenderer";
 import { create } from "./MarkdownLinkRenderer";
 import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
