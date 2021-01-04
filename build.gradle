@@ -26,86 +26,87 @@ plugins {
   id 'java-platform'
 }
 
-
 task('serve') {
   dependsOn ':scm-ui:yarn_install', ':scm-webapp:serve'
 }
 
+apply from: rootProject.file( 'gradle/dependencies.gradle' )
+
 dependencies {
   constraints {
     // lombok
-    api 'org.projectlombok:lombok:1.18.10'
+    api libraries.lombok
 
     // servlet api
-    api 'javax.servlet:javax.servlet-api:3.1.0'
+    api libraries.servletApi
 
     // logging
-    api 'org.slf4j:slf4j-api:1.7.30'
-    api 'org.slf4j:jcl-over-slf4j:1.7.30'
-    api 'ch.qos.logback:logback-classic:1.2.3'
+    api libraries.slf4jApi
+    api libraries.slf4jJcl
+    api libraries.logback
 
     // injection
-    api 'com.google.inject:guice:4.2.3'
-    api 'com.google.inject.extensions:guice-multibindings:4.2.3'
-    api 'com.google.inject.extensions:guice-servlet:4.2.3'
-    api 'com.google.inject.extensions:guice-throwingproviders:4.2.3'
-    api 'com.google.inject.extensions:guice-assistedinject:4.2.3'
+    api libraries.guice
+    api libraries.guiceMultibindings
+    api libraries.guiceServlet
+    api libraries.guiceThrowingproviders
+    api libraries.guiceAssistedinject
 
     // rest api
-    api 'javax.ws.rs:javax.ws.rs-api:2.1.1'
-    api 'org.jboss.resteasy:resteasy-core:4.5.8.Final'
+    api libraries.jaxRs
+    api libraries.resteasyCore
 
     // json
-    api 'com.fasterxml.jackson.core:jackson-core:2.12.0'
-    api 'com.fasterxml.jackson.core:jackson-annotations:2.12.0'
-    api 'com.fasterxml.jackson.core:jackson-databind:2.12.0'
+    api libraries.jacksonCore
+    api libraries.jacksonAnnotations
+    api libraries.jacksonDatabind
 
     // hypermedia
-    api 'de.otto.edison:edison-hal:2.1.0'
+    api libraries.edison
 
     // dto mapping
-    api 'org.mapstruct:mapstruct-jdk8:1.3.1.Final'
-    api 'org.mapstruct:mapstruct-processor:1.3.1.Final'
+    api libraries.mapstruct
+    api libraries.mapstructProcessor
 
     // events
-    api 'com.github.legman:core:1.6.2'
+    api libraries.legman
 
     // xml binding
-    api 'jakarta.xml.bind:jakarta.xml.bind-api:2.3.3'
-    api 'org.glassfish.jaxb:jaxb-runtime:2.3.3'
+    api libraries.jaxbApi
+    api libraries.jaxbRuntime
 
     // validation
-    api 'org.hibernate.validator:hibernate-validator:6.1.6.Final'
-    api 'javax.el:javax.el-api:3.0.0'
-    api 'org.glassfish:javax.el:3.0.1-b11'
+    api libraries.validator
+    api libraries.elApi
+    api libraries.elRuntime
 
     // utils
-    api 'com.google.guava:guava:30.0-jre'
-    api 'commons-lang:commons-lang:2.6'
+    api libraries.guava
+    api libraries.commonsLang
 
     // security
-    api 'org.apache.shiro:shiro-core:1.7.0'
-    api 'com.github.sdorra:ssp-lib:1.3.0'
-    api 'com.github.sdorra:ssp-processor:1.3.0'
-    api 'com.github.sdorra:shiro-unit:1.0.1'
+    api libraries.shiroCore
+    api libraries.ssp
+    api libraries.sspProcessor
+    api libraries.shiroUnit
 
     // tests
-    api 'org.junit.jupiter:junit-jupiter-api:5.7.0'
-    api 'org.junit.jupiter:junit-jupiter-params:5.7.0'
-    api 'org.junit.jupiter:junit-jupiter-engine:5.7.0'
+    api libraries.junitJupiterApi
+    api libraries.junitJupiterParams
+    api libraries.junitJupiterEngine
 
     // junit 4 support
-    api 'org.junit.vintage:junit-vintage-engine:5.7.0'
-    api 'junit:junit:4.13.1'
+    api libraries.junitVintageEngine
+    api libraries.junit
 
     // assertions
-    api 'org.hamcrest:hamcrest-core:2.1'
-    api 'org.hamcrest:hamcrest-library:2.1'
-    api 'org.assertj:assertj-core:3.18.1'
+    api libraries.hamcrestCore
+    api libraries.hamcrestLibrary
+    api libraries.assertj
 
     // mocking
-    api 'org.mockito:mockito-core:3.6.28'
-    api 'org.mockito:mockito-junit-jupiter:3.6.28'
+    api libraries.mockitoCore
+    api libraries.mockitoJunitJupiter
   }
 }
 
@@ -121,6 +122,7 @@ subprojects {
     targetCompatibility = JavaVersion.VERSION_1_8
   }
 
+  apply from: rootProject.file( 'gradle/dependencies.gradle' )
 }
 
 // set build props

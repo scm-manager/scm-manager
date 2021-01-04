@@ -27,6 +27,6 @@ plugins {
 }
 
 dependencies {
-  api platform(project(":"))
-  implementation 'com.google.inject:guice'
+  api platform(project(':'))
+  implementation libraries.guice
 }

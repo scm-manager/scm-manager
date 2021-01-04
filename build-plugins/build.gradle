@@ -28,12 +28,15 @@ plugins {
   id 'groovy'
 }
 
+apply from: file( '../gradle/dependencies.gradle' )
+
 dependencies {
   implementation gradleApi()
-  implementation 'com.google.guava:guava:30.0-jre'
   implementation 'com.github.node-gradle:gradle-node-plugin:2.2.4'
-  implementation 'org.eclipse.jetty:jetty-server:9.4.35.v20201120'
-  implementation 'org.eclipse.jetty:jetty-webapp:9.4.35.v20201120'
+  
+  implementation libraries.guava
+  implementation libraries.jettyServer
+  implementation libraries.jettyWebapp
 }
 
 gradlePlugin {

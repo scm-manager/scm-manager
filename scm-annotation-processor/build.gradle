@@ -31,18 +31,18 @@ dependencies {
   implementation project(':scm-annotations')
 
   // injection
-  implementation 'com.google.inject:guice'
+  implementation libraries.guice
 
   // rest api
-  implementation 'javax.ws.rs:javax.ws.rs-api'
+  implementation libraries.jaxRs
 
   // events
-  implementation 'com.github.legman:core'
+  implementation libraries.legman
 
   // utils
-  implementation 'com.google.guava:guava'
+  implementation libraries.guava
 
   // service registration
-  compileOnly 'org.kohsuke.metainf-services:metainf-services:1.8'
-  annotationProcessor 'org.kohsuke.metainf-services:metainf-services:1.8'
+  compileOnly libraries.metainfServices
+  annotationProcessor libraries.metainfServices
 }

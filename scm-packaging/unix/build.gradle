@@ -32,7 +32,7 @@ configurations {
 dependencies {
   server project(':scm-server')
   webapp project(path: ':scm-webapp', configuration: 'webapp')
-  jsvc 'commons-daemon:commons-daemon-native:1.1.0@tar.gz'
+  jsvc libraries.jsvc
 }
 
 task distribution(type: Tar) {

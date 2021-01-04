@@ -33,9 +33,8 @@ dependencies {
   testImplementation project(':scm-test')
 
   // lombok
-  compileOnly 'org.projectlombok:lombok'
-  // TODO version from parent
-  annotationProcessor 'org.projectlombok:lombok:1.18.10'
+  compileOnly libraries.lombok
+  annotationProcessor libraries.lombok
 }
 
 test {

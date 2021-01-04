@@ -33,6 +33,6 @@ rebel.xml
 # vagrant
 .vagrant
 
-
 .gradle
+.gradletasknamecache
 **/build

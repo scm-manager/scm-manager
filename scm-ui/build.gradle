@@ -27,10 +27,10 @@ plugins {
 }
 
 node {
-    download = true
-    version = '14.15.1'
-    yarnVersion = '1.22.5'
-    nodeModulesDir = file(project.rootProject.projectDir)
+  download = true
+  version = nodeVersion
+  yarnVersion = yarnVersion
+  nodeModulesDir = file(project.rootProject.projectDir)
 }
 
 // TODO define inputs and outputs
@@ -45,7 +45,7 @@ task typecheck(type: YarnTask) {
     include 'ui-*/**/*.tsx'
   })
   .withPathSensitivity(PathSensitivity.RELATIVE)
-  outputs.file("build/tmp/typecheck/marker")
+  outputs.file('build/tmp/typecheck/marker')
   dependsOn('yarn_install')
   doLast {
     File directory = new File(project.buildDir, 'tmp/typecheck')

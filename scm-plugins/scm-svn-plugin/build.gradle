@@ -27,12 +27,14 @@ plugins {
   id 'org.scm-manager.smp' version '0.5.1'
 }
 
+def svnkitVersion = '1.10.1-scm2'
+
 dependencies {
-  implementation('sonia.svnkit:svnkit:1.10.1-scm2') {
+  implementation("sonia.svnkit:svnkit:${svnkitVersion}") {
     exclude group: 'org.tmatesoft.svnkit', module: 'trilead-ssh2'
   }
-  implementation 'sonia.svnkit:svnkit-dav:1.10.1-scm2'
-  testImplementation 'com.github.sdorra:shiro-unit'
+  implementation "sonia.svnkit:svnkit-dav:${svnkitVersion}"
+  testImplementation libraries.shiroUnit
 }
 
 scmPlugin {

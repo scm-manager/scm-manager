@@ -29,9 +29,9 @@ plugins {
 dependencies {
   api platform(project(':'))
   
-  implementation 'commons-daemon:commons-daemon:1.2.3'
-  implementation 'org.eclipse.jetty:jetty-server:9.4.35.v20201120'
-  implementation 'org.eclipse.jetty:jetty-webapp:9.4.35.v20201120'
+  implementation libraries.commonsDaemon
+  implementation libraries.jettyServer
+  implementation libraries.jettyWebapp
   // TODO do we need jetty jmx?
-  implementation 'org.eclipse.jetty:jetty-jmx:9.4.35.v20201120'
+  implementation libraries.jettyJmx
 }

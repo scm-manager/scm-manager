@@ -1,0 +1,165 @@
+ext {
+  slf4jVersion = '1.7.30'
+  guiceVersion = '4.2.3'
+  resteasyVersion = '4.5.8.Final'
+
+  // TODO upgrade to 2.12.0, but this breaks openapi spec generation
+  jacksonVersion = '2.11.3'
+
+  mapstructVersion = '1.3.1.Final'
+  jaxbVersion = '2.3.3'
+  shiroVersion = '1.7.0'
+  sspVersion = '1.3.0'
+  jjwtVersion = '0.11.2'
+  bouncycastleVersion = '1.67'
+  jettyVersion = '9.4.35.v20201120'
+
+  junitJupiterVersion = '5.7.0'
+  hamcrestVersion = '2.1'
+  mockitoVersion = '3.6.28'
+  jerseyClientVersion = '1.19.4'
+
+  nodeVersion = '14.15.1'
+  yarnVersion = '1.22.5'
+
+  libraries = [
+    // lombok
+    lombok: 'org.projectlombok:lombok:1.18.10',
+
+    // servlet api
+    servletApi: 'javax.servlet:javax.servlet-api:3.1.0',
+
+    // logging
+    slf4jApi: "org.slf4j:slf4j-api:${slf4jVersion}",
+    slf4jJcl: "org.slf4j:jcl-over-slf4j:${slf4jVersion}",
+    logback: 'ch.qos.logback:logback-classic:1.2.3',
+
+    // injection
+    guice: "com.google.inject:guice:${guiceVersion}",
+    guiceMultibindings: "com.google.inject.extensions:guice-multibindings:${guiceVersion}",
+    guiceServlet: "com.google.inject.extensions:guice-servlet:${guiceVersion}",
+    guiceThrowingproviders: "com.google.inject.extensions:guice-throwingproviders:${guiceVersion}",
+    guiceAssistedinject: "com.google.inject.extensions:guice-assistedinject:${guiceVersion}",
+
+    // rest api
+    jaxRs: 'javax.ws.rs:javax.ws.rs-api:2.1.1',
+    resteasyCore: "org.jboss.resteasy:resteasy-core:${resteasyVersion}",
+    resteasyJaxbProvider: "org.jboss.resteasy:resteasy-jaxb-provider:${resteasyVersion}",
+    resteasyJackson2Provider: "org.jboss.resteasy:resteasy-jackson2-provider:${resteasyVersion}",
+    resteasyMultiartProvider: "org.jboss.resteasy:resteasy-multipart-provider:${resteasyVersion}",
+    resteasyGuice: "org.jboss.resteasy:resteasy-guice:${resteasyVersion}",
+    resteasyServletInitializer: "org.jboss.resteasy:resteasy-servlet-initializer:${resteasyVersion}",
+    resteasyValidatorProvider: "org.jboss.resteasy:resteasy-validator-provider:${resteasyVersion}",
+
+    // json
+    jacksonCore: "com.fasterxml.jackson.core:jackson-core:${jacksonVersion}",
+    jacksonAnnotations: "com.fasterxml.jackson.core:jackson-annotations:${jacksonVersion}",
+    jacksonDatabind: "com.fasterxml.jackson.core:jackson-databind:${jacksonVersion}",
+    jacksonJaxbAnnotations: "com.fasterxml.jackson.module:jackson-module-jaxb-annotations:${jacksonVersion}",
+    jacksonJaxRsBase: "com.fasterxml.jackson.jaxrs:jackson-jaxrs-base:${jacksonVersion}",
+    jacksonJaxRsJsonProvider: "com.fasterxml.jackson.jaxrs:jackson-jaxrs-json-provider:${jacksonVersion}",
+    jacksonDatatypeJdk8: "com.fasterxml.jackson.datatype:jackson-datatype-jdk8:${jacksonVersion}",
+    jacksonDatatypeJsr310: "com.fasterxml.jackson.datatype:jackson-datatype-jsr310:${jacksonVersion}",
+
+    // hypermedia
+    edison: 'de.otto.edison:edison-hal:2.1.0',
+
+    // openapi
+    swaggerJaxRs: 'io.swagger.core.v3:swagger-jaxrs2:2.1.6',
+
+    // dto mapping
+    mapstruct: "org.mapstruct:mapstruct-jdk8:${mapstructVersion}",
+    mapstructProcessor: "org.mapstruct:mapstruct-processor:${mapstructVersion}",
+
+    // events
+    legman: 'com.github.legman:core:1.6.2',
+
+    // xml binding
+    jaxbApi: "jakarta.xml.bind:jakarta.xml.bind-api:${jaxbVersion}",
+    jaxbRuntime: "org.glassfish.jaxb:jaxb-runtime:${jaxbVersion}",
+
+    // validation
+    validator: 'org.hibernate.validator:hibernate-validator:6.1.6.Final',
+    elApi: 'javax.el:javax.el-api:3.0.0',
+    elRuntime: 'org.glassfish:javax.el:3.0.1-b11',
+
+    // utils
+    guava: 'com.google.guava:guava:30.0-jre',
+    commonsLang: 'commons-lang:commons-lang:2.6',
+
+    // security
+    shiroCore: "org.apache.shiro:shiro-core:${shiroVersion}",
+    shiroWeb: "org.apache.shiro:shiro-web:${shiroVersion}",
+    shiroGuice: "org.apache.shiro:shiro-guice:${shiroVersion}",
+
+    ssp: "com.github.sdorra:ssp-lib:${sspVersion}",
+    sspProcessor: "com.github.sdorra:ssp-processor:${sspVersion}",
+    shiroUnit: 'com.github.sdorra:shiro-unit:1.0.1',
+
+    // jwt
+    jjwtApi: "io.jsonwebtoken:jjwt-api:${jjwtVersion}",
+    jjwtRuntime: "io.jsonwebtoken:jjwt-impl:${jjwtVersion}",
+    jjwtJackson: "io.jsonwebtoken:jjwt-jackson:${jjwtVersion}",
+
+    // gpg
+    bouncycastlePg: "org.bouncycastle:bcpg-jdk15on:${bouncycastleVersion}",
+    bouncycastleProv: "org.bouncycastle:bcprov-jdk15on:${bouncycastleVersion}",
+    bouncycastlePkix: "org.bouncycastle:bcpkix-jdk15on:${bouncycastleVersion}",
+
+    // service registration
+    metainfServices: 'org.kohsuke.metainf-services:metainf-services:1.8',
+
+    // cron expression
+    cronUtils: 'com.cronutils:cron-utils:9.1.3',
+
+    // templates
+    mustache: 'com.github.spullara.mustache.java:compiler:0.9.7',
+
+    // static resources
+    webResources: 'com.github.sdorra:web-resources:1.1.1',
+
+    // content type detection
+    spotter: 'com.github.sdorra:spotter-core:3.0.1',
+    tika: 'org.apache.tika:tika-core:1.25',
+
+    // restart on unix
+    akuma: 'org.kohsuke:akuma:1.10',
+
+    // native access
+    jna: 'net.java.dev.jna:jna:5.6.0',
+
+    // daemonize scm-manager on unix systems
+    commonsDaemon: 'commons-daemon:commons-daemon:1.2.3',
+    jsvc: 'commons-daemon:commons-daemon-native:1.1.0@tar.gz',
+
+    // jetty
+    jettyServer: "org.eclipse.jetty:jetty-server:${jettyVersion}",
+    jettyWebapp: "org.eclipse.jetty:jetty-webapp:${jettyVersion}",
+    jettyJmx: "org.eclipse.jetty:jetty-jmx:${jettyVersion}",
+
+    // tests
+    junitJupiterApi: "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}",
+    junitJupiterParams: "org.junit.jupiter:junit-jupiter-params:${junitJupiterVersion}",
+    junitJupiterEngine: "org.junit.jupiter:junit-jupiter-engine:${junitJupiterVersion}",
+
+    // junit 4 support
+    junitVintageEngine: "org.junit.vintage:junit-vintage-engine:${junitJupiterVersion}",
+    junit: 'junit:junit:4.13.1',
+
+    // assertions
+    hamcrestCore: "org.hamcrest:hamcrest-core:${hamcrestVersion}",
+    hamcrestLibrary: "org.hamcrest:hamcrest-library:${hamcrestVersion}",
+    assertj: 'org.assertj:assertj-core:3.18.1',
+
+    // mocking
+    mockitoCore: "org.mockito:mockito-core:${mockitoVersion}",
+    mockitoJunitJupiter: "org.mockito:mockito-junit-jupiter:${mockitoVersion}",
+
+    // testing async code
+    awaitility: 'org.awaitility:awaitility:4.0.2',
+
+    // rest api client for testing
+    jerseyClientApi: "com.sun.jersey:jersey-client:${jerseyClientVersion}",
+    jerseyClientRuntime: "com.sun.jersey.contribs:jersey-apache-client:${jerseyClientVersion}"
+  ]
+}
