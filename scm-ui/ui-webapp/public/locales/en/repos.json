@@ -248,7 +248,8 @@
       "label": "Compress",
       "helpText": "Compress the export dump size to reduce the download size."
     },
-    "exportButton": "Export Repository"
+    "exportButton": "Export Repository",
+    "exportStarted":  "The repository export was started. Depending on the repository size this may take a while."
   },
   "sources": {
     "fileTree": {

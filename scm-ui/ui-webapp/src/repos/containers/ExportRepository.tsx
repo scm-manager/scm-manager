@@ -32,7 +32,7 @@ type Props = {
 
 const ExportRepository: FC<Props> = ({ repository }) => {
   const [t] = useTranslation("repos");
-  const [compressed, setCompressed] = useState(false);
+  const [compressed, setCompressed] = useState(true);
   const [loading, setLoading] = useState(false);
 
   const createExportLink = () => {
@@ -61,7 +61,7 @@ const ExportRepository: FC<Props> = ({ repository }) => {
         <Level
           right={
             <a color="primary" href={createExportLink()} onClick={() => setLoading(true)}>
-              <Button color="primary" label={t("export.exportButton")} />
+              <Button color="primary" label={t("export.exportButton")} icon="file-export" />
             </a>
           }
         />

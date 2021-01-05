@@ -29,10 +29,10 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.Type;
-import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -50,14 +50,15 @@ import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.time.Instant;
 import java.util.Set;
 
 public class RepositoryExportResource {
@@ -66,33 +67,28 @@ public class RepositoryExportResource {
 
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
-  private final ResourceLinks resourceLinks;
-  private final ScmEventBus eventBus;
 
   @Inject
   public RepositoryExportResource(RepositoryManager manager,
-                                  RepositoryServiceFactory serviceFactory,
-                                  ResourceLinks resourceLinks,
-                                  ScmEventBus eventBus) {
+                                  RepositoryServiceFactory serviceFactory) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
-    this.resourceLinks = resourceLinks;
-    this.eventBus = eventBus;
   }
 
   /**
    * Exports an existing repository without additional metadata. The method can
    * only be used, if the repository type supports the {@link Command#BUNDLE}.
    *
-   * @param uriInfo uri info
-   * @return empty response with location header which points to the imported
-   * repository
+   * @param uriInfo   uri info
+   * @param namespace of the repository
+   * @param name      of the repository
+   * @param type      of the repository
+   * @return response with readable stream of repository dump
    * @since 2.13.0
    */
   @GET
   @Path("{type}")
   @Consumes(VndMediaType.REPOSITORY)
-  @Produces("application/octet-stream")
   @Operation(summary = "Exports the repository", description = "Exports the repository.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
@@ -115,10 +111,10 @@ public class RepositoryExportResource {
     )
   )
   public Response exportRepository(@Context UriInfo uriInfo,
-                         @PathParam("namespace") String namespace,
-                         @PathParam("name") String name,
-                         @PathParam("type") String type,
-                         @DefaultValue("false") @QueryParam("compressed") boolean compressed
+                                   @PathParam("namespace") String namespace,
+                                   @PathParam("name") String name,
+                                   @PathParam("type") String type,
+                                   @DefaultValue("false") @QueryParam("compressed") boolean compressed
   ) {
     Repository repository = manager.get(new NamespaceAndName(namespace, name));
     RepositoryPermissions.read().check(repository);
@@ -126,78 +122,37 @@ public class RepositoryExportResource {
     Type repositoryType = type(type);
     checkSupport(repositoryType, Command.BUNDLE);
 
-    logger.info("start {} export for repository {}/{}", repositoryType, namespace, name);
-//    if (compressed) {
-//      exportRepositoryCompressed(repository);
-//    }
-    return exportRepository(repository);
+    return exportRepository(repository, compressed);
   }
 
-  private Response exportRepository(Repository repository) {
+  private Response exportRepository(Repository repository, boolean compressed) {
     StreamingOutput output = os -> {
       try (RepositoryService service = serviceFactory.create(repository)) {
-        service.getBundleCommand().bundle(os);
+        if (compressed) {
+          GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
+          service.getBundleCommand().bundle(gzipCompressorOutputStream);
+          gzipCompressorOutputStream.finish();
+        } else {
+          service.getBundleCommand().bundle(os);
+        }
       } catch (IOException e) {
         throw new InternalRepositoryException(repository, "repository export failed", e);
       }
     };
 
     return Response
-      .ok(output)
-      .header("content-disposition", String.format("attachment; filename = %s-%s.dump", repository.getId(), repository.getName()))
+      .ok(output, compressed ? "application/x-gzip" : MediaType.APPLICATION_OCTET_STREAM)
+      .header("content-disposition", createContentDispositionHeaderValue(repository, compressed))
       .build();
   }
 
-//  private Response exportRepositoryCompressed(Repository repository) {
-//    StreamingOutput output = os -> {
-//      try (RepositoryService service = serviceFactory.create(repository);
-//           OutputStream fOut = Files.newOutputStream(Paths.get("temp/export"));
-//           BufferedOutputStream buffOut = new BufferedOutputStream(fOut);
-//           GzipCompressorOutputStream gzOut = new GzipCompressorOutputStream(buffOut);
-//           TarArchiveOutputStream tOut = new TarArchiveOutputStream(gzOut)) {
-//
-//        service.getBundleCommand().bundle(os);
-//        createTarArchiveEntry(repository.getName(), os.toString(), tOut);
-//
-//        tOut.finish();
-//      } catch (IOException e) {
-//        throw new InternalRepositoryException(repository, "repository export failed", e);
-//      }
-//    };
-//    return Response
-//      .ok(output)
-//      .header("content-disposition", String.format("attachment; filename = %s-%s.tar.gz", repository.getId(), repository.getName()))
-//      .build();
-//  }
-//
-//  private static void createTarArchiveEntry(String fileName,
-//                                            String data,
-//                                            TarArchiveOutputStream tOut)
-//    throws IOException {
-//
-//    byte[] dataInBytes = data.getBytes();
-//
-//    // create a byte[] input stream
-//    ByteArrayInputStream baOut1 = new ByteArrayInputStream(dataInBytes);
-//
-//    TarArchiveEntry tarEntry = new TarArchiveEntry(fileName);
-//
-//    // need defined the file size, else error
-//    tarEntry.setSize(dataInBytes.length);
-//    // tarEntry.setSize(baOut1.available()); alternative
-//
-//    tOut.putArchiveEntry(tarEntry);
-//
-//    // copy ByteArrayInputStream to TarArchiveOutputStream
-//    byte[] buffer = new byte[1024];
-//    int len;
-//    while ((len = baOut1.read(buffer)) > 0) {
-//      tOut.write(buffer, 0, len);
-//    }
-//
-//    tOut.closeArchiveEntry();
-//
-//  }
+  private String createContentDispositionHeaderValue(Repository repository, boolean compressed) {
+    long timestamp = Instant.now().toEpochMilli();
+    if (compressed) {
+      return String.format("attachment; filename = %s-%s-%s.gz", repository.getNamespace(), repository.getName(), timestamp);
+    }
+    return String.format("attachment; filename = %s-%s-%s.dump", repository.getNamespace(), repository.getName(), timestamp);
+  }
 
   /**
    * Check repository type for support for the given command.
