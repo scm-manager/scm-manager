@@ -147,7 +147,7 @@ public class RepositoryExportResource {
   }
 
   private String createContentDispositionHeaderValue(Repository repository, boolean compressed) {
-    long timestamp = Instant.now().toEpochMilli();
+    String timestamp = Instant.now().toString();
     if (compressed) {
       return String.format("attachment; filename = %s-%s-%s.gz", repository.getNamespace(), repository.getName(), timestamp);
     }
