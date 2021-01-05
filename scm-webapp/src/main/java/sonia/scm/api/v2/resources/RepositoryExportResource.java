@@ -148,10 +148,13 @@ public class RepositoryExportResource {
 
   private String createContentDispositionHeaderValue(Repository repository, boolean compressed) {
     String timestamp = createFormattedTimestamp();
-    if (compressed) {
-      return String.format("attachment; filename = %s-%s-%s.gz", repository.getNamespace(), repository.getName(), timestamp);
-    }
-    return String.format("attachment; filename = %s-%s-%s.dump", repository.getNamespace(), repository.getName(), timestamp);
+      return String.format(
+        "attachment; filename = %s-%s-%s.%s",
+        repository.getNamespace(),
+        repository.getName(),
+        timestamp,
+        compressed ? "gz" : "dump"
+      );
   }
 
   private String createFormattedTimestamp() {
