@@ -25,7 +25,8 @@
     }
   },
   "breadcrumb": {
-    "home": "Main page"
+    "home": "Main page",
+    "copyPermalink": "Copy Permalink to Clipboard"
   },
   "errorNotification": {
     "prefix": "Error",

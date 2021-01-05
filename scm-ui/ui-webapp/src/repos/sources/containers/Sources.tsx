@@ -33,6 +33,7 @@ import { compose } from "redux";
 import Content from "./Content";
 import { fetchSources, getSources, isDirectory } from "../modules/sources";
 import CodeActionBar from "../../codeSection/components/CodeActionBar";
+import { replaceBranchWithRevision } from "../components/content/SourcecodeViewer";
 
 type Props = WithTranslation &
   RouteComponentProps & {
@@ -45,6 +46,7 @@ type Props = WithTranslation &
     path: string;
     currentFileIsDirectory: boolean;
     sources: File;
+    fileRevision: string;
     selectedBranch: string;
 
     // dispatch props
@@ -56,7 +58,7 @@ class Sources extends React.Component<Props> {
     const { repository, branches, selectedBranch, baseUrl, revision, path, fetchSources } = this.props;
     fetchSources(repository, this.decodeRevision(revision), path);
     if (branches?.length > 0 && !selectedBranch) {
-      const defaultBranch = branches?.filter(b => b.defaultBranch === true)[0];
+      const defaultBranch = branches?.filter((b) => b.defaultBranch === true)[0];
       this.props.history.replace(`${baseUrl}/sources/${encodeURIComponent(defaultBranch.name)}/`);
     }
   }
@@ -90,7 +92,7 @@ class Sources extends React.Component<Props> {
 
   evaluateSwitchViewLink = () => {
     const { baseUrl, selectedBranch, branches } = this.props;
-    if (branches && selectedBranch && branches?.filter(b => b.name === selectedBranch).length !== 0) {
+    if (branches && selectedBranch && branches?.filter((b) => b.name === selectedBranch).length !== 0) {
       return `${baseUrl}/branch/${encodeURIComponent(selectedBranch)}/changesets/`;
     }
     return `${baseUrl}/changesets/`;
@@ -148,7 +150,18 @@ class Sources extends React.Component<Props> {
   }
 
   renderBreadcrumb = () => {
-    const { revision, selectedBranch, path, baseUrl, branches, sources, repository } = this.props;
+    const {
+      revision,
+      selectedBranch,
+      path,
+      baseUrl,
+      branches,
+      sources,
+      repository,
+      location,
+      fileRevision
+    } = this.props;
+    const permalink = fileRevision ? replaceBranchWithRevision(location.pathname, fileRevision) : null;
 
     return (
       <Breadcrumb
@@ -156,9 +169,10 @@ class Sources extends React.Component<Props> {
         revision={revision}
         path={path}
         baseUrl={baseUrl + "/sources"}
-        branch={branches?.filter(b => b.name === selectedBranch)[0]}
-        defaultBranch={branches?.filter(b => b.defaultBranch === true)[0]}
+        branch={branches?.filter((b) => b.name === selectedBranch)[0]}
+        defaultBranch={branches?.filter((b) => b.defaultBranch === true)[0]}
         sources={sources}
+        permalink={permalink}
       />
     );
   };
@@ -174,6 +188,8 @@ const mapStateToProps = (state: any, ownProps: Props) => {
     ? isDirectory(state, repository, decodedRevision, path)
     : isDirectory(state, repository, revision, path);
   const sources = getSources(state, repository, decodedRevision, path);
+  const file = getSources(state, repository, revision, path);
+  const fileRevision = file?.revision;
 
   return {
     repository,
@@ -182,7 +198,8 @@ const mapStateToProps = (state: any, ownProps: Props) => {
     loading,
     error,
     currentFileIsDirectory,
-    sources
+    sources,
+    fileRevision
   };
 };
 

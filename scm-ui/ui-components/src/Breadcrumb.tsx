@@ -21,16 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { Link } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useHistory, useLocation, Link } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import Icon from "./Icon";
+import Tooltip from "./Tooltip";
+import copyToClipboard from "./CopyToClipboard";
+import { withContextPath } from "./urls";
 
-type Props = WithTranslation & {
+type Props = {
   repository: Repository;
   branch: Branch;
   defaultBranch: Branch;
@@ -38,10 +41,30 @@ type Props = WithTranslation & {
   path: string;
   baseUrl: string;
   sources: File;
+  permalink: string | null;
 };
 
-const FlexStartNav = styled.nav`
+const PermaLinkWrapper = styled.div`
+  margin: 1.2rem 0 0 1.5rem;
+  width: 16px;
+  font-size: 13px;
+
+  i {
+    visibility: hidden;
+  }
+  &:hover i {
+    visibility: visible;
+  }
+`;
+
+const BreadcrumbNav = styled.nav`
   flex: 1;
+  margin: 1rem 0.5rem !important;
+
+  li:last-child:after {
+    color: #b5b5b5;
+    content: "\\0002f";
+  }
 `;
 
 const HomeIcon = styled(Icon)`
@@ -66,10 +89,13 @@ const ActionBar = styled.div`
   }
 `;
 
-class Breadcrumb extends React.Component<Props> {
-  renderPath() {
-    const { revision, path, baseUrl } = this.props;
+const Breadcrumb: FC<Props> = ({ repository, branch, defaultBranch, revision, path, baseUrl, sources, permalink }) => {
+  const location = useLocation();
+  const history = useHistory();
+  const [copying, setCopying] = useState(false);
+  const [t] = useTranslation("commons");
 
+  const pathSection = () => {
     if (path) {
       const paths = path.split("/");
       return paths.map((pathFragment, index) => {
@@ -91,50 +117,63 @@ class Breadcrumb extends React.Component<Props> {
       });
     }
     return null;
+  };
+
+  const copySource = () => {
+    history.push(location.pathname);
+    setCopying(true);
+    copyToClipboard(
+      window.location.protocol + "//" + window.location.host + withContextPath(permalink || location.pathname)
+    ).finally(() => setCopying(false));
+  };
+
+  let homeUrl = baseUrl + "/";
+  if (revision) {
+    homeUrl += encodeURIComponent(revision) + "/";
   }
 
-  render() {
-    const { repository, baseUrl, branch, defaultBranch, sources, revision, path, t } = this.props;
-
-    let homeUrl = baseUrl + "/";
-    if (revision) {
-      homeUrl += encodeURIComponent(revision) + "/";
-    }
-
-    return (
-      <>
-        <div className="is-flex">
-          <FlexStartNav className={classNames("breadcrumb", "sources-breadcrumb")} aria-label="breadcrumbs">
-            <ul>
-              <li>
-                <Link to={homeUrl}>
-                  <HomeIcon title={t("breadcrumb.home")} name="home" color="inherit" />
-                </Link>
-              </li>
-              {this.renderPath()}
-            </ul>
-          </FlexStartNav>
-          {binder.hasExtension("repos.sources.actionbar") && (
-            <ActionBar>
-              <ExtensionPoint
-                name="repos.sources.actionbar"
-                props={{
-                  baseUrl,
-                  revision,
-                  branch: branch ? branch : defaultBranch,
-                  path,
-                  sources,
-                  repository
-                }}
-                renderAll={true}
-              />
-            </ActionBar>
+  return (
+    <>
+      <div className="is-flex">
+        <PermaLinkWrapper>
+          {copying ? (
+            <Icon name="spinner fa-spin" />
+          ) : (
+            <Tooltip message={t("breadcrumb.copyPermalink")}>
+              <Icon name="link" onClick={() => copySource()} />
+            </Tooltip>
           )}
-        </div>
-        <hr className="is-marginless" />
-      </>
-    );
-  }
-}
+        </PermaLinkWrapper>
+        <BreadcrumbNav className={classNames("breadcrumb", "sources-breadcrumb")} aria-label="breadcrumbs">
+          <ul>
+            <li>
+              <Link to={homeUrl}>
+                <HomeIcon title={t("breadcrumb.home")} name="home" color="inherit" />
+              </Link>
+            </li>
+            {pathSection()}
+          </ul>
+        </BreadcrumbNav>
+        {binder.hasExtension("repos.sources.actionbar") && (
+          <ActionBar>
+            <ExtensionPoint
+              name="repos.sources.actionbar"
+              props={{
+                baseUrl,
+                revision,
+                branch: branch ? branch : defaultBranch,
+                path,
+                sources,
+                repository,
+              }}
+              renderAll={true}
+            />
+          </ActionBar>
+        )}
+      </div>
+      <hr className="is-marginless" />
+    </>
+  );
+};
 
-export default withTranslation("commons")(Breadcrumb);
+export default Breadcrumb;

@@ -24,7 +24,8 @@
     }
   },
   "breadcrumb": {
-    "home": "Hauptseite"
+    "home": "Hauptseite",
+    "copyPermalink": "Link in Zwischenablage kopieren"
   },
   "errorNotification": {
     "prefix": "Fehler",

@@ -649,16 +649,6 @@ form .field:not(.is-grouped) {
   }
 }
 
-// sources breadcrumb
-.sources-breadcrumb {
-  margin: 1rem 1.25rem !important;
-
-  li:last-child:after {
-    color: #b5b5b5;
-    content: "\0002f";
-  }
-}
-
 // pagination
 .pagination-next,
 .pagination-link,

@@ -1674,9 +1674,22 @@ exports[`Storyshots BreadCrumb Default 1`] = `
   <div
     className="is-flex"
   >
+    <div
+      className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 mGuSL"
+    >
+      <span
+        className="tooltip has-tooltip-right"
+        data-tooltip="breadcrumb.copyPermalink"
+      >
+        <i
+          className="fas fa-link has-text-grey-light"
+          onClick={[Function]}
+        />
+      </span>
+    </div>
     <nav
       aria-label="breadcrumbs"
-      className="Breadcrumb__FlexStartNav-zvtb4t-0 fJPNqk breadcrumb sources-breadcrumb"
+      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 kNVxHJ breadcrumb sources-breadcrumb"
     >
       <ul>
         <li>
@@ -1685,7 +1698,7 @@ exports[`Storyshots BreadCrumb Default 1`] = `
             onClick={[Function]}
           >
             <i
-              className="fas fa-fw fa-home has-text-inherit Breadcrumb__HomeIcon-zvtb4t-1 gddCRF"
+              className="fas fa-fw fa-home has-text-inherit Breadcrumb__HomeIcon-zvtb4t-2 hBZQpS"
               title="breadcrumb.home"
             />
           </a>

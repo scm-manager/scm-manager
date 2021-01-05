@@ -53,5 +53,6 @@ storiesOf("BreadCrumb", module)
       baseUrl={baseUrl}
       sources={sources}
       revision={"1"}
+      permalink={"/" + path}
     />
   ));
