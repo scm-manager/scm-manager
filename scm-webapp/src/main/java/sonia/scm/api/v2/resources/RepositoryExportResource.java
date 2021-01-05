@@ -147,11 +147,15 @@ public class RepositoryExportResource {
   }
 
   private String createContentDispositionHeaderValue(Repository repository, boolean compressed) {
-    String timestamp = Instant.now().toString();
+    String timestamp = createFormattedTimestamp();
     if (compressed) {
       return String.format("attachment; filename = %s-%s-%s.gz", repository.getNamespace(), repository.getName(), timestamp);
     }
     return String.format("attachment; filename = %s-%s-%s.dump", repository.getNamespace(), repository.getName(), timestamp);
+  }
+
+  private String createFormattedTimestamp() {
+    return Instant.now().toString().replace(":", "-").split("\\.")[0];
   }
 
   /**
@@ -163,29 +167,23 @@ public class RepositoryExportResource {
   private void checkSupport(Type type, Command cmd) {
     if (!(type instanceof RepositoryType)) {
       logger.warn("type {} is not a repository type", type.getName());
-
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
 
     Set<Command> cmds = ((RepositoryType) type).getSupportedCommands();
-
     if (!cmds.contains(cmd)) {
       logger.warn("type {} does not support this type of export",
         type.getName());
-
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
     }
   }
 
   private Type type(String type) {
     RepositoryHandler handler = manager.getHandler(type);
-
     if (handler == null) {
       logger.warn("no handler for type {} found", type);
-
       throw new WebApplicationException(Response.Status.NOT_FOUND);
     }
-
     return handler.getType();
   }
 }
