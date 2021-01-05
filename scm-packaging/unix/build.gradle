@@ -23,6 +23,10 @@
  */
 import org.gradle.util.VersionNumber
 
+plugins {
+  id 'org.scm-manager.packaging'
+}
+
 configurations {
   server
   webapp
@@ -35,11 +39,10 @@ dependencies {
   jsvc libraries.jsvc
 }
 
-task distribution(type: Tar) {
-
+task unix(type: Tar) {
   VersionNumber version = VersionNumber.parse(project.version)
 
-  archiveName = "unix-${project.version}.tar.gz"
+  archiveName = "unix-${project.version}-app.tar.gz"
   into('scm-server') {
     into('conf') {
       from 'src/main/fs/conf'
@@ -78,4 +81,14 @@ task distribution(type: Tar) {
 
   destinationDir file('build/libs')
   compression = Compression.GZIP
+}
+
+task packageYaml(type: PackageYaml)  {
+  type = 'unix'
+  artifact = file("build/libs/unix-${project.version}-app.tar.gz")
+  dependsOn unix
+}
+
+task distribution {
+  dependsOn packageYaml
 }

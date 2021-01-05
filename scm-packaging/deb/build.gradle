@@ -25,6 +25,7 @@ import org.gradle.util.VersionNumber
 
 plugins {
   id 'nebula.ospackage' version '8.4.1'
+  id 'org.scm-manager.packaging'
 }
 
 configurations {
@@ -38,7 +39,7 @@ dependencies {
   webapp project(path: ':scm-webapp', configuration: 'webapp')
 }
 
-task distribution(type: Deb) {
+task deb(type: Deb) {
   packageName 'scm-server'
   packageGroup 'devel'
   summary 'SCM-Manager Server'
@@ -131,4 +132,13 @@ task distribution(type: Deb) {
   link '/opt/scm-server/var/log', '/var/log/scm'
   link '/opt/scm-server/conf', '/etc/scm'
   link '/opt/scm-server/work', '/var/cache/scm/work'
+}
+
+task packageYaml(type: PackageYaml)  {
+  type = 'debian'
+  dependsOn deb
+}
+
+task distribution {
+  dependsOn packageYaml
 }

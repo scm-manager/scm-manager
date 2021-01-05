@@ -24,8 +24,8 @@
 
 plugins {
   id 'org.unbroken-dome.helm' version '1.4.0'
+  id 'org.scm-manager.packaging'
 }
-
 
 helm {
   downloadClient {
@@ -54,6 +54,11 @@ helmPackageScmServerChart {
   appVersion = expandedVersion
 }
 
+task packageYaml(type: PackageYaml)  {
+  type = 'k8s'
+  dependsOn helmPackageScmServerChart
+}
+
 task distribution {
-  dependsOn 'helmPackageScmServerChart'
+  dependsOn packageYaml
 }

@@ -24,6 +24,7 @@
 
 plugins {
   id 'com.bmuschko.docker-remote-api' version '6.6.1'
+  id 'org.scm-manager.packaging'
 }
 
 import org.gradle.util.VersionNumber
@@ -66,7 +67,7 @@ task context(type: Copy) {
   }
 }
 
-task distribution(type: DockerBuildImage) {
+task dockerImage(type: DockerBuildImage) {
   inputDir = file('build/docker')
   images = images()
   dependsOn 'context'
@@ -86,4 +87,13 @@ def images() {
       "${dockerRepository}:latest"
     ]
   }
+}
+
+task packageYaml(type: PackageYaml)  {
+  type = 'docker'
+  dependsOn dockerImage
+}
+
+task distribution {
+  dependsOn packageYaml
 }

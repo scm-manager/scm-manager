@@ -25,6 +25,7 @@ import org.gradle.util.VersionNumber
 
 plugins {
   id "de.undercouch.download" version "4.1.1"
+  id 'org.scm-manager.packaging'
 }
 
 configurations {
@@ -57,10 +58,10 @@ task verifyWinSW(type: Verify) {
   dependsOn 'downloadWinSW'
 }
 
-task distribution(type: Zip) {
+task windows(type: Zip) {
   VersionNumber version = VersionNumber.parse(project.version)
 
-  archiveName = "windows-${project.version}.zip"
+  archiveName = "windows-${project.version}-app.zip"
   into('scm-server') {
     into('conf') {
       from 'src/main/fs/conf'
@@ -84,4 +85,14 @@ task distribution(type: Zip) {
 
   destinationDir file('build/libs')
   dependsOn 'verifyWinSW'
+}
+
+task packageYaml(type: PackageYaml)  {
+  type = 'windows'
+  artifact = file("build/libs/windows-${project.version}-app.zip")
+  dependsOn windows
+}
+
+task distribution {
+  dependsOn packageYaml
 }

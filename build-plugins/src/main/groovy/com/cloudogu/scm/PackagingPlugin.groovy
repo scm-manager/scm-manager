@@ -23,53 +23,15 @@
  */
 
 
-plugins {
-  id 'java-gradle-plugin'
-  id 'groovy'
-}
+package com.cloudogu.scm
 
-apply from: file( '../gradle/dependencies.gradle' )
+import org.gradle.api.Plugin
+import org.gradle.api.Project
 
-dependencies {
-  implementation gradleApi()
-  implementation 'com.github.node-gradle:gradle-node-plugin:2.2.4'
-  
-  implementation libraries.guava
-  implementation libraries.jettyServer
-  implementation libraries.jettyWebapp
-}
+class PackagingPlugin implements Plugin<Project> {
 
-gradlePlugin {
-  // Define the plugin
-  plugins {
-    buildInfo {
-      id = 'org.scm-manager.build-info'
-      implementationClass = 'com.cloudogu.scm.BuildInfoPlugin'
-    }
-    corePlugins {
-      id = 'org.scm-manager.core-plugins'
-      implementationClass = 'com.cloudogu.scm.CorePluginsGradlePlugin'
-    }
-    serve {
-      id = 'org.scm-manager.serve'
-      implementationClass = 'com.cloudogu.scm.ServePlugin'
-    }
-    integrationTest {
-      id = 'org.scm-manager.integration-tests'
-      implementationClass = 'com.cloudogu.scm.IntegrationTestPlugin'
-    }
-    packaging {
-      id = 'org.scm-manager.packaging'
-      implementationClass = 'com.cloudogu.scm.PackagingPlugin'
-    }
+  void apply(Project project) {
+    project.ext.PackageYaml = PackageYamlTask
   }
-}
 
-repositories {
-  maven {
-    url "https://packages.scm-manager.org/repository/public/"
-  }
-  maven {
-    url 'https://plugins.gradle.org/m2/'
-  }
 }
