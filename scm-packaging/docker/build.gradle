@@ -34,6 +34,9 @@ import com.bmuschko.gradle.docker.tasks.image.*
 configurations {
   server
   webapp
+  packageYaml {
+    canBeConsumed = true
+  }
 }
 
 dependencies {
@@ -89,11 +92,13 @@ def images() {
   }
 }
 
-task packageYaml(type: PackageYaml)  {
+task distribution(type: PackageYaml)  {
   type = 'docker'
   dependsOn dockerImage
 }
 
-task distribution {
-  dependsOn packageYaml
+artifacts {
+  packageYaml(file('build/libs/package.yml')) {
+    builtBy distribution
+  }
 }

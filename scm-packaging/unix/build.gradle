@@ -31,6 +31,9 @@ configurations {
   server
   webapp
   jsvc
+  packageYaml {
+    canBeConsumed = true
+  }
 }
 
 dependencies {
@@ -83,12 +86,14 @@ task unix(type: Tar) {
   compression = Compression.GZIP
 }
 
-task packageYaml(type: PackageYaml)  {
+task distribution(type: PackageYaml)  {
   type = 'unix'
   artifact = file("build/libs/unix-${project.version}-app.tar.gz")
   dependsOn unix
 }
 
-task distribution {
-  dependsOn packageYaml
+artifacts {
+  packageYaml(file('build/libs/package.yml')) {
+    builtBy distribution
+  }
 }

@@ -32,6 +32,9 @@ configurations {
   server
   webapp
   jsvc
+  packageYaml {
+    canBeConsumed = true
+  }
 }
 
 dependencies {
@@ -134,11 +137,13 @@ task deb(type: Deb) {
   link '/opt/scm-server/work', '/var/cache/scm/work'
 }
 
-task packageYaml(type: PackageYaml)  {
+task distribution(type: PackageYaml)  {
   type = 'debian'
   dependsOn deb
 }
 
-task distribution {
-  dependsOn packageYaml
+artifacts {
+  packageYaml(file('build/libs/package.yml')) {
+    builtBy distribution
+  }
 }

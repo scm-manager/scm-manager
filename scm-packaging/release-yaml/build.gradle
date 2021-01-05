@@ -22,17 +22,25 @@
  * SOFTWARE.
  */
 
+plugins {
+  id 'org.scm-manager.packaging'
+}
 
-package com.cloudogu.scm
-
-import org.gradle.api.Plugin
-import org.gradle.api.Project
-
-class PackagingPlugin implements Plugin<Project> {
-
-  void apply(Project project) {
-    project.ext.PackageYaml = PackageYamlTask
-    project.ext.ReleaseYaml = ReleaseYamlTask
+configurations {
+  packageYaml {
+    canBeResolved = true
   }
+}
 
+dependencies {
+  packageYaml project(path: ':scm-packaging:unix', configuration: 'packageYaml')
+  packageYaml project(path: ':scm-packaging:windows', configuration: 'packageYaml')
+  packageYaml project(path: ':scm-packaging:deb', configuration: 'packageYaml')
+  packageYaml project(path: ':scm-packaging:rpm', configuration: 'packageYaml')
+  packageYaml project(path: ':scm-packaging:docker', configuration: 'packageYaml')
+  packageYaml project(path: ':scm-packaging:helm', configuration: 'packageYaml')
+}
+
+task distribution(type: ReleaseYaml) {
+  configuration = configurations.packageYaml
 }

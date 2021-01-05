@@ -132,6 +132,9 @@ ext {
     commonsDaemon: 'commons-daemon:commons-daemon:1.2.3',
     jsvc: 'commons-daemon:commons-daemon-native:1.1.0@tar.gz',
 
+    // yaml
+    snakeYml: 'org.yaml:snakeyaml:1.21',
+
     // jetty
     jettyServer: "org.eclipse.jetty:jetty-server:${jettyVersion}",
     jettyWebapp: "org.eclipse.jetty:jetty-webapp:${jettyVersion}",

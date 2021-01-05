@@ -37,6 +37,8 @@ dependencies {
   implementation libraries.guava
   implementation libraries.jettyServer
   implementation libraries.jettyWebapp
+
+  implementation libraries.snakeYml
 }
 
 gradlePlugin {

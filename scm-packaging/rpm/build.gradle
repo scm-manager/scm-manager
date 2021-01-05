@@ -31,6 +31,9 @@ plugins {
 configurations {
   server
   webapp
+  packageYaml {
+    canBeConsumed = true
+  }
 }
 
 dependencies {
@@ -131,11 +134,13 @@ task rpm(type: Rpm) {
   link '/opt/scm-server/work', '/var/cache/scm/work'
 }
 
-task packageYaml(type: PackageYaml)  {
+task distribution(type: PackageYaml)  {
   type = 'redhat'
   dependsOn rpm
 }
 
-task distribution {
-  dependsOn packageYaml
+artifacts {
+  packageYaml(file('build/libs/package.yml')) {
+    builtBy distribution
+  }
 }

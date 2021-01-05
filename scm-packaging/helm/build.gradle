@@ -27,6 +27,12 @@ plugins {
   id 'org.scm-manager.packaging'
 }
 
+configurations {
+  packageYaml {
+    canBeConsumed = true
+  }
+}
+
 helm {
   downloadClient {
     enabled = true
@@ -54,11 +60,13 @@ helmPackageScmServerChart {
   appVersion = expandedVersion
 }
 
-task packageYaml(type: PackageYaml)  {
+task distribution(type: PackageYaml)  {
   type = 'k8s'
   dependsOn helmPackageScmServerChart
 }
 
-task distribution {
-  dependsOn packageYaml
+artifacts {
+  packageYaml(file('build/libs/package.yml')) {
+    builtBy distribution
+  }
 }

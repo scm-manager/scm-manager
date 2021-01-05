@@ -31,6 +31,9 @@ plugins {
 configurations {
   server
   webapp
+  packageYaml {
+    canBeConsumed = true
+  }
 }
 
 dependencies {
@@ -87,12 +90,14 @@ task windows(type: Zip) {
   dependsOn 'verifyWinSW'
 }
 
-task packageYaml(type: PackageYaml)  {
+task distribution(type: PackageYaml)  {
   type = 'windows'
   artifact = file("build/libs/windows-${project.version}-app.zip")
   dependsOn windows
 }
 
-task distribution {
-  dependsOn packageYaml
+artifacts {
+  packageYaml(file('build/libs/package.yml')) {
+    builtBy distribution
+  }
 }
