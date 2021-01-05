@@ -108,6 +108,9 @@ dependencies {
   // native access
   implementation libraries.jna
 
+  // util
+  implementation libraries.commonsCompress
+
   // lombok
   compileOnly libraries.lombok
   testCompileOnly libraries.lombok
