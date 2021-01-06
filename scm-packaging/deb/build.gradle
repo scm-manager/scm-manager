@@ -65,6 +65,18 @@ task deb(type: Deb) {
   preInstallFile file('src/main/scripts/preinst')
   postInstallFile file('src/main/scripts/postinst')
 
+  if (project.hasProperty("gpg.scm.keyring")) {
+    signingKeyRingFile file(project.property("gpg.scm.keyring"))
+  }
+
+  if (project.hasProperty("gpg.scm.key")) {
+    signingKeyId project.property("gpg.scm.key")
+  }
+
+  if (project.hasProperty("gpg.scm.passphrase")) {
+    signingKeyPassphrase project.property("gpg.scm.passphrase")
+  }
+
   VersionNumber version = VersionNumber.parse(project.version)
 
   from('src/main/bin') {
