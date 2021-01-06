@@ -25,6 +25,7 @@
 plugins {
   id 'org.unbroken-dome.helm' version '1.4.0'
   id 'org.scm-manager.packaging'
+  id 'com.github.hierynomus.license-base' version '0.15.0'
 }
 
 configurations {
@@ -69,4 +70,27 @@ artifacts {
   packageYaml(file('build/libs/package.yml')) {
     builtBy distribution
   }
+}
+
+license {
+  header rootProject.file("LICENSE.txt")
+  strictCheck true
+
+  mapping {
+    gradle = 'SLASHSTAR_STYLE'
+  }
+
+  // TODO
+  // we get a strange build error with the license header,
+  // so we remove it for now
+  exclude '**/Chart.yaml'
+
+  exclude '**/build/**'
+  exclude '**/*.txt'
+  include '**/src/**'
+  include 'build.gradle'
+}
+
+task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
+  source = fileTree('.')
 }

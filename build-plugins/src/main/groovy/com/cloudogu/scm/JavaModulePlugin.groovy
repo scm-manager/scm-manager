@@ -23,6 +23,7 @@
  */
 package com.cloudogu.scm
 
+import com.hierynomus.gradle.license.tasks.LicenseCheck
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.jvm.toolchain.JavaLanguageVersion
@@ -30,6 +31,8 @@ import org.gradle.jvm.toolchain.JavaLanguageVersion
 class JavaModulePlugin implements Plugin<Project> {
 
   void apply(Project project) {
+    project.plugins.apply("com.github.hierynomus.license")
+
     project.afterEvaluate {
       project.java {
         toolchain {
@@ -39,6 +42,43 @@ class JavaModulePlugin implements Plugin<Project> {
       project.compileJava {
         options.release = 8
       }
+    }
+
+    project.license {
+      header project.rootProject.file('LICENSE.txt')
+      strictCheck true
+
+      mapping {
+        tsx = 'SLASHSTAR_STYLE'
+        ts = 'SLASHSTAR_STYLE'
+        java = 'SLASHSTAR_STYLE'
+        gradle = 'SLASHSTAR_STYLE'
+      }
+
+      exclude "**/*.mustache"
+      exclude "**/*.json"
+      exclude "**/*.ini"
+      exclude "**/mockito-extensions/*"
+      exclude "**/*.txt"
+      exclude "**/*.md"
+      exclude "**/*.gz"
+      exclude "**/*.zip"
+      exclude "**/*.smp"
+      exclude "**/*.asc"
+      exclude "**/*.png"
+      exclude "**/*.jpg"
+      exclude "**/*.gif"
+      exclude "**/*.dump"
+    }
+
+    project.tasks.register("licenseBuild", LicenseCheck) {
+      source = project.fileTree(dir: ".").include("build.gradle", "settings.gradle", "gradle.properties")
+      enabled = true
+    }
+
+    project.tasks.getByName("license").configure {
+      dependsOn("licenseBuild")
+      enabled = true
     }
   }
 

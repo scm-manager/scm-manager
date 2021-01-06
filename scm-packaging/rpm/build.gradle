@@ -48,6 +48,7 @@ buildscript {
 plugins {
   id 'nebula.ospackage' version '8.4.1'
   id 'org.scm-manager.packaging'
+  id 'com.github.hierynomus.license-base' version '0.15.0'
 }
 
 configurations {
@@ -177,4 +178,22 @@ artifacts {
   packageYaml(file('build/libs/package.yml')) {
     builtBy distribution
   }
+}
+
+license {
+  header rootProject.file("LICENSE.txt")
+  strictCheck true
+
+  mapping {
+    gradle = 'SLASHSTAR_STYLE'
+  }
+
+  exclude '**/build/**'
+  include '**/src/**'
+  include 'build.gradle'
+  include 'Vagrantfile'
+}
+
+task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
+  source = fileTree('.')
 }

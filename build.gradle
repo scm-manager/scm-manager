@@ -32,11 +32,11 @@ subprojects {
       url 'https://packages.scm-manager.org/repository/public/'
     }
   }
-
-  apply from: rootProject.file( 'gradle/dependencies.gradle' )
 }
 
-apply from: rootProject.file( 'gradle/dependencies.gradle' )
+allprojects {
+  apply from: rootProject.file('gradle/dependencies.gradle')
+}
 
 dependencies {
   constraints {
@@ -129,11 +129,11 @@ project.ext {
     if (buildNumber != null) {
       snapshotVersion += "-${buildNumber}"
     }
-    dockerTag =  version.replace('SNAPSHOT', snapshotVersion)
+    dockerTag = version.replace('SNAPSHOT', snapshotVersion)
   } else {
     expandedVersion = project.version
     expandedVersionWithDot = project.version
     dockerRepository = 'docker.io/scmmanager/scm-manager'
-    dockerTag =  version.replace('SNAPSHOT', snapshotVersion)
+    dockerTag = version.replace('SNAPSHOT', snapshotVersion)
   }
 }

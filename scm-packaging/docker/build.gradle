@@ -25,11 +25,11 @@
 plugins {
   id 'com.bmuschko.docker-remote-api' version '6.6.1'
   id 'org.scm-manager.packaging'
+  id 'com.github.hierynomus.license-base' version '0.15.0'
 }
 
 import org.gradle.util.VersionNumber
 import com.bmuschko.gradle.docker.tasks.image.*
-
 
 configurations {
   server
@@ -101,4 +101,22 @@ artifacts {
   packageYaml(file('build/libs/package.yml')) {
     builtBy distribution
   }
+}
+
+license {
+  header rootProject.file("LICENSE.txt")
+  strictCheck true
+
+  mapping {
+    gradle = 'SLASHSTAR_STYLE'
+  }
+
+  exclude '**/build/**'
+  include '**/src/**'
+  include 'build.gradle'
+  include 'Dockerfile'
+}
+
+task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
+  source = fileTree('.')
 }

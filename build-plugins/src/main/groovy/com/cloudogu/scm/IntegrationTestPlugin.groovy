@@ -30,7 +30,7 @@ import org.gradle.api.Project
 
 class IntegrationTestPlugin implements Plugin<Project> {
 
-  void apply(Project project) {      
+  void apply(Project project) {
     def extension = project.extensions.create("scmServer", ScmServerExtension, project)
 
     project.tasks.register('write-server-config', WriteServerConfigTask) {

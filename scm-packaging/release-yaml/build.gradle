@@ -24,6 +24,7 @@
 
 plugins {
   id 'org.scm-manager.packaging'
+  id 'com.github.hierynomus.license-base' version '0.15.0'
 }
 
 configurations {
@@ -43,4 +44,19 @@ dependencies {
 
 task distribution(type: ReleaseYaml) {
   configuration = configurations.packageYaml
+}
+
+license {
+  header rootProject.file("LICENSE.txt")
+  strictCheck true
+
+  mapping {
+    gradle = 'SLASHSTAR_STYLE'
+  }
+
+  include 'build.gradle'
+}
+
+task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
+  source = fileTree('.')
 }

@@ -26,6 +26,7 @@ import org.gradle.util.VersionNumber
 plugins {
   id 'org.scm-manager.packaging'
   id 'signing'
+  id 'com.github.hierynomus.license-base' version '0.15.0'
 }
 
 configurations {
@@ -106,4 +107,23 @@ artifacts {
 
 signing {
   sign configurations.unixPkg
+}
+
+
+license {
+  header rootProject.file("LICENSE.txt")
+  strictCheck true
+
+  mapping {
+    gradle = 'SLASHSTAR_STYLE'
+  }
+
+  exclude '**/build/**'
+  exclude '**/*.txt'
+  include '**/src/**'
+  include 'build.gradle'
+}
+
+task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
+  source = fileTree('.')
 }
