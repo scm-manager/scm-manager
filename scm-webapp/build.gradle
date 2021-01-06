@@ -51,7 +51,7 @@ dependencies {
   testImplementation project(':scm-test')
   annotationProcessor project(':scm-annotation-processor')
 
-  // servlet api 
+  // servlet api
   providedCompile libraries.servletApi
   testImplementation libraries.servletApi
 
@@ -127,7 +127,7 @@ dependencies {
   // shiro unit
   testImplementation libraries.shiroUnit
 
-  // rest api client 
+  // rest api client
   // TODO do we need this?
   testImplementation libraries.jerseyClientApi
   testImplementation libraries.jerseyClientRuntime

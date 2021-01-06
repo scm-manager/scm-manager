@@ -24,6 +24,32 @@
 
 rootProject.name = 'scm'
 
+// enfore rules
+// http://kordamp.org/enforcer-gradle-plugin/#_applying_the_plugin
+
+buildscript {
+  repositories {
+    jcenter()
+    gradlePluginPortal()
+  }
+  dependencies {
+    classpath 'org.kordamp.gradle:enforcer-gradle-plugin:0.8.0'
+  }
+}
+apply plugin: 'org.kordamp.gradle.enforcer'
+
+enforce {
+  rule(enforcer.rules.RequireJavaVersion) { r ->
+    r.version = '11.'
+  }
+  rule(enforcer.rules.EnforceBytecodeVersion) { r ->
+    r.maxJdkVersion = '1.8'
+  }
+  rule(enforcer.rules.RequireGradleVersion) { r ->
+    r.version = '6.7'
+  }
+}
+
 includeBuild 'build-plugins'
 include 'scm-annotations'
 include 'scm-annotation-processor'

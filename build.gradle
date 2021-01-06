@@ -26,6 +26,16 @@ plugins {
   id 'java-platform'
 }
 
+subprojects {
+  repositories {
+    maven {
+      url 'https://packages.scm-manager.org/repository/public/'
+    }
+  }
+
+  apply from: rootProject.file( 'gradle/dependencies.gradle' )
+}
+
 apply from: rootProject.file( 'gradle/dependencies.gradle' )
 
 dependencies {
@@ -104,16 +114,6 @@ dependencies {
     api libraries.mockitoCore
     api libraries.mockitoJunitJupiter
   }
-}
-
-subprojects {
-  repositories {
-    maven {
-      url 'https://packages.scm-manager.org/repository/public/'
-    }
-  }
-
-  apply from: rootProject.file( 'gradle/dependencies.gradle' )
 }
 
 // set build props
