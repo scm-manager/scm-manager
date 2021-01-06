@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- Option to link permanently source with a certain revision ([#1489](https://github.com/scm-manager/scm-manager/pull/1489))
+- Option to create a permanent link to a source file ([#1489](https://github.com/scm-manager/scm-manager/pull/1489))
 
 ## [2.12.0] - 2020-12-17
 ### Added
