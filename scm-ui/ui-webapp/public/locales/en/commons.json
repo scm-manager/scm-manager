@@ -86,6 +86,7 @@
     "error-message": "'me' is undefined"
   },
   "password": {
+    "subtitle": "Change Password",
     "label": "Password",
     "newPassword": "New Password",
     "currentPassword": "Current Password",

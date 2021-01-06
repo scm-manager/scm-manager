@@ -1,6 +1,7 @@
 {
   "setPermissions": {
-    "button": "Berechtigungen speichern",
+    "subtitle": "Berechtigungen setzen",
+    "button": "Berechtigungen setzen",
     "setPermissionsSuccessful": "Berechtigungen erfolgreich gespeichert"
   }
 }
