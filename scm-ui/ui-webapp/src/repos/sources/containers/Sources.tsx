@@ -33,7 +33,7 @@ import { compose } from "redux";
 import Content from "./Content";
 import { fetchSources, getSources, isDirectory } from "../modules/sources";
 import CodeActionBar from "../../codeSection/components/CodeActionBar";
-import { replaceBranchWithRevision } from "../components/content/SourcecodeViewer";
+import replaceBranchWithRevision from "../ReplaceBranchWithRevision";
 
 type Props = WithTranslation &
   RouteComponentProps & {
