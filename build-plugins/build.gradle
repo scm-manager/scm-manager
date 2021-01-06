@@ -44,6 +44,10 @@ dependencies {
 gradlePlugin {
   // Define the plugin
   plugins {
+    javaModule {
+      id = 'org.scm-manager.java'
+      implementationClass = 'com.cloudogu.scm.JavaModulePlugin'
+    }
     buildInfo {
       id = 'org.scm-manager.build-info'
       implementationClass = 'com.cloudogu.scm.BuildInfoPlugin'

@@ -21,18 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+package com.cloudogu.scm
 
-plugins {
-  id 'java-library'
-  id 'org.scm-manager.java'
-}
+import org.gradle.api.Plugin
+import org.gradle.api.Project
+import org.gradle.jvm.toolchain.JavaLanguageVersion
 
-dependencies {
-  api platform(project(':'))
-  
-  implementation libraries.commonsDaemon
-  implementation libraries.jettyServer
-  implementation libraries.jettyWebapp
-  // TODO do we need jetty jmx?
-  implementation libraries.jettyJmx
+class JavaModulePlugin implements Plugin<Project> {
+
+  void apply(Project project) {
+    project.afterEvaluate {
+      project.java {
+        toolchain {
+          languageVersion = JavaLanguageVersion.of(11)
+        }
+      }
+      project.compileJava {
+        options.release = 8
+      }
+    }
+  }
+
 }
