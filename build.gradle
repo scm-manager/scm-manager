@@ -26,10 +26,6 @@ plugins {
   id 'java-platform'
 }
 
-task('serve') {
-  dependsOn ':scm-ui:yarn_install', ':scm-webapp:serve'
-}
-
 apply from: rootProject.file( 'gradle/dependencies.gradle' )
 
 dependencies {

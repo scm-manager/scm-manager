@@ -32,39 +32,30 @@ import org.gradle.api.tasks.Nested
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
 import org.gradle.api.GradleException
+import org.gradle.api.tasks.options.Option
 
 class ServeTask extends DefaultTask {
 
-  private boolean frontend = true
-  private boolean waitForCompletion = true
-  private ScmServerExtension extension
+  @Input
+  boolean frontend = true
+
+  @Input
+  boolean waitForCompletion = true
 
   @Nested
-  ScmServerExtension getExtension() {
-    return extension
-  }
-
-  void setExtension(ScmServerExtension extension) {
-    this.extension = extension
-  }
+  ScmServerExtension extension
 
   @Input
-  boolean isFrontend() {
-    return frontend
-  }
-
-  void setFrontend(boolean frontend) {
-    this.frontend = frontend
-  }
+  @Option(option = 'debug-jvm', description = 'Start ScmServer suspended and listening on debug port (default: 5005)')
+  boolean debugJvm = false
 
   @Input
-  boolean isWaitForCompletion() {
-    return waitForCompletion
-  }
+  @Option(option = 'debug-wait', description = 'Wait until a debugger has connected')
+  boolean debugWait = false
 
-  void setWaitForCompletion(boolean waitForCompletion) {
-    this.waitForCompletion = waitForCompletion
-  }
+  @Input
+  @Option(option = 'debug-port', description = 'Port for debugger')
+  String debugPort = "5005"
 
   @TaskAction
   void exec() {
@@ -112,15 +103,24 @@ class ServeTask extends DefaultTask {
   }
 
   private Closure<Void> createBackend() {
-    def backend = project.tasks.create('boot-backend', JavaExec) {
-      main ScmServer.class.name
-      args(new File(project.buildDir, 'server/config.json').toString())
-      environment 'NODE_ENV', 'development'
-      classpath project.buildscript.configurations.classpath
-    }
     return {
-      backend.exec()
+      project.javaexec {
+        mainClass.set(ScmServer.name)
+        args(new File(project.buildDir, 'server/config.json').toString())
+        environment 'NODE_ENV', 'development'
+        classpath project.buildscript.configurations.classpath
+        if (debugJvm) {
+          debug = true
+          debugOptions {
+            enabled = true
+            port = Integer.parseInt(debugPort)
+            server = true
+            suspend = debugWait
+          }
+        }
+      }
     }
+
   }
 
   private Closure<Void> createFrontend() {
