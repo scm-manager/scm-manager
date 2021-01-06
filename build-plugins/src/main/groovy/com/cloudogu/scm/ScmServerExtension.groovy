@@ -40,6 +40,7 @@ class ScmServerExtension implements Serializable {
   private boolean openBrowser = true
   private boolean liveReload = true
   private File warFile
+  private File loggingConfiguration
 
   ScmServerExtension(Project project) {
     this.project = project
@@ -101,5 +102,15 @@ class ScmServerExtension implements Serializable {
 
   void configuration(String configuration) {
     setConfiguration(project.configurations.getByName(configuration))
+  }
+
+  @Optional
+  @InputFile
+  File getLoggingConfiguration() {
+    return loggingConfiguration
+  }
+
+  void setLoggingConfiguration(File loggingConfiguration) {
+    this.loggingConfiguration = loggingConfiguration
   }
 }

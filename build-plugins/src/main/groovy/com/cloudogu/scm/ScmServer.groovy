@@ -58,7 +58,7 @@ class ScmServer {
     }
 
     if (!Strings.isNullOrEmpty(configuration.loggingConfiguration)) {
-      System.setProperty('logback.configurationFile', configuration.loggingConfiguration);
+      System.setProperty('logback.configurationFile', configuration.loggingConfiguration)
     }
 
     info('set stage %s', configuration.stage)

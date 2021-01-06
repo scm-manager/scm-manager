@@ -154,6 +154,7 @@ scmServer {
   liveReload = true
   openBrowser = true
   warFile = file('build/libs/scm-webapp-dev.war')
+  loggingConfiguration = file('src/main/conf/logback.serve.xml')
 }
 
 serve {

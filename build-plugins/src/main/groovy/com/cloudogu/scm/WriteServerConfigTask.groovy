@@ -75,7 +75,8 @@ class WriteServerConfigTask extends DefaultTask {
 
     File serverConfig = getServerConfig()
     serverConfig.getParentFile().mkdirs()
-    serverConfig.text = JsonOutput.toJson([
+
+    def config = [
       home: extension.getHome(),
       port: extension.getPort(),
       contextPath: '/scm',
@@ -84,7 +85,11 @@ class WriteServerConfigTask extends DefaultTask {
       openBrowser: extension.openBrowser,
       warFile: warFile.toString(),
       livereloadUrl: extension.liveReload ? 'http://localhost:3000' : null
-    ])
+    ]
+    if (extension.loggingConfiguration != null && extension.loggingConfiguration.exists()) {
+      config.loggingConfiguration = extension.loggingConfiguration.toString()
+    }
+    serverConfig.text = JsonOutput.toJson(config)
   }
 
 }
