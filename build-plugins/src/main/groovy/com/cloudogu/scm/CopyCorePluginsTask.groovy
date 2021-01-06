@@ -25,23 +25,19 @@
 
 package com.cloudogu.scm
 
+import com.google.common.hash.Hashing
+import com.google.common.io.Files
+import groovy.xml.MarkupBuilder
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.file.Directory
 import org.gradle.api.file.DirectoryProperty
 import org.gradle.api.provider.Property
 import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.Internal
-
 import org.gradle.api.tasks.OutputDirectory
 import org.gradle.api.tasks.TaskAction
-import groovy.xml.MarkupBuilder
-import java.io.BufferedWriter
-
-import com.google.common.hash.Hashing
-import com.google.common.io.Files
 
 class CopyCorePluginsTask extends DefaultTask {
 

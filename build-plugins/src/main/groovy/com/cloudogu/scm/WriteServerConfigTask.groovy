@@ -25,27 +25,13 @@
 
 package com.cloudogu.scm
 
+import groovy.json.JsonOutput
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.file.Directory
-import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.provider.Property
-import org.gradle.api.provider.Provider
-import org.gradle.api.tasks.Classpath
 import org.gradle.api.tasks.Nested
-import org.gradle.api.tasks.Internal
-import org.gradle.api.GradleException
-
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import groovy.xml.MarkupBuilder
-import java.io.BufferedWriter
-import org.gradle.api.tasks.Input
-
-import com.google.common.hash.Hashing
-import com.google.common.io.Files
-import groovy.json.JsonOutput
 
 class WriteServerConfigTask extends DefaultTask {
 
@@ -61,7 +47,7 @@ class WriteServerConfigTask extends DefaultTask {
   }
 
   @OutputFile
-  public File getServerConfig() {
+  File getServerConfig() {
     return new File(project.buildDir, 'server/config.json')
   }
 
@@ -90,8 +76,8 @@ class WriteServerConfigTask extends DefaultTask {
     File serverConfig = getServerConfig()
     serverConfig.getParentFile().mkdirs()
     serverConfig.text = JsonOutput.toJson([
-      home: extension.getHome(), 
-      port: extension.getPort(), 
+      home: extension.getHome(),
+      port: extension.getPort(),
       contextPath: '/scm',
       stage: 'DEVELOPMENT',
       headerSize: 16384,

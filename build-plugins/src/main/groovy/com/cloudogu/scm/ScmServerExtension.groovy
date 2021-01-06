@@ -46,25 +46,25 @@ class ScmServerExtension implements Serializable {
   }
 
   @Input
-  public boolean isOpenBrowser() {
+  boolean isOpenBrowser() {
     return openBrowser
   }
 
-  public void setOpenBrowser(boolean openBrowser) {
+  void setOpenBrowser(boolean openBrowser) {
     this.openBrowser = openBrowser
   }
 
   @Input
-  public boolean isLiveReload() {
+  boolean isLiveReload() {
     return liveReload
   }
 
-  public void setLiveReload(boolean liveReload) {
+  void setLiveReload(boolean liveReload) {
     this.liveReload = liveReload
   }
 
   @Input
-  public String getHome() {
+  String getHome() {
     if (project.hasProperty('home')) {
       return project.getProperty('home')
     }
@@ -72,7 +72,7 @@ class ScmServerExtension implements Serializable {
   }
 
   @Input
-  public int getPort() {
+  int getPort() {
     if (project.hasProperty('port')) {
       return Integer.parseInt(project.getProperty('port'))
     }
@@ -81,11 +81,11 @@ class ScmServerExtension implements Serializable {
 
   @Optional
   @InputFile
-  public File getWarFile() {
+  File getWarFile() {
     return warFile
   }
 
-  public void setWarFile(File warFile) {
+  void setWarFile(File warFile) {
     this.warFile = warFile
   }
 

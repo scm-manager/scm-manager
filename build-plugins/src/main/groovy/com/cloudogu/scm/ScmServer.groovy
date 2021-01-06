@@ -39,7 +39,7 @@ import org.eclipse.jetty.server.handler.ShutdownHandler
 
 import java.awt.Desktop
 
-public class ScmServer {
+class ScmServer {
 
   def configuration
   private Server server

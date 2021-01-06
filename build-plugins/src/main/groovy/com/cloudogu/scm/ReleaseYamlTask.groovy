@@ -28,50 +28,28 @@ package com.cloudogu.scm
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
 import org.gradle.api.artifacts.Configuration
-import org.gradle.api.file.Directory
-import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.provider.Property
-import org.gradle.api.provider.Provider
 import org.gradle.api.tasks.Classpath
-import org.gradle.api.tasks.Nested
-import org.gradle.api.tasks.Internal
-import org.gradle.api.GradleException
-
 import org.gradle.api.tasks.OutputFile
 import org.gradle.api.tasks.TaskAction
-import groovy.xml.MarkupBuilder
-import java.io.BufferedWriter
-import org.gradle.api.artifacts.Configuration
-import org.gradle.api.tasks.Optional
-import org.gradle.api.tasks.Classpath
-import org.gradle.api.tasks.InputFile
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.InputFile
-
-import com.google.common.hash.Hashing
-import com.google.common.hash.HashCode
-import com.google.common.io.Files
-import groovy.json.JsonOutput
-
-import java.text.SimpleDateFormat
 import org.yaml.snakeyaml.Yaml
 
+import java.text.SimpleDateFormat
 
 class ReleaseYamlTask extends DefaultTask {
 
   private Configuration configuration
 
   @Classpath
-  public Configuration getConfiguration() {
+  Configuration getConfiguration() {
     return configuration
   }
 
-  public void setConfiguration(Configuration configuration) {
+  void setConfiguration(Configuration configuration) {
     this.configuration = configuration
   }
 
   @OutputFile
-  public File getOutputFile() {
+  File getOutputFile() {
     return new File(project.buildDir, 'libs/release.yml')
   }
 
@@ -93,7 +71,7 @@ class ReleaseYamlTask extends DefaultTask {
     }
 
     files.forEach { file ->
-      file.withReader { r -> 
+      file.withReader { r ->
         def pkg = yaml.load(r)
         release.packages.add(pkg)
       }

@@ -25,30 +25,12 @@
 
 package com.cloudogu.scm
 
+import com.google.common.hash.HashCode
+import com.google.common.hash.Hashing
+import com.google.common.io.Files
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
-import org.gradle.api.artifacts.Configuration
-import org.gradle.api.file.Directory
-import org.gradle.api.file.DirectoryProperty
-import org.gradle.api.provider.Property
-import org.gradle.api.provider.Provider
-import org.gradle.api.tasks.Classpath
-import org.gradle.api.tasks.Nested
-import org.gradle.api.tasks.Internal
-import org.gradle.api.GradleException
-
-import org.gradle.api.tasks.OutputFile
-import org.gradle.api.tasks.TaskAction
-import groovy.xml.MarkupBuilder
-import java.io.BufferedWriter
-import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Optional
-import org.gradle.api.tasks.InputFile
-
-import com.google.common.hash.Hashing
-import com.google.common.hash.HashCode
-import com.google.common.io.Files
-import groovy.json.JsonOutput
+import org.gradle.api.tasks.*
 
 class PackageYamlTask extends DefaultTask {
 
@@ -56,26 +38,26 @@ class PackageYamlTask extends DefaultTask {
   private File artifact
 
   @Input
-  public String getType() {
+  String getType() {
     return type
   }
 
-  public void setType(String type) {
+  void setType(String type) {
     this.type = type
   }
 
   @Optional
   @InputFile
-  public File getArtifact() {
+  File getArtifact() {
     return artifact
   }
 
-  public void setArtifact(File artifact) {
+  void setArtifact(File artifact) {
     this.artifact = artifact
   }
 
   @OutputFile
-  public File getOutputFile() {
+  File getOutputFile() {
     return new File(project.buildDir, 'libs/package.yml')
   }
 
