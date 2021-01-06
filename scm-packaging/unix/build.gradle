@@ -25,12 +25,14 @@ import org.gradle.util.VersionNumber
 
 plugins {
   id 'org.scm-manager.packaging'
+  id 'signing'
 }
 
 configurations {
   server
   webapp
   jsvc
+  unixPkg
   packageYaml {
     canBeConsumed = true
   }
@@ -90,10 +92,18 @@ task distribution(type: PackageYaml)  {
   type = 'unix'
   artifact = file("build/libs/unix-${project.version}-app.tar.gz")
   dependsOn unix
+  if (project.hasProperty("signing.secretKeyRingFile")) {
+    dependsOn "signUnixPkg"
+  }
 }
 
 artifacts {
+  unixPkg unix
   packageYaml(file('build/libs/package.yml')) {
     builtBy distribution
   }
+}
+
+signing {
+  sign configurations.unixPkg
 }

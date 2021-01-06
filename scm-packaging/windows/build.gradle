@@ -26,11 +26,13 @@ import org.gradle.util.VersionNumber
 plugins {
   id "de.undercouch.download" version "4.1.1"
   id 'org.scm-manager.packaging'
+  id 'signing'
 }
 
 configurations {
   server
   webapp
+  windowsPkg
   packageYaml {
     canBeConsumed = true
   }
@@ -94,10 +96,18 @@ task distribution(type: PackageYaml)  {
   type = 'windows'
   artifact = file("build/libs/windows-${project.version}-app.zip")
   dependsOn windows
+  if (project.hasProperty("signing.secretKeyRingFile")) {
+    dependsOn "signWindowsPkg"
+  }
 }
 
 artifacts {
+  windowsPkg windows
   packageYaml(file('build/libs/package.yml')) {
     builtBy distribution
   }
+}
+
+signing {
+  sign configurations.windowsPkg
 }
