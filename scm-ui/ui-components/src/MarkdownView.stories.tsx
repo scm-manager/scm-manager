@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import { storiesOf } from "@storybook/react";
 import MarkdownView from "./MarkdownView";
 import styled from "styled-components";
@@ -59,7 +59,7 @@ storiesOf("MarkdownView", module)
   .add("Commit Links", () => <MarkdownView content={MarkdownCommitLinks} />)
   .add("Custom code renderer", () => {
     const binder = new Binder("custom code renderer");
-    const Container: FC<any> = ({ value }) => {
+    const Container: FC<{ value: string }> = ({ value }) => {
       return (
         <div>
           <h4 style={{ border: "1px dashed lightgray", padding: "2px" }}>
