@@ -47,13 +47,16 @@ type Props = {
 const PermaLinkWrapper = styled.div`
   margin: 1.2rem 0 0 1.5rem;
   width: 16px;
+  height: 16px;
   font-size: 13px;
 
   i {
-    visibility: hidden;
+    color: #dbdbdb;
+    opacity: 0.75;
   }
   &:hover i {
-    visibility: visible;
+    color: #b5b5b5;
+    opacity: 1;
   }
 `;
 
@@ -140,7 +143,7 @@ const Breadcrumb: FC<Props> = ({ repository, branch, defaultBranch, revision, pa
             <Icon name="spinner fa-spin" />
           ) : (
             <Tooltip message={t("breadcrumb.copyPermalink")}>
-              <Icon name="link" onClick={() => copySource()} />
+              <Icon name="link" color="inherit" onClick={() => copySource()} />
             </Tooltip>
           )}
         </PermaLinkWrapper>

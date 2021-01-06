@@ -1675,14 +1675,14 @@ exports[`Storyshots BreadCrumb Default 1`] = `
     className="is-flex"
   >
     <div
-      className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 mGuSL"
+      className="Breadcrumb__PermaLinkWrapper-zvtb4t-0 grYLJW"
     >
       <span
         className="tooltip has-tooltip-right"
         data-tooltip="breadcrumb.copyPermalink"
       >
         <i
-          className="fas fa-link has-text-grey-light"
+          className="fas fa-link has-text-inherit"
           onClick={[Function]}
         />
       </span>
