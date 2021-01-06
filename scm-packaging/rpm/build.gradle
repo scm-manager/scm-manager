@@ -23,6 +23,28 @@
  */
 import org.gradle.util.VersionNumber
 
+// nebula.ospackage uses redline to build the rpm package.
+// The problem is that redline does not support 4096 bit rsa keys,
+// but we use such a key for rpm signatures.
+// - https://github.com/nebula-plugins/gradle-ospackage-plugin/issues/270
+// - https://github.com/craigwblake/redline/issues/62
+// For now we override the nebula dependency to redline with out own version
+// of redline, which supports only 4096 bit keys:
+// - https://github.com/craigwblake/redline/compare/master...scm-manager:big-rsa-header
+// This is far from ideal, but it works for our purposes.
+buildscript {
+  configurations.all {
+    resolutionStrategy {
+      force "org.redline-rpm:redline:1.2.9-rsa4096"
+    }
+  }
+  repositories {
+    maven {
+      url 'https://packages.scm-manager.org/repository/public/'
+    }
+  }
+}
+
 plugins {
   id 'nebula.ospackage' version '8.4.1'
   id 'org.scm-manager.packaging'
@@ -54,13 +76,25 @@ task rpm(type: Rpm) {
   url 'https://scm-manager.org'
 
   requires 'procps'
-  // recommends (weak dependency) is not supported, 
+  // recommends (weak dependency) is not supported,
   // so we define a hard dependencies for java and mercurial
   requires 'java-11-openjdk-headless'
   requires 'mercurial'
 
   preInstall file('src/main/scripts/before-installation.sh')
   postInstall file('src/main/scripts/after-installation.sh')
+
+  if (project.hasProperty("gpg.scm.keyring")) {
+    signingKeyRingFile file(project.property("gpg.scm.keyring"))
+  }
+
+  if (project.hasProperty("gpg.scm.key")) {
+    signingKeyId project.property("gpg.scm.key")
+  }
+
+  if (project.hasProperty("gpg.scm.passphrase")) {
+    signingKeyPassphrase project.property("gpg.scm.passphrase")
+  }
 
   VersionNumber version = VersionNumber.parse(project.version)
 
