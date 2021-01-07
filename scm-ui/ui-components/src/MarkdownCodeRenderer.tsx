@@ -35,11 +35,10 @@ type Props = {
 
 const MarkdownCodeRenderer: FC<Props> = (props) => {
   const binder = useBinder();
-  const { language } = props;
+  const { language, indexLinks } = props;
   const extensionKey = `markdown-renderer.code.${language}`;
   if (binder.hasExtension(extensionKey, props)) {
-    // const indexLinks = useSelector
-    return <ExtensionPoint name={extensionKey} props={{ ...props, indexLinks: props.indexLinks }} />;
+    return <ExtensionPoint name={extensionKey} props={{ ...props, indexLinks }} />;
   }
   return <SyntaxHighlighter {...props} />;
 };
