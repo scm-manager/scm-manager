@@ -136,7 +136,10 @@ dependencies {
 war {
   from 'build/war'
   from project.configurations.assets
-  dependsOn 'copy-core-plugins'
+  into('WEB-INF/classes/META-INF/scm') {
+    from('build/openapi')
+  }
+  dependsOn 'copy-core-plugins', 'resolve'
 }
 
 artifacts {
@@ -161,9 +164,28 @@ serve {
   dependsOn 'dev-war'
 }
 
+resolve {
+  outputFileName = 'openapi'
+  outputFormat = 'JSONANDYAML'
+  prettyPrint = 'TRUE'
+  classpath = sourceSets.main.runtimeClasspath
+  resourcePackages = ['sonia.scm.api.v2.resources']
+  outputDir = file('build/openapi')
+  openApiFile = file('build/tmp/openapi.yml')
+}
+
+task prepareOpenAPI(type: Copy) {
+  from 'src/main/doc/openapi.yml'
+  into 'build/tmp'
+  expand(version: project.version)
+}
+
+tasks.getByName("resolve").configure {
+  dependsOn 'prepareOpenAPI'
+}
+
 /**
 WTF???
-
 <!-- fix javadoc -->
 
 <dependency>
@@ -182,55 +204,8 @@ fix java.lang.NoClassDefFoundError org/w3c/dom/ElementTraversal
   <artifactId>xml-apis</artifactId>
   <version>1.4.01</version>
 </dependency>
-
-<!-- core plugins -->
-
-<dependency>
-  <groupId>sonia.scm.plugins</groupId>
-  <artifactId>scm-git-plugin</artifactId>
-  <version>2.13.0-SNAPSHOT</version>
-  <classifier>tests</classifier>
-  <scope>test</scope>
-</dependency>
-
-<dependency>
-  <groupId>sonia.scm.plugins</groupId>
-  <artifactId>scm-git-plugin</artifactId>
-  <version>2.13.0-SNAPSHOT</version>
-  <scope>test</scope>
-</dependency>
-
-<dependency>
-  <groupId>sonia.scm.plugins</groupId>
-  <artifactId>scm-hg-plugin</artifactId>
-  <version>2.13.0-SNAPSHOT</version>
-  <classifier>tests</classifier>
-  <scope>test</scope>
-</dependency>
-
-<dependency>
-  <groupId>sonia.scm.plugins</groupId>
-  <artifactId>scm-hg-plugin</artifactId>
-  <version>2.13.0-SNAPSHOT</version>
-  <scope>test</scope>
-</dependency>
-
-<dependency>
-  <groupId>sonia.scm.plugins</groupId>
-  <artifactId>scm-svn-plugin</artifactId>
-  <version>2.13.0-SNAPSHOT</version>
-  <classifier>tests</classifier>
-  <scope>test</scope>
-</dependency>
-
-<dependency>
-  <groupId>sonia.scm.plugins</groupId>
-  <artifactId>scm-svn-plugin</artifactId>
-  <version>2.13.0-SNAPSHOT</version>
-  <scope>test</scope>
-</dependency>
-
 **/
+
 test {
   useJUnitPlatform()
   // TODO integration tests
