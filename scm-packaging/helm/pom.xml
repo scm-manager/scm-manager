@@ -146,7 +146,7 @@
       <plugin>
         <groupId>com.kiwigrid</groupId>
         <artifactId>helm-maven-plugin</artifactId>
-        <version>5.4</version>
+        <version>5.6</version>
         <extensions>true</extensions>
         <configuration>
           <chartDirectory>${project.basedir}/target/chart</chartDirectory>
@@ -164,6 +164,8 @@
             <url>${helm.repository}</url>
             <type>ARTIFACTORY</type>
           </uploadRepoSnapshot>
+          <!-- Work around https://github.com/kiwigrid/helm-maven-plugin/issues/102 -->
+          <addDefaultRepo>false</addDefaultRepo>
         </configuration>
       </plugin>
 

@@ -44,6 +44,8 @@ service:
   type: LoadBalancer
   # service.port -- k8s service port
   port: 80
+  # service.nodePort -- k8s service node port
+  #nodePort:
 
 ingress:
   # ingress.enabled -- Enables ingress
@@ -117,3 +119,44 @@ tolerations: []
 
 # affinity -- Affinity settings
 affinity: {}
+
+# lifecycleHooks for the container to automate configuration before or after startup,
+# i.e. to create users or repos through REST API calls
+lifecycleHooks: |
+#    postStart:
+#      exec:
+#        command: ["/bin/bash", "-c", "echo lifecycleHook"]
+# Other option: Insert scrip file via "helm install --set-file=postStartHookScript=${pwd()}/postStartHook.sh"
+#  lifecycleHooks: |-
+#    postStart:
+#      exec:
+#        command:
+#          - "/bin/bash"
+#          - "-c"
+#          - >
+#    {{  tpl (required ".Values.postStartHookScript required!" .Values.postStartHookScript) . | indent 8  }}
+
+# extraEnv -- Additional environment variables, parsed through tpl function
+extraEnv: |
+#  - name: TZ
+#    value: "{{.Values.timezone}}"
+
+# extraEnvFrom -- Additional environment variables mapped from Secret or ConfigMap, parsed through tpl function
+extraEnvFrom: |
+#  - secretRef:
+#      name: "{{.Values.mail.credentials}}"
+
+# extraVolumes -- Add additional volumes, parsed through tpl function
+extraVolumes: |
+#  - name: bucket-service-account
+#    secret:
+#      secretName: "{{.Values.bucket.secretName}}"
+#      items:
+#        - key: service_account.json
+#          path: service_account.json
+
+# extraVolumeMounts -- Add additional volumes mounts, parsed through tpl function
+extraVolumeMounts: |
+#  - name: bucket-service-account
+#    mountPath: "{{.Values.bucket.mountPath}}"
+#    readOnly: true

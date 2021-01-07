@@ -68,6 +68,10 @@ spec:
         - name: {{ .Chart.Name }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          {{- if .Values.lifecycleHooks }}
+          lifecycle:
+{{ tpl .Values.lifecycleHooks . | indent 12 }}
+          {{- end }}
           ports:
             - name: http
               containerPort: 8080
@@ -89,6 +93,17 @@ spec:
             mountPath: /var/lib/scm
           - name: config
             mountPath: /opt/scm-server/conf
+            {{- with .Values.extraVolumeMounts }}
+            {{- tpl . $ | nindent 12 }}
+            {{- end }}
+          env:
+            {{- with .Values.extraEnv }}
+            {{- tpl . $ | nindent 12 }}
+            {{- end }}
+          envFrom:
+            {{- with .Values.extraEnvFrom }}
+            {{- tpl . $ | nindent 12 }}
+            {{- end }}
       volumes:
       - name: data
       {{- if .Values.persistence.enabled }}
@@ -104,6 +119,9 @@ spec:
       - name: scripts
         configMap: 
           name: {{ include "scm-manager.fullname" . }}-scripts
+      {{- end }}
+      {{- with .Values.extraVolumes }}
+      {{- tpl . $ | nindent 8 }}
       {{- end }}
     {{- with .Values.nodeSelector }}
       nodeSelector:
