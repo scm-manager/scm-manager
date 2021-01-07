@@ -24,9 +24,10 @@
 
 plugins {
   id 'java-platform'
+  id 'maven-publish'
 }
 
-subprojects {
+subprojects { s ->
   repositories {
     maven {
       url 'https://packages.scm-manager.org/repository/public/'
@@ -36,6 +37,20 @@ subprojects {
 
 allprojects {
   apply from: rootProject.file('gradle/dependencies.gradle')
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifactId project.name
+      from components.javaPlatform
+    }
+  }
+  repositories {
+    maven {
+      url = "/tmp/repo"
+    }
+  }
 }
 
 dependencies {

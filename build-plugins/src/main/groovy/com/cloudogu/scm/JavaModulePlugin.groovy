@@ -26,22 +26,51 @@ package com.cloudogu.scm
 import com.hierynomus.gradle.license.tasks.LicenseCheck
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.tasks.javadoc.Javadoc
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 
 class JavaModulePlugin implements Plugin<Project> {
 
   void apply(Project project) {
+    project.plugins.apply("java")
+    project.plugins.apply("maven-publish")
     project.plugins.apply("com.github.hierynomus.license")
 
-    project.afterEvaluate {
-      project.java {
-        toolchain {
-          languageVersion = JavaLanguageVersion.of(11)
+    project.java {
+      toolchain {
+        languageVersion = JavaLanguageVersion.of(11)
+      }
+      withJavadocJar()
+      withSourcesJar()
+    }
+
+    project.compileJava {
+      options.release = 8
+    }
+
+    project.tasks.withType(Javadoc) {
+      failOnError false
+    }
+
+
+    project.publishing {
+      publications {
+        mavenJava(MavenPublication) {
+          artifactId project.name
+          project.afterEvaluate {
+            def component = project.components.findByName("web")
+            if (component == null) {
+              component = project.components.java
+            }
+            from component
+          }
         }
       }
-      project.compileJava {
-        options.release = 8
-      }
+    }
+
+    project.rootProject.publishing.repositories.each { r ->
+      project.publishing.repositories.add(r)
     }
 
     project.license {
