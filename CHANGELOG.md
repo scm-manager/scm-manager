@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Added
 - Option to create a permanent link to a source file ([#1489](https://github.com/scm-manager/scm-manager/pull/1489))
+- add markdown codeblock renderer extension point ([#1492](https://github.com/scm-manager/scm-manager/pull/1492))
 
 ## [2.12.0] - 2020-12-17
 ### Added
