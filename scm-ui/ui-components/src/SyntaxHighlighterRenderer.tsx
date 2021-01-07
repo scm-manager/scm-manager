@@ -119,7 +119,7 @@ const SyntaxHighlighterRenderer: FC<Props> = ({
             {showLineNumbers && (
               <>
                 {copying ? (
-                  <Icon name="spinner" />
+                  <Icon name="spinner fa-spin" />
                 ) : (
                   <Tooltip message={t("sources.content.copyPermalink")}>
                     <Icon name="link" onClick={() => lineNumberClick(lineNumber)} />

@@ -25,6 +25,7 @@ import React, { FC, useEffect, useState } from "react";
 import { apiClient, ErrorNotification, Loading, SyntaxHighlighter } from "@scm-manager/ui-components";
 import { File, Link } from "@scm-manager/ui-types";
 import { useLocation } from "react-router-dom";
+import replaceBranchWithRevision from "../../ReplaceBranchWithRevision";
 
 type Props = {
   file: File;
@@ -66,12 +67,6 @@ const SourcecodeViewer: FC<Props> = ({ file, language }) => {
 
   return <SyntaxHighlighter language={getLanguage(language)} value={content} permalink={permalink} />;
 };
-
-export function replaceBranchWithRevision(path: string, revision: string) {
-  const pathParts = path.split("/");
-  pathParts[6] = revision; // The branch is at the 7th position in the url
-  return pathParts.join("/");
-}
 
 export function getLanguage(language: string) {
   return language.toLowerCase();

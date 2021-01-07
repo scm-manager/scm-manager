@@ -12,6 +12,11 @@ Below the action bar is a breadcrumb navigation that shows the path of the files
 
 ![Repository-Code-Sources](assets/repository-code-sourcesView.png)
 
+#### Permalink
+
+By clicking the Button on the left-hand side of the breadcrumbs navigation, a permalink to the active path is
+automatically copied to the user's clipboard.
+
 ### Changesets
 The changesets/commits overview shows the change history of the branch. Each entry represents a commit. 
 

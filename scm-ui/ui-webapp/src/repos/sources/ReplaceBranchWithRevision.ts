@@ -22,37 +22,12 @@
  * SOFTWARE.
  */
 
-import { storiesOf } from "@storybook/react";
-import * as React from "react";
-import styled from "styled-components";
-import Breadcrumb from "./Breadcrumb";
-import repository from "./__resources__/repository";
-// @ts-ignore ignore unknown png
-import Git from "./__resources__/git-logo.png";
-import { MemoryRouter } from "react-router-dom";
-
-const Wrapper = styled.div`
-  margin: 2rem;
-  max-width: 800px;
-`;
-
-const master = { name: "master", revision: "1", defaultBranch: true, _links: {} };
-const path = "src/main/java/com/cloudogu";
-const baseUrl = "scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources";
-const sources = Git;
-
-storiesOf("BreadCrumb", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
-  .add("Default", () => (
-    <Breadcrumb
-      repository={repository}
-      defaultBranch={master}
-      branch={master}
-      path={path}
-      baseUrl={baseUrl}
-      sources={sources}
-      revision={"1"}
-      permalink={"/" + path}
-    />
-  ));
+/**
+ * Takes a given path to a source file and replaces the branch with a concrete revision.
+ * This allows for the resulting url to act as a permalink.
+ */
+export default function replaceBranchWithRevision(path: string, revision: string) {
+  const pathParts = path.split("/");
+  pathParts[6] = revision; // The branch is at the 7th position in the url
+  return pathParts.join("/");
+}
