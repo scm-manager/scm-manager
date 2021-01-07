@@ -40,8 +40,8 @@ if helm-docs --version > /dev/null 2>&1; then
 
   cd "${CHARTDIR}"
   PAGE="docs/en/installation/k8s.md"
-  echo helm-docs --template-file="${MODULE_DIR}/src/main/docs/helm.md.gotmpl" --output-file="${MODULE_DIR}/../../${PAGE}"
-  helm-docs --template-file="../../src/main/docs/helm.md.gotmpl" --output-file="../../../../${PAGE}"
+  echo helm-docs --template-files="${MODULE_DIR}/src/main/docs/helm.md.gotmpl" --output-file="${MODULE_DIR}/../../${PAGE}"
+  helm-docs --template-files="../../src/main/docs/helm.md.gotmpl" --output-file="../../../../${PAGE}"
   echo "The helm documentation was successfully generated"
   echo "Please check the results at ${PAGE}"
   echo "And don't forget to commit ;)"
