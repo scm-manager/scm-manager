@@ -103,6 +103,11 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
           .collect(toList());
         linksBuilder.array(protocolLinks);
       }
+
+      if (repositoryService.isSupported(Command.BUNDLE)) {
+        linksBuilder.single(link("export", resourceLinks.repository().export(repository.getNamespace(), repository.getName(), repository.getType())));
+      }
+
       if (repositoryService.isSupported(Command.TAGS)) {
         linksBuilder.single(link("tags", resourceLinks.tag().all(repository.getNamespace(), repository.getName())));
       }

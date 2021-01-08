@@ -52,12 +52,10 @@ import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryPermissions;
-import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.PullCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
@@ -87,13 +85,14 @@ import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Consumer;
 
 import static com.google.common.base.Preconditions.checkArgument;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singletonList;
+import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
+import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
 
 public class RepositoryImportResource {
 
@@ -163,12 +162,11 @@ public class RepositoryImportResource {
                                 @PathParam("type") String type, @Valid RepositoryImportDto request) {
     RepositoryPermissions.create().check();
 
-    Type t = type(type);
+    Type t = type(manager, type);
     if (!t.getName().equals(request.getType())) {
       throw new WebApplicationException("type of import url and repository does not match", Response.Status.BAD_REQUEST);
     }
-
-    checkSupport(t, Command.PULL, request);
+    checkSupport(t, Command.PULL);
 
     logger.info("start {} import for external url {}", type, request.getImportUrl());
 
@@ -272,9 +270,8 @@ public class RepositoryImportResource {
     checkNotNull(inputStream, "bundle inputStream is required");
     checkArgument(!Strings.isNullOrEmpty(repositoryDto.getName()), "request does not contain name of the repository");
 
-    Type t = type(type);
-
-    checkSupport(t, Command.UNBUNDLE, "bundle");
+    Type t = type(manager, type);
+    checkSupport(t, Command.UNBUNDLE);
 
     Repository repository = mapper.map(repositoryDto);
     repository.setPermissions(singletonList(
@@ -338,42 +335,6 @@ public class RepositoryImportResource {
       logger.debug("Could not extract repository from input");
     }
     return null;
-  }
-
-  /**
-   * Check repository type for support for the given command.
-   *
-   * @param type    repository type
-   * @param cmd     command
-   * @param request request object
-   */
-  private void checkSupport(Type type, Command cmd, Object request) {
-    if (!(type instanceof RepositoryType)) {
-      logger.warn("type {} is not a repository type", type.getName());
-
-      throw new WebApplicationException(Response.Status.BAD_REQUEST);
-    }
-
-    Set<Command> cmds = ((RepositoryType) type).getSupportedCommands();
-
-    if (!cmds.contains(cmd)) {
-      logger.warn("type {} does not support this type of import: {}",
-        type.getName(), request);
-
-      throw new WebApplicationException(Response.Status.BAD_REQUEST);
-    }
-  }
-
-  private Type type(String type) {
-    RepositoryHandler handler = manager.getHandler(type);
-
-    if (handler == null) {
-      logger.warn("no handler for type {} found", type);
-
-      throw new WebApplicationException(Response.Status.NOT_FOUND);
-    }
-
-    return handler.getType();
   }
 
   @Getter

@@ -17,6 +17,12 @@ repository is marked as archived, it can no longer be modified.
 
 ![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
 
+In the area "Repository Export" you may export this repository as dump file.
+You can choose between compressed and uncompressed download format.
+This export function is currently only supported by Subversion repositories.
+
+![Repository-Settings-General-Svn](assets/repository-settings-general-svn.png)
+
 ### Permissions
 
 Thanks to the finely granular permission concept of SCM-Manager, users and groups can be authorized based on definable

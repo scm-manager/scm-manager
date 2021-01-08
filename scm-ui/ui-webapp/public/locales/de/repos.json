@@ -242,6 +242,15 @@
     "createButton": "Neues Repository erstellen",
     "importButton": "Repository importieren"
   },
+  "export": {
+    "subtitle": "Repository exportieren",
+    "compressed": {
+      "label": "Komprimieren",
+      "helpText": "Export Datei vor dem Download komprimieren. Reduziert die Downloadgröße."
+    },
+    "exportButton": "Repository exportieren",
+    "exportStarted":  "Der Repository Export wurde gestartet. Abhängig von der Größe des Repository kann dies einige Momente dauern."
+  },
   "sources": {
     "fileTree": {
       "name": "Name",
