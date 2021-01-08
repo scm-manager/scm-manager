@@ -36,10 +36,8 @@ import sonia.scm.Type;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
-import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -51,15 +49,17 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.Set;
+
+import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
+import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
 
 public class RepositoryExportResource {
 
@@ -119,7 +119,7 @@ public class RepositoryExportResource {
     Repository repository = manager.get(new NamespaceAndName(namespace, name));
     RepositoryPermissions.read().check(repository);
 
-    Type repositoryType = type(type);
+    Type repositoryType = type(manager, type);
     checkSupport(repositoryType, Command.BUNDLE);
 
     return exportRepository(repository, compressed);
@@ -153,40 +153,11 @@ public class RepositoryExportResource {
         repository.getNamespace(),
         repository.getName(),
         timestamp,
-        compressed ? "gz" : "dump"
+        compressed ? "dump.gz" : "dump"
       );
   }
 
   private String createFormattedTimestamp() {
     return Instant.now().toString().replace(":", "-").split("\\.")[0];
-  }
-
-  /**
-   * Check repository type for support for the given command.
-   *
-   * @param type repository type
-   * @param cmd  command
-   */
-  private void checkSupport(Type type, Command cmd) {
-    if (!(type instanceof RepositoryType)) {
-      logger.warn("type {} is not a repository type", type.getName());
-      throw new WebApplicationException(Response.Status.BAD_REQUEST);
-    }
-
-    Set<Command> cmds = ((RepositoryType) type).getSupportedCommands();
-    if (!cmds.contains(cmd)) {
-      logger.warn("type {} does not support this type of export",
-        type.getName());
-      throw new WebApplicationException(Response.Status.BAD_REQUEST);
-    }
-  }
-
-  private Type type(String type) {
-    RepositoryHandler handler = manager.getHandler(type);
-    if (handler == null) {
-      logger.warn("no handler for type {} found", type);
-      throw new WebApplicationException(Response.Status.NOT_FOUND);
-    }
-    return handler.getType();
   }
 }
