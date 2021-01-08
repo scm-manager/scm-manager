@@ -49,6 +49,10 @@ class JavaModulePlugin implements Plugin<Project> {
       options.release = 8
     }
 
+    project.compileTestJava {
+      options.release = 8
+    }
+
     project.tasks.withType(Javadoc) {
       failOnError false
     }

@@ -38,15 +38,17 @@ buildscript {
 }
 apply plugin: 'org.kordamp.gradle.enforcer'
 
+// https://kordamp.org/enforcer-gradle-plugin/
+
 enforce {
+  rule(enforcer.rules.RequireGradleVersion) { r ->
+    r.version = '6.7'
+  }
   rule(enforcer.rules.RequireJavaVersion) { r ->
-    r.version = '11.'
+    r.version = '11'
   }
   rule(enforcer.rules.EnforceBytecodeVersion) { r ->
     r.maxJdkVersion = '1.8'
-  }
-  rule(enforcer.rules.RequireGradleVersion) { r ->
-    r.version = '6.7'
   }
 }
 
