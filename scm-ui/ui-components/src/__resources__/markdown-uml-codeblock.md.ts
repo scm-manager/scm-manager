@@ -21,38 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-import { storiesOf } from "@storybook/react";
-import * as React from "react";
-import styled from "styled-components";
-import Breadcrumb from "./Breadcrumb";
-import repository from "./__resources__/repository";
-// @ts-ignore ignore unknown png
-import Git from "./__resources__/git-logo.png";
-import { MemoryRouter } from "react-router-dom";
-
-const Wrapper = styled.div`
-  margin: 2rem;
-  max-width: 800px;
-`;
-
-const master = { name: "master", revision: "1", defaultBranch: true, _links: {} };
-const path = "src/main/java/com/cloudogu";
-const baseUrl = "scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources";
-const sources = Git;
-
-storiesOf("BreadCrumb", module)
-  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
-  .add("Default", () => (
-    <Breadcrumb
-      repository={repository}
-      defaultBranch={master}
-      branch={master}
-      path={path}
-      baseUrl={baseUrl}
-      sources={sources}
-      revision={"1"}
-      permalink={"/" + path}
-    />
-  ));
+export default `# Uml Code Block in Markdown
+\`\`\`uml
+actor Foo1
+boundary Foo2
+control Foo3
+entity Foo4
+database Foo5
+collections Foo6
+Foo1 -> Foo2 : To boundary
+Foo1 -> Foo3 : To control
+Foo1 -> Foo4 : To entity
+Foo1 -> Foo5 : To database
+Foo1 -> Foo6 : To collections
+\`\`\``;

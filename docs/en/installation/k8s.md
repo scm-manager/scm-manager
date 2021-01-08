@@ -30,6 +30,10 @@ The following table list the configurable parameters of the SCM-Manager chart an
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | affinity | object | `{}` | Affinity settings |
+| extraEnv | string | `""` | Additional environment variables, parsed through tpl function |
+| extraEnvFrom | string | `""` | Additional environment variables mapped from Secret or ConfigMap, parsed through tpl function |
+| extraVolumeMounts | string | `""` | Add additional volumes mounts, parsed through tpl function |
+| extraVolumes | string | `""` | Add additional volumes, parsed through tpl function |
 | fullnameOverride | string | `""` | Override the full resource names |
 | image.pullPolicy | string | `"IfNotPresent"` | SCM-Manager image pull policy |
 | image.repository | string | `"scmmanager/scm-manager"` |  Name of SCM-Manager image |
@@ -39,6 +43,7 @@ The following table list the configurable parameters of the SCM-Manager chart an
 | ingress.hosts | list | `["scm-manager.local"]` | Ingress hosts |
 | ingress.path | string | `"/"` | Ingress path |
 | ingress.tls | list | `[]` | Ingress TLS configuration |
+| lifecycleHooks | string | `""` |  |
 | nameOverride | string | `""` | Override the resource name prefix |
 | nodeSelector | object | `{}` | Node labels for pod assignment |
 | persistence.accessMode | string | `"ReadWriteOnce"` | The PVC access mode |

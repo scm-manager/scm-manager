@@ -94,7 +94,7 @@ export default class Page extends React.Component<Props> {
   }
 
   renderPageHeader() {
-    const { error, afterTitle, subtitle, children } = this.props;
+    const { error, afterTitle, title, subtitle, children } = this.props;
 
     let pageActions = null;
     let pageActionsExists = false;
@@ -114,21 +114,24 @@ export default class Page extends React.Component<Props> {
     });
     const underline = pageActionsExists ? <hr className="header-with-actions" /> : null;
 
-    return (
-      <>
-        <div className="columns">
-          <div className="column">
-            <FlexContainer>
-              <Title title={this.getTextualTitle()}>{this.getTitleComponent()}</Title>
-              {afterTitle && <MarginLeft>{afterTitle}</MarginLeft>}
-            </FlexContainer>
-            <Subtitle subtitle={subtitle} />
+    if (title || subtitle) {
+      return (
+        <>
+          <div className="columns">
+            <div className="column">
+              <FlexContainer>
+                <Title title={this.getTextualTitle()}>{this.getTitleComponent()}</Title>
+                {afterTitle && <MarginLeft>{afterTitle}</MarginLeft>}
+              </FlexContainer>
+              <Subtitle subtitle={subtitle} />
+            </div>
+            {pageActions}
           </div>
-          {pageActions}
-        </div>
-        {underline}
-      </>
-    );
+          {underline}
+        </>
+      );
+    }
+    return null;
   }
 
   renderContent() {
