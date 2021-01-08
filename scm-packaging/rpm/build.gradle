@@ -197,3 +197,15 @@ license {
 task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
   source = fileTree('.')
 }
+
+task publish(type: HttpUploadTask) {
+  artifact rpm
+  method "PUT"
+  releaseUrl "https://packages.scm-manager.org/repository/yum-v2-releases/"
+  snapshotUrl "https://packages.scm-manager.org/repository/yum-v2-snapshots/"
+  if (project.hasProperty("packagesScmManagerUsername") && project.hasProperty("packagesScmManagerPassword")) {
+    username project.property("packagesScmManagerUsername")
+    password project.property("packagesScmManagerPassword")
+  }
+  dependsOn rpm
+}

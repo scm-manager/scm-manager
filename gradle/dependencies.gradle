@@ -140,6 +140,7 @@ ext {
     jettyServer: "org.eclipse.jetty:jetty-server:${jettyVersion}",
     jettyWebapp: "org.eclipse.jetty:jetty-webapp:${jettyVersion}",
     jettyJmx: "org.eclipse.jetty:jetty-jmx:${jettyVersion}",
+    jettyClient: "org.eclipse.jetty:jetty-client:${jettyVersion}",
 
     // tests
     junitJupiterApi: "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}",

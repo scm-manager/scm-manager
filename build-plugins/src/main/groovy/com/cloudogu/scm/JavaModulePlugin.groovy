@@ -57,7 +57,6 @@ class JavaModulePlugin implements Plugin<Project> {
       failOnError false
     }
 
-
     project.publishing {
       publications {
         mavenJava(MavenPublication) {

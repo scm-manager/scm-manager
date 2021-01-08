@@ -178,3 +178,14 @@ license {
 task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
   source = fileTree('.')
 }
+
+task publish(type: HttpUploadTask) {
+  artifact deb
+  releaseUrl "https://packages.scm-manager.org/repository/apt-v2-releases/"
+  snapshotUrl "https://packages.scm-manager.org/repository/apt-v2-snapshots/"
+  if (project.hasProperty("packagesScmManagerUsername") && project.hasProperty("packagesScmManagerPassword")) {
+    username project.property("packagesScmManagerUsername")
+    password project.property("packagesScmManagerPassword")
+  }
+  dependsOn deb
+}
