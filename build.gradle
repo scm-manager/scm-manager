@@ -136,6 +136,7 @@ project.ext {
   timestamp = new Date().format('yyyyMMddHHmmSS')
   revision = "git rev-parse --short HEAD".execute().text.trim()
   if (project.version.contains('-SNAPSHOT')) {
+    isSnapshot = true
     expandedVersion = project.version.replace('SNAPSHOT', timestamp)
     expandedVersionWithDot = project.version.replace('-SNAPSHOT', ".${timestamp}")
     dockerRepository = 'docker.io/cloudogu/scm-manager'
@@ -146,6 +147,7 @@ project.ext {
     }
     dockerTag = version.replace('SNAPSHOT', snapshotVersion)
   } else {
+    isSnapshot = false
     expandedVersion = project.version
     expandedVersionWithDot = project.version
     dockerRepository = 'docker.io/scmmanager/scm-manager'

@@ -23,7 +23,8 @@
  */
 
 plugins {
-  id 'org.unbroken-dome.helm' version '1.4.0'
+  id 'org.unbroken-dome.helm' version '1.5.0'
+  id 'org.unbroken-dome.helm-publish' version '1.5.0'
   id 'org.scm-manager.packaging'
   id 'com.github.hierynomus.license-base' version '0.15.0'
 }
@@ -55,7 +56,31 @@ helm {
       }
     }
   }
+  publishing {
+    repositories {
+      nexus {
+        url = uri('https://packages.scm-manager.org')
+        if (isSnapshot) {
+          repository = 'helm-v2-snapshots'
+        } else {
+          repository = 'helm-v2-releases'
+        }
+        if (project.hasProperty("packagesScmManagerUsername") && project.hasProperty("packagesScmManagerPassword")) {
+          credentials {
+            username = project.property("packagesScmManagerUsername")
+            password = project.property("packagesScmManagerPassword")
+          }
+        }
+      }
+    }
+  }
 }
+
+/*
+
+
+        }
+ */
 
 helmPackageScmServerChart {
   appVersion = expandedVersion
@@ -70,6 +95,10 @@ artifacts {
   packageYaml(file('build/libs/package.yml')) {
     builtBy distribution
   }
+}
+
+task publish {
+  dependsOn 'helmPublishScmServerChart'
 }
 
 license {
