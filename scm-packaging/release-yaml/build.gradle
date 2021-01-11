@@ -1,3 +1,5 @@
+import com.cloudogu.scm.GitHubUploadTask
+
 /*
  * MIT License
  *
@@ -44,6 +46,24 @@ dependencies {
 
 task distribution(type: ReleaseYaml) {
   configuration = configurations.packageYaml
+}
+
+task publish(type: GitHubUploadTask) {
+  owner = "scm-manager"
+  repo = "website"
+  path = "content/releases/${project.version.replace('.', '-')}.yml"
+  branch = "master"
+  message = "add release descriptor for ${project.version}"
+  author {
+    name = "CES Marvin"
+    email = "cesmarvin@cloudogu.com"
+  }
+  artifact = file('build/libs/release.yml')
+  if (project.hasProperty("gitHubApiToken")) {
+    apiToken = project.property("gitHubApiToken")
+  }
+  skip = isSnapshot
+  dependsOn 'distribution'
 }
 
 license {

@@ -34,6 +34,7 @@ class PackagingPlugin implements Plugin<Project> {
     project.ext.PackageYaml = PackageYamlTask
     project.ext.ReleaseYaml = ReleaseYamlTask
     project.ext.HttpUploadTask = HttpUploadTask
+    project.ext.GitHubUploadTask = GitHubUploadTask
   }
 
 }

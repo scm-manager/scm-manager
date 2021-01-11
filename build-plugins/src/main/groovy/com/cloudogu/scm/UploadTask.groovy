@@ -26,71 +26,61 @@
 package com.cloudogu.scm
 
 import org.eclipse.jetty.client.HttpClient
+import org.eclipse.jetty.client.api.ContentResponse
 import org.eclipse.jetty.client.api.Request
-import org.eclipse.jetty.client.util.BasicAuthentication
+import org.eclipse.jetty.util.ssl.SslContextFactory
+import org.gradle.api.DefaultTask
+import org.gradle.api.GradleException
 import org.gradle.api.tasks.Input
-import org.gradle.api.tasks.Optional
+import org.gradle.api.tasks.InputFile
+import org.gradle.api.tasks.TaskAction
+import org.gradle.api.tasks.bundling.AbstractArchiveTask
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class HttpUploadTask extends UploadTask {
+abstract class UploadTask extends DefaultTask {
 
   private static final Logger LOG = LoggerFactory.getLogger(HttpUploadTask)
 
-  @Input
-  String snapshotUrl
+  @InputFile
+  File artifact
 
   @Input
-  String releaseUrl
+  boolean skip = false
 
-  @Input
-  String method = "POST"
-
-  @Input
-  @Optional
-  String username
-
-  @Input
-  @Optional
-  String password
-
-  HttpUploadTask() {
-    // http upload ist not cacheable
-    outputs.upToDateWhen {
-      false
+  void artifact(Object object) {
+    if (object instanceof AbstractArchiveTask) {
+      artifact = object.getArchiveFile().get().asFile
+    } else if (object instanceof File) {
+      artifact = object
+    } else if (object instanceof String) {
+      artifact = new File(object)
+    } else {
+      throw new IllegalArgumentException("unknown artifact type")
     }
   }
 
-  @Override
-  Request createRequest(HttpClient client) {
-    URI uri = URI.create(createURL())
-    LOG.info("Upload {} with {} to {}", artifact, method, uri)
-
-    client.getAuthenticationStore().addAuthenticationResult(new BasicAuthentication.BasicResult(
-      uri, username, password
-    ))
-
-    return client.newRequest(uri)
-      .method(method)
-      .file(artifact.toPath())
-  }
-
-  private String createURL() {
-    String repositoryUrl = createRepositoryUrl()
-    if ("PUT".equals(method)) {
-      if (!repositoryUrl.endsWith("/")) {
-        repositoryUrl += "/"
+  @TaskAction
+  void upload() {
+    if (skip) {
+      LOG.warn("upload is skipped")
+    }
+    SslContextFactory.Client sslContextFactory = new SslContextFactory.Client()
+    HttpClient client = new HttpClient(sslContextFactory)
+    try {
+      client.start()
+      ContentResponse response = createRequest(client).send()
+      int status = response.getStatus()
+      if (status >= 300) {
+        throw new GradleException("failed to upload artifact, server returned ${status}")
+      } else {
+        LOG.info("successfully upload artifact, server returned with status {}", status)
       }
-      return repositoryUrl + artifact.name
+    } finally {
+      client.stop()
     }
-    return repositoryUrl
   }
 
-  private String createRepositoryUrl() {
-    if (project.version.contains("SNAPSHOT")) {
-      return snapshotUrl
-    }
-    return releaseUrl
-  }
+  abstract Request createRequest(HttpClient client)
 
 }
