@@ -27,6 +27,7 @@ plugins {
   id "de.undercouch.download" version "4.1.1"
   id 'org.scm-manager.packaging'
   id 'signing'
+  id 'maven-publish'
   id 'com.github.hierynomus.license-base' version '0.15.0'
 }
 
@@ -97,9 +98,6 @@ task distribution(type: PackageYaml)  {
   type = 'windows'
   artifact = file("build/libs/windows-${project.version}-app.zip")
   dependsOn windows
-  if (project.hasProperty("signing.secretKeyRingFile")) {
-    dependsOn "signWindowsPkg"
-  }
 }
 
 artifacts {
@@ -110,7 +108,25 @@ artifacts {
 }
 
 signing {
-  sign configurations.windowsPkg
+  sign publishing.publications
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      groupId "sonia.scm.packaging"
+      artifactId project.name
+      version project.version
+
+      artifact(windows) {
+        extension 'zip'
+      }
+    }
+  }
+}
+
+project.rootProject.publishing.repositories.each { r ->
+  project.publishing.repositories.add(r)
 }
 
 license {

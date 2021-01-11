@@ -26,6 +26,7 @@ import org.gradle.util.VersionNumber
 plugins {
   id 'org.scm-manager.packaging'
   id 'signing'
+  id 'maven-publish'
   id 'com.github.hierynomus.license-base' version '0.15.0'
 }
 
@@ -93,9 +94,6 @@ task distribution(type: PackageYaml)  {
   type = 'unix'
   artifact = file("build/libs/unix-${project.version}-app.tar.gz")
   dependsOn unix
-  if (project.hasProperty("signing.secretKeyRingFile")) {
-    dependsOn "signUnixPkg"
-  }
 }
 
 artifacts {
@@ -106,9 +104,26 @@ artifacts {
 }
 
 signing {
-  sign configurations.unixPkg
+  sign publishing.publications
 }
 
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      groupId "sonia.scm.packaging"
+      artifactId project.name
+      version project.version
+
+      artifact(unix) {
+        extension 'tar.gz'
+      }
+    }
+  }
+}
+
+project.rootProject.publishing.repositories.each { r ->
+  project.publishing.repositories.add(r)
+}
 
 license {
   header rootProject.file("LICENSE.txt")
