@@ -44,6 +44,7 @@ dependencies {
   corePlugin project(path: ':scm-plugins:scm-git-plugin', configuration: 'smp')
   corePlugin project(path: ':scm-plugins:scm-hg-plugin', configuration: 'smp')
   corePlugin project(path: ':scm-plugins:scm-svn-plugin', configuration: 'smp')
+  corePlugin project(path: ':scm-plugins:scm-legacy-plugin', configuration: 'smp')
   assets project(path: ':scm-ui', configuration: 'assets')
 
   implementation project(':scm-core')

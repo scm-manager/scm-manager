@@ -37,7 +37,7 @@ scmPlugin {
   displayName = 'Legacy'
   description = 'Support migrated repository urls and v1 passwords'
   author = 'Cloudogu GmbH'
-  category = 'Source Code Management'
+  category = 'Legacy Support'
 
   openapi {
     packages = [
