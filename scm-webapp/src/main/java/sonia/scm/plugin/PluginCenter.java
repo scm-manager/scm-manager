@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import org.slf4j.Logger;
@@ -71,9 +71,11 @@ public class PluginCenter {
   private String buildPluginUrl(String url) {
     String os = HttpUtil.encode(SystemUtil.getOS());
     String arch = SystemUtil.getArch();
+    String javaVersion = SystemUtil.getJre();
     return url.replace("{version}", context.getVersion())
       .replace("{os}", os)
-      .replace("{arch}", arch);
+      .replace("{arch}", arch)
+      .replace("{jre}", javaVersion);
   }
 
 }
