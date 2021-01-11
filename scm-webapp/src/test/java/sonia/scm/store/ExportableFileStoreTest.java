@@ -46,7 +46,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ExportableFileStoreTest {
 
-
   @Test
   void shouldNotPutContentIfNoFilesExists(@TempDir Path temp) throws IOException {
     Exporter exporter = mock(Exporter.class);
@@ -58,12 +57,12 @@ class ExportableFileStoreTest {
   }
 
   @Test
-  void shouldPutContentIntoExporterForEachFile(@TempDir Path temp) throws IOException {
-    createFile(temp, "config", "trace", "first.xml");
-    createFile(temp, "config", "trace", "second.xml");
+  void shouldPutContentIntoExporterForDataStore(@TempDir Path temp) throws IOException {
+    createFile(temp, "data", "trace", "first.xml");
+    createFile(temp, "data", "trace", "second.xml");
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     Exporter exporter = mock(Exporter.class);
-    ExportableFileStore exportableFileStore = new ExportableFileStore(temp.resolve("config").resolve("trace").toFile(), "first.xml");
+    ExportableFileStore exportableFileStore = new ExportableFileStore(temp.resolve("data").resolve("trace").toFile(), "first.xml");
     when(exporter.put(anyString())).thenReturn(os);
 
     exportableFileStore.export(exporter);
@@ -73,8 +72,24 @@ class ExportableFileStoreTest {
     assertThat(os.toString()).isNotBlank();
   }
 
+  @Test
+  void shouldPutContentIntoExporterForConfigStore(@TempDir Path temp) throws IOException {
+    createFile(temp, "config", null, "first.xml");
+    createFile(temp, "config", null, "second.xml");
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    Exporter exporter = mock(Exporter.class);
+    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp.resolve("config").toFile(), "first.xml");
+    when(exporter.put(anyString())).thenReturn(os);
+
+    exportableConfigFileStore.export(exporter);
+
+    verify(exporter).put("first.xml");
+    verify(exporter).put("second.xml");
+    assertThat(os.toString()).isNotBlank();
+  }
+
   private File createFile(Path temp, String type, String name, String fileName) throws IOException {
-    Path path = temp.resolve(type).resolve(name);
+    Path path = name != null ? temp.resolve(type).resolve(name) : temp.resolve(type);
     new File(path.toUri()).mkdirs();
     File file = new File(path.toFile(), fileName);
     if (!file.exists()) {

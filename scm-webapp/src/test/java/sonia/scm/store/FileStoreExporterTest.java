@@ -66,7 +66,7 @@ class FileStoreExporterTest {
 
   @Test
   void shouldReturnListOfExportableStores(@TempDir Path temp) throws IOException {
-    createFile(temp, "config", "trace", "first.xml");
+    createFile(temp, "config", null, "first.xml");
     createFile(temp, "data", "ci", "second.xml");
     createFile(temp, "data", "jenkins", "third.xml");
     when(resolver.forClass(Path.class).getLocation(REPOSITORY.getId())).thenReturn(temp);
@@ -80,7 +80,7 @@ class FileStoreExporterTest {
   }
 
   private File createFile(Path temp, String type, String name, String fileName) throws IOException {
-    Path path = temp.resolve(type).resolve(name);
+    Path path = name != null ? temp.resolve(type).resolve(name) : temp.resolve(type);
     new File(path.toUri()).mkdirs();
     File file = new File(path.toFile(), fileName);
     if (!file.exists()) {
