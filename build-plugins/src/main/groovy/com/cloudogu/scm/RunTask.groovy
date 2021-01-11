@@ -34,7 +34,7 @@ import org.gradle.api.tasks.TaskAction
 import org.gradle.api.GradleException
 import org.gradle.api.tasks.options.Option
 
-class ServeTask extends DefaultTask {
+class RunTask extends DefaultTask {
 
   @Input
   boolean frontend = true

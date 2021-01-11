@@ -37,7 +37,7 @@ class IntegrationTestPlugin implements Plugin<Project> {
       it.extension = extension
     }
 
-    project.tasks.register("startScmServer", ServeTask) {
+    project.tasks.register("startScmServer", RunTask) {
       it.extension = extension
       it.waitForCompletion = false
       it.frontend = false

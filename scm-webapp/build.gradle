@@ -25,7 +25,7 @@
 plugins {
   id 'war'
   id 'org.scm-manager.java'
-  id 'org.scm-manager.serve'
+  id 'org.scm-manager.run'
   id 'org.scm-manager.core-plugins'
   id 'io.swagger.core.v3.swagger-gradle-plugin' version '2.1.6'
 }
@@ -160,7 +160,7 @@ scmServer {
   loggingConfiguration = file('src/main/conf/logback.serve.xml')
 }
 
-serve {
+run {
   dependsOn 'dev-war'
 }
 

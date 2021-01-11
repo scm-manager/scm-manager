@@ -29,8 +29,7 @@ import org.gradle.api.Plugin
 import org.gradle.api.Project
 import com.moowork.gradle.node.NodeExtension
 
-
-class ServePlugin implements Plugin<Project> {
+class RunPlugin implements Plugin<Project> {
 
   void apply(Project project) {
     def extension = project.extensions.create("scmServer", ScmServerExtension, project)
@@ -45,7 +44,7 @@ class ServePlugin implements Plugin<Project> {
     project.tasks.register('write-server-config', WriteServerConfigTask) {
       it.extension = extension
     }
-    project.tasks.register("serve", ServeTask) {
+    project.tasks.register("run", RunTask) {
       it.extension = extension
       dependsOn 'write-server-config', 'yarnSetup'
     }

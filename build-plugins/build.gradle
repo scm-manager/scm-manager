@@ -59,8 +59,8 @@ gradlePlugin {
       implementationClass = 'com.cloudogu.scm.CorePluginsGradlePlugin'
     }
     serve {
-      id = 'org.scm-manager.serve'
-      implementationClass = 'com.cloudogu.scm.ServePlugin'
+      id = 'org.scm-manager.run'
+      implementationClass = 'com.cloudogu.scm.RunPlugin'
     }
     integrationTest {
       id = 'org.scm-manager.integration-tests'
