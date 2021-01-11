@@ -27,7 +27,6 @@ package sonia.scm.lifecycle.modules;
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
-import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;

@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.common.cache.RemovalListener;
 import com.google.inject.Inject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -33,6 +34,7 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.Type;
+import sonia.scm.export.FullScmRepositoryExporter;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -49,13 +51,14 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.time.Instant;
 
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
@@ -67,12 +70,14 @@ public class RepositoryExportResource {
 
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
+  private final FullScmRepositoryExporter fullScmRepositoryExporter;
 
   @Inject
   public RepositoryExportResource(RepositoryManager manager,
-                                  RepositoryServiceFactory serviceFactory) {
+                                  RepositoryServiceFactory serviceFactory, FullScmRepositoryExporter fullScmRepositoryExporter) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
+    this.fullScmRepositoryExporter = fullScmRepositoryExporter;
   }
 
   /**
@@ -125,6 +130,59 @@ public class RepositoryExportResource {
     return exportRepository(repository, compressed);
   }
 
+  /**
+   * Exports an existing repository with all additional metadata and environment information. The method can
+   * only be used, if the repository type supports the {@link Command#BUNDLE}.
+   *
+   * @param uriInfo   uri info
+   * @param namespace of the repository
+   * @param name      of the repository
+   * @param type      of the repository
+   * @return response with readable stream of repository dump
+   * @since 2.13.0
+   */
+  @GET
+  @Path("{type}/full")
+  @Consumes(VndMediaType.REPOSITORY)
+  @Operation(summary = "Exports the repository", description = "Exports the repository with metadata and environment information.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "Repository export was successful"
+  )
+  @ApiResponse(
+    responseCode = "401",
+    description = "not authenticated / invalid credentials"
+  )
+  @ApiResponse(
+    responseCode = "403",
+    description = "not authorized, the current user has no privileges to read the repository"
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response exportFullRepository(@Context UriInfo uriInfo,
+                                   @PathParam("namespace") String namespace,
+                                   @PathParam("name") String name,
+                                   @PathParam("type") String type
+  ) {
+    Repository repository = manager.get(new NamespaceAndName(namespace, name));
+    RepositoryPermissions.read().check(repository);
+
+    Type repositoryType = type(manager, type);
+    checkSupport(repositoryType, Command.BUNDLE);
+    StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os);
+
+    return Response
+      .ok(output,  "application/x-gzip")
+      .header("content-disposition", createContentDispositionHeaderValue(repository, "tar.gz"))
+      .build();
+  }
+
   private Response exportRepository(Repository repository, boolean compressed) {
     StreamingOutput output = os -> {
       try (RepositoryService service = serviceFactory.create(repository)) {
@@ -140,20 +198,24 @@ public class RepositoryExportResource {
       }
     };
 
+    return createResponse(repository, compressed, output);
+  }
+
+  private Response createResponse(Repository repository, boolean compressed, StreamingOutput output) {
     return Response
       .ok(output, compressed ? "application/x-gzip" : MediaType.APPLICATION_OCTET_STREAM)
-      .header("content-disposition", createContentDispositionHeaderValue(repository, compressed))
+      .header("content-disposition", createContentDispositionHeaderValue(repository, compressed ? "dump.gz" : "dump"))
       .build();
   }
 
-  private String createContentDispositionHeaderValue(Repository repository, boolean compressed) {
+  private String createContentDispositionHeaderValue(Repository repository, String filetype) {
     String timestamp = createFormattedTimestamp();
       return String.format(
         "attachment; filename = %s-%s-%s.%s",
         repository.getNamespace(),
         repository.getName(),
         timestamp,
-        compressed ? "dump.gz" : "dump"
+        filetype
       );
   }
 

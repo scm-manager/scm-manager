@@ -95,6 +95,8 @@ import sonia.scm.security.DefaultSecuritySystem;
 import sonia.scm.security.LoginAttemptHandler;
 import sonia.scm.security.RepositoryPermissionProvider;
 import sonia.scm.security.SecuritySystem;
+import sonia.scm.store.FileStoreExporter;
+import sonia.scm.store.StoreExporter;
 import sonia.scm.template.MustacheTemplateEngine;
 import sonia.scm.template.TemplateEngine;
 import sonia.scm.template.TemplateEngineFactory;
@@ -198,6 +200,7 @@ class ScmServletModule extends ServletModule {
     bind(NamespaceManager.class, DefaultNamespaceManager.class);
     bind(GroupCollector.class, DefaultGroupCollector.class);
     bind(CGIExecutorFactory.class, DefaultCGIExecutorFactory.class);
+    bind(StoreExporter.class, FileStoreExporter.class);
 
     // bind sslcontext provider
     bind(SSLContext.class).toProvider(SSLContextProvider.class);

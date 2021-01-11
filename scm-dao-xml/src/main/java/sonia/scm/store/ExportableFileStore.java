@@ -56,10 +56,20 @@ public class ExportableFileStore implements ExportableStore {
     File[] files = directory.listFiles();
     if (files != null) {
       for (File file : files) {
-        try (OutputStream stream = exporter.put(file.getName())) {
-          Files.copy(file.toPath(), stream);
+        if (file.isDirectory() && file.listFiles() != null) {
+          for (File file1 : file.listFiles()) {
+              putFileContentIntoStream(exporter, file1);
+          }
+        } else {
+          putFileContentIntoStream(exporter, file);
         }
       }
+    }
+  }
+
+  private void putFileContentIntoStream(Exporter exporter, File file) throws IOException {
+    try (OutputStream stream = exporter.put(file.getName())) {
+      Files.copy(file.toPath(), stream);
     }
   }
 }

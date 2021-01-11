@@ -29,8 +29,6 @@ import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.ContextEntry;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -56,41 +54,40 @@ public class FullScmRepositoryExporter {
     this.storeExporter = storeExporter;
   }
 
-  public OutputStream export(Repository repository) {
+  public void export(Repository repository, OutputStream outputStream) {
     try (
       RepositoryService service = serviceFactory.create(repository);
-      ByteArrayOutputStream baos = new ByteArrayOutputStream();
-      BufferedOutputStream bos = new BufferedOutputStream(baos);
+      BufferedOutputStream bos = new BufferedOutputStream(outputStream);
       GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(bos);
       TarArchiveOutputStream taos = new TarArchiveOutputStream(gzos);
     ) {
-
       writeRepository(service, taos);
       writeStoreData(repository, taos);
       writeEnvironmentData(taos);
-
       taos.finish();
-      return taos;
+
     } catch (IOException e) {
       LOGGER.error("Could not export repository with metadata: {}", repository, e);
     }
-    throw new InternalRepositoryException(
-      ContextEntry.ContextBuilder.entity(repository),
-      "Could not export repository with metadata"
-    );
   }
 
   private void writeRepository(RepositoryService service, TarArchiveOutputStream taos) throws IOException {
     ByteArrayOutputStream repoBaos = new ByteArrayOutputStream();
     service.getBundleCommand().bundle(repoBaos);
-    taos.putArchiveEntry(new TarArchiveEntry("repository"));
+    TarArchiveEntry entry = new TarArchiveEntry("repository");
+    entry.setSize(repoBaos.size());
+    entry.setName("repository.dump");
+    taos.putArchiveEntry(entry);
     taos.write(repoBaos.toByteArray());
     taos.closeArchiveEntry();
   }
 
   private void writeEnvironmentData(TarArchiveOutputStream taos) throws IOException {
     ByteArrayOutputStream envInfoBaos = generator.generate();
-    taos.putArchiveEntry(new TarArchiveEntry("environment"));
+    TarArchiveEntry entry = new TarArchiveEntry("environment");
+    entry.setSize(envInfoBaos.size());
+    entry.setName("environment.xml");
+    taos.putArchiveEntry(entry);
     taos.write(envInfoBaos.toByteArray());
     taos.closeArchiveEntry();
   }
@@ -99,7 +96,10 @@ public class FullScmRepositoryExporter {
     ByteArrayOutputStream metaDataBaos = new ByteArrayOutputStream();
     storeExporter.export(repository, metaDataBaos);
     if (metaDataBaos.size() > 0) {
-      taos.putArchiveEntry(new TarArchiveEntry("metadata"));
+      TarArchiveEntry entry = new TarArchiveEntry("metadata");
+      entry.setSize(metaDataBaos.size());
+      entry.setName("metadata.tar.gz");
+      taos.putArchiveEntry(entry);
       taos.write(metaDataBaos.toByteArray());
       taos.closeArchiveEntry();
     }

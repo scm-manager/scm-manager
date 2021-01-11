@@ -77,13 +77,12 @@ class FullScmRepositoryExporterTest {
   void shouldExportEverythingAsTarArchive() throws IOException {
     BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
     when(repositoryService.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
-    OutputStream os = exporter.export(REPOSITORY);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    exporter.export(REPOSITORY, baos);
 
     verify(storeExporter, times(1)).export(eq(REPOSITORY), any(OutputStream.class));
     verify(generator, times(1)).generate();
     verify(bundleCommandBuilder, times(1)).bundle(any(OutputStream.class));
-    assertThat(os).isInstanceOf(TarArchiveOutputStream.class);
   }
 
 }

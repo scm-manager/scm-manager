@@ -44,6 +44,7 @@ import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.export.FullScmRepositoryExporter;
 import sonia.scm.repository.CustomNamespaceStrategy;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.NamespaceStrategy;
@@ -147,6 +148,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private Set<NamespaceStrategy> strategies;
   @Mock
   private ScmEventBus eventBus;
+  @Mock
+  private FullScmRepositoryExporter fullScmRepositoryExporter;
 
   @Captor
   private ArgumentCaptor<Predicate<Repository>> filterCaptor;
@@ -168,7 +171,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
     super.repositoryImportResource = new RepositoryImportResource(repositoryManager, dtoToRepositoryMapper, serviceFactory, resourceLinks, eventBus);
-    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory);
+    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
