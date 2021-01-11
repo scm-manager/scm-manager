@@ -37,8 +37,6 @@ import sonia.scm.util.SystemUtil;
 import javax.inject.Inject;
 import javax.xml.bind.JAXB;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +52,7 @@ public class EnvironmentInformationXmlGenerator {
     this.contextProvider = contextProvider;
   }
 
-  public ByteArrayOutputStream generate() throws TransformerException, ParserConfigurationException {
+  public ByteArrayOutputStream generate() {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     ScmEnvironment scmEnvironment = new ScmEnvironment();
 

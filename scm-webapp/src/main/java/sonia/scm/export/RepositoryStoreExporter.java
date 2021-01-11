@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.export;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
@@ -30,6 +30,8 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Repository;
+import sonia.scm.store.ExportableStore;
+import sonia.scm.store.StoreExporter;
 
 import javax.inject.Inject;
 import java.io.BufferedOutputStream;

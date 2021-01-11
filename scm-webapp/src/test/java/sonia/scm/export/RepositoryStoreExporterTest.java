@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.export;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.Test;
@@ -32,6 +32,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.store.ExportableStore;
+import sonia.scm.store.Exporter;
+import sonia.scm.store.StoreExporter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
