@@ -37,11 +37,15 @@ class IntegrationTestPlugin implements Plugin<Project> {
       it.extension = extension
     }
 
+    project.tasks.register('prepare-home', PrepareHomeTask) {
+      it.extension = extension
+    }
+
     project.tasks.register("startScmServer", RunTask) {
       it.extension = extension
       it.waitForCompletion = false
       it.frontend = false
-      dependsOn 'write-server-config'
+      dependsOn 'write-server-config', 'prepare-home'
     }
 
     project.tasks.register("stopScmServer", StopScmServer) {

@@ -25,11 +25,13 @@
 plugins {
   id 'java-library'
   id 'org.scm-manager.java'
+  id 'org.scm-manager.core-plugins'
   id 'org.scm-manager.integration-tests'
 }
 
 configurations {
   itWebApp
+  itPlugin
 }
 
 dependencies {
@@ -50,12 +52,14 @@ dependencies {
   testImplementation 'org.glassfish:javax.json:1.1.4'
 
   itWebApp project(path: ':scm-webapp', configuration: 'webapp')
+  itPlugin project(path: ':scm-plugins:scm-integration-test-plugin', configuration: 'smp')
 }
 
 scmServer {
   configuration 'itWebApp'
   openBrowser = false
   liveReload = false
+  plugins = configurations.itPlugin
 }
 
 test {
@@ -67,9 +71,7 @@ task integrationTest(type: Test) {
   include '**/*ITCase.class'
   exclude '**/*Test.class'
 
-  dependsOn 'test'
-  doFirst {
-    tasks.getByName('startScmServer').exec()
-  }
+  dependsOn 'test', 'startScmServer'
+  mustRunAfter 'startScmServer'
   finalizedBy 'stopScmServer'
 }

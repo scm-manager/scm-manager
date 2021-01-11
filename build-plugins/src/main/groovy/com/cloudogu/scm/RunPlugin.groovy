@@ -44,9 +44,12 @@ class RunPlugin implements Plugin<Project> {
     project.tasks.register('write-server-config', WriteServerConfigTask) {
       it.extension = extension
     }
+    project.tasks.register('prepare-home', PrepareHomeTask) {
+      it.extension = extension
+    }
     project.tasks.register("run", RunTask) {
       it.extension = extension
-      dependsOn 'write-server-config', 'yarnSetup'
+      dependsOn 'write-server-config', 'prepare-home', 'yarnSetup'
     }
   }
 

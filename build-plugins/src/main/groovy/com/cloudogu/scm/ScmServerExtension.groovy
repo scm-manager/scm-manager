@@ -41,6 +41,7 @@ class ScmServerExtension implements Serializable {
   private boolean liveReload = true
   private File warFile
   private File loggingConfiguration
+  private Configuration plugins
 
   ScmServerExtension(Project project) {
     this.project = project
@@ -112,5 +113,15 @@ class ScmServerExtension implements Serializable {
 
   void setLoggingConfiguration(File loggingConfiguration) {
     this.loggingConfiguration = loggingConfiguration
+  }
+
+  @Optional
+  @Classpath
+  Configuration getPlugins() {
+    return plugins
+  }
+
+  void setPlugins(Configuration plugins) {
+    this.plugins = plugins
   }
 }
