@@ -33,10 +33,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Collections;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -64,14 +66,13 @@ class RepositoryStoreExporterTest {
   }
 
   @Test
-  void shouldWriteDataIfRepoStoreFound() throws IOException {
+  void shouldWriteDataIfRepoStoreFound() {
     when(storeExporter.findExportableStores(REPOSITORY)).thenReturn(ImmutableList.of(new TestExportableStore()));
-    OutputStream outputStream = mock(OutputStream.class);
+    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     repositoryStoreExporter.export(REPOSITORY, outputStream);
 
-    verify(outputStream).write(any());
-    verify(outputStream).flush();
-    verify(outputStream).close();
+    String content = outputStream.toString();
+    assertThat(content).isNotBlank();
   }
 
   @Test
