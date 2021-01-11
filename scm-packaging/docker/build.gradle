@@ -77,8 +77,7 @@ task dockerImage(type: DockerBuildImage) {
 }
 
 def images() {
-  def version = project.version
-  if (version.contains('-SNAPSHOT')) {
+  if (isSnapshot) {
     return [
       "${dockerRepository}:${dockerTag}"
     ]
@@ -90,6 +89,17 @@ def images() {
       "${dockerRepository}:latest"
     ]
   }
+}
+
+task publish(type: DockerPushImage) {
+  images = images()
+  if (project.hasProperty("dockerUsername") && project.hasProperty("dockerPassword")) {
+    registryCredentials {
+      username = project.property("dockerUsername")
+      password = project.property("dockerPassword")
+    }
+  }
+  dependsOn dockerImage
 }
 
 task distribution(type: PackageYaml)  {
