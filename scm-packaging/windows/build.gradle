@@ -67,7 +67,7 @@ task verifyWinSW(type: Verify) {
 task windows(type: Zip) {
   VersionNumber version = VersionNumber.parse(project.version)
 
-  archiveName = "windows-${project.version}-app.zip"
+  archiveFileName = "windows-${project.version}-app.zip"
   into('scm-server') {
     into('conf') {
       from 'src/main/fs/conf'

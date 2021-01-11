@@ -48,7 +48,7 @@ dependencies {
 task unix(type: Tar) {
   VersionNumber version = VersionNumber.parse(project.version)
 
-  archiveName = "unix-${project.version}-app.tar.gz"
+  archiveFileName = "unix-${project.version}-app.tar.gz"
   into('scm-server') {
     into('conf') {
       from 'src/main/fs/conf'
