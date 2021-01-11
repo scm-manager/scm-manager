@@ -39,20 +39,6 @@ allprojects {
   apply from: rootProject.file('gradle/dependencies.gradle')
 }
 
-publishing {
-  publications {
-    mavenJava(MavenPublication) {
-      artifactId project.name
-      from components.javaPlatform
-    }
-  }
-  repositories {
-    maven {
-      url = "/tmp/repo"
-    }
-  }
-}
-
 dependencies {
   constraints {
     // lombok
@@ -152,5 +138,27 @@ project.ext {
     expandedVersionWithDot = project.version
     dockerRepository = 'docker.io/scmmanager/scm-manager'
     dockerTag = version.replace('SNAPSHOT', snapshotVersion)
+  }
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifactId project.name
+      from components.javaPlatform
+    }
+  }
+  repositories {
+    maven {
+      String releasesRepoUrl = "https://packages.scm-manager.org/repository/releases/"
+      String snapshotsRepoUrl = "https://packages.scm-manager.org/repository/snapshots/"
+      url = isSnapshot ? snapshotsRepoUrl : releasesRepoUrl
+      if (project.hasProperty("packagesScmManagerUsername") && project.hasProperty("packagesScmManagerPassword")) {
+        credentials {
+          username project.property("packagesScmManagerUsername")
+          password project.property("packagesScmManagerPassword")
+        }
+      }
+    }
   }
 }
