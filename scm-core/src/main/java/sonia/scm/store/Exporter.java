@@ -28,5 +28,5 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public interface Exporter {
-  OutputStream put(String name) throws IOException;
+  OutputStream put(String name, long fileSize) throws IOException;
 }

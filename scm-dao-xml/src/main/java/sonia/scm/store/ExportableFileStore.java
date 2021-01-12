@@ -58,7 +58,7 @@ public class ExportableFileStore implements ExportableStore {
       for (File file : files) {
         if (file.isDirectory() && file.listFiles() != null) {
           for (File file1 : file.listFiles()) {
-              putFileContentIntoStream(exporter, file1);
+            putFileContentIntoStream(exporter, file1);
           }
         } else {
           putFileContentIntoStream(exporter, file);
@@ -68,7 +68,7 @@ public class ExportableFileStore implements ExportableStore {
   }
 
   private void putFileContentIntoStream(Exporter exporter, File file) throws IOException {
-    try (OutputStream stream = exporter.put(file.getName())) {
+    try (OutputStream stream = exporter.put(file.getName(), file.length())) {
       Files.copy(file.toPath(), stream);
     }
   }

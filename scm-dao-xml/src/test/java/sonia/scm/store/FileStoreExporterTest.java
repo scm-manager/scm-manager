@@ -39,7 +39,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -57,8 +56,9 @@ class FileStoreExporterTest {
   private FileStoreExporter fileStoreExporter;
 
   @Test
-  void shouldReturnEmptyList() {
-    when(resolver.forClass(Path.class).getLocation(REPOSITORY.getId())).thenReturn(Paths.get("tmp"));
+  void shouldReturnEmptyList(@TempDir Path temp) {
+    when(resolver.supportsLocationType(Path.class)).thenReturn(true);
+    when(resolver.forClass(Path.class).getLocation(REPOSITORY.getId())).thenReturn(temp);
 
     List<ExportableStore> exportableStores = fileStoreExporter.findExportableStores(REPOSITORY);
     assertThat(exportableStores).isEmpty();
@@ -66,9 +66,11 @@ class FileStoreExporterTest {
 
   @Test
   void shouldReturnListOfExportableStores(@TempDir Path temp) throws IOException {
-    createFile(temp, "config", null, "first.xml");
-    createFile(temp, "data", "ci", "second.xml");
-    createFile(temp, "data", "jenkins", "third.xml");
+    Path storePath = temp.resolve("store");
+    createFile(storePath, "config", null, "first.xml");
+    createFile(storePath, "data", "ci", "second.xml");
+    createFile(storePath, "data", "jenkins", "third.xml");
+    when(resolver.supportsLocationType(Path.class)).thenReturn(true);
     when(resolver.forClass(Path.class).getLocation(REPOSITORY.getId())).thenReturn(temp);
 
     List<ExportableStore> exportableStores = fileStoreExporter.findExportableStores(REPOSITORY);
@@ -79,8 +81,8 @@ class FileStoreExporterTest {
     assertThat(exportableStores.get(2).getType()).isEqualTo("data");
   }
 
-  private File createFile(Path temp, String type, String name, String fileName) throws IOException {
-    Path path = name != null ? temp.resolve(type).resolve(name) : temp.resolve(type);
+  private File createFile(Path storePath, String type, String name, String fileName) throws IOException {
+    Path path = name != null ? storePath.resolve(type).resolve(name) : storePath.resolve(type);
     new File(path.toUri()).mkdirs();
     File file = new File(path.toFile(), fileName);
     if (!file.exists()) {

@@ -42,6 +42,8 @@ import java.util.List;
 public class RepositoryStoreExporter {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryStoreExporter.class);
+  private static final String DATA_STORE = "data";
+  private static final String CONFIG_STORE = "config";
 
   private final StoreExporter storeExporter;
 
@@ -57,26 +59,37 @@ public class RepositoryStoreExporter {
       final TarArchiveOutputStream taos = new TarArchiveOutputStream(gzos)
     ) {
       List<ExportableStore> exportableStores = storeExporter.findExportableStores(repository);
-
-      for (final ExportableStore store : exportableStores) {
-        store.export(name -> {
-          taos.putArchiveEntry(new TarArchiveEntry("stores/" + store.getType() + "/" + store.getName() + "/" + name));
-          return new OutputStream() {
-            @Override
-            public void write(int b) throws IOException {
-              taos.write(b);
-            }
-
-            @Override
-            public void close() throws IOException {
-              taos.closeArchiveEntry();
-            }
-          };
+      for (ExportableStore store : exportableStores) {
+        store.export((name, filesize) -> {
+          if (DATA_STORE.equalsIgnoreCase(store.getType())) {
+            TarArchiveEntry entry = new TarArchiveEntry("stores/" + store.getType() + "/" + store.getName() + "/" + name);
+            entry.setSize(filesize);
+            taos.putArchiveEntry(entry);
+          } else if (CONFIG_STORE.equalsIgnoreCase(store.getType())) {
+            TarArchiveEntry entry = new TarArchiveEntry("stores/" + store.getType() + "/" + name);
+            entry.setSize(filesize);
+            taos.putArchiveEntry(entry);
+          }
+          return createOutputStream(taos);
         });
       }
 
     } catch (IOException e) {
       LOGGER.error("Could not export repository stores for {}", repository, e);
     }
+  }
+
+  private OutputStream createOutputStream(TarArchiveOutputStream taos) {
+    return new OutputStream() {
+      @Override
+      public void write(int b) throws IOException {
+        taos.write(b);
+      }
+
+      @Override
+      public void close() throws IOException {
+        taos.closeArchiveEntry();
+      }
+    };
   }
 }

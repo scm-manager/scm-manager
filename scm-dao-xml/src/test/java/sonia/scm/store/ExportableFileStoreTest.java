@@ -36,8 +36,9 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -49,11 +50,11 @@ class ExportableFileStoreTest {
   @Test
   void shouldNotPutContentIfNoFilesExists(@TempDir Path temp) throws IOException {
     Exporter exporter = mock(Exporter.class);
-    ExportableFileStore exportableFileStore = new ExportableFileStore(temp.toFile(), "config");
+    ExportableFileStore exportableFileStore = new ExportableFileStore(temp.resolve("store").toFile(), "config");
 
     exportableFileStore.export(exporter);
 
-    verify(exporter, never()).put(any());
+    verify(exporter, never()).put(anyString(), anyLong());
   }
 
   @Test
@@ -63,12 +64,12 @@ class ExportableFileStoreTest {
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     Exporter exporter = mock(Exporter.class);
     ExportableFileStore exportableFileStore = new ExportableFileStore(temp.resolve("data").resolve("trace").toFile(), "first.xml");
-    when(exporter.put(anyString())).thenReturn(os);
+    when(exporter.put(anyString(), anyLong())).thenReturn(os);
 
     exportableFileStore.export(exporter);
 
-    verify(exporter).put("first.xml");
-    verify(exporter).put("second.xml");
+    verify(exporter).put(eq("first.xml"), anyLong());
+    verify(exporter).put(eq("second.xml"), anyLong());
     assertThat(os.toString()).isNotBlank();
   }
 
@@ -79,12 +80,12 @@ class ExportableFileStoreTest {
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     Exporter exporter = mock(Exporter.class);
     ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp.resolve("config").toFile(), "first.xml");
-    when(exporter.put(anyString())).thenReturn(os);
+    when(exporter.put(anyString(), anyLong())).thenReturn(os);
 
     exportableConfigFileStore.export(exporter);
 
-    verify(exporter).put("first.xml");
-    verify(exporter).put("second.xml");
+    verify(exporter).put(eq("first.xml"), anyLong());
+    verify(exporter).put(eq("second.xml"), anyLong());
     assertThat(os.toString()).isNotBlank();
   }
 

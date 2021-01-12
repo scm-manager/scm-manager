@@ -102,7 +102,7 @@ class RepositoryStoreExporterTest {
 
     @Override
     public void export(Exporter exporter) throws IOException {
-      OutputStream stream = exporter.put("testStore");
+      OutputStream stream = exporter.put("testStore", 1);
       stream.flush();
       stream.close();
     }

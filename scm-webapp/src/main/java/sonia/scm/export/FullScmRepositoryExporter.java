@@ -74,9 +74,8 @@ public class FullScmRepositoryExporter {
   private void writeRepository(RepositoryService service, TarArchiveOutputStream taos) throws IOException {
     ByteArrayOutputStream repoBaos = new ByteArrayOutputStream();
     service.getBundleCommand().bundle(repoBaos);
-    TarArchiveEntry entry = new TarArchiveEntry("repository");
+    TarArchiveEntry entry = new TarArchiveEntry("repository.dump");
     entry.setSize(repoBaos.size());
-    entry.setName("repository.dump");
     taos.putArchiveEntry(entry);
     taos.write(repoBaos.toByteArray());
     taos.closeArchiveEntry();
@@ -84,9 +83,8 @@ public class FullScmRepositoryExporter {
 
   private void writeEnvironmentData(TarArchiveOutputStream taos) throws IOException {
     ByteArrayOutputStream envInfoBaos = generator.generate();
-    TarArchiveEntry entry = new TarArchiveEntry("environment");
+    TarArchiveEntry entry = new TarArchiveEntry("environment.xml");
     entry.setSize(envInfoBaos.size());
-    entry.setName("environment.xml");
     taos.putArchiveEntry(entry);
     taos.write(envInfoBaos.toByteArray());
     taos.closeArchiveEntry();
@@ -95,14 +93,11 @@ public class FullScmRepositoryExporter {
   private void writeStoreData(Repository repository, TarArchiveOutputStream taos) throws IOException {
     ByteArrayOutputStream metaDataBaos = new ByteArrayOutputStream();
     storeExporter.export(repository, metaDataBaos);
-    if (metaDataBaos.size() > 0) {
-      TarArchiveEntry entry = new TarArchiveEntry("metadata");
-      entry.setSize(metaDataBaos.size());
-      entry.setName("metadata.tar.gz");
-      taos.putArchiveEntry(entry);
-      taos.write(metaDataBaos.toByteArray());
-      taos.closeArchiveEntry();
-    }
+    TarArchiveEntry entry = new TarArchiveEntry("metadata.tar.gz");
+    entry.setSize(metaDataBaos.size());
+    taos.putArchiveEntry(entry);
+    taos.write(metaDataBaos.toByteArray());
+    taos.closeArchiveEntry();
   }
 
 }
