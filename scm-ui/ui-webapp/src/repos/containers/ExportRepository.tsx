@@ -33,14 +33,19 @@ type Props = {
 const ExportRepository: FC<Props> = ({ repository }) => {
   const [t] = useTranslation("repos");
   const [compressed, setCompressed] = useState(true);
+  const [fullExport, setFullExport] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const createExportLink = () => {
-    let exportLink = (repository?._links.export as Link).href;
-    if (compressed) {
-      exportLink += "?compressed=true";
+    if (fullExport) {
+      return (repository?._links?.fullExport as Link).href;
+    } else {
+      let exportLink = (repository?._links.export as Link).href;
+      if (compressed) {
+        exportLink += "?compressed=true";
+      }
+      return exportLink;
     }
-    return exportLink;
   };
 
   if (!repository?._links?.export) {
@@ -53,11 +58,20 @@ const ExportRepository: FC<Props> = ({ repository }) => {
       <Subtitle subtitle={t("export.subtitle")} />
       <>
         <Checkbox
-          checked={compressed}
+          checked={fullExport || compressed}
           label={t("export.compressed.label")}
           onChange={setCompressed}
           helpText={t("export.compressed.helpText")}
+          disabled={fullExport}
         />
+        {repository?._links?.fullExport && (
+          <Checkbox
+            checked={fullExport}
+            label={t("export.fullExport.label")}
+            onChange={setFullExport}
+            helpText={t("export.fullExport.helpText")}
+          />
+        )}
         <Level
           right={
             <a color="primary" href={createExportLink()} onClick={() => setLoading(true)}>

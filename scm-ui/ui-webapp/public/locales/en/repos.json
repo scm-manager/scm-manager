@@ -248,6 +248,10 @@
       "label": "Compress",
       "helpText": "Compress the export dump size to reduce the download size."
     },
+    "fullExport": {
+      "label": "With metadata (Experimental)",
+      "helpText": "In addition to the repository dump, metadata about the repository and SCM instance is exported. This feature is still experimental."
+    },
     "exportButton": "Export Repository",
     "exportStarted":  "The repository export was started. Depending on the repository size this may take a while."
   },

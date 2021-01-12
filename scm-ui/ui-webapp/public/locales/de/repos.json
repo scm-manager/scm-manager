@@ -248,6 +248,10 @@
       "label": "Komprimieren",
       "helpText": "Export Datei vor dem Download komprimieren. Reduziert die Downloadgröße."
     },
+    "fullExport": {
+      "label": "Mit Metadaten (Experimentell)",
+      "helpText": "Zusätzlich zum Repository Dump werden Metadaten zum Repository und zur SCM-Instanz exportiert. Dieses Feature ist noch experimentell."
+    },
     "exportButton": "Repository exportieren",
     "exportStarted":  "Der Repository Export wurde gestartet. Abhängig von der Größe des Repository kann dies einige Momente dauern."
   },

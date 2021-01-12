@@ -383,6 +383,10 @@ class ResourceLinks {
     String export(String namespace, String name, String type) {
       return repositoryExportLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("export").parameters().method("exportRepository").parameters(type).href();
     }
+
+    String fullExport(String namespace, String name, String type) {
+      return repositoryExportLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("export").parameters().method("exportFullRepository").parameters(type).href();
+    }
   }
 
   RepositoryCollectionLinks repositoryCollection() {
