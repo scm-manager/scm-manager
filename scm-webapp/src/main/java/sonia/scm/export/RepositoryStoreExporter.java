@@ -35,6 +35,7 @@ import sonia.scm.store.StoreExporter;
 
 import javax.inject.Inject;
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -66,6 +67,10 @@ public class RepositoryStoreExporter {
             entry.setSize(filesize);
             taos.putArchiveEntry(entry);
           } else if (CONFIG_STORE.equalsIgnoreCase(store.getType())) {
+            //TODO Can't think of a better solution just now
+            if (isIrrelevantFileFromConfigStoreDir(name)) {
+              return new ByteArrayOutputStream();
+            }
             TarArchiveEntry entry = new TarArchiveEntry("stores/" + store.getType() + "/" + name);
             entry.setSize(filesize);
             taos.putArchiveEntry(entry);
@@ -77,6 +82,10 @@ public class RepositoryStoreExporter {
     } catch (IOException e) {
       LOGGER.error("Could not export repository stores for {}", repository, e);
     }
+  }
+
+  private boolean isIrrelevantFileFromConfigStoreDir(String name) {
+    return !name.endsWith(".xml");
   }
 
   private OutputStream createOutputStream(TarArchiveOutputStream taos) {
