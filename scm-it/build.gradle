@@ -27,6 +27,7 @@ plugins {
   id 'org.scm-manager.java'
   id 'org.scm-manager.core-plugins'
   id 'org.scm-manager.integration-tests'
+  id 'com.github.node-gradle.node' version '2.2.4'
 }
 
 configurations {
@@ -72,11 +73,28 @@ test {
   exclude '**/*ITCase.class'
 }
 
-task integrationTest(type: Test) {
+task javaIntegrationTests(type: Test) {
   include '**/*ITCase.class'
   exclude '**/*Test.class'
 
   dependsOn 'test', 'startScmServer'
   mustRunAfter 'startScmServer'
+}
+
+node {
+  download = true
+  version = nodeVersion
+  yarnVersion = yarnVersion
+  nodeModulesDir = file(project.rootProject.projectDir)
+}
+
+task e2eTests(type: YarnTask) {
+  args = ['run', 'e2e-tests']
+  mustRunAfter 'startScmServer'
+  dependsOn 'yarn_install', 'startScmServer'
+}
+
+task integrationTest {
+  dependsOn(javaIntegrationTests, e2eTests)
   finalizedBy 'stopScmServer'
 }
