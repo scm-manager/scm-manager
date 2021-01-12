@@ -24,12 +24,31 @@
 
 package sonia.scm.store;
 
-import java.io.IOException;
-
+/**
+ * The {@link ExportableStore} is used to export the stored data inside the store.
+ *
+ * @since 2.13.0
+ */
 public interface ExportableStore {
 
+  /**
+   * Returns the type of the store. Example: "data" or "config"
+   *
+   * @return the store type
+   */
   String getType();
+
+  /**
+   * Returns the name of the store.
+   *
+   * @return the store name
+   */
   String getName();
 
-  void export(Exporter exporter) throws IOException;
+  /**
+   * The {@param exporter} processes the stored data.
+   *
+   * @param exporter
+   */
+  void export(Exporter exporter);
 }

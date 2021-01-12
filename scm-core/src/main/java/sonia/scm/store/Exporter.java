@@ -27,6 +27,19 @@ package sonia.scm.store;
 import java.io.IOException;
 import java.io.OutputStream;
 
+/**
+ * The {@link Exporter} exports an single store data entry as {@link OutputStream}.
+ *
+ * @since 2.13.0
+ */
 public interface Exporter {
-  OutputStream put(String name, long fileSize) throws IOException;
+  /**
+   * Exports an single store data entry.
+   *
+   * @param name of the data entry
+   * @param size of the data entry
+   * @return {@link OutputStream}
+   * @throws IOException
+   */
+  OutputStream put(String name, long size) throws IOException;
 }
