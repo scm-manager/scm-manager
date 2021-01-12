@@ -40,7 +40,6 @@ dependencies {
   testImplementation project(':scm-core')
   testImplementation project(':scm-test')
 
-  // TODO add tests
   testImplementation project(':scm-plugins:scm-git-plugin')
   testImplementation project(path: ':scm-plugins:scm-git-plugin', configuration: 'tests')
   testImplementation project(':scm-plugins:scm-hg-plugin')

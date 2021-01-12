@@ -35,8 +35,6 @@ node {
   nodeModulesDir = file(project.rootProject.projectDir)
 }
 
-// TODO define inputs and outputs
-
 task typecheck(type: YarnTask) {
   args = ['run', 'typecheck']
   inputs.files(fileTree(project.projectDir) {
@@ -120,7 +118,7 @@ configurations {
 
 artifacts {
   assets(project.layout.buildDirectory.dir('webapp')) {
-    builtBy(build)
+    builtBy(bundle)
   }
   assets(project.layout.projectDirectory.dir('ui-webapp/public'))
 }

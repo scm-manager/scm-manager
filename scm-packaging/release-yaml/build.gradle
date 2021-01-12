@@ -53,7 +53,7 @@ task publish(type: GitHubUploadTask) {
   repo = "website"
   path = "content/releases/${project.version.replace('.', '-')}.yml"
   branch = "master"
-  message = "add release descriptor for ${project.version}"
+  message = "Add release descriptor for ${project.version}"
   author {
     name = "CES Marvin"
     email = "cesmarvin@cloudogu.com"
