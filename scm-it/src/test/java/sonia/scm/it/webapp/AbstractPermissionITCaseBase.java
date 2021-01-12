@@ -21,14 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.it;
+
+package sonia.scm.it.webapp;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
@@ -40,9 +41,9 @@ import java.util.Collection;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static sonia.scm.it.IntegrationTestUtil.createAdminClient;
-import static sonia.scm.it.IntegrationTestUtil.createResource;
-import static sonia.scm.it.IntegrationTestUtil.post;
+import static sonia.scm.it.webapp.IntegrationTestUtil.createAdminClient;
+import static sonia.scm.it.webapp.IntegrationTestUtil.createResource;
+import static sonia.scm.it.webapp.IntegrationTestUtil.post;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -102,7 +103,7 @@ public abstract class AbstractPermissionITCaseBase<T>
     ClientResponse response = UserITUtil.postUser(client, trillian);
 
     assertNotNull(response);
-    assertEquals(201, response.getStatus());
+    Assert.assertEquals(201, response.getStatus());
     response.close();
   }
 
@@ -267,11 +268,11 @@ public abstract class AbstractPermissionITCaseBase<T>
 
     if (credentials.isAnonymous())
     {
-      assertEquals(401, response.getStatus());
+      Assert.assertEquals(401, response.getStatus());
     }
     else
     {
-      assertEquals(403, response.getStatus());
+      Assert.assertEquals(403, response.getStatus());
     }
 
     response.close();

@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.it;
+
+package sonia.scm.it.webapp;
 
 //~--- non-JDK imports --------------------------------------------------------
 

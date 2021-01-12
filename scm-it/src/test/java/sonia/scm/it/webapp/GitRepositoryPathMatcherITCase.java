@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.it;
+
+package sonia.scm.it.webapp;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
@@ -42,13 +42,13 @@ import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static sonia.scm.it.IntegrationTestUtil.ADMIN_PASSWORD;
-import static sonia.scm.it.IntegrationTestUtil.ADMIN_USERNAME;
-import static sonia.scm.it.IntegrationTestUtil.BASE_URL;
-import static sonia.scm.it.IntegrationTestUtil.createAdminClient;
-import static sonia.scm.it.IntegrationTestUtil.readJson;
-import static sonia.scm.it.RepositoryITUtil.createRepository;
-import static sonia.scm.it.RepositoryITUtil.deleteRepository;
+import static sonia.scm.it.webapp.IntegrationTestUtil.ADMIN_PASSWORD;
+import static sonia.scm.it.webapp.IntegrationTestUtil.ADMIN_USERNAME;
+import static sonia.scm.it.webapp.IntegrationTestUtil.BASE_URL;
+import static sonia.scm.it.webapp.IntegrationTestUtil.createAdminClient;
+import static sonia.scm.it.webapp.IntegrationTestUtil.readJson;
+import static sonia.scm.it.webapp.RepositoryITUtil.createRepository;
+import static sonia.scm.it.webapp.RepositoryITUtil.deleteRepository;
 
 /**
  * Integration test for RepositoryPathMatching with ".git" and without ".git".

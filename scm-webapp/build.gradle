@@ -127,11 +127,6 @@ dependencies {
 
   // shiro unit
   testImplementation libraries.shiroUnit
-
-  // rest api client
-  // TODO do we need this?
-  testImplementation libraries.jerseyClientApi
-  testImplementation libraries.jerseyClientRuntime
 }
 
 war {

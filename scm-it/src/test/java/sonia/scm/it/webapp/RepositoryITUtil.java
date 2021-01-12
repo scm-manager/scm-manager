@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.it;
+
+package sonia.scm.it.webapp;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
+import org.junit.Assert;
 import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.api.v2.resources.RepositoryDto;
 import sonia.scm.web.VndMediaType;
@@ -38,9 +39,9 @@ import java.net.URI;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
-import static sonia.scm.it.IntegrationTestUtil.BASE_URL;
-import static sonia.scm.it.IntegrationTestUtil.createResource;
-import static sonia.scm.it.IntegrationTestUtil.getLink;
+import static sonia.scm.it.webapp.IntegrationTestUtil.BASE_URL;
+import static sonia.scm.it.webapp.IntegrationTestUtil.createResource;
+import static sonia.scm.it.webapp.IntegrationTestUtil.getLink;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -57,7 +58,7 @@ public final class RepositoryITUtil
         .post(ClientResponse.class, repositoryJson);
 
     assertNotNull(response);
-    assertEquals(201, response.getStatus());
+    Assert.assertEquals(201, response.getStatus());
 
     URI url = URI.create(response.getHeaders().get("Location").get(0));
 
@@ -79,13 +80,13 @@ public final class RepositoryITUtil
     ClientResponse response = createResource(client, deleteUrl).delete(ClientResponse.class);
 
     assertNotNull(response);
-    assertEquals(204, response.getStatus());
+    Assert.assertEquals(204, response.getStatus());
     response.close();
 
     URI selfUrl = getLink(repository, "self");
     response = createResource(client, selfUrl).get(ClientResponse.class);
     assertNotNull(response);
-    assertEquals(404, response.getStatus());
+    Assert.assertEquals(404, response.getStatus());
     response.close();
   }
 
@@ -95,7 +96,7 @@ public final class RepositoryITUtil
     ClientResponse response = wr.get(ClientResponse.class);
 
     assertNotNull(response);
-    assertEquals(200, response.getStatus());
+    Assert.assertEquals(200, response.getStatus());
 
     String json = response.getEntity(String.class);
     RepositoryDto repository = null;

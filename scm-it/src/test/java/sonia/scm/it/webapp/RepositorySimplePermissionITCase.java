@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.it;
+
+package sonia.scm.it.webapp;
 
 //~--- non-JDK imports --------------------------------------------------------
 
@@ -30,6 +30,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import de.otto.edison.hal.HalRepresentation;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -42,9 +43,9 @@ import java.io.IOException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static sonia.scm.it.IntegrationTestUtil.createAdminClient;
-import static sonia.scm.it.IntegrationTestUtil.createResource;
-import static sonia.scm.it.IntegrationTestUtil.serialize;
+import static sonia.scm.it.webapp.IntegrationTestUtil.createAdminClient;
+import static sonia.scm.it.webapp.IntegrationTestUtil.createResource;
+import static sonia.scm.it.webapp.IntegrationTestUtil.serialize;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -92,7 +93,7 @@ public class RepositorySimplePermissionITCase
     ClientResponse response = wr.type(VndMediaType.REPOSITORY).post(ClientResponse.class, serialize(repository));
 
     assertNotNull(response);
-    assertEquals(201, response.getStatus());
+    Assert.assertEquals(201, response.getStatus());
 
     String repositoryUrl = response.getHeaders().getFirst("Location");
 
@@ -100,7 +101,7 @@ public class RepositorySimplePermissionITCase
     response.close();
     response = client.resource(repositoryUrl).get(ClientResponse.class);
     assertNotNull(response);
-    assertEquals(200, response.getStatus());
+    Assert.assertEquals(200, response.getStatus());
     repository = new ObjectMapperProvider().get().readValue(response.getEntity(String.class), RepositoryDto.class);
     REPOSITORY_PATH = repository.getNamespace() + "/" + repository.getName();
     assertNotNull(REPOSITORY_PATH);
@@ -129,7 +130,7 @@ public class RepositorySimplePermissionITCase
     if (!credentials.isAnonymous())
     {
       assertNotNull(response);
-      assertEquals(200, response.getStatus());
+      Assert.assertEquals(200, response.getStatus());
 
       HalRepresentation repositories =
         null;
@@ -157,7 +158,7 @@ public class RepositorySimplePermissionITCase
     if (!credentials.isAnonymous())
     {
       assertNotNull(response);
-      assertEquals(403, response.getStatus());
+      Assert.assertEquals(403, response.getStatus());
       response.close();
     }
   }

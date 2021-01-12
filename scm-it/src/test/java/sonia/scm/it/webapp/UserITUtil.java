@@ -21,41 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.it;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.WebResource;
+package sonia.scm.it.webapp;
 
-import java.util.Base64;
+import com.sun.jersey.api.client.ClientResponse;
+import sonia.scm.user.User;
+import sonia.scm.web.VndMediaType;
 
-import static sonia.scm.it.IntegrationTestUtil.createClient;
+import static sonia.scm.it.webapp.IntegrationTestUtil.post;
 
-public class ScmClient {
-  private final String user;
-  private final String password;
-
-  private final Client client;
-
-  public static ScmClient anonymous() {
-    return new ScmClient(null, null);
-  }
-
-  public ScmClient(String user, String password) {
-    this.user = user;
-    this.password = password;
-    this.client = createClient();
-  }
-
-  public WebResource.Builder resource(String url) {
-    if (user == null) {
-      return client.resource(url).getRequestBuilder();
-    } else {
-      return client.resource(url).header("Authorization", createAuthHeaderValue());
-    }
-  }
-
-  public String createAuthHeaderValue() {
-    return "Basic " + Base64.getEncoder().encodeToString((user +":"+ password).getBytes());
+public class UserITUtil {
+  public static ClientResponse postUser(ScmClient client, User user) {
+    return post(client, "users", VndMediaType.USER, user);
   }
 }

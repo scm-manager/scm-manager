@@ -21,17 +21,79 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.it;
 
-import com.sun.jersey.api.client.ClientResponse;
-import sonia.scm.user.User;
-import sonia.scm.web.VndMediaType;
+package sonia.scm.it.webapp;
 
-import static sonia.scm.it.IntegrationTestUtil.post;
+//~--- non-JDK imports --------------------------------------------------------
 
-public class UserITUtil {
-  public static ClientResponse postUser(ScmClient client, User user) {
-    return post(client, "users", VndMediaType.USER, user);
+import sonia.scm.util.Util;
+
+/**
+ *
+ * @author Sebastian Sdorra
+ */
+public class Credentials
+{
+
+  /**
+   * Constructs ...
+   *
+   */
+  public Credentials() {}
+
+  /**
+   * Constructs ...
+   *
+   *
+   * @param username
+   * @param password
+   */
+  public Credentials(String username, String password)
+  {
+    this.password = password;
+    this.username = username;
   }
+
+  //~--- get methods ----------------------------------------------------------
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getPassword()
+  {
+    return password;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public String getUsername()
+  {
+    return username;
+  }
+
+  /**
+   * Method description
+   *
+   *
+   * @return
+   */
+  public boolean isAnonymous()
+  {
+    return Util.isEmpty(username) && Util.isEmpty(password);
+  }
+
+  //~--- fields ---------------------------------------------------------------
+
+  /** Field description */
+  private String password;
+
+  /** Field description */
+  private String username;
 }

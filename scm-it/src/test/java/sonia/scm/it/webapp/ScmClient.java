@@ -21,27 +21,41 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.it;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.it.webapp;
 
-import static sonia.scm.it.IntegrationTestUtil.createAdminClient;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
 
-//~--- JDK imports ------------------------------------------------------------
+import java.util.Base64;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class AbstractAdminITCaseBase
-{
-  public AbstractAdminITCaseBase() {
-    client = createAdminClient();
+import static sonia.scm.it.webapp.IntegrationTestUtil.createClient;
+
+public class ScmClient {
+  private final String user;
+  private final String password;
+
+  private final Client client;
+
+  public static ScmClient anonymous() {
+    return new ScmClient(null, null);
   }
 
-  //~--- fields ---------------------------------------------------------------
+  public ScmClient(String user, String password) {
+    this.user = user;
+    this.password = password;
+    this.client = createClient();
+  }
 
-  /** Field description */
-  protected final ScmClient client;
+  public WebResource.Builder resource(String url) {
+    if (user == null) {
+      return client.resource(url).getRequestBuilder();
+    } else {
+      return client.resource(url).header("Authorization", createAuthHeaderValue());
+    }
+  }
+
+  public String createAuthHeaderValue() {
+    return "Basic " + Base64.getEncoder().encodeToString((user +":"+ password).getBytes());
+  }
 }

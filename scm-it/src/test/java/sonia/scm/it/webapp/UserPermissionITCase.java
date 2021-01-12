@@ -21,13 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.it;
+
+package sonia.scm.it.webapp;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.sun.jersey.api.client.ClientResponse;
 import de.otto.edison.hal.HalRepresentation;
+import org.junit.Assert;
 import org.junit.Assume;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -153,7 +154,7 @@ public class UserPermissionITCase extends AbstractPermissionITCaseBase<User>
     if (!credentials.isAnonymous())
     {
       assertNotNull(response);
-      assertEquals(200, response.getStatus());
+      Assert.assertEquals(200, response.getStatus());
 
       HalRepresentation repositories =
         null;

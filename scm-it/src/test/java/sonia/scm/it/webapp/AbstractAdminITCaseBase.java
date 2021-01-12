@@ -21,79 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.it;
+
+package sonia.scm.it.webapp;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import sonia.scm.util.Util;
+import static sonia.scm.it.webapp.IntegrationTestUtil.createAdminClient;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class Credentials
+public class AbstractAdminITCaseBase
 {
-
-  /**
-   * Constructs ...
-   *
-   */
-  public Credentials() {}
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param username
-   * @param password
-   */
-  public Credentials(String username, String password)
-  {
-    this.password = password;
-    this.username = username;
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getPassword()
-  {
-    return password;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public String getUsername()
-  {
-    return username;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public boolean isAnonymous()
-  {
-    return Util.isEmpty(username) && Util.isEmpty(password);
+  public AbstractAdminITCaseBase() {
+    client = createAdminClient();
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private String password;
-
-  /** Field description */
-  private String username;
+  protected final ScmClient client;
 }

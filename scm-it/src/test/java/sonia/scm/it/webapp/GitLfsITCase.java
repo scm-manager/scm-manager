@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.it;
+
+package sonia.scm.it.webapp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
@@ -55,13 +55,13 @@ import java.net.URI;
 import java.util.UUID;
 
 import static org.junit.Assert.assertArrayEquals;
-import static sonia.scm.it.IntegrationTestUtil.BASE_URL;
-import static sonia.scm.it.IntegrationTestUtil.REST_BASE_URL;
-import static sonia.scm.it.IntegrationTestUtil.createAdminClient;
-import static sonia.scm.it.IntegrationTestUtil.createResource;
-import static sonia.scm.it.IntegrationTestUtil.readJson;
-import static sonia.scm.it.RepositoryITUtil.createRepository;
-import static sonia.scm.it.RepositoryITUtil.deleteRepository;
+import static sonia.scm.it.webapp.IntegrationTestUtil.BASE_URL;
+import static sonia.scm.it.webapp.IntegrationTestUtil.REST_BASE_URL;
+import static sonia.scm.it.webapp.IntegrationTestUtil.createAdminClient;
+import static sonia.scm.it.webapp.IntegrationTestUtil.createResource;
+import static sonia.scm.it.webapp.IntegrationTestUtil.readJson;
+import static sonia.scm.it.webapp.RepositoryITUtil.createRepository;
+import static sonia.scm.it.webapp.RepositoryITUtil.deleteRepository;
 
 /**
  * Integration tests for git lfs.

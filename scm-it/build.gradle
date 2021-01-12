@@ -51,6 +51,12 @@ dependencies {
   testImplementation 'io.rest-assured:rest-assured:4.3.0'
   testImplementation 'org.glassfish:javax.json:1.1.4'
 
+  // dependencies for tests in sonia.scm.it.webapp
+  testImplementation project(':scm-webapp')
+  testImplementation libraries.jerseyClientApi
+  testImplementation libraries.jerseyClientRuntime
+  testImplementation libraries.jacksonJaxbAnnotations
+
   itWebApp project(path: ':scm-webapp', configuration: 'webapp')
   itPlugin project(path: ':scm-plugins:scm-integration-test-plugin', configuration: 'smp')
 }
