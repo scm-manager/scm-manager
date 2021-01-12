@@ -45,23 +45,35 @@ public class FileStoreExporter implements StoreExporter {
   @Override
   public List<ExportableStore> findExportableStores(Repository repository) {
     List<ExportableStore> exportableStores = new ArrayList<>();
-    File location = locationResolver.forClass(Path.class).getLocation(repository.getId()).resolve("store").toFile();
-    File[] storeTypeDirectories = location.listFiles();
+    File[] storeTypeDirectories = resolveStoreTypeDirectories(repository);
     if (storeTypeDirectories != null) {
       for (File storeTypeDirectory : storeTypeDirectories) {
-        File[] storeDirectories = storeTypeDirectory.listFiles();
-        if (storeDirectories != null) {
-          for (File storeDirectory : storeDirectories) {
-            if (storeDirectory.isDirectory()) {
-              exportableStores.add(new ExportableFileStore(storeDirectory, storeTypeDirectory.getName()));
-            } else if (shouldAddConfigStore(exportableStores)) {
-              exportableStores.add(new ExportableFileStore(storeTypeDirectory, storeTypeDirectory.getName()));
-            }
-          }
-        }
+        exportStoreTypeDirectories(exportableStores, storeTypeDirectory);
       }
     }
     return exportableStores;
+  }
+
+  private File[] resolveStoreTypeDirectories(Repository repository) {
+    File storeLocation = locationResolver.forClass(Path.class).getLocation(repository.getId()).resolve("store").toFile();
+    return storeLocation.listFiles();
+  }
+
+  private void exportStoreTypeDirectories(List<ExportableStore> exportableStores, File storeTypeDirectory) {
+    File[] storeDirectories = storeTypeDirectory.listFiles();
+    if (storeDirectories != null) {
+      for (File storeDirectory : storeDirectories) {
+        addExportableFileStore(exportableStores, storeTypeDirectory, storeDirectory);
+      }
+    }
+  }
+
+  private void addExportableFileStore(List<ExportableStore> exportableStores, File storeTypeDirectory, File storeDirectory) {
+    if (storeDirectory.isDirectory()) {
+      exportableStores.add(new ExportableFileStore(storeDirectory, storeTypeDirectory.getName()));
+    } else if (shouldAddConfigStore(exportableStores)) {
+      exportableStores.add(new ExportableFileStore(storeTypeDirectory, storeTypeDirectory.getName()));
+    }
   }
 
   private boolean shouldAddConfigStore(List<ExportableStore> exportableStores) {

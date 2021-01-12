@@ -53,15 +53,16 @@ public class ExportableFileStore implements ExportableStore {
 
   @Override
   public void export(Exporter exporter) throws IOException {
-    File[] files = directory.listFiles();
-    if (files != null) {
-      for (File file : files) {
-        if (file.isDirectory() && file.listFiles() != null) {
-          for (File file1 : file.listFiles()) {
-            putFileContentIntoStream(exporter, file1);
-          }
+    exportDirectoryEntries(exporter, directory);
+  }
+
+  private void exportDirectoryEntries(Exporter exporter, File directory) throws IOException {
+    if (directory.listFiles() != null) {
+      for (File fileOrDir : directory.listFiles()) {
+        if (fileOrDir.isDirectory()) {
+          exportDirectoryEntries(exporter, fileOrDir);
         } else {
-          putFileContentIntoStream(exporter, file);
+          putFileContentIntoStream(exporter, fileOrDir);
         }
       }
     }

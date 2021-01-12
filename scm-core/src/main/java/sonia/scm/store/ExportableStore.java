@@ -24,6 +24,8 @@
 
 package sonia.scm.store;
 
+import java.io.IOException;
+
 /**
  * The {@link ExportableStore} is used to export the stored data inside the store.
  *
@@ -49,6 +51,7 @@ public interface ExportableStore {
    * The {@param exporter} processes the stored data.
    *
    * @param exporter
+   * @throws IOException
    */
-  void export(Exporter exporter);
+  void export(Exporter exporter) throws IOException;
 }

@@ -24,15 +24,12 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.google.common.cache.RemovalListener;
 import com.google.inject.Inject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.Type;
 import sonia.scm.export.FullScmRepositoryExporter;
 import sonia.scm.repository.InternalRepositoryException;
@@ -51,22 +48,18 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.time.Instant;
 
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
 
 public class RepositoryExportResource {
-
-  private static final Logger logger = LoggerFactory.getLogger(RepositoryExportResource.class);
 
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
