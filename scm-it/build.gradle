@@ -78,6 +78,7 @@ task javaIntegrationTests(type: Test) {
   include '**/*ITCase.class'
   exclude '**/*Test.class'
   ignoreFailures = project.isCI
+  finalizedBy = ['stopScmServer']
 
   dependsOn 'test', 'startScmServer'
   mustRunAfter 'startScmServer'
@@ -109,7 +110,6 @@ task updateE2eTestTimestamps(type: TouchFiles) {
 
 task integrationTest {
   dependsOn(javaIntegrationTests, e2eTests)
-  finalizedBy = ['stopScmServer']
   description = "Runs all integration tests."
   group = "verification"
 }
