@@ -117,6 +117,8 @@ dependencies {
   }
 }
 
+import org.gradle.util.VersionNumber
+
 // set build props
 project.ext {
   timestamp = new Date().format('yyyyMMddHHmmSS')
@@ -131,14 +133,17 @@ project.ext {
     if (buildNumber != null) {
       snapshotVersion += "-${buildNumber}"
     }
-    dockerTag = version.replace('SNAPSHOT', snapshotVersion)
+    dockerTag = project.version.replace('SNAPSHOT', snapshotVersion)
   } else {
     isSnapshot = false
     expandedVersion = project.version
     expandedVersionWithDot = project.version
     dockerRepository = 'docker.io/scmmanager/scm-manager'
-    dockerTag = version.replace('SNAPSHOT', snapshotVersion)
+    dockerTag = project.version
   }
+
+  VersionNumber v = VersionNumber.parse(project.version)
+  nextSnapshotVersion = "${v.major}.${v.minor}.${v.micro + 1}-SNAPSHOT"
 }
 
 publishing {
@@ -159,6 +164,55 @@ publishing {
           password project.property("packagesScmManagerPassword")
         }
       }
+    }
+  }
+}
+
+// release related tasks
+
+task setVersion {
+  doLast {
+    if (!project.hasProperty('newVersion')) {
+      throw new GradleException('usage setVersion -PnewVersion=x.y.z')
+    }
+
+    String version = project.property('newVersion')
+    setNewVersion(version)
+  }
+}
+
+task setVersionToNextSnapshot {
+  doLast {
+    setNewVersion(nextSnapshotVersion)
+  }
+}
+
+task printVersion {
+  doLast {
+    println project.version
+  }
+}
+
+def setNewVersion(String newVersion) {
+  File propertiesFile = new File(project.rootDir, 'gradle.properties')
+
+  if (project.version == newVersion) {
+    println "project uses already version ${newVersion}"
+    return
+  }
+
+  def lines = propertiesFile.readLines('UTF-8')
+  def newLines = lines.collect{ line ->
+    if (line.trim().startsWith('version')) {
+      return "version = ${newVersion}"
+    }
+    return line
+  }
+
+  println "set version from ${project.version} to ${newVersion}"
+  propertiesFile.withWriter('UTF-8') {writer ->
+    newLines.forEach { line ->
+      writer.writeLine(line)
     }
   }
 }

@@ -170,7 +170,20 @@ task cleanUpAfterPublishing {
 }
 
 task setVersion(type: YarnTask) {
-  args = ['run', 'set-version', project.version]
+  doFirst {
+    if (!project.hasProperty('newVersion')) {
+      throw new GradleException('newVersion properties is required, specify with -PnewVersion=x.y.z')
+    }
+    println "set ui package modules to new version ${project.property('newVersion')}"
+  }
+  if (project.hasProperty('newVersion')) {
+    args = ['run', 'set-version', project.property('newVersion')]
+  }
+  dependsOn('yarn_install')
+}
+
+task setVersionToNextSnapshot(type: YarnTask) {
+  args = ['run', 'set-version', nextSnapshotVersion]
   dependsOn('yarn_install')
 }
 
