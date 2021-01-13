@@ -122,6 +122,3 @@ jar {
   dependsOn 'build-info'
 }
 
-test {
-  useJUnitPlatform()
-}

@@ -37,7 +37,3 @@ dependencies {
   compileOnly libraries.lombok
   annotationProcessor libraries.lombok
 }
-
-test {
-  useJUnitPlatform()
-}

@@ -201,9 +201,3 @@ fix java.lang.NoClassDefFoundError org/w3c/dom/ElementTraversal
   <version>1.4.01</version>
 </dependency>
 **/
-
-test {
-  useJUnitPlatform()
-  // TODO integration tests
-  exclude '**/*ITCase.class'
-}

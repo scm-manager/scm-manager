@@ -76,6 +76,7 @@ test {
 task javaIntegrationTests(type: Test) {
   include '**/*ITCase.class'
   exclude '**/*Test.class'
+  ignoreFailures = project.isCI
 
   dependsOn 'test', 'startScmServer'
   mustRunAfter 'startScmServer'
@@ -90,6 +91,7 @@ node {
 
 task e2eTests(type: YarnTask) {
   args = ['run', 'e2e-tests']
+  ignoreExitValue = project.isCI
   mustRunAfter 'startScmServer'
   dependsOn 'yarn_install', 'startScmServer'
 }

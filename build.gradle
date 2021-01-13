@@ -144,6 +144,8 @@ project.ext {
 
   VersionNumber v = VersionNumber.parse(project.version)
   nextSnapshotVersion = "${v.major}.${v.minor}.${v.micro + 1}-SNAPSHOT"
+
+  isCI = isRunningOnCiServer()
 }
 
 publishing {
@@ -167,6 +169,17 @@ publishing {
     }
   }
 }
+
+// determine if we run on ci
+def isRunningOnCiServer() {
+  return isEnvAvailable("JENKINS_URL") && isEnvAvailable("BUILD_ID")
+}
+
+def isEnvAvailable(String key) {
+  String value = System.getenv(key)
+  return value != null && !value.trim().isEmpty()
+}
+
 
 // release related tasks
 

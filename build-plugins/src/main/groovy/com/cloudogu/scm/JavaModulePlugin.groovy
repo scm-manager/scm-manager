@@ -57,6 +57,25 @@ class JavaModulePlugin implements Plugin<Project> {
       failOnError false
     }
 
+    project.afterEvaluate {
+      if (project.isCI) {
+        project.plugins.apply("jacoco")
+        project.jacocoTestReport {
+          reports {
+            xml.enabled true
+          }
+        }
+      }
+
+      project.test {
+        useJUnitPlatform()
+        if (project.isCI){
+          ignoreFailures = true
+          finalizedBy project.jacocoTestReport
+        }
+      }
+    }
+
     project.publishing {
       publications {
         mavenJava(MavenPublication) {

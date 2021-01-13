@@ -66,6 +66,7 @@ task test(type: YarnTask) {
   })
   .withPathSensitivity(PathSensitivity.RELATIVE)
   outputs.dir('build/jest-reports')
+  ignoreExitValue = project.isCI
   dependsOn('yarn_install')
 }
 
