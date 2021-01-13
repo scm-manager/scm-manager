@@ -25,6 +25,7 @@
 plugins {
   id 'java-platform'
   id 'maven-publish'
+  id "org.sonarqube" version "3.0"
 }
 
 subprojects { s ->
@@ -146,6 +147,8 @@ project.ext {
   nextSnapshotVersion = "${v.major}.${v.minor}.${v.micro + 1}-SNAPSHOT"
 
   isCI = isRunningOnCiServer()
+  os = os()
+  arch = arch()
 }
 
 publishing {
@@ -171,6 +174,7 @@ publishing {
 }
 
 // determine if we run on ci
+
 def isRunningOnCiServer() {
   return isEnvAvailable("JENKINS_URL") && isEnvAvailable("BUILD_ID")
 }
@@ -180,6 +184,17 @@ def isEnvAvailable(String key) {
   return value != null && !value.trim().isEmpty()
 }
 
+def os() {
+  return System.getProperty("os.name").toLowerCase(Locale.ENGLISH)
+}
+
+def arch() {
+  def arch = System.getProperty("os.arch")
+  if ("amd64".equals(arch)) {
+    return "x64"
+  }
+  return arch
+}
 
 // release related tasks
 

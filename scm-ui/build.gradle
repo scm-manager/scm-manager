@@ -228,3 +228,21 @@ license {
 task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
   source = fileTree('.')
 }
+
+sonarqube {
+  properties {
+    property 'sonar.language', 'typescript'
+    property 'sonar.sources', project.fileTree('.').include('ui-*/src/**')
+    property 'sonar.tests', project.fileTree('.').include('ui-*/src/**')
+    property 'sonar.test.inclusions', '**/*.test.ts,**/*.test.js,**/*.test.tsx'
+    property 'sonar.junit.reportPaths', 'build/jest-reports/'
+    // no wildcard support
+    // https://github.com/SonarSource/SonarJS/issues/578
+    property 'sonar.javascript.lcov.reportPaths', 'build/jest-reports/coverage-ui-components/lcov.info,build/jest-reports/coverage-ui-extensions/lcov.info,build/jest-reports/coverage-ui-webapp/lcov.info'
+    property 'sonar.nodejs.executable', project.file(".gradle/nodejs/node-v${nodeVersion}-${os}-${arch}/bin/node")
+  }
+}
+
+task sonarqube(type: org.sonarqube.gradle.SonarQubeTask) {
+  dependsOn 'yarn_install', 'test'
+}

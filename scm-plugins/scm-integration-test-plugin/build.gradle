@@ -46,3 +46,11 @@ scmPlugin {
   }
 
 }
+
+sonarqube {
+  // TODO
+  skipProject = true
+  properties {
+    property 'sonar.tests', ''
+  }
+}

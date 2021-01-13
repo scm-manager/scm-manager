@@ -78,8 +78,7 @@ pipeline {
             if (env.BRANCH_NAME != "master") {
               sonar += " -Dsonar.branch.target=master"
             }
-            // disable until we know how todo sonar analysis with subprojects
-            // sh "./gradlew sonarqube"
+            sh "./gradlew sonarqube"
           }
         }
       }

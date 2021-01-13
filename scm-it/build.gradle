@@ -113,3 +113,7 @@ task integrationTest {
   description = "Runs all integration tests."
   group = "verification"
 }
+
+sonarqube {
+  skipProject = true
+}
