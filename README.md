@@ -34,7 +34,96 @@ All news regarding SCM-Manager will be published in our [blog](https://www.scm-m
     [unsubscribe](mailto:scmmanager+unsubscribe@googlegroups.com)
 
 ## Documentation
+
 You can find the complete documentation on our [homepage](https://www.scm-manager.org/docs/).
+
+## Development
+
+The build of SCM-Manager requires the following installed packages:
+
+* Git
+* JDK 11
+* Mercurial (required for tests)
+* Docker (required for the docker package)
+
+The build of SCM-Manager requires Java 11, but the target runtime platform is still Java 8. 
+
+### Tasks
+
+SCM-Manager uses [Gradle](https://gradle.org/) for the build.
+The build itself is organized in tasks, the tasks can be executed with the gradle wrapper:
+
+```bash
+# on linux
+./gradlew taskname
+
+# on windows
+gradlew.bat taskname
+```
+
+This following tables describes some high level tasks,
+which should cover most of the daily work.
+
+| Name | Description |
+| ---- | ----------- |
+| run | Starts an SCM-Manager with enabled livereload for the ui |
+| build | Executes all checks, tests and builds the smp inclusive javadoc and source jar |
+| distribution | Builds all distribution packages of scm-packaging |
+| check | Executes all registered checks and tests |
+| test | Run all unit tests |
+| integrationTest | Run all integration tests of scm-it |
+| clean | Deletes the build directory |
+
+The next table defines a few more tasks which are more relevant for CI servers.
+
+| Name | Description |
+| ---- | ----------- |
+| publish | Publishes all artifacts and packages (required properties, see section 'Properties for publishing') |
+| sonarqube | Executes a SonarQube analysis |
+| setVersion | Sets the version to a new version |
+| setVersionToNextSnapshot | Sets the version to the next snapshot version |
+
+There many more tasks, which are executed as part of the high level tasks,
+and it should rarely be necessary to call them individually.
+To see the full list of available tasks, execute the following command:
+
+```bash
+# on linux
+./gradlew tasks
+
+# on windows
+gradlew.bat tasks
+```
+
+### Artifacts and reports
+
+Artifacts and reports which are created from the tasks are stored in the build directory of each subproject.
+
+### Debugging
+
+If you want to debug the `run` task of SCM-Manager.
+You can provide the `--debug-jvm` option, which starts the SCM-Manager jvm in debug mode.
+Then you can attach a debugger on port 5005.
+The port can be changed by using the `--debug-port` e.g.: `--debug-port=5006`.
+If you want to wait until a debugger is attached, before SCM-Manager starts you can use the `--debug-wait` option.
+
+### Properties for publishing
+
+The publishing process requires the following properties for authentication and signing.
+Those properties should be stored in `~/.gradle/gradle.properties`.
+
+| Property | Description |
+| -------- | ----------- |
+| packagesScmManagerUsername | Username for [packages.scm-manager.org](https://packages.scm-manager.org) |
+| packagesScmManagerPassword | Password for [packages.scm-manager.org](https://packages.scm-manager.org) |
+| dockerUsername | Username for [Docker Hub](https://hub.docker.com/) |
+| dockerPassword | Password or Api Token for [Docker Hub](https://hub.docker.com/) |
+| gitHubApiToken | Api Token for [GitHub](https://github.com/) |
+| npmEmail | Email of [NPM](https://www.npmjs.com/) account |
+| npmToken | Access Token for [NPM](https://www.npmjs.com/) account |
+| signing.keyId | Id of gpg secret key for signing |
+| signing.password | Passphrase of gpg secret key |
+| signing.secretKeyRingFile | Path to gpg secret key ring file |
 
 ## Need help?
 
