@@ -28,7 +28,7 @@ plugins {
   id 'org.scm-manager.packaging'
   id 'signing'
   id 'maven-publish'
-  id 'com.github.hierynomus.license-base' version '0.15.0'
+  id 'com.github.hierynomus.license-base'
 }
 
 configurations {

@@ -2,6 +2,7 @@ package com.cloudogu.scm
 
 import org.gradle.api.DefaultTask
 import org.gradle.api.GradleException
+import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.tasks.Input
 import org.gradle.api.tasks.TaskAction
@@ -10,9 +11,10 @@ import org.gradle.util.VersionNumber
 
 import java.nio.charset.StandardCharsets
 
-class VersionTasks {
+class VersionPlugin implements Plugin<Project> {
 
-  static void configure(Project project) {
+  @Override
+  void apply(Project project) {
     project.tasks.register("setVersion", SetVersionTask) {
       it.group = "help"
       it.description = "Set version for the plugin e.g.: setVersion --newVersion=x.y.z)"

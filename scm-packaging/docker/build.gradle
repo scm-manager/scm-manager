@@ -25,7 +25,7 @@
 plugins {
   id 'com.bmuschko.docker-remote-api' version '6.6.1'
   id 'org.scm-manager.packaging'
-  id 'com.github.hierynomus.license-base' version '0.15.0'
+  id 'com.github.hierynomus.license-base'
 }
 
 import org.gradle.util.VersionNumber
