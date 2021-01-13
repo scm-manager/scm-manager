@@ -67,7 +67,7 @@ public class ScmConfiguration implements Configuration {
    * Default plugin url
    */
   public static final String DEFAULT_PLUGINURL =
-    "https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}";
+    "https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}&jre={jre}";
 
   /**
    * SCM Manager release feed url
