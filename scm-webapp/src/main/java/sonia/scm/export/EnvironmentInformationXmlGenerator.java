@@ -24,11 +24,10 @@
 
 package sonia.scm.export;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.environment.Plugin;
+import sonia.scm.environment.Plugins;
+import sonia.scm.environment.ScmEnvironment;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
@@ -36,7 +35,6 @@ import sonia.scm.util.SystemUtil;
 
 import javax.inject.Inject;
 import javax.xml.bind.JAXB;
-import javax.xml.bind.annotation.XmlRootElement;
 import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,35 +74,5 @@ public class EnvironmentInformationXmlGenerator {
       plugins.add(new Plugin(pluginInformation.getName(), pluginInformation.getVersion()));
     }
     scmEnvironment.setPlugins(new Plugins(plugins));
-  }
-
-  @XmlRootElement(name = "scm-environment")
-  @Getter
-  @Setter
-  @NoArgsConstructor
-  static class ScmEnvironment {
-    private Plugins plugins;
-    private String coreVersion;
-    private String os;
-    private String arch;
-  }
-
-  @XmlRootElement(name = "plugins")
-  @AllArgsConstructor
-  @NoArgsConstructor
-  @Setter
-  @Getter
-  static class Plugins {
-    private List<Plugin> plugin;
-  }
-
-  @XmlRootElement(name = "plugin")
-  @AllArgsConstructor
-  @NoArgsConstructor
-  @Setter
-  @Getter
-  static class Plugin {
-    private String name;
-    private String version;
   }
 }

@@ -22,33 +22,21 @@
  * SOFTWARE.
  */
 
-package sonia.scm.importer;
+package sonia.scm.environment;
 
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryLocationResolver;
-import sonia.scm.store.StoreEntryDataImporterFactory;
-import sonia.scm.store.StoreEntryImporterFactory;
-import sonia.scm.store.StoreImporterFactory;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.inject.Inject;
-import java.nio.file.Path;
+import javax.xml.bind.annotation.XmlRootElement;
+import java.util.List;
 
-public class RepositoryStoreImporterFactory implements StoreImporterFactory {
-
-  private final RepositoryLocationResolver locationResolver;
-
-  @Inject
-  public RepositoryStoreImporterFactory(RepositoryLocationResolver locationResolver) {
-    this.locationResolver = locationResolver;
-  }
-
-  @Override
-  public StoreEntryImporterFactory importer(Repository repository) {
-
-    Path storeLocation = locationResolver.forClass(Path.class).getLocation(repository.getId()).resolve("store");
-
-
-
-    return new StoreEntryDataImporterFactory();
-  }
+@XmlRootElement(name = "plugins")
+@AllArgsConstructor
+@NoArgsConstructor
+@Setter
+@Getter
+public class Plugins {
+  private List<Plugin> plugin;
 }

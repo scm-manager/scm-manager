@@ -24,31 +24,43 @@
 
 package sonia.scm.importer;
 
-import sonia.scm.repository.Repository;
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.RepositoryLocationResolver;
-import sonia.scm.store.StoreEntryDataImporterFactory;
-import sonia.scm.store.StoreEntryImporterFactory;
-import sonia.scm.store.StoreImporterFactory;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 
 import javax.inject.Inject;
-import java.nio.file.Path;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
-public class RepositoryStoreImporterFactory implements StoreImporterFactory {
+public class FullScmRepositoryImporter {
 
+  private static final Logger LOGGER = LoggerFactory.getLogger(FullScmRepositoryImporter.class);
+
+  private final RepositoryServiceFactory serviceFactory;
   private final RepositoryLocationResolver locationResolver;
 
   @Inject
-  public RepositoryStoreImporterFactory(RepositoryLocationResolver locationResolver) {
+  public FullScmRepositoryImporter(RepositoryServiceFactory serviceFactory, RepositoryLocationResolver locationResolver) {
+    this.serviceFactory = serviceFactory;
     this.locationResolver = locationResolver;
   }
 
-  @Override
-  public StoreEntryImporterFactory importer(Repository repository) {
+  public void importFromFile(File importFile) {
+    if (importFile.exists()) {
+      try (TarArchiveInputStream tais = new TarArchiveInputStream(new GzipCompressorInputStream(new BufferedInputStream(new FileInputStream(importFile))))) {
 
-    Path storeLocation = locationResolver.forClass(Path.class).getLocation(repository.getId()).resolve("store");
+        //TODO Check environment, create repository and import repo with unbundle command, import repository stores
 
+      } catch (IOException e) {
+        LOGGER.error("Could not import repository data from file", e);
+      }
+    }
 
-
-    return new StoreEntryDataImporterFactory();
   }
 }
