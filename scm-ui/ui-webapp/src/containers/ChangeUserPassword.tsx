@@ -28,7 +28,8 @@ import {
   Level,
   Notification,
   PasswordConfirmation,
-  SubmitButton
+  SubmitButton,
+  Subtitle
 } from "@scm-manager/ui-components";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
@@ -55,9 +56,6 @@ class ChangeUserPassword extends React.Component<Props, State> {
       oldPassword: "",
       password: "",
       loading: false,
-      passwordConfirmationError: false,
-      validatePasswordError: false,
-      validatePassword: "",
       passwordChanged: false,
       passwordValid: false
     };
@@ -127,6 +125,7 @@ class ChangeUserPassword extends React.Component<Props, State> {
 
     return (
       <form onSubmit={this.submit}>
+        <Subtitle subtitle={t("password.subtitle")} />
         {message}
         <div className="columns">
           <div className="column">

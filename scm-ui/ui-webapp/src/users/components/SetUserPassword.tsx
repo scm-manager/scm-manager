@@ -24,7 +24,14 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
-import { ErrorNotification, Level, Notification, PasswordConfirmation, SubmitButton } from "@scm-manager/ui-components";
+import {
+  ErrorNotification,
+  Subtitle,
+  Level,
+  Notification,
+  PasswordConfirmation,
+  SubmitButton
+} from "@scm-manager/ui-components";
 import { setPassword } from "./setPassword";
 
 type Props = WithTranslation & {
@@ -46,9 +53,6 @@ class SetUserPassword extends React.Component<Props, State> {
     this.state = {
       password: "",
       loading: false,
-      passwordConfirmationError: false,
-      validatePasswordError: false,
-      validatePassword: "",
       passwordChanged: false,
       passwordValid: false
     };
@@ -85,14 +89,16 @@ class SetUserPassword extends React.Component<Props, State> {
       const { password } = this.state;
       this.setLoadingState();
       setPassword(user._links.password.href, password)
-        .then(result => {
+        .then((result) => {
           if (result.error) {
             this.setErrorState(result.error);
           } else {
             this.setSuccessfulState();
           }
         })
-        .catch(err => {});
+        .catch((err) => {
+          this.setErrorState(err);
+        });
     }
   };
 
@@ -116,6 +122,7 @@ class SetUserPassword extends React.Component<Props, State> {
 
     return (
       <form onSubmit={this.submit}>
+        <Subtitle subtitle={t("singleUserPassword.subtitle")} />
         {message}
         <PasswordConfirmation
           passwordChanged={this.passwordChanged}
