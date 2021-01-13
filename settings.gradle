@@ -75,4 +75,3 @@ include 'scm-packaging:docker'
 include 'scm-packaging:helm'
 include 'scm-packaging:release-yaml'
 
-includeBuild '../gradle-smp-plugin'
