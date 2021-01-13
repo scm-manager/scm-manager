@@ -11,7 +11,7 @@
     "test": "lerna run --scope '@scm-manager/ui-*' test",
     "e2e-tests": "lerna run --scope '@scm-manager/e2e-tests' ci",
     "typecheck": "lerna run --scope '@scm-manager/ui-*' typecheck",
-    "serve": "NODE_ENV=development webpack-dev-server --hot --mode=development --config=scm-ui/ui-scripts/src/webpack.config.js",
+    "serve": "NODE_ENV=development ui-scripts serve",
     "deploy": "ui-scripts publish",
     "set-version": "ui-scripts version"
   },

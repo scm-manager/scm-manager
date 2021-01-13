@@ -124,6 +124,7 @@ module.exports = [
       historyApiFallback: true,
       overlay: true,
       port: 3000,
+      hot: true,
       before: app => {
         app.use(createContextPathMiddleware("/scm"));
       },
@@ -160,6 +161,7 @@ module.exports = [
     plugins: webpackPlugins
   },
   {
+    mode,
     context: root,
     entry: "./ui-styles/src/scm.scss",
     module: {
@@ -195,6 +197,7 @@ module.exports = [
     }
   },
   {
+    mode,
     context: path.resolve(root),
     entry: {
       polyfills: "./ui-polyfill/src/index.js"
