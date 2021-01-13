@@ -27,7 +27,7 @@ plugins {
   id 'org.scm-manager.java'
   id 'org.scm-manager.core-plugins'
   id 'org.scm-manager.integration-tests'
-  id 'com.github.node-gradle.node'
+  id 'com.github.node-gradle.node' version '2.2.4'
 }
 
 configurations {

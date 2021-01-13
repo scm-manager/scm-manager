@@ -25,7 +25,6 @@
 plugins {
   id 'java-platform'
   id 'maven-publish'
-  id 'org.scm-manager.version'
 }
 
 subprojects { s ->

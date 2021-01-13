@@ -26,7 +26,7 @@ import org.gradle.util.VersionNumber
 plugins {
   id 'nebula.ospackage' version '8.4.1'
   id 'org.scm-manager.packaging'
-  id 'com.github.hierynomus.license-base'
+  id 'com.github.hierynomus.license-base' version '0.15.0'
 }
 
 configurations {
