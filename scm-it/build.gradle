@@ -99,7 +99,6 @@ task e2eTests(type: YarnTask) {
 
   args = ['run', 'e2e-tests']
   ignoreExitValue = project.isCI
-  mustRunAfter 'startScmServer'
   dependsOn 'yarn_install', 'startScmServer'
 }
 
@@ -110,5 +109,7 @@ task updateE2eTestTimestamps(type: TouchFiles) {
 
 task integrationTest {
   dependsOn(javaIntegrationTests, e2eTests)
-  finalizedBy 'stopScmServer'
+  finalizedBy = ['stopScmServer']
+  description = "Runs all integration tests."
+  group = "verification"
 }
