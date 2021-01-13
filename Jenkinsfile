@@ -72,7 +72,6 @@ pipeline {
       steps {
         sh 'git config --replace-all "remote.origin.fetch" "+refs/heads/*:refs/remotes/origin/*"'
         sh 'git fetch origin master'
-        sh "./gradlew integrationTest"
         script {
           withSonarQubeEnv('sonarcloud.io-scm') {
             String sonar = "sonarqube -Dsonar.organization=scm-manager -Dsonar.branch.name=${env.BRANCH_NAME}"
