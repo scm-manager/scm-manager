@@ -65,6 +65,15 @@ class JavaModulePlugin implements Plugin<Project> {
             xml.enabled true
           }
         }
+
+        project.tasks.register("update-test-timestamp", TouchFilesTask) {
+          directory = new File(project.buildDir, "test-results")
+          extension = "xml"
+        }
+
+        project.tasks.getByName("test").configure {
+          dependsOn "update-test-timestamp"
+        }
       }
 
       project.test {

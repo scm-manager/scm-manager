@@ -26,6 +26,7 @@
 plugins {
   id 'com.github.node-gradle.node' version '2.2.4'
   id 'com.github.hierynomus.license-base' version '0.15.0'
+  id 'org.scm-manager.ci'
 }
 
 node {
@@ -66,8 +67,18 @@ task test(type: YarnTask) {
   })
   .withPathSensitivity(PathSensitivity.RELATIVE)
   outputs.dir('build/jest-reports')
-  ignoreExitValue = project.isCI
-  dependsOn('yarn_install')
+
+  if (project.isCI) {
+    ignoreExitValue = project.isCI
+    dependsOn('yarn_install', 'updateUiTestTimestamps')
+  } else {
+    dependsOn('yarn_install')
+  }
+}
+
+task updateUiTestTimestamps(type: TouchFiles) {
+  directory = project.file('build/jest-reports')
+  extension = "xml"
 }
 
 task check {

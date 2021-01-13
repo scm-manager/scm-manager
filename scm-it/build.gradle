@@ -24,6 +24,7 @@
 
 plugins {
   id 'java-library'
+  id 'org.scm-manager.ci'
   id 'org.scm-manager.java'
   id 'org.scm-manager.core-plugins'
   id 'org.scm-manager.integration-tests'
@@ -90,10 +91,21 @@ node {
 }
 
 task e2eTests(type: YarnTask) {
+  inputs.files(fileTree(project.project(":scm-ui").projectDir) {
+    include 'e2e-*/**'
+    include 'ui-*/**'
+  })
+  outputs.dir(project.project(":scm-ui").file('build/reports/e2e'))
+
   args = ['run', 'e2e-tests']
   ignoreExitValue = project.isCI
   mustRunAfter 'startScmServer'
   dependsOn 'yarn_install', 'startScmServer'
+}
+
+task updateE2eTestTimestamps(type: TouchFiles) {
+  directory = project.project(":scm-ui").file('build/reports/e2e')
+  extension = "xml"
 }
 
 task integrationTest {

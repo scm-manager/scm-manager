@@ -70,6 +70,10 @@ gradlePlugin {
       id = 'org.scm-manager.packaging'
       implementationClass = 'com.cloudogu.scm.PackagingPlugin'
     }
+    ci {
+      id = 'org.scm-manager.ci'
+      implementationClass = 'com.cloudogu.scm.CIPlugin'
+    }
   }
 }
 

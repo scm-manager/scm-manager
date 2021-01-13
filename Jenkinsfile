@@ -75,8 +75,8 @@ pipeline {
         sh "./gradlew integrationTest"
         script {
           withSonarQubeEnv('sonarcloud.io-scm') {
-            String sonar = "sonarqube -Dsonar.organization=scm-manager -Dsonar.branch.name=${script.env.BRANCH_NAME}"
-            if (script.env.BRANCH_NAME != "master") {
+            String sonar = "sonarqube -Dsonar.organization=scm-manager -Dsonar.branch.name=${env.BRANCH_NAME}"
+            if (env.BRANCH_NAME != "master") {
               sonar += " -Dsonar.branch.target=master"
             }
             // disable until we know how todo sonar analysis with subprojects
@@ -141,7 +141,7 @@ pipeline {
     }
 
   }
-  
+
   post {
     failure {
       mail to: "scm-team@cloudogu.com",
@@ -180,8 +180,8 @@ void isBuildSuccess() {
 
 void withPublishProperies(Closure<Void> closure) {
   withCredentials([
-    usernamePassword(credentialsId: 'maven.scm-manager.org', passwordVariable: 'PACKAGES_PASSWORD', usernameVariable: 'PACKAGES_USERNAME'), 
-    usernamePassword(credentialsId: 'hub.docker.com-cesmarvin', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME'), 
+    usernamePassword(credentialsId: 'maven.scm-manager.org', passwordVariable: 'PACKAGES_PASSWORD', usernameVariable: 'PACKAGES_USERNAME'),
+    usernamePassword(credentialsId: 'hub.docker.com-cesmarvin', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME'),
     string(credentialsId: 'cesmarvin_npm_token', variable: 'NPM_TOKEN'),
     file(credentialsId: 'oss-gpg-secring', variable: 'GPG_KEYRING'),
     usernamePassword(credentialsId: 'oss-keyid-and-passphrase', usernameVariable: 'GPG_KEY_ID', passwordVariable: 'GPG_KEY_PASSPHRASE')
