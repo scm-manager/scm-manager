@@ -242,7 +242,3 @@ sonarqube {
     property 'sonar.nodejs.executable', project.file(".gradle/nodejs/node-v${nodeVersion}-${os}-${arch}/bin/node")
   }
 }
-
-task sonarqube(type: org.sonarqube.gradle.SonarQubeTask) {
-  dependsOn 'yarn_install', 'test'
-}
