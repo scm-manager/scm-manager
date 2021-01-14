@@ -3664,10 +3664,10 @@
     eslint-plugin-react-hooks "^2.1.2"
     jest "^26.6.3"
 
-"@scm-manager/integration-test-runner@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@scm-manager/integration-test-runner/-/integration-test-runner-1.0.0.tgz#78cd3fd8bc50665fe7e201b9b684a9354ade3fd5"
-  integrity sha512-J699E2bFLqt2SZDMW61x0JGqmy5plbm5oIbmUbzincD7vGau3I3kVHk9nyCtjnisqHG8oy0flZOiI88L5+/Cnw==
+"@scm-manager/integration-test-runner@^1.1.1":
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/@scm-manager/integration-test-runner/-/integration-test-runner-1.1.1.tgz#8dc71888fc332c20d31dd74f2fe10d6021709b46"
+  integrity sha512-MTR3H7P8CJg52kNMA2l1aabbeskWZxAyRHhVt+nZ11Rei9OHpcYAl2+JmRZ4fQRqpfJig2lEejfyh4BZDR9+fw==
   dependencies:
     "@cypress/browserify-preprocessor" "^3.0.1"
     "@ffmpeg-installer/ffmpeg" "^1.0.20"

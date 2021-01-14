@@ -8,7 +8,7 @@ Feature: Anonymous Mode Disabled
     When User visits any page
     Then There is no primary navigation
 
-  Scenario: Redirect to home screen after login
+  Scenario: Authenticated users have a footer navigation
     Given User is authenticated
     When User visits any page
     Then There is a footer navigation
