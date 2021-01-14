@@ -20,7 +20,7 @@ Ein archiviertes Repository kann nicht mehr verändert werden.
 ![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
 
 In dem Bereich "Repository exportieren" kann das Repository als Dump exportiert werden.
-Für den Download kann zwischen einem komprimierten Archiv oder dem einfachen Dump-Format gewählt werden.
+Für den Download kann zwischen einem komprimierten Dump oder dem einfachen Dump-Format gewählt werden.
 Diese Export-Funktion wird derzeit nur von Subversion Repositories unterstützt.
 
 ![Repository-Settings-General-Svn](assets/repository-settings-general-svn.png)
