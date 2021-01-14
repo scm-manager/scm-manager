@@ -28,10 +28,12 @@ import com.google.common.base.Charsets;
 import com.google.common.io.Files;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.api.v2.resources.RepositoryDto;
+import sonia.scm.it.utils.TestData;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.client.api.ClientCommand;
 import sonia.scm.repository.client.api.RepositoryClient;
@@ -65,6 +67,11 @@ public class GitRepositoryPathMatcherITCase {
 
   private ScmClient apiClient;
   private RepositoryDto repository;
+
+  @BeforeClass
+  public static void cleanup() {
+    TestData.cleanup();
+  }
 
   @Before
   public void setUp() {

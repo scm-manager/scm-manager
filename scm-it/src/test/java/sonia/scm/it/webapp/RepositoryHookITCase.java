@@ -30,6 +30,7 @@ import com.sun.jersey.api.client.WebResource;
 import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -38,6 +39,7 @@ import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameters;
 import sonia.scm.api.v2.resources.RepositoryDto;
 import sonia.scm.debug.DebugHookData;
+import sonia.scm.it.utils.TestData;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.client.api.ClientCommand;
@@ -87,6 +89,11 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
   public RepositoryHookITCase(String repositoryType)
   {
     this.repositoryType = repositoryType;
+  }
+
+  @BeforeClass
+  public static void cleanup() {
+    TestData.cleanup();
   }
 
   /**

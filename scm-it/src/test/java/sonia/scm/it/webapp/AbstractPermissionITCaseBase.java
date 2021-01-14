@@ -33,6 +33,7 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runners.Parameterized.Parameters;
+import sonia.scm.it.utils.TestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
@@ -69,6 +70,10 @@ public abstract class AbstractPermissionITCaseBase<T>
     this.client = credentials.isAnonymous()? ScmClient.anonymous(): new ScmClient(credentials.getUsername(), credentials.getPassword());
   }
 
+  @BeforeClass
+  public static void cleanup() {
+    TestData.cleanup();
+  }
 
   //~--- methods --------------------------------------------------------------
   /**

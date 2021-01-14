@@ -34,6 +34,7 @@ import org.apache.shiro.crypto.hash.Sha256Hash;
 import org.hamcrest.Matchers;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -42,6 +43,7 @@ import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.api.v2.resources.RepositoryDto;
 import sonia.scm.api.v2.resources.UserDto;
 import sonia.scm.api.v2.resources.UserToUserDtoMapperImpl;
+import sonia.scm.it.utils.TestData;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 import sonia.scm.util.HttpUtil;
@@ -84,6 +86,11 @@ public class GitLfsITCase {
 
   public GitLfsITCase() {
     mapper.setAnnotationIntrospector(new JaxbAnnotationIntrospector(TypeFactory.defaultInstance()));
+  }
+
+  @BeforeClass
+  public static void cleanup() {
+    TestData.cleanup();
   }
 
   // lifecycle methods
