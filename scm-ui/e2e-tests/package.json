@@ -8,25 +8,17 @@
   "private": false,
   "scripts": {
     "headless": "cypress run",
-    "ci": "node src/index.js"
+    "ci": "node ../../node_modules/@scm-manager/integration-test-runner/cli.js run -u scmadmin -p scmadmin -d ./"
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
     "cypress": "^4.12.0",
-    "fluent-ffmpeg": "^2.1.2"
-  },
-  "devDependencies": {
-    "eslint-plugin-cypress": "^2.11.1"
+    "fluent-ffmpeg": "^2.1.2",
+    "@scm-manager/integration-test-runner": "^1.0.0"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {
-    "extends": "@scm-manager/eslint-config",
-    "plugins": [
-      "cypress"
-    ],
-    "env": {
-      "cypress/globals": true
-    }
+    "extends": "@scm-manager/eslint-config"
   },
   "publishConfig": {
     "access": "public"
