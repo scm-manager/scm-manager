@@ -26,7 +26,7 @@ pipeline {
       }
       steps {
         // read version from branch, set it and commit it
-        sh "./gradlew setVersion -PnewVersion ${releaseVersion}"
+        gradle "setVersion -PnewVersion ${releaseVersion}"
         sh "git add gradle.properties lerna.json '**.json'"
         commit "Release version ${releaseVersion}"
 
@@ -47,13 +47,13 @@ pipeline {
     stage('Build') {
       steps {
         // build without tests
-        sh "./gradlew -xtest build"
+        gradle "-xtest build"
       }
     }
 
     stage('Check') {
       steps {
-        sh "./gradlew check"
+        gradle 'check'
         junit allowEmptyResults: true, testResults: '**/build/test-results/test/TEST-*.xml,**/build/test-results/tests/test/TEST-*.xml,**/build/jest-reports/TEST-*.xml'
       }
     }
@@ -61,7 +61,7 @@ pipeline {
     // in parallel with check?
     stage('Integration Tests') {
       steps {
-        sh "./gradlew integrationTest"
+        gradle 'integrationTest'
         junit allowEmptyResults: true, testResults: 'scm-it/build/test-results/javaIntegrationTests/*.xml,scm-ui/build/reports/e2e/*.xml'
         archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/e2e-tests/cypress/videos/*.mp4'
         archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/e2e-tests/cypress/screenshots/**/*.png'
@@ -74,11 +74,11 @@ pipeline {
         sh 'git fetch origin master'
         script {
           withSonarQubeEnv('sonarcloud.io-scm') {
-            String sonar = "sonarqube -Dsonar.organization=scm-manager -Dsonar.branch.name=${env.BRANCH_NAME}"
+            String parameters = " -Dsonar.organization=scm-manager -Dsonar.branch.name=${env.BRANCH_NAME}"
             if (env.BRANCH_NAME != "master") {
-              sonar += " -Dsonar.branch.target=master"
+              parameters += " -Dsonar.branch.target=master"
             }
-            sh "./gradlew sonarqube"
+            gradle "sonarqube ${parameters}"
           }
         }
       }
@@ -92,7 +92,7 @@ pipeline {
       }
       steps {
         withPublishProperies {
-          sh "./gradlew ${PUBLISH_PROPERTIES}"
+          gradle "publish ${PUBLISH_PROPERTIES}"
         }
       }
     }
@@ -120,7 +120,7 @@ pipeline {
         sh "git checkout develop"
         sh "git merge master"
 
-        sh "./gradlew setVersionToNextSnapshot"
+        gradle "setVersionToNextSnapshot"
 
         sh "git add gradle.properties lerna.json '**.json'"
         commit 'Prepare for next development iteration'
@@ -157,6 +157,11 @@ pipeline {
         body: "Check console output at ${BUILD_URL} to view the results."
     }
   }
+}
+
+void gradle(String command) {
+  // setting user home system property, should fix user prefs (?/.java/.prefs ...)
+  sh "./gradlew -Duser.home=${env.WORKSPACE} ${command}"
 }
 
 String getReleaseVersion() {
