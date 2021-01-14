@@ -3400,10 +3400,10 @@
     eslint-plugin-react "^7.16.0"
     eslint-plugin-react-hooks "^2.1.2"
 
-"@scm-manager/jest-preset@^2.12.1":
-  version "2.12.1"
-  resolved "https://registry.yarnpkg.com/@scm-manager/jest-preset/-/jest-preset-2.12.1.tgz#e620a2de6c83d23495359f3e7140bdeaa2928f69"
-  integrity sha512-EyQTzrI9sVjeWt+UpyL6jymJJ9OldgGI8e9mUoQOyv0eIR2cW+KvwOyTSrEKXU30V7OTETb1TIaRD8iGX6WKCQ==
+"@scm-manager/jest-preset@^2.12.3":
+  version "2.12.3"
+  resolved "https://registry.yarnpkg.com/@scm-manager/jest-preset/-/jest-preset-2.12.3.tgz#e477514352f52a332b0cdb9076bcfdb84fad7197"
+  integrity sha512-oXf+HT+jIfdZiLMPFgpFBHTK49D2PlqUx/qX+GZVtIFL6e6UFIPdgeI7zQNc+MWFz4ZSHcRks4uhftr48rw9aw==
   dependencies:
     babel-jest "^26.6.3"
     babel-plugin-require-context-hook "^1.0.0"
@@ -3411,10 +3411,10 @@
     jest "^26.6.3"
     jest-junit "^12.0.0"
 
-"@scm-manager/jest-preset@^2.12.3":
-  version "2.12.3"
-  resolved "https://registry.yarnpkg.com/@scm-manager/jest-preset/-/jest-preset-2.12.3.tgz#e477514352f52a332b0cdb9076bcfdb84fad7197"
-  integrity sha512-oXf+HT+jIfdZiLMPFgpFBHTK49D2PlqUx/qX+GZVtIFL6e6UFIPdgeI7zQNc+MWFz4ZSHcRks4uhftr48rw9aw==
+"@scm-manager/jest-preset@^2.12.4":
+  version "2.12.4"
+  resolved "https://registry.yarnpkg.com/@scm-manager/jest-preset/-/jest-preset-2.12.4.tgz#f72c6afd83b84b2cd70ecc71f059ae7922d2d14c"
+  integrity sha512-Cjyxy96n7GGu1dL89HT5RRFVfJTGDUXwGNpe/iM6ZBqPETC8YElTC4qoDy80anf+BhUZgN7hIKf0u9g2nHPFhQ==
   dependencies:
     babel-jest "^26.6.3"
     babel-plugin-require-context-hook "^1.0.0"
