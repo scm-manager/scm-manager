@@ -71,12 +71,12 @@ pipeline {
     stage('SonarQube') {
       steps {
         sh 'git config --replace-all "remote.origin.fetch" "+refs/heads/*:refs/remotes/origin/*"'
-        sh 'git fetch origin master'
+        sh 'git fetch origin develop'
         script {
           withSonarQubeEnv('sonarcloud.io-scm') {
             String parameters = " -Dsonar.organization=scm-manager -Dsonar.branch.name=${env.BRANCH_NAME}"
-            if (env.BRANCH_NAME != "master") {
-              parameters += " -Dsonar.branch.target=master"
+            if (env.BRANCH_NAME != "develop") {
+              parameters += " -Dsonar.branch.target=develop"
             }
             gradle "sonarqube ${parameters}"
           }
