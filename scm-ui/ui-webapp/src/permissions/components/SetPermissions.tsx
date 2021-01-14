@@ -25,7 +25,7 @@ import React from "react";
 import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Link } from "@scm-manager/ui-types";
-import { ErrorNotification, Level, Notification, SubmitButton } from "@scm-manager/ui-components";
+import { ErrorNotification, Level, Notification, SubmitButton, Subtitle } from "@scm-manager/ui-components";
 import { getLink } from "../../modules/indexResource";
 import { loadPermissionsForEntity, setPermissions } from "./handlePermissions";
 import PermissionsWrapper from "./PermissionsWrapper";
@@ -134,6 +134,7 @@ class SetPermissions extends React.Component<Props, State> {
 
     return (
       <form onSubmit={this.submit}>
+        <Subtitle subtitle={t("setPermissions.subtitle")} />
         {message}
         {this.renderPermissions()}
         <Level

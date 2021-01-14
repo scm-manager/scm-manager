@@ -10,7 +10,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add repository export for Subversion ([#1488](https://github.com/scm-manager/scm-manager/pull/1488))
 - Provide more options for Helm chart ([#1485](https://github.com/scm-manager/scm-manager/pull/1485))
 - Option to create a permanent link to a source file ([#1489](https://github.com/scm-manager/scm-manager/pull/1489))
-- add markdown codeblock renderer extension point ([#1492](https://github.com/scm-manager/scm-manager/pull/1492))
+- Add markdown codeblock renderer extension point ([#1492](https://github.com/scm-manager/scm-manager/pull/1492))
+- Add Java version to plugin center url ([#1494](https://github.com/scm-manager/scm-manager/pull/1494))
 
 ## [2.12.0] - 2020-12-17
 ### Added
