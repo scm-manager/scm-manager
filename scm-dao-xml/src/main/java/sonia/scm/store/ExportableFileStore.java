@@ -62,7 +62,11 @@ public class ExportableFileStore implements ExportableStore {
         if (fileOrDir.isDirectory()) {
           exportDirectoryEntries(exporter, fileOrDir);
         } else {
-          putFileContentIntoStream(exporter, fileOrDir);
+          if (type.equalsIgnoreCase("config") && !fileOrDir.getName().endsWith(".xml")) {
+            // Skip irrelevant config store files
+          } else {
+            putFileContentIntoStream(exporter, fileOrDir);
+          }
         }
       }
     }

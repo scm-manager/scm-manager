@@ -92,7 +92,7 @@ class RepositoryStoreExporterTest {
 
     @Override
     public String getType() {
-      return "hitchhiker";
+      return "config";
     }
 
     @Override
@@ -102,7 +102,7 @@ class RepositoryStoreExporterTest {
 
     @Override
     public void export(Exporter exporter) throws IOException {
-      OutputStream stream = exporter.put("testStore", 1);
+      OutputStream stream = exporter.put("testStore", 0);
       stream.flush();
       stream.close();
     }

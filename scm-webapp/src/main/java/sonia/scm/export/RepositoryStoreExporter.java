@@ -27,22 +27,21 @@ package sonia.scm.export;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.io.output.ProxyOutputStream;
+import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryExportException;
 import sonia.scm.store.ExportableStore;
 import sonia.scm.store.StoreExporter;
 
 import javax.inject.Inject;
 import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
 public class RepositoryStoreExporter {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(RepositoryStoreExporter.class);
   private static final String DATA_STORE = "data";
   private static final String CONFIG_STORE = "config";
 
@@ -67,10 +66,6 @@ public class RepositoryStoreExporter {
             entry.setSize(filesize);
             taos.putArchiveEntry(entry);
           } else if (CONFIG_STORE.equalsIgnoreCase(store.getType())) {
-            //TODO Can't think of a better solution just now
-            if (isIrrelevantFileFromConfigStoreDir(name)) {
-              return new ByteArrayOutputStream();
-            }
             TarArchiveEntry entry = new TarArchiveEntry("stores/" + store.getType() + "/" + name);
             entry.setSize(filesize);
             taos.putArchiveEntry(entry);
@@ -80,21 +75,16 @@ public class RepositoryStoreExporter {
       }
 
     } catch (IOException e) {
-      LOGGER.error("Could not export repository stores for {}", repository, e);
+      throw new RepositoryExportException(
+        ContextEntry.ContextBuilder.entity(repository).build(),
+        "Could not export repository metadata stores.",
+        e
+      );
     }
   }
 
-  private boolean isIrrelevantFileFromConfigStoreDir(String name) {
-    return !name.endsWith(".xml");
-  }
-
   private OutputStream createOutputStream(TarArchiveOutputStream taos) {
-    return new OutputStream() {
-      @Override
-      public void write(int b) throws IOException {
-        taos.write(b);
-      }
-
+    return new ProxyOutputStream(taos) {
       @Override
       public void close() throws IOException {
         taos.closeArchiveEntry();

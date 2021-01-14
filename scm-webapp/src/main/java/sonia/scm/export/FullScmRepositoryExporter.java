@@ -27,9 +27,9 @@ package sonia.scm.export;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryExportException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 
@@ -40,8 +40,6 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 public class FullScmRepositoryExporter {
-
-  private static final Logger LOGGER = LoggerFactory.getLogger(FullScmRepositoryExporter.class);
 
   private final EnvironmentInformationXmlGenerator generator;
   private final RepositoryServiceFactory serviceFactory;
@@ -67,7 +65,11 @@ public class FullScmRepositoryExporter {
       taos.finish();
 
     } catch (IOException e) {
-      LOGGER.error("Could not export repository with metadata: {}", repository, e);
+      throw new RepositoryExportException(
+        ContextEntry.ContextBuilder.entity(repository).build(),
+        "Could not export repository with metadata",
+        e
+      );
     }
   }
 
