@@ -86,13 +86,15 @@ pipeline {
 
     stage('Deployment') {
       when {
-        branch pattern: 'release/*', comparator: 'GLOB'
-        // TODO or develop
+        anyOf {
+          branch pattern: 'release/*', comparator: 'GLOB'
+          branch 'develop'
+        }
         expression { return isBuildSuccess() }
       }
       steps {
-        withPublishProperies {
-          gradle "publish ${PUBLISH_PROPERTIES}"
+        withPublishEnivronment {
+          gradle "publish"
         }
       }
     }
@@ -181,19 +183,15 @@ void isBuildSuccess() {
   return currentBuild.result == null || currentBuild.result == 'SUCCESS'
 }
 
-void withPublishProperies(Closure<Void> closure) {
+void withPublishEnivronment(Closure<Void> closure) {
   withCredentials([
-    usernamePassword(credentialsId: 'maven.scm-manager.org', passwordVariable: 'PACKAGES_PASSWORD', usernameVariable: 'PACKAGES_USERNAME'),
-    usernamePassword(credentialsId: 'hub.docker.com-cesmarvin', passwordVariable: 'DOCKER_PASSWORD', usernameVariable: 'DOCKER_USERNAME'),
-    string(credentialsId: 'cesmarvin_npm_token', variable: 'NPM_TOKEN'),
-    file(credentialsId: 'oss-gpg-secring', variable: 'GPG_KEYRING'),
-    usernamePassword(credentialsId: 'oss-keyid-and-passphrase', usernameVariable: 'GPG_KEY_ID', passwordVariable: 'GPG_KEY_PASSPHRASE')
+    usernamePassword(credentialsId: 'maven.scm-manager.org', usernameVariable: 'ORG_GRADLE_PROJECT_packagesScmManagerUsername', passwordVariable: 'ORG_GRADLE_PROJECT_packagesScmManagerPassword'),
+    usernamePassword(credentialsId: 'hub.docker.com-cesmarvin', usernameVariable: 'ORG_GRADLE_PROJECT_dockerUsername', passwordVariable: 'ORG_GRADLE_PROJECT_dockerPassword'),
+    string(credentialsId: 'cesmarvin_npm_token', variable: 'ORG_GRADLE_PROJECT_npmToken'),
+    file(credentialsId: 'oss-gpg-secring', variable: 'ORG_GRADLE_PROJECT_signing.secretKeyRingFile'),
+    usernamePassword(credentialsId: 'oss-keyid-and-passphrase', usernameVariable: 'ORG_GRADLE_PROJECT_signing.keyId', passwordVariable: 'ORG_GRADLE_PROJECT_signing.password')
   ]) {
-    String properties = "-PpackagesScmManagerUsername=${PACKAGES_USERNAME} -PpackagesScmManagerPassword=${PACKAGES_PASSWORD}"
-    properties += " -PdockerUsername=${DOCKER_USERNAME} -PdockerPassword=${DOCKER_PASSWORD}"
-    properties += " -PnpmEmail=cesmarvin@cloudogu.com -PnpmToken=${NPM_TOKEN}"
-    properties += " -Psigning.secretKeyRingFile=${GPG_KEYRING} -Psigning.keyId=${GPG_KEY_ID} -Psigning.password=${GPG_KEY_PASSPHRASE}"
-    withEnv(["PUBLISH_PROPERTIES=\"${properties}\""]) {
+    withEnv(["ORG_GRADLE_PROJECT_npmEmail=cesmarvin@cloudogu.com"]) {
       closure.call()
     }
   }
