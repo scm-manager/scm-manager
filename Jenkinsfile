@@ -188,6 +188,7 @@ void withPublishEnivronment(Closure<Void> closure) {
   withCredentials([
     usernamePassword(credentialsId: 'maven.scm-manager.org', usernameVariable: 'ORG_GRADLE_PROJECT_packagesScmManagerUsername', passwordVariable: 'ORG_GRADLE_PROJECT_packagesScmManagerPassword'),
     usernamePassword(credentialsId: 'hub.docker.com-cesmarvin', usernameVariable: 'ORG_GRADLE_PROJECT_dockerUsername', passwordVariable: 'ORG_GRADLE_PROJECT_dockerPassword'),
+    usernamePassword(credentialsId: 'cesmarvin-github', usernameVariable: 'ORG_GRADLE_PROJECT_gitHubUsername', passwordVariable: 'ORG_GRADLE_PROJECT_gitHubApiToken'),
     string(credentialsId: 'cesmarvin_npm_token', variable: 'ORG_GRADLE_PROJECT_npmToken'),
     file(credentialsId: 'oss-gpg-secring', variable: 'ORG_GRADLE_PROJECT_signing.secretKeyRingFile'),
     usernamePassword(credentialsId: 'oss-keyid-and-passphrase', usernameVariable: 'ORG_GRADLE_PROJECT_signing.keyId', passwordVariable: 'ORG_GRADLE_PROJECT_signing.password')
