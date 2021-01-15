@@ -64,7 +64,12 @@ abstract class UploadTask extends DefaultTask {
   void upload() {
     if (skip) {
       LOG.warn("upload is skipped")
+    } else {
+      doUpload()
     }
+  }
+
+  private void doUpload() {
     SslContextFactory.Client sslContextFactory = new SslContextFactory.Client()
     HttpClient client = new HttpClient(sslContextFactory)
     try {
