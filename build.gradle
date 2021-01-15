@@ -149,6 +149,20 @@ project.ext {
   isCI = isRunningOnCiServer()
   os = os()
   arch = arch()
+
+  // map signing environment variables
+  // this is required because of environment variables should not have a dot in the name
+  // but the gradle signing props are using dots
+  // also we use the set method, because setting props with dots works neither
+  if (isEnvAvailable("GPG_KEY_RING")) {
+    set('signing.secretKeyRingFile', System.getenv("GPG_KEY_RING"))
+  }
+  if (isEnvAvailable("GPG_KEY_ID")) {
+    set('signing.keyId', System.getenv("GPG_KEY_ID"))
+  }
+  if (isEnvAvailable("GPG_KEY_PASSWORD")) {
+    set('signing.password', System.getenv("GPG_KEY_PASSWORD"))
+  }
 }
 
 publishing {

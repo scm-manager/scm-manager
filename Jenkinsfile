@@ -190,8 +190,8 @@ void withPublishEnivronment(Closure<Void> closure) {
     usernamePassword(credentialsId: 'hub.docker.com-cesmarvin', usernameVariable: 'ORG_GRADLE_PROJECT_dockerUsername', passwordVariable: 'ORG_GRADLE_PROJECT_dockerPassword'),
     usernamePassword(credentialsId: 'cesmarvin-github', usernameVariable: 'ORG_GRADLE_PROJECT_gitHubUsername', passwordVariable: 'ORG_GRADLE_PROJECT_gitHubApiToken'),
     string(credentialsId: 'cesmarvin_npm_token', variable: 'ORG_GRADLE_PROJECT_npmToken'),
-    file(credentialsId: 'oss-gpg-secring', variable: 'ORG_GRADLE_PROJECT_signing.secretKeyRingFile'),
-    usernamePassword(credentialsId: 'oss-keyid-and-passphrase', usernameVariable: 'ORG_GRADLE_PROJECT_signing.keyId', passwordVariable: 'ORG_GRADLE_PROJECT_signing.password')
+    file(credentialsId: 'oss-gpg-secring', variable: 'GPG_KEY_RING'),
+    usernamePassword(credentialsId: 'oss-keyid-and-passphrase', usernameVariable: 'GPG_KEY_ID', passwordVariable: 'GPG_KEY_PASSWORD')
   ]) {
     withEnv(["ORG_GRADLE_PROJECT_npmEmail=cesmarvin@cloudogu.com"]) {
       closure.call()
