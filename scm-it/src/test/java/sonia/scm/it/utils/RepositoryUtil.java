@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.it.utils;
 
 import com.google.common.base.Charsets;
@@ -77,7 +77,13 @@ public class RepositoryUtil {
 
   public static Changeset createAndCommitFile(RepositoryClient repositoryClient, String username, String fileName, String content) throws IOException {
     writeAndAddFile(repositoryClient, fileName, content);
-    return commit(repositoryClient, username, "added " + fileName);
+    Changeset commit = commit(repositoryClient, username, "added " + fileName);
+    try {
+      Thread.sleep(10);
+    } catch (InterruptedException e) {
+      // nothing to do
+    }
+    return commit;
   }
 
   /**
