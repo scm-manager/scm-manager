@@ -73,6 +73,10 @@ task context(type: Copy) {
 task dockerImage(type: DockerBuildImage) {
   inputDir = file('build/docker')
   images = images()
+  doLast {
+    File file = new File(project.buildDir, 'docker.tag')
+    file.text = dockerTag
+  }
   dependsOn 'context'
 }
 
