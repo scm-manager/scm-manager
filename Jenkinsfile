@@ -100,6 +100,22 @@ pipeline {
       }
     }
 
+    stage('Presentation Environment') {
+      when {
+        branch 'develop'
+        expression { return isBuildSuccess() }
+      }
+      steps {
+        script {
+          def imageVersion = readFile 'scm-packaging/docker/build/docker.tag'
+
+          build job: 'scm-manager/next-scm.cloudogu.com', propagate: false, wait: false, parameters: [
+            string(name: 'imageTag', value: imageVersion)
+          ]
+        }
+      }
+    }
+
     stage('Push Tag') {
       when {
         branch pattern: 'release/*', comparator: 'GLOB'
