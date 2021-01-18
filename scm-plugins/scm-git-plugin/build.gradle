@@ -27,13 +27,14 @@ plugins {
   id 'org.scm-manager.smp' version '0.7.2'
 }
 
-def jgitVersion = '5.6.1.202002131546-r-scm1'
+def jgitVersion = '5.10.0.202012080955-r-scm1'
 
 dependencies {
   // required by scm-it
   api "sonia.jgit:org.eclipse.jgit:${jgitVersion}"
   implementation "sonia.jgit:org.eclipse.jgit.http.server:${jgitVersion}"
   implementation "sonia.jgit:org.eclipse.jgit.lfs.server:${jgitVersion}"
+  implementation "sonia.jgit:org.eclipse.jgit.gpg.bc:${jgitVersion}"
 
   testImplementation libraries.shiroUnit
 }
