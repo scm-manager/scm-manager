@@ -95,7 +95,7 @@ public class FullScmRepositoryExporter {
   private void writeStoreData(Repository repository, TarArchiveOutputStream taos) throws IOException {
     ByteArrayOutputStream metaDataBaos = new ByteArrayOutputStream();
     storeExporter.export(repository, metaDataBaos);
-    TarArchiveEntry entry = new TarArchiveEntry("scm-metadata.tar.gz");
+    TarArchiveEntry entry = new TarArchiveEntry("scm-metadata.tar");
     entry.setSize(metaDataBaos.size());
     taos.putArchiveEntry(entry);
     taos.write(metaDataBaos.toByteArray());

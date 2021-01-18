@@ -26,7 +26,6 @@ package sonia.scm.export;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import org.apache.commons.io.output.ProxyOutputStream;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
@@ -55,8 +54,7 @@ public class RepositoryStoreExporter {
   public void export(Repository repository, OutputStream output) {
     try (
       BufferedOutputStream bos = new BufferedOutputStream(output);
-      GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(bos);
-      final TarArchiveOutputStream taos = new TarArchiveOutputStream(gzos)
+      final TarArchiveOutputStream taos = new TarArchiveOutputStream(bos)
     ) {
       List<ExportableStore> exportableStores = storeExporter.findExportableStores(repository);
       for (ExportableStore store : exportableStores) {
