@@ -12,8 +12,8 @@
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
-    "fluent-ffmpeg": "^2.1.2",
-    "@scm-manager/integration-test-runner": "^1.1.2"
+    "@scm-manager/integration-test-runner": "^1.2.0",
+    "fluent-ffmpeg": "^2.1.2"
   },
   "prettier": "@scm-manager/prettier-config",
   "eslintConfig": {
