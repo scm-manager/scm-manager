@@ -43,8 +43,8 @@ helm {
   charts {
     scmServer {
       chartName = "scm-manager"
-      chartVersion = expandedVersion
-      version = expandedVersion
+      chartVersion = dockerTag
+      version = dockerTag
 
       sourceDir = file('src/main/chart')
       filtering {
