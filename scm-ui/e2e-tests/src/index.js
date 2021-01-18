@@ -33,7 +33,7 @@ ffmpeg.setFfmpegPath(ffmpegPath);
 const options = {
   reporter: "junit",
   reporterOptions: {
-    mochaFile: path.join("..", "target", "cypress-reports", "TEST-[hash].xml")
+    mochaFile: path.join("..", "build", "reports", "e2e", "TEST-[hash].xml")
   }
 };
 

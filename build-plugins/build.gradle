@@ -1,0 +1,87 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+
+plugins {
+  id 'java-gradle-plugin'
+  id 'groovy'
+}
+
+apply from: file( '../gradle/dependencies.gradle' )
+
+dependencies {
+  implementation gradleApi()
+  implementation 'com.github.node-gradle:gradle-node-plugin:2.2.4'
+  implementation 'gradle.plugin.com.hierynomus.gradle.plugins:license-gradle-plugin:0.15.0'
+
+  implementation libraries.guava
+  implementation libraries.jettyServer
+  implementation libraries.jettyWebapp
+  implementation libraries.jettyClient
+
+  implementation libraries.snakeYml
+}
+
+gradlePlugin {
+  // Define the plugin
+  plugins {
+    javaModule {
+      id = 'org.scm-manager.java'
+      implementationClass = 'com.cloudogu.scm.JavaModulePlugin'
+    }
+    buildInfo {
+      id = 'org.scm-manager.build-info'
+      implementationClass = 'com.cloudogu.scm.BuildInfoPlugin'
+    }
+    corePlugins {
+      id = 'org.scm-manager.core-plugins'
+      implementationClass = 'com.cloudogu.scm.CorePluginsGradlePlugin'
+    }
+    serve {
+      id = 'org.scm-manager.run'
+      implementationClass = 'com.cloudogu.scm.RunPlugin'
+    }
+    integrationTest {
+      id = 'org.scm-manager.integration-tests'
+      implementationClass = 'com.cloudogu.scm.IntegrationTestPlugin'
+    }
+    packaging {
+      id = 'org.scm-manager.packaging'
+      implementationClass = 'com.cloudogu.scm.PackagingPlugin'
+    }
+    ci {
+      id = 'org.scm-manager.ci'
+      implementationClass = 'com.cloudogu.scm.CIPlugin'
+    }
+  }
+}
+
+repositories {
+  maven {
+    url "https://packages.scm-manager.org/repository/public/"
+  }
+  maven {
+    url 'https://plugins.gradle.org/m2/'
+  }
+}

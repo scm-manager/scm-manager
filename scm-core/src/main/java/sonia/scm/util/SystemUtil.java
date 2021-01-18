@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.util;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -92,6 +92,10 @@ public final class SystemUtil
   public static String getOS()
   {
     return platform.getName();
+  }
+
+  public static String getJre() {
+    return System.getProperty("java.version");
   }
 
   /**

@@ -61,6 +61,7 @@
     }
   },
   "singleUserPassword": {
+    "subtitle": "Passwort setzen",
     "button": "Passwort setzen",
     "setPasswordSuccessful": "Das Passwort wurde erfolgreich gespeichert."
   },

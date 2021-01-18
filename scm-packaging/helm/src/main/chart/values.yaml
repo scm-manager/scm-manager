@@ -28,9 +28,9 @@
 
 image:
   # image.repository --  Name of SCM-Manager image
-  repository: ${docker.repository}
+  repository: ${dockerRepository}
   # image.tag -- Tag of SCM-Manager image
-  tag: ${docker.tag}
+  tag: ${dockerTag}
   # image.pullPolicy -- SCM-Manager image pull policy
   pullPolicy: IfNotPresent
 
@@ -126,7 +126,7 @@ lifecycleHooks: |
 #    postStart:
 #      exec:
 #        command: ["/bin/bash", "-c", "echo lifecycleHook"]
-# Other option: Insert scrip file via "helm install --set-file=postStartHookScript=${pwd()}/postStartHook.sh"
+# Other option: Insert scrip file via "helm install --set-file=postStartHookScript=\${pwd()}/postStartHook.sh"
 #  lifecycleHooks: |-
 #    postStart:
 #      exec:

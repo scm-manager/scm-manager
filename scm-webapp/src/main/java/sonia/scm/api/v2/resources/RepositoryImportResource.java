@@ -159,7 +159,8 @@ public class RepositoryImportResource {
     )
   )
   public Response importFromUrl(@Context UriInfo uriInfo,
-                                @PathParam("type") String type, @Valid RepositoryImportDto request) {
+                                @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
+                                @Valid RepositoryImportDto request) {
     RepositoryPermissions.create().check();
 
     Type t = type(manager, type);
@@ -244,7 +245,7 @@ public class RepositoryImportResource {
     )
   )
   public Response importFromBundle(@Context UriInfo uriInfo,
-                                   @PathParam("type") String type,
+                                   @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
                                    MultipartFormDataInput input,
                                    @QueryParam("compressed") @DefaultValue("false") boolean compressed) {
     RepositoryPermissions.create().check();

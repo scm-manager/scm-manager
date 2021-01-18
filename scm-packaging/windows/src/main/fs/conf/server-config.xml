@@ -32,7 +32,7 @@
     if you have to change something ensure you know what you are doing.
 
     For further information on configuration scm-server have a look at:
-    https://www.scm-manager.org/docs/${parsedVersion.majorVersion}.${parsedVersion.minorVersion}.x/en/administration/scm-server/
+    https://www.scm-manager.org/docs/${version.major}.${version.minor}.x/en/administration/scm-server/
   -->
 
   <New id="httpConfig" class="org.eclipse.jetty.server.HttpConfiguration">

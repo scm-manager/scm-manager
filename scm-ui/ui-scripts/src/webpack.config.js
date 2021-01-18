@@ -114,7 +114,7 @@ module.exports = [
       extensions: [".ts", ".tsx", ".js", ".jsx", ".css", ".scss", ".json"]
     },
     output: {
-      path: path.join(root, "target", "assets"),
+      path: path.join(root, "build", "webapp", "assets"),
       filename: "[name].bundle.js",
       chunkFilename: "[name].bundle.js"
     },
@@ -124,6 +124,7 @@ module.exports = [
       historyApiFallback: true,
       overlay: true,
       port: 3000,
+      hot: true,
       before: app => {
         app.use(createContextPathMiddleware("/scm"));
       },
@@ -160,6 +161,7 @@ module.exports = [
     plugins: webpackPlugins
   },
   {
+    mode,
     context: root,
     entry: "./ui-styles/src/scm.scss",
     module: {
@@ -190,17 +192,18 @@ module.exports = [
       minimizer: [new OptimizeCSSAssetsPlugin({})]
     },
     output: {
-      path: path.join(root, "target", "assets"),
+      path: path.join(root, "build", "webapp", "assets"),
       filename: "ui-styles.bundle.js"
     }
   },
   {
+    mode,
     context: path.resolve(root),
     entry: {
       polyfills: "./ui-polyfill/src/index.js"
     },
     output: {
-      path: path.resolve(root, "target", "assets"),
+      path: path.resolve(root, "build", "webapp", "assets"),
       filename: "[name].bundle.js"
     }
   }

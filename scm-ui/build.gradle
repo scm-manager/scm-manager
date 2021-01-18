@@ -1,0 +1,244 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+
+plugins {
+  id 'com.github.node-gradle.node' version '2.2.4'
+  id 'com.github.hierynomus.license-base' version '0.15.0'
+  id 'org.scm-manager.ci'
+}
+
+node {
+  download = true
+  version = nodeVersion
+  yarnVersion = yarnVersion
+  nodeModulesDir = file(project.rootProject.projectDir)
+}
+
+task typecheck(type: YarnTask) {
+  args = ['run', 'typecheck']
+  inputs.files(fileTree(project.projectDir) {
+    include 'ui-*/src/**'
+    include 'ui-*/**/*.js'
+    include 'ui-*/**/*.jsx'
+    include 'ui-*/**/*.ts'
+    include 'ui-*/**/*.tsx'
+  })
+  .withPathSensitivity(PathSensitivity.RELATIVE)
+  outputs.file('build/tmp/typecheck/marker')
+  dependsOn('yarn_install')
+  doLast {
+    File directory = new File(project.buildDir, 'tmp/typecheck')
+    directory.mkdirs()
+    File marker = new File(directory, 'marker')
+    marker.createNewFile()
+  }
+}
+
+task test(type: YarnTask) {
+  args = ['run', 'test']
+  inputs.files(fileTree(project.projectDir) {
+    include 'ui-*/src/**'
+    include 'ui-*/**/*.js'
+    include 'ui-*/**/*.jsx'
+    include 'ui-*/**/*.ts'
+    include 'ui-*/**/*.tsx'
+  })
+  .withPathSensitivity(PathSensitivity.RELATIVE)
+  outputs.dir('build/jest-reports')
+
+  if (project.isCI) {
+    ignoreExitValue = project.isCI
+    dependsOn('yarn_install', 'updateUiTestTimestamps')
+  } else {
+    dependsOn('yarn_install')
+  }
+}
+
+task updateUiTestTimestamps(type: TouchFiles) {
+  directory = project.file('build/jest-reports')
+  extension = "xml"
+}
+
+task check {
+  dependsOn('typecheck', 'test')
+}
+
+yarn_install {
+  inputs.files(fileTree(project.projectDir) {
+    include 'ui-*/package.json'
+  })
+  .withPathSensitivity(PathSensitivity.RELATIVE)
+
+  inputs.file(new File(project.rootProject.projectDir, 'package.json'))
+  inputs.file(new File(project.rootProject.projectDir, 'yarn.lock'))
+
+  outputs.dir(new File(project.rootProject.projectDir, 'node_modules'))
+}
+
+task build {
+  dependsOn 'check', 'bundle'
+}
+
+task bundle(type: YarnTask) {
+  args = ['run', 'build']
+  inputs.files(fileTree(project.projectDir) {
+    include 'ui-*/src/**'
+    include 'ui-*/**/*.js'
+    include 'ui-*/**/*.jsx'
+    include 'ui-*/**/*.ts'
+    include 'ui-*/**/*.tsx'
+    include 'ui-*/**/*.css'
+    include 'ui-*/**/*.sass'
+    include 'ui-*/**/*.scss'
+
+    exclude '**/*.test.ts'
+    exclude '**/*.test.tsx'
+  })
+  .withPathSensitivity(PathSensitivity.RELATIVE)
+  outputs.dir('build/assets')
+  dependsOn('yarn_install')
+}
+
+configurations {
+  assets {
+    canBeConsumed = true
+    canBeResolved = true
+  }
+}
+
+artifacts {
+  assets(project.layout.buildDirectory.dir('webapp')) {
+    builtBy(bundle)
+  }
+  assets(project.layout.projectDirectory.dir('ui-webapp/public'))
+}
+
+// In order to publish the packages to npm we have to do some tricks
+// 1. If we deploy a snapshot version, we replace the snapshot version in the package.json files with a unique version.
+//    This causes lerna to fail, because it does a dirty working copy check before publish.
+//    To trick lerna we move the git folder to .git-disabled before publishing and restore it afterwards.
+// 2. Authentication with yarn/npm requires a .npmrc file which contains the token and a .yarnrc file which contains
+//    the registry url and some settings. Those files are normally stored in the home directory of the user, but
+//    fortunately they could be stored in the current working directory as well. So we create an .npmrc file from a
+//    a project property "npmToken" and a .yarnrc in the root directory of the project. Both files are removed after
+//    publishing.
+
+File dotGit = new File(project.rootDir, ".git")
+File dotGitDisabled = new File(project.rootDir, ".git-disabled")
+File npmrc = new File(project.rootDir, ".npmrc")
+File yarnrc = new File(project.rootDir, ".yarnrc")
+
+task publish(type: YarnTask) {
+  doFirst {
+    dotGit.renameTo(dotGitDisabled)
+    if (project.hasProperty("npmToken")) {
+      npmrc.createNewFile()
+      npmrc.append "//registry.npmjs.org/:_authToken=${project.property('npmToken')}\n"
+      yarnrc.createNewFile()
+      yarnrc.append 'registry "https://registry.npmjs.org/"\n'
+      yarnrc.append 'always-auth true\n'
+      if (project.hasProperty('npmEmail')) {
+        yarnrc.append "email ${project.property('npmEmail')}\n"
+      }
+    }
+  }
+  args = ['run', 'deploy', project.version]
+  finalizedBy 'cleanUpAfterPublishing'
+  dependsOn 'yarn_install'
+}
+
+task cleanUpAfterPublishing {
+  doLast {
+    dotGitDisabled.renameTo(dotGit)
+    if (npmrc.exists()) {
+      npmrc.delete()
+    }
+    if (yarnrc.exists()) {
+      yarnrc.delete()
+    }
+  }
+}
+
+task setVersion(type: YarnTask) {
+  doFirst {
+    if (!project.hasProperty('newVersion')) {
+      throw new GradleException('newVersion properties is required, specify with -PnewVersion=x.y.z')
+    }
+    println "set ui package modules to new version ${project.property('newVersion')}"
+  }
+  if (project.hasProperty('newVersion')) {
+    args = ['run', 'set-version', project.property('newVersion')]
+  }
+  dependsOn('yarn_install')
+}
+
+task setVersionToNextSnapshot(type: YarnTask) {
+  args = ['run', 'set-version', nextSnapshotVersion]
+  dependsOn('yarn_install')
+}
+
+license {
+  header rootProject.file("LICENSE.txt")
+  strictCheck true
+
+  mapping {
+    tsx = 'SLASHSTAR_STYLE'
+    ts = 'SLASHSTAR_STYLE'
+    gradle = 'SLASHSTAR_STYLE'
+  }
+
+  exclude '**/node_modules/**'
+  exclude '**/build/**'
+  exclude '**/.gradle/**'
+  exclude '**/*.json'
+  exclude '**/*.jpg'
+  exclude '**/*.png'
+  exclude '**/*.gif'
+  exclude '**/*.svg'
+  exclude '**/*.ico'
+  exclude '**/*.md'
+  exclude '**/*.mustache'
+  exclude '**/*.snap'
+  exclude '**/*.iml'
+
+}
+
+task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
+  source = fileTree('.')
+}
+
+sonarqube {
+  properties {
+    property 'sonar.language', 'typescript'
+    property 'sonar.sources', project.fileTree('.').include('ui-*/src/**')
+    property 'sonar.tests', project.fileTree('.').include('ui-*/src/**')
+    property 'sonar.test.inclusions', '**/*.test.ts,**/*.test.js,**/*.test.tsx'
+    property 'sonar.junit.reportPaths', 'build/jest-reports/'
+    // no wildcard support
+    // https://github.com/SonarSource/SonarJS/issues/578
+    property 'sonar.javascript.lcov.reportPaths', 'build/jest-reports/coverage-ui-components/lcov.info,build/jest-reports/coverage-ui-extensions/lcov.info,build/jest-reports/coverage-ui-webapp/lcov.info'
+    property 'sonar.nodejs.executable', project.file(".gradle/nodejs/node-v${nodeVersion}-${os}-${arch}/bin/node")
+  }
+}

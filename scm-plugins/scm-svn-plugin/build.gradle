@@ -1,0 +1,79 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+
+plugins {
+  id 'org.scm-manager.smp' version '0.7.2'
+}
+
+def svnkitVersion = '1.10.1-scm2'
+
+dependencies {
+  implementation("sonia.svnkit:svnkit:${svnkitVersion}") {
+    exclude group: 'org.tmatesoft.svnkit', module: 'trilead-ssh2'
+  }
+  implementation "sonia.svnkit:svnkit-dav:${svnkitVersion}"
+  testImplementation libraries.shiroUnit
+}
+
+scmPlugin {
+  scmVersion = project.version
+  core = true
+  name = 'scm-svn-plugin'
+  displayName = 'Subversion'
+  description = 'Plugin for the version control system Subversion'
+  author = 'Cloudogu GmbH'
+  category = 'Source Code Management'
+  avatarUrl = '/images/svn-logo.gif'
+
+  openapi {
+    packages = [
+      'sonia.scm.api.v2.resources'
+    ]
+  }
+
+  sonar {
+    // SCMSvnDiffGenerator is a copy of an internal SVNKit class, with small changes for SCM-Manger.
+    // If we refactor the class, it could become very hard to merge it with upstream.
+    // So we do not want a duplication report for this class.
+    property 'sonar.cpd.exclusions', '**/SCMSvnDiffGenerator.java'
+  }
+
+}
+
+task testJar(type: Jar) {
+ 	classifier = 'tests'
+	from sourceSets.test.output
+}
+
+configurations {
+  tests {
+    canBeConsumed = true
+    canBeResolved = false
+  }
+}
+
+artifacts {
+  tests(testJar)
+}

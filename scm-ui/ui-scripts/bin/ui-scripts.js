@@ -22,10 +22,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-/* eslint-disable no-console */
-const { spawnSync } = require("child_process");
 
-const commands = ["plugin", "plugin-watch", "plugin-publish", "publish", "version"];
+const fs = require("fs");
+const path = require("path");
+
+const commandDir = path.join(__dirname, "../src/commands");
+const commands = fs
+  .readdirSync(commandDir)
+  .map(script => {
+    if (script.endsWith(".js")) {
+      return script.replace(".js", "");
+    }
+    return undefined;
+  })
+  .filter(cmd => !!cmd);
 
 const args = process.argv.slice(2);
 
@@ -33,33 +43,14 @@ const commandIndex = args.findIndex(arg => {
   return commands.includes(arg);
 });
 
-const command = commandIndex === -1 ? args[0] : args[commandIndex];
-const nodeArgs = commandIndex > 0 ? args.slice(0, commandIndex) : [];
-
-if (commands.includes(command)) {
-  const result = spawnSync(
-    "node",
-    nodeArgs.concat(require.resolve(`../src/commands/${command}`)).concat(args.slice(commandIndex + 1)),
-    { stdio: "inherit" }
-  );
-  if (result.signal) {
-    if (result.signal === "SIGKILL") {
-      console.log(
-        "The build failed because the process exited too early. " +
-          "This probably means the system ran out of memory or someone called " +
-          "`kill -9` on the process."
-      );
-    } else if (result.signal === "SIGTERM") {
-      console.log(
-        "The build failed because the process exited too early. " +
-          "Someone might have called `kill` or `killall`, or the system could " +
-          "be shutting down."
-      );
-    }
-    process.exit(1);
-  }
-  process.exit(result.status);
+const commandName = commandIndex === -1 ? args[0] : args[commandIndex];
+if (!commandName) {
+  console.log(`Use plugin-scripts [${commands.join(", ")}]`);
+} else if (commands.includes(commandName)) {
+  // eslint-disable-next-line
+  const command = require(path.join(commandDir, `${commandName}.js`));
+  command(args.slice(commandIndex + 1));
 } else {
-  console.log(`Unknown script "${command}".`);
-  console.log("Perhaps you need to update ui-scripts?");
+  console.log(`Unknown script "${commandName}".`);
+  console.log("Perhaps you need to update plugin-scripts?");
 }

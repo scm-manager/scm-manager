@@ -1,0 +1,30 @@
+openapi: 3.0.1
+info:
+  title: SCM-Manager REST-API
+  description: |
+    The following REST documentation describes all public endpoints of your SCM-Manager instance.
+    You can try the endpoints with or without authentication right on the swagger surface provided by the OpenAPI-Plugin.
+
+    For authenticated requests please login to the SCM-Manager. You can also use the "Authorize" button and insert your preferred authentication method.
+    For basic authentication simply use your SCM-Manager credentials. If you want to use the bearer token authentication, you can generate an
+    valid token using the authentication endpoint and copy the response body.
+
+    SCM-Manager defines a modern ["Level 3"-REST API](https://martinfowler.com/articles/richardsonMaturityModel.html).
+    Using the HATEOAS architecture for REST allows us to provide discoverable and self explanatory endpoint definitions.
+    The responses are build using the [HAL JSON format](http://stateless.co/hal_specification.html).
+    HAL makes the API human-friendly and simplifies the communication between the frontend and the server using links and embedded resources.
+
+    We highly suggest using HAL links when creating new functions for SCM-Manager since they are consistent and are only
+    appended to the response when user has the necessary permissions. The links and embedded resources can also be used by plugins, which can
+    define new resources or enrich existing ones.
+  contact:
+    name: SCM-Manager
+    url: https://scm-manager.org
+    email: scmmanager@googlegroups.com
+  license:
+    name: MIT
+    url: https://github.com/scm-manager/scm-manager/blob/develop/LICENSE.txt
+  version: ${version}
+servers:
+  - url: http://localhost:8081/scm/api
+    description: local endpoint url

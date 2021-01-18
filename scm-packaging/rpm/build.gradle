@@ -1,0 +1,211 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+import org.gradle.util.VersionNumber
+
+// nebula.ospackage uses redline to build the rpm package.
+// The problem is that redline does not support 4096 bit rsa keys,
+// but we use such a key for rpm signatures.
+// - https://github.com/nebula-plugins/gradle-ospackage-plugin/issues/270
+// - https://github.com/craigwblake/redline/issues/62
+// For now we override the nebula dependency to redline with out own version
+// of redline, which supports only 4096 bit keys:
+// - https://github.com/craigwblake/redline/compare/master...scm-manager:big-rsa-header
+// This is far from ideal, but it works for our purposes.
+buildscript {
+  configurations.all {
+    resolutionStrategy {
+      force "org.redline-rpm:redline:1.2.9-rsa4096"
+    }
+  }
+  repositories {
+    maven {
+      url 'https://packages.scm-manager.org/repository/public/'
+    }
+  }
+}
+
+plugins {
+  id 'nebula.ospackage' version '8.4.1'
+  id 'org.scm-manager.packaging'
+  id 'com.github.hierynomus.license-base' version '0.15.0'
+}
+
+configurations {
+  server
+  webapp
+  packageYaml {
+    canBeConsumed = true
+  }
+}
+
+dependencies {
+  server project(':scm-server')
+  webapp project(path: ':scm-webapp', configuration: 'webapp')
+}
+
+task rpm(type: Rpm) {
+  packageName 'scm-server'
+  packageGroup 'Development/Tools'
+  summary 'SCM-Manager Server'
+  packageDescription 'The easiest way to share and manage your Git, Mercurial and Subversion repositories'
+  version expandedVersionWithDot
+  license 'MIT'
+  arch 'NOARCH'
+  os LINUX
+  packager 'SCM-Team <scm-team@cloudogu.com>'
+  url 'https://scm-manager.org'
+
+  requires 'procps'
+  // recommends (weak dependency) is not supported,
+  // so we define a hard dependencies for java and mercurial
+  requires 'java-11-openjdk-headless'
+  requires 'mercurial'
+
+  preInstall file('src/main/scripts/before-installation.sh')
+  postInstall file('src/main/scripts/after-installation.sh')
+
+  if (project.hasProperty("signing.keyId")) {
+    signingKeyId project.property("signing.keyId")
+  }
+
+  if (project.hasProperty("signing.password")) {
+    signingKeyPassphrase project.property("signing.password")
+  }
+
+  if (project.hasProperty("signing.secretKeyRingFile")) {
+    signingKeyRingFile file(project.property("signing.secretKeyRingFile"))
+  }
+
+  VersionNumber version = VersionNumber.parse(project.version)
+
+  from('src/main/bin') {
+    into '/opt/scm-server/bin'
+    user 'root'
+    permissionGroup 'scm'
+    fileMode 0750
+  }
+
+  from('src/main/fs/etc/default/scm-server') {
+    fileType CONFIG | NOREPLACE
+    into '/etc/default'
+    user 'root'
+    permissionGroup 'scm'
+    fileMode 0640
+  }
+
+  from('src/main/fs/etc/scm') {
+    fileType CONFIG | NOREPLACE
+    into '/etc/scm'
+    user 'root'
+    permissionGroup 'scm'
+    fileMode 0640
+    expand([version: version])
+  }
+
+  from('src/main/fs/etc/systemd') {
+    into '/etc/systemd'
+    user 'root'
+    permissionGroup 'root'
+    fileMode 0644
+  }
+
+  from('src/main/fs/opt') {
+    into '/opt'
+    user 'root'
+    permissionGroup 'scm'
+    fileMode 0644
+  }
+
+  from(project.configurations.server) {
+    into '/opt/scm-server/lib'
+    user 'root'
+    permissionGroup 'scm'
+    fileMode 0644
+  }
+
+  from(project.configurations.webapp) {
+    into '/opt/scm-server/var/webapp'
+    user 'root'
+    permissionGroup 'scm'
+    fileMode 0644
+    rename {
+      'scm-webapp.war'
+    }
+  }
+
+  ['/run/scm', '/var/log/scm', '/var/lib/scm', '/var/cache/scm', '/var/cache/scm/work'].each { dir ->
+    from('src/main/emptydir') {
+      into dir
+      user 'scm'
+      permissionGroup 'scm'
+      fileMode 0750
+      createDirectoryEntry true
+    }
+  }
+
+  link '/opt/scm-server/var/log', '/var/log/scm'
+  link '/opt/scm-server/conf', '/etc/scm'
+  link '/opt/scm-server/work', '/var/cache/scm/work'
+}
+
+task distribution(type: PackageYaml)  {
+  type = 'redhat'
+  dependsOn rpm
+}
+
+artifacts {
+  packageYaml(file('build/libs/package.yml')) {
+    builtBy distribution
+  }
+}
+
+license {
+  header rootProject.file("LICENSE.txt")
+  strictCheck true
+
+  mapping {
+    gradle = 'SLASHSTAR_STYLE'
+  }
+
+  exclude '**/build/**'
+  include '**/src/**'
+  include 'build.gradle'
+  include 'Vagrantfile'
+}
+
+task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
+  source = fileTree('.')
+}
+
+task publish(type: HttpUploadTask) {
+  artifact rpm
+  method "PUT"
+  releaseUrl "https://packages.scm-manager.org/repository/yum-v2-releases/"
+  snapshotUrl "https://packages.scm-manager.org/repository/yum-v2-snapshots/"
+  if (project.hasProperty("packagesScmManagerUsername") && project.hasProperty("packagesScmManagerPassword")) {
+    username project.property("packagesScmManagerUsername")
+    password project.property("packagesScmManagerPassword")
+  }
+  dependsOn rpm
+}

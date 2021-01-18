@@ -1,0 +1,136 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+plugins {
+  id 'com.bmuschko.docker-remote-api' version '6.6.1'
+  id 'org.scm-manager.packaging'
+  id 'com.github.hierynomus.license-base' version '0.15.0'
+}
+
+import org.gradle.util.VersionNumber
+import com.bmuschko.gradle.docker.tasks.image.*
+
+configurations {
+  server
+  webapp
+  packageYaml {
+    canBeConsumed = true
+  }
+}
+
+dependencies {
+  server project(':scm-server')
+  webapp project(path: ':scm-webapp', configuration: 'webapp')
+}
+
+task context(type: Copy) {
+  VersionNumber version = VersionNumber.parse(project.version)
+  destinationDir = project.buildDir
+  into('docker') {
+    into('etc') {
+      from('src/main/fs/etc')
+      expand([version: version])
+    }
+    into('opt') {
+      from('src/main/fs/opt')
+    }
+    into('opt/scm-server/lib') {
+      from project.configurations.server
+    }
+    into('opt/scm-server/var/webapp') {
+      from project.configurations.webapp
+      rename {
+        'scm-webapp.war'
+      }
+    }
+    from('.') {
+      include 'Dockerfile'
+    }
+  }
+}
+
+task dockerImage(type: DockerBuildImage) {
+  inputDir = file('build/docker')
+  images = images()
+  doLast {
+    File file = new File(project.buildDir, 'docker.tag')
+    file.text = dockerTag
+  }
+  dependsOn 'context'
+}
+
+def images() {
+  if (isSnapshot) {
+    return [
+      "${dockerRepository}:${dockerTag}"
+    ]
+  } else {
+    // What about patch releases?
+    // It is a good idea to push always latest
+    return [
+      "${dockerRepository}:${dockerTag}",
+      "${dockerRepository}:latest"
+    ]
+  }
+}
+
+task publish(type: DockerPushImage) {
+  images = images()
+  if (project.hasProperty("dockerUsername") && project.hasProperty("dockerPassword")) {
+    registryCredentials {
+      username = project.property("dockerUsername")
+      password = project.property("dockerPassword")
+    }
+  }
+  dependsOn dockerImage
+}
+
+task distribution(type: PackageYaml)  {
+  type = 'docker'
+  dependsOn dockerImage
+}
+
+artifacts {
+  packageYaml(file('build/libs/package.yml')) {
+    builtBy distribution
+  }
+}
+
+license {
+  header rootProject.file("LICENSE.txt")
+  strictCheck true
+
+  mapping {
+    gradle = 'SLASHSTAR_STYLE'
+  }
+
+  exclude '**/build/**'
+  include '**/src/**'
+  include 'build.gradle'
+  include 'Dockerfile'
+}
+
+task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
+  source = fileTree('.')
+}

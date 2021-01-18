@@ -5,10 +5,20 @@
   "license": "MIT",
   "main": "./src/main/js/index.ts",
   "scripts": {
-    "build": "ui-scripts plugin",
-    "watch": "ui-scripts plugin-watch",
+    "build": "plugin-scripts build",
+    "watch": "plugin-scripts watch",
     "test": "jest",
     "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@scm-manager/ui-plugins": "^2.13.0-SNAPSHOT"
+  },
+  "devDependencies": {
+    "@scm-manager/plugin-scripts": "^1.0.1",
+    "@scm-manager/babel-preset": "^2.11.1",
+    "@scm-manager/jest-preset": "^2.12.3",
+    "@scm-manager/prettier-config": "^2.11.1",
+    "@scm-manager/eslint-config": "^2.11.1"
   },
   "babel": {
     "presets": [
@@ -18,8 +28,5 @@
   "jest": {
     "preset": "@scm-manager/jest-preset"
   },
-  "prettier": "@scm-manager/prettier-config",
-  "dependencies": {
-    "@scm-manager/ui-plugins": "^2.13.0-SNAPSHOT"
-  }
+  "prettier": "@scm-manager/prettier-config"
 }

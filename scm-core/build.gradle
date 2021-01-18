@@ -1,0 +1,124 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+plugins {
+  id 'java-library'
+  id 'org.scm-manager.java'
+  id 'org.scm-manager.build-info'
+}
+
+// TODO
+// gradle has xerces on it classpath, which breaks our annotation processor
+// so we force jdk build in for now
+// @see https://stackoverflow.com/questions/53299280/java-and-xerces-cant-find-property-xmlconstants-access-external-dtd
+System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
+
+dependencies {
+  api platform(project(':'))
+
+  // scm annotations
+  api project(':scm-annotations')
+  annotationProcessor project(':scm-annotation-processor')
+
+  // lombok
+  compileOnly libraries.lombok
+  annotationProcessor libraries.lombok
+
+  // servlet api
+  implementation libraries.servletApi
+
+  // logging
+  api libraries.slf4jApi
+  api libraries.slf4jJcl // is api here required?
+  testImplementation libraries.logback
+
+  // injection
+  api libraries.guice
+  api libraries.guiceMultibindings
+  api libraries.guiceServlet
+  api libraries.guiceThrowingproviders
+  api libraries.guiceAssistedinject
+
+  // rest api
+  api libraries.jaxRs
+  testImplementation libraries.resteasyCore
+
+  // json
+  api libraries.jacksonCore
+  api libraries.jacksonAnnotations
+  api libraries.jacksonDatabind
+
+  // hypermedia
+  api libraries.edison
+
+  // dto mapping
+  api libraries.mapstruct
+  annotationProcessor libraries.mapstructProcessor
+
+  // events
+  api libraries.legman
+
+  // xml binding
+  api libraries.jaxbApi
+  api libraries.jaxbRuntime // should this be an part of api configuration?
+
+  // validation
+  api libraries.validator
+  testImplementation libraries.elApi
+  testImplementation libraries.elRuntime
+
+  // utils
+  api libraries.guava
+  api libraries.commonsLang
+
+  // security
+  api libraries.shiroCore
+  api libraries.ssp
+  annotationProcessor libraries.sspProcessor
+  testImplementation libraries.shiroUnit
+
+  // tests
+  testImplementation libraries.junitJupiterApi
+  testImplementation libraries.junitJupiterParams
+  testRuntimeOnly libraries.junitJupiterEngine
+
+  // junit 4 support
+  testRuntimeOnly libraries.junitVintageEngine
+  testImplementation libraries.junit
+
+  // assertions
+  testImplementation libraries.hamcrestCore
+  testImplementation libraries.hamcrestLibrary
+  testImplementation libraries.assertj
+
+  // mocking
+  testImplementation libraries.mockitoCore
+  testImplementation libraries.mockitoJunitJupiter
+}
+
+jar {
+  from project.buildDirectory.dir('info')
+  dependsOn 'build-info'
+}
+

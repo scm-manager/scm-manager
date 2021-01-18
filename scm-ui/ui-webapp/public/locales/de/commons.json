@@ -86,6 +86,7 @@
     "error-message": "'me' ist nicht definiert"
   },
   "password": {
+    "subtitle": "Passwort ändern",
     "label": "Passwort",
     "newPassword": "Neues Passwort",
     "currentPassword": "Aktuelles Passwort",

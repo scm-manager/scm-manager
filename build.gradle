@@ -1,0 +1,260 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+plugins {
+  id 'java-platform'
+  id 'maven-publish'
+  id "org.sonarqube" version "3.0"
+}
+
+subprojects { s ->
+  repositories {
+    maven {
+      url 'https://packages.scm-manager.org/repository/public/'
+    }
+  }
+}
+
+allprojects {
+  apply from: rootProject.file('gradle/dependencies.gradle')
+}
+
+dependencies {
+  constraints {
+    // lombok
+    api libraries.lombok
+
+    // servlet api
+    api libraries.servletApi
+
+    // logging
+    api libraries.slf4jApi
+    api libraries.slf4jJcl
+    api libraries.logback
+
+    // injection
+    api libraries.guice
+    api libraries.guiceMultibindings
+    api libraries.guiceServlet
+    api libraries.guiceThrowingproviders
+    api libraries.guiceAssistedinject
+
+    // rest api
+    api libraries.jaxRs
+    api libraries.resteasyCore
+
+    // json
+    api libraries.jacksonCore
+    api libraries.jacksonAnnotations
+    api libraries.jacksonDatabind
+
+    // hypermedia
+    api libraries.edison
+
+    // dto mapping
+    api libraries.mapstruct
+    api libraries.mapstructProcessor
+
+    // events
+    api libraries.legman
+
+    // xml binding
+    api libraries.jaxbApi
+    api libraries.jaxbRuntime
+
+    // validation
+    api libraries.validator
+    api libraries.elApi
+    api libraries.elRuntime
+
+    // utils
+    api libraries.guava
+    api libraries.commonsLang
+
+    // security
+    api libraries.shiroCore
+    api libraries.ssp
+    api libraries.sspProcessor
+    api libraries.shiroUnit
+
+    // tests
+    api libraries.junitJupiterApi
+    api libraries.junitJupiterParams
+    api libraries.junitJupiterEngine
+
+    // junit 4 support
+    api libraries.junitVintageEngine
+    api libraries.junit
+
+    // assertions
+    api libraries.hamcrestCore
+    api libraries.hamcrestLibrary
+    api libraries.assertj
+
+    // mocking
+    api libraries.mockitoCore
+    api libraries.mockitoJunitJupiter
+  }
+}
+
+import org.gradle.util.VersionNumber
+
+// set build props
+project.ext {
+  timestamp = new Date().format('yyyyMMddHHmmSS')
+  revision = "git rev-parse --short HEAD".execute().text.trim()
+  if (project.version.contains('-SNAPSHOT')) {
+    isSnapshot = true
+    expandedVersion = project.version.replace('SNAPSHOT', timestamp)
+    expandedVersionWithDot = project.version.replace('-SNAPSHOT', ".${timestamp}")
+    dockerRepository = 'docker.io/cloudogu/scm-manager'
+    String snapshotVersion = revision
+    def buildNumber = System.getenv('BUILD_NUMBER')
+    if (buildNumber != null) {
+      snapshotVersion += "-${buildNumber}"
+    }
+    dockerTag = project.version.replace('SNAPSHOT', snapshotVersion)
+  } else {
+    isSnapshot = false
+    expandedVersion = project.version
+    expandedVersionWithDot = project.version
+    dockerRepository = 'docker.io/scmmanager/scm-manager'
+    dockerTag = project.version
+  }
+
+  VersionNumber v = VersionNumber.parse(project.version)
+  nextSnapshotVersion = "${v.major}.${v.minor}.${v.micro + 1}-SNAPSHOT"
+
+  isCI = isRunningOnCiServer()
+  os = os()
+  arch = arch()
+
+  // map signing environment variables
+  // this is required because of environment variables should not have a dot in the name
+  // but the gradle signing props are using dots
+  // also we use the set method, because setting props with dots works neither
+  if (isEnvAvailable("GPG_KEY_RING")) {
+    set('signing.secretKeyRingFile', System.getenv("GPG_KEY_RING"))
+  }
+  if (isEnvAvailable("GPG_KEY_ID")) {
+    set('signing.keyId', System.getenv("GPG_KEY_ID"))
+  }
+  if (isEnvAvailable("GPG_KEY_PASSWORD")) {
+    set('signing.password', System.getenv("GPG_KEY_PASSWORD"))
+  }
+}
+
+publishing {
+  publications {
+    mavenJava(MavenPublication) {
+      artifactId project.name
+      from components.javaPlatform
+    }
+  }
+  repositories {
+    maven {
+      String releasesRepoUrl = "https://packages.scm-manager.org/repository/releases/"
+      String snapshotsRepoUrl = "https://packages.scm-manager.org/repository/snapshots/"
+      url = isSnapshot ? snapshotsRepoUrl : releasesRepoUrl
+      if (project.hasProperty("packagesScmManagerUsername") && project.hasProperty("packagesScmManagerPassword")) {
+        credentials {
+          username project.property("packagesScmManagerUsername")
+          password project.property("packagesScmManagerPassword")
+        }
+      }
+    }
+  }
+}
+
+// determine if we run on ci
+
+def isRunningOnCiServer() {
+  return isEnvAvailable("JENKINS_URL") && isEnvAvailable("BUILD_ID")
+}
+
+def isEnvAvailable(String key) {
+  String value = System.getenv(key)
+  return value != null && !value.trim().isEmpty()
+}
+
+def os() {
+  return System.getProperty("os.name").toLowerCase(Locale.ENGLISH)
+}
+
+def arch() {
+  def arch = System.getProperty("os.arch")
+  if ("amd64".equals(arch)) {
+    return "x64"
+  }
+  return arch
+}
+
+// release related tasks
+
+task setVersion {
+  doLast {
+    if (!project.hasProperty('newVersion')) {
+      throw new GradleException('usage setVersion -PnewVersion=x.y.z')
+    }
+
+    String version = project.property('newVersion')
+    setNewVersion(version)
+  }
+}
+
+task setVersionToNextSnapshot {
+  doLast {
+    setNewVersion(nextSnapshotVersion)
+  }
+}
+
+task printVersion {
+  doLast {
+    println project.version
+  }
+}
+
+def setNewVersion(String newVersion) {
+  File propertiesFile = new File(project.rootDir, 'gradle.properties')
+
+  if (project.version == newVersion) {
+    println "project uses already version ${newVersion}"
+    return
+  }
+
+  def lines = propertiesFile.readLines('UTF-8')
+  def newLines = lines.collect{ line ->
+    if (line.trim().startsWith('version')) {
+      return "version = ${newVersion}"
+    }
+    return line
+  }
+
+  println "set version from ${project.version} to ${newVersion}"
+  propertiesFile.withWriter('UTF-8') {writer ->
+    newLines.forEach { line ->
+      writer.writeLine(line)
+    }
+  }
+}

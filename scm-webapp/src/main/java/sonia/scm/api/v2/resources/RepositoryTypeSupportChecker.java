@@ -64,6 +64,7 @@ class RepositoryTypeSupportChecker {
     }
   }
 
+  @SuppressWarnings("javasecurity:S5145") // the type parameter is validated in the resource to only contain valid characters (\w)
   static Type type(RepositoryManager manager, String type) {
     RepositoryHandler handler = manager.getHandler(type);
     if (handler == null) {
