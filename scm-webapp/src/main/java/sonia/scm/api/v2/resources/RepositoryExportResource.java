@@ -42,6 +42,7 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
 
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -111,7 +112,7 @@ public class RepositoryExportResource {
   public Response exportRepository(@Context UriInfo uriInfo,
                                    @PathParam("namespace") String namespace,
                                    @PathParam("name") String name,
-                                   @PathParam("type") String type,
+                                   @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
                                    @DefaultValue("false") @QueryParam("compressed") boolean compressed
   ) {
     Repository repository = manager.get(new NamespaceAndName(namespace, name));
@@ -161,7 +162,7 @@ public class RepositoryExportResource {
   public Response exportFullRepository(@Context UriInfo uriInfo,
                                    @PathParam("namespace") String namespace,
                                    @PathParam("name") String name,
-                                   @PathParam("type") String type
+                                   @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type
   ) {
     Repository repository = manager.get(new NamespaceAndName(namespace, name));
     RepositoryPermissions.read().check(repository);
