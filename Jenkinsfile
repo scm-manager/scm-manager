@@ -52,112 +52,15 @@ pipeline {
       }
     }
 
-    stage('Check') {
-      steps {
-        gradle 'check'
-        junit allowEmptyResults: true, testResults: '**/build/test-results/test/TEST-*.xml,**/build/test-results/tests/test/TEST-*.xml,**/build/jest-reports/TEST-*.xml'
-      }
-    }
-
     // in parallel with check?
     stage('Integration Tests') {
       steps {
-        // TODO remove obligatory rerun flag when flappy tests have been fixed
-        gradle '-PrerunIntegrationTests integrationTest'
+        gradle 'integrationTest --rerun-tasks'
         junit allowEmptyResults: true, testResults: 'scm-it/build/test-results/javaIntegrationTests/*.xml,scm-ui/build/reports/e2e/*.xml'
         archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/e2e-tests/cypress/videos/*.mp4'
         archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/e2e-tests/cypress/screenshots/**/*.png'
       }
     }
-
-    stage('SonarQube') {
-      steps {
-        sh 'git config --replace-all "remote.origin.fetch" "+refs/heads/*:refs/remotes/origin/*"'
-        sh 'git fetch origin develop'
-        script {
-          withSonarQubeEnv('sonarcloud.io-scm') {
-            String parameters = " -Dsonar.organization=scm-manager -Dsonar.branch.name=${env.BRANCH_NAME}"
-            if (env.BRANCH_NAME != "develop") {
-              parameters += " -Dsonar.branch.target=develop"
-            }
-            gradle "sonarqube ${parameters}"
-          }
-        }
-      }
-    }
-
-    stage('Deployment') {
-      when {
-        anyOf {
-          branch pattern: 'release/*', comparator: 'GLOB'
-          branch 'develop'
-        }
-        expression { return isBuildSuccess() }
-      }
-      steps {
-        withPublishEnivronment {
-          gradle "publish"
-        }
-      }
-    }
-
-    stage('Presentation Environment') {
-      when {
-        branch 'develop'
-        expression { return isBuildSuccess() }
-      }
-      steps {
-        script {
-          def imageVersion = readFile 'scm-packaging/docker/build/docker.tag'
-
-          build job: 'scm-manager/next-scm.cloudogu.com', propagate: false, wait: false, parameters: [
-            string(name: 'imageTag', value: imageVersion)
-          ]
-        }
-      }
-    }
-
-    stage('Push Tag') {
-      when {
-        branch pattern: 'release/*', comparator: 'GLOB'
-        expression { return isBuildSuccess() }
-      }
-      steps {
-        // push changes back to remote repository
-        authGit 'cesmarvin-github', 'push origin master --tags'
-        authGit 'cesmarvin-github', 'push origin --tags'
-      }
-    }
-
-
-    stage('Set Next Version') {
-      when {
-        branch pattern: 'release/*', comparator: 'GLOB'
-        expression { return isBuildSuccess() }
-      }
-      steps {
-        sh returnStatus: true, script: "git branch -D develop"
-        sh "git checkout develop"
-        sh "git -c user.name='CES Marvin' -c user.email='cesmarvin@cloudogu.com' merge master"
-
-        gradle "setVersionToNextSnapshot"
-
-        sh "git add gradle.properties lerna.json '**.json'"
-        commit 'Prepare for next development iteration'
-        authGit 'cesmarvin-github', 'push origin develop'
-      }
-    }
-
-    stage('Delete Release Branch') {
-      when {
-        branch pattern: 'release/*', comparator: 'GLOB'
-        expression { return isBuildSuccess() }
-      }
-      steps {
-        authGit 'cesmarvin-github', "push origin :${env.BRANCH_NAME}"
-      }
-    }
-
   }
 
   post {
