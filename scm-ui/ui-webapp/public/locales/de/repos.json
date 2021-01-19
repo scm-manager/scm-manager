@@ -75,6 +75,10 @@
       "title": "Wählen Sie Ihre Datei aus",
       "helpText": "Wählen Sie die Datei aus der das Repository importiert werden soll."
     },
+    "full": {
+      "title": "SCM-Manager Repository Archiv",
+      "helpText": "Wählen Sie das Archiv aus, welches importiert werden soll. Das Archiv muss von einer SCM-Manager Instanz exportiert worden sein."
+    },
     "pending": {
       "subtitle": "Repository wird importiert...",
       "infoText": "Ihr Repository wird gerade importiert. Dies kann einen Moment dauern. Sie werden weitergeleitet, sobald der Import abgeschlossen ist. Wenn Sie diese Seite verlassen, können Sie nicht zurückkehren, um den Import-Status zu erfahren."
@@ -87,7 +91,11 @@
       },
       "bundle": {
         "label": "Import aus Dump",
-        "helpText": "Das Repository wird aus einen Datei Dump importiert."
+        "helpText": "Das Repository wird aus einem Datei Dump importiert."
+      },
+      "full": {
+        "label": "Import aus Dump mit Metadaten",
+        "helpText": "Das Repository inkl. der Metadaten wird aus einem archivierten Dump importiert. Das Import Archiv muss von einem anderen SCM-Manager generiert worden sein."
       }
     }
   },

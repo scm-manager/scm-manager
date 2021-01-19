@@ -45,6 +45,7 @@ import sonia.scm.PageResult;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.export.FullScmRepositoryExporter;
+import sonia.scm.importer.FullScmRepositoryImporter;
 import sonia.scm.repository.CustomNamespaceStrategy;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.NamespaceStrategy;
@@ -151,6 +152,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private ScmEventBus eventBus;
   @Mock
   private FullScmRepositoryExporter fullScmRepositoryExporter;
+  @Mock
+  private FullScmRepositoryImporter fullScmRepositoryImporter;
 
   @Captor
   private ArgumentCaptor<Predicate<Repository>> filterCaptor;

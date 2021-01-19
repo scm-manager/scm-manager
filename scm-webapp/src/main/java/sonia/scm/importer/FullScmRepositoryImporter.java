@@ -37,9 +37,7 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 
 import javax.inject.Inject;
 import javax.xml.bind.JAXB;
-import java.io.BufferedInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 
 public class FullScmRepositoryImporter {
 
