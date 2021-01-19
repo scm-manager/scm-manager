@@ -34,10 +34,9 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 
 import javax.inject.Inject;
-import java.io.BufferedOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 public class FullScmRepositoryExporter {
 
@@ -93,13 +92,14 @@ public class FullScmRepositoryExporter {
   }
 
   private void writeStoreData(Repository repository, TarArchiveOutputStream taos) throws IOException {
-    ByteArrayOutputStream metaDataBaos = new ByteArrayOutputStream();
-    storeExporter.export(repository, metaDataBaos);
+    File metadata = Files.createFile(Paths.get("metadata")).toFile();
+    FileOutputStream metadataFos = new FileOutputStream(metadata);
+    storeExporter.export(repository, metadataFos);
     TarArchiveEntry entry = new TarArchiveEntry("scm-metadata.tar");
-    entry.setSize(metaDataBaos.size());
+    entry.setSize(metadata.length());
     taos.putArchiveEntry(entry);
-    taos.write(metaDataBaos.toByteArray());
+    Files.copy(metadata.toPath(), taos);
     taos.closeArchiveEntry();
+    Files.delete(metadata.toPath());
   }
-
 }
