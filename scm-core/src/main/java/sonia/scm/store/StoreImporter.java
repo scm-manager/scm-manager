@@ -26,17 +26,19 @@ package sonia.scm.store;
 
 import sonia.scm.repository.Repository;
 
+import java.io.InputStream;
+
 /**
- * The {@link StoreImporterFactory} is used to create a {@link StoreEntryImporterFactory} for a {@link Repository}.
+ * The {@link StoreImporter} is used to create a {@link StoreEntryImporterFactory} for a {@link Repository}.
  *
  * @since 2.13.0
  */
-public interface StoreImporterFactory {
+public interface StoreImporter {
   /**
    * Returns a {@link StoreEntryImporterFactory} for the {@link Repository}
    *
    * @param repository
-   * @return {@link StoreEntryImporterFactory}
+   * @param inputStream with the data to be imported
    */
-  StoreEntryImporterFactory importer(Repository repository);
+  void doImport(Repository repository, InputStream inputStream);
 }

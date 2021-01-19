@@ -58,11 +58,10 @@ public class FullScmRepositoryExporter {
       GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(bos);
       TarArchiveOutputStream taos = new TarArchiveOutputStream(gzos);
     ) {
+      writeEnvironmentData(taos);
       writeRepository(service, taos);
       writeStoreData(repository, taos);
-      writeEnvironmentData(taos);
       taos.finish();
-
     } catch (IOException e) {
       throw new RepositoryExportException(
         ContextEntry.ContextBuilder.entity(repository).build(),

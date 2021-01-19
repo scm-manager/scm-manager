@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEventType;
 import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.importer.FullScmRepositoryImporter;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryImportEvent;
@@ -103,18 +104,21 @@ public class RepositoryImportResource {
   private final RepositoryServiceFactory serviceFactory;
   private final ResourceLinks resourceLinks;
   private final ScmEventBus eventBus;
+  private final FullScmRepositoryImporter fullScmRepositoryImporter;
 
   @Inject
   public RepositoryImportResource(RepositoryManager manager,
                                   RepositoryDtoToRepositoryMapper mapper,
                                   RepositoryServiceFactory serviceFactory,
                                   ResourceLinks resourceLinks,
-                                  ScmEventBus eventBus) {
+                                  ScmEventBus eventBus,
+                                  FullScmRepositoryImporter fullScmRepositoryImporter) {
     this.manager = manager;
     this.mapper = mapper;
     this.serviceFactory = serviceFactory;
     this.resourceLinks = resourceLinks;
     this.eventBus = eventBus;
+    this.fullScmRepositoryImporter = fullScmRepositoryImporter;
   }
 
   /**
@@ -252,6 +256,65 @@ public class RepositoryImportResource {
     Repository repository = doImportFromBundle(type, input, compressed);
 
     return Response.created(URI.create(resourceLinks.repository().self(repository.getNamespace(), repository.getName()))).build();
+  }
+
+  /**
+   * Imports a repository as SCM-Manager provided import archive. The method can
+   * only be used, if the repository type supports the {@link Command#UNBUNDLE}. The
+   * method will return a location header with the url to the imported
+   * repository.
+   *
+   * @param uriInfo uri info
+   * @param type    repository type
+   * @param input   multi part form data which should contain a valid repository dto and the input stream of the bundle
+   * @return empty response with location header which points to the imported
+   * repository
+   * @since 2.13.0
+   */
+  @POST
+  @Path("{type}/full")
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Operation(
+    summary = "Import repository from SCM-Manager repository archive",
+    description = "Imports the repository with metadata from the provided bundle.",
+    tags = "Repository"
+  )
+  @ApiResponse(
+    responseCode = "201",
+    description = "Repository import was successful"
+  )
+  @ApiResponse(
+    responseCode = "401",
+    description = "not authenticated / invalid credentials"
+  )
+  @ApiResponse(
+    responseCode = "403",
+    description = "not authorized, the current user has no privileges to read the repository"
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response importFullRepository(@Context UriInfo uriInfo,
+                                       @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
+                                       MultipartFormDataInput input) {
+    RepositoryPermissions.create().check();
+
+    Map<String, List<InputPart>> formParts = input.getFormDataMap();
+    InputStream inputStream = extractFromInputPart(formParts.get("bundle"), InputStream.class);
+    RepositoryDto repositoryDto = extractFromInputPart(formParts.get("repository"), RepositoryDto.class);
+
+    checkNotNull(inputStream, "bundle inputStream is required");
+    checkNotNull(repositoryDto, "repository data is required");
+    checkArgument(!Strings.isNullOrEmpty(repositoryDto.getName()), "request does not contain name of the repository");
+
+    fullScmRepositoryImporter.importFromFile(mapper.map(repositoryDto), inputStream);
+
+    return Response.created(URI.create(resourceLinks.repository().self(repositoryDto.getNamespace(), repositoryDto.getName()))).build();
   }
 
   /**

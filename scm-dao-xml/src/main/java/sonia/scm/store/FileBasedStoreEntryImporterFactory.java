@@ -24,30 +24,10 @@
 
 package sonia.scm.store;
 
-import java.io.InputStream;
-
-public class StoreEntryDataImporter implements StoreEntryImporter {
-
-  private final String type;
-  private final String name;
-
-  public StoreEntryDataImporter(String type, String name) {
-    this.type =type;
-    this.name = name;
-  }
+public class FileBasedStoreEntryImporterFactory implements StoreEntryImporterFactory {
 
   @Override
-  public String getType() {
-    return type;
-  }
-
-  @Override
-  public String getName() {
-    return name;
-  }
-
-  @Override
-  public void importEntry(String name, InputStream stream) {
-
+  public StoreEntryImporter importStore(String type, String name) {
+    return new FileBasedStoreEntryImporter(type, name);
   }
 }

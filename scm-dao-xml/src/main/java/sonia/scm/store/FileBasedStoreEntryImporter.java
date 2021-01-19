@@ -22,33 +22,32 @@
  * SOFTWARE.
  */
 
-package sonia.scm.importer;
+package sonia.scm.store;
 
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryLocationResolver;
-import sonia.scm.store.StoreEntryDataImporterFactory;
-import sonia.scm.store.StoreEntryImporterFactory;
-import sonia.scm.store.StoreImporterFactory;
+import java.io.InputStream;
 
-import javax.inject.Inject;
-import java.nio.file.Path;
+public class FileBasedStoreEntryImporter implements StoreEntryImporter {
 
-public class RepositoryStoreImporterFactory implements StoreImporterFactory {
+  private final String type;
+  private final String name;
 
-  private final RepositoryLocationResolver locationResolver;
-
-  @Inject
-  public RepositoryStoreImporterFactory(RepositoryLocationResolver locationResolver) {
-    this.locationResolver = locationResolver;
+  public FileBasedStoreEntryImporter(String type, String name) {
+    this.type = type;
+    this.name = name;
   }
 
   @Override
-  public StoreEntryImporterFactory importer(Repository repository) {
+  public String getType() {
+    return type;
+  }
 
-    Path storeLocation = locationResolver.forClass(Path.class).getLocation(repository.getId()).resolve("store");
+  @Override
+  public String getName() {
+    return name;
+  }
 
+  @Override
+  public void importEntry(String name, InputStream stream) {
 
-
-    return new StoreEntryDataImporterFactory();
   }
 }
