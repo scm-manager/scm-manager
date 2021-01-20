@@ -805,13 +805,11 @@ form .field:not(.is-grouped) {
 }
 
 // modal
-.modal {
-  .modal-card {
-    border-radius: 6px;
+.modal-card {
+  border-radius: 6px;
 
-    .modal-card-foot {
-      justify-content: flex-end; // pulled-right
-    }
+  .modal-card-foot {
+    justify-content: flex-end; // pulled-right
   }
 }
 
