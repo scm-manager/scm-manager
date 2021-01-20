@@ -45,7 +45,6 @@ type Props = {
 };
 
 const PermaLinkWrapper = styled.div`
-  margin: 1.2rem 0 0 1.5rem;
   width: 16px;
   height: 16px;
   font-size: 13px;
@@ -132,7 +131,7 @@ const Breadcrumb: FC<Props> = ({ repository, branch, defaultBranch, revision, pa
 
   return (
     <>
-      <div className="is-flex">
+      <div className="is-flex is-align-items-center">
         <PermaLinkWrapper>
           {copying ? (
             <Icon name="spinner fa-spin" />
