@@ -58,10 +58,6 @@ const Header = styled.div`
   padding: 0.5em 0.75em;
 `;
 
-const VCenteredChild = styled.div`
-  align-items: center;
-`;
-
 const RightMarginIcon = styled(Icon)`
   margin-right: 0.5em;
 `;
@@ -128,7 +124,7 @@ class Content extends React.Component<Props, State> {
 
     return (
       <span className="has-cursor-pointer">
-        <VCenteredChild className={classNames("media", "is-flex")}>
+        <div className={classNames("media", "is-flex", "is-align-items-center")}>
           <div className="media-content" onClick={this.toggleCollapse}>
             <RightMarginIcon name={icon} color="inherit" />
             <span className="is-word-break">{file.name}</span>
@@ -151,7 +147,7 @@ class Content extends React.Component<Props, State> {
               renderAll={true}
             />
           </div>
-        </VCenteredChild>
+        </div>
       </span>
     );
   }
