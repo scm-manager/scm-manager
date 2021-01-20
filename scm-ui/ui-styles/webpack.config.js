@@ -50,9 +50,10 @@ module.exports = {
     filename: "ui-styles.bundle.js"
   },
   devServer: {
-    contentBase: path.join(__dirname, "public"),
+    contentBase: [path.join(__dirname, "public"), path.join(__dirname, "..", "ui-webapp", "public")],
+    contentBasePublicPath: ["/", "/ui-webapp"],
     compress: false,
     overlay: true,
-    port: 5000,
+    port: 5000
   }
 };
