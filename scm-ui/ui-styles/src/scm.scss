@@ -708,6 +708,9 @@ form .field:not(.is-grouped) {
   }
 }
 .menu-label {
+  display: flex;
+  height: 3.2rem;
+  align-items: center;
   color: #fff;
   font-size: 1em;
   font-weight: 600;
