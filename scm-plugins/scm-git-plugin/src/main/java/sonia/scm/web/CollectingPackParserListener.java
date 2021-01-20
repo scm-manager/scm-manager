@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -97,7 +97,7 @@ public class CollectingPackParserListener implements PackParserListener
   public static void set(ReceivePack pack)
   {
     logger.trace("apply collecting listener to receive pack");
-    pack.setPackParserListener(new CollectingPackParserListener());
+//    pack.setPackParserListener(new CollectingPackParserListener());
   }
 
   //~--- methods --------------------------------------------------------------
