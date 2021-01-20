@@ -34,27 +34,31 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.store.RepositoryStoreImporter;
 
 import javax.inject.Inject;
 import javax.xml.bind.JAXB;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.FilterInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 public class FullScmRepositoryImporter {
 
   private final RepositoryServiceFactory serviceFactory;
   private final RepositoryManager repositoryManager;
   private final ScmEnvironmentCompatibilityChecker compatibilityChecker;
-  private final RepositoryStoreImporter storeImporterFactory;
+  private final TarArchiveRepositoryStoreImporter storeImporter;
 
   @Inject
-  public FullScmRepositoryImporter(RepositoryServiceFactory serviceFactory, RepositoryManager repositoryManager, ScmEnvironmentCompatibilityChecker compatibilityChecker, RepositoryStoreImporter storeImporterFactory) {
+  public FullScmRepositoryImporter(RepositoryServiceFactory serviceFactory, RepositoryManager repositoryManager, ScmEnvironmentCompatibilityChecker compatibilityChecker, TarArchiveRepositoryStoreImporter storeImporter) {
     this.serviceFactory = serviceFactory;
     this.repositoryManager = repositoryManager;
     this.compatibilityChecker = compatibilityChecker;
-    this.storeImporterFactory = storeImporterFactory;
+    this.storeImporter = storeImporter;
   }
 
-  public void importFromFile(Repository repository, InputStream inputStream)  {
+  public void importFromFile(Repository repository, InputStream inputStream) {
     try {
       if (inputStream.available() > 0) {
         try (
@@ -89,7 +93,9 @@ public class FullScmRepositoryImporter {
   private void importStoresForCreatedRepository(Repository repository, TarArchiveInputStream tais) throws IOException {
     ArchiveEntry metadataEntry = tais.getNextEntry();
     if (metadataEntry.getName().equals("scm-metadata.tar") && !metadataEntry.isDirectory()) {
-      storeImporterFactory.doImport(repository, tais);
+      // Inside the repository tar archive stream is another tar archive.
+      // The nested tar archive is wrapped in another TarArchiveInputStream inside the storeImporter
+      storeImporter.importFromTarArchive(repository, tais);
     } else {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(repository).build(),
@@ -103,7 +109,7 @@ public class FullScmRepositoryImporter {
     if (repositoryEntry.getName().endsWith(".dump") && !repositoryEntry.isDirectory()) {
       return repositoryManager.create(repository, repo -> {
         try (RepositoryService service = serviceFactory.create(repo)) {
-          service.getUnbundleCommand().unbundle(tais);
+          service.getUnbundleCommand().unbundle(new NoneClosingInputStream(tais));
         } catch (IOException e) {
           throw new ImportFailedException(
             ContextEntry.ContextBuilder.entity(repository).build(),
@@ -121,9 +127,9 @@ public class FullScmRepositoryImporter {
   }
 
   private void checkScmEnvironment(Repository repository, TarArchiveInputStream tais) throws IOException {
-    ArchiveEntry entry = tais.getNextEntry();
-    if (entry.getName().equals("scm-environment.xml") && !entry.isDirectory() && entry.getSize() < 8192) {
-      boolean validEnvironment = compatibilityChecker.check(JAXB.unmarshal(tais, ScmEnvironment.class));
+    ArchiveEntry environmentEntry = tais.getNextEntry();
+    if (environmentEntry.getName().equals("scm-environment.xml") && !environmentEntry.isDirectory() && environmentEntry.getSize() < 1000000) {
+      boolean validEnvironment = compatibilityChecker.check(JAXB.unmarshal(new NoneClosingInputStream(tais), ScmEnvironment.class));
       if (!validEnvironment) {
         throw new ImportFailedException(
           ContextEntry.ContextBuilder.entity(repository).build(),
@@ -135,6 +141,18 @@ public class FullScmRepositoryImporter {
         ContextEntry.ContextBuilder.entity(repository).build(),
         "Invalid import format. Missing SCM-Manager environment description."
       );
+    }
+  }
+
+  static class NoneClosingInputStream extends FilterInputStream {
+
+    NoneClosingInputStream(InputStream delegate) {
+      super(delegate);
+    }
+
+    @Override
+    public void close() {
+      // Avoid closing stream because JAXB tries to close the stream
     }
   }
 }

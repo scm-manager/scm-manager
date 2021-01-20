@@ -24,10 +24,23 @@
 
 package sonia.scm.store;
 
+import java.io.File;
+
 public class FileBasedStoreEntryImporterFactory implements StoreEntryImporterFactory {
+
+  private final File directory;
+
+  FileBasedStoreEntryImporterFactory(File directory) {
+    this.directory = directory;
+  }
 
   @Override
   public StoreEntryImporter importStore(String type, String name) {
-    return new FileBasedStoreEntryImporter(type, name);
+    File storeDirectory = new File(directory, name.isEmpty() ? type : type + File.separator + name);
+    if (!storeDirectory.exists() && !storeDirectory.mkdirs()) {
+      //TODO Fix exception
+      throw new IllegalStateException("Could not create store");
+    }
+    return new FileBasedStoreEntryImporter(storeDirectory, type, name);
   }
 }

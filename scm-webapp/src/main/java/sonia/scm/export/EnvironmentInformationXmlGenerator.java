@@ -24,6 +24,7 @@
 
 package sonia.scm.export;
 
+import sonia.scm.ContextEntry;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.environment.Plugin;
 import sonia.scm.environment.Plugins;
@@ -31,11 +32,15 @@ import sonia.scm.environment.ScmEnvironment;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
+import sonia.scm.repository.RepositoryExportException;
 import sonia.scm.util.SystemUtil;
 
 import javax.inject.Inject;
 import javax.xml.bind.JAXB;
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.net.URI;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,15 +55,16 @@ public class EnvironmentInformationXmlGenerator {
     this.contextProvider = contextProvider;
   }
 
-  public ByteArrayOutputStream generate() {
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    ScmEnvironment scmEnvironment = new ScmEnvironment();
-
-    writeCoreInformation(scmEnvironment);
-    writePluginInformation(scmEnvironment);
-
-    JAXB.marshal(scmEnvironment, baos);
-    return baos;
+  public byte[] generate() {
+    try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+      ScmEnvironment scmEnvironment = new ScmEnvironment();
+      writeCoreInformation(scmEnvironment);
+      writePluginInformation(scmEnvironment);
+      JAXB.marshal(scmEnvironment, baos);
+      return baos.toByteArray();
+    } catch (IOException e) {
+      throw new RepositoryExportException(ContextEntry.ContextBuilder.noContext(), "Could not generate SCM-Manager environment description.", e);
+    }
   }
 
   private void writeCoreInformation(ScmEnvironment scmEnvironment) {

@@ -24,14 +24,21 @@
 
 package sonia.scm.store;
 
+import com.google.common.annotations.VisibleForTesting;
+
+import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 
 public class FileBasedStoreEntryImporter implements StoreEntryImporter {
 
+  private final File directory;
   private final String type;
   private final String name;
 
-  public FileBasedStoreEntryImporter(String type, String name) {
+  FileBasedStoreEntryImporter(File directory, String type, String name) {
+    this.directory = directory;
     this.type = type;
     this.name = name;
   }
@@ -46,8 +53,19 @@ public class FileBasedStoreEntryImporter implements StoreEntryImporter {
     return name;
   }
 
+  @VisibleForTesting
+  public File getDirectory() {
+    return this.directory;
+  }
+
   @Override
   public void importEntry(String name, InputStream stream) {
-
+    File file = new File(directory, name);
+    try {
+      Files.copy(stream, file.toPath());
+    } catch (IOException e) {
+      //TODO Replace exception
+      throw new IllegalStateException("Could not import file");
+    }
   }
 }

@@ -26,7 +26,6 @@ package sonia.scm.export;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.apache.commons.io.output.ProxyOutputStream;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryExportException;
@@ -35,6 +34,7 @@ import sonia.scm.store.StoreExporter;
 
 import javax.inject.Inject;
 import java.io.BufferedOutputStream;
+import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
@@ -82,11 +82,26 @@ public class RepositoryStoreExporter {
   }
 
   private OutputStream createOutputStream(TarArchiveOutputStream taos) {
-    return new ProxyOutputStream(taos) {
-      @Override
-      public void close() throws IOException {
-        taos.closeArchiveEntry();
-      }
-    };
+    return new CloseArchiveOutputStream(taos);
+  }
+
+  static class CloseArchiveOutputStream extends FilterOutputStream {
+
+    private final TarArchiveOutputStream delegate;
+
+    CloseArchiveOutputStream(TarArchiveOutputStream delegate) {
+      super(delegate);
+      this.delegate = delegate;
+    }
+
+    @Override
+    public void write(byte[] b, int off, int len) throws IOException {
+      delegate.write(b, off, len);
+    }
+
+    @Override
+    public void close() throws IOException {
+      delegate.closeArchiveEntry();
+    }
   }
 }

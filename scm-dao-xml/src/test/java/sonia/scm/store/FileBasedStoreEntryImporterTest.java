@@ -24,18 +24,27 @@
 
 package sonia.scm.store;
 
-import sonia.scm.repository.Repository;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-/**
- * The {@link StoreImporter} is used to create a {@link StoreEntryImporterFactory} for a {@link Repository}.
- *
- * @since 2.13.0
- */
-public interface StoreImporter {
-  /**
-   * Returns a {@link StoreEntryImporterFactory} for the {@link Repository}
-   *
-   * @param repository
-   */
-  StoreEntryImporterFactory doImport(Repository repository);
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class FileBasedStoreEntryImporterTest {
+
+  @Test
+  void shouldCreateFileFromInputStream(@TempDir Path temp) throws IOException {
+    FileBasedStoreEntryImporter importer = new FileBasedStoreEntryImporter(temp.toFile(), "config", "");
+    String fileName = "testStore.xml";
+
+    importer.importEntry(fileName, new ByteArrayInputStream("testdata".getBytes()));
+
+    assertThat(Files.exists(temp.resolve(fileName))).isTrue();
+    assertThat(new String(Files.readAllBytes(Paths.get(temp.resolve(fileName).toString())))).isEqualTo("testdata");
+  }
 }

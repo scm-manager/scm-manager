@@ -82,23 +82,25 @@ public class FullScmRepositoryExporter {
   }
 
   private void writeEnvironmentData(TarArchiveOutputStream taos) throws IOException {
-    ByteArrayOutputStream envInfoBaos = generator.generate();
+    byte[] envBytes = generator.generate();
     TarArchiveEntry entry = new TarArchiveEntry("scm-environment.xml");
-    entry.setSize(envInfoBaos.size());
+    entry.setSize(envBytes.length);
     taos.putArchiveEntry(entry);
-    taos.write(envInfoBaos.toByteArray());
+    taos.write(envBytes);
     taos.closeArchiveEntry();
   }
 
   private void writeStoreData(Repository repository, TarArchiveOutputStream taos) throws IOException {
     File metadata = Files.createFile(Paths.get("metadata")).toFile();
-    FileOutputStream metadataFos = new FileOutputStream(metadata);
-    storeExporter.export(repository, metadataFos);
-    TarArchiveEntry entry = new TarArchiveEntry("scm-metadata.tar");
-    entry.setSize(metadata.length());
-    taos.putArchiveEntry(entry);
-    Files.copy(metadata.toPath(), taos);
-    taos.closeArchiveEntry();
-    Files.delete(metadata.toPath());
+    try (FileOutputStream metadataFos = new FileOutputStream(metadata)) {
+      storeExporter.export(repository, metadataFos);
+      TarArchiveEntry entry = new TarArchiveEntry("scm-metadata.tar");
+      entry.setSize(metadata.length());
+      taos.putArchiveEntry(entry);
+      Files.copy(metadata.toPath(), taos);
+      taos.closeArchiveEntry();
+    } finally {
+      Files.delete(metadata.toPath());
+    }
   }
 }

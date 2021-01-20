@@ -65,7 +65,7 @@ class FullScmRepositoryExporterTest {
   @BeforeEach
   void initRepoService() {
     when(serviceFactory.create(REPOSITORY)).thenReturn(repositoryService);
-    when(generator.generate()).thenReturn(new ByteArrayOutputStream());
+    when(generator.generate()).thenReturn(new byte[0]);
   }
 
   @Test

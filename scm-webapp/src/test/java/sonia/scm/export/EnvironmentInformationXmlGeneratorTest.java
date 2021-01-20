@@ -57,7 +57,7 @@ class EnvironmentInformationXmlGeneratorTest {
   EnvironmentInformationXmlGenerator generator;
 
   @Test
-  void shouldGenerateXmlContent() throws TransformerException, ParserConfigurationException {
+  void shouldGenerateXmlContent() {
     InstalledPluginDescriptor descriptor = mock(InstalledPluginDescriptor.class, Answers.RETURNS_DEEP_STUBS);
     when(descriptor.getInformation().getName()).thenReturn("scm-exporter-test-plugin");
     when(descriptor.getInformation().getVersion()).thenReturn("42.0");
@@ -65,9 +65,9 @@ class EnvironmentInformationXmlGeneratorTest {
     InstalledPlugin installedPlugin = new InstalledPlugin(descriptor, null, null, null, false);
     when(pluginManager.getInstalled()).thenReturn(ImmutableList.of(installedPlugin));
 
-    ByteArrayOutputStream outputStream = generator.generate();
+    byte[] content = generator.generate();
 
-    String xmlContent = outputStream.toString();
+    String xmlContent = new String(content);
     assertThat(xmlContent).contains(
       "<scm-environment>",
       "    <plugins>\n" +

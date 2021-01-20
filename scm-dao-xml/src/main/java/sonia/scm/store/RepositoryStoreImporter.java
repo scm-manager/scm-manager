@@ -22,14 +22,12 @@
  * SOFTWARE.
  */
 
-package sonia.scm.importer;
+package sonia.scm.store;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryLocationResolver;
-import sonia.scm.store.StoreImporter;
 
 import javax.inject.Inject;
-import java.io.InputStream;
 import java.nio.file.Path;
 
 public class RepositoryStoreImporter implements StoreImporter {
@@ -42,10 +40,8 @@ public class RepositoryStoreImporter implements StoreImporter {
   }
 
   @Override
-  public void doImport(Repository repository, InputStream inputStream) {
+  public StoreEntryImporterFactory doImport(Repository repository) {
     Path storeLocation = locationResolver.forClass(Path.class).getLocation(repository.getId()).resolve("store");
-
-    //TODO Import each store from stream
-
+    return new FileBasedStoreEntryImporterFactory(storeLocation.toFile());
   }
 }
