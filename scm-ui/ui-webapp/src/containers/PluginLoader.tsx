@@ -23,8 +23,6 @@
  */
 import React, { ReactNode } from "react";
 import { apiClient, Loading, ErrorNotification, ErrorBoundary, Icon } from "@scm-manager/ui-components";
-import { getUiPluginsLink } from "../modules/indexResource";
-import { connect } from "react-redux";
 import loadBundle from "./loadBundle";
 import styled from "styled-components";
 
@@ -158,11 +156,4 @@ const comparePluginsByName = (a: Plugin, b: Plugin) => {
   return 0;
 };
 
-const mapStateToProps = (state: any) => {
-  const link = getUiPluginsLink(state);
-  return {
-    link
-  };
-};
-
-export default connect(mapStateToProps)(PluginLoader);
+export default PluginLoader;

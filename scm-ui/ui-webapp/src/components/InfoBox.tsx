@@ -25,12 +25,12 @@ import * as React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { InfoItem } from "./InfoItem";
+import { InfoItem } from "@scm-manager/ui-types";
 import { Icon } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
   type: "plugin" | "feature";
-  item: InfoItem;
+  item?: InfoItem;
 };
 
 const BottomMarginA = styled.a`

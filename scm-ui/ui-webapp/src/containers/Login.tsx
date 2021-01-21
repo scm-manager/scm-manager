@@ -21,9 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import { connect } from "react-redux";
-import { Redirect, RouteComponentProps, withRouter } from "react-router-dom";
+import { Redirect, RouteComponentProps, useLocation, withRouter } from "react-router-dom";
 import { compose } from "redux";
 import styled from "styled-components";
 import { getLoginFailure, getMe, isAnonymous, isLoginPending, login } from "../modules/auth";
@@ -31,6 +31,7 @@ import { getLoginInfoLink, getLoginLink } from "../modules/indexResource";
 import LoginInfo from "../components/LoginInfo";
 import { Me } from "@scm-manager/ui-types";
 import { parse } from "query-string";
+import {useIndexLink, useLogin, useSubject} from "@scm-manager/ui-api";
 
 type Props = RouteComponentProps & {
   authenticated: boolean;
@@ -60,59 +61,29 @@ export const from = (queryString?: string, stateParams?: FromObject | null): str
   return queryParams?.from || stateParams?.from || "/";
 };
 
-class Login extends React.Component<Props> {
-  handleLogin = (username: string, password: string): void => {
-    const { link, login } = this.props;
-    login(link, username, password);
-  };
+const Login: FC = ({}) => {
+  const { isAuthenticated, me } = useSubject();
+  const location = useLocation<FromObject>();
+  const { login, isLoading, error } = useLogin();
+  const loginInfoLink = useIndexLink("loginInfo");
 
-  renderRedirect = () => {
-    const to = from(window.location.search, this.props.location.state);
+  if (isAuthenticated && !!me) {
+    const to = from(window.location.search, location.state);
     return <Redirect to={to} />;
-  };
+  }
 
-  render() {
-    const { authenticated, me, ...restProps } = this.props;
 
-    if (authenticated && !!me) {
-      return this.renderRedirect();
-    }
-
-    return (
-      <HeroSection className="hero">
-        <div className="hero-body">
-          <div className="container">
-            <div className="columns is-centered">
-              <LoginInfo loginHandler={this.handleLogin} {...restProps} />
-            </div>
+  return (
+    <HeroSection className="hero">
+      <div className="hero-body">
+        <div className="container">
+          <div className="columns is-centered">
+            <LoginInfo loginHandler={login} loading={isLoading} error={error} loginInfoLink={loginInfoLink} />
           </div>
         </div>
-      </HeroSection>
-    );
-  }
-}
-
-const mapStateToProps = (state: any) => {
-  const authenticated = state?.auth?.me && !isAnonymous(state.auth.me);
-  const me = getMe(state);
-  const loading = isLoginPending(state);
-  const error = getLoginFailure(state);
-  const link = getLoginLink(state);
-  const loginInfoLink = getLoginInfoLink(state);
-  return {
-    authenticated,
-    me,
-    loading,
-    error,
-    link,
-    loginInfoLink
-  };
+      </div>
+    </HeroSection>
+  );
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    login: (loginLink: string, username: string, password: string) => dispatch(login(loginLink, username, password))
-  };
-};
-
-export default compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(Login);
+export default Login;
