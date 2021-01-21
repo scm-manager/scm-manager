@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, {FormEvent} from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import { ErrorNotification, Image, InputField, SubmitButton, UnauthorizedError } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
-  error?: Error;
-  loading: boolean;
+  error?: Error | null;
+  loading?: boolean;
   loginHandler: (username: string, password: string) => void;
 };
 
@@ -64,7 +64,7 @@ class LoginForm extends React.Component<Props, State> {
     };
   }
 
-  handleSubmit = (event: Event) => {
+  handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (this.isValid()) {
       this.props.loginHandler(this.state.username, this.state.password);

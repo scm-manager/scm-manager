@@ -21,100 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { Component } from "react";
+import React, { FC } from "react";
 import Main from "./Main";
-import { connect } from "react-redux";
-import { compose } from "redux";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { withRouter } from "react-router-dom";
-import {
-  fetchMe,
-  getFetchMeFailure,
-  getMe,
-  isAuthenticated,
-  isFetchMePending,
-  isLoginPending,
-  isLogoutPending
-} from "../modules/auth";
+import { useTranslation} from "react-i18next";
 import { ErrorPage, Footer, Header, Loading, PrimaryNavigation } from "@scm-manager/ui-components";
-import { Links, Me } from "@scm-manager/ui-types";
-import {
-  getAppVersion,
-  getFetchIndexResourcesFailure,
-  getLinks,
-  getMeLink,
-  isFetchIndexResourcesPending
-} from "../modules/indexResource";
 import Login from "./Login";
+import { useSubject, useIndex} from "@scm-manager/ui-api";
 
-type Props = WithTranslation & {
-  me: Me;
-  authenticated: boolean;
-  error: Error;
-  loading: boolean;
-  links: Links;
-  meLink: string;
-  version: string;
+const App: FC = () => {
+  const { data: index } = useIndex();
+  const { isLoading, error, isAuthenticated, me } = useSubject();
+  const [t] = useTranslation("commons");
 
-  // dispatcher functions
-  fetchMe: (link: string) => void;
-};
-
-class App extends Component<Props> {
-  componentDidMount() {
-    if (this.props.meLink) {
-      this.props.fetchMe(this.props.meLink);
-    }
+  if (!index) {
+    return null;
   }
 
-  render() {
-    const { me, loading, error, authenticated, links, version, t } = this.props;
+  let content;
+  const navigation = isAuthenticated ? <PrimaryNavigation links={index._links} /> : "";
 
-    let content;
-    const navigation = authenticated ? <PrimaryNavigation links={links} /> : "";
 
-    if (!authenticated && !loading) {
-      content = <Login />;
-    } else if (loading) {
-      content = <Loading />;
-    } else if (error) {
-      content = <ErrorPage title={t("app.error.title")} subtitle={t("app.error.subtitle")} error={error} />;
-    } else {
-      content = <Main authenticated={authenticated} links={links} me={me} />;
-    }
-    return (
-      <div className="App">
-        <Header>{navigation}</Header>
-        {content}
-        {authenticated && <Footer me={me} version={version} links={links} />}
-      </div>
-    );
+  if (!isAuthenticated && !isLoading) {
+    content = <Login />;
+  } else if (isLoading) {
+    content = <Loading />;
+  } else if (error) {
+    content = <ErrorPage title={t("app.error.title")} subtitle={t("app.error.subtitle")} error={error} />;
+  } else if (me) {
+    content = <Main authenticated={isAuthenticated} links={index._links} me={me} />;
   }
-}
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchMe: (link: string) => dispatch(fetchMe(link))
-  };
+  return (
+    <div className="App">
+      <Header>{navigation}</Header>
+      {content}
+      {isAuthenticated ? <Footer me={me} version={index.version} links={index._links} />: null}
+    </div>
+  );
 };
 
-const mapStateToProps = (state: any) => {
-  const authenticated = isAuthenticated(state) && !isLogoutPending(state);
-  const me = getMe(state);
-  const loading = isFetchMePending(state) || isFetchIndexResourcesPending(state) || isLoginPending(state);
-  const error = getFetchMeFailure(state) || getFetchIndexResourcesFailure(state);
-  const links = getLinks(state);
-  const meLink = getMeLink(state);
-  const version = getAppVersion(state);
-  return {
-    authenticated,
-    me,
-    loading,
-    error,
-    links,
-    meLink,
-    version
-  };
-};
-
-export default compose(withRouter, connect(mapStateToProps, mapDispatchToProps), withTranslation("commons"))(App);
+export default App;
