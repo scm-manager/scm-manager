@@ -47,8 +47,15 @@ Das gewählte Repository wird zum SCM-Manager hinzugefügt und sämtliche Reposi
 
 ![Repository importieren](assets/import-repository.png)
 
+Für Subversion Repository besteht die Möglichkeit ein Repository inkl. Metadaten zu importieren. 
+Dabei muss als Quelle ein Repository Archiv ausgewählt werden, welches vorher von einem SCM-Manager exportiert wurde.
+Der Import mit Metadaten unterstützt noch keine Migration der Plugin Daten, 
+deshalb müssen die Versionen des SCM-Managers und die Versionen sämtlicher Plugins zwischen der exportierenden Instanz und der importierenden Instanz exakt übereinstimmen.
+Wenn sich die installierten Plugins zwischen diesen beiden Instanzen unterscheiden, sollte dies kein Problem verursachen.
+![Repository mit Metadaten importieren](assets/import-repository-with-metadata.png)
 
 ### Repository Informationen
-Die Informationsseite eines Repository zeigt die Metadaten zum Repository an. Darunter befinden sich Beschreibungen zu den unterschiedlichen Möglichkeiten wie man mit diesem Repository arbeiten kann. In der Überschrift kann der Namespace angeklickt werden, um alle Repositories aus diesem Namespace anzuzeigen.
+Die Informationsseite eines Repository zeigt die Metadaten zum Repository an. Darunter befinden sich Beschreibungen zu den unterschiedlichen Möglichkeiten wie man mit diesem Repository arbeiten kann. 
+In der Überschrift kann der Namespace angeklickt werden, um alle Repositories aus diesem Namespace anzuzeigen.
 
 ![Repository-Information](assets/repository-information.png)

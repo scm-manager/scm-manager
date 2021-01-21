@@ -94,7 +94,7 @@
         "helpText": "Das Repository wird aus einem Datei Dump importiert."
       },
       "full": {
-        "label": "Import aus Dump mit Metadaten (Experimentell)",
+        "label": "Import aus Archiv mit Metadaten (Experimentell)",
         "helpText": "Das Repository inkl. der Metadaten wird aus einem archivierten Dump importiert. Das Import Archiv muss von einem anderen SCM-Manager generiert worden sein."
       }
     }
