@@ -34,6 +34,10 @@ export type Links = {
   [key: string]: LinkValue;
 };
 
+export type HalObject = {
+  _links: Links
+}
+
 export type Collection = {
   _embedded?: any;
   _links: Links;

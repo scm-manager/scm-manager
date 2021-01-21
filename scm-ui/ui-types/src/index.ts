@@ -23,7 +23,7 @@
  */
 
 export { Action } from "./Action";
-export { Link, Links, Collection, PagedCollection } from "./hal";
+export * from "./hal";
 
 export { Me } from "./Me";
 export { DisplayedUser, User } from "./User";
@@ -67,3 +67,5 @@ export { Plugin, PluginCollection, PluginGroup, PendingPlugins } from "./Plugin"
 export { RepositoryRole } from "./RepositoryRole";
 
 export { NamespaceStrategies } from "./NamespaceStrategies";
+
+export * from "./LoginInfo";

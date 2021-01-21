@@ -21,37 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
-import App from "./App";
-import { ErrorBoundary, Loading } from "@scm-manager/ui-components";
-import PluginLoader from "./PluginLoader";
-import ScrollToTop from "./ScrollToTop";
-import IndexErrorPage from "./IndexErrorPage";
-import { useIndex } from "@scm-manager/ui-api";
-import {Link} from "@scm-manager/ui-types";
 
-const Index: FC = () => {
-  const { isLoading, error, data } = useIndex();
-  const [pluginsLoaded, setPluginsLoaded] = useState(false);
+import { IndexResources, Link } from "@scm-manager/ui-types";
+import { useQuery } from "react-query";
+import { apiClient } from "@scm-manager/ui-components";
 
-  // TODO check componentDidUpdate method for anonymous user stuff
+export type ApiResult<T> = {
+  isLoading: boolean;
+  error: Error | null;
+  data?: T;
+};
 
-  if (error) {
-    return <IndexErrorPage error={error} />;
-  } else if (isLoading) {
-    return <Loading />;
-  } else if (data) {
-    const link = (data._links.uiPlugins as Link).href;
-    return (
-      <ErrorBoundary fallback={IndexErrorPage}>
-        <ScrollToTop>
-          <PluginLoader link={link} loaded={pluginsLoaded} callback={() => setPluginsLoaded(true)}>
-            <App />
-          </PluginLoader>
-        </ScrollToTop>
-      </ErrorBoundary>
-    );
+export const useIndex = (): ApiResult<IndexResources> => {
+  return useQuery<IndexResources, Error>("index", () => apiClient.get("/").then(response => response.json()));
+};
+
+export const useIndexLink = (name: string): string | undefined => {
+  const { data } = useIndex();
+  if (!data) {
+    throw new Error("could not find index data");
+  }
+  const linkObject = data._links[name] as Link;
+  if (linkObject) {
+    return linkObject.href;
   }
 };
 
-export default Index;
+export const useRequiredIndexLink = (name: string): string => {
+  const link = useIndexLink(name);
+  if (!link) {
+    throw new Error(`Could not find link ${name} in index resource`);
+  }
+  return link;
+};
+
+export const useIndexJsonResource = <T>(name: string): ApiResult<T> => {
+  const link = useIndexLink(name);
+  return useQuery<T, Error>(name, () => apiClient.get(link!).then(response => response.json()), {
+    // TODO does this make sense
+    enabled: !!link
+  });
+};
