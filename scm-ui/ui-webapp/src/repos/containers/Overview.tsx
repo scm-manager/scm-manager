@@ -21,14 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, {FC, useState} from "react";
 import { connect } from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
+import {RouteComponentProps, useHistory, useLocation, useParams, withRouter} from "react-router-dom";
+import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
 import { Link, NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
 import {
   CreateButton,
   LinkPaginator,
+  Loading,
   Notification,
   OverviewPageActions,
   Page,
@@ -47,6 +48,8 @@ import {
   isFetchReposPending
 } from "../modules/repos";
 import RepositoryList from "../components/list";
+import { useNamespaces, useRepositories } from "@scm-manager/ui-api";
+import {getNamespaceAndPageFromMatch} from "@scm-manager/ui-components/src/urls";
 
 type Props = WithTranslation &
   RouteComponentProps & {
@@ -65,7 +68,73 @@ type Props = WithTranslation &
     fetchNamespaces: (link: string, callback?: () => void) => void;
   };
 
-class Overview extends React.Component<Props> {
+const useOverviewData = () => {
+  const { namespace, page } = useUrlParams();
+  const { isLoading: isLoadingNamespaces, error: errorNamespaces, data: namespaces } = useNamespaces();
+  const ns = namespaces?._embedded.namespaces.find(n => n.namespace === namespace)
+  const { isLoading: isLoadingRepositories, error: errorRepositories, data: repositories } = useRepositories(ns, page, !namespace || !!namespaces);
+  return {
+    isLoading: isLoadingNamespaces || isLoadingRepositories,
+    error: errorNamespaces || errorRepositories || undefined,
+    namespaces,
+    namespace,
+    repositories
+  };
+};
+
+const useUrlParams = () => {
+  const params = useParams();
+  return urls.getNamespaceAndPageFromMatch({params});
+}
+
+const Overview: FC = () => {
+  const { isLoading, error, namespace, namespaces, repositories } = useOverviewData();
+  const location = useLocation();
+  const history = useHistory();
+  const [t] = useTranslation("repos");
+  const showCreateButton = !!repositories?._links.create;
+
+  console.log(location);
+
+  const allNamespacesPlaceholder = t("overview.allNamespaces")
+
+  let namespacesToRender: string[] = [];
+  if (namespaces) {
+    namespacesToRender = [
+      allNamespacesPlaceholder, ...namespaces._embedded.namespaces.map(n => n.namespace).sort()
+    ];
+  }
+
+  const namespaceSelected = (newNamespace: string) => {
+    if (newNamespace === allNamespacesPlaceholder) {
+      history.push("/repos/");
+    } else {
+      history.push(`/repos/${newNamespace}/`);
+    }
+  };
+
+  return (
+    <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={isLoading} error={error}>
+      {repositories && namespaces ? (
+        <RepositoryList repositories={repositories._embedded.repositories} namespaces={namespaces} />
+      ) : null}
+      <PageActions>
+        <OverviewPageActions
+          showCreateButton={showCreateButton}
+          currentGroup={namespace || ""}
+          groups={namespacesToRender}
+          groupSelected={namespaceSelected}
+          link={namespace ? `repos/${namespace}` : "repos"}
+          label={t("overview.createButton")}
+          testId="repository-overview"
+          searchPlaceholder={t("overview.searchRepository")}
+        />
+      </PageActions>
+    </Page>
+  );
+};
+
+class OverviewCmp extends React.Component<Props> {
   componentDidMount() {
     const { fetchNamespaces, namespacesLink } = this.props;
     fetchNamespaces(namespacesLink, () => this.fetchRepos());
@@ -209,4 +278,5 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("repos")(withRouter(Overview)));
+// export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("repos")(withRouter(OverviewCmp)));
+export default Overview;

@@ -22,12 +22,23 @@
  * SOFTWARE.
  */
 
-import { Link } from "@scm-manager/ui-types";
+import { Me, Namespace, NamespaceCollection, RepositoryCollection, Link } from "@scm-manager/ui-types";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { apiClient } from "@scm-manager/ui-components";
+import { ApiResult, useIndexJsonResource, useIndexLink, useRequiredIndexLink } from "./base";
 
-export type InfoItem = {
-  title: string;
-  summary: string;
-  _links: {
-    [key: string]: Link;
-  };
+export const useNamespaces = () => {
+  return useIndexJsonResource<NamespaceCollection>("namespaces");
+};
+
+export const useRepositories = (namespace?: Namespace, page?: number | string, enabled?: boolean): ApiResult<RepositoryCollection> => {
+  const indexLink = useRequiredIndexLink("repositories");
+  const namespaceLink = (namespace?._links.repositories as Link)?.href;
+
+  const link = namespaceLink || indexLink;
+  return useQuery<RepositoryCollection, Error>(["repositories", namespace?.namespace, page], () =>
+    apiClient.get(link).then(response => response.json()), {
+      enabled: enabled || enabled === undefined
+    }
+  );
 };
