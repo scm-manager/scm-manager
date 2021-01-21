@@ -22,18 +22,18 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.repository.api;
 
 import sonia.scm.ContextEntry;
 import sonia.scm.ExceptionWithContext;
 
 import java.util.List;
 
-public class RepositoryExportException extends ExceptionWithContext {
+public class ExportFailedException extends ExceptionWithContext {
 
   private static final String CODE = "67SM3DANZ1";
 
-  public RepositoryExportException(List<ContextEntry> context, String message, Exception cause) {
+  public ExportFailedException(List<ContextEntry> context, String message, Exception cause) {
     super(context, message, cause);
   }
 

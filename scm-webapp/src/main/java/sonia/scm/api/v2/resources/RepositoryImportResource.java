@@ -303,18 +303,17 @@ public class RepositoryImportResource {
                                        @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
                                        MultipartFormDataInput input) {
     RepositoryPermissions.create().check();
+    RepositoryDto repositoryDto = importFullRepositoryFromInput(input);
+    return Response.created(URI.create(resourceLinks.repository().self(repositoryDto.getNamespace(), repositoryDto.getName()))).build();
+  }
 
+  private RepositoryDto importFullRepositoryFromInput(MultipartFormDataInput input) {
     Map<String, List<InputPart>> formParts = input.getFormDataMap();
-    InputStream inputStream = extractFromInputPart(formParts.get("bundle"), InputStream.class);
-    RepositoryDto repositoryDto = extractFromInputPart(formParts.get("repository"), RepositoryDto.class);
-
-    checkNotNull(inputStream, "bundle inputStream is required");
-    checkNotNull(repositoryDto, "repository data is required");
-    checkArgument(!Strings.isNullOrEmpty(repositoryDto.getName()), "request does not contain name of the repository");
+    InputStream inputStream = extractInputStream(formParts);
+    RepositoryDto repositoryDto = extractRepositoryDto(formParts);
 
     fullScmRepositoryImporter.importFromFile(mapper.map(repositoryDto), inputStream);
-
-    return Response.created(URI.create(resourceLinks.repository().self(repositoryDto.getNamespace(), repositoryDto.getName()))).build();
+    return repositoryDto;
   }
 
   /**
@@ -327,12 +326,8 @@ public class RepositoryImportResource {
    */
   private Repository doImportFromBundle(String type, MultipartFormDataInput input, boolean compressed) {
     Map<String, List<InputPart>> formParts = input.getFormDataMap();
-    RepositoryDto repositoryDto = extractFromInputPart(formParts.get("repository"), RepositoryDto.class);
-    InputStream inputStream = extractFromInputPart(formParts.get("bundle"), InputStream.class);
-
-    checkNotNull(repositoryDto, "repository data is required");
-    checkNotNull(inputStream, "bundle inputStream is required");
-    checkArgument(!Strings.isNullOrEmpty(repositoryDto.getName()), "request does not contain name of the repository");
+    InputStream inputStream = extractInputStream(formParts);
+    RepositoryDto repositoryDto = extractRepositoryDto(formParts);
 
     Type t = type(manager, type);
     checkSupport(t, Command.UNBUNDLE);
@@ -378,6 +373,19 @@ public class RepositoryImportResource {
     };
   }
 
+  private RepositoryDto extractRepositoryDto(Map<String, List<InputPart>> formParts) {
+    RepositoryDto repositoryDto = extractFromInputPart(formParts.get("repository"), RepositoryDto.class);
+    checkNotNull(repositoryDto, "repository data is required");
+    checkArgument(!Strings.isNullOrEmpty(repositoryDto.getName()), "request does not contain name of the repository");
+    return repositoryDto;
+  }
+
+  private InputStream extractInputStream(Map<String, List<InputPart>> formParts) {
+    InputStream inputStream = extractFromInputPart(formParts.get("bundle"), InputStream.class);
+    checkNotNull(inputStream, "bundle inputStream is required");
+    return inputStream;
+  }
+
   private <T> T extractFromInputPart(List<InputPart> input, Class<T> type) {
     try {
       if (input != null && !input.isEmpty()) {
@@ -400,12 +408,12 @@ public class RepositoryImportResource {
     }
     return null;
   }
-
   @Getter
   @Setter
   @NoArgsConstructor
   @SuppressWarnings("java:S2160")
   public static class RepositoryImportDto extends RepositoryDto implements ImportRepositoryDto {
+
     @NotEmpty
     private String importUrl;
     private String username;

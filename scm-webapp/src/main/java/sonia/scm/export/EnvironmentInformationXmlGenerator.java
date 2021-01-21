@@ -32,15 +32,13 @@ import sonia.scm.environment.ScmEnvironment;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
-import sonia.scm.repository.RepositoryExportException;
+import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.util.SystemUtil;
 
 import javax.inject.Inject;
 import javax.xml.bind.JAXB;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.URI;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,7 +61,11 @@ public class EnvironmentInformationXmlGenerator {
       JAXB.marshal(scmEnvironment, baos);
       return baos.toByteArray();
     } catch (IOException e) {
-      throw new RepositoryExportException(ContextEntry.ContextBuilder.noContext(), "Could not generate SCM-Manager environment description.", e);
+      throw new ExportFailedException(
+        ContextEntry.ContextBuilder.noContext(),
+        "Could not generate SCM-Manager environment description.",
+        e
+      );
     }
   }
 

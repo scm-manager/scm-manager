@@ -24,6 +24,9 @@
 
 package sonia.scm.store;
 
+import sonia.scm.ContextEntry;
+import sonia.scm.repository.api.ImportFailedException;
+
 import java.io.File;
 
 public class FileBasedStoreEntryImporterFactory implements StoreEntryImporterFactory {
@@ -36,11 +39,20 @@ public class FileBasedStoreEntryImporterFactory implements StoreEntryImporterFac
 
   @Override
   public StoreEntryImporter importStore(String type, String name) {
-    File storeDirectory = new File(directory, name.isEmpty() ? type : type + File.separator + name);
+    File storeDirectory = new File(directory, resolveFilePath(type, name));
     if (!storeDirectory.exists() && !storeDirectory.mkdirs()) {
-      //TODO Fix exception
-      throw new IllegalStateException("Could not create store");
+      throw new ImportFailedException(
+        ContextEntry.ContextBuilder.noContext(),
+        String.format("Could not create store for type %s and name %s", type, name)
+      );
     }
     return new FileBasedStoreEntryImporter(storeDirectory, type, name);
+  }
+
+  private String resolveFilePath(String type, String name) {
+    if (name == null || name.isEmpty()) {
+      return type;
+    }
+    return type + File.separator + name;
   }
 }

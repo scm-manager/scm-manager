@@ -27,11 +27,11 @@ class RepositoryStoreImporterTest {
   private RepositoryStoreImporter repositoryStoreImporter;
 
   @Test
-  void shouldImportStoresFromArchive(@TempDir Path temp) {
+  void shouldImportStore(@TempDir Path temp) {
     when(locationResolver.supportsLocationType(Path.class)).thenReturn(true);
     when(locationResolver.forClass(Path.class).getLocation(REPOSITORY.getId())).thenReturn(temp);
 
     StoreEntryImporterFactory storeEntryImporterFactory = repositoryStoreImporter.doImport(REPOSITORY);
-    assertThat(storeEntryImporterFactory).isNotNull();
+    assertThat(storeEntryImporterFactory).isInstanceOf(StoreEntryImporterFactory.class);
   }
 }

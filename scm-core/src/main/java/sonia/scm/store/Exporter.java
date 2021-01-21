@@ -28,16 +28,16 @@ import java.io.IOException;
 import java.io.OutputStream;
 
 /**
- * The {@link Exporter} exports an single store data entry as {@link OutputStream}.
+ * The {@link Exporter} exports an single store entry as {@link OutputStream}.
  *
  * @since 2.13.0
  */
 public interface Exporter {
   /**
-   * Exports an single store data entry.
+   * Exports an single store entry.
    *
-   * @param name of the data entry
-   * @param size of the data entry
+   * @param name of the entry
+   * @param size of the entry
    * @return {@link OutputStream}
    * @throws IOException
    */

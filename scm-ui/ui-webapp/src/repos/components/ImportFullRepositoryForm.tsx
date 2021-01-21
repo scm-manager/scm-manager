@@ -32,7 +32,7 @@ type Props = {
   setValid: (valid: boolean) => void;
 };
 
-const ImportFullForm: FC<Props> = ({ setFile, setValid}) => {
+const ImportFullRepositoryForm: FC<Props> = ({ setFile, setValid}) => {
   const [t] = useTranslation("repos");
 
   return (
@@ -50,4 +50,4 @@ const ImportFullForm: FC<Props> = ({ setFile, setValid}) => {
   );
 };
 
-export default ImportFullForm;
+export default ImportFullRepositoryForm;

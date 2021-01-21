@@ -29,7 +29,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryExportException;
+import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 
@@ -42,10 +42,12 @@ public class FullScmRepositoryExporter {
 
   private final EnvironmentInformationXmlGenerator generator;
   private final RepositoryServiceFactory serviceFactory;
-  private final RepositoryStoreExporter storeExporter;
+  private final TarArchiveRepositoryStoreExporter storeExporter;
 
   @Inject
-  public FullScmRepositoryExporter(EnvironmentInformationXmlGenerator generator, RepositoryServiceFactory serviceFactory, RepositoryStoreExporter storeExporter) {
+  public FullScmRepositoryExporter(EnvironmentInformationXmlGenerator generator,
+                                   RepositoryServiceFactory serviceFactory,
+                                   TarArchiveRepositoryStoreExporter storeExporter) {
     this.generator = generator;
     this.serviceFactory = serviceFactory;
     this.storeExporter = storeExporter;
@@ -63,7 +65,7 @@ public class FullScmRepositoryExporter {
       writeStoreData(repository, taos);
       taos.finish();
     } catch (IOException e) {
-      throw new RepositoryExportException(
+      throw new ExportFailedException(
         ContextEntry.ContextBuilder.entity(repository).build(),
         "Could not export repository with metadata",
         e
@@ -72,13 +74,17 @@ public class FullScmRepositoryExporter {
   }
 
   private void writeRepository(RepositoryService service, TarArchiveOutputStream taos) throws IOException {
-    ByteArrayOutputStream repoBaos = new ByteArrayOutputStream();
-    service.getBundleCommand().bundle(repoBaos);
-    TarArchiveEntry entry = new TarArchiveEntry(service.getRepository().getName() + ".dump");
-    entry.setSize(repoBaos.size());
-    taos.putArchiveEntry(entry);
-    taos.write(repoBaos.toByteArray());
-    taos.closeArchiveEntry();
+    File repositoryFile = Files.createFile(Paths.get("repository")).toFile();
+    try (FileOutputStream repositoryFos = new FileOutputStream(repositoryFile)) {
+      service.getBundleCommand().bundle(repositoryFos);
+      TarArchiveEntry entry = new TarArchiveEntry(service.getRepository().getName() + ".dump");
+      entry.setSize(repositoryFile.length());
+      taos.putArchiveEntry(entry);
+      Files.copy(repositoryFile.toPath(), taos);
+      taos.closeArchiveEntry();
+    } finally {
+      Files.delete(repositoryFile.toPath());
+    }
   }
 
   private void writeEnvironmentData(TarArchiveOutputStream taos) throws IOException {

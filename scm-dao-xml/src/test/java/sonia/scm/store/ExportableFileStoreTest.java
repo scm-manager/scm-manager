@@ -75,8 +75,8 @@ class ExportableFileStoreTest {
 
   @Test
   void shouldPutContentIntoExporterForConfigStore(@TempDir Path temp) throws IOException {
-    createFile(temp, "config", null, "first.xml");
-    createFile(temp, "config", null, "second.xml");
+    createFile(temp, "config", "", "first.xml");
+    createFile(temp, "config", "", "second.xml");
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     Exporter exporter = mock(Exporter.class);
     ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp.resolve("config").toFile(), "first.xml");

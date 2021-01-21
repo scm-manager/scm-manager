@@ -61,15 +61,15 @@ public class ExportableFileStore implements ExportableStore {
       for (File fileOrDir : directory.listFiles()) {
         if (fileOrDir.isDirectory()) {
           exportDirectoryEntries(exporter, fileOrDir);
-        } else {
-          if (type.equalsIgnoreCase("config") && !fileOrDir.getName().endsWith(".xml")) {
-            // Skip irrelevant config store files
-          } else {
-            putFileContentIntoStream(exporter, fileOrDir);
-          }
+        } else if (!shouldSkipFile(fileOrDir)) {
+          putFileContentIntoStream(exporter, fileOrDir);
         }
       }
     }
+  }
+
+  private boolean shouldSkipFile(File fileOrDir) {
+    return type.equals("config") && !fileOrDir.getName().endsWith(".xml");
   }
 
   private void putFileContentIntoStream(Exporter exporter, File file) throws IOException {

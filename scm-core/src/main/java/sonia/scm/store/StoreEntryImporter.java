@@ -27,7 +27,7 @@ package sonia.scm.store;
 import java.io.InputStream;
 
 /**
- * The {@link StoreEntryImporter} is used to import an store entry from the provided {@link InputStream}.
+ * The {@link StoreEntryImporter} is used to import an store entry from {@link InputStream}.
  *
  * @since 2.13.0
  */

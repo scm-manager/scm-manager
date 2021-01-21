@@ -28,18 +28,20 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryExportException;
+import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.store.ExportableStore;
 import sonia.scm.store.StoreExporter;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
-public class RepositoryStoreExporter {
+public class TarArchiveRepositoryStoreExporter {
 
   private static final String DATA_STORE = "data";
   private static final String CONFIG_STORE = "config";
@@ -47,7 +49,7 @@ public class RepositoryStoreExporter {
   private final StoreExporter storeExporter;
 
   @Inject
-  public RepositoryStoreExporter(StoreExporter storeExporter) {
+  public TarArchiveRepositoryStoreExporter(StoreExporter storeExporter) {
     this.storeExporter = storeExporter;
   }
 
@@ -59,26 +61,43 @@ public class RepositoryStoreExporter {
       List<ExportableStore> exportableStores = storeExporter.findExportableStores(repository);
       for (ExportableStore store : exportableStores) {
         store.export((name, filesize) -> {
-          if (DATA_STORE.equalsIgnoreCase(store.getType())) {
-            TarArchiveEntry entry = new TarArchiveEntry("stores/" + store.getType() + "/" + store.getName() + "/" + name);
-            entry.setSize(filesize);
-            taos.putArchiveEntry(entry);
-          } else if (CONFIG_STORE.equalsIgnoreCase(store.getType())) {
-            TarArchiveEntry entry = new TarArchiveEntry("stores/" + store.getType() + "/" + name);
-            entry.setSize(filesize);
-            taos.putArchiveEntry(entry);
+          if (isStoreType(store, DATA_STORE)) {
+            String storePath = createStorePath(store.getType(), store.getName(), name);
+            addEntryToArchive(taos, storePath, filesize);
+          } else if (isStoreType(store, CONFIG_STORE)) {
+            String storePath = createStorePath(store.getType(), name);
+            addEntryToArchive(taos, storePath, filesize);
           }
           return createOutputStream(taos);
         });
       }
 
     } catch (IOException e) {
-      throw new RepositoryExportException(
+      throw new ExportFailedException(
         ContextEntry.ContextBuilder.entity(repository).build(),
         "Could not export repository metadata stores.",
         e
       );
     }
+  }
+
+  private boolean isStoreType(ExportableStore store, String dataStore) {
+    return dataStore.equalsIgnoreCase(store.getType());
+  }
+
+  private void addEntryToArchive(TarArchiveOutputStream taos, String storePath, long filesize) throws IOException {
+    TarArchiveEntry entry = new TarArchiveEntry(storePath);
+    entry.setSize(filesize);
+    taos.putArchiveEntry(entry);
+  }
+
+  @Nonnull
+  private String createStorePath(String... pathParts) {
+    StringBuilder storePath = new StringBuilder("stores");
+    for (String part : pathParts) {
+      storePath.append(File.separator).append(part);
+    }
+    return storePath.toString();
   }
 
   private OutputStream createOutputStream(TarArchiveOutputStream taos) {

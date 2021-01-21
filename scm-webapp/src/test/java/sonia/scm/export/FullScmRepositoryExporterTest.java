@@ -57,7 +57,7 @@ class FullScmRepositoryExporterTest {
   @Mock
   private EnvironmentInformationXmlGenerator generator;
   @Mock
-  private RepositoryStoreExporter storeExporter;
+  private TarArchiveRepositoryStoreExporter storeExporter;
 
   @InjectMocks
   private FullScmRepositoryExporter exporter;

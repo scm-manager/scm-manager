@@ -34,7 +34,6 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.store.RepositoryStoreImporter;
 
 import javax.inject.Inject;
 import javax.xml.bind.JAXB;
@@ -51,7 +50,10 @@ public class FullScmRepositoryImporter {
   private final TarArchiveRepositoryStoreImporter storeImporter;
 
   @Inject
-  public FullScmRepositoryImporter(RepositoryServiceFactory serviceFactory, RepositoryManager repositoryManager, ScmEnvironmentCompatibilityChecker compatibilityChecker, TarArchiveRepositoryStoreImporter storeImporter) {
+  public FullScmRepositoryImporter(RepositoryServiceFactory serviceFactory,
+                                   RepositoryManager repositoryManager,
+                                   ScmEnvironmentCompatibilityChecker compatibilityChecker,
+                                   TarArchiveRepositoryStoreImporter storeImporter) {
     this.serviceFactory = serviceFactory;
     this.repositoryManager = repositoryManager;
     this.compatibilityChecker = compatibilityChecker;
@@ -71,7 +73,7 @@ public class FullScmRepositoryImporter {
           importStoresForCreatedRepository(createdRepository, tais);
         } catch (IOException e) {
           throw new ImportFailedException(
-            ContextEntry.ContextBuilder.entity(repository).build(),
+            ContextEntry.ContextBuilder.noContext(),
             "Could not import repository data from file",
             e
           );

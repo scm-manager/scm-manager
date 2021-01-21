@@ -52,8 +52,8 @@ public class ScmEnvironmentCompatibilityChecker {
 
   boolean check(ScmEnvironment environment) {
     List<Boolean> compatibilityChecks = new ArrayList<>();
-    compatibilityChecks.add(arePluginsCompatible(environment));
     compatibilityChecks.add(isCoreVersionCompatible(scmContextProvider.getVersion(), environment.getCoreVersion()));
+    compatibilityChecks.add(arePluginsCompatible(environment));
 
     return compatibilityChecks.stream().allMatch(Boolean::booleanValue);
   }
@@ -74,8 +74,10 @@ public class ScmEnvironmentCompatibilityChecker {
       Optional<PluginInformation> matchingInstalledPlugin = findMatchingInstalledPlugin(currentlyInstalledPlugins, plugin);
       if (isPluginIncompatible(plugin, matchingInstalledPlugin)) {
         LOGGER.error(
-          "The installed plugin \"{}\" version is older than the plugin data from the previous SCM-Manager environment. "
-          + "Please update your plugins.", matchingInstalledPlugin.get().getName()
+          "The installed plugin \"{}\" with version \"{}\" doesn't match the plugin data version \"{}\" from the previous SCM-Manager environment.",
+          matchingInstalledPlugin.get().getName(),
+          matchingInstalledPlugin.get().getVersion(),
+          plugin.getVersion()
         );
         return false;
       }

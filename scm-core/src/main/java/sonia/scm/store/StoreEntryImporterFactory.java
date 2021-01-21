@@ -25,7 +25,7 @@
 package sonia.scm.store;
 
 /**
- * Create a {@link StoreEntryImporter} for the provided store type and store name.
+ * Create a {@link StoreEntryImporter} for the store type and store name.
  *
  * @since 2.13.0
  */

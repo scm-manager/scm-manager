@@ -8,6 +8,7 @@ import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.store.RepositoryStoreImporter;
 
 import javax.inject.Inject;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -24,19 +25,33 @@ public class TarArchiveRepositoryStoreImporter {
     try (TarArchiveInputStream tais = new TarArchiveInputStream(inputStream)) {
       ArchiveEntry entry = tais.getNextEntry();
       while (entry != null) {
-        String[] entryPathParts = entry.getName().split("/");
-        if (!isValidStorePath(entryPathParts)) {
-          throw new ImportFailedException(ContextEntry.ContextBuilder.entity(repository).build(), "Invalid store path in metadata file");
-        }
-        if (entryPathParts[1].equals("data")) {
-          repositoryStoreImporter.doImport(repository).importStore(entryPathParts[1], entryPathParts[2]).importEntry(entryPathParts[3], tais);
-        } else {
-          repositoryStoreImporter.doImport(repository).importStore(entryPathParts[1], "").importEntry(entryPathParts[2], tais);
-        }
+        String[] entryPathParts = entry.getName().split(File.separator);
+        validateStorePath(repository, entryPathParts);
+        importStoreByType(repository, tais, entryPathParts);
         entry = tais.getNextEntry();
       }
     } catch (IOException e) {
       throw  new ImportFailedException(ContextEntry.ContextBuilder.entity(repository).build(), "Could not import stores from metadata file.", e);
+    }
+  }
+
+  private void importStoreByType(Repository repository, TarArchiveInputStream tais, String[] entryPathParts) {
+    if (entryPathParts[1].equals("data")) {
+      repositoryStoreImporter
+        .doImport(repository)
+        .importStore(entryPathParts[1], entryPathParts[2])
+        .importEntry(entryPathParts[3], tais);
+    } else if (entryPathParts[1].equals("config")){
+      repositoryStoreImporter
+        .doImport(repository)
+        .importStore(entryPathParts[1], "")
+        .importEntry(entryPathParts[2], tais);
+    }
+  }
+
+  private void validateStorePath(Repository repository, String[] entryPathParts) {
+    if (!isValidStorePath(entryPathParts)) {
+      throw new ImportFailedException(ContextEntry.ContextBuilder.entity(repository).build(), "Invalid store path in metadata file");
     }
   }
 

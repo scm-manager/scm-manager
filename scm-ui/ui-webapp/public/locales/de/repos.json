@@ -77,7 +77,7 @@
     },
     "full": {
       "title": "SCM-Manager Repository Archiv",
-      "helpText": "Wählen Sie das Archiv aus, welches importiert werden soll. Das Archiv muss von einer SCM-Manager Instanz exportiert worden sein."
+      "helpText": "Wählen Sie das Repository Archiv aus. Das Archiv muss von einer SCM-Manager Instanz exportiert worden sein."
     },
     "pending": {
       "subtitle": "Repository wird importiert...",
@@ -94,7 +94,7 @@
         "helpText": "Das Repository wird aus einem Datei Dump importiert."
       },
       "full": {
-        "label": "Import aus Dump mit Metadaten",
+        "label": "Import aus Dump mit Metadaten (Experimentell)",
         "helpText": "Das Repository inkl. der Metadaten wird aus einem archivierten Dump importiert. Das Import Archiv muss von einem anderen SCM-Manager generiert worden sein."
       }
     }

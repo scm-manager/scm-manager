@@ -55,7 +55,11 @@ public class FileStoreExporter implements StoreExporter {
   }
 
   private File[] resolveStoreTypeDirectories(Repository repository) {
-    File storeLocation = locationResolver.forClass(Path.class).getLocation(repository.getId()).resolve("store").toFile();
+    File storeLocation = locationResolver
+      .forClass(Path.class)
+      .getLocation(repository.getId())
+      .resolve("store")
+      .toFile();
     return storeLocation.listFiles();
   }
 

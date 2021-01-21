@@ -49,7 +49,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class RepositoryStoreExporterTest {
+class TarArchiveRepositoryStoreExporterTest {
 
   private static final Repository REPOSITORY = RepositoryTestData.create42Puzzle();
 
@@ -57,13 +57,13 @@ class RepositoryStoreExporterTest {
   private StoreExporter storeExporter;
 
   @InjectMocks
-  private RepositoryStoreExporter repositoryStoreExporter;
+  private TarArchiveRepositoryStoreExporter tarArchiveRepositoryStoreExporter;
 
   @Test
   void shouldExportNothingIfNoStoresFound() throws IOException {
     when(storeExporter.findExportableStores(REPOSITORY)).thenReturn(Collections.emptyList());
     OutputStream outputStream = mock(OutputStream.class);
-    repositoryStoreExporter.export(REPOSITORY, outputStream);
+    tarArchiveRepositoryStoreExporter.export(REPOSITORY, outputStream);
 
     verify(outputStream, never()).write(any());
   }
@@ -72,7 +72,7 @@ class RepositoryStoreExporterTest {
   void shouldWriteDataIfRepoStoreFound() {
     when(storeExporter.findExportableStores(REPOSITORY)).thenReturn(ImmutableList.of(new TestExportableStore()));
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    repositoryStoreExporter.export(REPOSITORY, outputStream);
+    tarArchiveRepositoryStoreExporter.export(REPOSITORY, outputStream);
 
     String content = outputStream.toString();
     assertThat(content).isNotBlank();
@@ -83,7 +83,7 @@ class RepositoryStoreExporterTest {
     ExportableStore exportableStore = mock(ExportableStore.class);
     when(storeExporter.findExportableStores(REPOSITORY)).thenReturn(ImmutableList.of(exportableStore));
     OutputStream outputStream = mock(OutputStream.class);
-    repositoryStoreExporter.export(REPOSITORY, outputStream);
+    tarArchiveRepositoryStoreExporter.export(REPOSITORY, outputStream);
 
     verify(exportableStore).export(any(Exporter.class));
   }

@@ -25,6 +25,8 @@
 package sonia.scm.store;
 
 import com.google.common.annotations.VisibleForTesting;
+import sonia.scm.ContextEntry;
+import sonia.scm.repository.api.ImportFailedException;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,8 +66,11 @@ public class FileBasedStoreEntryImporter implements StoreEntryImporter {
     try {
       Files.copy(stream, file.toPath());
     } catch (IOException e) {
-      //TODO Replace exception
-      throw new IllegalStateException("Could not import file");
+      throw new ImportFailedException(
+        ContextEntry.ContextBuilder.noContext(),
+        String.format("Could not import file:%s", name),
+        e
+      );
     }
   }
 }

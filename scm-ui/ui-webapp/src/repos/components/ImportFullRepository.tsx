@@ -29,7 +29,7 @@ import { apiClient, ErrorNotification, Level, SubmitButton } from "@scm-manager/
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import ImportFromBundleForm from "./ImportFromBundleForm";
-import ImportFullForm from "./ImportFullForm";
+import ImportFullRepositoryForm from "./ImportFullRepositoryForm";
 
 type Props = {
   url: string;
@@ -90,7 +90,7 @@ const ImportFullRepository: FC<Props> = ({ url, repositoryType, setImportPending
   return (
     <form onSubmit={submit}>
       <ErrorNotification error={error} />
-     <ImportFullForm setFile={setFile} setValid={(file: boolean) => setValid({ ...valid, file })}/>
+     <ImportFullRepositoryForm setFile={setFile} setValid={(file: boolean) => setValid({ ...valid, file })}/>
       <hr />
       <NamespaceAndNameFields
         repository={repo}
