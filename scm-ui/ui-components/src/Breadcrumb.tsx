@@ -63,11 +63,6 @@ const PermaLinkWrapper = styled.div`
 const BreadcrumbNav = styled.nav`
   flex: 1;
   margin: 1rem 0.5rem !important;
-
-  li:last-child:after {
-    color: #b5b5b5;
-    content: "\\0002f";
-  }
 `;
 
 const HomeIcon = styled(Icon)`
