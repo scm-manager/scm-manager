@@ -60,7 +60,7 @@ public class FullScmRepositoryImporter {
     this.storeImporter = storeImporter;
   }
 
-  public void importFromFile(Repository repository, InputStream inputStream) {
+  public Repository importFromFile(Repository repository, InputStream inputStream) {
     try {
       if (inputStream.available() > 0) {
         try (
@@ -71,6 +71,7 @@ public class FullScmRepositoryImporter {
           checkScmEnvironment(repository, tais);
           Repository createdRepository = importRepositoryFromFile(repository, tais);
           importStoresForCreatedRepository(createdRepository, tais);
+          return createdRepository;
         } catch (IOException e) {
           throw new ImportFailedException(
             ContextEntry.ContextBuilder.noContext(),

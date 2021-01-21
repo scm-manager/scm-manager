@@ -303,17 +303,15 @@ public class RepositoryImportResource {
                                        @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
                                        MultipartFormDataInput input) {
     RepositoryPermissions.create().check();
-    RepositoryDto repositoryDto = importFullRepositoryFromInput(input);
-    return Response.created(URI.create(resourceLinks.repository().self(repositoryDto.getNamespace(), repositoryDto.getName()))).build();
+    Repository createdRepository = importFullRepositoryFromInput(input);
+    return Response.created(URI.create(resourceLinks.repository().self(createdRepository.getNamespace(), createdRepository.getName()))).build();
   }
 
-  private RepositoryDto importFullRepositoryFromInput(MultipartFormDataInput input) {
+  private Repository importFullRepositoryFromInput(MultipartFormDataInput input) {
     Map<String, List<InputPart>> formParts = input.getFormDataMap();
     InputStream inputStream = extractInputStream(formParts);
     RepositoryDto repositoryDto = extractRepositoryDto(formParts);
-
-    fullScmRepositoryImporter.importFromFile(mapper.map(repositoryDto), inputStream);
-    return repositoryDto;
+    return fullScmRepositoryImporter.importFromFile(mapper.map(repositoryDto), inputStream);
   }
 
   /**

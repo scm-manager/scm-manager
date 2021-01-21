@@ -18,16 +18,20 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.UnbundleCommandBuilder;
 import sonia.scm.store.RepositoryStoreImporter;
+import sonia.scm.store.StoreEntryImporterFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -47,7 +51,7 @@ class FullScmRepositoryImporterTest {
   @Mock
   private ScmEnvironmentCompatibilityChecker compatibilityChecker;
   @Mock
-  private RepositoryStoreImporter storeImporterFactory;
+  private TarArchiveRepositoryStoreImporter storeImporter;
 
   @InjectMocks
   private FullScmRepositoryImporter fullImporter;
@@ -80,8 +84,8 @@ class FullScmRepositoryImporterTest {
     when(compatibilityChecker.check(any())).thenReturn(true);
     when(repositoryManager.create(eq(REPOSITORY), any())).thenReturn(REPOSITORY);
 
-    fullImporter.importFromFile(REPOSITORY, Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream());
-
-    verify(storeImporterFactory).doImport(eq(REPOSITORY));
+    Repository repository = fullImporter.importFromFile(REPOSITORY, Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream());
+    assertThat(repository).isEqualTo(REPOSITORY);
+    verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class));
   }
 }
