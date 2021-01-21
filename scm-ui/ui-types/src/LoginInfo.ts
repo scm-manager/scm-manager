@@ -21,42 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import ReactDOM from "react-dom";
-import Index from "./containers/Index";
 
-import { ApiProvider } from "@scm-manager/ui-api";
+import { HalObject } from "./hal";
 
-import { I18nextProvider } from "react-i18next";
-import i18n from "./i18n";
+export type LoginInfo = HalObject & {
+  plugin?: InfoItem;
+  feature?: InfoItem;
+};
 
-import { Provider } from "react-redux";
-
-import createReduxStore from "./createReduxStore";
-import { BrowserRouter as Router } from "react-router-dom";
-
-import { urls } from "@scm-manager/ui-components";
-import { binder } from "@scm-manager/ui-extensions";
-import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink";
-
-binder.bind("changeset.description.tokens", ChangesetShortLink);
-
-const store = createReduxStore();
-
-const root = document.getElementById("root");
-if (!root) {
-  throw new Error("could not find root element");
-}
-
-ReactDOM.render(
-  <Provider store={store}>
-    <ApiProvider>
-      <I18nextProvider i18n={i18n}>
-        <Router basename={urls.contextPath}>
-          <Index />
-        </Router>
-      </I18nextProvider>
-    </ApiProvider>
-  </Provider>,
-  root
-);
+export type InfoItem = HalObject & {
+  title: string;
+  summary: string;
+};
