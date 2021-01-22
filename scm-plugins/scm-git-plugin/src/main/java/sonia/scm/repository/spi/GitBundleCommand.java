@@ -44,17 +44,29 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
     File[] files = fileOrDir.listFiles();
     if (files != null) {
       for (File file : files) {
+        if (shouldSkipFile(file)) {
+          continue;
+        }
+
         if (file.isDirectory()) {
           String filePath = path + file.getName();
           createTarEntryForFiles(filePath, file, taos);
         } else {
-          TarArchiveEntry entry = new TarArchiveEntry(path + File.separator + file.getName());
-          entry.setSize(file.length());
-          taos.putArchiveEntry(entry);
-          Files.copy(file.toPath(), taos);
-          taos.closeArchiveEntry();
+          createArchiveEntryForFile(taos, path, file);
         }
       }
     }
+  }
+
+  private boolean shouldSkipFile(File file) {
+    return file.getName().equals("config");
+  }
+
+  private void createArchiveEntryForFile(TarArchiveOutputStream taos, String filepath, File file) throws IOException {
+    TarArchiveEntry entry = new TarArchiveEntry(filepath + File.separator + file.getName());
+    entry.setSize(file.length());
+    taos.putArchiveEntry(entry);
+    Files.copy(file.toPath(), taos);
+    taos.closeArchiveEntry();
   }
 }
