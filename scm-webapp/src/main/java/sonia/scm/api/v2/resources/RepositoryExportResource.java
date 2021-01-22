@@ -30,14 +30,13 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.Type;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.api.BundleCommandBuilder;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -54,7 +53,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.Instant;
 
@@ -62,8 +60,6 @@ import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSuppo
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
 
 public class RepositoryExportResource {
-
-  private static final Logger logger = LoggerFactory.getLogger(RepositoryExportResource.class);
 
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
@@ -126,35 +122,49 @@ public class RepositoryExportResource {
   }
 
   private Response exportRepository(Repository repository, boolean compressed) {
-    StreamingOutput output = os -> {
-      try (RepositoryService service = serviceFactory.create(repository)) {
-        if (compressed) {
-          GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
-          service.getBundleCommand().bundle(gzipCompressorOutputStream);
-          gzipCompressorOutputStream.finish();
-        } else {
-          service.getBundleCommand().bundle(os);
+    StreamingOutput output;
+    String fileExtension;
+    try (final RepositoryService service = serviceFactory.create(repository)) {
+      BundleCommandBuilder bundleCommand = service.getBundleCommand();
+      fileExtension = resolveFileExtension(bundleCommand, compressed);
+      output = os -> {
+        try {
+          if (compressed) {
+            GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
+            bundleCommand.bundle(gzipCompressorOutputStream);
+            gzipCompressorOutputStream.finish();
+          } else {
+            bundleCommand.bundle(os);
+          }
+        } catch (IOException e) {
+          throw new InternalRepositoryException(repository, "repository export failed", e);
         }
-      } catch (IOException e) {
-        throw new InternalRepositoryException(repository, "repository export failed", e);
-      }
-    };
+      };
+    }
 
     return Response
       .ok(output, compressed ? "application/x-gzip" : MediaType.APPLICATION_OCTET_STREAM)
-      .header("content-disposition", createContentDispositionHeaderValue(repository, compressed))
+      .header("content-disposition", createContentDispositionHeaderValue(repository, fileExtension))
       .build();
   }
 
-  private String createContentDispositionHeaderValue(Repository repository, boolean compressed) {
+  private String resolveFileExtension(BundleCommandBuilder bundleCommand, boolean compressed) {
+    String fileExtension = bundleCommand.getFileExtension();
+    if (compressed) {
+      fileExtension += ".gz";
+    }
+    return fileExtension;
+  }
+
+  private String createContentDispositionHeaderValue(Repository repository, String fileExtension) {
     String timestamp = createFormattedTimestamp();
-      return String.format(
-        "attachment; filename = %s-%s-%s.%s",
-        repository.getNamespace(),
-        repository.getName(),
-        timestamp,
-        compressed ? "dump.gz" : "dump"
-      );
+    return String.format(
+      "attachment; filename = %s-%s-%s.%s",
+      repository.getNamespace(),
+      repository.getName(),
+      timestamp,
+      fileExtension
+    );
   }
 
   private String createFormattedTimestamp() {

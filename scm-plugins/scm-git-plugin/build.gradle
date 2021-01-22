@@ -35,6 +35,7 @@ dependencies {
   implementation "sonia.jgit:org.eclipse.jgit.http.server:${jgitVersion}"
   implementation "sonia.jgit:org.eclipse.jgit.lfs.server:${jgitVersion}"
   implementation "sonia.jgit:org.eclipse.jgit.gpg.bc:${jgitVersion}"
+  implementation libraries.commonsCompress
 
   testImplementation libraries.shiroUnit
 }
