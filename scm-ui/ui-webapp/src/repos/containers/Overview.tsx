@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {FC, useState} from "react";
+import React, { FC, useState } from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -100,12 +100,24 @@ const Overview: FC = () => {
   const { isLoading, error, namespace, namespaces, repositories, search, page } = useOverviewData();
   const history = useHistory();
   const [t] = useTranslation("repos");
+
   // we keep the create permission in the state,
   // because it does not change during searching or paging
   // and we can avoid bouncing of search bar elements
   const [showCreateButton, setShowCreateButton] = useState(false);
   if (!showCreateButton && !!repositories?._links.create) {
     setShowCreateButton(true);
+  }
+
+  // We need to keep track if we have already load the site,
+  // because we only know if we can create repositories and
+  // we need this information to show the create button.
+  // In order to avoid bouncing of the ui elements we want to
+  // wait until we have all information before we show the top
+  // action bar.
+  const [showActions, setShowActions] = useState(false);
+  if (!showActions && repositories) {
+    setShowActions(true);
   }
 
   const allNamespacesPlaceholder = t("overview.allNamespaces");
@@ -126,16 +138,18 @@ const Overview: FC = () => {
       <Repositories namespaces={namespaces} repositories={repositories} search={search} page={page} />
       {showCreateButton ? <CreateButton label={t("overview.createButton")} link="/repos/create" /> : null}
       <PageActions>
-        <OverviewPageActions
-          showCreateButton={showCreateButton}
-          currentGroup={namespace || ""}
-          groups={namespacesToRender}
-          groupSelected={namespaceSelected}
-          link={namespace ? `repos/${namespace}` : "repos"}
-          label={t("overview.createButton")}
-          testId="repository-overview"
-          searchPlaceholder={t("overview.searchRepository")}
-        />
+        {showActions ? (
+          <OverviewPageActions
+            showCreateButton={showCreateButton}
+            currentGroup={namespace || ""}
+            groups={namespacesToRender}
+            groupSelected={namespaceSelected}
+            link={namespace ? `repos/${namespace}` : "repos"}
+            label={t("overview.createButton")}
+            testId="repository-overview"
+            searchPlaceholder={t("overview.searchRepository")}
+          />
+        ) : null}
       </PageActions>
     </Page>
   );
