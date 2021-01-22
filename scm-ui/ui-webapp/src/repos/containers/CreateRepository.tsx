@@ -48,7 +48,7 @@ const CreateRepository: FC = () => {
   const [t] = useTranslation("repos");
 
   if (repository) {
-    return <Redirect to={`"/repo/${repository.namespace}/${repository.name}"`} />;
+    return <Redirect to={`/repo/${repository.namespace}/${repository.name}`} />;
   }
 
   return (
