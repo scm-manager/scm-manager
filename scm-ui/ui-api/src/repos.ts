@@ -31,14 +31,41 @@ export const useNamespaces = () => {
   return useIndexJsonResource<NamespaceCollection>("namespaces");
 };
 
-export const useRepositories = (namespace?: Namespace, page?: number | string, enabled?: boolean): ApiResult<RepositoryCollection> => {
-  const indexLink = useRequiredIndexLink("repositories");
-  const namespaceLink = (namespace?._links.repositories as Link)?.href;
+type UseRepositoriesRequest = {
+  namespace?: Namespace;
+  search?: string;
+  page?: number | string;
+  disabled?: boolean;
+};
 
-  const link = namespaceLink || indexLink;
-  return useQuery<RepositoryCollection, Error>(["repositories", namespace?.namespace, page], () =>
-    apiClient.get(link).then(response => response.json()), {
-      enabled: enabled || enabled === undefined
+const createQueryString = (params: Record<string, string>) => {
+  return Object.keys(params)
+    .map(k => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
+    .join("&");
+};
+
+export const useRepositories = (request?: UseRepositoriesRequest): ApiResult<RepositoryCollection> => {
+  const indexLink = useRequiredIndexLink("repositories");
+  const namespaceLink = (request?.namespace?._links.repositories as Link)?.href;
+  let link = namespaceLink || indexLink;
+
+  const queryParams: Record<string, string> = {};
+  if (request?.search) {
+    queryParams.q = request.search;
+  }
+  if (request?.page) {
+    queryParams.page = request.page.toString();
+  }
+  const queryString = createQueryString(queryParams);
+  if (queryString) {
+    link += `?${queryString}`;
+  }
+
+  return useQuery<RepositoryCollection, Error>(
+    ["repositories", request?.namespace?.namespace, request?.search || "", request?.page || 0],
+    () => apiClient.get(link).then(response => response.json()),
+    {
+      enabled: !request?.disabled
     }
   );
 };
