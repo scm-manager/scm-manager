@@ -21,143 +21,56 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { connect } from "react-redux";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
-import { NamespaceStrategies, Repository, RepositoryCreation, RepositoryType } from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { Page } from "@scm-manager/ui-components";
-import {
-  fetchRepositoryTypesIfNeeded,
-  getFetchRepositoryTypesFailure,
-  getRepositoryTypes,
-  isFetchRepositoryTypesPending
-} from "../modules/repositoryTypes";
 import RepositoryForm from "../components/form";
 import RepositoryFormSwitcher from "../components/form/RepositoryFormSwitcher";
-import { createRepo, createRepoReset, getCreateRepoFailure, isCreateRepoPending } from "../modules/repos";
-import { getRepositoriesLink } from "../../modules/indexResource";
-import {
-  fetchNamespaceStrategiesIfNeeded,
-  getFetchNamespaceStrategiesFailure,
-  getNamespaceStrategies,
-  isFetchNamespaceStrategiesPending
-} from "../../admin/modules/namespaceStrategies";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import { compose } from "redux";
+import { Redirect } from "react-router-dom";
+import { useCreateRepository, useIndex, useNamespaceStrategies, useRepositoryTypes } from "@scm-manager/ui-api";
 
-type Props = WithTranslation &
-  RouteComponentProps & {
-    repositoryTypes: RepositoryType[];
-    namespaceStrategies: NamespaceStrategies;
-    pageLoading: boolean;
-    createLoading: boolean;
-    error: Error;
-    repoLink: string;
-    indexResources: any;
-
-    // dispatch functions
-    fetchNamespaceStrategiesIfNeeded: () => void;
-    fetchRepositoryTypesIfNeeded: () => void;
-    createRepo: (
-      link: string,
-      repository: RepositoryCreation,
-      initRepository: boolean,
-      callback: (repo: Repository) => void
-    ) => void;
-    resetForm: () => void;
-
-    // context props
-    history: History;
+const useCreateRepositoryData = () => {
+  const { isLoading: isLoadingNS, error: errorNS, data: namespaceStrategies } = useNamespaceStrategies();
+  const { isLoading: isLoadingRT, error: errorRT, repositoryTypes } = useRepositoryTypes();
+  const { isLoading: isLoadingIdx, error: errorIdx, data: index } = useIndex();
+  return {
+    isPageLoading: isLoadingNS || isLoadingRT || isLoadingIdx,
+    pageLoadingError: errorNS || errorRT || errorIdx || undefined,
+    namespaceStrategies,
+    repositoryTypes,
+    index
   };
+};
 
-class CreateRepository extends React.Component<Props> {
-  componentDidMount() {
-    this.props.resetForm();
-    this.props.fetchRepositoryTypesIfNeeded();
-    this.props.fetchNamespaceStrategiesIfNeeded();
+const CreateRepository: FC = () => {
+  const { isPageLoading, pageLoadingError, namespaceStrategies, repositoryTypes, index } = useCreateRepositoryData();
+  const { isLoading, error, repository, create } = useCreateRepository();
+  const [t] = useTranslation("repos");
+
+  if (repository) {
+    return <Redirect to={`"/repo/${repository.namespace}/${repository.name}"`} />;
   }
 
-  repoCreated = (repo: Repository) => {
-    this.props.history.push("/repo/" + repo.namespace + "/" + repo.name);
-  };
-
-  render() {
-    const {
-      pageLoading,
-      createLoading,
-      repositoryTypes,
-      namespaceStrategies,
-      createRepo,
-      error,
-      indexResources,
-      repoLink,
-      t
-    } = this.props;
-
-    return (
-      <Page
-        title={t("create.title")}
-        subtitle={t("create.subtitle")}
-        afterTitle={<RepositoryFormSwitcher creationMode={"CREATE"} />}
-        loading={pageLoading}
-        error={error}
-        showContentOnError={true}
-      >
+  return (
+    <Page
+      title={t("create.title")}
+      subtitle={t("create.subtitle")}
+      afterTitle={<RepositoryFormSwitcher creationMode={"CREATE"} />}
+      loading={isPageLoading}
+      error={pageLoadingError || error || undefined}
+      showContentOnError={true}
+    >
+      {namespaceStrategies && repositoryTypes ? (
         <RepositoryForm
           repositoryTypes={repositoryTypes}
-          loading={createLoading}
-          namespaceStrategy={namespaceStrategies.current}
-          createRepository={(repo, initRepository) => {
-            createRepo(repoLink, repo, initRepository, (repo: Repository) => this.repoCreated(repo));
-          }}
-          indexResources={indexResources}
+          loading={isLoading}
+          namespaceStrategy={namespaceStrategies!.current}
+          createRepository={create}
+          indexResources={index}
         />
-      </Page>
-    );
-  }
-}
-
-const mapStateToProps = (state: any) => {
-  const repositoryTypes = getRepositoryTypes(state);
-  const namespaceStrategies = getNamespaceStrategies(state);
-  const pageLoading = isFetchRepositoryTypesPending(state) || isFetchNamespaceStrategiesPending(state);
-  const createLoading = isCreateRepoPending(state);
-  const error =
-    getFetchRepositoryTypesFailure(state) || getCreateRepoFailure(state) || getFetchNamespaceStrategiesFailure(state);
-  const repoLink = getRepositoriesLink(state);
-  const indexResources = state?.indexResources;
-
-  return {
-    repositoryTypes,
-    namespaceStrategies,
-    pageLoading,
-    createLoading,
-    error,
-    repoLink,
-    indexResources
-  };
+      ) : null}
+    </Page>
+  );
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchRepositoryTypesIfNeeded: () => {
-      dispatch(fetchRepositoryTypesIfNeeded());
-    },
-    fetchNamespaceStrategiesIfNeeded: () => {
-      dispatch(fetchNamespaceStrategiesIfNeeded());
-    },
-    createRepo: (link: string, repository: RepositoryCreation, initRepository: boolean, callback: () => void) => {
-      dispatch(createRepo(link, repository, initRepository, callback));
-    },
-    resetForm: () => {
-      dispatch(createRepoReset());
-    }
-  };
-};
-
-export default compose(
-  withRouter,
-  withTranslation("repos"),
-  connect(mapStateToProps, mapDispatchToProps)
-)(CreateRepository);
+export default CreateRepository;

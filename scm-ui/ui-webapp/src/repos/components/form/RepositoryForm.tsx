@@ -25,7 +25,7 @@ import React, { FC, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Repository, RepositoryType } from "@scm-manager/ui-types";
+import { IndexResources, Repository, RepositoryType } from "@scm-manager/ui-types";
 import { Checkbox, Level, Select, SubmitButton } from "@scm-manager/ui-components";
 import { CUSTOM_NAMESPACE_STRATEGY } from "../../modules/repos";
 import NamespaceAndNameFields from "../NamespaceAndNameFields";
@@ -52,7 +52,7 @@ type Props = {
   repositoryTypes?: RepositoryType[];
   namespaceStrategy?: string;
   loading: boolean;
-  indexResources?: any;
+  indexResources?: IndexResources;
 };
 
 type RepositoryCreation = Repository & {
