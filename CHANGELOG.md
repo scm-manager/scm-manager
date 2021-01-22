@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add Java version to plugin center url ([#1494](https://github.com/scm-manager/scm-manager/pull/1494))
 - Add Font ttf-dejavu to oci image ([#1498](https://github.com/scm-manager/scm-manager/issues/1498))
 
+### Changed
+- Layout of proxy settings ([#1502](https://github.com/scm-manager/scm-manager/pull/1502))
+
 ### Fixed
 - Add explicit provider setup for bouncy castle ([#1500](https://github.com/scm-manager/scm-manager/pull/1500))
 
