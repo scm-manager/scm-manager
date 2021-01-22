@@ -22,10 +22,17 @@
  * SOFTWARE.
  */
 
-import { Me, Namespace, NamespaceCollection, RepositoryCollection, Link } from "@scm-manager/ui-types";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  Namespace,
+  NamespaceCollection,
+  RepositoryCollection,
+  Link,
+  RepositoryCreation,
+  Repository, RepositoryTypeCollection, NamespaceStrategies
+} from "@scm-manager/ui-types";
+import {useMutation, useQuery, useQueryClient} from "react-query";
 import { apiClient } from "@scm-manager/ui-components";
-import { ApiResult, useIndexJsonResource, useIndexLink, useRequiredIndexLink } from "./base";
+import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
 
 export const useNamespaces = () => {
   return useIndexJsonResource<NamespaceCollection>("namespaces");
@@ -69,3 +76,65 @@ export const useRepositories = (request?: UseRepositoriesRequest): ApiResult<Rep
     }
   );
 };
+
+type CreateRepositoryRequest = {
+  repository: RepositoryCreation;
+  initialize: boolean;
+};
+
+const createRepository = (link: string) => {
+  return (request: CreateRepositoryRequest) => {
+    let createLink = link;
+    if (request.initialize) {
+      createLink += "?initialize=true";
+    }
+    return apiClient
+      .post(createLink, request.repository, "application/vnd.scmm-repository+json;v=2")
+      .then(response => {
+        const location = response.headers.get("Location");
+        if (!location) {
+          throw new Error("Server does not return required Location header");
+        }
+        return apiClient.get(location);
+      })
+      .then(response => response.json());
+  };
+};
+
+export const useCreateRepository = () => {
+  const queryClient = useQueryClient();
+  // not really the index link,
+  // but a post to the collection is create by convention
+  const link = useRequiredIndexLink("repositories");
+  const { mutate, data, isLoading, error } = useMutation<Repository, Error, CreateRepositoryRequest>(
+    createRepository(link),{
+      onSuccess: (repository) => {
+        queryClient.setQueryData(['repository', repository.namespace, repository.name], repository);
+      }
+    }
+  );
+  return {
+    create: (repository: RepositoryCreation, initialize: boolean) => {
+      mutate({ repository, initialize });
+    },
+    isLoading,
+    error,
+    repository: data
+  };
+};
+
+
+// TODO increase staleTime, infinite?
+export const useRepositoryTypes = () => {
+  const { isLoading, error, data } = useIndexJsonResource<RepositoryTypeCollection>("repositoryTypes");
+  return {
+    isLoading,
+    error,
+    repositoryTypes: data?._embedded.repositoryTypes
+  }
+};
+
+export const useNamespaceStrategies = () => {
+  return useIndexJsonResource<NamespaceStrategies>("namespaceStrategies");
+};
+
