@@ -22,22 +22,25 @@
  * SOFTWARE.
  */
 
-import { PagedCollection, Links } from "./hal";
+import { PagedCollection, Links, HalObject } from "./hal";
 
-export type Repository = {
+export type RepositoryBase = {
   namespace: string;
   name: string;
   type: string;
   contact?: string;
   description?: string;
-  creationDate?: string;
-  lastModified?: string;
-  archived?: boolean;
-  exporting?: boolean;
-  _links: Links;
-};
+}
 
-export type RepositoryCreation = Repository & {
+export type Repository = HalObject &
+  RepositoryBase & {
+    creationDate?: string;
+    lastModified?: string;
+    archived?: boolean;
+    exporting?: boolean;
+  };
+
+export type RepositoryCreation = RepositoryBase & {
   contextEntries: { [key: string]: any };
 };
 
