@@ -47,6 +47,14 @@ export const useIndexLink = (name: string): string | undefined => {
   }
 };
 
+export const useIndexLinks = () => {
+  const { data } = useIndex();
+  if (!data) {
+    throw new Error("could not find index data");
+  }
+  return data._links;
+};
+
 export const useRequiredIndexLink = (name: string): string => {
   const link = useIndexLink(name);
   if (!link) {
