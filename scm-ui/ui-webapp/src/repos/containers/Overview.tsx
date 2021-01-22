@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, {FC, useState} from "react";
 import { useHistory, useLocation, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import {
@@ -100,8 +100,13 @@ const Overview: FC = () => {
   const { isLoading, error, namespace, namespaces, repositories, search, page } = useOverviewData();
   const history = useHistory();
   const [t] = useTranslation("repos");
-
-  const showCreateButton = !!repositories?._links.create;
+  // we keep the create permission in the state,
+  // because it does not change during searching or paging
+  // and we can avoid bouncing of search bar elements
+  const [showCreateButton, setShowCreateButton] = useState(false);
+  if (!showCreateButton && !!repositories?._links.create) {
+    setShowCreateButton(true);
+  }
 
   const allNamespacesPlaceholder = t("overview.allNamespaces");
   let namespacesToRender: string[] = [];
