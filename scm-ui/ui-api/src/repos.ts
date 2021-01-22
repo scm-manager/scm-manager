@@ -28,10 +28,12 @@ import {
   RepositoryCollection,
   Link,
   RepositoryCreation,
-  Repository, RepositoryTypeCollection, NamespaceStrategies
+  Repository,
+  RepositoryTypeCollection,
+  NamespaceStrategies
 } from "@scm-manager/ui-types";
-import {useMutation, useQuery, useQueryClient} from "react-query";
-import { apiClient } from "@scm-manager/ui-components";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { apiClient, urls } from "@scm-manager/ui-components";
 import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
 
 export const useNamespaces = () => {
@@ -52,6 +54,7 @@ const createQueryString = (params: Record<string, string>) => {
 };
 
 export const useRepositories = (request?: UseRepositoriesRequest): ApiResult<RepositoryCollection> => {
+  const queryClient = useQueryClient();
   const indexLink = useRequiredIndexLink("repositories");
   const namespaceLink = (request?.namespace?._links.repositories as Link)?.href;
   let link = namespaceLink || indexLink;
@@ -72,7 +75,13 @@ export const useRepositories = (request?: UseRepositoriesRequest): ApiResult<Rep
     ["repositories", request?.namespace?.namespace, request?.search || "", request?.page || 0],
     () => apiClient.get(link).then(response => response.json()),
     {
-      enabled: !request?.disabled
+      enabled: !request?.disabled,
+      onSuccess: (repositories: RepositoryCollection) => {
+        // prepare single repository cache
+        repositories._embedded.repositories.forEach((repository: Repository) => {
+          queryClient.setQueryData(["repository", repository.namespace, repository.name], repository);
+        });
+      }
     }
   );
 };
@@ -107,9 +116,10 @@ export const useCreateRepository = () => {
   // but a post to the collection is create by convention
   const link = useRequiredIndexLink("repositories");
   const { mutate, data, isLoading, error } = useMutation<Repository, Error, CreateRepositoryRequest>(
-    createRepository(link),{
-      onSuccess: (repository) => {
-        queryClient.setQueryData(['repository', repository.namespace, repository.name], repository);
+    createRepository(link),
+    {
+      onSuccess: repository => {
+        queryClient.setQueryData(["repository", repository.namespace, repository.name], repository);
       }
     }
   );
@@ -123,7 +133,6 @@ export const useCreateRepository = () => {
   };
 };
 
-
 // TODO increase staleTime, infinite?
 export const useRepositoryTypes = () => {
   const { isLoading, error, data } = useIndexJsonResource<RepositoryTypeCollection>("repositoryTypes");
@@ -131,10 +140,16 @@ export const useRepositoryTypes = () => {
     isLoading,
     error,
     repositoryTypes: data?._embedded.repositoryTypes
-  }
+  };
 };
 
 export const useNamespaceStrategies = () => {
   return useIndexJsonResource<NamespaceStrategies>("namespaceStrategies");
 };
 
+export const useRepository = (namespace: string, name: string): ApiResult<Repository> => {
+  let link = useRequiredIndexLink("repositories");
+  return useQuery<Repository, Error>(["repository", namespace, name], () =>
+    apiClient.get(urls.concat(link, namespace, name)).then(response => response.json())
+  );
+};
