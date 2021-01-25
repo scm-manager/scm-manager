@@ -289,7 +289,7 @@ public class RepositoryImportResource {
   )
   @ApiResponse(
     responseCode = "403",
-    description = "not authorized, the current user has no privileges to read the repository"
+    description = "not authorized, the current user has no privileges to import repositories"
   )
   @ApiResponse(
     responseCode = "500",

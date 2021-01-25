@@ -45,6 +45,6 @@ class FileBasedStoreEntryImporterTest {
     importer.importEntry(fileName, new ByteArrayInputStream("testdata".getBytes()));
 
     assertThat(Files.exists(temp.resolve(fileName))).isTrue();
-    assertThat(new String(Files.readAllBytes(Paths.get(temp.resolve(fileName).toString())))).isEqualTo("testdata");
+    assertThat(temp.resolve(fileName)).hasContent("testdata");
   }
 }

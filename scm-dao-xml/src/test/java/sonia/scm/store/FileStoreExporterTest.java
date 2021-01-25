@@ -81,16 +81,13 @@ class FileStoreExporterTest {
     assertThat(exportableStores.get(2).getType()).isEqualTo("config");
   }
 
-  private File createFile(Path storePath, String type, String name, String fileName) throws IOException {
+  private void createFile(Path storePath, String type, String name, String fileName) throws IOException {
     Path path = name != null ? storePath.resolve(type).resolve(name) : storePath.resolve(type);
-    new File(path.toUri()).mkdirs();
-    File file = new File(path.toFile(), fileName);
-    if (!file.exists()) {
-      file.createNewFile();
+    Files.createDirectories(path);
+    Path file = path.resolve(fileName);
+    if (!Files.exists(file)) {
+      Files.createFile(file);
     }
-    FileWriter source = new FileWriter(file);
-    source.write("something");
-    source.close();
-    return file;
+    Files.write(file, Collections.singletonList("something"));
   }
 }

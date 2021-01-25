@@ -81,6 +81,6 @@ public class FileStoreExporter implements StoreExporter {
   }
 
   private boolean shouldAddConfigStore(List<ExportableStore> exportableStores) {
-    return exportableStores.isEmpty() || exportableStores.stream().noneMatch(es -> "config".equalsIgnoreCase(es.getType()));
+    return exportableStores.stream().noneMatch(es -> "config".equalsIgnoreCase(es.getType()));
   }
 }
