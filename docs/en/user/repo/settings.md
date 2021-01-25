@@ -18,8 +18,8 @@ repository is marked as archived, it can no longer be modified.
 ![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
 
 In the area "Repository Export" you may export this repository.
-You can choose to export a simple repository or a repository archive including metadata.
-For simple repository exports you can choose between compressed or uncompressed file format. The repository archive is always compressed.
+You can choose to export a simple dump of the repository or a repository archive including all SCM-Manager metadata like plugin configuration or other data.
+For a simple repository dump you can choose between compressed or uncompressed file format. The repository archive is always compressed.
 This export function is currently only supported by Subversion repositories.
 
 ![Repository-Settings-General-Svn](assets/repository-settings-general-svn.png)

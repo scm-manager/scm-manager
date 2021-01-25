@@ -46,7 +46,7 @@ Your repository will be added to SCM-Manager and all repository data including a
 ![Import Repository](assets/import-repository.png)
 
 
-Subversion also support importing repository archive with metadata. 
+Subversion also supports the import of a repository archive with metadata. 
 This repository archive must be exported from an SCM-Manager. 
 This import mode doesn't support data migration yet. 
 So the repository archive can only be imported if the version between the exporting SCM-Manager and the importing SCM-Manager and **also all plugin versions** are equal.
