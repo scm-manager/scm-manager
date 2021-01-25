@@ -28,18 +28,18 @@ import com.google.common.annotations.VisibleForTesting;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.api.ImportFailedException;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class FileBasedStoreEntryImporter implements StoreEntryImporter {
 
-  private final File directory;
+  private final Path directory;
   private final String type;
   private final String name;
 
-  FileBasedStoreEntryImporter(File directory, String type, String name) {
+  FileBasedStoreEntryImporter(Path directory, String type, String name) {
     this.directory = directory;
     this.type = type;
     this.name = name;
@@ -56,15 +56,15 @@ public class FileBasedStoreEntryImporter implements StoreEntryImporter {
   }
 
   @VisibleForTesting
-  public File getDirectory() {
+  public Path getDirectory() {
     return this.directory;
   }
 
   @Override
   public void importEntry(String name, InputStream stream) {
-    File file = new File(directory, name);
+    Path filePath = directory.resolve(name);
     try {
-      Files.copy(stream, file.toPath());
+      Files.copy(stream, filePath);
     } catch (IOException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.noContext(),

@@ -28,31 +28,44 @@ import sonia.scm.ContextEntry;
 import sonia.scm.repository.api.ImportFailedException;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class FileBasedStoreEntryImporterFactory implements StoreEntryImporterFactory {
 
-  private final File directory;
+  private final Path directory;
 
-  FileBasedStoreEntryImporterFactory(File directory) {
+  FileBasedStoreEntryImporterFactory(Path directory) {
     this.directory = directory;
   }
 
   @Override
   public StoreEntryImporter importStore(String type, String name) {
-    File storeDirectory = new File(directory, resolveFilePath(type, name));
-    if (!storeDirectory.exists() && !storeDirectory.mkdirs()) {
+    try {
+      Path storeDirectory = directory.resolve(resolveFilePath(type, name));
+      Files.createDirectories(storeDirectory);
+      if (!Files.exists(storeDirectory)) {
+        throw new ImportFailedException(
+          ContextEntry.ContextBuilder.noContext(),
+          String.format("Could not create store for type %s and name %s", type, name)
+        );
+      }
+      return new FileBasedStoreEntryImporter(storeDirectory, type, name);
+
+    } catch (IOException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.noContext(),
         String.format("Could not create store for type %s and name %s", type, name)
       );
     }
-    return new FileBasedStoreEntryImporter(storeDirectory, type, name);
   }
 
-  private String resolveFilePath(String type, String name) {
+  private Path resolveFilePath(String type, String name) {
     if (name == null || name.isEmpty()) {
-      return type;
+      return Paths.get(type);
     }
-    return type + File.separator + name;
+    return Paths.get(type, name);
   }
 }

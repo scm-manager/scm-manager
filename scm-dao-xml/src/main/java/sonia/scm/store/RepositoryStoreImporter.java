@@ -45,6 +45,6 @@ public class RepositoryStoreImporter implements StoreImporter {
       .forClass(Path.class)
       .getLocation(repository.getId())
       .resolve("store");
-    return new FileBasedStoreEntryImporterFactory(storeLocation.toFile());
+    return new FileBasedStoreEntryImporterFactory(storeLocation);
   }
 }

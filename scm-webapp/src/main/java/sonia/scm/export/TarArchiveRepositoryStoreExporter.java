@@ -91,7 +91,6 @@ public class TarArchiveRepositoryStoreExporter {
     taos.putArchiveEntry(entry);
   }
 
-  @Nonnull
   private String createStorePath(String... pathParts) {
     StringBuilder storePath = new StringBuilder("stores");
     for (String part : pathParts) {
@@ -111,11 +110,6 @@ public class TarArchiveRepositoryStoreExporter {
     CloseArchiveOutputStream(TarArchiveOutputStream delegate) {
       super(delegate);
       this.delegate = delegate;
-    }
-
-    @Override
-    public void write(byte[] b, int off, int len) throws IOException {
-      delegate.write(b, off, len);
     }
 
     @Override

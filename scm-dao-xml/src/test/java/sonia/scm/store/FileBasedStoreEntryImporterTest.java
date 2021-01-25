@@ -39,7 +39,7 @@ class FileBasedStoreEntryImporterTest {
 
   @Test
   void shouldCreateFileFromInputStream(@TempDir Path temp) throws IOException {
-    FileBasedStoreEntryImporter importer = new FileBasedStoreEntryImporter(temp.toFile(), "config", "");
+    FileBasedStoreEntryImporter importer = new FileBasedStoreEntryImporter(temp, "config", "");
     String fileName = "testStore.xml";
 
     importer.importEntry(fileName, new ByteArrayInputStream("testdata".getBytes()));
