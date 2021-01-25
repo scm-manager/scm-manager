@@ -57,23 +57,20 @@ export const useRepositories = (request?: UseRepositoriesRequest): ApiResult<Rep
   const queryClient = useQueryClient();
   const indexLink = useRequiredIndexLink("repositories");
   const namespaceLink = (request?.namespace?._links.repositories as Link)?.href;
-  let link = namespaceLink || indexLink;
+  const link = namespaceLink || indexLink;
 
-  const queryParams: Record<string, string> = {};
+  const queryParams: Record<string, string> = {
+    sortBy: "namespaceAndName"
+  };
   if (request?.search) {
     queryParams.q = request.search;
   }
   if (request?.page) {
     queryParams.page = request.page.toString();
   }
-  const queryString = createQueryString(queryParams);
-  if (queryString) {
-    link += `?${queryString}`;
-  }
-
   return useQuery<RepositoryCollection, Error>(
     ["repositories", request?.namespace?.namespace, request?.search || "", request?.page || 0],
-    () => apiClient.get(link).then(response => response.json()),
+    () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then(response => response.json()),
     {
       enabled: !request?.disabled,
       onSuccess: (repositories: RepositoryCollection) => {
