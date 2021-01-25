@@ -107,10 +107,10 @@ const ImportRepository: FC<Props> = ({
       );
     }
 
-    if (importType === "full") {
+    if (importType === "fullImport") {
       return (
         <ImportFullRepository
-          url={((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "full") as Link).href}
+          url={((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "fullImport") as Link).href}
           repositoryType={repositoryType!.name}
           setImportPending={setImportPending}
         />
