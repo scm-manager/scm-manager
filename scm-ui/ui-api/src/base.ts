@@ -25,6 +25,7 @@
 import { IndexResources, Link } from "@scm-manager/ui-types";
 import { useQuery } from "react-query";
 import { apiClient } from "@scm-manager/ui-components";
+import { useLegacyContext } from "./LegacyContext";
 
 export type ApiResult<T> = {
   isLoading: boolean;
@@ -33,7 +34,14 @@ export type ApiResult<T> = {
 };
 
 export const useIndex = (): ApiResult<IndexResources> => {
-  return useQuery<IndexResources, Error>("index", () => apiClient.get("/").then(response => response.json()));
+  const legacy = useLegacyContext();
+  return useQuery<IndexResources, Error>("index", () => apiClient.get("/").then(response => response.json()), {
+    onSuccess: index => {
+      if (legacy.onIndexFetched) {
+        legacy.onIndexFetched(index);
+      }
+    }
+  });
 };
 
 export const useIndexLink = (name: string): string | undefined => {

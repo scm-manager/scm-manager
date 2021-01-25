@@ -23,12 +23,22 @@
  */
 
 import { Me } from "@scm-manager/ui-types";
-import { useMutation, useQueryClient } from "react-query";
+import { useQuery, useMutation, useQueryClient } from "react-query";
 import { apiClient } from "@scm-manager/ui-components";
-import { ApiResult, useIndexJsonResource, useIndexLink, useRequiredIndexLink } from "./base";
+import { ApiResult, useIndexLink, useRequiredIndexLink } from "./base";
+import { useLegacyContext } from "./LegacyContext";
 
 export const useMe = (): ApiResult<Me> => {
-  return useIndexJsonResource<Me>("me");
+  const legacy = useLegacyContext();
+  const link = useIndexLink("me");
+  return useQuery<Me, Error>("me", () => apiClient.get(link!).then(response => response.json()), {
+    enabled: !!link,
+    onSuccess: me => {
+      if (legacy.onMeFetched) {
+        legacy.onMeFetched(me);
+      }
+    }
+  });
 };
 
 export const useSubject = () => {
