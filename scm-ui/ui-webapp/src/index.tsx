@@ -38,6 +38,7 @@ import { BrowserRouter as Router } from "react-router-dom";
 import { urls } from "@scm-manager/ui-components";
 import { binder } from "@scm-manager/ui-extensions";
 import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink";
+import ReduxAwareApiProvider from "./ReduxAwareApiProvider";
 
 binder.bind("changeset.description.tokens", ChangesetShortLink);
 
@@ -50,13 +51,13 @@ if (!root) {
 
 ReactDOM.render(
   <Provider store={store}>
-    <ApiProvider>
+    <ReduxAwareApiProvider>
       <I18nextProvider i18n={i18n}>
         <Router basename={urls.contextPath}>
           <Index />
         </Router>
       </I18nextProvider>
-    </ApiProvider>
+    </ReduxAwareApiProvider>
   </Provider>,
   root
 );
