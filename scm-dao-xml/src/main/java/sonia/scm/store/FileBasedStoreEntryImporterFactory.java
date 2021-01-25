@@ -43,8 +43,9 @@ public class FileBasedStoreEntryImporterFactory implements StoreEntryImporterFac
 
   @Override
   public StoreEntryImporter importStore(String type, String name) {
+    Path storeDirectory = directory;
     try {
-      Path storeDirectory = directory.resolve(resolveFilePath(type, name));
+      storeDirectory = directory.resolve(resolveFilePath(type, name));
       Files.createDirectories(storeDirectory);
       if (!Files.exists(storeDirectory)) {
         throw new ImportFailedException(

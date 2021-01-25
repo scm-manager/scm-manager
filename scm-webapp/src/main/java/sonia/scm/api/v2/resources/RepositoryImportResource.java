@@ -64,6 +64,7 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.ValidationUtil;
 import sonia.scm.web.VndMediaType;
+import sonia.scm.web.api.DtoValidator;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -88,8 +89,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singletonList;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
@@ -374,9 +373,14 @@ public class RepositoryImportResource {
   private RepositoryDto extractRepositoryDto(Map<String, List<InputPart>> formParts) {
     RepositoryDto repositoryDto = extractFromInputPart(formParts.get("repository"), RepositoryDto.class);
     checkNotNull(repositoryDto, "repository data is required");
-    checkArgument(!Strings.isNullOrEmpty(repositoryDto.getName()), "request does not contain name of the repository");
+    DtoValidator.validate(repositoryDto);
     return repositoryDto;
   }
+
+  private void checkNotNull(Object object, String errorMessage) {
+    if (object == null) {
+      throw new WebApplicationException(errorMessage, 400);
+    }  }
 
   private InputStream extractInputStream(Map<String, List<InputPart>> formParts) {
     InputStream inputStream = extractFromInputPart(formParts.get("bundle"), InputStream.class);
@@ -406,6 +410,7 @@ public class RepositoryImportResource {
     }
     return null;
   }
+
   @Getter
   @Setter
   @NoArgsConstructor
