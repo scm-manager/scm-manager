@@ -69,7 +69,7 @@ export const useLogin = () => {
     credentials => apiClient.post(link, credentials),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries();
+        return queryClient.invalidateQueries();
       }
     }
   );
