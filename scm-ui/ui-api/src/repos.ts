@@ -117,6 +117,7 @@ export const useCreateRepository = () => {
     {
       onSuccess: repository => {
         queryClient.setQueryData(["repository", repository.namespace, repository.name], repository);
+        return queryClient.invalidateQueries(["repositories"]);
       }
     }
   );

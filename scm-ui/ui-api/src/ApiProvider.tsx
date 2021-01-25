@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
-import {LegacyContext, LegacyContextProvider} from "./LegacyContext";
+import { LegacyContext, LegacyContextProvider } from "./LegacyContext";
 
 const queryClient = new QueryClient({
   defaultOptions: {
