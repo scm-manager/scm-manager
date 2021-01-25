@@ -20,8 +20,8 @@ Ein archiviertes Repository kann nicht mehr verändert werden.
 ![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
 
 In dem Bereich "Repository exportieren" kann das Repository exportiert werden.
-Für den Download kann zwischen einem einfachen Repository und einem Repository Archiv inkl. Metadaten gewählt werden. 
-Das Repository kann optional komprimiert werden. Das Repository Archive wird immer komprimiert ausgeliefert.
+Für den Download kann zwischen einem einfachen Dump des reinen Repositories und einem Repository Archiv inkl. der SCM-Manager Metadaten wie Plugin-Konfigurationen oder anderen Daten gewählt werden. 
+Der Dump kann optional komprimiert werden. Das Repository Archiv mit Metadaten wird immer komprimiert ausgeliefert.
 Diese Export-Funktion wird derzeit nur von Subversion Repositories unterstützt.
 
 ![Repository-Settings-General-Svn](assets/repository-settings-general-svn.png)
