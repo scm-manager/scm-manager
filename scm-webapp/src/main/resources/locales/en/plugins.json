@@ -308,6 +308,10 @@
     "3hSIlptme1": {
       "displayName": "Repository is archived",
       "description": "The repository is marked as \"archived\" and therefore must noch be modified."
+    },
+    "67SM3DANZ1": {
+      "displayName": "Repository export failed",
+      "description": "The repository could not be exported. Contact your administrator to find out the more information."
     }
   },
   "namespaceStrategies": {
