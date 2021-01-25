@@ -2191,6 +2191,7 @@ exports[`Storyshots Buttons|SubmitButton Default 1`] = `
 >
   <button
     className="button is-primary"
+    data-testid="submit-button"
     onClick={[Function]}
     type="submit"
   >
@@ -47092,6 +47093,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
         >
           <i
             className="fas fa-user-circle fa-fw"
+            data-testid="trillian-mcmillian"
           />
            
           Trillian McMillian
@@ -47102,6 +47104,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           <li>
             <a
               className=""
+              data-testid="footer-user-profile"
               href="/me"
               onClick={[Function]}
             >
@@ -47118,6 +47121,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
         >
           <i
             className="fas fa-info-circle fa-fw"
+            data-testid="footer.information.title"
           />
            
           footer.information.title
@@ -47144,6 +47148,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
         >
           <i
             className="fas fa-life-ring fa-fw"
+            data-testid="footer.support.title"
           />
            
           footer.support.title
@@ -47192,7 +47197,9 @@ exports[`Storyshots Layout|Footer Full 1`] = `
         <div
           className="FooterSection__Title-lx0ikb-0 jtNydW"
         >
-          <div>
+          <div
+            data-testid="trillian-mcmillian"
+          >
             <span
               className="Footer__AvatarContainer-k70cxq-1 iwlTWG image is-rounded"
             >
@@ -47211,6 +47218,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           <li>
             <a
               className=""
+              data-testid="footer-user-profile"
               href="/me"
               onClick={[Function]}
             >
@@ -47236,6 +47244,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
         >
           <i
             className="fas fa-info-circle fa-fw"
+            data-testid="footer.information.title"
           />
            
           footer.information.title
@@ -47280,6 +47289,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
         >
           <i
             className="fas fa-life-ring fa-fw"
+            data-testid="footer.support.title"
           />
            
           footer.support.title
@@ -47337,7 +47347,9 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
         <div
           className="FooterSection__Title-lx0ikb-0 jtNydW"
         >
-          <div>
+          <div
+            data-testid="trillian-mcmillian"
+          >
             <span
               className="Footer__AvatarContainer-k70cxq-1 iwlTWG image is-rounded"
             >
@@ -47356,6 +47368,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
           <li>
             <a
               className=""
+              data-testid="footer-user-profile"
               href="/me"
               onClick={[Function]}
             >
@@ -47372,6 +47385,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
         >
           <i
             className="fas fa-info-circle fa-fw"
+            data-testid="footer.information.title"
           />
            
           footer.information.title
@@ -47398,6 +47412,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
         >
           <i
             className="fas fa-life-ring fa-fw"
+            data-testid="footer.support.title"
           />
            
           footer.support.title
@@ -47448,6 +47463,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
         >
           <i
             className="fas fa-user-circle fa-fw"
+            data-testid="trillian-mcmillian"
           />
            
           Trillian McMillian
@@ -47458,6 +47474,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           <li>
             <a
               className=""
+              data-testid="footer-user-profile"
               href="/me"
               onClick={[Function]}
             >
@@ -47483,6 +47500,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
         >
           <i
             className="fas fa-info-circle fa-fw"
+            data-testid="footer.information.title"
           />
            
           footer.information.title
@@ -47527,6 +47545,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
         >
           <i
             className="fas fa-life-ring fa-fw"
+            data-testid="footer.support.title"
           />
            
           footer.support.title
