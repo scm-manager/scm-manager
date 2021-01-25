@@ -21,28 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React, { FC } from "react";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
-import {LegacyContext, LegacyContextProvider} from "./LegacyContext";
+import { ApiProvider } from "@scm-manager/ui-api";
+import { IndexResources, Me } from "@scm-manager/ui-types";
+import { ApiProviderProps } from "@scm-manager/ui-api/src/ApiProvider";
+import { fetchIndexResourcesSuccess } from "./modules/indexResource";
+import { fetchMeSuccess } from "./modules/auth";
+import {connect} from "react-redux";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      // TODO what makes sense for us
-      retry: false
-    }
-  }
-});
-
-type Props = LegacyContext;
-
-const ApiProvider: FC<Props> = ({ children, ...legacyContextProps }) => (
-  <QueryClientProvider client={queryClient}>
-    <LegacyContextProvider {...legacyContextProps}>{children}</LegacyContextProvider>
-    <ReactQueryDevtools initialIsOpen={false} />
-  </QueryClientProvider>
+const ReduxAwareApiProvider: FC<ApiProviderProps> = ({ children, ...listeners }) => (
+  <ApiProvider {...listeners}>{children}</ApiProvider>
 );
 
-export { Props as ApiProviderProps };
-export default ApiProvider;
+const mapDispatchToProps = (dispatch: any) => {
+  return {
+    onIndexFetched: (index: IndexResources) => {
+      dispatch(fetchIndexResourcesSuccess(index));
+    },
+    onMeFetched: (me: Me) => {
+      dispatch(fetchMeSuccess(me));
+    }
+  };
+};
+
+// @ts-ignore no clue how to type it
+export default connect(undefined, mapDispatchToProps)(ReduxAwareApiProvider);
