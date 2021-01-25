@@ -24,7 +24,6 @@
 
 package sonia.scm.store;
 
-import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -35,7 +34,6 @@ public class ExportableFileStore implements ExportableStore {
   private final File directory;
   private final String type;
 
-  @Inject
   public ExportableFileStore(File directory, String type) {
     this.directory = directory;
     this.type = type;
