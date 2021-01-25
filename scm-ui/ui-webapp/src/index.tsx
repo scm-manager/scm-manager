@@ -25,8 +25,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Index from "./containers/Index";
 
-import { ApiProvider } from "@scm-manager/ui-api";
-
 import { I18nextProvider } from "react-i18next";
 import i18n from "./i18n";
 
