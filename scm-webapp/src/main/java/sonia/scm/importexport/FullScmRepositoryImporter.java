@@ -22,13 +22,12 @@
  * SOFTWARE.
  */
 
-package sonia.scm.importer;
+package sonia.scm.importexport;
 
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import sonia.scm.ContextEntry;
-import sonia.scm.environment.ScmEnvironment;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.ImportFailedException;
@@ -72,12 +71,6 @@ public class FullScmRepositoryImporter {
           Repository createdRepository = importRepositoryFromFile(repository, tais);
           importStoresForCreatedRepository(createdRepository, tais);
           return createdRepository;
-        } catch (IOException e) {
-          throw new ImportFailedException(
-            ContextEntry.ContextBuilder.noContext(),
-            "Could not import repository data from file",
-            e
-          );
         }
       } else {
         throw new ImportFailedException(

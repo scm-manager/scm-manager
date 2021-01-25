@@ -22,13 +22,11 @@
  * SOFTWARE.
  */
 
-package sonia.scm.importer;
+package sonia.scm.importexport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.environment.Plugin;
-import sonia.scm.environment.ScmEnvironment;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
 
@@ -70,7 +68,7 @@ public class ScmEnvironmentCompatibilityChecker {
       .map(p -> p.getDescriptor().getInformation())
       .collect(Collectors.toList());
 
-    for (Plugin plugin : environment.getPlugins().getPlugin()) {
+    for (EnvironmentPluginDescriptor plugin : environment.getPlugins().getPlugin()) {
       Optional<PluginInformation> matchingInstalledPlugin = findMatchingInstalledPlugin(currentlyInstalledPlugins, plugin);
       if (isPluginIncompatible(plugin, matchingInstalledPlugin)) {
         LOGGER.error(
@@ -85,11 +83,11 @@ public class ScmEnvironmentCompatibilityChecker {
     return true;
   }
 
-  private boolean isPluginIncompatible(Plugin plugin, Optional<PluginInformation> matchingInstalledPlugin) {
+  private boolean isPluginIncompatible(EnvironmentPluginDescriptor plugin, Optional<PluginInformation> matchingInstalledPlugin) {
     return matchingInstalledPlugin.isPresent() && isPluginVersionIncompatible(plugin.getVersion(), matchingInstalledPlugin.get().getVersion());
   }
 
-  private Optional<PluginInformation> findMatchingInstalledPlugin(List<PluginInformation> currentlyInstalledPlugins, Plugin plugin) {
+  private Optional<PluginInformation> findMatchingInstalledPlugin(List<PluginInformation> currentlyInstalledPlugins, EnvironmentPluginDescriptor plugin) {
     return currentlyInstalledPlugins
       .stream()
       .filter(p -> p.getName().equalsIgnoreCase(plugin.getName()))

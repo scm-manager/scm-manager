@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.importer;
+package sonia.scm.importexport;
 
 import com.google.common.io.Files;
 import com.google.common.io.Resources;
@@ -41,8 +41,6 @@ import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.UnbundleCommandBuilder;
-import sonia.scm.store.RepositoryStoreImporter;
-import sonia.scm.store.StoreEntryImporterFactory;
 
 import java.io.File;
 import java.io.FileInputStream;

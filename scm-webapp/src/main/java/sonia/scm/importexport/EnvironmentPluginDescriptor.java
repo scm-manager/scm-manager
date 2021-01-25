@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.environment;
+package sonia.scm.importexport;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,8 +36,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NoArgsConstructor
 @Setter
 @Getter
-public
-class Plugin {
+class EnvironmentPluginDescriptor {
   private String name;
   private String version;
 }

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.export;
+package sonia.scm.importexport;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.Test;

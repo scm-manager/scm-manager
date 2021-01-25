@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.importer;
+package sonia.scm.importexport;
 
 import com.google.common.collect.ImmutableList;
 import org.junit.jupiter.api.BeforeEach;
@@ -33,9 +33,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.environment.Plugin;
-import sonia.scm.environment.Plugins;
-import sonia.scm.environment.ScmEnvironment;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginManager;
 
@@ -43,9 +40,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class ScmEnvironmentCompatibilityCheckerTest {
@@ -68,7 +63,10 @@ class ScmEnvironmentCompatibilityCheckerTest {
   @Test
   void shouldReturnTrueIfEnvironmentIsCompatible() {
     when(scmContextProvider.getVersion()).thenReturn("2.0.0");
-    ImmutableList<Plugin> plugins = ImmutableList.of(new Plugin("scm-first-plugin", "1.0.0"), new Plugin("scm-second-plugin", "1.1.0"));
+    ImmutableList<EnvironmentPluginDescriptor> plugins = ImmutableList.of(
+      new EnvironmentPluginDescriptor("scm-first-plugin", "1.0.0"),
+      new EnvironmentPluginDescriptor("scm-second-plugin", "1.1.0")
+    );
     ScmEnvironment env = createScmEnvironment("2.0.0", "linux", "64", plugins);
 
     boolean compatible = checker.check(env);
@@ -89,7 +87,7 @@ class ScmEnvironmentCompatibilityCheckerTest {
   @Test
   void shouldReturnFalseIfPluginIsIncompatible() {
     when(scmContextProvider.getVersion()).thenReturn("2.13.0");
-    ImmutableList<Plugin> plugins = ImmutableList.of(new Plugin("scm-second-plugin", "1.2.0"));
+    ImmutableList<EnvironmentPluginDescriptor> plugins = ImmutableList.of(new EnvironmentPluginDescriptor("scm-second-plugin", "1.2.0"));
     ScmEnvironment env = createScmEnvironment("2.13.0", "linux", "64", plugins);
 
     boolean compatible = checker.check(env);
@@ -100,7 +98,7 @@ class ScmEnvironmentCompatibilityCheckerTest {
   @Test
   void shouldReturnTrueIfPluginDoNotMatch() {
     when(scmContextProvider.getVersion()).thenReturn("2.13.0");
-    ImmutableList<Plugin> plugins = ImmutableList.of(new Plugin("scm-third-plugin", "42.0.0"));
+    ImmutableList<EnvironmentPluginDescriptor> plugins = ImmutableList.of(new EnvironmentPluginDescriptor("scm-third-plugin", "42.0.0"));
     ScmEnvironment env = createScmEnvironment("2.13.0", "linux", "64", plugins);
 
     boolean compatible = checker.check(env);
@@ -115,15 +113,15 @@ class ScmEnvironmentCompatibilityCheckerTest {
     return plugin;
   }
 
-  private ScmEnvironment createScmEnvironment(String coreVersion, String os, String arch, List<Plugin> pluginList) {
+  private ScmEnvironment createScmEnvironment(String coreVersion, String os, String arch, List<EnvironmentPluginDescriptor> pluginList) {
     ScmEnvironment scmEnvironment = new ScmEnvironment();
     scmEnvironment.setCoreVersion(coreVersion);
     scmEnvironment.setOs(os);
     scmEnvironment.setArch(arch);
 
-    Plugins plugins = new Plugins();
-    plugins.setPlugin(pluginList);
-    scmEnvironment.setPlugins(plugins);
+    EnvironmentPluginsDescriptor environmentPluginsDescriptor = new EnvironmentPluginsDescriptor();
+    environmentPluginsDescriptor.setPlugin(pluginList);
+    scmEnvironment.setPlugins(environmentPluginsDescriptor);
     return scmEnvironment;
   }
 

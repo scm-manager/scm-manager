@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.importer;
+package sonia.scm.importexport;
 
 import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;

@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEventType;
 import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.importer.FullScmRepositoryImporter;
+import sonia.scm.importexport.FullScmRepositoryImporter;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryImportEvent;
@@ -380,7 +380,8 @@ public class RepositoryImportResource {
   private void checkNotNull(Object object, String errorMessage) {
     if (object == null) {
       throw new WebApplicationException(errorMessage, 400);
-    }  }
+    }
+  }
 
   private InputStream extractInputStream(Map<String, List<InputPart>> formParts) {
     InputStream inputStream = extractFromInputPart(formParts.get("bundle"), InputStream.class);

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.importer;
+package sonia.scm.importexport;
 
 import com.google.common.io.Resources;
 import org.junit.jupiter.api.Test;

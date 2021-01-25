@@ -22,13 +22,10 @@
  * SOFTWARE.
  */
 
-package sonia.scm.export;
+package sonia.scm.importexport;
 
 import sonia.scm.ContextEntry;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.environment.Plugin;
-import sonia.scm.environment.Plugins;
-import sonia.scm.environment.ScmEnvironment;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
@@ -76,11 +73,11 @@ public class EnvironmentInformationXmlGenerator {
   }
 
   private void writePluginInformation(ScmEnvironment scmEnvironment) {
-    List<Plugin> plugins = new ArrayList<>();
+    List<EnvironmentPluginDescriptor> plugins = new ArrayList<>();
     for (InstalledPlugin plugin : pluginManager.getInstalled()) {
       PluginInformation pluginInformation = plugin.getDescriptor().getInformation();
-      plugins.add(new Plugin(pluginInformation.getName(), pluginInformation.getVersion()));
+      plugins.add(new EnvironmentPluginDescriptor(pluginInformation.getName(), pluginInformation.getVersion()));
     }
-    scmEnvironment.setPlugins(new Plugins(plugins));
+    scmEnvironment.setPlugins(new EnvironmentPluginsDescriptor(plugins));
   }
 }
