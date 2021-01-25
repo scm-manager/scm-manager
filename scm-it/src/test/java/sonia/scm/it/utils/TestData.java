@@ -68,6 +68,7 @@ public class TestData {
 
   public static void cleanup() {
     LOG.info("start to clean up to integration tests");
+    cleanupConfig();
     cleanupRepositories();
     cleanupGroups();
     cleanupUsers();
@@ -229,6 +230,40 @@ public class TestData {
       .body().jsonPath().getList("_embedded.users._links.self.href");
     LOG.info("about to delete {} users", users.size());
     users.stream().filter(url -> PROTECTED_USERS.stream().noneMatch(url::contains)).forEach(TestData::delete);
+  }
+
+  private static void cleanupConfig() {
+    given(VndMediaType.CONFIG).accept("application/json")
+      .when()
+      .body("{\n" +
+        "  \"proxyPassword\": null,\n" +
+        "  \"proxyPort\": 8080," +
+        "  \"proxyServer\": \"proxy.mydomain.com\",\n" +
+        "  \"proxyUser\": null,\n" +
+        "  \"enableProxy\": false,\n" +
+        "  \"realmDescription\": \"SONIA :: SCM Manager\",\n" +
+        "  \"disableGroupingGrid\": false,\n" +
+        "  \"dateFormat\": \"YYYY-MM-DD HH:mm:ss\",\n" +
+        "  \"anonymousAccessEnabled\": false,\n" +
+        "  \"anonymousMode\": \"OFF\",\n" +
+        "  \"baseUrl\": \"http://localhost:8081/scm\",\n" +
+        "  \"forceBaseUrl\": false,\n" +
+        "  \"loginAttemptLimit\": -1,\n" +
+        "  \"proxyExcludes\": [],\n" +
+        "  \"skipFailedAuthenticators\": false,\n" +
+        "  \"pluginUrl\": \"https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}&jre={jre}\", \n" +
+        "  \"loginAttemptLimitTimeout\": 300, \n" +
+        "  \"enabledXsrfProtection\": true, \n" +
+        "  \"enabledUserConverter\": false, \n" +
+        "  \"namespaceStrategy\": \"UsernameNamespaceStrategy\", \n" +
+        "  \"loginInfoUrl\": \"https://login-info.scm-manager.org/api/v1/login-info\",\n" +
+        "  \"releaseFeedUrl\": \"https://scm-manager.org/download/rss.xml\",\n" +
+        "  \"mailDomainName\": \"scm-manager.local\"\n" +
+        "}")
+      .put(createResourceUrl("config"))
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+    LOG.info("wrote default configuration");
   }
 
   private static void delete(String url) {
