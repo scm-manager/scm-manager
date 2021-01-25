@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Changed
 - Migrate integration tests to bdd ([#1497](https://github.com/scm-manager/scm-manager/pull/1497))
 - Layout of proxy settings ([#1502](https://github.com/scm-manager/scm-manager/pull/1502))
+- Apply test ids to production builds for usage in e2e tests ([#1499](https://github.com/scm-manager/scm-manager/pull/1499))
 
 ### Fixed
 - Add explicit provider setup for bouncy castle ([#1500](https://github.com/scm-manager/scm-manager/pull/1500))
