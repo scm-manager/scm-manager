@@ -77,9 +77,6 @@ dependencies {
   implementation libraries.jacksonDatatypeJdk8
   implementation libraries.jacksonDatatypeJsr310
 
-  //xml
-  implementation libraries.xmlApis
-
   // rest api
   implementation libraries.resteasyJaxbProvider
   implementation libraries.resteasyJackson2Provider

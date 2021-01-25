@@ -77,7 +77,6 @@ ext {
     // xml binding
     jaxbApi: "jakarta.xml.bind:jakarta.xml.bind-api:${jaxbVersion}",
     jaxbRuntime: "org.glassfish.jaxb:jaxb-runtime:${jaxbVersion}",
-    xmlApis: 'xml-apis:xml-apis:1.4.01',
 
     // validation
     validator: 'org.hibernate.validator:hibernate-validator:6.1.6.Final',
