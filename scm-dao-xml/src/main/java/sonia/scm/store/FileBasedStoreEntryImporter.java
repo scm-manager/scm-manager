@@ -68,7 +68,7 @@ public class FileBasedStoreEntryImporter implements StoreEntryImporter {
     } catch (IOException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.noContext(),
-        String.format("Could not import file:%s", name),
+        String.format("Could not import file %s for store %s of type %s", name, this.name, type),
         e
       );
     }

@@ -43,7 +43,7 @@ public class FileBasedStoreEntryImporterFactory implements StoreEntryImporterFac
     if (!storeDirectory.exists() && !storeDirectory.mkdirs()) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.noContext(),
-        String.format("Could not create store for type %s and name %s", type, name)
+        String.format("Could not create store directory %s for type %s and name %s", storeDirectory, type, name)
       );
     }
     return new FileBasedStoreEntryImporter(storeDirectory, type, name);
