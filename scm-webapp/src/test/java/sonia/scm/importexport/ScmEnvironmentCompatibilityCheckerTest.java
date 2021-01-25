@@ -57,7 +57,7 @@ class ScmEnvironmentCompatibilityCheckerTest {
   void preparePluginManager() {
     InstalledPlugin first = mockPlugin("scm-first-plugin", "1.0.0");
     InstalledPlugin second = mockPlugin("scm-second-plugin", "1.1.0");
-    when(pluginManager.getInstalled()).thenReturn(ImmutableList.of(first, second));
+    lenient().when(pluginManager.getInstalled()).thenReturn(ImmutableList.of(first, second));
   }
 
   @Test

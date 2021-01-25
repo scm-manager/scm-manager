@@ -93,7 +93,7 @@ public class TarArchiveRepositoryStoreExporter {
   private String createStorePath(String... pathParts) {
     StringBuilder storePath = new StringBuilder("stores");
     for (String part : pathParts) {
-      storePath.append(File.separator).append(part);
+      storePath.append('/').append(part);
     }
     return storePath.toString();
   }

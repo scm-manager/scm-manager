@@ -38,7 +38,7 @@ import java.util.stream.Collectors;
 
 public class ScmEnvironmentCompatibilityChecker {
 
-  private static final Logger LOGGER = LoggerFactory.getLogger(ScmEnvironmentCompatibilityChecker.class);
+  private static final Logger LOG = LoggerFactory.getLogger(ScmEnvironmentCompatibilityChecker.class);
   private final PluginManager pluginManager;
   private final SCMContextProvider scmContextProvider;
 
@@ -49,16 +49,19 @@ public class ScmEnvironmentCompatibilityChecker {
   }
 
   boolean check(ScmEnvironment environment) {
-    List<Boolean> compatibilityChecks = new ArrayList<>();
-    compatibilityChecks.add(isCoreVersionCompatible(scmContextProvider.getVersion(), environment.getCoreVersion()));
-    compatibilityChecks.add(arePluginsCompatible(environment));
-
-    return compatibilityChecks.stream().allMatch(Boolean::booleanValue);
+    return isCoreVersionCompatible(scmContextProvider.getVersion(), environment.getCoreVersion())
+      && arePluginsCompatible(environment);
   }
 
-  private boolean isCoreVersionCompatible(String currentCoreVersion, String previousCoreVersion) {
-    boolean compatible = currentCoreVersion.equals(previousCoreVersion);
-    LOGGER.error("SCM-Manager version is not compatible. Please use SCM-Manager instance with version: {}", currentCoreVersion);
+  private boolean isCoreVersionCompatible(String currentCoreVersion, String coreVersionFromImport) {
+    boolean compatible = currentCoreVersion.equals(coreVersionFromImport);
+    if (!compatible) {
+      LOG.info(
+        "SCM-Manager version is not compatible with dump. Dump can only be imported with SCM-Manager version: {}; you are running version {}",
+        coreVersionFromImport,
+        currentCoreVersion
+      );
+    }
     return compatible;
   }
 
@@ -71,8 +74,8 @@ public class ScmEnvironmentCompatibilityChecker {
     for (EnvironmentPluginDescriptor plugin : environment.getPlugins().getPlugin()) {
       Optional<PluginInformation> matchingInstalledPlugin = findMatchingInstalledPlugin(currentlyInstalledPlugins, plugin);
       if (isPluginIncompatible(plugin, matchingInstalledPlugin)) {
-        LOGGER.error(
-          "The installed plugin \"{}\" with version \"{}\" doesn't match the plugin data version \"{}\" from the previous SCM-Manager environment.",
+        LOG.info(
+          "The installed plugin \"{}\" with version \"{}\" doesn't match the plugin data version \"{}\" from the SCM-Manager environment the dump was created with.",
           matchingInstalledPlugin.get().getName(),
           matchingInstalledPlugin.get().getVersion(),
           plugin.getVersion()

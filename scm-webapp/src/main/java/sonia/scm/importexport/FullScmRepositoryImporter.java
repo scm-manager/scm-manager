@@ -43,6 +43,10 @@ import java.io.InputStream;
 
 public class FullScmRepositoryImporter {
 
+  private static final int _1_MB = 1000000;
+  private static final String SCM_ENVIRONMENT_FILE = "scm-environment.xml";
+  private static final String SCM_METADATA_TAR_FILE = "scm-metadata.tar";
+
   private final RepositoryServiceFactory serviceFactory;
   private final RepositoryManager repositoryManager;
   private final ScmEnvironmentCompatibilityChecker compatibilityChecker;
@@ -59,7 +63,7 @@ public class FullScmRepositoryImporter {
     this.storeImporter = storeImporter;
   }
 
-  public Repository importFromFile(Repository repository, InputStream inputStream) {
+  public Repository importFromStream(Repository repository, InputStream inputStream) {
     try {
       if (inputStream.available() > 0) {
         try (
@@ -75,27 +79,28 @@ public class FullScmRepositoryImporter {
       } else {
         throw new ImportFailedException(
           ContextEntry.ContextBuilder.entity(repository).build(),
-          "Import file not found."
+          "Stream to import from is empty."
         );
       }
     } catch (IOException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(repository).build(),
-        "Could not read import file."
+        "Could not import repository data from stream; got io exception while reading",
+        e
       );
     }
   }
 
   private void importStoresForCreatedRepository(Repository repository, TarArchiveInputStream tais) throws IOException {
     ArchiveEntry metadataEntry = tais.getNextEntry();
-    if (metadataEntry.getName().equals("scm-metadata.tar") && !metadataEntry.isDirectory()) {
+    if (metadataEntry.getName().equals(SCM_METADATA_TAR_FILE) && !metadataEntry.isDirectory()) {
       // Inside the repository tar archive stream is another tar archive.
       // The nested tar archive is wrapped in another TarArchiveInputStream inside the storeImporter
       storeImporter.importFromTarArchive(repository, tais);
     } else {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(repository).build(),
-        "Invalid import format. Missing metadata file."
+        "Invalid import format. Missing metadata file 'scm-metadata.tar' in tar."
       );
     }
   }
@@ -124,7 +129,7 @@ public class FullScmRepositoryImporter {
 
   private void checkScmEnvironment(Repository repository, TarArchiveInputStream tais) throws IOException {
     ArchiveEntry environmentEntry = tais.getNextEntry();
-    if (environmentEntry.getName().equals("scm-environment.xml") && !environmentEntry.isDirectory() && environmentEntry.getSize() < 1000000) {
+    if (environmentEntry.getName().equals(SCM_ENVIRONMENT_FILE) && !environmentEntry.isDirectory() && environmentEntry.getSize() < _1_MB) {
       boolean validEnvironment = compatibilityChecker.check(JAXB.unmarshal(new NoneClosingInputStream(tais), ScmEnvironment.class));
       if (!validEnvironment) {
         throw new ImportFailedException(
@@ -135,11 +140,11 @@ public class FullScmRepositoryImporter {
     } else {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(repository).build(),
-        "Invalid import format. Missing SCM-Manager environment description."
+        "Invalid import format. Missing SCM-Manager environment description file 'scm-environment.xml' or file too big."
       );
     }
   }
-
+  @SuppressWarnings("java:S4929") // we only want to override close here
   static class NoneClosingInputStream extends FilterInputStream {
 
     NoneClosingInputStream(InputStream delegate) {

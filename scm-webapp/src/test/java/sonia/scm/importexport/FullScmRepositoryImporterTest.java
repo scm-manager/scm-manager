@@ -88,7 +88,7 @@ class FullScmRepositoryImporterTest {
   void shouldNotImportRepositoryIfFileNotExists(@TempDir Path temp) throws IOException {
     File emptyFile = new File(temp.resolve("empty").toString());
     Files.touch(emptyFile);
-    assertThrows(ImportFailedException.class, () -> fullImporter.importFromFile(REPOSITORY, new FileInputStream(emptyFile)));
+    assertThrows(ImportFailedException.class, () -> fullImporter.importFromStream(REPOSITORY, new FileInputStream(emptyFile)));
   }
 
   @Test
@@ -97,7 +97,7 @@ class FullScmRepositoryImporterTest {
 
     assertThrows(
       ImportFailedException.class,
-      () -> fullImporter.importFromFile(REPOSITORY, Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream())
+      () -> fullImporter.importFromStream(REPOSITORY, Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream())
     );
   }
 
@@ -106,7 +106,7 @@ class FullScmRepositoryImporterTest {
     when(compatibilityChecker.check(any())).thenReturn(true);
     when(repositoryManager.create(eq(REPOSITORY), any())).thenReturn(REPOSITORY);
 
-    Repository repository = fullImporter.importFromFile(REPOSITORY, Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream());
+    Repository repository = fullImporter.importFromStream(REPOSITORY, Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream());
     assertThat(repository).isEqualTo(REPOSITORY);
     verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class));
   }

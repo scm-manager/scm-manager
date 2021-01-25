@@ -310,7 +310,7 @@ public class RepositoryImportResource {
     Map<String, List<InputPart>> formParts = input.getFormDataMap();
     InputStream inputStream = extractInputStream(formParts);
     RepositoryDto repositoryDto = extractRepositoryDto(formParts);
-    return fullScmRepositoryImporter.importFromFile(mapper.map(repositoryDto), inputStream);
+    return fullScmRepositoryImporter.importFromStream(mapper.map(repositoryDto), inputStream);
   }
 
   /**

@@ -80,6 +80,7 @@ public class TarArchiveRepositoryStoreImporter {
   }
 
   private boolean isValidStorePath(String[] entryPathParts) {
+    //This prevents array out of bound exceptions
     if (entryPathParts.length < 3 || entryPathParts.length > 4) {
       return false;
     }
