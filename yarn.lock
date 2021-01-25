@@ -3699,10 +3699,10 @@
     eslint-plugin-react-hooks "^2.1.2"
     jest "^26.6.3"
 
-"@scm-manager/integration-test-runner@^1.2.0":
-  version "1.2.0"
-  resolved "https://registry.yarnpkg.com/@scm-manager/integration-test-runner/-/integration-test-runner-1.2.0.tgz#a6aeb9fd18253978174dcf0d22e95626e6894062"
-  integrity sha512-myYM6/MIWnndkzOfq+2+a2+GvWYJc1k/3lRE/GNGSVuNWMR2t5XyHp2OznjBXNpCxx7NqyyTtM5gDtOdNrcw7g==
+"@scm-manager/integration-test-runner@^1.3.0":
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/@scm-manager/integration-test-runner/-/integration-test-runner-1.3.0.tgz#67243fe5d131c439f4ba9b243981cdfe491843a6"
+  integrity sha512-DbD+MW/1umlr/4UhxJibU0ntkfD4uQi40VgC++QKXYiT15ObLqHDDFhbUhT3IAGenmNZJ7pKCIoNzetVeuCa2A==
   dependencies:
     "@cypress/browserify-preprocessor" "^3.0.1"
     "@ffmpeg-installer/ffmpeg" "^1.0.20"
@@ -3712,8 +3712,10 @@
     axios "^0.21.0"
     cypress "^6.2.1"
     cypress-cucumber-preprocessor "^4.0.0"
+    cypress-file-upload "^5.0.0"
     fluent-ffmpeg "^2.1.2"
     fs-extra "^9.0.1"
+    human-readable-ids "^1.0.4"
     pino "^6.7.0"
     pino-pretty "^4.3.0"
     resolve "^1.19.0"
@@ -8303,6 +8305,13 @@ cypress-cucumber-preprocessor@^4.0.0:
     minimist "^1.2.5"
     through "^2.3.8"
 
+cypress-file-upload@^5.0.0:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/cypress-file-upload/-/cypress-file-upload-5.0.2.tgz#538722e64747b5bf309399a7df26b470431859cb"
+  integrity sha512-QRPnQPeEaW+HMVB62/htIsKh7Kd/x2uzoHKEQxh7LCD+4IaG0rAjLZupCIjjUh+JnRymgfir8wOYtFSJCNWlpA==
+  dependencies:
+    mime "^2.5.0"
+
 cypress@*, cypress@^6.2.1:
   version "6.2.1"
   resolved "https://registry.yarnpkg.com/cypress/-/cypress-6.2.1.tgz#27d5fbcf008c698c390fdb0c03441804176d06c4"
@@ -11322,6 +11331,13 @@ https-proxy-agent@^2.2.3:
     agent-base "^4.3.0"
     debug "^3.1.0"
 
+human-readable-ids@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/human-readable-ids/-/human-readable-ids-1.0.4.tgz#41b3a2a6966636e104e41e0673b984b36dfde202"
+  integrity sha512-h1zwThTims8A/SpqFGWyTx+jG1+WRMJaEeZgbtPGrIpj2AZjsOgy8Y+iNzJ0yAyN669Q6F02EK66WMWcst+2FA==
+  dependencies:
+    knuth-shuffle "^1.0.0"
+
 human-signals@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/human-signals/-/human-signals-1.1.1.tgz#c5b1cd14f50aeae09ab6c59fe63ba3395fe4dfa3"
@@ -13479,6 +13495,11 @@ knuth-shuffle-seeded@^1.0.6:
   dependencies:
     seed-random "~2.2.0"
 
+knuth-shuffle@^1.0.0:
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/knuth-shuffle/-/knuth-shuffle-1.0.8.tgz#929a467b0efd8d297bdcf318ca988a9f1037f80d"
+  integrity sha512-IdC4Hpp+mx53zTt6VAGsAtbGM0g4BV9fP8tTcviCosSwocHcRDw9uG5Rnv6wLWckF4r72qeXFoK9NkvV1gUJCQ==
+
 koa-compose@^3.0.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/koa-compose/-/koa-compose-3.2.1.tgz#a85ccb40b7d986d8e5a345b3a1ace8eabcf54de7"
@@ -14409,6 +14430,11 @@ mime@^2.4.4:
   version "2.4.6"
   resolved "https://registry.yarnpkg.com/mime/-/mime-2.4.6.tgz#e5b407c90db442f2beb5b162373d07b69affa4d1"
   integrity sha512-RZKhC3EmpBchfTGBVb8fb+RL2cWyw/32lshnsETttkBAyAUXSGHxbEJWWRXc751DrIxG1q04b8QwMbAwkRPpUA==
+
+mime@^2.5.0:
+  version "2.5.0"
+  resolved "https://registry.yarnpkg.com/mime/-/mime-2.5.0.tgz#2b4af934401779806ee98026bb42e8c1ae1876b1"
+  integrity sha512-ft3WayFSFUVBuJj7BMLKAQcSlItKtfjsKDDsii3rqFDAZ7t11zRe8ASw/GlmivGwVUYtwkQrxiGGpL6gFvB0ag==
 
 mimic-fn@^1.0.0:
   version "1.2.0"
