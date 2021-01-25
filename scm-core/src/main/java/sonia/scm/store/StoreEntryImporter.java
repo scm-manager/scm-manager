@@ -27,14 +27,26 @@ package sonia.scm.store;
 import java.io.InputStream;
 
 /**
- * The {@link StoreEntryImporter} is used to import an store entry from {@link InputStream}.
+ * The {@link StoreEntryImporter} is used to import a store entry from an {@link InputStream}.
  *
  * @since 2.13.0
  */
 public interface StoreEntryImporter {
 
+  /**
+   * The type of the store.
+   */
   String getType();
+
+  /**
+   * The name of the store.
+   */
   String getName();
 
+  /**
+   * Will be called for each entry of the store.
+   * @param name The name of the store entry.
+   * @param stream An input stream with the raw data of the store entry.
+   */
   void importEntry(String name, InputStream stream);
 }

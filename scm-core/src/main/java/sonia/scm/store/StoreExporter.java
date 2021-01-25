@@ -29,7 +29,7 @@ import sonia.scm.repository.Repository;
 import java.util.List;
 
 /**
- * The {@link StoreExporter} is used to collect all {@link ExportableStore}.
+ * The {@link StoreExporter} is used to collect all {@link ExportableStore}s for a given repository.
  * An {@link ExportableStore} can be used to export all data which is stored inside.
  *
  * @since 2.13.0

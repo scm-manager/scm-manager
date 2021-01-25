@@ -48,10 +48,7 @@ public interface ExportableStore {
   String getName();
 
   /**
-   * The {@param exporter} processes the stored data.
-   *
-   * @param exporter
-   * @throws IOException
+   * Exports the data of this store to the given {@param exporter}.
    */
   void export(Exporter exporter) throws IOException;
 }

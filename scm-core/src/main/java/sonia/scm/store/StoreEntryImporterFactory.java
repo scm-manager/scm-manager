@@ -33,9 +33,8 @@ public interface StoreEntryImporterFactory {
   /**
    * Returns a {@link StoreEntryImporter}.
    *
-   * @param type of the store
-   * @param name of the store
-   * @return {@link StoreEntryImporter}
+   * @param type The type of the store.
+   * @param name The name of the store.
    */
   StoreEntryImporter importStore(String type, String name);
 }
