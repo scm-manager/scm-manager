@@ -35,5 +35,5 @@ import java.util.List;
  * @since 2.13.0
  */
 public interface StoreExporter {
-  List<ExportableStore> findExportableStores(Repository repository);
+  List<ExportableStore> listExportableStores(Repository repository);
 }

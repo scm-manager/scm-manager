@@ -61,7 +61,7 @@ class TarArchiveRepositoryStoreExporterTest {
 
   @Test
   void shouldExportNothingIfNoStoresFound() throws IOException {
-    when(storeExporter.findExportableStores(REPOSITORY)).thenReturn(Collections.emptyList());
+    when(storeExporter.listExportableStores(REPOSITORY)).thenReturn(Collections.emptyList());
     OutputStream outputStream = mock(OutputStream.class);
     tarArchiveRepositoryStoreExporter.export(REPOSITORY, outputStream);
 
@@ -70,7 +70,7 @@ class TarArchiveRepositoryStoreExporterTest {
 
   @Test
   void shouldWriteDataIfRepoStoreFound() {
-    when(storeExporter.findExportableStores(REPOSITORY)).thenReturn(ImmutableList.of(new TestExportableStore()));
+    when(storeExporter.listExportableStores(REPOSITORY)).thenReturn(ImmutableList.of(new TestExportableStore()));
     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
     tarArchiveRepositoryStoreExporter.export(REPOSITORY, outputStream);
 
@@ -81,7 +81,7 @@ class TarArchiveRepositoryStoreExporterTest {
   @Test
   void shouldExportFromFoundRepoStore() throws IOException {
     ExportableStore exportableStore = mock(ExportableStore.class);
-    when(storeExporter.findExportableStores(REPOSITORY)).thenReturn(ImmutableList.of(exportableStore));
+    when(storeExporter.listExportableStores(REPOSITORY)).thenReturn(ImmutableList.of(exportableStore));
     OutputStream outputStream = mock(OutputStream.class);
     tarArchiveRepositoryStoreExporter.export(REPOSITORY, outputStream);
 

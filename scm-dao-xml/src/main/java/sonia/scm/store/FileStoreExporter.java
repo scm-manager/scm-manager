@@ -43,7 +43,7 @@ public class FileStoreExporter implements StoreExporter {
   }
 
   @Override
-  public List<ExportableStore> findExportableStores(Repository repository) {
+  public List<ExportableStore> listExportableStores(Repository repository) {
     List<ExportableStore> exportableStores = new ArrayList<>();
     File[] storeTypeDirectories = resolveStoreTypeDirectories(repository);
     if (storeTypeDirectories != null) {

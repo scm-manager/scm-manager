@@ -60,7 +60,7 @@ class FileStoreExporterTest {
     when(resolver.supportsLocationType(Path.class)).thenReturn(true);
     when(resolver.forClass(Path.class).getLocation(REPOSITORY.getId())).thenReturn(temp);
 
-    List<ExportableStore> exportableStores = fileStoreExporter.findExportableStores(REPOSITORY);
+    List<ExportableStore> exportableStores = fileStoreExporter.listExportableStores(REPOSITORY);
     assertThat(exportableStores).isEmpty();
   }
 
@@ -73,7 +73,7 @@ class FileStoreExporterTest {
     when(resolver.supportsLocationType(Path.class)).thenReturn(true);
     when(resolver.forClass(Path.class).getLocation(REPOSITORY.getId())).thenReturn(temp);
 
-    List<ExportableStore> exportableStores = fileStoreExporter.findExportableStores(REPOSITORY);
+    List<ExportableStore> exportableStores = fileStoreExporter.listExportableStores(REPOSITORY);
 
     assertThat(exportableStores).hasSize(3);
     assertThat(exportableStores.get(0).getType()).isEqualTo("config");

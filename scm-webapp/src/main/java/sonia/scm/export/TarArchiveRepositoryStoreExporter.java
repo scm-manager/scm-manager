@@ -58,7 +58,7 @@ public class TarArchiveRepositoryStoreExporter {
       BufferedOutputStream bos = new BufferedOutputStream(output);
       final TarArchiveOutputStream taos = new TarArchiveOutputStream(bos)
     ) {
-      List<ExportableStore> exportableStores = storeExporter.findExportableStores(repository);
+      List<ExportableStore> exportableStores = storeExporter.listExportableStores(repository);
       for (ExportableStore store : exportableStores) {
         store.export((name, filesize) -> {
           if (isStoreType(store, DATA_STORE)) {
