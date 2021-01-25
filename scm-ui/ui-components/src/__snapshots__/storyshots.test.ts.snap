@@ -1689,7 +1689,7 @@ exports[`Storyshots BreadCrumb Default 1`] = `
     </div>
     <nav
       aria-label="breadcrumbs"
-      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 kNVxHJ breadcrumb sources-breadcrumb"
+      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 hiBICL breadcrumb sources-breadcrumb"
     >
       <ul>
         <li>
