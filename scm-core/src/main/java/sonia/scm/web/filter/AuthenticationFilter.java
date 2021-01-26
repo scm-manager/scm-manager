@@ -34,6 +34,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.Priorities;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.AnonymousMode;
@@ -49,6 +50,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -69,7 +71,7 @@ public class AuthenticationFilter extends HttpFilter {
   private static final String ATTRIBUTE_FAILED_AUTH = "sonia.scm.auth.failed";
 
 
-  private final Set<WebTokenGenerator> tokenGenerators;
+  private final List<WebTokenGenerator> tokenGenerators;
   protected ScmConfiguration configuration;
 
   /**
@@ -81,7 +83,7 @@ public class AuthenticationFilter extends HttpFilter {
   @Inject
   public AuthenticationFilter(ScmConfiguration configuration, Set<WebTokenGenerator> tokenGenerators) {
     this.configuration = configuration;
-    this.tokenGenerators = tokenGenerators;
+    this.tokenGenerators = Priorities.sortInstances(tokenGenerators);
   }
 
   /**

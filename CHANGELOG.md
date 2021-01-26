@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add Font ttf-dejavu to oci image ([#1498](https://github.com/scm-manager/scm-manager/issues/1498))
 
 ### Changed
+- Migrate integration tests to bdd ([#1497](https://github.com/scm-manager/scm-manager/pull/1497))
 - Layout of proxy settings ([#1502](https://github.com/scm-manager/scm-manager/pull/1502))
 - Apply test ids to production builds for usage in e2e tests ([#1499](https://github.com/scm-manager/scm-manager/pull/1499))
 - Bump google guava version to 30.1-jre

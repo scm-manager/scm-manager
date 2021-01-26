@@ -21,24 +21,3 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-
-describe("With Anonymous mode protocol only enabled", () => {
-  before("Set anonymous mode to protocol only", () => {
-    cy.login("scmadmin", "scmadmin");
-    cy.setAnonymousMode("PROTOCOL_ONLY");
-    cy.byTestId("primary-navigation-logout").click();
-  });
-
-  it("Should show login page without primary navigation", () => {
-    cy.visit("/repos/");
-    cy.byTestId("login-button");
-    cy.containsNotByTestId("div", "primary-navigation-login");
-    cy.containsNotByTestId("div", "primary-navigation-repositories");
-  });
-
-  after("Disable anonymous access", () => {
-    cy.login("scmadmin", "scmadmin");
-    cy.setAnonymousMode("OFF");
-    cy.byTestId("primary-navigation-logout").click();
-  });
-});

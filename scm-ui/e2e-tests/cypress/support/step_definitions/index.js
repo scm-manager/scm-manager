@@ -22,23 +22,4 @@
  * SOFTWARE.
  */
 
-describe("With Anonymous mode disabled", () => {
-  before("Disable anonymous access", () => {
-    cy.login("scmadmin", "scmadmin");
-    cy.setAnonymousMode("OFF");
-    cy.byTestId("primary-navigation-logout").click();
-  });
-
-  it("Should show login page without primary navigation", () => {
-    cy.byTestId("login-button");
-    cy.containsNotByTestId("div", "primary-navigation-login");
-    cy.containsNotByTestId("div", "primary-navigation-repositories");
-  });
-  it("Should redirect after login", () => {
-    cy.login("scmadmin", "scmadmin");
-
-    cy.visit("/me");
-    cy.byTestId("footer-user-profile");
-    cy.byTestId("primary-navigation-logout").click();
-  });
-});
+export * from "@scm-manager/integration-test-runner/steps";
