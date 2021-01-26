@@ -11,17 +11,22 @@
   "author": "SCM Team <scm-team@cloudogu.com>",
   "license": "MIT",
   "scripts": {
+    "test": "jest src/",
+    "typecheck": "tsc"
   },
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.10.1",
     "@scm-manager/eslint-config": "^2.10.1",
     "@scm-manager/jest-preset": "^2.12.4",
     "@scm-manager/prettier-config": "^2.10.1",
-    "@scm-manager/tsconfig": "^2.10.1"
+    "@scm-manager/tsconfig": "^2.10.1",
+    "@testing-library/react-hooks": "^5.0.3",
+    "react-test-renderer": "^17.0.1"
   },
   "dependencies": {
-    "@scm-manager/ui-types": "^2.13.0-SNAPSHOT",
     "@scm-manager/ui-components": "^2.13.0-SNAPSHOT",
+    "@scm-manager/ui-types": "^2.13.0-SNAPSHOT",
+    "fetch-mock-jest": "^1.5.1",
     "react": "^16.8.6",
     "react-query": "^3.5.16"
   },
