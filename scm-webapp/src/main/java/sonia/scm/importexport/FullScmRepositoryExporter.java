@@ -32,6 +32,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.repository.work.WorkdirProvider;
 
 import javax.inject.Inject;
 import java.io.*;
@@ -43,14 +44,16 @@ public class FullScmRepositoryExporter {
   private final EnvironmentInformationXmlGenerator generator;
   private final RepositoryServiceFactory serviceFactory;
   private final TarArchiveRepositoryStoreExporter storeExporter;
+  private final WorkdirProvider workdirProvider;
 
   @Inject
   public FullScmRepositoryExporter(EnvironmentInformationXmlGenerator generator,
                                    RepositoryServiceFactory serviceFactory,
-                                   TarArchiveRepositoryStoreExporter storeExporter) {
+                                   TarArchiveRepositoryStoreExporter storeExporter, WorkdirProvider workdirProvider) {
     this.generator = generator;
     this.serviceFactory = serviceFactory;
     this.storeExporter = storeExporter;
+    this.workdirProvider = workdirProvider;
   }
 
   public void export(Repository repository, OutputStream outputStream) {
@@ -74,7 +77,8 @@ public class FullScmRepositoryExporter {
   }
 
   private void writeRepository(RepositoryService service, TarArchiveOutputStream taos) throws IOException {
-    File repositoryFile = Files.createFile(Paths.get("repository")).toFile();
+    File newWorkdir = workdirProvider.createNewWorkdir();
+    File repositoryFile = Files.createFile(Paths.get(newWorkdir.getPath(),"repository")).toFile();
     try (FileOutputStream repositoryFos = new FileOutputStream(repositoryFile)) {
       service.getBundleCommand().bundle(repositoryFos);
       TarArchiveEntry entry = new TarArchiveEntry(service.getRepository().getName() + ".dump");
@@ -97,7 +101,8 @@ public class FullScmRepositoryExporter {
   }
 
   private void writeStoreData(Repository repository, TarArchiveOutputStream taos) throws IOException {
-    File metadata = Files.createFile(Paths.get("metadata")).toFile();
+    File newWorkdir = workdirProvider.createNewWorkdir();
+    File metadata = Files.createFile(Paths.get(newWorkdir.getPath(),"metadata")).toFile();
     try (FileOutputStream metadataFos = new FileOutputStream(metadata)) {
       storeExporter.export(repository, metadataFos);
       TarArchiveEntry entry = new TarArchiveEntry("scm-metadata.tar");

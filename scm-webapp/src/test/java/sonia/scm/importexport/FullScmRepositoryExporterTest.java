@@ -27,6 +27,7 @@ package sonia.scm.importexport;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -36,10 +37,12 @@ import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.BundleCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.repository.work.WorkdirProvider;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Path;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
@@ -58,6 +61,8 @@ class FullScmRepositoryExporterTest {
   private EnvironmentInformationXmlGenerator generator;
   @Mock
   private TarArchiveRepositoryStoreExporter storeExporter;
+  @Mock
+  private WorkdirProvider workdirProvider;
 
   @InjectMocks
   private FullScmRepositoryExporter exporter;
@@ -69,9 +74,10 @@ class FullScmRepositoryExporterTest {
   }
 
   @Test
-  void shouldExportEverythingAsTarArchive() throws IOException {
+  void shouldExportEverythingAsTarArchive(@TempDir Path temp) throws IOException {
     BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
     when(repositoryService.getBundleCommand()).thenReturn(bundleCommandBuilder);
+    when(workdirProvider.createNewWorkdir()).thenReturn(temp.toFile());
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     exporter.export(REPOSITORY, baos);
 
