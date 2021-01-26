@@ -22,48 +22,28 @@
  * SOFTWARE.
  */
 
-package sonia.scm.web.lfs;
+package sonia.scm.store;
 
-import com.google.inject.Inject;
-import com.google.inject.Singleton;
-import sonia.scm.repository.Repository;
-import sonia.scm.store.BlobStore;
-import sonia.scm.store.BlobStoreFactory;
+import sonia.scm.repository.RepositoryLocationResolver;
+import sonia.scm.update.RepositoryUpdateIterator;
 
-/**
- * Creates {@link BlobStore} objects to store lfs objects.
- *
- * @author Sebastian Sdorra
- * @since 1.54
- */
-@Singleton
-public class LfsBlobStoreFactory {
+import javax.inject.Inject;
+import java.nio.file.Path;
+import java.util.function.Consumer;
 
-  private static final String GIT_LFS_STORE_NAME = "git-lfs";
+public class FileRepositoryUpdateIterator implements RepositoryUpdateIterator {
 
-  private final BlobStoreFactory blobStoreFactory;
+  private final RepositoryLocationResolver locationResolver;
 
-  /**
-   * Create a new instance.
-   *
-   * @param blobStoreFactory blob store factory
-   */
   @Inject
-  public LfsBlobStoreFactory(BlobStoreFactory blobStoreFactory) {
-    this.blobStoreFactory = blobStoreFactory;
+  public FileRepositoryUpdateIterator(RepositoryLocationResolver locationResolver) {
+    this.locationResolver = locationResolver;
   }
 
-  /**
-   * Provides a {@link BlobStore} corresponding to the SCM Repository.
-   *
-   * @param repository The SCM Repository to provide a LFS {@link BlobStore} for.
-   *
-   * @return blob store for the corresponding scm repository
-   */
-  public BlobStore getLfsBlobStore(Repository repository) {
-    return blobStoreFactory
-        .withName(GIT_LFS_STORE_NAME)
-        .forRepository(repository)
-        .build();
+  @Override
+  public void forEachRepository(Consumer<String> repositoryIdConsumer) {
+    locationResolver
+      .forClass(Path.class)
+      .forAllLocations((repositoryId, path) -> repositoryIdConsumer.accept(repositoryId));
   }
 }

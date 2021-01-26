@@ -51,12 +51,14 @@ import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.DataStoreFactory;
 import sonia.scm.store.DefaultBlobDirectoryAccess;
 import sonia.scm.store.FileBlobStoreFactory;
+import sonia.scm.store.FileRepositoryUpdateIterator;
 import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.store.JAXBConfigurationStoreFactory;
 import sonia.scm.store.JAXBDataStoreFactory;
 import sonia.scm.store.JAXBPropertyFileAccess;
 import sonia.scm.update.BlobDirectoryAccess;
 import sonia.scm.update.PropertyFileAccess;
+import sonia.scm.update.RepositoryUpdateIterator;
 import sonia.scm.update.UpdateStepRepositoryMetadataAccess;
 import sonia.scm.update.V1PropertyDAO;
 import sonia.scm.update.xml.XmlV1PropertyDAO;
@@ -104,6 +106,7 @@ public class BootstrapModule extends AbstractModule {
     bind(V1PropertyDAO.class, XmlV1PropertyDAO.class);
     bind(PropertyFileAccess.class, JAXBPropertyFileAccess.class);
     bind(BlobDirectoryAccess.class, DefaultBlobDirectoryAccess.class);
+    bind(RepositoryUpdateIterator.class, FileRepositoryUpdateIterator.class);
     bind(new TypeLiteral<UpdateStepRepositoryMetadataAccess<Path>>() {}).to(new TypeLiteral<MetadataStore>() {});
   }
 
