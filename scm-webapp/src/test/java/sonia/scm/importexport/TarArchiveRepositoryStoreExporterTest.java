@@ -34,7 +34,9 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.store.ExportableStore;
 import sonia.scm.store.Exporter;
+import sonia.scm.store.StoreEntryMetaData;
 import sonia.scm.store.StoreExporter;
+import sonia.scm.store.StoreType;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -91,13 +93,8 @@ class TarArchiveRepositoryStoreExporterTest {
   static class TestExportableStore implements ExportableStore {
 
     @Override
-    public String getType() {
-      return "config";
-    }
-
-    @Override
-    public String getName() {
-      return "puzzle42";
+    public StoreEntryMetaData getMetaData() {
+      return new StoreEntryMetaData(StoreType.CONFIG, "puzzle42");
     }
 
     @Override

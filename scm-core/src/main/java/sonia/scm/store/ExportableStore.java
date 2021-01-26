@@ -34,18 +34,9 @@ import java.io.IOException;
 public interface ExportableStore {
 
   /**
-   * Returns the type of the store. Example: "data" or "config"
-   *
-   * @return the store type
+   * Contains the information about this store.
    */
-  String getType();
-
-  /**
-   * Returns the name of the store.
-   *
-   * @return the store name
-   */
-  String getName();
+  StoreEntryMetaData getMetaData();
 
   /**
    * Exports the data of this store to the given {@param exporter}.

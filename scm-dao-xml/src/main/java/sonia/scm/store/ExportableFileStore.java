@@ -32,21 +32,16 @@ import java.nio.file.Files;
 public class ExportableFileStore implements ExportableStore {
 
   private final File directory;
-  private final String type;
+  private final StoreType type;
 
-  public ExportableFileStore(File directory, String type) {
+  public ExportableFileStore(File directory, StoreType type) {
     this.directory = directory;
     this.type = type;
   }
 
   @Override
-  public String getType() {
-    return type;
-  }
-
-  @Override
-  public String getName() {
-    return directory.getName();
+  public StoreEntryMetaData getMetaData() {
+    return new StoreEntryMetaData(type, directory.getName());
   }
 
   @Override
@@ -67,10 +62,10 @@ public class ExportableFileStore implements ExportableStore {
   }
 
   private boolean shouldSkipFile(File fileOrDir) {
-    if (type.equals(StoreType.CONFIG.getValue())) {
+    if (type.equals(StoreType.CONFIG)) {
       return !fileOrDir.getName().endsWith(".xml");
     }
-    if (type.equals(StoreType.BLOB.getValue())) {
+    if (type.equals(StoreType.BLOB)) {
       return !fileOrDir.getName().endsWith(".blob");
     }
     return false;

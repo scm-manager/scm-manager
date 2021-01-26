@@ -36,7 +36,7 @@ class FileBasedStoreEntryImporterFactoryTest {
   void shouldCreateStoreEntryImporterForDataStore(@TempDir Path temp) {
     FileBasedStoreEntryImporterFactory factory = new FileBasedStoreEntryImporterFactory(temp);
 
-    FileBasedStoreEntryImporter dataImporter = (FileBasedStoreEntryImporter) factory.importStore(StoreType.DATA, "hitchhiker");
+    FileBasedStoreEntryImporter dataImporter = (FileBasedStoreEntryImporter) factory.importStore(new StoreEntryMetaData(StoreType.DATA, "hitchhiker"));
     assertThat(dataImporter.getDirectory()).isEqualTo(temp.resolve("data").resolve("hitchhiker"));
   }
 
@@ -44,7 +44,7 @@ class FileBasedStoreEntryImporterFactoryTest {
   void shouldCreateStoreEntryImporterForConfigStore(@TempDir Path temp) {
     FileBasedStoreEntryImporterFactory factory = new FileBasedStoreEntryImporterFactory(temp);
 
-    FileBasedStoreEntryImporter configImporter = (FileBasedStoreEntryImporter) factory.importStore(StoreType.CONFIG, "");
+    FileBasedStoreEntryImporter configImporter = (FileBasedStoreEntryImporter) factory.importStore(new StoreEntryMetaData(StoreType.CONFIG, ""));
     assertThat(configImporter.getDirectory()).isEqualTo(temp.resolve("config"));
   }
 }

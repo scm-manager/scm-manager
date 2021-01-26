@@ -32,6 +32,7 @@ import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.store.ExportableStore;
+import sonia.scm.store.StoreEntryMetaData;
 import sonia.scm.store.StoreExporter;
 import sonia.scm.store.StoreType;
 
@@ -61,11 +62,12 @@ public class TarArchiveRepositoryStoreExporter {
       List<ExportableStore> exportableStores = storeExporter.listExportableStores(repository);
       for (ExportableStore store : exportableStores) {
         store.export((name, filesize) -> {
+          StoreEntryMetaData storeMetaData = store.getMetaData();
           if (isStoreType(store, StoreType.DATA)) {
-            String storePath = createStorePath(store.getType(), store.getName(), name);
+            String storePath = createStorePath(storeMetaData.getType().getValue(), storeMetaData.getName(), name);
             addEntryToArchive(taos, storePath, filesize);
           } else if (isStoreType(store, StoreType.CONFIG)) {
-            String storePath = createStorePath(store.getType(), name);
+            String storePath = createStorePath(storeMetaData.getType().getValue(), name);
             addEntryToArchive(taos, storePath, filesize);
           } else {
             LOG.debug("Skip file {} on export", name);
@@ -84,7 +86,7 @@ public class TarArchiveRepositoryStoreExporter {
   }
 
   private boolean isStoreType(ExportableStore store, StoreType type) {
-    return type.getValue().equalsIgnoreCase(store.getType());
+    return type.equals(store.getMetaData().getType());
   }
 
   private void addEntryToArchive(TarArchiveOutputStream taos, String storePath, long filesize) throws IOException {

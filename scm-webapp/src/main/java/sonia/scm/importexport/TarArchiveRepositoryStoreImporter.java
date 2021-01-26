@@ -30,6 +30,7 @@ import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.store.RepositoryStoreImporter;
+import sonia.scm.store.StoreEntryMetaData;
 import sonia.scm.store.StoreType;
 
 import javax.inject.Inject;
@@ -65,17 +66,17 @@ public class TarArchiveRepositoryStoreImporter {
     if (storeType.equals(StoreType.DATA.getValue())) {
       repositoryStoreImporter
         .doImport(repository)
-        .importStore(StoreType.DATA, entryPathParts[2])
+        .importStore(new StoreEntryMetaData(StoreType.DATA, entryPathParts[2]))
         .importEntry(entryPathParts[3], tais);
     } else if (storeType.equals(StoreType.CONFIG.getValue())){
       repositoryStoreImporter
         .doImport(repository)
-        .importStore(StoreType.CONFIG, "")
+        .importStore(new StoreEntryMetaData(StoreType.CONFIG, ""))
         .importEntry(entryPathParts[2], tais);
     } else if(storeType.equals(StoreType.BLOB.getValue())) {
       repositoryStoreImporter
         .doImport(repository)
-        .importStore(StoreType.BLOB, entryPathParts[2])
+        .importStore(new StoreEntryMetaData(StoreType.BLOB, entryPathParts[2]))
         .importEntry(entryPathParts[3], tais);
     }
   }
@@ -91,14 +92,14 @@ public class TarArchiveRepositoryStoreImporter {
 
   private boolean isValidStorePath(String[] entryPathParts) {
     //This prevents array out of bound exceptions
-    if (entryPathParts.length < 3 || entryPathParts.length > 4) {
-      return false;
-    }
-    if (entryPathParts[1].equals("data")) {
-      return entryPathParts.length == 4;
-    }
-    if (entryPathParts[1].equals("config")) {
-      return entryPathParts.length == 3;
+    if (entryPathParts.length > 1) {
+      String storeType = entryPathParts[1];
+      if (storeType.equals(StoreType.DATA.getValue()) || storeType.equals(StoreType.BLOB.getValue())) {
+        return entryPathParts.length == 4;
+      }
+      if (storeType.equals(StoreType.CONFIG.getValue())) {
+        return entryPathParts.length == 3;
+      }
     }
     // We only support config and data stores yet
     return false;

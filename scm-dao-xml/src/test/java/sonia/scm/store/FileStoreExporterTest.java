@@ -67,17 +67,17 @@ class FileStoreExporterTest {
   @Test
   void shouldReturnListOfExportableStores(@TempDir Path temp) throws IOException {
     Path storePath = temp.resolve("store");
-    createFile(storePath, "config", null, "first.xml");
-    createFile(storePath, "data", "ci", "second.xml");
-    createFile(storePath, "data", "jenkins", "third.xml");
+    createFile(storePath, StoreType.CONFIG.getValue(), null, "first.xml");
+    createFile(storePath, StoreType.DATA.getValue(), "ci", "second.xml");
+    createFile(storePath, StoreType.DATA.getValue(), "jenkins", "third.xml");
     when(resolver.supportsLocationType(Path.class)).thenReturn(true);
     when(resolver.forClass(Path.class).getLocation(REPOSITORY.getId())).thenReturn(temp);
 
     List<ExportableStore> exportableStores = fileStoreExporter.listExportableStores(REPOSITORY);
 
     assertThat(exportableStores).hasSize(3);
-    assertThat(exportableStores.stream().filter(e -> e.getType().equals("config"))).hasSize(1);
-    assertThat(exportableStores.stream().filter(e -> e.getType().equals("data"))).hasSize(2);
+    assertThat(exportableStores.stream().filter(e -> e.getMetaData().getType().equals(StoreType.CONFIG))).hasSize(1);
+    assertThat(exportableStores.stream().filter(e -> e.getMetaData().getType().equals(StoreType.DATA))).hasSize(2);
   }
 
   private void createFile(Path storePath, String type, String name, String fileName) throws IOException {

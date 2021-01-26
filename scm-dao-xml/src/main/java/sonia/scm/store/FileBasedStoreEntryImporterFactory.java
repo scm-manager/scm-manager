@@ -42,15 +42,17 @@ public class FileBasedStoreEntryImporterFactory implements StoreEntryImporterFac
   }
 
   @Override
-  public StoreEntryImporter importStore(StoreType type, String name) {
+  public StoreEntryImporter importStore(StoreEntryMetaData metaData) {
+    StoreType storeType = metaData.getType();
+    String storeName = metaData.getName();
     Path storeDirectory = directory;
     try {
-      storeDirectory = directory.resolve(resolveFilePath(type.getValue(), name));
+      storeDirectory = directory.resolve(resolveFilePath(storeType.getValue(), storeName));
       Files.createDirectories(storeDirectory);
       if (!Files.exists(storeDirectory)) {
         throw new ImportFailedException(
           ContextEntry.ContextBuilder.noContext(),
-          String.format("Could not create store for type %s and name %s", type, name)
+          String.format("Could not create store for type %s and name %s", storeType, storeName)
         );
       }
       return new FileBasedStoreEntryImporter(storeDirectory);
@@ -58,7 +60,7 @@ public class FileBasedStoreEntryImporterFactory implements StoreEntryImporterFac
     } catch (IOException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.noContext(),
-        String.format("Could not create store directory %s for type %s and name %s", storeDirectory, type, name)
+        String.format("Could not create store directory %s for type %s and name %s", storeDirectory, storeType, storeName)
       );
     }
   }

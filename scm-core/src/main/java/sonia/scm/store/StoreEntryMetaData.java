@@ -22,27 +22,12 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.store;
 
-import sonia.scm.ContextEntry;
-import sonia.scm.ExceptionWithContext;
+import lombok.Value;
 
-import java.util.List;
-
-public class ExportFailedException extends ExceptionWithContext {
-
-  private static final String CODE = "67SM3DANZ1";
-
-  public ExportFailedException(List<ContextEntry> context, String message, Exception cause) {
-    super(context, message, cause);
-  }
-
-  public ExportFailedException(List<ContextEntry> context, String message) {
-    super(context, message);
-  }
-
-  @Override
-  public String getCode() {
-    return CODE;
-  }
+@Value
+public class StoreEntryMetaData {
+  StoreType type;
+  String name;
 }

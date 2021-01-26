@@ -24,8 +24,10 @@
 
 package sonia.scm.store;
 
+import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryLocationResolver;
+import sonia.scm.repository.api.ExportFailedException;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -74,13 +76,25 @@ public class FileStoreExporter implements StoreExporter {
 
   private void addExportableFileStore(List<ExportableStore> exportableStores, File storeTypeDirectory, File storeDirectory) {
     if (storeDirectory.isDirectory()) {
-      exportableStores.add(new ExportableFileStore(storeDirectory, storeTypeDirectory.getName()));
+      exportableStores.add(new ExportableFileStore(storeDirectory, parseValueToStoreTypeEnum(storeTypeDirectory)));
     } else if (shouldAddConfigStore(exportableStores)) {
-      exportableStores.add(new ExportableFileStore(storeTypeDirectory, storeTypeDirectory.getName()));
+      exportableStores.add(new ExportableFileStore(storeTypeDirectory, parseValueToStoreTypeEnum(storeTypeDirectory)));
     }
   }
 
+  private StoreType parseValueToStoreTypeEnum(File storeTypeDirectory) {
+    for (StoreType type : StoreType.values()) {
+      if (type.getValue().equals(storeTypeDirectory.getName())) {
+        return type;
+      }
+    }
+    throw new ExportFailedException(
+      ContextEntry.ContextBuilder.noContext(),
+      String.format("Unsupported store type found: %s", storeTypeDirectory.getName())
+    );
+  }
+
   private boolean shouldAddConfigStore(List<ExportableStore> exportableStores) {
-    return exportableStores.stream().noneMatch(es -> "config".equalsIgnoreCase(es.getType()));
+    return exportableStores.stream().noneMatch(es -> StoreType.CONFIG.equals(es.getMetaData().getType()));
   }
 }
