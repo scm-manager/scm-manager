@@ -27,17 +27,13 @@
 <html lang="en">
 <head>
   <title>SCM-Manager Styleguide</title>
-  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <meta content="text/html; charset=UTF-8" http-equiv="content-type">
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <meta name="theme-color" content="#000000">
-  <link rel="shortcut icon" href="ui-webapp/favicon.ico">
-  <script type="application/javascript" src="/ui-styles.bundle.js"></script>
+  <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+  <meta content="#000000" name="theme-color">
+  <link href="ui-webapp/favicon.ico" rel="shortcut icon">
+  <script src="/ui-styles.bundle.js" type="application/javascript"></script>
   <style>
-    .sg-sub-section {
-      /*border: 1px solid red; /* TODO: REMOVE! */
-    }
-
     /* Styleguide subsection spacing */
     .sg-sub-section + .sg-sub-section {
       margin-top: 2.5rem;
@@ -60,6 +56,7 @@
       <ul>
         <li><a href="#colors">Colors</a></li>
         <li><a href="#layout">Layout</a></li>
+        <li><a href="#typography">Typography</a></li>
         <li><a href="#buttons">Buttons</a></li>
         <li><a href="#tables">Tables</a></li>
         <li><a href="#form-controls">Form Controls</a></li>
@@ -307,7 +304,7 @@
   <div class="hero-body">
     <div class="container">
       <div class="columns is-vcentered">
-        <div class="column"><img src="ui-webapp/images/logo.png" alt="SCM-Manager"></div>
+        <div class="column"><img alt="SCM-Manager" src="ui-webapp/images/logo.png"></div>
       </div>
     </div>
   </div>
@@ -368,23 +365,6 @@
         </div>
       </div>
     </div>
-    <div class="sg-sub-section" id="loading">
-      <h3 class="subtitle is-4">Loading</h3>
-      <div class="is-flex" style="flex-direction: column; align-items: center; justify-content: center; min-height: 256px;">
-        <img style="margin-bottom: 0.75rem; width: 128px; height: 128px;" src="/ui-webapp/images/loading.svg" alt="Loading ...">
-        <p class="has-text-centered">loading plugin information</p>
-      </div>
-    </div>
-    <div class="sg-sub-section">
-      <h3 class="subtitle is-4">Headlines</h3>
-      <div class="notification">Subheadlines should only be used if there is reasonable content for them.</div>
-      <div class="container">
-        <div class="box" style="box-shadow: none; border: 1px solid #dbdbdb;">
-          <h1 class="title">Users</h1>
-          <h2 class="subtitle">Create, read, update and delete users</h2>
-        </div>
-      </div>
-    </div>
     <div class="sg-sub-section" id="footer">
       <h3 class="subtitle is-4">Footer</h3>
     </div>
@@ -397,9 +377,9 @@
         <div style="font-weight: bold; margin-bottom: 0.5rem;">
           <span class="image is-rounded"
                 style="float: left; margin-right: 0.3em; padding-top: 0.2em; width: 1em; height: 1em;">
-            <img class="is-rounded" style="vertical-align: middle;"
+            <img alt="sdorra" class="is-rounded"
                  src="https://gravatar.com/avatar/c8afb88b3858e1202d582122f94ed5f6?size=64&default=identicon"
-                 alt="sdorra">
+                 style="vertical-align: middle;">
           </span>
           Sebastian Sdorra
         </div>
@@ -433,6 +413,610 @@
     </div>
   </section>
 </footer>
+<section class="section" id="typography">
+  <div class="container">
+    <h2 class="title is-3">Typography</h2>
+    <div class="sg-sub-section">
+      <h3 class="subtitle is-4">Headlines</h3>
+      <div class="notification">Subheadlines should only be used if there is reasonable content for them.</div>
+      <div class="container">
+        <div class="box" style="box-shadow: none; border: 1px solid #dbdbdb;">
+          <h1 class="title">Users</h1>
+          <h2 class="subtitle">Create, read, update and delete users</h2>
+        </div>
+      </div>
+    </div>
+    <div class="sg-sub-section">
+      <h3 class="subtitle is-4">Icons</h3>
+      <div class="notification">The following icons have a global significance and should only be used in connection
+        with certain functions.
+      </div>
+      <table class="table is-bordered">
+        <thead>
+        <tr>
+          <th>Icon</th>
+          <th>Name</th>
+          <th>Meaning</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-code-branch">
+                <i class="fas fa-lg fa-code-branch"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>code-branch</code></td>
+          <td>Branches</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-tags">
+                <i class="fas fa-lg fa-tags"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>tags</code></td>
+          <td>Tags</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-exchange-alt">
+                <i class="fas fa-lg fa-exchange-alt"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>exchange-alt</code></td>
+          <td>Commits, Convert type</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-code">
+                <i class="fas fa-lg fa-code"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>code</code></td>
+          <td>Code, Sources</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-code-branch fa-rotate-180">
+                <i class="fas fa-lg fa-code-branch fa-rotate-180"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>code-branch fa-rotate-180</code></td>
+          <td>Pull Requests</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-cog">
+                <i class="fas fa-lg fa-cog"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>cog</code></td>
+          <td>Settings</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-star">
+                <i class="fas fa-lg fa-star"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>star</code></td>
+          <td>Favorite repository</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-book-reader">
+                <i class="fas fa-lg fa-book-reader"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>book-reader</code></td>
+          <td>Readme</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-info-circle">
+                <i class="fas fa-lg fa-info-circle"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>info-circle</code></td>
+          <td>Information</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-trash">
+                <i class="fas fa-lg fa-trash"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>trash</code></td>
+          <td>Delete</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-times">
+                <i class="fas fa-lg fa-times"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>times</code></td>
+          <td>Delete, Remove, Disapprove</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-plus">
+                <i class="fas fa-lg fa-plus"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>plus</code></td>
+          <td>Add, Subscribe</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-key">
+                <i class="fas fa-lg fa-key"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>key</code></td>
+          <td>Signature</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-tag">
+                <i class="fas fa-lg fa-tag"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>tag</code></td>
+          <td>Single Tag</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-circle-notch">
+                <i class="fas fa-lg fa-circle-notch"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>circle-notch</code></td>
+          <td>No status available</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-home">
+                <i class="fas fa-lg fa-home"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>home</code></td>
+          <td>Home, Internal user</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-link">
+                <i class="fas fa-lg fa-link"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>link</code></td>
+          <td>Copy permalink</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-upload">
+                <i class="fas fa-lg fa-upload"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>upload</code></td>
+          <td>Upload</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-download">
+                <i class="fas fa-lg fa-download"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>download</code></td>
+          <td>Download, Install</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-folder">
+                <i class="fas fa-lg fa-folder"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>folder</code></td>
+          <td>Folder</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="far fa-folder">
+                <i class="far fa-lg fa-folder"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>folder</code></td>
+          <td>Subrepository, submodule, externals</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-file">
+                <i class="fas fa-lg fa-file"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>file</code></td>
+          <td>File</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-user-clock">
+                <i class="fas fa-lg fa-user-clock"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>user-clock</code></td>
+          <td>Annotate</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-history">
+                <i class="fas fa-lg fa-history"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>history</code></td>
+          <td>History</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-search-plus">
+                <i class="fas fa-lg fa-search-plus"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>search-plus</code></td>
+          <td>Open in Fullscreen</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-edit">
+                <i class="fas fa-lg fa-edit"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>edit</code></td>
+          <td>Edit</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-eye-slash">
+                <i class="fas fa-lg fa-eye-slash"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>eye-slash</code></td>
+          <td>Collapse</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-eye">
+                <i class="fas fa-lg fa-eye"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>eye</code></td>
+          <td>Collapse</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-columns">
+                <i class="fas fa-lg fa-columns"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>columns</code></td>
+          <td>Side-by-side view</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-align-left">
+                <i class="fas fa-lg fa-align-left"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>align-left</code></td>
+          <td>Combined view</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-sort-alpha-down">
+                <i class="fas fa-lg fa-sort-alpha-down"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>sort-alpha-down</code></td>
+          <td>Sort alphabetically</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-sort-alpha-down-alt">
+                <i class="fas fa-lg fa-sort-alpha-down-alt"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>sort-alpha-down-alt</code></td>
+          <td>Sort alphabetically reverse</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-sort-amount-down-alt">
+                <i class="fas fa-lg fa-sort-amount-down-alt"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>sort-amount-down-alt</code></td>
+          <td>Sort descending</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-sort-amount-down">
+                <i class="fas fa-lg fa-sort-amount-down"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>sort-amount-down</code></td>
+          <td>Sort ascending</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-user">
+                <i class="fas fa-lg fa-user"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>user</code></td>
+          <td>User, One reviewer</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-user-friends">
+                <i class="fas fa-lg fa-user-friends"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>user-friends</code></td>
+          <td>Two reviewers</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-users">
+                <i class="fas fa-lg fa-users"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>users</code></td>
+          <td>More reviewers</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-exclamation-triangle">
+                <i class="fas fa-lg fa-exclamation-triangle"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>exclamation-triangle</code></td>
+          <td>Problem detected, e.g. target branch deleted, conflicts</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-minus">
+                <i class="fas fa-lg fa-minus"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>minus</code></td>
+          <td>Unsubscribe</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-check">
+                <i class="fas fa-lg fa-check"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>check</code></td>
+          <td>Approve</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-clock">
+                <i class="fas fa-lg fa-clock"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>clock</code></td>
+          <td>Outdated</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-bolt">
+                <i class="fas fa-lg fa-bolt"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>bolt</code></td>
+          <td>System</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-reply">
+                <i class="fas fa-lg fa-reply"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>reply</code></td>
+          <td>Reply</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-tasks">
+                <i class="fas fa-lg fa-tasks"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>tasks</code></td>
+          <td>Task</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-comment-dots">
+                <i class="fas fa-lg fa-comment-dots"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>comment-dots</code></td>
+          <td>Comment</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-check-circle">
+                <i class="fas fa-lg fa-check-circle"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>check-circle</code></td>
+          <td>Mark as done, Status successful</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-question-circle">
+                <i class="fas fa-lg fa-question-circle"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>question-circle</code></td>
+          <td>Help text</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-times-circle">
+                <i class="fas fa-lg fa-times-circle"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>times-circle</code></td>
+          <td>Status failed</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-archive">
+                <i class="fas fa-lg fa-archive"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>archive</code></td>
+          <td>Archive</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-globe-americas">
+                <i class="fas fa-lg fa-globe-americas"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>globe-americas</code></td>
+          <td>External group</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-puzzle-piece">
+                <i class="fas fa-lg fa-puzzle-piece"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>puzzle-piece</code></td>
+          <td>Plugins</td>
+        </tr>
+        <tr>
+          <td>
+            <a class="level-item">
+              <span class="tooltip has-tooltip-top" data-tooltip="fas fa-sync-alt">
+                <i class="fas fa-lg fa-sync-alt"></i>
+              </span>
+            </a>
+          </td>
+          <td><code>sync-alt</code></td>
+          <td>Update</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
 <section class="section" id="buttons">
   <div class="container">
     <h2 class="title is-3">Buttons</h2>
@@ -517,7 +1101,10 @@
     </div>
     <div class="sg-sub-section">
       <h3 class="subtitle is-4">Loading Buttons</h3>
-      <div class="notification">...</div>
+      <div class="notification">While an asynchronous process is active, a appropriate button may contain a loading
+        spinner. The running process should be indicate by a short message e.g. "Exporting". A tooltip should also be
+        given.
+      </div>
       <div class="level">
         <div class="level-left"></div>
         <div class="level-right">
@@ -537,6 +1124,64 @@
       </div>
     </div>
     <div class="sg-sub-section">
+      <h3 class="subtitle is-4">Outlined Buttons</h3>
+      <div class="notification">Should be used for secondary actions.</div>
+      <div class="level">
+        <div class="level-left"></div>
+        <div class="level-right">
+          <div class="level-item">
+            <div class="has-text-right">
+              <div class="field is-grouped">
+                <p class="control"><a class="button is-primary is-outlined">Primary</a></p>
+                <p class="control"><a class="button is-link is-outlined">Link</a></p>
+                <p class="control"><a class="button is-info is-outlined">Info</a></p>
+                <p class="control"><a class="button is-success is-outlined">Success</a></p>
+                <p class="control"><a class="button is-warning is-outlined">Warning</a></p>
+                <p class="control"><a class="button is-danger is-outlined">Danger</a></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sg-sub-section">
+      <h3 class="subtitle is-4">Icon Buttons</h3>
+      <div class="notification">Alternative to the normal button with minimum space requirements. Should always get a
+        tooltip.
+      </div>
+      <div class="field is-grouped">
+        <div class="control">
+          <span class="tooltip has-tooltip-top" data-tooltip="Switch to side-by-side view">
+            <a aria-label="Switch to side-by-side view" class="button" style="width: 50px; cursor: pointer;">
+              <i class="fas fa-columns"></i>
+            </a>
+          </span>
+        </div>
+        <div class="control">
+          <span class="tooltip has-tooltip-top" data-tooltip="Open in Fullscreen">
+            <a class="button" style="width: 50px; cursor: pointer;">
+              <i class="fas fa-search-plus"></i>
+            </a>
+          </span>
+        </div>
+        <div class="control">
+          <span class="tooltip has-tooltip-top" data-tooltip="Jump to the previous version of the file">
+            <a aria-label="Jump to the previous version of the file" class="button"
+               style="width: 50px; cursor: pointer;">
+              <i class="fas fa-file-code has-text-inherit"></i>
+            </a>
+          </span>
+        </div>
+        <div class="control">
+          <span class="tooltip has-tooltip-top" data-tooltip="Jump to source file">
+            <a aria-label="Jump to source file" class="button" style="width: 50px; cursor: pointer;">
+              <i class="fas fa-file-code has-text-inherit"></i>
+            </a>
+          </span>
+        </div>
+      </div>
+    </div>
+    <div class="sg-sub-section">
       <h3 class="subtitle is-4">Button Groups and Addons</h3>
       <div class="notification content">
         <ul>
@@ -546,35 +1191,45 @@
           <li>In cases where just the first button is visible and others might be added later in the process, or buttons
             aren't part of the same functional group, "grouped buttons" can be used.
           </li>
-          <li>If the contents of buttons have a direct connection (like "Run" and "Store") they should be placed next
+          <li>If the contents of buttons have a direct connection (like "Commits" and "Sources") they should be placed
+            next
             to each other.
           </li>
+          <li>The function with the higher priority should be positioned on the right.</li>
         </ul>
       </div>
       <h4 class="subtitle is-5">Button Addon</h4>
       <div class="field has-addons">
-        <p class="control"><a class="button is-primary"> <span>Run</span> </a></p>
-        <p class="control"><a class="button"> <span>Store</span> </a></p>
+        <p class="control">
+          <button type="button" class="button is-default" style="font-size: 1rem;">
+            <span class="icon is-medium"><i class="fas fa-fa fa-exchange-alt has-text-inherit"></i></span>
+            <span>Commits </span>
+          </button>
+        </p>
+        <p class="control">
+          <button type="button" class="button is-link is-selected" style="font-size: 1rem;">
+            <span class="icon is-medium"><i class="fas fa-fa fa-code has-text-inherit"></i></span>
+            <span>Sources </span>
+          </button>
+        </p>
       </div>
       <br>
       <h4 class="subtitle is-5">Button Group</h4>
       <div class="field is-grouped">
-        <p class="control"><a class="button is-primary"> <span class="icon"><i class="fas fa-plus">&nbsp</i></span>&nbsp;&nbsp;Add
-          Admin Group </a></p>
-        <p class="control"><a class="button is-warning"> <span class="icon"><i class="fa fa-times">&nbsp</i></span>&nbsp;&nbsp;Delete
-          Admin Group</a></p>
+        <p class="control"><a class="button is-default">Cancel</a></p>
+        <p class="control"><a class="button is-primary">Submit</a></p>
       </div>
     </div>
     <div class="sg-sub-section">
       <h3 class="subtitle is-4">Pagination</h3>
       <h4 class="subtitle is-5">Disabled Pagination</h4>
       <div class="notification">Disabled navigation buttons are either grey or light blue.</div>
-      <nav class="pagination is-centered" aria-label="pagination">
-        <button type="button" disabled="disabled" class="button is-default pagination-previous">Previous</button>
-        <button type="button" disabled="disabled" class="button is-default pagination-next">Next</button>
+      <nav aria-label="pagination" class="pagination is-centered">
+        <button class="button is-default pagination-previous" disabled="disabled" type="button">Previous</button>
+        <button class="button is-default pagination-next" disabled="disabled" type="button">Next</button>
         <ul class="pagination-list">
           <li>
-            <button type="button" disabled="disabled" class="button is-default pagination-link is-current">1</button>
+            <button class="button is-default pagination-link is-current" disabled="disabled" type="button">1</button>
           </li>
         </ul>
       </nav>
@@ -584,19 +1239,19 @@
         The buttons containing the page numbers should have the same width, even when reaching triple digits. For this a
         width of 80px is necessary.
       </div>
-      <nav class="pagination is-centered" aria-label="pagination">
-        <button type="button" class="button is-default pagination-previous">Previous</button>
-        <button type="button" class="button is-default pagination-next">Next</button>
+      <nav aria-label="pagination" class="pagination is-centered">
+        <button class="button is-default pagination-previous" type="button">Previous</button>
+        <button class="button is-default pagination-next" type="button">Next</button>
         <ul class="pagination-list">
           <li>
-            <button type="button" class="button is-default pagination-link">1</button>
+            <button class="button is-default pagination-link" type="button">1</button>
           </li>
           <li>
-            <button type="button" disabled="" class="button is-default pagination-link is-current">2</button>
+            <button class="button is-default pagination-link is-current" disabled="" type="button">2</button>
           </li>
           <li><span class="pagination-ellipsis">…</span></li>
           <li>
-            <button type="button" class="button is-default pagination-link">457</button>
+            <button class="button is-default pagination-link" type="button">457</button>
           </li>
         </ul>
       </nav>
@@ -608,16 +1263,18 @@
         Create buttons at the end of a page should be full-width and complemented with a border.
       </div>
       <div class="has-text-right">
-        <button type="submit" class="button is-primary">Create Repository</button>
+        <button class="button is-primary" type="submit">Create Repository</button>
       </div>
       <div class="has-text-centered" style="margin-top: 2em; padding: 1em; border: 2px solid rgb(233, 247, 253);">
-        <button type="submit" class="button is-primary">Create Repository</button>
+        <button class="button is-primary" type="submit">Create Repository</button>
       </div>
     </div>
     <div class="sg-sub-section">
       <h3 class="subtitle is-4">Submit</h3>
-      <div class="notification">When a primary action like a "submit" button for a form is used, it should be placed on
-        the bottom right of the page.
+      <div class="notification">A submit button should be used when submitting an form or action, usually combined with
+        a refresh.
+        When a primary action like a "submit" button for a form is used, it should be placed on the bottom right of the
+        page.
       </div>
       <div class="level">
         <div class="level-left"></div>
@@ -628,7 +1285,7 @@
                 <button class="button">Cancel</button>
               </p>
               <p class="control">
-                <button type="submit" class="button is-primary">Submit</button>
+                <button class="button is-primary" type="submit">Submit</button>
               </p>
             </div>
           </div>
@@ -651,39 +1308,18 @@
           <div class="level-item">
             <div class="field is-grouped">
               <p class="control">
-                <button type="button" class="button is-default"><span class="icon is-medium"><i class="fa fa-plus"></i></span><span>Add</span>
+                <button class="button is-default" type="button"><span class="icon is-medium"><i class="fa fa-plus"></i></span><span>Add</span>
                 </button>
               </p>
               <p class="control">
-                <button type="button" class="button is-warning"><span class="icon is-medium"><i class="fa fa-times"></i></span><span>Delete</span>
+                <button class="button is-warning" type="button"><span class="icon is-medium"><i class="fa fa-times"></i></span><span>Delete</span>
                 </button>
               </p>
               <p class="control">
-                <button type="button" class="button is-link"><span class="icon is-medium"><i
+                <button class="button is-link" type="button"><span class="icon is-medium"><i
                   class="fas fa-arrow-circle-down"></i></span><span>Download</span>
                 </button>
               </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="sg-sub-section">
-      <h3 class="subtitle is-4">Outlined Buttons</h3>
-      <div class="notification">...</div>
-      <div class="level">
-        <div class="level-left"></div>
-        <div class="level-right">
-          <div class="level-item">
-            <div class="has-text-right">
-              <div class="field is-grouped">
-                <p class="control"><a class="button is-primary is-outlined">Primary</a></p>
-                <p class="control"><a class="button is-link is-outlined">Link</a></p>
-                <p class="control"><a class="button is-info is-outlined">Info</a></p>
-                <p class="control"><a class="button is-success is-outlined">Success</a></p>
-                <p class="control"><a class="button is-warning is-outlined">Warning</a></p>
-                <p class="control"><a class="button is-danger is-outlined">Danger</a></p>
-              </div>
             </div>
           </div>
         </div>
@@ -701,13 +1337,13 @@
           <div class="level-item">
             <div class="field is-grouped">
               <p class="control">
-                <button type="submit" class="button is-primary">Create Repository</button>
+                <button class="button is-primary" type="submit">Create Repository</button>
               </p>
               <p class="control">
-                <button type="submit" class="button is-primary">Create User</button>
+                <button class="button is-primary" type="submit">Create User</button>
               </p>
               <p class="control">
-                <button type="submit" class="button is-primary">Create Group</button>
+                <button class="button is-primary" type="submit">Create Group</button>
               </p>
             </div>
           </div>
@@ -750,12 +1386,12 @@
     </div>
     <div class="sg-sub-section">
       <h3 class="subtitle is-4">Card Tables</h3>
-      <div class="notification content">Special tables can be used for lists of groups, users, tags etc. Colors at the
-        left side could display roles, for example green = active user, yellow = not active.
+      <div class="notification content">Special tables can be used for lists of groups, users, tags etc.
         <br/>
         <ul>
-          <li>In general, use icons instead of buttons within the <code>.card-table</code></li>
-          <li>Use icons and a darker background in a specific action column</li>
+          <li>In general, use icons instead of buttons within the <code>.card-table</code>.</li>
+          <li>Use icons and a darker background in a specific action column.</li>
+          <li>Colors at the left side could display roles, for example green = active user, yellow = not active.</li>
         </ul>
       </div>
       <div class="container">
@@ -769,19 +1405,19 @@
           </thead>
           <tbody>
           <tr class="border-is-yellow">
-            <td class="is-hidden-mobile"><i title="Inactive" class="fas fa-fw fa-user-slash has-text-grey-light"></i>
+            <td class="is-hidden-mobile"><i class="fas fa-fw fa-user-slash has-text-grey-light" title="Inactive"></i>
               <a>_anonymous</a></td>
             <td><a>SCM Anonymous</a></td>
             <td><a>scm-anonymous@scm-manager.org</a></td>
           </tr>
           <tr class="border-is-green">
-            <td class="is-hidden-mobile"><i title="Active" class="fas fa-fw fa-user has-text-grey-light"></i> <a>dhuchthausen</a>
+            <td class="is-hidden-mobile"><i class="fas fa-fw fa-user has-text-grey-light" title="Active"></i> <a>dhuchthausen</a>
             </td>
             <td><a>Daniel Huchthausen</a></td>
             <td><a>daniel.huchthausen@cloudogu.com</a></td>
           </tr>
           <tr class="border-is-green">
-            <td class="is-hidden-mobile"><i title="Active" class="fas fa-fw fa-user has-text-grey-light"></i> <a>fscholdei</a>
+            <td class="is-hidden-mobile"><i class="fas fa-fw fa-user has-text-grey-light" title="Active"></i> <a>fscholdei</a>
             </td>
             <td><a>Florian Scholdei</a></td>
             <td><a>florian.scholdei@cloudogu.com</a></td>
@@ -806,7 +1442,7 @@
             <td class="is-darker">
               <a class="level-item">
               <span class="icon is-small">
-                <i title="Delete Branch" class="fas fa-fw fa-trash fas"></i>
+                <i class="fas fa-fw fa-trash fas" title="Delete Branch"></i>
               </span>
               </a>
             </td>
@@ -822,7 +1458,7 @@
             <td class="is-darker">
               <a class="level-item">
               <span class="icon is-small">
-                <i title="Delete Branch" class="fas fa-fw fa-trash fas"></i>
+                <i class="fas fa-fw fa-trash fas" title="Delete Branch"></i>
               </span>
               </a>
             </td>
@@ -839,9 +1475,16 @@
     <hr>
     <div class="sg-sub-section">
       <h3 class="subtitle is-4">Forms</h3>
-      <div class="notification">If possible, forms should be divided into two columns to get a better grasp of the
-        content. It is recommended to divide unrelated content with horizontal lines.
-        <i>Einstellungen haben auch eine Überschrift!</i></div>
+      <div class="notification content">
+        A form contains a set of related input fields.
+        <br/>
+        <ul>
+          <li>Fields should always have a label.</li>
+          <li>If possible, forms should be divided into two columns to get a better grasp of the content.</li>
+          <li>Similar content should appear next to each other.</li>
+          <li>It is recommended to divide unrelated content with horizontal lines.</li>
+        </ul>
+      </div>
       <div>
         <div class="columns">
           <div class="column is-half">
@@ -853,7 +1496,7 @@
                   class="fa fa-question-circle has-text-info t-textinfo-0-1-11">&nbsp</i></span>
               </label>
               <div class="control">
-                <input class="input" type="text" placeholder="" value="SONIA :: SCM Manager" id="realmDescription">
+                <input class="input" id="realmDescription" placeholder="" type="text" value="SONIA :: SCM Manager">
               </div>
             </div>
           </div>
@@ -866,7 +1509,7 @@
                   class="fa fa-question-circle has-text-info t-textinfo-0-1-11">&nbsp</i></span>
               </label>
               <div class="control">
-                <input class="input" type="text" placeholder="" value="YYYY-MM-DD HH:mm:ss" id="dateFormat">
+                <input class="input" id="dateFormat" placeholder="" type="text" value="YYYY-MM-DD HH:mm:ss">
               </div>
             </div>
           </div>
@@ -881,9 +1524,9 @@
                   class="fa fa-question-circle has-text-info t-textinfo-0-1-11">&nbsp</i></span>
               </label>
               <div class="control">
-                <input class="input" type="text" placeholder=""
-                       value="https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}&x=u&jre={jre}"
-                       id="pluginCenterUrl">
+                <input class="input" id="pluginCenterUrl" placeholder=""
+                       type="text"
+                       value="https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}&x=u&jre={jre}">
               </div>
             </div>
           </div>
@@ -917,7 +1560,7 @@
               </label>
               <div class="control">
                 <label class="checkbox">
-                      <span tabindex="0" class="gwt-Anchor">
+                      <span class="gwt-Anchor" tabindex="0">
                         <i class="is-outlined fa-check-square has-text-link fa"></i>
                       </span>
                   Enabled XSRF Protection
@@ -930,41 +1573,42 @@
     </div>
     <div class="sg-sub-section">
       <h3 class="subtitle is-4">Input</h3>
-        <div class="field">
-          <label class="label">
-            Name
-            <span class="tooltip has-tooltip-right is-inline-block has-tooltip-multiline"
-                  data-tooltip="Unique name of the group"
-                  style="">
+      <div class="field">
+        <label class="label" for="name">
+          Name
+          <span class="tooltip has-tooltip-right is-inline-block has-tooltip-multiline"
+                data-tooltip="Unique name of the group"
+                style="">
             <i class="fas fa-question-circle has-text-blue-light"></i>
           </span>
-          </label>
-          <div class="control">
-            <input class="input" type="text" placeholder="" value="">
-          </div>
+        </label>
+        <div class="control">
+          <input class="input" placeholder="" type="text" value="" id="name">
+        </div>
       </div>
     </div>
     <div class="sg-sub-section">
       <h3 class="subtitle is-4">Textarea</h3>
-        <div class="field">
-          <label class="label">
-            Description
-            <span class="tooltip has-tooltip-right is-inline-block has-tooltip-multiline"
-                  data-tooltip="A short description of the group"
-                  style="">
+      <div class="field">
+        <label class="label" for="description">
+          Description
+          <span class="tooltip has-tooltip-right is-inline-block has-tooltip-multiline"
+                data-tooltip="A short description of the group"
+                style="">
             <i class="fas fa-question-circle has-text-blue-light"></i>
           </span>
-          </label>
-          <div class="control">
-            <textarea class="textarea"></textarea>
-          </div>
+        </label>
+        <div class="control">
+          <textarea class="textarea" id="description"></textarea>
         </div>
+      </div>
     </div>
     <div class="sg-sub-section">
       <h3 class="subtitle is-4">Dropdown</h3>
-      <div class="notification">Select elements should always contain placeholder texts.</div>
+      <div class="notification">Select elements should always contain placeholder texts, also for preselected options.
+      </div>
       <div class="field">
-        <label class="label">
+        <label class="label" for="permittedRole">
           Permitted Role
           <span class="tooltip has-tooltip-right is-inline-block has-tooltip-multiline"
                 data-tooltip="The api key will be restricted to permissions of this role"
@@ -973,24 +1617,24 @@
           </span>
         </label>
         <div class="control select">
-          <select>
+          <select id="permittedRole">
             <option>CUSTOM</option>
             <option value="CI-SERVER">CI-SERVER</option>
             <option value="OWNER">OWNER</option>
-            <option value="READ" selected>READ</option>
+            <option selected value="READ">READ</option>
             <option value="WRITE">WRITE</option>
           </select>
         </div>
       </div>
       <div class="field is-horizontal" style="margin-top: 2rem;">
         <div class="field-label is-normal" style="flex-basis: inherit; flex-grow: 0;">
-          <label class="label is-size-6">Select branch</label>
+          <label class="label is-size-6" for="selectBranch">Select branch</label>
         </div>
         <div class="field-body">
           <div class="field is-narrow" style="margin-bottom: 0 !important;">
             <div class="control" style="min-width: 10rem;">
               <div class="is-fullwidth select">
-                <select style="">
+                <select style="" id="selectBranch">
                   <option value="main">main</option>
                   <option value="develop">develop</option>
                 </select>
@@ -1005,7 +1649,7 @@
       <div class="field">
         <div class="control">
           <label class="checkbox">
-            <span tabindex="0" class="gwt-Anchor"><i class="is-outlined fa-square has-text-black far"></i></span>
+            <span class="gwt-Anchor" tabindex="0"><i class="is-outlined fa-square has-text-black far"></i></span>
             External
             <span class="tooltip has-tooltip-right is-inline-block has-tooltip-multiline"
                   data-tooltip="This user is managed by an external system."
@@ -1018,7 +1662,7 @@
       <div class="field">
         <div class="control">
           <label class="checkbox">
-            <span tabindex="0" class="gwt-Anchor"><i class="is-outlined fa-check-square has-text-link fa"></i></span>
+            <span class="gwt-Anchor" tabindex="0"><i class="is-outlined fa-check-square has-text-link fa"></i></span>
             Active
           </label>
         </div>
@@ -1032,11 +1676,11 @@
         <div class="field is-grouped">
           <div class="control">
             <label class="hbseve radio" style="margin-right: 0.5em;">
-              <input type="radio" name="permission_scope" value="USER_PERMISSION" checked="">
+              <input checked="" name="permission_scope" type="radio" value="USER_PERMISSION">
               User Permission
             </label>
             <label class="hbseve radio">
-              <input type="radio" name="permission_scope" value="GROUP_PERMISSION">
+              <input name="permission_scope" type="radio" value="GROUP_PERMISSION">
               Group Permission
             </label>
           </div>
@@ -1045,24 +1689,24 @@
     </div>
     <div class="sg-sub-section">
       <h3 class="subtitle is-4">File Upload</h3>
-        <label class="label">
-          Dump File
-          <span class="tooltip has-tooltip-right is-inline-block has-tooltip-multiline"
-                data-tooltip="Select your dump file from which the repository should be imported."
-                style="position: absolute; padding-left: 3px;">
+      <label class="label">
+        Dump File
+        <span class="tooltip has-tooltip-right is-inline-block has-tooltip-multiline"
+              data-tooltip="Select your dump file from which the repository should be imported."
+              style="position: absolute; padding-left: 3px;">
             <i class="fas fa-question-circle has-text-blue-light"></i>
           </span>
-        </label>
-        <div class="file is-info has-name is-fullwidth">
-          <label class="file-label">
-            <input class="file-input" type="file" name="resume">
-            <span class="file-cta">
+      </label>
+      <div class="file is-info has-name is-fullwidth">
+        <label class="file-label">
+          <input class="file-input" name="resume" type="file">
+          <span class="file-cta">
               <span class="file-icon"><i class="fas fa-upload"></i></span>
               <span class="file-label">Upload File</span>
             </span>
-            <span class="file-name">2fRNLPdVq2.tar.gz</span>
-          </label>
-        </div>
+          <span class="file-name">2fRNLPdVq2.tar.gz</span>
+        </label>
+      </div>
     </div>
   </div>
 </section>
@@ -1071,195 +1715,302 @@
     <h2 class="title is-3">Miscellaneous Elements</h2>
     <hr>
     <div class="sg-sub-section">
+      <h3 class="subtitle is-4">Boxes</h3>
+      <div class="notification content">Border around boxes should set the focus on an area that is not simply a
+        notification.
+        <br/>
+        <ul>
+          <li>Borders can either be created by <code>.box</code> or a separate border in conjunction with a
+            border-radius of 5px.
+          </li>
+          <li>The main colors with 25-75% opacity should be used.</li>
+        </ul>
+      </div>
+      <div class="box" style="box-shadow: rgb(40 177 232 / 10%) 0 2px 3px, rgb(40 177 232 / 20%) 0 0 0 2px;">
+        <article class="media">
+          <div class="media-left" style="padding: 0.2rem 0.4rem;">
+            <img src="/ui-webapp/images/iconCommunitySupport.png" alt="Community Support Icon">
+          </div>
+          <div class="media-content">
+            <div class="content">
+              <h3 class="has-text-weight-medium">Community Support</h3>
+              <p>Contact the SCM-Manager support team for questions about SCM-Manager, to report bugs or to request
+                features through the official channels.</p>
+              <a class="button is-info is-pulled-right" target="_blank" href="https://scm-manager.org/support/">Contact
+                Our Team</a>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div style="padding: 1.5rem 1rem; border: 1px solid rgb(255, 106, 136); border-radius: 5px;">
+        <div class="level">
+          <div class="level-left">
+            <p>
+              <strong>Delete Branch</strong>
+              <br>Deleted branches cannot be restored.
+            </p>
+          </div>
+          <div class="level-right">
+            <button type="button" class="button is-warning">
+              <span class="icon is-medium"><i class="fas fa-times has-text-inherit"></i></span>
+              <span>Delete Branch </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="sg-sub-section">
       <h3 class="subtitle is-4">Breadcrumb</h3>
       <div class="notification">The breadcrumb is used for a path-depth view for sources.</div>
-        <div class="is-flex is-align-items-center">
-          <div style="width: 16px; height: 16px; font-size: 13px;">
+      <div class="is-flex is-align-items-center">
+        <div style="width: 16px; height: 16px; font-size: 13px;">
             <span class="tooltip has-tooltip-right" data-tooltip="Copy Permalink to Clipboard">
               <i class="fas fa-link has-text-inherit" style="color: #dbdbdb; opacity: 0.75;"></i>
             </span>
-          </div>
-          <nav class="breadcrumb sources-breadcrumb" style="flex: 1; margin: 1rem 0.5rem !important;" aria-label="breadcrumbs">
-            <ul>
-              <li><a><i title="Main page" class="fas fa-fw fa-home has-text-inherit" style="line-height: 1.5rem;"></i></a></li>
-              <li><a>src</a></li>
-              <li><a>main</a></li>
-              <li><a>java</a></li>
-              <li><a>com</a></li>
-              <li class="is-active"><a aria-current="page">cloudogu</a></li>
-            </ul>
-          </nav>
         </div>
-        <hr class="is-marginless">
+        <nav aria-label="breadcrumbs" class="breadcrumb sources-breadcrumb"
+             style="flex: 1; margin: 1rem 0.5rem !important;">
+          <ul>
+            <li><a><i class="fas fa-fw fa-home has-text-inherit" style="line-height: 1.5rem;" title="Main page"></i></a>
+            </li>
+            <li><a>src</a></li>
+            <li><a>main</a></li>
+            <li><a>java</a></li>
+            <li><a>com</a></li>
+            <li class="is-active"><a aria-current="page">cloudogu</a></li>
+          </ul>
+        </nav>
+      </div>
+      <hr class="is-marginless">
     </div>
     <div class="sg-sub-section">
       <h3 class="subtitle is-4">Card Column</h3>
       <div class="content">
-        <div class="columns card-columns is-multiline" style="padding: 0px 0.75rem;">
-        <div class="box box-link-shadow column is-clipped is-half">
-          <article class="media" style="position: relative; pointer-events: none; z-index: 1;">
-            <figure class="media-left" style="margin-top: 0.8em; margin-left: 1em !important;">
-              <p class="image is-64x64">
-                <img src="/ui-webapp/images/blib.jpg" alt="Logo">
-              </p>
-            </figure>
-            <div class="media-content text-box is-flex" style="flex-direction: column; justify-content: space-around; align-self: stretch;">
-              <div class="is-flex">
-                <div class="content" style="overflow: hidden; margin-bottom: 0px !important;">
-                  <p class="shorten-text is-marginless"><strong>Git</strong></p>
+        <div class="columns card-columns is-multiline" style="padding: 0 0.75rem;">
+          <div class="box box-link-shadow column is-clipped is-half">
+            <article class="media" style="position: relative; pointer-events: none; z-index: 1;">
+              <figure class="media-left" style="margin-top: 0.8em; margin-left: 1em !important;">
+                <p class="image is-64x64">
+                  <img alt="Logo" src="/ui-webapp/images/blib.jpg">
+                </p>
+              </figure>
+              <div class="media-content text-box is-flex"
+                   style="flex-direction: column; justify-content: space-around; align-self: stretch;">
+                <div class="is-flex">
+                  <div class="content" style="overflow: hidden; margin-bottom: 0 !important;">
+                    <p class="shorten-text is-marginless"><strong>Git</strong></p>
+                  </div>
+                  <div style="">
+                    <div class="is-flex" style="margin-left: auto;"></div>
+                  </div>
                 </div>
-                <div style="">
-                  <div class="is-flex" style="margin-left: auto;"></div>
-                </div>
-              </div>
-              <div class="level is-flex" style="padding-bottom: 1rem;">
-                <div class="level-left is-hidden-mobile" style="margin-right: 0.5rem;">
-                  <small>2.13.0-SNAPSHOT</small>
-                </div>
-                <div class="level-right is-block is-mobile is-marginless shorten-text" style="flex-shrink: inherit; pointer-events: all;">
-                  <small class="level-item is-block shorten-text">Cloudogu GmbH</small>
-                </div>
-              </div>
-            </div>
-          </article>
-        </div>
-        <div class="box box-link-shadow column is-clipped is-half">
-          <article class="media" style="position: relative; pointer-events: none; z-index: 1;">
-            <figure class="media-left" style="margin-top: 0.8em; margin-left: 1em !important;">
-              <p class="image is-64x64">
-                <img src="/ui-webapp/images/blib.jpg" alt="Logo">
-              </p>
-            </figure>
-            <div class="media-content text-box is-flex" style="flex-direction: column; justify-content: space-around; align-self: stretch;">
-              <div class="is-flex">
-                <div class="content" style="overflow: hidden; margin-bottom: 0px !important;">
-                  <p class="shorten-text is-marginless"><strong>Repository Template</strong></p>
-                  <p class="shorten-text">Enable creators of repositories to choose a template repository upon initialization. Repositories with a specific configuration file are marked as templates and will be automatically detected by SCM-Manager.</p>
-                </div>
-                <div style="margin-left: auto;">
-                  <div class="is-flex">
-                    <span class="level-item" style="padding: 0.5rem; border: 1px solid rgb(205, 205, 205); border-radius: 4px; cursor: pointer; pointer-events: all; margin-bottom: 0 !important;">
-                      <i title="Uninstall" class="fas fa-fw fa-trash has-text-info"></i>
-                    </span>
+                <div class="level is-flex" style="padding-bottom: 1rem;">
+                  <div class="level-left is-hidden-mobile" style="margin-right: 0.5rem;">
+                    <small>2.13.0-SNAPSHOT</small>
+                  </div>
+                  <div class="level-right is-block is-mobile is-marginless shorten-text"
+                       style="flex-shrink: inherit; pointer-events: all;">
+                    <small class="level-item is-block shorten-text">Cloudogu GmbH</small>
                   </div>
                 </div>
               </div>
-              <div class="level is-flex" style="padding-bottom: 1rem;">
-                <div class="level-left is-hidden-mobile" style="margin-right: 0.5rem;">
-                  <small>1.1.0-SNAPSHOT</small>
+            </article>
+          </div>
+          <div class="box box-link-shadow column is-clipped is-half">
+            <article class="media" style="position: relative; pointer-events: none; z-index: 1;">
+              <figure class="media-left" style="margin-top: 0.8em; margin-left: 1em !important;">
+                <p class="image is-64x64">
+                  <img alt="Logo" src="/ui-webapp/images/blib.jpg">
+                </p>
+              </figure>
+              <div class="media-content text-box is-flex"
+                   style="flex-direction: column; justify-content: space-around; align-self: stretch;">
+                <div class="is-flex">
+                  <div class="content" style="overflow: hidden; margin-bottom: 0 !important;">
+                    <p class="shorten-text is-marginless"><strong>Repository Template</strong></p>
+                    <p class="shorten-text">Enable creators of repositories to choose a template repository upon
+                      initialization. Repositories with a specific configuration file are marked as templates and will
+                      be automatically detected by SCM-Manager.</p>
+                  </div>
+                  <div style="margin-left: auto;">
+                    <div class="is-flex">
+                    <span class="level-item"
+                          style="padding: 0.5rem; border: 1px solid rgb(205, 205, 205); border-radius: 4px; cursor: pointer; pointer-events: all; margin-bottom: 0 !important;">
+                      <i class="fas fa-fw fa-trash has-text-info" title="Uninstall"></i>
+                    </span>
+                    </div>
+                  </div>
                 </div>
-                <div class="level-right is-block is-mobile is-marginless shorten-text" style="flex-shrink: inherit; pointer-events: all;">
-                  <small class="level-item is-block shorten-text">Sebastian Sdorra</small>
+                <div class="level is-flex" style="padding-bottom: 1rem;">
+                  <div class="level-left is-hidden-mobile" style="margin-right: 0.5rem;">
+                    <small>1.1.0-SNAPSHOT</small>
+                  </div>
+                  <div class="level-right is-block is-mobile is-marginless shorten-text"
+                       style="flex-shrink: inherit; pointer-events: all;">
+                    <small class="level-item is-block shorten-text">Sebastian Sdorra</small>
+                  </div>
                 </div>
               </div>
-            </div>
-          </article>
-        </div>
+            </article>
+          </div>
 
-        <div class="box box-link-shadow column is-clipped is-full">
-          <article class="media" style="position: relative; pointer-events: none; z-index: 1;">
-            <figure class="media-left" style="margin-top: 0.8em; margin-left: 1em !important;">
-              <p class="image is-64x64">
-                <img src="/ui-webapp/images/blib.jpg" alt="Logo">
-              </p>
-            </figure>
-            <div class="media-content text-box is-flex" style="flex-direction: column; justify-content: space-around; align-self: stretch;">
-              <div class="is-flex">
-                <div class="content" style="overflow: hidden; margin-bottom: 0px !important;">
-                  <p class="shorten-text is-marginless"><strong>Review</strong></p>
-                  <p class="shorten-text">Depict a review process with pull requests</p>
+          <div class="box box-link-shadow column is-clipped is-full">
+            <article class="media" style="position: relative; pointer-events: none; z-index: 1;">
+              <figure class="media-left" style="margin-top: 0.8em; margin-left: 1em !important;">
+                <p class="image is-64x64">
+                  <img alt="Logo" src="/ui-webapp/images/blib.jpg">
+                </p>
+              </figure>
+              <div class="media-content text-box is-flex"
+                   style="flex-direction: column; justify-content: space-around; align-self: stretch;">
+                <div class="is-flex">
+                  <div class="content" style="overflow: hidden; margin-bottom: 0 !important;">
+                    <p class="shorten-text is-marginless"><strong>Review</strong></p>
+                    <p class="shorten-text">Depict a review process with pull requests</p>
+                  </div>
+                  <div style="margin-left: auto;">
+                    <div class="is-flex">
+                    <span class="level-item"
+                          style="padding: 0.5rem; border: 1px solid rgb(205, 205, 205); border-radius: 4px; cursor: pointer; pointer-events: all; margin-bottom: 0 !important;">
+                      <i class="fas fa-fw fa-trash has-text-info" title="Uninstall"></i>
+                    </span>
+                      <span class="level-item"
+                            style="padding: 0.5rem; border: 1px solid rgb(205, 205, 205); border-radius: 4px; cursor: pointer; pointer-events: all; margin-bottom: 0 !important; margin-left: 0.5rem;">
+                      <i class="fas fa-fw fa-sync-alt has-text-info" title="Update"></i>
+                    </span>
+                    </div>
+                  </div>
                 </div>
-                <div style="margin-left: auto;">
-                  <div class="is-flex">
-                    <span class="level-item" style="padding: 0.5rem; border: 1px solid rgb(205, 205, 205); border-radius: 4px; cursor: pointer; pointer-events: all; margin-bottom: 0 !important;">
-                      <i title="Uninstall" class="fas fa-fw fa-trash has-text-info"></i>
-                    </span>
-                    <span class="level-item" style="padding: 0.5rem; border: 1px solid rgb(205, 205, 205); border-radius: 4px; cursor: pointer; pointer-events: all; margin-bottom: 0 !important; margin-left: 0.5rem;">
-                      <i title="Update" class="fas fa-fw fa-sync-alt has-text-info"></i>
-                    </span>
+                <div class="level is-flex" style="padding-bottom: 1rem;">
+                  <div class="level-left is-hidden-mobile" style="margin-right: 0.5rem;">
+                    <small>2.6.0</small>
+                  </div>
+                  <div class="level-right is-block is-mobile is-marginless shorten-text"
+                       style="flex-shrink: inherit; pointer-events: all;">
+                    <small class="level-item is-block shorten-text">Cloudogu GmbH</small>
                   </div>
                 </div>
               </div>
-              <div class="level is-flex" style="padding-bottom: 1rem;">
-                <div class="level-left is-hidden-mobile" style="margin-right: 0.5rem;">
-                  <small>2.6.0</small>
-                </div>
-                <div class="level-right is-block is-mobile is-marginless shorten-text" style="flex-shrink: inherit; pointer-events: all;">
-                  <small class="level-item is-block shorten-text">Cloudogu GmbH</small>
-                </div>
-              </div>
-            </div>
-          </article>
+            </article>
+          </div>
         </div>
       </div>
     </div>
+    <div class="sg-sub-section">
+      <h3 class="subtitle is-4">Date</h3>
+      <div class="notification">Dates are preferably shown relatively and by hovering with an absolute date.</div>
+      <p>
+        <time style="border-bottom: 1px dotted rgb(219,219,219); cursor: help;" title="2009-06-30 18:30:00">over 10
+          years ago
+        </time>
+      </p>
+      <p>
+        <time style="border-bottom: 1px dotted rgb(219,219,219); cursor: help;" title="2019-06-30 18:30:00">3 months
+          ago
+        </time>
+      </p>
+      <p>
+        <time style="border-bottom: 1px dotted rgb(219,219,219); cursor: help;" title="2019-10-12 13:56:40">less than a
+          minute ago
+        </time>
+      </p>
+      <p>
+        <time style="border-bottom: 1px dotted rgb(219,219,219); cursor: help;" title="2019-10-11 13:56:40">1 day ago
+        </time>
+      </p>
     </div>
-      <div class="sg-sub-section">
-        <h3 class="subtitle is-4">Date</h3>
-        <div class="notification">Dates are preferably shown relatively and by hovering with an absolute date.</div>
-        <p><time style="border-bottom: 1px dotted rgb(219,219,219); cursor: help;" title="2009-06-30 18:30:00">over 10 years ago</time></p>
-        <p><time style="border-bottom: 1px dotted rgb(219,219,219); cursor: help;" title="2019-06-30 18:30:00">3 months ago</time></p>
-        <p><time style="border-bottom: 1px dotted rgb(219,219,219); cursor: help;" title="2019-10-12 13:56:40">less than a minute ago</time></p>
-        <p><time style="border-bottom: 1px dotted rgb(219,219,219); cursor: help;" title="2019-10-11 13:56:40">1 day ago</time></p>
+    <div class="sg-sub-section">
+      <h3 class="subtitle is-4">Group Member List</h3>
+      <ul class="Details__StyledMemberList-sc-1uy93gc-0 cmCFmV">
+        <li class=""
+            style="display: inline-block; margin-right: 0.25rem; padding: 0.25rem 0.75rem; border: 1px solid rgb(238, 238, 238); border-radius: 4px;">
+          <a><i class="fas fa-user has-text-inherit"></i> mmuster</a>
+        </li>
+        <li class=""
+            style="display: inline-block; margin-right: 0.25rem; padding: 0.25rem 0.75rem; border: 1px solid rgb(238, 238, 238); border-radius: 4px;">
+          <a><i class="fas fa-user has-text-inherit"></i> belefant</a>
+        </li>
+        <li class=""
+            style="display: inline-block; margin-right: 0.25rem; padding: 0.25rem 0.75rem; border: 1px solid rgb(238, 238, 238); border-radius: 4px;">
+          <a><i class="fas fa-user has-text-inherit"></i> aschultz</a>
+        </li>
+        <li class=""
+            style="display: inline-block; margin-right: 0.25rem; padding: 0.25rem 0.75rem; border: 1px solid rgb(238, 238, 238); border-radius: 4px;">
+          <a><i class="fas fa-user has-text-inherit"></i> zgummi</a>
+        </li>
+        <li class=""
+            style="display: inline-block; margin-right: 0.25rem; padding: 0.25rem 0.75rem; border: 1px solid rgb(238, 238, 238); border-radius: 4px;">
+          <a><i class="fas fa-user has-text-inherit"></i> nobody</a>
+        </li>
+      </ul>
+    </div>
+    <div class="sg-sub-section" id="loading">
+      <h3 class="subtitle is-4">Loading</h3>
+      <div class="is-flex"
+           style="flex-direction: column; align-items: center; justify-content: center; min-height: 256px;">
+        <img alt="Loading ..." src="/ui-webapp/images/loading.svg"
+             style="margin-bottom: 0.75rem; width: 128px; height: 128px;">
+        <p class="has-text-centered">loading plugin information</p>
       </div>
-      <div class="sg-sub-section">
-        <h3 class="subtitle is-4">Notifications</h3>
-        <div class="notification">Notification are using the full base colors.</div>
-        <div class="columns">
-          <div class="column is-one-third">
-            <div class="notification is-primary">
-              <button class="delete">&nbsp</button>
-              <strong>Primary/Success</strong><br>
-              Primar lorem ipsum dolor sit amet, consectetur
-              adipiscing elit lorem ipsum dolor. Pellentesque risus mi, tempus quis placerat ut, porta nec nulla.
-              Vestibulum
-              rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur.
-            </div>
-          </div>
-          <div class="column is-one-third">
-            <div class="notification is-info">
-              <button class="delete">&nbsp</button>
-              <strong>Info/Link</strong><br>
-              Primar lorem ipsum dolor sit amet, consectetur
-              adipiscing elit lorem ipsum dolor. Pellentesque risus mi, tempus quis placerat ut, porta nec nulla.
-              Vestibulum
-              rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur.
-            </div>
-          </div>
-          <div class="column is-one-third">
-            <div class="notification is-success">
-              <button class="delete">&nbsp</button>
-              <strong>Success</strong><br>
-              Primar lorem ipsum dolor sit amet, consectetur
-              adipiscing elit lorem ipsum dolor. Pellentesque risus mi, tempus quis placerat ut, porta nec nulla.
-              Vestibulum
-              rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur.
-            </div>
+    </div>
+    <div class="sg-sub-section">
+      <h3 class="subtitle is-4">Notifications</h3>
+      <div class="notification">Notification are using the full base colors.</div>
+      <div class="columns">
+        <div class="column is-one-third">
+          <div class="notification is-primary">
+            <button class="delete">&nbsp</button>
+            <strong>Primary/Success</strong><br>
+            Primar lorem ipsum dolor sit amet, consectetur
+            adipiscing elit lorem ipsum dolor. Pellentesque risus mi, tempus quis placerat ut, porta nec nulla.
+            Vestibulum
+            rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur.
           </div>
         </div>
-        <div class="columns">
-          <div class="column is-one-third">
-            <div class="notification is-warning">
-              <button class="delete">&nbsp</button>
-              <strong>Warning</strong><br>
-              Primar lorem ipsum dolor sit amet, consectetur
-              adipiscing elit lorem ipsum dolor. Pellentesque risus mi, tempus quis placerat ut, porta nec nulla.
-              Vestibulum
-              rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur.
-            </div>
+        <div class="column is-one-third">
+          <div class="notification is-info">
+            <button class="delete">&nbsp</button>
+            <strong>Info/Link</strong><br>
+            Primar lorem ipsum dolor sit amet, consectetur
+            adipiscing elit lorem ipsum dolor. Pellentesque risus mi, tempus quis placerat ut, porta nec nulla.
+            Vestibulum
+            rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur.
           </div>
-          <div class="column is-one-third">
-            <div class="notification is-danger">
-              <button class="delete">&nbsp</button>
-              <strong>Danger</strong><br>
-              Primar lorem ipsum dolor sit amet, consectetur
-              adipiscing elit lorem ipsum dolor. Pellentesque risus mi, tempus quis placerat ut, porta nec nulla.
-              Vestibulum
-              rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur.
-            </div>
+        </div>
+        <div class="column is-one-third">
+          <div class="notification is-success">
+            <button class="delete">&nbsp</button>
+            <strong>Success</strong><br>
+            Primar lorem ipsum dolor sit amet, consectetur
+            adipiscing elit lorem ipsum dolor. Pellentesque risus mi, tempus quis placerat ut, porta nec nulla.
+            Vestibulum
+            rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur.
           </div>
         </div>
       </div>
+      <div class="columns">
+        <div class="column is-one-third">
+          <div class="notification is-warning">
+            <button class="delete">&nbsp</button>
+            <strong>Warning</strong><br>
+            Primar lorem ipsum dolor sit amet, consectetur
+            adipiscing elit lorem ipsum dolor. Pellentesque risus mi, tempus quis placerat ut, porta nec nulla.
+            Vestibulum
+            rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur.
+          </div>
+        </div>
+        <div class="column is-one-third">
+          <div class="notification is-danger">
+            <button class="delete">&nbsp</button>
+            <strong>Danger</strong><br>
+            Primar lorem ipsum dolor sit amet, consectetur
+            adipiscing elit lorem ipsum dolor. Pellentesque risus mi, tempus quis placerat ut, porta nec nulla.
+            Vestibulum
+            rhoncus ac ex sit amet fringilla. Nullam gravida purus diam, et dictum <a>felis venenatis</a> efficitur.
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="sg-sub-section">
       <h3 class="subtitle is-4">Tags</h3>
       <div class="notification">Tags can use background in all full base colors.</div>
@@ -1268,11 +2019,12 @@
     </div>
     <div class="sg-sub-section">
       <h3 class="subtitle is-4">Tooltips</h3>
-      <div class="notification content">...
-        <br />
+      <div class="notification content">Tooltips add context to the element and should follow rules for UX writing.
+        <br/>
         <ul>
           <li>Use tooltips instead of titles for buttons.</li>
           <li>Do not set an HTML title if a tooltip is also defined.</li>
+          <li>The font-weight of tooltips should be normal.</li>
         </ul>
       </div>
       <div class="field is-grouped">
@@ -1292,7 +2044,8 @@
         </div>
         <div class="control">
           <span class="tooltip has-tooltip-top" data-tooltip="Jump to the previous version of the file">
-            <a aria-label="Jump to the previous version of the file" class="button" style="width: 50px; cursor: pointer;">
+            <a aria-label="Jump to the previous version of the file" class="button"
+               style="width: 50px; cursor: pointer;">
               <i class="fas fa-file-code has-text-inherit"></i>
             </a>
           </span>
@@ -1308,15 +2061,16 @@
       <div style="margin-top: 2rem;">
         <span class="tooltip has-tooltip-top" data-tooltip="Reviewers:
 - EmilWithoutEmail
-- jschnatterer
+- Jochen Sander
 - Florian Scholdei
-- Stephan Christann">
+- Susi Sonne">
           <i class="fas fa-users has-text-grey-light"></i>
         </span>
-        <span class="tooltip has-tooltip-right" style="margin-left: 2rem;" data-tooltip="Copy Permalink to Clipboard">
+        <span class="tooltip has-tooltip-right" data-tooltip="Copy Permalink to Clipboard" style="margin-left: 2rem;">
           <i class="fas fa-link has-text-inherit" style="color: #dbdbdb; opacity: 0.75;"></i>
         </span>
-        <span class="tooltip has-tooltip-right is-inline-block has-tooltip-multiline" style="margin-left: 2rem;" data-tooltip="This is a help message">
+        <span class="tooltip has-tooltip-right is-inline-block has-tooltip-multiline"
+              data-tooltip="This is a help message" style="margin-left: 2rem;">
           <i class="fas fa-question-circle has-text-blue-light"></i>
         </span>
       </div>
@@ -1330,30 +2084,33 @@
         </div>
         <hr style="margin: 0.5em 0;">
         <div class="swL">
-          <p>
           <div>Key ID: <a>0x0ABC1DEF234GH567</a></div>
-          <div>Status: <span class="has-text-success">verified</span></div><div>Key Owner: fscholdei</div><div>Contacts:</div>
+          <div>Status: <span class="has-text-success">verified</span></div>
+          <div>Key Owner: fscholdei</div>
+          <div>Contacts:</div>
           <div>- Florian Scholdei &lt;florian.scholdei@cloudogu.com&gt;</div>
-          </p>
         </div>
       </div>
     </div>
     <div class="sg-sub-section">
       <h3 class="subtitle is-4">Modals</h3>
-      <div class="notification content">Even if the content of the modals differs, they all should use the same basic
-        class <code>.modal-card</code> to ensure a
-        constant layout. Buttons inside the modals should use the standard button formats. Modals without actions do not
-        require a footer.
+      <div class="notification content">A modal is intended to be used when it blocks the rest of the interaction with
+        the application or puts a focus on a part of the UI.
         <br/>
         <ul>
-          <li>...</li>
+          <li>Even if the content of the modals differs, they all should use the same basic
+            class <code>.modal-card</code> to ensure a constant layout.
+          </li>
+          <li>Buttons inside the modals should use the standard button formats.</li>
+          <li>Normal modals have a gray header. Otherwise the main colors with 25-75% opacity should be used.</li>
+          <li>Modals without actions do not require a footer.</li>
         </ul>
       </div>
       <div class="modal-card"
            style="box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.02);">
         <header class="modal-card-head has-background-light">
           <p class="modal-card-title is-marginless">Reject Pull Request</p>
-          <button class="delete" aria-label="close"></button>
+          <button aria-label="close" class="delete"></button>
         </header>
         <section class="modal-card-body">Do you really want to reject this pull request?</section>
         <footer class="modal-card-foot">
@@ -1372,7 +2129,7 @@
            style="box-shadow: 0 0.5em 1em -0.125em rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.02);">
         <header class="modal-card-head">
           <p class="modal-card-title is-marginless">Cannot be merged automatically</p>
-          <button class="delete" aria-label="close">&nbsp</button>
+          <button aria-label="close" class="delete">&nbsp</button>
         </header>
         <section class="modal-card-body">
           <div class="content">
@@ -1400,16 +2157,19 @@
     </div>
     <div class="sg-sub-section">
       <h3 class="subtitle is-4">Toasts</h3>
-      <div style="padding: 1.5rem; color: #905515; background-color: #ffeeab; max-width: 18rem; font-size: 0.75rem; border-radius: 5px; animation: 0.5s slide-up;">
+      <div
+        style="padding: 1.5rem; color: #905515; background-color: #ffeeab; max-width: 18rem; font-size: 0.75rem; border-radius: 5px; animation: 0.5s slide-up;">
         <h1 style="margin-bottom: 0.25rem; font-weight: bold;">New Changes</h1>
         <p>The underlying Pull-Request has changed. Press reload to see the changes.</p>
         <p>Warning: Non saved modification will be lost.</p>
         <div style="display: flex; padding-top: 0.5rem; width: 100%;">
-          <button class="button" style="margin-right: 0.5rem; flex-grow: 1; color: #905515; border-color: #905515; background-color: #ffeeab; font-size: 0.75rem;">
+          <button class="button"
+                  style="margin-right: 0.5rem; flex-grow: 1; color: #905515; border-color: #905515; background-color: #ffeeab; font-size: 0.75rem;">
             <i class="fas fa-fw fa-redo" style="margin-right: 0.25rem;"></i>
             Reload
           </button>
-          <button class="button" style="flex-grow: 1; color: #905515; border-color: #905515; background-color: #ffeeab; font-size: 0.75rem;">
+          <button class="button"
+                  style="flex-grow: 1; color: #905515; border-color: #905515; background-color: #ffeeab; font-size: 0.75rem;">
             <i class="fas fa-fw fa-times" style="margin-right: 0.25rem;"></i>
             Ignore
           </button>
@@ -1428,9 +2188,9 @@
       <div class="media" style="padding: .5em .75em;">
         <figure class="media-left" style="margin-top: 0.5rem; margin-right: 0.5rem;">
           <div class="image" style="width: 35px; height: 35px;">
-            <img class="has-rounded-border"
-                 src="https://gravatar.com/avatar/c8afb88b3858e1202d582122f94ed5f6?size=64&amp;default=identicon"
-                 alt="Sebastian Sdorra">
+            <img alt="Sebastian Sdorra"
+                 class="has-rounded-border"
+                 src="https://gravatar.com/avatar/c8afb88b3858e1202d582122f94ed5f6?size=64&amp;default=identicon">
           </div>
         </figure>
         <div class="media-right" style="margin-left: 0; width: 100%;">
@@ -1480,128 +2240,250 @@
           <li>Make sure important states like "open" are properly marked. For example, with tags.</li>
         </ul>
       </div>
-          <div class="colums">
-            <div class="column is-clipped">
-              <div class="media">
-                <div class="media-content">
-                  <h1 class="title">#1497 Migrate integration tests to bdd</h1>
+      <div class="colums">
+        <div class="column" style="flex: 0 0 auto;">
+          <div style="margin-bottom: 2rem; padding: 1rem; border: 1px solid rgb(219, 219, 219); border-radius: 4px;">
+            <div class="media">
+              <div class="media-content">
+                <h1 class="title is-inline is-marginless" style="margin-right: 0.5rem !important;">#1497 Migrate
+                  integration tests to bdd
+                  <span class="tag is-light is-medium"
+                        style="margin-top: 0.25rem; font-style: inherit; font-weight: normal;" title="0 / 1 tasks done">0 / 1 tasks done</span>
+                </h1>
+              </div>
+              <div class="media-right">
+                <div class="field is-grouped" style="">
+                  <div class="control">
+                    <button class="button is-link is-outlined" title="Subscribe" type="button">
+                      <i class="fas fa-plus fa-fw has-text-inherit"></i>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="media" style="">
+              <div class="media-content">
+                <div><span class="tag is-light is-medium" title="feature/bdd">feature/bdd</span> <i
+                  class="fas fa-long-arrow-alt-right">&nbsp</i> <span class="tag is-light is-medium" title="develop">develop</span>
+                </div>
+              </div>
+              <div class="media-right tag is-light is-medium">OPEN</div>
+            </div>
+            <div class="media">
+              <div class="media-content"><span class="is-word-break">Migrates the existing e2e tests towards a cucumber bdd-style and utilizes the integration-test-runner package.<br>
+                </span></div>
+            </div>
+
+            <div class="media" style="margin-bottom: 1rem;">
+              <div class="media-content">
+                <div class="field is-horizontal">
+                  <div class="field-label is-inline-flex" style="text-align: left; margin-right: 0; min-width: 5.5em;">
+                    Author:
+                  </div>
+                  <div class="field-body is-inline-flex" style="flex-grow: 8;">
+                    <div style="display: inline-block; font-weight: bold;">Emil Boyce</div>&nbsp;
+                    <time style="border-bottom: 1px dotted rgb(219, 219, 219); cursor: help;"
+                          title="2021-01-15 10:17:57">
+                      11 days ago
+                    </time>
+                  </div>
+                </div>
+                <div class="field is-horizontal">
+                  <div class="field-label is-inline-flex" style="text-align: left; margin-right: 0; min-width: 5.5em;">
+                    Reviewers:
+                  </div>
+                  <div class="field-body is-inline-flex" style="flex-grow: 8;">
+                    <ul class="is-separated">
+                      <li style="display: inline-block; font-weight: bold;">Jawad Mack</li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="level">
+              <div class="level-left">
+                <div class="level-item">
+                  <button class="button is-link is-outlined" type="button">
+                    <span class="icon is-medium"><i class="fas fa-check has-text-inherit"></i></span>
+                    <span>Approve </span>
+                  </button>
+                </div>
+              </div>
+              <div class="level-right">
+                <div class="level-item">
+                  <p class="control">
+                    <button class="button is-warning" type="button">Reject Pull Request</button>
+                  </p>
+                </div>
+                <div class="level-item">
+                  <p class="control">
+                    <button class="button is-primary" type="button">Merge Pull Request</button>
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="tabs">
+            <ul>
+              <li class="is-active"><a>Comments</a></li>
+              <li><a>Commits</a></li>
+              <li><a>Diff</a></li>
+            </ul>
+          </div>
+          <div class="comment-wrapper">
+            <div class="inline-comment" style="font-size: 0.9rem; padding: 0 1.5rem 1.5rem;">
+              <article class="media">
+                <div class="media-content is-clipped content" style="margin-bottom: 0;">
+                  <a title="Collapse" style="color: inherit;">
+                    <span class="icon is-small"><i class="fa fa-angle-down"></i></span>
+                    <span style="margin-left: 5px;"><strong>Jawad Mack</strong> </span>
+                  </a>
+                  <span style="padding: 0 0.4rem">
+                        <time style="border-bottom: 1px dotted rgb(219, 219, 219); cursor: help;"
+                              title="2020-12-26 11:31:17">a month ago</time>
+                      </span>
+                  <span class="tag is-light is-rounded has-cursor-pointer"
+                        style="font-style: inherit; font-weight: inherit;"
+                        title="The comment is related to an older of the source or target branch. Click here to see the original context.">
+                        <i class="fas fa-clock has-text-link"></i>
+                        &nbsp;
+                        outdated
+                      </span>
+                  <br>
+                  <div class="content is-word-break">
+                    <p>Maybe you can get a more elegant solution</p>
+                  </div>
                 </div>
                 <div class="media-right">
-                  <div class="field is-grouped" style="">
-                    <div class="control">
-                      <button type="button" title="Subscribe" class="button is-link is-outlined">
-                        <i class="fas fa-plus fa-fw has-text-inherit"></i>
+                  <div class="level-right">
+                    <a class="level-item" title="Delete">
+                      <span class="icon is-small"><i class="fas fa-trash has-text-link"></i></span>
+                    </a>
+                    <a class="level-item" title="Update">
+                      <span class="icon is-small"><i class="fas fa-edit has-text-link"></i></span>
+                    </a>
+                    <a class="level-item" title="Reply">
+                      <span class="icon is-small"><i class="fas fa-reply has-text-link"></i></span>
+                    </a>
+                    <a class="level-item" title="Make task from comment">
+                      <span class="icon is-small"><i class="fas fa-tasks has-text-link"></i></span>
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+          <div class="comment-wrapper" style="border-top: 1px solid rgb(219, 219, 219);">
+            <div class="inline-comment" style="font-size: 0.9rem; padding: 1.5rem;">
+              <article class="media">
+                <div class="media-content is-clipped content" style="margin-bottom: 0;">
+                  <a title="Collapse" style="color: inherit;">
+                    <span class="icon is-small"><i class="fa fa-angle-down"></i></span>
+                    <span style="margin-left: 5px;"><strong>Emil Boyce</strong> </span>
+                  </a>
+                  <span style="padding: 0 0.4rem">
+                        <time style="border-bottom: 1px dotted rgb(219, 219, 219); cursor: help;"
+                              title="2021-01-20 09:39:17">6 days ago</time>
+                      </span>
+                  <br>
+                  <div class="content is-word-break">
+                    <p>Changelog updated</p>
+                  </div>
+                </div>
+                <div class="media-right">
+                  <div class="level-right">
+                    <a class="level-item" title="Delete">
+                      <span class="icon is-small"><i class="fas fa-trash has-text-link"></i></span>
+                    </a>
+                    <a class="level-item" title="Update">
+                      <span class="icon is-small"><i class="fas fa-edit has-text-link"></i></span>
+                    </a>
+                    <a class="level-item" title="Reply">
+                      <span class="icon is-small"><i class="fas fa-reply has-text-link"></i></span>
+                    </a>
+                    <a class="level-item" title="Make task from comment">
+                      <span class="icon is-small"><i class="fas fa-tasks has-text-link"></i></span>
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+          <div class="comment-wrapper" style="border-top: 1px solid rgb(219, 219, 219);">
+            <div class="inline-comment" style="font-size: 0.9rem; padding: 1.5rem;">
+              <article class="media">
+                <div class="media-content is-clipped content" style="margin-bottom: 0;">
+                  <a title="Collapse" style="color: inherit;">
+                    <span class="icon is-small"><i class="fa fa-angle-down"></i></span>
+                    <span style="margin-left: 5px;"><strong>Ebrahim Mcneil</strong> </span>
+                  </a>
+                  <span style="padding: 0 0.4rem">
+                        <time style="border-bottom: 1px dotted rgb(219, 219, 219); cursor: help;"
+                              title="2021-01-26 13:03:27">12 minutes ago</time>
+                      </span>
+                  <span style="font-style: inherit; font-weight: inherit;">
+                    <span class="tag is-warning is-rounded"><i class="fas fa-check-circle"></i>&nbsp;Task</span>
+                  </span>
+                  <br>
+                  <div class="content is-word-break">
+                    <p>Migrate store name</p>
+                  </div>
+                </div>
+                <div class="media-right">
+                  <div class="level-right">
+                    <a class="level-item" title="Delete">
+                      <span class="icon is-small"><i class="fas fa-trash has-text-link"></i></span>
+                    </a>
+                    <a class="level-item" title="Update">
+                      <span class="icon is-small"><i class="fas fa-edit has-text-link"></i></span>
+                    </a>
+                    <a class="level-item" title="Reply">
+                      <span class="icon is-small"><i class="fas fa-reply has-text-link"></i></span>
+                    </a>
+                    <a class="level-item" title="Mark as done">
+                      <span class="icon is-small"><i class="fas fa-check-circle has-text-link"></i></span>
+                    </a>
+                    <a class="level-item" title="Make comment from task">
+                      <span class="icon is-small"><i class="fas fa-comment-dots has-text-link"></i></span>
+                    </a>
+                  </div>
+                </div>
+              </article>
+            </div>
+          </div>
+          <article class="media">
+            <div class="media-content">
+              <div class="field">
+                <div class="control">
+                  <textarea class="textarea" placeholder="Add comment"></textarea>
+                </div>
+              </div>
+              <div class="field is-grouped">
+                <div class="control">
+                  <label class="radio" style="margin-right: 0.5em;">
+                    <input checked="" name="comment_type_editor" type="radio" value="COMMENT"> Comment
+                  </label>
+                  <label class="radio" style="">
+                    <input name="comment_type_editor" type="radio" value="TASK_TODO"> Task
+                  </label>
+                </div>
+              </div>
+              <div class="field">
+                <div class="level">
+                  <div class="level-left"></div>
+                  <div class="level-right">
+                    <div class="level-item">
+                      <button class="button is-primary" data-testid="submit-button" disabled="" type="submit">Add
+                        comment
                       </button>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="media" style="">
-                <div class="media-content">
-                  <div><span class="tag is-light is-medium" title="feature/bdd">feature/bdd</span> <i
-                    class="fas fa-long-arrow-alt-right">&nbsp</i> <span class="tag is-light is-medium" title="develop">develop</span>
-                  </div>
-                </div>
-                <div class="media-right tag is-success is-medium">OPEN</div>
-              </div>
-              <div class="media">
-                <div class="media-content"><span class="is-word-break">Migrates the existing e2e tests towards a cucumber bdd-style and utilizes the integration-test-runner package.<br>
-                </span></div>
-              </div>
-              <div class="media Translate(o)-bottomSpace-0-1-8 has-text-grey">
-                <div class="media-content">msuewer <span>a month ago</span></div>
-
-              </div>
-              <div class="Translate(o)-borderTop-0-1-10 Translate(o)-bottomSpace-0-1-10">
-
-                <div class="field has-addons flex-float-right-0-1-1 Translate(o)-bottomSpace-0-1-8">
-                  <p class="control">
-                    <button type="button" class="button is-warning">Reject pull request</button>
-                  </p>
-                  <p class="control">
-                    <button type="button" class="button">Merge pull request</button>
-                  </p>
-                </div>
-              </div>
-              <div class="box">
-                <div class="tabs">
-                  <ul>
-                    <li class="is-active"><a>Comments</a></li>
-                    <li><a>Commits</a></li>
-                    <li><a>Diff</a></li>
-                  </ul>
-                </div>
-                <article class="media">
-                  <div class="media-content">
-                    <div class="content">
-                      <p><strong>msuewer </strong><span>a month ago</span><br>
-                        <span>Testkommentar<br>
-                    </span></p>
-                    </div>
-                  </div>
-                  <div class="media-right">
-                    <div class="level-right"><a class="level-item"><span class="icon is-small"><i class="fas fa-trash">&nbsp</i></span></a><a
-                      class="level-item"><span class="icon is-small"><i class="fas fa-edit">&nbsp</i></span></a></div>
-                  </div>
-                </article>
-                <article class="media">
-                  <div class="media-content">
-                    <div class="content">
-                      <p><strong>msuewer </strong><span>a month ago</span><br>
-                        <span>das c ist falsch!<br>
-                    </span></p>
-                    </div>
-                  </div>
-                  <div class="media-right">
-                    <div class="level-right"><a class="level-item"><span class="icon is-small"><i class="fas fa-trash">&nbsp</i></span></a><a
-                      class="level-item"><span class="icon is-small"><i class="fas fa-edit">&nbsp</i></span></a></div>
-                  </div>
-                </article>
-                <article class="media">
-                  <div class="media-content">
-                    <div class="field">
-                      <div class="control">
-                        <textarea class="textarea" placeholder="Add comment">&nbsp</textarea>
-                      </div>
-                    </div>
-                    <div class="field">
-                      <p class="control has-text-right">
-                        <button type="submit" class="button is-primary"><span class="icon"><i
-                          class="fa fa-plus">&nbsp</i></span>&nbsp;&nbsp;Add
-                          comment
-                        </button>
-                      </p>
-                    </div>
-                  </div>
-                </article>
-              </div>
             </div>
+          </article>
+        </div>
       </div>
-    </div>
-    <div class="sg-sub-section">
-      <h3 class="subtitle is-4">Group Member List</h3>
-      <ul class="Details__StyledMemberList-sc-1uy93gc-0 cmCFmV">
-        <li class=""
-            style="display: inline-block; margin-right: 0.25rem; padding: 0.25rem 0.75rem; border: 1px solid rgb(238, 238, 238); border-radius: 4px;">
-          <a><i class="fas fa-user has-text-inherit"></i> pczora</a>
-        </li>
-        <li class=""
-            style="display: inline-block; margin-right: 0.25rem; padding: 0.25rem 0.75rem; border: 1px solid rgb(238, 238, 238); border-radius: 4px;">
-          <a><i class="fas fa-user has-text-inherit"></i> fscholdei</a>
-        </li>
-        <li class=""
-            style="display: inline-block; margin-right: 0.25rem; padding: 0.25rem 0.75rem; border: 1px solid rgb(238, 238, 238); border-radius: 4px;">
-          <a><i class="fas fa-user has-text-inherit"></i> sdorra</a>
-        </li>
-        <li class=""
-            style="display: inline-block; margin-right: 0.25rem; padding: 0.25rem 0.75rem; border: 1px solid rgb(238, 238, 238); border-radius: 4px;">
-          <a><i class="fas fa-user has-text-inherit"></i> pfeuffer</a>
-        </li>
-        <li class=""
-            style="display: inline-block; margin-right: 0.25rem; padding: 0.25rem 0.75rem; border: 1px solid rgb(238, 238, 238); border-radius: 4px;">
-          <a><i class="fas fa-user has-text-inherit"></i> nobody</a>
-        </li>
-      </ul>
     </div>
   </div>
 </section>
