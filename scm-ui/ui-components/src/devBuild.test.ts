@@ -53,17 +53,6 @@ describe("devbuild tests", () => {
     });
   });
 
-  describe("createAttributesForTesting in non development mode", () => {
-    beforeAll(() => {
-      setStage("production");
-    });
-
-    it("should return undefined for non development", () => {
-      const attributes = createAttributesForTesting("123");
-      expect(attributes).toBeUndefined();
-    });
-  });
-
   describe("createAttributesForTesting in development mode", () => {
     beforeAll(() => {
       setStage("development");

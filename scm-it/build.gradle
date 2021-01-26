@@ -78,6 +78,7 @@ task javaIntegrationTests(type: Test) {
   include '**/*ITCase.class'
   exclude '**/*Test.class'
   ignoreFailures = project.isCI
+  outputs.upToDateWhen { !project.hasProperty('rerunIntegrationTests') }
   finalizedBy = ['stopScmServer']
 
   dependsOn 'test', 'startScmServer'

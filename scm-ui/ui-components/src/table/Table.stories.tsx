@@ -26,6 +26,17 @@ import { storiesOf } from "@storybook/react";
 import Table from "./Table";
 import Column from "./Column";
 import TextColumn from "./TextColumn";
+import styled from "styled-components";
+
+const StyledTable = styled(Table)`
+  width: 400px;
+  border: 1px dashed black;
+  padding: 4px;
+  margin: 4px;
+  td {
+    word-break: break-word;
+  }
+`;
 
 storiesOf("Table|Table", module)
   .add("Default", () => (
@@ -73,4 +84,22 @@ storiesOf("Table|Table", module)
       <TextColumn header="Id" dataKey="id" />
       <TextColumn header="Name" dataKey="name" />
     </Table>
+  ))
+  .add("Table with Word-Break", () => (
+    <StyledTable
+      data={[
+        {
+          id: "42",
+          name: "herp_derp_schlerp_ferp_gerp_nerp_terp_ierp_perp_lerp_merp_oerp_zerp_serp_verp_herp"
+        },
+        {
+          id: "17",
+          name: "herp_derp_schlerp_ferp_gerp_nerp_terp_ierp_perp_lerp_merp_oerp_zerp_serp_verp"
+        }
+      ]}
+      emptyMessage="No data found."
+    >
+      <TextColumn header="Id" dataKey="id" />
+      <TextColumn header="Name" dataKey="name" />
+    </StyledTable>
   ));
