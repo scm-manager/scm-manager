@@ -76,9 +76,8 @@ class FileStoreExporterTest {
     List<ExportableStore> exportableStores = fileStoreExporter.listExportableStores(REPOSITORY);
 
     assertThat(exportableStores).hasSize(3);
-    assertThat(exportableStores.get(0).getType()).isEqualTo("data");
-    assertThat(exportableStores.get(1).getType()).isEqualTo("data");
-    assertThat(exportableStores.get(2).getType()).isEqualTo("config");
+    assertThat(exportableStores.stream().filter(e -> e.getType().equals("config"))).hasSize(1);
+    assertThat(exportableStores.stream().filter(e -> e.getType().equals("data"))).hasSize(2);
   }
 
   private void createFile(Path storePath, String type, String name, String fileName) throws IOException {
