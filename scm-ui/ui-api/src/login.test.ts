@@ -136,7 +136,7 @@ describe("Test login hooks", () => {
           cookie: true,
           grant_type: "password",
           username: "tricia",
-          password: "hitchhickersSecret!"
+          password: "hitchhikersSecret!"
         }
       });
 
