@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 import java.io.File;
@@ -33,6 +33,20 @@ public enum Store {
 
   private static final String GLOBAL_STORE_BASE_DIRECTORY = "var";
   static final String STORE_DIRECTORY = "store";
+
+  public static Store forStoreType(StoreType storeType) {
+    switch (storeType) {
+      case BLOB:
+        return BLOB;
+      case DATA:
+        return DATA;
+      case CONFIG:
+      case CONFIG_ENTRY:
+        return CONFIG;
+      default:
+        throw new IllegalArgumentException("unknown store type: " + storeType);
+    }
+  }
 
   private String directory;
 
