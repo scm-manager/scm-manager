@@ -22,23 +22,20 @@
  * SOFTWARE.
  */
 import React, { FC, ReactElement, useEffect, useState } from "react";
-import styled from "styled-components";
 import { Comparator } from "./types";
 import SortIcon from "./SortIcon";
 import Notification from "../Notification";
-
-const StyledTable = styled.table.attrs(() => ({
-  className: "table content is-hoverable"
-}))``;
+import classNames from "classnames";
 
 type Props = {
   data: any[];
   sortable?: boolean;
   emptyMessage?: string;
   children: Array<ReactElement>;
+  className?: string;
 };
 
-const Table: FC<Props> = ({ data, sortable, children, emptyMessage }) => {
+const Table: FC<Props> = ({ data, sortable, children, emptyMessage, className }) => {
   const [tableData, setTableData] = useState(data);
   useEffect(() => {
     setTableData(data);
@@ -107,7 +104,7 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage }) => {
   }
 
   return (
-    <StyledTable>
+    <table className={classNames("table content is-hoverable", className)}>
       <thead>
         <tr>
           {React.Children.map(children, (child, index) => (
@@ -125,7 +122,7 @@ const Table: FC<Props> = ({ data, sortable, children, emptyMessage }) => {
         </tr>
       </thead>
       <tbody>{tableData.map(mapDataToColumns)}</tbody>
-    </StyledTable>
+    </table>
   );
 };
 
