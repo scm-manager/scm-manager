@@ -67,7 +67,13 @@ public class ExportableFileStore implements ExportableStore {
   }
 
   private boolean shouldSkipFile(File fileOrDir) {
-    return type.equals("config") && !fileOrDir.getName().endsWith(".xml");
+    if (type.equals(StoreType.CONFIG.getValue())) {
+      return !fileOrDir.getName().endsWith(".xml");
+    }
+    if (type.equals(StoreType.BLOB.getValue())) {
+      return !fileOrDir.getName().endsWith(".blob");
+    }
+    return false;
   }
 
   private void putFileContentIntoStream(Exporter exporter, File file) throws IOException {

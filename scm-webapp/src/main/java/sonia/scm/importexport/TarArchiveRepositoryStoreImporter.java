@@ -73,17 +73,19 @@ public class TarArchiveRepositoryStoreImporter {
         .importStore(StoreType.CONFIG, "")
         .importEntry(entryPathParts[2], tais);
     } else if(storeType.equals(StoreType.BLOB.getValue())) {
-      //TODO test this implementation
       repositoryStoreImporter
         .doImport(repository)
-        .importStore(StoreType.BLOB, "")
-        .importEntry(entryPathParts[2], tais);
+        .importStore(StoreType.BLOB, entryPathParts[2])
+        .importEntry(entryPathParts[3], tais);
     }
   }
 
   private void validateStorePath(Repository repository, String[] entryPathParts) {
     if (!isValidStorePath(entryPathParts)) {
-      throw new ImportFailedException(ContextEntry.ContextBuilder.entity(repository).build(), "Invalid store path in metadata file");
+      throw new ImportFailedException(
+        ContextEntry.ContextBuilder.entity(repository).build(),
+        "Invalid store path in metadata file"
+      );
     }
   }
 

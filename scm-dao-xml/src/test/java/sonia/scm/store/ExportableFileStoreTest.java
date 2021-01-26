@@ -89,6 +89,33 @@ class ExportableFileStoreTest {
     assertThat(os.toString()).isNotBlank();
   }
 
+  @Test
+  void shouldSkipFilteredConfigFiles(@TempDir Path temp) throws IOException {
+    createFile(temp, "config", "", "first.yaml");
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    Exporter exporter = mock(Exporter.class);
+    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp.toFile(), StoreType.CONFIG.getValue());
+
+    exportableConfigFileStore.export(exporter);
+
+    verify(exporter, never()).put(anyString(), anyLong());
+    assertThat(os.toString()).isBlank();
+  }
+
+  @Test
+  void shouldSkipFilteredBlobFiles(@TempDir Path temp) throws IOException {
+    createFile(temp, "blob", "security", "second.xml");
+    ByteArrayOutputStream os = new ByteArrayOutputStream();
+    Exporter exporter = mock(Exporter.class);
+    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp.toFile(), StoreType.BLOB.getValue());
+
+    exportableConfigFileStore.export(exporter);
+
+    verify(exporter, never()).put(anyString(), anyLong());
+    assertThat(os.toString()).isBlank();
+  }
+
+
   private File createFile(Path temp, String type, String name, String fileName) throws IOException {
     Path path = name != null ? temp.resolve(type).resolve(name) : temp.resolve(type);
     new File(path.toUri()).mkdirs();
