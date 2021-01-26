@@ -50,7 +50,7 @@ export const useIndexLink = (name: string): string | undefined => {
     throw new Error("could not find index data");
   }
   const linkObject = data._links[name] as Link;
-  if (linkObject) {
+  if (linkObject && linkObject.href) {
     return linkObject.href;
   }
 };
