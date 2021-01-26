@@ -63222,7 +63222,7 @@ exports[`Storyshots SyntaxHighlighter Without line numbers 1`] = `
 
 exports[`Storyshots Table|Table Default 1`] = `
 <table
-  className="Table__StyledTable-sc-1bx231g-0 table content is-hoverable"
+  className="table content is-hoverable"
 >
   <thead>
     <tr>
@@ -63311,9 +63311,60 @@ exports[`Storyshots Table|Table Empty 1`] = `
 </div>
 `;
 
+exports[`Storyshots Table|Table Table with Word-Break 1`] = `
+<table
+  className="table content is-hoverable Tablestories__StyledTable-vgb14n-0 hmfYbF"
+>
+  <thead>
+    <tr>
+      <th
+        className="has-cursor-pointer"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
+        Id
+        <i
+          className="fas fa-sort-alpha-down has-text-grey-light SortIcon__IconWithMarginLeft-izn5p7-0 cBnwYo"
+        />
+      </th>
+      <th
+        className="has-cursor-pointer"
+        onClick={[Function]}
+        onMouseEnter={[Function]}
+        onMouseLeave={[Function]}
+      >
+        Name
+        <i
+          className="fas fa-sort-alpha-down has-text-grey-light SortIcon__IconWithMarginLeft-izn5p7-0 cBnwYo"
+        />
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>
+        42
+      </td>
+      <td>
+        herp_derp_schlerp_ferp_gerp_nerp_terp_ierp_perp_lerp_merp_oerp_zerp_serp_verp_herp
+      </td>
+    </tr>
+    <tr>
+      <td>
+        17
+      </td>
+      <td>
+        herp_derp_schlerp_ferp_gerp_nerp_terp_ierp_perp_lerp_merp_oerp_zerp_serp_verp
+      </td>
+    </tr>
+  </tbody>
+</table>
+`;
+
 exports[`Storyshots Table|Table TextColumn 1`] = `
 <table
-  className="Table__StyledTable-sc-1bx231g-0 table content is-hoverable"
+  className="table content is-hoverable"
 >
   <thead>
     <tr>
