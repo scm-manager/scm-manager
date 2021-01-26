@@ -37,7 +37,7 @@ class FileBasedStoreEntryImporterFactoryTest {
     FileBasedStoreEntryImporterFactory factory = new FileBasedStoreEntryImporterFactory(temp);
 
     FileBasedStoreEntryImporter dataImporter = (FileBasedStoreEntryImporter) factory.importStore(new StoreEntryMetaData(StoreType.DATA, "hitchhiker"));
-    assertThat(dataImporter.getDirectory()).isEqualTo(temp.resolve("data").resolve("hitchhiker"));
+    assertThat(dataImporter.getDirectory()).isEqualTo(temp.resolve("store").resolve("data").resolve("hitchhiker"));
   }
 
   @Test
@@ -45,6 +45,6 @@ class FileBasedStoreEntryImporterFactoryTest {
     FileBasedStoreEntryImporterFactory factory = new FileBasedStoreEntryImporterFactory(temp);
 
     FileBasedStoreEntryImporter configImporter = (FileBasedStoreEntryImporter) factory.importStore(new StoreEntryMetaData(StoreType.CONFIG, ""));
-    assertThat(configImporter.getDirectory()).isEqualTo(temp.resolve("config"));
+    assertThat(configImporter.getDirectory()).isEqualTo(temp.resolve("store").resolve("config"));
   }
 }
