@@ -78,9 +78,11 @@ public class FullScmRepositoryExporter {
 
   private void writeRepository(RepositoryService service, TarArchiveOutputStream taos) throws IOException {
     File newWorkdir = workdirProvider.createNewWorkdir();
-    File repositoryFile = Files.createFile(Paths.get(newWorkdir.getPath(),"repository")).toFile();
-    try (FileOutputStream repositoryFos = new FileOutputStream(repositoryFile)) {
-      service.getBundleCommand().bundle(repositoryFos);
+    File repositoryFile = Files.createFile(Paths.get(newWorkdir.getPath(), "repository")).toFile();
+    try {
+      try (FileOutputStream repositoryFos = new FileOutputStream(repositoryFile)) {
+        service.getBundleCommand().bundle(repositoryFos);
+      }
       TarArchiveEntry entry = new TarArchiveEntry(service.getRepository().getName() + ".dump");
       entry.setSize(repositoryFile.length());
       taos.putArchiveEntry(entry);
@@ -102,9 +104,11 @@ public class FullScmRepositoryExporter {
 
   private void writeStoreData(Repository repository, TarArchiveOutputStream taos) throws IOException {
     File newWorkdir = workdirProvider.createNewWorkdir();
-    File metadata = Files.createFile(Paths.get(newWorkdir.getPath(),"metadata")).toFile();
-    try (FileOutputStream metadataFos = new FileOutputStream(metadata)) {
-      storeExporter.export(repository, metadataFos);
+    File metadata = Files.createFile(Paths.get(newWorkdir.getPath(), "metadata")).toFile();
+    try {
+      try (FileOutputStream metadataFos = new FileOutputStream(metadata)) {
+        storeExporter.export(repository, metadataFos);
+      }
       TarArchiveEntry entry = new TarArchiveEntry("scm-metadata.tar");
       entry.setSize(metadata.length());
       taos.putArchiveEntry(entry);

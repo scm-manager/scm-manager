@@ -43,8 +43,7 @@ public class RepositoryStoreImporter implements StoreImporter {
   public StoreEntryImporterFactory doImport(Repository repository) {
     Path storeLocation = locationResolver
       .forClass(Path.class)
-      .getLocation(repository.getId())
-      .resolve("store");
+      .getLocation(repository.getId());
     return new FileBasedStoreEntryImporterFactory(storeLocation);
   }
 }

@@ -45,9 +45,9 @@ public class FileBasedStoreEntryImporterFactory implements StoreEntryImporterFac
   public StoreEntryImporter importStore(StoreEntryMetaData metaData) {
     StoreType storeType = metaData.getType();
     String storeName = metaData.getName();
-    Path storeDirectory = directory;
+    Path storeDirectory = directory.resolve(Store.STORE_DIRECTORY);
     try {
-      storeDirectory = directory.resolve(resolveFilePath(storeType.getValue(), storeName));
+      storeDirectory = storeDirectory.resolve(resolveFilePath(storeType.getValue(), storeName));
       Files.createDirectories(storeDirectory);
       if (!Files.exists(storeDirectory)) {
         throw new ImportFailedException(

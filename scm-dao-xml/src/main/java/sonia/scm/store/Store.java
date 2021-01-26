@@ -32,7 +32,7 @@ public enum Store {
   BLOB("blob");
 
   private static final String GLOBAL_STORE_BASE_DIRECTORY = "var";
-  private static final String STORE_DIRECTORY = "store";
+  static final String STORE_DIRECTORY = "store";
 
   private String directory;
 

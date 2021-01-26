@@ -60,7 +60,7 @@ public class FileStoreExporter implements StoreExporter {
     File storeLocation = locationResolver
       .forClass(Path.class)
       .getLocation(repository.getId())
-      .resolve("store")
+      .resolve(Store.STORE_DIRECTORY)
       .toFile();
     return storeLocation.listFiles();
   }
@@ -76,13 +76,13 @@ public class FileStoreExporter implements StoreExporter {
 
   private void addExportableFileStore(List<ExportableStore> exportableStores, File storeTypeDirectory, File storeDirectory) {
     if (storeDirectory.isDirectory()) {
-      exportableStores.add(new ExportableFileStore(storeDirectory, parseValueToStoreTypeEnum(storeTypeDirectory)));
+      exportableStores.add(new ExportableFileStore(storeDirectory, getEnumForValue(storeTypeDirectory)));
     } else if (shouldAddConfigStore(exportableStores)) {
-      exportableStores.add(new ExportableFileStore(storeTypeDirectory, parseValueToStoreTypeEnum(storeTypeDirectory)));
+      exportableStores.add(new ExportableFileStore(storeTypeDirectory, getEnumForValue(storeTypeDirectory)));
     }
   }
 
-  private StoreType parseValueToStoreTypeEnum(File storeTypeDirectory) {
+  private StoreType getEnumForValue(File storeTypeDirectory) {
     for (StoreType type : StoreType.values()) {
       if (type.getValue().equals(storeTypeDirectory.getName())) {
         return type;
