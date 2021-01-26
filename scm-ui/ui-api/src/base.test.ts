@@ -31,7 +31,7 @@ import createWrapper from "./tests/createWrapper";
 import { QueryClient } from "react-query";
 
 describe("Test base api hooks", () => {
-  describe("usIndex tests", () => {
+  describe("useIndex tests", () => {
     fetchMock.get("/api/v2/", {
       version: "x.y.z",
       _links: {}

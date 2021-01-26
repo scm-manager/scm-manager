@@ -31,7 +31,7 @@ import { getLoginInfoLink, getLoginLink } from "../modules/indexResource";
 import LoginInfo from "../components/LoginInfo";
 import { Me } from "@scm-manager/ui-types";
 import { parse } from "query-string";
-import {useIndexLink, useLogin, useSubject} from "@scm-manager/ui-api";
+import { useIndexLink, useLogin, useSubject } from "@scm-manager/ui-api";
 
 type Props = RouteComponentProps & {
   authenticated: boolean;
@@ -71,7 +71,6 @@ const Login: FC = ({}) => {
     const to = from(window.location.search, location.state);
     return <Redirect to={to} />;
   }
-
 
   return (
     <HeroSection className="hero">
