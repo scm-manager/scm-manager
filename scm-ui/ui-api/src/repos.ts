@@ -40,7 +40,7 @@ export const useNamespaces = () => {
   return useIndexJsonResource<NamespaceCollection>("namespaces");
 };
 
-type UseRepositoriesRequest = {
+export type UseRepositoriesRequest = {
   namespace?: Namespace;
   search?: string;
   page?: number | string;
