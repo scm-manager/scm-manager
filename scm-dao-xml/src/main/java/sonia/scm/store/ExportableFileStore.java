@@ -54,19 +54,19 @@ public class ExportableFileStore implements ExportableStore {
       for (File fileOrDir : directory.listFiles()) {
         if (fileOrDir.isDirectory()) {
           exportDirectoryEntries(exporter, fileOrDir);
-        } else if (!shouldSkipFile(fileOrDir)) {
+        } else if (shouldIncludeFile(fileOrDir)) {
           putFileContentIntoStream(exporter, fileOrDir);
         }
       }
     }
   }
 
-  private boolean shouldSkipFile(File fileOrDir) {
-    if (type.equals(StoreType.CONFIG)) {
-      return !fileOrDir.getName().endsWith(".xml");
+  private boolean shouldIncludeFile(File fileOrDir) {
+    if (type.equals(StoreType.CONFIG) || type.equals(StoreType.DATA)) {
+      return fileOrDir.getName().endsWith(".xml");
     }
     if (type.equals(StoreType.BLOB)) {
-      return !fileOrDir.getName().endsWith(".blob");
+      return fileOrDir.getName().endsWith(".blob");
     }
     return false;
   }

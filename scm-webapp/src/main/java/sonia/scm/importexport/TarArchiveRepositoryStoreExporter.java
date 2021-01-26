@@ -63,7 +63,7 @@ public class TarArchiveRepositoryStoreExporter {
       for (ExportableStore store : exportableStores) {
         store.export((name, filesize) -> {
           StoreEntryMetaData storeMetaData = store.getMetaData();
-          if (isStoreType(store, StoreType.DATA)) {
+          if (isStoreType(store, StoreType.DATA) || isStoreType(store, StoreType.BLOB)) {
             String storePath = createStorePath(storeMetaData.getType().getValue(), storeMetaData.getName(), name);
             addEntryToArchive(taos, storePath, filesize);
           } else if (isStoreType(store, StoreType.CONFIG)) {

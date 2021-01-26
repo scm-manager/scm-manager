@@ -99,9 +99,9 @@ class TarArchiveRepositoryStoreExporterTest {
 
     @Override
     public void export(Exporter exporter) throws IOException {
-      OutputStream stream = exporter.put("testStore", 0);
-      stream.flush();
-      stream.close();
+      try (OutputStream stream = exporter.put("testStore", 0)) {
+        stream.flush();
+      }
     }
   }
 }
