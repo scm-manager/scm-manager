@@ -72,7 +72,7 @@ class RemoveRepositoryIdFromBlobStoreUpdateStepTest {
   private Map<String, ByteArrayOutputStream> blobStreams = new HashMap<>();
 
   @Test
-  void x() throws IOException {
+  void migrateBlobsFromOldStoreToNewStore() throws IOException {
     Mockito.doAnswer(invocation -> {
       invocation.getArgument(0, Consumer.class).accept("repo-id");
       return null;
