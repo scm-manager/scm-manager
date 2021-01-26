@@ -26,15 +26,17 @@ package sonia.scm.importexport;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.store.ExportableStore;
 import sonia.scm.store.StoreExporter;
+import sonia.scm.store.StoreType;
 
 import javax.inject.Inject;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -42,8 +44,7 @@ import java.util.List;
 
 public class TarArchiveRepositoryStoreExporter {
 
-  private static final String DATA_STORE = "data";
-  private static final String CONFIG_STORE = "config";
+  private static final Logger LOG = LoggerFactory.getLogger(TarArchiveRepositoryStoreExporter.class);
 
   private final StoreExporter storeExporter;
 
@@ -60,12 +61,14 @@ public class TarArchiveRepositoryStoreExporter {
       List<ExportableStore> exportableStores = storeExporter.listExportableStores(repository);
       for (ExportableStore store : exportableStores) {
         store.export((name, filesize) -> {
-          if (isStoreType(store, DATA_STORE)) {
+          if (isStoreType(store, StoreType.DATA)) {
             String storePath = createStorePath(store.getType(), store.getName(), name);
             addEntryToArchive(taos, storePath, filesize);
-          } else if (isStoreType(store, CONFIG_STORE)) {
+          } else if (isStoreType(store, StoreType.CONFIG)) {
             String storePath = createStorePath(store.getType(), name);
             addEntryToArchive(taos, storePath, filesize);
+          } else {
+            LOG.debug("Skip file {} on export", name);
           }
           return createOutputStream(taos);
         });
@@ -80,8 +83,8 @@ public class TarArchiveRepositoryStoreExporter {
     }
   }
 
-  private boolean isStoreType(ExportableStore store, String dataStore) {
-    return dataStore.equalsIgnoreCase(store.getType());
+  private boolean isStoreType(ExportableStore store, StoreType type) {
+    return type.getValue().equalsIgnoreCase(store.getType());
   }
 
   private void addEntryToArchive(TarArchiveOutputStream taos, String storePath, long filesize) throws IOException {

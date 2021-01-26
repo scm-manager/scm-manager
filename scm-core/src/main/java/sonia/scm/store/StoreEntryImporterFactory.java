@@ -36,5 +36,5 @@ public interface StoreEntryImporterFactory {
    * @param type The type of the store.
    * @param name The name of the store.
    */
-  StoreEntryImporter importStore(String type, String name);
+  StoreEntryImporter importStore(StoreType type, String name);
 }

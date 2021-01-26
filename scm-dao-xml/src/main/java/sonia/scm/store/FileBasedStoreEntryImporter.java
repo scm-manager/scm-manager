@@ -36,23 +36,9 @@ import java.nio.file.Path;
 public class FileBasedStoreEntryImporter implements StoreEntryImporter {
 
   private final Path directory;
-  private final String type;
-  private final String name;
 
-  FileBasedStoreEntryImporter(Path directory, String type, String name) {
+  FileBasedStoreEntryImporter(Path directory) {
     this.directory = directory;
-    this.type = type;
-    this.name = name;
-  }
-
-  @Override
-  public String getType() {
-    return type;
-  }
-
-  @Override
-  public String getName() {
-    return name;
   }
 
   @VisibleForTesting
@@ -68,7 +54,7 @@ public class FileBasedStoreEntryImporter implements StoreEntryImporter {
     } catch (IOException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.noContext(),
-        String.format("Could not import file %s for store %s of type %s", name, this.name, type),
+        String.format("Could not import file %s for store %s", name, directory.toString()),
         e
       );
     }

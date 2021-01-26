@@ -30,6 +30,7 @@ import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.store.RepositoryStoreImporter;
+import sonia.scm.store.StoreType;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -60,15 +61,22 @@ public class TarArchiveRepositoryStoreImporter {
   }
 
   private void importStoreByType(Repository repository, TarArchiveInputStream tais, String[] entryPathParts) {
-    if (entryPathParts[1].equals("data")) {
+    String storeType = entryPathParts[1];
+    if (storeType.equals(StoreType.DATA.getValue())) {
       repositoryStoreImporter
         .doImport(repository)
-        .importStore(entryPathParts[1], entryPathParts[2])
+        .importStore(StoreType.DATA, entryPathParts[2])
         .importEntry(entryPathParts[3], tais);
-    } else if (entryPathParts[1].equals("config")){
+    } else if (storeType.equals(StoreType.CONFIG.getValue())){
       repositoryStoreImporter
         .doImport(repository)
-        .importStore(entryPathParts[1], "")
+        .importStore(StoreType.CONFIG, "")
+        .importEntry(entryPathParts[2], tais);
+    } else if(storeType.equals(StoreType.BLOB.getValue())) {
+      //TODO test this implementation
+      repositoryStoreImporter
+        .doImport(repository)
+        .importStore(StoreType.BLOB, "")
         .importEntry(entryPathParts[2], tais);
     }
   }

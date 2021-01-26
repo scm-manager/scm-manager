@@ -24,27 +24,20 @@
 
 package sonia.scm.store;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+public enum StoreType {
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+  DATA("data"),
+  CONFIG("config"),
+  BLOB("blob"),
+  CONFIG_ENTRY("config");
 
-import static org.assertj.core.api.Assertions.assertThat;
+  StoreType(String value) {
+    this.value = value;
+  }
 
-class FileBasedStoreEntryImporterTest {
+  private final String value;
 
-  @Test
-  void shouldCreateFileFromInputStream(@TempDir Path temp) {
-    FileBasedStoreEntryImporter importer = new FileBasedStoreEntryImporter(temp);
-    String fileName = "testStore.xml";
-
-    importer.importEntry(fileName, new ByteArrayInputStream("testdata".getBytes()));
-
-    assertThat(Files.exists(temp.resolve(fileName))).isTrue();
-    assertThat(temp.resolve(fileName)).hasContent("testdata");
+  public String getValue() {
+    return value;
   }
 }

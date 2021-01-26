@@ -42,10 +42,10 @@ public class FileBasedStoreEntryImporterFactory implements StoreEntryImporterFac
   }
 
   @Override
-  public StoreEntryImporter importStore(String type, String name) {
+  public StoreEntryImporter importStore(StoreType type, String name) {
     Path storeDirectory = directory;
     try {
-      storeDirectory = directory.resolve(resolveFilePath(type, name));
+      storeDirectory = directory.resolve(resolveFilePath(type.getValue(), name));
       Files.createDirectories(storeDirectory);
       if (!Files.exists(storeDirectory)) {
         throw new ImportFailedException(
@@ -53,7 +53,7 @@ public class FileBasedStoreEntryImporterFactory implements StoreEntryImporterFac
           String.format("Could not create store for type %s and name %s", type, name)
         );
       }
-      return new FileBasedStoreEntryImporter(storeDirectory, type, name);
+      return new FileBasedStoreEntryImporter(storeDirectory);
 
     } catch (IOException e) {
       throw new ImportFailedException(
