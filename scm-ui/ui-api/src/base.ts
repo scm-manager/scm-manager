@@ -33,6 +33,7 @@ export type ApiResult<T> = {
   data?: T;
 };
 
+// TODO should we disable refetch on mount?
 export const useIndex = (): ApiResult<IndexResources> => {
   const legacy = useLegacyContext();
   return useQuery<IndexResources, Error>("index", () => apiClient.get("/").then(response => response.json()), {
