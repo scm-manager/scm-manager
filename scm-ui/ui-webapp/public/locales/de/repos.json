@@ -75,7 +75,7 @@
       "title": "Wählen Sie Ihre Datei aus",
       "helpText": "Wählen Sie die Datei aus der das Repository importiert werden soll."
     },
-    "full": {
+    "fullImport": {
       "title": "SCM-Manager Repository Archiv",
       "helpText": "Wählen Sie das Repository Archiv aus. Das Archiv muss von einer SCM-Manager Instanz exportiert worden sein."
     },
@@ -93,7 +93,7 @@
         "label": "Import aus Dump",
         "helpText": "Das Repository wird aus einem Datei Dump importiert."
       },
-      "full": {
+      "fullImport": {
         "label": "Import aus Archiv mit Metadaten (Experimentell)",
         "helpText": "Das Repository inkl. der Metadaten wird aus einem archivierten Dump importiert. Das Import Archiv muss von einem anderen SCM-Manager generiert worden sein."
       }

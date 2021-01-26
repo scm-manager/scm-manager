@@ -38,7 +38,7 @@ const ImportFullRepositoryForm: FC<Props> = ({ setFile, setValid}) => {
   return (
     <div className="columns">
       <div className="column is-vcentered">
-        <LabelWithHelpIcon label={t("import.full.title")} helpText={t("import.full.helpText")} />
+        <LabelWithHelpIcon label={t("import.fullImport.title")} helpText={t("import.fullImport.helpText")} />
         <FileUpload
           handleFile={(file: File) => {
             setFile(file);
