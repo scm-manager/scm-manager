@@ -22,9 +22,7 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
 
   @Override
   public BundleResponse bundle(BundleCommandRequest request) throws IOException {
-
     Path repoDir = context.getDirectory().toPath();
-
     if (Files.exists(repoDir)) {
       try (OutputStream os = request.getArchive().openStream();
            BufferedOutputStream bos = new BufferedOutputStream(os);
@@ -33,6 +31,9 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
         createTarEntryForFiles("", repoDir, taos);
         taos.finish();
       }
+    }
+    else {
+      //TODO throw ExportFailedException which already exists on the branch "feature/import_export_with_metadata"
     }
     return new BundleResponse(0);
   }
@@ -47,20 +48,20 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
     if (files != null) {
       files
         .filter(filePath -> !shouldSkipFile(filePath))
-        .forEach(f -> processFileOrDir(path, f, taos));
+        .forEach(f -> bundleFileOrDir(path, f, taos));
     }
   }
 
-  private void processFileOrDir(String path, Path fileOrDir, TarArchiveOutputStream taos) {
+  private void bundleFileOrDir(String path, Path fileOrDir, TarArchiveOutputStream taos) {
     try {
+      String filePath = path + "/" + fileOrDir.getFileName().toString();
       if (Files.isDirectory(fileOrDir)) {
-        String filePath = path + "/" + fileOrDir.getFileName().toString();
         createTarEntryForFiles(filePath, fileOrDir, taos);
       } else {
-        createArchiveEntryForFile(path, fileOrDir, taos);
+        createArchiveEntryForFile(filePath, fileOrDir, taos);
       }
     } catch (IOException e) {
-      //TODO fix exception / the matching exception already exists on the branch "feature/import_export_with_metadata"
+      //TODO throw ExportFailedException which already exists on the branch "feature/import_export_with_metadata"
       throw new WebApplicationException();
     }
   }
@@ -69,11 +70,11 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
     return filePath.getFileName().toString().equals("config");
   }
 
-  private void createArchiveEntryForFile(String filepath, Path filePath, TarArchiveOutputStream taos) throws IOException {
-    TarArchiveEntry entry = new TarArchiveEntry(filepath + "/" + filePath.getFileName().toString());
-    entry.setSize(filePath.toFile().length());
+  private void createArchiveEntryForFile(String filePath, Path path, TarArchiveOutputStream taos) throws IOException {
+    TarArchiveEntry entry = new TarArchiveEntry(filePath);
+    entry.setSize(path.toFile().length());
     taos.putArchiveEntry(entry);
-    Files.copy(filePath, taos);
+    Files.copy(path, taos);
     taos.closeArchiveEntry();
   }
 }

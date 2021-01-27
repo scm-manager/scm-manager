@@ -1,7 +1,6 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.io.ByteSink;
-import com.google.common.io.Files;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
@@ -9,10 +8,12 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.BufferedInputStream;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -24,9 +25,9 @@ class GitBundleCommandTest {
 
   @Test
   void shouldBundleRepository(@TempDir Path temp) throws IOException {
-    File repoDir = mockGitContextWithRepoDir(temp);
-    if (!repoDir.exists()) {
-      repoDir.mkdirs();
+    Path repoDir = mockGitContextWithRepoDir(temp);
+    if (!Files.exists(repoDir)) {
+      Files.createDirectories(repoDir);
     }
     String content = "readme testdata";
     addFileToRepoDir(repoDir, "README.md", content);
@@ -45,19 +46,19 @@ class GitBundleCommandTest {
     assertThat(fileExtension).isEqualTo("tar");
   }
 
-  private void addFileToRepoDir(File repoDir, String filename, String content) throws IOException {
-    File file = new File(repoDir, filename);
-    if (!file.exists()) {
-      Files.touch(file);
+  private void addFileToRepoDir(Path repoDir, String filename, String content) throws IOException {
+    Path file = repoDir.resolve(filename);
+    if (!Files.exists(file)) {
+      Files.createFile(file);
     }
-    Files.write(content.getBytes(), file);
+    Files.copy(new ByteArrayInputStream(content.getBytes()), file, StandardCopyOption.REPLACE_EXISTING);
   }
 
-  private File mockGitContextWithRepoDir(Path temp) {
+  private Path mockGitContextWithRepoDir(Path temp) {
     GitContext gitContext = mock(GitContext.class);
     bundleCommand = new GitBundleCommand(gitContext);
-    File repoDir = new File(temp.toString() + "/repository");
-    when(gitContext.getDirectory()).thenReturn(repoDir);
+    Path repoDir = Paths.get(temp.toString(), "repository");
+    when(gitContext.getDirectory()).thenReturn(repoDir.toFile());
     return repoDir;
   }
 
@@ -79,5 +80,4 @@ class GitBundleCommandTest {
     tais.read(result);
     assertThat(new String(result)).isEqualTo(content);
   }
-
 }

@@ -25,9 +25,7 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
 
   @Override
   public UnbundleResponse unbundle(UnbundleCommandRequest request) throws IOException {
-    ByteSource archive = checkNotNull(request.getArchive(),
-      "archive is required");
-
+    ByteSource archive = checkNotNull(request.getArchive(),"archive is required");
     Path repositoryDir = context.getDirectory().toPath();
     LOG.debug("archive repository {} to {}", repositoryDir, archive);
 
@@ -35,6 +33,11 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
       Files.createDirectories(repositoryDir);
     }
 
+    unbundleRepositoryFromRequest(request, repositoryDir);
+    return new UnbundleResponse(0);
+  }
+
+  private void unbundleRepositoryFromRequest(UnbundleCommandRequest request, Path repositoryDir) throws IOException {
     try (TarArchiveInputStream tais = new TarArchiveInputStream(request.getArchive().openBufferedStream())) {
       TarArchiveEntry entry = tais.getNextTarEntry();
       while (entry != null) {
@@ -47,7 +50,6 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
         entry = tais.getNextTarEntry();
       }
     }
-    return new UnbundleResponse(0);
   }
 
   private void createDirectoriesIfNestedFile(Path repositoryDir, TarArchiveEntry entry) throws IOException {
