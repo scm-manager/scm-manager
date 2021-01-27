@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add markdown codeblock renderer extension point ([#1492](https://github.com/scm-manager/scm-manager/pull/1492))
 - Add Java version to plugin center url ([#1494](https://github.com/scm-manager/scm-manager/pull/1494))
 - Add Font ttf-dejavu to oci image ([#1498](https://github.com/scm-manager/scm-manager/issues/1498))
+- Add import and export for Git via dump file ([#1507](https://github.com/scm-manager/scm-manager/pull/1507))
 
 ### Fixed
 - Add explicit provider setup for bouncy castle ([#1500](https://github.com/scm-manager/scm-manager/pull/1500))
