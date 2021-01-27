@@ -34,8 +34,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
+import static java.util.Collections.emptyList;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 
 public class FileStoreExporter implements StoreExporter {
@@ -51,17 +55,19 @@ public class FileStoreExporter implements StoreExporter {
   public List<ExportableStore> listExportableStores(Repository repository) {
     List<ExportableStore> exportableStores = new ArrayList<>();
     Path storeDirectory = resolveStoreDirectory(repository);
+    if (!Files.exists(storeDirectory)) {
+      return emptyList();
+    }
     try (Stream<Path> storeTypeDirectories = Files.list(storeDirectory)) {
-      storeTypeDirectories.forEach(storeTypeDirectory -> {
-        exportStoreTypeDirectories(exportableStores, storeTypeDirectory);
-      });
+      storeTypeDirectories.forEach(storeTypeDirectory ->
+        exportStoreTypeDirectories(exportableStores, storeTypeDirectory)
+      );
     } catch (IOException e) {
       throw new ExportFailedException(
         noContext(),
         "Could not list content of directory " + storeDirectory,
         e
       );
-
     }
     return exportableStores;
   }
@@ -76,7 +82,7 @@ public class FileStoreExporter implements StoreExporter {
   private void exportStoreTypeDirectories(List<ExportableStore> exportableStores, Path storeTypeDirectory) {
     try (Stream<Path> storeDirectories = Files.list(storeTypeDirectory)) {
       storeDirectories.forEach(storeDirectory ->
-        addExportableFileStore(exportableStores, storeTypeDirectory, storeDirectory)
+        getStoreFor(storeDirectory).ifPresent(exportableStores::add)
       );
     } catch (IOException e) {
       throw new ExportFailedException(
@@ -87,27 +93,24 @@ public class FileStoreExporter implements StoreExporter {
     }
   }
 
-  private void addExportableFileStore(List<ExportableStore> exportableStores, Path storeTypeDirectory, Path storeDirectory) {
-    if (Files.isDirectory(storeDirectory)) {
-      exportableStores.add(new ExportableFileStore(storeDirectory, getEnumForValue(storeTypeDirectory)));
-    } else if (shouldAddConfigStore(exportableStores)) {
-      exportableStores.add(new ExportableFileStore(storeTypeDirectory, getEnumForValue(storeTypeDirectory)));
+  private Optional<ExportableStore> getStoreFor(Path storePath) {
+    if (isStoreDirectoryForType(storePath, StoreType.DATA)) {
+      return of(new ExportableDataFileStore(storePath));
+    } else if (isStoreDirectoryForType(storePath, StoreType.BLOB)) {
+      return of(new ExportableBlobFileStore(storePath));
+    } else if (isValidConfigFile(storePath)) {
+      return of(new ExportableConfigFileStore(storePath));
+    } else {
+      return empty();
     }
   }
 
-  private StoreType getEnumForValue(Path storeTypeDirectory) {
-    for (StoreType type : StoreType.values()) {
-      if (type.getValue().equals(storeTypeDirectory.getFileName().toString())) {
-        return type;
-      }
-    }
-    throw new ExportFailedException(
-      noContext(),
-      String.format("Unsupported store type found: %s", storeTypeDirectory.getFileName().toString())
-    );
+  private boolean isValidConfigFile(Path storePath) {
+    return isStoreDirectoryForType(storePath, StoreType.CONFIG)
+      && storePath.getFileName().toString().endsWith(".xml");
   }
 
-  private boolean shouldAddConfigStore(List<ExportableStore> exportableStores) {
-    return exportableStores.stream().noneMatch(es -> StoreType.CONFIG.equals(es.getMetaData().getType()));
+  private boolean isStoreDirectoryForType(Path storePath, StoreType data) {
+    return storePath.getParent().getFileName().toString().equals(data.getValue());
   }
 }

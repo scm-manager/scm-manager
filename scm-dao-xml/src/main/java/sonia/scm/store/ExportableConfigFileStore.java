@@ -24,20 +24,26 @@
 
 package sonia.scm.store;
 
-public enum StoreType {
+import java.io.IOException;
+import java.nio.file.Path;
 
-  DATA("data"),
-  CONFIG("config"),
-  BLOB("blob"),
-  CONFIG_ENTRY("configEntry");
+import static sonia.scm.store.ExportCopier.putFileContentIntoStream;
 
-  StoreType(String value) {
-    this.value = value;
+class ExportableConfigFileStore implements ExportableStore {
+
+  private final Path file;
+
+  ExportableConfigFileStore(Path file) {
+    this.file = file;
   }
 
-  private final String value;
+  @Override
+  public StoreEntryMetaData getMetaData() {
+    return new StoreEntryMetaData(StoreType.CONFIG, file.getFileName().toString());
+  }
 
-  public String getValue() {
-    return value;
+  @Override
+  public void export(Exporter exporter) throws IOException {
+    putFileContentIntoStream(exporter, file);
   }
 }

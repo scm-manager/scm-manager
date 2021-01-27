@@ -24,20 +24,20 @@
 
 package sonia.scm.store;
 
-public enum StoreType {
+import java.nio.file.Path;
 
-  DATA("data"),
-  CONFIG("config"),
-  BLOB("blob"),
-  CONFIG_ENTRY("configEntry");
+class ExportableBlobFileStore extends ExportableDirectoryBasedFileStore {
 
-  StoreType(String value) {
-    this.value = value;
+  ExportableBlobFileStore(Path directory) {
+    super(directory);
   }
 
-  private final String value;
+  @Override
+  StoreType getStoreType() {
+    return StoreType.BLOB;
+  }
 
-  public String getValue() {
-    return value;
+  boolean shouldIncludeFile(Path file) {
+    return file.getFileName().toString().endsWith(".blob");
   }
 }

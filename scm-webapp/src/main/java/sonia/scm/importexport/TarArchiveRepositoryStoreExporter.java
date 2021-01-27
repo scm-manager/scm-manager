@@ -43,6 +43,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 
+import static java.util.Arrays.asList;
+
 public class TarArchiveRepositoryStoreExporter {
 
   private static final Logger LOG = LoggerFactory.getLogger(TarArchiveRepositoryStoreExporter.class);
@@ -63,10 +65,10 @@ public class TarArchiveRepositoryStoreExporter {
       for (ExportableStore store : exportableStores) {
         store.export((name, filesize) -> {
           StoreEntryMetaData storeMetaData = store.getMetaData();
-          if (isStoreType(store, StoreType.DATA) || isStoreType(store, StoreType.BLOB)) {
+          if (isOneOfStoreTypes(store, StoreType.DATA, StoreType.BLOB)) {
             String storePath = createStorePath(storeMetaData.getType().getValue(), storeMetaData.getName(), name);
             addEntryToArchive(taos, storePath, filesize);
-          } else if (isStoreType(store, StoreType.CONFIG)) {
+          } else if (isOneOfStoreTypes(store, StoreType.CONFIG, StoreType.CONFIG_ENTRY)) {
             String storePath = createStorePath(storeMetaData.getType().getValue(), name);
             addEntryToArchive(taos, storePath, filesize);
           } else {
@@ -85,8 +87,8 @@ public class TarArchiveRepositoryStoreExporter {
     }
   }
 
-  private boolean isStoreType(ExportableStore store, StoreType type) {
-    return type.equals(store.getMetaData().getType());
+  private boolean isOneOfStoreTypes(ExportableStore store, StoreType... types) {
+    return asList(types).contains(store.getMetaData().getType());
   }
 
   private void addEntryToArchive(TarArchiveOutputStream taos, String storePath, long filesize) throws IOException {

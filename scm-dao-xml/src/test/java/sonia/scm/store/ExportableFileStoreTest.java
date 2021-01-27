@@ -27,14 +27,15 @@ package sonia.scm.store;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -48,11 +49,15 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class ExportableFileStoreTest {
 
+  @Mock
+  Exporter exporter;
+
   @Test
   void shouldNotPutContentIfNoFilesExists(@TempDir Path temp) throws IOException {
-    Exporter exporter = mock(Exporter.class);
-    ExportableFileStore exportableFileStore = new ExportableFileStore(temp.resolve("store"), StoreType.CONFIG);
+    Path dataStoreDir = temp.resolve("some-store");
+    Files.createDirectories(dataStoreDir);
 
+    ExportableStore exportableFileStore = new ExportableDataFileStore(dataStoreDir);
     exportableFileStore.export(exporter);
 
     verify(exporter, never()).put(anyString(), anyLong());
@@ -63,8 +68,7 @@ class ExportableFileStoreTest {
     createFile(temp, "data", "trace", "first.xml");
     createFile(temp, "data", "trace", "second.xml");
     ByteArrayOutputStream os = new ByteArrayOutputStream();
-    Exporter exporter = mock(Exporter.class);
-    ExportableFileStore exportableFileStore = new ExportableFileStore(temp, StoreType.DATA);
+    ExportableStore exportableFileStore = new ExportableDataFileStore(temp.resolve("data").resolve("trace"));
     when(exporter.put(anyString(), anyLong())).thenReturn(os);
 
     exportableFileStore.export(exporter);
@@ -77,16 +81,13 @@ class ExportableFileStoreTest {
   @Test
   void shouldPutContentIntoExporterForConfigStore(@TempDir Path temp) throws IOException {
     createFile(temp, "config", "", "first.xml");
-    createFile(temp, "config", "", "second.xml");
     ByteArrayOutputStream os = new ByteArrayOutputStream();
-    Exporter exporter = mock(Exporter.class);
-    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp, StoreType.CONFIG);
+    ExportableStore exportableConfigFileStore = new ExportableConfigFileStore(temp.resolve("config").resolve("first.xml"));
     when(exporter.put(anyString(), anyLong())).thenReturn(os);
 
     exportableConfigFileStore.export(exporter);
 
     verify(exporter).put(eq("first.xml"), anyLong());
-    verify(exporter).put(eq("second.xml"), anyLong());
     assertThat(os.toString()).isNotBlank();
   }
 
@@ -95,26 +96,13 @@ class ExportableFileStoreTest {
     createFile(temp, "blob", "assets", "first.blob");
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     Exporter exporter = mock(Exporter.class);
-    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp, StoreType.BLOB);
+    ExportableStore exportableBlobFileStore = new ExportableBlobFileStore(temp.resolve("blob").resolve("assets"));
     when(exporter.put(anyString(), anyLong())).thenReturn(os);
 
-    exportableConfigFileStore.export(exporter);
+    exportableBlobFileStore.export(exporter);
 
     verify(exporter).put(eq("first.blob"), anyLong());
     assertThat(os.toString()).isNotBlank();
-  }
-
-  @Test
-  void shouldSkipFilteredConfigFiles(@TempDir Path temp) throws IOException {
-    createFile(temp, "config", "", "first.yaml");
-    ByteArrayOutputStream os = new ByteArrayOutputStream();
-    Exporter exporter = mock(Exporter.class);
-    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp, StoreType.CONFIG);
-
-    exportableConfigFileStore.export(exporter);
-
-    verify(exporter, never()).put(anyString(), anyLong());
-    assertThat(os.toString()).isBlank();
   }
 
   @Test
@@ -122,14 +110,13 @@ class ExportableFileStoreTest {
     createFile(temp, "blob", "security", "second.xml");
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     Exporter exporter = mock(Exporter.class);
-    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp, StoreType.BLOB);
+    ExportableStore exportableBlobFileStore = new ExportableBlobFileStore(temp.resolve("blob").resolve("security"));
 
-    exportableConfigFileStore.export(exporter);
+    exportableBlobFileStore.export(exporter);
 
     verify(exporter, never()).put(anyString(), anyLong());
     assertThat(os.toString()).isBlank();
   }
-
 
   private File createFile(Path temp, String type, String name, String fileName) throws IOException {
     Path path = name != null ? temp.resolve(type).resolve(name) : temp.resolve(type);
