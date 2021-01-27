@@ -26,7 +26,7 @@ import fetchMock from "fetch-mock-jest";
 import { renderHook } from "@testing-library/react-hooks";
 import { Me } from "@scm-manager/ui-types";
 import createWrapper from "./tests/createWrapper";
-import { useLogin, useMe, useSubject } from "./login";
+import { useLogin, useLogout, useMe, useSubject } from "./login";
 import { setIndexLink, setEmptyIndex } from "./tests/indexLinks";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import { LegacyContext } from "./LegacyContext";
@@ -112,7 +112,7 @@ describe("Test login hooks", () => {
       });
       const { result } = renderHook(() => useSubject(), { wrapper: createWrapper(undefined, queryClient) });
 
-      expect(result.current.isAuthenticated).toBe(true);
+      expect(result.current.isAuthenticated).toBe(false);
       expect(result.current.isAnonymous).toBe(true);
     });
 
@@ -154,13 +154,64 @@ describe("Test login hooks", () => {
         wrapper: createWrapper(undefined, queryClient)
       });
       const { login } = result.current;
+      expect(login).toBeDefined();
 
       await act(() => {
-        login("tricia", "hitchhickersSecret!");
+        if (login) {
+          login("tricia", "hitchhickersSecret!");
+        }
         return waitForNextUpdate();
       });
 
       expect(result.current.error).toBeFalsy();
+    });
+
+    it("should not return login, if authenticated", () => {
+      const queryClient = createInfiniteCachingClient();
+      setEmptyIndex(queryClient);
+      queryClient.setQueryData("me", tricia);
+
+      const { result } = renderHook(() => useLogin(), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+
+      expect(result.current.login).toBeUndefined();
+    });
+  });
+
+  describe("useLogout tests", () => {
+    it("should call logout", async () => {
+      const queryClient = createInfiniteCachingClient();
+      setIndexLink(queryClient, "logout", "/logout");
+
+      fetchMock.deleteOnce("/api/v2/logout", "");
+
+      const { result, waitForNextUpdate } = renderHook(() => useLogout(), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+      const { logout } = result.current;
+      expect(logout).toBeDefined();
+
+      await act(() => {
+        if (logout) {
+          logout();
+        }
+        return waitForNextUpdate();
+      });
+
+      expect(result.current.error).toBeFalsy();
+    });
+
+    it("should not return logout without link", () => {
+      const queryClient = createInfiniteCachingClient();
+      setEmptyIndex(queryClient);
+
+      const { result } = renderHook(() => useLogout(), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+
+      const { logout } = result.current;
+      expect(logout).toBeUndefined();
     });
   });
 });

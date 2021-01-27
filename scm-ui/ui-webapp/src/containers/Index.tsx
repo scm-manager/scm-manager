@@ -28,7 +28,7 @@ import PluginLoader from "./PluginLoader";
 import ScrollToTop from "./ScrollToTop";
 import IndexErrorPage from "./IndexErrorPage";
 import { useIndex } from "@scm-manager/ui-api";
-import {Link} from "@scm-manager/ui-types";
+import { Link } from "@scm-manager/ui-types";
 
 const Index: FC = () => {
   const { isLoading, error, data } = useIndex();
@@ -38,20 +38,21 @@ const Index: FC = () => {
 
   if (error) {
     return <IndexErrorPage error={error} />;
-  } else if (isLoading) {
-    return <Loading />;
-  } else if (data) {
-    const link = (data._links.uiPlugins as Link).href;
-    return (
-      <ErrorBoundary fallback={IndexErrorPage}>
-        <ScrollToTop>
-          <PluginLoader link={link} loaded={pluginsLoaded} callback={() => setPluginsLoaded(true)}>
-            <App />
-          </PluginLoader>
-        </ScrollToTop>
-      </ErrorBoundary>
-    );
   }
+  if (isLoading || !data) {
+    return <Loading />;
+  }
+
+  const link = (data._links.uiPlugins as Link).href;
+  return (
+    <ErrorBoundary fallback={IndexErrorPage}>
+      <ScrollToTop>
+        <PluginLoader link={link} loaded={pluginsLoaded} callback={() => setPluginsLoaded(true)}>
+          <App />
+        </PluginLoader>
+      </ScrollToTop>
+    </ErrorBoundary>
+  );
 };
 
 export default Index;

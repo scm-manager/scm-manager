@@ -21,55 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import {connect} from "react-redux";
-import {WithTranslation, withTranslation} from "react-i18next";
+import React, { FC, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 
-import {getLogoutFailure, logout} from "../modules/auth";
-import {ErrorPage, Loading} from "@scm-manager/ui-components";
-import {getLogoutLink} from "../modules/indexResource";
-import {RouteComponentProps, withRouter} from "react-router-dom";
-import {compose} from "redux";
+import { ErrorPage, Loading } from "@scm-manager/ui-components";
+import { Redirect } from "react-router-dom";
+import { useLogout } from "@scm-manager/ui-api";
 
-type Props = RouteComponentProps &
-  WithTranslation & {
-  error: Error;
-  logoutLink: string;
-
-  // dispatcher functions
-  logout: (link: string, callback: () => void) => void;
-};
-
-class Logout extends React.Component<Props> {
-  componentDidMount() {
-    if (this.props.logoutLink) {
-      this.props.logout(this.props.logoutLink, () => this.props.history.push("/login"));
+const Logout: FC = ({}) => {
+  const { error, logout } = useLogout();
+  const [t] = useTranslation("commons");
+  useEffect(() => {
+    if (logout) {
+      logout();
     }
+  }, []);
+
+  if (!logout) {
+    return <Redirect to={"/login"} />;
   }
 
-  render() {
-    const {error, t} = this.props;
-    if (error) {
-      return <ErrorPage title={t("logout.error.title")} subtitle={t("logout.error.subtitle")} error={error}/>;
-    } else {
-      return <Loading/>;
-    }
+  if (error) {
+    return <ErrorPage title={t("logout.error.title")} subtitle={t("logout.error.subtitle")} error={error} />;
   }
-}
-
-const mapStateToProps = (state: any) => {
-  const error = getLogoutFailure(state);
-  const logoutLink = getLogoutLink(state);
-  return {
-    error,
-    logoutLink
-  };
+  return <Loading />;
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    logout: (link: string, callback: () => void) => dispatch(logout(link, callback))
-  };
-};
-
-export default compose(withTranslation("commons"), withRouter, connect(mapStateToProps, mapDispatchToProps))(Logout);
+export default Logout;

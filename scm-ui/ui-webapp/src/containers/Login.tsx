@@ -22,28 +22,11 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { connect } from "react-redux";
-import { Redirect, RouteComponentProps, useLocation, withRouter } from "react-router-dom";
-import { compose } from "redux";
+import { Redirect, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import { getLoginFailure, getMe, isAnonymous, isLoginPending, login } from "../modules/auth";
-import { getLoginInfoLink, getLoginLink } from "../modules/indexResource";
 import LoginInfo from "../components/LoginInfo";
-import { Me } from "@scm-manager/ui-types";
 import { parse } from "query-string";
-import {useIndexLink, useLogin, useSubject} from "@scm-manager/ui-api";
-
-type Props = RouteComponentProps & {
-  authenticated: boolean;
-  me: Me;
-  loading: boolean;
-  error?: Error;
-  link: string;
-  loginInfoLink?: string;
-
-  // dispatcher props
-  login: (link: string, username: string, password: string) => void;
-};
+import { useIndexLink, useLogin } from "@scm-manager/ui-api";
 
 const HeroSection = styled.section`
   padding-top: 2em;
@@ -62,16 +45,14 @@ export const from = (queryString?: string, stateParams?: FromObject | null): str
 };
 
 const Login: FC = ({}) => {
-  const { isAuthenticated, me } = useSubject();
   const location = useLocation<FromObject>();
   const { login, isLoading, error } = useLogin();
   const loginInfoLink = useIndexLink("loginInfo");
 
-  if (isAuthenticated && !!me) {
+  if (!login) {
     const to = from(window.location.search, location.state);
     return <Redirect to={to} />;
   }
-
 
   return (
     <HeroSection className="hero">
