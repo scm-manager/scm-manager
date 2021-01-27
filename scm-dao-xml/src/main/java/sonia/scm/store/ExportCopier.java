@@ -24,20 +24,29 @@
 
 package sonia.scm.store;
 
-public enum StoreType {
+import sonia.scm.repository.api.ExportFailedException;
 
-  DATA("data"),
-  CONFIG("config"),
-  BLOB("blob"),
-  CONFIG_ENTRY("configEntry");
+import java.io.IOException;
+import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-  StoreType(String value) {
-    this.value = value;
+import static sonia.scm.ContextEntry.ContextBuilder.noContext;
+
+final class ExportCopier {
+
+  private ExportCopier() {
   }
 
-  private final String value;
-
-  public String getValue() {
-    return value;
+  static void putFileContentIntoStream(Exporter exporter, Path file) {
+    try (OutputStream stream = exporter.put(file.getFileName().toString(), Files.size(file))) {
+      Files.copy(file, stream);
+    } catch (IOException e) {
+      throw new ExportFailedException(
+        noContext(),
+        "Could not copy file to export stream: " + file,
+        e
+      );
+    }
   }
 }

@@ -24,20 +24,28 @@
 
 package sonia.scm.store;
 
-public enum StoreType {
+import java.nio.file.Path;
+import java.util.Optional;
+import java.util.function.Function;
 
-  DATA("data"),
-  CONFIG("config"),
-  BLOB("blob"),
-  CONFIG_ENTRY("configEntry");
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
-  StoreType(String value) {
-    this.value = value;
+class ExportableDataFileStore extends ExportableDirectoryBasedFileStore {
+
+  static Function<StoreType, Optional<Function<Path, ExportableStore>>> DATA_FACTORY =
+    storeType -> storeType == StoreType.DATA ? of(ExportableDataFileStore::new) : empty();
+
+  ExportableDataFileStore(Path directory) {
+    super(directory);
   }
 
-  private final String value;
+  @Override
+  StoreType getStoreType() {
+    return StoreType.DATA;
+  }
 
-  public String getValue() {
-    return value;
+  boolean shouldIncludeFile(Path file) {
+    return file.getFileName().toString().endsWith(".xml");
   }
 }
