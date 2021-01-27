@@ -4,11 +4,13 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import sonia.scm.repository.api.BundleResponse;
 
+import javax.ws.rs.WebApplicationException;
 import java.io.BufferedOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Stream;
 
 public class GitBundleCommand extends AbstractGitCommand implements BundleCommand {
 
@@ -21,9 +23,9 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
   @Override
   public BundleResponse bundle(BundleCommandRequest request) throws IOException {
 
-    File repoDir = context.getDirectory();
+    Path repoDir = context.getDirectory().toPath();
 
-    if (repoDir.exists()) {
+    if (Files.exists(repoDir)) {
       try (OutputStream os = request.getArchive().openStream();
            BufferedOutputStream bos = new BufferedOutputStream(os);
            TarArchiveOutputStream taos = new TarArchiveOutputStream(bos)) {
@@ -40,33 +42,38 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
     return TAR_ARCHIVE;
   }
 
-  private void createTarEntryForFiles(String path, File fileOrDir, TarArchiveOutputStream taos) throws IOException {
-    File[] files = fileOrDir.listFiles();
+  private void createTarEntryForFiles(String path, Path fileOrDir, TarArchiveOutputStream taos) throws IOException {
+    Stream<Path> files = Files.list(fileOrDir);
     if (files != null) {
-      for (File file : files) {
-        if (shouldSkipFile(file)) {
-          continue;
-        }
-
-        if (file.isDirectory()) {
-          String filePath = path + file.getName();
-          createTarEntryForFiles(filePath, file, taos);
-        } else {
-          createArchiveEntryForFile(taos, path, file);
-        }
-      }
+      files
+        .filter(filePath -> !shouldSkipFile(filePath))
+        .forEach(f -> processFileOrDir(path, f, taos));
     }
   }
 
-  private boolean shouldSkipFile(File file) {
-    return file.getName().equals("config");
+  private void processFileOrDir(String path, Path fileOrDir, TarArchiveOutputStream taos) {
+    try {
+      if (Files.isDirectory(fileOrDir)) {
+        String filePath = path + "/" + fileOrDir.getFileName().toString();
+        createTarEntryForFiles(filePath, fileOrDir, taos);
+      } else {
+        createArchiveEntryForFile(path, fileOrDir, taos);
+      }
+    } catch (IOException e) {
+      //TODO fix exception / the matching exception already exists on the branch "feature/import_export_with_metadata"
+      throw new WebApplicationException();
+    }
   }
 
-  private void createArchiveEntryForFile(TarArchiveOutputStream taos, String filepath, File file) throws IOException {
-    TarArchiveEntry entry = new TarArchiveEntry(filepath + File.separator + file.getName());
-    entry.setSize(file.length());
+  private boolean shouldSkipFile(Path filePath) {
+    return filePath.getFileName().toString().equals("config");
+  }
+
+  private void createArchiveEntryForFile(String filepath, Path filePath, TarArchiveOutputStream taos) throws IOException {
+    TarArchiveEntry entry = new TarArchiveEntry(filepath + "/" + filePath.getFileName().toString());
+    entry.setSize(filePath.toFile().length());
     taos.putArchiveEntry(entry);
-    Files.copy(file.toPath(), taos);
+    Files.copy(filePath, taos);
     taos.closeArchiveEntry();
   }
 }
