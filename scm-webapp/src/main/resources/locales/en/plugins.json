@@ -47,6 +47,12 @@
           "displayName": "Archive repositories",
           "description": "May mark repositories as \"archived\" and therefore unmodifiable"
         }
+      },
+      "read,export": {
+        "*": {
+          "displayName": "Export repositories",
+          "description": "May export all repositories"
+        }
       }
     },
     "user": {
@@ -148,6 +154,10 @@
       "archive": {
         "displayName": "archive repository",
         "description": "May mark the repository as \"archived\" and therefore unmodifiable"
+      },
+      "export": {
+        "displayName": "export repository",
+        "description": "May export the repository"
       },
       "*": {
         "displayName": "own repository",
