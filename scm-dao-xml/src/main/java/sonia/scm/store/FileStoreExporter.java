@@ -24,16 +24,19 @@
 
 package sonia.scm.store;
 
-import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.api.ExportFailedException;
 
 import javax.inject.Inject;
-import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
+
+import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 
 public class FileStoreExporter implements StoreExporter {
 
@@ -47,50 +50,60 @@ public class FileStoreExporter implements StoreExporter {
   @Override
   public List<ExportableStore> listExportableStores(Repository repository) {
     List<ExportableStore> exportableStores = new ArrayList<>();
-    File[] storeTypeDirectories = resolveStoreTypeDirectories(repository);
-    if (storeTypeDirectories != null) {
-      for (File storeTypeDirectory : storeTypeDirectories) {
+    Path storeDirectory = resolveStoreDirectory(repository);
+    try (Stream<Path> storeTypeDirectories = Files.list(storeDirectory)) {
+      storeTypeDirectories.forEach(storeTypeDirectory -> {
         exportStoreTypeDirectories(exportableStores, storeTypeDirectory);
-      }
+      });
+    } catch (IOException e) {
+      throw new ExportFailedException(
+        noContext(),
+        "Could not list content of directory " + storeDirectory,
+        e
+      );
+
     }
     return exportableStores;
   }
 
-  private File[] resolveStoreTypeDirectories(Repository repository) {
-    File storeLocation = locationResolver
+  private Path resolveStoreDirectory(Repository repository) {
+    return locationResolver
       .forClass(Path.class)
       .getLocation(repository.getId())
-      .resolve(Store.STORE_DIRECTORY)
-      .toFile();
-    return storeLocation.listFiles();
+      .resolve(Store.STORE_DIRECTORY);
   }
 
-  private void exportStoreTypeDirectories(List<ExportableStore> exportableStores, File storeTypeDirectory) {
-    File[] storeDirectories = storeTypeDirectory.listFiles();
-    if (storeDirectories != null) {
-      for (File storeDirectory : storeDirectories) {
-        addExportableFileStore(exportableStores, storeTypeDirectory, storeDirectory);
-      }
+  private void exportStoreTypeDirectories(List<ExportableStore> exportableStores, Path storeTypeDirectory) {
+    try (Stream<Path> storeDirectories = Files.list(storeTypeDirectory)) {
+      storeDirectories.forEach(storeDirectory ->
+        addExportableFileStore(exportableStores, storeTypeDirectory, storeDirectory)
+      );
+    } catch (IOException e) {
+      throw new ExportFailedException(
+        noContext(),
+        "Could not list content of directory " + storeTypeDirectory,
+        e
+      );
     }
   }
 
-  private void addExportableFileStore(List<ExportableStore> exportableStores, File storeTypeDirectory, File storeDirectory) {
-    if (storeDirectory.isDirectory()) {
+  private void addExportableFileStore(List<ExportableStore> exportableStores, Path storeTypeDirectory, Path storeDirectory) {
+    if (Files.isDirectory(storeDirectory)) {
       exportableStores.add(new ExportableFileStore(storeDirectory, getEnumForValue(storeTypeDirectory)));
     } else if (shouldAddConfigStore(exportableStores)) {
       exportableStores.add(new ExportableFileStore(storeTypeDirectory, getEnumForValue(storeTypeDirectory)));
     }
   }
 
-  private StoreType getEnumForValue(File storeTypeDirectory) {
+  private StoreType getEnumForValue(Path storeTypeDirectory) {
     for (StoreType type : StoreType.values()) {
-      if (type.getValue().equals(storeTypeDirectory.getName())) {
+      if (type.getValue().equals(storeTypeDirectory.getFileName().toString())) {
         return type;
       }
     }
     throw new ExportFailedException(
-      ContextEntry.ContextBuilder.noContext(),
-      String.format("Unsupported store type found: %s", storeTypeDirectory.getName())
+      noContext(),
+      String.format("Unsupported store type found: %s", storeTypeDirectory.getFileName().toString())
     );
   }
 

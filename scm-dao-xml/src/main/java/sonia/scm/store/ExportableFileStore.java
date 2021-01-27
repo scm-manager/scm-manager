@@ -24,24 +24,29 @@
 
 package sonia.scm.store;
 
-import java.io.File;
+import sonia.scm.repository.api.ExportFailedException;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.stream.Stream;
+
+import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 
 public class ExportableFileStore implements ExportableStore {
 
-  private final File directory;
+  private final Path directory;
   private final StoreType type;
 
-  public ExportableFileStore(File directory, StoreType type) {
+  public ExportableFileStore(Path directory, StoreType type) {
     this.directory = directory;
     this.type = type;
   }
 
   @Override
   public StoreEntryMetaData getMetaData() {
-    return new StoreEntryMetaData(type, directory.getName());
+    return new StoreEntryMetaData(type, directory.getFileName().toString());
   }
 
   @Override
@@ -49,31 +54,47 @@ public class ExportableFileStore implements ExportableStore {
     exportDirectoryEntries(exporter, directory);
   }
 
-  private void exportDirectoryEntries(Exporter exporter, File directory) throws IOException {
-    if (directory.listFiles() != null) {
-      for (File fileOrDir : directory.listFiles()) {
-        if (fileOrDir.isDirectory()) {
-          exportDirectoryEntries(exporter, fileOrDir);
-        } else if (shouldIncludeFile(fileOrDir)) {
-          putFileContentIntoStream(exporter, fileOrDir);
-        }
+  private void exportDirectoryEntries(Exporter exporter, Path directory) {
+    if (Files.isDirectory(directory)) {
+      try (Stream<Path> fileList = Files.list(directory)) {
+        fileList.forEach(
+          fileOrDir -> {
+            if (Files.isDirectory(fileOrDir)) {
+              exportDirectoryEntries(exporter, fileOrDir);
+            } else if (shouldIncludeFile(fileOrDir)) {
+              putFileContentIntoStream(exporter, fileOrDir);
+            }
+          }
+        );
+      } catch (IOException e) {
+        throw new ExportFailedException(
+          noContext(),
+          "Could not read directory " + directory,
+          e
+        );
       }
     }
   }
 
-  private boolean shouldIncludeFile(File fileOrDir) {
+  private boolean shouldIncludeFile(Path fileOrDir) {
     if (type.equals(StoreType.CONFIG) || type.equals(StoreType.DATA)) {
-      return fileOrDir.getName().endsWith(".xml");
+      return fileOrDir.getFileName().toString().endsWith(".xml");
     }
     if (type.equals(StoreType.BLOB)) {
-      return fileOrDir.getName().endsWith(".blob");
+      return fileOrDir.getFileName().toString().endsWith(".blob");
     }
     return false;
   }
 
-  private void putFileContentIntoStream(Exporter exporter, File file) throws IOException {
-    try (OutputStream stream = exporter.put(file.getName(), file.length())) {
-      Files.copy(file.toPath(), stream);
+  private void putFileContentIntoStream(Exporter exporter, Path file) {
+    try (OutputStream stream = exporter.put(file.getFileName().toString(), Files.size(file))) {
+      Files.copy(file, stream);
+    } catch (IOException e) {
+      throw new ExportFailedException(
+        noContext(),
+        "Could not copy file to export stream: " + file,
+        e
+      );
     }
   }
 }

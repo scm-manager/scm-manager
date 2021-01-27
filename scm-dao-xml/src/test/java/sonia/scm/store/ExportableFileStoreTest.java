@@ -51,7 +51,7 @@ class ExportableFileStoreTest {
   @Test
   void shouldNotPutContentIfNoFilesExists(@TempDir Path temp) throws IOException {
     Exporter exporter = mock(Exporter.class);
-    ExportableFileStore exportableFileStore = new ExportableFileStore(temp.resolve("store").toFile(), StoreType.CONFIG);
+    ExportableFileStore exportableFileStore = new ExportableFileStore(temp.resolve("store"), StoreType.CONFIG);
 
     exportableFileStore.export(exporter);
 
@@ -64,7 +64,7 @@ class ExportableFileStoreTest {
     createFile(temp, "data", "trace", "second.xml");
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     Exporter exporter = mock(Exporter.class);
-    ExportableFileStore exportableFileStore = new ExportableFileStore(temp.toFile(), StoreType.DATA);
+    ExportableFileStore exportableFileStore = new ExportableFileStore(temp, StoreType.DATA);
     when(exporter.put(anyString(), anyLong())).thenReturn(os);
 
     exportableFileStore.export(exporter);
@@ -80,7 +80,7 @@ class ExportableFileStoreTest {
     createFile(temp, "config", "", "second.xml");
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     Exporter exporter = mock(Exporter.class);
-    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp.toFile(), StoreType.CONFIG);
+    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp, StoreType.CONFIG);
     when(exporter.put(anyString(), anyLong())).thenReturn(os);
 
     exportableConfigFileStore.export(exporter);
@@ -95,7 +95,7 @@ class ExportableFileStoreTest {
     createFile(temp, "blob", "assets", "first.blob");
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     Exporter exporter = mock(Exporter.class);
-    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp.toFile(), StoreType.BLOB);
+    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp, StoreType.BLOB);
     when(exporter.put(anyString(), anyLong())).thenReturn(os);
 
     exportableConfigFileStore.export(exporter);
@@ -109,7 +109,7 @@ class ExportableFileStoreTest {
     createFile(temp, "config", "", "first.yaml");
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     Exporter exporter = mock(Exporter.class);
-    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp.toFile(), StoreType.CONFIG);
+    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp, StoreType.CONFIG);
 
     exportableConfigFileStore.export(exporter);
 
@@ -122,7 +122,7 @@ class ExportableFileStoreTest {
     createFile(temp, "blob", "security", "second.xml");
     ByteArrayOutputStream os = new ByteArrayOutputStream();
     Exporter exporter = mock(Exporter.class);
-    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp.toFile(), StoreType.BLOB);
+    ExportableFileStore exportableConfigFileStore = new ExportableFileStore(temp, StoreType.BLOB);
 
     exportableConfigFileStore.export(exporter);
 
