@@ -149,11 +149,11 @@ public class RepositoryExportResource {
   }
 
   private String resolveFileExtension(BundleCommandBuilder bundleCommand, boolean compressed) {
-    String fileExtension = bundleCommand.getFileExtension();
     if (compressed) {
-      fileExtension += ".gz";
+      return bundleCommand.getFileExtension() + ".gz";
+    } else {
+      return bundleCommand.getFileExtension();
     }
-    return fileExtension;
   }
 
   private String createContentDispositionHeaderValue(Repository repository, String fileExtension) {

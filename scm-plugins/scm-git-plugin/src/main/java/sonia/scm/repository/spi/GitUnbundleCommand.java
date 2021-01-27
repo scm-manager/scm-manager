@@ -62,25 +62,19 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
 
   private void unbundleRepositoryFromRequest(UnbundleCommandRequest request, Path repositoryDir) throws IOException {
     try (TarArchiveInputStream tais = new TarArchiveInputStream(request.getArchive().openBufferedStream())) {
-      TarArchiveEntry entry = tais.getNextTarEntry();
-      while (entry != null) {
-        createDirectoriesIfNestedFile(repositoryDir, entry);
+      TarArchiveEntry entry;
+      while ((entry = tais.getNextTarEntry()) != null) {
         Path filePath = repositoryDir.resolve(entry.getName());
-        if (!Files.exists(filePath)) {
-          Files.createFile(filePath);
-        }
+        createDirectoriesIfNestedFile(filePath);
         Files.copy(tais, filePath, StandardCopyOption.REPLACE_EXISTING);
-        entry = tais.getNextTarEntry();
       }
     }
   }
 
-  private void createDirectoriesIfNestedFile(Path repositoryDir, TarArchiveEntry entry) throws IOException {
-    if (entry.getName().contains("/")) {
-      Path filePath = Paths.get(entry.getName());
-      if (!Files.exists(filePath)) {
-          Files.createDirectories(repositoryDir.resolve(filePath));
-        }
+  private void createDirectoriesIfNestedFile(Path filePath) throws IOException {
+    Path directory = filePath.getParent();
+    if (!Files.exists(directory)) {
+        Files.createDirectories(directory);
     }
   }
 }

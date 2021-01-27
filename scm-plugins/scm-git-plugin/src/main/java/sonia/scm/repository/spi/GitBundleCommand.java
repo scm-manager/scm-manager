@@ -67,7 +67,7 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
   }
 
   private void createTarEntryForFiles(String path, Path fileOrDir, TarArchiveOutputStream taos) throws IOException {
-    Stream<Path> files = Files.list(fileOrDir);
+    try (Stream<Path> files = Files.list(fileOrDir)) {
     if (files != null) {
       files
         .filter(filePath -> !shouldSkipFile(filePath))

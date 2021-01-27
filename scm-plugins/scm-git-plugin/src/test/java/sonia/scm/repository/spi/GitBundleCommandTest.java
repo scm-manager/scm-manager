@@ -99,8 +99,7 @@ class GitBundleCommandTest {
     TarArchiveInputStream tais = new TarArchiveInputStream(new BufferedInputStream(new ByteArrayInputStream(baos.toByteArray())));
     tais.getNextEntry();
 
-    byte[] result = new byte[(int) tais.getCurrentEntry().getSize()];
-    tais.read(result);
+    byte[] result = IOUtils.toByteArray(tais);
     assertThat(new String(result)).isEqualTo(content);
   }
 }
