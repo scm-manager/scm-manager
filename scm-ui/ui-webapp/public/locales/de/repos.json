@@ -258,7 +258,7 @@
     },
     "fullExport": {
       "label": "Mit Metadaten (Experimentell)",
-      "helpText": "Zusätzlich zum Repository Dump werden Metadaten zum Repository und zur SCM-Instanz exportiert. Dieses Feature ist noch experimentell."
+      "helpText": "Zusätzlich zum Repository Dump werden Metadaten zum Repository und zur SCM-Instanz exportiert. Gespeicherte Passwörter funktionieren nicht bei einem Import in andere SCM-Manager Instanzen. Dieses Feature ist noch experimentell. Es sollte (noch) nicht für Backups genutzt werden!"
     },
     "exportButton": "Repository exportieren",
     "exportStarted":  "Der Repository Export wurde gestartet. Abhängig von der Größe des Repository kann dies einige Momente dauern."

@@ -258,7 +258,7 @@
     },
     "fullExport": {
       "label": "With metadata (Experimental)",
-      "helpText": "In addition to the repository dump, metadata about the repository and SCM instance is exported. This feature is still experimental."
+      "helpText": "In addition to the repository dump, metadata about the repository and SCM instance is exported. Stored passwords will not work if this is imported in other instances of SCM-Manager. This feature is still experimental. Do not use this as a backup mechanism (yet)!"
     },
     "exportButton": "Export Repository",
     "exportStarted":  "The repository export was started. Depending on the repository size this may take a while."
