@@ -78,7 +78,7 @@ const RepositoryForm: FC<Props> = ({
   });
   const [initRepository, setInitRepository] = useState(false);
   const [contextEntries, setContextEntries] = useState({});
-  const [valid, setValid] = useState({ namespaceAndName: false, contact: true });
+  const [valid, setValid] = useState({ namespaceAndName: true, contact: true });
   const [t] = useTranslation("repos");
 
   useEffect(() => {
