@@ -136,7 +136,7 @@ describe("Test login hooks", () => {
           cookie: true,
           grant_type: "password",
           username: "tricia",
-          password: "hitchhickersSecret!"
+          password: "hitchhikersSecret!"
         }
       });
 
@@ -158,7 +158,7 @@ describe("Test login hooks", () => {
 
       await act(() => {
         if (login) {
-          login("tricia", "hitchhickersSecret!");
+          login("tricia", "hitchhikersSecret!");
         }
         return waitForNextUpdate();
       });
