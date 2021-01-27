@@ -40,10 +40,15 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.work.WorkdirProvider;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Collection;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
@@ -67,6 +72,8 @@ class FullScmRepositoryExporterTest {
   @InjectMocks
   private FullScmRepositoryExporter exporter;
 
+  private Collection<Path> workDirsCreated = new ArrayList<>();
+
   @BeforeEach
   void initRepoService() {
     when(serviceFactory.create(REPOSITORY)).thenReturn(repositoryService);
@@ -77,12 +84,20 @@ class FullScmRepositoryExporterTest {
   void shouldExportEverythingAsTarArchive(@TempDir Path temp) throws IOException {
     BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
     when(repositoryService.getBundleCommand()).thenReturn(bundleCommandBuilder);
-    when(workdirProvider.createNewWorkdir()).thenReturn(temp.toFile());
+    when(workdirProvider.createNewWorkdir()).thenAnswer(invocation -> createWorkDir(temp));
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     exporter.export(REPOSITORY, baos);
 
     verify(storeExporter, times(1)).export(eq(REPOSITORY), any(OutputStream.class));
     verify(generator, times(1)).generate();
     verify(bundleCommandBuilder, times(1)).bundle(any(OutputStream.class));
+    workDirsCreated.forEach(wd -> assertThat(wd).doesNotExist());
+  }
+
+  private File createWorkDir(Path temp) throws IOException {
+    Path newWorkDir = temp.resolve("workDir-" + workDirsCreated.size());
+    workDirsCreated.add(newWorkDir);
+    Files.createDirectories(newWorkDir);
+    return newWorkDir.toFile();
   }
 }

@@ -33,6 +33,7 @@ import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
 import java.io.BufferedOutputStream;
@@ -82,8 +83,8 @@ public class FullScmRepositoryExporter {
 
   private void writeRepository(RepositoryService service, TarArchiveOutputStream taos) throws IOException {
     File newWorkdir = workdirProvider.createNewWorkdir();
-    File repositoryFile = Files.createFile(Paths.get(newWorkdir.getPath(), "repository")).toFile();
     try {
+      File repositoryFile = Files.createFile(Paths.get(newWorkdir.getPath(), "repository")).toFile();
       try (FileOutputStream repositoryFos = new FileOutputStream(repositoryFile)) {
         service.getBundleCommand().bundle(repositoryFos);
       }
@@ -93,7 +94,7 @@ public class FullScmRepositoryExporter {
       Files.copy(repositoryFile.toPath(), taos);
       taos.closeArchiveEntry();
     } finally {
-      Files.delete(repositoryFile.toPath());
+      IOUtil.deleteSilently(newWorkdir);
     }
   }
 
@@ -108,8 +109,8 @@ public class FullScmRepositoryExporter {
 
   private void writeStoreData(Repository repository, TarArchiveOutputStream taos) throws IOException {
     File newWorkdir = workdirProvider.createNewWorkdir();
-    File metadata = Files.createFile(Paths.get(newWorkdir.getPath(), "metadata")).toFile();
     try {
+      File metadata = Files.createFile(Paths.get(newWorkdir.getPath(), "metadata")).toFile();
       try (FileOutputStream metadataFos = new FileOutputStream(metadata)) {
         storeExporter.export(repository, metadataFos);
       }
@@ -119,7 +120,7 @@ public class FullScmRepositoryExporter {
       Files.copy(metadata.toPath(), taos);
       taos.closeArchiveEntry();
     } finally {
-      Files.delete(metadata.toPath());
+      IOUtil.deleteSilently(newWorkdir);
     }
   }
 }
