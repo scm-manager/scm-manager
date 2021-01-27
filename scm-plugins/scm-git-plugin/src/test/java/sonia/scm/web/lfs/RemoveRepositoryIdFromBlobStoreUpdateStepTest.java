@@ -24,7 +24,6 @@
 
 package sonia.scm.web.lfs;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
@@ -32,27 +31,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.store.Blob;
-import sonia.scm.store.BlobStore;
-import sonia.scm.store.BlobStoreFactory;
+import sonia.scm.store.StoreType;
 import sonia.scm.update.RepositoryUpdateIterator;
+import sonia.scm.update.StoreUpdateStepUtilFactory;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.function.Consumer;
 
-import static java.util.Arrays.asList;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RemoveRepositoryIdFromBlobStoreUpdateStepTest {
@@ -60,16 +50,12 @@ class RemoveRepositoryIdFromBlobStoreUpdateStepTest {
   @Mock
   private RepositoryUpdateIterator repositoryUpdateIterator;
   @Mock(answer = Answers.CALLS_REAL_METHODS)
-  private BlobStoreFactory blobStoreFactory;
+  private StoreUpdateStepUtilFactory utilFactory;
   @Mock
-  private BlobStore oldBlobStore;
-  @Mock
-  private BlobStore newBlobStore;
+  private StoreUpdateStepUtilFactory.StoreUpdateStepUtil util;
 
   @InjectMocks
   private RemoveRepositoryIdFromBlobStoreUpdateStep updateStep;
-
-  private Map<String, ByteArrayOutputStream> blobStreams = new HashMap<>();
 
   @Test
   void migrateBlobsFromOldStoreToNewStore() throws IOException {
@@ -78,39 +64,11 @@ class RemoveRepositoryIdFromBlobStoreUpdateStepTest {
       return null;
     }).when(repositoryUpdateIterator).forEachRepository(any());
 
-    doReturn(oldBlobStore)
-      .when(blobStoreFactory).getStore(argThat(argument -> argument.getName().startsWith("repo-id")));
-    doReturn(newBlobStore)
-      .when(blobStoreFactory).getStore(argThat(argument -> argument.getName().equals("git-lfs")));
-
-    Blob oldBlob1 = createBlob("blob1");
-    Blob oldBlob2 = createBlob("blob2");
-    when(oldBlobStore.getAll()).thenReturn(asList(oldBlob1, oldBlob2));
-    Blob newBlob1 = createBlob("newBlob1");
-    Blob newBlob2 = createBlob("newBlob2");
-    when(newBlobStore.create("blob1")).thenReturn(newBlob1);
-    when(newBlobStore.create("blob2")).thenReturn(newBlob2);
+    doReturn(util)
+      .when(utilFactory).build(eq(StoreType.BLOB), argThat(argument -> argument.getName().equals("repo-id-git-lfs")));
 
     updateStep.doUpdate();
 
-    verify(newBlobStore).create("blob1");
-    verify(newBlobStore).create("blob2");
-
-    verify(oldBlobStore).remove(oldBlob1);
-    verify(oldBlobStore).remove(oldBlob2);
-
-    Assertions.assertThat(blobStreams.get("newBlob1")).hasToString("some data for blob1");
-    Assertions.assertThat(blobStreams.get("newBlob2")).hasToString("some data for blob2");
-  }
-
-  private Blob createBlob(String id) throws IOException {
-    Blob blob = mock(Blob.class);
-    lenient().when(blob.getId()).thenReturn(id);
-    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-    blobStreams.put(id, outputStream);
-    lenient().when(blob.getOutputStream()).thenReturn(outputStream);
-    String blobContent = "some data for " + id;
-    lenient().when(blob.getInputStream()).thenReturn(new ByteArrayInputStream(blobContent.getBytes(StandardCharsets.UTF_8)));
-    return blob;
+    verify(util).renameStore("git-lfs");
   }
 }

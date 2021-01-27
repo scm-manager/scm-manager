@@ -22,52 +22,28 @@
  * SOFTWARE.
  */
 
-package sonia.scm.web.lfs;
+package sonia.scm.store;
 
-import sonia.scm.migration.UpdateStep;
-import sonia.scm.plugin.Extension;
-import sonia.scm.store.StoreType;
-import sonia.scm.update.RepositoryUpdateIterator;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.update.StoreUpdateStepUtilFactory;
-import sonia.scm.version.Version;
 
 import javax.inject.Inject;
 
-import static sonia.scm.version.Version.parse;
+public class FileStoreUpdateStepUtilFactory implements StoreUpdateStepUtilFactory {
 
-@Extension
-public class RemoveRepositoryIdFromBlobStoreUpdateStep implements UpdateStep {
-
-  private final RepositoryUpdateIterator repositoryUpdateIterator;
-  private final StoreUpdateStepUtilFactory utilFactory;
+  private final RepositoryLocationResolver locationResolver;
+  private final SCMContextProvider contextProvider;
 
   @Inject
-  public RemoveRepositoryIdFromBlobStoreUpdateStep(RepositoryUpdateIterator repositoryUpdateIterator, StoreUpdateStepUtilFactory utilFactory) {
-    this.repositoryUpdateIterator = repositoryUpdateIterator;
-    this.utilFactory = utilFactory;
+  public FileStoreUpdateStepUtilFactory(RepositoryLocationResolver locationResolver, SCMContextProvider contextProvider) {
+    this.locationResolver = locationResolver;
+    this.contextProvider = contextProvider;
   }
 
   @Override
-  public void doUpdate()  {
-    repositoryUpdateIterator.forEachRepository(this::doUpdate);
+  public StoreUpdateStepUtil build(StoreType type, StoreParameters parameters) {
+    return new FileStoreUpdateStepUtil(locationResolver, contextProvider, parameters, type);
   }
 
-  private void doUpdate(String repositoryId) {
-    utilFactory
-      .forType(StoreType.BLOB)
-      .forName(repositoryId + "-git-lfs")
-      .forRepository(repositoryId)
-      .build()
-      .renameStore("git-lfs");
-  }
-
-  @Override
-  public Version getTargetVersion() {
-    return parse("2.0.1");
-  }
-
-  @Override
-  public String getAffectedDataType() {
-    return "sonia.scm.git.lfs";
-  }
 }
