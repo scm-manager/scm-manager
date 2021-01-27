@@ -47,6 +47,12 @@
           "displayName": "Repositories archivieren",
           "description": "Darf Repositories als \"archiviert\" und somit als schreibgeschützt markieren."
         }
+      },
+      "read,export": {
+        "*": {
+          "displayName": "Repositories exportieren",
+          "description": "Darf alle Repositories exportieren."
+        }
       }
     },
     "user": {
@@ -148,6 +154,10 @@
       "archive": {
         "displayName": "Repository archivieren",
         "description": "Darf das Repository als \"archiviert\" und somit als schreibgeschützt markieren."
+      },
+      "export": {
+        "displayName": "Repository exportieren",
+        "description": "Darf das Repository exportieren."
       },
       "*": {
         "displayName": "Alle Repository Rechte",
