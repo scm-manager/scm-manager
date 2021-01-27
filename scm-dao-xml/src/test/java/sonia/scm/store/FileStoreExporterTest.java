@@ -57,7 +57,6 @@ class FileStoreExporterTest {
 
   @Test
   void shouldReturnEmptyList(@TempDir Path temp) {
-    when(resolver.supportsLocationType(Path.class)).thenReturn(true);
     when(resolver.forClass(Path.class).getLocation(REPOSITORY.getId())).thenReturn(temp);
 
     List<ExportableStore> exportableStores = fileStoreExporter.listExportableStores(REPOSITORY);
@@ -70,7 +69,6 @@ class FileStoreExporterTest {
     createFile(storePath, StoreType.CONFIG.getValue(), null, "first.xml");
     createFile(storePath, StoreType.DATA.getValue(), "ci", "second.xml");
     createFile(storePath, StoreType.DATA.getValue(), "jenkins", "third.xml");
-    when(resolver.supportsLocationType(Path.class)).thenReturn(true);
     when(resolver.forClass(Path.class).getLocation(REPOSITORY.getId())).thenReturn(temp);
 
     List<ExportableStore> exportableStores = fileStoreExporter.listExportableStores(REPOSITORY);

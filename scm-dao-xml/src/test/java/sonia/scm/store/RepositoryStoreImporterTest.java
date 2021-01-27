@@ -25,7 +25,6 @@ package sonia.scm.store;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -34,10 +33,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryTestData;
 
-import java.nio.file.Path;
-
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RepositoryStoreImporterTest {
@@ -50,10 +46,7 @@ class RepositoryStoreImporterTest {
   private RepositoryStoreImporter repositoryStoreImporter;
 
   @Test
-  void shouldImportStore(@TempDir Path temp) {
-    when(locationResolver.supportsLocationType(Path.class)).thenReturn(true);
-    when(locationResolver.forClass(Path.class).getLocation(REPOSITORY.getId())).thenReturn(temp);
-
+  void shouldImportStore() {
     StoreEntryImporterFactory storeEntryImporterFactory = repositoryStoreImporter.doImport(REPOSITORY);
     assertThat(storeEntryImporterFactory).isInstanceOf(StoreEntryImporterFactory.class);
   }
