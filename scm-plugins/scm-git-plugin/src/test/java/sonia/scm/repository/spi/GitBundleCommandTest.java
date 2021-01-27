@@ -25,6 +25,7 @@ package sonia.scm.repository.spi;
 
 import com.google.common.io.ByteSink;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
+import org.apache.commons.compress.utils.IOUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -71,9 +72,6 @@ class GitBundleCommandTest {
 
   private void addFileToRepoDir(Path repoDir, String filename, String content) throws IOException {
     Path file = repoDir.resolve(filename);
-    if (!Files.exists(file)) {
-      Files.createFile(file);
-    }
     Files.copy(new ByteArrayInputStream(content.getBytes()), file, StandardCopyOption.REPLACE_EXISTING);
   }
 

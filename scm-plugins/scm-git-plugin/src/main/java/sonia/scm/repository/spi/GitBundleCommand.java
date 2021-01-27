@@ -54,8 +54,7 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
         createTarEntryForFiles("", repoDir, taos);
         taos.finish();
       }
-    }
-    else {
+    } else {
       //TODO throw ExportFailedException which already exists on the branch "feature/import_export_with_metadata"
     }
     return new BundleResponse(0);
@@ -68,10 +67,11 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
 
   private void createTarEntryForFiles(String path, Path fileOrDir, TarArchiveOutputStream taos) throws IOException {
     try (Stream<Path> files = Files.list(fileOrDir)) {
-    if (files != null) {
-      files
-        .filter(filePath -> !shouldSkipFile(filePath))
-        .forEach(f -> bundleFileOrDir(path, f, taos));
+      if (files != null) {
+        files
+          .filter(this::shouldIncludeFile)
+          .forEach(f -> bundleFileOrDir(path, f, taos));
+      }
     }
   }
 
@@ -89,8 +89,8 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
     }
   }
 
-  private boolean shouldSkipFile(Path filePath) {
-    return filePath.getFileName().toString().equals("config");
+  private boolean shouldIncludeFile(Path filePath) {
+    return !filePath.getFileName().toString().equals("config");
   }
 
   private void createArchiveEntryForFile(String filePath, Path path, TarArchiveOutputStream taos) throws IOException {
