@@ -67,12 +67,11 @@ class ProxySettings extends React.Component<Props> {
         <div className="columns">
           <div className="column is-half">
             <InputField
-              label={t("proxySettings.password")}
-              onChange={this.handleProxyPasswordChange}
-              value={proxyPassword}
-              type="password"
+              label={t("proxySettings.server")}
+              value={proxyServer}
+              onChange={this.handleProxyServerChange}
               disabled={!enableProxy || !hasUpdatePermission}
-              helpText={t("proxySettings.passwordHelpText")}
+              helpText={t("proxySettings.serverHelpText")}
             />
           </div>
           <div className="column is-half">
@@ -88,20 +87,21 @@ class ProxySettings extends React.Component<Props> {
         <div className="columns">
           <div className="column is-half">
             <InputField
-              label={t("proxySettings.server")}
-              value={proxyServer}
-              onChange={this.handleProxyServerChange}
-              disabled={!enableProxy || !hasUpdatePermission}
-              helpText={t("proxySettings.serverHelpText")}
-            />
-          </div>
-          <div className="column is-half">
-            <InputField
               label={t("proxySettings.user")}
               value={proxyUser}
               onChange={this.handleProxyUserChange}
               disabled={!enableProxy || !hasUpdatePermission}
               helpText={t("proxySettings.userHelpText")}
+            />
+          </div>
+          <div className="column is-half">
+            <InputField
+              label={t("proxySettings.password")}
+              onChange={this.handleProxyPasswordChange}
+              value={proxyPassword}
+              type="password"
+              disabled={!enableProxy || !hasUpdatePermission}
+              helpText={t("proxySettings.passwordHelpText")}
             />
           </div>
         </div>

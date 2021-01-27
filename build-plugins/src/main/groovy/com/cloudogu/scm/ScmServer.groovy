@@ -51,6 +51,8 @@ class ScmServer {
   void start() throws Exception {
     info('start scm-server at port %s', configuration.port)
 
+    System.setProperty("javax.xml.parsers.DocumentBuilderFactory", "com.sun.org.apache.xerces.internal.jaxp.DocumentBuilderFactoryImpl");
+
     System.setProperty('scm.home', configuration.home)
     if (configuration.disableCorePlugins) {
       info('disable core plugin extraction')

@@ -41,8 +41,15 @@ import javax.validation.constraints.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.security.Security;
 
 class DefaultPrivateKey implements PrivateKey {
+
+  static {
+    if (Security.getProvider(BouncyCastleProvider.PROVIDER_NAME) == null) {
+      Security.addProvider(new BouncyCastleProvider());
+    }
+  }
 
   static DefaultPrivateKey parseRaw(String rawPrivateKey) {
     return new DefaultPrivateKey(KeysExtractor.extractPrivateKey(rawPrivateKey));

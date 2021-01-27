@@ -70,5 +70,4 @@ public class LfsBlobStoreFactoryTest {
     // make sure there have been no further usages of the factory
     verify(blobStoreFactory, times(1)).getStore(any());
   }
-  
 }

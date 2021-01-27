@@ -30,15 +30,16 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 import org.junit.Assert;
 import sonia.scm.api.rest.ObjectMapperProvider;
+import sonia.scm.api.v2.resources.ConfigDto;
 import sonia.scm.api.v2.resources.RepositoryDto;
 import sonia.scm.web.VndMediaType;
 
 import java.io.IOException;
 import java.net.URI;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.fail;
+import static sonia.scm.it.webapp.ConfigUtil.readConfig;
 import static sonia.scm.it.webapp.IntegrationTestUtil.BASE_URL;
 import static sonia.scm.it.webapp.IntegrationTestUtil.createResource;
 import static sonia.scm.it.webapp.IntegrationTestUtil.getLink;
@@ -50,7 +51,17 @@ public final class RepositoryITUtil
 
   private RepositoryITUtil() {}
 
+  public static void setNamespaceStrategy(ScmClient client, String namespaceStrategy) {
+    ConfigDto config = readConfig(client);
+
+    config.setNamespaceStrategy(namespaceStrategy);
+
+    ConfigUtil.writeConfig(client, config);
+  }
+
   public static RepositoryDto createRepository(ScmClient client, String repositoryJson) {
+    setNamespaceStrategy(client, "UsernameNamespaceStrategy");
+
     ClientResponse response =
       createResource(client, "repositories")
         .accept("*/*")
