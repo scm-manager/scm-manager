@@ -25,8 +25,16 @@
 package sonia.scm.store;
 
 import java.nio.file.Path;
+import java.util.Optional;
+import java.util.function.Function;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 class ExportableBlobFileStore extends ExportableDirectoryBasedFileStore {
+
+  static Function<StoreType, Optional<Function<Path, ExportableStore>>> BLOB_FACTORY =
+    storeType -> storeType == StoreType.BLOB ? of(ExportableBlobFileStore::new) : empty();
 
   ExportableBlobFileStore(Path directory) {
     super(directory);

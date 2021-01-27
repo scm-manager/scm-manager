@@ -78,17 +78,6 @@ class FileStoreExporterTest {
     assertThat(exportableStores.stream().filter(e -> e.getMetaData().getType().equals(StoreType.DATA))).hasSize(2);
   }
 
-  @Test
-  void shouldFilterIllegalConfigFiles(@TempDir Path temp) throws IOException {
-    Path storePath = temp.resolve("store");
-    createFile(storePath, StoreType.CONFIG.getValue(), null, "dummy.bck");
-    when(resolver.forClass(Path.class).getLocation(REPOSITORY.getId())).thenReturn(temp);
-
-    List<ExportableStore> exportableStores = fileStoreExporter.listExportableStores(REPOSITORY);
-
-    assertThat(exportableStores).hasSize(0);
-  }
-
   private void createFile(Path storePath, String type, String name, String fileName) throws IOException {
     Path path = name != null ? storePath.resolve(type).resolve(name) : storePath.resolve(type);
     Files.createDirectories(path);

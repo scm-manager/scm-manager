@@ -33,18 +33,25 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
+import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
 import static sonia.scm.ContextEntry.ContextBuilder.noContext;
+import static sonia.scm.store.ExportableBlobFileStore.BLOB_FACTORY;
+import static sonia.scm.store.ExportableConfigFileStore.CONFIG_FACTORY;
+import static sonia.scm.store.ExportableDataFileStore.DATA_FACTORY;
 
 public class FileStoreExporter implements StoreExporter {
 
   private final RepositoryLocationResolver locationResolver;
+
+  private static final Collection<Function<StoreType, Optional<Function<Path, ExportableStore>>>> STORE_FACTORIES =
+    asList(DATA_FACTORY, BLOB_FACTORY, CONFIG_FACTORY);
 
   @Inject
   public FileStoreExporter(RepositoryLocationResolver locationResolver) {
@@ -94,23 +101,21 @@ public class FileStoreExporter implements StoreExporter {
   }
 
   private Optional<ExportableStore> getStoreFor(Path storePath) {
-    if (isStoreDirectoryForType(storePath, StoreType.DATA)) {
-      return of(new ExportableDataFileStore(storePath));
-    } else if (isStoreDirectoryForType(storePath, StoreType.BLOB)) {
-      return of(new ExportableBlobFileStore(storePath));
-    } else if (isValidConfigFile(storePath)) {
-      return of(new ExportableConfigFileStore(storePath));
-    } else {
-      return empty();
+    return STORE_FACTORIES
+      .stream()
+      .map(factory -> factory.apply(getEnumForValue(storePath.getParent())))
+      .filter(Optional::isPresent)
+      .map(Optional::get)
+      .findFirst()
+      .map(f -> f.apply(storePath));
+  }
+
+  private StoreType getEnumForValue(Path storeTypeDirectory) {
+    for (StoreType type : StoreType.values()) {
+      if (type.getValue().equals(storeTypeDirectory.getFileName().toString())) {
+        return type;
+      }
     }
-  }
-
-  private boolean isValidConfigFile(Path storePath) {
-    return isStoreDirectoryForType(storePath, StoreType.CONFIG)
-      && storePath.getFileName().toString().endsWith(".xml");
-  }
-
-  private boolean isStoreDirectoryForType(Path storePath, StoreType data) {
-    return storePath.getParent().getFileName().toString().equals(data.getValue());
+    return null;
   }
 }

@@ -25,8 +25,16 @@
 package sonia.scm.store;
 
 import java.nio.file.Path;
+import java.util.Optional;
+import java.util.function.Function;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 class ExportableDataFileStore extends ExportableDirectoryBasedFileStore {
+
+  static Function<StoreType, Optional<Function<Path, ExportableStore>>> DATA_FACTORY =
+    storeType -> storeType == StoreType.DATA ? of(ExportableDataFileStore::new) : empty();
 
   ExportableDataFileStore(Path directory) {
     super(directory);

@@ -26,12 +26,19 @@ package sonia.scm.store;
 
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.Optional;
+import java.util.function.Function;
 
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 import static sonia.scm.store.ExportCopier.putFileContentIntoStream;
 
 class ExportableConfigFileStore implements ExportableStore {
 
   private final Path file;
+
+  static Function<StoreType, Optional<Function<Path, ExportableStore>>> CONFIG_FACTORY =
+    storeType -> storeType == StoreType.CONFIG ? of(ExportableConfigFileStore::new) : empty();
 
   ExportableConfigFileStore(Path file) {
     this.file = file;
@@ -44,6 +51,8 @@ class ExportableConfigFileStore implements ExportableStore {
 
   @Override
   public void export(Exporter exporter) throws IOException {
-    putFileContentIntoStream(exporter, file);
+    if (file.getFileName().toString().endsWith(".xml")) {
+      putFileContentIntoStream(exporter, file);
+    }
   }
 }
