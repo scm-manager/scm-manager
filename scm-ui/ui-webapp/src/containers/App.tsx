@@ -23,14 +23,14 @@
  */
 import React, { FC } from "react";
 import Main from "./Main";
-import { useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { ErrorPage, Footer, Header, Loading, PrimaryNavigation } from "@scm-manager/ui-components";
 import Login from "./Login";
-import { useSubject, useIndex} from "@scm-manager/ui-api";
+import { useSubject, useIndex } from "@scm-manager/ui-api";
 
 const App: FC = () => {
   const { data: index } = useIndex();
-  const { isLoading, error, isAuthenticated, me } = useSubject();
+  const { isLoading, error, isAuthenticated, isAnonymous, me } = useSubject();
   const [t] = useTranslation("commons");
 
   if (!index) {
@@ -38,24 +38,26 @@ const App: FC = () => {
   }
 
   let content;
-  const navigation = isAuthenticated ? <PrimaryNavigation links={index._links} /> : "";
 
+  // authenticated means authorized, we stick on authenticated for compatibility reasons
+  const authenticated = isAuthenticated || isAnonymous;
+  const navigation = authenticated ? <PrimaryNavigation links={index._links} /> : "";
 
-  if (!isAuthenticated && !isLoading) {
+  if (!authenticated && !isLoading) {
     content = <Login />;
   } else if (isLoading) {
     content = <Loading />;
   } else if (error) {
     content = <ErrorPage title={t("app.error.title")} subtitle={t("app.error.subtitle")} error={error} />;
   } else if (me) {
-    content = <Main authenticated={isAuthenticated} links={index._links} me={me} />;
+    content = <Main authenticated={authenticated} links={index._links} me={me} />;
   }
 
   return (
     <div className="App">
       <Header>{navigation}</Header>
       {content}
-      {isAuthenticated ? <Footer me={me} version={index.version} links={index._links} />: null}
+      {authenticated ? <Footer me={me} version={index.version} links={index._links} /> : null}
     </div>
   );
 };
