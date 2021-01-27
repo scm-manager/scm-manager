@@ -45,7 +45,7 @@ export const useSubject = () => {
   const link = useIndexLink("login");
   const { isLoading, error, data: me } = useMe();
   const isAnonymous = me?.name === "_anonymous";
-  const isAuthenticated = (me && !link) || isAnonymous;
+  const isAuthenticated = !isAnonymous && !!me && !link;
   return {
     isAuthenticated,
     isAnonymous,
@@ -63,10 +63,10 @@ type Credentials = {
 };
 
 export const useLogin = () => {
-  const link = useRequiredIndexLink("login");
+  const link = useIndexLink("login");
   const queryClient = useQueryClient();
   const { mutate, isLoading, error } = useMutation<unknown, Error, Credentials>(
-    credentials => apiClient.post(link, credentials),
+    credentials => apiClient.post(link!, credentials),
     {
       onSuccess: () => {
         return queryClient.invalidateQueries();
@@ -74,10 +74,35 @@ export const useLogin = () => {
     }
   );
 
+  const login = (username: string, password: string) => {
+    mutate({ cookie: true, grant_type: "password", username, password });
+  };
+
   return {
-    login: (username: string, password: string) => {
-      mutate({ cookie: true, grant_type: "password", username, password });
-    },
+    login: link ? login : undefined,
+    isLoading,
+    error
+  };
+};
+
+export const useLogout = () => {
+  const link = useIndexLink("logout");
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error, data } = useMutation<boolean, Error, unknown>(
+    () => apiClient.delete(link!).then(() => true),
+    {
+      onSuccess: () => {
+        return queryClient.invalidateQueries();
+      }
+    }
+  );
+
+  const logout = () => {
+    mutate({});
+  };
+
+  return {
+    logout: link && !data ? logout : undefined,
     isLoading,
     error
   };
