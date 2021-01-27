@@ -14,6 +14,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add Java version to plugin center url ([#1494](https://github.com/scm-manager/scm-manager/pull/1494))
 - Add Font ttf-dejavu to oci image ([#1498](https://github.com/scm-manager/scm-manager/issues/1498))
 
+### Changed
+- Enrich styleguide with new features, rules and changes ([#1506](https://github.com/scm-manager/scm-manager/pull/1506))
+
 ## [2.12.0] - 2020-12-17
 ### Added
 - Add repository import via dump file for Subversion ([#1471](https://github.com/scm-manager/scm-manager/pull/1471))
