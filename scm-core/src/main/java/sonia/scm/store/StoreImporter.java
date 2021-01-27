@@ -24,13 +24,16 @@
 
 package sonia.scm.store;
 
+import com.google.common.annotations.Beta;
 import sonia.scm.repository.Repository;
 
 /**
  * The {@link StoreImporter} is used to create a {@link StoreEntryImporterFactory} for a {@link Repository}.
+ * <p><b>This interface is not yet finalized and might change in the upcoming versions.</b></p>
  *
  * @since 2.13.0
  */
+@Beta
 public interface StoreImporter {
   /**
    * Returns a {@link StoreEntryImporterFactory} for the {@link Repository}

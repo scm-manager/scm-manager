@@ -24,13 +24,17 @@
 
 package sonia.scm.store;
 
+import com.google.common.annotations.Beta;
+
 import java.io.IOException;
 
 /**
  * The {@link ExportableStore} is used to export the stored data inside the store.
+ * <p><b>This interface is not yet finalized and might change in the upcoming versions.</b></p>
  *
  * @since 2.13.0
  */
+@Beta
 public interface ExportableStore {
 
   /**

@@ -24,13 +24,17 @@
 
 package sonia.scm.store;
 
+import com.google.common.annotations.Beta;
+
 import java.io.InputStream;
 
 /**
  * The {@link StoreEntryImporter} is used to import a store entry from an {@link InputStream}.
+ * <p><b>This interface is not yet finalized and might change in the upcoming versions.</b></p>
  *
  * @since 2.13.0
  */
+@Beta
 public interface StoreEntryImporter {
 
   /**
