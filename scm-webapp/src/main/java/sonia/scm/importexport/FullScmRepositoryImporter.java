@@ -72,6 +72,7 @@ public class FullScmRepositoryImporter {
           TarArchiveInputStream tais = new TarArchiveInputStream(gcis)
         ) {
           checkScmEnvironment(repository, tais);
+          skipRepositoryMetadata(tais);
           Repository createdRepository = importRepositoryFromFile(repository, tais);
           importStoresForCreatedRepository(createdRepository, tais);
           return createdRepository;
@@ -144,6 +145,11 @@ public class FullScmRepositoryImporter {
       );
     }
   }
+
+  private void skipRepositoryMetadata(TarArchiveInputStream tais) throws IOException {
+    tais.getNextEntry();
+  }
+
   @SuppressWarnings("java:S4929") // we only want to override close here
   static class NoneClosingInputStream extends FilterInputStream {
 

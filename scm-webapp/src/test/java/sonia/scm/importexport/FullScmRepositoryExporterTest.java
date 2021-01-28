@@ -63,7 +63,9 @@ class FullScmRepositoryExporterTest {
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private RepositoryService repositoryService;
   @Mock
-  private EnvironmentInformationXmlGenerator generator;
+  private EnvironmentInformationXmlGenerator environmentGenerator;
+  @Mock
+  private RepositoryMetadataXmlGenerator metadataGenerator;
   @Mock
   private TarArchiveRepositoryStoreExporter storeExporter;
   @Mock
@@ -77,7 +79,8 @@ class FullScmRepositoryExporterTest {
   @BeforeEach
   void initRepoService() {
     when(serviceFactory.create(REPOSITORY)).thenReturn(repositoryService);
-    when(generator.generate()).thenReturn(new byte[0]);
+    when(environmentGenerator.generate()).thenReturn(new byte[0]);
+    when(metadataGenerator.generate(REPOSITORY)).thenReturn(new byte[0]);
   }
 
   @Test
@@ -89,7 +92,8 @@ class FullScmRepositoryExporterTest {
     exporter.export(REPOSITORY, baos);
 
     verify(storeExporter, times(1)).export(eq(REPOSITORY), any(OutputStream.class));
-    verify(generator, times(1)).generate();
+    verify(environmentGenerator, times(1)).generate();
+    verify(metadataGenerator, times(1)).generate(REPOSITORY);
     verify(bundleCommandBuilder, times(1)).bundle(any(OutputStream.class));
     workDirsCreated.forEach(wd -> assertThat(wd).doesNotExist());
   }

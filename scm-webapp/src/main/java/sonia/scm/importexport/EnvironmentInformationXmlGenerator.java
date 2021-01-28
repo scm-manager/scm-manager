@@ -39,7 +39,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EnvironmentInformationXmlGenerator {
+class EnvironmentInformationXmlGenerator {
 
   private final PluginManager pluginManager;
   private final SCMContextProvider contextProvider;
