@@ -41,11 +41,12 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static sonia.scm.importexport.FullScmRepositoryExporter.SCM_ENVIRONMENT_FILE_NAME;
+import static sonia.scm.importexport.FullScmRepositoryExporter.STORE_DATA_FILE_NAME;
+
 public class FullScmRepositoryImporter {
 
   private static final int _1_MB = 1000000;
-  private static final String SCM_ENVIRONMENT_FILE = "scm-environment.xml";
-  private static final String SCM_METADATA_TAR_FILE = "scm-metadata.tar";
 
   private final RepositoryServiceFactory serviceFactory;
   private final RepositoryManager repositoryManager;
@@ -94,7 +95,7 @@ public class FullScmRepositoryImporter {
 
   private void importStoresForCreatedRepository(Repository repository, TarArchiveInputStream tais) throws IOException {
     ArchiveEntry metadataEntry = tais.getNextEntry();
-    if (metadataEntry.getName().equals(SCM_METADATA_TAR_FILE) && !metadataEntry.isDirectory()) {
+    if (metadataEntry.getName().equals(STORE_DATA_FILE_NAME) && !metadataEntry.isDirectory()) {
       // Inside the repository tar archive stream is another tar archive.
       // The nested tar archive is wrapped in another TarArchiveInputStream inside the storeImporter
       storeImporter.importFromTarArchive(repository, tais);
@@ -130,7 +131,7 @@ public class FullScmRepositoryImporter {
 
   private void checkScmEnvironment(Repository repository, TarArchiveInputStream tais) throws IOException {
     ArchiveEntry environmentEntry = tais.getNextEntry();
-    if (environmentEntry.getName().equals(SCM_ENVIRONMENT_FILE) && !environmentEntry.isDirectory() && environmentEntry.getSize() < _1_MB) {
+    if (environmentEntry.getName().equals(SCM_ENVIRONMENT_FILE_NAME) && !environmentEntry.isDirectory() && environmentEntry.getSize() < _1_MB) {
       boolean validEnvironment = compatibilityChecker.check(JAXB.unmarshal(new NoneClosingInputStream(tais), ScmEnvironment.class));
       if (!validEnvironment) {
         throw new ImportFailedException(

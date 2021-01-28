@@ -46,6 +46,9 @@ import java.nio.file.Paths;
 
 public class FullScmRepositoryExporter {
 
+  static final String SCM_ENVIRONMENT_FILE_NAME = "scm-environment.xml";
+  static final String METADATA_FILE_NAME = "metadata.xml";
+  static final String STORE_DATA_FILE_NAME = "store-data.tar";
   private final EnvironmentInformationXmlGenerator environmentGenerator;
   private final RepositoryMetadataXmlGenerator metadataGenerator;
   private final RepositoryServiceFactory serviceFactory;
@@ -87,7 +90,7 @@ public class FullScmRepositoryExporter {
 
   private void writeEnvironmentData(TarArchiveOutputStream taos) throws IOException {
     byte[] envBytes = environmentGenerator.generate();
-    TarArchiveEntry entry = new TarArchiveEntry("scm-environment.xml");
+    TarArchiveEntry entry = new TarArchiveEntry(SCM_ENVIRONMENT_FILE_NAME);
     entry.setSize(envBytes.length);
     taos.putArchiveEntry(entry);
     taos.write(envBytes);
@@ -96,7 +99,7 @@ public class FullScmRepositoryExporter {
 
   private void writeMetadata(Repository repository, TarArchiveOutputStream taos) throws IOException {
     byte[] metadataBytes = metadataGenerator.generate(repository);
-    TarArchiveEntry entry = new TarArchiveEntry("metadata.xml");
+    TarArchiveEntry entry = new TarArchiveEntry(METADATA_FILE_NAME);
     entry.setSize(metadataBytes.length);
     taos.putArchiveEntry(entry);
     taos.write(metadataBytes);
@@ -127,7 +130,7 @@ public class FullScmRepositoryExporter {
       try (FileOutputStream metadataFos = new FileOutputStream(metadata)) {
         storeExporter.export(repository, metadataFos);
       }
-      TarArchiveEntry entry = new TarArchiveEntry("scm-metadata.tar");
+      TarArchiveEntry entry = new TarArchiveEntry(STORE_DATA_FILE_NAME);
       entry.setSize(metadata.length());
       taos.putArchiveEntry(entry);
       Files.copy(metadata.toPath(), taos);
