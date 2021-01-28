@@ -51,10 +51,6 @@ const ContentRight = styled.div`
   align-items: start;
 `;
 
-const CenteredItems = styled.div`
-  align-items: center;
-`;
-
 const StyledLink = styled(Link)`
   color: inherit;
   :hover {
@@ -75,10 +71,10 @@ const CardColumnSmall: FC<Props> = ({ link, avatar, contentLeft, contentRight, f
       <div className="media">
         {renderAvatar}
         <FlexFullHeight className={classNames("media-content", "text-box", "is-flex")}>
-          <CenteredItems className="is-flex">
+          <div className="is-flex is-align-items-center">
             <ContentLeft>{contentLeft}</ContentLeft>
             <ContentRight>{contentRight}</ContentRight>
-          </CenteredItems>
+          </div>
           {renderFooter}
         </FlexFullHeight>
       </div>

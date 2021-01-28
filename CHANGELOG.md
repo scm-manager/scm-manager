@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Apply test ids to production builds for usage in e2e tests ([#1499](https://github.com/scm-manager/scm-manager/pull/1499))
 - Bump google guava version to 30.1-jre
 - Refactor table component so that it can be styled by styled-components ([#1503](https://github.com/scm-manager/scm-manager/pull/1503))
+- Enrich styleguide with new features, rules and changes ([#1506](https://github.com/scm-manager/scm-manager/pull/1506))
 
 ### Fixed
 - Add explicit provider setup for bouncy castle ([#1500](https://github.com/scm-manager/scm-manager/pull/1500))

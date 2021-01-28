@@ -52,6 +52,24 @@ const text = `Mind-paralyzing change needed improbability vortex machine sorts s
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 const doNothing = () => {};
+const withFormElementsBody = (
+  <>
+    <RadioList>
+      <Radio label="One" checked={true} helpText="The first one" />
+      <Radio label="Two" checked={false} helpText="The second one" />
+    </RadioList>
+    <hr />
+    <p>{text}</p>
+    <hr />
+    <Textarea label="Text" onChange={doNothing} />
+  </>
+);
+const withFormElementsFooter = (
+  <ButtonGroup>
+    <Button label="One" />
+    <Button label="Two" />
+  </ButtonGroup>
+);
 
 storiesOf("Modal|Modal", module)
   .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
@@ -66,21 +84,13 @@ storiesOf("Modal|Modal", module)
     </CloseableModal>
   ))
   .add("With form elements", () => (
-    <NonCloseableModal>
-      <RadioList>
-        <Radio label="One" checked={true} helpText="The first one" />
-        <Radio label="Two" checked={false} helpText="The second one" />
-      </RadioList>
-      <hr />
-      <p>{text}</p>
-      <hr />
-      <Textarea label="Text" onChange={doNothing} />
-      <hr />
-      <ButtonGroup>
-        <Button label="One" />
-        <Button label="Two" />
-      </ButtonGroup>
-    </NonCloseableModal>
+    <Modal
+      body={withFormElementsBody}
+      closeFunction={doNothing}
+      active={true}
+      title={"Hitchhiker Modal"}
+      footer={withFormElementsFooter}
+    />
   ))
   .add("With long tooltips", () => {
     return (

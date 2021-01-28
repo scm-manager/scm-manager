@@ -54,9 +54,6 @@ const Icon = styled.i<CollapsedProps>`
 `;
 
 const MenuLabel = styled.p<CollapsedProps>`
-  height: 3.2rem;
-  display: flex;
-  align-items: center;
   justify-content: ${(props: CollapsedProps) => (props.collapsed ? "center" : "inherit")};
   cursor: pointer;
 `;
