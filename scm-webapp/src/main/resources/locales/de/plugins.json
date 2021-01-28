@@ -321,7 +321,11 @@
     },
     "67SM3DANZ1": {
       "displayName": "Repository Export fehlgeschlagen",
-      "description": "Das Repository konnte nicht exportiert werden. Für weitere Informationen wenden Sie sich an Ihren Administrator."
+      "description": "Das Repository konnte nicht exportiert werden. Für weitere Informationen wenden Sie sich an Ihren Administrator oder schauen Sie im Log."
+    },
+    "4hSNNTBiu1": {
+      "displayName": "Falscher Repository Typ",
+      "description": "Der gegebene Typ entspricht nicht dem Typen des Repositories."
     }
   },
   "namespaceStrategies": {

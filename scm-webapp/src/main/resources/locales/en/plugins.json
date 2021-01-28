@@ -321,7 +321,11 @@
     },
     "67SM3DANZ1": {
       "displayName": "Repository export failed",
-      "description": "The repository could not be exported. Contact your administrator to find out the more information."
+      "description": "The repository could not be exported. Contact your administrator or see the logs for more information."
+    },
+    "4hSNNTBiu1": {
+      "displayName": "Wrong repository type",
+      "description": "The given type does not match the type of the repository."
     }
   },
   "namespaceStrategies": {

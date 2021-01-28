@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
+import sonia.scm.BadRequestException;
 import sonia.scm.Type;
 import sonia.scm.importexport.FullScmRepositoryExporter;
 import sonia.scm.repository.InternalRepositoryException;
@@ -57,6 +58,7 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.time.Instant;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
 
@@ -79,9 +81,9 @@ public class RepositoryExportResource {
    * only be used, if the repository type supports the {@link Command#BUNDLE}.
    *
    * @param uriInfo   uri info
-   * @param namespace of the repository
-   * @param name      of the repository
-   * @param type      of the repository
+   * @param namespace namespace of the repository
+   * @param name      name of the repository
+   * @param type      type of the repository
    * @return response with readable stream of repository dump
    * @since 2.13.0
    */
@@ -115,12 +117,7 @@ public class RepositoryExportResource {
                                    @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
                                    @DefaultValue("false") @QueryParam("compressed") boolean compressed
   ) {
-    Repository repository = manager.get(new NamespaceAndName(namespace, name));
-    RepositoryPermissions.read().check(repository);
-
-    Type repositoryType = type(manager, type);
-    checkSupport(repositoryType, Command.BUNDLE);
-
+    Repository repository = getVerifiedRepository(namespace, name, type);
     return exportRepository(repository, compressed);
   }
 
@@ -129,9 +126,9 @@ public class RepositoryExportResource {
    * only be used, if the repository type supports the {@link Command#BUNDLE}.
    *
    * @param uriInfo   uri info
-   * @param namespace of the repository
-   * @param name      of the repository
-   * @param type      of the repository
+   * @param namespace namespace of the repository
+   * @param name      name of the repository
+   * @param type      type of the repository
    * @return response with readable stream of repository dump
    * @since 2.13.0
    */
@@ -164,17 +161,25 @@ public class RepositoryExportResource {
                                    @PathParam("name") String name,
                                    @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type
   ) {
-    Repository repository = manager.get(new NamespaceAndName(namespace, name));
-    RepositoryPermissions.read().check(repository);
-
-    Type repositoryType = type(manager, type);
-    checkSupport(repositoryType, Command.BUNDLE);
+    Repository repository = getVerifiedRepository(namespace, name, type);
     StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os);
 
     return Response
       .ok(output,  "application/x-gzip")
       .header("content-disposition", createContentDispositionHeaderValue(repository, "tar.gz"))
       .build();
+  }
+
+  private Repository getVerifiedRepository(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("type") @Pattern(regexp = "\\w{1,10}") String type) {
+    Repository repository = manager.get(new NamespaceAndName(namespace, name));
+    RepositoryPermissions.read().check(repository);
+
+    if (type.equals(repository.getType())) {
+      throw new WrongTypeException(repository);
+    }
+    Type repositoryType = type(manager, type);
+    checkSupport(repositoryType, Command.BUNDLE);
+    return repository;
   }
 
   private Response exportRepository(Repository repository, boolean compressed) {
@@ -215,5 +220,19 @@ public class RepositoryExportResource {
 
   private String createFormattedTimestamp() {
     return Instant.now().toString().replace(":", "-").split("\\.")[0];
+  }
+
+  private static class WrongTypeException extends BadRequestException {
+
+    private static final String CODE = "4hSNNTBiu1";
+
+    public WrongTypeException(Repository repository) {
+      super(entity(repository).build(), "illegal type for repository");
+    }
+
+    @Override
+    public String getCode() {
+      return CODE;
+    }
   }
 }

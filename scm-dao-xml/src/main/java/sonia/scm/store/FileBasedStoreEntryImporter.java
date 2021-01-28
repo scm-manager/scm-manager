@@ -33,7 +33,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class FileBasedStoreEntryImporter implements StoreEntryImporter {
+class FileBasedStoreEntryImporter implements StoreEntryImporter {
 
   private final Path directory;
 
@@ -42,7 +42,7 @@ public class FileBasedStoreEntryImporter implements StoreEntryImporter {
   }
 
   @VisibleForTesting
-  public Path getDirectory() {
+  Path getDirectory() {
     return this.directory;
   }
 

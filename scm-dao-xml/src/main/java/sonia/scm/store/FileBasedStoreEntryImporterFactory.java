@@ -33,7 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class FileBasedStoreEntryImporterFactory implements StoreEntryImporterFactory {
+class FileBasedStoreEntryImporterFactory implements StoreEntryImporterFactory {
 
   private final Path directory;
 

@@ -26,7 +26,7 @@ package sonia.scm.store;
 
 import java.io.File;
 
-public enum Store {
+enum Store {
   CONFIG("config"),
   DATA("data"),
   BLOB("blob");
@@ -34,7 +34,7 @@ public enum Store {
   private static final String GLOBAL_STORE_BASE_DIRECTORY = "var";
   static final String STORE_DIRECTORY = "store";
 
-  public static Store forStoreType(StoreType storeType) {
+  static Store forStoreType(StoreType storeType) {
     switch (storeType) {
       case BLOB:
         return BLOB;
