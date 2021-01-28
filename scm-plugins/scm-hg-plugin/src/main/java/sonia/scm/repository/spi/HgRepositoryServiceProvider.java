@@ -56,7 +56,9 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.OUTGOING,
     Command.PUSH,
     Command.PULL,
-    Command.MODIFY
+    Command.MODIFY,
+    Command.BUNDLE,
+    Command.UNBUNDLE
   );
 
   public static final Set<Feature> FEATURES = EnumSet.of(Feature.COMBINED_DEFAULT_BRANCH);
@@ -267,4 +269,13 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
     return new HgTagCommand(context, handler.getWorkingCopyFactory());
   }
 
+  @Override
+  public BundleCommand getBundleCommand() {
+    return new HgBundleCommand(context);
+  }
+
+  @Override
+  public UnbundleCommand getUnbundleCommand() {
+    return new HgUnbundleCommand(context);
+  }
 }
