@@ -775,7 +775,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
 
     MockHttpRequest request = MockHttpRequest
-      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/svn/full");
+      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full");
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);

@@ -60,7 +60,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class FullScmRepositoryImporterTest {
 
-  private static final Repository REPOSITORY = RepositoryTestData.createHeartOfGold();
+  private static final Repository REPOSITORY = RepositoryTestData.createHeartOfGold("svn");
 
   @Mock
   private RepositoryServiceFactory serviceFactory;
@@ -105,6 +105,7 @@ class FullScmRepositoryImporterTest {
   void shouldImportScmRepositoryArchive() throws IOException {
     when(compatibilityChecker.check(any())).thenReturn(true);
     when(repositoryManager.create(eq(REPOSITORY), any())).thenReturn(REPOSITORY);
+    when(service.getBundleCommand().getFileExtension()).thenReturn("dump");
 
     Repository repository = fullImporter.importFromStream(REPOSITORY, Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream());
     assertThat(repository).isEqualTo(REPOSITORY);

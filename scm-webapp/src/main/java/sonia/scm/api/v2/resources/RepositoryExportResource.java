@@ -89,7 +89,7 @@ public class RepositoryExportResource {
    * @since 2.13.0
    */
   @GET
-  @Path("{type}")
+  @Path("{type: ^(?!full$)[^/]+$}")
   @Consumes(VndMediaType.REPOSITORY)
   @Operation(summary = "Exports the repository", description = "Exports the repository.", tags = "Repository")
   @ApiResponse(
@@ -129,12 +129,11 @@ public class RepositoryExportResource {
    * @param uriInfo   uri info
    * @param namespace namespace of the repository
    * @param name      name of the repository
-   * @param type      type of the repository
    * @return response with readable stream of repository dump
    * @since 2.13.0
    */
   @GET
-  @Path("{type}/full")
+  @Path("full")
   @Consumes(VndMediaType.REPOSITORY)
   @Operation(summary = "Exports the repository", description = "Exports the repository with metadata and environment information.", tags = "Repository")
   @ApiResponse(
@@ -159,10 +158,9 @@ public class RepositoryExportResource {
   )
   public Response exportFullRepository(@Context UriInfo uriInfo,
                                        @PathParam("namespace") String namespace,
-                                       @PathParam("name") String name,
-                                       @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type
+                                       @PathParam("name") String name
   ) {
-    Repository repository = getVerifiedRepository(namespace, name, type);
+    Repository repository = getVerifiedRepository(namespace, name);
     StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os);
 
     return Response
@@ -171,9 +169,14 @@ public class RepositoryExportResource {
       .build();
   }
 
-  private Repository getVerifiedRepository(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("type") @Pattern(regexp = "\\w{1,10}") String type) {
+  private Repository getVerifiedRepository(String namespace, String name) {
     Repository repository = manager.get(new NamespaceAndName(namespace, name));
     RepositoryPermissions.read().check(repository);
+    return repository;
+  }
+
+  private Repository getVerifiedRepository(String namespace, String name, String type) {
+    Repository repository = getVerifiedRepository(namespace, name);
 
     if (!type.equals(repository.getType())) {
       throw new WrongTypeException(repository);
