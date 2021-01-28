@@ -75,6 +75,10 @@
       "title": "Wählen Sie Ihre Datei aus",
       "helpText": "Wählen Sie die Datei aus der das Repository importiert werden soll."
     },
+    "fullImport": {
+      "title": "SCM-Manager Repository Archiv",
+      "helpText": "Wählen Sie das Repository Archiv aus. Das Archiv muss von einer SCM-Manager Instanz exportiert worden sein."
+    },
     "pending": {
       "subtitle": "Repository wird importiert...",
       "infoText": "Ihr Repository wird gerade importiert. Dies kann einen Moment dauern. Sie werden weitergeleitet, sobald der Import abgeschlossen ist. Wenn Sie diese Seite verlassen, können Sie nicht zurückkehren, um den Import-Status zu erfahren."
@@ -87,7 +91,11 @@
       },
       "bundle": {
         "label": "Import aus Dump",
-        "helpText": "Das Repository wird aus einen Datei Dump importiert."
+        "helpText": "Das Repository wird aus einem Datei Dump importiert."
+      },
+      "fullImport": {
+        "label": "Import aus Archiv mit Metadaten (Experimentell)",
+        "helpText": "Das Repository inkl. der Metadaten wird aus einem archivierten Dump importiert. Das Import Archiv muss von einem anderen SCM-Manager generiert worden sein."
       }
     }
   },
@@ -247,6 +255,10 @@
     "compressed": {
       "label": "Komprimieren",
       "helpText": "Export Datei vor dem Download komprimieren. Reduziert die Downloadgröße."
+    },
+    "fullExport": {
+      "label": "Mit Metadaten (Experimentell)",
+      "helpText": "Zusätzlich zum Repository Dump werden Metadaten zum Repository und zur SCM-Instanz exportiert. Gespeicherte Passwörter funktionieren nicht bei einem Import in andere SCM-Manager Instanzen. Dieses Feature ist noch experimentell. Es sollte (noch) nicht für Backups genutzt werden!"
     },
     "exportButton": "Repository exportieren",
     "exportStarted":  "Der Repository Export wurde gestartet. Abhängig von der Größe des Repository kann dies einige Momente dauern."

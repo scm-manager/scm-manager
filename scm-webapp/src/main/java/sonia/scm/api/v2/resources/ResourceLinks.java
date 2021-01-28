@@ -372,6 +372,11 @@ class ResourceLinks {
     String importFromBundle(String type) {
       return repositoryImportLinkBuilder.method("getRepositoryImportResource").parameters().method("importFromBundle").parameters(type).href();
     }
+
+    String fullImport(String type) {
+      return repositoryImportLinkBuilder.method("getRepositoryImportResource").parameters().method("importFullRepository").parameters(type).href();
+    }
+
     String archive(String namespace, String name) {
       return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("archive").parameters().href();
     }
@@ -382,6 +387,10 @@ class ResourceLinks {
 
     String export(String namespace, String name, String type) {
       return repositoryExportLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("export").parameters().method("exportRepository").parameters(type).href();
+    }
+
+    String fullExport(String namespace, String name, String type) {
+      return repositoryExportLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("export").parameters().method("exportFullRepository").parameters(type).href();
     }
   }
 

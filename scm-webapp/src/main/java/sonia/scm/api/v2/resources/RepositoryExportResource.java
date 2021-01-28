@@ -30,9 +30,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import sonia.scm.BadRequestException;
 import sonia.scm.Type;
+import sonia.scm.importexport.FullScmRepositoryExporter;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -43,6 +43,7 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
 
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -54,25 +55,25 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.time.Instant;
 
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
 
 public class RepositoryExportResource {
 
-  private static final Logger logger = LoggerFactory.getLogger(RepositoryExportResource.class);
-
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
+  private final FullScmRepositoryExporter fullScmRepositoryExporter;
 
   @Inject
   public RepositoryExportResource(RepositoryManager manager,
-                                  RepositoryServiceFactory serviceFactory) {
+                                  RepositoryServiceFactory serviceFactory, FullScmRepositoryExporter fullScmRepositoryExporter) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
+    this.fullScmRepositoryExporter = fullScmRepositoryExporter;
   }
 
   /**
@@ -80,9 +81,9 @@ public class RepositoryExportResource {
    * only be used, if the repository type supports the {@link Command#BUNDLE}.
    *
    * @param uriInfo   uri info
-   * @param namespace of the repository
-   * @param name      of the repository
-   * @param type      of the repository
+   * @param namespace namespace of the repository
+   * @param name      name of the repository
+   * @param type      type of the repository
    * @return response with readable stream of repository dump
    * @since 2.13.0
    */
@@ -113,16 +114,72 @@ public class RepositoryExportResource {
   public Response exportRepository(@Context UriInfo uriInfo,
                                    @PathParam("namespace") String namespace,
                                    @PathParam("name") String name,
-                                   @PathParam("type") String type,
+                                   @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
                                    @DefaultValue("false") @QueryParam("compressed") boolean compressed
   ) {
+    Repository repository = getVerifiedRepository(namespace, name, type);
+    return exportRepository(repository, compressed);
+  }
+
+  /**
+   * Exports an existing repository with all additional metadata and environment information. The method can
+   * only be used, if the repository type supports the {@link Command#BUNDLE}.
+   *
+   * @param uriInfo   uri info
+   * @param namespace namespace of the repository
+   * @param name      name of the repository
+   * @param type      type of the repository
+   * @return response with readable stream of repository dump
+   * @since 2.13.0
+   */
+  @GET
+  @Path("{type}/full")
+  @Consumes(VndMediaType.REPOSITORY)
+  @Operation(summary = "Exports the repository", description = "Exports the repository with metadata and environment information.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "Repository export was successful"
+  )
+  @ApiResponse(
+    responseCode = "401",
+    description = "not authenticated / invalid credentials"
+  )
+  @ApiResponse(
+    responseCode = "403",
+    description = "not authorized, the current user has no privileges to read the repository"
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response exportFullRepository(@Context UriInfo uriInfo,
+                                   @PathParam("namespace") String namespace,
+                                   @PathParam("name") String name,
+                                   @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type
+  ) {
+    Repository repository = getVerifiedRepository(namespace, name, type);
+    StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os);
+
+    return Response
+      .ok(output,  "application/x-gzip")
+      .header("content-disposition", createContentDispositionHeaderValue(repository, "tar.gz"))
+      .build();
+  }
+
+  private Repository getVerifiedRepository(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("type") @Pattern(regexp = "\\w{1,10}") String type) {
     Repository repository = manager.get(new NamespaceAndName(namespace, name));
     RepositoryPermissions.read().check(repository);
 
+    if (!type.equals(repository.getType())) {
+      throw new WrongTypeException(repository);
+    }
     Type repositoryType = type(manager, type);
     checkSupport(repositoryType, Command.BUNDLE);
-
-    return exportRepository(repository, compressed);
+    return repository;
   }
 
   private Response exportRepository(Repository repository, boolean compressed) {
@@ -140,24 +197,42 @@ public class RepositoryExportResource {
       }
     };
 
+    return createResponse(repository, compressed, output);
+  }
+
+  private Response createResponse(Repository repository, boolean compressed, StreamingOutput output) {
     return Response
       .ok(output, compressed ? "application/x-gzip" : MediaType.APPLICATION_OCTET_STREAM)
-      .header("content-disposition", createContentDispositionHeaderValue(repository, compressed))
+      .header("content-disposition", createContentDispositionHeaderValue(repository, compressed ? "dump.gz" : "dump"))
       .build();
   }
 
-  private String createContentDispositionHeaderValue(Repository repository, boolean compressed) {
+  private String createContentDispositionHeaderValue(Repository repository, String filetype) {
     String timestamp = createFormattedTimestamp();
       return String.format(
         "attachment; filename = %s-%s-%s.%s",
         repository.getNamespace(),
         repository.getName(),
         timestamp,
-        compressed ? "dump.gz" : "dump"
+        filetype
       );
   }
 
   private String createFormattedTimestamp() {
     return Instant.now().toString().replace(":", "-").split("\\.")[0];
+  }
+
+  private static class WrongTypeException extends BadRequestException {
+
+    private static final String CODE = "4hSNNTBiu1";
+
+    public WrongTypeException(Repository repository) {
+      super(entity(repository).build(), "illegal type for repository");
+    }
+
+    @Override
+    public String getCode() {
+      return CODE;
+    }
   }
 }

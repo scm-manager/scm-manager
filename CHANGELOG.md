@@ -13,6 +13,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add markdown codeblock renderer extension point ([#1492](https://github.com/scm-manager/scm-manager/pull/1492))
 - Add Java version to plugin center url ([#1494](https://github.com/scm-manager/scm-manager/pull/1494))
 - Add Font ttf-dejavu to oci image ([#1498](https://github.com/scm-manager/scm-manager/issues/1498))
+- Add repository import and export with metadata for Subversion ([#1501](https://github.com/scm-manager/scm-manager/pull/1501))
+- API for store rename/delete in update steps ([#1505](https://github.com/scm-manager/scm-manager/pull/1505))
+
+### Changed
+- Directory name for git LFS files ([#1504](https://github.com/scm-manager/scm-manager/pull/1504))
 
 ### Changed
 - Migrate integration tests to bdd ([#1497](https://github.com/scm-manager/scm-manager/pull/1497))

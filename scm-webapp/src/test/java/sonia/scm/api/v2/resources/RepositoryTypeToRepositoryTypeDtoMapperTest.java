@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
+import de.otto.edison.hal.Link;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.After;
@@ -39,6 +40,7 @@ import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
 
 import java.net.URI;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -114,19 +116,25 @@ public class RepositoryTypeToRepositoryTypeDtoMapperTest {
   }
 
   @Test
-  public void shouldAppendImportFromBundleLink() {
+  public void shouldAppendImportFromBundleLinkAndFullImportLink() {
     RepositoryType type = new RepositoryType("hk", "Hitchhiker", ImmutableSet.of(Command.UNBUNDLE));
     when(subject.isPermitted("repository:create")).thenReturn(true);
 
     RepositoryTypeDto dto = mapper.map(type);
+    List<Link> links = dto.getLinks().getLinksBy("import");
+    assertEquals(2, links.size());
     assertEquals(
       "https://scm-manager.org/scm/v2/repositories/import/hk/bundle",
-      dto.getLinks().getLinkBy("import").get().getHref()
+      links.get(0).getHref()
+    );
+    assertEquals(
+      "https://scm-manager.org/scm/v2/repositories/import/hk/full",
+      links.get(1).getHref()
     );
   }
 
   @Test
-  public void shouldNotAppendImportFromBundleLinkIfCommandNotSupported() {
+  public void shouldNotAppendImportFromBundleLinkOrFullImportLinkIfCommandNotSupported() {
     when(subject.isPermitted("repository:create")).thenReturn(true);
     RepositoryTypeDto dto = mapper.map(type);
     assertFalse(dto.getLinks().getLinkBy("import").isPresent());

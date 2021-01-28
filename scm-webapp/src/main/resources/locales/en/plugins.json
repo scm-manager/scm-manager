@@ -47,6 +47,12 @@
           "displayName": "Archive repositories",
           "description": "May mark repositories as \"archived\" and therefore unmodifiable"
         }
+      },
+      "read,export": {
+        "*": {
+          "displayName": "Export repositories",
+          "description": "May export all repositories"
+        }
       }
     },
     "user": {
@@ -148,6 +154,10 @@
       "archive": {
         "displayName": "archive repository",
         "description": "May mark the repository as \"archived\" and therefore unmodifiable"
+      },
+      "export": {
+        "displayName": "export repository",
+        "description": "May export the repository"
       },
       "*": {
         "displayName": "own repository",
@@ -308,6 +318,14 @@
     "3hSIlptme1": {
       "displayName": "Repository is archived",
       "description": "The repository is marked as \"archived\" and therefore must noch be modified."
+    },
+    "67SM3DANZ1": {
+      "displayName": "Repository export failed",
+      "description": "The repository could not be exported. Contact your administrator or see the logs for more information."
+    },
+    "4hSNNTBiu1": {
+      "displayName": "Wrong repository type",
+      "description": "The given type does not match the type of the repository."
     }
   },
   "namespaceStrategies": {
