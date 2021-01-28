@@ -49,7 +49,7 @@ public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase 
 
   @Before
   public void initWorkDirProvider() throws IOException {
-    workdirProvider = new WorkdirProvider(temporaryFolder.newFolder(), repositoryLocationResolver);
+    workdirProvider = new WorkdirProvider(temporaryFolder.newFolder(), repositoryLocationResolver, false);
   }
 
   @Test

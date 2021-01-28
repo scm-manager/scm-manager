@@ -52,7 +52,7 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
 
   @Before
   public void bindScmProtocol() throws IOException {
-    workdirProvider = new WorkdirProvider(temporaryFolder.newFolder(), repositoryLocationResolver);
+    workdirProvider = new WorkdirProvider(temporaryFolder.newFolder(), repositoryLocationResolver, false);
     workingCopyFactory = new SimpleHgWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider)) {
       @Override
       public void configure(com.aragost.javahg.commands.PullCommand pullCommand) {

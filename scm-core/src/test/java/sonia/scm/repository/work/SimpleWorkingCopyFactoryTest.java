@@ -64,7 +64,7 @@ public class SimpleWorkingCopyFactoryTest {
 
   @Before
   public void initFactory() throws IOException {
-    WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder(), repositoryLocationResolver);
+    WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder(), repositoryLocationResolver, false);
     WorkingCopyPool configurableTestWorkingCopyPool = new WorkingCopyPool() {
       @Override
       public <R, W> WorkingCopy<R, W> getWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext context) {
