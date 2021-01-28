@@ -300,7 +300,7 @@ public class RepositoryToRepositoryDtoMapperTest {
     repository.setType("svn");
     RepositoryDto dto = mapper.map(repository);
     assertEquals(
-      "http://example.com/base/v2/repositories/testspace/test/export/svn/full",
+      "http://example.com/base/v2/repositories/testspace/test/export/full",
       dto.getLinks().getLinkBy("fullExport").get().getHref());
   }
 
