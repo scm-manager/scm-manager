@@ -13,10 +13,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add markdown codeblock renderer extension point ([#1492](https://github.com/scm-manager/scm-manager/pull/1492))
 - Add Java version to plugin center url ([#1494](https://github.com/scm-manager/scm-manager/pull/1494))
 - Add Font ttf-dejavu to oci image ([#1498](https://github.com/scm-manager/scm-manager/issues/1498))
+- Add repository import and export with metadata for Subversion ([#1501](https://github.com/scm-manager/scm-manager/pull/1501))
+- API for store rename/delete in update steps ([#1505](https://github.com/scm-manager/scm-manager/pull/1505))
 - Add import and export for Git via dump file ([#1507](https://github.com/scm-manager/scm-manager/pull/1507))
+
+### Changed
+- Directory name for git LFS files ([#1504](https://github.com/scm-manager/scm-manager/pull/1504))
+
+### Changed
+- Migrate integration tests to bdd ([#1497](https://github.com/scm-manager/scm-manager/pull/1497))
+- Layout of proxy settings ([#1502](https://github.com/scm-manager/scm-manager/pull/1502))
+- Apply test ids to production builds for usage in e2e tests ([#1499](https://github.com/scm-manager/scm-manager/pull/1499))
+- Bump google guava version to 30.1-jre
+- Refactor table component so that it can be styled by styled-components ([#1503](https://github.com/scm-manager/scm-manager/pull/1503))
 
 ### Fixed
 - Add explicit provider setup for bouncy castle ([#1500](https://github.com/scm-manager/scm-manager/pull/1500))
+- Repository contact information is editable ([#1508](https://github.com/scm-manager/scm-manager/pull/1508))
 
 ## [2.12.0] - 2020-12-17
 ### Added

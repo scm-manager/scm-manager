@@ -22,23 +22,29 @@
  * SOFTWARE.
  */
 
-describe("With Anonymous mode disabled", () => {
-  before("Disable anonymous access", () => {
-    cy.login("scmadmin", "scmadmin");
-    cy.setAnonymousMode("OFF");
-    cy.byTestId("primary-navigation-logout").click();
-  });
+package sonia.scm.store;
 
-  it("Should show login page without primary navigation", () => {
-    cy.byTestId("login-button");
-    cy.containsNotByTestId("div", "primary-navigation-login");
-    cy.containsNotByTestId("div", "primary-navigation-repositories");
-  });
-  it("Should redirect after login", () => {
-    cy.login("scmadmin", "scmadmin");
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-    cy.visit("/me");
-    cy.byTestId("footer-user-profile");
-    cy.byTestId("primary-navigation-logout").click();
-  });
-});
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+class FileBasedStoreEntryImporterTest {
+
+  @Test
+  void shouldCreateFileFromInputStream(@TempDir Path temp) {
+    FileBasedStoreEntryImporter importer = new FileBasedStoreEntryImporter(temp);
+    String fileName = "testStore.xml";
+
+    importer.importEntry(fileName, new ByteArrayInputStream("testdata".getBytes()));
+
+    assertThat(Files.exists(temp.resolve(fileName))).isTrue();
+    assertThat(temp.resolve(fileName)).hasContent("testdata");
+  }
+}

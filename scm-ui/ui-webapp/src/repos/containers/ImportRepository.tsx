@@ -40,6 +40,7 @@ import {
 import { connect } from "react-redux";
 import { fetchNamespaceStrategiesIfNeeded } from "../../admin/modules/namespaceStrategies";
 import ImportRepositoryFromBundle from "../components/ImportRepositoryFromBundle";
+import ImportFullRepository from "../components/ImportFullRepository";
 
 type Props = {
   repositoryTypes: RepositoryType[];
@@ -100,6 +101,16 @@ const ImportRepository: FC<Props> = ({
       return (
         <ImportRepositoryFromBundle
           url={((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "bundle") as Link).href}
+          repositoryType={repositoryType!.name}
+          setImportPending={setImportPending}
+        />
+      );
+    }
+
+    if (importType === "fullImport") {
+      return (
+        <ImportFullRepository
+          url={((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "fullImport") as Link).href}
           repositoryType={repositoryType!.name}
           setImportPending={setImportPending}
         />

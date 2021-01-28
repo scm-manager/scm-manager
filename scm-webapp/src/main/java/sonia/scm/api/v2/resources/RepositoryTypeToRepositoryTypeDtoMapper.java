@@ -53,6 +53,7 @@ public abstract class RepositoryTypeToRepositoryTypeDtoMapper extends BaseMapper
       }
       if (repositoryType.getSupportedCommands().contains(Command.UNBUNDLE)) {
         linksBuilder.array(Link.linkBuilder("import", resourceLinks.repository().importFromBundle(repositoryType.getName())).withName("bundle").build());
+        linksBuilder.array(Link.linkBuilder("import", resourceLinks.repository().fullImport(repositoryType.getName())).withName("fullImport").build());
       }
     }
 

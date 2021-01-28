@@ -294,6 +294,16 @@ public class RepositoryToRepositoryDtoMapperTest {
       dto.getLinks().getLinkBy("export").get().getHref());
   }
 
+  @Test
+  public void shouldCreateFullExportLink() {
+    Repository repository = createTestRepository();
+    repository.setType("svn");
+    RepositoryDto dto = mapper.map(repository);
+    assertEquals(
+      "http://example.com/base/v2/repositories/testspace/test/export/svn/full",
+      dto.getLinks().getLinkBy("fullExport").get().getHref());
+  }
+
   private ScmProtocol mockProtocol(String type, String protocol) {
     return new MockScmProtocol(type, protocol);
   }

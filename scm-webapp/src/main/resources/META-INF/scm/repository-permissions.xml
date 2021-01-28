@@ -34,6 +34,7 @@
     <verb read-only="true">permissionRead</verb>
     <verb>permissionWrite</verb>
     <verb read-only="true">archive</verb>
+    <verb read-only="true">export</verb>
     <verb>*</verb>
   </verbs>
   <roles>

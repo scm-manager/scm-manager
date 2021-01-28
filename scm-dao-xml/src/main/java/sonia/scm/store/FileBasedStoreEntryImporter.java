@@ -22,23 +22,41 @@
  * SOFTWARE.
  */
 
-describe("With Anonymous mode protocol only enabled", () => {
-  before("Set anonymous mode to protocol only", () => {
-    cy.login("scmadmin", "scmadmin");
-    cy.setAnonymousMode("PROTOCOL_ONLY");
-    cy.byTestId("primary-navigation-logout").click();
-  });
+package sonia.scm.store;
 
-  it("Should show login page without primary navigation", () => {
-    cy.visit("/repos/");
-    cy.byTestId("login-button");
-    cy.containsNotByTestId("div", "primary-navigation-login");
-    cy.containsNotByTestId("div", "primary-navigation-repositories");
-  });
+import com.google.common.annotations.VisibleForTesting;
+import sonia.scm.ContextEntry;
+import sonia.scm.repository.api.ImportFailedException;
 
-  after("Disable anonymous access", () => {
-    cy.login("scmadmin", "scmadmin");
-    cy.setAnonymousMode("OFF");
-    cy.byTestId("primary-navigation-logout").click();
-  });
-});
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+
+class FileBasedStoreEntryImporter implements StoreEntryImporter {
+
+  private final Path directory;
+
+  FileBasedStoreEntryImporter(Path directory) {
+    this.directory = directory;
+  }
+
+  @VisibleForTesting
+  Path getDirectory() {
+    return this.directory;
+  }
+
+  @Override
+  public void importEntry(String name, InputStream stream) {
+    Path filePath = directory.resolve(name);
+    try {
+      Files.copy(stream, filePath);
+    } catch (IOException e) {
+      throw new ImportFailedException(
+        ContextEntry.ContextBuilder.noContext(),
+        String.format("Could not import file %s for store %s", name, directory.toString()),
+        e
+      );
+    }
+  }
+}

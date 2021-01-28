@@ -50,6 +50,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.HandlerEventType;
 import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.importexport.FullScmRepositoryImporter;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryImportEvent;
@@ -63,6 +64,7 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.IOUtil;
 import sonia.scm.util.ValidationUtil;
 import sonia.scm.web.VndMediaType;
+import sonia.scm.web.api.DtoValidator;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Email;
@@ -87,8 +89,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 
-import static com.google.common.base.Preconditions.checkArgument;
-import static com.google.common.base.Preconditions.checkNotNull;
 import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singletonList;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
@@ -103,18 +103,21 @@ public class RepositoryImportResource {
   private final RepositoryServiceFactory serviceFactory;
   private final ResourceLinks resourceLinks;
   private final ScmEventBus eventBus;
+  private final FullScmRepositoryImporter fullScmRepositoryImporter;
 
   @Inject
   public RepositoryImportResource(RepositoryManager manager,
                                   RepositoryDtoToRepositoryMapper mapper,
                                   RepositoryServiceFactory serviceFactory,
                                   ResourceLinks resourceLinks,
-                                  ScmEventBus eventBus) {
+                                  ScmEventBus eventBus,
+                                  FullScmRepositoryImporter fullScmRepositoryImporter) {
     this.manager = manager;
     this.mapper = mapper;
     this.serviceFactory = serviceFactory;
     this.resourceLinks = resourceLinks;
     this.eventBus = eventBus;
+    this.fullScmRepositoryImporter = fullScmRepositoryImporter;
   }
 
   /**
@@ -255,6 +258,62 @@ public class RepositoryImportResource {
   }
 
   /**
+   * Imports a repository as SCM-Manager provided import archive. The method can
+   * only be used, if the repository type supports the {@link Command#UNBUNDLE}. The
+   * method will return a location header with the url to the imported
+   * repository.
+   *
+   * @param uriInfo uri info
+   * @param type    repository type
+   * @param input   multi part form data which should contain a valid repository dto and the input stream of the bundle
+   * @return empty response with location header which points to the imported
+   * repository
+   * @since 2.13.0
+   */
+  @POST
+  @Path("{type}/full")
+  @Consumes(MediaType.MULTIPART_FORM_DATA)
+  @Operation(
+    summary = "Import repository from SCM-Manager repository archive",
+    description = "Imports the repository with metadata from the provided bundle.",
+    tags = "Repository"
+  )
+  @ApiResponse(
+    responseCode = "201",
+    description = "Repository import was successful"
+  )
+  @ApiResponse(
+    responseCode = "401",
+    description = "not authenticated / invalid credentials"
+  )
+  @ApiResponse(
+    responseCode = "403",
+    description = "not authorized, the current user has no privileges to import repositories"
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response importFullRepository(@Context UriInfo uriInfo,
+                                       @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
+                                       MultipartFormDataInput input) {
+    RepositoryPermissions.create().check();
+    Repository createdRepository = importFullRepositoryFromInput(input);
+    return Response.created(URI.create(resourceLinks.repository().self(createdRepository.getNamespace(), createdRepository.getName()))).build();
+  }
+
+  private Repository importFullRepositoryFromInput(MultipartFormDataInput input) {
+    Map<String, List<InputPart>> formParts = input.getFormDataMap();
+    InputStream inputStream = extractInputStream(formParts);
+    RepositoryDto repositoryDto = extractRepositoryDto(formParts);
+    return fullScmRepositoryImporter.importFromStream(mapper.map(repositoryDto), inputStream);
+  }
+
+  /**
    * Start bundle import.
    *
    * @param type       repository type
@@ -264,12 +323,8 @@ public class RepositoryImportResource {
    */
   private Repository doImportFromBundle(String type, MultipartFormDataInput input, boolean compressed) {
     Map<String, List<InputPart>> formParts = input.getFormDataMap();
-    RepositoryDto repositoryDto = extractFromInputPart(formParts.get("repository"), RepositoryDto.class);
-    InputStream inputStream = extractFromInputPart(formParts.get("bundle"), InputStream.class);
-
-    checkNotNull(repositoryDto, "repository data is required");
-    checkNotNull(inputStream, "bundle inputStream is required");
-    checkArgument(!Strings.isNullOrEmpty(repositoryDto.getName()), "request does not contain name of the repository");
+    InputStream inputStream = extractInputStream(formParts);
+    RepositoryDto repositoryDto = extractRepositoryDto(formParts);
 
     Type t = type(manager, type);
     checkSupport(t, Command.UNBUNDLE);
@@ -315,6 +370,25 @@ public class RepositoryImportResource {
     };
   }
 
+  private RepositoryDto extractRepositoryDto(Map<String, List<InputPart>> formParts) {
+    RepositoryDto repositoryDto = extractFromInputPart(formParts.get("repository"), RepositoryDto.class);
+    checkNotNull(repositoryDto, "repository data is required");
+    DtoValidator.validate(repositoryDto);
+    return repositoryDto;
+  }
+
+  private void checkNotNull(Object object, String errorMessage) {
+    if (object == null) {
+      throw new WebApplicationException(errorMessage, 400);
+    }
+  }
+
+  private InputStream extractInputStream(Map<String, List<InputPart>> formParts) {
+    InputStream inputStream = extractFromInputPart(formParts.get("bundle"), InputStream.class);
+    checkNotNull(inputStream, "bundle inputStream is required");
+    return inputStream;
+  }
+
   private <T> T extractFromInputPart(List<InputPart> input, Class<T> type) {
     try {
       if (input != null && !input.isEmpty()) {
@@ -343,6 +417,7 @@ public class RepositoryImportResource {
   @NoArgsConstructor
   @SuppressWarnings("java:S2160")
   public static class RepositoryImportDto extends RepositoryDto implements ImportRepositoryDto {
+
     @NotEmpty
     private String importUrl;
     private String username;

@@ -38,6 +38,7 @@ import org.apache.shiro.codec.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import sonia.scm.Priority;
 import sonia.scm.plugin.Extension;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
@@ -53,6 +54,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
+@Priority(100)
 @Extension
 public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator
 {

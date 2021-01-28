@@ -62,7 +62,8 @@ pipeline {
     // in parallel with check?
     stage('Integration Tests') {
       steps {
-        gradle 'integrationTest'
+        // TODO remove obligatory rerun flag when flappy tests have been fixed
+        gradle '-PrerunIntegrationTests integrationTest'
         junit allowEmptyResults: true, testResults: 'scm-it/build/test-results/javaIntegrationTests/*.xml,scm-ui/build/reports/e2e/*.xml'
         archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/e2e-tests/cypress/videos/*.mp4'
         archiveArtifacts allowEmptyArchive: true, artifacts: 'scm-ui/e2e-tests/cypress/screenshots/**/*.png'
