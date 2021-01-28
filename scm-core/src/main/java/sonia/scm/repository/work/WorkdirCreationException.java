@@ -31,6 +31,10 @@ public class WorkdirCreationException extends ExceptionWithContext {
 
   public static final String CODE = "3tS0mjSoo1";
 
+  public WorkdirCreationException(String path) {
+    super(ContextEntry.ContextBuilder.entity("Path", path).build(), "Could not create directory " + path);
+  }
+
   public WorkdirCreationException(String path, Exception cause) {
     super(ContextEntry.ContextBuilder.entity("Path", path).build(), "Could not create directory " + path, cause);
   }

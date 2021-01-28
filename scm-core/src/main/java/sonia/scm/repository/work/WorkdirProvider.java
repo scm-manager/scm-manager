@@ -65,8 +65,11 @@ public class WorkdirProvider {
   }
 
   private File createWorkDir(File baseDirectory) {
+    // recreate base directory when it may be deleted (see https://github.com/scm-manager/scm-manager/issues/1493 for example)
+    if (!baseDirectory.exists() && !baseDirectory.mkdirs()) {
+      throw new WorkdirCreationException(baseDirectory.toString());
+    }
     try {
-      baseDirectory.mkdirs(); // recreate base directory when it may be deleted (see https://github.com/scm-manager/scm-manager/issues/1493 for example)
       return Files.createTempDirectory(baseDirectory.toPath(),"work-").toFile();
     } catch (IOException e) {
       throw new WorkdirCreationException(baseDirectory.toString(), e);
