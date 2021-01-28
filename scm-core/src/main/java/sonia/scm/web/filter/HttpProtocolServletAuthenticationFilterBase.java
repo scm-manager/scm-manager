@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.filter;
 
 import sonia.scm.config.ScmConfiguration;
@@ -57,7 +57,7 @@ public class HttpProtocolServletAuthenticationFilterBase extends AuthenticationF
       // we can proceed the filter chain because the HttpProtocolServlet will render the ui if the client is a browser
       chain.doFilter(request, response);
     } else {
-      HttpUtil.sendUnauthorized(request, response);
+      HttpUtil.sendUnauthorized(request, response, configuration.getRealmDescription());
     }
   }
 

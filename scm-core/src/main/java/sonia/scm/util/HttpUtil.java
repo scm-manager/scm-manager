@@ -582,20 +582,20 @@ public final class HttpUtil
     HttpServletResponse response, String realmDescription)
     throws IOException
   {
-    if ((request == null) ||!isWUIRequest(request))
-    {
-      response.setHeader(HEADER_WWW_AUTHENTICATE,
-        "Basic realm=\"".concat(realmDescription).concat("\""));
-
+    if ((request == null) ||!isWUIRequest(request)) {
+      String headerValue = "Basic realm=\"";
+      if (Strings.isNullOrEmpty(realmDescription)) {
+        headerValue += AUTHENTICATION_REALM;
+      } else {
+        headerValue += realmDescription;
+      }
+      headerValue += "\"";
+      response.setHeader(HEADER_WWW_AUTHENTICATE, headerValue);
+    } else if (logger.isTraceEnabled()) {
+      logger.trace("do not send WWW-Authenticate header, because the client is the web interface");
     }
-    else if (logger.isTraceEnabled())
-    {
-      logger.trace(
-        "do not send WWW-Authenticate header, because the client is the web interface");
-    }
 
-    response.sendError(HttpServletResponse.SC_UNAUTHORIZED,
-      STATUS_UNAUTHORIZED_MESSAGE);
+    response.sendError(HttpServletResponse.SC_UNAUTHORIZED, STATUS_UNAUTHORIZED_MESSAGE);
   }
 
   /**

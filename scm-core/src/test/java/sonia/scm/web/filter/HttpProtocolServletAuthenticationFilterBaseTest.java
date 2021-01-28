@@ -51,7 +51,7 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class HttpProtocolServletAuthenticationFilterBaseTest {
 
-  private ScmConfiguration configuration = new ScmConfiguration();
+  private ScmConfiguration configuration;
 
   private Set<WebTokenGenerator> tokenGenerators = Collections.emptySet();
 
@@ -74,6 +74,7 @@ class HttpProtocolServletAuthenticationFilterBaseTest {
 
   @BeforeEach
   void setUpObjectUnderTest() {
+    configuration = new ScmConfiguration();
     authenticationFilter = new HttpProtocolServletAuthenticationFilterBase(configuration, tokenGenerators, userAgentParser);
   }
 
@@ -84,6 +85,16 @@ class HttpProtocolServletAuthenticationFilterBaseTest {
     authenticationFilter.handleUnauthorized(request, response, filterChain);
 
     verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, HttpUtil.STATUS_UNAUTHORIZED_MESSAGE);
+  }
+
+  @Test
+  void shouldSendConfiguredRealmDescription() throws IOException, ServletException {
+    configuration.setRealmDescription("Hitchhikers finest");
+    when(userAgentParser.parse(request)).thenReturn(nonBrowser);
+
+    authenticationFilter.handleUnauthorized(request, response, filterChain);
+
+    verify(response).setHeader(HttpUtil.HEADER_WWW_AUTHENTICATE, "Basic realm=\"Hitchhikers finest\"");
   }
 
   @Test
