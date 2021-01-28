@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.migration;
 
 import sonia.scm.plugin.ExtensionPoint;
@@ -50,6 +50,7 @@ import sonia.scm.version.Version;
  * <ul>
  * <li>a {@link sonia.scm.security.KeyGenerator},</li>
  * <li>the {@link sonia.scm.repository.RepositoryLocationResolver},</li>
+ * <li>an {@link sonia.scm.update.RepositoryUpdateIterator},</li>
  * <li>the {@link sonia.scm.io.FileSystem},</li>
  * <li>the {@link sonia.scm.security.CipherHandler},</li>
  * <li>a {@link sonia.scm.store.ConfigurationStoreFactory},</li>
@@ -82,6 +83,8 @@ import sonia.scm.version.Version;
  * </li>
  * </ul>
  * </p>
+ * <p>Mind that an implementation of this class has to be annotated with {@link sonia.scm.plugin.Extension}, so that the
+ * step will be found. </p>
  */
 @ExtensionPoint
 public interface UpdateStep {

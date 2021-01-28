@@ -104,8 +104,9 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
         linksBuilder.array(protocolLinks);
       }
 
-      if (repositoryService.isSupported(Command.BUNDLE)) {
+      if (repositoryService.isSupported(Command.BUNDLE) && RepositoryPermissions.export(repository).isPermitted()) {
         linksBuilder.single(link("export", resourceLinks.repository().export(repository.getNamespace(), repository.getName(), repository.getType())));
+        linksBuilder.single(link("fullExport", resourceLinks.repository().fullExport(repository.getNamespace(), repository.getName(), repository.getType())));
       }
 
       if (repositoryService.isSupported(Command.TAGS)) {

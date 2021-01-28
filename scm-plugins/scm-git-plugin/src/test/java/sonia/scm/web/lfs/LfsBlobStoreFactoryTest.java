@@ -62,7 +62,7 @@ public class LfsBlobStoreFactoryTest {
     // just make sure the right parameter is passed, as properly validating the return value is nearly impossible with 
     // the return value (and should not be part of this test)
     verify(blobStoreFactory).getStore(argThat(blobStoreParameters -> {
-      assertThat(blobStoreParameters.getName()).isEqualTo("the-id-git-lfs");
+      assertThat(blobStoreParameters.getName()).isEqualTo("git-lfs");
       assertThat(blobStoreParameters.getRepositoryId()).isEqualTo("the-id");
       return true;
     }));

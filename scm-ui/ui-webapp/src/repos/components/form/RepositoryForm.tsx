@@ -78,7 +78,7 @@ const RepositoryForm: FC<Props> = ({
   });
   const [initRepository, setInitRepository] = useState(false);
   const [contextEntries, setContextEntries] = useState({});
-  const [valid, setValid] = useState({ namespaceAndName: false, contact: true });
+  const [valid, setValid] = useState({ namespaceAndName: true, contact: true });
   const [t] = useTranslation("repos");
 
   useEffect(() => {
@@ -178,12 +178,12 @@ const RepositoryForm: FC<Props> = ({
   };
 
   const submitButton = () => {
-    if (disabled) {
+    if (!isModifiable() && isEditMode()) {
       return null;
     }
     return (
       <Level
-        right={<SubmitButton disabled={!isValid()} loading={loading} label={t("repositoryForm.submitCreate")} />}
+        right={<SubmitButton disabled={!isValid() || loading} loading={loading} label={t("repositoryForm.submitCreate")} />}
       />
     );
   };

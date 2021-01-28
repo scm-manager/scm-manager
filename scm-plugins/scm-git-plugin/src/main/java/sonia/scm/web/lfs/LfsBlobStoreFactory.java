@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.lfs;
 
 import com.google.inject.Inject;
@@ -32,44 +32,37 @@ import sonia.scm.store.BlobStoreFactory;
 
 /**
  * Creates {@link BlobStore} objects to store lfs objects.
- * 
+ *
  * @author Sebastian Sdorra
  * @since 1.54
  */
 @Singleton
 public class LfsBlobStoreFactory {
-  
-  private static final String GIT_LFS_REPOSITORY_POSTFIX = "-git-lfs";
-  
+
+  private static final String GIT_LFS_STORE_NAME = "git-lfs";
+
   private final BlobStoreFactory blobStoreFactory;
 
   /**
    * Create a new instance.
-   * 
+   *
    * @param blobStoreFactory blob store factory
    */
   @Inject
   public LfsBlobStoreFactory(BlobStoreFactory blobStoreFactory) {
     this.blobStoreFactory = blobStoreFactory;
   }
-  
+
   /**
    * Provides a {@link BlobStore} corresponding to the SCM Repository.
-   * <p>
-   * git-lfs repositories should generally carry the same name as their regular SCM repository counterparts. However,
-   * we have decided to store them under their IDs instead of their names, since the names might change and provide
-   * other drawbacks, as well.
-   * <p>
-   * These repositories will have {@linkplain #GIT_LFS_REPOSITORY_POSTFIX} appended to their IDs.
    *
    * @param repository The SCM Repository to provide a LFS {@link BlobStore} for.
-   * 
+   *
    * @return blob store for the corresponding scm repository
    */
-  @SuppressWarnings("unchecked")
   public BlobStore getLfsBlobStore(Repository repository) {
     return blobStoreFactory
-        .withName(repository.getId() + GIT_LFS_REPOSITORY_POSTFIX)
+        .withName(GIT_LFS_STORE_NAME)
         .forRepository(repository)
         .build();
   }

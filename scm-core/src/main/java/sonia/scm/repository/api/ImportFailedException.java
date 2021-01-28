@@ -42,6 +42,10 @@ public class ImportFailedException extends ExceptionWithContext {
     super(context, message, cause);
   }
 
+  public ImportFailedException(List<ContextEntry> context, String message) {
+    super(context, message);
+  }
+
   @Override
   public String getCode() {
     return CODE;

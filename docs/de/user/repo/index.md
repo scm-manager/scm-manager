@@ -50,6 +50,7 @@ Dieses Repository Archiv muss von einem anderen SCM-Manager exportiert worden se
 ![Repository importieren](assets/import-repository.png)
 
 ### Repository Informationen
-Die Informationsseite eines Repository zeigt die Metadaten zum Repository an. Darunter befinden sich Beschreibungen zu den unterschiedlichen Möglichkeiten wie man mit diesem Repository arbeiten kann. In der Überschrift kann der Namespace angeklickt werden, um alle Repositories aus diesem Namespace anzuzeigen.
+Die Informationsseite eines Repository zeigt die Metadaten zum Repository an. Darunter befinden sich Beschreibungen zu den unterschiedlichen Möglichkeiten wie man mit diesem Repository arbeiten kann. 
+In der Überschrift kann der Namespace angeklickt werden, um alle Repositories aus diesem Namespace anzuzeigen.
 
 ![Repository-Information](assets/repository-information.png)
