@@ -46,7 +46,7 @@ public class NoneCachingWorkingCopyPool implements WorkingCopyPool {
 
   @Override
   public <R, W> WorkingCopy<R, W> getWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext context) {
-    return context.initialize(workdirProvider.createNewWorkdir());
+    return context.initialize(workdirProvider.createNewWorkdir(context.getScmRepository().getId()));
   }
 
   @Override

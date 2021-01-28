@@ -25,10 +25,8 @@
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.commands.PullCommand;
-import com.google.inject.util.Providers;
 import org.junit.Before;
 import org.junit.Test;
-import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.TagCreateRequest;
 import sonia.scm.repository.api.TagDeleteRequest;
@@ -46,7 +44,7 @@ public class HgTagCommandTest extends AbstractHgCommandTestBase {
   @Before
   public void initWorkingCopyFactory() {
 
-    workingCopyFactory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())) {
+    workingCopyFactory = new SimpleHgWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver))) {
       @Override
       public void configure(PullCommand pullCommand) {
         // we do not want to configure http hooks in this unit test

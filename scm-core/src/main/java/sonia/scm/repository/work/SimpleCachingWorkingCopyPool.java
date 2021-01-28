@@ -96,7 +96,7 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
 
   private <R, W> WorkingCopy<R, W> createNewWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext workingCopyContext) {
     Stopwatch stopwatch = Stopwatch.createStarted();
-    File newWorkdir = workdirProvider.createNewWorkdir();
+    File newWorkdir = workdirProvider.createNewWorkdir(workingCopyContext.getScmRepository().getId());
     WorkingCopy<R, W> parentAndClone = workingCopyContext.initialize(newWorkdir);
     LOG.debug("initialized new workdir for {} in path {} in {}", workingCopyContext.getScmRepository(), newWorkdir, stopwatch.stop());
     return parentAndClone;

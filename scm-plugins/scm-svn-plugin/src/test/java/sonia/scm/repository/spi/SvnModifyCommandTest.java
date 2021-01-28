@@ -57,7 +57,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   @Before
   public void initSvnModifyCommand() {
     context = createContext();
-    workingCopyFactory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(context.getDirectory())));
+    workingCopyFactory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(context.getDirectory(), repositoryLocationResolver)));
     svnModifyCommand = new SvnModifyCommand(context, workingCopyFactory);
   }
 

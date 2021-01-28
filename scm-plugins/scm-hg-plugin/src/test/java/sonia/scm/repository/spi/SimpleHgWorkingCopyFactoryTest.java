@@ -25,13 +25,10 @@
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Repository;
-import com.google.inject.util.Providers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
-import sonia.scm.repository.HgEnvironmentBuilder;
-import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.work.SimpleCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.repository.work.WorkingCopy;
@@ -55,7 +52,7 @@ public class SimpleHgWorkingCopyFactoryTest extends AbstractHgCommandTestBase {
 
   @Before
   public void bindScmProtocol() throws IOException {
-    workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
+    workdirProvider = new WorkdirProvider(temporaryFolder.newFolder(), repositoryLocationResolver);
     workingCopyFactory = new SimpleHgWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider)) {
       @Override
       public void configure(com.aragost.javahg.commands.PullCommand pullCommand) {

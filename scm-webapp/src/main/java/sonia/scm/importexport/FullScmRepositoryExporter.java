@@ -107,7 +107,7 @@ public class FullScmRepositoryExporter {
   }
 
   private void writeRepository(RepositoryService service, TarArchiveOutputStream taos) throws IOException {
-    File newWorkdir = workdirProvider.createNewWorkdir();
+    File newWorkdir = workdirProvider.createNewWorkdir(service.getRepository().getId());
     try {
       File repositoryFile = Files.createFile(Paths.get(newWorkdir.getPath(), "repository")).toFile();
       try (FileOutputStream repositoryFos = new FileOutputStream(repositoryFile)) {
@@ -124,7 +124,7 @@ public class FullScmRepositoryExporter {
   }
 
   private void writeStoreData(Repository repository, TarArchiveOutputStream taos) throws IOException {
-    File newWorkdir = workdirProvider.createNewWorkdir();
+    File newWorkdir = workdirProvider.createNewWorkdir(repository.getId());
     try {
       File metadata = Files.createFile(Paths.get(newWorkdir.getPath(), "metadata")).toFile();
       try (FileOutputStream metadataFos = new FileOutputStream(metadata)) {

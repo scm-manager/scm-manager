@@ -83,8 +83,9 @@ class ModifyCommandBuilderTest {
   @BeforeEach
   void initWorkdir(@TempDir Path temp) throws IOException {
     workdir = Files.createDirectory(temp.resolve("workdir"));
-    lenient().when(workdirProvider.createNewWorkdir()).thenReturn(workdir.toFile());
-    commandBuilder = new ModifyCommandBuilder(command, workdirProvider, new EMail(SCM_CONFIGURATION));
+    lenient().when(workdirProvider.createNewWorkdir("1" +
+      "")).thenReturn(workdir.toFile());
+    commandBuilder = new ModifyCommandBuilder(command, workdirProvider, "1", new EMail(SCM_CONFIGURATION));
   }
 
   @BeforeEach
