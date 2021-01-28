@@ -38,6 +38,7 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.api.BundleCommandBuilder;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -183,39 +184,53 @@ public class RepositoryExportResource {
   }
 
   private Response exportRepository(Repository repository, boolean compressed) {
-    StreamingOutput output = os -> {
-      try (RepositoryService service = serviceFactory.create(repository)) {
-        if (compressed) {
-          GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
-          service.getBundleCommand().bundle(gzipCompressorOutputStream);
-          gzipCompressorOutputStream.finish();
-        } else {
-          service.getBundleCommand().bundle(os);
+    StreamingOutput output;
+    String fileExtension;
+    try (final RepositoryService service = serviceFactory.create(repository)) {
+      BundleCommandBuilder bundleCommand = service.getBundleCommand();
+      fileExtension = resolveFileExtension(bundleCommand, compressed);
+      output = os -> {
+        try {
+          if (compressed) {
+            GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
+            bundleCommand.bundle(gzipCompressorOutputStream);
+            gzipCompressorOutputStream.finish();
+          } else {
+            bundleCommand.bundle(os);
+          }
+        } catch (IOException e) {
+          throw new InternalRepositoryException(repository, "repository export failed", e);
         }
-      } catch (IOException e) {
-        throw new InternalRepositoryException(repository, "repository export failed", e);
-      }
-    };
+      };
+    }
 
-    return createResponse(repository, compressed, output);
+    return createResponse(repository, fileExtension, compressed, output);
   }
 
-  private Response createResponse(Repository repository, boolean compressed, StreamingOutput output) {
+  private Response createResponse(Repository repository, String fileExtension, boolean compressed, StreamingOutput output) {
     return Response
       .ok(output, compressed ? "application/x-gzip" : MediaType.APPLICATION_OCTET_STREAM)
-      .header("content-disposition", createContentDispositionHeaderValue(repository, compressed ? "dump.gz" : "dump"))
+      .header("content-disposition", createContentDispositionHeaderValue(repository, fileExtension))
       .build();
   }
 
-  private String createContentDispositionHeaderValue(Repository repository, String filetype) {
+  private String resolveFileExtension(BundleCommandBuilder bundleCommand, boolean compressed) {
+    if (compressed) {
+      return bundleCommand.getFileExtension() + ".gz";
+    } else {
+      return bundleCommand.getFileExtension();
+    }
+  }
+
+  private String createContentDispositionHeaderValue(Repository repository, String fileExtension) {
     String timestamp = createFormattedTimestamp();
-      return String.format(
-        "attachment; filename = %s-%s-%s.%s",
-        repository.getNamespace(),
-        repository.getName(),
-        timestamp,
-        filetype
-      );
+    return String.format(
+      "attachment; filename = %s-%s-%s.%s",
+      repository.getNamespace(),
+      repository.getName(),
+      timestamp,
+      fileExtension
+    );
   }
 
   private String createFormattedTimestamp() {

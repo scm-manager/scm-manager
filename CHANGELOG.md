@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Font ttf-dejavu included oci image ([#1498](https://github.com/scm-manager/scm-manager/issues/1498))
 - Repository import and export with metadata for Subversion ([#1501](https://github.com/scm-manager/scm-manager/pull/1501))
 - API for store rename/delete in update steps ([#1505](https://github.com/scm-manager/scm-manager/pull/1505))
+- Add import and export for Git via dump file ([#1507](https://github.com/scm-manager/scm-manager/pull/1507))
 
 ### Changed
 - Directory name for git LFS files ([#1504](https://github.com/scm-manager/scm-manager/pull/1504))

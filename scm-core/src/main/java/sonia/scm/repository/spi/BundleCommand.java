@@ -51,6 +51,10 @@ public interface BundleCommand
    *
    * @throws IOException
    */
-  public BundleResponse bundle(BundleCommandRequest request)
+  BundleResponse bundle(BundleCommandRequest request)
     throws IOException;
+
+  default String getFileExtension() {
+   return "tar";
+  }
 }
