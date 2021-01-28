@@ -92,7 +92,7 @@ public class GitMergeCommand_Conflict_Test extends AbstractGitCommandTestBase {
   }
 
   private MergeConflictResult computeMergeConflictResult(String branchToMerge, String targetBranch) {
-    GitMergeCommand gitMergeCommand = new GitMergeCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())));
+    GitMergeCommand gitMergeCommand = new GitMergeCommand(createContext(), new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver))));
     MergeCommandRequest mergeCommandRequest = new MergeCommandRequest();
     mergeCommandRequest.setBranchToMerge(branchToMerge);
     mergeCommandRequest.setTargetBranch(targetBranch);

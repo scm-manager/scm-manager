@@ -81,9 +81,9 @@ public class ModifyCommandBuilder {
 
   private final ModifyCommandRequest request = new ModifyCommandRequest();
 
-  ModifyCommandBuilder(ModifyCommand command, WorkdirProvider workdirProvider, @Nullable EMail eMail) {
+  ModifyCommandBuilder(ModifyCommand command, WorkdirProvider workdirProvider, String repositoryId, @Nullable EMail eMail) {
     this.command = command;
-    this.workdir = workdirProvider.createNewWorkdir();
+    this.workdir = workdirProvider.createNewWorkdir(repositoryId);
     this.eMail = eMail;
   }
 

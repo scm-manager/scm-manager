@@ -72,7 +72,7 @@ class GitModifyCommandTestBase extends AbstractGitCommandTestBase {
   GitModifyCommand createCommand() {
     return new GitModifyCommand(
       createContext(),
-      new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider())),
+      new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver))),
       lfsBlobStoreFactory,
       createGitRepositoryConfigStoreProvider());
   }

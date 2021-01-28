@@ -29,16 +29,20 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryProvider;
 import sonia.scm.util.IOUtil;
 
 import java.io.Closeable;
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 public class SimpleWorkingCopyFactoryTest {
 
@@ -51,6 +55,8 @@ public class SimpleWorkingCopyFactoryTest {
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
   private SimpleWorkingCopyFactory<Closeable, Closeable, Context> simpleWorkingCopyFactory;
 
+  private final RepositoryLocationResolver repositoryLocationResolver = mock(RepositoryLocationResolver.class);
+
   private String initialBranchForLastCloneCall;
 
   private boolean workdirIsCached = false;
@@ -58,11 +64,11 @@ public class SimpleWorkingCopyFactoryTest {
 
   @Before
   public void initFactory() throws IOException {
-    WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder());
+    WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder(), repositoryLocationResolver, false);
     WorkingCopyPool configurableTestWorkingCopyPool = new WorkingCopyPool() {
       @Override
       public <R, W> WorkingCopy<R, W> getWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext context) {
-        workdir = workdirProvider.createNewWorkdir();
+        workdir = workdirProvider.createNewWorkdir(context.getScmRepository().getId());
         return context.initialize(workdir);
       }
 
@@ -99,6 +105,10 @@ public class SimpleWorkingCopyFactoryTest {
         workingCopy.close();
       }
     };
+
+    RepositoryLocationResolver.RepositoryLocationResolverInstance instanceMock = mock(RepositoryLocationResolver.RepositoryLocationResolverInstance.class);
+    when(repositoryLocationResolver.forClass(Path.class)).thenReturn(instanceMock);
+    when(instanceMock.getLocation(anyString())).thenAnswer(invocation -> temporaryFolder.newFolder(invocation.getArgument(0, String.class)).toPath());
   }
 
   @Test

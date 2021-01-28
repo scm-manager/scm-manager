@@ -87,7 +87,8 @@ class FullScmRepositoryExporterTest {
   void shouldExportEverythingAsTarArchive(@TempDir Path temp) throws IOException {
     BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
     when(repositoryService.getBundleCommand()).thenReturn(bundleCommandBuilder);
-    when(workdirProvider.createNewWorkdir()).thenAnswer(invocation -> createWorkDir(temp));
+    when(repositoryService.getRepository()).thenReturn(REPOSITORY);
+    when(workdirProvider.createNewWorkdir(anyString())).thenAnswer(invocation -> createWorkDir(temp, invocation.getArgument(0, String.class)));
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     exporter.export(REPOSITORY, baos);
 
@@ -98,8 +99,8 @@ class FullScmRepositoryExporterTest {
     workDirsCreated.forEach(wd -> assertThat(wd).doesNotExist());
   }
 
-  private File createWorkDir(Path temp) throws IOException {
-    Path newWorkDir = temp.resolve("workDir-" + workDirsCreated.size());
+  private File createWorkDir(Path temp, String repositoryId) throws IOException {
+    Path newWorkDir = temp.resolve("workDir-" + repositoryId);
     workDirsCreated.add(newWorkDir);
     Files.createDirectories(newWorkDir);
     return newWorkDir.toFile();

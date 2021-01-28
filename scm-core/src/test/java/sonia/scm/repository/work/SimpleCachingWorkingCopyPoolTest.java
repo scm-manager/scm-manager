@@ -38,6 +38,7 @@ import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
@@ -68,7 +69,7 @@ class SimpleCachingWorkingCopyPoolTest {
   @Test
   void shouldCreateNewWorkdirForTheFirstRequest(@TempDir Path temp) {
     when(workingCopyContext.getScmRepository()).thenReturn(REPOSITORY);
-    when(workdirProvider.createNewWorkdir()).thenReturn(temp.toFile());
+    when(workdirProvider.createNewWorkdir(anyString())).thenReturn(temp.toFile());
 
     WorkingCopy<?, ?> workdir = simpleCachingWorkingCopyPool.getWorkingCopy(workingCopyContext);
 
@@ -78,7 +79,7 @@ class SimpleCachingWorkingCopyPoolTest {
   @Test
   void shouldCreateWorkdirOnlyOnceForTheSameRepository(@TempDir Path temp) throws SimpleWorkingCopyFactory.ReclaimFailedException {
     when(workingCopyContext.getScmRepository()).thenReturn(REPOSITORY);
-    when(workdirProvider.createNewWorkdir()).thenReturn(temp.toFile());
+    when(workdirProvider.createNewWorkdir(anyString())).thenReturn(temp.toFile());
 
     WorkingCopy<?, ?> firstWorkdir = simpleCachingWorkingCopyPool.getWorkingCopy(workingCopyContext);
     simpleCachingWorkingCopyPool.contextClosed(workingCopyContext, firstWorkdir.getDirectory());
@@ -96,7 +97,7 @@ class SimpleCachingWorkingCopyPoolTest {
     firstDirectory.mkdirs();
     File secondDirectory = temp.resolve("second").toFile();
     secondDirectory.mkdirs();
-    when(workdirProvider.createNewWorkdir()).thenReturn(
+    when(workdirProvider.createNewWorkdir(anyString())).thenReturn(
       firstDirectory,
       secondDirectory);
 

@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Directory name for git LFS files ([#1504](https://github.com/scm-manager/scm-manager/pull/1504))
+- Temporary data for repositories is kept in the repository directory, not in a global directory ([#1510](https://github.com/scm-manager/scm-manager/pull/1510))
 - Migrate integration tests to bdd ([#1497](https://github.com/scm-manager/scm-manager/pull/1497))
 - Layout of proxy settings ([#1502](https://github.com/scm-manager/scm-manager/pull/1502))
 - Apply test ids to production builds for usage in e2e tests ([#1499](https://github.com/scm-manager/scm-manager/pull/1499))

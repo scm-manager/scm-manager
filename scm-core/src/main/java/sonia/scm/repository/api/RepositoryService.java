@@ -444,7 +444,7 @@ public final class RepositoryService implements Closeable {
     LOG.debug("create modify command for repository {}",
       repository.getNamespaceAndName());
 
-    return new ModifyCommandBuilder(provider.getModifyCommand(), workdirProvider, eMail);
+    return new ModifyCommandBuilder(provider.getModifyCommand(), workdirProvider, repository.getId(), eMail);
   }
 
   /**

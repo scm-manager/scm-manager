@@ -24,30 +24,55 @@
 
 package sonia.scm.repository.work;
 
+import sonia.scm.repository.RepositoryLocationResolver;
+
+import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class WorkdirProvider {
 
   private final File rootDirectory;
+  private final RepositoryLocationResolver repositoryLocationResolver;
+  private final boolean useRepositorySpecificDir;
 
-  public WorkdirProvider() {
-    this(new File(System.getProperty("scm.workdir" , System.getProperty("java.io.tmpdir")), "scm-work"));
+  @Inject
+  public WorkdirProvider(RepositoryLocationResolver repositoryLocationResolver) {
+    this(new File(System.getProperty("scm.workdir" , System.getProperty("java.io.tmpdir")), "scm-work"), repositoryLocationResolver, System.getProperty("scm.workdir") == null);
   }
 
-  public WorkdirProvider(File rootDirectory) {
+  public WorkdirProvider(File rootDirectory, RepositoryLocationResolver repositoryLocationResolver, boolean useRepositorySpecificDir) {
     this.rootDirectory = rootDirectory;
+    this.repositoryLocationResolver = repositoryLocationResolver;
+    this.useRepositorySpecificDir = useRepositorySpecificDir;
     if (!rootDirectory.exists() && !rootDirectory.mkdirs()) {
       throw new IllegalStateException("could not create pool directory " + rootDirectory);
     }
   }
 
   public File createNewWorkdir() {
+    return createWorkDir(this.rootDirectory);
+  }
+
+  public File createNewWorkdir(String repositoryId) {
+    if (useRepositorySpecificDir) {
+      return createWorkDir(repositoryLocationResolver.forClass(Path.class).getLocation(repositoryId).resolve("work").toFile());
+    } else {
+      return createNewWorkdir();
+    }
+  }
+
+  private File createWorkDir(File baseDirectory) {
+    // recreate base directory when it may be deleted (see https://github.com/scm-manager/scm-manager/issues/1493 for example)
+    if (!baseDirectory.exists() && !baseDirectory.mkdirs()) {
+      throw new WorkdirCreationException(baseDirectory.toString());
+    }
     try {
-      return Files.createTempDirectory(rootDirectory.toPath(),"workdir").toFile();
+      return Files.createTempDirectory(baseDirectory.toPath(),"work-").toFile();
     } catch (IOException e) {
-      throw new WorkdirCreationException(rootDirectory.toString(), e);
+      throw new WorkdirCreationException(baseDirectory.toString(), e);
     }
   }
 }
