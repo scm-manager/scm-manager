@@ -113,7 +113,7 @@ public class FullScmRepositoryExporter {
       try (FileOutputStream repositoryFos = new FileOutputStream(repositoryFile)) {
         service.getBundleCommand().bundle(repositoryFos);
       }
-      TarArchiveEntry entry = new TarArchiveEntry(service.getRepository().getName() + ".dump");
+      TarArchiveEntry entry = new TarArchiveEntry(createRepositoryEntryName(service));
       entry.setSize(repositoryFile.length());
       taos.putArchiveEntry(entry);
       Files.copy(repositoryFile.toPath(), taos);
@@ -121,6 +121,10 @@ public class FullScmRepositoryExporter {
     } finally {
       IOUtil.deleteSilently(newWorkdir);
     }
+  }
+
+  private String createRepositoryEntryName(RepositoryService service) {
+    return String.format("%s.%s", service.getRepository().getName(), service.getBundleCommand().getFileExtension());
   }
 
   private void writeStoreData(Repository repository, TarArchiveOutputStream taos) throws IOException {

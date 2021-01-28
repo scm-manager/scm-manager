@@ -109,7 +109,8 @@ public class FullScmRepositoryImporter {
 
   private Repository importRepositoryFromFile(Repository repository, TarArchiveInputStream tais) throws IOException {
     ArchiveEntry repositoryEntry = tais.getNextEntry();
-    if (repositoryEntry.getName().endsWith(".dump") && !repositoryEntry.isDirectory()) {
+    String repositoryEntryFileExtension = resolveFileExtensionForRepository(repository);
+    if (repositoryEntry.getName().endsWith(repositoryEntryFileExtension) && !repositoryEntry.isDirectory()) {
       return repositoryManager.create(repository, repo -> {
         try (RepositoryService service = serviceFactory.create(repo)) {
           service.getUnbundleCommand().unbundle(new NoneClosingInputStream(tais));
@@ -126,6 +127,12 @@ public class FullScmRepositoryImporter {
         ContextEntry.ContextBuilder.entity(repository).build(),
         "Invalid import format. Missing repository dump file."
       );
+    }
+  }
+
+  private String resolveFileExtensionForRepository(Repository repository) {
+    try (RepositoryService repoService = serviceFactory.create(repository)) {
+      return "." + repoService.getBundleCommand().getFileExtension();
     }
   }
 
