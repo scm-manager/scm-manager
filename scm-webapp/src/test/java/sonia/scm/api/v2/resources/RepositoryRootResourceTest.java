@@ -193,7 +193,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Test
   public void shouldFailForNotExistingRepository() throws URISyntaxException {
     when(repositoryManager.get(any(NamespaceAndName.class))).thenReturn(null);
-    mockRepository("space", "repo");
+    createRepository("space", "repo");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/other");
     MockHttpResponse response = new MockHttpResponse();
@@ -205,7 +205,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldFindExistingRepository() throws URISyntaxException, UnsupportedEncodingException {
-    mockRepository("space", "repo");
+    createRepository("space", "repo");
     when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
@@ -219,7 +219,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldGetAll() throws URISyntaxException, UnsupportedEncodingException {
-    PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
+    PageResult<Repository> singletonPageResult = createSingletonPageResult(createRepository("space", "repo"));
     when(repositoryManager.getPage(any(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
     when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
@@ -234,7 +234,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldCreateFilterForSearch() throws URISyntaxException {
-    PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
+    PageResult<Repository> singletonPageResult = createSingletonPageResult(createRepository("space", "repo"));
     when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
     when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
@@ -251,7 +251,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldCreateFilterForNamespace() throws URISyntaxException {
-    PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
+    PageResult<Repository> singletonPageResult = createSingletonPageResult(createRepository("space", "repo"));
     when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
     when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
@@ -268,7 +268,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldCreateFilterForNamespaceWithQuery() throws URISyntaxException {
-    PageResult<Repository> singletonPageResult = createSingletonPageResult(mockRepository("space", "repo"));
+    PageResult<Repository> singletonPageResult = createSingletonPageResult(createRepository("space", "repo"));
     when(repositoryManager.getPage(filterCaptor.capture(), any(), eq(0), eq(10))).thenReturn(singletonPageResult);
     when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
@@ -302,7 +302,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldHandleUpdateForExistingRepository() throws Exception {
-    mockRepository("space", "repo");
+    createRepository("space", "repo");
 
     URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
     byte[] repository = Resources.toByteArray(url);
@@ -321,7 +321,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldHandleUpdateForConcurrentlyChangedRepository() throws Exception {
-    mockRepository("space", "repo", 1337);
+    createRepository("space", "repo", 1337);
 
     URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
     byte[] repository = Resources.toByteArray(url);
@@ -341,7 +341,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldHandleUpdateForExistingRepositoryForChangedNamespace() throws Exception {
-    mockRepository("wrong", "repo");
+    createRepository("wrong", "repo");
 
     URL url = Resources.getResource("sonia/scm/api/v2/repository-test-update.json");
     byte[] repository = Resources.toByteArray(url);
@@ -360,7 +360,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldHandleDeleteForExistingRepository() throws Exception {
-    mockRepository("space", "repo");
+    createRepository("space", "repo");
 
     MockHttpRequest request = MockHttpRequest.delete("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
     MockHttpResponse response = new MockHttpResponse();
@@ -451,7 +451,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldCreateArrayOfProtocolUrls() throws Exception {
-    mockRepository("space", "repo");
+    createRepository("space", "repo");
     when(service.getSupportedProtocols()).thenReturn(of(new MockScmProtocol("http", "http://"), new MockScmProtocol("ssh", "ssh://")));
     when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
@@ -468,7 +468,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldRenameRepository() throws Exception {
     String namespace = "space";
     String name = "repo";
-    Repository repository1 = mockRepository(namespace, name);
+    Repository repository1 = createRepository(namespace, name);
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository1);
 
     URL url = Resources.getResource("sonia/scm/api/v2/rename-repo.json");
@@ -686,7 +686,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldMarkRepositoryAsArchived() throws Exception {
     String namespace = "space";
     String name = "repo";
-    Repository repository = mockRepository(namespace, name);
+    Repository repository = createRepository(namespace, name);
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
 
     MockHttpRequest request = MockHttpRequest
@@ -704,7 +704,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldRemoveArchiveMarkFromRepository() throws Exception {
     String namespace = "space";
     String name = "repo";
-    Repository repository = mockRepository(namespace, name);
+    Repository repository = createRepository(namespace, name);
     repository.setArchived(true);
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
 
@@ -723,7 +723,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldExportRepository() throws URISyntaxException {
     String namespace = "space";
     String name = "repo";
-    Repository repository = mockRepository(namespace, name);
+    Repository repository = createRepository(namespace, name, "svn");
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
 
@@ -745,7 +745,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldExportRepositoryCompressed() throws URISyntaxException {
     String namespace = "space";
     String name = "repo";
-    Repository repository = mockRepository(namespace, name);
+    Repository repository = createRepository(namespace, name, "svn");
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
 
@@ -767,7 +767,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   public void shouldExportFullRepository() throws URISyntaxException {
     String namespace = "space";
     String name = "repo";
-    Repository repository = mockRepository(namespace, name);
+    Repository repository = createRepository(namespace, name, "svn");
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
 
@@ -798,11 +798,17 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     return new PageResult<>(singletonList(repository), 0);
   }
 
-  private Repository mockRepository(String namespace, String name) {
-    return mockRepository(namespace, name, 0);
+  private Repository createRepository(String namespace, String name, String type) {
+    Repository repository = createRepository(namespace, name);
+    repository.setType(type);
+    return repository;
   }
 
-  private Repository mockRepository(String namespace, String name, long lastModified) {
+  private Repository createRepository(String namespace, String name) {
+    return createRepository(namespace, name, 0);
+  }
+
+  private Repository createRepository(String namespace, String name, long lastModified) {
     Repository repository = new Repository();
     repository.setNamespace(namespace);
     repository.setName(name);

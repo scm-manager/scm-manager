@@ -174,7 +174,7 @@ public class RepositoryExportResource {
     Repository repository = manager.get(new NamespaceAndName(namespace, name));
     RepositoryPermissions.read().check(repository);
 
-    if (type.equals(repository.getType())) {
+    if (!type.equals(repository.getType())) {
       throw new WrongTypeException(repository);
     }
     Type repositoryType = type(manager, type);
