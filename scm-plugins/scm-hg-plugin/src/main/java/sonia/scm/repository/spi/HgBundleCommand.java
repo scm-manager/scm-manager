@@ -26,9 +26,10 @@ package sonia.scm.repository.spi;
 
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import sonia.scm.ContextEntry;
 import sonia.scm.repository.api.BundleResponse;
+import sonia.scm.repository.api.ExportFailedException;
 
-import javax.ws.rs.WebApplicationException;
 import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -58,7 +59,10 @@ public class HgBundleCommand implements BundleCommand {
         taos.finish();
       }
     } else {
-      //TODO throw ExportFailedException which already exists on the branch "feature/import_export_with_metadata"
+      throw new ExportFailedException(
+        ContextEntry.ContextBuilder.noContext(),
+        "Could not export repository. Repository directory does not exist."
+      );
     }
     return new BundleResponse(0);
   }
@@ -85,8 +89,11 @@ public class HgBundleCommand implements BundleCommand {
         createArchiveEntryForFile(filePath, fileOrDir, taos);
       }
     } catch (IOException e) {
-      //TODO throw ExportFailedException which already exists on the branch "feature/import_export_with_metadata"
-      throw new WebApplicationException();
+      throw new ExportFailedException(
+        ContextEntry.ContextBuilder.noContext(),
+        "Could not export repository. Error on bundling files.",
+        e
+      );
     }
   }
 

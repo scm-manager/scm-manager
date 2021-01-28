@@ -64,13 +64,12 @@ class HgBundleCommandTest {
     assertStreamContainsContent(baos, content);
   }
 
-  //TODO activate after git import export was merged
-  //@Test
-  //void shouldReturnTarForGitBundleCommand() {
-   // bundleCommand = new HgBundleCommand(mock(HgCommandContext.class));
-    // String fileExtension = bundleCommand.getFileExtension();
-    // assertThat(fileExtension).isEqualTo("tar");
-  //}
+  @Test
+  void shouldReturnTarForGitBundleCommand() {
+    bundleCommand = new HgBundleCommand(mock(HgCommandContext.class));
+     String fileExtension = bundleCommand.getFileExtension();
+     assertThat(fileExtension).isEqualTo("tar");
+  }
 
   private void addFileToRepoDir(Path repoDir, String filename, String content) throws IOException {
     Path file = repoDir.resolve(filename);
