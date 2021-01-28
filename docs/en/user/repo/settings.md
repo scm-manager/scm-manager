@@ -15,14 +15,14 @@ In the danger zone at the bottom you may rename the repository, delete it or mar
 strategy in the global SCM-Manager config is set to `custom` you may even rename the repository namespace. If a
 repository is marked as archived, it can no longer be modified.
 
+In the "Export repository" section the repository can be exported in different formats.
+The output format of the repository can be changed via the offered options:
+* `Standard`: If no options are selected, the repository will be exported in the standard format.
+  Git and Mercurial are exported as `Tar archive` and Subversion uses the `Dump` format.
+* `Compress`: The output format is additionally compressed with `GZip` to reduce the file size.
+* `With metadata`: Instead of the standard format a repository archive is exported, which contains additional metadata besides the repository.
+
 ![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
-
-In the area "Repository Export" you may export this repository.
-You can choose to export a simple dump of the repository or a repository archive including all SCM-Manager metadata like plugin configuration or other data.
-For a simple repository dump you can choose between compressed or uncompressed file format. The repository archive is always compressed.
-This export function is currently only supported by Subversion repositories.
-
-![Repository-Settings-General-Svn](assets/repository-settings-general-svn.png)
 
 ### Permissions
 

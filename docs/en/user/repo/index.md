@@ -41,7 +41,9 @@ If the namespace strategy is set to custom, the namespace field is also mandator
 Beneath creating new repositories you also may import existing repositories to SCM-Manager. 
 Just use the Switcher on top right to navigate to the import page and fill the import wizard with the required information.
 
-Your repository will be added to SCM-Manager and all repository data including all branches and tags will be imported. 
+Your repository will be added to SCM-Manager and all repository data including all branches and tags will be imported.
+In addition to the normal repository import, there is the possibility to import a repository archive with metadata.
+This repository archive must have been exported from another SCM manager and is checked for data compatibility during import.
 
 ![Import Repository](assets/import-repository.png)
 

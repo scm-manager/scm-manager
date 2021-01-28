@@ -32,6 +32,7 @@ dependencies {
     exclude group: 'com.google.guava', module: 'guava'
     exclude group: 'org.slf4j'
   }
+  implementation libraries.commonsCompress
   testImplementation libraries.shiroUnit
   testImplementation libraries.logback
 }

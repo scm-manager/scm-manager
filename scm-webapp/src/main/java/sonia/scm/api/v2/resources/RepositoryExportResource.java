@@ -158,15 +158,15 @@ public class RepositoryExportResource {
     )
   )
   public Response exportFullRepository(@Context UriInfo uriInfo,
-                                   @PathParam("namespace") String namespace,
-                                   @PathParam("name") String name,
-                                   @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type
+                                       @PathParam("namespace") String namespace,
+                                       @PathParam("name") String name,
+                                       @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type
   ) {
     Repository repository = getVerifiedRepository(namespace, name, type);
     StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os);
 
     return Response
-      .ok(output,  "application/x-gzip")
+      .ok(output, "application/x-gzip")
       .header("content-disposition", createContentDispositionHeaderValue(repository, "tar.gz"))
       .build();
   }

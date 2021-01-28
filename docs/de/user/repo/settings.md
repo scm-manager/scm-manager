@@ -17,14 +17,14 @@ umzubenennen, zu löschen oder als archiviert zu markieren. Wenn in der globalen
 Strategie `benutzerdefiniert` ausgewählt ist, kann zusätzlich zum Repository Namen auch der Namespace umbenannt werden.
 Ein archiviertes Repository kann nicht mehr verändert werden.
 
+In dem Bereich "Repository exportieren" kann das Repository in unterschiedlichen Formaten exportiert werden.
+Das Ausgabeformat des Repository kann über die angebotenen Optionen verändert werden:
+* `Standard`: Werden keine Optionen ausgewählt, wird das Repository im Standard Format exportiert.
+  Git und Mercurial werden dabei als `Tar Archiv` exportiert und Subversion nutzt das `Dump` Format.
+* `Komprimieren`: Das Ausgabeformat wird zusätzlich mit `GZip` komprimiert, um die Dateigröße zu verringern.
+* `Mit Metadaten`: Statt dem Standard-Format wird ein Repository Archiv exportiert, welches außer dem Repository noch weitere Metadaten enthält.
+
 ![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
-
-In dem Bereich "Repository exportieren" kann das Repository exportiert werden.
-Für den Download kann zwischen einem einfachen Dump des reinen Repositories und einem Repository Archiv inkl. der SCM-Manager Metadaten wie Plugin-Konfigurationen oder anderen Daten gewählt werden. 
-Der Dump kann optional komprimiert werden. Das Repository Archiv mit Metadaten wird immer komprimiert ausgeliefert.
-Diese Export-Funktion wird derzeit nur von Subversion Repositories unterstützt.
-
-![Repository-Settings-General-Svn](assets/repository-settings-general-svn.png)
 
 ### Berechtigungen
 
