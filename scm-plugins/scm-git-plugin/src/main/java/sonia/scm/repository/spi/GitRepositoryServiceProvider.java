@@ -34,11 +34,9 @@ import java.util.EnumSet;
 import java.util.Set;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class GitRepositoryServiceProvider extends RepositoryServiceProvider
-{
+public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
 
   public static final Set<Command> COMMANDS = ImmutableSet.of(
     Command.BLAME,
@@ -56,7 +54,9 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
     Command.PUSH,
     Command.PULL,
     Command.MERGE,
-    Command.MODIFY
+    Command.MODIFY,
+    Command.BUNDLE,
+    Command.UNBUNDLE
   );
 
   protected static final Set<Feature> FEATURES = EnumSet.of(Feature.INCOMING_REVISION);
@@ -159,6 +159,16 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider
   @Override
   public ModifyCommand getModifyCommand() {
     return commandInjector.getInstance(GitModifyCommand.class);
+  }
+
+  @Override
+  public BundleCommand getBundleCommand() {
+    return new GitBundleCommand(context);
+  }
+
+  @Override
+  public UnbundleCommand getUnbundleCommand() {
+    return new GitUnbundleCommand(context);
   }
 
   @Override

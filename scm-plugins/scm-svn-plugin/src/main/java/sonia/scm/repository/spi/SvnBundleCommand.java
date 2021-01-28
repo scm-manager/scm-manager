@@ -51,6 +51,8 @@ public class SvnBundleCommand extends AbstractSvnCommand
   implements BundleCommand
 {
 
+  private static final String DUMP = "dump";
+
   public SvnBundleCommand(SvnContext context)
   {
     super(context);
@@ -102,5 +104,10 @@ public class SvnBundleCommand extends AbstractSvnCommand
     }
 
     return response;
+  }
+
+  @Override
+  public String getFileExtension() {
+    return DUMP;
   }
 }

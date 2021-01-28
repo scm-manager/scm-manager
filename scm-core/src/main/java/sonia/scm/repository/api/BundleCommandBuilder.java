@@ -51,10 +51,11 @@ import static com.google.common.base.Preconditions.checkNotNull;
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
  */
-public final class BundleCommandBuilder
-{
+public final class BundleCommandBuilder {
 
-  /** logger for BundleCommandBuilder */
+  /**
+   * logger for BundleCommandBuilder
+   */
   private static final Logger logger =
     LoggerFactory.getLogger(BundleCommandBuilder.class);
 
@@ -63,12 +64,10 @@ public final class BundleCommandBuilder
   /**
    * Constructs a new {@link BundleCommandBuilder}.
    *
-   *
    * @param bundleCommand bundle command implementation
-   * @param repository repository
+   * @param repository    repository
    */
-  BundleCommandBuilder(BundleCommand bundleCommand, Repository repository)
-  {
+  BundleCommandBuilder(BundleCommand bundleCommand, Repository repository) {
     this.bundleCommand = bundleCommand;
     this.repository = repository;
   }
@@ -79,13 +78,11 @@ public final class BundleCommandBuilder
    * Dumps the repository to the given {@link File}.
    *
    * @param outputFile output file
-   *
    * @return bundle response
-   *
    * @throws IOException
    */
   public BundleResponse bundle(File outputFile) throws IOException {
-    checkArgument((outputFile != null) &&!outputFile.exists(),
+    checkArgument((outputFile != null) && !outputFile.exists(),
       "file is null or exists already");
 
     BundleCommandRequest request =
@@ -100,16 +97,12 @@ public final class BundleCommandBuilder
   /**
    * Dumps the repository to the given {@link OutputStream}.
    *
-   *
    * @param outputStream output stream
-   *
    * @return bundle response
-   *
    * @throws IOException
    */
   public BundleResponse bundle(OutputStream outputStream)
-    throws IOException
-  {
+    throws IOException {
     checkNotNull(outputStream, "output stream is required");
 
     logger.info("bundle {} to output stream", repository);
@@ -122,14 +115,11 @@ public final class BundleCommandBuilder
    * Dumps the repository to the given {@link ByteSink}.
    *
    * @param sink byte sink
-   *
    * @return bundle response
-   *
    * @throws IOException
    */
   public BundleResponse bundle(ByteSink sink)
-    throws IOException
-  {
+    throws IOException {
     checkNotNull(sink, "byte sink is required");
     logger.info("bundle {} to byte sink", sink);
 
@@ -137,21 +127,25 @@ public final class BundleCommandBuilder
   }
 
   /**
+   * Checks for the file extension of the bundled repository
+   *
+   * @return the file extension of the bundle
+   */
+  public String getFileExtension() {
+    return bundleCommand.getFileExtension();
+  }
+
+  /**
    * Converts an {@link OutputStream} into a {@link ByteSink}.
    *
-   *
    * @param outputStream ouput stream to convert
-   *
    * @return converted byte sink
    */
-  private ByteSink asByteSink(final OutputStream outputStream)
-  {
-    return new ByteSink()
-    {
+  private ByteSink asByteSink(final OutputStream outputStream) {
+    return new ByteSink() {
 
       @Override
-      public OutputStream openStream() throws IOException
-      {
+      public OutputStream openStream() throws IOException {
         return outputStream;
       }
     };
@@ -159,9 +153,13 @@ public final class BundleCommandBuilder
 
   //~--- fields ---------------------------------------------------------------
 
-  /** bundle command implementation */
+  /**
+   * bundle command implementation
+   */
   private final BundleCommand bundleCommand;
 
-  /** repository */
+  /**
+   * repository
+   */
   private final Repository repository;
 }
