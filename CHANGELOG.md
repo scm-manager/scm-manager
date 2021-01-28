@@ -7,19 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 ### Added
-- Add repository export for Subversion ([#1488](https://github.com/scm-manager/scm-manager/pull/1488))
+- Repository export for Subversion ([#1488](https://github.com/scm-manager/scm-manager/pull/1488))
 - Provide more options for Helm chart ([#1485](https://github.com/scm-manager/scm-manager/pull/1485))
 - Option to create a permanent link to a source file ([#1489](https://github.com/scm-manager/scm-manager/pull/1489))
-- Add markdown codeblock renderer extension point ([#1492](https://github.com/scm-manager/scm-manager/pull/1492))
-- Add Java version to plugin center url ([#1494](https://github.com/scm-manager/scm-manager/pull/1494))
-- Add Font ttf-dejavu to oci image ([#1498](https://github.com/scm-manager/scm-manager/issues/1498))
-- Add repository import and export with metadata for Subversion ([#1501](https://github.com/scm-manager/scm-manager/pull/1501))
+- Markdown codeblock renderer extension point ([#1492](https://github.com/scm-manager/scm-manager/pull/1492))
+- Java version added to plugin center url ([#1494](https://github.com/scm-manager/scm-manager/pull/1494))
+- Font ttf-dejavu included oci image ([#1498](https://github.com/scm-manager/scm-manager/issues/1498))
+- Repository import and export with metadata for Subversion ([#1501](https://github.com/scm-manager/scm-manager/pull/1501))
 - API for store rename/delete in update steps ([#1505](https://github.com/scm-manager/scm-manager/pull/1505))
 
 ### Changed
 - Directory name for git LFS files ([#1504](https://github.com/scm-manager/scm-manager/pull/1504))
-
-### Changed
 - Migrate integration tests to bdd ([#1497](https://github.com/scm-manager/scm-manager/pull/1497))
 - Layout of proxy settings ([#1502](https://github.com/scm-manager/scm-manager/pull/1502))
 - Apply test ids to production builds for usage in e2e tests ([#1499](https://github.com/scm-manager/scm-manager/pull/1499))
