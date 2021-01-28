@@ -178,12 +178,12 @@ const RepositoryForm: FC<Props> = ({
   };
 
   const submitButton = () => {
-    if (disabled) {
+    if (!isModifiable() && isEditMode()) {
       return null;
     }
     return (
       <Level
-        right={<SubmitButton disabled={!isValid()} loading={loading} label={t("repositoryForm.submitCreate")} />}
+        right={<SubmitButton disabled={!isValid() || loading} loading={loading} label={t("repositoryForm.submitCreate")} />}
       />
     );
   };
