@@ -204,10 +204,10 @@ public class RepositoryExportResource {
       };
     }
 
-    return createResponse(repository, compressed, output);
+    return createResponse(repository, fileExtension, compressed, output);
   }
 
-  private Response createResponse(Repository repository, boolean compressed, StreamingOutput output) {
+  private Response createResponse(Repository repository, String fileExtension, boolean compressed, StreamingOutput output) {
     return Response
       .ok(output, compressed ? "application/x-gzip" : MediaType.APPLICATION_OCTET_STREAM)
       .header("content-disposition", createContentDispositionHeaderValue(repository, fileExtension))
