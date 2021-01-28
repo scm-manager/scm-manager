@@ -63,18 +63,15 @@ public class HgBundleCommand implements BundleCommand {
     return new BundleResponse(0);
   }
 
-  //TODO Activate after git import export was merged
-  //@Override
-  //public String getFileExtension() {
-  //  return TAR_ARCHIVE;
-  //}
+  @Override
+  public String getFileExtension() {
+    return TAR_ARCHIVE;
+  }
 
   private void createTarEntryForFiles(String path, Path fileOrDir, TarArchiveOutputStream taos) throws IOException {
     try (Stream<Path> files = Files.list(fileOrDir)) {
       if (files != null) {
-        files
-          .filter(this::shouldIncludeFile)
-          .forEach(f -> bundleFileOrDir(path, f, taos));
+        files.forEach(f -> bundleFileOrDir(path, f, taos));
       }
     }
   }
@@ -91,10 +88,6 @@ public class HgBundleCommand implements BundleCommand {
       //TODO throw ExportFailedException which already exists on the branch "feature/import_export_with_metadata"
       throw new WebApplicationException();
     }
-  }
-
-  private boolean shouldIncludeFile(Path filePath) {
-    return !filePath.getFileName().toString().equals("config");
   }
 
   private void createArchiveEntryForFile(String filePath, Path path, TarArchiveOutputStream taos) throws IOException {
