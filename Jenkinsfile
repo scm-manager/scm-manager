@@ -27,7 +27,7 @@ pipeline {
       }
       steps {
         // read version from branch, set it and commit it
-        gradle "setVersion -PnewVersion ${releaseVersion}"
+        gradle "setVersion -PnewVersion=${releaseVersion}"
         sh "git add gradle.properties lerna.json '**.json'"
         commit "Release version ${releaseVersion}"
 
@@ -138,7 +138,7 @@ pipeline {
       steps {
         sh returnStatus: true, script: "git branch -D develop"
         sh "git checkout develop"
-        sh "git merge master"
+        sh "git -c user.name='CES Marvin' -c user.email='cesmarvin@cloudogu.com' merge master"
 
         gradle "setVersionToNextSnapshot"
 
