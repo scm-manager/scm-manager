@@ -31,7 +31,6 @@ import org.junit.After;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
@@ -127,7 +126,7 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
    * @throws IOException
    * @throws InterruptedException
    */
-  @Test @Ignore
+  @Test
   public void testSimpleHook() throws IOException, InterruptedException
   {
     // commit and push commit
@@ -151,7 +150,7 @@ public class RepositoryHookITCase extends AbstractAdminITCaseBase
    * @throws IOException
    * @throws InterruptedException
    */
-  @Test @Ignore
+  @Test
   public void testOnlyNewCommit() throws IOException, InterruptedException
   {
     // skip test if branches are not supported by repository type
