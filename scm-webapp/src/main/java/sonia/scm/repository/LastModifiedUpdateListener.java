@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -79,7 +79,7 @@ public final class LastModifiedUpdateListener
    *
    * @param event
    */
-  @Subscribe
+  @Subscribe(async = false)
   public void onPostReceive(PostReceiveRepositoryHookEvent event)
   {
     final Repository repository = event.getRepository();

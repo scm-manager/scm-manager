@@ -48,7 +48,7 @@ public class MergeDetectionHelper {
   private String target;
   private String branch;
 
-  @Subscribe
+  @Subscribe(async = false)
   public void handlePreReceiveEvent(PreReceiveRepositoryHookEvent event) {
     if (target == null || branch == null) {
       return;
@@ -56,7 +56,7 @@ public class MergeDetectionHelper {
     preMergeDetections.add(createDto(event));
   }
 
-  @Subscribe
+  @Subscribe(async = false)
   public void handlePostReceiveEvent(PostReceiveRepositoryHookEvent event) {
     if (target == null || branch == null) {
       return;

@@ -68,7 +68,7 @@ public final class DebugHook
    *
    * @param event received event
    */
-  @Subscribe(referenceType = ReferenceType.STRONG)
+  @Subscribe(referenceType = ReferenceType.STRONG, async = false)
   public void processEvent(PostReceiveRepositoryHookEvent event){
     LOG.trace("store changeset ids from repository {}", event.getRepository());
 
