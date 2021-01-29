@@ -21,9 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.protocol;
 
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -33,6 +37,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
 import sonia.scm.PushStateDispatcher;
+import sonia.scm.SCMContext;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.DefaultRepositoryProvider;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -40,6 +46,9 @@ import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HttpScmProtocol;
+import sonia.scm.security.AnonymousMode;
+import sonia.scm.security.AnonymousToken;
+import sonia.scm.util.HttpUtil;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
 
@@ -66,6 +75,9 @@ class HttpProtocolServletTest {
 
   @Mock
   private UserAgentParser userAgentParser;
+
+  @Mock
+  private ScmConfiguration configuration;
 
   @InjectMocks
   private HttpProtocolServlet servlet;
@@ -151,6 +163,57 @@ class HttpProtocolServletTest {
       verify(request).setAttribute(DefaultRepositoryProvider.ATTRIBUTE_NAME, repository);
       verify(protocol).serve(request, response, null);
       verify(repositoryService).close();
+    }
+
+    @Nested
+    class WithSubject {
+
+      @Mock
+      private Subject subject;
+
+      @BeforeEach
+      void setUpSubject() {
+        ThreadContext.bind(subject);
+      }
+
+      @AfterEach
+      void tearDownSubject() {
+        ThreadContext.unbindSubject();
+      }
+
+      @Test
+      void shouldSendUnauthorizedWithCustomRealmDescription() throws IOException, ServletException {
+        when(subject.getPrincipal()).thenReturn(SCMContext.USER_ANONYMOUS);
+        when(configuration.getRealmDescription()).thenReturn("Hitchhikers finest");
+
+        callServiceWithAuthorizationException();
+
+        verify(response).setHeader(HttpUtil.HEADER_WWW_AUTHENTICATE, "Basic realm=\"Hitchhikers finest\"");
+        verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, HttpUtil.STATUS_UNAUTHORIZED_MESSAGE);
+      }
+
+      @Test
+      void shouldSendForbidden() throws IOException, ServletException {
+        callServiceWithAuthorizationException();
+
+        verify(response).setStatus(HttpServletResponse.SC_FORBIDDEN);
+      }
+
+      private void callServiceWithAuthorizationException() throws IOException, ServletException {
+        NamespaceAndName repo = new NamespaceAndName("space", "name");
+        when(extractor.fromUri("/space/name")).thenReturn(Optional.of(repo));
+        when(serviceFactory.create(repo)).thenReturn(repositoryService);
+
+        when(request.getPathInfo()).thenReturn("/space/name");
+        Repository repository = RepositoryTestData.createHeartOfGold();
+        when(repositoryService.getRepository()).thenReturn(repository);
+        when(repositoryService.getProtocol(HttpScmProtocol.class)).thenThrow(
+          new AuthorizationException("failed")
+        );
+
+        servlet.service(request, response);
+      }
+
     }
 
   }

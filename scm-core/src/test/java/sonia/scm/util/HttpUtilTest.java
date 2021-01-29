@@ -39,6 +39,8 @@ import static org.mockito.Mockito.*;
 //~--- JDK imports ------------------------------------------------------------
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  *
@@ -396,13 +398,10 @@ public class HttpUtilTest
   @Test
   public void getPortFromUrlTest()
   {
-    assertTrue(HttpUtil.getPortFromUrl("http://www.scm-manager.org") == 80);
-    assertTrue(HttpUtil.getPortFromUrl("https://www.scm-manager.org") == 443);
-    assertTrue(HttpUtil.getPortFromUrl("http://www.scm-manager.org:8080")
-      == 8080);
-    assertTrue(
-      HttpUtil.getPortFromUrl("http://www.scm-manager.org:8181/test/folder")
-      == 8181);
+    assertThat(HttpUtil.getPortFromUrl("http://www.scm-manager.org")).isEqualTo(80);
+    assertThat(HttpUtil.getPortFromUrl("https://www.scm-manager.org")).isEqualTo(443);
+    assertThat(HttpUtil.getPortFromUrl("http://www.scm-manager.org:8080")).isEqualTo(8080);
+    assertThat(HttpUtil.getPortFromUrl("http://www.scm-manager.org:8181/test/folder")).isEqualTo(8181);
   }
 
   /**
@@ -418,9 +417,9 @@ public class HttpUtilTest
 
     ScmConfiguration config = new ScmConfiguration();
 
-    assertTrue(HttpUtil.getServerPort(config, request) == 443);
+    assertThat(HttpUtil.getServerPort(config, request)).isEqualTo(443);
     config.setBaseUrl("http://www.scm-manager.org:8080");
-    assertTrue(HttpUtil.getServerPort(config, request) == 8080);
+    assertThat(HttpUtil.getServerPort(config, request)).isEqualTo(8080);
   }
 
   /**
@@ -507,5 +506,27 @@ public class HttpUtilTest
     when(request.getParameter(HttpUtil.HEADER_SCM_CLIENT)).thenReturn(HttpUtil.SCM_CLIENT_WUI);
 
     assertThat(HttpUtil.isWUIRequest(request)).isTrue();
+  }
+
+  @Test
+  public void sendUnauthorized() throws IOException {
+    HttpServletResponse response = mock(HttpServletResponse.class);
+    HttpUtil.sendUnauthorized(response, "Hitchhikers finest");
+    verify(response).setHeader(HttpUtil.HEADER_WWW_AUTHENTICATE, "Basic realm=\"Hitchhikers finest\"");
+    verify(response).sendError(HttpServletResponse.SC_UNAUTHORIZED, HttpUtil.STATUS_UNAUTHORIZED_MESSAGE);
+  }
+
+  @Test
+  public void sendUnauthorizedWithDefaultRealmForNullDescription() throws IOException {
+    HttpServletResponse response = mock(HttpServletResponse.class);
+    HttpUtil.sendUnauthorized(response, null);
+    verify(response).setHeader(HttpUtil.HEADER_WWW_AUTHENTICATE, "Basic realm=\"" + HttpUtil.AUTHENTICATION_REALM  + "\"");
+  }
+
+  @Test
+  public void sendUnauthorizedWithDefaultRealmForEmptyDescription() throws IOException {
+    HttpServletResponse response = mock(HttpServletResponse.class);
+    HttpUtil.sendUnauthorized(response, "");
+    verify(response).setHeader(HttpUtil.HEADER_WWW_AUTHENTICATE, "Basic realm=\"" + HttpUtil.AUTHENTICATION_REALM  + "\"");
   }
 }

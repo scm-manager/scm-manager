@@ -31,6 +31,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Add explicit provider setup for bouncy castle ([#1500](https://github.com/scm-manager/scm-manager/pull/1500))
 - Repository contact information is editable ([#1508](https://github.com/scm-manager/scm-manager/pull/1508))
+- Usage of custom realm description for scm protocols ([#1512](https://github.com/scm-manager/scm-manager/pull/1512))
 
 ## [2.12.0] - 2020-12-17
 ### Added

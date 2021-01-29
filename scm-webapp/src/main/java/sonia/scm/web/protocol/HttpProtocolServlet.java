@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.protocol;
 
 import com.google.inject.Inject;
@@ -31,6 +31,7 @@ import org.apache.http.HttpStatus;
 import org.apache.shiro.authz.AuthorizationException;
 import sonia.scm.NotFoundException;
 import sonia.scm.PushStateDispatcher;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.filter.WebElement;
 import sonia.scm.repository.DefaultRepositoryProvider;
 import sonia.scm.repository.NamespaceAndName;
@@ -57,6 +58,7 @@ public class HttpProtocolServlet extends HttpServlet {
   public static final String PATH = "/repo";
   public static final String PATTERN = PATH + "/*";
 
+  private final ScmConfiguration configuration;
   private final RepositoryServiceFactory serviceFactory;
   private final NamespaceAndNameFromPathExtractor pathExtractor;
   private final PushStateDispatcher dispatcher;
@@ -64,7 +66,8 @@ public class HttpProtocolServlet extends HttpServlet {
 
 
   @Inject
-  public HttpProtocolServlet(RepositoryServiceFactory serviceFactory, NamespaceAndNameFromPathExtractor pathExtractor, PushStateDispatcher dispatcher, UserAgentParser userAgentParser) {
+  public HttpProtocolServlet(ScmConfiguration configuration, RepositoryServiceFactory serviceFactory, NamespaceAndNameFromPathExtractor pathExtractor, PushStateDispatcher dispatcher, UserAgentParser userAgentParser) {
+    this.configuration = configuration;
     this.serviceFactory = serviceFactory;
     this.pathExtractor = pathExtractor;
     this.dispatcher = dispatcher;
@@ -100,7 +103,7 @@ public class HttpProtocolServlet extends HttpServlet {
     } catch (AuthorizationException e) {
       log.debug(e.getMessage());
       if (Authentications.isAuthenticatedSubjectAnonymous()) {
-        HttpUtil.sendUnauthorized(resp);
+        HttpUtil.sendUnauthorized(resp, configuration.getRealmDescription());
       } else {
         resp.setStatus(HttpStatus.SC_FORBIDDEN);
       }
