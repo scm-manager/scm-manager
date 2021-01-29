@@ -1,0 +1,12 @@
+@startuml
+Frontend -> SCM_REST_API: POST Request "create(BranchRequestDto)"
+SCM_REST_API -> Repository_Service_Factory: create(Repository)
+Repository_Service_Factory --> SCM_REST_API: Returns repository service
+Repository_Service -> Repository_Branches_Command: checkIfBranchDoesNotAlreadyExist()
+Repository_Service -> Repository_Branch_Command: getBranchCommand()
+Repository_Branch_Command --> Repository_Service: Returns branch command builder
+Repository_Service -> Repository_Branch_Command_Builder: from(String parent)
+Repository_Service -> Repository_Branch_Command_Builder: name(String branchName)
+Repository_Branch_Command_Builder --> SCM_REST_API: Returns new branch
+SCM_REST_API --> Frontend: Returns location of the new branch
+@enduml
