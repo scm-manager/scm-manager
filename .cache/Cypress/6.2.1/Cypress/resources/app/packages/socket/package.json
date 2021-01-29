@@ -1,0 +1,28 @@
+{
+  "name": "@packages/socket",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "clean-deps": "rm -rf node_modules",
+    "postinstall": "patch-package",
+    "test": "yarn test-unit",
+    "test-debug": "yarn test-unit --inspect-brk=5566",
+    "test-unit": "cross-env NODE_ENV=test mocha --reporter mocha-multi-reporters --reporter-options configFile=../../mocha-reporter-config.json",
+    "test-watch": "cross-env NODE_ENV=test mocha --watch"
+  },
+  "dependencies": {
+    "socket.io": "2.3.0",
+    "socket.io-circular-parser": "cypress-io/socket.io-circular-parser#unpatched-has-binary-2",
+    "socket.io-client": "2.3.0"
+  },
+  "files": [
+    "lib",
+    "patches"
+  ],
+  "workspaces": {
+    "nohoist": [
+      "**"
+    ]
+  }
+}
