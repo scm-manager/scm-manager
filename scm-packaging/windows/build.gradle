@@ -68,7 +68,7 @@ task verifyWinSW(type: Verify) {
 task windows(type: Zip) {
   VersionNumber version = VersionNumber.parse(project.version)
 
-  archiveFileName = "windows-${project.version}-app.zip"
+  archiveFileName = "windows-${project.version}.zip"
   into('scm-server') {
     into('conf') {
       from 'src/main/fs/conf'
@@ -96,7 +96,7 @@ task windows(type: Zip) {
 
 task distribution(type: PackageYaml)  {
   type = 'windows'
-  artifact = file("build/libs/windows-${project.version}-app.zip")
+  artifact = file("build/libs/windows-${project.version}.zip")
   dependsOn windows
 }
 

@@ -49,7 +49,7 @@ dependencies {
 task unix(type: Tar) {
   VersionNumber version = VersionNumber.parse(project.version)
 
-  archiveFileName = "unix-${project.version}-app.tar.gz"
+  archiveFileName = "unix-${project.version}.tar.gz"
   into('scm-server') {
     into('conf') {
       from 'src/main/fs/conf'
@@ -92,7 +92,7 @@ task unix(type: Tar) {
 
 task distribution(type: PackageYaml)  {
   type = 'unix'
-  artifact = file("build/libs/unix-${project.version}-app.tar.gz")
+  artifact = file("build/libs/unix-${project.version}.tar.gz")
   dependsOn unix
 }
 
