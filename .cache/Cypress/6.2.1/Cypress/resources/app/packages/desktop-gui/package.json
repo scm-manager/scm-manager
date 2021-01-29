@@ -1,0 +1,22 @@
+{
+  "name": "@packages/desktop-gui",
+  "version": "0.0.0",
+  "private": true,
+  "main": "lib/gui.js",
+  "scripts": {
+    "build": "webpack",
+    "build-prod": "cross-env NODE_ENV=production yarn build",
+    "clean-deps": "rm -rf node_modules",
+    "cypress:open": "cross-env TZ=America/New_York node ../../scripts/cypress open --project .",
+    "cypress:run": "cross-env TZ=America/New_York node ../../scripts/cypress run --project .",
+    "dev": "yarn start-test 5005 cypress:open",
+    "postinstall": "echo '@packages/desktop-gui needs: yarn build'",
+    "start": "http-server -p 5005 dist",
+    "watch": "yarn build --watch --progress"
+  },
+  "files": [
+    "dist",
+    "lib",
+    "!lib/**/*_spec.jsx"
+  ]
+}

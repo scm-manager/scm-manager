@@ -1,0 +1,28 @@
+{
+  "name": "@packages/extension",
+  "version": "0.0.0",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "build": "gulp build",
+    "build-prod": "yarn build",
+    "clean": "gulp clean",
+    "clean-deps": "rm -rf node_modules",
+    "postinstall": "echo '@packages/extension needs: yarn build'",
+    "test": "yarn test-unit",
+    "test-debug": "yarn test-unit --inspect-brk=5566",
+    "test-unit": "cross-env NODE_ENV=test mocha --reporter mocha-multi-reporters --reporter-options configFile=../../mocha-reporter-config.json",
+    "test-watch": "yarn test-unit --watch",
+    "watch": "gulp watch"
+  },
+  "dependencies": {
+    "bluebird": "3.5.3",
+    "lodash": "4.17.19"
+  },
+  "files": [
+    "app",
+    "dist",
+    "lib",
+    "theme"
+  ]
+}
