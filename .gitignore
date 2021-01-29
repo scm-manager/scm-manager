@@ -36,3 +36,4 @@ rebel.xml
 .gradle
 .gradletasknamecache
 **/build
+.npm
