@@ -43,6 +43,7 @@ import sonia.scm.repository.spi.HookEventFacade;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.Semaphore;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -56,6 +57,8 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   /** the logger for GitReceiveHook */
   private static final Logger logger =
     LoggerFactory.getLogger(GitReceiveHook.class);
+
+  static final ThreadLocal<Semaphore> ASYNC_SEMAPHORE = new ThreadLocal<>();
 
   //~--- constructors ---------------------------------------------------------
 
@@ -126,17 +129,16 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
 
       GitHookContextProvider context = new GitHookContextProvider(converterFactory, rpack, receiveCommands, repository, repositoryId);
 
-      new Thread() {
-        @Override
-        public void run() {
-          try {
-            Thread.sleep(100);
-          } catch (InterruptedException e) {
-            e.printStackTrace();
-          }
+      Semaphore semaphore = new Semaphore(0);
+      ASYNC_SEMAPHORE.set(semaphore);
+      new Thread(() -> {
+        try {
+          semaphore.acquire();
           hookEventFacade.handle(repositoryId).fireHookEvent(type, context);
+        } catch (InterruptedException e) {
+//           interrupted successfully
         }
-      }.start();
+      }).start();
 
     }
     catch (Exception ex)

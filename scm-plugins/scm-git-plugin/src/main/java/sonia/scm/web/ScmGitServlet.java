@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.concurrent.Semaphore;
 import java.util.regex.Pattern;
 
 import static org.eclipse.jgit.lfs.lib.Constants.CONTENT_TYPE_GIT_LFS_JSON;
@@ -109,7 +110,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
   @Override
   public void service(HttpServletRequest request, HttpServletResponse response, Repository repository)
     throws ServletException, IOException
-  {    
+  {
     String repoPath = repository.getNamespace() + "/" + repository.getName();
     logger.trace("handle git repository at {}", repoPath);
     if (isLfsBatchApiRequest(request, repoPath)) {
@@ -123,17 +124,24 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
     } else if (isRegularGitAPIRequest(request)) {
       logger.trace("handle regular git request");
       // continue with the regular git Backend
-      handleRegularGitRequest(request, response, repository);
+      try {
+        handleRegularGitRequest(request, response, repository);
+      } finally {
+        Semaphore semaphore = GitReceiveHook.ASYNC_SEMAPHORE.get();
+        if (semaphore != null) {
+          semaphore.release();
+        }
+      }
     } else {
       logger.trace("handle browser request");
       handleBrowserRequest(request, response, repository);
     }
   }
-  
+
   private boolean isRegularGitAPIRequest(HttpServletRequest request) {
     return REGEX_GITHTTPBACKEND.matcher(HttpUtil.getStrippedURI(request)).matches();
   }
-  
+
   private void handleGitLfsRequest(HttpServlet servlet, HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
     if (repositoryRequestListenerUtil.callListeners(request, response, repository)) {
       servlet.service(request, response);
@@ -141,7 +149,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
       logger.debug("request aborted by repository request listener");
     }
   }
-  
+
   private void handleRegularGitRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
     if (repositoryRequestListenerUtil.callListeners(request, response, repository)) {
       super.service(request, response);
@@ -149,7 +157,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
       logger.debug("request aborted by repository request listener");
     }
   }
-  
+
 
   /**
    * This method renders basic information about the repository into the response. The result is meant to be viewed by
