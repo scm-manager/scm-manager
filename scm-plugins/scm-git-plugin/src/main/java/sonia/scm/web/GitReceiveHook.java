@@ -36,7 +36,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.spi.GitHookContextProvider;
 import sonia.scm.repository.spi.HookEventFacade;
@@ -44,8 +43,6 @@ import sonia.scm.repository.spi.HookEventFacade;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-
-import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -91,7 +88,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   public void onPostReceive(ReceivePack rpack,
     Collection<ReceiveCommand> receiveCommands)
   {
-    onReceive(rpack, receiveCommands, POST_RECEIVE);
+    onReceive(rpack, receiveCommands, RepositoryHookType.POST_RECEIVE);
   }
 
   /**
@@ -122,12 +119,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   {
     try
     {
-      Repository repository;
-      if (type == POST_RECEIVE) {
-        repository = GitUtil.open(rpack.getRepository().getDirectory());
-      } else {
-        repository = rpack.getRepository();
-      }
+      Repository repository = rpack.getRepository();
       String repositoryId = resolveRepositoryId(repository);
 
       logger.trace("resolved repository to {}", repositoryId);
