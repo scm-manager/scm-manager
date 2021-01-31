@@ -106,6 +106,7 @@ public class ChangesetRootResource {
         .page(page)
         .pageSize(pageSize)
         .create()
+        .setDisableCache(true)
         .getChangesets();
       if (changesets != null && changesets.getChangesets() != null) {
         PageResult<Changeset> pageResult = new PageResult<>(changesets.getChangesets(), changesets.getTotal());

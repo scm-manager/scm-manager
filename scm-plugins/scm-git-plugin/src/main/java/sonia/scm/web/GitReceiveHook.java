@@ -126,7 +126,17 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
 
       GitHookContextProvider context = new GitHookContextProvider(converterFactory, rpack, receiveCommands, repository, repositoryId);
 
-      hookEventFacade.handle(repositoryId).fireHookEvent(type, context);
+      new Thread() {
+        @Override
+        public void run() {
+          try {
+            Thread.sleep(100);
+          } catch (InterruptedException e) {
+            e.printStackTrace();
+          }
+          hookEventFacade.handle(repositoryId).fireHookEvent(type, context);
+        }
+      }.start();
 
     }
     catch (Exception ex)
