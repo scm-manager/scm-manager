@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.protocolcommand.git;
 
 import org.eclipse.jgit.lib.Repository;
@@ -39,6 +39,7 @@ import sonia.scm.protocolcommand.CommandContext;
 import sonia.scm.protocolcommand.RepositoryContext;
 import sonia.scm.protocolcommand.ScmCommandProtocol;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.web.GitHookEventFacade;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -48,27 +49,33 @@ public class GitCommandProtocol implements ScmCommandProtocol {
 
   private static final Logger LOG = LoggerFactory.getLogger(GitCommandProtocol.class);
 
-  private ScmUploadPackFactory uploadPackFactory;
-  private ScmReceivePackFactory receivePackFactory;
+  private final ScmUploadPackFactory uploadPackFactory;
+  private final ScmReceivePackFactory receivePackFactory;
+  private final GitHookEventFacade gitHookEventFacade;
 
   @Inject
-  public GitCommandProtocol(ScmUploadPackFactory uploadPackFactory, ScmReceivePackFactory receivePackFactory) {
+  public GitCommandProtocol(ScmUploadPackFactory uploadPackFactory, ScmReceivePackFactory receivePackFactory, GitHookEventFacade gitHookEventFacade) {
     this.uploadPackFactory = uploadPackFactory;
     this.receivePackFactory = receivePackFactory;
+    this.gitHookEventFacade = gitHookEventFacade;
   }
 
   @Override
   public void handle(CommandContext commandContext, RepositoryContext repositoryContext) throws IOException {
     String subCommand = commandContext.getArgs()[0];
 
-    if (RemoteConfig.DEFAULT_UPLOAD_PACK.equals(subCommand)) {
-      LOG.trace("got upload pack");
-      upload(commandContext, repositoryContext);
-    } else if (RemoteConfig.DEFAULT_RECEIVE_PACK.equals(subCommand)) {
-      LOG.trace("got receive pack");
-      receive(commandContext, repositoryContext);
-    } else {
-      throw new IllegalArgumentException("Unknown git command: " + commandContext.getCommand());
+    try {
+      if (RemoteConfig.DEFAULT_UPLOAD_PACK.equals(subCommand)) {
+        LOG.trace("got upload pack");
+        upload(commandContext, repositoryContext);
+      } else if (RemoteConfig.DEFAULT_RECEIVE_PACK.equals(subCommand)) {
+        LOG.trace("got receive pack");
+        receive(commandContext, repositoryContext);
+      } else {
+        throw new IllegalArgumentException("Unknown git command: " + commandContext.getCommand());
+      }
+    } finally {
+      gitHookEventFacade.firePending();
     }
   }
 

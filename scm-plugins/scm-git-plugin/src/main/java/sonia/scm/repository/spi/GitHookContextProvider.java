@@ -123,6 +123,10 @@ public class GitHookContextProvider extends HookContextProvider
     return SUPPORTED_FEATURES;
   }
 
+  public String getRepositoryId() {
+    return repositoryId;
+  }
+
   private final GitHookChangesetProvider changesetProvider;
   private final List<ReceiveCommand> receiveCommands;
   private final ReceivePack receivePack;

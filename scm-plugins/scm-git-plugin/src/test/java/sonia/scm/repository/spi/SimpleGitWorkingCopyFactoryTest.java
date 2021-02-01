@@ -42,6 +42,7 @@ import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.repository.work.WorkingCopy;
+import sonia.scm.web.GitHookEventFacade;
 
 import java.io.File;
 import java.io.IOException;
@@ -64,7 +65,7 @@ public class SimpleGitWorkingCopyFactoryTest extends AbstractGitCommandTestBase 
   @Before
   public void bindScmProtocol() throws IOException {
     HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
-    HookEventFacade hookEventFacade = new HookEventFacade(of(mock(RepositoryManager.class)), hookContextFactory);
+    GitHookEventFacade hookEventFacade = new GitHookEventFacade(new HookEventFacade(of(mock(RepositoryManager.class)), hookContextFactory));
     GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
     proto = new ScmTransportProtocol(of(GitTestHelper.createConverterFactory()), of(hookEventFacade), of(gitRepositoryHandler));
     Transport.register(proto);

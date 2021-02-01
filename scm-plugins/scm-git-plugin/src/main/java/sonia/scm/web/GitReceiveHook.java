@@ -38,12 +38,10 @@ import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.spi.GitHookContextProvider;
-import sonia.scm.repository.spi.HookEventFacade;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
-import java.util.concurrent.Semaphore;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -58,19 +56,11 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   private static final Logger logger =
     LoggerFactory.getLogger(GitReceiveHook.class);
 
-  static final ThreadLocal<Semaphore> ASYNC_SEMAPHORE = new ThreadLocal<>();
+  private final GitRepositoryHandler handler;
+  private final GitChangesetConverterFactory converterFactory;
+  private final GitHookEventFacade hookEventFacade;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param hookEventFacade
-   * @param handler
-   */
-  public GitReceiveHook(GitChangesetConverterFactory converterFactory, HookEventFacade hookEventFacade,
+  public GitReceiveHook(GitChangesetConverterFactory converterFactory, GitHookEventFacade hookEventFacade,
                         GitRepositoryHandler handler)
   {
     this.converterFactory = converterFactory;
@@ -78,15 +68,6 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     this.handler = handler;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param rpack
-   * @param receiveCommands
-   */
   @Override
   public void onPostReceive(ReceivePack rpack,
     Collection<ReceiveCommand> receiveCommands)
@@ -94,14 +75,6 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     onReceive(rpack, receiveCommands, RepositoryHookType.POST_RECEIVE);
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param rpack
-   * @param receiveCommands
-   */
   @Override
   public void onPreReceive(ReceivePack rpack,
     Collection<ReceiveCommand> receiveCommands)
@@ -109,14 +82,6 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     onReceive(rpack, receiveCommands, RepositoryHookType.PRE_RECEIVE);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param rpack
-   * @param receiveCommands
-   * @param type
-   */
   private void handleReceiveCommands(ReceivePack rpack,
     List<ReceiveCommand> receiveCommands, RepositoryHookType type)
   {
@@ -129,17 +94,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
 
       GitHookContextProvider context = new GitHookContextProvider(converterFactory, rpack, receiveCommands, repository, repositoryId);
 
-      Semaphore semaphore = new Semaphore(0);
-      ASYNC_SEMAPHORE.set(semaphore);
-      new Thread(() -> {
-        try {
-          semaphore.acquire();
-          hookEventFacade.handle(repositoryId).fireHookEvent(type, context);
-        } catch (InterruptedException e) {
-//           interrupted successfully
-        }
-      }).start();
-
+      hookEventFacade.fire(type, context);
     }
     catch (Exception ex)
     {
@@ -195,13 +150,4 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     StoredConfig gitConfig = repository.getConfig();
     return handler.getRepositoryId(gitConfig);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private GitRepositoryHandler handler;
-
-  private final GitChangesetConverterFactory converterFactory;
-  /** Field description */
-  private HookEventFacade hookEventFacade;
 }

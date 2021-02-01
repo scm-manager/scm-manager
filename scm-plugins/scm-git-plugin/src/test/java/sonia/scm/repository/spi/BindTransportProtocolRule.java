@@ -27,12 +27,12 @@ package sonia.scm.repository.spi;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
 import org.eclipse.jgit.transport.Transport;
 import org.junit.rules.ExternalResource;
-import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.HookContextFactory;
+import sonia.scm.web.GitHookEventFacade;
 
 import static com.google.inject.util.Providers.of;
 import static org.mockito.ArgumentMatchers.any;
@@ -47,7 +47,7 @@ public class BindTransportProtocolRule extends ExternalResource {
   protected void before() {
     HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
     RepositoryManager repositoryManager = mock(RepositoryManager.class);
-    HookEventFacade hookEventFacade = new HookEventFacade(of(repositoryManager), hookContextFactory);
+    GitHookEventFacade hookEventFacade = new GitHookEventFacade(new HookEventFacade(of(repositoryManager), hookContextFactory));
     GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
     scmTransportProtocol = new ScmTransportProtocol(of(GitTestHelper.createConverterFactory()), of(hookEventFacade), of(gitRepositoryHandler));
 

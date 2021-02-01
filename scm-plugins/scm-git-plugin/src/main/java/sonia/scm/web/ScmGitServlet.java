@@ -41,7 +41,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.concurrent.Semaphore;
 import java.util.regex.Pattern;
 
 import static org.eclipse.jgit.lfs.lib.Constants.CONTENT_TYPE_GIT_LFS_JSON;
@@ -69,27 +68,17 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param repositoryResolver
-   * @param receivePackFactory
-   * @param repositoryViewer
-   * @param repositoryRequestListenerUtil
-   * @param lfsServletFactory
-   */
   @Inject
   public ScmGitServlet(GitRepositoryResolver repositoryResolver,
                        GitReceivePackFactory receivePackFactory,
                        GitRepositoryViewer repositoryViewer,
                        RepositoryRequestListenerUtil repositoryRequestListenerUtil,
-                       LfsServletFactory lfsServletFactory)
+                       LfsServletFactory lfsServletFactory, GitHookEventFacade gitHookEventFacade)
   {
     this.repositoryViewer = repositoryViewer;
     this.repositoryRequestListenerUtil = repositoryRequestListenerUtil;
     this.lfsServletFactory = lfsServletFactory;
+    this.gitHookEventFacade = gitHookEventFacade;
 
     setRepositoryResolver(repositoryResolver);
     setReceivePackFactory(receivePackFactory);
@@ -126,11 +115,9 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
       // continue with the regular git Backend
       try {
         handleRegularGitRequest(request, response, repository);
+        gitHookEventFacade.firePending();
       } finally {
-        Semaphore semaphore = GitReceiveHook.ASYNC_SEMAPHORE.get();
-        if (semaphore != null) {
-          semaphore.release();
-        }
+        gitHookEventFacade.clean();
       }
     } else {
       logger.trace("handle browser request");
@@ -253,4 +240,6 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
   private final GitRepositoryViewer repositoryViewer;
 
   private final LfsServletFactory lfsServletFactory;
+
+  private final GitHookEventFacade gitHookEventFacade;
 }
