@@ -87,7 +87,7 @@ class BranchToBranchDtoMapperTest {
   @Test
   void shouldAppendDeleteLink() {
     Repository repository = RepositoryTestData.createHeartOfGold();
-    when(subject.isPermitted("repository:modify:" + repository.getId())).thenReturn(true);
+    when(subject.isPermitted("repository:push:" + repository.getId())).thenReturn(true);
     Branch branch = Branch.normalBranch("master", "42");
 
     BranchDto dto = mapper.map(branch, repository);
@@ -106,7 +106,7 @@ class BranchToBranchDtoMapperTest {
   @Test
   void shouldNotAppendDeleteLinkIfNotPermitted() {
     Repository repository = RepositoryTestData.createHeartOfGold();
-    when(subject.isPermitted("repository:modify:" + repository.getId())).thenReturn(false);
+    when(subject.isPermitted("repository:push:" + repository.getId())).thenReturn(false);
     Branch branch = Branch.normalBranch("master", "42");
 
     BranchDto dto = mapper.map(branch, repository);

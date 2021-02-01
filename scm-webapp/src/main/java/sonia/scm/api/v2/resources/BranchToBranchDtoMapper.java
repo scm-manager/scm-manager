@@ -62,7 +62,7 @@ public abstract class BranchToBranchDtoMapper extends HalAppenderMapper implemen
       .single(linkBuilder("changeset", resourceLinks.changeset().changeset(namespaceAndName.getNamespace(), namespaceAndName.getName(), branch.getRevision())).build())
       .single(linkBuilder("source", resourceLinks.source().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), branch.getRevision())).build());
 
-    if (!branch.isDefaultBranch() && RepositoryPermissions.modify(repository).isPermitted()) {
+    if (!branch.isDefaultBranch() && RepositoryPermissions.push(repository).isPermitted()) {
       linksBuilder.single(linkBuilder("delete", resourceLinks.branch().delete(repository.getNamespace(), repository.getName(), branch.getName())).build());
     }
 

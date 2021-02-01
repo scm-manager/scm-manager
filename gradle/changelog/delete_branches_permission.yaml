@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fix permission check for branch deletion ([#1515](https://github.com/scm-manager/scm-manager/pull/1515))
