@@ -112,6 +112,7 @@ import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -783,6 +784,30 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     assertEquals(SC_OK, response.getStatus());
     assertEquals("application/x-gzip", response.getOutputHeaders().get("Content-Type").get(0).toString());
     verify(fullScmRepositoryExporter).export(eq(repository), any(OutputStream.class));
+  }
+
+  @Test
+  public void shouldLockRepositoryWhileExporting() throws URISyntaxException {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = mock(Repository.class);
+    when(repository.getName()).thenReturn(name);
+    when(repository.getNamespace()).thenReturn(namespace);
+    when(repository.getType()).thenReturn("svn");
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
+
+    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
+    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    verify(repository, times(1)).setExporting(true);
+    verify(repository, times(1)).setExporting(false);
   }
 
   private void mockRepositoryHandler(Set<Command> cmds) {

@@ -22,29 +22,24 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.repository.api;
 
-/**
- * Implementations of this class can be used to check whether a repository is archived.
- *
- * @since 2.12.0
- */
-public interface RepositoryArchivedCheck {
+import sonia.scm.ExceptionWithContext;
+import sonia.scm.repository.Repository;
 
-  /**
-   * Checks whether the repository with the given id is archived or not.
-   * @param repositoryId The id of the repository to check.
-   * @return <code>true</code> when the repository with the given id is archived, <code>false</code> otherwise.
-   */
-  boolean isArchived(String repositoryId);
+import static java.lang.String.format;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-  /**
-   * Checks whether the given repository is archived or not. This checks the status on behalf of the id of the
-   * repository, not by the archive flag provided by the repository itself.
-   * @param repository The repository to check.
-   * @return <code>true</code> when the given repository is archived, <code>false</code> otherwise.
-   */
-  default boolean isArchived(Repository repository) {
-    return isArchived(repository.getId());
+public class RepositoryExportingException extends ExceptionWithContext {
+
+  public static final String CODE = "1mSNlpe1V1";
+
+  public RepositoryExportingException(Repository repository) {
+    super(entity(repository).build(), format("Repository %s is currently being exported and must not be modified", repository));
+  }
+
+  @Override
+  public String getCode() {
+    return CODE;
   }
 }

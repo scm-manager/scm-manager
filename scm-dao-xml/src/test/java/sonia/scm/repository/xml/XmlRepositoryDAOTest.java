@@ -246,6 +246,16 @@ class XmlRepositoryDAOTest {
     }
 
     @Test
+    void shouldNotModifyExportingRepository() {
+      REPOSITORY.setExporting(true);
+      dao.add(REPOSITORY);
+
+      Repository heartOfGold = createRepository("42");
+      heartOfGold.setExporting(true);
+      assertThrows(StoreReadOnlyException.class, () -> dao.modify(heartOfGold));
+    }
+
+    @Test
     void shouldRemoveRepository() {
       dao.add(REPOSITORY);
       assertThat(dao.contains("42")).isTrue();
@@ -262,6 +272,15 @@ class XmlRepositoryDAOTest {
     @Test
     void shouldNotRemoveArchivedRepository() {
       REPOSITORY.setArchived(true);
+      dao.add(REPOSITORY);
+      assertThat(dao.contains("42")).isTrue();
+
+      assertThrows(StoreReadOnlyException.class, () -> dao.delete(REPOSITORY));
+    }
+
+    @Test
+    void shouldNotRemoveExportingRepository() {
+      REPOSITORY.setExporting(true);
       dao.add(REPOSITORY);
       assertThat(dao.contains("42")).isTrue();
 

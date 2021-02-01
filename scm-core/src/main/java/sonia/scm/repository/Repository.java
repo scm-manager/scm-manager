@@ -31,6 +31,8 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
+import sonia.scm.repository.api.RepositoryArchivedException;
+import sonia.scm.repository.api.RepositoryExportingException;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
@@ -80,6 +82,8 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   private Set<RepositoryPermission> permissions = new HashSet<>();
   private String type;
   private boolean archived;
+  @XmlTransient
+  private boolean exporting;
 
 
   /**
@@ -219,6 +223,16 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   }
 
   /**
+   * Returns <code>true</code>, when the repository is in state "exporting". An exporting repository is read-only until the export is finished.
+   *
+   * @since 2.14.0
+   */
+  public boolean isExporting() {
+    return exporting;
+  }
+
+
+  /**
    * Returns {@code true} if the repository is healthy.
    *
    * @return {@code true} if the repository is healthy
@@ -245,6 +259,21 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
       && ValidationUtil.isRepositoryNameValid(name)
       && Util.isNotEmpty(type)
       && ((Util.isEmpty(contact)) || ValidationUtil.isMailAddressValid(contact));
+  }
+
+  /**
+   * Checks if the repository may be modified.
+   *
+   * @throws RepositoryArchivedException if the repository is archived
+   * @throws RepositoryExportingException if the repository is currently being exported
+   */
+  public void checkRepositoryMayBeModified() {
+    if (archived) {
+      throw new RepositoryArchivedException(this);
+    }
+    if (exporting) {
+      throw new RepositoryExportingException(this);
+    }
   }
 
   public void setContact(String contact) {
@@ -297,6 +326,15 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
    */
   public void setArchived(boolean archived) {
     this.archived = archived;
+  }
+
+  /**
+   * Set this to <code>true</code> to mark the repository as "exporting". An "exporting" repository is read-only until the export is finished.
+   *
+   * @since 2.14.0
+   */
+  public void setExporting(boolean exporting) {
+    this.exporting = exporting;
   }
 
   public void setHealthCheckFailures(List<HealthCheckFailure> healthCheckFailures) {

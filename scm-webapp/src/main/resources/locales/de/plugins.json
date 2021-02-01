@@ -326,6 +326,10 @@
     "4hSNNTBiu1": {
       "displayName": "Falscher Repository Typ",
       "description": "Der gegebene Typ entspricht nicht dem Typen des Repositories."
+    },
+    "1mSNlpe1V1": {
+      "displayName": "Repository wird exportiert",
+      "description": "Das Repository wird momentan exportiert und darf nicht modifiziert werden."
     }
   },
   "namespaceStrategies": {

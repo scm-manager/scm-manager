@@ -58,6 +58,7 @@ import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.time.Instant;
+import java.util.function.Function;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
@@ -119,7 +120,7 @@ public class RepositoryExportResource {
                                    @DefaultValue("false") @QueryParam("compressed") boolean compressed
   ) {
     Repository repository = getVerifiedRepository(namespace, name, type);
-    return exportRepository(repository, compressed);
+    return withLock(repository, repo -> exportRepository(repo, compressed));
   }
 
   /**
@@ -161,12 +162,16 @@ public class RepositoryExportResource {
                                        @PathParam("name") String name
   ) {
     Repository repository = getVerifiedRepository(namespace, name);
-    StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os);
+    return withLock(repository, this::exportFullRepository);
+  }
 
-    return Response
-      .ok(output, "application/x-gzip")
-      .header("content-disposition", createContentDispositionHeaderValue(repository, "tar.gz"))
-      .build();
+  private Response withLock(Repository repository, Function<Repository, Response> function) {
+    try {
+      repository.setExporting(true);
+      return function.apply(repository);
+    } finally {
+      repository.setExporting(false);
+    }
   }
 
   private Repository getVerifiedRepository(String namespace, String name) {
@@ -184,6 +189,15 @@ public class RepositoryExportResource {
     Type repositoryType = type(manager, type);
     checkSupport(repositoryType, Command.BUNDLE);
     return repository;
+  }
+
+  private Response exportFullRepository(Repository repository) {
+    StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os);
+
+    return Response
+      .ok(output, "application/x-gzip")
+      .header("content-disposition", createContentDispositionHeaderValue(repository, "tar.gz"))
+      .build();
   }
 
   private Response exportRepository(Repository repository, boolean compressed) {

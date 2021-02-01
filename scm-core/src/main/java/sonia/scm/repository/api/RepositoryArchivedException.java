@@ -34,7 +34,7 @@ public class RepositoryArchivedException extends ExceptionWithContext {
 
   public static final String CODE = "3hSIlptme1";
 
-  protected RepositoryArchivedException(Repository repository) {
+  public RepositoryArchivedException(Repository repository) {
     super(entity(repository).build(), format("Repository %s is marked as archived and must not be modified", repository));
   }
 

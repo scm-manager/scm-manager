@@ -140,7 +140,7 @@ public class XmlRepositoryDAO implements RepositoryDAO {
   @Override
   public void modify(Repository repository) {
     Repository clone = repository.clone();
-    if (clone.isArchived() && byId.get(clone.getId()).isArchived()) {
+    if (mustNotModifyRepository(clone)) {
       throw new StoreReadOnlyException(repository);
     }
 
@@ -160,9 +160,14 @@ public class XmlRepositoryDAO implements RepositoryDAO {
     metadataStore.write(repositoryPath, clone);
   }
 
+  private boolean mustNotModifyRepository(Repository clone) {
+    return clone.isArchived() && byId.get(clone.getId()).isArchived()
+      || clone.isExporting() && byId.get(clone.getId()).isExporting();
+  }
+
   @Override
   public void delete(Repository repository) {
-    if (repository.isArchived()) {
+    if (repository.isArchived() || repository.isExporting()) {
       throw new StoreReadOnlyException(repository);
     }
     Path path;
