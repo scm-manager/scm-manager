@@ -27,8 +27,8 @@ package sonia.scm.store;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.repository.RepositoryArchivedCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
+import sonia.scm.repository.RepositoryReadOnlyChecker;
 
 /**
  * JAXB implementation of {@link ConfigurationStoreFactory}.
@@ -44,8 +44,8 @@ public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory impleme
    * @param repositoryLocationResolver Resolver to get the repository Directory
    */
   @Inject
-  public JAXBConfigurationStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, RepositoryArchivedCheck archivedCheck) {
-    super(contextProvider, repositoryLocationResolver, Store.CONFIG, archivedCheck);
+  public JAXBConfigurationStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, RepositoryReadOnlyChecker readOnlyChecker) {
+    super(contextProvider, repositoryLocationResolver, Store.CONFIG, readOnlyChecker);
   }
 
   @Override

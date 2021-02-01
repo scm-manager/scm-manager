@@ -32,6 +32,7 @@ import sonia.scm.repository.Feature;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.security.Authentications;
@@ -183,7 +184,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public BranchCommandBuilder getBranchCommand() {
-    repository.checkRepositoryMayBeModified();
+    RepositoryReadOnlyChecker.checkReadOnly(getRepository());
     RepositoryPermissions.push(getRepository()).check();
     LOG.debug("create branch command for repository {}",
       repository.getNamespaceAndName());
@@ -334,7 +335,7 @@ public final class RepositoryService implements Closeable {
    * @since 1.31
    */
   public PullCommandBuilder getPullCommand() {
-    repository.checkRepositoryMayBeModified();
+    RepositoryReadOnlyChecker.checkReadOnly(getRepository());
     LOG.debug("create pull command for repository {}",
       repository.getNamespaceAndName());
 
@@ -388,7 +389,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public TagCommandBuilder getTagCommand() {
-    repository.checkRepositoryMayBeModified();
+    RepositoryReadOnlyChecker.checkReadOnly(getRepository());
     return new TagCommandBuilder(provider.getTagCommand());
   }
 
@@ -418,7 +419,7 @@ public final class RepositoryService implements Closeable {
    * @since 2.0.0
    */
   public MergeCommandBuilder getMergeCommand() {
-    repository.checkRepositoryMayBeModified();
+    RepositoryReadOnlyChecker.checkReadOnly(getRepository());
     LOG.debug("create merge command for repository {}",
       repository.getNamespaceAndName());
 
@@ -440,7 +441,7 @@ public final class RepositoryService implements Closeable {
    * @since 2.0.0
    */
   public ModifyCommandBuilder getModifyCommand() {
-    repository.checkRepositoryMayBeModified();
+    RepositoryReadOnlyChecker.checkReadOnly(getRepository());
     LOG.debug("create modify command for repository {}",
       repository.getNamespaceAndName());
 

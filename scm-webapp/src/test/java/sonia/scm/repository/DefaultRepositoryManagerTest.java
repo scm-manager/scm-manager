@@ -65,7 +65,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasProperty;
@@ -536,6 +535,60 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     verify(repositoryDAO, never()).modify(any());
   }
 
+  @Test
+  @SubjectAware(username = "trillian")
+  public void shouldMarkRepositoryAsExportingByGetFromId() {
+    RepositoryPermissionGuard.setReadOnlyVerbs(ImmutableSet.of("read"));
+    Repository repository = createTestRepository();
+    RepositoryManager repoManager = (RepositoryManager) manager;
+    DefaultRepositoryExportingCheck.setAsExporting(repository.getId());
+
+    Repository repo = repoManager.get(repository.getId());
+    assertTrue(repo.isExporting());
+
+    DefaultRepositoryExportingCheck.removeFromExporting(repository.getId());
+  }
+
+  @Test
+  @SubjectAware(username = "trillian")
+  public void shouldMarkRepositoryAsExportingByGetFromNamespaceAndName() {
+    RepositoryPermissionGuard.setReadOnlyVerbs(ImmutableSet.of("read"));
+    Repository repository = createTestRepository();
+    RepositoryManager repoManager = (RepositoryManager) manager;
+    DefaultRepositoryExportingCheck.setAsExporting(repository.getId());
+
+    Repository repo = repoManager.get(repository.getNamespaceAndName());
+    assertTrue(repo.isExporting());
+
+    DefaultRepositoryExportingCheck.removeFromExporting(repository.getId());
+  }
+
+  @Test
+  @SubjectAware(username = "trillian")
+  public void shouldMarkRepositoryAsExportingByGetAll() {
+    RepositoryPermissionGuard.setReadOnlyVerbs(ImmutableSet.of("read"));
+    Repository repository = createTestRepository();
+    RepositoryManager repoManager = (RepositoryManager) manager;
+    DefaultRepositoryExportingCheck.setAsExporting(repository.getId());
+
+    Collection<Repository> repos = repoManager.getAll();
+    assertEquals(1, repos.stream().filter(Repository::isExporting).count());
+
+    DefaultRepositoryExportingCheck.removeFromExporting(repository.getId());
+  }
+
+  @Test
+  public void shouldNotMarkRepositoryAsExporting() {
+    Repository repository = createTestRepository();
+    RepositoryManager repoManager = (RepositoryManager) manager;
+
+    Repository repo = repoManager.get(repository.getNamespaceAndName());
+    assertFalse(repo.isExporting());
+
+    repo = repoManager.get(repository.getId());
+    assertFalse(repo.isExporting());
+  }
+
   //~--- methods --------------------------------------------------------------
 
   @Override
@@ -552,11 +605,9 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     handlerSet.add(createRepositoryHandler("hg", "Mercurial"));
     handlerSet.add(createRepositoryHandler("svn", "SVN"));
 
-    this.configuration = new ScmConfiguration();
-
     when(namespaceStrategy.createNamespace(Mockito.any(Repository.class))).thenAnswer(invocation -> mockedNamespace);
 
-    return new DefaultRepositoryManager(configuration, contextProvider,
+    return new DefaultRepositoryManager(contextProvider,
       keyGenerator, repositoryDAO, handlerSet, Providers.of(namespaceStrategy));
   }
 

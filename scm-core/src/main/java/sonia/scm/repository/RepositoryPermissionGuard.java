@@ -34,6 +34,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.function.BooleanSupplier;
 
+import static sonia.scm.repository.DefaultRepositoryExportingCheck.isRepositoryExporting;
 import static sonia.scm.repository.EventDrivenRepositoryArchiveCheck.isRepositoryArchived;
 
 /**
@@ -64,11 +65,14 @@ public class RepositoryPermissionGuard implements PermissionGuard<Repository> {
       if (isRepositoryArchived(id)) {
         throw new AuthorizationException("repository is archived");
       }
+      if (isRepositoryExporting(id)) {
+        throw new AuthorizationException("repository is exporting");
+      }
     }
 
     @Override
     public boolean isPermitted(Subject subject, String id, BooleanSupplier delegate) {
-      return !isRepositoryArchived(id) && delegate.getAsBoolean();
+      return !isRepositoryArchived(id) && !isRepositoryExporting(id) && delegate.getAsBoolean();
     }
   }
 }

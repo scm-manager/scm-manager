@@ -31,8 +31,6 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
-import sonia.scm.repository.api.RepositoryArchivedException;
-import sonia.scm.repository.api.RepositoryExportingException;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
@@ -192,7 +190,9 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     return name;
   }
 
-  public String getNamespace() { return namespace; }
+  public String getNamespace() {
+    return namespace;
+  }
 
   @XmlTransient
   public NamespaceAndName getNamespaceAndName() {
@@ -261,21 +261,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
       && ((Util.isEmpty(contact)) || ValidationUtil.isMailAddressValid(contact));
   }
 
-  /**
-   * Checks if the repository may be modified.
-   *
-   * @throws RepositoryArchivedException if the repository is archived
-   * @throws RepositoryExportingException if the repository is currently being exported
-   */
-  public void checkRepositoryMayBeModified() {
-    if (archived) {
-      throw new RepositoryArchivedException(this);
-    }
-    if (exporting) {
-      throw new RepositoryExportingException(this);
-    }
-  }
-
   public void setContact(String contact) {
     this.contact = contact;
   }
@@ -296,7 +281,9 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     this.lastModified = lastModified;
   }
 
-  public void setNamespace(String namespace) { this.namespace = namespace; }
+  public void setNamespace(String namespace) {
+    this.namespace = namespace;
+  }
 
   public void setName(String name) {
     this.name = name;

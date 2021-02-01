@@ -33,6 +33,7 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import sonia.scm.BadRequestException;
 import sonia.scm.Type;
 import sonia.scm.importexport.FullScmRepositoryExporter;
+import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -120,7 +121,7 @@ public class RepositoryExportResource {
                                    @DefaultValue("false") @QueryParam("compressed") boolean compressed
   ) {
     Repository repository = getVerifiedRepository(namespace, name, type);
-    return withLock(repository, repo -> exportRepository(repo, compressed));
+    return withReadOnlyLock(repository, repo -> exportRepository(repo, compressed));
   }
 
   /**
@@ -162,14 +163,16 @@ public class RepositoryExportResource {
                                        @PathParam("name") String name
   ) {
     Repository repository = getVerifiedRepository(namespace, name);
-    return withLock(repository, this::exportFullRepository);
+    return withReadOnlyLock(repository, this::exportFullRepository);
   }
 
-  private Response withLock(Repository repository, Function<Repository, Response> function) {
+  private Response withReadOnlyLock(Repository repository, Function<Repository, Response> responseFunction) {
     try {
+      DefaultRepositoryExportingCheck.setAsExporting(repository.getId());
       repository.setExporting(true);
-      return function.apply(repository);
+      return responseFunction.apply(repository);
     } finally {
+      DefaultRepositoryExportingCheck.removeFromExporting(repository.getId());
       repository.setExporting(false);
     }
   }

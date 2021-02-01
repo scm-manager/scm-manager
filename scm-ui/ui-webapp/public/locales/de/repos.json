@@ -7,7 +7,8 @@
     "description": "Beschreibung",
     "creationDate": "Erstellt",
     "lastModified": "Zuletzt bearbeitet",
-    "archived":  "archiviert"
+    "archived":  "archiviert",
+    "exporting": "Wird exportiert"
   },
   "validation": {
     "namespace-invalid": "Der Namespace des Repository ist ungültig",
@@ -252,6 +253,7 @@
   },
   "export": {
     "subtitle": "Repository exportieren",
+    "notification": "Achtung: Während eines laufenden Exports kann auf das Repository nur lesend zugegriffen werden.",
     "compressed": {
       "label": "Komprimieren",
       "helpText": "Export Datei vor dem Download komprimieren. Reduziert die Downloadgröße."
@@ -398,6 +400,9 @@
   },
   "archive": {
     "tooltip": "Nur lesender Zugriff möglich. Das Archiv kann nicht verändert werden."
+  },
+  "exporting": {
+    "tooltip": "Nur lesender Zugriff möglich. Das Repository wird derzeit exportiert."
   },
   "diff": {
     "jumpToSource": "Zur Quelldatei springen",

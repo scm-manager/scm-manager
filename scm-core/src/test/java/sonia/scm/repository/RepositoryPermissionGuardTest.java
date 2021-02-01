@@ -142,5 +142,40 @@ class RepositoryPermissionGuardTest {
         verify(checkDelegate).run();
       }
     }
+
+    @Nested
+    class WithExportingRepository {
+
+      @BeforeEach
+      void mockExportingRepository() {
+        DefaultRepositoryExportingCheck.setAsExporting("1");
+      }
+
+      @AfterEach
+      void removeExportingFlag() {
+        DefaultRepositoryExportingCheck.removeFromExporting("1");
+      }
+
+      @Test
+      void shouldInterceptPermissionCheck() {
+        assertThat(readInterceptor.isPermitted(subject, "1", permittedDelegate)).isFalse();
+
+        verify(permittedDelegate, never()).getAsBoolean();
+      }
+
+      @Test
+      void shouldInterceptCheckRequest() {
+        assertThrows(AuthorizationException.class, () -> readInterceptor.check(subject, "1", checkDelegate));
+      }
+
+      @Test
+      void shouldThrowConcretePermissionExceptionOverArchiveException() {
+        doThrow(new AuthorizationException()).when(checkDelegate).run();
+
+        assertThrows(AuthorizationException.class, () -> readInterceptor.check(subject, "1", checkDelegate));
+
+        verify(checkDelegate).run();
+      }
+    }
   }
 }

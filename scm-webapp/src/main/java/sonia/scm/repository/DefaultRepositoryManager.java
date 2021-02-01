@@ -79,7 +79,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   private static final String THREAD_NAME = "Hook-%s";
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultRepositoryManager.class);
-  private final ScmConfiguration configuration;
   private final ExecutorService executorService;
   private final Map<String, RepositoryHandler> handlerMap;
   private final KeyGenerator keyGenerator;
@@ -89,11 +88,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   private final ManagerDaoAdapter<Repository> managerDaoAdapter;
 
   @Inject
-  public DefaultRepositoryManager(ScmConfiguration configuration,
-                                  SCMContextProvider contextProvider, KeyGenerator keyGenerator,
+  public DefaultRepositoryManager(SCMContextProvider contextProvider, KeyGenerator keyGenerator,
                                   RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
                                   Provider<NamespaceStrategy> namespaceStrategyProvider) {
-    this.configuration = configuration;
     this.keyGenerator = keyGenerator;
     this.repositoryDAO = repositoryDAO;
     this.namespaceStrategyProvider = namespaceStrategyProvider;
@@ -242,9 +239,16 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
     if (repository != null) {
       repository = repository.clone();
+      markAsExporting(repository);
     }
 
     return repository;
+  }
+
+  private void markAsExporting(Repository repository) {
+    if (DefaultRepositoryExportingCheck.isRepositoryExporting(repository.getId())) {
+      repository.setExporting(true);
+    }
   }
 
   @Override
@@ -258,6 +262,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     if (repository != null) {
       RepositoryPermissions.read(repository).check();
       repository = repository.clone();
+      markAsExporting(repository);
     }
 
     return repository;
@@ -336,7 +341,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
         && filter.test(repository)
         && RepositoryPermissions.read().isPermitted(repository)) {
         Repository r = repository.clone();
-
+        markAsExporting(r);
         repositories.add(r);
       }
     }

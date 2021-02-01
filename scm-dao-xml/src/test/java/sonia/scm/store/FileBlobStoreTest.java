@@ -30,7 +30,7 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import sonia.scm.AbstractTestBase;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryArchivedCheck;
+import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.security.UUIDKeyGenerator;
 
@@ -51,8 +51,8 @@ import static org.mockito.Mockito.when;
 class FileBlobStoreTest extends AbstractTestBase
 {
 
-  private Repository repository = RepositoryTestData.createHeartOfGold();
-  private RepositoryArchivedCheck archivedCheck = mock(RepositoryArchivedCheck.class);
+  private final Repository repository = RepositoryTestData.createHeartOfGold();
+  private final RepositoryReadOnlyChecker readOnlyChecker = mock(RepositoryReadOnlyChecker.class);
   private BlobStore store;
 
   @BeforeEach
@@ -191,7 +191,7 @@ class FileBlobStoreTest extends AbstractTestBase
     @BeforeEach
     void setRepositoryArchived() {
       store.create("1"); // store for test must not be empty
-      when(archivedCheck.isArchived(repository.getId())).thenReturn(true);
+      when(readOnlyChecker.isReadOnly(repository.getId())).thenReturn(true);
       createBlobStore();
     }
 
@@ -227,6 +227,6 @@ class FileBlobStoreTest extends AbstractTestBase
 
   protected BlobStoreFactory createBlobStoreFactory()
   {
-    return new FileBlobStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator(), archivedCheck);
+    return new FileBlobStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator(), readOnlyChecker);
   }
 }

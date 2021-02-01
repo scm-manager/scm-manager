@@ -39,7 +39,7 @@ type Props = WithTranslation & {
   baseDate?: DateProp;
 };
 
-const ArchiveTag = styled.span`
+const RepositoryTag = styled.span`
   margin-left: 0.2rem;
   background-color: #9a9a9a;
   padding: 0.25rem;
@@ -145,13 +145,19 @@ class RepositoryEntry extends React.Component<Props> {
 
   createTitle = () => {
     const { repository, t } = this.props;
-    const archivedFlag = repository.archived && (
-      <ArchiveTag title={t("archive.tooltip")}>{t("repository.archived")}</ArchiveTag>
-    );
+    const repositoryFlags = [];
+    if (repository.archived) {
+      repositoryFlags.push(<RepositoryTag title={t("archive.tooltip")}>{t("repository.archived")}</RepositoryTag>);
+    }
+
+    if (repository.exporting) {
+      repositoryFlags.push(<RepositoryTag title={t("exporting.tooltip")}>{t("repository.exporting")}</RepositoryTag>);
+    }
+
     return (
       <>
         <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} />
-        <strong>{repository.name}</strong> {archivedFlag}
+        <strong>{repository.name}</strong> {repositoryFlags.map(flag => flag)}
       </>
     );
   };

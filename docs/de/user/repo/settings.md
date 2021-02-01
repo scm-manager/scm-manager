@@ -18,6 +18,7 @@ Strategie `benutzerdefiniert` ausgewählt ist, kann zusätzlich zum Repository N
 Ein archiviertes Repository kann nicht mehr verändert werden.
 
 In dem Bereich "Repository exportieren" kann das Repository in unterschiedlichen Formaten exportiert werden.
+Während des laufenden Exports kann auf das Repository nur lesend zugriffen werden. 
 Das Ausgabeformat des Repository kann über die angebotenen Optionen verändert werden:
 * `Standard`: Werden keine Optionen ausgewählt, wird das Repository im Standard Format exportiert.
   Git und Mercurial werden dabei als `Tar Archiv` exportiert und Subversion nutzt das `Dump` Format.

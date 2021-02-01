@@ -34,6 +34,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
@@ -49,6 +50,7 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.util.IterableUtil.sizeOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 

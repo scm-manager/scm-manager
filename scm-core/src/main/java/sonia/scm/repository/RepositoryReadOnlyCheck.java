@@ -22,50 +22,29 @@
  * SOFTWARE.
  */
 
-import { PagedCollection, Links } from "./hal";
+package sonia.scm.repository;
 
-export type Repository = {
-  namespace: string;
-  name: string;
-  type: string;
-  contact?: string;
-  description?: string;
-  creationDate?: string;
-  lastModified?: string;
-  archived?: boolean;
-  exporting?: boolean;
-  _links: Links;
-};
+/**
+ * Implementations of this class can be used to check whether a repository is read only.
+ *
+ * @since 2.14.0
+ */
+public interface RepositoryReadOnlyCheck {
 
-export type RepositoryCreation = Repository & {
-  contextEntries: { [key: string]: any };
-};
+  /**
+   * Checks whether the repository with the given id is read only or not.
+   * @param repositoryId The id of the repository to check.
+   * @return <code>true</code> when the repository with the given id is read only, <code>false</code> otherwise.
+   */
+  boolean isReadOnly(String repositoryId);
 
-export type RepositoryUrlImport = Repository & {
-  importUrl: string;
-  username?: string;
-  password?: string;
-};
-
-export type Namespace = {
-  namespace: string;
-  _links: Links;
-};
-
-export type RepositoryCollection = PagedCollection & {
-  _embedded: {
-    repositories: Repository[] | string[];
+  /**
+   * Checks whether the given repository is read only or not. This checks the status on behalf of the id of the
+   * repository, not by the archive flag provided by the repository itself.
+   * @param repository The repository to check.
+   * @return <code>true</code> when the given repository is read only, <code>false</code> otherwise.
+   */
+  default boolean isReadOnly(Repository repository) {
+    return isReadOnly(repository.getId());
   };
-};
-
-export type NamespaceCollection = {
-  _embedded: {
-    namespaces: Namespace[];
-  };
-};
-
-export type RepositoryGroup = {
-  name: string;
-  namespace?: Namespace;
-  repositories: Repository[];
-};
+}

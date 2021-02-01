@@ -28,7 +28,7 @@ package sonia.scm.store;
 
 import org.junit.Test;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryArchivedCheck;
+import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.UUIDKeyGenerator;
 
 import static org.junit.Assert.assertEquals;
@@ -42,12 +42,12 @@ import static org.mockito.Mockito.when;
  */
 public class JAXBDataStoreTest extends DataStoreTestBase {
 
-  private final RepositoryArchivedCheck archivedCheck = mock(RepositoryArchivedCheck.class);
+  private final RepositoryReadOnlyChecker readOnlyChecker = mock(RepositoryReadOnlyChecker.class);
 
   @Override
   protected DataStoreFactory createDataStoreFactory()
   {
-    return new JAXBDataStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator(), archivedCheck);
+    return new JAXBDataStoreFactory(contextProvider, repositoryLocationResolver, new UUIDKeyGenerator(), readOnlyChecker);
   }
 
   @Override
@@ -80,7 +80,7 @@ public class JAXBDataStoreTest extends DataStoreTestBase {
   @Test(expected = StoreReadOnlyException.class)
   public void shouldNotStoreForReadOnlyRepository()
   {
-    when(archivedCheck.isArchived(repository.getId())).thenReturn(true);
+    when(readOnlyChecker.isReadOnly(repository.getId())).thenReturn(true);
     getDataStore(StoreObject.class, repository).put("abc", new StoreObject("abc_value"));
   }
 }

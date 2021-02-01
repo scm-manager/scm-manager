@@ -29,7 +29,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Stage;
-import sonia.scm.repository.RepositoryArchivedCheck;
+import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.JAXBConfigurationEntryStoreFactory;
 import sonia.scm.update.RepositoryV1PropertyReader;
@@ -111,8 +111,8 @@ class XmlV1PropertyDAOTest {
     Files.createDirectories(configPath);
     Path propFile = configPath.resolve("repository-properties-v1.xml");
     Files.write(propFile, PROPERTIES.getBytes());
-    RepositoryArchivedCheck archivedCheck = mock(RepositoryArchivedCheck.class);
-    XmlV1PropertyDAO dao = new XmlV1PropertyDAO(new JAXBConfigurationEntryStoreFactory(new SimpleContextProvider(temp), null, new SimpleKeyGenerator(), archivedCheck));
+    RepositoryReadOnlyChecker readOnlyChecker = mock(RepositoryReadOnlyChecker.class);
+    XmlV1PropertyDAO dao = new XmlV1PropertyDAO(new JAXBConfigurationEntryStoreFactory(new SimpleContextProvider(temp), null, new SimpleKeyGenerator(), readOnlyChecker));
 
     dao.getProperties(new RepositoryV1PropertyReader())
       .forEachEntry((key, prop) -> {

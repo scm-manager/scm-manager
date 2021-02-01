@@ -108,8 +108,7 @@ public class DefaultRepositoryManagerPerfTest {
     Set<RepositoryHandler> handlerSet = ImmutableSet.of(repositoryHandler);
     NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
     repositoryManager = new DefaultRepositoryManager(
-      configuration, 
-      contextProvider, 
+      contextProvider,
       keyGenerator, 
       repositoryDAO,
       handlerSet,

@@ -29,8 +29,8 @@ package sonia.scm.store;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.repository.RepositoryArchivedCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
+import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.util.IOUtil;
 
@@ -47,8 +47,8 @@ public class JAXBDataStoreFactory extends FileBasedStoreFactory
   private final KeyGenerator keyGenerator;
 
   @Inject
-  public JAXBDataStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator, RepositoryArchivedCheck archivedCheck) {
-    super(contextProvider, repositoryLocationResolver, Store.DATA, archivedCheck);
+  public JAXBDataStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator, RepositoryReadOnlyChecker readOnlyChecker) {
+    super(contextProvider, repositoryLocationResolver, Store.DATA, readOnlyChecker);
     this.keyGenerator = keyGenerator;
   }
 

@@ -22,50 +22,41 @@
  * SOFTWARE.
  */
 
-import { PagedCollection, Links } from "./hal";
+package sonia.scm.repository;
 
-export type Repository = {
-  namespace: string;
-  name: string;
-  type: string;
-  contact?: string;
-  description?: string;
-  creationDate?: string;
-  lastModified?: string;
-  archived?: boolean;
-  exporting?: boolean;
-  _links: Links;
-};
+import sonia.scm.EagerSingleton;
 
-export type RepositoryCreation = Repository & {
-  contextEntries: { [key: string]: any };
-};
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 
-export type RepositoryUrlImport = Repository & {
-  importUrl: string;
-  username?: string;
-  password?: string;
-};
+/**
+ * Default implementation of {@link RepositoryExportingCheck}. This tracks the exporting status of repositories.
+ */
+@EagerSingleton
+public class DefaultRepositoryExportingCheck implements RepositoryExportingCheck, RepositoryReadOnlyCheck {
 
-export type Namespace = {
-  namespace: string;
-  _links: Links;
-};
+  private static final Collection<String> EXPORTING_REPOSITORIES = Collections.synchronizedSet(new HashSet<>());
 
-export type RepositoryCollection = PagedCollection & {
-  _embedded: {
-    repositories: Repository[] | string[];
-  };
-};
+  public static void setAsExporting(String repositoryId) {
+    EXPORTING_REPOSITORIES.add(repositoryId);
+  }
 
-export type NamespaceCollection = {
-  _embedded: {
-    namespaces: Namespace[];
-  };
-};
+  public static void removeFromExporting(String repositoryId) {
+    EXPORTING_REPOSITORIES.remove(repositoryId);
+  }
 
-export type RepositoryGroup = {
-  name: string;
-  namespace?: Namespace;
-  repositories: Repository[];
-};
+  public static boolean isRepositoryExporting(String repositoryId) {
+    return EXPORTING_REPOSITORIES.contains(repositoryId);
+  }
+
+  @Override
+  public boolean isExporting(String repositoryId) {
+    return EXPORTING_REPOSITORIES.contains(repositoryId);
+  }
+
+  @Override
+  public boolean isReadOnly(String repositoryId) {
+    return isRepositoryExporting(repositoryId);
+  }
+}
