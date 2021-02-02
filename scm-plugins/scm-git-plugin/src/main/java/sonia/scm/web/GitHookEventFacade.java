@@ -32,6 +32,18 @@ import sonia.scm.repository.spi.HookEventFacade;
 
 import javax.inject.Inject;
 
+/**
+ * This class is used to delay the firing of post commit hooks, so that they are not
+ * executed while the internal git processing has not finished. Without this, this can
+ * lead to conflicting access to pack files which results in 'Short compressed stream'
+ * errors (see https://github.com/scm-manager/scm-manager/pull/1518).
+ * <br>
+ * The delay is handled either by "caching" the hook data in a thread local, where it
+ * is fetched from when {@link #firePending()} is called, or in case the trigger is fired
+ * due to changes made with internal git file push (from a workdir to the central
+ * repository) by detecting the internal thread used by JGit and joining another thread
+ * where the pending push is triggered.
+ */
 public class GitHookEventFacade {
 
   public static final Logger LOG = LoggerFactory.getLogger(GitHookEventFacade.class);
