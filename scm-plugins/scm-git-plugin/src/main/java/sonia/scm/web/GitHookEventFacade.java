@@ -24,6 +24,7 @@
 
 package sonia.scm.web;
 
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.spi.GitHookContextProvider;
 import sonia.scm.repository.spi.HookEventFacade;
@@ -85,7 +86,7 @@ public class GitHookEventFacade {
     if (context != null) {
       hookEventFacade.handle(context.getRepositoryId()).fireHookEvent(type, context);
     } else {
-      throw new IllegalStateException("Context not present");
+      LoggerFactory.getLogger(GitHookEventFacade.class).warn("Could not find context", new IllegalStateException("Context not present in a fire pending"));
     }
   }
 }
