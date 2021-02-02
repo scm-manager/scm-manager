@@ -24,6 +24,7 @@
 
 package sonia.scm.web;
 
+import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.spi.GitHookContextProvider;
@@ -32,6 +33,8 @@ import sonia.scm.repository.spi.HookEventFacade;
 import javax.inject.Inject;
 
 public class GitHookEventFacade {
+
+  public static final Logger LOG = LoggerFactory.getLogger(GitHookEventFacade.class);
 
   private final HookEventFacade hookEventFacade;
 
@@ -50,11 +53,22 @@ public class GitHookEventFacade {
       case POST_RECEIVE:
         Thread thread = Thread.currentThread();
         if ("JGit-Receive-Pack".equals(thread.getName())) {
+          LOG.debug("handling internal git thread for post receive hook");
           handleGitInternalThread(context, thread);
         } else {
+          LOG.debug("register post receive hook for repository id {} in thread {}", context.getRepositoryId(), thread);
           PENDING_POST_HOOK.set(context);
         }
         break;
+    }
+  }
+
+  public void firePending() {
+    try {
+      LOG.debug("fire pending post receive hooks in thread {}", Thread.currentThread());
+      doFire(RepositoryHookType.POST_RECEIVE, PENDING_POST_HOOK.get());
+    } finally {
+      clean();
     }
   }
 
@@ -62,20 +76,13 @@ public class GitHookEventFacade {
     new Thread(() -> {
       try {
         thread.join();
-      } catch (Exception e) {
-        e.printStackTrace();
+      } catch (InterruptedException e) {
+        LOG.debug("got interrupted in internal git thread for repository id {}", context.getRepositoryId(), e);
       } finally {
+        LOG.debug("internal git thread ended for repository id {}", context.getRepositoryId());
         doFire(RepositoryHookType.POST_RECEIVE, context);
       }
     }).start();
-  }
-
-  public void firePending() {
-    try {
-      doFire(RepositoryHookType.POST_RECEIVE, PENDING_POST_HOOK.get());
-    } finally {
-      clean();
-    }
   }
 
   public void clean() {
@@ -84,9 +91,10 @@ public class GitHookEventFacade {
 
   private void doFire(RepositoryHookType type, GitHookContextProvider context) {
     if (context != null) {
+      LOG.debug("firing {} hook for repository {} in Thread {}", type, context.getRepositoryId(), Thread.currentThread());
       hookEventFacade.handle(context.getRepositoryId()).fireHookEvent(type, context);
     } else {
-      LoggerFactory.getLogger(GitHookEventFacade.class).warn("Could not find context", new IllegalStateException("Context not present in a fire pending"));
+      LOG.debug("No context found for event type {} in Thread {}", type, Thread.currentThread());
     }
   }
 }
