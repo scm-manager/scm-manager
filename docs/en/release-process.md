@@ -42,7 +42,7 @@ git commit -m "Adjust changelog for release <version>"
 
 Jenkins will
 
-- update `build.gradle` and `package.json`
+- update `gradle.properties` and `package.json`
 - merge with master branch
 - build and deploy everything
 - set the new development version for the develop branch
@@ -78,7 +78,7 @@ git merge origin/support/<support branch>
 
 If you need to update the parent of the plugin to a new release of SCM-Manager, change it now:
 
-- `build.gradle`: `parent.version`
+- `build.gradle`: `scmVersion`
 - `package.json`: `dependencies.ui-plugins`
 
 ## Plugin dependencies
@@ -88,7 +88,7 @@ Check if all plugin dependencies are proper versions and not SNAPSHOT!
 ## Build, commit and push
 
 ```
-rm -rf node_modules && ./gradlew build \
+./gradlew build \
 && git add yarn.lock build.gradle package.json \
 && git commit -m "Update to new version of SCM-Manager" \
 && git push origin develop
@@ -113,7 +113,7 @@ export VERSION=<version> \
 
 Jenkins will
 
-- update versions in build.gradle and package.json
+- update versions in gradle.properties and package.json
 - merge with master branch
 - build and deploy everything
 - set the new development version for the develop branch
