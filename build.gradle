@@ -26,6 +26,11 @@ plugins {
   id 'java-platform'
   id 'maven-publish'
   id "org.sonarqube" version "3.0"
+  id "org.scm-manager.changelog" version "0.1.4"
+}
+
+changelog {
+  versionUrlPattern = "https://www.scm-manager.org/download/{0}"
 }
 
 subprojects { s ->

@@ -19,18 +19,38 @@ Check whether there is an integration branch for the previous release or bugfixe
 git merge origin/support/<support branch>
 ```
 
-## Modify Changelog
+## Update Changelog
 
-Change "Unreleased" header in `CHANGELOG.md` to  `<version> - <current date>`
+The changelog must be updated to reflect the changes for the new release.
+All unreleased changes are stored in the `gradle/changelog` directory.
+The changelog can be updated with the `updateChangelog` gradle task.
+
+```bash
+./gradlew updateChangelog --release=<version>
+```
+
+Now we should manually check if the changelog looks good.
+
+```bash
+git diff CHANGELOG.md
+```
+
+If everything looks fine, we can remove the changelog directory.
+
+```bash
+rm -rf gradle/changelog
+```
 
 ## Create release branch
 
-`git checkout -b release/<version>`
+```bash
+git checkout -b release/<version>
+```
 
 ## Commit version changes
 
-```
-git add CHANGELOG.md
+```bash
+git add CHANGELOG.md gradle/changelog
 git commit -m "Adjust changelog for release <version>"
 ```
 

@@ -1,0 +1,2 @@
+- type: changed
+  description: Implement new changelog process ([#1517](https://github.com/scm-manager/scm-manager/issues/1517))
