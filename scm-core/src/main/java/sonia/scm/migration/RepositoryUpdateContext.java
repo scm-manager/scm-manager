@@ -24,25 +24,21 @@
 
 package sonia.scm.migration;
 
-import sonia.scm.plugin.ExtensionPoint;
-
 /**
- * This is the main interface for "global" data migration/update. Using this interface, SCM-Manager provides the
- * possibility to change data structures between versions for a given type of data. This class should be used only
- * for global data, that is not repository specific (eg. the store is created without a call of
- * <code>forRepository</code> in a store factory. To migrate repository specific data, use a
- * {@link RepositoryUpdateStep}.
- * <p>For information about {@link #getAffectedDataType()} and {@link #getTargetVersion()}, see the package
- * documentation.</p>
- *
- * @see sonia.scm.migration
+ * Data for the repository, whose data that should be migrated.
  */
-@ExtensionPoint
-public interface UpdateStep extends UpdateStepTarget {
+public final class RepositoryUpdateContext {
+
+  private final String repositoryId;
+
+  public RepositoryUpdateContext(String repositoryId) {
+    this.repositoryId = repositoryId;
+  }
+
   /**
-   * Implement this to update the data to the new version. If any {@link Exception} is thrown, SCM-Manager will not
-   * start up.
+   * The id of the repository, whose data should be migrated.
    */
-  @SuppressWarnings("java:S112") // we suppress this one, because an implementation should feel free to throw any exception it deems necessary
-  void doUpdate() throws Exception;
+  public String getRepositoryId() {
+    return repositoryId;
+  }
 }
