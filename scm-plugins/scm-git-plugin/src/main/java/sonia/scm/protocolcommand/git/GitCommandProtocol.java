@@ -63,19 +63,14 @@ public class GitCommandProtocol implements ScmCommandProtocol {
   @Override
   public void handle(CommandContext commandContext, RepositoryContext repositoryContext) throws IOException {
     String subCommand = commandContext.getArgs()[0];
-
-    try {
-      if (RemoteConfig.DEFAULT_UPLOAD_PACK.equals(subCommand)) {
-        LOG.trace("got upload pack");
-        upload(commandContext, repositoryContext);
-      } else if (RemoteConfig.DEFAULT_RECEIVE_PACK.equals(subCommand)) {
-        LOG.trace("got receive pack");
-        receive(commandContext, repositoryContext);
-      } else {
-        throw new IllegalArgumentException("Unknown git command: " + commandContext.getCommand());
-      }
-    } finally {
-      gitHookEventFacade.firePending();
+    if (RemoteConfig.DEFAULT_UPLOAD_PACK.equals(subCommand)) {
+      LOG.trace("got upload pack");
+      upload(commandContext, repositoryContext);
+    } else if (RemoteConfig.DEFAULT_RECEIVE_PACK.equals(subCommand)) {
+      LOG.trace("got receive pack");
+      receive(commandContext, repositoryContext);
+    } else {
+      throw new IllegalArgumentException("Unknown git command: " + commandContext.getCommand());
     }
   }
 
@@ -86,6 +81,8 @@ public class GitCommandProtocol implements ScmCommandProtocol {
       receivePack.receive(commandContext.getInputStream(), commandContext.getOutputStream(), commandContext.getErrorStream());
     } catch (ServiceNotEnabledException | ServiceNotAuthorizedException e) {
       throw new IOException("error creating receive pack for ssh", e);
+    } finally {
+      gitHookEventFacade.firePending();
     }
   }
 

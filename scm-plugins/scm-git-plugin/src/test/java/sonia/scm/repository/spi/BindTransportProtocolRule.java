@@ -39,14 +39,15 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class BindTransportProtocolRule extends ExternalResource {
+class BindTransportProtocolRule extends ExternalResource {
 
   private ScmTransportProtocol scmTransportProtocol;
+
+  RepositoryManager repositoryManager = mock(RepositoryManager.class);
 
   @Override
   protected void before() {
     HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
-    RepositoryManager repositoryManager = mock(RepositoryManager.class);
     GitHookEventFacade hookEventFacade = new GitHookEventFacade(new HookEventFacade(of(repositoryManager), hookContextFactory));
     GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
     scmTransportProtocol = new ScmTransportProtocol(of(GitTestHelper.createConverterFactory()), of(hookEventFacade), of(gitRepositoryHandler));

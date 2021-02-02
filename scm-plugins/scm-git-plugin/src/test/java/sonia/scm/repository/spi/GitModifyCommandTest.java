@@ -36,12 +36,15 @@ import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.RepositoryHookType;
 
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.verify;
 
 public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
@@ -326,5 +329,22 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
       RevCommit lastCommit = getLastCommit(git);
       assertThat(lastCommit.getRawGpgSignature()).isNullOrEmpty();
     }
+  }
+
+  @Test
+  public void shouldTriggerPostCommitHook() throws IOException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest("new_file", newFile, false));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
+
+    verify(transportProtocolRule.repositoryManager).fireHookEvent(argThat(argument -> argument.getType() == RepositoryHookType.PRE_RECEIVE));
+    verify(transportProtocolRule.repositoryManager).fireHookEvent(argThat(argument -> argument.getType() == RepositoryHookType.POST_RECEIVE));
   }
 }

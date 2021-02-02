@@ -47,22 +47,26 @@ public class GitHookEventFacade {
         doFire(type, context);
         break;
       case POST_RECEIVE:
-        PENDING_POST_HOOK.set(context);
-
         Thread thread = Thread.currentThread();
         if ("JGit-Receive-Pack".equals(thread.getName())) {
-          new Thread(() -> {
-            try {
-              thread.join();
-            } catch (Exception e) {
-              e.printStackTrace();
-            } finally {
-              firePending();
-            }
-          }).start();
+          handleGitInternalThread(context, thread);
+        } else {
+          PENDING_POST_HOOK.set(context);
         }
         break;
     }
+  }
+
+  private void handleGitInternalThread(GitHookContextProvider context, Thread thread) {
+    new Thread(() -> {
+      try {
+        thread.join();
+      } catch (Exception e) {
+        e.printStackTrace();
+      } finally {
+        doFire(RepositoryHookType.POST_RECEIVE, context);
+      }
+    }).start();
   }
 
   public void firePending() {
@@ -80,6 +84,8 @@ public class GitHookEventFacade {
   private void doFire(RepositoryHookType type, GitHookContextProvider context) {
     if (context != null) {
       hookEventFacade.handle(context.getRepositoryId()).fireHookEvent(type, context);
+    } else {
+      throw new IllegalStateException("Context not present");
     }
   }
 }
