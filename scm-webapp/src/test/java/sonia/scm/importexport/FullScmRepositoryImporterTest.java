@@ -36,6 +36,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.RepositoryService;
@@ -47,13 +48,13 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.Collection;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -105,9 +106,13 @@ class FullScmRepositoryImporterTest {
   void shouldImportScmRepositoryArchive() throws IOException {
     when(compatibilityChecker.check(any())).thenReturn(true);
     when(repositoryManager.create(eq(REPOSITORY), any())).thenReturn(REPOSITORY);
+    Collection<RepositoryPermission> existingPermissions = REPOSITORY.getPermissions();
 
     Repository repository = fullImporter.importFromStream(REPOSITORY, Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream());
     assertThat(repository).isEqualTo(REPOSITORY);
     verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class));
+    verify(repositoryManager).modify(REPOSITORY);
+    Collection<RepositoryPermission> updatedPermissions = REPOSITORY.getPermissions();
+    assertThat(updatedPermissions).isNotEqualTo(existingPermissions);
   }
 }

@@ -25,6 +25,7 @@
 package sonia.scm.importexport;
 
 import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
@@ -57,9 +58,10 @@ class RepositoryMetadataXmlGenerator {
 
   @AllArgsConstructor
   @NoArgsConstructor
+  @Getter
   @XmlRootElement(name = "metadata")
   @XmlAccessorType(XmlAccessType.FIELD)
-  private static class RepositoryMetadata {
+  static class RepositoryMetadata {
 
     private String namespace;
     private String name;
