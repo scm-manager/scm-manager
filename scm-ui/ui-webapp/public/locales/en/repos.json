@@ -262,6 +262,14 @@
       "label": "With metadata (Experimental)",
       "helpText": "In addition to the repository dump, metadata about the repository and SCM instance is exported. If possible, ensure that installed plugins are up to date. However, stored passwords will not work if this is imported in other instances of SCM-Manager. This feature is still experimental. Do not use this as a backup mechanism (yet)!"
     },
+    "encrypt": {
+      "label": "Encrypt",
+      "helpText": "The export file will be encrypted and must be decrypted using the same password."
+    },
+    "password": {
+      "label": "Password",
+      "helpText": "If a password is set, it will be used the encrypt the export file."
+    },
     "exportButton": "Export Repository",
     "exportStarted":  "The repository export was started. Depending on the repository size this may take a while."
   },

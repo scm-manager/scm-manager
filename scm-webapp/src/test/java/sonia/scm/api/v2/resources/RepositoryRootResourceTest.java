@@ -659,7 +659,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(service.getUnbundleCommand()).thenReturn(ubc);
     InputStream in = new ByteArrayInputStream(svnDump);
 
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.unbundleImport(in, true);
+    Consumer<Repository> repositoryConsumer = repositoryImportResource.unbundleImport(in, true, "hitchhiker");
     repositoryConsumer.accept(RepositoryTestData.createHeartOfGold("svn"));
 
     verify(ubc).setCompressed(true);
@@ -678,7 +678,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(service.getUnbundleCommand()).thenReturn(ubc);
     InputStream in = new ByteArrayInputStream(svnDump);
 
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.unbundleImport(in, false);
+    Consumer<Repository> repositoryConsumer = repositoryImportResource.unbundleImport(in, false, "hitchhiker");
     repositoryConsumer.accept(RepositoryTestData.createHeartOfGold("svn"));
 
     verify(ubc, never()).setCompressed(true);

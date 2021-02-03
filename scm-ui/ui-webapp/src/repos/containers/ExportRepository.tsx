@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC, useState } from "react";
-import { Button, Checkbox, Level, Notification, Subtitle } from "@scm-manager/ui-components";
+import { Button, Checkbox, InputField, Level, Notification, Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { Link, Repository } from "@scm-manager/ui-types";
 
@@ -34,6 +34,8 @@ const ExportRepository: FC<Props> = ({ repository }) => {
   const [t] = useTranslation("repos");
   const [compressed, setCompressed] = useState(true);
   const [fullExport, setFullExport] = useState(false);
+  const [encrypt, setEncrypt] = useState(false);
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
 
   const createExportLink = () => {
@@ -75,8 +77,26 @@ const ExportRepository: FC<Props> = ({ repository }) => {
             helpText={t("export.fullExport.helpText")}
           />
         )}
+        <Checkbox
+          checked={encrypt}
+          label={t("export.encrypt.label")}
+          onChange={setEncrypt}
+          helpText={t("export.encrypt.helpText")}
+        />
+        {encrypt && (
+          <div className="columns column is-half">
+            <InputField
+              label={t("export.password.label")}
+              helpText={t("export.password.helpText")}
+              value={password}
+              onChange={setPassword}
+              type="password"
+            />
+          </div>
+        )}
         <Level
           right={
+            //TODO change this <a> to async download
             <a color="primary" href={createExportLink()} onClick={() => setLoading(true)}>
               <Button color="primary" label={t("export.exportButton")} icon="file-export" />
             </a>
