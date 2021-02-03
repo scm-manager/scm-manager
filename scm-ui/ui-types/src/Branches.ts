@@ -22,7 +22,13 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import { Embedded, HalRepresentationWithEmbedded, Links } from "./hal";
+
+type EmbeddedBranches = {
+  branches: Branch[];
+} & Embedded;
+
+export type BranchCollection = HalRepresentationWithEmbedded<EmbeddedBranches>;
 
 export type Branch = {
   name: string;

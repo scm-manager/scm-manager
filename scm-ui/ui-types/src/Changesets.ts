@@ -22,25 +22,25 @@
  * SOFTWARE.
  */
 
-import { Collection, Links } from "./hal";
+import {Embedded, HalRepresentation, HalRepresentationWithEmbedded, Links, PagedCollection} from "./hal";
 import { Tag } from "./Tags";
 import { Branch } from "./Branches";
 import { Person } from "./Person";
 import { Signature } from "./Signature";
 
-export type Changeset = Collection & {
+type ChangesetEmbedded = {
+  tags?: Tag[];
+  branches?: Branch[];
+  parents?: ParentChangeset[];
+} & Embedded;
+
+export type Changeset = HalRepresentation<ChangesetEmbedded> & {
   id: string;
   date: Date;
   author: Person;
   description: string;
   contributors?: Contributor[];
   signatures?: Signature[];
-  _links: Links;
-  _embedded: {
-    tags?: Tag[];
-    branches?: Branch[];
-    parents?: ParentChangeset[];
-  };
 };
 
 export type Contributor = {
@@ -52,3 +52,9 @@ export type ParentChangeset = {
   id: string;
   _links: Links;
 };
+
+type EmbeddedChangesets = {
+  changesets: Changeset[];
+} & Embedded;
+
+export type ChangesetCollection = PagedCollection<EmbeddedChangesets>;

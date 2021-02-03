@@ -27,5 +27,7 @@
 export * from "./base";
 export * from "./login";
 export * from "./repos";
+export * from "./branches";
+export * from "./changesets";
 
 export { default as ApiProvider } from "./ApiProvider";
