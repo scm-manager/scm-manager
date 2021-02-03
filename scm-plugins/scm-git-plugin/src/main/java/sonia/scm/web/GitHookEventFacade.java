@@ -24,13 +24,17 @@
 
 package sonia.scm.web;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.spi.GitHookContextProvider;
 import sonia.scm.repository.spi.HookEventFacade;
 
+import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * This class is used to delay the firing of post commit hooks, so that they are not
@@ -46,15 +50,17 @@ import javax.inject.Inject;
  */
 public class GitHookEventFacade {
 
-  public static final Logger LOG = LoggerFactory.getLogger(GitHookEventFacade.class);
-
-  private final HookEventFacade hookEventFacade;
+  private static final Logger LOG = LoggerFactory.getLogger(GitHookEventFacade.class);
 
   private static final ThreadLocal<GitHookContextProvider> PENDING_POST_HOOK = new ThreadLocal<>();
+
+  private final HookEventFacade hookEventFacade;
+  private final ExecutorService internalThreadHookHandler;
 
   @Inject
   public GitHookEventFacade(HookEventFacade hookEventFacade) {
     this.hookEventFacade = hookEventFacade;
+    this.internalThreadHookHandler = createInternalThreadHookHandlerPool();
   }
 
   public void fire(RepositoryHookType type, GitHookContextProvider context) {
@@ -73,6 +79,8 @@ public class GitHookEventFacade {
           PENDING_POST_HOOK.set(context);
         }
         break;
+      default:
+        throw new IllegalArgumentException("unknown hook type: " + type);
     }
   }
 
@@ -86,7 +94,7 @@ public class GitHookEventFacade {
   }
 
   private void handleGitInternalThread(GitHookContextProvider context, Thread thread) {
-    new Thread(() -> {
+    internalThreadHookHandler.submit(() -> {
       try {
         thread.join();
       } catch (InterruptedException e) {
@@ -95,7 +103,7 @@ public class GitHookEventFacade {
         LOG.debug("internal git thread ended for repository id {}", context.getRepositoryId());
         doFire(RepositoryHookType.POST_RECEIVE, context);
       }
-    }).start();
+    });
   }
 
   public void clean() {
@@ -109,5 +117,14 @@ public class GitHookEventFacade {
     } else {
       LOG.debug("No context found for event type {} in Thread {}", type, Thread.currentThread());
     }
+  }
+
+  @Nonnull
+  private ExecutorService createInternalThreadHookHandlerPool() {
+    return Executors.newCachedThreadPool(
+      new ThreadFactoryBuilder()
+        .setNameFormat("GitInternalThreadHookHandler-%d")
+        .build()
+    );
   }
 }
