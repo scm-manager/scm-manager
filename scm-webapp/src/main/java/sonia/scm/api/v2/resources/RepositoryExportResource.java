@@ -33,7 +33,6 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import sonia.scm.BadRequestException;
 import sonia.scm.Type;
 import sonia.scm.importexport.FullScmRepositoryExporter;
-import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -59,11 +58,11 @@ import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.function.Function;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
+import static sonia.scm.repository.DefaultRepositoryExportingCheck.withReadOnlyLock;
 
 public class RepositoryExportResource {
 
@@ -121,7 +120,7 @@ public class RepositoryExportResource {
                                    @DefaultValue("false") @QueryParam("compressed") boolean compressed
   ) {
     Repository repository = getVerifiedRepository(namespace, name, type);
-    return withReadOnlyLock(repository, repo -> exportRepository(repo, compressed));
+    return exportRepository(repository, compressed);
   }
 
   /**
@@ -163,18 +162,7 @@ public class RepositoryExportResource {
                                        @PathParam("name") String name
   ) {
     Repository repository = getVerifiedRepository(namespace, name);
-    return withReadOnlyLock(repository, this::exportFullRepository);
-  }
-
-  private Response withReadOnlyLock(Repository repository, Function<Repository, Response> responseFunction) {
-    try {
-      DefaultRepositoryExportingCheck.setAsExporting(repository.getId());
-      repository.setExporting(true);
-      return responseFunction.apply(repository);
-    } finally {
-      DefaultRepositoryExportingCheck.removeFromExporting(repository.getId());
-      repository.setExporting(false);
-    }
+    return exportFullRepository(repository);
   }
 
   private Repository getVerifiedRepository(String namespace, String name) {
@@ -195,7 +183,10 @@ public class RepositoryExportResource {
   }
 
   private Response exportFullRepository(Repository repository) {
-    StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os);
+    StreamingOutput output = os -> withReadOnlyLock(repository, repo -> {
+       fullScmRepositoryExporter.export(repo, os);
+       return null;
+    });
 
     return Response
       .ok(output, "application/x-gzip")
@@ -213,10 +204,22 @@ public class RepositoryExportResource {
         try {
           if (compressed) {
             GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
-            bundleCommand.bundle(gzipCompressorOutputStream);
+            withReadOnlyLock(repository, repo -> {
+              try {
+                return bundleCommand.bundle(gzipCompressorOutputStream);
+              } catch (IOException e) {
+                throw new InternalRepositoryException(repository, "repository export failed", e);
+              }
+            });
             gzipCompressorOutputStream.finish();
           } else {
-            bundleCommand.bundle(os);
+            withReadOnlyLock(repository, repo -> {
+              try {
+                return bundleCommand.bundle(os);
+              } catch (IOException e) {
+                throw new InternalRepositoryException(repository, "repository export failed", e);
+              }
+            });
           }
         } catch (IOException e) {
           throw new InternalRepositoryException(repository, "repository export failed", e);

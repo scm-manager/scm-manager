@@ -26,9 +26,11 @@ package sonia.scm.repository;
 
 import sonia.scm.EagerSingleton;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.function.Function;
 
 /**
  * Default implementation of {@link RepositoryExportingCheck}. This tracks the exporting status of repositories.
@@ -58,5 +60,16 @@ public class DefaultRepositoryExportingCheck implements RepositoryExportingCheck
   @Override
   public boolean isReadOnly(String repositoryId) {
     return isRepositoryExporting(repositoryId);
+  }
+
+  public static <T> T withReadOnlyLock(Repository repository, Function<Repository, T> callback) throws IOException {
+    try {
+      DefaultRepositoryExportingCheck.setAsExporting(repository.getId());
+      repository.setExporting(true);
+      return callback.apply(repository);
+    } finally {
+      DefaultRepositoryExportingCheck.removeFromExporting(repository.getId());
+      repository.setExporting(false);
+    }
   }
 }
