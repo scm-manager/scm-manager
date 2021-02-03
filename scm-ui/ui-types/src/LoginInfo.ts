@@ -22,14 +22,14 @@
  * SOFTWARE.
  */
 
-import { HalObject } from "./hal";
+import { HalRepresentation } from "./hal";
 
-export type LoginInfo = HalObject & {
+export type LoginInfo = HalRepresentation & {
   plugin?: InfoItem;
   feature?: InfoItem;
 };
 
-export type InfoItem = HalObject & {
+export type InfoItem = HalRepresentation & {
   title: string;
   summary: string;
 };

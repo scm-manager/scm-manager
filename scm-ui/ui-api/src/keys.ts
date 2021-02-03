@@ -20,41 +20,31 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
-export type Link = {
-  href: string;
-  name?: string;
-  templated?: boolean;
+import { Branch, NamespaceAndName } from "@scm-manager/ui-types";
+
+export const repoQueryKey = (repository: NamespaceAndName, ...values: unknown[]) => {
+  return ["repository", repository.namespace, repository.name, ...values];
 };
 
-type LinkValue = Link | Link[];
-
-export type Links = {
-  [key: string]: LinkValue;
+const isBranch = (branch: string | Branch): branch is Branch => {
+  return (branch as Branch).name !== undefined;
 };
 
-export type Embedded = {
-  [key: string]: unknown;
+export const branchQueryKey = (
+  repository: NamespaceAndName,
+  branch: string | Branch | undefined,
+  ...values: unknown[]
+) => {
+  let branchName;
+  if (!branch) {
+    branchName = "_";
+  } else if (isBranch(branch)) {
+    branchName = branch.name;
+  } else {
+    branchName = branch;
+  }
+  return [...repoQueryKey(repository), "branch", branchName, ...values];
 };
-
-type EmbeddedType = Embedded | undefined;
-
-export type HalRepresentation<T extends EmbeddedType = undefined> = {
-  _embedded?: T;
-  _links: Links;
-};
-
-export type HalRepresentationWithEmbedded<T extends EmbeddedType = undefined> = HalRepresentation<T> & {
-  _embedded: T;
-};
-
-export type PagedCollection<T extends EmbeddedType = undefined> = HalRepresentationWithEmbedded<T> & {
-  page: number;
-  pageTotal: number;
-};
-
-/**
- * @deprecated use HalRepresentation instead
- */
-export type Collection<T extends EmbeddedType = undefined> = HalRepresentation<T>;

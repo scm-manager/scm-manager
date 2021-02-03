@@ -20,41 +20,46 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
-export type Link = {
-  href: string;
-  name?: string;
-  templated?: boolean;
-};
+import { requiredLink } from "./links";
 
-type LinkValue = Link | Link[];
+describe("requireLink tests", () => {
+  it("should return required link", () => {
+    const link = requiredLink(
+      {
+        _links: {
+          spaceship: {
+            href: "/v2/ship"
+          }
+        }
+      },
+      "spaceship"
+    );
+    expect(link).toBe("/v2/ship");
+  });
 
-export type Links = {
-  [key: string]: LinkValue;
-};
+  it("should throw error, if link is missing", () => {
+    const object = { _links: {} };
+    expect(() => requiredLink(object, "spaceship")).toThrowError();
+  });
 
-export type Embedded = {
-  [key: string]: unknown;
-};
-
-type EmbeddedType = Embedded | undefined;
-
-export type HalRepresentation<T extends EmbeddedType = undefined> = {
-  _embedded?: T;
-  _links: Links;
-};
-
-export type HalRepresentationWithEmbedded<T extends EmbeddedType = undefined> = HalRepresentation<T> & {
-  _embedded: T;
-};
-
-export type PagedCollection<T extends EmbeddedType = undefined> = HalRepresentationWithEmbedded<T> & {
-  page: number;
-  pageTotal: number;
-};
-
-/**
- * @deprecated use HalRepresentation instead
- */
-export type Collection<T extends EmbeddedType = undefined> = HalRepresentation<T>;
+  it("should throw error, if link is array", () => {
+    const object = {
+      _links: {
+        spaceship: [
+          {
+            name: "one",
+            href: "/v2/one"
+          },
+          {
+            name: "two",
+            href: "/v2/two"
+          }
+        ]
+      }
+    };
+    expect(() => requiredLink(object, "spaceship")).toThrowError();
+  });
+});

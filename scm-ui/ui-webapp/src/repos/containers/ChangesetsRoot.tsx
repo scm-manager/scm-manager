@@ -21,39 +21,43 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { Route, withRouter, RouteComponentProps } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
+
+import React, { FC } from "react";
+import { Route, useRouteMatch, useHistory } from "react-router-dom";
 import { Repository, Branch } from "@scm-manager/ui-types";
 import Changesets from "./Changesets";
-import { compose } from "redux";
 import CodeActionBar from "../codeSection/components/CodeActionBar";
 import { urls } from "@scm-manager/ui-components";
 
-type Props = WithTranslation &
-  RouteComponentProps & {
-    repository: Repository;
-    selectedBranch: string;
-    baseUrl: string;
-    branches: Branch[];
-  };
+type Props = {
+  repository: Repository;
+  baseUrl: string;
+  branches: Branch[];
+  selectedBranch?: string;
+};
 
-class ChangesetsRoot extends React.Component<Props> {
-  isBranchAvailable = () => {
-    const { branches, selectedBranch } = this.props;
+const ChangesetRoot: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }) => {
+  const match = useRouteMatch();
+  const history = useHistory();
+  if (!repository) {
+    return null;
+  }
+
+  const url = urls.stripEndingSlash(match.url);
+  const defaultBranch = branches?.find(b => b.defaultBranch === true);
+
+  const isBranchAvailable = () => {
     return branches?.filter(b => b.name === selectedBranch).length === 0;
   };
 
-  evaluateSwitchViewLink = () => {
-    const { baseUrl, selectedBranch } = this.props;
+  const evaluateSwitchViewLink = () => {
     if (selectedBranch) {
       return `${baseUrl}/sources/${encodeURIComponent(selectedBranch)}/`;
     }
     return `${baseUrl}/sources/`;
   };
 
-  onSelectBranch = (branch?: Branch) => {
-    const { baseUrl, history } = this.props;
+  const onSelectBranch = (branch?: Branch) => {
     if (branch) {
       const url = `${baseUrl}/branch/${encodeURIComponent(branch.name)}/changesets/`;
       history.push(url);
@@ -62,35 +66,21 @@ class ChangesetsRoot extends React.Component<Props> {
     }
   };
 
-  render() {
-    const { repository, branches, match, selectedBranch } = this.props;
+  return (
+    <>
+      <CodeActionBar
+        branches={branches}
+        selectedBranch={!isBranchAvailable() ? selectedBranch : defaultBranch?.name}
+        onSelectBranch={onSelectBranch}
+        switchViewLink={evaluateSwitchViewLink()}
+      />
+      <div className="panel">
+        <Route path={`${url}/:page?`}>
+          <Changesets repository={repository} branch={branches?.filter(b => b.name === selectedBranch)[0]} />
+        </Route>
+      </div>
+    </>
+  );
+};
 
-    if (!repository) {
-      return null;
-    }
-
-    const url = urls.stripEndingSlash(match.url);
-    const defaultBranch = branches?.find(b => b.defaultBranch === true);
-
-    return (
-      <>
-        <CodeActionBar
-          branches={branches}
-          selectedBranch={!this.isBranchAvailable() ? selectedBranch : defaultBranch?.name}
-          onSelectBranch={this.onSelectBranch}
-          switchViewLink={this.evaluateSwitchViewLink()}
-        />
-        <div className="panel">
-          <Route
-            path={`${url}/:page?`}
-            component={() => (
-              <Changesets repository={repository} branch={branches?.filter(b => b.name === selectedBranch)[0]} />
-            )}
-          />
-        </div>
-      </>
-    );
-  }
-}
-
-export default compose(withRouter, withTranslation("repos"))(ChangesetsRoot);
+export default ChangesetRoot;
