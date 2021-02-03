@@ -21,46 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { connect } from "react-redux";
+import React, { FC } from "react";
 import GroupForm from "../components/GroupForm";
-import { getModifyGroupFailure, isModifyGroupPending, modifyGroup, modifyGroupReset } from "../modules/groups";
-import { History } from "history";
-import { withRouter } from "react-router-dom";
-import { DisplayedUser, Group } from "@scm-manager/ui-types";
-import { ErrorNotification } from "@scm-manager/ui-components";
-import { getUserAutoCompleteLink } from "../../modules/indexResource";
+import { DisplayedUser, Group, Link } from "@scm-manager/ui-types";
+import { apiClient, ErrorNotification } from "@scm-manager/ui-components";
 import DeleteGroup from "./DeleteGroup";
-import { apiClient } from "@scm-manager/ui-components";
-import { compose } from "redux";
+import { useIndexLinks, useUpdateGroup } from "@scm-manager/ui-api";
 
 type Props = {
   group: Group;
-  fetchGroup: (name: string) => void;
-  modifyGroup: (group: Group, callback?: () => void) => void;
-  modifyGroupReset: (p: Group) => void;
-  autocompleteLink: string;
-  history: History;
-  loading?: boolean;
-  error: Error;
 };
 
-class EditGroup extends React.Component<Props> {
-  componentDidMount() {
-    const { group, modifyGroupReset } = this.props;
-    modifyGroupReset(group);
-  }
+const EditGroup: FC<Props> = ({ group }) => {
+  const indexLinks = useIndexLinks();
+  const { error, isLoading, update } = useUpdateGroup();
+  const autocompleteLink = (indexLinks.autocomplete as Link[]).find(i => i.name === "users");
 
-  groupModified = (group: Group) => () => {
-    this.props.history.push(`/group/${group.name}`);
-  };
-
-  modifyGroup = (group: Group) => {
-    this.props.modifyGroup(group, this.groupModified(group));
-  };
-
-  loadUserAutocompletion = (inputValue: string) => {
-    const url = this.props.autocompleteLink + "?q=";
+  // TODO: Replace with react-query hook
+  const loadUserAutocompletion = (inputValue: string) => {
+    if (!autocompleteLink) {
+      return [];
+    }
+    const url = autocompleteLink + "?q=";
     return apiClient
       .get(url + inputValue)
       .then(response => response.json())
@@ -74,45 +56,13 @@ class EditGroup extends React.Component<Props> {
       });
   };
 
-  render() {
-    const { loading, error, group } = this.props;
-    return (
-      <div>
-        <ErrorNotification error={error} />
-        <GroupForm
-          group={group}
-          submitForm={group => {
-            this.modifyGroup(group);
-          }}
-          loading={loading}
-          loadUserSuggestions={this.loadUserAutocompletion}
-        />
-        <DeleteGroup group={group} />
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const loading = isModifyGroupPending(state, ownProps.group.name);
-  const error = getModifyGroupFailure(state, ownProps.group.name);
-  const autocompleteLink = getUserAutoCompleteLink(state);
-  return {
-    loading,
-    error,
-    autocompleteLink
-  };
+  return (
+    <div>
+      <ErrorNotification error={error || undefined} />
+      <GroupForm group={group} submitForm={update} loading={isLoading} loadUserSuggestions={loadUserAutocompletion} />
+      <DeleteGroup group={group} />
+    </div>
+  );
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    modifyGroup: (group: Group, callback?: () => void) => {
-      dispatch(modifyGroup(group, callback));
-    },
-    modifyGroupReset: (group: Group) => {
-      dispatch(modifyGroupReset(group));
-    }
-  };
-};
-
-export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter)(EditGroup);
+export default EditGroup;

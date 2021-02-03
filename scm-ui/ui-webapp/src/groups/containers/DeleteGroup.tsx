@@ -22,42 +22,31 @@
  * SOFTWARE.
  */
 import React, { FC, useState } from "react";
-import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Group } from "@scm-manager/ui-types";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
-import { deleteGroup, getDeleteGroupFailure, isDeleteGroupPending } from "../modules/groups";
+import { useDeleteGroup } from "@scm-manager/ui-api";
 
 type Props = {
-  loading: boolean;
-  error: Error;
   group: Group;
   confirmDialog?: boolean;
-  deleteGroup: (group: Group, callback?: () => void) => void;
 };
 
-export const DeleteGroup: FC<Props> = ({ confirmDialog = true, group, deleteGroup, loading, error }) => {
+export const DeleteGroup: FC<Props> = ({ confirmDialog = true, group }) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const { isLoading, error, remove, isDeleted } = useDeleteGroup();
   const [t] = useTranslation("groups");
-  const history = useHistory();
 
-  const deleteGroupCallback = () => {
-    deleteGroup(group, groupDeleted);
-  };
+  if (isDeleted) {
+    return <Redirect to={"/groups/"} />;
+  }
 
-  const groupDeleted = () => {
-    history.push("/groups/");
-  };
+  const deleteGroupCallback = () => remove(group);
 
-  const confirmDelete = () => {
-    setShowConfirmAlert(true);
-  };
+  const confirmDelete = () => setShowConfirmAlert(true);
 
-  const isDeletable = () => {
-    return group._links.delete;
-  };
-
+  const isDeletable = () => group._links.delete;
   const action = confirmDialog ? confirmDelete : deleteGroupCallback;
 
   if (!isDeletable()) {
@@ -73,7 +62,7 @@ export const DeleteGroup: FC<Props> = ({ confirmDialog = true, group, deleteGrou
           {
             className: "is-outlined",
             label: t("deleteGroup.confirmAlert.submit"),
-            onClick: () => deleteGroupCallback()
+            onClick: deleteGroupCallback
           },
           {
             label: t("deleteGroup.confirmAlert.cancel"),
@@ -88,27 +77,10 @@ export const DeleteGroup: FC<Props> = ({ confirmDialog = true, group, deleteGrou
   return (
     <>
       <hr />
-      <ErrorNotification error={error} />
-      <Level right={<DeleteButton label={t("deleteGroup.button")} action={action} loading={loading} />} />
+      <ErrorNotification error={error || undefined} />
+      <Level right={<DeleteButton label={t("deleteGroup.button")} action={action} loading={isLoading} />} />
     </>
   );
 };
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const loading = isDeleteGroupPending(state, ownProps.group.name);
-  const error = getDeleteGroupFailure(state, ownProps.group.name);
-  return {
-    loading,
-    error
-  };
-};
-
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    deleteGroup: (group: Group, callback?: () => void) => {
-      dispatch(deleteGroup(group, callback));
-    }
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DeleteGroup);
+export default DeleteGroup;

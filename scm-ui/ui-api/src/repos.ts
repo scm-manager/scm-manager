@@ -23,18 +23,19 @@
  */
 
 import {
+  Link,
   Namespace,
   NamespaceCollection,
-  RepositoryCollection,
-  Link,
-  RepositoryCreation,
+  NamespaceStrategies,
   Repository,
-  RepositoryTypeCollection,
-  NamespaceStrategies
+  RepositoryCollection,
+  RepositoryCreation,
+  RepositoryTypeCollection
 } from "@scm-manager/ui-types";
-import { useMutation, useQuery, useQueryClient } from "react-query";
-import { apiClient, urls } from "@scm-manager/ui-components";
-import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
+import {useMutation, useQuery, useQueryClient} from "react-query";
+import {apiClient, urls} from "@scm-manager/ui-components";
+import {ApiResult, useIndexJsonResource, useRequiredIndexLink} from "./base";
+import {createQueryString} from "./utils";
 
 export const useNamespaces = () => {
   return useIndexJsonResource<NamespaceCollection>("namespaces");
@@ -45,12 +46,6 @@ export type UseRepositoriesRequest = {
   search?: string;
   page?: number | string;
   disabled?: boolean;
-};
-
-const createQueryString = (params: Record<string, string>) => {
-  return Object.keys(params)
-    .map(k => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
-    .join("&");
 };
 
 export const useRepositories = (request?: UseRepositoriesRequest): ApiResult<RepositoryCollection> => {
