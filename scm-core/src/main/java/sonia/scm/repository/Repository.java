@@ -80,8 +80,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   private Set<RepositoryPermission> permissions = new HashSet<>();
   private String type;
   private boolean archived;
-  @XmlTransient
-  private boolean exporting;
 
 
   /**
@@ -223,16 +221,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   }
 
   /**
-   * Returns <code>true</code>, when the repository is in state "exporting". An exporting repository is read-only until the export is finished.
-   *
-   * @since 2.14.0
-   */
-  public boolean isExporting() {
-    return exporting;
-  }
-
-
-  /**
    * Returns {@code true} if the repository is healthy.
    *
    * @return {@code true} if the repository is healthy
@@ -313,15 +301,6 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
    */
   public void setArchived(boolean archived) {
     this.archived = archived;
-  }
-
-  /**
-   * Set this to <code>true</code> to mark the repository as "exporting". An "exporting" repository is read-only until the export is finished.
-   *
-   * @since 2.14.0
-   */
-  public void setExporting(boolean exporting) {
-    this.exporting = exporting;
   }
 
   public void setHealthCheckFailures(List<HealthCheckFailure> healthCheckFailures) {

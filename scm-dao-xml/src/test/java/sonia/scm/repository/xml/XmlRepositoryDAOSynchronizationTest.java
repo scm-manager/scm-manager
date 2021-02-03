@@ -36,6 +36,7 @@ import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.InitialRepositoryLocationResolver;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryExportingCheck;
 
 import java.nio.file.Path;
 import java.util.concurrent.ExecutorService;
@@ -54,6 +55,8 @@ class XmlRepositoryDAOSynchronizationTest {
 
   @Mock
   private SCMContextProvider provider;
+  @Mock
+  private RepositoryExportingCheck repositoryExportingCheck;
 
   private FileSystem fileSystem;
   private PathBasedRepositoryLocationResolver resolver;
@@ -75,7 +78,7 @@ class XmlRepositoryDAOSynchronizationTest {
       provider, new InitialRepositoryLocationResolver(), fileSystem
     );
 
-    repositoryDAO = new XmlRepositoryDAO(resolver, fileSystem);
+    repositoryDAO = new XmlRepositoryDAO(resolver, fileSystem, repositoryExportingCheck);
   }
 
   @Test
@@ -88,7 +91,7 @@ class XmlRepositoryDAOSynchronizationTest {
   }
 
   private void assertCreated() {
-    XmlRepositoryDAO assertionDao = new XmlRepositoryDAO(resolver, fileSystem);
+    XmlRepositoryDAO assertionDao = new XmlRepositoryDAO(resolver, fileSystem, repositoryExportingCheck);
     assertThat(assertionDao.getAll()).hasSize(CREATION_COUNT);
   }
 
@@ -97,7 +100,7 @@ class XmlRepositoryDAOSynchronizationTest {
   void shouldCreateALotOfRepositoriesInParallel() throws InterruptedException {
     ExecutorService executors = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
 
-    final XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(resolver, fileSystem);
+    final XmlRepositoryDAO repositoryDAO = new XmlRepositoryDAO(resolver, fileSystem, repositoryExportingCheck);
     for (int i=0; i<CREATION_COUNT; i++) {
       executors.submit(create(repositoryDAO, i));
     }

@@ -35,10 +35,6 @@ class DefaultRepositoryExportingCheckTest {
   private static final Repository NORMAL_REPOSITORY = new Repository("hog", "git", "hitchhiker", "hog");
   private static final Repository EXPORTING_REPOSITORY = new Repository("exporting_hog", "git", "hitchhiker", "hog");
 
-  static {
-    EXPORTING_REPOSITORY.setExporting(true);
-  }
-
   private final DefaultRepositoryExportingCheck check = new DefaultRepositoryExportingCheck();
 
   @BeforeEach

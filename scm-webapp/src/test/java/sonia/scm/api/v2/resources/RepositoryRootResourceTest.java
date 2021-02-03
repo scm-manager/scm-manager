@@ -47,6 +47,7 @@ import sonia.scm.event.ScmEventBus;
 import sonia.scm.importexport.FullScmRepositoryExporter;
 import sonia.scm.importexport.FullScmRepositoryImporter;
 import sonia.scm.repository.CustomNamespaceStrategy;
+import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
@@ -88,6 +89,7 @@ import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Stream.of;
@@ -104,24 +106,24 @@ import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyObject;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.RETURNS_SELF;
+import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static org.mockito.MockitoAnnotations.openMocks;
 
 @SubjectAware(
   username = "trillian",
   password = "secret",
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
+@SuppressWarnings("UnstableApiUsage")
 public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   private static final String REALM = "AdminRealm";
@@ -155,12 +157,15 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private FullScmRepositoryExporter fullScmRepositoryExporter;
   @Mock
   private FullScmRepositoryImporter fullScmRepositoryImporter;
+  @Mock
+  private DefaultRepositoryExportingCheck repositoryExportingCheck;
 
   @Captor
   private ArgumentCaptor<Predicate<Repository>> filterCaptor;
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
+  private Repository repositoryMarkedAsExported;
 
   @InjectMocks
   private RepositoryToRepositoryDtoMapperImpl repositoryToDtoMapper;
@@ -169,18 +174,22 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   @Before
   public void prepareEnvironment() {
-    initMocks(this);
+    openMocks(this);
     super.repositoryToDtoMapper = repositoryToDtoMapper;
     super.dtoToRepositoryMapper = dtoToRepositoryMapper;
     super.manager = repositoryManager;
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
     super.repositoryImportResource = new RepositoryImportResource(repositoryManager, dtoToRepositoryMapper, serviceFactory, resourceLinks, eventBus, fullScmRepositoryImporter);
-    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter);
+    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryExportingCheck);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
+    doAnswer(invocation -> {
+      repositoryMarkedAsExported = invocation.getArgument(0, Repository.class);
+      return invocation.getArgument(1, Supplier.class).get();
+    }).when(repositoryExportingCheck).withExportingLock(any(), any());
     doReturn(ImmutableSet.of(new CustomNamespaceStrategy()).iterator()).when(strategies).iterator();
     SimplePrincipalCollection trillian = new SimplePrincipalCollection("trillian", REALM);
     trillian.add(new User("trillian"), REALM);
@@ -317,7 +326,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(SC_NO_CONTENT, response.getStatus());
-    verify(repositoryManager).modify(anyObject());
+    verify(repositoryManager).modify(any());
   }
 
   @Test
@@ -337,7 +346,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     assertEquals(SC_CONFLICT, response.getStatus());
     assertThat(response.getContentAsString()).contains("space/repo");
-    verify(repositoryManager, never()).modify(anyObject());
+    verify(repositoryManager, never()).modify(any());
   }
 
   @Test
@@ -356,7 +365,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(SC_BAD_REQUEST, response.getStatus());
-    verify(repositoryManager, never()).modify(anyObject());
+    verify(repositoryManager, never()).modify(any());
   }
 
   @Test
@@ -369,7 +378,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(SC_NO_CONTENT, response.getStatus());
-    verify(repositoryManager).delete(anyObject());
+    verify(repositoryManager).delete(any());
   }
 
   @Test
@@ -806,8 +815,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     dispatcher.invoke(request, response);
 
-    verify(repository, times(1)).setExporting(true);
-    verify(repository, times(1)).setExporting(false);
+    assertThat(repositoryMarkedAsExported).isSameAs(repository);
   }
 
   private void mockRepositoryHandler(Set<Command> cmds) {
@@ -851,7 +859,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   /**
    * This method is a slightly adapted copy of Lin Zaho's gist at https://gist.github.com/lin-zhao/9985191
    */
-  private MockHttpRequest multipartRequest(MockHttpRequest request, Map<String, InputStream> files, RepositoryDto repository) throws IOException {
+  private void multipartRequest(MockHttpRequest request, Map<String, InputStream> files, RepositoryDto repository) throws IOException {
     String boundary = UUID.randomUUID().toString();
     request.contentType("multipart/form-data; boundary=" + boundary);
 
@@ -889,6 +897,5 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
       formWriter.flush();
     }
     request.setInputStream(new ByteArrayInputStream(buffer.toByteArray()));
-    return request;
   }
 }

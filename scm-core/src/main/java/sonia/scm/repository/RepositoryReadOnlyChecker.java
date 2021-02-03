@@ -78,7 +78,7 @@ public class RepositoryReadOnlyChecker {
   }
 
   private static boolean isExporting(Repository repository) {
-    return repository.isExporting() || DefaultRepositoryExportingCheck.isRepositoryExporting(repository.getId());
+    return DefaultRepositoryExportingCheck.isRepositoryExporting(repository.getId());
   }
 
   private static boolean isArchived(Repository repository) {

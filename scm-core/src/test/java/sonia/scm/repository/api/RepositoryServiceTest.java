@@ -50,7 +50,6 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.util.IterableUtil.sizeOf;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -116,25 +115,25 @@ class RepositoryServiceTest {
     repository.setArchived(true);
     RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
 
-    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getModifyCommand());
-    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getBranchCommand());
-    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getPullCommand());
-    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getTagCommand());
-    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getMergeCommand());
-    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getModifyCommand());
+    assertThrows(RepositoryArchivedException.class, repositoryService::getModifyCommand);
+    assertThrows(RepositoryArchivedException.class, repositoryService::getBranchCommand);
+    assertThrows(RepositoryArchivedException.class, repositoryService::getPullCommand);
+    assertThrows(RepositoryArchivedException.class, repositoryService::getTagCommand);
+    assertThrows(RepositoryArchivedException.class, repositoryService::getMergeCommand);
+    assertThrows(RepositoryArchivedException.class, repositoryService::getModifyCommand);
   }
 
   @Test
   void shouldFailForExportingRepository() {
-    repository.setExporting(true);
+    DefaultRepositoryExportingCheck.setAsExporting(repository.getId());
     RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
 
-    assertThrows(RepositoryExportingException.class, () -> repositoryService.getModifyCommand());
-    assertThrows(RepositoryExportingException.class, () -> repositoryService.getBranchCommand());
-    assertThrows(RepositoryExportingException.class, () -> repositoryService.getPullCommand());
-    assertThrows(RepositoryExportingException.class, () -> repositoryService.getTagCommand());
-    assertThrows(RepositoryExportingException.class, () -> repositoryService.getMergeCommand());
-    assertThrows(RepositoryExportingException.class, () -> repositoryService.getModifyCommand());
+    assertThrows(RepositoryExportingException.class, repositoryService::getModifyCommand);
+    assertThrows(RepositoryExportingException.class, repositoryService::getBranchCommand);
+    assertThrows(RepositoryExportingException.class, repositoryService::getPullCommand);
+    assertThrows(RepositoryExportingException.class, repositoryService::getTagCommand);
+    assertThrows(RepositoryExportingException.class, repositoryService::getMergeCommand);
+    assertThrows(RepositoryExportingException.class, repositoryService::getModifyCommand);
   }
 
   private static class DummyHttpProtocol extends HttpScmProtocol {
@@ -156,7 +155,7 @@ class RepositoryServiceTest {
     }
   }
 
-  private static class DummyScmProtocolProvider implements ScmProtocolProvider {
+  private static class DummyScmProtocolProvider implements ScmProtocolProvider<ScmProtocol> {
 
     private final boolean anonymousEnabled;
 

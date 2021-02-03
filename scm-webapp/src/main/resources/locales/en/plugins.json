@@ -329,7 +329,7 @@
     },
     "1mSNlpe1V1": {
       "displayName": "Repository is being exported",
-      "description": "The repository is being exported and therefore must noch be modified."
+      "description": "The repository is being exported and therefore must not be modified."
     }
   },
   "namespaceStrategies": {

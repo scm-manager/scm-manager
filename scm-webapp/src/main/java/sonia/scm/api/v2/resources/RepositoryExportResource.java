@@ -33,6 +33,7 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import sonia.scm.BadRequestException;
 import sonia.scm.Type;
 import sonia.scm.importexport.FullScmRepositoryExporter;
+import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -62,20 +63,21 @@ import java.time.Instant;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
-import static sonia.scm.repository.DefaultRepositoryExportingCheck.withReadOnlyLock;
 
 public class RepositoryExportResource {
 
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
   private final FullScmRepositoryExporter fullScmRepositoryExporter;
+  private final DefaultRepositoryExportingCheck repositoryExportingCheck;
 
   @Inject
   public RepositoryExportResource(RepositoryManager manager,
-                                  RepositoryServiceFactory serviceFactory, FullScmRepositoryExporter fullScmRepositoryExporter) {
+                                  RepositoryServiceFactory serviceFactory, FullScmRepositoryExporter fullScmRepositoryExporter, DefaultRepositoryExportingCheck repositoryExportingCheck) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.fullScmRepositoryExporter = fullScmRepositoryExporter;
+    this.repositoryExportingCheck = repositoryExportingCheck;
   }
 
   /**
@@ -183,8 +185,8 @@ public class RepositoryExportResource {
   }
 
   private Response exportFullRepository(Repository repository) {
-    StreamingOutput output = os -> withReadOnlyLock(repository, repo -> {
-       fullScmRepositoryExporter.export(repo, os);
+    StreamingOutput output = os -> repositoryExportingCheck.withExportingLock(repository, () -> {
+       fullScmRepositoryExporter.export(repository, os);
        return null;
     });
 
@@ -204,7 +206,7 @@ public class RepositoryExportResource {
         try {
           if (compressed) {
             GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
-            withReadOnlyLock(repository, repo -> {
+            repositoryExportingCheck.withExportingLock(repository, () -> {
               try {
                 return bundleCommand.bundle(gzipCompressorOutputStream);
               } catch (IOException e) {
@@ -213,7 +215,7 @@ public class RepositoryExportResource {
             });
             gzipCompressorOutputStream.finish();
           } else {
-            withReadOnlyLock(repository, repo -> {
+            repositoryExportingCheck.withExportingLock(repository, () -> {
               try {
                 return bundleCommand.bundle(os);
               } catch (IOException e) {

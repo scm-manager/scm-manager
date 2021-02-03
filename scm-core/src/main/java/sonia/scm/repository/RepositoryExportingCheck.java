@@ -25,24 +25,25 @@
 package sonia.scm.repository;
 
 /**
- * Implementations of this class can be used to check whether a repository is being exported.
+ * Implementations of this class can be used to check whether a repository is currently being exported.
  *
  * @since 2.14.0
  */
 public interface RepositoryExportingCheck {
 
   /**
-   * Checks whether the repository with the given id is being exported or not.
+   * Checks whether the repository with the given id is currently (that is, at this moment) being exported or not.
    * @param repositoryId The id of the repository to check.
-   * @return <code>true</code> when the repository with the given id is being exported, <code>false</code> otherwise.
+   * @return <code>true</code> when the repository with the given id is currently being exported, <code>false</code>
+   * otherwise.
    */
   boolean isExporting(String repositoryId);
 
   /**
-   * Checks whether the given repository is being exported or not. This checks the status on behalf of the id of the
-   * repository, not by the exporting flag provided by the repository itself.
+   * Checks whether the given repository is currently (that is, at this moment) being exported or not. This checks the
+   * status on behalf of the id of the repository, not by the exporting flag provided by the repository itself.
    * @param repository The repository to check.
-   * @return <code>true</code> when the given repository is being exported, <code>false</code> otherwise.
+   * @return <code>true</code> when the given repository is currently being exported, <code>false</code> otherwise.
    */
   default boolean isExporting(Repository repository) {
     return isExporting(repository.getId());

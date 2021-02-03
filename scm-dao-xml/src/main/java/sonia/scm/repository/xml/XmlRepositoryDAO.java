@@ -33,6 +33,7 @@ import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryDAO;
+import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.store.StoreReadOnlyException;
 
@@ -54,14 +55,16 @@ public class XmlRepositoryDAO implements RepositoryDAO {
 
   private final PathBasedRepositoryLocationResolver repositoryLocationResolver;
   private final FileSystem fileSystem;
+  private final RepositoryExportingCheck repositoryExportingCheck;
 
   private final Map<String, Repository> byId;
   private final Map<NamespaceAndName, Repository> byNamespaceAndName;
 
   @Inject
-  public XmlRepositoryDAO(PathBasedRepositoryLocationResolver repositoryLocationResolver, FileSystem fileSystem) {
+  public XmlRepositoryDAO(PathBasedRepositoryLocationResolver repositoryLocationResolver, FileSystem fileSystem, RepositoryExportingCheck repositoryExportingCheck) {
     this.repositoryLocationResolver = repositoryLocationResolver;
     this.fileSystem = fileSystem;
+    this.repositoryExportingCheck = repositoryExportingCheck;
 
     this.byId = new ConcurrentHashMap<>();
     this.byNamespaceAndName = new ConcurrentHashMap<>();
@@ -162,12 +165,12 @@ public class XmlRepositoryDAO implements RepositoryDAO {
 
   private boolean mustNotModifyRepository(Repository clone) {
     return clone.isArchived() && byId.get(clone.getId()).isArchived()
-      || clone.isExporting() && byId.get(clone.getId()).isExporting();
+      || repositoryExportingCheck.isExporting(clone);
   }
 
   @Override
   public void delete(Repository repository) {
-    if (repository.isArchived() || repository.isExporting()) {
+    if (repository.isArchived() || repositoryExportingCheck.isExporting(repository)) {
       throw new StoreReadOnlyException(repository);
     }
     Path path;

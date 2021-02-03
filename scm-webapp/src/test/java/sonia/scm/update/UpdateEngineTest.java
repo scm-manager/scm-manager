@@ -21,13 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update;
 
 import org.junit.jupiter.api.Test;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
-import sonia.scm.store.InMemoryConfigurationEntryStore;
 import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
 import sonia.scm.version.Version;
 

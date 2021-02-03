@@ -39,7 +39,6 @@ import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.Type;
-import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.security.AuthorizationChangedEvent;
 import sonia.scm.security.KeyGenerator;
@@ -239,16 +238,9 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
     if (repository != null) {
       repository = repository.clone();
-      markAsExporting(repository);
     }
 
     return repository;
-  }
-
-  private void markAsExporting(Repository repository) {
-    if (DefaultRepositoryExportingCheck.isRepositoryExporting(repository.getId())) {
-      repository.setExporting(true);
-    }
   }
 
   @Override
@@ -262,7 +254,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     if (repository != null) {
       RepositoryPermissions.read(repository).check();
       repository = repository.clone();
-      markAsExporting(repository);
     }
 
     return repository;
@@ -341,7 +332,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
         && filter.test(repository)
         && RepositoryPermissions.read().isPermitted(repository)) {
         Repository r = repository.clone();
-        markAsExporting(r);
+
         repositories.add(r);
       }
     }

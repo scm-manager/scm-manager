@@ -108,7 +108,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
 
   private RepositoryDAO repositoryDAO;
 
-  {
+  static {
     ThreadContext.unbindSubject();
   }
 
@@ -119,8 +119,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   public ExpectedException thrown = ExpectedException.none();
 
   private NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
-
-  private ScmConfiguration configuration;
 
   private String mockedNamespace = "default_namespace";
 
@@ -533,60 +531,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     assertThrows(NoChangesMadeException.class, () -> repoManager.unarchive(repository));
 
     verify(repositoryDAO, never()).modify(any());
-  }
-
-  @Test
-  @SubjectAware(username = "trillian")
-  public void shouldMarkRepositoryAsExportingByGetFromId() {
-    RepositoryPermissionGuard.setReadOnlyVerbs(ImmutableSet.of("read"));
-    Repository repository = createTestRepository();
-    RepositoryManager repoManager = (RepositoryManager) manager;
-    DefaultRepositoryExportingCheck.setAsExporting(repository.getId());
-
-    Repository repo = repoManager.get(repository.getId());
-    assertTrue(repo.isExporting());
-
-    DefaultRepositoryExportingCheck.removeFromExporting(repository.getId());
-  }
-
-  @Test
-  @SubjectAware(username = "trillian")
-  public void shouldMarkRepositoryAsExportingByGetFromNamespaceAndName() {
-    RepositoryPermissionGuard.setReadOnlyVerbs(ImmutableSet.of("read"));
-    Repository repository = createTestRepository();
-    RepositoryManager repoManager = (RepositoryManager) manager;
-    DefaultRepositoryExportingCheck.setAsExporting(repository.getId());
-
-    Repository repo = repoManager.get(repository.getNamespaceAndName());
-    assertTrue(repo.isExporting());
-
-    DefaultRepositoryExportingCheck.removeFromExporting(repository.getId());
-  }
-
-  @Test
-  @SubjectAware(username = "trillian")
-  public void shouldMarkRepositoryAsExportingByGetAll() {
-    RepositoryPermissionGuard.setReadOnlyVerbs(ImmutableSet.of("read"));
-    Repository repository = createTestRepository();
-    RepositoryManager repoManager = (RepositoryManager) manager;
-    DefaultRepositoryExportingCheck.setAsExporting(repository.getId());
-
-    Collection<Repository> repos = repoManager.getAll();
-    assertEquals(1, repos.stream().filter(Repository::isExporting).count());
-
-    DefaultRepositoryExportingCheck.removeFromExporting(repository.getId());
-  }
-
-  @Test
-  public void shouldNotMarkRepositoryAsExporting() {
-    Repository repository = createTestRepository();
-    RepositoryManager repoManager = (RepositoryManager) manager;
-
-    Repository repo = repoManager.get(repository.getNamespaceAndName());
-    assertFalse(repo.isExporting());
-
-    repo = repoManager.get(repository.getId());
-    assertFalse(repo.isExporting());
   }
 
   //~--- methods --------------------------------------------------------------
