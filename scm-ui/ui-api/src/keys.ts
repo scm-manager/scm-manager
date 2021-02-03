@@ -20,57 +20,31 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
-import { PagedCollection, Links, HalRepresentation } from "./hal";
+import { Branch, NamespaceAndName } from "@scm-manager/ui-types";
 
-export type NamespaceAndName = {
-  namespace: string;
-  name: string;
+export const repoQueryKey = (repository: NamespaceAndName, ...values: unknown[]) => {
+  return ["repository", repository.namespace, repository.name, ...values];
 };
 
-export type RepositoryBase = NamespaceAndName & {
-  type: string;
-  contact?: string;
-  description?: string;
+const isBranch = (branch: string | Branch): branch is Branch => {
+  return (branch as Branch).name !== undefined;
 };
 
-export type Repository = HalRepresentation &
-  RepositoryBase & {
-    creationDate?: string;
-    lastModified?: string;
-    archived?: boolean;
-  };
-
-export type RepositoryCreation = RepositoryBase & {
-  contextEntries: { [key: string]: any };
-};
-
-export type RepositoryUrlImport = Repository & {
-  importUrl: string;
-  username?: string;
-  password?: string;
-};
-
-export type Namespace = {
-  namespace: string;
-  _links: Links;
-};
-
-export type RepositoryCollection = PagedCollection & {
-  _embedded: {
-    repositories: Repository[] | string[];
-  };
-};
-
-export type NamespaceCollection = {
-  _embedded: {
-    namespaces: Namespace[];
-  };
-};
-
-export type RepositoryGroup = {
-  name: string;
-  namespace?: Namespace;
-  repositories: Repository[];
+export const branchQueryKey = (
+  repository: NamespaceAndName,
+  branch: string | Branch | undefined,
+  ...values: unknown[]
+) => {
+  let branchName;
+  if (!branch) {
+    branchName = "_";
+  } else if (isBranch(branch)) {
+    branchName = branch.name;
+  } else {
+    branchName = branch;
+  }
+  return [...repoQueryKey(repository), "branch", branchName, ...values];
 };

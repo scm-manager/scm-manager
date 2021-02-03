@@ -21,116 +21,65 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { Route, RouteComponentProps, withRouter } from "react-router-dom";
+import React, { FC } from "react";
+import { Route, useLocation } from "react-router-dom";
 import Sources from "../../sources/containers/Sources";
 import ChangesetsRoot from "../../containers/ChangesetsRoot";
-import { Branch, Repository } from "@scm-manager/ui-types";
+import { Repository } from "@scm-manager/ui-types";
 import { ErrorPage, Loading } from "@scm-manager/ui-components";
-import { compose } from "redux";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { connect } from "react-redux";
-import {
-  fetchBranches,
-  getBranches,
-  getFetchBranchesFailure,
-  isFetchBranchesPending
-} from "../../branches/modules/branches";
+import { useTranslation } from "react-i18next";
+import { useBranches } from "@scm-manager/ui-api";
 
-type Props = RouteComponentProps &
-  WithTranslation & {
-    repository: Repository;
-    baseUrl: string;
-
-    // State props
-    branches: Branch[];
-    error: Error;
-    loading: boolean;
-    selectedBranch: string;
-
-    // Dispatch props
-    fetchBranches: (p: Repository) => void;
-  };
-
-class CodeOverview extends React.Component<Props> {
-  componentDidMount() {
-    const { repository } = this.props;
-    this.props.fetchBranches(repository);
-  }
-
-  render() {
-    const { repository, baseUrl, branches, selectedBranch, error, loading, t } = this.props;
-    const url = baseUrl;
-
-    if (loading) {
-      return <Loading />;
-    }
-
-    if (error) {
-      return (
-        <ErrorPage title={t("repositoryRoot.errorTitle")} subtitle={t("repositoryRoot.errorSubtitle")} error={error} />
-      );
-    }
-
-    return (
-      <>
-        <Route
-          path={`${url}/sources`}
-          exact={true}
-          render={() => <Sources repository={repository} baseUrl={`${url}`} branches={branches} />}
-        />
-        <Route
-          path={`${url}/sources/:revision/:path*`}
-          render={() => (
-            <Sources repository={repository} baseUrl={`${url}`} branches={branches} selectedBranch={selectedBranch} />
-          )}
-        />
-        <Route
-          path={`${url}/changesets`}
-          render={() => <ChangesetsRoot repository={repository} baseUrl={`${url}`} branches={branches} />}
-        />
-        <Route
-          path={`${url}/branch/:branch/changesets/`}
-          render={() => (
-            <ChangesetsRoot
-              repository={repository}
-              baseUrl={`${url}`}
-              branches={branches}
-              selectedBranch={selectedBranch}
-            />
-          )}
-        />
-      </>
-    );
-  }
-}
-
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchBranches: (repo: Repository) => {
-      dispatch(fetchBranches(repo));
-    }
-  };
+type Props = {
+  repository: Repository;
+  baseUrl: string;
 };
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const { repository, location } = ownProps;
-  const error = getFetchBranchesFailure(state, repository);
-  const loading = isFetchBranchesPending(state, repository);
-  const branches = getBranches(state, repository);
+const useSelectedBranch = () => {
+  const location = useLocation();
   const branchFromURL =
     !location.pathname.includes("/code/changesets/") && decodeURIComponent(location.pathname.split("/")[6]);
-  const selectedBranch = branchFromURL && branchFromURL !== "undefined" ? branchFromURL : "";
-  return {
-    error,
-    loading,
-    branches,
-    selectedBranch
-  };
+  return branchFromURL && branchFromURL !== "undefined" ? branchFromURL : "";
 };
 
-export default compose(
-  withRouter,
-  withTranslation("repos"),
-  connect(mapStateToProps, mapDispatchToProps)
-)(CodeOverview);
+const CodeOverview: FC<Props> = ({ baseUrl, repository }) => {
+  const { isLoading, error, data } = useBranches(repository);
+  const selectedBranch = useSelectedBranch();
+  const [t] = useTranslation("repos");
+  const branches = data?._embedded.branches;
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
+  if (error) {
+    return (
+      <ErrorPage title={t("repositoryRoot.errorTitle")} subtitle={t("repositoryRoot.errorSubtitle")} error={error} />
+    );
+  }
+
+
+  return (
+    <>
+      <Route
+        path={`${baseUrl}/sources`}
+        exact={true}
+        render={() => <Sources repository={repository} baseUrl={baseUrl} branches={branches} />}
+      />
+      <Route
+        path={`${baseUrl}/sources/:revision/:path*`}
+        render={() => (
+          <Sources repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
+        )}
+      />
+      <Route path={`${baseUrl}/changesets`}>
+        <ChangesetsRoot repository={repository} baseUrl={baseUrl} branches={branches} />
+      </Route>
+      <Route path={`${baseUrl}/branch/:branch/changesets/`}>
+        <ChangesetsRoot repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
+      </Route>
+    </>
+  );
+};
+
+export default CodeOverview;

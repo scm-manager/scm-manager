@@ -29,22 +29,14 @@ export { Me } from "./Me";
 export { DisplayedUser, User } from "./User";
 export { Group, Member } from "./Group";
 
-export {
-  Repository,
-  RepositoryCollection,
-  RepositoryGroup,
-  RepositoryCreation,
-  Namespace,
-  NamespaceCollection,
-  RepositoryUrlImport
-} from "./Repositories";
+export * from "./Repositories";
 export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
 
-export { Branch, BranchRequest } from "./Branches";
+export * from "./Branches";
 
 export { Person } from "./Person";
 
-export { Changeset, Contributor, ParentChangeset } from "./Changesets";
+export * from "./Changesets";
 
 export { Signature } from "./Signature";
 

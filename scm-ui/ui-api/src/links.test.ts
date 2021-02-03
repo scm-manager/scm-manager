@@ -20,57 +20,46 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
-import { PagedCollection, Links, HalRepresentation } from "./hal";
+import { requiredLink } from "./links";
 
-export type NamespaceAndName = {
-  namespace: string;
-  name: string;
-};
+describe("requireLink tests", () => {
+  it("should return required link", () => {
+    const link = requiredLink(
+      {
+        _links: {
+          spaceship: {
+            href: "/v2/ship"
+          }
+        }
+      },
+      "spaceship"
+    );
+    expect(link).toBe("/v2/ship");
+  });
 
-export type RepositoryBase = NamespaceAndName & {
-  type: string;
-  contact?: string;
-  description?: string;
-};
+  it("should throw error, if link is missing", () => {
+    const object = { _links: {} };
+    expect(() => requiredLink(object, "spaceship")).toThrowError();
+  });
 
-export type Repository = HalRepresentation &
-  RepositoryBase & {
-    creationDate?: string;
-    lastModified?: string;
-    archived?: boolean;
-  };
-
-export type RepositoryCreation = RepositoryBase & {
-  contextEntries: { [key: string]: any };
-};
-
-export type RepositoryUrlImport = Repository & {
-  importUrl: string;
-  username?: string;
-  password?: string;
-};
-
-export type Namespace = {
-  namespace: string;
-  _links: Links;
-};
-
-export type RepositoryCollection = PagedCollection & {
-  _embedded: {
-    repositories: Repository[] | string[];
-  };
-};
-
-export type NamespaceCollection = {
-  _embedded: {
-    namespaces: Namespace[];
-  };
-};
-
-export type RepositoryGroup = {
-  name: string;
-  namespace?: Namespace;
-  repositories: Repository[];
-};
+  it("should throw error, if link is array", () => {
+    const object = {
+      _links: {
+        spaceship: [
+          {
+            name: "one",
+            href: "/v2/one"
+          },
+          {
+            name: "two",
+            href: "/v2/two"
+          }
+        ]
+      }
+    };
+    expect(() => requiredLink(object, "spaceship")).toThrowError();
+  });
+});

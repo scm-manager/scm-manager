@@ -36,9 +36,9 @@ import {
   useRepository,
   useRepositoryTypes
 } from "./repos";
-import { Namespace, Repository } from "@scm-manager/ui-types";
+import { Repository } from "@scm-manager/ui-types";
 import { QueryClient } from "react-query";
-import {act} from "react-test-renderer";
+import { act } from "react-test-renderer";
 
 describe("Test repository hooks", () => {
   const heartOfGold: Repository = {
@@ -162,7 +162,6 @@ describe("Test repository hooks", () => {
   });
 
   describe("useCreateRepository tests", () => {
-
     it("should create repository", async () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "repositories", "/r");
@@ -170,7 +169,7 @@ describe("Test repository hooks", () => {
       fetchMock.postOnce("/api/v2/r", {
         status: 201,
         headers: {
-          "Location": "/r/spaceships/heartOfGold"
+          Location: "/r/spaceships/heartOfGold"
         }
       });
 
@@ -188,7 +187,7 @@ describe("Test repository hooks", () => {
       await act(() => {
         const { create } = result.current;
         create(repository, false);
-        return waitForNextUpdate()
+        return waitForNextUpdate();
       });
 
       expect(result.current.repository).toEqual(heartOfGold);
@@ -201,7 +200,7 @@ describe("Test repository hooks", () => {
       fetchMock.postOnce("/api/v2/r?initialize=true", {
         status: 201,
         headers: {
-          "Location": "/r/spaceships/heartOfGold"
+          Location: "/r/spaceships/heartOfGold"
         }
       });
 
@@ -219,7 +218,7 @@ describe("Test repository hooks", () => {
       await act(() => {
         const { create } = result.current;
         create(repository, true);
-        return waitForNextUpdate()
+        return waitForNextUpdate();
       });
 
       expect(result.current.repository).toEqual(heartOfGold);
@@ -245,12 +244,11 @@ describe("Test repository hooks", () => {
       await act(() => {
         const { create } = result.current;
         create(repository, false);
-        return waitForNextUpdate()
+        return waitForNextUpdate();
       });
 
       expect(result.current.error).toBeDefined();
     });
-
   });
 
   describe("useNamespaces test", () => {
