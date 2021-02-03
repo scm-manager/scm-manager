@@ -315,7 +315,10 @@ describe("Test repository hooks", () => {
       await waitFor(() => {
         return !!result.current.repositoryTypes;
       });
-      expect(result.current?.repositoryTypes[0].name).toEqual("git");
+      expect(result.current?.repositoryTypes).toBeDefined();
+      if (result.current?.repositoryTypes) {
+        expect(result.current?.repositoryTypes[0].name).toEqual("git");
+      }
     });
   });
 

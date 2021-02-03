@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import {Embedded, HalRepresentation, HalRepresentationWithEmbedded, Links, PagedCollection} from "./hal";
+import { Embedded, HalRepresentationWithEmbedded, Links, PagedCollection } from "./hal";
 import { Tag } from "./Tags";
 import { Branch } from "./Branches";
 import { Person } from "./Person";
@@ -34,7 +34,7 @@ type ChangesetEmbedded = {
   parents?: ParentChangeset[];
 } & Embedded;
 
-export type Changeset = HalRepresentation<ChangesetEmbedded> & {
+export type Changeset = HalRepresentationWithEmbedded<ChangesetEmbedded> & {
   id: string;
   date: Date;
   author: Person;
