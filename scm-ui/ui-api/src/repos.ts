@@ -32,10 +32,10 @@ import {
   RepositoryCreation,
   RepositoryTypeCollection
 } from "@scm-manager/ui-types";
-import {useMutation, useQuery, useQueryClient} from "react-query";
-import {apiClient, urls} from "@scm-manager/ui-components";
-import {ApiResult, useIndexJsonResource, useRequiredIndexLink} from "./base";
-import {createQueryString} from "./utils";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { apiClient, urls } from "@scm-manager/ui-components";
+import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
+import { createQueryString } from "./utils";
 
 export const useNamespaces = () => {
   return useIndexJsonResource<NamespaceCollection>("namespaces");

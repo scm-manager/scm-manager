@@ -27,6 +27,7 @@ import { DisplayedUser, Group, Link } from "@scm-manager/ui-types";
 import { apiClient, ErrorNotification } from "@scm-manager/ui-components";
 import DeleteGroup from "./DeleteGroup";
 import { useIndexLinks, useUpdateGroup } from "@scm-manager/ui-api";
+import { Redirect } from "react-router-dom";
 
 type Props = {
   group: Group;
@@ -34,15 +35,19 @@ type Props = {
 
 const EditGroup: FC<Props> = ({ group }) => {
   const indexLinks = useIndexLinks();
-  const { error, isLoading, update } = useUpdateGroup();
+  const { error, isLoading, update, isUpdated } = useUpdateGroup();
   const autocompleteLink = (indexLinks.autocomplete as Link[]).find(i => i.name === "users");
+
+  if (isUpdated) {
+    return <Redirect to={`/group/${group.name}`} />;
+  }
 
   // TODO: Replace with react-query hook
   const loadUserAutocompletion = (inputValue: string) => {
     if (!autocompleteLink) {
       return [];
     }
-    const url = autocompleteLink + "?q=";
+    const url = autocompleteLink.href + "?q=";
     return apiClient
       .get(url + inputValue)
       .then(response => response.json())
