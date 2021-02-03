@@ -65,6 +65,7 @@ public class GitHookEventFacade {
       case POST_RECEIVE:
         Thread thread = Thread.currentThread();
         if ("JGit-Receive-Pack".equals(thread.getName())) {
+          // this thread name is used in the JGit class org.eclipse.jgit.transport.InternalPushConnection
           LOG.debug("handling internal git thread for post receive hook");
           handleGitInternalThread(context, thread);
         } else {
