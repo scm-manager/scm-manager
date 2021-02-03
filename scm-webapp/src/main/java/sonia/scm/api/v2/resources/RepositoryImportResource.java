@@ -85,6 +85,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
+import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -93,6 +94,7 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singletonList;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
+import static sonia.scm.importexport.RepositoryImportExportEncryption.decrypt;
 
 public class RepositoryImportResource {
 
@@ -252,7 +254,7 @@ public class RepositoryImportResource {
                                    MultipartFormDataInput input,
                                    @QueryParam("compressed") @DefaultValue("false") boolean compressed) {
     RepositoryPermissions.create().check();
-    Repository repository = doImportFromBundle(type, input, compressed);
+    Repository repository = doImportFromBundle(type, input, compressed, "lala");
 
     return Response.created(URI.create(resourceLinks.repository().self(repository.getNamespace(), repository.getName()))).build();
   }
@@ -321,7 +323,7 @@ public class RepositoryImportResource {
    * @param compressed true if the bundle is gzip compressed
    * @return imported repository
    */
-  private Repository doImportFromBundle(String type, MultipartFormDataInput input, boolean compressed) {
+  private Repository doImportFromBundle(String type, MultipartFormDataInput input, boolean compressed, String password) {
     Map<String, List<InputPart>> formParts = input.getFormDataMap();
     InputStream inputStream = extractInputStream(formParts);
     RepositoryDto repositoryDto = extractRepositoryDto(formParts);
@@ -337,7 +339,7 @@ public class RepositoryImportResource {
     try {
       repository = manager.create(
         repository,
-        unbundleImport(inputStream, compressed)
+        unbundleImport(inputStream, compressed, password)
       );
       eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, false));
 
@@ -350,15 +352,19 @@ public class RepositoryImportResource {
   }
 
   @VisibleForTesting
-  Consumer<Repository> unbundleImport(InputStream inputStream, boolean compressed) {
+  Consumer<Repository> unbundleImport(InputStream inputStream, boolean compressed, String password) {
     return repository -> {
       File file = null;
+      InputStream is = inputStream;
       try (RepositoryService service = serviceFactory.create(repository)) {
+        if (!Strings.isNullOrEmpty(password)) {
+          is = decrypt(is, password);
+        }
         file = File.createTempFile("scm-import-", ".bundle");
-        long length = Files.asByteSink(file).writeFrom(inputStream);
+        long length = Files.asByteSink(file).writeFrom(is);
         logger.info("copied {} bytes to temp, start bundle import", length);
         service.getUnbundleCommand().setCompressed(compressed).unbundle(file);
-      } catch (IOException e) {
+      } catch (IOException | GeneralSecurityException e) {
         throw new InternalRepositoryException(repository, "Failed to import from bundle", e);
       } finally {
         try {

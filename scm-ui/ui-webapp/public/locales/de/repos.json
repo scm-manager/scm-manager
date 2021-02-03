@@ -262,6 +262,14 @@
       "label": "Mit Metadaten (Experimentell)",
       "helpText": "Zusätzlich zum Repository Dump werden Metadaten zum Repository und zur SCM-Instanz exportiert. Gespeicherte Passwörter funktionieren nicht bei einem Import in andere SCM-Manager Instanzen. Dieses Feature ist noch experimentell. Es sollte (noch) nicht für Backups genutzt werden!"
     },
+    "encrypt": {
+      "label": "Verschlüsseln",
+      "helpText": "Die Export Datei wird verschlüsselt und muss mit dem gleichen Passwort entschlüsselt werden."
+    },
+    "password": {
+      "label": "Passwort",
+      "helpText": "Wird ein Passwort angegeben, wird die Export Datei damit verschlüsselt."
+    },
     "exportButton": "Repository exportieren",
     "exportStarted":  "Der Repository Export wurde gestartet. Abhängig von der Größe des Repository kann dies einige Momente dauern."
   },

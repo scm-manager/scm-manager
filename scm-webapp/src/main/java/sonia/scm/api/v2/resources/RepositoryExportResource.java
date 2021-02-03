@@ -24,11 +24,15 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import sonia.scm.BadRequestException;
 import sonia.scm.Type;
@@ -44,10 +48,13 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
@@ -57,11 +64,14 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.security.GeneralSecurityException;
 import java.time.Instant;
+import java.util.Optional;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
+import static sonia.scm.importexport.RepositoryImportExportEncryption.encrypt;
 
 public class RepositoryExportResource {
 
@@ -119,7 +129,7 @@ public class RepositoryExportResource {
                                    @DefaultValue("false") @QueryParam("compressed") boolean compressed
   ) {
     Repository repository = getVerifiedRepository(namespace, name, type);
-    return exportRepository(repository, compressed);
+    return exportRepository(repository, compressed, Optional.empty());
   }
 
   /**
@@ -161,7 +171,100 @@ public class RepositoryExportResource {
                                        @PathParam("name") String name
   ) {
     Repository repository = getVerifiedRepository(namespace, name);
-    return exportFullRepository(repository);
+    return exportFullRepository(repository, Optional.empty());
+  }
+
+  /**
+   * Exports an existing repository without additional metadata. The method can
+   * only be used, if the repository type supports the {@link Command#BUNDLE}.
+   *
+   * @param uriInfo   uri info
+   * @param namespace namespace of the repository
+   * @param name      name of the repository
+   * @param type      type of the repository
+   * @param request   request of repository export which contains the password
+   * @return response with readable stream of repository dump
+   * @since 2.14.0
+   */
+  @POST
+  @Path("{type: ^(?!full$)[^/]+$}")
+  @Consumes(VndMediaType.REPOSITORY)
+  @Operation(summary = "Exports the repository", description = "Exports the repository.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "Repository export was successful"
+  )
+  @ApiResponse(
+    responseCode = "401",
+    description = "not authenticated / invalid credentials"
+  )
+  @ApiResponse(
+    responseCode = "403",
+    description = "not authorized, the current user has no privileges to read the repository"
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response exportRepositoryWithPassword(@Context UriInfo uriInfo,
+                                               @PathParam("namespace") String namespace,
+                                               @PathParam("name") String name,
+                                               @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
+                                               @DefaultValue("false") @QueryParam("compressed") boolean compressed,
+                                               @Valid RepositoryExportDto request
+
+
+  ) {
+    Repository repository = getVerifiedRepository(namespace, name, type);
+    return exportRepository(repository, compressed, Optional.of(request.getPassword()));
+  }
+
+  /**
+   * Exports an existing repository with all additional metadata and environment information. The method can
+   * only be used, if the repository type supports the {@link Command#BUNDLE}.
+   *
+   * @param uriInfo   uri info
+   * @param namespace namespace of the repository
+   * @param name      name of the repository
+   * @param request   request of repository export which contains the password
+   * @return response with readable stream of repository dump
+   * @since 2.14.0
+   */
+  @POST
+  @Path("full")
+  @Consumes(VndMediaType.REPOSITORY)
+  @Operation(summary = "Exports the repository", description = "Exports the repository with metadata and environment information.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "Repository export was successful"
+  )
+  @ApiResponse(
+    responseCode = "401",
+    description = "not authenticated / invalid credentials"
+  )
+  @ApiResponse(
+    responseCode = "403",
+    description = "not authorized, the current user has no privileges to read the repository"
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response exportFullRepositoryWithPassword(@Context UriInfo uriInfo,
+                                                   @PathParam("namespace") String namespace,
+                                                   @PathParam("name") String name,
+                                                   @Valid RepositoryExportDto request
+  ) {
+    Repository repository = getVerifiedRepository(namespace, name);
+    return exportFullRepository(repository, Optional.of(request.getPassword()));
   }
 
   private Repository getVerifiedRepository(String namespace, String name) {
@@ -181,8 +284,17 @@ public class RepositoryExportResource {
     return repository;
   }
 
-  private Response exportFullRepository(Repository repository) {
-    StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os);
+  private Response exportFullRepository(Repository repository, Optional<String> password) {
+    StreamingOutput output = os -> {
+      if (password.isPresent()) {
+        try {
+          os = encrypt(os, password.get());
+        } catch (GeneralSecurityException e) {
+          throw new InternalRepositoryException(repository, "repository export encryption failed", e);
+        }
+      }
+      fullScmRepositoryExporter.export(repository, os);
+    };
 
     return Response
       .ok(output, "application/x-gzip")
@@ -190,7 +302,7 @@ public class RepositoryExportResource {
       .build();
   }
 
-  private Response exportRepository(Repository repository, boolean compressed) {
+  private Response exportRepository(Repository repository, boolean compressed, Optional<String> password) {
     StreamingOutput output;
     String fileExtension;
     try (final RepositoryService service = serviceFactory.create(repository)) {
@@ -198,6 +310,9 @@ public class RepositoryExportResource {
       fileExtension = resolveFileExtension(bundleCommand, compressed);
       output = os -> {
         try {
+          if (password.isPresent()) {
+            os = encrypt(os, password.get());
+          }
           if (compressed) {
             GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
             bundleCommand.bundle(gzipCompressorOutputStream);
@@ -205,7 +320,7 @@ public class RepositoryExportResource {
           } else {
             bundleCommand.bundle(os);
           }
-        } catch (IOException e) {
+        } catch (IOException | GeneralSecurityException e) {
           throw new InternalRepositoryException(repository, "repository export failed", e);
         }
       };
@@ -256,5 +371,13 @@ public class RepositoryExportResource {
     public String getCode() {
       return CODE;
     }
+  }
+
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  static class RepositoryExportDto {
+    @NotBlank
+    private String password;
   }
 }

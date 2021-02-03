@@ -43,7 +43,7 @@ const ImportRepositoryFromBundle: FC<Props> = ({ url, repositoryType, setImportP
     type: repositoryType,
     contact: "",
     description: "",
-    _links: {},
+    _links: {}
   });
 
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, file: false });
@@ -59,7 +59,7 @@ const ImportRepositoryFromBundle: FC<Props> = ({ url, repositoryType, setImportP
     setLoading(loading);
   };
 
-  const isValid = () => Object.values(valid).every((v) => v);
+  const isValid = () => Object.values(valid).every(v => v);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -67,21 +67,21 @@ const ImportRepositoryFromBundle: FC<Props> = ({ url, repositoryType, setImportP
     setError(undefined);
     handleImportLoading(true);
     apiClient
-      .postBinary(compressed ? url + "?compressed=true" : url, (formData) => {
+      .postBinary(compressed ? url + "?compressed=true" : url, formData => {
         formData.append("bundle", file, file?.name);
         formData.append("repository", JSON.stringify(repo));
       })
-      .then((response) => {
+      .then(response => {
         const location = response.headers.get("Location");
         return apiClient.get(location!);
       })
-      .then((response) => response.json())
-      .then((repo) => {
+      .then(response => response.json())
+      .then(repo => {
         if (history.location.pathname === currentPath) {
           history.push(`/repo/${repo.namespace}/${repo.name}/code/sources`);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         setError(error);
         handleImportLoading(false);
       });
