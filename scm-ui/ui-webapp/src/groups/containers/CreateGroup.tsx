@@ -44,7 +44,7 @@ const CreateGroup: FC = () => {
     if (!autocompleteLink) {
       return [];
     }
-    const url = autocompleteLink + "?q=";
+    const url = autocompleteLink.href + "?q=";
     return apiClient
       .get(url + inputValue)
       .then(response => response.json())
