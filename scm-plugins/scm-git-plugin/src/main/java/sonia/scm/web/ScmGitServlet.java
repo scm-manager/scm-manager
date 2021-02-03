@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 import com.google.common.annotations.VisibleForTesting;
@@ -68,27 +68,17 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * Constructs ...
-   *
-   *
-   *
-   * @param repositoryResolver
-   * @param receivePackFactory
-   * @param repositoryViewer
-   * @param repositoryRequestListenerUtil
-   * @param lfsServletFactory
-   */
   @Inject
   public ScmGitServlet(GitRepositoryResolver repositoryResolver,
                        GitReceivePackFactory receivePackFactory,
                        GitRepositoryViewer repositoryViewer,
                        RepositoryRequestListenerUtil repositoryRequestListenerUtil,
-                       LfsServletFactory lfsServletFactory)
+                       LfsServletFactory lfsServletFactory, GitHookEventFacade gitHookEventFacade)
   {
     this.repositoryViewer = repositoryViewer;
     this.repositoryRequestListenerUtil = repositoryRequestListenerUtil;
     this.lfsServletFactory = lfsServletFactory;
+    this.gitHookEventFacade = gitHookEventFacade;
 
     setRepositoryResolver(repositoryResolver);
     setReceivePackFactory(receivePackFactory);
@@ -109,7 +99,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
   @Override
   public void service(HttpServletRequest request, HttpServletResponse response, Repository repository)
     throws ServletException, IOException
-  {    
+  {
     String repoPath = repository.getNamespace() + "/" + repository.getName();
     logger.trace("handle git repository at {}", repoPath);
     if (isLfsBatchApiRequest(request, repoPath)) {
@@ -123,17 +113,22 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
     } else if (isRegularGitAPIRequest(request)) {
       logger.trace("handle regular git request");
       // continue with the regular git Backend
-      handleRegularGitRequest(request, response, repository);
+      try {
+        handleRegularGitRequest(request, response, repository);
+        gitHookEventFacade.firePending();
+      } finally {
+        gitHookEventFacade.clean();
+      }
     } else {
       logger.trace("handle browser request");
       handleBrowserRequest(request, response, repository);
     }
   }
-  
+
   private boolean isRegularGitAPIRequest(HttpServletRequest request) {
     return REGEX_GITHTTPBACKEND.matcher(HttpUtil.getStrippedURI(request)).matches();
   }
-  
+
   private void handleGitLfsRequest(HttpServlet servlet, HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
     if (repositoryRequestListenerUtil.callListeners(request, response, repository)) {
       servlet.service(request, response);
@@ -141,7 +136,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
       logger.debug("request aborted by repository request listener");
     }
   }
-  
+
   private void handleRegularGitRequest(HttpServletRequest request, HttpServletResponse response, Repository repository) throws ServletException, IOException {
     if (repositoryRequestListenerUtil.callListeners(request, response, repository)) {
       super.service(request, response);
@@ -149,7 +144,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
       logger.debug("request aborted by repository request listener");
     }
   }
-  
+
 
   /**
    * This method renders basic information about the repository into the response. The result is meant to be viewed by
@@ -245,4 +240,6 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
   private final GitRepositoryViewer repositoryViewer;
 
   private final LfsServletFactory lfsServletFactory;
+
+  private final GitHookEventFacade gitHookEventFacade;
 }

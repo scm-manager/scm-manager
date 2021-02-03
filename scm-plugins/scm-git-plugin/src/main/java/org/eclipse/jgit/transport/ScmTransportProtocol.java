@@ -36,8 +36,8 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.RepositoryCache;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.web.CollectingPackParserListener;
+import sonia.scm.web.GitHookEventFacade;
 import sonia.scm.web.GitReceiveHook;
 
 import java.io.File;
@@ -54,7 +54,7 @@ public class ScmTransportProtocol extends TransportProtocol {
   private static final Set<String> SCHEMES = ImmutableSet.of(NAME);
 
   private Provider<GitChangesetConverterFactory> converterFactory;
-  private Provider<HookEventFacade> hookEventFacadeProvider;
+  private Provider<GitHookEventFacade> hookEventFacadeProvider;
   private Provider<GitRepositoryHandler> repositoryHandlerProvider;
 
   public ScmTransportProtocol() {
@@ -63,7 +63,7 @@ public class ScmTransportProtocol extends TransportProtocol {
   @Inject
   public ScmTransportProtocol(
     Provider<GitChangesetConverterFactory> converterFactory,
-    Provider<HookEventFacade> hookEventFacadeProvider,
+    Provider<GitHookEventFacade> hookEventFacadeProvider,
     Provider<GitRepositoryHandler> repositoryHandlerProvider) {
     this.converterFactory = converterFactory;
     this.hookEventFacadeProvider = hookEventFacadeProvider;
@@ -110,11 +110,11 @@ public class ScmTransportProtocol extends TransportProtocol {
 
     private final GitChangesetConverterFactory converterFactory;
     private final GitRepositoryHandler handler;
-    private final HookEventFacade hookEventFacade;
+    private final GitHookEventFacade hookEventFacade;
 
     public TransportLocalWithHooks(
       GitChangesetConverterFactory converterFactory,
-      HookEventFacade hookEventFacade,
+      GitHookEventFacade hookEventFacade,
       GitRepositoryHandler handler,
       Repository local, URIish uri, File gitDir) {
       super(local, uri, gitDir);
