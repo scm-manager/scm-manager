@@ -256,10 +256,9 @@ const RepositoryRoot = () => {
                 path={`${url}/code/sourceext/:extension/:revision/:path*`}
                 render={() => <SourceExtensions repository={repository} baseUrl={`${url}/code/sources`} />}
               />
-              <Route
-                path={`${url}/code`}
-                render={() => <CodeOverview baseUrl={`${url}/code`} repository={repository} />}
-              />
+              <Route path={`${url}/code`}>
+                <CodeOverview baseUrl={`${url}/code`} repository={repository} />
+              </Route>
               <Route
                 path={`${url}/branch/:branch`}
                 render={() => <BranchRoot repository={repository} baseUrl={`${url}/branch`} />}
