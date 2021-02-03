@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Collection, Links } from "./hal";
+import { HalRepresentationWithEmbedded, Links } from "./hal";
 
 export type RepositoryType = {
   name: string;
@@ -30,8 +30,8 @@ export type RepositoryType = {
   _links: Links;
 };
 
-export type RepositoryTypeCollection = Collection & {
-  _embedded: {
-    repositoryTypes: RepositoryType[];
-  };
+type RepositoryTypeEmbedded = {
+  repositoryTypes: RepositoryType[];
 };
+
+export type RepositoryTypeCollection = HalRepresentationWithEmbedded<RepositoryTypeEmbedded>;

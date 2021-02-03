@@ -64,6 +64,7 @@ describe("Test changeset hooks", () => {
           author: {
             name: "Arthur Dent"
           },
+          _embedded: {},
           _links: {}
         }
       ]

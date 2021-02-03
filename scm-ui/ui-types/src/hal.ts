@@ -38,18 +38,16 @@ export type Embedded = {
   [key: string]: unknown;
 };
 
-type EmbeddedType = Embedded | undefined;
-
-export type HalRepresentation<T extends EmbeddedType = undefined> = {
-  _embedded?: T;
+export type HalRepresentation = {
+  _embedded?: Embedded;
   _links: Links;
 };
 
-export type HalRepresentationWithEmbedded<T extends EmbeddedType = undefined> = HalRepresentation<T> & {
+export type HalRepresentationWithEmbedded<T extends Embedded> = HalRepresentation & {
   _embedded: T;
 };
 
-export type PagedCollection<T extends EmbeddedType = undefined> = HalRepresentationWithEmbedded<T> & {
+export type PagedCollection<T extends Embedded = Embedded> = HalRepresentationWithEmbedded<T> & {
   page: number;
   pageTotal: number;
 };
@@ -57,4 +55,5 @@ export type PagedCollection<T extends EmbeddedType = undefined> = HalRepresentat
 /**
  * @deprecated use HalRepresentation instead
  */
-export type Collection<T extends EmbeddedType = undefined> = HalRepresentation<T>;
+export type Collection = HalRepresentation;
+

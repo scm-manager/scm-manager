@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React from "react";
-import { Changeset, Collection, Link } from "@scm-manager/ui-types";
+import { Changeset, HalRepresentation, Link } from "@scm-manager/ui-types";
 import LoadingDiff from "../LoadingDiff";
 import Notification from "../../Notification";
 import { WithTranslation, withTranslation } from "react-i18next";
@@ -34,11 +34,11 @@ type Props = WithTranslation & {
   fileControlFactory?: FileControlFactory;
 };
 
-export const isDiffSupported = (changeset: Collection) => {
+export const isDiffSupported = (changeset: HalRepresentation) => {
   return !!changeset._links.diff || !!changeset._links.diffParsed;
 };
 
-export const createUrl = (changeset: Collection) => {
+export const createUrl = (changeset: HalRepresentation) => {
   if (changeset._links.diffParsed) {
     return (changeset._links.diffParsed as Link).href;
   } else if (changeset._links.diff) {
