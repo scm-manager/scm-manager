@@ -38,11 +38,35 @@ Different types of stores can persist data globally or repository specific.
 One of the main pages in SCM-Manager is the repository overview. 
 To show all available repositories the following actions in frontend and backend are executed.
 
-![Fetch all repositories](http://www.plantuml.com/plantuml/svg/LOuxZiCm30NxFSNc0B7wLBw9mT0lbW195FX9hX-fJ3KS40EytPpKezM_M-bSuqHe_S_kmnufANssgtYEPnYKfJkwRomj6RTxequNzET-WJmKYPHpSV2IunIEDalo8ZrDiuH9l55bhCVCdFD1jHwA8LPSjC2siORjwEVa5m00)
+```uml
+Frontend -> SCM_REST_API: GET Request "getAllRepositories()"
+SCM_REST_API -> Repository_Manager: getAllRepositories()
+Repository_Manager -> Repository_DAO: getAll()
+Repository_DAO --> Repository_Manager: Returns all repositories
+Repository_Manager --> SCM_REST_API: Returns available repositories
+SCM_REST_API ->Repository_Collection_Mapper: map(Collection<Repository>)
+Repository_Collection_Mapper -> Repository_Mapper: map(Repository)
+Repository_Mapper --> Repository_Collection_Mapper: Returns single mapped repository
+Repository_Collection_Mapper --> SCM_REST_API: Returns all mapped repositories as HAL objects
+SCM_REST_API --> Frontend: Returns repository collection object as JSON
+```
 
 ### Create new branch
 Another core function of SCM-Manager is to create new branches using the Web UI. 
 Creating a new branch over the SCM-Manager UI would lead to the following actions.
 The SCM-Manager Subversion API does not support the branch and branches commands, so this feature is not available for Subversion repositories. 
 
-![Create new branch](http://www.plantuml.com/plantuml/svg/LOunZiCm30JxUyNb0J7xLFw9GTCRIu146HGPVpzIcMfsiCsitTayQlbxP9KI1yBAVtA_-el8-5xEx2dsw31fwb1Vf5NgKf-LbK_Optw3FGp49YaxPCfsD8aATVRSb8PrmY0-AEsQ1uc17PlYtdPZbRHSisc57eDV)
+```uml
+Frontend -> SCM_REST_API: POST Request "create(BranchRequestDto)"
+SCM_REST_API -> Repository_Service_Factory: create(Repository)
+Repository_Service_Factory --> SCM_REST_API: Returns repository service
+SCM_REST_API -> Repository_Branches_Command: getBranchesCommand()
+Repository_Branches_Command --> SCM_REST_API: Returns branches command builder
+SCM_REST_API -> Repository_Branches_Command: checkIfBranchDoesNotAlreadyExist()
+SCM_REST_API -> Repository_Branch_Command: getBranchCommand()
+Repository_Branch_Command --> SCM_REST_API: Returns branch command builder
+SCM_REST_API -> Repository_Branch_Command_Builder: from(String parent)
+SCM_REST_API -> Repository_Branch_Command_Builder: name(String branchName)
+Repository_Branch_Command_Builder --> SCM_REST_API: Returns new branch
+SCM_REST_API --> Frontend: Returns location of the new branch
+```
