@@ -20,41 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
-export type Link = {
-  href: string;
-  name?: string;
-  templated?: boolean;
+import { HalRepresentation } from "@scm-manager/ui-types";
+
+export const requiredLink = (object: HalRepresentation, name: string) => {
+  const link = object._links[name];
+  if (!link) {
+    throw new Error(`could not find link with name ${name}`);
+  }
+  if (Array.isArray(link)) {
+    throw new Error(`could not return href, link ${name} is a multi link`);
+  }
+  return link.href;
 };
-
-type LinkValue = Link | Link[];
-
-export type Links = {
-  [key: string]: LinkValue;
-};
-
-export type Embedded = {
-  [key: string]: unknown;
-};
-
-type EmbeddedType = Embedded | undefined;
-
-export type HalRepresentation<T extends EmbeddedType = undefined> = {
-  _embedded?: T;
-  _links: Links;
-};
-
-export type HalRepresentationWithEmbedded<T extends EmbeddedType = undefined> = HalRepresentation<T> & {
-  _embedded: T;
-};
-
-export type PagedCollection<T extends EmbeddedType = undefined> = HalRepresentationWithEmbedded<T> & {
-  page: number;
-  pageTotal: number;
-};
-
-/**
- * @deprecated use HalRepresentation instead
- */
-export type Collection<T extends EmbeddedType = undefined> = HalRepresentation<T>;

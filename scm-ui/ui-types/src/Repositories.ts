@@ -22,17 +22,20 @@
  * SOFTWARE.
  */
 
-import { PagedCollection, Links, HalObject } from "./hal";
+import { PagedCollection, Links, HalRepresentation } from "./hal";
 
-export type RepositoryBase = {
+export type NamespaceAndName = {
   namespace: string;
   name: string;
+};
+
+export type RepositoryBase = NamespaceAndName & {
   type: string;
   contact?: string;
   description?: string;
 }
 
-export type Repository = HalObject &
+export type Repository = HalRepresentation &
   RepositoryBase & {
     creationDate?: string;
     lastModified?: string;
