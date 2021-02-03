@@ -20,57 +20,28 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
-import { PagedCollection, Links, HalRepresentation } from "./hal";
+import { BranchCollection, Repository } from "@scm-manager/ui-types";
+import { requiredLink } from "./links";
+import { useQuery, useQueryClient } from "react-query";
+import { ApiResult } from "./base";
+import { branchQueryKey, repoQueryKey } from "./keys";
+import { apiClient } from "@scm-manager/ui-components";
 
-export type NamespaceAndName = {
-  namespace: string;
-  name: string;
-};
-
-export type RepositoryBase = NamespaceAndName & {
-  type: string;
-  contact?: string;
-  description?: string;
-};
-
-export type Repository = HalRepresentation &
-  RepositoryBase & {
-    creationDate?: string;
-    lastModified?: string;
-    archived?: boolean;
-  };
-
-export type RepositoryCreation = RepositoryBase & {
-  contextEntries: { [key: string]: any };
-};
-
-export type RepositoryUrlImport = Repository & {
-  importUrl: string;
-  username?: string;
-  password?: string;
-};
-
-export type Namespace = {
-  namespace: string;
-  _links: Links;
-};
-
-export type RepositoryCollection = PagedCollection & {
-  _embedded: {
-    repositories: Repository[] | string[];
-  };
-};
-
-export type NamespaceCollection = {
-  _embedded: {
-    namespaces: Namespace[];
-  };
-};
-
-export type RepositoryGroup = {
-  name: string;
-  namespace?: Namespace;
-  repositories: Repository[];
+export const useBranches = (repository: Repository): ApiResult<BranchCollection> => {
+  const queryClient = useQueryClient();
+  const link = requiredLink(repository, "branches");
+  return useQuery<BranchCollection, Error>(
+    repoQueryKey(repository, "branches"),
+    () => apiClient.get(link).then(response => response.json()),
+    {
+      onSuccess: branchCollection => {
+        branchCollection._embedded.branches.forEach(branch => {
+          queryClient.setQueryData(branchQueryKey(repository, branch), branch);
+        });
+      }
+    }
+  );
 };

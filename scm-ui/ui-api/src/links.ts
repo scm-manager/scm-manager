@@ -20,57 +20,18 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
-import { PagedCollection, Links, HalRepresentation } from "./hal";
+import { HalRepresentation } from "@scm-manager/ui-types";
 
-export type NamespaceAndName = {
-  namespace: string;
-  name: string;
-};
-
-export type RepositoryBase = NamespaceAndName & {
-  type: string;
-  contact?: string;
-  description?: string;
-};
-
-export type Repository = HalRepresentation &
-  RepositoryBase & {
-    creationDate?: string;
-    lastModified?: string;
-    archived?: boolean;
-  };
-
-export type RepositoryCreation = RepositoryBase & {
-  contextEntries: { [key: string]: any };
-};
-
-export type RepositoryUrlImport = Repository & {
-  importUrl: string;
-  username?: string;
-  password?: string;
-};
-
-export type Namespace = {
-  namespace: string;
-  _links: Links;
-};
-
-export type RepositoryCollection = PagedCollection & {
-  _embedded: {
-    repositories: Repository[] | string[];
-  };
-};
-
-export type NamespaceCollection = {
-  _embedded: {
-    namespaces: Namespace[];
-  };
-};
-
-export type RepositoryGroup = {
-  name: string;
-  namespace?: Namespace;
-  repositories: Repository[];
+export const requiredLink = (object: HalRepresentation, name: string) => {
+  const link = object._links[name];
+  if (!link) {
+    throw new Error(`could not find link with name ${name}`);
+  }
+  if (Array.isArray(link)) {
+    throw new Error(`could not return href, link ${name} is a multi link`);
+  }
+  return link.href;
 };
