@@ -93,10 +93,10 @@ public class GitHookEventFacade {
     }
   }
 
-  private void handleGitInternalThread(GitHookContextProvider context, Thread thread) {
+  private void handleGitInternalThread(GitHookContextProvider context, Thread internalJGitThread) {
     internalThreadHookHandler.submit(() -> {
       try {
-        thread.join();
+        internalJGitThread.join();
       } catch (InterruptedException e) {
         LOG.debug("got interrupted in internal git thread for repository id {}", context.getRepositoryId(), e);
       } finally {
