@@ -21,130 +21,91 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { connect } from "react-redux";
-import { Route, RouteComponentProps } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { Route, useParams, useRouteMatch } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Group } from "@scm-manager/ui-types";
+import { Link } from "@scm-manager/ui-types";
 import {
+  CustomQueryFlexWrappedColumns,
   ErrorPage,
   Loading,
   NavLink,
   Page,
-  CustomQueryFlexWrappedColumns,
   PrimaryContentColumn,
-  SecondaryNavigationColumn,
   SecondaryNavigation,
+  SecondaryNavigationColumn,
+  StateMenuContextProvider,
   SubNavigation,
-  StateMenuContextProvider
+  urls
 } from "@scm-manager/ui-components";
-import { getGroupsLink, mustGetGroupsLink } from "../../modules/indexResource";
-import { fetchGroupByName, getFetchGroupFailure, getGroupByName, isFetchGroupPending } from "../modules/groups";
 import { Details } from "./../components/table";
 import { EditGroupNavLink, SetPermissionsNavLink } from "./../components/navLinks";
 import EditGroup from "./EditGroup";
 import SetPermissions from "../../permissions/components/SetPermissions";
-import { urls } from "@scm-manager/ui-components";
+import { useGroup } from "@scm-manager/ui-api";
 
-type Props = RouteComponentProps &
-  WithTranslation & {
-    name: string;
-    group: Group;
-    loading: boolean;
-    error: Error;
-    groupLink: string;
+const SingleGroup: FC = () => {
+  const { name } = useParams();
+  const match = useRouteMatch();
+  const { data: group, isLoading, error } = useGroup(name);
+  const [t] = useTranslation("groups");
 
-    // dispatcher functions
-    fetchGroupByName: (p1: string, p2: string) => void;
-  };
-
-class SingleGroup extends React.Component<Props> {
-  componentDidMount() {
-    this.props.fetchGroupByName(this.props.groupLink, this.props.name);
+  if (error) {
+    return <ErrorPage title={t("singleGroup.errorTitle")} subtitle={t("singleGroup.errorSubtitle")} error={error} />;
   }
 
-  render() {
-    const { t, loading, error, group } = this.props;
-
-    if (error) {
-      return <ErrorPage title={t("singleGroup.errorTitle")} subtitle={t("singleGroup.errorSubtitle")} error={error} />;
-    }
-
-    if (!group || loading) {
-      return <Loading />;
-    }
-
-    const url = urls.matchedUrl(this.props);
-
-    const extensionProps = {
-      group,
-      url
-    };
-
-    return (
-      <StateMenuContextProvider>
-        <Page title={group.name}>
-          <CustomQueryFlexWrappedColumns>
-            <PrimaryContentColumn>
-              <Route path={url} exact component={() => <Details group={group} />} />
-              <Route path={`${url}/settings/general`} exact component={() => <EditGroup group={group} />} />
-              <Route
-                path={`${url}/settings/permissions`}
-                exact
-                component={() => <SetPermissions selectedPermissionsLink={group._links.permissions} />}
-              />
-              <ExtensionPoint name="group.route" props={extensionProps} renderAll={true} />
-            </PrimaryContentColumn>
-            <SecondaryNavigationColumn>
-              <SecondaryNavigation label={t("singleGroup.menu.navigationLabel")}>
-                <NavLink
-                  to={`${url}`}
-                  icon="fas fa-info-circle"
-                  label={t("singleGroup.menu.informationNavLink")}
-                  title={t("singleGroup.menu.informationNavLink")}
-                />
-                <ExtensionPoint name="group.navigation" props={extensionProps} renderAll={true} />
-                <SubNavigation
-                  to={`${url}/settings/general`}
-                  label={t("singleGroup.menu.settingsNavLink")}
-                  title={t("singleGroup.menu.settingsNavLink")}
-                >
-                  <EditGroupNavLink group={group} editUrl={`${url}/settings/general`} />
-                  <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
-                  <ExtensionPoint name="group.setting" props={extensionProps} renderAll={true} />
-                </SubNavigation>
-              </SecondaryNavigation>
-            </SecondaryNavigationColumn>
-          </CustomQueryFlexWrappedColumns>
-        </Page>
-      </StateMenuContextProvider>
-    );
+  if (!group || isLoading) {
+    return <Loading />;
   }
-}
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const name = ownProps.match.params.name;
-  const group = getGroupByName(state, name);
-  const loading = isFetchGroupPending(state, name);
-  const error = getFetchGroupFailure(state, name);
-  const groupLink = mustGetGroupsLink(state);
+  const url = urls.matchedUrlFromMatch(match);
 
-  return {
-    name,
+  const extensionProps = {
     group,
-    loading,
-    error,
-    groupLink
+    url
   };
+
+  return (
+    <StateMenuContextProvider>
+      <Page title={group.name}>
+        <CustomQueryFlexWrappedColumns>
+          <PrimaryContentColumn>
+            <Route path={url} exact>
+              <Details group={group} />
+            </Route>
+            <Route path={`${url}/settings/general`} exact>
+              <EditGroup group={group} />
+            </Route>
+            <Route path={`${url}/settings/permissions`} exact>
+              <SetPermissions selectedPermissionsLink={group._links.permissions as Link} />
+            </Route>
+            <ExtensionPoint name="group.route" props={extensionProps} renderAll={true} />
+          </PrimaryContentColumn>
+          <SecondaryNavigationColumn>
+            <SecondaryNavigation label={t("singleGroup.menu.navigationLabel")}>
+              <NavLink
+                to={`${url}`}
+                icon="fas fa-info-circle"
+                label={t("singleGroup.menu.informationNavLink")}
+                title={t("singleGroup.menu.informationNavLink")}
+              />
+              <ExtensionPoint name="group.navigation" props={extensionProps} renderAll={true} />
+              <SubNavigation
+                to={`${url}/settings/general`}
+                label={t("singleGroup.menu.settingsNavLink")}
+                title={t("singleGroup.menu.settingsNavLink")}
+              >
+                <EditGroupNavLink group={group} editUrl={`${url}/settings/general`} />
+                <SetPermissionsNavLink group={group} permissionsUrl={`${url}/settings/permissions`} />
+                <ExtensionPoint name="group.setting" props={extensionProps} renderAll={true} />
+              </SubNavigation>
+            </SecondaryNavigation>
+          </SecondaryNavigationColumn>
+        </CustomQueryFlexWrappedColumns>
+      </Page>
+    </StateMenuContextProvider>
+  );
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchGroupByName: (link: string, name: string) => {
-      dispatch(fetchGroupByName(link, name));
-    }
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("groups")(SingleGroup));
+export default SingleGroup;

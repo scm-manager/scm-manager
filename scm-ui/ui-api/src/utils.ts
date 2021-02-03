@@ -22,42 +22,8 @@
  * SOFTWARE.
  */
 
-export { Action } from "./Action";
-export * from "./hal";
-
-export { Me } from "./Me";
-export { DisplayedUser, User } from "./User";
-export * from "./Group";
-
-export * from "./Repositories";
-export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
-
-export * from "./Branches";
-
-export { Person } from "./Person";
-
-export * from "./Changesets";
-
-export { Signature } from "./Signature";
-
-export { AnnotatedSource, AnnotatedLine } from "./Annotate";
-
-export { Tag } from "./Tags";
-
-export { Config, AnonymousMode } from "./Config";
-
-export { IndexResources } from "./IndexResources";
-
-export { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
-
-export { SubRepository, File } from "./Sources";
-
-export { SelectValue, AutocompleteObject } from "./Autocomplete";
-
-export { Plugin, PluginCollection, PluginGroup, PendingPlugins } from "./Plugin";
-
-export { RepositoryRole } from "./RepositoryRole";
-
-export { NamespaceStrategies } from "./NamespaceStrategies";
-
-export * from "./LoginInfo";
+export const createQueryString = (params: Record<string, string>) => {
+  return Object.keys(params)
+    .map(k => encodeURIComponent(k) + "=" + encodeURIComponent(params[k]))
+    .join("&");
+};

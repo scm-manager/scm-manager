@@ -22,22 +22,34 @@
  * SOFTWARE.
  */
 
-import { Collection, Links } from "./hal";
+import { Collection, Links, PagedCollection } from "./hal";
 
 export type Member = {
   name: string;
   _links: Links;
 };
 
-export type Group = Collection & {
+export type GroupBase = {
   name: string;
   description: string;
   type: string;
   external: boolean;
   members: string[];
-  _embedded: {
-    members: Member[];
+};
+
+export type Group = Collection &
+  GroupBase & {
+    creationDate?: string;
+    lastModified?: string;
+    _embedded: {
+      members: Member[];
+    };
   };
-  creationDate?: string;
-  lastModified?: string;
+
+export type GroupCreation = GroupBase;
+
+export type GroupCollection = PagedCollection & {
+  _embedded: {
+    groups: Group[];
+  };
 };
