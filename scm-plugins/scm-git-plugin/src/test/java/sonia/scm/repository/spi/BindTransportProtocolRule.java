@@ -44,11 +44,12 @@ class BindTransportProtocolRule extends ExternalResource {
   private ScmTransportProtocol scmTransportProtocol;
 
   RepositoryManager repositoryManager = mock(RepositoryManager.class);
+  GitHookEventFacade hookEventFacade;
 
   @Override
   protected void before() {
     HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
-    GitHookEventFacade hookEventFacade = new GitHookEventFacade(new HookEventFacade(of(repositoryManager), hookContextFactory));
+    hookEventFacade = new GitHookEventFacade(new HookEventFacade(of(repositoryManager), hookContextFactory));
     GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
     scmTransportProtocol = new ScmTransportProtocol(of(GitTestHelper.createConverterFactory()), of(hookEventFacade), of(gitRepositoryHandler));
 
@@ -61,5 +62,6 @@ class BindTransportProtocolRule extends ExternalResource {
   @Override
   protected void after() {
     Transport.unregister(scmTransportProtocol);
+    hookEventFacade.close();
   }
 }

@@ -33,6 +33,7 @@ import sonia.scm.repository.spi.HookEventFacade;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
+import java.io.Closeable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -48,7 +49,7 @@ import java.util.concurrent.Executors;
  * repository) by detecting the internal thread used by JGit and joining another thread
  * where the pending push is triggered.
  */
-public class GitHookEventFacade {
+public class GitHookEventFacade implements Closeable {
 
   private static final Logger LOG = LoggerFactory.getLogger(GitHookEventFacade.class);
 
@@ -126,5 +127,10 @@ public class GitHookEventFacade {
         .setNameFormat("GitInternalThreadHookHandler-%d")
         .build()
     );
+  }
+
+  @Override
+  public void close() {
+    internalThreadHookHandler.shutdown();
   }
 }
