@@ -58,11 +58,11 @@ export type Namespace = {
   _links: Links;
 };
 
-export type RepositoryCollection = PagedCollection & {
-  _embedded: {
-    repositories: Repository[] | string[];
-  };
+type RepositoryEmbedded = {
+  repositories: Repository[];
 };
+
+export type RepositoryCollection = PagedCollection<RepositoryEmbedded>;
 
 export type NamespaceCollection = {
   _embedded: {

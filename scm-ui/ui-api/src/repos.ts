@@ -146,7 +146,7 @@ export const useNamespaceStrategies = () => {
 };
 
 export const useRepository = (namespace: string, name: string): ApiResult<Repository> => {
-  let link = useRequiredIndexLink("repositories");
+  const link = useRequiredIndexLink("repositories");
   return useQuery<Repository, Error>(["repository", namespace, name], () =>
     apiClient.get(urls.concat(link, namespace, name)).then(response => response.json())
   );
