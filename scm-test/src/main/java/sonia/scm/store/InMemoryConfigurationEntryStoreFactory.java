@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 import java.util.HashMap;
@@ -38,10 +38,13 @@ public class InMemoryConfigurationEntryStoreFactory implements ConfigurationEntr
   @Override
   public <T> ConfigurationEntryStore<T> getStore(TypedStoreParameters<T> storeParameters) {
     String name = storeParameters.getName();
+    if (storeParameters.getRepositoryId() != null) {
+      name += name + "-" + storeParameters.getRepositoryId();
+    }
     return get(name);
   }
 
   public <T> InMemoryConfigurationEntryStore<T> get(String name) {
-    return stores.computeIfAbsent(name, x -> new InMemoryConfigurationEntryStore());
+    return stores.computeIfAbsent(name, x -> new InMemoryConfigurationEntryStore<T>());
   }
 }

@@ -24,7 +24,10 @@
 
 package sonia.scm.update;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import sonia.scm.migration.RepositoryUpdateContext;
+import sonia.scm.migration.RepositoryUpdateStep;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.store.InMemoryConfigurationEntryStoreFactory;
@@ -33,15 +36,34 @@ import sonia.scm.version.Version;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Consumer;
 
+import static java.util.Collections.emptySet;
+import static java.util.Collections.singleton;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.CALLS_REAL_METHODS;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 import static sonia.scm.version.Version.parse;
 
 class UpdateEngineTest {
 
   ConfigurationEntryStoreFactory storeFactory = new InMemoryConfigurationEntryStoreFactory();
+  RepositoryUpdateIterator repositoryUpdateIterator = mock(RepositoryUpdateIterator.class, CALLS_REAL_METHODS);
 
   List<String> processedUpdates = new ArrayList<>();
+
+  @BeforeEach
+  void mockRepositories() {
+    doAnswer(invocation -> {
+      Consumer<String> consumer = invocation.getArgument(0, Consumer.class);
+      consumer.accept("42");
+      consumer.accept("1337");
+      return null;
+    }).when(repositoryUpdateIterator).forEachRepository(any());
+  }
 
   @Test
   void shouldProcessStepsInCorrectOrder() {
@@ -51,11 +73,27 @@ class UpdateEngineTest {
     updateSteps.add(new FixedVersionUpdateStep("test", "1.2.0"));
     updateSteps.add(new FixedVersionUpdateStep("test", "1.1.0"));
 
-    UpdateEngine updateEngine = new UpdateEngine(updateSteps, storeFactory);
+    UpdateEngine updateEngine = new UpdateEngine(updateSteps, emptySet(), storeFactory, repositoryUpdateIterator);
     updateEngine.update();
 
     assertThat(processedUpdates)
       .containsExactly("test:1.1.0", "test:1.1.1", "test:1.2.0");
+  }
+
+  @Test
+  void shouldProcessStepsInCorrectOrderWithRepositoryUpdates() {
+    LinkedHashSet<UpdateStep> updateSteps = new LinkedHashSet<>();
+    LinkedHashSet<RepositoryUpdateStep> repositoryUpdateSteps = new LinkedHashSet<>();
+
+    repositoryUpdateSteps.add(new FixedVersionUpdateStep("test", "1.1.1"));
+    updateSteps.add(new FixedVersionUpdateStep("test", "1.2.0"));
+    repositoryUpdateSteps.add(new FixedVersionUpdateStep("test", "1.1.0"));
+
+    UpdateEngine updateEngine = new UpdateEngine(updateSteps, repositoryUpdateSteps, storeFactory, repositoryUpdateIterator);
+    updateEngine.update();
+
+    assertThat(processedUpdates)
+      .containsExactly("test:1.1.0-42", "test:1.1.0-1337", "test:1.1.1-42", "test:1.1.1-1337", "test:1.2.0");
   }
 
   @Test
@@ -65,7 +103,7 @@ class UpdateEngineTest {
     updateSteps.add(new FixedVersionUpdateStep("test", "1.2.0"));
     updateSteps.add(new CoreFixedVersionUpdateStep("core", "1.2.0"));
 
-    UpdateEngine updateEngine = new UpdateEngine(updateSteps, storeFactory);
+    UpdateEngine updateEngine = new UpdateEngine(updateSteps, emptySet(), storeFactory, repositoryUpdateIterator);
     updateEngine.update();
 
     assertThat(processedUpdates)
@@ -73,19 +111,51 @@ class UpdateEngineTest {
   }
 
   @Test
-  void shouldRunStepsOnlyOnce() {
+  void shouldProcessGlobalStepsBeforeRepository() {
+    Set<UpdateStep> updateSteps = singleton(new FixedVersionUpdateStep("test", "1.2.0"));
+    Set<RepositoryUpdateStep> repositoryUpdateSteps = singleton(new FixedVersionUpdateStep("test", "1.2.0"));
+
+    UpdateEngine updateEngine = new UpdateEngine(updateSteps, repositoryUpdateSteps, storeFactory, repositoryUpdateIterator);
+    updateEngine.update();
+
+    assertThat(processedUpdates)
+      .containsExactly("test:1.2.0", "test:1.2.0-42", "test:1.2.0-1337");
+  }
+
+  @Test
+  void shouldRunGlobalStepsOnlyOnce() {
     LinkedHashSet<UpdateStep> updateSteps = new LinkedHashSet<>();
 
     updateSteps.add(new FixedVersionUpdateStep("test", "1.1.1"));
 
-    UpdateEngine updateEngine = new UpdateEngine(updateSteps, storeFactory);
-    updateEngine.update();
+    UpdateEngine firstUpdateEngine = new UpdateEngine(updateSteps, emptySet(), storeFactory, repositoryUpdateIterator);
+    firstUpdateEngine.update();
 
     processedUpdates.clear();
 
-    updateEngine.update();
+    UpdateEngine secondUpdateEngine = new UpdateEngine(updateSteps, emptySet(), storeFactory, repositoryUpdateIterator);
+    secondUpdateEngine.update();
 
     assertThat(processedUpdates).isEmpty();
+  }
+
+  @Test
+  void shouldRunRepositoryStepsOnlyOnce() {
+    LinkedHashSet<RepositoryUpdateStep> repositoryUpdateSteps = new LinkedHashSet<>();
+
+    repositoryUpdateSteps.add(new FixedVersionUpdateStep("test", "1.1.1"));
+
+    UpdateEngine firstUpdateEngine = new UpdateEngine(emptySet(), repositoryUpdateSteps, storeFactory, repositoryUpdateIterator);
+    firstUpdateEngine.update();
+
+    processedUpdates.clear();
+
+    repositoryUpdateSteps.add(new FixedVersionUpdateStep("test", "1.2.0"));
+    UpdateEngine secondUpdateEngine = new UpdateEngine(emptySet(), repositoryUpdateSteps, storeFactory, repositoryUpdateIterator);
+    secondUpdateEngine.update();
+
+    assertThat(processedUpdates)
+      .containsExactly("test:1.2.0-42", "test:1.2.0-1337");
   }
 
   @Test
@@ -94,20 +164,20 @@ class UpdateEngineTest {
 
     updateSteps.add(new FixedVersionUpdateStep("test", "1.1.1"));
 
-    UpdateEngine updateEngine = new UpdateEngine(updateSteps, storeFactory);
+    UpdateEngine updateEngine = new UpdateEngine(updateSteps, emptySet(), storeFactory, repositoryUpdateIterator);
     updateEngine.update();
 
     processedUpdates.clear();
 
     updateSteps.add(new FixedVersionUpdateStep("other", "1.1.1"));
 
-    updateEngine = new UpdateEngine(updateSteps, storeFactory);
+    updateEngine = new UpdateEngine(updateSteps, emptySet(), storeFactory, repositoryUpdateIterator);
     updateEngine.update();
 
     assertThat(processedUpdates).containsExactly("other:1.1.1");
   }
 
-  class FixedVersionUpdateStep implements UpdateStep {
+  class FixedVersionUpdateStep implements UpdateStep, RepositoryUpdateStep {
     private final String type;
     private final String version;
 
@@ -129,6 +199,11 @@ class UpdateEngineTest {
     @Override
     public void doUpdate() {
       processedUpdates.add(type + ":" + version);
+    }
+
+    @Override
+    public void doUpdate(RepositoryUpdateContext repositoryUpdateContext) throws Exception {
+      processedUpdates.add(type + ":" + version + "-" + repositoryUpdateContext.getRepositoryId());
     }
   }
 

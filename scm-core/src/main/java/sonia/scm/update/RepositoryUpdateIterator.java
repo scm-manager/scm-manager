@@ -24,6 +24,8 @@
 
 package sonia.scm.update;
 
+import sonia.scm.migration.UpdateException;
+
 import java.util.function.Consumer;
 
 /**
@@ -39,4 +41,35 @@ public interface RepositoryUpdateIterator {
    * @since 2.13.0
    */
   void forEachRepository(Consumer<String> repositoryIdConsumer);
+
+  /**
+   * Equivalent to {@link #forEachRepository(Consumer)} with the difference, that you can throw exceptions in the given
+   * update code, that will then be wrapped in a {@link UpdateException}.
+   *
+   * @since 2.14.0
+   */
+  default void forEachRepositoryWithException(UpdaterWithException updater) {
+    forEachRepository(
+      repositoryId -> {
+        try {
+          updater.update(repositoryId);
+        } catch (Exception e) {
+          throw new UpdateException("could not run update step", e);
+        }
+      }
+    );
+  }
+
+  /**
+   * Simple callback with the id of an existing repository with the possibility to throw exceptions.
+   *
+   * @since 2.14.0
+   */
+  interface UpdaterWithException {
+    /**
+     * Implements the update logic for a single repository, denoted by its id.
+     */
+    @SuppressWarnings("java:S112") // We explicitly want to allow arbitrary exceptions here
+    void update(String repositoryId) throws Exception;
+  }
 }

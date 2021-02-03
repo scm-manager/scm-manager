@@ -21,15 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.update;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.migration.RepositoryUpdateContext;
+import sonia.scm.migration.RepositoryUpdateStep;
 import sonia.scm.migration.UpdateException;
 import sonia.scm.migration.UpdateStep;
+import sonia.scm.migration.UpdateStepTarget;
 import sonia.scm.store.ConfigurationEntryStore;
 import sonia.scm.store.ConfigurationEntryStoreFactory;
+import sonia.scm.version.Version;
 
 import javax.inject.Inject;
 import java.util.Comparator;
@@ -37,6 +41,7 @@ import java.util.List;
 import java.util.Set;
 
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Stream.concat;
 
 public class UpdateEngine {
 
@@ -44,46 +49,90 @@ public class UpdateEngine {
 
   private static final String STORE_NAME = "executedUpdates";
 
-  private final List<UpdateStep> steps;
+  private final List<UpdateStepWrapper> steps;
   private final ConfigurationEntryStore<UpdateVersionInfo> store;
+  private final ConfigurationEntryStoreFactory storeFactory;
+  private final RepositoryUpdateIterator repositoryUpdateIterator;
 
   @Inject
-  public UpdateEngine(Set<UpdateStep> steps, ConfigurationEntryStoreFactory storeFactory) {
-    this.steps = sortSteps(steps);
+  public UpdateEngine(
+    Set<UpdateStep> globalSteps,
+    Set<RepositoryUpdateStep> repositorySteps,
+    ConfigurationEntryStoreFactory storeFactory,
+    RepositoryUpdateIterator repositoryUpdateIterator
+  ) {
+    this.storeFactory = storeFactory;
+    this.repositoryUpdateIterator = repositoryUpdateIterator;
     this.store = storeFactory.withType(UpdateVersionInfo.class).withName(STORE_NAME).build();
+    this.steps = sortSteps(globalSteps, repositorySteps);
   }
 
-  private List<UpdateStep> sortSteps(Set<UpdateStep> steps) {
+  private List<UpdateStepWrapper> sortSteps(Set<UpdateStep> globalSteps, Set<RepositoryUpdateStep> repositorySteps) {
     LOG.trace("sorting available update steps:");
-    List<UpdateStep> sortedSteps = steps.stream()
+    List<UpdateStepWrapper> sortedSteps =
+      concat(
+        globalSteps.stream().filter(this::notRunYet).map(this::wrap),
+        repositorySteps.stream().map(this::wrap))
       .sorted(
         Comparator
-          .comparing(UpdateStep::getTargetVersion)
-          .thenComparing(this::isCoreUpdateStep)
+          .comparing(UpdateStepWrapper::getTargetVersion)
+          .thenComparing(UpdateEngine::isGlobalUpdateStep)
+          .thenComparing(UpdateEngine::isCoreUpdateStep)
           .reversed())
       .collect(toList());
     sortedSteps.forEach(step -> LOG.trace("{} for version {}", step.getAffectedDataType(), step.getTargetVersion()));
     return sortedSteps;
   }
 
-  private boolean isCoreUpdateStep(UpdateStep updateStep) {
-    return updateStep instanceof CoreUpdateStep;
+  private UpdateStepWrapper wrap(UpdateStep updateStep) {
+    return new UpdateStepWrapper(updateStep) {
+      @Override
+      public void doUpdate() throws Exception {
+        LOG.info("running update step for type {} and version {} (class {})",
+          updateStep.getAffectedDataType(),
+          updateStep.getTargetVersion(),
+          updateStep.getClass().getName()
+        );
+        updateStep.doUpdate();
+        storeNewVersion(store, updateStep);
+      }
+    };
+  }
+
+  private UpdateStepWrapper wrap(RepositoryUpdateStep repositoryUpdateStep) {
+    return new UpdateStepWrapper(repositoryUpdateStep) {
+      @Override
+      public void doUpdate() {
+        repositoryUpdateIterator.forEachRepositoryWithException(repositoryId -> {
+          if (notRunYet(repositoryUpdateStep, repositoryId)) {
+            LOG.info("running update step for type {} and version {} (class {}) for repository id {}",
+              repositoryUpdateStep.getAffectedDataType(),
+              repositoryUpdateStep.getTargetVersion(),
+              repositoryUpdateStep.getClass().getName(),
+              repositoryId
+            );
+            repositoryUpdateStep.doUpdate(new RepositoryUpdateContext(repositoryId));
+            storeNewVersion(storeForRepository(repositoryId), repositoryUpdateStep);
+          }
+        });
+      }
+    };
+  }
+
+  private static boolean isCoreUpdateStep(UpdateStepWrapper updateStep) {
+    return updateStep.isCoreUpdate();
+  }
+
+  private static boolean isGlobalUpdateStep(UpdateStepWrapper updateStep) {
+    return updateStep instanceof UpdateStep;
   }
 
   public void update() {
-    steps
-      .stream()
-      .filter(this::notRunYet)
-      .forEach(this::execute);
+    steps.forEach(this::execute);
   }
 
-  private void execute(UpdateStep updateStep) {
+  private void execute(UpdateStepWrapper updateStep) {
     try {
-      LOG.info("running update step for type {} and version {} (class {})",
-        updateStep.getAffectedDataType(),
-        updateStep.getTargetVersion(),
-        updateStep.getClass().getName()
-      );
       updateStep.doUpdate();
     } catch (Exception e) {
       throw new UpdateException(
@@ -94,6 +143,9 @@ public class UpdateEngine {
           updateStep.getClass()),
         e);
     }
+  }
+
+  private void storeNewVersion(ConfigurationEntryStore<UpdateVersionInfo> store, UpdateStepTarget updateStep) {
     UpdateVersionInfo newVersionInfo = new UpdateVersionInfo(updateStep.getTargetVersion().getParsedVersion());
     store.put(updateStep.getAffectedDataType(), newVersionInfo);
   }
@@ -103,6 +155,24 @@ public class UpdateEngine {
       updateStep.getAffectedDataType(),
       updateStep.getTargetVersion()
     );
+    ConfigurationEntryStore<UpdateVersionInfo> store = this.store;
+    return notRunYet(store, updateStep);
+  }
+
+  private boolean notRunYet(RepositoryUpdateStep repositoryUpdateStep, String repositoryId) {
+    LOG.trace("checking whether to run update step for type {} and version {} on repository id {}",
+      repositoryUpdateStep.getAffectedDataType(),
+      repositoryUpdateStep.getTargetVersion(),
+      repositoryId
+    );
+    return notRunYet(storeForRepository(repositoryId), repositoryUpdateStep);
+  }
+
+  private ConfigurationEntryStore<UpdateVersionInfo> storeForRepository(String repositoryId) {
+    return storeFactory.withType(UpdateVersionInfo.class).withName(STORE_NAME).forRepository(repositoryId).build();
+  }
+
+  private boolean notRunYet(ConfigurationEntryStore<UpdateVersionInfo> store, UpdateStepTarget updateStep) {
     UpdateVersionInfo updateVersionInfo = store.get(updateStep.getAffectedDataType());
     if (updateVersionInfo == null) {
       LOG.trace("no updates for type {} run yet; step will be executed", updateStep.getAffectedDataType());
@@ -115,5 +185,32 @@ public class UpdateEngine {
       result
     );
     return result;
+  }
+
+  private static abstract class UpdateStepWrapper implements UpdateStepTarget {
+    private final UpdateStepTarget delegateTarget;
+    private final boolean coreUpdate;
+
+    protected UpdateStepWrapper(UpdateStepTarget delegateTarget) {
+      this.delegateTarget = delegateTarget;
+      this.coreUpdate = delegateTarget instanceof CoreUpdateStep;
+    }
+
+    @Override
+    public Version getTargetVersion() {
+      return delegateTarget.getTargetVersion();
+    }
+
+    @Override
+    public String getAffectedDataType() {
+      return delegateTarget.getAffectedDataType();
+    }
+
+    public boolean isCoreUpdate() {
+      return coreUpdate;
+    }
+
+    @SuppressWarnings("java:S112") // we explicitly want to allow all kinds of exceptions here
+    abstract void doUpdate() throws Exception;
   }
 }
