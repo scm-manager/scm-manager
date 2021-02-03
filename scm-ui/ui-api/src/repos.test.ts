@@ -23,9 +23,9 @@
  */
 
 import fetchMock from "fetch-mock-jest";
-import { renderHook } from "@testing-library/react-hooks";
+import {renderHook} from "@testing-library/react-hooks";
 import createWrapper from "./tests/createWrapper";
-import { setIndexLink } from "./tests/indexLinks";
+import {setIndexLink} from "./tests/indexLinks";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import {
   useCreateRepository,
@@ -55,9 +55,9 @@ describe("Test repository hooks", () => {
   describe("useRepositories tests", () => {
     const repositoryCollection = {
       _embedded: {
-        repositories: [heartOfGold],
-        _links: {}
-      }
+        repositories: [heartOfGold]
+      },
+      _links: {}
     };
 
     const expectCollection = async (queryClient: QueryClient, request?: UseRepositoriesRequest) => {
