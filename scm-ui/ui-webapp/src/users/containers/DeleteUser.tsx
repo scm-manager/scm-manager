@@ -22,45 +22,34 @@
  * SOFTWARE.
  */
 import React, { FC, useState } from "react";
-import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { User } from "@scm-manager/ui-types";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
-import { deleteUser, getDeleteUserFailure, isDeleteUserPending } from "../modules/users";
+import { useDeleteUser } from "@scm-manager/ui-api";
 
 type Props = {
-  loading: boolean;
-  error: Error;
   user: User;
   confirmDialog?: boolean;
-  deleteUser: (user: User, callback?: () => void) => void;
 };
 
-const DeleteUser: FC<Props> = ({ confirmDialog = true, loading, error, user, deleteUser }) => {
+const DeleteUser: FC<Props> = ({ confirmDialog = true, user }) => {
+  const { isDeleted, isLoading, error, remove } = useDeleteUser();
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("users");
-  const history = useHistory();
+  const isDeletable = !!user._links.delete;
 
-  const userDeleted = () => {
-    history.push("/users/");
-  };
+  const deleteUserCallback = () => remove(user);
 
-  const deleteUserCallback = () => {
-    deleteUser(user, userDeleted);
-  };
-
-  const confirmDelete = () => {
-    setShowConfirmAlert(true);
-  };
-
-  const isDeletable = () => {
-    return user._links.delete;
-  };
+  const confirmDelete = () => setShowConfirmAlert(true);
 
   const action = confirmDialog ? confirmDelete : deleteUserCallback;
 
-  if (!isDeletable()) {
+  if (isDeleted) {
+    return <Redirect to="/users/" />;
+  }
+
+  if (!isDeletable) {
     return null;
   }
 
@@ -73,7 +62,7 @@ const DeleteUser: FC<Props> = ({ confirmDialog = true, loading, error, user, del
           {
             className: "is-outlined",
             label: t("deleteUser.confirmAlert.submit"),
-            onClick: () => deleteUserCallback()
+            onClick: deleteUserCallback
           },
           {
             label: t("deleteUser.confirmAlert.cancel"),
@@ -88,27 +77,10 @@ const DeleteUser: FC<Props> = ({ confirmDialog = true, loading, error, user, del
   return (
     <>
       <hr />
-      <ErrorNotification error={error} />
-      <Level right={<DeleteButton label={t("deleteUser.button")} action={action} loading={loading} />} />
+      <ErrorNotification error={error || undefined} />
+      <Level right={<DeleteButton label={t("deleteUser.button")} action={action} loading={isLoading} />} />
     </>
   );
 };
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const loading = isDeleteUserPending(state, ownProps.user.name);
-  const error = getDeleteUserFailure(state, ownProps.user.name);
-  return {
-    loading,
-    error
-  };
-};
-
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    deleteUser: (user: User, callback?: () => void) => {
-      dispatch(deleteUser(user, callback));
-    }
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DeleteUser);
+export default DeleteUser;

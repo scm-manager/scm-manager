@@ -26,7 +26,7 @@ export { Action } from "./Action";
 export * from "./hal";
 
 export { Me } from "./Me";
-export { DisplayedUser, User } from "./User";
+export * from "./User";
 export * from "./Group";
 
 export * from "./Repositories";
