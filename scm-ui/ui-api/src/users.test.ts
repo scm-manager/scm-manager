@@ -29,7 +29,15 @@ import { setIndexLink } from "./tests/indexLinks";
 import { renderHook } from "@testing-library/react-hooks";
 import createWrapper from "./tests/createWrapper";
 import { act } from "react-test-renderer";
-import {useCreateUser, useDeleteUser, useUpdateUser, useUser, useUsers} from "./users";
+import {
+  useConvertToExternal,
+  useConvertToInternal,
+  useCreateUser,
+  useDeleteUser,
+  useUpdateUser,
+  useUser,
+  useUsers
+} from "./users";
 
 describe("Test user hooks", () => {
   const yoda: User = {
@@ -44,6 +52,12 @@ describe("Test user hooks", () => {
       },
       update: {
         href: "/users/yoda"
+      },
+      convertToInternal: {
+        href: "/users/yoda/convertToInternal"
+      },
+      convertToExternal: {
+        href: "/users/yoda/convertToExternal"
       }
     },
     _embedded: {
@@ -236,6 +250,58 @@ describe("Test user hooks", () => {
 
       expect(result.current.error).toBeFalsy();
       expect(result.current.isUpdated).toBe(true);
+      expect(result.current.isLoading).toBe(false);
+      expect(queryClient.getQueryData(["user", "yoda"])).toBeUndefined();
+      expect(queryClient.getQueryData(["users"])).toBeUndefined();
+    });
+  });
+
+  describe("useConvertToInternal tests", () => {
+    it("should convert user", async () => {
+      const queryClient = createInfiniteCachingClient();
+
+      fetchMock.putOnce("/api/v2/users/yoda/convertToInternal", {
+        status: 200
+      });
+
+      const { result, waitForNextUpdate } = renderHook(() => useConvertToInternal(), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+
+      await act(() => {
+        const { convertToInternal } = result.current;
+        convertToInternal(yoda, "thisisaverystrongpassword");
+        return waitForNextUpdate();
+      });
+
+      expect(result.current.error).toBeFalsy();
+      expect(result.current.isConverted).toBe(true);
+      expect(result.current.isLoading).toBe(false);
+      expect(queryClient.getQueryData(["user", "yoda"])).toBeUndefined();
+      expect(queryClient.getQueryData(["users"])).toBeUndefined();
+    });
+  });
+
+  describe("useConvertToExternal tests", () => {
+    it("should convert user", async () => {
+      const queryClient = createInfiniteCachingClient();
+
+      fetchMock.putOnce("/api/v2/users/yoda/convertToExternal", {
+        status: 200
+      });
+
+      const { result, waitForNextUpdate } = renderHook(() => useConvertToExternal(), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+
+      await act(() => {
+        const { convertToExternal } = result.current;
+        convertToExternal(yoda);
+        return waitForNextUpdate();
+      });
+
+      expect(result.current.error).toBeFalsy();
+      expect(result.current.isConverted).toBe(true);
       expect(result.current.isLoading).toBe(false);
       expect(queryClient.getQueryData(["user", "yoda"])).toBeUndefined();
       expect(queryClient.getQueryData(["users"])).toBeUndefined();
