@@ -82,9 +82,8 @@ public final class BundleCommandBuilder {
    *
    * @param outputFile output file
    * @return bundle response
-   * @throws IOException
    */
-  public BundleResponse bundle(File outputFile) throws IOException {
+  public BundleResponse bundle(File outputFile) {
     checkArgument((outputFile != null) && !outputFile.exists(),
       "file is null or exists already");
 
@@ -94,7 +93,7 @@ public final class BundleCommandBuilder {
     logger.info("create bundle at {} for repository {}", outputFile,
       repository.getId());
 
-    return bundleCommand.bundle(request);
+    return bundleWithExportingLock(request);
   }
 
   /**
@@ -102,22 +101,14 @@ public final class BundleCommandBuilder {
    *
    * @param outputStream output stream
    * @return bundle response
-   * @throws IOException
    */
-  public BundleResponse bundle(OutputStream outputStream)
-    throws IOException {
+  public BundleResponse bundle(OutputStream outputStream) {
     checkNotNull(outputStream, "output stream is required");
 
     logger.info("bundle {} to output stream", repository);
 
-    return repositoryExportingCheck.withExportingLock(repository, () -> {
-      try {
-        return bundleCommand.bundle(
-          new BundleCommandRequest(asByteSink(outputStream)));
-      } catch (IOException e) {
-        throw new InternalRepositoryException(repository, "Exception during bundle; does not necessarily indicate a problem with the repository", e);
-      }
-    });
+    BundleCommandRequest request = new BundleCommandRequest(asByteSink(outputStream));
+    return bundleWithExportingLock(request);
   }
 
   /**
@@ -125,16 +116,19 @@ public final class BundleCommandBuilder {
    *
    * @param sink byte sink
    * @return bundle response
-   * @throws IOException
    */
-  public BundleResponse bundle(ByteSink sink)
-    throws IOException {
+  public BundleResponse bundle(ByteSink sink) {
     checkNotNull(sink, "byte sink is required");
     logger.info("bundle {} to byte sink", sink);
 
+    BundleCommandRequest request = new BundleCommandRequest(sink);
+    return bundleWithExportingLock(request);
+  }
+
+  private BundleResponse bundleWithExportingLock(BundleCommandRequest request) {
     return repositoryExportingCheck.withExportingLock(repository, () -> {
       try {
-        return bundleCommand.bundle(new BundleCommandRequest(sink));
+        return bundleCommand.bundle(request);
       } catch (IOException e) {
         throw new InternalRepositoryException(repository, "Exception during bundle; does not necessarily indicate a problem with the repository", e);
       }

@@ -51,5 +51,12 @@ public interface RepositoryExportingCheck {
     return isExporting(repository.getId());
   }
 
+  /**
+   * Asserts that the given repository is marked as being exported during the execution of the given callback.
+   * @param repository The repository that will be marked as being exported.
+   * @param callback This callback will be executed.
+   * @param <T> The return type of the callback.
+   * @return The result of the callback.
+   */
   <T> T withExportingLock(Repository repository, Supplier<T> callback);
 }
