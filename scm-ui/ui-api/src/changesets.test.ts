@@ -150,8 +150,6 @@ describe("Test changeset hooks", () => {
         "repository",
         "hitchhiker",
         "heart-of-gold",
-        "branch",
-        "_",
         "changeset",
         "42"
       ]);
