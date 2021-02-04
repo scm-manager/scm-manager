@@ -23,9 +23,9 @@
  */
 
 import { Me } from "@scm-manager/ui-types";
-import { useQuery, useMutation, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient } from "@scm-manager/ui-components";
-import { ApiResult, useIndexLink, useRequiredIndexLink } from "./base";
+import { ApiResult, useIndexLink } from "./base";
 import { useLegacyContext } from "./LegacyContext";
 
 export const useMe = (): ApiResult<Me> => {
@@ -39,6 +39,14 @@ export const useMe = (): ApiResult<Me> => {
       }
     }
   });
+};
+
+export const useRequiredMe = () => {
+  const { data } = useMe();
+  if (!data) {
+    throw new Error("Could not find 'me' in cache");
+  }
+  return data;
 };
 
 export const useSubject = () => {

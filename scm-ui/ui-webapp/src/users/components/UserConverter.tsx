@@ -21,19 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   Button,
+  ErrorNotification,
+  Level,
   Modal,
   PasswordConfirmation,
-  SubmitButton,
-  ErrorNotification,
-  Level
+  SubmitButton
 } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import { Link, User } from "@scm-manager/ui-types";
-import { convertToExternal, convertToInternal } from "./convertUser";
+import { User } from "@scm-manager/ui-types";
 import styled from "styled-components";
+import { useConvertToExternal, useConvertToInternal } from "@scm-manager/ui-api";
 
 const ExternalDescription = styled.div`
   display: flex;
@@ -43,28 +43,27 @@ const ExternalDescription = styled.div`
 
 type Props = {
   user: User;
-  fetchUser: (user: User) => void;
 };
 
-const UserConverter: FC<Props> = ({ user, fetchUser }) => {
+const UserConverter: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [password, setPassword] = useState("");
   const [passwordValid, setPasswordValid] = useState(false);
-  const [error, setError] = useState<Error | undefined>();
+  const {
+    isLoading: isConvertingToInternal,
+    error: convertingToInternalError,
+    convertToInternal
+  } = useConvertToInternal();
+  const {
+    isLoading: isConvertingToExternal,
+    error: convertingToExternalError,
+    convertToExternal
+  } = useConvertToExternal();
+  const error = convertingToExternalError || convertingToInternalError || undefined;
+  const isLoading = isConvertingToExternal || isConvertingToInternal;
 
-  const toInternal = () => {
-    convertToInternal((user._links.convertToInternal as Link).href, password)
-      .then(() => fetchUser(user))
-      .then(() => setShowPasswordModal(false))
-      .catch(setError);
-  };
-
-  const toExternal = () => {
-    convertToExternal((user._links.convertToExternal as Link).href)
-      .then(() => fetchUser(user))
-      .catch(setError);
-  };
+  useEffect(() => setShowPasswordModal(false), [user]);
 
   const changePassword = (password: string, valid: boolean) => {
     setPassword(password);
@@ -87,16 +86,26 @@ const UserConverter: FC<Props> = ({ user, fetchUser }) => {
           action={() => setShowPasswordModal(true)}
           icon="exchange-alt"
           className="is-pulled-right"
+          loading={isLoading}
+          disabled={isLoading}
         />
       );
     } else {
-      return <Button label={t("userForm.button.convertToExternal")} action={() => toExternal()} icon="exchange-alt" />;
+      return (
+        <Button
+          label={t("userForm.button.convertToExternal")}
+          loading={isLoading}
+          disabled={isLoading}
+          action={() => convertToExternal(user)}
+          icon="exchange-alt"
+        />
+      );
     }
   };
 
   const onReturnPressed = () => {
     if (password && passwordValid) {
-      toInternal();
+      convertToInternal(user, password);
     }
   };
 
@@ -111,8 +120,9 @@ const UserConverter: FC<Props> = ({ user, fetchUser }) => {
       title={t("userForm.modal.passwordRequired")}
       footer={
         <SubmitButton
-          action={() => password && passwordValid && toInternal()}
-          disabled={!passwordValid}
+          action={() => password && passwordValid && convertToInternal(user, password)}
+          loading={isLoading}
+          disabled={!passwordValid || isLoading}
           scrollToTop={false}
           label={t("userForm.modal.convertToInternal")}
         />
