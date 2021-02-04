@@ -29,21 +29,37 @@ import { FilterInput } from "./forms";
 
 type Props = {
   showCreateButton: boolean;
+  currentGroup: string;
+  groups?: string[];
   link: string;
+  groupSelected: (namespace: string) => void;
   label?: string;
   testId?: string;
   searchPlaceholder?: string;
 };
 
 const OverviewPageActions: FC<Props> = ({
+  groups,
+  currentGroup,
   showCreateButton,
   link,
+  groupSelected,
   label,
   testId,
   searchPlaceholder
 }) => {
   const history = useHistory();
   const location = useLocation();
+  const groupSelector = groups && (
+    <div className={"column is-flex"}>
+      <DropDown
+        className={"is-fullwidth"}
+        options={groups}
+        preselectedOption={currentGroup}
+        optionSelected={groupSelected}
+      />
+    </div>
+  );
 
   const [filterValue, setFilterValue] = useState(urls.getQueryStringFromLocation(location));
 
@@ -69,6 +85,7 @@ const OverviewPageActions: FC<Props> = ({
 
   return (
     <div className={"columns is-tablet"}>
+      {groupSelector}
       <div className={"column"}>
         <FilterInput
           placeholder={searchPlaceholder}
