@@ -29,7 +29,7 @@ import { useQuery, useQueryClient } from "react-query";
 import { requiredLink } from "./links";
 import { apiClient } from "@scm-manager/ui-components";
 import { ApiResult } from "./base";
-import { branchQueryKey } from "./keys";
+import { branchQueryKey, repoQueryKey } from "./keys";
 
 type UseChangesetsRequest = {
   branch?: Branch;
@@ -59,7 +59,7 @@ export const useChangesets = (
   return useQuery<ChangesetCollection, Error>(key, () => apiClient.get(link).then(response => response.json()), {
     onSuccess: changesetCollection => {
       changesetCollection._embedded.changesets.forEach(changeset => {
-        queryClient.setQueryData(branchQueryKey(repository, branch, "changeset", changeset.id), changeset);
+        queryClient.setQueryData(repoQueryKey(repository, "changeset", changeset.id), changeset);
       });
     }
   });
