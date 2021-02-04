@@ -23,7 +23,7 @@
  */
 
 import React, { FC } from "react";
-import { FileUpload, LabelWithHelpIcon, Checkbox } from "@scm-manager/ui-components";
+import { FileUpload, LabelWithHelpIcon, Checkbox, InputField } from "@scm-manager/ui-components";
 import { File } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 
@@ -32,34 +32,57 @@ type Props = {
   setValid: (valid: boolean) => void;
   compressed: boolean;
   setCompressed: (compressed: boolean) => void;
+  password: string;
+  setPassword: (password: string) => void;
   disabled: boolean;
 };
 
-const ImportFromBundleForm: FC<Props> = ({ setFile, setValid, compressed, setCompressed, disabled }) => {
+const ImportFromBundleForm: FC<Props> = ({
+  setFile,
+  setValid,
+  compressed,
+  setCompressed,
+  password,
+  setPassword,
+  disabled
+}) => {
   const [t] = useTranslation("repos");
 
   return (
-    <div className="columns">
-      <div className="column is-half is-vcentered">
-        <LabelWithHelpIcon label={t("import.bundle.title")} helpText={t("import.bundle.helpText")} />
-        <FileUpload
-          handleFile={(file: File) => {
-            setFile(file);
-            setValid(!!file);
-          }}
-        />
+    <>
+      <div className="columns">
+        <div className="column is-half is-vcentered">
+          <LabelWithHelpIcon label={t("import.bundle.title")} helpText={t("import.bundle.helpText")} />
+          <FileUpload
+            handleFile={(file: File) => {
+              setFile(file);
+              setValid(!!file);
+            }}
+          />
+        </div>
+        <div className="column is-half is-vcentered">
+          <Checkbox
+            checked={compressed}
+            onChange={(value, name) => setCompressed(value)}
+            label={t("import.compressed.label")}
+            disabled={disabled}
+            helpText={t("import.compressed.helpText")}
+            title={t("import.compressed.label")}
+          />
+        </div>
       </div>
-      <div className="column is-half is-vcentered">
-        <Checkbox
-          checked={compressed}
-          onChange={(value, name) => setCompressed(value)}
-          label={t("import.compressed.label")}
-          disabled={disabled}
-          helpText={t("import.compressed.helpText")}
-          title={t("import.compressed.label")}
-        />
+      <div className="columns">
+        <div className="column is-half is-vcentered">
+          <InputField
+            value={password}
+            onChange={value => setPassword(value)}
+            type="password"
+            label={t("import.bundle.password.title")}
+            helpText={t("import.bundle.password.helpText")}
+          />
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 

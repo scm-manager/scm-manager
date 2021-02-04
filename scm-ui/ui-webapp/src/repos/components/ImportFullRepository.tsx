@@ -44,9 +44,9 @@ const ImportFullRepository: FC<Props> = ({ url, repositoryType, setImportPending
     type: repositoryType,
     contact: "",
     description: "",
-    _links: {},
+    _links: {}
   });
-
+  const [password, setPassword] = useState("");
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, file: false });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | undefined>();
@@ -59,7 +59,7 @@ const ImportFullRepository: FC<Props> = ({ url, repositoryType, setImportPending
     setLoading(loading);
   };
 
-  const isValid = () => Object.values(valid).every((v) => v);
+  const isValid = () => Object.values(valid).every(v => v);
 
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -67,21 +67,21 @@ const ImportFullRepository: FC<Props> = ({ url, repositoryType, setImportPending
     setError(undefined);
     handleImportLoading(true);
     apiClient
-      .postBinary(url, (formData) => {
+      .postBinary(url, formData => {
         formData.append("bundle", file, file?.name);
-        formData.append("repository", JSON.stringify(repo));
+        formData.append("repository", JSON.stringify({ ...repo, password }));
       })
-      .then((response) => {
+      .then(response => {
         const location = response.headers.get("Location");
         return apiClient.get(location!);
       })
-      .then((response) => response.json())
-      .then((repo) => {
+      .then(response => response.json())
+      .then(repo => {
         if (history.location.pathname === currentPath) {
           history.push(`/repo/${repo.namespace}/${repo.name}/code/sources`);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         setError(error);
         handleImportLoading(false);
       });
@@ -90,7 +90,12 @@ const ImportFullRepository: FC<Props> = ({ url, repositoryType, setImportPending
   return (
     <form onSubmit={submit}>
       <ErrorNotification error={error} />
-     <ImportFullRepositoryForm setFile={setFile} setValid={(file: boolean) => setValid({ ...valid, file })}/>
+      <ImportFullRepositoryForm
+        setFile={setFile}
+        password={password}
+        setPassword={setPassword}
+        setValid={(file: boolean) => setValid({ ...valid, file })}
+      />
       <hr />
       <NamespaceAndNameFields
         repository={repo}

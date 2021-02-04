@@ -74,11 +74,19 @@
     },
     "bundle": {
       "title": "Dump File",
-      "helpText": "Select your dump file from which the repository should be imported."
+      "helpText": "Select your dump file from which the repository should be imported.",
+      "password": {
+        "title": "Password",
+        "helpText": "If the imported dump have to be decrypted the correct password must be provided."
+      }
     },
     "fullImport": {
       "title": "SCM-Manager Repository Archive",
-      "helpText": "Select the archive file which should be imported. The archive must have been exported from an SCM-Manager instance. This instance and all installed plugins have to be of the same or a newer version."
+      "helpText": "Select the archive file which should be imported. The archive must have been exported from an SCM-Manager instance.",
+      "password": {
+        "title": "Password",
+        "helpText": "If the imported repository archive have to be decrypted the correct password must be provided."
+      }
     },
     "pending": {
       "subtitle": "Importing Repository...",

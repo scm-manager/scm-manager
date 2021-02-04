@@ -74,11 +74,19 @@
     },
     "bundle": {
       "title": "Wählen Sie Ihre Datei aus",
-      "helpText": "Wählen Sie die Datei aus der das Repository importiert werden soll."
+      "helpText": "Wählen Sie die Datei aus der das Repository importiert werden soll.",
+      "password": {
+        "title": "Passwort",
+        "helpText": "Wenn der importierte Dump verschlüsselt ist, muss das korrekte Passwort mitgeliefert werden."
+      }
     },
     "fullImport": {
       "title": "SCM-Manager Repository Archiv",
-      "helpText": "Wählen Sie das Repository Archiv aus. Das Archiv muss von einer SCM-Manager Instanz exportiert worden sein. Diese Instanz und alle installierten Plugins müssen dieselbe oder eine neuere Version haben."
+      "helpText": "Wählen Sie das Repository Archiv aus. Das Archiv muss von einer SCM-Manager Instanz exportiert worden sein.",
+      "password": {
+        "title": "Passwort",
+        "helpText": "Wenn der importierte Repository Archiv verschlüsselt ist, muss das korrekte Passwort mitgeliefert werden."
+      }
     },
     "pending": {
       "subtitle": "Repository wird importiert...",
