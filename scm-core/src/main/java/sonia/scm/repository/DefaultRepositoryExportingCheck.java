@@ -24,9 +24,13 @@
 
 package sonia.scm.repository;
 
-import java.util.Collection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 /**
@@ -34,31 +38,32 @@ import java.util.function.Supplier;
  */
 public final class DefaultRepositoryExportingCheck implements RepositoryExportingCheck {
 
-  private static final Collection<String> EXPORTING_REPOSITORIES = Collections.synchronizedSet(new HashSet<>());
-
-  public static void setAsExporting(String repositoryId) {
-    EXPORTING_REPOSITORIES.add(repositoryId);
-  }
-
-  public static void removeFromExporting(String repositoryId) {
-    EXPORTING_REPOSITORIES.remove(repositoryId);
-  }
+  private static final Logger LOG = LoggerFactory.getLogger(DefaultRepositoryExportingCheck.class);
+  private static final Map<String, AtomicInteger> EXPORTING_REPOSITORIES = Collections.synchronizedMap(new HashMap<>());
 
   public static boolean isRepositoryExporting(String repositoryId) {
-    return EXPORTING_REPOSITORIES.contains(repositoryId);
+    return getLockCount(repositoryId).get() > 0;
   }
 
   @Override
   public boolean isExporting(String repositoryId) {
-    return EXPORTING_REPOSITORIES.contains(repositoryId);
+    return isRepositoryExporting(repositoryId);
   }
 
   public <T> T withExportingLock(Repository repository, Supplier<T> callback) {
     try {
-      DefaultRepositoryExportingCheck.setAsExporting(repository.getId());
+      getLockCount(repository.getId()).incrementAndGet();
       return callback.get();
     } finally {
-      DefaultRepositoryExportingCheck.removeFromExporting(repository.getId());
+      int lockCount = getLockCount(repository.getId()).decrementAndGet();
+      if (lockCount <= 0) {
+        LOG.warn("Got negative export lock count {} for repository {}", lockCount, repository);
+        EXPORTING_REPOSITORIES.remove(repository.getId());
+      }
     }
+  }
+
+  private static AtomicInteger getLockCount(String repositoryId) {
+    return EXPORTING_REPOSITORIES.computeIfAbsent(repositoryId, r -> new AtomicInteger(0));
   }
 }

@@ -32,36 +32,35 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 class DefaultRepositoryExportingCheckTest {
 
-  private static final Repository NORMAL_REPOSITORY = new Repository("hog", "git", "hitchhiker", "hog");
   private static final Repository EXPORTING_REPOSITORY = new Repository("exporting_hog", "git", "hitchhiker", "hog");
 
   private final DefaultRepositoryExportingCheck check = new DefaultRepositoryExportingCheck();
 
-  @BeforeEach
-  void prepareExportingRepository() {
-    DefaultRepositoryExportingCheck.setAsExporting(EXPORTING_REPOSITORY.getId());
-  }
-
-  @AfterEach
-  void removeExportingRepository() {
-    DefaultRepositoryExportingCheck.removeFromExporting(EXPORTING_REPOSITORY.getId());
+  @Test
+  void shouldBeReadOnlyIfBeingExported() {
+    check.withExportingLock(EXPORTING_REPOSITORY, () -> {
+      boolean readOnly = check.isExporting(EXPORTING_REPOSITORY);
+      assertThat(readOnly).isTrue();
+      return null;
+    });
   }
 
   @Test
-  void shouldBeReadOnlyIfBeingExported() {
-    boolean readOnly = check.isExporting(EXPORTING_REPOSITORY);
-    assertThat(readOnly).isTrue();
+  void shouldBeReadOnlyIfBeingExportedMultipleTimes() {
+    check.withExportingLock(EXPORTING_REPOSITORY, () -> {
+      check.withExportingLock(EXPORTING_REPOSITORY, () -> {
+        boolean readOnly = check.isExporting(EXPORTING_REPOSITORY);
+        assertThat(readOnly).isTrue();
+        return null;
+      });
+      boolean readOnly = check.isExporting(EXPORTING_REPOSITORY);
+      assertThat(readOnly).isTrue();
+      return null;
+    });
   }
 
   @Test
   void shouldNotBeReadOnlyIfNotBeingExported() {
-    boolean readOnly = check.isExporting(NORMAL_REPOSITORY);
-    assertThat(readOnly).isFalse();
-  }
-
-  @Test
-  void shouldNotBeReadOnlyAfterExportIsFinished() {
-    DefaultRepositoryExportingCheck.removeFromExporting(EXPORTING_REPOSITORY.getId());
     boolean readOnly = check.isExporting(EXPORTING_REPOSITORY);
     assertThat(readOnly).isFalse();
   }

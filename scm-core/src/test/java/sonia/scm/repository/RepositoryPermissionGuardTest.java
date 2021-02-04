@@ -33,12 +33,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
+import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.Method;
 import java.util.function.BooleanSupplier;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
@@ -58,7 +62,7 @@ class RepositoryPermissionGuardTest {
 
   @BeforeAll
   static void setReadOnlyVerbs() {
-    RepositoryPermissionGuard.setReadOnlyVerbs(asList("read"));
+    RepositoryPermissionGuard.setReadOnlyVerbs(singletonList("read"));
   }
 
   @Nested
@@ -144,17 +148,8 @@ class RepositoryPermissionGuardTest {
     }
 
     @Nested
+    @ExtendWith(WrapInExportCheck.class)
     class WithExportingRepository {
-
-      @BeforeEach
-      void mockExportingRepository() {
-        DefaultRepositoryExportingCheck.setAsExporting("1");
-      }
-
-      @AfterEach
-      void removeExportingFlag() {
-        DefaultRepositoryExportingCheck.removeFromExporting("1");
-      }
 
       @Test
       void shouldInterceptPermissionCheck() {
@@ -176,6 +171,22 @@ class RepositoryPermissionGuardTest {
 
         verify(checkDelegate).run();
       }
+    }
+  }
+
+  private static class WrapInExportCheck implements InvocationInterceptor {
+
+    public void interceptTestMethod(Invocation<Void> invocation,
+                                    ReflectiveInvocationContext<Method> invocationContext,
+                                    ExtensionContext extensionContext) {
+      new DefaultRepositoryExportingCheck().withExportingLock(new Repository("1", "git", "space", "X"), () -> {
+        try {
+          invocation.proceed();
+          return null;
+        } catch (Throwable t) {
+          throw new RuntimeException(t);
+        }
+      });
     }
   }
 }

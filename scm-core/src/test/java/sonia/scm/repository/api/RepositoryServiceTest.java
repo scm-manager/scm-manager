@@ -127,15 +127,17 @@ class RepositoryServiceTest {
 
   @Test
   void shouldFailForExportingRepository() {
-    DefaultRepositoryExportingCheck.setAsExporting(repository.getId());
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
+    new DefaultRepositoryExportingCheck().withExportingLock(repository, () -> {
+      RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
 
-    assertThrows(RepositoryExportingException.class, repositoryService::getModifyCommand);
-    assertThrows(RepositoryExportingException.class, repositoryService::getBranchCommand);
-    assertThrows(RepositoryExportingException.class, repositoryService::getPullCommand);
-    assertThrows(RepositoryExportingException.class, repositoryService::getTagCommand);
-    assertThrows(RepositoryExportingException.class, repositoryService::getMergeCommand);
-    assertThrows(RepositoryExportingException.class, repositoryService::getModifyCommand);
+      assertThrows(RepositoryExportingException.class, repositoryService::getModifyCommand);
+      assertThrows(RepositoryExportingException.class, repositoryService::getBranchCommand);
+      assertThrows(RepositoryExportingException.class, repositoryService::getPullCommand);
+      assertThrows(RepositoryExportingException.class, repositoryService::getTagCommand);
+      assertThrows(RepositoryExportingException.class, repositoryService::getMergeCommand);
+      assertThrows(RepositoryExportingException.class, repositoryService::getModifyCommand);
+      return null;
+    });
   }
 
   private static class DummyHttpProtocol extends HttpScmProtocol {
