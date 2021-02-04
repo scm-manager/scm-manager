@@ -79,7 +79,7 @@ class RepositoryServiceTest {
   @Test
   void shouldReturnMatchingProtocolsFromProvider() {
     when(subject.getPrincipal()).thenReturn("Hitchhiker");
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail, null);
     Stream<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
 
     assertThat(sizeOf(supportedProtocols.collect(Collectors.toList()))).isEqualTo(1);
@@ -88,7 +88,7 @@ class RepositoryServiceTest {
   @Test
   void shouldFilterOutNonAnonymousEnabledProtocolsForAnonymousUser() {
     when(subject.getPrincipal()).thenReturn(SCMContext.USER_ANONYMOUS);
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Stream.of(new DummyScmProtocolProvider(), new DummyScmProtocolProvider(false)).collect(Collectors.toSet()), null, eMail);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Stream.of(new DummyScmProtocolProvider(), new DummyScmProtocolProvider(false)).collect(Collectors.toSet()), null, eMail, null);
     Stream<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
 
     assertThat(sizeOf(supportedProtocols.collect(Collectors.toList()))).isEqualTo(1);
@@ -97,7 +97,7 @@ class RepositoryServiceTest {
   @Test
   void shouldFindKnownProtocol() {
     when(subject.getPrincipal()).thenReturn("Hitchhiker");
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail, null);
 
     HttpScmProtocol protocol = repositoryService.getProtocol(HttpScmProtocol.class);
 
@@ -107,7 +107,7 @@ class RepositoryServiceTest {
   @Test
   void shouldFailForUnknownProtocol() {
     when(subject.getPrincipal()).thenReturn("Hitchhiker");
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail, null);
 
     assertThrows(IllegalArgumentException.class, () -> repositoryService.getProtocol(UnknownScmProtocol.class));
   }
@@ -115,7 +115,7 @@ class RepositoryServiceTest {
   @Test
   void shouldFailForArchivedRepository() {
     repository.setArchived(true);
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail, null);
 
     assertThrows(RepositoryArchivedException.class, repositoryService::getModifyCommand);
     assertThrows(RepositoryArchivedException.class, repositoryService::getBranchCommand);
@@ -128,7 +128,7 @@ class RepositoryServiceTest {
   @Test
   void shouldFailForExportingRepository() {
     new DefaultRepositoryExportingCheck().withExportingLock(repository, () -> {
-      RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
+      RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail, null);
 
       assertThrows(RepositoryExportingException.class, repositoryService::getModifyCommand);
       assertThrows(RepositoryExportingException.class, repositoryService::getBranchCommand);

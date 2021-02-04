@@ -33,6 +33,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.BundleCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
@@ -47,6 +48,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -70,6 +72,8 @@ class FullScmRepositoryExporterTest {
   private TarArchiveRepositoryStoreExporter storeExporter;
   @Mock
   private WorkdirProvider workdirProvider;
+  @Mock
+  private RepositoryExportingCheck repositoryExportingCheck;
 
   @InjectMocks
   private FullScmRepositoryExporter exporter;
@@ -81,6 +85,7 @@ class FullScmRepositoryExporterTest {
     when(serviceFactory.create(REPOSITORY)).thenReturn(repositoryService);
     when(environmentGenerator.generate()).thenReturn(new byte[0]);
     when(metadataGenerator.generate(REPOSITORY)).thenReturn(new byte[0]);
+    when(repositoryExportingCheck.withExportingLock(any(), any())).thenAnswer(invocation -> invocation.getArgument(1, Supplier.class).get());
   }
 
   @Test
@@ -96,6 +101,7 @@ class FullScmRepositoryExporterTest {
     verify(environmentGenerator, times(1)).generate();
     verify(metadataGenerator, times(1)).generate(REPOSITORY);
     verify(bundleCommandBuilder, times(1)).bundle(any(OutputStream.class));
+    verify(repositoryExportingCheck).withExportingLock(eq(REPOSITORY), any());
     workDirsCreated.forEach(wd -> assertThat(wd).doesNotExist());
   }
 

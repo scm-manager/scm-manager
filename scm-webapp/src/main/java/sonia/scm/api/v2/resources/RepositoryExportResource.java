@@ -33,7 +33,6 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import sonia.scm.BadRequestException;
 import sonia.scm.Type;
 import sonia.scm.importexport.FullScmRepositoryExporter;
-import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -69,15 +68,13 @@ public class RepositoryExportResource {
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
   private final FullScmRepositoryExporter fullScmRepositoryExporter;
-  private final DefaultRepositoryExportingCheck repositoryExportingCheck;
 
   @Inject
   public RepositoryExportResource(RepositoryManager manager,
-                                  RepositoryServiceFactory serviceFactory, FullScmRepositoryExporter fullScmRepositoryExporter, DefaultRepositoryExportingCheck repositoryExportingCheck) {
+                                  RepositoryServiceFactory serviceFactory, FullScmRepositoryExporter fullScmRepositoryExporter) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.fullScmRepositoryExporter = fullScmRepositoryExporter;
-    this.repositoryExportingCheck = repositoryExportingCheck;
   }
 
   /**
@@ -185,10 +182,7 @@ public class RepositoryExportResource {
   }
 
   private Response exportFullRepository(Repository repository) {
-    StreamingOutput output = os -> repositoryExportingCheck.withExportingLock(repository, () -> {
-       fullScmRepositoryExporter.export(repository, os);
-       return null;
-    });
+    StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os);
 
     return Response
       .ok(output, "application/x-gzip")
@@ -206,22 +200,10 @@ public class RepositoryExportResource {
         try {
           if (compressed) {
             GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
-            repositoryExportingCheck.withExportingLock(repository, () -> {
-              try {
-                return bundleCommand.bundle(gzipCompressorOutputStream);
-              } catch (IOException e) {
-                throw new InternalRepositoryException(repository, "repository export failed", e);
-              }
-            });
+            bundleCommand.bundle(gzipCompressorOutputStream);
             gzipCompressorOutputStream.finish();
           } else {
-            repositoryExportingCheck.withExportingLock(repository, () -> {
-              try {
-                return bundleCommand.bundle(os);
-              } catch (IOException e) {
-                throw new InternalRepositoryException(repository, "repository export failed", e);
-              }
-            });
+            bundleCommand.bundle(os);
           }
         } catch (IOException e) {
           throw new InternalRepositoryException(repository, "repository export failed", e);

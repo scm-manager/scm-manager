@@ -47,7 +47,6 @@ import sonia.scm.event.ScmEventBus;
 import sonia.scm.importexport.FullScmRepositoryExporter;
 import sonia.scm.importexport.FullScmRepositoryImporter;
 import sonia.scm.repository.CustomNamespaceStrategy;
-import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
@@ -157,8 +156,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private FullScmRepositoryExporter fullScmRepositoryExporter;
   @Mock
   private FullScmRepositoryImporter fullScmRepositoryImporter;
-  @Mock
-  private DefaultRepositoryExportingCheck repositoryExportingCheck;
 
   @Captor
   private ArgumentCaptor<Predicate<Repository>> filterCaptor;
@@ -181,15 +178,11 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
     super.repositoryImportResource = new RepositoryImportResource(repositoryManager, dtoToRepositoryMapper, serviceFactory, resourceLinks, eventBus, fullScmRepositoryImporter);
-    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryExportingCheck);
+    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
-    doAnswer(invocation -> {
-      repositoryMarkedAsExported = invocation.getArgument(0, Repository.class);
-      return invocation.getArgument(1, Supplier.class).get();
-    }).when(repositoryExportingCheck).withExportingLock(any(), any());
     doReturn(ImmutableSet.of(new CustomNamespaceStrategy()).iterator()).when(strategies).iterator();
     SimplePrincipalCollection trillian = new SimplePrincipalCollection("trillian", REALM);
     trillian.add(new User("trillian"), REALM);
@@ -793,29 +786,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     assertEquals(SC_OK, response.getStatus());
     assertEquals("application/x-gzip", response.getOutputHeaders().get("Content-Type").get(0).toString());
     verify(fullScmRepositoryExporter).export(eq(repository), any(OutputStream.class));
-  }
-
-  @Test
-  public void shouldLockRepositoryWhileExporting() throws URISyntaxException {
-    String namespace = "space";
-    String name = "repo";
-    Repository repository = mock(Repository.class);
-    when(repository.getName()).thenReturn(name);
-    when(repository.getNamespace()).thenReturn(namespace);
-    when(repository.getType()).thenReturn("svn");
-    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
-    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
-
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
-    MockHttpRequest request = MockHttpRequest
-      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full");
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertThat(repositoryMarkedAsExported).isSameAs(repository);
   }
 
   private void mockRepositoryHandler(Set<Command> cmds) {

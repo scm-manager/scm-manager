@@ -31,6 +31,7 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
@@ -94,6 +95,7 @@ public final class RepositoryService implements Closeable {
 
   @Nullable
   private final EMail eMail;
+  private final RepositoryExportingCheck repositoryExportingCheck;
 
   /**
    * Constructs a new {@link RepositoryService}. This constructor should only
@@ -104,6 +106,7 @@ public final class RepositoryService implements Closeable {
    * @param repository      the repository
    * @param workdirProvider provider for workdirs
    * @param eMail           utility to compute email addresses if missing
+   * @param repositoryExportingCheck
    */
   RepositoryService(CacheManager cacheManager,
                     RepositoryServiceProvider provider,
@@ -111,7 +114,7 @@ public final class RepositoryService implements Closeable {
                     PreProcessorUtil preProcessorUtil,
                     @SuppressWarnings({"rawtypes", "java:S3740"}) Set<ScmProtocolProvider> protocolProviders,
                     WorkdirProvider workdirProvider,
-                    @Nullable EMail eMail) {
+                    @Nullable EMail eMail, RepositoryExportingCheck repositoryExportingCheck) {
     this.cacheManager = cacheManager;
     this.provider = provider;
     this.repository = repository;
@@ -119,6 +122,7 @@ public final class RepositoryService implements Closeable {
     this.protocolProviders = protocolProviders;
     this.workdirProvider = workdirProvider;
     this.eMail = eMail;
+    this.repositoryExportingCheck = repositoryExportingCheck;
   }
 
   /**
@@ -219,7 +223,7 @@ public final class RepositoryService implements Closeable {
     LOG.debug("create bundle command for repository {}",
       repository.getNamespaceAndName());
 
-    return new BundleCommandBuilder(provider.getBundleCommand(), repository);
+    return new BundleCommandBuilder(provider.getBundleCommand(), repositoryExportingCheck, repository);
   }
 
   /**

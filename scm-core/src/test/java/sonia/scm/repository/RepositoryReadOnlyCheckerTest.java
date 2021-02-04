@@ -26,6 +26,8 @@ package sonia.scm.repository;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.function.Supplier;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 class RepositoryReadOnlyCheckerTest {
@@ -36,7 +38,17 @@ class RepositoryReadOnlyCheckerTest {
   private boolean exporting = false;
 
   private final RepositoryArchivedCheck archivedCheck = repositoryId -> archived;
-  private final RepositoryExportingCheck exportingCheck = repositoryId -> exporting;
+  private final RepositoryExportingCheck exportingCheck = new RepositoryExportingCheck() {
+    @Override
+    public boolean isExporting(String repositoryId) {
+      return exporting;
+    }
+
+    @Override
+    public <T> T withExportingLock(Repository repository, Supplier<T> callback) {
+      return null;
+    }
+  };
 
   private final RepositoryReadOnlyChecker checker = new RepositoryReadOnlyChecker(archivedCheck, exportingCheck);
 

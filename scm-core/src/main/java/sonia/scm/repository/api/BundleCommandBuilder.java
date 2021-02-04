@@ -30,7 +30,9 @@ import com.google.common.io.ByteSink;
 import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.spi.BundleCommand;
 import sonia.scm.repository.spi.BundleCommandRequest;
 
@@ -63,12 +65,13 @@ public final class BundleCommandBuilder {
 
   /**
    * Constructs a new {@link BundleCommandBuilder}.
-   *
-   * @param bundleCommand bundle command implementation
+   *  @param bundleCommand bundle command implementation
+   * @param repositoryExportingCheck
    * @param repository    repository
    */
-  BundleCommandBuilder(BundleCommand bundleCommand, Repository repository) {
+  BundleCommandBuilder(BundleCommand bundleCommand, RepositoryExportingCheck repositoryExportingCheck, Repository repository) {
     this.bundleCommand = bundleCommand;
+    this.repositoryExportingCheck = repositoryExportingCheck;
     this.repository = repository;
   }
 
@@ -107,8 +110,14 @@ public final class BundleCommandBuilder {
 
     logger.info("bundle {} to output stream", repository);
 
-    return bundleCommand.bundle(
-      new BundleCommandRequest(asByteSink(outputStream)));
+    return repositoryExportingCheck.withExportingLock(repository, () -> {
+      try {
+        return bundleCommand.bundle(
+          new BundleCommandRequest(asByteSink(outputStream)));
+      } catch (IOException e) {
+        throw new InternalRepositoryException(repository, "Exception during bundle; does not necessarily indicate a problem with the repository", e);
+      }
+    });
   }
 
   /**
@@ -123,7 +132,13 @@ public final class BundleCommandBuilder {
     checkNotNull(sink, "byte sink is required");
     logger.info("bundle {} to byte sink", sink);
 
-    return bundleCommand.bundle(new BundleCommandRequest(sink));
+    return repositoryExportingCheck.withExportingLock(repository, () -> {
+      try {
+        return bundleCommand.bundle(new BundleCommandRequest(sink));
+      } catch (IOException e) {
+        throw new InternalRepositoryException(repository, "Exception during bundle; does not necessarily indicate a problem with the repository", e);
+      }
+    });
   }
 
   /**
@@ -162,4 +177,6 @@ public final class BundleCommandBuilder {
    * repository
    */
   private final Repository repository;
+
+  private final RepositoryExportingCheck repositoryExportingCheck;
 }

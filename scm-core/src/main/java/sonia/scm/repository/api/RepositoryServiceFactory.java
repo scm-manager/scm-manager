@@ -43,12 +43,14 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.ClearRepositoryCacheEvent;
+import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryCacheKeyPredicate;
 import sonia.scm.repository.RepositoryEvent;
+import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
@@ -123,6 +125,7 @@ public final class RepositoryServiceFactory {
   @SuppressWarnings({"rawtypes", "java:S3740"})
   private final Set<ScmProtocolProvider> protocolProviders;
   private final WorkdirProvider workdirProvider;
+  private final RepositoryExportingCheck repositoryExportingCheck;
 
   @Nullable
   private final EMail eMail;
@@ -141,7 +144,7 @@ public final class RepositoryServiceFactory {
    * @param protocolProviders providers for repository protocols
    * @param workdirProvider   provider for working directories
    *
-   * @deprecated use {@link RepositoryServiceFactory#RepositoryServiceFactory(CacheManager, RepositoryManager, Set, PreProcessorUtil, Set, WorkdirProvider, EMail)} instead
+   * @deprecated use {@link RepositoryServiceFactory#RepositoryServiceFactory(CacheManager, RepositoryManager, Set, PreProcessorUtil, Set, WorkdirProvider, EMail, RepositoryExportingCheck)} instead
    * @since 1.21
    */
   @Deprecated
@@ -152,7 +155,8 @@ public final class RepositoryServiceFactory {
                                   WorkdirProvider workdirProvider) {
     this(
       cacheManager, repositoryManager, resolvers,
-      preProcessorUtil, protocolProviders, workdirProvider, null, ScmEventBus.getInstance()
+      preProcessorUtil, protocolProviders, workdirProvider, null, ScmEventBus.getInstance(),
+      new DefaultRepositoryExportingCheck()
     );
   }
 
@@ -174,11 +178,12 @@ public final class RepositoryServiceFactory {
   public RepositoryServiceFactory(CacheManager cacheManager, RepositoryManager repositoryManager,
                                   Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
                                   @SuppressWarnings({"rawtypes", "java:S3740"})  Set<ScmProtocolProvider> protocolProviders,
-                                  WorkdirProvider workdirProvider, EMail eMail) {
+                                  WorkdirProvider workdirProvider, EMail eMail,
+                                  RepositoryExportingCheck repositoryExportingCheck) {
     this(
       cacheManager, repositoryManager, resolvers,
       preProcessorUtil, protocolProviders, workdirProvider,
-      eMail, ScmEventBus.getInstance()
+      eMail, ScmEventBus.getInstance(), repositoryExportingCheck
     );
   }
 
@@ -187,7 +192,8 @@ public final class RepositoryServiceFactory {
   RepositoryServiceFactory(CacheManager cacheManager, RepositoryManager repositoryManager,
                            Set<RepositoryServiceResolver> resolvers, PreProcessorUtil preProcessorUtil,
                            @SuppressWarnings({"rawtypes", "java:S3740"}) Set<ScmProtocolProvider> protocolProviders,
-                           WorkdirProvider workdirProvider, @Nullable EMail eMail, ScmEventBus eventBus) {
+                           WorkdirProvider workdirProvider, @Nullable EMail eMail, ScmEventBus eventBus,
+                           RepositoryExportingCheck repositoryExportingCheck) {
     this.cacheManager = cacheManager;
     this.repositoryManager = repositoryManager;
     this.resolvers = resolvers;
@@ -195,6 +201,7 @@ public final class RepositoryServiceFactory {
     this.protocolProviders = protocolProviders;
     this.workdirProvider = workdirProvider;
     this.eMail = eMail;
+    this.repositoryExportingCheck = repositoryExportingCheck;
 
     eventBus.register(new CacheClearHook(cacheManager));
   }
@@ -284,7 +291,7 @@ public final class RepositoryServiceFactory {
         }
 
         service = new RepositoryService(cacheManager, provider, repository,
-          preProcessorUtil, protocolProviders, workdirProvider, eMail);
+          preProcessorUtil, protocolProviders, workdirProvider, eMail, repositoryExportingCheck);
 
         break;
       }

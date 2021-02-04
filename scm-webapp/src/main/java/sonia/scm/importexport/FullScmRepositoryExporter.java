@@ -29,6 +29,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -54,25 +55,36 @@ public class FullScmRepositoryExporter {
   private final RepositoryServiceFactory serviceFactory;
   private final TarArchiveRepositoryStoreExporter storeExporter;
   private final WorkdirProvider workdirProvider;
+  private final RepositoryExportingCheck repositoryExportingCheck;
 
   @Inject
   public FullScmRepositoryExporter(EnvironmentInformationXmlGenerator environmentGenerator,
                                    RepositoryMetadataXmlGenerator metadataGenerator,
                                    RepositoryServiceFactory serviceFactory,
-                                   TarArchiveRepositoryStoreExporter storeExporter, WorkdirProvider workdirProvider) {
+                                   TarArchiveRepositoryStoreExporter storeExporter,
+                                   WorkdirProvider workdirProvider,
+                                   RepositoryExportingCheck repositoryExportingCheck) {
     this.environmentGenerator = environmentGenerator;
     this.metadataGenerator = metadataGenerator;
     this.serviceFactory = serviceFactory;
     this.storeExporter = storeExporter;
     this.workdirProvider = workdirProvider;
+    this.repositoryExportingCheck = repositoryExportingCheck;
   }
 
   public void export(Repository repository, OutputStream outputStream) {
+    repositoryExportingCheck.withExportingLock(repository, () -> {
+      exportInLock(repository, outputStream);
+      return null;
+    });
+  }
+
+  private void exportInLock(Repository repository, OutputStream outputStream) {
     try (
       RepositoryService service = serviceFactory.create(repository);
       BufferedOutputStream bos = new BufferedOutputStream(outputStream);
       GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(bos);
-      TarArchiveOutputStream taos = new TarArchiveOutputStream(gzos);
+      TarArchiveOutputStream taos = new TarArchiveOutputStream(gzos)
     ) {
       writeEnvironmentData(taos);
       writeMetadata(repository, taos);

@@ -24,6 +24,8 @@
 
 package sonia.scm.repository;
 
+import java.util.function.Supplier;
+
 /**
  * Implementations of this class can be used to check whether a repository is currently being exported.
  *
@@ -48,4 +50,6 @@ public interface RepositoryExportingCheck {
   default boolean isExporting(Repository repository) {
     return isExporting(repository.getId());
   }
+
+  <T> T withExportingLock(Repository repository, Supplier<T> callback);
 }

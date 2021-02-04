@@ -50,6 +50,7 @@ public final class DefaultRepositoryExportingCheck implements RepositoryExportin
     return isRepositoryExporting(repositoryId);
   }
 
+  @Override
   public <T> T withExportingLock(Repository repository, Supplier<T> callback) {
     try {
       getLockCount(repository.getId()).incrementAndGet();
