@@ -188,7 +188,9 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     return name;
   }
 
-  public String getNamespace() { return namespace; }
+  public String getNamespace() {
+    return namespace;
+  }
 
   @XmlTransient
   public NamespaceAndName getNamespaceAndName() {
@@ -267,7 +269,9 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
     this.lastModified = lastModified;
   }
 
-  public void setNamespace(String namespace) { this.namespace = namespace; }
+  public void setNamespace(String namespace) {
+    this.namespace = namespace;
+  }
 
   public void setName(String name) {
     this.name = name;

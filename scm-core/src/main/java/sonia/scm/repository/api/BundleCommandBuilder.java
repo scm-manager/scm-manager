@@ -30,7 +30,9 @@ import com.google.common.io.ByteSink;
 import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.spi.BundleCommand;
 import sonia.scm.repository.spi.BundleCommandRequest;
 
@@ -63,12 +65,13 @@ public final class BundleCommandBuilder {
 
   /**
    * Constructs a new {@link BundleCommandBuilder}.
-   *
-   * @param bundleCommand bundle command implementation
+   *  @param bundleCommand bundle command implementation
+   * @param repositoryExportingCheck
    * @param repository    repository
    */
-  BundleCommandBuilder(BundleCommand bundleCommand, Repository repository) {
+  BundleCommandBuilder(BundleCommand bundleCommand, RepositoryExportingCheck repositoryExportingCheck, Repository repository) {
     this.bundleCommand = bundleCommand;
+    this.repositoryExportingCheck = repositoryExportingCheck;
     this.repository = repository;
   }
 
@@ -79,9 +82,8 @@ public final class BundleCommandBuilder {
    *
    * @param outputFile output file
    * @return bundle response
-   * @throws IOException
    */
-  public BundleResponse bundle(File outputFile) throws IOException {
+  public BundleResponse bundle(File outputFile) {
     checkArgument((outputFile != null) && !outputFile.exists(),
       "file is null or exists already");
 
@@ -91,7 +93,7 @@ public final class BundleCommandBuilder {
     logger.info("create bundle at {} for repository {}", outputFile,
       repository.getId());
 
-    return bundleCommand.bundle(request);
+    return bundleWithExportingLock(request);
   }
 
   /**
@@ -99,16 +101,14 @@ public final class BundleCommandBuilder {
    *
    * @param outputStream output stream
    * @return bundle response
-   * @throws IOException
    */
-  public BundleResponse bundle(OutputStream outputStream)
-    throws IOException {
+  public BundleResponse bundle(OutputStream outputStream) {
     checkNotNull(outputStream, "output stream is required");
 
     logger.info("bundle {} to output stream", repository);
 
-    return bundleCommand.bundle(
-      new BundleCommandRequest(asByteSink(outputStream)));
+    BundleCommandRequest request = new BundleCommandRequest(asByteSink(outputStream));
+    return bundleWithExportingLock(request);
   }
 
   /**
@@ -116,14 +116,23 @@ public final class BundleCommandBuilder {
    *
    * @param sink byte sink
    * @return bundle response
-   * @throws IOException
    */
-  public BundleResponse bundle(ByteSink sink)
-    throws IOException {
+  public BundleResponse bundle(ByteSink sink) {
     checkNotNull(sink, "byte sink is required");
     logger.info("bundle {} to byte sink", sink);
 
-    return bundleCommand.bundle(new BundleCommandRequest(sink));
+    BundleCommandRequest request = new BundleCommandRequest(sink);
+    return bundleWithExportingLock(request);
+  }
+
+  private BundleResponse bundleWithExportingLock(BundleCommandRequest request) {
+    return repositoryExportingCheck.withExportingLock(repository, () -> {
+      try {
+        return bundleCommand.bundle(request);
+      } catch (IOException e) {
+        throw new InternalRepositoryException(repository, "Exception during bundle; does not necessarily indicate a problem with the repository", e);
+      }
+    });
   }
 
   /**
@@ -162,4 +171,6 @@ public final class BundleCommandBuilder {
    * repository
    */
   private final Repository repository;
+
+  private final RepositoryExportingCheck repositoryExportingCheck;
 }

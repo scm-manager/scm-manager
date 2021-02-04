@@ -41,7 +41,7 @@ import {
   StateMenuContextProvider,
   SubNavigation,
   Tooltip,
-  urls,
+  urls
 } from "@scm-manager/ui-components";
 import { fetchRepoByName, getFetchRepoFailure, getRepository, isFetchRepoPending } from "../modules/repos";
 import RepositoryDetails from "../components/RepositoryDetails";
@@ -75,7 +75,7 @@ type Props = RouteComponentProps &
     fetchRepoByName: (link: string, namespace: string, name: string) => void;
   };
 
-const ArchiveTag = styled.span`
+const RepositoryTag = styled.span`
   margin-left: 0.2rem;
   background-color: #9a9a9a;
   padding: 0.4rem;
@@ -153,7 +153,7 @@ class RepositoryRoot extends React.Component<Props> {
     const extensionProps = {
       repository,
       url,
-      indexLinks,
+      indexLinks
     };
 
     const redirectUrlFactory = binder.getExtension("repository.redirect", this.props);
@@ -164,16 +164,16 @@ class RepositoryRoot extends React.Component<Props> {
       redirectedUrl = url + "/info";
     }
 
-    const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = (changeset) => (file) => {
+    const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = changeset => file => {
       const baseUrl = `${url}/code/sources`;
       const sourceLink = file.newPath && {
         url: `${baseUrl}/${changeset.id}/${file.newPath}/`,
-        label: t("diff.jumpToSource"),
+        label: t("diff.jumpToSource")
       };
       const targetLink = file.oldPath &&
         changeset._embedded?.parents?.length === 1 && {
           url: `${baseUrl}/${changeset._embedded.parents[0].id}/${file.oldPath}`,
-          label: t("diff.jumpToTarget"),
+          label: t("diff.jumpToTarget")
         };
 
       const links = [];
@@ -199,11 +199,22 @@ class RepositoryRoot extends React.Component<Props> {
       return links ? links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />) : null;
     };
 
-    const archivedFlag = repository.archived && (
-      <Tooltip message={t("archive.tooltip")}>
-        <ArchiveTag className="is-size-6">{t("repository.archived")}</ArchiveTag>
-      </Tooltip>
-    );
+    const repositoryFlags = [];
+    if (repository.archived) {
+      repositoryFlags.push(
+        <Tooltip message={t("archive.tooltip")}>
+          <RepositoryTag className="is-size-6">{t("repository.archived")}</RepositoryTag>
+        </Tooltip>
+      );
+    }
+
+    if (repository.exporting) {
+      repositoryFlags.push(
+        <Tooltip message={t("exporting.tooltip")}>
+          <RepositoryTag className="is-size-6">{t("repository.exporting")}</RepositoryTag>
+        </Tooltip>
+      );
+    }
 
     const titleComponent = (
       <>
@@ -222,7 +233,7 @@ class RepositoryRoot extends React.Component<Props> {
           afterTitle={
             <>
               <ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />
-              {archivedFlag}
+              {repositoryFlags.map(flag => flag)}
             </>
           }
         >
@@ -360,7 +371,7 @@ const mapStateToProps = (state: any, ownProps: Props) => {
     loading,
     error,
     repoLink,
-    indexLinks,
+    indexLinks
   };
 };
 
@@ -368,7 +379,7 @@ const mapDispatchToProps = (dispatch: any) => {
   return {
     fetchRepoByName: (link: string, namespace: string, name: string) => {
       dispatch(fetchRepoByName(link, namespace, name));
-    },
+    }
   };
 };
 

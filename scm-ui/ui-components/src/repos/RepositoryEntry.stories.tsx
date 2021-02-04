@@ -75,6 +75,8 @@ const QuickLink = (
 );
 
 const archivedRepository = { ...repository, archived: true };
+const exportingRepository = { ...repository, exporting: true };
+const archivedExportingRepository = { ...repository, archived: true, exporting: true };
 
 storiesOf("RepositoryEntry", module)
   .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
@@ -101,4 +103,14 @@ storiesOf("RepositoryEntry", module)
     const binder = new Binder("title");
     bindAvatar(binder, Git);
     return withBinder(binder, archivedRepository);
+  })
+  .add("Exporting", () => {
+    const binder = new Binder("title");
+    bindAvatar(binder, Git);
+    return withBinder(binder, exportingRepository);
+  })
+  .add("MultiRepositoryTags", () => {
+    const binder = new Binder("title");
+    bindAvatar(binder, Git);
+    return withBinder(binder, archivedExportingRepository);
   });

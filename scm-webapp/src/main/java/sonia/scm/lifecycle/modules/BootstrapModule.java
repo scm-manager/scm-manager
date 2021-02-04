@@ -36,8 +36,10 @@ import sonia.scm.io.FileSystem;
 import sonia.scm.lifecycle.DefaultRestarter;
 import sonia.scm.lifecycle.Restarter;
 import sonia.scm.plugin.PluginLoader;
+import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.EventDrivenRepositoryArchiveCheck;
 import sonia.scm.repository.RepositoryArchivedCheck;
+import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.xml.MetadataStore;
 import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
@@ -100,6 +102,7 @@ public class BootstrapModule extends AbstractModule {
 
     // bind core
     bind(RepositoryArchivedCheck.class, EventDrivenRepositoryArchiveCheck.class);
+    bind(RepositoryExportingCheck.class, DefaultRepositoryExportingCheck.class);
     bind(ConfigurationStoreFactory.class, JAXBConfigurationStoreFactory.class);
     bind(ConfigurationEntryStoreFactory.class, JAXBConfigurationEntryStoreFactory.class);
     bind(DataStoreFactory.class, JAXBDataStoreFactory.class);

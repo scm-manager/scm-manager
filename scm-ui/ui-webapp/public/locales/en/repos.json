@@ -7,7 +7,8 @@
     "description": "Description",
     "creationDate": "Creation Date",
     "lastModified": "Last Modified",
-    "archived": "archived"
+    "archived": "archived",
+    "exporting": "exporting"
   },
   "validation": {
     "namespace-invalid": "The repository namespace is invalid",
@@ -252,6 +253,7 @@
   },
   "export": {
     "subtitle": "Repository Export",
+    "notification": "Attention: During the export the repository cannot be modified.",
     "compressed": {
       "label": "Compress",
       "helpText": "Compress the export dump size to reduce the download size."
@@ -398,6 +400,9 @@
   },
   "archive": {
     "tooltip": "Read only. The archive cannot be changed."
+  },
+  "exporting": {
+    "tooltip": "Read only. The repository is currently being exported."
   },
   "diff": {
     "changes": {

@@ -39,6 +39,7 @@ import sonia.scm.NotFoundException;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
@@ -94,7 +95,8 @@ class RepositoryServiceFactoryTest {
     return new RepositoryServiceFactory(
       cacheManager, repositoryManager, builder.build(),
       preProcessorUtil, ImmutableSet.of(), workdirProvider,
-      new EMail(new ScmConfiguration()), eventBus
+      new EMail(new ScmConfiguration()), eventBus,
+      new DefaultRepositoryExportingCheck()
     );
   }
 

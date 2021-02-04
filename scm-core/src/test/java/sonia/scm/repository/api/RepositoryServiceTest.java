@@ -34,7 +34,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryArchivedException;
+import sonia.scm.repository.RepositoryExportingException;
 import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.user.EMail;
@@ -76,7 +79,7 @@ class RepositoryServiceTest {
   @Test
   void shouldReturnMatchingProtocolsFromProvider() {
     when(subject.getPrincipal()).thenReturn("Hitchhiker");
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail, null);
     Stream<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
 
     assertThat(sizeOf(supportedProtocols.collect(Collectors.toList()))).isEqualTo(1);
@@ -85,7 +88,7 @@ class RepositoryServiceTest {
   @Test
   void shouldFilterOutNonAnonymousEnabledProtocolsForAnonymousUser() {
     when(subject.getPrincipal()).thenReturn(SCMContext.USER_ANONYMOUS);
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Stream.of(new DummyScmProtocolProvider(), new DummyScmProtocolProvider(false)).collect(Collectors.toSet()), null, eMail);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Stream.of(new DummyScmProtocolProvider(), new DummyScmProtocolProvider(false)).collect(Collectors.toSet()), null, eMail, null);
     Stream<ScmProtocol> supportedProtocols = repositoryService.getSupportedProtocols();
 
     assertThat(sizeOf(supportedProtocols.collect(Collectors.toList()))).isEqualTo(1);
@@ -94,7 +97,7 @@ class RepositoryServiceTest {
   @Test
   void shouldFindKnownProtocol() {
     when(subject.getPrincipal()).thenReturn("Hitchhiker");
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail, null);
 
     HttpScmProtocol protocol = repositoryService.getProtocol(HttpScmProtocol.class);
 
@@ -104,7 +107,7 @@ class RepositoryServiceTest {
   @Test
   void shouldFailForUnknownProtocol() {
     when(subject.getPrincipal()).thenReturn("Hitchhiker");
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail, null);
 
     assertThrows(IllegalArgumentException.class, () -> repositoryService.getProtocol(UnknownScmProtocol.class));
   }
@@ -112,14 +115,29 @@ class RepositoryServiceTest {
   @Test
   void shouldFailForArchivedRepository() {
     repository.setArchived(true);
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail);
+    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail, null);
 
-    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getModifyCommand());
-    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getBranchCommand());
-    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getPullCommand());
-    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getTagCommand());
-    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getMergeCommand());
-    assertThrows(RepositoryArchivedException.class, () -> repositoryService.getModifyCommand());
+    assertThrows(RepositoryArchivedException.class, repositoryService::getModifyCommand);
+    assertThrows(RepositoryArchivedException.class, repositoryService::getBranchCommand);
+    assertThrows(RepositoryArchivedException.class, repositoryService::getPullCommand);
+    assertThrows(RepositoryArchivedException.class, repositoryService::getTagCommand);
+    assertThrows(RepositoryArchivedException.class, repositoryService::getMergeCommand);
+    assertThrows(RepositoryArchivedException.class, repositoryService::getModifyCommand);
+  }
+
+  @Test
+  void shouldFailForExportingRepository() {
+    new DefaultRepositoryExportingCheck().withExportingLock(repository, () -> {
+      RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail, null);
+
+      assertThrows(RepositoryExportingException.class, repositoryService::getModifyCommand);
+      assertThrows(RepositoryExportingException.class, repositoryService::getBranchCommand);
+      assertThrows(RepositoryExportingException.class, repositoryService::getPullCommand);
+      assertThrows(RepositoryExportingException.class, repositoryService::getTagCommand);
+      assertThrows(RepositoryExportingException.class, repositoryService::getMergeCommand);
+      assertThrows(RepositoryExportingException.class, repositoryService::getModifyCommand);
+      return null;
+    });
   }
 
   private static class DummyHttpProtocol extends HttpScmProtocol {
@@ -141,7 +159,7 @@ class RepositoryServiceTest {
     }
   }
 
-  private static class DummyScmProtocolProvider implements ScmProtocolProvider {
+  private static class DummyScmProtocolProvider implements ScmProtocolProvider<ScmProtocol> {
 
     private final boolean anonymousEnabled;
 

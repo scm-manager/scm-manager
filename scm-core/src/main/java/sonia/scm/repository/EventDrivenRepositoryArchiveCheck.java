@@ -25,15 +25,11 @@
 package sonia.scm.repository;
 
 import com.github.legman.Subscribe;
-import sonia.scm.EagerSingleton;
-import sonia.scm.plugin.Extension;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
-@Extension
-@EagerSingleton
 /**
  * Default implementation of {@link RepositoryArchivedCheck}. This tracks the archive status of repositories by using
  * {@link RepositoryModificationEvent}s. The initial set of archived repositories is read by

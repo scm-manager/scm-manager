@@ -22,50 +22,23 @@
  * SOFTWARE.
  */
 
-import { PagedCollection, Links } from "./hal";
+package sonia.scm.repository;
 
-export type Repository = {
-  namespace: string;
-  name: string;
-  type: string;
-  contact?: string;
-  description?: string;
-  creationDate?: string;
-  lastModified?: string;
-  archived?: boolean;
-  exporting?: boolean;
-  _links: Links;
-};
+import sonia.scm.ExceptionWithContext;
 
-export type RepositoryCreation = Repository & {
-  contextEntries: { [key: string]: any };
-};
+import static java.lang.String.format;
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-export type RepositoryUrlImport = Repository & {
-  importUrl: string;
-  username?: string;
-  password?: string;
-};
+public class RepositoryExportingException extends ExceptionWithContext {
 
-export type Namespace = {
-  namespace: string;
-  _links: Links;
-};
+  public static final String CODE = "1mSNlpe1V1";
 
-export type RepositoryCollection = PagedCollection & {
-  _embedded: {
-    repositories: Repository[] | string[];
-  };
-};
+  public RepositoryExportingException(Repository repository) {
+    super(entity(repository).build(), format("Repository %s is currently being exported and must not be modified", repository));
+  }
 
-export type NamespaceCollection = {
-  _embedded: {
-    namespaces: Namespace[];
-  };
-};
-
-export type RepositoryGroup = {
-  name: string;
-  namespace?: Namespace;
-  repositories: Repository[];
-};
+  @Override
+  public String getCode() {
+    return CODE;
+  }
+}

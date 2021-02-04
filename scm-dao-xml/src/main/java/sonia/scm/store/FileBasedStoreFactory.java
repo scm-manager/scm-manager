@@ -29,8 +29,8 @@ package sonia.scm.store;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.repository.RepositoryArchivedCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
+import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.util.IOUtil;
 
 import java.io.File;
@@ -52,13 +52,13 @@ public abstract class FileBasedStoreFactory {
   private final SCMContextProvider contextProvider;
   private final RepositoryLocationResolver repositoryLocationResolver;
   private final Store store;
-  private final RepositoryArchivedCheck archivedCheck;
+  private final RepositoryReadOnlyChecker readOnlyChecker;
 
-  protected FileBasedStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, Store store, RepositoryArchivedCheck archivedCheck) {
+  protected FileBasedStoreFactory(SCMContextProvider contextProvider, RepositoryLocationResolver repositoryLocationResolver, Store store, RepositoryReadOnlyChecker readOnlyChecker) {
     this.contextProvider = contextProvider;
     this.repositoryLocationResolver = repositoryLocationResolver;
     this.store = store;
-    this.archivedCheck = archivedCheck;
+    this.readOnlyChecker = readOnlyChecker;
   }
 
   protected File getStoreLocation(StoreParameters storeParameters) {
@@ -83,12 +83,13 @@ public abstract class FileBasedStoreFactory {
   }
 
   protected boolean mustBeReadOnly(StoreParameters storeParameters) {
-    return storeParameters.getRepositoryId() != null && archivedCheck.isArchived(storeParameters.getRepositoryId());
+    return storeParameters.getRepositoryId() != null && readOnlyChecker.isReadOnly(storeParameters.getRepositoryId());
   }
 
   /**
    * Get the store directory of a specific repository
-   * @param store the type of the store
+   *
+   * @param store        the type of the store
    * @param repositoryId the id of the repossitory
    * @return the store directory of a specific repository
    */
@@ -98,6 +99,7 @@ public abstract class FileBasedStoreFactory {
 
   /**
    * Get the global store directory
+   *
    * @param store the type of the store
    * @return the global store directory
    */

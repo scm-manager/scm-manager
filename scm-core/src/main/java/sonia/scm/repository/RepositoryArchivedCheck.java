@@ -27,7 +27,7 @@ package sonia.scm.repository;
 /**
  * Implementations of this class can be used to check whether a repository is archived.
  *
- * @since 1.12.0
+ * @since 2.12.0
  */
 public interface RepositoryArchivedCheck {
 

@@ -31,7 +31,9 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.PreProcessorUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.security.Authentications;
@@ -93,15 +95,18 @@ public final class RepositoryService implements Closeable {
 
   @Nullable
   private final EMail eMail;
+  private final RepositoryExportingCheck repositoryExportingCheck;
 
   /**
    * Constructs a new {@link RepositoryService}. This constructor should only
    * be called from the {@link RepositoryServiceFactory}.
-   * @param cacheManager     cache manager
-   * @param provider         implementation for {@link RepositoryServiceProvider}
-   * @param repository       the repository
-   * @param workdirProvider  provider for workdirs
-   * @param eMail            utility to compute email addresses if missing
+   *
+   * @param cacheManager    cache manager
+   * @param provider        implementation for {@link RepositoryServiceProvider}
+   * @param repository      the repository
+   * @param workdirProvider provider for workdirs
+   * @param eMail           utility to compute email addresses if missing
+   * @param repositoryExportingCheck
    */
   RepositoryService(CacheManager cacheManager,
                     RepositoryServiceProvider provider,
@@ -109,7 +114,7 @@ public final class RepositoryService implements Closeable {
                     PreProcessorUtil preProcessorUtil,
                     @SuppressWarnings({"rawtypes", "java:S3740"}) Set<ScmProtocolProvider> protocolProviders,
                     WorkdirProvider workdirProvider,
-                    @Nullable EMail eMail) {
+                    @Nullable EMail eMail, RepositoryExportingCheck repositoryExportingCheck) {
     this.cacheManager = cacheManager;
     this.provider = provider;
     this.repository = repository;
@@ -117,6 +122,7 @@ public final class RepositoryService implements Closeable {
     this.protocolProviders = protocolProviders;
     this.workdirProvider = workdirProvider;
     this.eMail = eMail;
+    this.repositoryExportingCheck = repositoryExportingCheck;
   }
 
   /**
@@ -182,7 +188,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public BranchCommandBuilder getBranchCommand() {
-    verifyNotArchived();
+    RepositoryReadOnlyChecker.checkReadOnly(getRepository());
     RepositoryPermissions.push(getRepository()).check();
     LOG.debug("create branch command for repository {}",
       repository.getNamespaceAndName());
@@ -217,7 +223,7 @@ public final class RepositoryService implements Closeable {
     LOG.debug("create bundle command for repository {}",
       repository.getNamespaceAndName());
 
-    return new BundleCommandBuilder(provider.getBundleCommand(), repository);
+    return new BundleCommandBuilder(provider.getBundleCommand(), repositoryExportingCheck, repository);
   }
 
   /**
@@ -305,7 +311,7 @@ public final class RepositoryService implements Closeable {
    */
   public ModificationsCommandBuilder getModificationsCommand() {
     LOG.debug("create modifications command for repository {}", repository);
-    return new ModificationsCommandBuilder(provider.getModificationsCommand(),repository, cacheManager.getCache(ModificationsCommandBuilder.CACHE_NAME), preProcessorUtil);
+    return new ModificationsCommandBuilder(provider.getModificationsCommand(), repository, cacheManager.getCache(ModificationsCommandBuilder.CACHE_NAME), preProcessorUtil);
   }
 
   /**
@@ -333,7 +339,7 @@ public final class RepositoryService implements Closeable {
    * @since 1.31
    */
   public PullCommandBuilder getPullCommand() {
-    verifyNotArchived();
+    RepositoryReadOnlyChecker.checkReadOnly(getRepository());
     LOG.debug("create pull command for repository {}",
       repository.getNamespaceAndName());
 
@@ -383,12 +389,11 @@ public final class RepositoryService implements Closeable {
    * The tag command allows the management of repository tags.
    *
    * @return instance of {@link TagCommandBuilder}
-   *
    * @throws CommandNotSupportedException if the command is not supported
    *                                      by the implementation of the repository service provider.
    */
   public TagCommandBuilder getTagCommand() {
-    verifyNotArchived();
+    RepositoryReadOnlyChecker.checkReadOnly(getRepository());
     return new TagCommandBuilder(provider.getTagCommand());
   }
 
@@ -418,7 +423,7 @@ public final class RepositoryService implements Closeable {
    * @since 2.0.0
    */
   public MergeCommandBuilder getMergeCommand() {
-    verifyNotArchived();
+    RepositoryReadOnlyChecker.checkReadOnly(getRepository());
     LOG.debug("create merge command for repository {}",
       repository.getNamespaceAndName());
 
@@ -440,7 +445,7 @@ public final class RepositoryService implements Closeable {
    * @since 2.0.0
    */
   public ModifyCommandBuilder getModifyCommand() {
-    verifyNotArchived();
+    RepositoryReadOnlyChecker.checkReadOnly(getRepository());
     LOG.debug("create modify command for repository {}",
       repository.getNamespaceAndName());
 
@@ -489,12 +494,6 @@ public final class RepositoryService implements Closeable {
       .filter(protocol -> !Authentications.isAuthenticatedSubjectAnonymous() || protocol.isAnonymousEnabled());
   }
 
-  private void verifyNotArchived() {
-    if (getRepository().isArchived()) {
-      throw new RepositoryArchivedException(getRepository());
-    }
-  }
-
   @SuppressWarnings({"rawtypes", "java:S3740"})
   private ScmProtocol createProviderInstanceForRepository(ScmProtocolProvider protocolProvider) {
     return protocolProvider.get(repository);
@@ -507,6 +506,6 @@ public final class RepositoryService implements Closeable {
       // no idea how to fix this, without cast
       .map(p -> (T) p)
       .findFirst()
-      .orElseThrow(() -> new IllegalArgumentException(String.format("no implementation for %s and repository type %s", clazz.getName(),getRepository().getType())));
+      .orElseThrow(() -> new IllegalArgumentException(String.format("no implementation for %s and repository type %s", clazz.getName(), getRepository().getType())));
   }
 }

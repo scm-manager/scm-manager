@@ -28,11 +28,9 @@ package sonia.scm.store;
 
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
-import sonia.scm.repository.RepositoryArchivedCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
+import sonia.scm.repository.RepositoryReadOnlyChecker;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.util.IOUtil;
 
@@ -46,11 +44,6 @@ import java.io.File;
 @Singleton
 public class FileBlobStoreFactory extends FileBasedStoreFactory implements BlobStoreFactory {
 
-  /**
-   * the logger for FileBlobStoreFactory
-   */
-  private static final Logger LOG = LoggerFactory.getLogger(FileBlobStoreFactory.class);
-
   private final KeyGenerator keyGenerator;
 
   /**
@@ -60,8 +53,8 @@ public class FileBlobStoreFactory extends FileBasedStoreFactory implements BlobS
    * @param keyGenerator key generator
    */
   @Inject
-  public FileBlobStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator, RepositoryArchivedCheck archivedCheck) {
-    super(contextProvider, repositoryLocationResolver, Store.BLOB, archivedCheck);
+  public FileBlobStoreFactory(SCMContextProvider contextProvider , RepositoryLocationResolver repositoryLocationResolver, KeyGenerator keyGenerator, RepositoryReadOnlyChecker readOnlyChecker) {
+    super(contextProvider, repositoryLocationResolver, Store.BLOB, readOnlyChecker);
     this.keyGenerator = keyGenerator;
   }
 

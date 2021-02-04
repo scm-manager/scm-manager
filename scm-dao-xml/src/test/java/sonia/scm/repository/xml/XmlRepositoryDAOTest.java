@@ -41,6 +41,7 @@ import sonia.scm.io.DefaultFileSystem;
 import sonia.scm.io.FileSystem;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.store.StoreReadOnlyException;
@@ -72,8 +73,10 @@ class XmlRepositoryDAOTest {
   @Mock
   private PathBasedRepositoryLocationResolver locationResolver;
   private Consumer<BiConsumer<String, Path>> triggeredOnForAllLocations = none -> {};
+  @Mock
+  private RepositoryExportingCheck repositoryExportingCheck;
 
-  private FileSystem fileSystem = new DefaultFileSystem();
+  private final FileSystem fileSystem = new DefaultFileSystem();
 
   private XmlRepositoryDAO dao;
 
@@ -120,7 +123,7 @@ class XmlRepositoryDAOTest {
 
     @BeforeEach
     void createDAO() {
-      dao = new XmlRepositoryDAO(locationResolver, fileSystem);
+      dao = new XmlRepositoryDAO(locationResolver, fileSystem, repositoryExportingCheck);
     }
 
     @Test
@@ -246,6 +249,15 @@ class XmlRepositoryDAOTest {
     }
 
     @Test
+    void shouldNotModifyExportingRepository() {
+      when(repositoryExportingCheck.isExporting(REPOSITORY)).thenReturn(true);
+      dao.add(REPOSITORY);
+
+      Repository heartOfGold = createRepository("42");
+      assertThrows(StoreReadOnlyException.class, () -> dao.modify(heartOfGold));
+    }
+
+    @Test
     void shouldRemoveRepository() {
       dao.add(REPOSITORY);
       assertThat(dao.contains("42")).isTrue();
@@ -262,6 +274,15 @@ class XmlRepositoryDAOTest {
     @Test
     void shouldNotRemoveArchivedRepository() {
       REPOSITORY.setArchived(true);
+      dao.add(REPOSITORY);
+      assertThat(dao.contains("42")).isTrue();
+
+      assertThrows(StoreReadOnlyException.class, () -> dao.delete(REPOSITORY));
+    }
+
+    @Test
+    void shouldNotRemoveExportingRepository() {
+      when(repositoryExportingCheck.isExporting(REPOSITORY)).thenReturn(true);
       dao.add(REPOSITORY);
       assertThat(dao.contains("42")).isTrue();
 
@@ -317,8 +338,9 @@ class XmlRepositoryDAOTest {
       dao.add(REPOSITORY);
 
       String content = getXmlFileContent(REPOSITORY.getId());
-      assertThat(content).containsSubsequence("trillian", "<verb>read</verb>", "<verb>write</verb>");
-      assertThat(content).containsSubsequence("vogons", "<verb>delete</verb>");
+      assertThat(content)
+        .containsSubsequence("trillian", "<verb>read</verb>", "<verb>write</verb>")
+        .containsSubsequence("vogons", "<verb>delete</verb>");
     }
 
     @Test
@@ -372,7 +394,7 @@ class XmlRepositoryDAOTest {
       mockExistingPath();
 
       // when
-      XmlRepositoryDAO dao = new XmlRepositoryDAO(locationResolver, fileSystem);
+      XmlRepositoryDAO dao = new XmlRepositoryDAO(locationResolver, fileSystem, repositoryExportingCheck);
 
       // then
       assertThat(dao.contains(new NamespaceAndName("space", "existing"))).isTrue();
@@ -383,7 +405,7 @@ class XmlRepositoryDAOTest {
       // given
       mockExistingPath();
 
-      XmlRepositoryDAO dao = new XmlRepositoryDAO(locationResolver, fileSystem);
+      XmlRepositoryDAO dao = new XmlRepositoryDAO(locationResolver, fileSystem, repositoryExportingCheck);
 
       // when
       dao.refresh();

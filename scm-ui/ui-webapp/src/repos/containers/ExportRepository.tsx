@@ -56,6 +56,9 @@ const ExportRepository: FC<Props> = ({ repository }) => {
     <>
       <hr />
       <Subtitle subtitle={t("export.subtitle")} />
+      <Notification type="inherit">
+        {t("export.notification")}
+      </Notification>
       <>
         <Checkbox
           checked={fullExport || compressed}

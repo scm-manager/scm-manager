@@ -65,7 +65,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.Stack;
 
-import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasProperty;
@@ -109,7 +108,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
 
   private RepositoryDAO repositoryDAO;
 
-  {
+  static {
     ThreadContext.unbindSubject();
   }
 
@@ -120,8 +119,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   public ExpectedException thrown = ExpectedException.none();
 
   private NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
-
-  private ScmConfiguration configuration;
 
   private String mockedNamespace = "default_namespace";
 
@@ -552,11 +549,9 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     handlerSet.add(createRepositoryHandler("hg", "Mercurial"));
     handlerSet.add(createRepositoryHandler("svn", "SVN"));
 
-    this.configuration = new ScmConfiguration();
-
     when(namespaceStrategy.createNamespace(Mockito.any(Repository.class))).thenAnswer(invocation -> mockedNamespace);
 
-    return new DefaultRepositoryManager(configuration, contextProvider,
+    return new DefaultRepositoryManager(contextProvider,
       keyGenerator, repositoryDAO, handlerSet, Providers.of(namespaceStrategy));
   }
 

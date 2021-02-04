@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository;
 
 import sonia.scm.ExceptionWithContext;
-import sonia.scm.repository.Repository;
 
 import static java.lang.String.format;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -34,7 +33,7 @@ public class RepositoryArchivedException extends ExceptionWithContext {
 
   public static final String CODE = "3hSIlptme1";
 
-  protected RepositoryArchivedException(Repository repository) {
+  public RepositoryArchivedException(Repository repository) {
     super(entity(repository).build(), format("Repository %s is marked as archived and must not be modified", repository));
   }
 

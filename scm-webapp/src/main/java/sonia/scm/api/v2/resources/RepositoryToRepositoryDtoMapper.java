@@ -27,9 +27,12 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.HealthCheckFailure;
 import sonia.scm.repository.NamespaceStrategy;
@@ -69,6 +72,11 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
 
   @Override
   public abstract RepositoryDto map(Repository modelObject);
+
+  @AfterMapping
+  void setExporting(Repository repository, @MappingTarget RepositoryDto repositoryDto) {
+    repositoryDto.setExporting(DefaultRepositoryExportingCheck.isRepositoryExporting(repository.getId()));
+  }
 
   @ObjectFactory
   RepositoryDto createDto(Repository repository) {

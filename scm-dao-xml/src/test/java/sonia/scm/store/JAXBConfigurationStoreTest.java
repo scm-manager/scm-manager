@@ -26,7 +26,7 @@ package sonia.scm.store;
 
 import org.junit.Test;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryArchivedCheck;
+import sonia.scm.repository.RepositoryReadOnlyChecker;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -41,17 +41,16 @@ import static org.mockito.Mockito.when;
  */
 public class JAXBConfigurationStoreTest extends StoreTestBase {
 
-  private final RepositoryArchivedCheck archivedCheck = mock(RepositoryArchivedCheck.class);
+  private final RepositoryReadOnlyChecker readOnlyChecker = mock(RepositoryReadOnlyChecker.class);
 
   @Override
   protected ConfigurationStoreFactory createStoreFactory()
   {
-    return new JAXBConfigurationStoreFactory(contextProvider, repositoryLocationResolver, archivedCheck);
+    return new JAXBConfigurationStoreFactory(contextProvider, repositoryLocationResolver, readOnlyChecker);
   }
 
 
   @Test
-  @SuppressWarnings("unchecked")
   public void shouldStoreAndLoadInRepository()
   {
     Repository repository = new Repository("id", "git", "ns", "n");
@@ -70,17 +69,17 @@ public class JAXBConfigurationStoreTest extends StoreTestBase {
 
 
   @Test
-  @SuppressWarnings("unchecked")
   public void shouldNotWriteArchivedRepository()
   {
     Repository repository = new Repository("id", "git", "ns", "n");
-    when(archivedCheck.isArchived("id")).thenReturn(true);
+    when(readOnlyChecker.isReadOnly("id")).thenReturn(true);
     ConfigurationStore<StoreObject> store = createStoreFactory()
       .withType(StoreObject.class)
       .withName("test")
       .forRepository(repository)
       .build();
 
-    assertThrows(RuntimeException.class, () -> store.set(new StoreObject("value")));
+    StoreObject storeObject = new StoreObject("value");
+    assertThrows(RuntimeException.class, () -> store.set(storeObject));
   }
 }

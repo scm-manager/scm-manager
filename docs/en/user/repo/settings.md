@@ -16,6 +16,7 @@ strategy in the global SCM-Manager config is set to `custom` you may even rename
 repository is marked as archived, it can no longer be modified.
 
 In the "Export repository" section the repository can be exported in different formats.
+During the export the repository cannot be modified!
 The output format of the repository can be changed via the offered options:
 * `Standard`: If no options are selected, the repository will be exported in the standard format.
   Git and Mercurial are exported as `Tar archive` and Subversion uses the `Dump` format.

@@ -33,12 +33,16 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.api.extension.ExtensionContext;
+import org.junit.jupiter.api.extension.InvocationInterceptor;
+import org.junit.jupiter.api.extension.ReflectiveInvocationContext;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.lang.reflect.Method;
 import java.util.function.BooleanSupplier;
 
-import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.doThrow;
@@ -58,7 +62,7 @@ class RepositoryPermissionGuardTest {
 
   @BeforeAll
   static void setReadOnlyVerbs() {
-    RepositoryPermissionGuard.setReadOnlyVerbs(asList("read"));
+    RepositoryPermissionGuard.setReadOnlyVerbs(singletonList("read"));
   }
 
   @Nested
@@ -141,6 +145,48 @@ class RepositoryPermissionGuardTest {
 
         verify(checkDelegate).run();
       }
+    }
+
+    @Nested
+    @ExtendWith(WrapInExportCheck.class)
+    class WithExportingRepository {
+
+      @Test
+      void shouldInterceptPermissionCheck() {
+        assertThat(readInterceptor.isPermitted(subject, "1", permittedDelegate)).isFalse();
+
+        verify(permittedDelegate, never()).getAsBoolean();
+      }
+
+      @Test
+      void shouldInterceptCheckRequest() {
+        assertThrows(AuthorizationException.class, () -> readInterceptor.check(subject, "1", checkDelegate));
+      }
+
+      @Test
+      void shouldThrowConcretePermissionExceptionOverArchiveException() {
+        doThrow(new AuthorizationException()).when(checkDelegate).run();
+
+        assertThrows(AuthorizationException.class, () -> readInterceptor.check(subject, "1", checkDelegate));
+
+        verify(checkDelegate).run();
+      }
+    }
+  }
+
+  private static class WrapInExportCheck implements InvocationInterceptor {
+
+    public void interceptTestMethod(Invocation<Void> invocation,
+                                    ReflectiveInvocationContext<Method> invocationContext,
+                                    ExtensionContext extensionContext) {
+      new DefaultRepositoryExportingCheck().withExportingLock(new Repository("1", "git", "space", "X"), () -> {
+        try {
+          invocation.proceed();
+          return null;
+        } catch (Throwable t) {
+          throw new RuntimeException(t);
+        }
+      });
     }
   }
 }

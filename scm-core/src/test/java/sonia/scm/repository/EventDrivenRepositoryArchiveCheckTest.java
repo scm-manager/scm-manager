@@ -38,9 +38,10 @@ import static sonia.scm.repository.EventDrivenRepositoryArchiveCheck.setAsArchiv
 class EventDrivenRepositoryArchiveCheckTest {
 
   private static final Repository NORMAL_REPOSITORY = new Repository("hog", "git", "hitchhiker", "hog");
-  private static final Repository ARCHIVED_REPOSITORY = new Repository("hog", "git", "hitchhiker", "hog");
+  private static final Repository ARCHIVED_REPOSITORY = new Repository("archived_hog", "git", "hitchhiker", "hog");
   static {
     ARCHIVED_REPOSITORY.setArchived(true);
+    EventDrivenRepositoryArchiveCheck.setAsArchived(ARCHIVED_REPOSITORY.getId());
   }
 
   EventDrivenRepositoryArchiveCheck check = new EventDrivenRepositoryArchiveCheck();
@@ -53,7 +54,7 @@ class EventDrivenRepositoryArchiveCheckTest {
   @Test
   void shouldBeArchivedAfterFlagHasBeenSet() {
     check.updateListener(new RepositoryModificationEvent(HandlerEventType.MODIFY, ARCHIVED_REPOSITORY, NORMAL_REPOSITORY));
-    assertThat(check.isArchived("hog")).isTrue();
+    assertThat(check.isArchived("archived_hog")).isTrue();
   }
 
   @Test
@@ -70,6 +71,18 @@ class EventDrivenRepositoryArchiveCheckTest {
 
     new EventDrivenRepositoryArchiveCheckInitializer(repositoryDAO).init(null);
 
-    assertThat(check.isArchived("hog")).isTrue();
+    assertThat(check.isArchived("archived_hog")).isTrue();
+  }
+
+  @Test
+  void shouldBeReadOnly() {
+    boolean readOnly = check.isArchived(ARCHIVED_REPOSITORY);
+    assertThat(readOnly).isTrue();
+  }
+
+  @Test
+  void shouldNotBeReadOnly() {
+    boolean readOnly = check.isArchived(NORMAL_REPOSITORY);
+    assertThat(readOnly).isFalse();
   }
 }
