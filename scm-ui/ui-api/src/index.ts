@@ -26,10 +26,11 @@
 
 export * from "./base";
 export * from "./login";
+export * from "./groups";
+export * from "./users";
 export * from "./repos";
 export * from "./branches";
 export * from "./changesets";
-export * from "./groups";
 export * from "./tags";
 
 export { default as ApiProvider } from "./ApiProvider";
