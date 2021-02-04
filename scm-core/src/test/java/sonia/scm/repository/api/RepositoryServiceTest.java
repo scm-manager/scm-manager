@@ -36,6 +36,8 @@ import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryArchivedException;
+import sonia.scm.repository.RepositoryExportingException;
 import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.user.EMail;

@@ -22,20 +22,19 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository;
 
 import sonia.scm.ExceptionWithContext;
-import sonia.scm.repository.Repository;
 
 import static java.lang.String.format;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-public class RepositoryExportingException extends ExceptionWithContext {
+public class RepositoryArchivedException extends ExceptionWithContext {
 
-  public static final String CODE = "1mSNlpe1V1";
+  public static final String CODE = "3hSIlptme1";
 
-  public RepositoryExportingException(Repository repository) {
-    super(entity(repository).build(), format("Repository %s is currently being exported and must not be modified", repository));
+  public RepositoryArchivedException(Repository repository) {
+    super(entity(repository).build(), format("Repository %s is marked as archived and must not be modified", repository));
   }
 
   @Override

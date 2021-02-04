@@ -24,8 +24,6 @@
 
 package sonia.scm.repository;
 
-import sonia.scm.EagerSingleton;
-
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
@@ -34,8 +32,7 @@ import java.util.function.Supplier;
 /**
  * Default implementation of {@link RepositoryExportingCheck}. This tracks the exporting status of repositories.
  */
-@EagerSingleton
-public class DefaultRepositoryExportingCheck implements RepositoryExportingCheck {
+public final class DefaultRepositoryExportingCheck implements RepositoryExportingCheck {
 
   private static final Collection<String> EXPORTING_REPOSITORIES = Collections.synchronizedSet(new HashSet<>());
 

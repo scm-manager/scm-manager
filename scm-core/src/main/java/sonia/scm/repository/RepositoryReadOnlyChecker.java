@@ -24,9 +24,6 @@
 
 package sonia.scm.repository;
 
-import sonia.scm.repository.api.RepositoryArchivedException;
-import sonia.scm.repository.api.RepositoryExportingException;
-
 import javax.inject.Inject;
 
 /**
