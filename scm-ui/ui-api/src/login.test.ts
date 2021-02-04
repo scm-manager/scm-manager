@@ -26,11 +26,12 @@ import fetchMock from "fetch-mock-jest";
 import { renderHook } from "@testing-library/react-hooks";
 import { Me } from "@scm-manager/ui-types";
 import createWrapper from "./tests/createWrapper";
-import { useLogin, useLogout, useMe, useSubject } from "./login";
-import { setIndexLink, setEmptyIndex } from "./tests/indexLinks";
+import { useLogin, useLogout, useMe, useRequiredMe, useSubject } from "./login";
+import { setEmptyIndex, setIndexLink } from "./tests/indexLinks";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import { LegacyContext } from "./LegacyContext";
 import { act } from "react-test-renderer";
+import { QueryClient } from "react-query";
 
 describe("Test login hooks", () => {
   const tricia: Me = {
@@ -86,6 +87,35 @@ describe("Test login hooks", () => {
       expect(result.current.isLoading).toBe(false);
       expect(result.current?.data).toBeFalsy();
       expect(result.current?.error).toBeFalsy();
+    });
+  });
+
+  describe("useRequiredMe tests", () => {
+    // TODO: fix test and reenable
+    xit("should return me", async () => {
+      const queryClient = new QueryClient();
+      queryClient.setQueryData("me", tricia);
+      setIndexLink(queryClient, "me", "/requiredMe");
+      fetchMock.get("/api/v2/requiredMe", {
+        name: "tricia",
+        displayName: "Tricia",
+        groups: [],
+        _links: {}
+      });
+      const { result, waitFor } = renderHook(() => useMe(), { wrapper: createWrapper(undefined, queryClient) });
+      await waitFor(() => {
+        return !!result.current;
+      });
+      expect(result.current?.data?.name).toBe("tricia");
+    });
+
+    it("should throw an error if me is not available", () => {
+      const queryClient = createInfiniteCachingClient();
+      setEmptyIndex(queryClient);
+
+      const { result } = renderHook(() => useRequiredMe(), { wrapper: createWrapper(undefined, queryClient) });
+
+      expect(result.error).toBeDefined();
     });
   });
 
