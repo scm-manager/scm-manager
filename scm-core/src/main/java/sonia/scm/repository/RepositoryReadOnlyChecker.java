@@ -28,38 +28,40 @@ import sonia.scm.repository.api.RepositoryArchivedException;
 import sonia.scm.repository.api.RepositoryExportingException;
 
 import javax.inject.Inject;
-import java.util.Set;
 
 /**
- * Checks all {@link RepositoryReadOnlyCheck}s if any check is locking the repository to read only access.
+ * Checks, whether a repository has to be considered read only. Currently, this includes {@link RepositoryArchivedCheck}
+ * and {@link RepositoryExportingCheck}.
  *
  * @since 2.14.0
  */
-public class RepositoryReadOnlyChecker {
+public final class RepositoryReadOnlyChecker {
 
-  private final Set<RepositoryReadOnlyCheck> readOnlyChecks;
+  private final RepositoryArchivedCheck archivedCheck;
+  private final RepositoryExportingCheck exportingCheck;
 
   @Inject
-  public RepositoryReadOnlyChecker(Set<RepositoryReadOnlyCheck> readOnlyChecks) {
-    this.readOnlyChecks = readOnlyChecks;
+  public RepositoryReadOnlyChecker(RepositoryArchivedCheck archivedCheck, RepositoryExportingCheck exportingCheck) {
+    this.archivedCheck = archivedCheck;
+    this.exportingCheck = exportingCheck;
   }
 
   /**
-   * Checks if the repository is read only
+   * Checks if the repository is read only.
    * @param repository The repository to check.
-   * @return <code>true</code> if any check locks the repository to read only access
+   * @return <code>true</code> if any check locks the repository to read only access.
    */
   public boolean isReadOnly(Repository repository) {
     return isReadOnly(repository.getId());
   }
 
   /**
-   * Checks if the repository for the given id is read only
+   * Checks if the repository for the given id is read only.
    * @param repositoryId The id of the given repository to check.
-   * @return <code>true</code> if any check locks the repository to read only access
+   * @return <code>true</code> if any check locks the repository to read only access.
    */
   public boolean isReadOnly(String repositoryId) {
-    return readOnlyChecks.stream().anyMatch(check -> check.isReadOnly(repositoryId));
+    return archivedCheck.isArchived(repositoryId) || exportingCheck.isExporting(repositoryId);
   }
 
   /**

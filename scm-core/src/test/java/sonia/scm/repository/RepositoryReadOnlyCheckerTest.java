@@ -24,40 +24,42 @@
 
 package sonia.scm.repository;
 
-import com.google.common.collect.ImmutableSet;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class RepositoryReadOnlyCheckerTest {
+class RepositoryReadOnlyCheckerTest {
 
   private final Repository repository = new Repository("1", "git","hitchhiker", "HeartOfGold");
 
+  private boolean archived = false;
+  private boolean exporting = false;
+
+  private final RepositoryArchivedCheck archivedCheck = repositoryId -> archived;
+  private final RepositoryExportingCheck exportingCheck = repositoryId -> exporting;
+
+  private final RepositoryReadOnlyChecker checker = new RepositoryReadOnlyChecker(archivedCheck, exportingCheck);
+
   @Test
   void shouldReturnFalseIfAllChecksFalse() {
-    ImmutableSet<RepositoryReadOnlyCheck> checks = ImmutableSet.of(repoId -> false, repoId -> false);
-
-    RepositoryReadOnlyChecker checker = new RepositoryReadOnlyChecker(checks);
     boolean readOnly = checker.isReadOnly(repository);
 
     assertThat(readOnly).isFalse();
   }
 
   @Test
-  void shouldReturnTrueIfAllChecksTrue() {
-    ImmutableSet<RepositoryReadOnlyCheck> checks = ImmutableSet.of(repoId -> true, repoId -> true);
+  void shouldReturnTrueIfArchivedIsTrue() {
+    archived = true;
 
-    RepositoryReadOnlyChecker checker = new RepositoryReadOnlyChecker(checks);
     boolean readOnly = checker.isReadOnly(repository);
 
     assertThat(readOnly).isTrue();
   }
 
   @Test
-  void shouldReturnTrueIfAnyCheckTrue() {
-    ImmutableSet<RepositoryReadOnlyCheck> checks = ImmutableSet.of(repoId -> false, repoId -> true, repoId -> false);
+  void shouldReturnTrueIfExportingIsTrue() {
+    exporting = true;
 
-    RepositoryReadOnlyChecker checker = new RepositoryReadOnlyChecker(checks);
     boolean readOnly = checker.isReadOnly(repository);
 
     assertThat(readOnly).isTrue();

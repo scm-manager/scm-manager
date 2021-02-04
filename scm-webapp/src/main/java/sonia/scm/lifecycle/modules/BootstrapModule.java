@@ -26,7 +26,6 @@ package sonia.scm.lifecycle.modules;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.TypeLiteral;
-import com.google.inject.multibindings.Multibinder;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +41,6 @@ import sonia.scm.repository.EventDrivenRepositoryArchiveCheck;
 import sonia.scm.repository.RepositoryArchivedCheck;
 import sonia.scm.repository.RepositoryExportingCheck;
 import sonia.scm.repository.RepositoryLocationResolver;
-import sonia.scm.repository.RepositoryReadOnlyCheck;
 import sonia.scm.repository.xml.MetadataStore;
 import sonia.scm.repository.xml.PathBasedRepositoryLocationResolver;
 import sonia.scm.security.CipherHandler;
@@ -105,11 +103,6 @@ public class BootstrapModule extends AbstractModule {
     // bind core
     bind(RepositoryArchivedCheck.class, EventDrivenRepositoryArchiveCheck.class);
     bind(RepositoryExportingCheck.class, DefaultRepositoryExportingCheck.class);
-    Multibinder<RepositoryReadOnlyCheck> readOnlyCheckMultibinder =
-      Multibinder.newSetBinder(binder(), RepositoryReadOnlyCheck.class);
-    readOnlyCheckMultibinder.addBinding().to(DefaultRepositoryExportingCheck.class);
-    readOnlyCheckMultibinder.addBinding().to(EventDrivenRepositoryArchiveCheck.class);
-
     bind(ConfigurationStoreFactory.class, JAXBConfigurationStoreFactory.class);
     bind(ConfigurationEntryStoreFactory.class, JAXBConfigurationEntryStoreFactory.class);
     bind(DataStoreFactory.class, JAXBDataStoreFactory.class);

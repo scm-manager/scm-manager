@@ -35,7 +35,7 @@ import java.util.function.Supplier;
  * Default implementation of {@link RepositoryExportingCheck}. This tracks the exporting status of repositories.
  */
 @EagerSingleton
-public class DefaultRepositoryExportingCheck implements RepositoryExportingCheck, RepositoryReadOnlyCheck {
+public class DefaultRepositoryExportingCheck implements RepositoryExportingCheck {
 
   private static final Collection<String> EXPORTING_REPOSITORIES = Collections.synchronizedSet(new HashSet<>());
 
@@ -54,11 +54,6 @@ public class DefaultRepositoryExportingCheck implements RepositoryExportingCheck
   @Override
   public boolean isExporting(String repositoryId) {
     return EXPORTING_REPOSITORIES.contains(repositoryId);
-  }
-
-  @Override
-  public boolean isReadOnly(String repositoryId) {
-    return isRepositoryExporting(repositoryId);
   }
 
   public <T> T withExportingLock(Repository repository, Supplier<T> callback) {

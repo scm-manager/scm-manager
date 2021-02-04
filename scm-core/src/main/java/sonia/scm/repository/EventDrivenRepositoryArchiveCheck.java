@@ -32,14 +32,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 
-@Extension
-@EagerSingleton
 /**
  * Default implementation of {@link RepositoryArchivedCheck}. This tracks the archive status of repositories by using
  * {@link RepositoryModificationEvent}s. The initial set of archived repositories is read by
  * {@link EventDrivenRepositoryArchiveCheckInitializer} on startup.
  */
-public final class EventDrivenRepositoryArchiveCheck implements RepositoryArchivedCheck, RepositoryReadOnlyCheck {
+@Extension
+@EagerSingleton
+public final class EventDrivenRepositoryArchiveCheck implements RepositoryArchivedCheck {
 
   private static final Collection<String> ARCHIVED_REPOSITORIES = Collections.synchronizedSet(new HashSet<>());
 
@@ -68,10 +68,5 @@ public final class EventDrivenRepositoryArchiveCheck implements RepositoryArchiv
     } else {
       EventDrivenRepositoryArchiveCheck.removeFromArchived(repository.getId());
     }
-  }
-
-  @Override
-  public boolean isReadOnly(String repositoryId) {
-    return isRepositoryArchived(repositoryId);
   }
 }

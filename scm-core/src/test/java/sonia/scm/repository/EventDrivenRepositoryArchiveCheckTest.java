@@ -76,13 +76,13 @@ class EventDrivenRepositoryArchiveCheckTest {
 
   @Test
   void shouldBeReadOnly() {
-    boolean readOnly = check.isReadOnly(ARCHIVED_REPOSITORY);
+    boolean readOnly = check.isArchived(ARCHIVED_REPOSITORY);
     assertThat(readOnly).isTrue();
   }
 
   @Test
   void shouldNotBeReadOnly() {
-    boolean readOnly = check.isReadOnly(NORMAL_REPOSITORY);
+    boolean readOnly = check.isArchived(NORMAL_REPOSITORY);
     assertThat(readOnly).isFalse();
   }
 }

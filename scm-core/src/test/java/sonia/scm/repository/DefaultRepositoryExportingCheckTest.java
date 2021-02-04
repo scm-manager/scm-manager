@@ -49,20 +49,20 @@ class DefaultRepositoryExportingCheckTest {
 
   @Test
   void shouldBeReadOnlyIfBeingExported() {
-    boolean readOnly = check.isReadOnly(EXPORTING_REPOSITORY);
+    boolean readOnly = check.isExporting(EXPORTING_REPOSITORY);
     assertThat(readOnly).isTrue();
   }
 
   @Test
   void shouldNotBeReadOnlyIfNotBeingExported() {
-    boolean readOnly = check.isReadOnly(NORMAL_REPOSITORY);
+    boolean readOnly = check.isExporting(NORMAL_REPOSITORY);
     assertThat(readOnly).isFalse();
   }
 
   @Test
   void shouldNotBeReadOnlyAfterExportIsFinished() {
     DefaultRepositoryExportingCheck.removeFromExporting(EXPORTING_REPOSITORY.getId());
-    boolean readOnly = check.isReadOnly(EXPORTING_REPOSITORY);
+    boolean readOnly = check.isExporting(EXPORTING_REPOSITORY);
     assertThat(readOnly).isFalse();
   }
 }
