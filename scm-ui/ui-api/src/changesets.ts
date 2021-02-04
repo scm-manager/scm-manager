@@ -23,7 +23,6 @@
  *
  */
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import { Branch, ChangesetCollection, Repository } from "@scm-manager/ui-types";
 import { useQuery, useQueryClient } from "react-query";
 import { requiredLink } from "./links";
