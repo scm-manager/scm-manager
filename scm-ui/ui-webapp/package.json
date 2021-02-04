@@ -3,9 +3,9 @@
   "version": "2.13.1-SNAPSHOT",
   "private": true,
   "dependencies": {
-    "@scm-manager/ui-components": "^2.13.0-SNAPSHOT",
+    "@scm-manager/ui-components": "^2.13.1-SNAPSHOT",
     "@scm-manager/ui-api": "^2.13.1-SNAPSHOT",
-    "@scm-manager/ui-extensions": "^2.13.0-SNAPSHOT",
+    "@scm-manager/ui-extensions": "^2.13.1-SNAPSHOT",
     "classnames": "^2.2.5",
     "history": "^4.10.1",
     "i18next": "^19.6.0",
