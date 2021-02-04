@@ -14,7 +14,7 @@
     "typecheck": "tsc"
   },
   "devDependencies": {
-    "typescript": "^3.7.2"
+    "@scm-manager/tsconfig": "^2.11.2"
   },
   "babel": {
     "presets": [
