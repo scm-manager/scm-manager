@@ -22,13 +22,14 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import { HalRepresentation } from "./hal";
 
-export type Me = {
+export type MeBase = {
   name: string;
   displayName: string;
   mail?: string;
   fallbackMail?: string;
   groups: string[];
-  _links: Links;
 };
+
+export type Me = MeBase & HalRepresentation;
