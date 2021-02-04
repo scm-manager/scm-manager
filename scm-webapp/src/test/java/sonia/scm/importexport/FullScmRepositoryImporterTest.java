@@ -100,7 +100,7 @@ class FullScmRepositoryImporterTest {
     FileInputStream inputStream = new FileInputStream(emptyFile);
     assertThrows(
       ImportFailedException.class,
-      () -> fullImporter.importFromStream(REPOSITORY, inputStream)
+      () -> fullImporter.importFromStream(REPOSITORY, inputStream, "")
     );
   }
 
@@ -111,7 +111,7 @@ class FullScmRepositoryImporterTest {
     InputStream importStream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
     assertThrows(
       IncompatibleEnvironmentForImportException.class,
-      () -> fullImporter.importFromStream(REPOSITORY, importStream)
+      () -> fullImporter.importFromStream(REPOSITORY, importStream, "")
     );
   }
 
@@ -131,7 +131,7 @@ class FullScmRepositoryImporterTest {
     void shouldImportScmRepositoryArchive() throws IOException {
       InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
 
-      Repository repository = fullImporter.importFromStream(REPOSITORY, stream);
+      Repository repository = fullImporter.importFromStream(REPOSITORY, stream, "");
 
       assertThat(repository).isEqualTo(REPOSITORY);
       verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class));
@@ -145,7 +145,7 @@ class FullScmRepositoryImporterTest {
     void shouldTriggerUpdateForImportedRepository() throws IOException {
       InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
 
-      fullImporter.importFromStream(REPOSITORY, stream);
+      fullImporter.importFromStream(REPOSITORY, stream, "");
 
       verify(updateEngine).update(REPOSITORY.getId());
     }

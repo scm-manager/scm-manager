@@ -64,9 +64,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
 import java.time.Instant;
-import java.util.Optional;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
@@ -74,6 +72,8 @@ import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
 import static sonia.scm.importexport.RepositoryImportExportEncryption.encrypt;
 
 public class RepositoryExportResource {
+
+  private static final String NO_PASSWORD = "";
 
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
@@ -129,7 +129,7 @@ public class RepositoryExportResource {
                                    @DefaultValue("false") @QueryParam("compressed") boolean compressed
   ) {
     Repository repository = getVerifiedRepository(namespace, name, type);
-    return exportRepository(repository, compressed, Optional.empty());
+    return exportRepository(repository, compressed, NO_PASSWORD);
   }
 
   /**
@@ -171,7 +171,7 @@ public class RepositoryExportResource {
                                        @PathParam("name") String name
   ) {
     Repository repository = getVerifiedRepository(namespace, name);
-    return exportFullRepository(repository, Optional.empty());
+    return exportFullRepository(repository, NO_PASSWORD);
   }
 
   /**
@@ -220,7 +220,7 @@ public class RepositoryExportResource {
 
   ) {
     Repository repository = getVerifiedRepository(namespace, name, type);
-    return exportRepository(repository, compressed, Optional.of(request.getPassword()));
+    return exportRepository(repository, compressed, request.getPassword());
   }
 
   /**
@@ -264,7 +264,7 @@ public class RepositoryExportResource {
                                                    @Valid RepositoryExportDto request
   ) {
     Repository repository = getVerifiedRepository(namespace, name);
-    return exportFullRepository(repository, Optional.of(request.getPassword()));
+    return exportFullRepository(repository, request.getPassword());
   }
 
   private Repository getVerifiedRepository(String namespace, String name) {
@@ -284,17 +284,8 @@ public class RepositoryExportResource {
     return repository;
   }
 
-  private Response exportFullRepository(Repository repository, Optional<String> password) {
-    StreamingOutput output = os -> {
-      if (password.isPresent()) {
-        try {
-          os = encrypt(os, password.get());
-        } catch (GeneralSecurityException e) {
-          throw new InternalRepositoryException(repository, "repository export encryption failed", e);
-        }
-      }
-      fullScmRepositoryExporter.export(repository, os);
-    };
+  private Response exportFullRepository(Repository repository, String password) {
+    StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os, password);
 
     return Response
       .ok(output, "application/x-gzip")
@@ -302,7 +293,7 @@ public class RepositoryExportResource {
       .build();
   }
 
-  private Response exportRepository(Repository repository, boolean compressed, Optional<String> password) {
+  private Response exportRepository(Repository repository, boolean compressed, String password) {
     StreamingOutput output;
     String fileExtension;
     try (final RepositoryService service = serviceFactory.create(repository)) {
@@ -310,8 +301,8 @@ public class RepositoryExportResource {
       fileExtension = resolveFileExtension(bundleCommand, compressed);
       output = os -> {
         try {
-          if (password.isPresent()) {
-            os = encrypt(os, password.get());
+          if (!Strings.isNullOrEmpty(password)) {
+            os = encrypt(os, password);
           }
           if (compressed) {
             GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
@@ -320,7 +311,7 @@ public class RepositoryExportResource {
           } else {
             bundleCommand.bundle(os);
           }
-        } catch (IOException | GeneralSecurityException e) {
+        } catch (IOException e) {
           throw new InternalRepositoryException(repository, "repository export failed", e);
         }
       };
