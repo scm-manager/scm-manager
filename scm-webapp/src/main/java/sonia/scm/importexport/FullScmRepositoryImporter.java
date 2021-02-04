@@ -48,6 +48,7 @@ import java.util.HashSet;
 import static sonia.scm.importexport.FullScmRepositoryExporter.METADATA_FILE_NAME;
 import static sonia.scm.importexport.FullScmRepositoryExporter.SCM_ENVIRONMENT_FILE_NAME;
 import static sonia.scm.importexport.FullScmRepositoryExporter.STORE_DATA_FILE_NAME;
+import static sonia.scm.importexport.RepositoryImportExportEncryption.decrypt;
 
 public class FullScmRepositoryImporter {
 
@@ -69,12 +70,13 @@ public class FullScmRepositoryImporter {
     this.storeImporter = storeImporter;
   }
 
-  public Repository importFromStream(Repository repository, InputStream inputStream) {
+  public Repository importFromStream(Repository repository, InputStream inputStream, String password) {
     try {
       if (inputStream.available() > 0) {
         try (
           BufferedInputStream bif = new BufferedInputStream(inputStream);
-          GzipCompressorInputStream gcis = new GzipCompressorInputStream(bif);
+          InputStream cif = decrypt(bif, password);
+          GzipCompressorInputStream gcis = new GzipCompressorInputStream(cif);
           TarArchiveInputStream tais = new TarArchiveInputStream(gcis)
         ) {
           checkScmEnvironment(repository, tais);

@@ -53,7 +53,11 @@ import java.util.function.Supplier;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyString;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class FullScmRepositoryExporterTest {
@@ -78,7 +82,7 @@ class FullScmRepositoryExporterTest {
   @InjectMocks
   private FullScmRepositoryExporter exporter;
 
-  private Collection<Path> workDirsCreated = new ArrayList<>();
+  private final Collection<Path> workDirsCreated = new ArrayList<>();
 
   @BeforeEach
   void initRepoService() {
@@ -95,7 +99,7 @@ class FullScmRepositoryExporterTest {
     when(repositoryService.getRepository()).thenReturn(REPOSITORY);
     when(workdirProvider.createNewWorkdir(anyString())).thenAnswer(invocation -> createWorkDir(temp, invocation.getArgument(0, String.class)));
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    exporter.export(REPOSITORY, baos);
+    exporter.export(REPOSITORY, baos, "");
 
     verify(storeExporter, times(1)).export(eq(REPOSITORY), any(OutputStream.class));
     verify(environmentGenerator, times(1)).generate();

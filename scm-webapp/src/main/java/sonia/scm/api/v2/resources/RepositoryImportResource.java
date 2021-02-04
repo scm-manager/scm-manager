@@ -85,7 +85,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.security.GeneralSecurityException;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
@@ -144,7 +143,7 @@ public class RepositoryImportResource {
     description = "Repository import was successful",
     content = @Content(
       mediaType = VndMediaType.REPOSITORY,
-      schema = @Schema(implementation = ImportRepositoryDto.class)
+      schema = @Schema(implementation = ImportRepositoryFromUrlDto.class)
     )
   )
   @ApiResponse(
@@ -165,7 +164,7 @@ public class RepositoryImportResource {
   )
   public Response importFromUrl(@Context UriInfo uriInfo,
                                 @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
-                                @Valid RepositoryImportDto request) {
+                                @Valid RepositoryImportResource.RepositoryImportFromUrlDto request) {
     RepositoryPermissions.create().check();
 
     Type t = type(manager, type);
@@ -194,7 +193,7 @@ public class RepositoryImportResource {
   }
 
   @VisibleForTesting
-  Consumer<Repository> pullChangesFromRemoteUrl(RepositoryImportDto request) {
+  Consumer<Repository> pullChangesFromRemoteUrl(RepositoryImportFromUrlDto request) {
     return repository -> {
       try (RepositoryService service = serviceFactory.create(repository)) {
         PullCommandBuilder pullCommand = service.getPullCommand();
@@ -254,7 +253,7 @@ public class RepositoryImportResource {
                                    MultipartFormDataInput input,
                                    @QueryParam("compressed") @DefaultValue("false") boolean compressed) {
     RepositoryPermissions.create().check();
-    Repository repository = doImportFromBundle(type, input, compressed, "lala");
+    Repository repository = doImportFromBundle(type, input, compressed);
 
     return Response.created(URI.create(resourceLinks.repository().self(repository.getNamespace(), repository.getName()))).build();
   }
@@ -311,8 +310,9 @@ public class RepositoryImportResource {
   private Repository importFullRepositoryFromInput(MultipartFormDataInput input) {
     Map<String, List<InputPart>> formParts = input.getFormDataMap();
     InputStream inputStream = extractInputStream(formParts);
-    RepositoryDto repositoryDto = extractRepositoryDto(formParts);
-    return fullScmRepositoryImporter.importFromStream(mapper.map(repositoryDto), inputStream);
+    RepositoryImportFromFileDto repositoryDto = extractRepositoryDto(formParts);
+
+    return fullScmRepositoryImporter.importFromStream(mapper.map(repositoryDto), inputStream, repositoryDto.getPassword());
   }
 
   /**
@@ -323,10 +323,11 @@ public class RepositoryImportResource {
    * @param compressed true if the bundle is gzip compressed
    * @return imported repository
    */
-  private Repository doImportFromBundle(String type, MultipartFormDataInput input, boolean compressed, String password) {
+  private Repository doImportFromBundle(String type, MultipartFormDataInput input, boolean compressed) {
     Map<String, List<InputPart>> formParts = input.getFormDataMap();
     InputStream inputStream = extractInputStream(formParts);
-    RepositoryDto repositoryDto = extractRepositoryDto(formParts);
+    RepositoryImportFromFileDto repositoryDto = extractRepositoryDto(formParts);
+    inputStream = decryptInputStream(inputStream, repositoryDto.getPassword());
 
     Type t = type(manager, type);
     checkSupport(t, Command.UNBUNDLE);
@@ -339,7 +340,7 @@ public class RepositoryImportResource {
     try {
       repository = manager.create(
         repository,
-        unbundleImport(inputStream, compressed, password)
+        unbundleImport(inputStream, compressed)
       );
       eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, false));
 
@@ -351,20 +352,23 @@ public class RepositoryImportResource {
     return repository;
   }
 
+  private InputStream decryptInputStream(InputStream inputStream, String password) {
+    if (!Strings.isNullOrEmpty(password)) {
+      inputStream = decrypt(inputStream, password);
+    }
+    return inputStream;
+  }
+
   @VisibleForTesting
-  Consumer<Repository> unbundleImport(InputStream inputStream, boolean compressed, String password) {
+  Consumer<Repository> unbundleImport(InputStream inputStream, boolean compressed) {
     return repository -> {
       File file = null;
-      InputStream is = inputStream;
       try (RepositoryService service = serviceFactory.create(repository)) {
-        if (!Strings.isNullOrEmpty(password)) {
-          is = decrypt(is, password);
-        }
         file = File.createTempFile("scm-import-", ".bundle");
-        long length = Files.asByteSink(file).writeFrom(is);
+        long length = Files.asByteSink(file).writeFrom(inputStream);
         logger.info("copied {} bytes to temp, start bundle import", length);
         service.getUnbundleCommand().setCompressed(compressed).unbundle(file);
-      } catch (IOException | GeneralSecurityException e) {
+      } catch (IOException e) {
         throw new InternalRepositoryException(repository, "Failed to import from bundle", e);
       } finally {
         try {
@@ -376,8 +380,8 @@ public class RepositoryImportResource {
     };
   }
 
-  private RepositoryDto extractRepositoryDto(Map<String, List<InputPart>> formParts) {
-    RepositoryDto repositoryDto = extractFromInputPart(formParts.get("repository"), RepositoryDto.class);
+  private RepositoryImportFromFileDto extractRepositoryDto(Map<String, List<InputPart>> formParts) {
+    RepositoryImportFromFileDto repositoryDto = extractFromInputPart(formParts.get("repository"), RepositoryImportFromFileDto.class);
     checkNotNull(repositoryDto, "repository data is required");
     DtoValidator.validate(repositoryDto);
     return repositoryDto;
@@ -422,14 +426,26 @@ public class RepositoryImportResource {
   @Setter
   @NoArgsConstructor
   @SuppressWarnings("java:S2160")
-  public static class RepositoryImportDto extends RepositoryDto implements ImportRepositoryDto {
+  public static class RepositoryImportFromUrlDto extends RepositoryDto implements ImportRepositoryFromUrlDto {
 
     @NotEmpty
     private String importUrl;
     private String username;
     private String password;
 
-    RepositoryImportDto(Links links, Embedded embedded) {
+    RepositoryImportFromUrlDto(Links links, Embedded embedded) {
+      super(links, embedded);
+    }
+  }
+
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @SuppressWarnings("java:S2160")
+  public static class RepositoryImportFromFileDto extends RepositoryDto implements ImportRepositoryFromFileDto {
+    private String password;
+
+    RepositoryImportFromFileDto(Links links, Embedded embedded) {
       super(links, embedded);
     }
   }
@@ -447,12 +463,18 @@ public class RepositoryImportResource {
     String getContact();
 
     String getDescription();
+  }
 
+  interface ImportRepositoryFromUrlDto extends ImportRepositoryDto {
     @NotEmpty
     String getImportUrl();
 
     String getUsername();
 
+    String getPassword();
+  }
+
+  interface ImportRepositoryFromFileDto extends ImportRepositoryDto {
     String getPassword();
   }
 }

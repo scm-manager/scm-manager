@@ -25,6 +25,10 @@
 package sonia.scm.importexport;
 
 
+import com.google.common.base.Strings;
+import sonia.scm.repository.api.ExportFailedException;
+import sonia.scm.repository.api.ImportFailedException;
+
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -41,25 +45,42 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
 
+import static sonia.scm.ContextEntry.ContextBuilder.noContext;
+
 public class RepositoryImportExportEncryption {
 
-  public static OutputStream encrypt(OutputStream os, String secret) throws GeneralSecurityException {
-    IvParameterSpec ivspec = createIvParamSpec();
-    SecretKeySpec secretKey = createSecretKey(secret);
-    Cipher cipher = createCipher();
-    cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
-    return new CipherOutputStream(os, cipher);
+  public static OutputStream encrypt(OutputStream os, String secret) {
+    if (!Strings.isNullOrEmpty(secret)) {
+      try {
+        IvParameterSpec ivspec = createIvParamSpec();
+        SecretKeySpec secretKey = createSecretKey(secret);
+        Cipher cipher = createCipher();
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
+        return new CipherOutputStream(os, cipher);
+      } catch (GeneralSecurityException e) {
+        throw new ExportFailedException(noContext(), "Could not encrypt repository on export.", e);
+      }
+    }
+    return os;
   }
 
-  public static InputStream decrypt(InputStream is, String secret) throws GeneralSecurityException {
-    IvParameterSpec ivspec = createIvParamSpec();
-    SecretKeySpec secretKey = createSecretKey(secret);
-    Cipher cipher = createCipher();
-    cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec);
-    return new CipherInputStream(is, cipher);
+  public static InputStream decrypt(InputStream is, String secret) {
+    if (!Strings.isNullOrEmpty(secret)) {
+      try {
+        IvParameterSpec ivspec = createIvParamSpec();
+        SecretKeySpec secretKey = createSecretKey(secret);
+        Cipher cipher = createCipher();
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec);
+        return new CipherInputStream(is, cipher);
+      } catch (GeneralSecurityException e) {
+        throw new ImportFailedException(noContext(), "Could not decrypt repository on import.", e);
+      }
+    }
+    return is;
   }
 
   private static SecretKeySpec createSecretKey(String secret) throws NoSuchAlgorithmException, InvalidKeySpecException {
+    //TODO Is this key okay? Choose key without salt?
     SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
     KeySpec spec = new PBEKeySpec(secret.toCharArray(), "salt".getBytes(), 65536, 256);
     SecretKey tmp = factory.generateSecret(spec);

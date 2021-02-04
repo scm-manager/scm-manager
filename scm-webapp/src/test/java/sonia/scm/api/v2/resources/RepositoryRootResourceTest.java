@@ -99,6 +99,7 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.OPTIONAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
@@ -543,12 +544,12 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(service.getPullCommand()).thenReturn(pullCommandBuilder);
 
     Repository repository = RepositoryTestData.createHeartOfGold();
-    RepositoryImportResource.RepositoryImportDto repositoryImportDto = new RepositoryImportResource.RepositoryImportDto();
-    repositoryImportDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-    repositoryImportDto.setNamespace("scmadmin");
-    repositoryImportDto.setName("scm-manager");
+    RepositoryImportResource.RepositoryImportFromUrlDto repositoryImportFromUrlDto = new RepositoryImportResource.RepositoryImportFromUrlDto();
+    repositoryImportFromUrlDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+    repositoryImportFromUrlDto.setNamespace("scmadmin");
+    repositoryImportFromUrlDto.setName("scm-manager");
 
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportDto);
+    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportFromUrlDto);
     repositoryConsumer.accept(repository);
 
     verify(pullCommandBuilder).pull("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
@@ -560,14 +561,14 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(service.getPullCommand()).thenReturn(pullCommandBuilder);
 
     Repository repository = RepositoryTestData.createHeartOfGold();
-    RepositoryImportResource.RepositoryImportDto repositoryImportDto = new RepositoryImportResource.RepositoryImportDto();
-    repositoryImportDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-    repositoryImportDto.setNamespace("scmadmin");
-    repositoryImportDto.setName("scm-manager");
-    repositoryImportDto.setUsername("trillian");
-    repositoryImportDto.setPassword("secret");
+    RepositoryImportResource.RepositoryImportFromUrlDto repositoryImportFromUrlDto = new RepositoryImportResource.RepositoryImportFromUrlDto();
+    repositoryImportFromUrlDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+    repositoryImportFromUrlDto.setNamespace("scmadmin");
+    repositoryImportFromUrlDto.setName("scm-manager");
+    repositoryImportFromUrlDto.setUsername("trillian");
+    repositoryImportFromUrlDto.setPassword("secret");
 
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportDto);
+    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportFromUrlDto);
     repositoryConsumer.accept(repository);
 
     verify(pullCommandBuilder).withUsername("trillian");
@@ -581,12 +582,12 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     doThrow(ImportFailedException.class).when(pullCommandBuilder).pull(anyString());
 
     Repository repository = RepositoryTestData.createHeartOfGold();
-    RepositoryImportResource.RepositoryImportDto repositoryImportDto = new RepositoryImportResource.RepositoryImportDto();
-    repositoryImportDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-    repositoryImportDto.setNamespace("scmadmin");
-    repositoryImportDto.setName("scm-manager");
+    RepositoryImportResource.RepositoryImportFromUrlDto repositoryImportFromUrlDto = new RepositoryImportResource.RepositoryImportFromUrlDto();
+    repositoryImportFromUrlDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+    repositoryImportFromUrlDto.setNamespace("scmadmin");
+    repositoryImportFromUrlDto.setName("scm-manager");
 
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportDto);
+    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportFromUrlDto);
     assertThrows(ImportFailedException.class, () -> repositoryConsumer.accept(repository));
   }
 
@@ -659,7 +660,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(service.getUnbundleCommand()).thenReturn(ubc);
     InputStream in = new ByteArrayInputStream(svnDump);
 
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.unbundleImport(in, true, "hitchhiker");
+    Consumer<Repository> repositoryConsumer = repositoryImportResource.unbundleImport(in, true);
     repositoryConsumer.accept(RepositoryTestData.createHeartOfGold("svn"));
 
     verify(ubc).setCompressed(true);
@@ -678,7 +679,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(service.getUnbundleCommand()).thenReturn(ubc);
     InputStream in = new ByteArrayInputStream(svnDump);
 
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.unbundleImport(in, false, "hitchhiker");
+    Consumer<Repository> repositoryConsumer = repositoryImportResource.unbundleImport(in, false);
     repositoryConsumer.accept(RepositoryTestData.createHeartOfGold("svn"));
 
     verify(ubc, never()).setCompressed(true);
@@ -785,7 +786,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     assertEquals(SC_OK, response.getStatus());
     assertEquals("application/x-gzip", response.getOutputHeaders().get("Content-Type").get(0).toString());
-    verify(fullScmRepositoryExporter).export(eq(repository), any(OutputStream.class));
+    verify(fullScmRepositoryExporter).export(eq(repository), any(OutputStream.class), any());
   }
 
   private void mockRepositoryHandler(Set<Command> cmds) {

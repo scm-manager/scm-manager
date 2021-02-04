@@ -45,6 +45,8 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static sonia.scm.importexport.RepositoryImportExportEncryption.encrypt;
+
 public class FullScmRepositoryExporter {
 
   static final String SCM_ENVIRONMENT_FILE_NAME = "scm-environment.xml";
@@ -72,19 +74,20 @@ public class FullScmRepositoryExporter {
     this.repositoryExportingCheck = repositoryExportingCheck;
   }
 
-  public void export(Repository repository, OutputStream outputStream) {
+  public void export(Repository repository, OutputStream outputStream, String password) {
     repositoryExportingCheck.withExportingLock(repository, () -> {
-      exportInLock(repository, outputStream);
+      exportInLock(repository, outputStream, password);
       return null;
     });
   }
 
-  private void exportInLock(Repository repository, OutputStream outputStream) {
+  private void exportInLock(Repository repository, OutputStream outputStream, String password) {
     try (
       RepositoryService service = serviceFactory.create(repository);
       BufferedOutputStream bos = new BufferedOutputStream(outputStream);
-      GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(bos);
-      TarArchiveOutputStream taos = new TarArchiveOutputStream(gzos)
+      OutputStream cos = encrypt(bos, password);
+      GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(cos);
+      TarArchiveOutputStream taos = new TarArchiveOutputStream(gzos);
     ) {
       writeEnvironmentData(taos);
       writeMetadata(repository, taos);

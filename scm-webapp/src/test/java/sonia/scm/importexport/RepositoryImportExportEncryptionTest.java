@@ -24,7 +24,7 @@
 
 package sonia.scm.importexport;
 
-import org.apache.commons.io.IOUtils;
+import com.google.common.io.ByteSource;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
@@ -33,26 +33,67 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.security.GeneralSecurityException;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static sonia.scm.importexport.RepositoryImportExportEncryption.decrypt;
 
 class RepositoryImportExportEncryptionTest {
 
   @Test
-  void shouldEncryptAndDecryptContentWithPassword() throws IOException, GeneralSecurityException {
+  void shouldNotEncryptWithoutPassword() throws IOException {
     String content = "my content";
-    String secret = "secret";
+    String secret = "";
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
     OutputStream os = RepositoryImportExportEncryption.encrypt(baos, secret);
     os.write(content.getBytes());
     os.flush();
 
-    ByteArrayInputStream bais = new ByteArrayInputStream(baos.toByteArray());
+    assertThat(os.toString()).isEqualTo(content);
+  }
+
+  @Test
+  void shouldNotDecryptWithoutPassword() throws IOException {
+    String content = "my content";
+    String secret = "";
+    ByteArrayInputStream bais = new ByteArrayInputStream(content.getBytes());
+
     InputStream is = RepositoryImportExportEncryption.decrypt(bais, secret);
 
-    String result = IOUtils.toString(is, StandardCharsets.UTF_8.name());
+    ByteSource byteSource = new ByteSource() {
+      @Override
+      public InputStream openStream() {
+        return is;
+      }
+    };
+
+    String result = byteSource.asCharSource(StandardCharsets.UTF_8).read();
+
+    assertThat(result).isEqualTo(content);
+  }
+
+  @Test
+  void shouldEncryptAndDecryptContentWithPassword() throws IOException {
+    String content = "my content";
+    String secret = "secretPassword";
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+    OutputStream os = RepositoryImportExportEncryption.encrypt(baos, secret);
+    os.write(content.getBytes());
+    os.flush();
+
+    assertThat(os.toString()).isNotEqualTo(content);
+
+    InputStream is = decrypt(new ByteArrayInputStream(baos.toByteArray()), secret);
+
+    ByteSource byteSource = new ByteSource() {
+      @Override
+      public InputStream openStream() {
+        return is;
+      }
+    };
+
+    String result = byteSource.asCharSource(StandardCharsets.UTF_8).read();
 
     assertThat(result).isEqualTo(content);
   }
