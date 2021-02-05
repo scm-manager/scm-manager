@@ -40,6 +40,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
+import static java.lang.String.format;
 import static java.util.stream.Collectors.toList;
 import static java.util.stream.Stream.concat;
 
@@ -76,9 +77,10 @@ public class UpdateEngine {
       .sorted(
         Comparator
           .comparing(UpdateStepWrapper::getTargetVersion)
-          .thenComparing(UpdateEngine::isGlobalUpdateStep)
+          .thenComparing(UpdateStepWrapper::isGlobalUpdateStep)
           .thenComparing(UpdateEngine::isCoreUpdateStep)
-          .reversed())
+          .reversed()
+      )
       .collect(toList());
     sortedSteps.forEach(step -> LOG.trace("{} for version {}", step.getAffectedDataType(), step.getTargetVersion()));
     return sortedSteps;
@@ -100,35 +102,32 @@ public class UpdateEngine {
   }
 
   private UpdateStepWrapper wrap(RepositoryUpdateStep repositoryUpdateStep) {
-    return new UpdateStepWrapper(repositoryUpdateStep) {
-      @Override
-      public void doUpdate() {
-        repositoryUpdateIterator.forEachRepositoryWithException(repositoryId -> {
-          if (notRunYet(repositoryUpdateStep, repositoryId)) {
-            LOG.info("running update step for type {} and version {} (class {}) for repository id {}",
-              repositoryUpdateStep.getAffectedDataType(),
-              repositoryUpdateStep.getTargetVersion(),
-              repositoryUpdateStep.getClass().getName(),
-              repositoryId
-            );
-            repositoryUpdateStep.doUpdate(new RepositoryUpdateContext(repositoryId));
-            storeNewVersion(storeForRepository(repositoryId), repositoryUpdateStep);
-          }
-        });
-      }
-    };
+    return new RepositoryUpdateStepWrapper(repositoryUpdateStep);
+  }
+
+  private void doUpdateForRepository(String repositoryId, RepositoryUpdateStep repositoryUpdateStep) throws Exception {
+    if (notRunYet(repositoryUpdateStep, repositoryId)) {
+      LOG.info("running update step for type {} and version {} (class {}) for repository id {}",
+        repositoryUpdateStep.getAffectedDataType(),
+        repositoryUpdateStep.getTargetVersion(),
+        repositoryUpdateStep.getClass().getName(),
+        repositoryId
+      );
+      repositoryUpdateStep.doUpdate(new RepositoryUpdateContext(repositoryId));
+      storeNewVersion(storeForRepository(repositoryId), repositoryUpdateStep);
+    }
   }
 
   private static boolean isCoreUpdateStep(UpdateStepWrapper updateStep) {
     return updateStep.isCoreUpdate();
   }
 
-  private static boolean isGlobalUpdateStep(UpdateStepWrapper updateStep) {
-    return updateStep instanceof UpdateStep;
-  }
-
   public void update() {
     steps.forEach(this::execute);
+  }
+
+  public void update(String repsitoryId) {
+    steps.forEach(step -> execute(step, repsitoryId));
   }
 
   private void execute(UpdateStepWrapper updateStep) {
@@ -136,11 +135,26 @@ public class UpdateEngine {
       updateStep.doUpdate();
     } catch (Exception e) {
       throw new UpdateException(
-        String.format(
+        format(
           "could not execute update for type %s to version %s in %s",
           updateStep.getAffectedDataType(),
           updateStep.getTargetVersion(),
           updateStep.getClass()),
+        e);
+    }
+  }
+
+  private void execute(UpdateStepWrapper updateStep, String repositoryId) {
+    try {
+      updateStep.doUpdate(repositoryId);
+    } catch (Exception e) {
+      throw new UpdateException(
+        format(
+          "could not execute update for type %s to version %s in %s for repository id %s",
+          updateStep.getAffectedDataType(),
+          updateStep.getTargetVersion(),
+          updateStep.getClass(),
+          repositoryId),
         e);
     }
   }
@@ -187,7 +201,7 @@ public class UpdateEngine {
     return result;
   }
 
-  private static abstract class UpdateStepWrapper implements UpdateStepTarget {
+  private abstract class UpdateStepWrapper implements UpdateStepTarget {
     private final UpdateStepTarget delegateTarget;
     private final boolean coreUpdate;
 
@@ -210,7 +224,43 @@ public class UpdateEngine {
       return coreUpdate;
     }
 
+    public boolean isGlobalUpdateStep() {
+      return true;
+    }
+
+    public UpdateStepTarget getDelegateTarget() {
+      return delegateTarget;
+    }
+
     @SuppressWarnings("java:S112") // we explicitly want to allow all kinds of exceptions here
     abstract void doUpdate() throws Exception;
+
+    void doUpdate(String repositoryId) throws Exception {}
+  }
+
+  private class RepositoryUpdateStepWrapper extends UpdateStepWrapper {
+    public RepositoryUpdateStepWrapper(RepositoryUpdateStep delegateTarget) {
+      super(delegateTarget);
+    }
+
+    @Override
+    public boolean isGlobalUpdateStep() {
+      return false;
+    }
+
+    @Override
+    public RepositoryUpdateStep getDelegateTarget() {
+      return (RepositoryUpdateStep) super.getDelegateTarget();
+    }
+
+    @Override
+    void doUpdate() {
+      repositoryUpdateIterator.forEachRepositoryWithException(this::doUpdate);
+    }
+
+    @Override
+    void doUpdate(String repositoryId) throws Exception {
+      doUpdateForRepository(repositoryId, getDelegateTarget());
+    }
   }
 }

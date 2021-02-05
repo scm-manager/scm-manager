@@ -97,6 +97,22 @@ class UpdateEngineTest {
   }
 
   @Test
+  void shouldProcessStepsForSingleRepository() {
+    LinkedHashSet<UpdateStep> updateSteps = new LinkedHashSet<>();
+    LinkedHashSet<RepositoryUpdateStep> repositoryUpdateSteps = new LinkedHashSet<>();
+
+    updateSteps.add(new FixedVersionUpdateStep("test", "1.2.0"));
+    repositoryUpdateSteps.add(new FixedVersionUpdateStep("test", "1.1.1"));
+    repositoryUpdateSteps.add(new FixedVersionUpdateStep("test", "1.1.0"));
+
+    UpdateEngine updateEngine = new UpdateEngine(updateSteps, repositoryUpdateSteps, storeFactory, repositoryUpdateIterator);
+    updateEngine.update("1337");
+
+    assertThat(processedUpdates)
+      .containsExactly("test:1.1.0-1337", "test:1.1.1-1337");
+  }
+
+  @Test
   void shouldProcessCoreStepsBeforeOther() {
     LinkedHashSet<UpdateStep> updateSteps = new LinkedHashSet<>();
 

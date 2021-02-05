@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle.modules;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.multibindings.Multibinder;
+import sonia.scm.migration.RepositoryUpdateStep;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.plugin.PluginLoader;
 
@@ -40,9 +41,14 @@ public class UpdateStepModule extends AbstractModule {
   @Override
   protected void configure() {
     Multibinder<UpdateStep> updateStepBinder = Multibinder.newSetBinder(binder(), UpdateStep.class);
+    Multibinder<RepositoryUpdateStep> repositoryUdateStepBinder = Multibinder.newSetBinder(binder(), RepositoryUpdateStep.class);
     pluginLoader
       .getExtensionProcessor()
       .byExtensionPoint(UpdateStep.class)
       .forEach(stepClass -> updateStepBinder.addBinding().to(stepClass));
+    pluginLoader
+      .getExtensionProcessor()
+      .byExtensionPoint(RepositoryUpdateStep.class)
+      .forEach(stepClass -> repositoryUdateStepBinder.addBinding().to(stepClass));
   }
 }
