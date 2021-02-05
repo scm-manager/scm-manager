@@ -28,8 +28,10 @@ import org.apache.commons.compress.archivers.ArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import sonia.scm.ContextEntry;
+import sonia.scm.importexport.RepositoryMetadataXmlGenerator.RepositoryMetadata;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -40,7 +42,10 @@ import java.io.BufferedInputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collection;
+import java.util.HashSet;
 
+import static sonia.scm.importexport.FullScmRepositoryExporter.METADATA_FILE_NAME;
 import static sonia.scm.importexport.FullScmRepositoryExporter.SCM_ENVIRONMENT_FILE_NAME;
 import static sonia.scm.importexport.FullScmRepositoryExporter.STORE_DATA_FILE_NAME;
 
@@ -73,9 +78,10 @@ public class FullScmRepositoryImporter {
           TarArchiveInputStream tais = new TarArchiveInputStream(gcis)
         ) {
           checkScmEnvironment(repository, tais);
-          skipRepositoryMetadata(tais);
+          Collection<RepositoryPermission> importedPermissions = processRepositoryMetadata(tais);
           Repository createdRepository = importRepositoryFromFile(repository, tais);
           importStoresForCreatedRepository(createdRepository, tais);
+          importRepositoryPermissions(createdRepository, importedPermissions);
           return createdRepository;
         }
       } else {
@@ -91,6 +97,14 @@ public class FullScmRepositoryImporter {
         e
       );
     }
+  }
+
+  private void importRepositoryPermissions(Repository repository, Collection<RepositoryPermission> importedPermissions) {
+    Collection<RepositoryPermission> existingPermissions = repository.getPermissions();
+    RepositoryImportPermissionMerger permissionMerger = new RepositoryImportPermissionMerger();
+    Collection<RepositoryPermission> permissions = permissionMerger.merge(existingPermissions, importedPermissions);
+    repository.setPermissions(permissions);
+    repositoryManager.modify(repository);
   }
 
   private void importStoresForCreatedRepository(Repository repository, TarArchiveInputStream tais) throws IOException {
@@ -135,7 +149,7 @@ public class FullScmRepositoryImporter {
       boolean validEnvironment = compatibilityChecker.check(JAXB.unmarshal(new NoneClosingInputStream(tais), ScmEnvironment.class));
       if (!validEnvironment) {
         throw new ImportFailedException(
-          ContextEntry.ContextBuilder.entity(repository).build(),
+          ContextEntry.ContextBuilder.noContext(),
           "Incompatible SCM-Manager environment. Could not import file."
         );
       }
@@ -147,8 +161,17 @@ public class FullScmRepositoryImporter {
     }
   }
 
-  private void skipRepositoryMetadata(TarArchiveInputStream tais) throws IOException {
-    tais.getNextEntry();
+  private Collection<RepositoryPermission> processRepositoryMetadata(TarArchiveInputStream tais) throws IOException {
+    ArchiveEntry metadataEntry = tais.getNextEntry();
+    if (metadataEntry.getName().equals(METADATA_FILE_NAME)) {
+      RepositoryMetadata metadata = JAXB.unmarshal(new NoneClosingInputStream(tais), RepositoryMetadata.class);
+      return new HashSet<>(metadata.getPermissions());
+    } else {
+      throw new ImportFailedException(
+        ContextEntry.ContextBuilder.noContext(),
+        String.format("Invalid import format. Missing SCM-Manager metadata description file %s.", METADATA_FILE_NAME)
+      );
+    }
   }
 
   @SuppressWarnings("java:S4929") // we only want to override close here
