@@ -28,7 +28,7 @@ import fetchMock from "fetch-mock-jest";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import { renderHook } from "@testing-library/react-hooks";
 import createWrapper from "./tests/createWrapper";
-import { useChangesets } from "./changesets";
+import { useChangeset, useChangesets } from "./changesets";
 
 describe("Test changeset hooks", () => {
   const repository: Repository = {
@@ -52,22 +52,22 @@ describe("Test changeset hooks", () => {
     }
   };
 
+  const changeset: Changeset = {
+    id: "42",
+    description: "Awesome change",
+    date: new Date(),
+    author: {
+      name: "Arthur Dent"
+    },
+    _embedded: {},
+    _links: {}
+  };
+
   const changesets: ChangesetCollection = {
     page: 1,
     pageTotal: 1,
     _embedded: {
-      changesets: [
-        {
-          id: "42",
-          description: "Awesome change",
-          date: new Date(),
-          author: {
-            name: "Arthur Dent"
-          },
-          _embedded: {},
-          _links: {}
-        }
-      ]
+      changesets: [changeset]
     },
     _links: {}
   };
@@ -155,6 +155,25 @@ describe("Test changeset hooks", () => {
       ]);
 
       expect(changeset?.id).toBe("42");
+    });
+  });
+
+  describe("useChangeset tests", () => {
+    it("should return changes", async () => {
+      fetchMock.get("/api/v2/r/c/42", changeset);
+
+      const queryClient = createInfiniteCachingClient();
+
+      const { result, waitFor } = renderHook(() => useChangeset(repository, "42"), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+
+      await waitFor(() => {
+        return !!result.current.data;
+      });
+
+      const c = result.current.data;
+      expect(c?.description).toBe("Awesome change");
     });
   });
 });

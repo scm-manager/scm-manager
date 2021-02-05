@@ -39,6 +39,9 @@ export const useBranches = (repository: Repository): ApiResult<BranchCollection>
     {
       onSuccess: branchCollection => {
         branchCollection._embedded.branches.forEach(branch => {
+          // TODO does this make sense?
+          // do we want every branch in the cache
+          // it slows down the rendering of the branch chooser
           queryClient.setQueryData(branchQueryKey(repository, branch), branch);
         });
       }
