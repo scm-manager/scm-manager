@@ -158,7 +158,7 @@ describe("Test login hooks", () => {
 
       await act(() => {
         if (login) {
-          login("tricia", "hitchhickersSecret!");
+          login("tricia", "hitchhikersSecret!");
         }
         return waitForNextUpdate();
       });
