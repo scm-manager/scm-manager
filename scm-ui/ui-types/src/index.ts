@@ -42,7 +42,7 @@ export { Signature } from "./Signature";
 
 export { AnnotatedSource, AnnotatedLine } from "./Annotate";
 
-export { Tag } from "./Tags";
+export * from "./Tags";
 
 export { Config, AnonymousMode } from "./Config";
 

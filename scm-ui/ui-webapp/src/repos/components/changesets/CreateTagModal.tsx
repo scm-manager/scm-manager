@@ -23,82 +23,80 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { Modal, InputField, Button, apiClient } from "@scm-manager/ui-components";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Tag } from "@scm-manager/ui-types";
-import { isBranchValid } from "../validation";
+import { Modal, InputField, Button, Loading, ErrorNotification } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
+import { Changeset, Repository } from "@scm-manager/ui-types";
+import { useCreateTag, useTags } from "@scm-manager/ui-api";
+import { validation } from "@scm-manager/ui-components/";
 
-type Props = WithTranslation & {
-  existingTagsLink: string;
-  tagCreationLink: string;
+type Props = {
+  changeset: Changeset;
+  repository: Repository;
   onClose: () => void;
-  onCreated: () => void;
-  onError: (error: Error) => void;
-  revision: string;
 };
 
-/**
- * @deprecated
- */
-const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, existingTagsLink, onCreated, onError, revision }) => {
+const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
+  const { isLoading, error, data: tags } = useTags(repository);
+  const { isLoading: isLoadingCreate, error: errorCreate, create, tag: createdTag } = useCreateTag(
+    repository,
+    changeset
+  );
+  const [t] = useTranslation("repos");
   const [newTagName, setNewTagName] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [tagNames, setTagNames] = useState<string[]>([]);
-
   useEffect(() => {
-    apiClient
-      .get(existingTagsLink)
-      .then(response => response.json())
-      .then(json => setTagNames(json._embedded.tags.map((tag: Tag) => tag.name)));
-  }, [existingTagsLink]);
+    if (createdTag) {
+      onClose();
+    }
+  }, [createdTag, onClose]);
 
-  const createTag = () => {
-    setLoading(true);
-    apiClient
-      .post(tagCreationLink, {
-        revision,
-        name: newTagName
-      })
-      .then(onCreated)
-      .catch(onError)
-      .finally(() => setLoading(false));
-  };
+  const tagNames = tags?._embedded.tags.map(tag => tag.name);
 
   let validationError = "";
 
-  if (newTagName !== "") {
+  if (tagNames !== undefined && newTagName !== "") {
     if (tagNames.includes(newTagName)) {
       validationError = "tags.create.form.field.name.error.exists";
-    } else if (!isBranchValid(newTagName)) {
+    } else if (!validation.isBranchValid(newTagName)) {
       validationError = "tags.create.form.field.name.error.format";
     }
+  }
+
+  let body;
+  if (isLoading) {
+    body = <Loading />;
+  } else if (error) {
+    body = <ErrorNotification error={error} />;
+  } else if (errorCreate) {
+    body = <ErrorNotification error={errorCreate} />;
+  } else {
+    body = (
+      <>
+        <InputField
+          name="name"
+          label={t("tags.create.form.field.name.label")}
+          onChange={val => setNewTagName(val)}
+          value={newTagName}
+          validationError={!!validationError}
+          errorMessage={t(validationError)}
+        />
+        <div className="mt-6">{t("tags.create.hint")}</div>
+      </>
+    );
   }
 
   return (
     <Modal
       title={t("tags.create.title")}
       active={true}
-      body={
-        <>
-          <InputField
-            name="name"
-            label={t("tags.create.form.field.name.label")}
-            onChange={val => setNewTagName(val)}
-            value={newTagName}
-            validationError={!!validationError}
-            errorMessage={t(validationError)}
-          />
-          <div className="mt-6">{t("tags.create.hint")}</div>
-        </>
-      }
+      body={body}
       footer={
         <>
           <Button action={onClose}>{t("tags.create.cancel")}</Button>
           <Button
             color="success"
-            action={() => createTag()}
-            loading={loading}
-            disabled={!!validationError || newTagName.length === 0}
+            action={() => create(newTagName)}
+            loading={isLoadingCreate}
+            disabled={isLoading || isLoadingCreate || !!validationError || newTagName.length === 0}
           >
             {t("tags.create.confirm")}
           </Button>
@@ -109,4 +107,4 @@ const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, existingTagsLi
   );
 };
 
-export default withTranslation("repos")(CreateTagModal);
+export default CreateTagModal;
