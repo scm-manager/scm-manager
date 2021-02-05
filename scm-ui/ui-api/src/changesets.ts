@@ -23,16 +23,20 @@
  *
  */
 
-import { Branch, ChangesetCollection, Repository } from "@scm-manager/ui-types";
+import { Branch, Changeset, ChangesetCollection, NamespaceAndName, Repository } from "@scm-manager/ui-types";
 import { useQuery, useQueryClient } from "react-query";
 import { requiredLink } from "./links";
-import { apiClient } from "@scm-manager/ui-components";
+import { apiClient, urls } from "@scm-manager/ui-components";
 import { ApiResult } from "./base";
 import { branchQueryKey, repoQueryKey } from "./keys";
 
 type UseChangesetsRequest = {
   branch?: Branch;
   page?: string | number;
+};
+
+const changesetQueryKey = (repository: NamespaceAndName, id: string) => {
+  return repoQueryKey(repository, "changeset", id);
 };
 
 export const useChangesets = (
@@ -58,8 +62,15 @@ export const useChangesets = (
   return useQuery<ChangesetCollection, Error>(key, () => apiClient.get(link).then(response => response.json()), {
     onSuccess: changesetCollection => {
       changesetCollection._embedded.changesets.forEach(changeset => {
-        queryClient.setQueryData(repoQueryKey(repository, "changeset", changeset.id), changeset);
+        queryClient.setQueryData(changesetQueryKey(repository, changeset.id), changeset);
       });
     }
   });
+};
+
+export const useChangeset = (repository: Repository, id: string): ApiResult<Changeset> => {
+  const changesetsLink = requiredLink(repository, "changesets");
+  return useQuery<Changeset, Error>(changesetQueryKey(repository, id), () =>
+    apiClient.get(urls.concat(changesetsLink, id)).then(response => response.json())
+  );
 };
