@@ -43,6 +43,9 @@ export const useTags = (repository: Repository): ApiResult<TagCollection> => {
     {
       onSuccess: tags => {
         tags._embedded.tags.forEach(tag => {
+          // TODO does this make sense?
+          // do we want every tag in the cache
+          // it slows down the rendering of the tag creation modal
           queryClient.setQueryData(tagQueryKey(repository, tag.name), tag);
         });
       }
