@@ -26,6 +26,8 @@ package sonia.scm.migration;
 
 /**
  * Data for the repository, whose data that should be migrated.
+ *
+ * @since 2.14.0
  */
 public final class RepositoryUpdateContext {
 

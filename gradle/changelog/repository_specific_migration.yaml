@@ -1,2 +1,2 @@
 - type: added
-  description: Repository data can be migrated independently ([#1515](https://github.com/scm-manager/scm-manager/pull/1526))
+  description: Repository data can be migrated independently to enable the import of dumps from older versions ([#1515](https://github.com/scm-manager/scm-manager/pull/1526))

@@ -35,6 +35,8 @@ import sonia.scm.plugin.ExtensionPoint;
  * documentation.</p>
  *
  * @see sonia.scm.migration
+ *
+ * @since 2.14.0
  */
 @ExtensionPoint
 public interface RepositoryUpdateStep extends UpdateStepTarget {

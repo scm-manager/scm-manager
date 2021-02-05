@@ -53,6 +53,7 @@ import static sonia.scm.importexport.FullScmRepositoryExporter.STORE_DATA_FILE_N
 
 public class FullScmRepositoryImporter {
 
+  @SuppressWarnings("java:S115") // we like this name here
   private static final int _1_MB = 1000000;
 
   private final RepositoryServiceFactory serviceFactory;
@@ -65,7 +66,8 @@ public class FullScmRepositoryImporter {
   public FullScmRepositoryImporter(RepositoryServiceFactory serviceFactory,
                                    RepositoryManager repositoryManager,
                                    ScmEnvironmentCompatibilityChecker compatibilityChecker,
-                                   TarArchiveRepositoryStoreImporter storeImporter, UpdateEngine updateEngine) {
+                                   TarArchiveRepositoryStoreImporter storeImporter,
+                                   UpdateEngine updateEngine) {
     this.serviceFactory = serviceFactory;
     this.repositoryManager = repositoryManager;
     this.compatibilityChecker = compatibilityChecker;

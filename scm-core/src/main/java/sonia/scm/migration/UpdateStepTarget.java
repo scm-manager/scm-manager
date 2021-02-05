@@ -26,6 +26,11 @@ package sonia.scm.migration;
 
 import sonia.scm.version.Version;
 
+/**
+ * Base class for update steps, telling the target version and the affected data type.
+ *
+ * @since 2.14.0
+ */
 public interface UpdateStepTarget {
   /**
    * Declares the new version of the data type given by {@link #getAffectedDataType()}. A update step will only be
