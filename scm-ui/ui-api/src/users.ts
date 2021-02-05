@@ -139,7 +139,7 @@ export const useDeleteUser = () => {
   };
 };
 
-export function convertToInternal(url: string, newPassword: string) {
+const convertToInternal = (url: string, newPassword: string) => {
   return apiClient.put(
     url,
     {
@@ -147,11 +147,11 @@ export function convertToInternal(url: string, newPassword: string) {
     },
     "application/vnd.scmm-user+json;v=2"
   );
-}
+};
 
-export function convertToExternal(url: string) {
+const convertToExternal = (url: string) => {
   return apiClient.put(url, {}, "application/vnd.scmm-user+json;v=2");
-}
+};
 
 export type ConvertToInternalRequest = {
   user: User;
