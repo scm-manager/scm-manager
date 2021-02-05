@@ -81,7 +81,6 @@ const SingleUser: FC = () => {
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
             <Route path={url} exact>
-              {" "}
               <Details user={user} />
             </Route>
             <Route path={`${url}/settings/general`}>
@@ -104,7 +103,7 @@ const SingleUser: FC = () => {
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("singleUser.menu.navigationLabel")}>
               <NavLink
-                to={`${url}`}
+                to={url}
                 icon="fas fa-info-circle"
                 label={t("singleUser.menu.informationNavLink")}
                 title={t("singleUser.menu.informationNavLink")}

@@ -51,12 +51,16 @@ const Profile: FC = () => {
   const [t] = useTranslation("commons");
   const me = useRequiredMe();
 
-  const mayChangePassword = () => me._links.password;
-  const canManagePublicKeys = () => me._links.publicKeys;
-  const canManageApiKeys = () => me._links.apiKeys;
+  const mayChangePassword = !!me._links.password;
+  const canManagePublicKeys = !!me._links.publicKeys;
+  const canManageApiKeys = !!me._links.apiKeys;
 
-  const shouldRenderNavigation = () =>
-    me._links.password || me._links.publicKeys || me._links.apiKeys || binder.hasExtension("profile.route");
+  const shouldRenderNavigation = !!(
+    me._links.password ||
+    me._links.publicKeys ||
+    me._links.apiKeys ||
+    binder.hasExtension("profile.route")
+  );
 
   if (!me) {
     return (
@@ -82,39 +86,37 @@ const Profile: FC = () => {
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
             <Route path={url} exact render={() => <ProfileInfo me={me} />} />
-            {shouldRenderNavigation() && (
+            {shouldRenderNavigation && (
               <Switch>
-                {mayChangePassword() && <Redirect exact from={`${url}/settings/`} to={`${url}/settings/password`} />}
-                {canManagePublicKeys() && (
-                  <Redirect exact from={`${url}/settings/`} to={`${url}/settings/publicKeys`} />
-                )}
-                {canManageApiKeys() && <Redirect exact from={`${url}/settings/`} to={`${url}/settings/apiKeys`} />}
+                {mayChangePassword && <Redirect exact from={`${url}/settings/`} to={`${url}/settings/password`} />}
+                {canManagePublicKeys && <Redirect exact from={`${url}/settings/`} to={`${url}/settings/publicKeys`} />}
+                {canManageApiKeys && <Redirect exact from={`${url}/settings/`} to={`${url}/settings/apiKeys`} />}
               </Switch>
             )}
-            {mayChangePassword() && (
+            {mayChangePassword && (
               <Route path={`${url}/settings/password`} render={() => <ChangeUserPassword me={me} />} />
             )}
-            {canManagePublicKeys() && (
+            {canManagePublicKeys && (
               <Route path={`${url}/settings/publicKeys`} render={() => <SetPublicKeys user={me} />} />
             )}
-            {canManageApiKeys() && <Route path={`${url}/settings/apiKeys`} render={() => <SetApiKeys user={me} />} />}
+            {canManageApiKeys && <Route path={`${url}/settings/apiKeys`} render={() => <SetApiKeys user={me} />} />}
             <ExtensionPoint name="profile.route" props={extensionProps} renderAll={true} />
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
             <SecondaryNavigation label={t("profile.navigationLabel")}>
               <NavLink
-                to={`${url}`}
+                to={url}
                 icon="fas fa-info-circle"
                 label={t("profile.informationNavLink")}
                 title={t("profile.informationNavLink")}
               />
-              {shouldRenderNavigation() && (
+              {shouldRenderNavigation && (
                 <SubNavigation
                   to={`${url}/settings/`}
                   label={t("profile.settingsNavLink")}
                   title={t("profile.settingsNavLink")}
                 >
-                  {mayChangePassword() && (
+                  {mayChangePassword && (
                     <NavLink to={`${url}/settings/password`} label={t("profile.changePasswordNavLink")} />
                   )}
                   <SetPublicKeysNavLink user={me} publicKeyUrl={`${url}/settings/publicKeys`} />
