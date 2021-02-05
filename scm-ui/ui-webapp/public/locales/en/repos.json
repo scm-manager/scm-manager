@@ -78,7 +78,7 @@
     },
     "fullImport": {
       "title": "SCM-Manager Repository Archive",
-      "helpText": "Select the archive file which should be imported. The archive must have been exported from an SCM-Manager instance."
+      "helpText": "Select the archive file which should be imported. The archive must have been exported from an SCM-Manager instance. This instance and all installed plugins have to be of the same or a newer version."
     },
     "pending": {
       "subtitle": "Importing Repository...",
@@ -260,7 +260,7 @@
     },
     "fullExport": {
       "label": "With metadata (Experimental)",
-      "helpText": "In addition to the repository dump, metadata about the repository and SCM instance is exported. Stored passwords will not work if this is imported in other instances of SCM-Manager. This feature is still experimental. Do not use this as a backup mechanism (yet)!"
+      "helpText": "In addition to the repository dump, metadata about the repository and SCM instance is exported. If possible, ensure that installed plugins are up to date. However, stored passwords will not work if this is imported in other instances of SCM-Manager. This feature is still experimental. Do not use this as a backup mechanism (yet)!"
     },
     "exportButton": "Export Repository",
     "exportStarted":  "The repository export was started. Depending on the repository size this may take a while."
