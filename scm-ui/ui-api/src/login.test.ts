@@ -31,7 +31,6 @@ import { setEmptyIndex, setIndexLink } from "./tests/indexLinks";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import { LegacyContext } from "./LegacyContext";
 import { act } from "react-test-renderer";
-import { QueryClient } from "react-query";
 
 describe("Test login hooks", () => {
   const tricia: Me = {
@@ -91,22 +90,15 @@ describe("Test login hooks", () => {
   });
 
   describe("useRequiredMe tests", () => {
-    // TODO: fix test and reenable
-    xit("should return me", async () => {
-      const queryClient = new QueryClient();
+    it("should return me", async () => {
+      const queryClient = createInfiniteCachingClient();
       queryClient.setQueryData("me", tricia);
-      setIndexLink(queryClient, "me", "/requiredMe");
-      fetchMock.get("/api/v2/requiredMe", {
-        name: "tricia",
-        displayName: "Tricia",
-        groups: [],
-        _links: {}
-      });
-      const { result, waitFor } = renderHook(() => useMe(), { wrapper: createWrapper(undefined, queryClient) });
+      setIndexLink(queryClient, "me", "/me");
+      const { result, waitFor } = renderHook(() => useRequiredMe(), { wrapper: createWrapper(undefined, queryClient) });
       await waitFor(() => {
         return !!result.current;
       });
-      expect(result.current?.data?.name).toBe("tricia");
+      expect(result.current?.name).toBe("tricia");
     });
 
     it("should throw an error if me is not available", () => {
