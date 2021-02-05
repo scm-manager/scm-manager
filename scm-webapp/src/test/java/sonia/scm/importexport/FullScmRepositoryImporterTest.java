@@ -40,6 +40,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.ImportFailedException;
+import sonia.scm.repository.api.IncompatibleEnvironmentForImportException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.api.UnbundleCommandBuilder;
@@ -109,7 +110,7 @@ class FullScmRepositoryImporterTest {
 
     InputStream importStream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
     assertThrows(
-      ImportFailedException.class,
+      IncompatibleEnvironmentForImportException.class,
       () -> fullImporter.importFromStream(REPOSITORY, importStream)
     );
   }

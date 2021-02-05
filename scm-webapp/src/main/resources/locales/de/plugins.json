@@ -334,6 +334,10 @@
     "8YR7aawFW1": {
       "displayName": "Aktuelles Passwort falsch",
       "description": "Das aktuelle Passwort ist falsch. Bitte versuchen Sie es noch einmal."
+    },
+    "5GSO9ZkzX1": {
+      "displayName": "Inkompatible Umgebung",
+      "description": "Die Version dieses SCM-Managers oder eines der installierten Plugins ist zu alt für den Import des Dumps. Bitte installieren Sie die neuesten Versionen. Nähere Informationen finden sich im Log."
     }
   },
   "namespaceStrategies": {
