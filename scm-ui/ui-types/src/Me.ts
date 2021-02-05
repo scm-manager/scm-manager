@@ -24,12 +24,10 @@
 
 import { HalRepresentation } from "./hal";
 
-export type MeBase = {
+export type Me = HalRepresentation & {
   name: string;
   displayName: string;
   mail?: string;
   fallbackMail?: string;
   groups: string[];
 };
-
-export type Me = MeBase & HalRepresentation;
