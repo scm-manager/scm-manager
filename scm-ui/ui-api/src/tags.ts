@@ -23,34 +23,42 @@
  *
  */
 
-import { Changeset, NamespaceAndName, Repository, Tag, TagCollection } from "@scm-manager/ui-types";
+import { Branch, Changeset, Link, NamespaceAndName, Repository, Tag, TagCollection } from "@scm-manager/ui-types";
 import { requiredLink } from "./links";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query";
 import { ApiResult } from "./base";
-import { repoQueryKey } from "./keys";
-import { apiClient } from "@scm-manager/ui-components";
+import { branchQueryKey, repoQueryKey } from "./keys";
+import { apiClient, urls } from "@scm-manager/ui-components";
 
 const tagQueryKey = (repository: NamespaceAndName, tag: string) => {
   return repoQueryKey(repository, "tag", tag);
 };
 
 export const useTags = (repository: Repository): ApiResult<TagCollection> => {
-  const queryClient = useQueryClient();
   const link = requiredLink(repository, "tags");
   return useQuery<TagCollection, Error>(
     repoQueryKey(repository, "tags"),
-    () => apiClient.get(link).then(response => response.json()),
-    {
-      onSuccess: tags => {
-        tags._embedded.tags.forEach(tag => {
-          // TODO does this make sense?
-          // do we want every tag in the cache
-          // it slows down the rendering of the tag creation modal
-          queryClient.setQueryData(tagQueryKey(repository, tag.name), tag);
-        });
-      }
-    }
+    () => apiClient.get(link).then(response => response.json())
+    // we do not populate the cache for a single tag,
+    // because we have no pagination for tags and if we have a lot of them
+    // the population slows us down
   );
+};
+
+export const useTag = (repository: Repository, name: string): ApiResult<Tag> => {
+  const link = requiredLink(repository, "tags");
+  return useQuery<Tag, Error>(tagQueryKey(repository, name), () =>
+    apiClient.get(urls.concat(link, name)).then(response => response.json())
+  );
+};
+
+const invalidateCacheForTag = (queryClient: QueryClient, repository: NamespaceAndName, tag: Tag) => {
+  return Promise.all([
+    queryClient.invalidateQueries(repoQueryKey(repository, "tags")),
+    queryClient.invalidateQueries(tagQueryKey(repository, tag.name)),
+    queryClient.invalidateQueries(repoQueryKey(repository, "changesets")),
+    queryClient.invalidateQueries(repoQueryKey(repository, "changeset", tag.revision))
+  ]);
 };
 
 const createTag = (changeset: Changeset, link: string) => {
@@ -77,8 +85,7 @@ export const useCreateTag = (repository: Repository, changeset: Changeset) => {
   const { isLoading, error, mutate, data } = useMutation<Tag, Error, string>(createTag(changeset, link), {
     onSuccess: async tag => {
       queryClient.setQueryData(tagQueryKey(repository, tag.name), tag);
-      await queryClient.invalidateQueries(repoQueryKey(repository, "tags"));
-      await queryClient.invalidateQueries(repoQueryKey(repository, "changeset", tag.revision));
+      await invalidateCacheForTag(queryClient, repository, tag);
     }
   });
   return {
@@ -86,5 +93,26 @@ export const useCreateTag = (repository: Repository, changeset: Changeset) => {
     error,
     create: (name: string) => mutate(name),
     tag: data
+  };
+};
+
+export const useDeleteTag = (repository: Repository) => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, Tag>(
+    tag => {
+      const deleteUrl = (tag._links.delete as Link).href;
+      return apiClient.delete(deleteUrl);
+    },
+    {
+      onSuccess: async (_, tag) => {
+        await invalidateCacheForTag(queryClient, repository, tag);
+      }
+    }
+  );
+  return {
+    remove: (tag: Tag) => mutate(tag),
+    isLoading,
+    error,
+    isDeleted: !!data
   };
 };

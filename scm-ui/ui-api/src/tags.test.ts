@@ -28,7 +28,7 @@ import fetchMock from "fetch-mock-jest";
 import { renderHook } from "@testing-library/react-hooks";
 import createWrapper from "./tests/createWrapper";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
-import { useCreateTag, useTags } from "./tags";
+import { useCreateTag, useDeleteTag, useTag, useTags } from "./tags";
 import { act } from "react-test-renderer";
 
 describe("Test Tag hooks", () => {
@@ -62,7 +62,11 @@ describe("Test Tag hooks", () => {
     name: "1.0",
     revision: "42",
     signatures: [],
-    _links: {}
+    _links: {
+      "delete": {
+        href: "/hog/tags/1.0"
+      }
+    }
   };
 
   const tags: TagCollection = {
@@ -72,15 +76,17 @@ describe("Test Tag hooks", () => {
     _links: {}
   };
 
+  const queryClient = createInfiniteCachingClient();
+
+  beforeEach(() => queryClient.clear());
+
   afterEach(() => {
     fetchMock.reset();
   });
 
   describe("useTags tests", () => {
-    it("should return tags", async () => {
+    const fetchTags = async () => {
       fetchMock.getOnce("/api/v2/hog/tags", tags);
-
-      const queryClient = createInfiniteCachingClient();
 
       const { result, waitFor } = renderHook(() => useTags(repository), {
         wrapper: createWrapper(undefined, queryClient)
@@ -89,36 +95,51 @@ describe("Test Tag hooks", () => {
         return !!result.current.data;
       });
 
-      expect(result.current.data).toEqual(tags);
+      return result.current;
+    };
+
+    it("should return tags", async () => {
+      const { data } = await fetchTags();
+      expect(data).toEqual(tags);
     });
 
-    it("should populate tag cache", async () => {
-      fetchMock.getOnce("/api/v2/hog/tags", tags);
+    it("should cache tag collection", async () => {
+      await fetchTags();
 
-      const queryClient = createInfiniteCachingClient();
+      const cachedTags = queryClient.getQueryData(["repository", "hitchhiker", "heart-of-gold", "tags"]);
+      expect(cachedTags).toEqual(tags);
+    });
+  });
 
-      const { result, waitFor } = renderHook(() => useTags(repository), {
+  describe("useTag tests", () => {
+    const fetchTag = async () => {
+      fetchMock.getOnce("/api/v2/hog/tags/1.0", tagOneDotZero);
+
+      const { result, waitFor } = renderHook(() => useTag(repository, "1.0"), {
         wrapper: createWrapper(undefined, queryClient)
       });
       await waitFor(() => {
         return !!result.current.data;
       });
 
-      const cachgeTag: Tag | undefined = queryClient.getQueryData([
-        "repository",
-        "hitchhiker",
-        "heart-of-gold",
-        "tag",
-        "1.0"
-      ]);
-      expect(cachgeTag?.name).toBe("1.0");
+      return result.current;
+    };
+
+    it("should return tag", async () => {
+      const { data } = await fetchTag();
+      expect(data).toEqual(tagOneDotZero);
+    });
+
+    it("should cache tag", async () => {
+      await fetchTag();
+
+      const cachedTag = queryClient.getQueryData(["repository", "hitchhiker", "heart-of-gold", "tag", "1.0"]);
+      expect(cachedTag).toEqual(tagOneDotZero);
     });
   });
 
   describe("useCreateTags tests", () => {
-    it("should create tag", async () => {
-      const queryClient = createInfiniteCachingClient();
-
+    const createTag = async () => {
       fetchMock.postOnce("/api/v2/hog/tag", {
         status: 201,
         headers: {
@@ -138,12 +159,43 @@ describe("Test Tag hooks", () => {
         return waitForNextUpdate();
       });
 
-      expect(result.current.tag).toEqual(tagOneDotZero);
+      return result.current;
+    };
+
+    const shouldInvalidateQuery = async (queryKey: string[], data: unknown) => {
+      queryClient.setQueryData(queryKey, data);
+      await createTag();
+
+      const queryState = queryClient.getQueryState(queryKey);
+      expect(queryState!.isInvalidated).toBe(true);
+    };
+
+    it("should create tag", async () => {
+      const { tag } = await createTag();
+
+      expect(tag).toEqual(tagOneDotZero);
+    });
+
+    it("should cache tag", async () => {
+      await createTag();
+
+      const cachedTag = queryClient.getQueryData<Tag>(["repository", "hitchhiker", "heart-of-gold", "tag", "1.0"]);
+      expect(cachedTag).toEqual(tagOneDotZero);
+    });
+
+    it("should invalidate tag collection cache", async () => {
+      await shouldInvalidateQuery(["repository", "hitchhiker", "heart-of-gold", "tags"], tags);
+    });
+
+    it("should invalidate changeset cache", async () => {
+      await shouldInvalidateQuery(["repository", "hitchhiker", "heart-of-gold", "changeset", "42"], changeset);
+    });
+
+    it("should invalidate changeset collection cache", async () => {
+      await shouldInvalidateQuery(["repository", "hitchhiker", "heart-of-gold", "changesets"], [changeset]);
     });
 
     it("should fail without location header", async () => {
-      const queryClient = createInfiniteCachingClient();
-
       fetchMock.postOnce("/api/v2/hog/tag", {
         status: 201
       });
@@ -159,6 +211,56 @@ describe("Test Tag hooks", () => {
       });
 
       expect(result.current.error).toBeDefined();
+    });
+  });
+
+  describe("useDeleteTags tests", () => {
+    const deleteTag = async () => {
+      fetchMock.deleteOnce("/api/v2/hog/tags/1.0", {
+        status: 204
+      });
+
+      const { result, waitForNextUpdate } = renderHook(() => useDeleteTag(repository), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+
+      await act(() => {
+        const { remove } = result.current;
+        remove(tagOneDotZero);
+        return waitForNextUpdate();
+      });
+
+      return result.current;
+    };
+
+    const shouldInvalidateQuery = async (queryKey: string[], data: unknown) => {
+      queryClient.setQueryData(queryKey, data);
+      await deleteTag();
+
+      const queryState = queryClient.getQueryState(queryKey);
+      expect(queryState!.isInvalidated).toBe(true);
+    };
+
+    it("should delete tag", async () => {
+      const { isDeleted } = await deleteTag();
+
+      expect(isDeleted).toBe(true);
+    });
+
+    it("should invalidate tag cache", async () => {
+      await shouldInvalidateQuery(["repository", "hitchhiker", "heart-of-gold", "tag", "1.0"], tagOneDotZero);
+    });
+
+    it("should invalidate tag collection cache", async () => {
+      await shouldInvalidateQuery(["repository", "hitchhiker", "heart-of-gold", "tags"], tags);
+    });
+
+    it("should invalidate changeset cache", async () => {
+      await shouldInvalidateQuery(["repository", "hitchhiker", "heart-of-gold", "changeset", "42"], changeset);
+    });
+
+    it("should invalidate changeset collection cache", async () => {
+      await shouldInvalidateQuery(["repository", "hitchhiker", "heart-of-gold", "changesets"], [changeset]);
     });
   });
 });

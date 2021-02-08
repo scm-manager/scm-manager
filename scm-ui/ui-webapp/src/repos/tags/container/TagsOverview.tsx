@@ -22,12 +22,13 @@
  * SOFTWARE.
  */
 
-import React, { FC, useEffect, useState } from "react";
-import { Repository, Tag, Link } from "@scm-manager/ui-types";
-import { ErrorNotification, Loading, Notification, Subtitle, apiClient } from "@scm-manager/ui-components";
+import React, { FC } from "react";
+import { Repository } from "@scm-manager/ui-types";
+import { ErrorNotification, Loading, Notification, Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import orderTags from "../orderTags";
 import TagTable from "../components/TagTable";
+import { useTags } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
@@ -35,48 +36,28 @@ type Props = {
 };
 
 const TagsOverview: FC<Props> = ({ repository, baseUrl }) => {
+  const { isLoading, error, data } = useTags(repository);
   const [t] = useTranslation("repos");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | undefined>(undefined);
-  const [tags, setTags] = useState<Tag[]>([]);
-
-  const fetchTags = () => {
-    const link = (repository._links?.tags as Link)?.href;
-    if (link) {
-      setLoading(true);
-      apiClient
-        .get(link)
-        .then(r => r.json())
-        .then(r => setTags(r._embedded.tags))
-        .then(() => setLoading(false))
-        .catch(setError);
-    }
-  };
-
-  useEffect(() => {
-    fetchTags();
-  }, [repository]);
-
-  const renderTagsTable = () => {
-    if (!loading && tags?.length > 0) {
-      orderTags(tags);
-      return <TagTable baseUrl={baseUrl} tags={tags} fetchTags={fetchTags} />;
-    }
-    return <Notification type="info">{t("tags.overview.noTags")}</Notification>;
-  };
 
   if (error) {
     return <ErrorNotification error={error} />;
   }
 
-  if (loading) {
+  if (isLoading) {
     return <Loading />;
   }
+
+  const tags = data?._embedded.tags || [];
+  orderTags(tags);
 
   return (
     <>
       <Subtitle subtitle={t("tags.overview.title")} />
-      {renderTagsTable()}
+      {tags.length > 0 ? (
+        <TagTable repository={repository} baseUrl={baseUrl} tags={tags} />
+      ) : (
+        <Notification type="info">{t("tags.overview.noTags")}</Notification>
+      )}
     </>
   );
 };
