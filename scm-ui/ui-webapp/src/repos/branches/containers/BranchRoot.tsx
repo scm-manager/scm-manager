@@ -64,7 +64,9 @@ const BranchRoot: FC<Props> = ({ repository }) => {
   return (
     <Switch>
       <Redirect exact from={url} to={`${url}/info`} />
-      <Route path={`${url}/info`} component={() => <BranchView repository={repository} branch={branch} />} />
+      <Route path={`${url}/info`}>
+        <BranchView repository={repository} branch={branch} />
+      </Route>
     </Switch>
   );
 };

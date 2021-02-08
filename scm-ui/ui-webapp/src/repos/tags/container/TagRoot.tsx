@@ -22,55 +22,31 @@
  * SOFTWARE.
  */
 
-import React, { FC, useEffect, useState } from "react";
-import { Link, Repository, Tag } from "@scm-manager/ui-types";
-import { Redirect, Switch, useLocation, useRouteMatch, Route } from "react-router-dom";
-import { apiClient, ErrorNotification, Loading } from "@scm-manager/ui-components";
-import { useTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { Repository } from "@scm-manager/ui-types";
+import { Redirect, Switch, useRouteMatch, Route } from "react-router-dom";
+import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import TagView from "../components/TagView";
 import { urls } from "@scm-manager/ui-components";
+import { useTag } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
   baseUrl: string;
 };
 
+type Params = {
+  tag: string;
+};
+
 const TagRoot: FC<Props> = ({ repository, baseUrl }) => {
-  const match = useRouteMatch();
-  const [tags, setTags] = useState<Tag[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | undefined>(undefined);
-  const [tag, setTag] = useState<Tag>();
-
-  useEffect(() => {
-    const link = (repository._links?.tags as Link)?.href;
-    if (link) {
-      apiClient
-        .get(link)
-        .then(r => r.json())
-        .then(r => setTags(r._embedded.tags))
-        .catch(setError);
-    }
-  }, [repository]);
-
-  useEffect(() => {
-    const tagName = decodeURIComponent(match?.params?.tag);
-    const link = tags?.length > 0 && (tags.find(tag => tag.name === tagName)?._links.self as Link).href;
-    if (link) {
-      apiClient
-        .get(link)
-        .then(r => r.json())
-        .then(setTag)
-        .then(() => setLoading(false))
-        .catch(setError);
-    }
-  }, [tags]);
-
+  const match = useRouteMatch<Params>();
+  const { isLoading, error, data: tag } = useTag(repository, match.params.tag);
   if (error) {
     return <ErrorNotification error={error} />;
   }
 
-  if (loading || !tags) {
+  if (isLoading || !tag) {
     return <Loading />;
   }
 
@@ -79,9 +55,10 @@ const TagRoot: FC<Props> = ({ repository, baseUrl }) => {
   return (
     <Switch>
       <Redirect exact from={url} to={`${url}/info`} />
-      <Route path={`${url}/info`} component={() => <TagView repository={repository} tag={tag} />} />
+      <Route path={`${url}/info`}>
+        <TagView repository={repository} tag={tag} />
+      </Route>
     </Switch>
   );
 };
-
 export default TagRoot;
