@@ -21,130 +21,55 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { connect } from "react-redux";
-import { compose } from "redux";
-import { withRouter } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Branch, Repository } from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { Repository } from "@scm-manager/ui-types";
 import { CreateButton, ErrorNotification, Loading, Notification, Subtitle } from "@scm-manager/ui-components";
-import {
-  fetchBranches,
-  getBranches,
-  getFetchBranchesFailure,
-  isFetchBranchesPending,
-  isPermittedToCreateBranches
-} from "../modules/branches";
 import { orderBranches } from "../util/orderBranches";
 import BranchTable from "../components/BranchTable";
+import { useBranches } from "@scm-manager/ui-api";
 
-type Props = WithTranslation & {
+type Props = {
   repository: Repository;
   baseUrl: string;
-  loading: boolean;
-  error: Error;
-  branches: Branch[];
-
-  // dispatch props
-  showCreateButton: boolean;
-  fetchBranches: (p: Repository) => void;
-
-  // Context props
-  history: any;
-  match: any;
 };
 
-class BranchesOverview extends React.Component<Props> {
-  componentDidMount() {
-    const { fetchBranches, repository } = this.props;
-    fetchBranches(repository);
+const BranchesOverview: FC<Props> = ({ repository, baseUrl }) => {
+  const { isLoading, error, data } = useBranches(repository);
+  const [t] = useTranslation("repos");
+
+  if (error) {
+    return <ErrorNotification error={error} />;
   }
 
-  render() {
-    const { loading, error, branches, t } = this.props;
-
-    if (error) {
-      return <ErrorNotification error={error} />;
-    }
-
-    if (!branches || loading) {
-      return <Loading />;
-    }
-
-    return (
-      <>
-        <Subtitle subtitle={t("branches.overview.title")} />
-        {this.renderBranchesTable()}
-        {this.renderCreateButton()}
-      </>
-    );
+  if (!data || isLoading) {
+    return <Loading />;
   }
 
-  renderBranchesTable() {
-    const { baseUrl, branches, repository, fetchBranches, t } = this.props;
-    if (branches && branches.length > 0) {
-      orderBranches(branches);
-      const staleBranches = branches.filter(b => b.stale);
-      const activeBranches = branches.filter(b => !b.stale);
-      return (
-        <>
-          {activeBranches.length > 0 && (
-            <BranchTable
-              baseUrl={baseUrl}
-              type={"active"}
-              branches={activeBranches}
-              fetchBranches={() => fetchBranches(repository)}
-            />
-          )}
-          {staleBranches.length > 0 && (
-            <BranchTable
-              baseUrl={baseUrl}
-              type={"stale"}
-              branches={staleBranches}
-              fetchBranches={() => fetchBranches(repository)}
-            />
-          )}
-        </>
-      );
-    }
+  const branches = data._embedded.branches || [];
+
+  if (branches.length === 0) {
     return <Notification type="info">{t("branches.overview.noBranches")}</Notification>;
   }
 
-  renderCreateButton() {
-    const { showCreateButton, t } = this.props;
-    if (showCreateButton) {
-      return <CreateButton label={t("branches.overview.createButton")} link="./create" />;
-    }
-    return null;
-  }
-}
+  orderBranches(branches);
+  const staleBranches = branches.filter(b => b.stale);
+  const activeBranches = branches.filter(b => !b.stale);
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const { repository } = ownProps;
-  const loading = isFetchBranchesPending(state, repository);
-  const error = getFetchBranchesFailure(state, repository);
-  const branches = getBranches(state, repository);
-  const showCreateButton = isPermittedToCreateBranches(state, repository);
+  const showCreateButton = !!data._links.create;
 
-  return {
-    repository,
-    loading,
-    error,
-    branches,
-    showCreateButton
-  };
+  return (
+    <>
+      <Subtitle subtitle={t("branches.overview.title")} />
+      {activeBranches.length > 0 ? (
+        <BranchTable repository={repository} baseUrl={baseUrl} type="active" branches={activeBranches} />
+      ) : null}
+      {staleBranches.length > 0 ? (
+        <BranchTable repository={repository} baseUrl={baseUrl} type="stale" branches={staleBranches} />
+      ) : null}
+      {showCreateButton ? <CreateButton label={t("branches.overview.createButton")} link="./create" /> : null}
+    </>
+  );
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchBranches: (repository: Repository) => {
-      dispatch(fetchBranches(repository));
-    }
-  };
-};
-
-export default compose(
-  withTranslation("repos"),
-  withRouter,
-  connect(mapStateToProps, mapDispatchToProps)
-)(BranchesOverview);
+export default BranchesOverview;

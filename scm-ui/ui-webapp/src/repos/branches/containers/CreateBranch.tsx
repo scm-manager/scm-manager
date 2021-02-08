@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, {FC, useEffect} from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
+import {Redirect, useLocation, withRouter} from "react-router-dom";
+import {useTranslation, WithTranslation, withTranslation} from "react-i18next";
 import queryString from "query-string";
 import { History } from "history";
 import { Branch, BranchRequest, Repository } from "@scm-manager/ui-types";
@@ -42,8 +42,9 @@ import {
   isFetchBranchesPending
 } from "../modules/branches";
 import { compose } from "redux";
+import {useBranches, useCreateBranch} from "@scm-manager/ui-api";
 
-type Props = WithTranslation & {
+type PropsClass = WithTranslation & {
   loading?: boolean;
   error?: Error;
   repository: Repository;
@@ -66,7 +67,52 @@ type Props = WithTranslation & {
   location: any;
 };
 
-class CreateBranch extends React.Component<Props> {
+type Props = {
+  repository: Repository;
+};
+
+const CreateBranch: FC<Props> = ({repository}) => {
+  const {isLoading: isLoadingCreate, error: errorCreate, create, branch: createdBranch} = useCreateBranch(repository);
+  const {isLoading: isLoadingList, error: errorList, data: branches} = useBranches(repository);
+  const location = useLocation();
+  const [t] = useTranslation("repos");
+
+  const transmittedName = (url: string) => {
+    const params = queryString.parse(url);
+    return params.name;
+  };
+
+  if (createdBranch) {
+    return <Redirect to={`/repo/${repository.namespace}/${repository.name}/branch/${encodeURIComponent(createdBranch.name)}/info`}/>;
+  }
+
+  if (errorList) {
+    return <ErrorNotification error={errorList} />;
+  }
+
+  if (errorCreate) {
+    return <ErrorNotification error={errorCreate} />;
+  }
+
+  if (isLoadingList || !branches) {
+    return <Loading />;
+  }
+
+  return (
+    <>
+      <Subtitle subtitle={t("branches.create.title")} />
+      <BranchForm
+        submitForm={create}
+        loading={isLoadingCreate}
+        repository={repository}
+        branches={branches._embedded.branches}
+        transmittedName={transmittedName(location.search)}
+      />
+    </>
+  );
+};
+
+class CreateBranchClass extends React.Component<PropsClass> {
   componentDidMount() {
     const { fetchBranches, repository } = this.props;
     fetchBranches(repository);
@@ -135,7 +181,7 @@ const mapDispatchToProps = (dispatch: any) => {
   };
 };
 
-const mapStateToProps = (state: any, ownProps: Props) => {
+const mapStateToProps = (state: any, ownProps: PropsClass) => {
   const { repository } = ownProps;
   const loading = isFetchBranchesPending(state, repository) || isCreateBranchPending(state, repository);
   const error = getFetchBranchesFailure(state, repository) || getCreateBranchFailure(state, repository);
@@ -154,4 +200,4 @@ export default compose(
   withTranslation("repos"),
   connect(mapStateToProps, mapDispatchToProps),
   withRouter
-)(CreateBranch);
+)(CreateBranchClass);

@@ -28,7 +28,8 @@ import fetchMock from "fetch-mock-jest";
 import { renderHook } from "@testing-library/react-hooks";
 import createWrapper from "./tests/createWrapper";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
-import { useBranches } from "./branches";
+import { useBranch, useBranches, useCreateBranch, useDeleteBranch } from "./branches";
+import { act } from "react-test-renderer";
 
 describe("Test branches hooks", () => {
   const repository: Repository = {
@@ -42,28 +43,36 @@ describe("Test branches hooks", () => {
     }
   };
 
+  const develop: Branch = {
+    name: "develop",
+    revision: "42",
+    _links: {
+      delete: {
+        href: "/hog/branches/develop"
+      }
+    }
+  };
+
   const branches: BranchCollection = {
     _embedded: {
-      branches: [
-        {
-          name: "develop",
-          revision: "42",
-          _links: {}
-        }
-      ]
+      branches: [develop]
     },
     _links: {}
   };
+
+  const queryClient = createInfiniteCachingClient();
+
+  beforeEach(() => {
+    queryClient.clear();
+  });
 
   afterEach(() => {
     fetchMock.reset();
   });
 
   describe("useBranches tests", () => {
-    it("should return branches", async () => {
+    const fetchBrances = async () => {
       fetchMock.getOnce("/api/v2/hog/branches", branches);
-
-      const queryClient = createInfiniteCachingClient();
 
       const { result, waitFor } = renderHook(() => useBranches(repository), {
         wrapper: createWrapper(undefined, queryClient)
@@ -72,29 +81,139 @@ describe("Test branches hooks", () => {
         return !!result.current.data;
       });
 
-      expect(result.current.data).toEqual(branches);
+      return result.current.data;
+    };
+
+    it("should return branches", async () => {
+      const branches = await fetchBrances();
+      expect(branches).toEqual(branches);
     });
 
-    it("should populate branch chache", async () => {
-      fetchMock.getOnce("/api/v2/hog/branches", branches);
+    it("should add branches to cache", async () => {
+      await fetchBrances();
 
-      const queryClient = createInfiniteCachingClient();
+      const data = queryClient.getQueryData<BranchCollection>([
+        "repository",
+        "hitchhiker",
+        "heart-of-gold",
+        "branches"
+      ]);
+      expect(data).toEqual(branches);
+    });
+  });
 
-      const { result, waitFor } = renderHook(() => useBranches(repository), {
+  describe("useBranch tests", () => {
+    const fetchBranch = async () => {
+      fetchMock.getOnce("/api/v2/hog/branches/develop", develop);
+
+      const { result, waitFor } = renderHook(() => useBranch(repository, "develop"), {
         wrapper: createWrapper(undefined, queryClient)
       });
+
+      expect(result.error).toBeUndefined();
+
       await waitFor(() => {
         return !!result.current.data;
       });
 
-      const cachedBranch: Branch | undefined = queryClient.getQueryData([
+      return result.current.data;
+    };
+
+    it("should return branch", async () => {
+      const branch = await fetchBranch();
+      expect(branch).toEqual(develop);
+    });
+  });
+
+  describe("useCreateBranch tests", () => {
+    const createBranch = async () => {
+      fetchMock.postOnce("/api/v2/hog/branches", {
+        status: 201,
+        headers: {
+          Location: "/hog/branches/develop"
+        }
+      });
+
+      fetchMock.getOnce("/api/v2/hog/branches/develop", develop);
+
+      const { result, waitForNextUpdate } = renderHook(() => useCreateBranch(repository), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+
+      await act(() => {
+        const { create } = result.current;
+        create({ name: "develop", parent: "main" });
+        return waitForNextUpdate();
+      });
+
+      return result.current;
+    };
+
+    it("should create branch", async () => {
+      const { branch } = await createBranch();
+      expect(branch).toEqual(develop);
+    });
+
+    it("should cache created branch", async () => {
+      await createBranch();
+
+      const branch = queryClient.getQueryData<Branch>([
         "repository",
         "hitchhiker",
         "heart-of-gold",
         "branch",
         "develop"
       ]);
-      expect(cachedBranch?.name).toBe("develop");
+      expect(branch).toEqual(develop);
+    });
+
+    it("should invalidate cached branches list", async () => {
+      queryClient.setQueryData(["repository", "hitchhiker", "heart-of-gold", "branches"], branches);
+      await createBranch();
+
+      const queryState = queryClient.getQueryState(["repository", "hitchhiker", "heart-of-gold", "branches"]);
+      expect(queryState!.isInvalidated).toBe(true);
+    });
+  });
+
+  describe("useDeleteBranch tests", () => {
+    const deleteBranch = async () => {
+      fetchMock.deleteOnce("/api/v2/hog/branches/develop", {
+        status: 204
+      });
+
+      const { result, waitForNextUpdate } = renderHook(() => useDeleteBranch(repository), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+
+      await act(() => {
+        const { remove } = result.current;
+        remove(develop);
+        return waitForNextUpdate();
+      });
+
+      return result.current;
+    };
+
+    it("should delete branch", async () => {
+      const { isDeleted } = await deleteBranch();
+      expect(isDeleted).toBe(true);
+    });
+
+    it("should invalidate branch", async () => {
+      queryClient.setQueryData(["repository", "hitchhiker", "heart-of-gold", "branch", "develop"], develop);
+      await deleteBranch();
+
+      const queryState = queryClient.getQueryState(["repository", "hitchhiker", "heart-of-gold", "branch", "develop"]);
+      expect(queryState!.isInvalidated).toBe(true);
+    });
+
+    it("should invalidate cached branches list", async () => {
+      queryClient.setQueryData(["repository", "hitchhiker", "heart-of-gold", "branches"], branches);
+      await deleteBranch();
+
+      const queryState = queryClient.getQueryState(["repository", "hitchhiker", "heart-of-gold", "branches"]);
+      expect(queryState!.isInvalidated).toBe(true);
     });
   });
 });
