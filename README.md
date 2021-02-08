@@ -107,6 +107,20 @@ Then you can attach a debugger on port 5005.
 The port can be changed by using the `--debug-port` e.g.: `--debug-port=5006`.
 If you want to wait until a debugger is attached, before SCM-Manager starts you can use the `--debug-wait` option.
 
+### Distribution
+
+SCM-Manager provides various modules to deploy SCM-Manager on differnt platforms (e.g. Docker, Helm, RPM, DEB, Windows).
+Those modules are not build by default. 
+To build the distribution modules specify the `distribution` property e.g.:
+
+```bash
+# on unix
+./gradlew -Pdistribution distribution
+
+# on windows
+gradlew.bat -Pdistribution distribution
+```
+
 ### Properties for publishing
 
 The publishing process requires the following properties for authentication and signing.
