@@ -67,11 +67,17 @@ include 'scm-dao-xml'
 include 'scm-webapp'
 include 'scm-server'
 include 'scm-it'
-include 'scm-packaging:unix'
-include 'scm-packaging:windows'
-include 'scm-packaging:deb'
-include 'scm-packaging:rpm'
-include 'scm-packaging:docker'
-include 'scm-packaging:helm'
-include 'scm-packaging:release-yaml'
+
+// Do not add scm-packaging modules to every build,
+// These modules drastically increase the time Gradle spends in the configuration phase.
+// To build a distribution of SCM-Manager you have to pass -Pdistribution
+if (settings.hasProperty("distribution")) {
+  include 'scm-packaging:unix'
+  include 'scm-packaging:windows'
+  include 'scm-packaging:deb'
+  include 'scm-packaging:rpm'
+  include 'scm-packaging:docker'
+  include 'scm-packaging:helm'
+  include 'scm-packaging:release-yaml'
+}
 
