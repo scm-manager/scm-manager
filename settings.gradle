@@ -70,8 +70,8 @@ include 'scm-it'
 
 // Do not add scm-packaging modules to every build,
 // These modules drastically increase the time Gradle spends in the configuration phase.
-// To build a distribution of SCM-Manager you have to pass -Pdistribution
-if (settings.hasProperty("distribution")) {
+// To build a distribution of SCM-Manager you have to pass -PenablePackaging
+if (settings.hasProperty("enablePackaging")) {
   include 'scm-packaging:unix'
   include 'scm-packaging:windows'
   include 'scm-packaging:deb'

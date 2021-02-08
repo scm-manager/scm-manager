@@ -96,7 +96,7 @@ pipeline {
       }
       steps {
         withPublishEnivronment {
-          gradle "-Pdistribution publish"
+          gradle "-PenablePackaging publish"
         }
       }
     }

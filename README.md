@@ -111,14 +111,14 @@ If you want to wait until a debugger is attached, before SCM-Manager starts you 
 
 SCM-Manager provides various modules to deploy SCM-Manager on differnt platforms (e.g. Docker, Helm, RPM, DEB, Windows).
 Those modules are not build by default. 
-To build the distribution modules specify the `distribution` property e.g.:
+To build the distribution modules specify the `enablePackaging` property e.g.:
 
 ```bash
 # on unix
-./gradlew -Pdistribution distribution
+./gradlew -PenablePackaging distribution
 
 # on windows
-gradlew.bat -Pdistribution distribution
+gradlew.bat -PenablePackaging distribution
 ```
 
 ### Properties for publishing
