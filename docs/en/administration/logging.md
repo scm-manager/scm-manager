@@ -33,3 +33,7 @@ The location of the file depends also on the type of installation.
 | Windows | $EXTRACT_PATH/scm-server/conf/logging.xml |
 
 **$EXTRACT_PATH** is the path were you etract the content of the package.
+
+You can set the log level for scm to `TRACE`, `DEBUG`, `INFO`, `WARN` or `ERROR`
+by setting the environment variable `SCM_CORE_LOG_LEVEL` to one of these values.
+The default value is `INFO`.

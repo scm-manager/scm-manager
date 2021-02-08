@@ -42,8 +42,10 @@
 
   </appender>
 
-  <logger name="sonia.scm" level="INFO" />
-  <logger name="com.cloudogu.scm" level="INFO" />
+  <variable name="SCM_CORE_LOG_LEVEL" value="${SCM_CORE_LOG_LEVEL:-INFO}" />
+
+  <logger name="sonia.scm" level="${SCM_CORE_LOG_LEVEL}" />
+  <logger name="com.cloudogu.scm" level="${SCM_CORE_LOG_LEVEL}" />
 
   <!-- suppress massive gzip logging -->
   <logger name="sonia.scm.filter.GZipFilter" level="WARN" />

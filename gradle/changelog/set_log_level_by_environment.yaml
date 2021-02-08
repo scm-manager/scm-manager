@@ -1,0 +1,2 @@
+- type: added
+  description: Set core scm log level by environment variable ([#1531](https://github.com/scm-manager/scm-manager/pull/1531))
