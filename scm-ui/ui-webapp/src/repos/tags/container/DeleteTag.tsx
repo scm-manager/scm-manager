@@ -24,9 +24,10 @@
 
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
-import { apiClient, ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
-import { Link, Repository, Tag } from "@scm-manager/ui-types";
+import { Redirect } from "react-router-dom";
+import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { Repository, Tag } from "@scm-manager/ui-types";
+import { useDeleteTag } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
@@ -34,48 +35,36 @@ type Props = {
 };
 
 const DeleteTag: FC<Props> = ({ tag, repository }) => {
+  const { isLoading, error, remove, isDeleted } = useDeleteTag(repository);
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
-  const [error, setError] = useState<Error | undefined>();
   const [t] = useTranslation("repos");
-  const history = useHistory();
 
-  const deleteBranch = () => {
-    apiClient
-      .delete((tag._links.delete as Link).href)
-      .then(() => history.push(`/repo/${repository.namespace}/${repository.name}/tags/`))
-      .catch(setError);
-  };
-
-  if (!tag._links.delete) {
-    return null;
-  }
-
-  let confirmAlert = null;
-  if (showConfirmAlert) {
-    confirmAlert = (
-      <ConfirmAlert
-        title={t("tag.delete.confirmAlert.title")}
-        message={t("tag.delete.confirmAlert.message", { tag: tag.name })}
-        buttons={[
-          {
-            className: "is-outlined",
-            label: t("tag.delete.confirmAlert.submit"),
-            onClick: () => deleteBranch()
-          },
-          {
-            label: t("tag.delete.confirmAlert.cancel"),
-            onClick: () => null
-          }
-        ]}
-        close={() => setShowConfirmAlert(false)}
-      />
-    );
+  if (isDeleted) {
+    return <Redirect to={`/repo/${repository.namespace}/${repository.name}/tags/`} />;
   }
 
   return (
     <>
       <ErrorNotification error={error} />
-      {showConfirmAlert && confirmAlert}
+      {showConfirmAlert ? (
+        <ConfirmAlert
+          title={t("tag.delete.confirmAlert.title")}
+          message={t("tag.delete.confirmAlert.message", { tag: tag.name })}
+          buttons={[
+            {
+              className: "is-outlined",
+              label: t("tag.delete.confirmAlert.submit"),
+              isLoading,
+              onClick: () => remove(tag)
+            },
+            {
+              label: t("tag.delete.confirmAlert.cancel"),
+              onClick: () => null
+            }
+          ]}
+          close={() => setShowConfirmAlert(false)}
+        />
+      ) : null}
       <Level
         left={
           <p>
