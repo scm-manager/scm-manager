@@ -21,90 +21,52 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import BranchView from "../components/BranchView";
-import { connect } from "react-redux";
-import { compose } from "redux";
-import { Redirect, Route, Switch, withRouter } from "react-router-dom";
-import { Branch, Repository } from "@scm-manager/ui-types";
-import { fetchBranch, getBranch, getFetchBranchFailure, isFetchBranchPending } from "../modules/branches";
+import { Redirect, Route, Switch, useLocation, useRouteMatch } from "react-router-dom";
+import { Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading, NotFoundError, urls } from "@scm-manager/ui-components";
-import { History } from "history";
 import queryString from "query-string";
+import { useBranch } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
-  branchName: string;
-  branch: Branch;
-  loading: boolean;
-  error?: Error;
-
-  // context props
-  history: History;
-  match: any;
-  location: any;
-
-  // dispatch functions
-  fetchBranch: (repository: Repository, branchName: string) => void;
 };
 
-class BranchRoot extends React.Component<Props> {
-  componentDidMount() {
-    const { fetchBranch, repository, branchName } = this.props;
-    fetchBranch(repository, branchName);
+type Params = {
+  branch: string;
+};
+
+const BranchRoot: FC<Props> = ({ repository }) => {
+  const match = useRouteMatch<Params>();
+  const { isLoading, error, data: branch } = useBranch(repository, match.params.branch);
+  const location = useLocation();
+
+  if (isLoading) {
+    return <Loading />;
   }
 
-  render() {
-    const { repository, branch, loading, error, match, location } = this.props;
-
-    const url = urls.matchedUrl(this.props);
-
-    if (error) {
-      if (error instanceof NotFoundError && queryString.parse(location.search).create === "true") {
-        return (
-          <Redirect
-            to={`/repo/${repository.namespace}/${repository.name}/branches/create?name=${match.params.branch}`}
-          />
-        );
-      }
-
-      return <ErrorNotification error={error} />;
+  if (error) {
+    if (error instanceof NotFoundError && queryString.parse(location.search).create === "true") {
+      return (
+        <Redirect to={`/repo/${repository.namespace}/${repository.name}/branches/create?name=${match.params.branch}`} />
+      );
     }
 
-    if (loading || !branch) {
-      return <Loading />;
-    }
-
-    return (
-      <Switch>
-        <Redirect exact from={url} to={`${url}/info`} />
-        <Route path={`${url}/info`} component={() => <BranchView repository={repository} branch={branch} />} />
-      </Switch>
-    );
+    return <ErrorNotification error={error} />;
   }
-}
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const { repository } = ownProps;
-  const branchName = decodeURIComponent(ownProps.match.params.branch);
-  const branch = getBranch(state, repository, branchName);
-  const loading = isFetchBranchPending(state, repository, branchName);
-  const error = getFetchBranchFailure(state, repository, branchName);
-  return {
-    repository,
-    branchName,
-    branch,
-    loading,
-    error
-  };
+  const url = urls.matchedUrlFromMatch(match);
+  if (!branch) {
+    return null;
+  }
+
+  return (
+    <Switch>
+      <Redirect exact from={url} to={`${url}/info`} />
+      <Route path={`${url}/info`} component={() => <BranchView repository={repository} branch={branch} />} />
+    </Switch>
+  );
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchBranch: (repository: Repository, branchName: string) => {
-      dispatch(fetchBranch(repository, branchName));
-    }
-  };
-};
-
-export default compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(BranchRoot);
+export default BranchRoot;

@@ -23,28 +23,81 @@
  *
  */
 
-import { BranchCollection, Repository } from "@scm-manager/ui-types";
+import { Branch, BranchCollection, BranchCreation, Link, Repository } from "@scm-manager/ui-types";
 import { requiredLink } from "./links";
-import { useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { ApiResult } from "./base";
 import { branchQueryKey, repoQueryKey } from "./keys";
-import { apiClient } from "@scm-manager/ui-components";
+import { apiClient, urls } from "@scm-manager/ui-components";
 
 export const useBranches = (repository: Repository): ApiResult<BranchCollection> => {
-  const queryClient = useQueryClient();
   const link = requiredLink(repository, "branches");
   return useQuery<BranchCollection, Error>(
     repoQueryKey(repository, "branches"),
-    () => apiClient.get(link).then(response => response.json()),
+    () => apiClient.get(link).then(response => response.json())
+    // we do not populate the cache for a single branch,
+    // because we have no pagination for branches and if we have a lot of them
+    // the population slows us down
+  );
+};
+
+export const useBranch = (repository: Repository, name: string): ApiResult<Branch> => {
+  const link = requiredLink(repository, "branches");
+  return useQuery<Branch, Error>(branchQueryKey(repository, name), () =>
+    apiClient.get(urls.concat(link, name)).then(response => response.json())
+  );
+};
+
+const createBranch = (link: string) => {
+  return (branch: BranchCreation) => {
+    return apiClient
+      .post(link, branch)
+      .then(response => {
+        const location = response.headers.get("Location");
+        if (!location) {
+          throw new Error("Server does not return required Location header");
+        }
+        return apiClient.get(location);
+      })
+      .then(response => response.json());
+  };
+};
+
+export const useCreateBranch = (repository: Repository) => {
+  const queryClient = useQueryClient();
+  const link = requiredLink(repository, "branches");
+  const { mutate, isLoading, error, data } = useMutation<Branch, Error, BranchCreation>(createBranch(link), {
+    onSuccess: async branch => {
+      queryClient.setQueryData(branchQueryKey(repository, branch), branch);
+      await queryClient.invalidateQueries(repoQueryKey(repository, "branches"));
+    }
+  });
+  return {
+    create: (branch: BranchCreation) => mutate(branch),
+    isLoading,
+    error,
+    branch: data
+  };
+};
+
+export const useDeleteBranch = (repository: Repository) => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, Branch>(
+    branch => {
+      const deleteUrl = (branch._links.delete as Link).href;
+      return apiClient.delete(deleteUrl);
+    },
     {
-      onSuccess: branchCollection => {
-        branchCollection._embedded.branches.forEach(branch => {
-          // TODO does this make sense?
-          // do we want every branch in the cache
-          // it slows down the rendering of the branch chooser
-          queryClient.setQueryData(branchQueryKey(repository, branch), branch);
-        });
+      onSuccess: async (_, branch) => {
+        await queryClient.invalidateQueries(branchQueryKey(repository, branch));
+        await queryClient.invalidateQueries(repoQueryKey(repository, "branches"));
       }
     }
   );
+  return {
+    remove: (branch: Branch) => mutate(branch),
+    isLoading,
+    error,
+    isDeleted: !!data
+  };
 };
