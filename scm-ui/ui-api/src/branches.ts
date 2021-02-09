@@ -51,7 +51,7 @@ export const useBranch = (repository: Repository, name: string): ApiResult<Branc
 const createBranch = (link: string) => {
   return (branch: BranchCreation) => {
     return apiClient
-      .post(link, branch)
+      .post(link, branch, "application/vnd.scmm-branchRequest+json;v=2")
       .then(response => {
         const location = response.headers.get("Location");
         if (!location) {
