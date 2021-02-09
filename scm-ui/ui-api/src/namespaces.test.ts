@@ -27,7 +27,7 @@ import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import { setIndexLink } from "./tests/indexLinks";
 import fetchMock from "fetch-mock-jest";
 import { renderHook } from "@testing-library/react-hooks";
-import { useNamespaces, useNamespaceStrategies } from "./namespaces";
+import { useNamespace, useNamespaces, useNamespaceStrategies } from "./namespaces";
 import createWrapper from "./tests/createWrapper";
 
 describe("Test namespace hooks", () => {
@@ -73,6 +73,25 @@ describe("Test namespace hooks", () => {
         return !!result.current.data;
       });
       expect(result.current?.data?.current).toEqual("awesome");
+    });
+  });
+
+  describe("useNamespace tests", () => {
+    it("should return namespace", async () => {
+      const queryClient = createInfiniteCachingClient();
+      setIndexLink(queryClient, "namespaces", "/ns");
+      fetchMock.get("/api/v2/ns/awesome", {
+        namespace: "awesome",
+        _links: {}
+      });
+
+      const { result, waitFor } = renderHook(() => useNamespace("awesome"), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+      await waitFor(() => {
+        return !!result.current.data;
+      });
+      expect(result.current?.data?.namespace).toEqual("awesome");
     });
   });
 });
