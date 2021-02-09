@@ -48,6 +48,8 @@ Zusätzlich zum normalen Repository Import gibt es die Möglichkeit ein Reposito
 Dieses Repository Archiv muss von einem anderen SCM-Manager exportiert worden sein und wird vor dem Import auf
 Kompatibilität der Daten überprüft (der SCM-Manager und alle installierten Plugins müssen mindestens die Version des
 exportierenden Systems haben).
+Ist die zu importierende Datei verschlüsselt, muss das korrekte Passwort zum Entschlüsseln mitgeliefert werden. 
+Wird kein Passwort gesetzt, geht der SCM-Manager davon aus, dass die Datei unverschlüsselt ist.
 
 ![Repository importieren](assets/import-repository.png)
 

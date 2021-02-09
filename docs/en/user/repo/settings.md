@@ -25,6 +25,7 @@ The output format of the repository can be changed via the offered options:
   besides the repository. When you use this, please make sure all installed plugins are up to date. An import of
   such an export is possible only in an SCM-Manager with the same or a newer version. The same is valid for all
   installed plugins.
+* `Encrypt`: The export file will be encrypted using the provided password. The same password must be used to decrypt this export file.
 
 ![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
 

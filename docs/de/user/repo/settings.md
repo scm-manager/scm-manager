@@ -27,6 +27,7 @@ Das Ausgabeformat des Repository kann über die angebotenen Optionen verändert 
   weitere Metadaten enthält. Für diesen Export sollte sichergestellt werden, dass alle installierten Plugins aktuell sind.
   Ein Import eines so exportierten Repositories ist nur in einem SCM-Manager mit derselben oder einer neueren Version
   möglich. Dieses gilt ebenso für alle installierten Plugins.
+* `Verschlüsseln`: Die Export-Datei wird mit dem gesetzten Passwort verschlüsselt. Zum Entschlüsseln muss das exakt gleiche Passwort verwendet werden.
 
 ![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
 
