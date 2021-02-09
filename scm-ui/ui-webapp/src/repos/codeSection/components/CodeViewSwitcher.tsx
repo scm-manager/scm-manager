@@ -44,37 +44,26 @@ type Props = {
 const CodeViewSwitcher: FC<Props> = ({ currentUrl, switchViewLink }) => {
   const { t } = useTranslation("repos");
 
-  const resolveLocation = () => {
-    if (currentUrl.includes("/code/branch") || currentUrl.includes("/code/changesets")) {
-      return "changesets";
-    }
-    if (currentUrl.includes("/code/sources")) {
-      return "sources";
-    }
-    return "";
-  };
-
-  const isSourcesTab = () => {
-    return resolveLocation() === "sources";
-  };
-
-  const isChangesetsTab = () => {
-    return resolveLocation() === "changesets";
-  };
+  let location = "";
+  if (currentUrl.includes("/code/branch") || currentUrl.includes("/code/changesets")) {
+    location = "changesets";
+  } else if (currentUrl.includes("/code/sources")) {
+    location = "sources";
+  }
 
   return (
     <ButtonAddonsMarginRight>
       <SmallButton
         label={t("code.commits")}
         icon="fa fa-exchange-alt"
-        color={isChangesetsTab() ? "link is-selected" : undefined}
-        link={isSourcesTab() ? switchViewLink : undefined}
+        color={location === "changesets" ? "link is-selected" : undefined}
+        link={location === "sources" ? switchViewLink : undefined}
       />
       <SmallButton
         label={t("code.sources")}
         icon="fa fa-code"
-        color={isSourcesTab() ? "link is-selected" : undefined}
-        link={isChangesetsTab() ? switchViewLink : undefined}
+        color={location === "sources" ? "link is-selected" : undefined}
+        link={location === "changesets" ? switchViewLink : undefined}
       />
     </ButtonAddonsMarginRight>
   );
