@@ -49,6 +49,8 @@ import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 
 public class RepositoryImportExportEncryption {
 
+  private static final String INITIALIZATION_VECTOR = "SCM-Manager-IV42";
+
   public static OutputStream encrypt(OutputStream os, String secret) {
     if (!Strings.isNullOrEmpty(secret)) {
       try {
@@ -82,8 +84,8 @@ public class RepositoryImportExportEncryption {
   private static SecretKeySpec createSecretKey(String secret) throws NoSuchAlgorithmException, InvalidKeySpecException {
     SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
     KeySpec spec = new PBEKeySpec(secret.toCharArray(), "salt".getBytes(), 65536, 256);
-    SecretKey tmp = factory.generateSecret(spec);
-    return new SecretKeySpec(tmp.getEncoded(), "AES");
+    SecretKey key = factory.generateSecret(spec);
+    return new SecretKeySpec(key.getEncoded(), "AES");
   }
 
   private static Cipher createCipher() throws NoSuchAlgorithmException, NoSuchPaddingException {
@@ -91,7 +93,6 @@ public class RepositoryImportExportEncryption {
   }
 
   private static IvParameterSpec createIvParamSpec() {
-    byte[] iv = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    return new IvParameterSpec(iv);
+    return new IvParameterSpec(INITIALIZATION_VECTOR.getBytes());
   }
 }
