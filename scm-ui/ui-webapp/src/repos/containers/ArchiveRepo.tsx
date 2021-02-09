@@ -22,45 +22,30 @@
  * SOFTWARE.
  */
 import React, { FC, useState } from "react";
-import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { Button, ConfirmAlert, ErrorNotification, Level } from "@scm-manager/ui-components";
-import { archiveRepo, getModifyRepoFailure, isModifyRepoPending } from "../modules/repos";
+import { useArchiveRepository } from "@scm-manager/ui-api";
 
 type Props = {
-  loading: boolean;
-  error: Error;
   repository: Repository;
   confirmDialog?: boolean;
-  archiveRepo: (p1: Repository, p2: () => void) => void;
 };
 
-const ArchiveRepo: FC<Props> = ({ confirmDialog = true, repository, archiveRepo, loading, error }: Props) => {
+const ArchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
+  const { isLoading, error, archive } = useArchiveRepository();
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("repos");
 
-  const archived = () => {
-    window.location.reload();
-  };
-
   const archiveRepoCallback = () => {
-    archiveRepo(repository, archived);
+    archive(repository);
   };
 
   const confirmArchive = () => {
     setShowConfirmAlert(true);
   };
 
-  const isArchiveable = () => {
-    return repository._links.archive;
-  };
-
   const action = confirmDialog ? confirmArchive : archiveRepoCallback;
-
-  if (!isArchiveable()) {
-    return null;
-  }
 
   const confirmAlert = (
     <ConfirmAlert
@@ -70,12 +55,12 @@ const ArchiveRepo: FC<Props> = ({ confirmDialog = true, repository, archiveRepo,
         {
           className: "is-outlined",
           label: t("archiveRepo.confirmAlert.submit"),
-          onClick: () => archiveRepoCallback(),
+          onClick: () => archiveRepoCallback()
         },
         {
           label: t("archiveRepo.confirmAlert.cancel"),
-          onClick: () => null,
-        },
+          onClick: () => null
+        }
       ]}
       close={() => setShowConfirmAlert(false)}
     />
@@ -94,29 +79,11 @@ const ArchiveRepo: FC<Props> = ({ confirmDialog = true, repository, archiveRepo,
           </p>
         }
         right={
-          <Button color="warning" icon="archive" label={t("archiveRepo.button")} action={action} loading={loading} />
+          <Button color="warning" icon="archive" label={t("archiveRepo.button")} action={action} loading={isLoading} />
         }
       />
     </>
   );
 };
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const { namespace, name } = ownProps.repository;
-  const loading = isModifyRepoPending(state, namespace, name);
-  const error = getModifyRepoFailure(state, namespace, name);
-  return {
-    loading,
-    error,
-  };
-};
-
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    archiveRepo: (repo: Repository, callback: () => void) => {
-      dispatch(archiveRepo(repo, callback));
-    },
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ArchiveRepo);
+export default ArchiveRepo;

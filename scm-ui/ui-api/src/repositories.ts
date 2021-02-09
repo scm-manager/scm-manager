@@ -23,6 +23,7 @@
  */
 
 import {
+  Group,
   Link,
   Namespace,
   Repository,
@@ -166,5 +167,71 @@ export const useDeleteRepository = (options?: UseDeleteRepositoryOptions) => {
     isLoading,
     error,
     isDeleted: !!data
+  };
+};
+
+export const useUpdateRepository = () => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
+    repository => {
+      const link = requiredLink(repository, "update");
+      return apiClient.put(link, repository, "application/vnd.scmm-repository+json;v=2");
+    },
+    {
+      onSuccess: async (_, repository) => {
+        await queryClient.invalidateQueries(repoQueryKey(repository));
+        await queryClient.invalidateQueries(["repositories"]);
+      }
+    }
+  );
+  return {
+    update: (repository: Repository) => mutate(repository),
+    isLoading,
+    error,
+    isUpdated: !!data
+  };
+};
+
+export const useArchiveRepository = () => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
+    repository => {
+      const link = requiredLink(repository, "archive");
+      return apiClient.post(link);
+    },
+    {
+      onSuccess: async (_, repository) => {
+        await queryClient.invalidateQueries(repoQueryKey(repository));
+        await queryClient.invalidateQueries(["repositories"]);
+      }
+    }
+  );
+  return {
+    archive: (repository: Repository) => mutate(repository),
+    isLoading,
+    error,
+    isArchived: !!data
+  };
+};
+
+export const useUnarchiveRepository = () => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
+    repository => {
+      const link = requiredLink(repository, "unarchive");
+      return apiClient.post(link);
+    },
+    {
+      onSuccess: async (_, repository) => {
+        await queryClient.invalidateQueries(repoQueryKey(repository));
+        await queryClient.invalidateQueries(["repositories"]);
+      }
+    }
+  );
+  return {
+    unarchive: (repository: Repository) => mutate(repository),
+    isLoading,
+    error,
+    isUnarchived: !!data
   };
 };
