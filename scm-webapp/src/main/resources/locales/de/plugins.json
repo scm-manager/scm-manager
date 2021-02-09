@@ -330,6 +330,10 @@
     "1mSNlpe1V1": {
       "displayName": "Repository wird exportiert",
       "description": "Das Repository wird momentan exportiert und darf nicht modifiziert werden."
+    },
+    "8YR7aawFW1": {
+      "displayName": "Aktuelles Passwort falsch",
+      "description": "Das aktuelle Passwort ist falsch. Bitte versuchen Sie es noch einmal."
     }
   },
   "namespaceStrategies": {
