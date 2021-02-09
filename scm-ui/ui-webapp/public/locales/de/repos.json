@@ -85,7 +85,7 @@
       "helpText": "Wählen Sie das Repository Archiv aus. Das Archiv muss von einer SCM-Manager Instanz exportiert worden sein.",
       "password": {
         "title": "Passwort",
-        "helpText": "Wenn der importierte Repository Archiv verschlüsselt ist, muss das korrekte Passwort mitgeliefert werden."
+        "helpText": "Wenn das importierte Repository Archiv verschlüsselt ist, muss das korrekte Passwort mitgeliefert werden."
       }
     },
     "pending": {
@@ -272,7 +272,7 @@
     },
     "encrypt": {
       "label": "Verschlüsseln",
-      "helpText": "Die Export Datei wird verschlüsselt und muss mit dem gleichen Passwort entschlüsselt werden."
+      "helpText": "Die Export Datei wird mit dem gesetzen Passwort verschlüsselt."
     },
     "password": {
       "label": "Passwort",
