@@ -44,6 +44,8 @@ Just use the Switcher on top right to navigate to the import page and fill the i
 Your repository will be added to SCM-Manager and all repository data including all branches and tags will be imported.
 In addition to the normal repository import, there is the possibility to import a repository archive with metadata.
 This repository archive must have been exported from another SCM manager and is checked for data compatibility during import.
+If the file to be imported is encrypted, the correct password must be supplied for decryption.
+If no password is set, the SCM Manager assumes that the file is unencrypted.
 
 ![Import Repository](assets/import-repository.png)
 
