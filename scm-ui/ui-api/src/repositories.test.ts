@@ -23,19 +23,17 @@
  */
 
 import fetchMock from "fetch-mock-jest";
-import {renderHook} from "@testing-library/react-hooks";
+import { renderHook } from "@testing-library/react-hooks";
 import createWrapper from "./tests/createWrapper";
-import {setIndexLink} from "./tests/indexLinks";
+import { setIndexLink } from "./tests/indexLinks";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import {
   useCreateRepository,
-  useNamespaces,
-  useNamespaceStrategies,
   useRepositories,
   UseRepositoriesRequest,
   useRepository,
   useRepositoryTypes
-} from "./repos";
+} from "./repositories";
 import { Repository } from "@scm-manager/ui-types";
 import { QueryClient } from "react-query";
 import { act } from "react-test-renderer";
@@ -251,31 +249,6 @@ describe("Test repository hooks", () => {
     });
   });
 
-  describe("useNamespaces test", () => {
-    it("should return namespaces", async () => {
-      const queryClient = createInfiniteCachingClient();
-      setIndexLink(queryClient, "namespaces", "/namespaces");
-      fetchMock.get("/api/v2/namespaces", {
-        _embedded: {
-          namespaces: [
-            {
-              namespace: "spaceships",
-              _links: {}
-            }
-          ]
-        }
-      });
-
-      const { result, waitFor } = renderHook(() => useNamespaces(), {
-        wrapper: createWrapper(undefined, queryClient)
-      });
-      await waitFor(() => {
-        return !!result.current.data;
-      });
-      expect(result.current?.data?._embedded.namespaces[0].namespace).toBe("spaceships");
-    });
-  });
-
   describe("useRepository tests", () => {
     it("should return repository", async () => {
       const queryClient = createInfiniteCachingClient();
@@ -319,26 +292,6 @@ describe("Test repository hooks", () => {
       if (result.current?.repositoryTypes) {
         expect(result.current?.repositoryTypes[0].name).toEqual("git");
       }
-    });
-  });
-
-  describe("useNamespaceStrategies tests", () => {
-    it("should return namespaces strategies", async () => {
-      const queryClient = createInfiniteCachingClient();
-      setIndexLink(queryClient, "namespaceStrategies", "/ns");
-      fetchMock.get("/api/v2/ns", {
-        current: "awesome",
-        available: [],
-        _links: {}
-      });
-
-      const { result, waitFor } = renderHook(() => useNamespaceStrategies(), {
-        wrapper: createWrapper(undefined, queryClient)
-      });
-      await waitFor(() => {
-        return !!result.current.data;
-      });
-      expect(result.current?.data?.current).toEqual("awesome");
     });
   });
 });
