@@ -136,7 +136,6 @@ class DefaultHgEnvironmentBuilderTest {
     assertThat(env)
       .containsEntry(ENV_REPOSITORY_ID, repositoryId)
       .containsEntry(ENV_REPOSITORY_NAME, "hitchhiker/HeartOfGold")
-      .containsEntry(ENV_HTTP_POST_ARGS, "false")
       .containsEntry(ENV_REPOSITORY_PATH, directory.resolve("repo").toAbsolutePath().toString());
   }
 

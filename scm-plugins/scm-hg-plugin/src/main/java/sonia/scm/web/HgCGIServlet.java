@@ -143,14 +143,14 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
 
     File directory = handler.getDirectory(repository.getId());
     executor.setWorkDirectory(directory);
-    executor.setArgs(createArgs());
 
     HgConfig config = handler.getConfig();
+    executor.setArgs(createArgs(config));
     executor.execute(config.getHgBinary());
   }
 
   @Nonnull
-  private List<String> createArgs() {
+  private List<String> createArgs(HgConfig config) {
     List<String> args = new ArrayList<>();
     config(args, "extensions.cgiserve", extension.getAbsolutePath());
 
@@ -161,6 +161,11 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
     config(args, "web.push_ssl", "false");
     config(args, "web.allow_read", "*");
     config(args, "web.allow_push", "*");
+
+    // enable experimental httppostargs protocol of mercurial
+    // Issue 970: https://goo.gl/poascp
+    config(args, "experimental.httppostargs", String.valueOf(config.isEnableHttpPostArgs()));
+
     args.add("cgiserve");
     return args;
   }
