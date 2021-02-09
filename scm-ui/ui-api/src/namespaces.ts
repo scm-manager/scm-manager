@@ -23,11 +23,20 @@
  *
  */
 
-import { useIndexJsonResource } from "./base";
-import { NamespaceCollection, NamespaceStrategies } from "@scm-manager/ui-types";
+import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
+import { Namespace, NamespaceCollection, NamespaceStrategies } from "@scm-manager/ui-types";
+import { useQuery } from "react-query";
+import { apiClient, urls } from "@scm-manager/ui-components";
 
 export const useNamespaces = () => {
   return useIndexJsonResource<NamespaceCollection>("namespaces");
+};
+
+export const useNamespace = (name: string): ApiResult<Namespace> => {
+  const namespacesLink = useRequiredIndexLink("namespaces");
+  return useQuery<Namespace, Error>(["namespace", name], () =>
+    apiClient.get(urls.concat(namespacesLink, name)).then(response => response.json())
+  );
 };
 
 export const useNamespaceStrategies = () => {
