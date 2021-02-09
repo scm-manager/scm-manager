@@ -272,7 +272,7 @@
     },
     "encrypt": {
       "label": "Encrypt",
-      "helpText": "The export file will be encrypted and must be decrypted using the same password."
+      "helpText": "The export file will be encrypted using the provided password."
     },
     "password": {
       "label": "Password",
