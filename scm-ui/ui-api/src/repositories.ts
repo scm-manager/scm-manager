@@ -25,8 +25,6 @@
 import {
   Link,
   Namespace,
-  NamespaceCollection,
-  NamespaceStrategies,
   Repository,
   RepositoryCollection,
   RepositoryCreation,
@@ -36,10 +34,6 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient, urls } from "@scm-manager/ui-components";
 import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
 import { createQueryString } from "./utils";
-
-export const useNamespaces = () => {
-  return useIndexJsonResource<NamespaceCollection>("namespaces");
-};
 
 export type UseRepositoriesRequest = {
   namespace?: Namespace;
@@ -134,10 +128,6 @@ export const useRepositoryTypes = () => {
     error,
     repositoryTypes: data?._embedded.repositoryTypes
   };
-};
-
-export const useNamespaceStrategies = () => {
-  return useIndexJsonResource<NamespaceStrategies>("namespaceStrategies");
 };
 
 export const useRepository = (namespace: string, name: string): ApiResult<Repository> => {
