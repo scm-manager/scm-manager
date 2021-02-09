@@ -20,18 +20,16 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
-// TODO move apiClient and urls from ui-components
+import { useIndexJsonResource } from "./base";
+import { NamespaceCollection, NamespaceStrategies } from "@scm-manager/ui-types";
 
-export * from "./base";
-export * from "./login";
-export * from "./groups";
-export * from "./users";
-export * from "./repositories";
-export * from "./namespaces";
-export * from "./branches";
-export * from "./changesets";
-export * from "./tags";
+export const useNamespaces = () => {
+  return useIndexJsonResource<NamespaceCollection>("namespaces");
+};
 
-export { default as ApiProvider } from "./ApiProvider";
+export const useNamespaceStrategies = () => {
+  return useIndexJsonResource<NamespaceStrategies>("namespaceStrategies");
+};
