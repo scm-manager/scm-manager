@@ -47,6 +47,7 @@ import java.io.InputStream;
 import java.util.Collection;
 import java.util.HashSet;
 
+import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 import static sonia.scm.importexport.FullScmRepositoryExporter.METADATA_FILE_NAME;
 import static sonia.scm.importexport.FullScmRepositoryExporter.SCM_ENVIRONMENT_FILE_NAME;
 import static sonia.scm.importexport.FullScmRepositoryExporter.STORE_DATA_FILE_NAME;
@@ -100,7 +101,7 @@ public class FullScmRepositoryImporter {
       }
     } catch (IOException e) {
       throw new ImportFailedException(
-        ContextEntry.ContextBuilder.entity(repository).build(),
+        noContext(),
         "Could not import repository data from stream; got io exception while reading",
         e
       );
@@ -138,7 +139,7 @@ public class FullScmRepositoryImporter {
           service.getUnbundleCommand().unbundle(new NoneClosingInputStream(tais));
         } catch (IOException e) {
           throw new ImportFailedException(
-            ContextEntry.ContextBuilder.entity(repository).build(),
+            noContext(),
             "Repository import failed. Could not import repository from file.",
             e
           );

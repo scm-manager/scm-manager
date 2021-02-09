@@ -80,7 +80,6 @@ public class RepositoryImportExportEncryption {
   }
 
   private static SecretKeySpec createSecretKey(String secret) throws NoSuchAlgorithmException, InvalidKeySpecException {
-    //TODO Is this key okay? Choose key without salt?
     SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
     KeySpec spec = new PBEKeySpec(secret.toCharArray(), "salt".getBytes(), 65536, 256);
     SecretKey tmp = factory.generateSecret(spec);

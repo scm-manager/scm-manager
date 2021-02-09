@@ -35,6 +35,7 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static sonia.scm.importexport.RepositoryImportExportEncryption.decrypt;
 
 class RepositoryImportExportEncryptionTest {
@@ -81,20 +82,38 @@ class RepositoryImportExportEncryptionTest {
     OutputStream os = RepositoryImportExportEncryption.encrypt(baos, secret);
     os.write(content.getBytes());
     os.flush();
+    os.close();
 
-    assertThat(os.toString()).isNotEqualTo(content);
+    assertThat(baos.toString()).isNotEqualTo(content);
 
     InputStream is = decrypt(new ByteArrayInputStream(baos.toByteArray()), secret);
-
     ByteSource byteSource = new ByteSource() {
       @Override
       public InputStream openStream() {
         return is;
       }
     };
-
     String result = byteSource.asCharSource(StandardCharsets.UTF_8).read();
 
     assertThat(result).isEqualTo(content);
+  }
+
+  @Test
+  void shouldFailOnDecryptIfNotEncrypted() throws IOException {
+    String content = "my content";
+    String secret = "secretPassword";
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    baos.write(content.getBytes());
+    baos.flush();
+    baos.close();
+
+    InputStream is = decrypt(new ByteArrayInputStream(baos.toByteArray()), secret);
+    ByteSource byteSource = new ByteSource() {
+      @Override
+      public InputStream openStream() {
+        return is;
+      }
+    };
+    assertThrows(IOException.class, () -> byteSource.asCharSource(StandardCharsets.UTF_8).read());
   }
 }
