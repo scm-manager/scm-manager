@@ -246,7 +246,9 @@ const RepositoryRoot = () => {
               <Redirect from={`${url}/branch/:branch/changesets`} to={`${url}/code/branch/:branch/changesets/`} />
 
               <Route path={`${url}/info`} exact component={() => <RepositoryDetails repository={repository} />} />
-              <Route path={`${url}/settings/general`} component={() => <EditRepo repository={repository} />} />
+              <Route path={`${url}/settings/general`}>
+                <EditRepo repository={repository} />
+              </Route>
               <Route
                 path={`${url}/settings/permissions`}
                 render={() => <Permissions namespace={repository.namespace} repoName={repository.name} />}

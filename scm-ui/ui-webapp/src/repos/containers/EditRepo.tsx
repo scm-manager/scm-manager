@@ -21,98 +21,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { connect } from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import React, { FC } from "react";
+import { Redirect, useRouteMatch } from "react-router-dom";
 import RepositoryForm from "../components/form";
-import { Repository, Links } from "@scm-manager/ui-types";
-import { getModifyRepoFailure, isModifyRepoPending, modifyRepo, modifyRepoReset } from "../modules/repos";
-import { History } from "history";
+import { Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Subtitle } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { compose } from "redux";
 import RepositoryDangerZone from "./RepositoryDangerZone";
-import { getLinks } from "../../modules/indexResource";
 import { urls } from "@scm-manager/ui-components";
-import { TranslationProps, withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import ExportRepository from "./ExportRepository";
+import { useIndexLinks, useUpdateRepository } from "@scm-manager/ui-api";
 
-type Props = TranslationProps &
-  RouteComponentProps & {
-    loading: boolean;
-    error: Error;
-    indexLinks: Links;
-
-    modifyRepo: (p1: Repository, p2: () => void) => void;
-    modifyRepoReset: (p: Repository) => void;
-
-    // context props
-    repository: Repository;
-    history: History;
-  };
-
-class EditRepo extends React.Component<Props> {
-  componentDidMount() {
-    const { modifyRepoReset, repository } = this.props;
-    modifyRepoReset(repository);
-  }
-
-  repoModified = () => {
-    const { history, repository } = this.props;
-    history.push(`/repo/${repository.namespace}/${repository.name}`);
-  };
-
-  render() {
-    const { loading, error, repository, indexLinks, t } = this.props;
-
-    const url = urls.matchedUrl(this.props);
-
-    const extensionProps = {
-      repository,
-      url
-    };
-
-    return (
-      <>
-        <Subtitle subtitle={t("repositoryForm.subtitle")} />
-        <ErrorNotification error={error} />
-        <RepositoryForm
-          repository={this.props.repository}
-          loading={loading}
-          modifyRepository={repo => {
-            this.props.modifyRepo(repo, this.repoModified);
-          }}
-        />
-        <ExportRepository repository={this.props.repository}/>
-        <ExtensionPoint name="repo-config.route" props={extensionProps} renderAll={true} />
-        <RepositoryDangerZone repository={repository} indexLinks={indexLinks} />
-      </>
-    );
-  }
-}
-
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const { namespace, name } = ownProps.repository;
-  const loading = isModifyRepoPending(state, namespace, name);
-  const error = getModifyRepoFailure(state, namespace, name);
-  const indexLinks = getLinks(state);
-
-  return {
-    loading,
-    error,
-    indexLinks
-  };
+type Props = {
+  repository: Repository;
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    modifyRepo: (repo: Repository, callback: () => void) => {
-      dispatch(modifyRepo(repo, callback));
-    },
-    modifyRepoReset: (repo: Repository) => {
-      dispatch(modifyRepoReset(repo));
-    }
+const EditRepo: FC<Props> = ({ repository }) => {
+  const match = useRouteMatch();
+  const { isLoading, error, update, isUpdated } = useUpdateRepository();
+  const indexLinks = useIndexLinks();
+  const [t] = useTranslation("repos");
+
+  if (isUpdated) {
+    return <Redirect to={`/repo/${repository.namespace}/${repository.name}`} />;
+  }
+
+  const url = urls.matchedUrlFromMatch(match);
+  const extensionProps = {
+    repository,
+    url
   };
+
+  return (
+    <>
+      <Subtitle subtitle={t("repositoryForm.subtitle")} />
+      <ErrorNotification error={error} />
+      <RepositoryForm repository={repository} loading={isLoading} modifyRepository={update} />
+      <ExportRepository repository={repository} />
+      <ExtensionPoint name="repo-config.route" props={extensionProps} renderAll={true} />
+      <RepositoryDangerZone repository={repository} indexLinks={indexLinks} />
+    </>
+  );
 };
 
-export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter)(withTranslation("repos")(EditRepo));
+export default EditRepo;

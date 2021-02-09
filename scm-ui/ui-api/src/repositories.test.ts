@@ -28,13 +28,16 @@ import createWrapper from "./tests/createWrapper";
 import { setIndexLink } from "./tests/indexLinks";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import {
+  useArchiveRepository,
   useCreateRepository,
   useDeleteRepository,
   UseDeleteRepositoryOptions,
   useRepositories,
   UseRepositoriesRequest,
   useRepository,
-  useRepositoryTypes
+  useRepositoryTypes,
+  useUnarchiveRepository,
+  useUpdateRepository
 } from "./repositories";
 import { Repository } from "@scm-manager/ui-types";
 import { QueryClient } from "react-query";
@@ -48,6 +51,15 @@ describe("Test repository hooks", () => {
     _links: {
       delete: {
         href: "/r/spaceships/heartOfGold"
+      },
+      update: {
+        href: "/r/spaceships/heartOfGold"
+      },
+      archive: {
+        href: "/r/spaceships/heartOfGold/archive"
+      },
+      unarchive: {
+        href: "/r/spaceships/heartOfGold/unarchive"
       }
     }
   };
@@ -348,15 +360,158 @@ describe("Test repository hooks", () => {
       await shouldInvalidateQuery(["repositories"], repositoryCollection);
     });
 
-    it("should call onSuccess callback", async () => {
+    it("should call onSucess callback", async () => {
       let repo;
       await deleteRepository({
         onSuccess: repository => {
           repo = repository;
         }
       });
-
       expect(repo).toEqual(heartOfGold);
+    });
+  });
+
+  describe("useUpdateRepository tests", () => {
+    const queryClient = createInfiniteCachingClient();
+
+    beforeEach(() => {
+      queryClient.clear();
+    });
+
+    const updateRepository = async () => {
+      fetchMock.putOnce("/api/v2/r/spaceships/heartOfGold", {
+        status: 204
+      });
+
+      const { result, waitForNextUpdate } = renderHook(() => useUpdateRepository(), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+
+      await act(() => {
+        const { update } = result.current;
+        update(heartOfGold);
+        return waitForNextUpdate();
+      });
+
+      return result.current;
+    };
+
+    const shouldInvalidateQuery = async (queryKey: string[], data: unknown) => {
+      queryClient.setQueryData(queryKey, data);
+      await updateRepository();
+
+      const queryState = queryClient.getQueryState(queryKey);
+      expect(queryState!.isInvalidated).toBe(true);
+    };
+
+    it("should update repository", async () => {
+      const { isUpdated } = await updateRepository();
+
+      expect(isUpdated).toBe(true);
+    });
+
+    it("should invalidate repository cache", async () => {
+      await shouldInvalidateQuery(["repository", "spaceships", "heartOfGold"], heartOfGold);
+    });
+
+    it("should invalidate repository collection cache", async () => {
+      await shouldInvalidateQuery(["repositories"], repositoryCollection);
+    });
+  });
+
+  describe("useArchiveRepository tests", () => {
+    const queryClient = createInfiniteCachingClient();
+
+    beforeEach(() => {
+      queryClient.clear();
+    });
+
+    const archiveRepository = async () => {
+      fetchMock.postOnce("/api/v2/r/spaceships/heartOfGold/archive", {
+        status: 204
+      });
+
+      const { result, waitForNextUpdate } = renderHook(() => useArchiveRepository(), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+
+      await act(() => {
+        const { archive } = result.current;
+        archive(heartOfGold);
+        return waitForNextUpdate();
+      });
+
+      return result.current;
+    };
+
+    const shouldInvalidateQuery = async (queryKey: string[], data: unknown) => {
+      queryClient.setQueryData(queryKey, data);
+      await archiveRepository();
+
+      const queryState = queryClient.getQueryState(queryKey);
+      expect(queryState!.isInvalidated).toBe(true);
+    };
+
+    it("should archive repository", async () => {
+      const { isArchived } = await archiveRepository();
+
+      expect(isArchived).toBe(true);
+    });
+
+    it("should invalidate repository cache", async () => {
+      await shouldInvalidateQuery(["repository", "spaceships", "heartOfGold"], heartOfGold);
+    });
+
+    it("should invalidate repository collection cache", async () => {
+      await shouldInvalidateQuery(["repositories"], repositoryCollection);
+    });
+  });
+
+  describe("useUnarchiveRepository tests", () => {
+    const queryClient = createInfiniteCachingClient();
+
+    beforeEach(() => {
+      queryClient.clear();
+    });
+
+    const unarchiveRepository = async () => {
+      fetchMock.postOnce("/api/v2/r/spaceships/heartOfGold/unarchive", {
+        status: 204
+      });
+
+      const { result, waitForNextUpdate } = renderHook(() => useUnarchiveRepository(), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+
+      await act(() => {
+        const { unarchive } = result.current;
+        unarchive(heartOfGold);
+        return waitForNextUpdate();
+      });
+
+      return result.current;
+    };
+
+    const shouldInvalidateQuery = async (queryKey: string[], data: unknown) => {
+      queryClient.setQueryData(queryKey, data);
+      await unarchiveRepository();
+
+      const queryState = queryClient.getQueryState(queryKey);
+      expect(queryState!.isInvalidated).toBe(true);
+    };
+
+    it("should unarchive repository", async () => {
+      const { isUnarchived } = await unarchiveRepository();
+
+      expect(isUnarchived).toBe(true);
+    });
+
+    it("should invalidate repository cache", async () => {
+      await shouldInvalidateQuery(["repository", "spaceships", "heartOfGold"], heartOfGold);
+    });
+
+    it("should invalidate repository collection cache", async () => {
+      await shouldInvalidateQuery(["repositories"], repositoryCollection);
     });
   });
 });
