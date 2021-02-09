@@ -22,47 +22,37 @@
  * SOFTWARE.
  */
 import React, { FC, useState } from "react";
-import { connect } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
-import { deleteRepo, getDeleteRepoFailure, isDeleteRepoPending } from "../modules/repos";
+import { useDeleteRepository } from "@scm-manager/ui-api";
 
 type Props = {
-  loading: boolean;
-  error: Error;
   repository: Repository;
   confirmDialog?: boolean;
-  deleteRepo: (p1: Repository, p2: () => void) => void;
 };
 
-const DeleteRepo: FC<Props> = ({ confirmDialog = true, repository, deleteRepo, loading, error }: Props) => {
+const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
+  const history = useHistory();
+  const { isLoading, error, remove } = useDeleteRepository({
+    onSuccess: () => {
+      history.push("/repos/");
+    }
+  });
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("repos");
-  const history = useHistory();
-
-  const deleted = () => {
-    history.push("/repos/");
-  };
 
   const deleteRepoCallback = () => {
-    deleteRepo(repository, deleted);
+    remove(repository);
+    setShowConfirmAlert(false);
   };
 
   const confirmDelete = () => {
     setShowConfirmAlert(true);
   };
 
-  const isDeletable = () => {
-    return repository._links.delete;
-  };
-
   const action = confirmDialog ? confirmDelete : deleteRepoCallback;
-
-  if (!isDeletable()) {
-    return null;
-  }
 
   if (showConfirmAlert) {
     return (
@@ -96,28 +86,10 @@ const DeleteRepo: FC<Props> = ({ confirmDialog = true, repository, deleteRepo, l
             {t("deleteRepo.description")}
           </p>
         }
-        right={<DeleteButton label={t("deleteRepo.button")} action={action} loading={loading} />}
+        right={<DeleteButton label={t("deleteRepo.button")} action={action} loading={isLoading} />}
       />
     </>
   );
 };
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const { namespace, name } = ownProps.repository;
-  const loading = isDeleteRepoPending(state, namespace, name);
-  const error = getDeleteRepoFailure(state, namespace, name);
-  return {
-    loading,
-    error
-  };
-};
-
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    deleteRepo: (repo: Repository, callback: () => void) => {
-      dispatch(deleteRepo(repo, callback));
-    }
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DeleteRepo);
+export default DeleteRepo;
