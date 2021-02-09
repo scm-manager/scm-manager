@@ -48,13 +48,13 @@ public interface RepositoryUpdateIterator {
    *
    * @since 2.14.0
    */
-  default void forEachRepositoryWithException(UpdaterWithException updater) {
+  default void updateEachRepository(Updater updater) {
     forEachRepository(
       repositoryId -> {
         try {
           updater.update(repositoryId);
         } catch (Exception e) {
-          throw new UpdateException("could not run update step", e);
+          throw new UpdateException("failed to update repository with id " + repositoryId, e);
         }
       }
     );
@@ -65,7 +65,7 @@ public interface RepositoryUpdateIterator {
    *
    * @since 2.14.0
    */
-  interface UpdaterWithException {
+  interface Updater {
     /**
      * Implements the update logic for a single repository, denoted by its id.
      */

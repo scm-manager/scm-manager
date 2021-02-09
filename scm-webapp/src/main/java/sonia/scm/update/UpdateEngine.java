@@ -248,7 +248,7 @@ public class UpdateEngine {
 
     @Override
     void doUpdate() {
-      repositoryUpdateIterator.forEachRepositoryWithException(this::doUpdate);
+      repositoryUpdateIterator.updateEachRepository(this::doUpdate);
     }
 
     @Override

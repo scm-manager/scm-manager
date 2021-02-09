@@ -39,7 +39,7 @@ public class InMemoryConfigurationEntryStoreFactory implements ConfigurationEntr
   public <T> ConfigurationEntryStore<T> getStore(TypedStoreParameters<T> storeParameters) {
     String name = storeParameters.getName();
     if (storeParameters.getRepositoryId() != null) {
-      name += name + "-" + storeParameters.getRepositoryId();
+      name = name + "-" + storeParameters.getRepositoryId();
     }
     return get(name);
   }
