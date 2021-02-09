@@ -28,12 +28,15 @@ import {
   Repository,
   RepositoryCollection,
   RepositoryCreation,
-  RepositoryTypeCollection
+  RepositoryTypeCollection,
+  User
 } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient, urls } from "@scm-manager/ui-components";
 import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
 import { createQueryString } from "./utils";
+import { requiredLink } from "./links";
+import { repoQueryKey } from "./keys";
 
 export type UseRepositoriesRequest = {
   namespace?: Namespace;
@@ -135,4 +138,33 @@ export const useRepository = (namespace: string, name: string): ApiResult<Reposi
   return useQuery<Repository, Error>(["repository", namespace, name], () =>
     apiClient.get(urls.concat(link, namespace, name)).then(response => response.json())
   );
+};
+
+export type UseDeleteRepositoryOptions = {
+  onSuccess: (repository: Repository) => void;
+};
+
+export const useDeleteRepository = (options?: UseDeleteRepositoryOptions) => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
+    repository => {
+      const link = requiredLink(repository, "delete");
+      return apiClient.delete(link);
+    },
+    {
+      onSuccess: async (_, repository) => {
+        if (options?.onSuccess) {
+          options.onSuccess(repository);
+        }
+        await queryClient.invalidateQueries(repoQueryKey(repository));
+        await queryClient.invalidateQueries(["repositories"]);
+      }
+    }
+  );
+  return {
+    remove: (repository: Repository) => mutate(repository),
+    isLoading,
+    error,
+    isDeleted: !!data
+  };
 };

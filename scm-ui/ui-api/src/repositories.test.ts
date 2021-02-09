@@ -29,6 +29,8 @@ import { setIndexLink } from "./tests/indexLinks";
 import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
 import {
   useCreateRepository,
+  useDeleteRepository,
+  UseDeleteRepositoryOptions,
   useRepositories,
   UseRepositoriesRequest,
   useRepository,
@@ -43,6 +45,17 @@ describe("Test repository hooks", () => {
     namespace: "spaceships",
     name: "heartOfGold",
     type: "git",
+    _links: {
+      delete: {
+        href: "/r/spaceships/heartOfGold"
+      }
+    }
+  };
+
+  const repositoryCollection = {
+    _embedded: {
+      repositories: [heartOfGold]
+    },
     _links: {}
   };
 
@@ -51,13 +64,6 @@ describe("Test repository hooks", () => {
   });
 
   describe("useRepositories tests", () => {
-    const repositoryCollection = {
-      _embedded: {
-        repositories: [heartOfGold]
-      },
-      _links: {}
-    };
-
     const expectCollection = async (queryClient: QueryClient, request?: UseRepositoriesRequest) => {
       const { result, waitFor } = renderHook(() => useRepositories(request), {
         wrapper: createWrapper(undefined, queryClient)
@@ -292,6 +298,65 @@ describe("Test repository hooks", () => {
       if (result.current?.repositoryTypes) {
         expect(result.current?.repositoryTypes[0].name).toEqual("git");
       }
+    });
+  });
+
+  describe("useDeleteRepository tests", () => {
+    const queryClient = createInfiniteCachingClient();
+
+    beforeEach(() => {
+      queryClient.clear();
+    });
+
+    const deleteRepository = async (options?: UseDeleteRepositoryOptions) => {
+      fetchMock.deleteOnce("/api/v2/r/spaceships/heartOfGold", {
+        status: 204
+      });
+
+      const { result, waitForNextUpdate } = renderHook(() => useDeleteRepository(options), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+
+      await act(() => {
+        const { remove } = result.current;
+        remove(heartOfGold);
+        return waitForNextUpdate();
+      });
+
+      return result.current;
+    };
+
+    const shouldInvalidateQuery = async (queryKey: string[], data: unknown) => {
+      queryClient.setQueryData(queryKey, data);
+      await deleteRepository();
+
+      const queryState = queryClient.getQueryState(queryKey);
+      expect(queryState!.isInvalidated).toBe(true);
+    };
+
+    it("should delete repository", async () => {
+      const { isDeleted } = await deleteRepository();
+
+      expect(isDeleted).toBe(true);
+    });
+
+    it("should invalidate repository cache", async () => {
+      await shouldInvalidateQuery(["repository", "spaceships", "heartOfGold"], heartOfGold);
+    });
+
+    it("should invalidate repository collection cache", async () => {
+      await shouldInvalidateQuery(["repositories"], repositoryCollection);
+    });
+
+    it("should call onSuccess callback", async () => {
+      let repo;
+      await deleteRepository({
+        onSuccess: repository => {
+          repo = repository;
+        }
+      });
+
+      expect(repo).toEqual(heartOfGold);
     });
   });
 });
