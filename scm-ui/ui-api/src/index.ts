@@ -33,6 +33,10 @@ export * from "./namespaces";
 export * from "./branches";
 export * from "./changesets";
 export * from "./tags";
+export * from "./groups";
+export * from "./config";
+export * from "./admin";
+export * from "./plugins";
 export * from "./permissions";
 
 export { default as ApiProvider } from "./ApiProvider";

@@ -22,45 +22,34 @@
  * SOFTWARE.
  */
 
-export { Action } from "./Action";
-export * from "./hal";
+import fetchMock from "fetch-mock-jest";
+import createInfiniteCachingClient from "./tests/createInfiniteCachingClient";
+import { renderHook } from "@testing-library/react-hooks";
+import createWrapper from "./tests/createWrapper";
+import { useUpdateInfo } from "./admin";
+import { UpdateInfo } from "@scm-manager/ui-types";
+import { setIndexLink } from "./tests/indexLinks";
 
-export { Me } from "./Me";
-export * from "./User";
-export * from "./Group";
+describe("Test admin hooks", () => {
+  describe("useUpdateInfo tests", () => {
+    it("should get update info", async () => {
+      const updateInfo: UpdateInfo = {
+        latestVersion: "x.y.z",
+        link: "http://heartofgold@hitchhiker.com/x.y.z"
+      };
+      fetchMock.getOnce("/api/v2/updateInfo", updateInfo);
 
-export * from "./Repositories";
-export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
+      const queryClient = createInfiniteCachingClient();
+      setIndexLink(queryClient, "updateInfo", "/updateInfo");
 
-export * from "./Branches";
+      const { result, waitFor } = renderHook(() => useUpdateInfo(), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+      await waitFor(() => {
+        return !!result.current.data;
+      });
 
-export { Person } from "./Person";
-
-export * from "./Changesets";
-
-export { Signature } from "./Signature";
-
-export { AnnotatedSource, AnnotatedLine } from "./Annotate";
-
-export * from "./Tags";
-
-export { Config, AnonymousMode } from "./Config";
-
-export { IndexResources } from "./IndexResources";
-
-export { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
-
-export { SubRepository, File } from "./Sources";
-
-export { SelectValue, AutocompleteObject } from "./Autocomplete";
-
-export { Plugin, PluginCollection, PluginGroup, PendingPlugins } from "./Plugin";
-
-export * from "./RepositoryRole";
-export * from "./RepositoryVerbs";
-
-export { NamespaceStrategies } from "./NamespaceStrategies";
-
-export * from "./LoginInfo";
-
-export * from "./Admin";
+      expect(result.current.data).toEqual(updateInfo);
+    });
+  });
+});
