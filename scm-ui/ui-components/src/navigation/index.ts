@@ -35,3 +35,4 @@ export { MenuContext, StateMenuContextProvider } from "./MenuContext";
 export { default as SecondaryNavigationItem } from "./SecondaryNavigationItem";
 export { default as ExternalLink } from "./ExternalLink";
 export { default as ExternalNavLink } from "./ExternalNavLink";
+export { default as useNavigationLock } from "./useNavigationLock";

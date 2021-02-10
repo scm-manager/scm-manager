@@ -29,7 +29,7 @@ import { useTranslation } from "react-i18next";
 import ImportRepositoryTypeSelect from "../components/ImportRepositoryTypeSelect";
 import ImportTypeSelect from "../components/ImportTypeSelect";
 import ImportRepositoryFromUrl from "../components/ImportRepositoryFromUrl";
-import { Loading, Notification, Page } from "@scm-manager/ui-components";
+import { Loading, Notification, Page, useNavigationLock } from "@scm-manager/ui-components";
 import RepositoryFormSwitcher from "../components/form/RepositoryFormSwitcher";
 import {
   fetchRepositoryTypesIfNeeded,
@@ -42,7 +42,6 @@ import { fetchNamespaceStrategiesIfNeeded } from "../../admin/modules/namespaceS
 import ImportRepositoryFromBundle from "../components/ImportRepositoryFromBundle";
 import ImportFullRepository from "../components/ImportFullRepository";
 import { Prompt } from "react-router-dom";
-import useNavigationLock from "@scm-manager/ui-components/src/navigation/useNavigationLock";
 
 type Props = {
   repositoryTypes: RepositoryType[];

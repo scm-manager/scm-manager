@@ -1,0 +1,2 @@
+- type: added
+  description: Warn user to leave page during repository import ([#1536](https://github.com/scm-manager/scm-manager/pull/1536))
