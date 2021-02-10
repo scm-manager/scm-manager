@@ -32,6 +32,9 @@ const useNavigationLock = (enabled: boolean) => {
     } else {
       window.onbeforeunload = undefined;
     }
+    return () => {
+      window.onbeforeunload = undefined;
+    };
   }, [enabled]);
 };
 
