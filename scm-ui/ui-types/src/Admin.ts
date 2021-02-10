@@ -22,45 +22,7 @@
  * SOFTWARE.
  */
 
-export { Action } from "./Action";
-export * from "./hal";
-
-export { Me } from "./Me";
-export * from "./User";
-export * from "./Group";
-
-export * from "./Repositories";
-export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
-
-export * from "./Branches";
-
-export { Person } from "./Person";
-
-export * from "./Changesets";
-
-export { Signature } from "./Signature";
-
-export { AnnotatedSource, AnnotatedLine } from "./Annotate";
-
-export * from "./Tags";
-
-export { Config, AnonymousMode } from "./Config";
-
-export { IndexResources } from "./IndexResources";
-
-export { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
-
-export { SubRepository, File } from "./Sources";
-
-export { SelectValue, AutocompleteObject } from "./Autocomplete";
-
-export { Plugin, PluginCollection, PluginGroup, PendingPlugins } from "./Plugin";
-
-export * from "./RepositoryRole";
-export * from "./RepositoryVerbs";
-
-export { NamespaceStrategies } from "./NamespaceStrategies";
-
-export * from "./LoginInfo";
-
-export * from "./Admin";
+export type UpdateInfo = {
+  latestVersion: string;
+  link: string;
+};

@@ -72,6 +72,18 @@ export const useRequiredIndexLink = (name: string): string => {
   return link;
 };
 
+export const useVersion = (): string => {
+  const { data } = useIndex();
+  if (!data) {
+    throw new Error("could not find index data");
+  }
+  const { version } = data;
+  if (!version) {
+    throw new Error("could not find version in index data");
+  }
+  return version;
+};
+
 export const useIndexJsonResource = <T>(name: string): ApiResult<T> => {
   const link = useIndexLink(name);
   return useQuery<T, Error>(name, () => apiClient.get(link!).then(response => response.json()), {
