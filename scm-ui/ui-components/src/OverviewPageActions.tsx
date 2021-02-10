@@ -80,7 +80,7 @@ const OverviewPageActions: FC<Props> = ({
           placeholder={searchPlaceholder}
           value={urls.getQueryStringFromLocation(location)}
           filter={filter => {
-            history.push(`/${link}/?q=${filter}`);
+            history.push(`${location.pathname}?q=${filter}`);
           }}
           testId={testId + "-filter"}
         />
