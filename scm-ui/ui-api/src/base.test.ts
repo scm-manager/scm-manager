@@ -23,7 +23,7 @@
  */
 
 import fetchMock from "fetch-mock-jest";
-import { useIndex, useIndexJsonResource, useIndexLink, useIndexLinks, useRequiredIndexLink } from "./base";
+import { useIndex, useIndexJsonResource, useIndexLink, useIndexLinks, useRequiredIndexLink, useVersion } from "./base";
 import { renderHook } from "@testing-library/react-hooks";
 import { LegacyContext } from "./LegacyContext";
 import { IndexResources, Link } from "@scm-manager/ui-types";
@@ -138,6 +138,24 @@ describe("Test base api hooks", () => {
         wrapper: createWrapper(undefined, queryClient)
       });
       expect((result.current!.spaceships as Link).href).toBe("/api/spaceships");
+    });
+  });
+
+  describe("useVersion tests", () => {
+    it("should throw an error if version is not available", async () => {
+      const { result } = renderHook(() => useVersion(), { wrapper: createWrapper() });
+      expect(result.error).toBeDefined();
+    });
+
+    it("should return version", () => {
+      const queryClient = new QueryClient();
+      queryClient.setQueryData("index", {
+        version: "x.y.z"
+      });
+      const { result } = renderHook(() => useVersion(), {
+        wrapper: createWrapper(undefined, queryClient)
+      });
+      expect(result.current).toBe("x.y.z");
     });
   });
 
