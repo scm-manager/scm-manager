@@ -37,13 +37,14 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import sonia.scm.BadRequestException;
 import sonia.scm.Type;
 import sonia.scm.importexport.FullScmRepositoryExporter;
-import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.importexport.RepositoryImportExportEncryption;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.BundleCommandBuilder;
 import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
@@ -69,7 +70,6 @@ import java.time.Instant;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
-import static sonia.scm.importexport.RepositoryImportExportEncryption.encrypt;
 
 public class RepositoryExportResource {
 
@@ -78,13 +78,17 @@ public class RepositoryExportResource {
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
   private final FullScmRepositoryExporter fullScmRepositoryExporter;
+  private final RepositoryImportExportEncryption repositoryImportExportEncryption;
 
   @Inject
   public RepositoryExportResource(RepositoryManager manager,
-                                  RepositoryServiceFactory serviceFactory, FullScmRepositoryExporter fullScmRepositoryExporter) {
+                                  RepositoryServiceFactory serviceFactory,
+                                  FullScmRepositoryExporter fullScmRepositoryExporter,
+                                  RepositoryImportExportEncryption repositoryImportExportEncryption) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.fullScmRepositoryExporter = fullScmRepositoryExporter;
+    this.repositoryImportExportEncryption = repositoryImportExportEncryption;
   }
 
   /**
@@ -302,7 +306,7 @@ public class RepositoryExportResource {
       output = os -> {
         try {
           if (!Strings.isNullOrEmpty(password)) {
-            os = encrypt(os, password);
+            os = repositoryImportExportEncryption.encrypt(os, password);
           }
           if (compressed) {
             GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
@@ -312,7 +316,7 @@ public class RepositoryExportResource {
             bundleCommand.bundle(os);
           }
         } catch (IOException e) {
-          throw new InternalRepositoryException(repository, "repository export failed", e);
+          throw new ExportFailedException(entity(repository).build(), "repository export failed", e);
         }
       };
     }

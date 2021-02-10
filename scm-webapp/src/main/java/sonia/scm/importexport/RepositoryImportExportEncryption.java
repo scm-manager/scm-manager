@@ -26,8 +26,6 @@ package sonia.scm.importexport;
 
 
 import com.google.common.base.Strings;
-import sonia.scm.repository.api.ExportFailedException;
-import sonia.scm.repository.api.ImportFailedException;
 
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
@@ -38,61 +36,126 @@ import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.PBEKeySpec;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.security.GeneralSecurityException;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidAlgorithmParameterException;
+import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.KeySpec;
-
-import static sonia.scm.ContextEntry.ContextBuilder.noContext;
+import java.util.Arrays;
 
 public class RepositoryImportExportEncryption {
 
-  private static final String INITIALIZATION_VECTOR = "SCM-Manager-IV42";
+  private static final SecureRandom SECURE_RANDOM = new SecureRandom();
+  private static final String SALTED_HEADER = "Salted__";
 
-  public static OutputStream encrypt(OutputStream os, String secret) {
+  static {
+    SECURE_RANDOM.setSeed(System.currentTimeMillis());
+  }
+
+  public OutputStream encrypt(OutputStream origin, String secret) throws IOException {
     if (!Strings.isNullOrEmpty(secret)) {
-      try {
-        IvParameterSpec ivspec = createIvParamSpec();
-        SecretKeySpec secretKey = createSecretKey(secret);
-        Cipher cipher = createCipher();
-        cipher.init(Cipher.ENCRYPT_MODE, secretKey, ivspec);
-        return new CipherOutputStream(os, cipher);
-      } catch (GeneralSecurityException e) {
-        throw new ExportFailedException(noContext(), "Could not encrypt repository on export.", e);
-      }
+      byte[] salt = createSalt();
+      writeSaltHeader(origin, salt);
+      Cipher cipher = createCipher(Cipher.ENCRYPT_MODE, secret, salt);
+      return new CipherOutputStream(origin, cipher);
+    } else {
+      return origin;
     }
-    return os;
   }
 
-  public static InputStream decrypt(InputStream is, String secret) {
+  public InputStream decrypt(InputStream encryptedStream, String secret) throws IOException {
     if (!Strings.isNullOrEmpty(secret)) {
-      try {
-        IvParameterSpec ivspec = createIvParamSpec();
-        SecretKeySpec secretKey = createSecretKey(secret);
-        Cipher cipher = createCipher();
-        cipher.init(Cipher.DECRYPT_MODE, secretKey, ivspec);
-        return new CipherInputStream(is, cipher);
-      } catch (GeneralSecurityException e) {
-        throw new ImportFailedException(noContext(), "Could not decrypt repository on import.", e);
-      }
+      byte[] salt = readSaltHeader(encryptedStream);
+      Cipher cipher = createCipher(Cipher.DECRYPT_MODE, secret, salt);
+      return new CipherInputStream(encryptedStream, cipher);
+    } else {
+      return encryptedStream;
     }
-    return is;
   }
 
-  private static SecretKeySpec createSecretKey(String secret) throws NoSuchAlgorithmException, InvalidKeySpecException {
-    SecretKeyFactory factory = SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
-    KeySpec spec = new PBEKeySpec(secret.toCharArray(), "salt".getBytes(), 65536, 256);
-    SecretKey key = factory.generateSecret(spec);
-    return new SecretKeySpec(key.getEncoded(), "AES");
+  private void writeSaltHeader(OutputStream origin, byte[] salt) throws IOException {
+    origin.write(SALTED_HEADER.getBytes(StandardCharsets.UTF_8));
+    origin.write(salt);
   }
 
-  private static Cipher createCipher() throws NoSuchAlgorithmException, NoSuchPaddingException {
-    return Cipher.getInstance("AES/CBC/PKCS5Padding");
+  private byte[] readSaltHeader(InputStream encryptedStream) throws IOException {
+    byte[] header = new byte[8];
+    encryptedStream.read(header);
+    if (!SALTED_HEADER.equals(new String(header, StandardCharsets.UTF_8))) {
+      throw new IOException("Expected header with salt not found (\"Salted__\")");
+    }
+    byte[] salt = new byte[8];
+    int lengthRead = encryptedStream.read(salt);
+    if (lengthRead != 8) {
+      throw new IOException("Failed to read salt from input");
+    }
+    return salt;
   }
 
-  private static IvParameterSpec createIvParamSpec() {
-    return new IvParameterSpec(INITIALIZATION_VECTOR.getBytes());
+  private Cipher createCipher(int encryptMode, String key, byte[] salt) {
+    Cipher cipher = getCipher();
+    try {
+      cipher.init(encryptMode, getSecretKeySpec(key.toCharArray(), salt), getIvSpec(key.toCharArray(), salt));
+    } catch (InvalidKeyException | InvalidAlgorithmParameterException e) {
+      throw new IllegalStateException("Could not initialize cipher", e);
+    }
+    return cipher;
+  }
+
+  private Cipher getCipher() {
+    try {
+      return Cipher.getInstance("AES/CBC/PKCS5Padding");
+    } catch (NoSuchAlgorithmException | NoSuchPaddingException e) {
+      throw new IllegalStateException("Could not initialize cipher", e);
+    }
+  }
+
+  private byte[] createSalt() {
+    byte[] salt = new byte[8];
+    SECURE_RANDOM.nextBytes(salt);
+    return salt;
+  }
+
+  private SecretKeySpec getSecretKeySpec(char[] key, byte[] salt) {
+    SecretKey secretKey = computeSecretKey(key, salt);
+    return new SecretKeySpec(secretKey.getEncoded(), "AES");
+  }
+
+  private SecretKey computeSecretKey(char[] password, byte[] salt) {
+    KeySpec spec = getKeySpec(password, salt);
+    try {
+      return new SecretKeySpec(getSecretKeyFactory().generateSecret(spec).getEncoded(), "AES");
+    } catch (InvalidKeySpecException e) {
+      throw new IllegalStateException("could not create key spec", e);
+    }
+  }
+
+  private PBEKeySpec getKeySpec(char[] password, byte[] salt) {
+    return new PBEKeySpec(password, salt, 10000, 256);
+  }
+
+  private IvParameterSpec getIvSpec(char[] password, byte[] salt) {
+    PBEKeySpec spec = new PBEKeySpec(password, salt, 100, 256);
+    byte[] bytes = new byte[0];
+    try {
+      bytes = getSecretKeyFactory().generateSecret(spec).getEncoded();
+    } catch (InvalidKeySpecException e) {
+      throw new IllegalStateException("Could not derive from key", e);
+    }
+    byte[] iv = Arrays.copyOfRange(bytes, 16, 16 + 16);
+    return new IvParameterSpec(iv);
+  }
+
+  private SecretKeyFactory getSecretKeyFactory() {
+    try {
+      return SecretKeyFactory.getInstance("PBKDF2WithHmacSHA256");
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalStateException("Could not instantiate secret key factory", e);
+    }
   }
 }

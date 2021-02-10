@@ -83,14 +83,17 @@ class FullScmRepositoryImporterTest {
   private TarArchiveRepositoryStoreImporter storeImporter;
   @Mock
   private UpdateEngine updateEngine;
+  @Mock
+  private RepositoryImportExportEncryption repositoryImportExportEncryption;
 
   @InjectMocks
   private FullScmRepositoryImporter fullImporter;
 
   @BeforeEach
-  void initRepositoryService() {
+  void initRepositoryService() throws IOException {
     lenient().when(serviceFactory.create(REPOSITORY)).thenReturn(service);
     lenient().when(service.getUnbundleCommand()).thenReturn(unbundleCommandBuilder);
+    lenient().when(repositoryImportExportEncryption.decrypt(any(), any())).thenAnswer(invocation -> invocation.getArgument(0));
   }
 
   @Test

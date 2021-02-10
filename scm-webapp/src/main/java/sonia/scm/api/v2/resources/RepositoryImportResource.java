@@ -47,10 +47,12 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartInputImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
 import sonia.scm.HandlerEventType;
 import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.importexport.FullScmRepositoryImporter;
+import sonia.scm.importexport.RepositoryImportExportEncryption;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryImportEvent;
@@ -58,6 +60,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -93,7 +96,6 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Collections.singletonList;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
-import static sonia.scm.importexport.RepositoryImportExportEncryption.decrypt;
 
 public class RepositoryImportResource {
 
@@ -105,6 +107,7 @@ public class RepositoryImportResource {
   private final ResourceLinks resourceLinks;
   private final ScmEventBus eventBus;
   private final FullScmRepositoryImporter fullScmRepositoryImporter;
+  private final RepositoryImportExportEncryption repositoryImportExportEncryption;
 
   @Inject
   public RepositoryImportResource(RepositoryManager manager,
@@ -112,13 +115,15 @@ public class RepositoryImportResource {
                                   RepositoryServiceFactory serviceFactory,
                                   ResourceLinks resourceLinks,
                                   ScmEventBus eventBus,
-                                  FullScmRepositoryImporter fullScmRepositoryImporter) {
+                                  FullScmRepositoryImporter fullScmRepositoryImporter,
+                                  RepositoryImportExportEncryption repositoryImportExportEncryption) {
     this.manager = manager;
     this.mapper = mapper;
     this.serviceFactory = serviceFactory;
     this.resourceLinks = resourceLinks;
     this.eventBus = eventBus;
     this.fullScmRepositoryImporter = fullScmRepositoryImporter;
+    this.repositoryImportExportEncryption = repositoryImportExportEncryption;
   }
 
   /**
@@ -354,7 +359,11 @@ public class RepositoryImportResource {
 
   private InputStream decryptInputStream(InputStream inputStream, String password) {
     if (!Strings.isNullOrEmpty(password)) {
-      inputStream = decrypt(inputStream, password);
+      try {
+        inputStream = repositoryImportExportEncryption.decrypt(inputStream, password);
+      } catch (IOException e) {
+        throw new ImportFailedException(ContextEntry.ContextBuilder.noContext(), "import failed", e);
+      }
     }
     return inputStream;
   }

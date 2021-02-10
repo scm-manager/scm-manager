@@ -51,7 +51,6 @@ import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 import static sonia.scm.importexport.FullScmRepositoryExporter.METADATA_FILE_NAME;
 import static sonia.scm.importexport.FullScmRepositoryExporter.SCM_ENVIRONMENT_FILE_NAME;
 import static sonia.scm.importexport.FullScmRepositoryExporter.STORE_DATA_FILE_NAME;
-import static sonia.scm.importexport.RepositoryImportExportEncryption.decrypt;
 
 public class FullScmRepositoryImporter {
 
@@ -63,18 +62,21 @@ public class FullScmRepositoryImporter {
   private final ScmEnvironmentCompatibilityChecker compatibilityChecker;
   private final TarArchiveRepositoryStoreImporter storeImporter;
   private final UpdateEngine updateEngine;
+  private final RepositoryImportExportEncryption repositoryImportExportEncryption;
 
   @Inject
   public FullScmRepositoryImporter(RepositoryServiceFactory serviceFactory,
                                    RepositoryManager repositoryManager,
                                    ScmEnvironmentCompatibilityChecker compatibilityChecker,
                                    TarArchiveRepositoryStoreImporter storeImporter,
-                                   UpdateEngine updateEngine) {
+                                   UpdateEngine updateEngine,
+                                   RepositoryImportExportEncryption repositoryImportExportEncryption) {
     this.serviceFactory = serviceFactory;
     this.repositoryManager = repositoryManager;
     this.compatibilityChecker = compatibilityChecker;
     this.storeImporter = storeImporter;
     this.updateEngine = updateEngine;
+    this.repositoryImportExportEncryption = repositoryImportExportEncryption;
   }
 
   public Repository importFromStream(Repository repository, InputStream inputStream, String password) {
@@ -82,7 +84,7 @@ public class FullScmRepositoryImporter {
       if (inputStream.available() > 0) {
         try (
           BufferedInputStream bif = new BufferedInputStream(inputStream);
-          InputStream cif = decrypt(bif, password);
+          InputStream cif = repositoryImportExportEncryption.decrypt(bif, password);
           GzipCompressorInputStream gcis = new GzipCompressorInputStream(cif);
           TarArchiveInputStream tais = new TarArchiveInputStream(gcis)
         ) {
