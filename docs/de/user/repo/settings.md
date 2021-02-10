@@ -23,7 +23,10 @@ Das Ausgabeformat des Repository kann über die angebotenen Optionen verändert 
 * `Standard`: Werden keine Optionen ausgewählt, wird das Repository im Standard Format exportiert.
   Git und Mercurial werden dabei als `Tar Archiv` exportiert und Subversion nutzt das `Dump` Format.
 * `Komprimieren`: Das Ausgabeformat wird zusätzlich mit `GZip` komprimiert, um die Dateigröße zu verringern.
-* `Mit Metadaten`: Statt dem Standard-Format wird ein Repository Archiv exportiert, welches außer dem Repository noch weitere Metadaten enthält.
+* `Mit Metadaten`: Statt dem Standard-Format wird ein Repository Archiv exportiert, welches außer dem Repository noch
+  weitere Metadaten enthält. Für diesen Export sollte sichergestellt werden, dass alle installierten Plugins aktuell sind.
+  Ein Import eines so exportierten Repositories ist nur in einem SCM-Manager mit derselben oder einer neueren Version
+  möglich. Dieses gilt ebenso für alle installierten Plugins.
 
 ![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
 

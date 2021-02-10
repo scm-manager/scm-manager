@@ -35,6 +35,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.plugin.InstalledPlugin;
 import sonia.scm.plugin.PluginManager;
+import sonia.scm.version.Version;
 
 import java.util.Collections;
 import java.util.List;
@@ -61,11 +62,25 @@ class ScmEnvironmentCompatibilityCheckerTest {
   }
 
   @Test
-  void shouldReturnTrueIfEnvironmentIsCompatible() {
+  void shouldReturnTrueIfEnvironmentIsSame() {
     when(scmContextProvider.getVersion()).thenReturn("2.0.0");
     ImmutableList<EnvironmentPluginDescriptor> plugins = ImmutableList.of(
       new EnvironmentPluginDescriptor("scm-first-plugin", "1.0.0"),
       new EnvironmentPluginDescriptor("scm-second-plugin", "1.1.0")
+    );
+    ScmEnvironment env = createScmEnvironment("2.0.0", "linux", "64", plugins);
+
+    boolean compatible = checker.check(env);
+
+    assertThat(compatible).isTrue();
+  }
+
+  @Test
+  void shouldReturnTrueIfEnvironmentIsNewer() {
+    when(scmContextProvider.getVersion()).thenReturn("2.1.0");
+    ImmutableList<EnvironmentPluginDescriptor> plugins = ImmutableList.of(
+      new EnvironmentPluginDescriptor("scm-first-plugin", "0.9.0"),
+      new EnvironmentPluginDescriptor("scm-second-plugin", "1.0.1")
     );
     ScmEnvironment env = createScmEnvironment("2.0.0", "linux", "64", plugins);
 
@@ -124,5 +139,4 @@ class ScmEnvironmentCompatibilityCheckerTest {
     scmEnvironment.setPlugins(environmentPluginsDescriptor);
     return scmEnvironment;
   }
-
 }

@@ -78,7 +78,7 @@
     },
     "fullImport": {
       "title": "SCM-Manager Repository Archiv",
-      "helpText": "Wählen Sie das Repository Archiv aus. Das Archiv muss von einer SCM-Manager Instanz exportiert worden sein."
+      "helpText": "Wählen Sie das Repository Archiv aus. Das Archiv muss von einer SCM-Manager Instanz exportiert worden sein. Diese Instanz und alle installierten Plugins müssen dieselbe oder eine neuere Version haben."
     },
     "pending": {
       "subtitle": "Repository wird importiert...",
@@ -260,7 +260,7 @@
     },
     "fullExport": {
       "label": "Mit Metadaten (Experimentell)",
-      "helpText": "Zusätzlich zum Repository Dump werden Metadaten zum Repository und zur SCM-Instanz exportiert. Gespeicherte Passwörter funktionieren nicht bei einem Import in andere SCM-Manager Instanzen. Dieses Feature ist noch experimentell. Es sollte (noch) nicht für Backups genutzt werden!"
+      "helpText": "Zusätzlich zum Repository Dump werden Metadaten zum Repository und zur SCM-Instanz exportiert. Installierte Plugins sollten nach Möglichkeit in der neuesten Version installiert sein. Gespeicherte Passwörter funktionieren nicht bei einem Import in andere SCM-Manager Instanzen. Dieses Feature ist noch experimentell. Es sollte (noch) nicht für Backups genutzt werden!"
     },
     "exportButton": "Repository exportieren",
     "exportStarted":  "Der Repository Export wurde gestartet. Abhängig von der Größe des Repository kann dies einige Momente dauern."

@@ -33,8 +33,10 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.api.ImportFailedException;
+import sonia.scm.repository.api.IncompatibleEnvironmentForImportException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.update.UpdateEngine;
 
 import javax.inject.Inject;
 import javax.xml.bind.JAXB;
@@ -51,22 +53,26 @@ import static sonia.scm.importexport.FullScmRepositoryExporter.STORE_DATA_FILE_N
 
 public class FullScmRepositoryImporter {
 
+  @SuppressWarnings("java:S115") // we like this name here
   private static final int _1_MB = 1000000;
 
   private final RepositoryServiceFactory serviceFactory;
   private final RepositoryManager repositoryManager;
   private final ScmEnvironmentCompatibilityChecker compatibilityChecker;
   private final TarArchiveRepositoryStoreImporter storeImporter;
+  private final UpdateEngine updateEngine;
 
   @Inject
   public FullScmRepositoryImporter(RepositoryServiceFactory serviceFactory,
                                    RepositoryManager repositoryManager,
                                    ScmEnvironmentCompatibilityChecker compatibilityChecker,
-                                   TarArchiveRepositoryStoreImporter storeImporter) {
+                                   TarArchiveRepositoryStoreImporter storeImporter,
+                                   UpdateEngine updateEngine) {
     this.serviceFactory = serviceFactory;
     this.repositoryManager = repositoryManager;
     this.compatibilityChecker = compatibilityChecker;
     this.storeImporter = storeImporter;
+    this.updateEngine = updateEngine;
   }
 
   public Repository importFromStream(Repository repository, InputStream inputStream) {
@@ -113,6 +119,7 @@ public class FullScmRepositoryImporter {
       // Inside the repository tar archive stream is another tar archive.
       // The nested tar archive is wrapped in another TarArchiveInputStream inside the storeImporter
       storeImporter.importFromTarArchive(repository, tais);
+      updateEngine.update(repository.getId());
     } else {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(repository).build(),
@@ -148,10 +155,7 @@ public class FullScmRepositoryImporter {
     if (environmentEntry.getName().equals(SCM_ENVIRONMENT_FILE_NAME) && !environmentEntry.isDirectory() && environmentEntry.getSize() < _1_MB) {
       boolean validEnvironment = compatibilityChecker.check(JAXB.unmarshal(new NoneClosingInputStream(tais), ScmEnvironment.class));
       if (!validEnvironment) {
-        throw new ImportFailedException(
-          ContextEntry.ContextBuilder.noContext(),
-          "Incompatible SCM-Manager environment. Could not import file."
-        );
+        throw new IncompatibleEnvironmentForImportException();
       }
     } else {
       throw new ImportFailedException(

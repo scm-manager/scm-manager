@@ -22,29 +22,26 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.migration;
 
-import java.util.HashMap;
-import java.util.Map;
+import sonia.scm.version.Version;
 
-public class InMemoryConfigurationEntryStoreFactory implements ConfigurationEntryStoreFactory {
+/**
+ * Base class for update steps, telling the target version and the affected data type.
+ *
+ * @since 2.14.0
+ */
+public interface UpdateStepTarget {
+  /**
+   * Declares the new version of the data type given by {@link #getAffectedDataType()}. A update step will only be
+   * executed, when this version is bigger than the last recorded version for its data type according to
+   * {@link Version#compareTo(Version)}
+   */
+  Version getTargetVersion();
 
-  private final Map<String, InMemoryConfigurationEntryStore> stores = new HashMap<>();
-
-  public static InMemoryConfigurationEntryStoreFactory create() {
-    return new InMemoryConfigurationEntryStoreFactory();
-  }
-
-  @Override
-  public <T> ConfigurationEntryStore<T> getStore(TypedStoreParameters<T> storeParameters) {
-    String name = storeParameters.getName();
-    if (storeParameters.getRepositoryId() != null) {
-      name = name + "-" + storeParameters.getRepositoryId();
-    }
-    return get(name);
-  }
-
-  public <T> InMemoryConfigurationEntryStore<T> get(String name) {
-    return stores.computeIfAbsent(name, x -> new InMemoryConfigurationEntryStore<T>());
-  }
+  /**
+   * Declares the data type this update step will take care of. This should be a qualified name, like
+   * <code>com.example.myPlugin.configuration</code>.
+   */
+  String getAffectedDataType();
 }

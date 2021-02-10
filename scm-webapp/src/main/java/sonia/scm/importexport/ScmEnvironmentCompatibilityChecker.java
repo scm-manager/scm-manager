@@ -29,9 +29,9 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.plugin.PluginInformation;
 import sonia.scm.plugin.PluginManager;
+import sonia.scm.version.Version;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -54,10 +54,10 @@ public class ScmEnvironmentCompatibilityChecker {
   }
 
   private boolean isCoreVersionCompatible(String currentCoreVersion, String coreVersionFromImport) {
-    boolean compatible = currentCoreVersion.equals(coreVersionFromImport);
+    boolean compatible = Version.parse(currentCoreVersion).isNewerOrEqual(coreVersionFromImport);
     if (!compatible) {
       LOG.info(
-        "SCM-Manager version is not compatible with dump. Dump can only be imported with SCM-Manager version: {}; you are running version {}",
+        "SCM-Manager version is not compatible with dump. Dump can only be imported with SCM-Manager version {} or newer; you are running version {}.",
         coreVersionFromImport,
         currentCoreVersion
       );
@@ -73,9 +73,9 @@ public class ScmEnvironmentCompatibilityChecker {
 
     for (EnvironmentPluginDescriptor plugin : environment.getPlugins().getPlugin()) {
       Optional<PluginInformation> matchingInstalledPlugin = findMatchingInstalledPlugin(currentlyInstalledPlugins, plugin);
-      if (isPluginIncompatible(plugin, matchingInstalledPlugin)) {
+      if (matchingInstalledPlugin.isPresent() && isPluginIncompatible(plugin, matchingInstalledPlugin.get())) {
         LOG.info(
-          "The installed plugin \"{}\" with version \"{}\" doesn't match the plugin data version \"{}\" from the SCM-Manager environment the dump was created with.",
+          "The installed plugin \"{}\" with version \"{}\" is older than the plugin data version \"{}\" from the SCM-Manager environment the dump was created with. Please update the plugin.",
           matchingInstalledPlugin.get().getName(),
           matchingInstalledPlugin.get().getVersion(),
           plugin.getVersion()
@@ -86,8 +86,8 @@ public class ScmEnvironmentCompatibilityChecker {
     return true;
   }
 
-  private boolean isPluginIncompatible(EnvironmentPluginDescriptor plugin, Optional<PluginInformation> matchingInstalledPlugin) {
-    return matchingInstalledPlugin.isPresent() && isPluginVersionIncompatible(plugin.getVersion(), matchingInstalledPlugin.get().getVersion());
+  private boolean isPluginIncompatible(EnvironmentPluginDescriptor plugin, PluginInformation matchingInstalledPlugin) {
+    return isPluginVersionIncompatible(plugin.getVersion(), matchingInstalledPlugin.getVersion());
   }
 
   private Optional<PluginInformation> findMatchingInstalledPlugin(List<PluginInformation> currentlyInstalledPlugins, EnvironmentPluginDescriptor plugin) {
@@ -98,6 +98,6 @@ public class ScmEnvironmentCompatibilityChecker {
   }
 
   private boolean isPluginVersionIncompatible(String previousPluginVersion, String installedPluginVersion) {
-    return !installedPluginVersion.equals(previousPluginVersion);
+    return Version.parse(installedPluginVersion).isOlder(previousPluginVersion);
   }
 }
