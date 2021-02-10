@@ -8,11 +8,11 @@
   "private": false,
   "scripts": {
     "headless": "cypress run",
-    "ci": "integration-test-runner run -u scmadmin -p scmadmin -d ./"
+    "ci": "integration-test-runner run -u scmadmin -p scmadmin -O ../build/target/ -d ./"
   },
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.0.20",
-    "@scm-manager/integration-test-runner": "^1.3.0",
+    "@scm-manager/integration-test-runner": "^1.3.7",
     "fluent-ffmpeg": "^2.1.2"
   },
   "prettier": "@scm-manager/prettier-config",
