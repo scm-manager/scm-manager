@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import { HalRepresentation } from "./hal";
 
 export type AnonymousMode = "FULL" | "PROTOCOL_ONLY" | "OFF";
 
-export type Config = {
+export type Config = HalRepresentation & {
   proxyPassword: string | null;
   proxyPort: number;
   proxyServer: string;
@@ -50,5 +50,4 @@ export type Config = {
   loginInfoUrl: string;
   releaseFeedUrl: string;
   mailDomainName: string;
-  _links: Links;
 };

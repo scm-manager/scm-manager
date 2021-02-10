@@ -22,10 +22,9 @@
  * SOFTWARE.
  */
 import * as React from "react";
-import { connect } from "react-redux";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { compose } from "redux";
-import { PendingPlugins, Plugin, PluginCollection } from "@scm-manager/ui-types";
+import { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Plugin } from "@scm-manager/ui-types";
 import {
   Button,
   ButtonGroup,
@@ -35,89 +34,50 @@ import {
   Subtitle,
   Title
 } from "@scm-manager/ui-components";
-import {
-  fetchPendingPlugins,
-  fetchPluginsByLink,
-  getFetchPluginsFailure,
-  getPendingPlugins,
-  getPluginCollection,
-  isFetchPluginsPending
-} from "../modules/plugins";
 import PluginsList from "../components/PluginList";
-import {
-  getPendingPluginsLink,
-  mustGetAvailablePluginsLink,
-  mustGetInstalledPluginsLink
-} from "../../../modules/indexResource";
 import PluginTopActions from "../components/PluginTopActions";
 import PluginBottomActions from "../components/PluginBottomActions";
 import ExecutePendingActionModal from "../components/ExecutePendingActionModal";
 import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
 import ShowPendingModal from "../components/ShowPendingModal";
+import { useAvailablePlugins, useInstalledPlugins, usePendingPlugins } from "@scm-manager/ui-api";
+import { useQueryClient } from "react-query";
 
-type Props = WithTranslation & {
-  loading: boolean;
-  error: Error;
-  collection: PluginCollection;
-  baseUrl: string;
+type Props = {
   installed: boolean;
-  availablePluginsLink: string;
-  installedPluginsLink: string;
-  pendingPluginsLink: string;
-  pendingPlugins: PendingPlugins;
-
-  // dispatched functions
-  fetchPluginsByLink: (link: string) => void;
-  fetchPendingPlugins: (link: string) => void;
 };
 
-type State = {
-  showPendingModal: boolean;
-  showExecutePendingModal: boolean;
-  showUpdateAllModal: boolean;
-  showCancelModal: boolean;
-};
+const PluginsOverview: FC<Props> = ({ installed }) => {
+  const [t] = useTranslation("admin");
+  const queryClient = useQueryClient();
+  const {
+    data: availablePlugins,
+    isLoading: isLoadingAvailablePlugins,
+    error: availablePluginsError
+  } = useAvailablePlugins(!installed);
+  const {
+    data: installedPlugins,
+    isLoading: isLoadingInstalledPlugins,
+    error: installedPluginsError
+  } = useInstalledPlugins(installed);
+  const { data: pendingPlugins, isLoading: isLoadingPendingPlugins, error: pendingPluginsError } = usePendingPlugins();
+  const [showPendingModal, setShowPendingModal] = useState<boolean>();
+  const [showExecutePendingModal, setShowExecutePendingModal] = useState<boolean>();
+  const [showUpdateAllModal, setShowUpdateAllModal] = useState<boolean>();
+  const [showCancelModal, setShowCancelModal] = useState<boolean>();
+  const collection = installed ? installedPlugins : availablePlugins;
+  const error = (installed ? installedPluginsError : availablePluginsError) || pendingPluginsError;
+  const loading = (installed ? isLoadingInstalledPlugins : isLoadingAvailablePlugins) || isLoadingPendingPlugins;
 
-class PluginsOverview extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      showPendingModal: false,
-      showExecutePendingModal: false,
-      showUpdateAllModal: false,
-      showCancelModal: false
-    };
-  }
+  const refresh = () =>
+    Promise.all([
+      queryClient.invalidateQueries("availablePlugins"),
+      queryClient.invalidateQueries("installedPlugins"),
+      queryClient.invalidateQueries("pendingPlugins")
+    ]);
 
-  componentDidMount() {
-    this.fetchPlugins();
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    const { installed } = this.props;
-    if (prevProps.installed !== installed) {
-      this.fetchPlugins();
-    }
-  }
-
-  fetchPlugins = () => {
-    const {
-      installed,
-      fetchPluginsByLink,
-      availablePluginsLink,
-      installedPluginsLink,
-      pendingPluginsLink,
-      fetchPendingPlugins
-    } = this.props;
-    fetchPluginsByLink(installed ? installedPluginsLink : availablePluginsLink);
-    if (pendingPluginsLink) {
-      fetchPendingPlugins(pendingPluginsLink);
-    }
-  };
-
-  renderHeader = (actions: React.ReactNode) => {
-    const { installed, t } = this.props;
+  const renderHeader = (actions: React.ReactNode) => {
     return (
       <div className="columns">
         <div className="column">
@@ -129,15 +89,14 @@ class PluginsOverview extends React.Component<Props, State> {
     );
   };
 
-  renderFooter = (actions: React.ReactNode) => {
+  const renderFooter = (actions: React.ReactNode) => {
     if (actions) {
       return <PluginBottomActions>{actions}</PluginBottomActions>;
     }
     return null;
   };
 
-  createActions = () => {
-    const { pendingPlugins, collection, t } = this.props;
+  const createActions = () => {
     const buttons = [];
 
     if (pendingPlugins && pendingPlugins._links) {
@@ -149,11 +108,7 @@ class PluginsOverview extends React.Component<Props, State> {
             key={"executePending"}
             icon={"arrow-circle-right"}
             label={t("plugins.executePending")}
-            action={() =>
-              this.setState({
-                showExecutePendingModal: true
-              })
-            }
+            action={() => setShowExecutePendingModal(true)}
           />
         );
       }
@@ -167,11 +122,7 @@ class PluginsOverview extends React.Component<Props, State> {
               key={"showPending"}
               icon={"info"}
               label={t("plugins.showPending")}
-              action={() =>
-                this.setState({
-                  showPendingModal: true
-                })
-              }
+              action={() => setShowPendingModal(true)}
             />
           );
         }
@@ -183,11 +134,7 @@ class PluginsOverview extends React.Component<Props, State> {
             key={"cancelPending"}
             icon={"times"}
             label={t("plugins.cancelPending")}
-            action={() =>
-              this.setState({
-                showCancelModal: true
-              })
-            }
+            action={() => setShowCancelModal(true)}
           />
         );
       }
@@ -200,12 +147,8 @@ class PluginsOverview extends React.Component<Props, State> {
           reducedMobile={true}
           key={"updateAll"}
           icon={"sync-alt"}
-          label={this.computeUpdateAllSize()}
-          action={() =>
-            this.setState({
-              showUpdateAllModal: true
-            })
-          }
+          label={computeUpdateAllSize()}
+          action={() => setShowUpdateAllModal(true)}
         />
       );
     }
@@ -216,133 +159,69 @@ class PluginsOverview extends React.Component<Props, State> {
     return null;
   };
 
-  computeUpdateAllSize = () => {
-    const { collection, t } = this.props;
-    const outdatedPlugins = collection._embedded.plugins.filter((p: Plugin) => p._links.update).length;
+  const computeUpdateAllSize = () => {
+    const outdatedPlugins = collection?._embedded.plugins.filter((p: Plugin) => p._links.update).length;
     return t("plugins.outdatedPlugins", {
       count: outdatedPlugins
     });
   };
 
-  render() {
-    const { loading, error, collection } = this.props;
+  const renderPluginsList = () => {
+    if (collection?._embedded && collection._embedded.plugins.length > 0) {
+      return <PluginsList plugins={collection._embedded.plugins} refresh={refresh} />;
+    }
+    return <Notification type="info">{t("plugins.noPlugins")}</Notification>;
+  };
 
-    if (error) {
-      return <ErrorNotification error={error} />;
+  const renderModals = () => {
+    if (showPendingModal && pendingPlugins) {
+      return <ShowPendingModal onClose={() => setShowPendingModal(false)} pendingPlugins={pendingPlugins} />;
     }
 
-    if (!collection || loading) {
-      return <Loading />;
-    }
-
-    const actions = this.createActions();
-    return (
-      <>
-        {this.renderHeader(actions)}
-        <hr className="header-with-actions" />
-        {this.renderPluginsList()}
-        {this.renderFooter(actions)}
-        {this.renderModals()}
-      </>
-    );
-  }
-
-  renderModals = () => {
-    const { collection, pendingPlugins } = this.props;
-    const { showPendingModal, showExecutePendingModal, showCancelModal, showUpdateAllModal } = this.state;
-
-    if (showPendingModal) {
+    if (showExecutePendingModal && pendingPlugins) {
       return (
-        <ShowPendingModal
-          onClose={() =>
-            this.setState({
-              showPendingModal: false
-            })
-          }
-          pendingPlugins={pendingPlugins}
-        />
+        <ExecutePendingActionModal onClose={() => setShowExecutePendingModal(false)} pendingPlugins={pendingPlugins} />
       );
     }
-
-    if (showExecutePendingModal) {
-      return (
-        <ExecutePendingActionModal
-          onClose={() =>
-            this.setState({
-              showExecutePendingModal: false
-            })
-          }
-          pendingPlugins={pendingPlugins}
-        />
-      );
-    }
-    if (showCancelModal) {
+    if (showCancelModal && pendingPlugins) {
       return (
         <CancelPendingActionModal
-          onClose={() =>
-            this.setState({
-              showCancelModal: false
-            })
-          }
-          refresh={this.fetchPlugins}
+          onClose={() => setShowCancelModal(false)}
+          refresh={refresh}
           pendingPlugins={pendingPlugins}
         />
       );
     }
-    if (showUpdateAllModal) {
+    if (showUpdateAllModal && collection) {
       return (
         <UpdateAllActionModal
-          onClose={() =>
-            this.setState({
-              showUpdateAllModal: false
-            })
-          }
-          refresh={this.fetchPlugins}
+          onClose={() => setShowUpdateAllModal(false)}
+          refresh={refresh}
           installedPlugins={collection}
         />
       );
     }
+    return null;
   };
 
-  renderPluginsList() {
-    const { collection, t } = this.props;
-
-    if (collection._embedded && collection._embedded.plugins.length > 0) {
-      return <PluginsList plugins={collection._embedded.plugins} refresh={this.fetchPlugins} />;
-    }
-    return <Notification type="info">{t("plugins.noPlugins")}</Notification>;
+  if (error) {
+    return <ErrorNotification error={error} />;
   }
-}
 
-const mapStateToProps = (state: any) => {
-  const collection = getPluginCollection(state);
-  const loading = isFetchPluginsPending(state);
-  const error = getFetchPluginsFailure(state);
-  const availablePluginsLink = mustGetAvailablePluginsLink(state);
-  const installedPluginsLink = mustGetInstalledPluginsLink(state);
-  const pendingPluginsLink = getPendingPluginsLink(state);
-  const pendingPlugins = getPendingPlugins(state);
+  if (!collection || loading) {
+    return <Loading />;
+  }
 
-  return {
-    collection,
-    loading,
-    error,
-    availablePluginsLink,
-    installedPluginsLink,
-    pendingPluginsLink,
-    pendingPlugins
-  };
+  const actions = createActions();
+  return (
+    <>
+      {renderHeader(actions)}
+      <hr className="header-with-actions" />
+      {renderPluginsList()}
+      {renderFooter(actions)}
+      {renderModals()}
+    </>
+  );
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchPluginsByLink: (link: string) => {
-      dispatch(fetchPluginsByLink(link));
-    },
-    fetchPendingPlugins: (link: string) => {
-      dispatch(fetchPendingPlugins(link));
-    }
-  };
-};
-
-export default compose(withTranslation("admin"), connect(mapStateToProps, mapDispatchToProps))(PluginsOverview);
+export default PluginsOverview;

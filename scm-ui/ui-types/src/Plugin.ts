@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-import { Collection, Links } from "./hal";
+import { HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
 
-export type Plugin = {
+export type Plugin = HalRepresentation & {
   name: string;
   version: string;
   newVersion?: string;
@@ -32,31 +32,24 @@ export type Plugin = {
   description?: string;
   author: string;
   category: string;
-  avatarUrl: string;
+  avatarUrl?: string;
   pending: boolean;
   markedForUninstall?: boolean;
   dependencies: string[];
   optionalDependencies: string[];
-  _links: Links;
 };
 
-export type PluginCollection = Collection & {
-  _links: Links;
-  _embedded: {
-    plugins: Plugin[] | string[];
-  };
-};
+export type PluginCollection = HalRepresentationWithEmbedded<{
+  plugins: Plugin[];
+}>;
 
 export type PluginGroup = {
   name: string;
   plugins: Plugin[];
 };
 
-export type PendingPlugins = {
-  _links: Links;
-  _embedded: {
-    new: [];
-    update: [];
-    uninstall: [];
-  };
-};
+export type PendingPlugins = HalRepresentationWithEmbedded<{
+  new: Plugin[];
+  update: Plugin[];
+  uninstall: Plugin[];
+}>;
