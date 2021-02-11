@@ -36,17 +36,22 @@ import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.IncompatibleEnvironmentForImportException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.update.UpdateEngine;
 
 import javax.inject.Inject;
 import javax.xml.bind.JAXB;
 import java.io.BufferedInputStream;
+import java.io.FileInputStream;
 import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.Optional;
 
 import static sonia.scm.importexport.FullScmRepositoryExporter.METADATA_FILE_NAME;
 import static sonia.scm.importexport.FullScmRepositoryExporter.SCM_ENVIRONMENT_FILE_NAME;
@@ -62,21 +67,25 @@ public class FullScmRepositoryImporter {
   private final ScmEnvironmentCompatibilityChecker compatibilityChecker;
   private final TarArchiveRepositoryStoreImporter storeImporter;
   private final UpdateEngine updateEngine;
+  private final WorkdirProvider workdirProvider;
 
   @Inject
   public FullScmRepositoryImporter(RepositoryServiceFactory serviceFactory,
                                    RepositoryManager repositoryManager,
                                    ScmEnvironmentCompatibilityChecker compatibilityChecker,
                                    TarArchiveRepositoryStoreImporter storeImporter,
-                                   UpdateEngine updateEngine) {
+                                   UpdateEngine updateEngine,
+                                   WorkdirProvider workdirProvider) {
     this.serviceFactory = serviceFactory;
     this.repositoryManager = repositoryManager;
     this.compatibilityChecker = compatibilityChecker;
     this.storeImporter = storeImporter;
     this.updateEngine = updateEngine;
+    this.workdirProvider = workdirProvider;
   }
 
   public Repository importFromStream(Repository repository, InputStream inputStream) {
+    Repository createdRepository = null;
     try {
       if (inputStream.available() > 0) {
         try (
@@ -86,10 +95,14 @@ public class FullScmRepositoryImporter {
         ) {
           checkScmEnvironment(repository, tais);
           Collection<RepositoryPermission> importedPermissions = processRepositoryMetadata(tais);
-          Repository createdRepository = importRepositoryFromFile(repository, tais);
-          importStoresForCreatedRepository(createdRepository, tais);
+          createdRepository = repositoryManager.create(repository);
+          importRepository(createdRepository, tais);
           importRepositoryPermissions(createdRepository, importedPermissions);
           return createdRepository;
+        } catch (Exception e) {
+          // Delete the repository if any error occurs during the import
+          repositoryManager.delete(createdRepository);
+          throw e;
         }
       } else {
         throw new ImportFailedException(
@@ -106,6 +119,16 @@ public class FullScmRepositoryImporter {
     }
   }
 
+  private void importRepository(Repository createdRepository, TarArchiveInputStream tais) throws IOException {
+    Optional<Path> savedRepositoryPath = importStoresOrSaveRepository(createdRepository, tais);
+    if (savedRepositoryPath.isPresent()) {
+      unbundleRepository(createdRepository, new FileInputStream(savedRepositoryPath.get().toFile()));
+      Files.delete(savedRepositoryPath.get());
+    } else {
+      unbundleRepositoryFromTarArchiveInputStream(createdRepository, tais);
+    }
+  }
+
   private void importRepositoryPermissions(Repository repository, Collection<RepositoryPermission> importedPermissions) {
     Collection<RepositoryPermission> existingPermissions = repository.getPermissions();
     RepositoryImportPermissionMerger permissionMerger = new RepositoryImportPermissionMerger();
@@ -114,13 +137,17 @@ public class FullScmRepositoryImporter {
     repositoryManager.modify(repository);
   }
 
-  private void importStoresForCreatedRepository(Repository repository, TarArchiveInputStream tais) throws IOException {
-    ArchiveEntry metadataEntry = tais.getNextEntry();
-    if (metadataEntry.getName().equals(STORE_DATA_FILE_NAME) && !metadataEntry.isDirectory()) {
+  private Optional<Path> importStoresOrSaveRepository(Repository repository, TarArchiveInputStream tais) throws IOException {
+    ArchiveEntry entry = tais.getNextEntry();
+    if (entry.getName().equals(STORE_DATA_FILE_NAME) && !entry.isDirectory()) {
       // Inside the repository tar archive stream is another tar archive.
       // The nested tar archive is wrapped in another TarArchiveInputStream inside the storeImporter
-      storeImporter.importFromTarArchive(repository, tais);
-      updateEngine.update(repository.getId());
+      importStores(repository, tais);
+      return Optional.empty();
+    } else if (!entry.isDirectory()) {
+      Path path = saveRepositoryDataFromTarArchiveEntry(repository, tais);
+      importStores(repository, tais);
+      return Optional.of(path);
     } else {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(repository).build(),
@@ -129,24 +156,44 @@ public class FullScmRepositoryImporter {
     }
   }
 
-  private Repository importRepositoryFromFile(Repository repository, TarArchiveInputStream tais) throws IOException {
+  private void importStores(Repository repository, TarArchiveInputStream tais) {
+    storeImporter.importFromTarArchive(repository, tais);
+    updateEngine.update(repository.getId());
+  }
+
+  private Path saveRepositoryDataFromTarArchiveEntry(Repository repository, TarArchiveInputStream tais) throws IOException {
+    // The order of files inside the repository archives was changed.
+    // Due to ensure backwards compatible with existing repository archives we save the repository
+    // and read it again after the stores were imported.
+    Path repositoryPath = createSavedRepositoryLocation(repository);
+    Files.copy(tais, repositoryPath);
+    return repositoryPath;
+  }
+
+  private Path createSavedRepositoryLocation(Repository repository) {
+    return workdirProvider.createNewWorkdir(repository.getId()).toPath().resolve("repository");
+  }
+
+  private void unbundleRepositoryFromTarArchiveInputStream(Repository repository, TarArchiveInputStream tais) throws IOException {
     ArchiveEntry repositoryEntry = tais.getNextEntry();
     if (!repositoryEntry.isDirectory()) {
-      return repositoryManager.create(repository, repo -> {
-        try (RepositoryService service = serviceFactory.create(repo)) {
-          service.getUnbundleCommand().unbundle(new NoneClosingInputStream(tais));
-        } catch (IOException e) {
-          throw new ImportFailedException(
-            ContextEntry.ContextBuilder.entity(repository).build(),
-            "Repository import failed. Could not import repository from file.",
-            e
-          );
-        }
-      });
+      unbundleRepository(repository, tais);
     } else {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(repository).build(),
         "Invalid import format. Missing repository dump file."
+      );
+    }
+  }
+
+  private void unbundleRepository(Repository repository, InputStream is) {
+    try (RepositoryService service = serviceFactory.create(repository)) {
+      service.getUnbundleCommand().unbundle(new NoneClosingInputStream(is));
+    } catch (IOException e) {
+      throw new ImportFailedException(
+        ContextEntry.ContextBuilder.entity(repository).build(),
+        "Repository import failed. Could not import repository from file.",
+        e
       );
     }
   }
