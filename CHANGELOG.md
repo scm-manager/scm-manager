@@ -39,6 +39,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add support for permalinks to lines in source code view ([#1472](https://github.com/scm-manager/scm-manager/pull/1472))
 - Add "archive" flag for repositories to make them immutable ([#1477](https://github.com/scm-manager/scm-manager/pull/1477))
 
+### Changed
+- Implement mercurial cgi protocol as extension ([#1458](https://github.com/scm-manager/scm-manager/pull/1458))
+
 ### Fixed
 - Add "Api Key" page link to sub-navigation of "User" and "Me" sections ([#1464](https://github.com/scm-manager/scm-manager/pull/1464))
 - Empty page on repository namespace filter ([#1476](https://github.com/scm-manager/scm-manager/pull/1476))
@@ -63,7 +66,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Send mercurial hook callbacks over separate tcp socket instead of http ([#1416](https://github.com/scm-manager/scm-manager/pull/1416))
-- Implement mercurial cgi protocol as extension ([#1458](https://github.com/scm-manager/scm-manager/pull/1458))
 
 ### Fixed
 - Language detection of files with interpreter parameters e.g.: `#!/usr/bin/make -f` ([#1450](https://github.com/scm-manager/scm-manager/issues/1450))

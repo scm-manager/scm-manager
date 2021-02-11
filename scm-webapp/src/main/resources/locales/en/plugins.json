@@ -331,6 +331,10 @@
       "displayName": "Repository is being exported",
       "description": "The repository is being exported and therefore must not be modified."
     },
+    "5GSO9ZkzX1": {
+      "displayName": "Incompatible environment",
+      "description": "The version of this SCM-Manager or one of its plugins is too old for the import of the given dump. Please update to the latest versions. See the log for more information."
+    },
     "8YR7aawFW1": {
       "displayName": "Wrong current password",
       "description": "The current password is wrong. Please try again."

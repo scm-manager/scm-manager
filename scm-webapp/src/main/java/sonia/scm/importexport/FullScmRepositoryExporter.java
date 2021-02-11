@@ -45,7 +45,6 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-import static sonia.scm.importexport.RepositoryImportExportEncryption.encrypt;
 
 public class FullScmRepositoryExporter {
 
@@ -58,6 +57,7 @@ public class FullScmRepositoryExporter {
   private final TarArchiveRepositoryStoreExporter storeExporter;
   private final WorkdirProvider workdirProvider;
   private final RepositoryExportingCheck repositoryExportingCheck;
+  private final RepositoryImportExportEncryption repositoryImportExportEncryption;
 
   @Inject
   public FullScmRepositoryExporter(EnvironmentInformationXmlGenerator environmentGenerator,
@@ -65,13 +65,15 @@ public class FullScmRepositoryExporter {
                                    RepositoryServiceFactory serviceFactory,
                                    TarArchiveRepositoryStoreExporter storeExporter,
                                    WorkdirProvider workdirProvider,
-                                   RepositoryExportingCheck repositoryExportingCheck) {
+                                   RepositoryExportingCheck repositoryExportingCheck,
+                                   RepositoryImportExportEncryption repositoryImportExportEncryption) {
     this.environmentGenerator = environmentGenerator;
     this.metadataGenerator = metadataGenerator;
     this.serviceFactory = serviceFactory;
     this.storeExporter = storeExporter;
     this.workdirProvider = workdirProvider;
     this.repositoryExportingCheck = repositoryExportingCheck;
+    this.repositoryImportExportEncryption = repositoryImportExportEncryption;
   }
 
   public void export(Repository repository, OutputStream outputStream, String password) {
@@ -85,7 +87,7 @@ public class FullScmRepositoryExporter {
     try (
       RepositoryService service = serviceFactory.create(repository);
       BufferedOutputStream bos = new BufferedOutputStream(outputStream);
-      OutputStream cos = encrypt(bos, password);
+      OutputStream cos = repositoryImportExportEncryption.optionallyEncrypt(bos, password);
       GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(cos);
       TarArchiveOutputStream taos = new TarArchiveOutputStream(gzos);
     ) {

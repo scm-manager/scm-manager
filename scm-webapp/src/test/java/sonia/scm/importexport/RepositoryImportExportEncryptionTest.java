@@ -36,9 +36,10 @@ import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static sonia.scm.importexport.RepositoryImportExportEncryption.decrypt;
 
 class RepositoryImportExportEncryptionTest {
+
+  private RepositoryImportExportEncryption encryption = new RepositoryImportExportEncryption();
 
   @Test
   void shouldNotEncryptWithoutPassword() throws IOException {
@@ -46,7 +47,7 @@ class RepositoryImportExportEncryptionTest {
     String secret = "";
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-    OutputStream os = RepositoryImportExportEncryption.encrypt(baos, secret);
+    OutputStream os = encryption.optionallyEncrypt(baos, secret);
     os.write(content.getBytes());
     os.flush();
 
@@ -59,7 +60,7 @@ class RepositoryImportExportEncryptionTest {
     String secret = "";
     ByteArrayInputStream bais = new ByteArrayInputStream(content.getBytes());
 
-    InputStream is = RepositoryImportExportEncryption.decrypt(bais, secret);
+    InputStream is = encryption.optionallyDecrypt(bais, secret);
 
     ByteSource byteSource = new ByteSource() {
       @Override
@@ -79,14 +80,14 @@ class RepositoryImportExportEncryptionTest {
     String secret = "secretPassword";
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-    OutputStream os = RepositoryImportExportEncryption.encrypt(baos, secret);
+    OutputStream os = encryption.optionallyEncrypt(baos, secret);
     os.write(content.getBytes());
     os.flush();
     os.close();
 
     assertThat(baos.toString()).isNotEqualTo(content);
 
-    InputStream is = decrypt(new ByteArrayInputStream(baos.toByteArray()), secret);
+    InputStream is = encryption.optionallyDecrypt(new ByteArrayInputStream(baos.toByteArray()), secret);
     ByteSource byteSource = new ByteSource() {
       @Override
       public InputStream openStream() {
@@ -99,21 +100,12 @@ class RepositoryImportExportEncryptionTest {
   }
 
   @Test
-  void shouldFailOnDecryptIfNotEncrypted() throws IOException {
+  void shouldFailOnDecryptIfNotEncrypted() {
     String content = "my content";
     String secret = "secretPassword";
-    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    baos.write(content.getBytes());
-    baos.flush();
-    baos.close();
 
-    InputStream is = decrypt(new ByteArrayInputStream(baos.toByteArray()), secret);
-    ByteSource byteSource = new ByteSource() {
-      @Override
-      public InputStream openStream() {
-        return is;
-      }
-    };
-    assertThrows(IOException.class, () -> byteSource.asCharSource(StandardCharsets.UTF_8).read());
+    ByteArrayInputStream notEncryptedStream = new ByteArrayInputStream(content.getBytes());
+
+    assertThrows(IOException.class, () -> encryption.optionallyDecrypt(notEncryptedStream, secret));
   }
 }

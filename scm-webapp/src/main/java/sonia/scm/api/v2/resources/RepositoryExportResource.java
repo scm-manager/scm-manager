@@ -37,13 +37,14 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import sonia.scm.BadRequestException;
 import sonia.scm.Type;
 import sonia.scm.importexport.FullScmRepositoryExporter;
-import sonia.scm.repository.InternalRepositoryException;
+import sonia.scm.importexport.RepositoryImportExportEncryption;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.BundleCommandBuilder;
 import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
@@ -64,12 +65,12 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.time.Instant;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
-import static sonia.scm.importexport.RepositoryImportExportEncryption.encrypt;
 
 public class RepositoryExportResource {
 
@@ -78,13 +79,17 @@ public class RepositoryExportResource {
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
   private final FullScmRepositoryExporter fullScmRepositoryExporter;
+  private final RepositoryImportExportEncryption repositoryImportExportEncryption;
 
   @Inject
   public RepositoryExportResource(RepositoryManager manager,
-                                  RepositoryServiceFactory serviceFactory, FullScmRepositoryExporter fullScmRepositoryExporter) {
+                                  RepositoryServiceFactory serviceFactory,
+                                  FullScmRepositoryExporter fullScmRepositoryExporter,
+                                  RepositoryImportExportEncryption repositoryImportExportEncryption) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.fullScmRepositoryExporter = fullScmRepositoryExporter;
+    this.repositoryImportExportEncryption = repositoryImportExportEncryption;
   }
 
   /**
@@ -100,7 +105,6 @@ public class RepositoryExportResource {
    */
   @GET
   @Path("{type: ^(?!full$)[^/]+$}")
-  @Consumes(VndMediaType.REPOSITORY)
   @Operation(summary = "Exports the repository", description = "Exports the repository.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
@@ -144,7 +148,6 @@ public class RepositoryExportResource {
    */
   @GET
   @Path("full")
-  @Consumes(VndMediaType.REPOSITORY)
   @Operation(summary = "Exports the repository", description = "Exports the repository with metadata and environment information.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
@@ -188,7 +191,7 @@ public class RepositoryExportResource {
    */
   @POST
   @Path("{type: ^(?!full$)[^/]+$}")
-  @Consumes(VndMediaType.REPOSITORY)
+  @Consumes(VndMediaType.ENCRYPTION)
   @Operation(summary = "Exports the repository", description = "Exports the repository.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
@@ -215,7 +218,7 @@ public class RepositoryExportResource {
                                                @PathParam("name") String name,
                                                @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
                                                @DefaultValue("false") @QueryParam("compressed") boolean compressed,
-                                               @Valid RepositoryExportDto request
+                                               @Valid EncryptionDto request
 
 
   ) {
@@ -236,7 +239,7 @@ public class RepositoryExportResource {
    */
   @POST
   @Path("full")
-  @Consumes(VndMediaType.REPOSITORY)
+  @Consumes(VndMediaType.ENCRYPTION)
   @Operation(summary = "Exports the repository", description = "Exports the repository with metadata and environment information.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
@@ -261,7 +264,7 @@ public class RepositoryExportResource {
   public Response exportFullRepositoryWithPassword(@Context UriInfo uriInfo,
                                                    @PathParam("namespace") String namespace,
                                                    @PathParam("name") String name,
-                                                   @Valid RepositoryExportDto request
+                                                   @Valid EncryptionDto request
   ) {
     Repository repository = getVerifiedRepository(namespace, name);
     return exportFullRepository(repository, request.getPassword());
@@ -301,18 +304,16 @@ public class RepositoryExportResource {
       fileExtension = resolveFileExtension(bundleCommand, compressed);
       output = os -> {
         try {
-          if (!Strings.isNullOrEmpty(password)) {
-            os = encrypt(os, password);
-          }
+          OutputStream cos = repositoryImportExportEncryption.optionallyEncrypt(os, password);
           if (compressed) {
-            GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
+            GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(cos);
             bundleCommand.bundle(gzipCompressorOutputStream);
             gzipCompressorOutputStream.finish();
           } else {
             bundleCommand.bundle(os);
           }
         } catch (IOException e) {
-          throw new InternalRepositoryException(repository, "repository export failed", e);
+          throw new ExportFailedException(entity(repository).build(), "repository export failed", e);
         }
       };
     }
@@ -367,7 +368,7 @@ public class RepositoryExportResource {
   @Getter
   @Setter
   @NoArgsConstructor
-  static class RepositoryExportDto {
+  static class EncryptionDto {
     @NotBlank
     private String password;
   }

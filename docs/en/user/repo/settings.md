@@ -21,7 +21,10 @@ The output format of the repository can be changed via the offered options:
 * `Standard`: If no options are selected, the repository will be exported in the standard format.
   Git and Mercurial are exported as `Tar archive` and Subversion uses the `Dump` format.
 * `Compress`: The output format is additionally compressed with `GZip` to reduce the file size.
-* `With metadata`: Instead of the standard format a repository archive is exported, which contains additional metadata besides the repository.
+* `With metadata`: Instead of the standard format, a repository archive is exported, which contains additional metadata
+  besides the repository. When you use this, please make sure all installed plugins are up to date. An import of
+  such an export is possible only in an SCM-Manager with the same or a newer version. The same is valid for all
+  installed plugins.
 * `Encrypt`: The export file will be encrypted using the provided password. The same password must be used to decrypt this export file.
 
 ![Repository-Settings-General-Git](assets/repository-settings-general-git.png)

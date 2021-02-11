@@ -22,29 +22,25 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.migration;
 
-import java.util.HashMap;
-import java.util.Map;
+/**
+ * Data for the repository, whose data that should be migrated.
+ *
+ * @since 2.14.0
+ */
+public final class RepositoryUpdateContext {
 
-public class InMemoryConfigurationEntryStoreFactory implements ConfigurationEntryStoreFactory {
+  private final String repositoryId;
 
-  private final Map<String, InMemoryConfigurationEntryStore> stores = new HashMap<>();
-
-  public static InMemoryConfigurationEntryStoreFactory create() {
-    return new InMemoryConfigurationEntryStoreFactory();
+  public RepositoryUpdateContext(String repositoryId) {
+    this.repositoryId = repositoryId;
   }
 
-  @Override
-  public <T> ConfigurationEntryStore<T> getStore(TypedStoreParameters<T> storeParameters) {
-    String name = storeParameters.getName();
-    if (storeParameters.getRepositoryId() != null) {
-      name = name + "-" + storeParameters.getRepositoryId();
-    }
-    return get(name);
-  }
-
-  public <T> InMemoryConfigurationEntryStore<T> get(String name) {
-    return stores.computeIfAbsent(name, x -> new InMemoryConfigurationEntryStore<T>());
+  /**
+   * The id of the repository, whose data should be migrated.
+   */
+  public String getRepositoryId() {
+    return repositoryId;
   }
 }

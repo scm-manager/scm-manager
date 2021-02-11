@@ -57,8 +57,6 @@ public class DefaultHgEnvironmentBuilder implements HgEnvironmentBuilder {
   @VisibleForTesting
   static final String ENV_REPOSITORY_ID = "SCM_REPOSITORY_ID";
   @VisibleForTesting
-  static final String ENV_HTTP_POST_ARGS = "SCM_HTTP_POST_ARGS";
-  @VisibleForTesting
   static final String ENV_TRANSACTION_ID = "SCM_TRANSACTION_ID";
 
   private final AccessTokenBuilderFactory accessTokenBuilderFactory;
@@ -103,10 +101,6 @@ public class DefaultHgEnvironmentBuilder implements HgEnvironmentBuilder {
     env.put(ENV_REPOSITORY_NAME, repository.getNamespace() + "/" + repository.getName());
     env.put(ENV_REPOSITORY_ID, repository.getId());
     env.put(ENV_REPOSITORY_PATH, directory.getAbsolutePath());
-
-    // enable experimental httppostargs protocol of mercurial
-    // Issue 970: https://goo.gl/poascp
-    env.put(ENV_HTTP_POST_ARGS, String.valueOf(config.isEnableHttpPostArgs()));
   }
 
   private void write(ImmutableMap.Builder<String, String> env) {

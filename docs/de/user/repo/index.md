@@ -45,7 +45,9 @@ Wechseln Sie über den Schalter oben rechts auf die Importseite und füllen Sie 
 
 Das gewählte Repository wird zum SCM-Manager hinzugefügt und sämtliche Repository Daten inklusive aller Branches und Tags werden importiert.
 Zusätzlich zum normalen Repository Import gibt es die Möglichkeit ein Repository Archiv mit Metadaten zu importieren. 
-Dieses Repository Archiv muss von einem anderen SCM-Manager exportiert worden sein und wird beim Importieren auf Kompatibilität der Daten überprüft.
+Dieses Repository Archiv muss von einem anderen SCM-Manager exportiert worden sein und wird vor dem Import auf
+Kompatibilität der Daten überprüft (der SCM-Manager und alle installierten Plugins müssen mindestens die Version des
+exportierenden Systems haben).
 Ist die zu importierende Datei verschlüsselt, muss das korrekte Passwort zum Entschlüsseln mitgeliefert werden. 
 Wird kein Passwort gesetzt, geht der SCM-Manager davon aus, dass die Datei unverschlüsselt ist.
 

@@ -22,29 +22,27 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.repository.api;
 
-import java.util.HashMap;
-import java.util.Map;
+import sonia.scm.ExceptionWithContext;
 
-public class InMemoryConfigurationEntryStoreFactory implements ConfigurationEntryStoreFactory {
+import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 
-  private final Map<String, InMemoryConfigurationEntryStore> stores = new HashMap<>();
+/**
+ * This exception is thrown if the repository import fails.
+ *
+ * @since 2.14.0
+ */
+public class IncompatibleEnvironmentForImportException extends ExceptionWithContext {
 
-  public static InMemoryConfigurationEntryStoreFactory create() {
-    return new InMemoryConfigurationEntryStoreFactory();
+  private static final String CODE = "5GSO9ZkzX1";
+
+  public IncompatibleEnvironmentForImportException() {
+    super(noContext(), "Incompatible SCM-Manager environment. Cannot import file. See previous logs for more detail.");
   }
 
   @Override
-  public <T> ConfigurationEntryStore<T> getStore(TypedStoreParameters<T> storeParameters) {
-    String name = storeParameters.getName();
-    if (storeParameters.getRepositoryId() != null) {
-      name = name + "-" + storeParameters.getRepositoryId();
-    }
-    return get(name);
-  }
-
-  public <T> InMemoryConfigurationEntryStore<T> get(String name) {
-    return stores.computeIfAbsent(name, x -> new InMemoryConfigurationEntryStore<T>());
+  public String getCode() {
+    return CODE;
   }
 }
