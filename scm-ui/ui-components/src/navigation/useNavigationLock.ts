@@ -30,9 +30,11 @@ const useNavigationLock = (enabled: boolean) => {
     if (enabled) {
       window.onbeforeunload = () => true;
     } else {
+      // @ts-ignore We need to reset this listener if the lock was disabled
       window.onbeforeunload = undefined;
     }
     return () => {
+      // @ts-ignore Remove this listener when the hook will be unmounted
       window.onbeforeunload = undefined;
     };
   }, [enabled]);
