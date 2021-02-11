@@ -31,7 +31,7 @@ import createWrapper from "./tests/createWrapper";
 import { useConfig, useUpdateConfig } from "./config";
 import { act } from "react-test-renderer";
 
-describe("Test group hooks", () => {
+describe("Test config hooks", () => {
   const config: Config = {
     anonymousAccessEnabled: false,
     anonymousMode: "OFF",
@@ -93,8 +93,6 @@ describe("Test group hooks", () => {
       fetchMock.putOnce("/api/v2/config", {
         status: 200
       });
-
-      // fetchMock.getOnce("/api/v2/config", newConfig);
 
       const { result, waitForNextUpdate } = renderHook(() => useUpdateConfig(), {
         wrapper: createWrapper(undefined, queryClient)

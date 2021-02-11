@@ -26,6 +26,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
 import { Button, ButtonGroup, ErrorNotification, Modal } from "@scm-manager/ui-components";
 import SuccessNotification from "./SuccessNotification";
+import {FC} from "react";
 
 type Props = WithTranslation & {
   onClose: () => void;
@@ -46,7 +47,11 @@ type State = {
   error?: Error;
 };
 
-class PluginActionModal extends React.Component<Props, State> {
+const PluginActionModal: FC = () => {
+
+}
+
+class PluginActionModalCmp extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {

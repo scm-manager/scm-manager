@@ -21,19 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, {FC} from "react";
+import {useTranslation, WithTranslation, withTranslation} from "react-i18next";
 import { PluginCollection } from "@scm-manager/ui-types";
 import { apiClient } from "@scm-manager/ui-components";
 import PluginActionModal from "./PluginActionModal";
+import {useUpdatePlugins} from "@scm-manager/ui-api";
 
 type Props = WithTranslation & {
   onClose: () => void;
-  refresh: () => void;
   installedPlugins: PluginCollection;
 };
 
-class UpdateAllActionModal extends React.Component<Props> {
+const UpdateAllActionModal: FC<Props> = ({ installedPlugins, onClose }) => {
+  const [t] = useTranslation("admin");
+  const { update, isLoading, error, isUpdated } = useUpdatePlugins();
+
+  return (
+    <PluginActionModal
+      description={t("plugins.modal.updateAll")}
+      label={t("plugins.updateAll")}
+      onClose={onClose}
+      installedPlugins={installedPlugins}
+      execute={() => update(installedPlugins)}
+    />
+  );
+}
+
+class UpdateAllActionModalCmp extends React.Component<Props> {
   render() {
     const { onClose, installedPlugins, t } = this.props;
 
@@ -49,7 +64,7 @@ class UpdateAllActionModal extends React.Component<Props> {
   }
 
   updateAll = () => {
-    const { installedPlugins, refresh, onClose } = this.props;
+    const { installedPlugins, onClose } = this.props;
     return apiClient
       .post(installedPlugins._links.update.href)
       .then(refresh)
