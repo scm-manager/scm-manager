@@ -92,7 +92,7 @@ class FullScmRepositoryExporterTest {
     when(environmentGenerator.generate()).thenReturn(new byte[0]);
     when(metadataGenerator.generate(REPOSITORY)).thenReturn(new byte[0]);
     when(repositoryExportingCheck.withExportingLock(any(), any())).thenAnswer(invocation -> invocation.getArgument(1, Supplier.class).get());
-    when(repositoryImportExportEncryption.encrypt(any(), any())).thenAnswer(invocation -> invocation.getArgument(0));
+    when(repositoryImportExportEncryption.optionallyEncrypt(any(), any())).thenAnswer(invocation -> invocation.getArgument(0));
   }
 
   @Test

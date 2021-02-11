@@ -63,12 +63,10 @@ import sonia.scm.repository.api.PullCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.ValidationUtil;
 import sonia.scm.web.VndMediaType;
 import sonia.scm.web.api.DtoValidator;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;

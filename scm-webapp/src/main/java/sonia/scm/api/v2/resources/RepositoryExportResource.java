@@ -24,7 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.google.common.base.Strings;
 import com.google.inject.Inject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
