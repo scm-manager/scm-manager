@@ -99,7 +99,6 @@ import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.OPTIONAL;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThrows;
@@ -781,6 +780,30 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_OK, response.getStatus());
+    assertEquals("application/x-gzip", response.getOutputHeaders().get("Content-Type").get(0).toString());
+    verify(fullScmRepositoryExporter).export(eq(repository), any(OutputStream.class), any());
+  }
+
+  @Test
+  public void shouldExportFullRepositoryWithPassword() throws URISyntaxException {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = createRepository(namespace, name, "svn");
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
+
+    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
+    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full")
+      .contentType(VndMediaType.ENCRYPTION)
+      .content("{\"password\": \"hitchhiker\"}".getBytes());
     MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
