@@ -171,7 +171,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private RepositoryDtoToRepositoryMapperImpl dtoToRepositoryMapper;
 
   @Before
-  public void prepareEnvironment() {
+  public void prepareEnvironment() throws IOException {
     openMocks(this);
     super.repositoryToDtoMapper = repositoryToDtoMapper;
     super.dtoToRepositoryMapper = dtoToRepositoryMapper;
@@ -192,6 +192,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
         .principals(trillian)
         .authenticated(true)
         .buildSubject());
+    when(repositoryImportExportEncryption.optionallyEncrypt(any(), any())).thenAnswer(invocation -> invocation.getArgument(0));
   }
 
   @Test
