@@ -23,14 +23,19 @@
  */
 
 import { ApiResult, useIndexLink, useRequiredIndexLink } from "./base";
-import { PendingPlugins, PluginCollection } from "@scm-manager/ui-types";
-import { useQuery } from "react-query";
+import { isPluginCollection, PendingPlugins, Plugin, PluginCollection } from "@scm-manager/ui-types";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient } from "@scm-manager/ui-components";
+import { requiredLink } from "./links";
 
-export const useAvailablePlugins = (enabled?: boolean): ApiResult<PluginCollection> => {
+export type UseAvailablePluginsOptions = {
+  enabled?: boolean;
+};
+
+export const useAvailablePlugins = ({ enabled }: UseAvailablePluginsOptions = {}): ApiResult<PluginCollection> => {
   const indexLink = useRequiredIndexLink("availablePlugins");
   return useQuery<PluginCollection, Error>(
-    "availablePlugins",
+    ["plugins", "available"],
     () => apiClient.get(indexLink).then(response => response.json()),
     {
       enabled
@@ -38,10 +43,14 @@ export const useAvailablePlugins = (enabled?: boolean): ApiResult<PluginCollecti
   );
 };
 
-export const useInstalledPlugins = (enabled?: boolean): ApiResult<PluginCollection> => {
+export type UseInstalledPluginsOptions = {
+  enabled?: boolean;
+};
+
+export const useInstalledPlugins = ({ enabled }: UseInstalledPluginsOptions = {}): ApiResult<PluginCollection> => {
   const indexLink = useRequiredIndexLink("installedPlugins");
   return useQuery<PluginCollection, Error>(
-    "installedPlugins",
+    ["plugins", "installed"],
     () => apiClient.get(indexLink).then(response => response.json()),
     {
       enabled
@@ -52,10 +61,78 @@ export const useInstalledPlugins = (enabled?: boolean): ApiResult<PluginCollecti
 export const usePendingPlugins = (): ApiResult<PendingPlugins> => {
   const indexLink = useIndexLink("pendingPlugins");
   return useQuery<PendingPlugins, Error>(
-    "pendingPlugins",
+    ["plugins", "pending"],
     () => apiClient.get(indexLink!).then(response => response.json()),
     {
       enabled: !!indexLink
     }
   );
+};
+
+const linkWithRestart = (link: string, restart?: boolean) => {
+  if (restart) {
+    return link + "WithRestart";
+  }
+  return link;
+};
+
+type PluginActionOptions = {
+  plugin: Plugin;
+  restart?: boolean;
+};
+
+export const useInstallPlugin = () => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, PluginActionOptions>(
+    ({ plugin, restart }) => apiClient.post(requiredLink(plugin, linkWithRestart("install", restart))),
+    {
+      onSuccess: () => queryClient.invalidateQueries("plugins")
+    }
+  );
+  return {
+    install: (plugin: Plugin, restart?: boolean) => mutate({ plugin, restart }),
+    isLoading,
+    error,
+    isInstalled: !!data
+  };
+};
+
+export const useUninstallPlugin = () => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, PluginActionOptions>(
+    ({ plugin, restart }) => apiClient.post(requiredLink(plugin, linkWithRestart("uninstall", restart))),
+    {
+      onSuccess: () => queryClient.invalidateQueries("plugins")
+    }
+  );
+  return {
+    uninstall: (plugin: Plugin, restart?: boolean) => mutate({ plugin, restart }),
+    isLoading,
+    error,
+    isUninstalled: !!data
+  };
+};
+
+type UpdatePluginsOptions = {
+  plugins: Plugin | PluginCollection;
+  restart?: boolean;
+};
+
+export const useUpdatePlugins = () => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, UpdatePluginsOptions>(
+    ({ plugins, restart }) =>
+      apiClient.post(
+        requiredLink(plugins, isPluginCollection(plugins) ? "update" : linkWithRestart("update", restart))
+      ),
+    {
+      onSuccess: () => queryClient.invalidateQueries("plugins")
+    }
+  );
+  return {
+    update: (plugin: Plugin | PluginCollection, restart?: boolean) => mutate({ plugins: plugin, restart }),
+    isLoading,
+    error,
+    isUpdated: !!data
+  };
 };

@@ -54,7 +54,7 @@ export { SubRepository, File } from "./Sources";
 
 export { SelectValue, AutocompleteObject } from "./Autocomplete";
 
-export { Plugin, PluginCollection, PluginGroup, PendingPlugins } from "./Plugin";
+export * from "./Plugin";
 
 export * from "./RepositoryRole";
 export * from "./RepositoryVerbs";
