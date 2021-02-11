@@ -734,6 +734,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
     when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+    when(bundleCommandBuilder.getFileExtension()).thenReturn(".bundle");
 
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/svn");
@@ -756,6 +757,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
     when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+    when(bundleCommandBuilder.getFileExtension()).thenReturn(".bundle");
 
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/svn?compressed=true");
