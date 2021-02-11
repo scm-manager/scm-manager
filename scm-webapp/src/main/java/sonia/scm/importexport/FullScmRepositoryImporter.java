@@ -45,6 +45,7 @@ import java.io.FilterInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashSet;
 
 import static sonia.scm.ContextEntry.ContextBuilder.noContext;
@@ -174,7 +175,10 @@ public class FullScmRepositoryImporter {
     ArchiveEntry metadataEntry = tais.getNextEntry();
     if (metadataEntry.getName().equals(METADATA_FILE_NAME)) {
       RepositoryMetadata metadata = JAXB.unmarshal(new NoneClosingInputStream(tais), RepositoryMetadata.class);
-      return new HashSet<>(metadata.getPermissions());
+      if (metadata != null && metadata.getPermissions() != null) {
+        return new HashSet<>(metadata.getPermissions());
+      }
+      return Collections.emptySet();
     } else {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.noContext(),
