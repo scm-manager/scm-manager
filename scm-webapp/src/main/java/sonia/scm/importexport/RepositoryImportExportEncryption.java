@@ -85,8 +85,8 @@ public class RepositoryImportExportEncryption {
 
   private byte[] readSaltHeader(InputStream encryptedStream) throws IOException {
     byte[] header = new byte[8];
-    encryptedStream.read(header);
-    if (!SALTED_HEADER.equals(new String(header, StandardCharsets.UTF_8))) {
+    int headerBytesRead = encryptedStream.read(header);
+    if (headerBytesRead != 8 || !SALTED_HEADER.equals(new String(header, StandardCharsets.UTF_8))) {
       throw new IOException("Expected header with salt not found (\"Salted__\")");
     }
     byte[] salt = new byte[8];
@@ -139,16 +139,16 @@ public class RepositoryImportExportEncryption {
     return new PBEKeySpec(password, salt, 10000, 256);
   }
 
+  @SuppressWarnings("java:S3329") // we generate the IV by deriving it from the password; this should be pseudo random enough
   private IvParameterSpec getIvSpec(char[] password, byte[] salt) {
-    PBEKeySpec spec = new PBEKeySpec(password, salt, 100, 256);
-    byte[] bytes = new byte[0];
+    PBEKeySpec spec = new PBEKeySpec(password, salt, 1000, 256);
     try {
-      bytes = getSecretKeyFactory().generateSecret(spec).getEncoded();
+      byte[] bytes = getSecretKeyFactory().generateSecret(spec).getEncoded();
+      byte[] iv = Arrays.copyOfRange(bytes, 16, 16 + 16);
+      return new IvParameterSpec(iv);
     } catch (InvalidKeySpecException e) {
       throw new IllegalStateException("Could not derive from key", e);
     }
-    byte[] iv = Arrays.copyOfRange(bytes, 16, 16 + 16);
-    return new IvParameterSpec(iv);
   }
 
   private SecretKeyFactory getSecretKeyFactory() {
