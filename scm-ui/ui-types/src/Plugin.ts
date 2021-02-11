@@ -43,6 +43,8 @@ export type PluginCollection = HalRepresentationWithEmbedded<{
   plugins: Plugin[];
 }>;
 
+export const isPluginCollection = (input: HalRepresentation): input is PluginCollection => input._embedded ? "plugins" in input._embedded : false;
+
 export type PluginGroup = {
   name: string;
   plugins: Plugin[];
