@@ -123,7 +123,9 @@ public class FullScmRepositoryImporter {
     Optional<Path> savedRepositoryPath = importStoresOrSaveRepository(createdRepository, tais);
     if (savedRepositoryPath.isPresent()) {
       unbundleRepository(createdRepository, new FileInputStream(savedRepositoryPath.get().toFile()));
+      //Delete saved repository and workDir after import has been finished
       Files.delete(savedRepositoryPath.get());
+      Files.delete(savedRepositoryPath.get().getParent());
     } else {
       unbundleRepositoryFromTarArchiveInputStream(createdRepository, tais);
     }

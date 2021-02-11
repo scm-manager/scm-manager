@@ -24,7 +24,6 @@
 
 package sonia.scm.importexport;
 
-import com.google.common.io.Files;
 import com.google.common.io.Resources;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
@@ -47,10 +46,10 @@ import sonia.scm.repository.api.UnbundleCommandBuilder;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.update.UpdateEngine;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
 
@@ -61,6 +60,7 @@ import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -98,9 +98,9 @@ class FullScmRepositoryImporterTest {
 
   @Test
   void shouldNotImportRepositoryIfFileNotExists(@TempDir Path temp) throws IOException {
-    File emptyFile = new File(temp.resolve("empty").toString());
-    Files.touch(emptyFile);
-    FileInputStream inputStream = new FileInputStream(emptyFile);
+    Path emptyFile = temp.resolve("empty");
+    Files.createFile(emptyFile);
+    FileInputStream inputStream = new FileInputStream(emptyFile.toFile());
     assertThrows(
       ImportFailedException.class,
       () -> fullImporter.importFromStream(REPOSITORY, inputStream)
@@ -130,7 +130,7 @@ class FullScmRepositoryImporterTest {
     }
 
     @Test
-    void shouldImportScmRepositoryArchiveIfRepositoryComesBeforeStores() throws IOException {
+    void shouldImportScmRepositoryArchiveWithWorkDir() throws IOException {
       InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
 
       Repository repository = fullImporter.importFromStream(REPOSITORY, stream);
@@ -141,6 +141,17 @@ class FullScmRepositoryImporterTest {
       Collection<RepositoryPermission> updatedPermissions = REPOSITORY.getPermissions();
       assertThat(updatedPermissions).hasSize(2);
       verify(unbundleCommandBuilder).unbundle((InputStream) argThat(argument -> argument.getClass().equals(FullScmRepositoryImporter.NoneClosingInputStream.class)));
+      verify(workdirProvider, times(1)).createNewWorkdir(REPOSITORY.getId());
+    }
+
+    @Test
+    void shouldNotExistWorkDirAfterRepositoryImportIsFinished(@TempDir Path temp) throws IOException {
+      when(workdirProvider.createNewWorkdir(REPOSITORY.getId())).thenReturn(temp.toFile());
+      InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
+      fullImporter.importFromStream(REPOSITORY, stream);
+
+      boolean workDirExists = Files.exists(temp);
+      assertThat(workDirExists).isFalse();
     }
 
     @Test
