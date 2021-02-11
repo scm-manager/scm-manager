@@ -292,8 +292,15 @@ public class RepositoryExportResource {
 
     return Response
       .ok(output, "application/x-gzip")
-      .header("content-disposition", createContentDispositionHeaderValue(repository, "tar.gz"))
+      .header("content-disposition", createContentDispositionHeaderValue(repository, resolveFullExportFileExtension(password)))
       .build();
+  }
+
+  private String resolveFullExportFileExtension(String password) {
+    if (!Strings.isNullOrEmpty(password)) {
+      return "tar.gz.enc";
+    }
+    return "tar.gz";
   }
 
   private Response exportRepository(Repository repository, boolean compressed, String password) {
@@ -301,7 +308,7 @@ public class RepositoryExportResource {
     String fileExtension;
     try (final RepositoryService service = serviceFactory.create(repository)) {
       BundleCommandBuilder bundleCommand = service.getBundleCommand();
-      fileExtension = resolveFileExtension(bundleCommand, compressed);
+      fileExtension = resolveFileExtension(bundleCommand, compressed, !Strings.isNullOrEmpty(password));
       output = os -> {
         try {
           OutputStream cos = repositoryImportExportEncryption.optionallyEncrypt(os, password);
@@ -328,12 +335,15 @@ public class RepositoryExportResource {
       .build();
   }
 
-  private String resolveFileExtension(BundleCommandBuilder bundleCommand, boolean compressed) {
+  private String resolveFileExtension(BundleCommandBuilder bundleCommand, boolean compressed, boolean encrypted) {
+    StringBuilder fileExtensionBuilder = new StringBuilder(bundleCommand.getFileExtension());
     if (compressed) {
-      return bundleCommand.getFileExtension() + ".gz";
-    } else {
-      return bundleCommand.getFileExtension();
+      fileExtensionBuilder.append(".gz");
     }
+    if (encrypted) {
+      fileExtensionBuilder.append(".enc");
+    }
+    return fileExtensionBuilder.toString();
   }
 
   private String createContentDispositionHeaderValue(Repository repository, String fileExtension) {
