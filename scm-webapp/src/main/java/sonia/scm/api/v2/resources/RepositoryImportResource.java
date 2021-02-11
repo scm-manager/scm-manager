@@ -445,22 +445,7 @@ public class RepositoryImportResource {
     private String password;
   }
 
-  interface ImportRepositoryDto {
-    String getNamespace();
-
-    @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
-    String getName();
-
-    @NotEmpty
-    String getType();
-
-    @Email
-    String getContact();
-
-    String getDescription();
-  }
-
-  interface ImportRepositoryFromUrlDto extends ImportRepositoryDto {
+  interface ImportRepositoryFromUrlDto extends CreateRepositoryDto {
     @NotEmpty
     String getImportUrl();
 
@@ -469,7 +454,7 @@ public class RepositoryImportResource {
     String getPassword();
   }
 
-  interface ImportRepositoryFromFileDto extends ImportRepositoryDto {
+  interface ImportRepositoryFromFileDto extends CreateRepositoryDto {
     String getPassword();
   }
 }
