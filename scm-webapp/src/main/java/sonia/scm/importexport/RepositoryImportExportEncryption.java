@@ -79,14 +79,14 @@ public class RepositoryImportExportEncryption {
   }
 
   private void writeSaltHeader(OutputStream origin, byte[] salt) throws IOException {
-    origin.write(SALTED_HEADER.getBytes(StandardCharsets.UTF_8));
+    origin.write(SALTED_HEADER.getBytes(StandardCharsets.ISO_8859_1));
     origin.write(salt);
   }
 
   private byte[] readSaltHeader(InputStream encryptedStream) throws IOException {
     byte[] header = new byte[8];
     int headerBytesRead = encryptedStream.read(header);
-    if (headerBytesRead != 8 || !SALTED_HEADER.equals(new String(header, StandardCharsets.UTF_8))) {
+    if (headerBytesRead != 8 || !SALTED_HEADER.equals(new String(header, StandardCharsets.ISO_8859_1))) {
       throw new IOException("Expected header with salt not found (\"Salted__\")");
     }
     byte[] salt = new byte[8];
