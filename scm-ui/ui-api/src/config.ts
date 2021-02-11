@@ -26,6 +26,7 @@ import { ApiResult, useIndexLink } from "./base";
 import { Config, Link } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient } from "@scm-manager/ui-components";
+import {requiredLink} from "./links";
 
 export const useConfig = (): ApiResult<Config> => {
   const indexLink = useIndexLink("config");
@@ -38,7 +39,7 @@ export const useUpdateConfig = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data, reset } = useMutation<unknown, Error, Config>(
     config => {
-      const updateUrl = (config._links.update as Link).href;
+      const updateUrl = requiredLink(config, "update");
       return apiClient.put(updateUrl, config, "application/vnd.scmm-config+json;v=2");
     },
     {

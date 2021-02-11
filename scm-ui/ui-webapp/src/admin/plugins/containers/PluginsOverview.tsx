@@ -42,7 +42,6 @@ import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
 import ShowPendingModal from "../components/ShowPendingModal";
 import { useAvailablePlugins, useInstalledPlugins, usePendingPlugins } from "@scm-manager/ui-api";
-import { useQueryClient } from "react-query";
 
 type Props = {
   installed: boolean;
@@ -50,17 +49,16 @@ type Props = {
 
 const PluginsOverview: FC<Props> = ({ installed }) => {
   const [t] = useTranslation("admin");
-  const queryClient = useQueryClient();
   const {
     data: availablePlugins,
     isLoading: isLoadingAvailablePlugins,
     error: availablePluginsError
-  } = useAvailablePlugins(!installed);
+  } = useAvailablePlugins({ enabled: !installed });
   const {
     data: installedPlugins,
     isLoading: isLoadingInstalledPlugins,
     error: installedPluginsError
-  } = useInstalledPlugins(installed);
+  } = useInstalledPlugins({ enabled: installed });
   const { data: pendingPlugins, isLoading: isLoadingPendingPlugins, error: pendingPluginsError } = usePendingPlugins();
   const [showPendingModal, setShowPendingModal] = useState<boolean>();
   const [showExecutePendingModal, setShowExecutePendingModal] = useState<boolean>();
@@ -69,13 +67,6 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   const collection = installed ? installedPlugins : availablePlugins;
   const error = (installed ? installedPluginsError : availablePluginsError) || pendingPluginsError;
   const loading = (installed ? isLoadingInstalledPlugins : isLoadingAvailablePlugins) || isLoadingPendingPlugins;
-
-  const refresh = () =>
-    Promise.all([
-      queryClient.invalidateQueries("availablePlugins"),
-      queryClient.invalidateQueries("installedPlugins"),
-      queryClient.invalidateQueries("pendingPlugins")
-    ]);
 
   const renderHeader = (actions: React.ReactNode) => {
     return (
@@ -168,7 +159,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
 
   const renderPluginsList = () => {
     if (collection?._embedded && collection._embedded.plugins.length > 0) {
-      return <PluginsList plugins={collection._embedded.plugins} refresh={refresh} />;
+      return <PluginsList plugins={collection._embedded.plugins} />;
     }
     return <Notification type="info">{t("plugins.noPlugins")}</Notification>;
   };
@@ -187,7 +178,6 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
       return (
         <CancelPendingActionModal
           onClose={() => setShowCancelModal(false)}
-          refresh={refresh}
           pendingPlugins={pendingPlugins}
         />
       );
@@ -196,7 +186,6 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
       return (
         <UpdateAllActionModal
           onClose={() => setShowUpdateAllModal(false)}
-          refresh={refresh}
           installedPlugins={collection}
         />
       );
