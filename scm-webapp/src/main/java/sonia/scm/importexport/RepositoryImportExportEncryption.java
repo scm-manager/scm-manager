@@ -41,6 +41,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.security.InvalidAlgorithmParameterException;
 import java.security.InvalidKeyException;
@@ -53,7 +54,8 @@ import java.util.Arrays;
 public class RepositoryImportExportEncryption {
 
   private static final SecureRandom SECURE_RANDOM = new SecureRandom();
-  private static final String SALTED_HEADER = "Salted__";
+  private static final String ENCRYPTION_HEADER = "SCMM_v1_";
+  private static final Charset ENCRYPTION_HEADER_CHARSET = StandardCharsets.ISO_8859_1;
 
   static {
     SECURE_RANDOM.setSeed(System.currentTimeMillis());
@@ -111,14 +113,14 @@ public class RepositoryImportExportEncryption {
   }
 
   private void writeSaltHeader(OutputStream origin, byte[] salt) throws IOException {
-    origin.write(SALTED_HEADER.getBytes(StandardCharsets.ISO_8859_1));
+    origin.write(ENCRYPTION_HEADER.getBytes(ENCRYPTION_HEADER_CHARSET));
     origin.write(salt);
   }
 
   private byte[] readSaltHeader(InputStream encryptedStream) throws IOException {
     byte[] header = new byte[8];
     int headerBytesRead = encryptedStream.read(header);
-    if (headerBytesRead != 8 || !SALTED_HEADER.equals(new String(header, StandardCharsets.ISO_8859_1))) {
+    if (headerBytesRead != 8 || !ENCRYPTION_HEADER.equals(new String(header, ENCRYPTION_HEADER_CHARSET))) {
       throw new IOException("Expected header with salt not found (\"Salted__\")");
     }
     byte[] salt = new byte[8];
