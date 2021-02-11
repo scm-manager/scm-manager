@@ -47,7 +47,7 @@ class RepositoryImportExportEncryptionTest {
     String secret = "";
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-    OutputStream os = encryption.encrypt(baos, secret);
+    OutputStream os = encryption.optionallyEncrypt(baos, secret);
     os.write(content.getBytes());
     os.flush();
 
@@ -60,7 +60,7 @@ class RepositoryImportExportEncryptionTest {
     String secret = "";
     ByteArrayInputStream bais = new ByteArrayInputStream(content.getBytes());
 
-    InputStream is = encryption.decrypt(bais, secret);
+    InputStream is = encryption.optionallyDecrypt(bais, secret);
 
     ByteSource byteSource = new ByteSource() {
       @Override
@@ -80,14 +80,14 @@ class RepositoryImportExportEncryptionTest {
     String secret = "secretPassword";
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-    OutputStream os = encryption.encrypt(baos, secret);
+    OutputStream os = encryption.optionallyEncrypt(baos, secret);
     os.write(content.getBytes());
     os.flush();
     os.close();
 
     assertThat(baos.toString()).isNotEqualTo(content);
 
-    InputStream is = encryption.decrypt(new ByteArrayInputStream(baos.toByteArray()), secret);
+    InputStream is = encryption.optionallyDecrypt(new ByteArrayInputStream(baos.toByteArray()), secret);
     ByteSource byteSource = new ByteSource() {
       @Override
       public InputStream openStream() {
@@ -106,6 +106,6 @@ class RepositoryImportExportEncryptionTest {
 
     ByteArrayInputStream notEncryptedStream = new ByteArrayInputStream(content.getBytes());
 
-    assertThrows(IOException.class, () -> encryption.decrypt(notEncryptedStream, secret));
+    assertThrows(IOException.class, () -> encryption.optionallyDecrypt(notEncryptedStream, secret));
   }
 }

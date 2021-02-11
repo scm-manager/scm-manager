@@ -65,6 +65,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.time.Instant;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -104,7 +105,6 @@ public class RepositoryExportResource {
    */
   @GET
   @Path("{type: ^(?!full$)[^/]+$}")
-  @Consumes(VndMediaType.REPOSITORY)
   @Operation(summary = "Exports the repository", description = "Exports the repository.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
@@ -148,7 +148,6 @@ public class RepositoryExportResource {
    */
   @GET
   @Path("full")
-  @Consumes(VndMediaType.REPOSITORY)
   @Operation(summary = "Exports the repository", description = "Exports the repository with metadata and environment information.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
@@ -192,7 +191,7 @@ public class RepositoryExportResource {
    */
   @POST
   @Path("{type: ^(?!full$)[^/]+$}")
-  @Consumes(VndMediaType.REPOSITORY)
+  @Consumes(VndMediaType.ENCRYPTION)
   @Operation(summary = "Exports the repository", description = "Exports the repository.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
@@ -219,7 +218,7 @@ public class RepositoryExportResource {
                                                @PathParam("name") String name,
                                                @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
                                                @DefaultValue("false") @QueryParam("compressed") boolean compressed,
-                                               @Valid RepositoryExportDto request
+                                               @Valid EncryptionDto request
 
 
   ) {
@@ -240,7 +239,7 @@ public class RepositoryExportResource {
    */
   @POST
   @Path("full")
-  @Consumes(VndMediaType.REPOSITORY)
+  @Consumes(VndMediaType.ENCRYPTION)
   @Operation(summary = "Exports the repository", description = "Exports the repository with metadata and environment information.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
@@ -265,7 +264,7 @@ public class RepositoryExportResource {
   public Response exportFullRepositoryWithPassword(@Context UriInfo uriInfo,
                                                    @PathParam("namespace") String namespace,
                                                    @PathParam("name") String name,
-                                                   @Valid RepositoryExportDto request
+                                                   @Valid EncryptionDto request
   ) {
     Repository repository = getVerifiedRepository(namespace, name);
     return exportFullRepository(repository, request.getPassword());
@@ -305,11 +304,9 @@ public class RepositoryExportResource {
       fileExtension = resolveFileExtension(bundleCommand, compressed);
       output = os -> {
         try {
-          if (!Strings.isNullOrEmpty(password)) {
-            os = repositoryImportExportEncryption.encrypt(os, password);
-          }
+          OutputStream cos = repositoryImportExportEncryption.optionallyEncrypt(os, password);
           if (compressed) {
-            GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
+            GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(cos);
             bundleCommand.bundle(gzipCompressorOutputStream);
             gzipCompressorOutputStream.finish();
           } else {
@@ -371,7 +368,7 @@ public class RepositoryExportResource {
   @Getter
   @Setter
   @NoArgsConstructor
-  static class RepositoryExportDto {
+  static class EncryptionDto {
     @NotBlank
     private String password;
   }

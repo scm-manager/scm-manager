@@ -87,7 +87,7 @@ public class FullScmRepositoryExporter {
     try (
       RepositoryService service = serviceFactory.create(repository);
       BufferedOutputStream bos = new BufferedOutputStream(outputStream);
-      OutputStream cos = repositoryImportExportEncryption.encrypt(bos, password);
+      OutputStream cos = repositoryImportExportEncryption.optionallyEncrypt(bos, password);
       GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(cos);
       TarArchiveOutputStream taos = new TarArchiveOutputStream(gzos);
     ) {

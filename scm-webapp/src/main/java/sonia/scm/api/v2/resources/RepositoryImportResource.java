@@ -32,8 +32,6 @@ import com.google.common.base.Strings;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.Links;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -358,14 +356,11 @@ public class RepositoryImportResource {
   }
 
   private InputStream decryptInputStream(InputStream inputStream, String password) {
-    if (!Strings.isNullOrEmpty(password)) {
-      try {
-        inputStream = repositoryImportExportEncryption.decrypt(inputStream, password);
-      } catch (IOException e) {
-        throw new ImportFailedException(ContextEntry.ContextBuilder.noContext(), "import failed", e);
-      }
+    try {
+      return repositoryImportExportEncryption.decrypt(inputStream, password);
+    } catch (IOException e) {
+      throw new ImportFailedException(ContextEntry.ContextBuilder.noContext(), "import failed", e);
     }
-    return inputStream;
   }
 
   @VisibleForTesting
@@ -436,15 +431,10 @@ public class RepositoryImportResource {
   @NoArgsConstructor
   @SuppressWarnings("java:S2160")
   public static class RepositoryImportFromUrlDto extends RepositoryDto implements ImportRepositoryFromUrlDto {
-
     @NotEmpty
     private String importUrl;
     private String username;
     private String password;
-
-    RepositoryImportFromUrlDto(Links links, Embedded embedded) {
-      super(links, embedded);
-    }
   }
 
   @Getter
@@ -453,10 +443,6 @@ public class RepositoryImportResource {
   @SuppressWarnings("java:S2160")
   public static class RepositoryImportFromFileDto extends RepositoryDto implements ImportRepositoryFromFileDto {
     private String password;
-
-    RepositoryImportFromFileDto(Links links, Embedded embedded) {
-      super(links, embedded);
-    }
   }
 
   interface ImportRepositoryDto {

@@ -27,6 +27,8 @@ package sonia.scm.importexport;
 
 import com.google.common.base.Strings;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 import javax.crypto.Cipher;
 import javax.crypto.CipherInputStream;
 import javax.crypto.CipherOutputStream;
@@ -57,25 +59,55 @@ public class RepositoryImportExportEncryption {
     SECURE_RANDOM.setSeed(System.currentTimeMillis());
   }
 
-  public OutputStream encrypt(OutputStream origin, String secret) throws IOException {
+  /**
+   * Returns an encrypting stream for the given origin stream, if a not-empty secret is given. Otherwise
+   * the original stream is returned. That is, this delegates to {@link #encrypt(OutputStream, String)} if
+   * a secret is given.
+   * @param origin The stream that should be encrypted, when a not-empty secret is given.
+   * @param secret The secret to use or <code>null</code> or an empty string, if no encryption should be used.
+   * @return An encrypted stream or <code>origin</code>, when no secret is given.
+   */
+  public OutputStream optionallyEncrypt(OutputStream origin, @Nullable String secret) throws IOException {
     if (!Strings.isNullOrEmpty(secret)) {
-      byte[] salt = createSalt();
-      writeSaltHeader(origin, salt);
-      Cipher cipher = createCipher(Cipher.ENCRYPT_MODE, secret, salt);
-      return new CipherOutputStream(origin, cipher);
+      return encrypt(origin, secret);
     } else {
       return origin;
     }
   }
 
-  public InputStream decrypt(InputStream encryptedStream, String secret) throws IOException {
+  /**
+   * Encrypts the given stream with the given secret.
+   */
+  public OutputStream encrypt(OutputStream origin, @Nonnull String secret) throws IOException {
+    byte[] salt = createSalt();
+    writeSaltHeader(origin, salt);
+    Cipher cipher = createCipher(Cipher.ENCRYPT_MODE, secret, salt);
+    return new CipherOutputStream(origin, cipher);
+  }
+
+  /**
+   * Returns a decrypting stream for the given input stream, if a not-empty secret is given. Otherwise
+   * the original stream is returned. That is, this delegated to {@link #decrypt(InputStream, String)} if
+   * a secret is given.
+   * @param stream The stream that should be decrypted, when a not-empty secret is given.
+   * @param secret The secret to use or <code>null</code> or an empty string, if no decryption should take place.
+   * @return A decrypted stream or <code>stream</code>, when no secret is given.
+   */
+  public InputStream optionallyDecrypt(InputStream stream, @Nullable String secret) throws IOException {
     if (!Strings.isNullOrEmpty(secret)) {
-      byte[] salt = readSaltHeader(encryptedStream);
-      Cipher cipher = createCipher(Cipher.DECRYPT_MODE, secret, salt);
-      return new CipherInputStream(encryptedStream, cipher);
+      return decrypt(stream, secret);
     } else {
-      return encryptedStream;
+      return stream;
     }
+  }
+
+  /**
+   * Decrypts the given stream with the given secret.
+   */
+  public InputStream decrypt(InputStream encryptedStream, @Nonnull String secret) throws IOException {
+    byte[] salt = readSaltHeader(encryptedStream);
+    Cipher cipher = createCipher(Cipher.DECRYPT_MODE, secret, salt);
+    return new CipherInputStream(encryptedStream, cipher);
   }
 
   private void writeSaltHeader(OutputStream origin, byte[] salt) throws IOException {
