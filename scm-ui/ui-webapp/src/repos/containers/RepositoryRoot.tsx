@@ -249,10 +249,9 @@ const RepositoryRoot = () => {
               <Route path={`${url}/settings/general`}>
                 <EditRepo repository={repository} />
               </Route>
-              <Route
-                path={`${url}/settings/permissions`}
-                render={() => <Permissions namespace={repository.namespace} repoName={repository.name} />}
-              />
+              <Route path={`${url}/settings/permissions`}>
+                <Permissions namespaceOrRepository={repository} />
+              </Route>
               <Route
                 exact
                 path={`${url}/code/changeset/:id`}

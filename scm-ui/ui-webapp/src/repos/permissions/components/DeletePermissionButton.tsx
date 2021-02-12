@@ -23,45 +23,31 @@
  */
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Permission } from "@scm-manager/ui-types";
-import { ConfirmAlert } from "@scm-manager/ui-components";
+import { Namespace, Permission, Repository } from "@scm-manager/ui-types";
+import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { useDeletePermission } from "@scm-manager/ui-api";
 
 type Props = {
   permission: Permission;
-  namespace: string;
-  repoName: string;
+  namespaceOrRepository: Namespace | Repository;
   confirmDialog?: boolean;
-  deletePermission: (permission: Permission, namespace: string, repoName: string) => void;
-  loading: boolean;
 };
 
-const DeletePermissionButton: FC<Props> = ({
-  confirmDialog = true,
-  permission,
-  namespace,
-  deletePermission,
-  repoName
-}) => {
+const DeletePermissionButton: FC<Props> = ({ namespaceOrRepository, permission, confirmDialog = true }) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
+  const { isLoading, error, remove } = useDeletePermission(namespaceOrRepository);
   const [t] = useTranslation("repos");
 
-  const deletePermissionCallback = () => {
-    deletePermission(permission, namespace, repoName);
+  const deletePermission = () => {
+    remove(permission);
+    setShowConfirmAlert(false);
   };
 
   const confirmDelete = () => {
     setShowConfirmAlert(true);
   };
 
-  const isDeletable = () => {
-    return permission._links.delete;
-  };
-
-  const action = confirmDialog ? confirmDelete : deletePermissionCallback;
-
-  if (!isDeletable()) {
-    return null;
-  }
+  const action = confirmDialog ? confirmDelete : deletePermission;
 
   if (showConfirmAlert) {
     return (
@@ -72,7 +58,8 @@ const DeletePermissionButton: FC<Props> = ({
           {
             className: "is-outlined",
             label: t("permission.delete-permission-button.confirm-alert.submit"),
-            onClick: () => deletePermissionCallback()
+            isLoading,
+            onClick: () => deletePermission()
           },
           {
             label: t("permission.delete-permission-button.confirm-alert.cancel"),
@@ -85,11 +72,14 @@ const DeletePermissionButton: FC<Props> = ({
   }
 
   return (
-    <a className="level-item" onClick={action}>
-      <span className="icon is-small">
-        <i className="fas fa-trash" />
-      </span>
-    </a>
+    <>
+      <ErrorNotification error={error} />
+      <a className="level-item" onClick={action}>
+        <span className="icon is-small">
+          <i className="fas fa-trash" />
+        </span>
+      </a>
+    </>
   );
 };
 

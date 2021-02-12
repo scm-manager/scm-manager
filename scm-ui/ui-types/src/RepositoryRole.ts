@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import { Links, PagedCollection } from "./hal";
 
 export type RepositoryRole = {
   name: string;
@@ -32,3 +32,9 @@ export type RepositoryRole = {
   lastModified?: string;
   _links: Links;
 };
+
+type RepositoryRoleEmbedded = {
+  repositoryRoles: RepositoryRole[];
+};
+
+export type RepositoryRoleCollection = PagedCollection<RepositoryRoleEmbedded>;
