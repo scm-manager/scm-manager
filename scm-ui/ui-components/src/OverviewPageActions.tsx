@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import classNames from "classnames";
 import { Button, DropDown, urls } from "./index";
@@ -50,6 +50,7 @@ const OverviewPageActions: FC<Props> = ({
 }) => {
   const history = useHistory();
   const location = useLocation();
+  const [filterValue, setFilterValue] = useState(urls.getQueryStringFromLocation(location));
   const groupSelector = groups && (
     <div className={"column is-flex"}>
       <DropDown
@@ -72,6 +73,15 @@ const OverviewPageActions: FC<Props> = ({
     return null;
   };
 
+  const filter = (filter: string) => {
+    if ((filter && filter !== filterValue) || (!filter && filterValue)) {
+      history.push(`/${link}/?q=${filter}`);
+    } else {
+      history.push(`${location.pathname}?q=${filter}`);
+    }
+    setFilterValue(filter);
+  };
+
   return (
     <div className={"columns is-tablet"}>
       {groupSelector}
@@ -79,9 +89,7 @@ const OverviewPageActions: FC<Props> = ({
         <FilterInput
           placeholder={searchPlaceholder}
           value={urls.getQueryStringFromLocation(location)}
-          filter={filter => {
-            history.push(`${location.pathname}?q=${filter}`);
-          }}
+          filter={filter}
           testId={testId + "-filter"}
         />
       </div>
