@@ -111,7 +111,7 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
     PushCommandRequest request = new PushCommandRequest();
     request.setRemoteRepository(incomingRepository);
     cmd.push(request);
-    GitPullCommand pullCommand = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, null, new GitConfig()));
+    GitPullCommand pullCommand = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, null, new GitConfig()), hookContextFactory, eventBus);
     PullCommandRequest pullRequest = new PullCommandRequest();
     pullRequest.setRemoteRepository(incomingRepository);
     pullCommand.pull(pullRequest);

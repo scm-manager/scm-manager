@@ -39,11 +39,13 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.user.User;
 import sonia.scm.user.UserTestData;
 
@@ -83,6 +85,9 @@ public class AbstractRemoteCommandTestBase
 
     incoming = Git.init().setDirectory(incomingDirectory).setBare(false).call();
     outgoing = Git.init().setDirectory(outgoingDirectory).setBare(false).call();
+
+    eventBus = mock(ScmEventBus.class);
+    hookContextFactory = mock(HookContextFactory.class);
 
     handler = mock(GitRepositoryHandler.class);
     when(handler.getDirectory(incomingRepository.getId())).thenReturn(
@@ -207,4 +212,7 @@ public class AbstractRemoteCommandTestBase
 
   /** Field description */
   private ScmTransportProtocol proto;
+
+  protected ScmEventBus eventBus;
+  protected HookContextFactory hookContextFactory;
 }

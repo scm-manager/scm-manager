@@ -44,24 +44,20 @@ import static org.junit.Assert.assertNotNull;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
 public class GitIncomingCommandTest
-  extends AbstractRemoteCommandTestBase
-{
+  extends AbstractRemoteCommandTestBase {
 
   /**
    * Method description
-   *
    *
    * @throws GitAPIException
    * @throws IOException
    */
   @Test
   public void testGetIncomingChangesets()
-    throws IOException, GitAPIException
-  {
+    throws IOException, GitAPIException {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
     RevCommit c1 = commit(outgoing, "added a");
@@ -84,22 +80,20 @@ public class GitIncomingCommandTest
     assertCommitsEquals(c2, cpr.getChangesets().get(1));
   }
 
-    /**
+  /**
    * Method description
-   *
    *
    * @throws GitAPIException
    * @throws IOException
    */
   @Test
   public void testGetIncomingChangesetsWithAllreadyPullChangesets()
-    throws IOException, GitAPIException
-  {
+    throws IOException, GitAPIException {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
     commit(outgoing, "added a");
 
-    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory()), new GitConfig()));
+    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory()), new GitConfig()), hookContextFactory, eventBus);
     PullCommandRequest req = new PullCommandRequest();
     req.setRemoteRepository(outgoingRepository);
     pull.pull(req);
@@ -124,13 +118,11 @@ public class GitIncomingCommandTest
   /**
    * Method description
    *
-   *
    * @throws IOException
    */
   @Test
   public void testGetIncomingChangesetsWithEmptyRepository()
-    throws IOException
-  {
+    throws IOException {
     GitIncomingCommand cmd = createCommand();
     IncomingCommandRequest request = new IncomingCommandRequest();
 
@@ -146,15 +138,13 @@ public class GitIncomingCommandTest
   /**
    * Check for correct behaviour
    *
-   *
    * @throws GitAPIException
    * @throws IOException
    */
   @Test
   @Ignore
   public void testGetIncomingChangesetsWithUnrelatedRepository()
-    throws IOException, GitAPIException
-  {
+    throws IOException, GitAPIException {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
     commit(outgoing, "added a");
