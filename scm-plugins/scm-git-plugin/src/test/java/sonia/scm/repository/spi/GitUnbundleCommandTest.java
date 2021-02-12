@@ -29,9 +29,16 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.GitChangesetConverter;
+import sonia.scm.repository.GitChangesetConverterFactory;
+import sonia.scm.repository.api.HookContextFactory;
 
-import javax.annotation.Nonnull;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
@@ -42,14 +49,24 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class GitUnbundleCommandTest extends AbstractGitCommandTestBase {
+  @Mock
   private GitContext gitContext;
+  @Mock
+  private HookContextFactory hookContextFactory;
+  @Mock
+  private ScmEventBus eventBus;
+  @Mock
+  private GitChangesetConverterFactory changesetConverterFactory;
+
+  @InjectMocks
   private GitUnbundleCommand unbundleCommand;
 
   @BeforeEach
   void initCommand() {
     gitContext = mock(GitContext.class);
-    unbundleCommand = new GitUnbundleCommand(gitContext);
+    unbundleCommand = new GitUnbundleCommand(gitContext, hookContextFactory, eventBus, changesetConverterFactory);
   }
 
   @Test

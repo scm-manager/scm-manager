@@ -26,7 +26,6 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -41,29 +40,24 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.Changeset;
+import sonia.scm.repository.GitChangesetConverter;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.Person;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.Tag;
-import sonia.scm.repository.api.HookBranchProvider;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
-import sonia.scm.repository.api.HookFeature;
-import sonia.scm.repository.api.HookTagProvider;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullResponse;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -76,29 +70,20 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   private static final Logger LOG = LoggerFactory.getLogger(GitPullCommand.class);
   private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
+  private final GitChangesetConverterFactory changesetConverterFactory;
 
-  /**
-   * Constructs ...
-   *
-   * @param handler
-   * @param context
-   * @param hookContextFactory
-   * @param eventBus
-   */
   @Inject
-  public GitPullCommand(GitRepositoryHandler handler, GitContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
+  public GitPullCommand(GitRepositoryHandler handler,
+                        GitContext context,
+                        HookContextFactory hookContextFactory,
+                        ScmEventBus eventBus,
+                        GitChangesetConverterFactory changesetConverterFactory) {
     super(handler, context);
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
+    this.changesetConverterFactory = changesetConverterFactory;
   }
 
-  /**
-   * Method description
-   *
-   * @param request
-   * @return
-   * @throws IOException
-   */
   @Override
   public PullResponse pull(PullCommandRequest request)
     throws IOException {
@@ -128,13 +113,6 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     return new PullResponse(counter);
   }
 
-  /**
-   * Method description
-   *
-   * @param git
-   * @param tru
-   * @return
-   */
   private long count(Git git, TrackingRefUpdate tru) {
     long counter = 0;
 
@@ -186,7 +164,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     LOG.debug("pull changes from {} to {}",
       sourceDirectory.getAbsolutePath(), repository.getId());
 
-    PullResponse response = null;
+    PullResponse response;
 
     org.eclipse.jgit.lib.Repository source = null;
 
@@ -238,29 +216,23 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   }
 
   private void firePostReceiveRepositoryHookEvent(Git git, FetchResult result) {
-    List<String> branches = getBrachesFromFetchResult(result);
-    List<Tag> tags = getTagsFromFetchResult(result);
-    List<Changeset> changesets = getChangesetsForPulledRepository(git);
-    eventBus.post(new PostReceiveRepositoryHookEvent(createPullHookEvent(new PullHookContextProvider(tags, changesets, branches))));
+    try {
+      org.eclipse.jgit.lib.Repository repository = context.open();
+      List<String> branches = getBranchesFromFetchResult(result);
+      List<Tag> tags = getTagsFromFetchResult(result);
+      Iterable<RevCommit> changesets = getChangesetsForPulledRepository(git);
+      eventBus.post(createEvent(changesetConverterFactory.create(repository), branches, tags, changesets));
+    } catch (IOException | GitAPIException e) {
+      throw new ImportFailedException(
+        ContextEntry.ContextBuilder.entity(context.getRepository()).build(),
+        "Could not fire post receive repository hook event after unbundle",
+        e
+      );
+    }
   }
 
-  private List<Changeset> getChangesetsForPulledRepository(Git git) {
-    List<Changeset> changesets = new ArrayList<>();
-    try {
-      for (RevCommit revCommit : git.log().all().call()) {
-        changesets.add(
-          new Changeset(
-            revCommit.getName(),
-            GitUtil.getCommitTime(revCommit),
-            new Person(revCommit.getAuthorIdent().getName(), revCommit.getAuthorIdent().getEmailAddress()),
-            revCommit.getFullMessage()
-          )
-        );
-      }
-    } catch (GitAPIException | IOException e) {
-      throw new ImportFailedException(ContextEntry.ContextBuilder.entity(repository).build(), "Could not pull changes from remote", e);
-    }
-    return changesets;
+  private Iterable<RevCommit> getChangesetsForPulledRepository(Git git) throws IOException, GitAPIException {
+    return git.log().all().call();
   }
 
   private List<Tag> getTagsFromFetchResult(FetchResult result) {
@@ -270,67 +242,16 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
       .collect(Collectors.toList());
   }
 
-  private List<String> getBrachesFromFetchResult(FetchResult result) {
+  private List<String> getBranchesFromFetchResult(FetchResult result) {
     return result.getAdvertisedRefs().stream()
       .filter(r -> r.getName().startsWith("refs/heads"))
       .map(r -> r.getLeaf().getName())
       .collect(Collectors.toList());
   }
 
-  private RepositoryHookEvent createPullHookEvent(PullHookContextProvider hookEvent) {
-    HookContext context = hookContextFactory.createContext(hookEvent, this.context.getRepository());
-    return new RepositoryHookEvent(context, this.context.getRepository(), RepositoryHookType.POST_RECEIVE);
-  }
-
-  private static class PullHookContextProvider extends HookContextProvider {
-    private final List<Tag> newTags;
-    private final List<Changeset> newChangesets;
-    private final List<String> newBranches;
-
-    private PullHookContextProvider(List<Tag> newTags, List<Changeset> newChangesets, List<String> newBranches) {
-      this.newTags = newTags;
-      this.newChangesets = newChangesets;
-      this.newBranches = newBranches;
-    }
-
-    @Override
-    public Set<HookFeature> getSupportedFeatures() {
-      return ImmutableSet.of(HookFeature.CHANGESET_PROVIDER, HookFeature.BRANCH_PROVIDER, HookFeature.TAG_PROVIDER);
-    }
-
-    @Override
-    public HookTagProvider getTagProvider() {
-      return new HookTagProvider() {
-        @Override
-        public List<Tag> getCreatedTags() {
-          return newTags;
-        }
-
-        @Override
-        public List<Tag> getDeletedTags() {
-          return null;
-        }
-      };
-    }
-
-    @Override
-    public HookBranchProvider getBranchProvider() {
-      return new HookBranchProvider() {
-        @Override
-        public List<String> getCreatedOrModified() {
-          return newBranches;
-        }
-
-        @Override
-        public List<String> getDeletedOrClosed() {
-          return null;
-        }
-      };
-    }
-
-    @Override
-    public HookChangesetProvider getChangesetProvider() {
-      return r -> new HookChangesetResponse(newChangesets);
-    }
+  private PostReceiveRepositoryHookEvent createEvent(GitChangesetConverter converter, List<String> branches, List<Tag> tags, Iterable<RevCommit> changesets) {
+    HookContext context = hookContextFactory.createContext(new GitImportHookContextProvider(converter, tags, changesets, branches), this.context.getRepository());
+    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, this.context.getRepository(), RepositoryHookType.POST_RECEIVE);
+    return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
   }
 }

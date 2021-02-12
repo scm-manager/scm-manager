@@ -93,7 +93,7 @@ public class GitIncomingCommandTest
 
     commit(outgoing, "added a");
 
-    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory()), new GitConfig()), hookContextFactory, eventBus);
+    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory()), new GitConfig()), hookContextFactory, eventBus, GitTestHelper.createConverterFactory());
     PullCommandRequest req = new PullCommandRequest();
     req.setRemoteRepository(outgoingRepository);
     pull.pull(req);

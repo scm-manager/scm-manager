@@ -28,6 +28,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Before;
 import org.junit.Test;
 import sonia.scm.repository.GitConfig;
+import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.Modifications;
 
 import java.io.File;
@@ -111,7 +112,7 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
     PushCommandRequest request = new PushCommandRequest();
     request.setRemoteRepository(incomingRepository);
     cmd.push(request);
-    GitPullCommand pullCommand = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, null, new GitConfig()), hookContextFactory, eventBus);
+    GitPullCommand pullCommand = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, null, new GitConfig()), hookContextFactory, eventBus, GitTestHelper.createConverterFactory());
     PullCommandRequest pullRequest = new PullCommandRequest();
     pullRequest.setRemoteRepository(incomingRepository);
     pullCommand.pull(pullRequest);
