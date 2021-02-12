@@ -56,7 +56,8 @@ export { SelectValue, AutocompleteObject } from "./Autocomplete";
 
 export { Plugin, PluginCollection, PluginGroup, PendingPlugins } from "./Plugin";
 
-export { RepositoryRole } from "./RepositoryRole";
+export * from "./RepositoryRole";
+export * from "./RepositoryVerbs";
 
 export { NamespaceStrategies } from "./NamespaceStrategies";
 

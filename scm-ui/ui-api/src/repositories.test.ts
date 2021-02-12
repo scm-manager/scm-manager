@@ -360,7 +360,7 @@ describe("Test repository hooks", () => {
       await shouldInvalidateQuery(["repositories"], repositoryCollection);
     });
 
-    it("should call onSucess callback", async () => {
+    it("should call onSuccess callback", async () => {
       let repo;
       await deleteRepository({
         onSuccess: repository => {

@@ -21,11 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
 import { Select } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
+type Props = {
   availableRoles?: string[];
   handleRoleChange: (p: string) => void;
   role: string;
@@ -34,34 +33,36 @@ type Props = WithTranslation & {
   loading?: boolean;
 };
 
-class RoleSelector extends React.Component<Props> {
-  render() {
-    const { availableRoles, role, handleRoleChange, loading, label, helpText } = this.props;
+const emptyOption = {
+  label: "",
+  value: ""
+};
 
-    if (!availableRoles) return null;
+const createSelectOptions = (roles: string[]) => {
+  return roles.map(role => {
+    return {
+      label: role,
+      value: role
+    };
+  });
+};
 
-    const options = role ? this.createSelectOptions(availableRoles) : ["", ...this.createSelectOptions(availableRoles)];
-
-    return (
-      <Select
-        onChange={handleRoleChange}
-        value={role ? role : ""}
-        options={options}
-        loading={loading}
-        label={label}
-        helpText={helpText}
-      />
-    );
+const RoleSelector: FC<Props> = ({ availableRoles, role, handleRoleChange, loading, label, helpText }) => {
+  if (!availableRoles) {
+    return null;
   }
+  const options = role ? createSelectOptions(availableRoles) : [emptyOption, ...createSelectOptions(availableRoles)];
 
-  createSelectOptions(roles: string[]) {
-    return roles.map(role => {
-      return {
-        label: role,
-        value: role
-      };
-    });
-  }
-}
+  return (
+    <Select
+      onChange={handleRoleChange}
+      value={role ? role : ""}
+      options={options}
+      loading={loading}
+      label={label}
+      helpText={helpText}
+    />
+  );
+};
 
-export default withTranslation("repos")(RoleSelector);
+export default RoleSelector;
