@@ -62,6 +62,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -308,7 +309,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
         @Override
         public List<Tag> getDeletedTags() {
-          return null;
+          return Collections.emptyList();
         }
       };
     }
@@ -323,7 +324,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
         @Override
         public List<String> getDeletedOrClosed() {
-          return null;
+          return Collections.emptyList();
         }
       };
     }
