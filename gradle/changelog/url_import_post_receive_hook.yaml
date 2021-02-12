@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fire post receive repository hook event after the repository import via URL has been finished for Git and Mercurial. ([#1542](https://github.com/scm-manager/scm-manager/pull/1542))
