@@ -24,10 +24,9 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -41,15 +40,31 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
+import sonia.scm.repository.Person;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookType;
+import sonia.scm.repository.Tag;
+import sonia.scm.repository.api.HookBranchProvider;
+import sonia.scm.repository.api.HookContext;
+import sonia.scm.repository.api.HookContextFactory;
+import sonia.scm.repository.api.HookFeature;
+import sonia.scm.repository.api.HookTagProvider;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullResponse;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author Sebastian Sdorra
@@ -57,31 +72,25 @@ import java.io.IOException;
 public class GitPullCommand extends AbstractGitPushOrPullCommand
   implements PullCommand {
 
-  /**
-   * Field description
-   */
   private static final String REF_SPEC = "refs/heads/*:refs/heads/*";
-
-  /**
-   * Field description
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitPullCommand.class);
-
-  //~--- constructors ---------------------------------------------------------
+  private static final Logger LOG = LoggerFactory.getLogger(GitPullCommand.class);
+  private final HookContextFactory hookContextFactory;
+  private final ScmEventBus eventBus;
 
   /**
    * Constructs ...
    *
    * @param handler
    * @param context
+   * @param hookContextFactory
+   * @param eventBus
    */
   @Inject
-  public GitPullCommand(GitRepositoryHandler handler, GitContext context) {
+  public GitPullCommand(GitRepositoryHandler handler, GitContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
     super(handler, context);
+    this.hookContextFactory = hookContextFactory;
+    this.eventBus = eventBus;
   }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
@@ -108,13 +117,13 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   }
 
   private PullResponse convert(Git git, FetchResult fetch) {
-    long counter = 0l;
+    long counter = 0;
 
     for (TrackingRefUpdate tru : fetch.getTrackingRefUpdates()) {
       counter += count(git, tru);
     }
 
-    logger.debug("received {} changesets by pull", counter);
+    LOG.debug("received {} changesets by pull", counter);
 
     return new PullResponse(counter);
   }
@@ -151,12 +160,12 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
           counter += Iterables.size(commits);
         }
 
-        logger.trace("counting {} commits for ref update {}", counter, tru);
+        LOG.trace("counting {} commits for ref update {}", counter, tru);
       } catch (Exception ex) {
-        logger.error("could not count pushed/pulled changesets", ex);
+        LOG.error("could not count pushed/pulled changesets", ex);
       }
     } else {
-      logger.debug("do not count non branch ref update {}", tru);
+      LOG.debug("do not count non branch ref update {}", tru);
     }
 
     return counter;
@@ -174,7 +183,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     Preconditions.checkArgument(sourceDirectory.exists(),
       "target repository directory does not exists");
 
-    logger.debug("pull changes from {} to {}",
+    LOG.debug("pull changes from {} to {}",
       sourceDirectory.getAbsolutePath(), repository.getId());
 
     PullResponse response = null;
@@ -193,14 +202,14 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
   private PullResponse pullFromUrl(PullCommandRequest request)
     throws IOException {
-    logger.debug("pull changes from {} to {}", request.getRemoteUrl(), repository);
+    LOG.debug("pull changes from {} to {}", request.getRemoteUrl(), repository);
 
     PullResponse response;
     Git git = Git.wrap(open());
-
+    FetchResult result;
     try {
       //J-
-      FetchResult result = git.fetch()
+      result = git.fetch()
         .setCredentialsProvider(
           new UsernamePasswordCredentialsProvider(
             Strings.nullToEmpty(request.getUsername()),
@@ -223,6 +232,105 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
       );
     }
 
+    firePostReceiveRepositoryHookEvent(git, result);
+
     return response;
+  }
+
+  private void firePostReceiveRepositoryHookEvent(Git git, FetchResult result) {
+    List<String> branches = getBrachesFromFetchResult(result);
+    List<Tag> tags = getTagsFromFetchResult(result);
+    List<Changeset> changesets = getChangesetsForPulledRepository(git);
+    eventBus.post(new PostReceiveRepositoryHookEvent(createPullHookEvent(new PullHookContextProvider(tags, changesets, branches))));
+  }
+
+  private List<Changeset> getChangesetsForPulledRepository(Git git) {
+    List<Changeset> changesets = new ArrayList<>();
+    try {
+      for (RevCommit revCommit : git.log().all().call()) {
+        changesets.add(
+          new Changeset(
+            revCommit.getName(),
+            GitUtil.getCommitTime(revCommit),
+            new Person(revCommit.getAuthorIdent().getName(), revCommit.getAuthorIdent().getEmailAddress()),
+            revCommit.getFullMessage()
+          )
+        );
+      }
+    } catch (GitAPIException | IOException e) {
+      throw new ImportFailedException(ContextEntry.ContextBuilder.entity(repository).build(), "Could not pull changes from remote", e);
+    }
+    return changesets;
+  }
+
+  private List<Tag> getTagsFromFetchResult(FetchResult result) {
+    return result.getAdvertisedRefs().stream()
+      .filter(r -> r.getName().startsWith("refs/tags"))
+      .map(r -> new Tag(r.getName(), r.getObjectId().getName()))
+      .collect(Collectors.toList());
+  }
+
+  private List<String> getBrachesFromFetchResult(FetchResult result) {
+    return result.getAdvertisedRefs().stream()
+      .filter(r -> r.getName().startsWith("refs/heads"))
+      .map(r -> r.getLeaf().getName())
+      .collect(Collectors.toList());
+  }
+
+  private RepositoryHookEvent createPullHookEvent(PullHookContextProvider hookEvent) {
+    HookContext context = hookContextFactory.createContext(hookEvent, this.context.getRepository());
+    return new RepositoryHookEvent(context, this.context.getRepository(), RepositoryHookType.POST_RECEIVE);
+  }
+
+  private static class PullHookContextProvider extends HookContextProvider {
+    private final List<Tag> newTags;
+    private final List<Changeset> newChangesets;
+    private final List<String> newBranches;
+
+    private PullHookContextProvider(List<Tag> newTags, List<Changeset> newChangesets, List<String> newBranches) {
+      this.newTags = newTags;
+      this.newChangesets = newChangesets;
+      this.newBranches = newBranches;
+    }
+
+    @Override
+    public Set<HookFeature> getSupportedFeatures() {
+      return ImmutableSet.of(HookFeature.CHANGESET_PROVIDER, HookFeature.BRANCH_PROVIDER, HookFeature.TAG_PROVIDER);
+    }
+
+    @Override
+    public HookTagProvider getTagProvider() {
+      return new HookTagProvider() {
+        @Override
+        public List<Tag> getCreatedTags() {
+          return newTags;
+        }
+
+        @Override
+        public List<Tag> getDeletedTags() {
+          return null;
+        }
+      };
+    }
+
+    @Override
+    public HookBranchProvider getBranchProvider() {
+      return new HookBranchProvider() {
+        @Override
+        public List<String> getCreatedOrModified() {
+          return newBranches;
+        }
+
+        @Override
+        public List<String> getDeletedOrClosed() {
+          return null;
+        }
+      };
+    }
+
+    @Override
+    public HookChangesetProvider getChangesetProvider() {
+      return r -> new HookChangesetResponse(newChangesets);
+    }
   }
 }
