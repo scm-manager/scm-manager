@@ -88,7 +88,21 @@ class FullScmRepositoryImporterTest {
   private WorkdirProvider workdirProvider;
 
   @InjectMocks
+  private EnvironmentCheckStep environmentCheckStep;
+  @InjectMocks
+  private MetadataImportStep metadataImportStep;
+  @InjectMocks
+  private StoreImportStep storeImportStep;
+  @InjectMocks
+  private RepositoryImportStep repositoryImportStep;
+
   private FullScmRepositoryImporter fullImporter;
+
+  @BeforeEach
+  void initTestObject() {
+    FullScmRepositoryImporterProcess process = new FullScmRepositoryImporterProcess(environmentCheckStep, metadataImportStep, storeImportStep, repositoryImportStep, repositoryManager);
+    fullImporter = new FullScmRepositoryImporter(process);
+  }
 
   @BeforeEach
   void initRepositoryService() {
@@ -140,7 +154,7 @@ class FullScmRepositoryImporterTest {
       verify(repositoryManager).modify(REPOSITORY);
       Collection<RepositoryPermission> updatedPermissions = REPOSITORY.getPermissions();
       assertThat(updatedPermissions).hasSize(2);
-      verify(unbundleCommandBuilder).unbundle((InputStream) argThat(argument -> argument.getClass().equals(FullScmRepositoryImporter.NoneClosingInputStream.class)));
+      verify(unbundleCommandBuilder).unbundle((InputStream) argThat(argument -> argument.getClass().equals(NoneClosingInputStream.class)));
       verify(workdirProvider, times(1)).createNewWorkdir(REPOSITORY.getId());
     }
 
@@ -171,7 +185,7 @@ class FullScmRepositoryImporterTest {
       assertThat(repository).isEqualTo(REPOSITORY);
       verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class));
       verify(repositoryManager).modify(REPOSITORY);
-      verify(unbundleCommandBuilder).unbundle((InputStream) argThat(argument -> argument.getClass().equals(FullScmRepositoryImporter.NoneClosingInputStream.class)));
+      verify(unbundleCommandBuilder).unbundle((InputStream) argThat(argument -> argument.getClass().equals(NoneClosingInputStream.class)));
       verify(workdirProvider, never()).createNewWorkdir(REPOSITORY.getId());
     }
   }
