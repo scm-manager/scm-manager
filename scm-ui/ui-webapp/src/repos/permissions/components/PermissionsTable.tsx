@@ -26,28 +26,31 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { LabelWithHelpIcon, Notification } from "@scm-manager/ui-components";
 import SinglePermission from "../containers/SinglePermission";
-import { PermissionCollection, RepositoryRole } from "@scm-manager/ui-types";
+import { Namespace, PermissionCollection, Repository, RepositoryRole } from "@scm-manager/ui-types";
 
 type Props = {
-  availableRepositoryRoles: RepositoryRole[];
+  availableRoles: RepositoryRole[];
   availableVerbs: string[];
-  namespace: string;
-  repoName?: string;
   permissions: PermissionCollection;
+  namespaceOrRepository: Namespace | Repository;
 };
 
-const PermissionsTable: FC<Props> = ({
-  availableRepositoryRoles,
-  availableVerbs,
-  namespace,
-  repoName,
-  permissions,
-}) => {
+const PermissionsTable: FC<Props> = ({ availableRoles, availableVerbs, namespaceOrRepository, permissions }) => {
   const [t] = useTranslation("repos");
 
-  if (permissions?.length === 0) {
+  if (permissions._embedded.permissions?.length === 0) {
     return <Notification type="info">{t("permission.noPermissions")}</Notification>;
   }
+
+  permissions?._embedded.permissions.sort((a, b) => {
+    if (a.name > b.name) {
+      return 1;
+    } else if (a.name < b.name) {
+      return -1;
+    } else {
+      return 0;
+    }
+  });
 
   return (
     <table className="card-table table is-hoverable is-fullwidth">
@@ -69,14 +72,13 @@ const PermissionsTable: FC<Props> = ({
         </tr>
       </thead>
       <tbody>
-        {permissions.map((permission) => {
+        {permissions?._embedded.permissions.map(permission => {
           return (
             <SinglePermission
-              availableRepositoryRoles={availableRepositoryRoles}
-              availableRepositoryVerbs={availableVerbs}
+              availableRoles={availableRoles}
+              availableVerbs={availableVerbs}
               key={permission.name + permission.groupPermission.toString()}
-              namespace={namespace}
-              repoName={repoName}
+              namespaceOrRepository={namespaceOrRepository}
               permission={permission}
             />
           );

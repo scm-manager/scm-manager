@@ -20,25 +20,25 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
-import { HalRepresentationWithEmbedded, Links } from "./hal";
+import { validation } from "@scm-manager/ui-components";
+import { Permission } from "@scm-manager/ui-types";
 
-export type PermissionCreateEntry = {
-  name: string;
-  role?: string;
-  verbs?: string[];
-  groupPermission: boolean;
+const isNameValid = validation.isNameValid;
+
+export { isNameValid };
+
+export const isPermissionValid = (name: string, groupPermission: boolean, permissions: Permission[]) => {
+  return isNameValid(name) && !currentPermissionIncludeName(name, groupPermission, permissions);
 };
 
-export type Permission = PermissionCreateEntry & {
-  _links: Links;
+const currentPermissionIncludeName = (name: string, groupPermission: boolean, permissions: Permission[]) => {
+  for (let i = 0; i < permissions.length; i++) {
+    if (permissions[i].name === name && permissions[i].groupPermission === groupPermission) {
+      return true;
+    }
+  }
+  return false;
 };
-
-type PermissionEmbedded = {
-  permissions: Permission[];
-};
-
-// TODO fix wrong usage of PermissionCollection
-
-export type PermissionCollection = HalRepresentationWithEmbedded<PermissionEmbedded>;

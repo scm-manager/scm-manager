@@ -74,12 +74,9 @@ const NamespaceRoot: FC = () => {
           <PrimaryContentColumn>
             <Switch>
               <Redirect exact from={`${url}/settings`} to={`${url}/settings/permissions`} />
-              <Route
-                path={`${url}/settings/permissions`}
-                render={() => {
-                  return <Permissions namespace={namespace.namespace} />;
-                }}
-              />
+              <Route path={`${url}/settings/permissions`}>
+                <Permissions namespaceOrRepository={namespace} />
+              </Route>
             </Switch>
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>
