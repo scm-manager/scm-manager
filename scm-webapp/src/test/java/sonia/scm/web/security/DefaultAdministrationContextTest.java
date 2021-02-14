@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.security;
 
 import com.google.inject.Guice;
@@ -36,9 +36,9 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.security.Authentications;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -61,7 +61,7 @@ class DefaultAdministrationContextTest {
   void shouldBindSubject() {
     context.runAsAdmin(() -> {
       Subject adminSubject = SecurityUtils.getSubject();
-      assertThat(adminSubject.getPrincipal()).isEqualTo("scmsystem");
+      assertThat(adminSubject.getPrincipal()).isEqualTo(Authentications.PRINCIPAL_SYSTEM);
     });
   }
 
@@ -72,7 +72,7 @@ class DefaultAdministrationContextTest {
 
       context.runAsAdmin(() -> {
         Subject adminSubject = SecurityUtils.getSubject();
-        assertThat(adminSubject.getPrincipal()).isEqualTo("scmsystem");
+        assertThat(adminSubject.getPrincipal()).isEqualTo(Authentications.PRINCIPAL_SYSTEM);
       });
 
     } finally {
