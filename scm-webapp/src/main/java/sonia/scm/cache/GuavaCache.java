@@ -195,6 +195,7 @@ public class GuavaCache<K, V> implements Cache<K, V>
    * @return
    */
   @Override
+  @SuppressWarnings("java:S4738") // we have to use guava predicate for compatibility
   public Iterable<V> removeAll(Predicate<K> filter)
   {
     Set<V> removedValues = Sets.newHashSet();

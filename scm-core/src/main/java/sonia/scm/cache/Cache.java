@@ -37,8 +37,8 @@ import com.google.common.base.Predicate;
  * @param <K> type of the keys for the cache
  * @param <V> type of cached elements
  */
-public interface Cache<K, V> extends org.apache.shiro.cache.Cache<K, V>
-{
+@SuppressWarnings("java:S2176") // we could not rename the interface
+public interface Cache<K, V> extends org.apache.shiro.cache.Cache<K, V> {
 
   /**
    * Remove all elements from this cache.
@@ -87,6 +87,7 @@ public interface Cache<K, V> extends org.apache.shiro.cache.Cache<K, V>
    *
    * @return all previous cached values
    */
+  @SuppressWarnings("java:S4738") // we have to use guava predicate for compatibility
   Iterable<V> removeAll(Predicate<K> predicate);
 
   /**

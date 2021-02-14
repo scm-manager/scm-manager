@@ -108,10 +108,10 @@ public class GuavaCacheConfigurationReader {
 
     if (manualFile.exists()) {
       try {
-        GuavaCacheManagerConfiguration manualConfig =
-          readConfiguration(manualFile.toURI().toURL(), false);
-
-        config = merge(config, manualConfig);
+        GuavaCacheManagerConfiguration manualConfig = readConfiguration(manualFile.toURI().toURL(), false);
+        if (manualConfig != null) {
+          config = merge(config, manualConfig);
+        }
       } catch (MalformedURLException ex) {
         logger.error("malformed url", ex);
       }

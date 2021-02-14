@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -67,7 +67,7 @@ public final class GuavaCaches
    *
    * @return
    */
-  public static com.google.common.cache.Cache create(
+  public static <K,V> com.google.common.cache.Cache<K, V> create(
     GuavaCacheConfiguration configuration, String name)
   {
     CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();

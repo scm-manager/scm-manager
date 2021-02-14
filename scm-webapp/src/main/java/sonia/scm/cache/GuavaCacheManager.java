@@ -43,29 +43,21 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Sebastian Sdorra
  */
 @Singleton
-public class GuavaCacheManager
-  implements CacheManager, org.apache.shiro.cache.CacheManager {
+public class GuavaCacheManager implements CacheManager, org.apache.shiro.cache.CacheManager {
 
-  /**
-   * the logger for GuavaCacheManager
-   */
   private static final Logger LOG = LoggerFactory.getLogger(GuavaCacheManager.class);
 
-  //~--- constructors ---------------------------------------------------------
+  @SuppressWarnings({"java:S3740", "rawtypes"})
+  private final ConcurrentHashMap<String, GuavaCache> caches = new ConcurrentHashMap<>();
 
-  /**
-   * Constructs ...
-   */
+  private final GuavaCacheConfiguration defaultConfiguration;
+
+
   @Inject
   public GuavaCacheManager(GuavaCacheConfigurationReader configurationReader) {
     this(configurationReader.read());
   }
 
-  /**
-   * Constructs ...
-   *
-   * @param config
-   */
   @VisibleForTesting
   protected GuavaCacheManager(GuavaCacheManagerConfiguration config) {
     defaultConfiguration = config.getDefaultCache();
@@ -76,34 +68,6 @@ public class GuavaCacheManager
     }
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @throws IOException
-   */
-  @Override
-  public void close() throws IOException {
-    LOG.info("close guava cache manager");
-
-    for (Cache c : caches.values()) {
-      c.clear();
-    }
-
-    caches.clear();
-  }
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @param name
-   * @param <K>
-   * @param <V>
-   * @return
-   */
   @Override
   @SuppressWarnings("unchecked")
   public <K, V> GuavaCache<K, V> getCache(String name) {
@@ -118,15 +82,14 @@ public class GuavaCacheManager
     });
   }
 
-  //~--- fields ---------------------------------------------------------------
+  @Override
+  public void close() throws IOException {
+    LOG.info("close guava cache manager");
 
-  /**
-   * Field description
-   */
-  private final ConcurrentHashMap<String, GuavaCache> caches = new ConcurrentHashMap<>();
+    for (Cache<?, ?> c : caches.values()) {
+      c.clear();
+    }
 
-  /**
-   * Field description
-   */
-  private GuavaCacheConfiguration defaultConfiguration;
+    caches.clear();
+  }
 }
