@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,14 +37,14 @@ import com.google.common.base.Predicate;
  * @param <K> type of the keys for the cache
  * @param <V> type of cached elements
  */
-public interface Cache<K, V>
+public interface Cache<K, V> extends org.apache.shiro.cache.Cache<K, V>
 {
 
   /**
    * Remove all elements from this cache.
    *
    */
-  public void clear();
+  void clear();
 
   /**
    * Returns true if this cache contains an element with the specified key.
@@ -54,7 +54,7 @@ public interface Cache<K, V>
    *
    * @return true if this cache contains an element with the specified key
    */
-  public boolean contains(K key);
+  boolean contains(K key);
 
   /**
    * Put a new element to this cache.
@@ -65,7 +65,7 @@ public interface Cache<K, V>
    *
    * @return previous cached value or null
    */
-  public V put(K key, V value);
+  V put(K key, V value);
 
   /**
    * Remove the element with the specified key from this cache. Return previous
@@ -75,7 +75,7 @@ public interface Cache<K, V>
    *
    * @return previous cached value or null
    */
-  public V remove(K key);
+  V remove(K key);
 
   /**
    * Remove all elements with matching {@link Predicate} from this cache.
@@ -87,7 +87,7 @@ public interface Cache<K, V>
    *
    * @return all previous cached values
    */
-  public Iterable<V> removeAll(Predicate<K> predicate);
+  Iterable<V> removeAll(Predicate<K> predicate);
 
   /**
    * Returns the number of entries in the cache.
@@ -96,7 +96,7 @@ public interface Cache<K, V>
    *
    * @since 2.0.0
    */
-  public int size();
+  int size();
 
   //~--- get methods ----------------------------------------------------------
 
@@ -108,7 +108,7 @@ public interface Cache<K, V>
    *
    * @return The cached element with the specified key or null
    */
-  public V get(K key);
+  V get(K key);
 
   /**
    * Returns performance statistics of the cache or null if the cache does not
@@ -119,5 +119,5 @@ public interface Cache<K, V>
    *
    * @since 2.0.0
    */
-  public CacheStatistics getStatistics();
+  CacheStatistics getStatistics();
 }
