@@ -21,12 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Maps;
 
@@ -44,25 +43,15 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.inject.Inject;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class GuavaCacheConfigurationReader
-{
-
-  /** Field description */
-  private static final String DEFAULT = "/config/gcache.xml";
-
-  /** Field description */
-  private static final String MANUAL_RESOURCE =
-    "ext".concat(File.separator).concat("gcache.xml");
-
-  /** Field description */
-  private static final String MODULE_RESOURCES = "META-INF/scm/gcache.xml";
+public class GuavaCacheConfigurationReader {
 
   /**
    * the logger for CacheConfigurationReader
@@ -75,118 +64,69 @@ public class GuavaCacheConfigurationReader
   /**
    * Constructs ...
    *
-   *
    * @param loader
    */
-  @VisibleForTesting
-  GuavaCacheConfigurationReader(CacheConfigurationLoader loader)
-  {
+  @Inject
+  public GuavaCacheConfigurationReader(CacheConfigurationLoader loader) {
     this.loader = loader;
 
-    try
-    {
-      this.context =
-        JAXBContext.newInstance(GuavaCacheManagerConfiguration.class);
-    }
-    catch (JAXBException ex)
-    {
-      throw new CacheException(
-        "could not create jaxb context for cache configuration", ex);
+    try {
+      this.context = JAXBContext.newInstance(GuavaCacheManagerConfiguration.class);
+    } catch (JAXBException ex) {
+      throw new CacheException("could not create jaxb context for cache configuration", ex);
     }
   }
 
   //~--- methods --------------------------------------------------------------
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static GuavaCacheManagerConfiguration read()
-  {
-    return new GuavaCacheConfigurationReader(
-      new DefaultCacheConfigurationLoader(
-        DEFAULT, MANUAL_RESOURCE, MODULE_RESOURCES)).doRead();
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  @VisibleForTesting
-  GuavaCacheManagerConfiguration doRead()
-  {
+  public GuavaCacheManagerConfiguration read() {
     URL defaultConfigUrl = loader.getDefaultResource();
 
-    if (defaultConfigUrl == null)
-    {
+    if (defaultConfigUrl == null) {
       throw new IllegalStateException(
         "could not find default cache configuration");
     }
 
-    GuavaCacheManagerConfiguration config = readConfiguration(defaultConfigUrl,
-                                              true);
+    GuavaCacheManagerConfiguration config = readConfiguration(defaultConfigUrl, true);
 
     Iterator<URL> it = loader.getModuleResources();
 
-    if (!it.hasNext())
-    {
+    if (!it.hasNext()) {
       logger.debug("no module configuration found");
     }
 
-    while (it.hasNext())
-    {
+    while (it.hasNext()) {
       GuavaCacheManagerConfiguration moduleConfig =
         readConfiguration(it.next(), false);
 
-      if (moduleConfig != null)
-      {
+      if (moduleConfig != null) {
         config = merge(config, moduleConfig);
       }
     }
 
     File manualFile = loader.getManualFileResource();
 
-    if (manualFile.exists())
-    {
-      try
-      {
+    if (manualFile.exists()) {
+      try {
         GuavaCacheManagerConfiguration manualConfig =
           readConfiguration(manualFile.toURI().toURL(), false);
 
         config = merge(config, manualConfig);
-      }
-      catch (MalformedURLException ex)
-      {
+      } catch (MalformedURLException ex) {
         logger.error("malformed url", ex);
       }
-    }
-    else
-    {
+    } else {
       logger.warn("could not find manual configuration at {}", manualFile);
     }
 
     return config;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param caches
-   *
-   * @return
-   */
   private Map<String, GuavaNamedCacheConfiguration> createNamedCacheMap(
-    List<GuavaNamedCacheConfiguration> caches)
-  {
+    List<GuavaNamedCacheConfiguration> caches) {
     Map<String, GuavaNamedCacheConfiguration> map = Maps.newLinkedHashMap();
 
-    for (GuavaNamedCacheConfiguration ncc : caches)
-    {
+    for (GuavaNamedCacheConfiguration ncc : caches) {
       map.put(ncc.getName(), ncc);
     }
 
@@ -196,28 +136,23 @@ public class GuavaCacheConfigurationReader
   /**
    * Method description
    *
-   *
    * @param config
    * @param other
-   *
    * @return
    */
   private GuavaCacheManagerConfiguration merge(
-    GuavaCacheManagerConfiguration config, GuavaCacheManagerConfiguration other)
-  {
+    GuavaCacheManagerConfiguration config, GuavaCacheManagerConfiguration other) {
     GuavaCacheConfiguration defaultCache = config.getDefaultCache();
     Map<String, GuavaNamedCacheConfiguration> namedCaches =
       createNamedCacheMap(config.getCaches());
 
-    if (other.getDefaultCache() != null)
-    {
+    if (other.getDefaultCache() != null) {
       defaultCache = other.getDefaultCache();
     }
 
     List<GuavaNamedCacheConfiguration> otherNamedCaches = other.getCaches();
 
-    for (GuavaNamedCacheConfiguration ncc : otherNamedCaches)
-    {
+    for (GuavaNamedCacheConfiguration ncc : otherNamedCaches) {
       namedCaches.put(ncc.getName(), ncc);
     }
 
@@ -228,34 +163,22 @@ public class GuavaCacheConfigurationReader
   /**
    * Method description
    *
-   *
    * @param url
    * @param fail
-   *
    * @return
    */
-  private GuavaCacheManagerConfiguration readConfiguration(URL url,
-    boolean fail)
-  {
+  private GuavaCacheManagerConfiguration readConfiguration(URL url, boolean fail) {
     logger.debug("read cache configuration from {}", url);
 
     GuavaCacheManagerConfiguration config = null;
 
-    try
-    {
-      config =
-        (GuavaCacheManagerConfiguration) context.createUnmarshaller().unmarshal(
-          url);
-    }
-    catch (JAXBException ex)
-    {
-      if (fail)
-      {
-        throw new CacheException("could not unmarshall cache configuration",
-          ex);
-      }
-      else
-      {
+    try {
+      Unmarshaller unmarshaller = context.createUnmarshaller();
+      config = (GuavaCacheManagerConfiguration) unmarshaller.unmarshal(url);
+    } catch (JAXBException ex) {
+      if (fail) {
+        throw new CacheException("could not unmarshall cache configuration", ex);
+      } else {
         logger.warn("could not unmarshall cache configuration", ex);
       }
     }
@@ -265,9 +188,13 @@ public class GuavaCacheConfigurationReader
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private JAXBContext context;
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private CacheConfigurationLoader loader;
 }

@@ -21,67 +21,58 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.Maps;
 import com.google.inject.Singleton;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
+import javax.inject.Inject;
 import java.io.IOException;
+import java.util.concurrent.ConcurrentHashMap;
 
-import java.util.Map;
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Guava based implementation of {@link CacheManager} and {@link org.apache.shiro.cache.CacheManager}.
- * 
+ *
  * @author Sebastian Sdorra
  */
 @Singleton
 public class GuavaCacheManager
-  implements CacheManager, org.apache.shiro.cache.CacheManager
-{
+  implements CacheManager, org.apache.shiro.cache.CacheManager {
 
- /**
+  /**
    * the logger for GuavaCacheManager
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GuavaCacheManager.class);
+  private static final Logger LOG = LoggerFactory.getLogger(GuavaCacheManager.class);
 
   //~--- constructors ---------------------------------------------------------
 
   /**
    * Constructs ...
-   *
    */
-  public GuavaCacheManager()
-  {
-    this(GuavaCacheConfigurationReader.read());
+  @Inject
+  public GuavaCacheManager(GuavaCacheConfigurationReader configurationReader) {
+    this(configurationReader.read());
   }
 
   /**
    * Constructs ...
    *
-   *
    * @param config
    */
   @VisibleForTesting
-  protected GuavaCacheManager(GuavaCacheManagerConfiguration config)
-  {
+  protected GuavaCacheManager(GuavaCacheManagerConfiguration config) {
     defaultConfiguration = config.getDefaultCache();
 
-    for (GuavaNamedCacheConfiguration ncc : config.getCaches())
-    {
-      logger.debug("create cache {} from configured configuration {}",
-        ncc.getName(), ncc);
-      cacheMap.put(ncc.getName(), new GuavaCache(ncc));
+    for (GuavaNamedCacheConfiguration ncc : config.getCaches()) {
+      LOG.debug("create cache {} from configured configuration {}", ncc.getName(), ncc);
+      caches.put(ncc.getName(), new GuavaCache<>(ncc));
     }
   }
 
@@ -90,20 +81,17 @@ public class GuavaCacheManager
   /**
    * Method description
    *
-   *
    * @throws IOException
    */
   @Override
-  public void close() throws IOException
-  {
-    logger.info("close guava cache manager");
+  public void close() throws IOException {
+    LOG.info("close guava cache manager");
 
-    for (Cache c : cacheMap.values())
-    {
+    for (Cache c : caches.values()) {
       c.clear();
     }
 
-    cacheMap.clear();
+    caches.clear();
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -111,38 +99,34 @@ public class GuavaCacheManager
   /**
    * Method description
    *
-   *
    * @param name
    * @param <K>
    * @param <V>
-   *
    * @return
    */
   @Override
   @SuppressWarnings("unchecked")
-  public synchronized <K, V> GuavaCache<K, V> getCache(String name)
-  {
-    logger.trace("try to retrieve cache {}", name);
+  public <K, V> GuavaCache<K, V> getCache(String name) {
+    LOG.trace("try to retrieve cache {}", name);
 
-    GuavaCache<K, V> cache = cacheMap.get(name);
-
-    if (cache == null)
-    {
-      logger.debug(
+    return caches.computeIfAbsent(name, cacheName -> {
+      LOG.debug(
         "cache {} does not exists, creating a new instance from default configuration: {}",
-        name, defaultConfiguration);
-      cache = new GuavaCache<K, V>(defaultConfiguration, name);
-      cacheMap.put(name, cache);
-    }
-
-    return cache;
+        cacheName, defaultConfiguration
+      );
+      return new GuavaCache<>(defaultConfiguration, cacheName);
+    });
   }
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private volatile Map<String, GuavaCache> cacheMap = Maps.newHashMap();
+  /**
+   * Field description
+   */
+  private final ConcurrentHashMap<String, GuavaCache> caches = new ConcurrentHashMap<>();
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private GuavaCacheConfiguration defaultConfiguration;
 }

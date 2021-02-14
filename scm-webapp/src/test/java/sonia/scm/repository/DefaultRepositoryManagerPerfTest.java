@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 import com.google.common.base.Stopwatch;
@@ -49,6 +49,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.SCMContextProvider;
+import sonia.scm.cache.DefaultCacheConfigurationLoader;
+import sonia.scm.cache.GuavaCacheConfigurationReader;
 import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.AuthorizationCollector;
@@ -69,36 +71,36 @@ import static org.mockito.Mockito.when;
 
 /**
  * Performance test for {@link RepositoryManager#getAll()}.
- * 
+ *
  * @see <a href="https://goo.gl/PD1AeM">Issue 781</a>
  * @author Sebastian Sdorra
  * @since 1.52
  */
 @RunWith(MockitoJUnitRunner.class)
 public class DefaultRepositoryManagerPerfTest {
-  
+
   private static final int REPOSITORY_COUNT = 2000;
-  
+
   private static final String REPOSITORY_TYPE = "perf";
-  
+
   @Mock
   private SCMContextProvider contextProvider;
-  
+
   @Mock
   private RepositoryDAO repositoryDAO;
-  
+
   private final ScmConfiguration configuration = new ScmConfiguration();
-  
+
   private final KeyGenerator keyGenerator = new DefaultKeyGenerator();
 
   @Mock
   private RepositoryHandler repositoryHandler;
-  
+
   private DefaultRepositoryManager repositoryManager;
-  
+
   @Mock
   private AuthorizationCollector authzCollector;
-  
+
   /**
    * Setup object under test.
    */
@@ -109,17 +111,23 @@ public class DefaultRepositoryManagerPerfTest {
     NamespaceStrategy namespaceStrategy = mock(NamespaceStrategy.class);
     repositoryManager = new DefaultRepositoryManager(
       contextProvider,
-      keyGenerator, 
+      keyGenerator,
       repositoryDAO,
       handlerSet,
       Providers.of(namespaceStrategy)
     );
-    
+
     setUpTestRepositories();
-    
-    GuavaCacheManager cacheManager = new GuavaCacheManager();
+
+    GuavaCacheManager cacheManager = new GuavaCacheManager(
+      new GuavaCacheConfigurationReader(
+        new DefaultCacheConfigurationLoader(
+          DefaultRepositoryManagerPerfTest.class.getClassLoader()
+        )
+      )
+    );
     DefaultSecurityManager securityManager = new DefaultSecurityManager(new DummyRealm(authzCollector, cacheManager));
-    
+
     ThreadContext.bind(securityManager);
   }
 
@@ -127,26 +135,26 @@ public class DefaultRepositoryManagerPerfTest {
   public void tearDown(){
     ThreadContext.unbindSecurityManager();
   }
-  
+
   /**
    * Start performance test and ensure that the timeout is not reached.
    */
   @Test(timeout = 6000L)
   public void perfTestGetAll(){
     SecurityUtils.getSubject().login(new UsernamePasswordToken("trillian", "secret"));
-    
+
     List<Long> times = new ArrayList<>();
     for ( int i=0; i<3; i++ ) {
       times.add(benchGetAll());
     }
-    
+
     long average = calculateAverage(times);
     double value = (double) average / TimeUnit.MILLISECONDS.convert(1, TimeUnit.SECONDS);
 
     // Too bad this functionality is not exposed as a regular method call
     System.out.println( String.format("%.4g s", value) );
   }
-  
+
 private long calculateAverage(List<Long> times) {
   Long sum = 0L;
   if(!times.isEmpty()) {
@@ -157,7 +165,7 @@ private long calculateAverage(List<Long> times) {
   }
   return sum;
 }
-  
+
   private long benchGetAll(){
     Stopwatch sw = Stopwatch.createStarted();
     System.out.append("found ").append(String.valueOf(repositoryManager.getAll().size()));
@@ -165,7 +173,7 @@ private long calculateAverage(List<Long> times) {
     System.out.append(" in ").println(sw);
     return sw.elapsed(TimeUnit.MILLISECONDS);
   }
-  
+
   private void setUpTestRepositories() {
     Map<String,Repository> repositories = new LinkedHashMap<>();
     for ( int i=0; i<REPOSITORY_COUNT; i++ ) {
@@ -174,12 +182,12 @@ private long calculateAverage(List<Long> times) {
     }
     when(repositoryDAO.getAll()).thenReturn(repositories.values());
   }
-  
+
   private Repository createTestRepository(int number) {
     return new Repository(keyGenerator.createKey(), REPOSITORY_TYPE, "namespace", "repo-" + number);
 
   }
-  
+
   static class DummyRealm extends AuthorizingRealm {
 
     private final AuthorizationCollector authzCollector;
@@ -189,28 +197,28 @@ private long calculateAverage(List<Long> times) {
       setCredentialsMatcher(new AllowAllCredentialsMatcher());
       setCacheManager(cacheManager);
     }
-    
+
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
       SimplePrincipalCollection spc = new SimplePrincipalCollection(token.getPrincipal(), REPOSITORY_TYPE);
       spc.add(UserTestData.createTrillian(), REPOSITORY_TYPE);
       return new SimpleAuthenticationInfo(spc, REPOSITORY_TYPE);
     }
-    
+
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
       return authzCollector.collect(principals);
     }
-    
+
   }
-  
+
   private static class SetProvider implements Provider {
 
     @Override
     public Object get() {
       return Collections.emptySet();
     }
-  
+
   }
-  
+
 }

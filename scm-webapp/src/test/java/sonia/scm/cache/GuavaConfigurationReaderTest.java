@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -71,7 +71,7 @@ public class GuavaConfigurationReaderTest
       Iterators.forArray("gcache.002.xml", "gcache.003.xml"),
       "gcache.004.xml"
     );
-    //J+    
+    //J+
 
     // cache sonia.test.cache.001 override by cache.004.xml
     assertCacheValues(getCache(gcm, "sonia.test.cache.001"), 6L, 2L, 8L);
@@ -202,7 +202,7 @@ public class GuavaConfigurationReaderTest
     return new GuavaCacheConfigurationReader(
       new CacheConfigurationTestLoader(
         tempFolder, defaultConfiguration, moduleConfiguration,
-          manualConfiguration)).doRead();
+          manualConfiguration)).read();
   }
 
   //~--- get methods ----------------------------------------------------------
