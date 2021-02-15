@@ -88,8 +88,8 @@ public class FullScmRepositoryExporter {
     ) {
       writeEnvironmentData(taos);
       writeMetadata(repository, taos);
-      writeRepository(service, taos);
       writeStoreData(repository, taos);
+      writeRepository(service, taos);
       taos.finish();
     } catch (IOException e) {
       throw new ExportFailedException(

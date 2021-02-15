@@ -1,0 +1,2 @@
+- type: changed
+  description: Change the order of files inside the repository archive ([#1538](https://github.com/scm-manager/scm-manager/pull/1538))
