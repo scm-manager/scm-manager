@@ -136,3 +136,35 @@ export const useUpdatePlugins = () => {
     isUpdated: !!data
   };
 };
+
+export const useExecutePendingPlugins = () => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, PendingPlugins>(
+    pending => apiClient.post(requiredLink(pending, "execute")),
+    {
+      onSuccess: () => queryClient.invalidateQueries("plugins")
+    }
+  );
+  return {
+    update: (pending: PendingPlugins) => mutate(pending),
+    isLoading,
+    error,
+    isExecuted: !!data
+  };
+};
+
+export const useCancelPendingPlugins = () => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, PendingPlugins>(
+    pending => apiClient.post(requiredLink(pending, "cancel")),
+    {
+      onSuccess: () => queryClient.invalidateQueries("plugins")
+    }
+  );
+  return {
+    update: (pending: PendingPlugins) => mutate(pending),
+    isLoading,
+    error,
+    isCancelled: !!data
+  };
+};

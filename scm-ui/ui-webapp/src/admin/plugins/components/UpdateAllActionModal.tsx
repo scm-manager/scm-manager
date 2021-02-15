@@ -21,14 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {FC} from "react";
-import {useTranslation, WithTranslation, withTranslation} from "react-i18next";
+import React, { FC, useEffect } from "react";
+import { useTranslation, WithTranslation } from "react-i18next";
 import { PluginCollection } from "@scm-manager/ui-types";
-import { apiClient } from "@scm-manager/ui-components";
 import PluginActionModal from "./PluginActionModal";
-import {useUpdatePlugins} from "@scm-manager/ui-api";
+import { useUpdatePlugins } from "@scm-manager/ui-api";
 
-type Props = WithTranslation & {
+type Props = {
   onClose: () => void;
   installedPlugins: PluginCollection;
 };
@@ -37,39 +36,23 @@ const UpdateAllActionModal: FC<Props> = ({ installedPlugins, onClose }) => {
   const [t] = useTranslation("admin");
   const { update, isLoading, error, isUpdated } = useUpdatePlugins();
 
+  useEffect(() => {
+    if (isUpdated) {
+      onClose();
+    }
+  }, [onClose, isUpdated]);
+
   return (
     <PluginActionModal
       description={t("plugins.modal.updateAll")}
       label={t("plugins.updateAll")}
       onClose={onClose}
       installedPlugins={installedPlugins}
+      error={error}
+      loading={isLoading}
+      success={isUpdated}
       execute={() => update(installedPlugins)}
     />
   );
-}
-
-class UpdateAllActionModalCmp extends React.Component<Props> {
-  render() {
-    const { onClose, installedPlugins, t } = this.props;
-
-    return (
-      <PluginActionModal
-        description={t("plugins.modal.updateAll")}
-        label={t("plugins.updateAll")}
-        onClose={onClose}
-        installedPlugins={installedPlugins}
-        execute={this.updateAll}
-      />
-    );
-  }
-
-  updateAll = () => {
-    const { installedPlugins, onClose } = this.props;
-    return apiClient
-      .post(installedPlugins._links.update.href)
-      .then(refresh)
-      .then(onClose);
-  };
-}
-
-export default withTranslation("admin")(UpdateAllActionModal);
+};
+export default UpdateAllActionModal;
