@@ -21,73 +21,48 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { apiClient, Button, ButtonGroup, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
+import React, { FC, useEffect, useState } from "react";
+import { Button, ButtonGroup, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
 import { PendingPlugins } from "@scm-manager/ui-types";
-import { WithTranslation, withTranslation } from "react-i18next";
-import waitForRestart from "./waitForRestart";
+import { useTranslation, WithTranslation } from "react-i18next";
 import SuccessNotification from "./SuccessNotification";
 import PendingPluginsQueue from "./PendingPluginsQueue";
+import { useExecutePendingPlugins } from "@scm-manager/ui-api";
+import waitForRestart from "./waitForRestart";
 
 type Props = WithTranslation & {
   onClose: () => void;
   pendingPlugins: PendingPlugins;
 };
 
-type State = {
-  loading: boolean;
-  success: boolean;
-  error?: Error;
-};
+const ExecutePendingModal: FC<Props> = ({ pendingPlugins, onClose }) => {
+  const [t] = useTranslation("admin");
+  const { isExecuted, error, isLoading, update } = useExecutePendingPlugins();
+  const [restarted, setRestarted] = useState<boolean>(false);
+  const [restarting, setRestarting] = useState<boolean>(false);
+  const loading = isLoading || restarting;
 
-class ExecutePendingModal extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      loading: false,
-      success: false
-    };
-  }
+  useEffect(() => {
+    if (isExecuted) {
+      setRestarting(true);
+      waitForRestart().then(() => {
+        setRestarting(false);
+        setRestarted(true);
+      });
+    }
+  }, [isExecuted]);
 
-  renderNotifications = () => {
-    const { t } = this.props;
-    const { error, success } = this.state;
+  const renderNotifications = () => {
     if (error) {
       return <ErrorNotification error={error} />;
-    } else if (success) {
+    } else if (restarted) {
       return <SuccessNotification />;
     } else {
       return <Notification type="warning">{t("plugins.modal.restartNotification")}</Notification>;
     }
   };
 
-  executeAndRestart = () => {
-    const { pendingPlugins } = this.props;
-    this.setState({
-      loading: true
-    });
-
-    apiClient
-      .post(pendingPlugins._links.execute.href)
-      .then(waitForRestart)
-      .then(() => {
-        this.setState({
-          success: true,
-          loading: false,
-          error: undefined
-        });
-      })
-      .catch(error => {
-        this.setState({
-          success: false,
-          loading: false,
-          error: error
-        });
-      });
-  };
-
-  renderBody = () => {
-    const { pendingPlugins, t } = this.props;
+  const renderBody = () => {
     return (
       <>
         <div className="media">
@@ -96,40 +71,35 @@ class ExecutePendingModal extends React.Component<Props, State> {
             <PendingPluginsQueue pendingPlugins={pendingPlugins} />
           </div>
         </div>
-        <div className="media">{this.renderNotifications()}</div>
+        <div className="media">{renderNotifications()}</div>
       </>
     );
   };
 
-  renderFooter = () => {
-    const { onClose, t } = this.props;
-    const { loading, error, success } = this.state;
+  const renderFooter = () => {
     return (
       <ButtonGroup>
         <Button
           color="warning"
           label={t("plugins.modal.executeAndRestart")}
           loading={loading}
-          action={this.executeAndRestart}
-          disabled={error || success}
+          action={() => update(pendingPlugins)}
+          disabled={!!error}
         />
         <Button label={t("plugins.modal.abort")} action={onClose} />
       </ButtonGroup>
     );
   };
 
-  render() {
-    const { onClose, t } = this.props;
-    return (
-      <Modal
-        title={t("plugins.modal.executeAndRestart")}
-        closeFunction={onClose}
-        body={this.renderBody()}
-        footer={this.renderFooter()}
-        active={true}
-      />
-    );
-  }
-}
+  return (
+    <Modal
+      title={t("plugins.modal.executeAndRestart")}
+      closeFunction={onClose}
+      body={renderBody()}
+      footer={renderFooter()}
+      active={true}
+    />
+  );
+};
 
-export default withTranslation("admin")(ExecutePendingModal);
+export default ExecutePendingModal;
