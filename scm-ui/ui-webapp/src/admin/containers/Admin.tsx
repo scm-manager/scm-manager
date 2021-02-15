@@ -74,25 +74,25 @@ const Admin: FC = () => {
               <Route path={`${url}/settings/general`} exact component={GlobalConfig} />
               <Redirect exact from={`${url}/plugins`} to={`${url}/plugins/installed/`} />
               <Route path={`${url}/plugins/installed`} exact>
-                <PluginsOverview baseUrl={`${url}/plugins/installed`} installed={true} />
+                <PluginsOverview installed={true} />
               </Route>
               <Route path={`${url}/plugins/installed/:page`} exact>
-                <PluginsOverview baseUrl={`${url}/plugins/installed`} installed={true} />
+                <PluginsOverview installed={true} />
               </Route>
               <Route path={`${url}/plugins/available`} exact>
-                <PluginsOverview baseUrl={`${url}/plugins/available`} installed={false} />
+                <PluginsOverview installed={false} />
               </Route>
               <Route path={`${url}/plugins/available/:page`} exact>
-                <PluginsOverview baseUrl={`${url}/plugins/available`} installed={false} />
+                <PluginsOverview installed={false} />
               </Route>
               <Route path={`${url}/role/:role`}>
-                <SingleRepositoryRole baseUrl={`${url}/roles`} history={history} />
+                <SingleRepositoryRole />
               </Route>
               <Route path={`${url}/roles`} exact>
                 <RepositoryRoles baseUrl={`${url}/roles`} />
               </Route>
               <Route path={`${url}/roles/create`}>
-                <CreateRepositoryRole history={history} />
+                <CreateRepositoryRole />
               </Route>
               <Route path={`${url}/roles/:page`} exact>
                 <RepositoryRoles baseUrl={`${url}/roles`} />

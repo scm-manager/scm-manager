@@ -37,6 +37,7 @@ export * from "./groups";
 export * from "./config";
 export * from "./admin";
 export * from "./plugins";
+export * from "./repository-roles";
 export * from "./permissions";
 
 export { default as ApiProvider } from "./ApiProvider";

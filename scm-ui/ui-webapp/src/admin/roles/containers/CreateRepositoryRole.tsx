@@ -21,73 +21,34 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { connect } from "react-redux";
-import { compose } from "redux";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
-import { RepositoryRole } from "@scm-manager/ui-types";
-import { ErrorNotification, Subtitle, Title } from "@scm-manager/ui-components";
-import { createRole, getCreateRoleFailure, getFetchVerbsFailure, isFetchVerbsPending } from "../modules/roles";
-import { getRepositoryRolesLink, getRepositoryVerbsLink } from "../../../modules/indexResource";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { ErrorNotification, Loading, Subtitle, Title } from "@scm-manager/ui-components";
 import RepositoryRoleForm from "./RepositoryRoleForm";
+import { useCreateRepositoryRole } from "@scm-manager/ui-api";
+import { Redirect } from "react-router-dom";
 
-type Props = WithTranslation & {
-  repositoryRolesLink: string;
-  error?: Error;
-  history: History;
+const CreateRepositoryRole: FC = () => {
+  const [t] = useTranslation("admin");
+  const { error, isLoading: loading, create, repositoryRole: created } = useCreateRepositoryRole();
 
-  // dispatch function
-  addRole: (link: string, role: RepositoryRole, callback?: () => void) => void;
-};
-
-class CreateRepositoryRole extends React.Component<Props> {
-  repositoryRoleCreated = (role: RepositoryRole) => {
-    const { history } = this.props;
-    history.push("/admin/role/" + role.name + "/info");
-  };
-
-  createRepositoryRole = (role: RepositoryRole) => {
-    this.props.addRole(this.props.repositoryRolesLink, role, () => this.repositoryRoleCreated(role));
-  };
-
-  render() {
-    const { t, error } = this.props;
-
-    if (error) {
-      return <ErrorNotification error={error} />;
-    }
-
-    return (
-      <>
-        <Title title={t("repositoryRole.title")} />
-        <Subtitle subtitle={t("repositoryRole.createSubtitle")} />
-        <RepositoryRoleForm submitForm={(role: RepositoryRole) => this.createRepositoryRole(role)} />
-      </>
-    );
+  if (created) {
+    return <Redirect to={`/admin/role/${created.name}/info`} />;
   }
-}
 
-const mapStateToProps = (state: any) => {
-  const loading = isFetchVerbsPending(state);
-  const error = getFetchVerbsFailure(state) || getCreateRoleFailure(state);
-  const verbsLink = getRepositoryVerbsLink(state);
-  const repositoryRolesLink = getRepositoryRolesLink(state);
+  if (loading) {
+    return <Loading />;
+  } else if (error) {
+    return <ErrorNotification error={error} />;
+  }
 
-  return {
-    loading,
-    error,
-    verbsLink,
-    repositoryRolesLink
-  };
+  return (
+    <>
+      <Title title={t("repositoryRole.title")} />
+      <Subtitle subtitle={t("repositoryRole.createSubtitle")} />
+      <RepositoryRoleForm submitForm={create} />
+    </>
+  );
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    addRole: (link: string, role: RepositoryRole, callback?: () => void) => {
-      dispatch(createRole(link, role, callback));
-    }
-  };
-};
-
-export default compose(connect(mapStateToProps, mapDispatchToProps), withTranslation("admin"))(CreateRepositoryRole);
+export default CreateRepositoryRole;
