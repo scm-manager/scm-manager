@@ -61,24 +61,30 @@ class FullScmRepositoryImporterProcess {
     try {
       TarArchiveEntry tarArchiveEntry;
       while ((tarArchiveEntry = tais.getNextTarEntry()) != null) {
-        TarArchiveEntry currentEntry = tarArchiveEntry;
-        LOG.trace("Trying to handle tar entry '{}'", currentEntry.getName());
-        stream(importSteps)
-          .filter(step -> step.handle(currentEntry, state, tais))
-          .findFirst()
-          .orElseThrow(() -> new ImportFailedException(
-            ContextEntry.ContextBuilder.entity(repository).build(),
-            "Invalid import format. Unknown file in tar: " + currentEntry.getName()
-          ));
+        LOG.trace("Trying to handle tar entry '{}'", tarArchiveEntry.getName());
+        handle(tais, state, tarArchiveEntry);
       }
       stream(importSteps).forEach(step -> step.finish(state));
       return state.getRepository();
     } finally {
-      stream(importSteps).forEach(step -> step.cleanup(state));
+      stream(importSteps)
+        .forEach(step -> step.cleanup(state));
       if (!state.success()) {
         // Delete the repository if any error occurs during the import
         repositoryManager.delete(state.getRepository());
       }
     }
+  }
+
+  private void handle(TarArchiveInputStream tais, ImportState state, TarArchiveEntry currentEntry) {
+    for (ImportStep step : importSteps) {
+      if (step.handle(currentEntry, state, tais)) {
+        return;
+      }
+    }
+    throw new ImportFailedException(
+      ContextEntry.ContextBuilder.entity(state.getRepository()).build(),
+      "Invalid import format. Unknown file in tar: " + currentEntry.getName()
+    );
   }
 }
