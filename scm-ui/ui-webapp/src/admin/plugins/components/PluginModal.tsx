@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC, useEffect, useState } from "react";
-import { useTranslation, WithTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Plugin } from "@scm-manager/ui-types";
@@ -32,17 +32,10 @@ import SuccessNotification from "./SuccessNotification";
 import { PluginAction } from "./PluginEntry";
 import { useInstallPlugin, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
 
-type Props = WithTranslation & {
+type Props = {
   plugin: Plugin;
   pluginAction: string;
   onClose: () => void;
-};
-
-type State = {
-  success: boolean;
-  restart: boolean;
-  loading: boolean;
-  error?: Error;
 };
 
 const ListParent = styled.div`
@@ -79,7 +72,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
         onClose();
       }
     }
-  }, [isDone, shouldRestart]);
+  }, [isDone, shouldRestart, restarted]);
 
   const handlePluginAction = (e: Event) => {
     e.preventDefault();
@@ -250,7 +243,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
       title={t(`plugins.modal.title.${pluginAction}`, {
         name: plugin.displayName ? plugin.displayName : plugin.name
       })}
-      closeFunction={() => onClose()}
+      closeFunction={onClose}
       body={body}
       footer={footer()}
       active={true}
