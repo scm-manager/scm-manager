@@ -37,7 +37,6 @@ export const PluginAction = {
 
 type Props = WithTranslation & {
   plugin: Plugin;
-  refresh: () => void;
 };
 
 type State = {
@@ -134,13 +133,12 @@ class PluginEntry extends React.Component<Props, State> {
   };
 
   renderModal = () => {
-    const { plugin, refresh } = this.props;
+    const { plugin } = this.props;
     if (this.state.showInstallModal && this.isInstallable()) {
       return (
         <PluginModal
           plugin={plugin}
           pluginAction={PluginAction.INSTALL}
-          refresh={refresh}
           onClose={() => this.toggleModal("showInstallModal")}
         />
       );
@@ -149,7 +147,6 @@ class PluginEntry extends React.Component<Props, State> {
         <PluginModal
           plugin={plugin}
           pluginAction={PluginAction.UPDATE}
-          refresh={refresh}
           onClose={() => this.toggleModal("showUpdateModal")}
         />
       );
@@ -158,7 +155,6 @@ class PluginEntry extends React.Component<Props, State> {
         <PluginModal
           plugin={plugin}
           pluginAction={PluginAction.UNINSTALL}
-          refresh={refresh}
           onClose={() => this.toggleModal("showUninstallModal")}
         />
       );
