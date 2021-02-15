@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, {FC, useEffect, useState} from "react";
 import { useTranslation } from "react-i18next";
 import { PendingPlugins } from "@scm-manager/ui-types";
 import { Notification } from "@scm-manager/ui-components";
 import PluginActionModal from "./PluginActionModal";
 import { useExecutePendingPlugins } from "@scm-manager/ui-api";
+import waitForRestart from "./waitForRestart";
 
 type Props = {
   onClose: () => void;
@@ -36,6 +37,19 @@ type Props = {
 const ExecutePendingActionModal: FC<Props> = ({ onClose, pendingPlugins }) => {
   const [t] = useTranslation("admin");
   const { update, isLoading, error, isExecuted } = useExecutePendingPlugins();
+  const [restarted, setRestarted] = useState<boolean>(false);
+  const [restarting, setRestarting] = useState<boolean>(false);
+  const loading = isLoading || restarting;
+
+  useEffect(() => {
+    if (isExecuted) {
+      setRestarting(true);
+      waitForRestart().then(() => {
+        setRestarting(false);
+        setRestarted(true);
+      });
+    }
+  }, [isExecuted]);
 
   return (
     <PluginActionModal
@@ -44,8 +58,8 @@ const ExecutePendingActionModal: FC<Props> = ({ onClose, pendingPlugins }) => {
       onClose={onClose}
       pendingPlugins={pendingPlugins}
       error={error}
-      loading={isLoading}
-      success={isExecuted}
+      loading={loading}
+      success={restarted}
       execute={() => update(pendingPlugins)}
     >
       <Notification type="warning">{t("plugins.modal.restartNotification")}</Notification>
