@@ -21,13 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.SCMContext;
 
 public class Authentications {
+
+  /**
+   * Username of the system account.
+   * @since 2.14.0
+   */
+  public static final String PRINCIPAL_SYSTEM = "_scmsystem";
+
+  /**
+   * Username of the anonymous account.
+   * @since 2.14.0
+   */
+  public static final String PRINCIPAL_ANONYMOUS = SCMContext.USER_ANONYMOUS;
 
   private Authentications() {}
 
@@ -36,6 +48,17 @@ public class Authentications {
   }
 
   public static boolean isSubjectAnonymous(String principal) {
-    return SCMContext.USER_ANONYMOUS.equals(principal);
+    return PRINCIPAL_ANONYMOUS.equals(principal);
+  }
+
+  /**
+   * Returns true if the given principal is equal to the one from the system account.
+   *
+   * @param principal principal
+   * @return {@code true}
+   * @since 2.14.0
+   */
+  public static boolean isSubjectSystemAccount(String principal) {
+    return PRINCIPAL_SYSTEM.equals(principal);
   }
 }

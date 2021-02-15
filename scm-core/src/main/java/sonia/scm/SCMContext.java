@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -48,9 +48,11 @@ public final class SCMContext
    * the anonymous user
    * @since 1.21
    */
-  public static final User ANONYMOUS = new User(USER_ANONYMOUS,
-                                         "SCM Anonymous",
-                                         "scm-anonymous@scm-manager.org");
+  public static final User ANONYMOUS = new User(
+    USER_ANONYMOUS,
+    "SCM Anonymous",
+    "scm-anonymous@scm-manager.org"
+  );
 
   /** Singleton instance of {@link SCMContextProvider} */
   private static volatile SCMContextProvider provider;

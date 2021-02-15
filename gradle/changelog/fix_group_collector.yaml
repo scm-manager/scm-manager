@@ -1,0 +1,2 @@
+- type: fixed
+  description: Do not resolve external groups for system accounts ([#1541](https://github.com/scm-manager/scm-manager/pull/1541))
