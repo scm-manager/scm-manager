@@ -22,33 +22,27 @@
  * SOFTWARE.
  */
 import React, { FC, useState } from "react";
-import { connect } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
-import { deleteRole, getDeleteRoleFailure, isDeleteRolePending } from "../modules/roles";
+import { useDeleteRepositoryRole } from "@scm-manager/ui-api";
 
 type Props = {
-  loading: boolean;
-  error: Error;
   role: RepositoryRole;
   confirmDialog?: boolean;
-  deleteRole: (role: RepositoryRole, callback?: () => void) => void;
 };
 
-const DeleteRepositoryRole: FC<Props> = ({ confirmDialog = true, deleteRole, role, loading, error }: Props) => {
+const DeleteRepositoryRole: FC<Props> = ({ confirmDialog = true, role }: Props) => {
+  const { isLoading: loading, error, remove, isDeleted } = useDeleteRepositoryRole();
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("admin");
-  const history = useHistory();
 
-  const roleDeleted = () => {
-    history.push("/admin/roles/");
-  };
+  if (isDeleted) {
+    return <Redirect to="/admin/roles" />;
+  }
 
-  const deleteRoleCallback = () => {
-    deleteRole(role, roleDeleted);
-  };
+  const deleteRoleCallback = () => remove(role);
 
   const confirmDelete = () => {
     setShowConfirmAlert(true);
@@ -73,7 +67,7 @@ const DeleteRepositoryRole: FC<Props> = ({ confirmDialog = true, deleteRole, rol
           {
             className: "is-outlined",
             label: t("repositoryRole.delete.confirmAlert.submit"),
-            onClick: () => deleteRoleCallback()
+            onClick: deleteRoleCallback
           },
           {
             label: t("repositoryRole.delete.confirmAlert.cancel"),
@@ -94,21 +88,4 @@ const DeleteRepositoryRole: FC<Props> = ({ confirmDialog = true, deleteRole, rol
   );
 };
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const loading = isDeleteRolePending(state, ownProps.role.name);
-  const error = getDeleteRoleFailure(state, ownProps.role.name);
-  return {
-    loading,
-    error
-  };
-};
-
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    deleteRole: (role: RepositoryRole, callback?: () => void) => {
-      dispatch(deleteRole(role, callback));
-    }
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(DeleteRepositoryRole);
+export default DeleteRepositoryRole;
