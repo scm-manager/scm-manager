@@ -100,8 +100,7 @@ class FullScmRepositoryImporterTest {
 
   @BeforeEach
   void initTestObject() {
-    FullScmRepositoryImporterProcess process = new FullScmRepositoryImporterProcess(environmentCheckStep, metadataImportStep, storeImportStep, repositoryImportStep, repositoryManager);
-    fullImporter = new FullScmRepositoryImporter(process);
+    fullImporter = new FullScmRepositoryImporter(environmentCheckStep, metadataImportStep, storeImportStep, repositoryImportStep, repositoryManager);
   }
 
   @BeforeEach
