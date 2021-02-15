@@ -22,16 +22,18 @@
  * SOFTWARE.
  */
 
-import { Links, PagedCollection } from "./hal";
+import {HalRepresentation, PagedCollection} from "./hal";
 
-export type RepositoryRole = {
+export type RepositoryRoleBase = {
   name: string;
   verbs: string[];
   type?: string;
   creationDate?: string;
   lastModified?: string;
-  _links: Links;
 };
+
+export type RepositoryRole = HalRepresentation & RepositoryRoleBase;
+export type RepositoryRoleCreation = RepositoryRoleBase;
 
 type RepositoryRoleEmbedded = {
   repositoryRoles: RepositoryRole[];
