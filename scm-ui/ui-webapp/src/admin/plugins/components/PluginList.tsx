@@ -21,28 +21,26 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import { Plugin } from "@scm-manager/ui-types";
 import PluginGroupEntry from "../components/PluginGroupEntry";
 import groupByCategory from "./groupByCategory";
+import { PluginModalContent } from "../containers/PluginsOverview";
 
 type Props = {
   plugins: Plugin[];
+  openModal: (content: PluginModalContent) => void;
 };
 
-class PluginList extends React.Component<Props> {
-  render() {
-    const { plugins } = this.props;
-
-    const groups = groupByCategory(plugins);
-    return (
-      <div className="content is-plugin-page">
-        {groups.map(group => {
-          return <PluginGroupEntry group={group} key={group.name} />;
-        })}
-      </div>
-    );
-  }
-}
+const PluginList: FC<Props> = ({ plugins, openModal }) => {
+  const groups = groupByCategory(plugins);
+  return (
+    <div className="content is-plugin-page">
+      {groups.map(group => {
+        return <PluginGroupEntry group={group} openModal={openModal} key={group.name} />;
+      })}
+    </div>
+  );
+};
 
 export default PluginList;
