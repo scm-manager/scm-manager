@@ -29,18 +29,19 @@ import { useTranslation } from "react-i18next";
 import ImportRepositoryTypeSelect from "../components/ImportRepositoryTypeSelect";
 import ImportTypeSelect from "../components/ImportTypeSelect";
 import ImportRepositoryFromUrl from "../components/ImportRepositoryFromUrl";
-import { Loading, Notification, Page } from "@scm-manager/ui-components";
+import { Loading, Notification, Page, useNavigationLock } from "@scm-manager/ui-components";
 import RepositoryFormSwitcher from "../components/form/RepositoryFormSwitcher";
 import {
   fetchRepositoryTypesIfNeeded,
   getFetchRepositoryTypesFailure,
   getRepositoryTypes,
-  isFetchRepositoryTypesPending,
+  isFetchRepositoryTypesPending
 } from "../modules/repositoryTypes";
 import { connect } from "react-redux";
 import { fetchNamespaceStrategiesIfNeeded } from "../../admin/modules/namespaceStrategies";
 import ImportRepositoryFromBundle from "../components/ImportRepositoryFromBundle";
 import ImportFullRepository from "../components/ImportFullRepository";
+import { Prompt } from "react-router-dom";
 
 type Props = {
   repositoryTypes: RepositoryType[];
@@ -69,7 +70,7 @@ const ImportRepository: FC<Props> = ({
   pageLoading,
   error,
   fetchRepositoryTypesIfNeeded,
-  fetchNamespaceStrategiesIfNeeded,
+  fetchNamespaceStrategiesIfNeeded
 }) => {
   const [importPending, setImportPending] = useState(false);
   const [repositoryType, setRepositoryType] = useState<RepositoryType | undefined>();
@@ -80,6 +81,8 @@ const ImportRepository: FC<Props> = ({
     fetchRepositoryTypesIfNeeded();
     fetchNamespaceStrategiesIfNeeded();
   }, [repositoryTypes]);
+
+  useNavigationLock(importPending);
 
   const changeRepositoryType = (repositoryType: RepositoryType) => {
     setRepositoryType(repositoryType);
@@ -110,7 +113,9 @@ const ImportRepository: FC<Props> = ({
     if (importType === "fullImport") {
       return (
         <ImportFullRepository
-          url={((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "fullImport") as Link).href}
+          url={
+            ((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "fullImport") as Link).href
+          }
           repositoryType={repositoryType!.name}
           setImportPending={setImportPending}
         />
@@ -129,6 +134,7 @@ const ImportRepository: FC<Props> = ({
       error={error}
       showContentOnError={true}
     >
+      <Prompt when={importPending} message={t("import.navigationWarning")} />
       <ImportPendingLoading importPending={importPending} />
       <ImportRepositoryTypeSelect
         repositoryTypes={repositoryTypes}
@@ -161,7 +167,7 @@ const mapStateToProps = (state: any) => {
   return {
     repositoryTypes,
     pageLoading,
-    error,
+    error
   };
 };
 
@@ -172,7 +178,7 @@ const mapDispatchToProps = (dispatch: any) => {
     },
     fetchNamespaceStrategiesIfNeeded: () => {
       dispatch(fetchNamespaceStrategiesIfNeeded());
-    },
+    }
   };
 };
 

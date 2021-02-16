@@ -22,17 +22,22 @@
  * SOFTWARE.
  */
 
-// @create-index
+import { useEffect } from "react";
 
-export { default as NavAction } from "./NavAction";
-export { default as NavLink } from "./NavLink";
-export { default as Navigation } from "./Navigation";
-export { default as SubNavigation } from "./SubNavigation";
-export { default as PrimaryNavigation } from "./PrimaryNavigation";
-export { default as PrimaryNavigationLink } from "./PrimaryNavigationLink";
-export { default as SecondaryNavigation } from "./SecondaryNavigation";
-export { MenuContext, StateMenuContextProvider } from "./MenuContext";
-export { default as SecondaryNavigationItem } from "./SecondaryNavigationItem";
-export { default as ExternalLink } from "./ExternalLink";
-export { default as ExternalNavLink } from "./ExternalNavLink";
-export { default as useNavigationLock } from "./useNavigationLock";
+// This hook can be used to warn the user on reloading or closing the current page if the navigation lock is enabled.
+const useNavigationLock = (enabled: boolean) => {
+  useEffect(() => {
+    if (enabled) {
+      window.onbeforeunload = () => true;
+    } else {
+      // @ts-ignore We need to reset this listener if the lock was disabled
+      window.onbeforeunload = undefined;
+    }
+    return () => {
+      // @ts-ignore Remove this listener when the hook will be unmounted
+      window.onbeforeunload = undefined;
+    };
+  }, [enabled]);
+};
+
+export default useNavigationLock;

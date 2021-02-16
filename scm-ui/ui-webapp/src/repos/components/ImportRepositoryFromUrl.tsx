@@ -75,6 +75,7 @@ const ImportRepositoryFromUrl: FC<Props> = ({ url, repositoryType, setImportPend
       })
       .then(response => response.json())
       .then(repo => {
+        handleImportLoading(false);
         if (history.location.pathname === currentPath) {
           history.push(`/repo/${repo.namespace}/${repo.name}/code/sources`);
         }
