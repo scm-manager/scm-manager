@@ -24,8 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
@@ -46,49 +44,34 @@ import java.util.List;
 
 import static sonia.scm.repository.SvnUtil.parseRevision;
 
-//~--- JDK imports ------------------------------------------------------------
+public class SvnLogCommand extends AbstractSvnCommand implements LogCommand {
 
-public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
-{
+  private static final Logger LOG = LoggerFactory.getLogger(SvnLogCommand.class);
 
-  /**
-   * the logger for SvnLogCommand
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(SvnLogCommand.class);
-
-  SvnLogCommand(SvnContext context)
-  {
+  SvnLogCommand(SvnContext context) {
     super(context);
   }
-
-  //~--- get methods ----------------------------------------------------------
 
   @Override
   @SuppressWarnings("unchecked")
   public Changeset getChangeset(String revision, LogCommandRequest request) {
     Changeset changeset = null;
 
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("fetch changeset {}", revision);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("fetch changeset {}", revision);
     }
 
-    try
-    {
+    try {
       long revisioNumber = parseRevision(revision, repository);
       Preconditions.checkArgument(revisioNumber > 0, "revision must be greater than zero: %d", revisioNumber);
       SVNRepository repo = open();
       Collection<SVNLogEntry> entries = repo.log(null, null, revisioNumber,
-                                          revisioNumber, true, true);
+        revisioNumber, true, true);
 
-      if (Util.isNotEmpty(entries))
-      {
+      if (Util.isNotEmpty(entries)) {
         changeset = SvnUtil.createChangeset(entries.iterator().next());
       }
-    }
-    catch (SVNException ex)
-    {
+    } catch (SVNException ex) {
       throw new InternalRepositoryException(repository, "could not open repository", ex);
     }
 
@@ -98,73 +81,48 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
   @Override
   @SuppressWarnings("unchecked")
   public ChangesetPagingResult getChangesets(LogCommandRequest request) {
-    if (logger.isDebugEnabled())
-    {
-      logger.debug("fetch changesets for {}", request);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("fetch changesets for {}", request);
     }
 
-    ChangesetPagingResult changesets = null;
+    ChangesetPagingResult changesets;
     int start = request.getPagingStart();
     int limit = request.getPagingLimit();
     long startRevision = parseRevision(request.getStartChangeset(), repository);
     long endRevision = parseRevision(request.getEndChangeset(), repository);
     String[] pathArray = null;
 
-    if (!Strings.isNullOrEmpty(request.getPath()))
-    {
-      pathArray = new String[] { request.getPath() };
+    if (!Strings.isNullOrEmpty(request.getPath())) {
+      pathArray = new String[]{request.getPath()};
     }
 
-    try
-    {
+    try {
       SVNRepository repo = open();
 
-      if ((startRevision > 0) || (pathArray != null))
-      {
+      if ((startRevision > 0) || (pathArray != null)) {
         changesets = getChangesets(repo, startRevision, endRevision, start,
           limit, pathArray);
-      }
-      else
-      {
+      } else {
         changesets = getChangesets(repo, start, limit);
       }
-    }
-    catch (SVNException ex)
-    {
+    } catch (SVNException ex) {
       throw new InternalRepositoryException(repository, "could not open repository", ex);
     }
 
     return changesets;
   }
 
-
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param repo
-   * @param start
-   * @param limit
-   *
-   * @return
-   *
-   * @throws SVNException
-   */
   private ChangesetPagingResult getChangesets(SVNRepository repo, int start,
-    int limit)
-    throws SVNException
-  {
+                                              int limit)
+    throws SVNException {
     long latest = repo.getLatestRevision();
     long startRev = latest - start;
     long endRev = Math.max(startRev - (limit - 1), 1);
 
     final List<Changeset> changesets = Lists.newArrayList();
 
-    if (startRev > 0)
-    {
-      logger.debug("fetch changeset from {} to {}", startRev, endRev);
+    if (startRev > 0) {
+      LOG.debug("fetch changeset from {} to {}", startRev, endRev);
       repo.log(null, startRev, endRev, true, true,
         new ChangesetCollector(changesets));
     }
@@ -172,51 +130,30 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     return new ChangesetPagingResult((int) latest, changesets);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repo
-   * @param startRevision
-   * @param endRevision
-   * @param start
-   * @param limit
-   * @param path
-   *
-   * @return
-   *
-   * @throws SVNException
-   */
   @SuppressWarnings("unchecked")
   private ChangesetPagingResult getChangesets(SVNRepository repo,
-    long startRevision, long endRevision, int start, int limit, String[] path)
-    throws SVNException
-  {
+                                              long startRevision, long endRevision, int start, int limit, String[] path)
+    throws SVNException {
     long startRev;
     long endRev = Math.max(endRevision, 0);
     long maxRev = repo.getLatestRevision();
 
-    if (startRevision >= 0l)
-    {
+    if (startRevision >= 0) {
       startRev = startRevision;
-    }
-    else
-    {
+    } else {
       startRev = maxRev;
     }
 
     List<SVNLogEntry> changesetList = Lists.newArrayList();
 
-    logger.debug("fetch changeset from {} to {} for path {}", startRev, endRev,
+    LOG.debug("fetch changeset from {} to {} for path {}", startRev, endRev,
       path);
 
     Collection<SVNLogEntry> entries = repo.log(path, null, startRev, endRev,
-                                        true, true);
+      true, true);
 
-    for (SVNLogEntry entry : entries)
-    {
-      if (entry.getRevision() <= maxRev)
-      {
+    for (SVNLogEntry entry : entries) {
+      if (entry.getRevision() <= maxRev) {
         changesetList.add(entry);
       }
     }
@@ -225,17 +162,15 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
     int max = limit + start;
     int end = total;
 
-    if ((max > 0) && (end > max))
-    {
+    if ((max > 0) && (end > max)) {
       end = max;
     }
 
-    if (start < 0)
-    {
+    if (start < 0) {
       start = 0;
     }
 
-    logger.trace(
+    LOG.trace(
       "create sublist from {} to {} of total {} collected changesets", start,
       end, total);
 
@@ -245,45 +180,20 @@ public class SvnLogCommand extends AbstractSvnCommand implements LogCommand
       SvnUtil.createChangesets(changesetList));
   }
 
-  //~--- inner classes --------------------------------------------------------
-
   /**
    * Collect and convert changesets.
-   *
    */
-  private static class ChangesetCollector implements ISVNLogEntryHandler
-  {
+  private static class ChangesetCollector implements ISVNLogEntryHandler {
 
-    /**
-     * Constructs ...
-     *
-     *
-     * @param changesets
-     */
-    public ChangesetCollector(Collection<Changeset> changesets)
-    {
+    private final Collection<Changeset> changesets;
+
+    public ChangesetCollector(Collection<Changeset> changesets) {
       this.changesets = changesets;
     }
 
-    //~--- methods ------------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     *
-     * @param logEntry
-     *
-     * @throws SVNException
-     */
     @Override
-    public void handleLogEntry(SVNLogEntry logEntry) throws SVNException
-    {
+    public void handleLogEntry(SVNLogEntry logEntry) {
       changesets.add(SvnUtil.createChangeset(logEntry));
     }
-
-    //~--- fields -------------------------------------------------------------
-
-    /** Field description */
-    private final Collection<Changeset> changesets;
   }
 }
