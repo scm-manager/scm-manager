@@ -38,6 +38,8 @@ import sonia.scm.repository.RepositoryTestData;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -66,25 +68,28 @@ class FileStoreExporterTest {
   @Test
   void shouldReturnListOfExportableStores(@TempDir Path temp) throws IOException {
     Path storePath = temp.resolve("store");
-    createFile(storePath, StoreType.CONFIG.getValue(), null, "first.xml");
-    createFile(storePath, StoreType.DATA.getValue(), "ci", "second.xml");
-    createFile(storePath, StoreType.DATA.getValue(), "jenkins", "third.xml");
+    createFile(storePath, StoreType.CONFIG.getValue(), "config.xml");
+    Path configEntryFile = createFile(storePath, StoreType.CONFIG.getValue(), "config-entry.xml");
+    Files.write(configEntryFile, Arrays.asList("<?xml version=\"1.0\" ?>", "<configuration type=\"config-entry\">", "</configuration>"));
+    createFile(storePath, StoreType.DATA.getValue(), "ci", "data.xml");
+    createFile(storePath, StoreType.DATA.getValue(), "jenkins", "data.xml");
     when(resolver.forClass(Path.class).getLocation(REPOSITORY.getId())).thenReturn(temp);
 
     List<ExportableStore> exportableStores = fileStoreExporter.listExportableStores(REPOSITORY);
 
-    assertThat(exportableStores).hasSize(3);
+    assertThat(exportableStores).hasSize(4);
     assertThat(exportableStores.stream().filter(e -> e.getMetaData().getType().equals(StoreType.CONFIG))).hasSize(1);
+    assertThat(exportableStores.stream().filter(e -> e.getMetaData().getType().equals(StoreType.CONFIG_ENTRY))).hasSize(1);
     assertThat(exportableStores.stream().filter(e -> e.getMetaData().getType().equals(StoreType.DATA))).hasSize(2);
   }
 
-  private void createFile(Path storePath, String type, String name, String fileName) throws IOException {
-    Path path = name != null ? storePath.resolve(type).resolve(name) : storePath.resolve(type);
-    Files.createDirectories(path);
-    Path file = path.resolve(fileName);
+  private Path createFile(Path storePath, String... names) throws IOException {
+    Path file = Arrays.stream(names).map(Paths::get).reduce(Path::resolve).map(storePath::resolve).orElse(storePath);
+    Files.createDirectories(file.getParent());
     if (!Files.exists(file)) {
       Files.createFile(file);
     }
     Files.write(file, Collections.singletonList("something"));
+    return file;
   }
 }

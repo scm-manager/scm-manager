@@ -24,12 +24,19 @@
 
 package sonia.scm.store;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.api.ExportFailedException;
 
 import javax.inject.Inject;
+import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -43,15 +50,18 @@ import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
 import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 import static sonia.scm.store.ExportableBlobFileStore.BLOB_FACTORY;
+import static sonia.scm.store.ExportableConfigEntryFileStore.CONFIG_ENTRY_FACTORY;
 import static sonia.scm.store.ExportableConfigFileStore.CONFIG_FACTORY;
 import static sonia.scm.store.ExportableDataFileStore.DATA_FACTORY;
 
 public class FileStoreExporter implements StoreExporter {
 
-  private final RepositoryLocationResolver locationResolver;
-
   private static final Collection<Function<StoreType, Optional<Function<Path, ExportableStore>>>> STORE_FACTORIES =
-    asList(DATA_FACTORY, BLOB_FACTORY, CONFIG_FACTORY);
+    asList(DATA_FACTORY, BLOB_FACTORY, CONFIG_FACTORY, CONFIG_ENTRY_FACTORY);
+
+  private static final Logger LOG = LoggerFactory.getLogger(FileStoreExporter.class);
+
+  private final RepositoryLocationResolver locationResolver;
 
   @Inject
   public FileStoreExporter(RepositoryLocationResolver locationResolver) {
@@ -103,19 +113,50 @@ public class FileStoreExporter implements StoreExporter {
   private Optional<ExportableStore> getStoreFor(Path storePath) {
     return STORE_FACTORIES
       .stream()
-      .map(factory -> factory.apply(getEnumForValue(storePath.getParent())))
+      .map(factory -> factory.apply(getEnumForValue(storePath)))
       .filter(Optional::isPresent)
       .map(Optional::get)
       .findFirst()
       .map(f -> f.apply(storePath));
   }
 
-  private StoreType getEnumForValue(Path storeTypeDirectory) {
-    for (StoreType type : StoreType.values()) {
-      if (type.getValue().equals(storeTypeDirectory.getFileName().toString())) {
-        return type;
+  private StoreType getEnumForValue(Path storePath) {
+    if (Files.isDirectory(storePath)) {
+      for (StoreType type : StoreType.values()) {
+        if (type.getValue().equals(storePath.getParent().getFileName().toString())) {
+          return type;
+        }
       }
+    } else if (storePath.toString().endsWith(".xml")) {
+      return determineConfigType(storePath);
+    } else {
+      LOG.info("ignoring unknown file '{}' in export", storePath);
     }
     return null;
+  }
+
+  private StoreType determineConfigType(Path storePath) {
+    try (InputStream in = Files.newInputStream(storePath)) {
+      SAXParserFactory.newInstance().newSAXParser().parse(in, new DefaultHandler() {
+        @Override
+        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
+          if ("configuration".equals(qName) && "config-entry".equals(attributes.getValue("type"))) {
+            throw new ConfigurationEntrySAXException();
+          }
+          throw new ConfigurationSAXException();
+        }
+      });
+    } catch (ConfigurationEntrySAXException e) {
+      return StoreType.CONFIG_ENTRY;
+    } catch (Exception e) {
+      // nothing to do; this file probably is a config file
+    }
+    return StoreType.CONFIG;
+  }
+
+  private static class ConfigurationEntrySAXException extends SAXException {
+  }
+
+  private static class ConfigurationSAXException extends SAXException {
   }
 }

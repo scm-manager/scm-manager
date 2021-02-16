@@ -33,7 +33,7 @@ import static java.util.Optional.of;
 
 class ExportableDataFileStore extends ExportableDirectoryBasedFileStore {
 
-  static Function<StoreType, Optional<Function<Path, ExportableStore>>> DATA_FACTORY =
+  static final Function<StoreType, Optional<Function<Path, ExportableStore>>> DATA_FACTORY =
     storeType -> storeType == StoreType.DATA ? of(ExportableDataFileStore::new) : empty();
 
   ExportableDataFileStore(Path directory) {

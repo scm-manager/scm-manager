@@ -33,7 +33,7 @@ import static java.util.Optional.of;
 
 class ExportableBlobFileStore extends ExportableDirectoryBasedFileStore {
 
-  static Function<StoreType, Optional<Function<Path, ExportableStore>>> BLOB_FACTORY =
+  static final Function<StoreType, Optional<Function<Path, ExportableStore>>> BLOB_FACTORY =
     storeType -> storeType == StoreType.BLOB ? of(ExportableBlobFileStore::new) : empty();
 
   ExportableBlobFileStore(Path directory) {

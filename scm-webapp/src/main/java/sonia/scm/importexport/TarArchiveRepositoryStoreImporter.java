@@ -68,7 +68,7 @@ public class TarArchiveRepositoryStoreImporter {
         .doImport(repository)
         .importStore(new StoreEntryMetaData(StoreType.DATA, entryPathParts[2]))
         .importEntry(entryPathParts[3], tais);
-    } else if (storeType.equals(StoreType.CONFIG.getValue())){
+    } else if (storeType.equals(StoreType.CONFIG.getValue()) || storeType.equals(StoreType.CONFIG_ENTRY.getValue())){
       repositoryStoreImporter
         .doImport(repository)
         .importStore(new StoreEntryMetaData(StoreType.CONFIG, ""))
@@ -97,7 +97,7 @@ public class TarArchiveRepositoryStoreImporter {
       if (storeType.equals(StoreType.DATA.getValue()) || storeType.equals(StoreType.BLOB.getValue())) {
         return entryPathParts.length == 4;
       }
-      if (storeType.equals(StoreType.CONFIG.getValue())) {
+      if (storeType.equals(StoreType.CONFIG.getValue()) || storeType.equals(StoreType.CONFIG_ENTRY.getValue())) {
         return entryPathParts.length == 3;
       }
     }
