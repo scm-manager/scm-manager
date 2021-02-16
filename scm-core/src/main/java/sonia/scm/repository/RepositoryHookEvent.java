@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -84,6 +84,14 @@ public class RepositoryHookEvent
   public RepositoryHookType getType()
   {
     return type;
+  }
+
+  @Override
+  public String toString() {
+    return "RepositoryHookEvent{" +
+      "repository=" + repository +
+      ", type=" + type +
+      '}';
   }
 
   //~--- fields ---------------------------------------------------------------
