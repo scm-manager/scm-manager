@@ -1,4 +1,4 @@
-import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
+import { ApiResult, useRequiredIndexLink } from "./base";
 import { RepositoryRole, RepositoryRoleCollection, RepositoryRoleCreation } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient, urls } from "@scm-manager/ui-components";
@@ -115,9 +115,4 @@ export const useDeleteRepositoryRole = () => {
     error,
     isDeleted: !!data
   };
-};
-
-export const useAvailableRepositoryVerbs = () => {
-  const { data, isLoading, error } = useIndexJsonResource<{ verbs: string[] }>("repositoryVerbs");
-  return { error, isLoading, data: data?.verbs };
 };

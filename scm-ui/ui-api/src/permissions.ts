@@ -31,16 +31,12 @@ import {
   PermissionCollection,
   PermissionCreateEntry,
   Repository,
-  RepositoryRoleCollection,
   RepositoryVerbs
 } from "@scm-manager/ui-types";
 import { apiClient } from "@scm-manager/ui-components";
 import { requiredLink } from "./links";
 import { repoQueryKey } from "./keys";
-
-export const useRepositoryRoles = (): ApiResult<RepositoryRoleCollection> => {
-  return useIndexJsonResource<RepositoryRoleCollection>("repositoryRoles");
-};
+import { useRepositoryRoles } from "./repository-roles";
 
 export const useRepositoryVerbs = (): ApiResult<RepositoryVerbs> => {
   return useIndexJsonResource<RepositoryVerbs>("repositoryVerbs");
