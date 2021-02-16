@@ -1,0 +1,2 @@
+- type: fixed
+  description: Do not modify external users in internal user db when they have not been changed ([#1543](https://github.com/scm-manager/scm-manager/pull/1543))

@@ -154,10 +154,12 @@ public final class SyncingRealmHelper {
       }
     }
 
-    try {
-      userManager.modify(clone);
-    } catch (NotFoundException e) {
-      throw new IllegalStateException("got NotFoundException though user " + clone.getName() + " could be loaded", e);
+    if (!user.equals(clone)) {
+      try {
+        userManager.modify(clone);
+      } catch (NotFoundException e) {
+        throw new IllegalStateException("got NotFoundException though user " + clone.getName() + " could be loaded", e);
+      }
     }
   }
 

@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -53,6 +53,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -180,11 +181,27 @@ public class SyncingRealmHelperTest {
   @Test
   public void testStoreUserModify(){
     when(userManager.contains("tricia")).thenReturn(Boolean.TRUE);
+    User existing = new User("tricia");
+    User converted = new User("tricia", "McMillan", "tricia@hitchhiker.com");
 
-    User user = new User("tricia");
+    when(converter.convert(existing)).thenReturn(converted);
 
-    helper.store(user);
-    verify(userManager, times(1)).modify(user);
+    helperWithConverters.store(existing);
+    verify(userManager).modify(converted);
+  }
+
+  /**
+   * Tests {@link SyncingRealmHelper#store(User)} with an existing user.
+   */
+  @Test
+  public void testDoNotStoreUserIfNotModified(){
+    when(userManager.contains("tricia")).thenReturn(Boolean.TRUE);
+    User existing = new User("tricia");
+
+    when(converter.convert(existing)).thenReturn(existing);
+
+    helperWithConverters.store(existing);
+    verify(userManager, never()).modify(any());
   }
 
   /**
