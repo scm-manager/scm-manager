@@ -95,7 +95,7 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
     List<String> branches = getBranchesFromPullResult(result);
     List<Tag> tags = getTagsFromPullResult(result);
 
-    eventBus.post(createEvent(branches, tags, new HgLazyChangesetResolver(result)));
+    eventBus.post(createEvent(branches, tags, new HgLazyChangesetResolver(context.open())));
   }
 
   private List<Tag> getTagsFromPullResult(List<Changeset> result) {

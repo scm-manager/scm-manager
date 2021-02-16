@@ -220,19 +220,15 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
       org.eclipse.jgit.lib.Repository repository = context.open();
       List<String> branches = getBranchesFromFetchResult(result);
       List<Tag> tags = getTagsFromFetchResult(result);
-      Iterable<RevCommit> changesets = getChangesetsForPulledRepository(git);
-      eventBus.post(createEvent(changesetConverterFactory.create(repository), branches, tags, changesets));
-    } catch (IOException | GitAPIException e) {
+      GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(context.getRepository(), git);
+      eventBus.post(createEvent(changesetConverterFactory.create(repository), branches, tags, changesetResolver));
+    } catch (IOException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(context.getRepository()).build(),
         "Could not fire post receive repository hook event after unbundle",
         e
       );
     }
-  }
-
-  private Iterable<RevCommit> getChangesetsForPulledRepository(Git git) throws IOException, GitAPIException {
-    return git.log().all().call();
   }
 
   private List<Tag> getTagsFromFetchResult(FetchResult result) {
@@ -249,8 +245,13 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
       .collect(Collectors.toList());
   }
 
-  private PostReceiveRepositoryHookEvent createEvent(GitChangesetConverter converter, List<String> branches, List<Tag> tags, Iterable<RevCommit> changesets) {
-    HookContext context = hookContextFactory.createContext(new GitImportHookContextProvider(converter, tags, changesets, branches), this.context.getRepository());
+  private PostReceiveRepositoryHookEvent createEvent(GitChangesetConverter converter,
+                                                     List<String> branches,
+                                                     List<Tag> tags,
+                                                     GitLazyChangesetResolver changesetResolver
+  ) {
+    GitImportHookContextProvider contextProvider = new GitImportHookContextProvider(converter, branches, tags, changesetResolver);
+    HookContext context = hookContextFactory.createContext(contextProvider, this.context.getRepository());
     RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, this.context.getRepository(), RepositoryHookType.POST_RECEIVE);
     return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
   }

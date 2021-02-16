@@ -24,32 +24,32 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.Repository;
-import com.aragost.javahg.commands.LogCommand;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.Person;
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.revwalk.RevCommit;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.ImportFailedException;
 
-import java.util.List;
+import java.io.IOException;
 import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
 
-class HgLazyChangesetResolver implements Callable<List<Changeset>> {
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
+public class GitLazyChangesetResolver implements Callable<Iterable<RevCommit>> {
   private final Repository repository;
+  private final Git git;
 
-  HgLazyChangesetResolver(Repository repository) {
+  public GitLazyChangesetResolver(Repository repository, Git git) {
     this.repository = repository;
+    this.git = git;
   }
 
   @Override
-  public List<Changeset> call() {
-    return LogCommand.on(repository).execute().stream()
-      .map(changeset -> new Changeset(
-        changeset.toString(),
-        changeset.getTimestamp().getDate().getTime(),
-        Person.toPerson(changeset.getUser()),
-        changeset.getMessage())
-      )
-      .collect(Collectors.toList());
+  public Iterable<RevCommit> call() {
+    try {
+      return git.log().all().call();
+    } catch (IOException | GitAPIException e) {
+      throw new ImportFailedException(entity(repository).build(), "Could not resolve changesets for imported repository", e);
+    }
   }
 }
