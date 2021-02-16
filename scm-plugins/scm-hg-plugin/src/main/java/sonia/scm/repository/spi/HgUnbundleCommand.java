@@ -25,7 +25,6 @@
 package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Branch;
-import com.aragost.javahg.Changeset;
 import com.aragost.javahg.Repository;
 import com.google.common.io.ByteSource;
 import org.slf4j.Logger;
@@ -47,7 +46,6 @@ import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static sonia.scm.util.Archives.extractTar;
-
 
 public class HgUnbundleCommand implements UnbundleCommand {
   private static final Logger LOG = LoggerFactory.getLogger(HgUnbundleCommand.class);
@@ -81,8 +79,8 @@ public class HgUnbundleCommand implements UnbundleCommand {
     Repository repository = context.open();
     List<String> branches = extractBranches(repository);
     List<Tag> tags = extractTags(repository);
-
-    eventBus.post(createEvent(branches, tags, new HgLazyChangesetResolver(com.aragost.javahg.commands.LogCommand.on(repository).execute())));
+    HgLazyChangesetResolver changesetResolver = new HgLazyChangesetResolver(repository);
+    eventBus.post(createEvent(branches, tags, changesetResolver));
   }
 
   private List<Tag> extractTags(Repository repository) {
@@ -98,7 +96,8 @@ public class HgUnbundleCommand implements UnbundleCommand {
   }
 
   private PostReceiveRepositoryHookEvent createEvent(List<String> branches, List<Tag> tags, HgLazyChangesetResolver changesetResolver) {
-    HookContext context = hookContextFactory.createContext(new HgImportHookContextProvider(branches, tags, changesetResolver), this.context.getScmRepository());
+    HgImportHookContextProvider contextProvider = new HgImportHookContextProvider(branches, tags, changesetResolver);
+    HookContext context = hookContextFactory.createContext(contextProvider, this.context.getScmRepository());
     RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, this.context.getScmRepository(), RepositoryHookType.POST_RECEIVE);
     return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
   }

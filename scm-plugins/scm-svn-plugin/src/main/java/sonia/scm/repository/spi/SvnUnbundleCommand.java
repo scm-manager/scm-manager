@@ -152,7 +152,7 @@ public class SvnUnbundleCommand extends AbstractSvnCommand implements UnbundleCo
     }
   }
 
-  static class ChangesetResolver implements Callable<List<Changeset>> {
+  private static class ChangesetResolver implements Callable<List<Changeset>> {
 
     private final Repository repository;
     private final LogCommand logCommand;
