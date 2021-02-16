@@ -56,8 +56,12 @@ const SingleRepositoryRole: FC = () => {
   return (
     <>
       <Title title={t("repositoryRole.title")} />
-      <Route path={`${url}/info`} component={() => <PermissionRoleDetail role={role} url={url} />} />
-      <Route path={`${url}/edit`} exact component={() => <EditRepositoryRole role={role} />} />
+      <Route path={`${url}/info`}>
+        <PermissionRoleDetail role={role} url={url} />
+      </Route>
+      <Route path={`${url}/edit`} exact>
+        <EditRepositoryRole role={role} />
+      </Route>
       <ExtensionPoint name="roles.route" props={extensionProps} renderAll={true} />
     </>
   );
