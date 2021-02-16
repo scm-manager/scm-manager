@@ -1,8 +1,9 @@
 import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
-import { Link, RepositoryRole, RepositoryRoleCollection, RepositoryRoleCreation } from "@scm-manager/ui-types";
+import { RepositoryRole, RepositoryRoleCollection, RepositoryRoleCreation } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient, urls } from "@scm-manager/ui-components";
 import { createQueryString } from "./utils";
+import { requiredLink } from "./links";
 
 export type UseRepositoryRolesRequest = {
   page?: number | string;
@@ -76,7 +77,7 @@ export const useUpdateRepositoryRole = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, RepositoryRole>(
     repositoryRole => {
-      const updateUrl = (repositoryRole._links.update as Link).href;
+      const updateUrl = requiredLink(repositoryRole, "update");
       return apiClient.put(updateUrl, repositoryRole, "application/vnd.scmm-repositoryRole+json;v=2");
     },
     {
@@ -98,7 +99,7 @@ export const useDeleteRepositoryRole = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, RepositoryRole>(
     repositoryRole => {
-      const deleteUrl = (repositoryRole._links.delete as Link).href;
+      const deleteUrl = requiredLink(repositoryRole, "delete");
       return apiClient.delete(deleteUrl);
     },
     {
