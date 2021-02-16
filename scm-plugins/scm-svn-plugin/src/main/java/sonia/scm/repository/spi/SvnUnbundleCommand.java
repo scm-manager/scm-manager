@@ -166,7 +166,7 @@ public class SvnUnbundleCommand extends AbstractSvnCommand implements UnbundleCo
     public List<Changeset> call() {
       try {
       LogCommandRequest request = new LogCommandRequest();
-      request.setPagingLimit(-1);
+      request.setPagingLimit(999999);
       return logCommand.getChangesets(request).getChangesets();
       } catch (IOException e) {
         throw new ImportFailedException(
