@@ -253,6 +253,6 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public UnbundleCommand getUnbundleCommand() {
-    return new HgUnbundleCommand(context);
+    return new HgUnbundleCommand(context, hookContextFactory, eventBus);
   }
 }

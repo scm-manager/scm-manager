@@ -63,12 +63,6 @@ class GitUnbundleCommandTest extends AbstractGitCommandTestBase {
   @InjectMocks
   private GitUnbundleCommand unbundleCommand;
 
-  @BeforeEach
-  void initCommand() {
-    gitContext = mock(GitContext.class);
-    unbundleCommand = new GitUnbundleCommand(gitContext, hookContextFactory, eventBus, changesetConverterFactory);
-  }
-
   @Test
   void shouldUnbundleRepositoryFiles(@TempDir Path temp) throws IOException {
     String filePath = "test-input";
