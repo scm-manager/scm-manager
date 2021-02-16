@@ -24,83 +24,104 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import sonia.scm.util.Archives;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.plugin.Extension;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.Person;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.api.HookChangesetBuilder;
+import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
-class HgUnbundleCommandTest {
-  @Mock
-  private HgCommandContext hgContext;
-  @Mock
-  private HookContextFactory hookContextFactory;
-  @Mock
-  private ScmEventBus eventBus;
+public class HgUnbundleCommandTest extends AbstractHgCommandTestBase {
 
-  @InjectMocks
+  private HookChangesetBuilder hookChangesetBuilder;
+  private ScmEventBus eventBus;
   private HgUnbundleCommand unbundleCommand;
 
+  @Captor
+  private final ArgumentCaptor<PostReceiveRepositoryHookEvent> eventCaptor =
+    ArgumentCaptor.forClass(PostReceiveRepositoryHookEvent.class);
+
+  @Before
+  public void initUnbundleCommand() {
+    eventBus = mock(ScmEventBus.class);
+    HookContextFactory hookContextFactory = mock(HookContextFactory.class);
+    HookContext hookContext = mock(HookContext.class);
+    when(hookContextFactory.createContext(any(), eq(cmdContext.getScmRepository()))).thenReturn(hookContext);
+    hookChangesetBuilder = mock(HookChangesetBuilder.class);
+    when(hookContext.getChangesetProvider()).thenReturn(hookChangesetBuilder);
+    unbundleCommand = new HgUnbundleCommand(cmdContext, hookContextFactory, eventBus);
+  }
+
   @Test
-  void shouldUnbundleRepositoryFiles(@TempDir Path temp) throws IOException {
+  public void shouldUnbundleRepositoryFiles() throws IOException {
+    Changeset first = new Changeset("1", 0L, new Person("trillian"), "first");
+    when(hookChangesetBuilder.getChangesetList()).thenReturn(ImmutableList.of(first));
+
     String filePath = "test-input";
     String fileContent = "HeartOfGold";
-    UnbundleCommandRequest unbundleCommandRequest = createUnbundleCommandRequestForFile(temp, filePath, fileContent);
+    UnbundleCommandRequest unbundleCommandRequest = createUnbundleCommandRequestForFile(filePath, fileContent);
 
     unbundleCommand.unbundle(unbundleCommandRequest);
 
-    assertFileWithContentWasCreated(temp, filePath, fileContent);
+    assertFileWithContentWasCreated(cmdContext.getDirectory(), filePath, fileContent);
+    verify(eventBus).post(eventCaptor.capture());
+
+    PostReceiveRepositoryHookEvent event = eventCaptor.getValue();
+    List<Changeset> changesets = event.getContext().getChangesetProvider().getChangesetList();
+    assertThat(changesets).contains(first);
+    assertThat(changesets).hasSize(1);
   }
 
   @Test
-  void shouldUnbundleNestedRepositoryFiles(@TempDir Path temp) throws IOException {
+  public void shouldUnbundleNestedRepositoryFiles() throws IOException {
     String filePath = "objects/pack/test-input";
     String fileContent = "hitchhiker";
-    UnbundleCommandRequest unbundleCommandRequest = createUnbundleCommandRequestForFile(temp, filePath, fileContent);
+    UnbundleCommandRequest unbundleCommandRequest = createUnbundleCommandRequestForFile(filePath, fileContent);
 
     unbundleCommand.unbundle(unbundleCommandRequest);
 
-    assertFileWithContentWasCreated(temp, filePath, fileContent);
+    assertFileWithContentWasCreated(cmdContext.getDirectory(), filePath, fileContent);
   }
 
-  private void assertFileWithContentWasCreated(@TempDir Path temp, String filePath, String fileContent) throws IOException {
-    File createdFile = temp.resolve(filePath).toFile();
+  private void assertFileWithContentWasCreated(File temp, String filePath, String fileContent) throws IOException {
+    File createdFile = temp.toPath().resolve(filePath).toFile();
     assertThat(createdFile).exists();
     assertThat(Files.readLines(createdFile, StandardCharsets.UTF_8).get(0)).isEqualTo(fileContent);
   }
 
-  private UnbundleCommandRequest createUnbundleCommandRequestForFile(Path temp, String filePath, String fileContent) throws IOException {
+  private UnbundleCommandRequest createUnbundleCommandRequestForFile(String filePath, String fileContent) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     TarArchiveOutputStream taos = Archives.createTarOutputStream(baos);
     addEntry(taos, filePath, fileContent);
     taos.finish();
     taos.close();
 
-    when(hgContext.getDirectory()).thenReturn(temp.toFile());
     ByteSource byteSource = ByteSource.wrap(baos.toByteArray());
-    UnbundleCommandRequest unbundleCommandRequest = new UnbundleCommandRequest(byteSource);
-    return unbundleCommandRequest;
+    return new UnbundleCommandRequest(byteSource);
   }
 
   private void addEntry(TarArchiveOutputStream taos, String name, String input) throws IOException {
