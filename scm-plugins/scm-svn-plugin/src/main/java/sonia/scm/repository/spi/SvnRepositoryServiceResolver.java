@@ -25,21 +25,27 @@
 package sonia.scm.repository.spi;
 
 import com.google.inject.Inject;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.SvnWorkingCopyFactory;
+import sonia.scm.repository.api.HookContextFactory;
 
 @Extension
 public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
 
-  private SvnRepositoryHandler handler;
-  private SvnWorkingCopyFactory workingCopyFactory;
+  private final SvnRepositoryHandler handler;
+  private final SvnWorkingCopyFactory workingCopyFactory;
+  private final HookContextFactory hookContextFactory;
+  private final ScmEventBus eventBus;
 
   @Inject
-  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler, SvnWorkingCopyFactory workingCopyFactory) {
+  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler, SvnWorkingCopyFactory workingCopyFactory, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
     this.handler = handler;
     this.workingCopyFactory = workingCopyFactory;
+    this.hookContextFactory = hookContextFactory;
+    this.eventBus = eventBus;
   }
 
   @Override
@@ -47,7 +53,7 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
     SvnRepositoryServiceProvider provider = null;
 
     if (SvnRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new SvnRepositoryServiceProvider(handler, repository, workingCopyFactory);
+      provider = new SvnRepositoryServiceProvider(handler, repository, workingCopyFactory, hookContextFactory, eventBus);
     }
 
     return provider;
