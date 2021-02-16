@@ -27,7 +27,6 @@ package sonia.scm.repository.spi;
 import com.aragost.javahg.Changeset;
 import com.aragost.javahg.commands.ExecutionException;
 import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableSet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
@@ -37,25 +36,19 @@ import sonia.scm.io.INIConfigurationReader;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.Person;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.Tag;
-import sonia.scm.repository.api.HookBranchProvider;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
-import sonia.scm.repository.api.HookFeature;
-import sonia.scm.repository.api.HookTagProvider;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullResponse;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
-import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCommand {
@@ -101,20 +94,8 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
   private void firePostReceiveRepositoryHookEvent(List<Changeset> result) {
     List<String> branches = getBranchesFromPullResult(result);
     List<Tag> tags = getTagsFromPullResult(result);
-    List<sonia.scm.repository.Changeset> changesets = getChangesetFromPullResult(result);
 
-    eventBus.post(new PostReceiveRepositoryHookEvent(createPullHookEvent(new PullHookContextProvider(tags, changesets, branches))));
-  }
-
-  private List<sonia.scm.repository.Changeset> getChangesetFromPullResult(List<Changeset> result) {
-    return result.stream()
-      .map(changeset -> new sonia.scm.repository.Changeset(
-        changeset.toString(),
-        changeset.getTimestamp().getDate().getTime(),
-        Person.toPerson(changeset.getUser()),
-        changeset.getMessage())
-      )
-      .collect(Collectors.toList());
+    eventBus.post(createEvent(branches, tags, new HgLazyChangesetResolver(result)));
   }
 
   private List<Tag> getTagsFromPullResult(List<Changeset> result) {
@@ -132,6 +113,12 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
       .map(Changeset::getBranch)
       .distinct()
       .collect(Collectors.toList());
+  }
+
+  private PostReceiveRepositoryHookEvent createEvent(List<String> branches, List<Tag> tags, HgLazyChangesetResolver changesetResolver) {
+    HookContext context = hookContextFactory.createContext(new HgImportHookContextProvider(branches, tags, changesetResolver), this.context.getScmRepository());
+    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, this.context.getScmRepository(), RepositoryHookType.POST_RECEIVE);
+    return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
   }
 
   public void addAuthenticationConfig(PullCommandRequest request, String url) throws IOException {
@@ -165,62 +152,5 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
 
   public File getHgrcFile() {
     return new File(getContext().getDirectory(), HgRepositoryHandler.PATH_HGRC);
-  }
-
-  private RepositoryHookEvent createPullHookEvent(PullHookContextProvider hookEvent) {
-    HookContext context = hookContextFactory.createContext(hookEvent, this.context.getScmRepository());
-    return new RepositoryHookEvent(context, this.context.getScmRepository(), RepositoryHookType.POST_RECEIVE);
-  }
-
-  private static class PullHookContextProvider extends HookContextProvider {
-    private final List<Tag> newTags;
-    private final List<sonia.scm.repository.Changeset> newChangesets;
-    private final List<String> newBranches;
-
-    private PullHookContextProvider(List<Tag> newTags, List<sonia.scm.repository.Changeset> newChangesets, List<String> newBranches) {
-      this.newTags = newTags;
-      this.newChangesets = newChangesets;
-      this.newBranches = newBranches;
-    }
-
-    @Override
-    public Set<HookFeature> getSupportedFeatures() {
-      return ImmutableSet.of(HookFeature.CHANGESET_PROVIDER, HookFeature.BRANCH_PROVIDER, HookFeature.TAG_PROVIDER);
-    }
-
-    @Override
-    public HookTagProvider getTagProvider() {
-      return new HookTagProvider() {
-        @Override
-        public List<Tag> getCreatedTags() {
-          return newTags;
-        }
-
-        @Override
-        public List<Tag> getDeletedTags() {
-          return Collections.emptyList();
-        }
-      };
-    }
-
-    @Override
-    public HookBranchProvider getBranchProvider() {
-      return new HookBranchProvider() {
-        @Override
-        public List<String> getCreatedOrModified() {
-          return newBranches;
-        }
-
-        @Override
-        public List<String> getDeletedOrClosed() {
-          return Collections.emptyList();
-        }
-      };
-    }
-
-    @Override
-    public HookChangesetProvider getChangesetProvider() {
-      return r -> new HookChangesetResponse(newChangesets);
-    }
   }
 }

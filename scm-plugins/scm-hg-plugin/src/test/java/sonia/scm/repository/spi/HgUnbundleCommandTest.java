@@ -30,8 +30,15 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import sonia.scm.util.Archives;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.plugin.Extension;
+import sonia.scm.repository.api.HookContextFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -43,15 +50,17 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+@ExtendWith(MockitoExtension.class)
 class HgUnbundleCommandTest {
+  @Mock
   private HgCommandContext hgContext;
-  private HgUnbundleCommand unbundleCommand;
+  @Mock
+  private HookContextFactory hookContextFactory;
+  @Mock
+  private ScmEventBus eventBus;
 
-  @BeforeEach
-  void initCommand() {
-    hgContext = mock(HgCommandContext.class);
-    unbundleCommand = new HgUnbundleCommand(hgContext);
-  }
+  @InjectMocks
+  private HgUnbundleCommand unbundleCommand;
 
   @Test
   void shouldUnbundleRepositoryFiles(@TempDir Path temp) throws IOException {
