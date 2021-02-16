@@ -42,6 +42,18 @@ import CancelPendingActionModal from "../components/CancelPendingActionModal";
 import UpdateAllActionModal from "../components/UpdateAllActionModal";
 import ShowPendingModal from "../components/ShowPendingModal";
 import { useAvailablePlugins, useInstalledPlugins, usePendingPlugins } from "@scm-manager/ui-api";
+import PluginModal from "../components/PluginModal";
+
+export enum PluginAction {
+  INSTALL = "install",
+  UPDATE = "update",
+  UNINSTALL = "uninstall"
+}
+
+export type PluginModalContent = {
+  plugin: Plugin;
+  action: PluginAction;
+}
 
 type Props = {
   installed: boolean;
@@ -64,6 +76,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   const [showExecutePendingModal, setShowExecutePendingModal] = useState<boolean>();
   const [showUpdateAllModal, setShowUpdateAllModal] = useState<boolean>();
   const [showCancelModal, setShowCancelModal] = useState<boolean>();
+  const [pluginModalContent, setPluginModalContent] = useState<PluginModalContent | null>(null);
   const collection = installed ? installedPlugins : availablePlugins;
   const error = (installed ? installedPluginsError : availablePluginsError) || pendingPluginsError;
   const loading = (installed ? isLoadingInstalledPlugins : isLoadingAvailablePlugins) || isLoadingPendingPlugins;
@@ -159,7 +172,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
 
   const renderPluginsList = () => {
     if (collection?._embedded && collection._embedded.plugins.length > 0) {
-      return <PluginsList plugins={collection._embedded.plugins} />;
+      return <PluginsList plugins={collection._embedded.plugins} openModal={setPluginModalContent} />;
     }
     return <Notification type="info">{t("plugins.noPlugins")}</Notification>;
   };
@@ -168,7 +181,6 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     if (showPendingModal && pendingPlugins) {
       return <ShowPendingModal onClose={() => setShowPendingModal(false)} pendingPlugins={pendingPlugins} />;
     }
-
     if (showExecutePendingModal && pendingPlugins) {
       return (
         <ExecutePendingActionModal onClose={() => setShowExecutePendingModal(false)} pendingPlugins={pendingPlugins} />
@@ -189,6 +201,14 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
           installedPlugins={collection}
         />
       );
+    }
+    if (pluginModalContent) {
+      const { action, plugin } = pluginModalContent;
+      return <PluginModal
+        plugin={plugin}
+        pluginAction={action}
+        onClose={() => setPluginModalContent(null)}
+      />
     }
     return null;
   };

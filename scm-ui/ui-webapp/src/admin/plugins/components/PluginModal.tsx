@@ -29,8 +29,8 @@ import { Plugin } from "@scm-manager/ui-types";
 import { Button, ButtonGroup, Checkbox, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
 import waitForRestart from "./waitForRestart";
 import SuccessNotification from "./SuccessNotification";
-import { PluginAction } from "./PluginEntry";
 import { useInstallPlugin, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
+import { PluginAction } from "../containers/PluginsOverview";
 
 type Props = {
   plugin: Plugin;
