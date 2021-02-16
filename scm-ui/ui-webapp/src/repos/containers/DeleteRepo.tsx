@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
@@ -35,17 +35,21 @@ type Props = {
 
 const DeleteRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
   const history = useHistory();
-  const { isLoading, error, remove } = useDeleteRepository({
+  const { isLoading, error, remove, isDeleted } = useDeleteRepository({
     onSuccess: () => {
       history.push("/repos/");
     }
   });
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("repos");
+  useEffect(() => {
+    if (isDeleted) {
+      setShowConfirmAlert(false);
+    }
+  }, [isDeleted]);
 
   const deleteRepoCallback = () => {
     remove(repository);
-    setShowConfirmAlert(false);
   };
 
   const confirmDelete = () => {

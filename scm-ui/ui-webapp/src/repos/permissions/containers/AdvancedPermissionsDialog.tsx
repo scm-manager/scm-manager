@@ -58,11 +58,11 @@ const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, r
     }
   };
 
-  const verbSelectBoxes = Object.entries(verbs).map(verb => (
+  const verbSelectBoxes = Object.entries(verbs).map(([name, checked]) => (
     <PermissionCheckbox
-      key={verb[0]}
-      name={verb[0]}
-      checked={verb[1]}
+      key={name}
+      name={name}
+      checked={checked}
       onChange={handleChange}
       disabled={readOnly}
       role={true}
@@ -72,8 +72,8 @@ const AdvancedPermissionsDialog: FC<Props> = ({ availableVerbs, selectedVerbs, r
   const handleSubmit = () => {
     onSubmit(
       Object.entries(verbs)
-        .filter(verb => verb[1])
-        .map(verb => verb[0])
+        .filter(([_, checked]) => checked)
+        .map(([name]) => name)
     );
   };
 
