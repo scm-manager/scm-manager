@@ -23,14 +23,12 @@
  */
 
 import {
-  Group,
   Link,
   Namespace,
   Repository,
   RepositoryCollection,
   RepositoryCreation,
   RepositoryTypeCollection,
-  User
 } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient, urls } from "@scm-manager/ui-components";

@@ -35,14 +35,19 @@ type Props = {
   namespaceOrRepository: Namespace | Repository;
 };
 
-const PermissionsTable: FC<Props> = ({ availableRoles, availableVerbs, namespaceOrRepository, permissions }) => {
+const PermissionsTable: FC<Props> = ({
+  availableRoles,
+  availableVerbs,
+  namespaceOrRepository,
+  permissions: permissionCollection
+}) => {
   const [t] = useTranslation("repos");
 
-  if (permissions._embedded.permissions?.length === 0) {
+  if (permissionCollection._embedded.permissions?.length === 0) {
     return <Notification type="info">{t("permission.noPermissions")}</Notification>;
   }
 
-  permissions?._embedded.permissions.sort((a, b) => {
+  permissionCollection?._embedded.permissions.sort((a, b) => {
     if (a.name > b.name) {
       return 1;
     } else if (a.name < b.name) {
@@ -72,7 +77,7 @@ const PermissionsTable: FC<Props> = ({ availableRoles, availableVerbs, namespace
         </tr>
       </thead>
       <tbody>
-        {permissions?._embedded.permissions.map(permission => {
+        {permissionCollection?._embedded.permissions.map(permission => {
           return (
             <SinglePermission
               availableRoles={availableRoles}
