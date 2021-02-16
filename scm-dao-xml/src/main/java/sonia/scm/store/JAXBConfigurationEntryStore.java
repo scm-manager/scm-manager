@@ -195,7 +195,7 @@ public class JAXBConfigurationEntryStore<V> implements ConfigurationEntryStore<V
 
             // configuration start
             writer.writeStartElement(TAG_CONFIGURATION);
-
+            writer.writeAttribute("type", "config-entry");
 
             for (Entry<String, V> e : entries.entrySet()) {
 
