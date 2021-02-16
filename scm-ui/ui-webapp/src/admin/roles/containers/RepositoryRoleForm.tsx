@@ -26,7 +26,7 @@ import { useTranslation } from "react-i18next";
 import { RepositoryRole } from "@scm-manager/ui-types";
 import { ErrorNotification, InputField, Level, SubmitButton } from "@scm-manager/ui-components";
 import PermissionsWrapper from "../../../permissions/components/PermissionsWrapper";
-import { useAvailableRepositoryVerbs, useRequiredIndexLink } from "@scm-manager/ui-api";
+import { useRepositoryVerbs, useRequiredIndexLink } from "@scm-manager/ui-api";
 
 type Props = {
   role?: RepositoryRole;
@@ -34,7 +34,7 @@ type Props = {
 };
 
 const RepositoryRoleForm: FC<Props> = ({ role: initialRole, submitForm }) => {
-  const { isLoading: loading, error, data: availableVerbs } = useAvailableRepositoryVerbs();
+  const { isLoading: loading, error, data } = useRepositoryVerbs();
   const createLink = useRequiredIndexLink("repositoryRoles");
   const [t] = useTranslation("admin");
   const [role, setRole] = useState<RepositoryRole>(
@@ -46,6 +46,7 @@ const RepositoryRoleForm: FC<Props> = ({ role: initialRole, submitForm }) => {
       }
     }
   );
+  const availableVerbs = data?.verbs;
 
   if (error) {
     return <ErrorNotification error={error} />;
