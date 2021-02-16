@@ -23,7 +23,7 @@
  *
  */
 
-import { ApiResult, useRequiredIndexLink } from "./base";
+import { ApiResult, useIndexJsonResource } from "./base";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   Namespace,
@@ -39,18 +39,11 @@ import { requiredLink } from "./links";
 import { repoQueryKey } from "./keys";
 
 export const useRepositoryRoles = (): ApiResult<RepositoryRoleCollection> => {
-  const rolesLink = useRequiredIndexLink("repositoryRoles");
-
-  return useQuery<RepositoryRoleCollection, Error>(["repositoryRoles"], () =>
-    apiClient.get(rolesLink).then(response => response.json())
-  );
+  return useIndexJsonResource<RepositoryRoleCollection>("repositoryRoles");
 };
 
 export const useRepositoryVerbs = (): ApiResult<RepositoryVerbs> => {
-  const verbsLink = useRequiredIndexLink("repositoryVerbs");
-  return useQuery<RepositoryVerbs, Error>(["repositoryVerbs"], () =>
-    apiClient.get(verbsLink).then(response => response.json())
-  );
+  return useIndexJsonResource<RepositoryVerbs>("repositoryVerbs");
 };
 
 export const useAvailablePermissions = () => {

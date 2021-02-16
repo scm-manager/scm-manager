@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Namespace, Permission, Repository } from "@scm-manager/ui-types";
 import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
@@ -35,12 +35,16 @@ type Props = {
 
 const DeletePermissionButton: FC<Props> = ({ namespaceOrRepository, permission, confirmDialog = true }) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
-  const { isLoading, error, remove } = useDeletePermission(namespaceOrRepository);
+  const { isLoading, error, remove, isDeleted } = useDeletePermission(namespaceOrRepository);
   const [t] = useTranslation("repos");
+  useEffect(() => {
+    if (isDeleted) {
+      setShowConfirmAlert(false);
+    }
+  }, [isDeleted]);
 
   const deletePermission = () => {
     remove(permission);
-    setShowConfirmAlert(false);
   };
 
   const confirmDelete = () => {
