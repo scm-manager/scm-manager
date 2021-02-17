@@ -44,6 +44,7 @@ import org.mockito.Mock;
 import sonia.scm.PageResult;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.FullScmRepositoryExporter;
 import sonia.scm.importexport.FullScmRepositoryImporter;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
@@ -92,6 +93,7 @@ import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Stream.of;
+import static javax.servlet.http.HttpServletResponse.SC_ACCEPTED;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
@@ -157,6 +159,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private FullScmRepositoryImporter fullScmRepositoryImporter;
   @Mock
   private RepositoryImportExportEncryption repositoryImportExportEncryption;
+  @Mock
+  private ExportService exportService;
 
   @Captor
   private ArgumentCaptor<Predicate<Repository>> filterCaptor;
@@ -179,7 +183,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
     super.repositoryImportResource = new RepositoryImportResource(repositoryManager, dtoToRepositoryMapper, serviceFactory, resourceLinks, eventBus, fullScmRepositoryImporter, repositoryImportExportEncryption);
-    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryImportExportEncryption);
+    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryImportExportEncryption, exportService);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
@@ -814,6 +818,30 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     assertEquals(SC_OK, response.getStatus());
     assertEquals("application/x-gzip", response.getOutputHeaders().get("Content-Type").get(0).toString());
     verify(fullScmRepositoryExporter).export(eq(repository), any(OutputStream.class), any());
+  }
+
+
+  @Test
+  public void shouldExportFullRepositoryAsyncWithPassword() throws URISyntaxException {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = createRepository(namespace, name, "svn");
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
+
+    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
+    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full")
+      .contentType(VndMediaType.ENCRYPTION)
+      .content("{\"password\": \"hitchhiker\", \"async\":\"true\"}".getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_ACCEPTED, response.getStatus());
+    assertEquals("broken_test_link", response.getOutputHeaders().getFirst("SCM-Export-Download"));
   }
 
   private void mockRepositoryHandler(Set<Command> cmds) {

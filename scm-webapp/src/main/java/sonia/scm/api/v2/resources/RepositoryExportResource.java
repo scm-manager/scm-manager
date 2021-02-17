@@ -25,6 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.common.base.Strings;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -36,6 +37,7 @@ import lombok.Setter;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import sonia.scm.BadRequestException;
 import sonia.scm.Type;
+import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.FullScmRepositoryExporter;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
 import sonia.scm.repository.NamespaceAndName;
@@ -50,7 +52,6 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.web.VndMediaType;
 
 import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
@@ -67,6 +68,9 @@ import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.time.Instant;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
@@ -80,16 +84,20 @@ public class RepositoryExportResource {
   private final RepositoryServiceFactory serviceFactory;
   private final FullScmRepositoryExporter fullScmRepositoryExporter;
   private final RepositoryImportExportEncryption repositoryImportExportEncryption;
+  private final ExecutorService repositoryExportHandler;
+  private final ExportService exportService;
 
   @Inject
   public RepositoryExportResource(RepositoryManager manager,
                                   RepositoryServiceFactory serviceFactory,
                                   FullScmRepositoryExporter fullScmRepositoryExporter,
-                                  RepositoryImportExportEncryption repositoryImportExportEncryption) {
+                                  RepositoryImportExportEncryption repositoryImportExportEncryption, ExportService exportService) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.fullScmRepositoryExporter = fullScmRepositoryExporter;
     this.repositoryImportExportEncryption = repositoryImportExportEncryption;
+    this.exportService = exportService;
+    this.repositoryExportHandler = this.createExportHandlerPool();
   }
 
   /**
@@ -218,12 +226,12 @@ public class RepositoryExportResource {
                                                @PathParam("name") String name,
                                                @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
                                                @DefaultValue("false") @QueryParam("compressed") boolean compressed,
-                                               @Valid EncryptionDto request
-
-
-  ) {
-    Repository repository = getVerifiedRepository(namespace, name, type);
-    return exportRepository(repository, compressed, request.getPassword());
+                                               @Valid ExportDto request
+  ) throws Exception {
+    return exportAsync(request, () -> {
+      Repository repository = getVerifiedRepository(namespace, name, type);
+      return exportRepository(repository, compressed, request.getPassword());
+    });
   }
 
   /**
@@ -264,10 +272,22 @@ public class RepositoryExportResource {
   public Response exportFullRepositoryWithPassword(@Context UriInfo uriInfo,
                                                    @PathParam("namespace") String namespace,
                                                    @PathParam("name") String name,
-                                                   @Valid EncryptionDto request
-  ) {
-    Repository repository = getVerifiedRepository(namespace, name);
-    return exportFullRepository(repository, request.getPassword());
+                                                   @Valid ExportDto request
+  ) throws Exception {
+    return exportAsync(request, () -> {
+      Repository repository = getVerifiedRepository(namespace, name);
+      return exportFullRepository(repository, request.getPassword());
+    });
+  }
+
+  private Response exportAsync(ExportDto exportDto, Callable<Response> call) throws Exception {
+    if (exportDto.isAsync()) {
+      repositoryExportHandler.submit(call);
+      //TODO Use ResourceLinks
+      return Response.status(202).header("SCM-Export-Download", "testlink").build();
+    } else {
+      return call.call();
+    }
   }
 
   private Repository getVerifiedRepository(String namespace, String name) {
@@ -361,6 +381,14 @@ public class RepositoryExportResource {
     return Instant.now().toString().replace(":", "-").split("\\.")[0];
   }
 
+  private ExecutorService createExportHandlerPool() {
+    return Executors.newCachedThreadPool(
+      new ThreadFactoryBuilder()
+        .setNameFormat("RepositoryExportHandler-%d")
+        .build()
+    );
+  }
+
   private static class WrongTypeException extends BadRequestException {
 
     private static final String CODE = "4hSNNTBiu1";
@@ -378,8 +406,8 @@ public class RepositoryExportResource {
   @Getter
   @Setter
   @NoArgsConstructor
-  static class EncryptionDto {
-    @NotBlank
+  static class ExportDto {
     private String password;
+    private boolean async;
   }
 }
