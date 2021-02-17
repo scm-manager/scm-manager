@@ -26,20 +26,15 @@ package sonia.scm.store;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.api.ExportFailedException;
+import sonia.scm.xml.XmlStreams;
 
 import javax.inject.Inject;
-import javax.xml.XMLConstants;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -139,39 +134,22 @@ public class FileStoreExporter implements StoreExporter {
   }
 
   private StoreType determineConfigType(Path storePath) {
-    // We don't want to read too much of this file, so we use a SAX parser.
-    // Sadly though, there's no way to stop parsing without an exception, so
-    // we use this somewhat cumbersome way here.
-    try (InputStream in = Files.newInputStream(storePath)) {
-      createSaxParser().parse(in, new DefaultHandler() {
-        @Override
-        public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-          if ("configuration".equals(qName) && "config-entry".equals(attributes.getValue("type"))) {
-            throw new ConfigurationEntrySAXException();
-          }
-          throw new ConfigurationSAXException();
-        }
-      });
-    } catch (ConfigurationEntrySAXException e) {
-      return StoreType.CONFIG_ENTRY;
-    } catch (ConfigurationSAXException e) {
-      return StoreType.CONFIG;
-    } catch (SAXException | ParserConfigurationException | IOException e) {
+    XMLStreamReader reader = null;
+    try {
+      reader = XmlStreams.createReader(storePath);
+      reader.nextTag();
+      if (
+        "configuration".equals(reader.getLocalName())
+          && "config-entry".equals(reader.getAttributeValue(0))
+          && "type".equals(reader.getAttributeName(0).getLocalPart())) {
+        return StoreType.CONFIG_ENTRY;
+      } else {
+        return StoreType.CONFIG;
+      }
+    } catch (XMLStreamException | IOException e) {
       throw new ExportFailedException(noContext(), "Failed to read store file " + storePath, e);
+    } finally {
+      XmlStreams.close(reader);
     }
-    throw new ExportFailedException(noContext(), "Failed to determine store type for file " + storePath);
-  }
-
-  private SAXParser createSaxParser() throws ParserConfigurationException, SAXException {
-    SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
-    parser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
-    parser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
-    return parser;
-  }
-
-  private static class ConfigurationEntrySAXException extends SAXException {
-  }
-
-  private static class ConfigurationSAXException extends SAXException {
   }
 }
