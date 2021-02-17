@@ -36,14 +36,14 @@ import java.util.List;
 import java.util.Set;
 
 class HgImportHookContextProvider extends HookContextProvider {
+  private final List<String> newBranches;
   private final List<Tag> newTags;
   private final HgLazyChangesetResolver changesetResolver;
-  private final List<String> newBranches;
 
   HgImportHookContextProvider(List<String> newBranches, List<Tag> newTags, HgLazyChangesetResolver changesetResolver) {
+    this.newBranches = newBranches;
     this.newTags = newTags;
     this.changesetResolver = changesetResolver;
-    this.newBranches = newBranches;
   }
 
   @Override

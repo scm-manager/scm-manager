@@ -42,7 +42,8 @@ class GitImportHookContextProvider extends HookContextProvider {
   private final List<String> newBranches;
 
   GitImportHookContextProvider(GitChangesetConverter converter,
-                               List<String> newBranches, List<Tag> newTags,
+                               List<String> newBranches,
+                               List<Tag> newTags,
                                GitLazyChangesetResolver changesetResolver) {
     this.converter = converter;
     this.newTags = newTags;

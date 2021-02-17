@@ -65,8 +65,7 @@ public class GitLazyChangesetResolverTest extends AbstractGitCommandTestBase {
   public void shouldThrowImportFailedException() {
     Git git = mock(Git.class);
     doThrow(ImportFailedException.class).when(git).log();
-    GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(repository, git);
-    changesetResolver.call();
+    new GitLazyChangesetResolver(repository, git).call();
   }
 }
 

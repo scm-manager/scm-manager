@@ -27,21 +27,17 @@ package sonia.scm.repository.spi;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Closeables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
-
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHookEvent;
-import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
@@ -49,16 +45,15 @@ import sonia.scm.repository.api.HookFeature;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.UnbundleResponse;
 
-import static com.google.common.base.Preconditions.*;
-
-//~--- JDK imports ------------------------------------------------------------
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
 
 /**
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
@@ -70,7 +65,11 @@ public class SvnUnbundleCommand extends AbstractSvnCommand implements UnbundleCo
   private final ScmEventBus eventBus;
   private final SvnLogCommand svnLogCommand;
 
-  public SvnUnbundleCommand(SvnContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus, SvnLogCommand svnLogCommand) {
+  public SvnUnbundleCommand(SvnContext context,
+                            HookContextFactory hookContextFactory,
+                            ScmEventBus eventBus,
+                            SvnLogCommand svnLogCommand
+  ) {
     super(context);
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
@@ -115,7 +114,7 @@ public class SvnUnbundleCommand extends AbstractSvnCommand implements UnbundleCo
   private PostReceiveRepositoryHookEvent createEvent() {
     Repository repository = this.context.getRepository();
     HookContext context = hookContextFactory.createContext(new SvnImportHookContextProvider(repository, svnLogCommand), repository);
-    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, repository, RepositoryHookType.POST_RECEIVE);
+    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, repository, POST_RECEIVE);
     return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
   }
 
@@ -166,6 +165,7 @@ public class SvnUnbundleCommand extends AbstractSvnCommand implements UnbundleCo
     public List<Changeset> call() {
       try {
       LogCommandRequest request = new LogCommandRequest();
+      // Setting paging limit to "-1" doesn't work
       request.setPagingLimit(999999);
       return logCommand.getChangesets(request).getChangesets();
       } catch (IOException e) {

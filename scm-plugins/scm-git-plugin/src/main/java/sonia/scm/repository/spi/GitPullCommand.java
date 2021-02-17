@@ -47,7 +47,6 @@ import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHookEvent;
-import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
@@ -59,6 +58,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
 
 /**
  * @author Sebastian Sdorra
@@ -217,11 +218,10 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
   private void firePostReceiveRepositoryHookEvent(Git git, FetchResult result) {
     try {
-      org.eclipse.jgit.lib.Repository repository = context.open();
       List<String> branches = getBranchesFromFetchResult(result);
       List<Tag> tags = getTagsFromFetchResult(result);
       GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(context.getRepository(), git);
-      eventBus.post(createEvent(changesetConverterFactory.create(repository), branches, tags, changesetResolver));
+      eventBus.post(createEvent(changesetConverterFactory.create(context.open()), branches, tags, changesetResolver));
     } catch (IOException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(context.getRepository()).build(),
@@ -252,7 +252,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   ) {
     GitImportHookContextProvider contextProvider = new GitImportHookContextProvider(converter, branches, tags, changesetResolver);
     HookContext context = hookContextFactory.createContext(contextProvider, this.context.getRepository());
-    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, this.context.getRepository(), RepositoryHookType.POST_RECEIVE);
+    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, this.context.getRepository(), POST_RECEIVE);
     return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
   }
 }

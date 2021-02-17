@@ -37,11 +37,9 @@ import java.io.IOException;
 import java.util.Set;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
-{
+public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
 
   //J-
   public static final Set<Command> COMMANDS = ImmutableSet.of(
@@ -60,99 +58,45 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
                                Repository repository,
                                SvnWorkingCopyFactory workingCopyFactory,
                                HookContextFactory hookContextFactory,
-                               ScmEventBus eventBus)
-  {
+                               ScmEventBus eventBus) {
     this.context = new SvnContext(repository, handler.getDirectory(repository.getId()));
     this.workingCopyFactory = workingCopyFactory;
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
-  public void close() throws IOException
-  {
+  public void close() throws IOException {
     Closeables.close(context, true);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public SvnBlameCommand getBlameCommand()
-  {
+  public SvnBlameCommand getBlameCommand() {
     return new SvnBlameCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public SvnBrowseCommand getBrowseCommand()
-  {
+  public SvnBrowseCommand getBrowseCommand() {
     return new SvnBrowseCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public BundleCommand getBundleCommand()
-  {
+  public BundleCommand getBundleCommand() {
     return new SvnBundleCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public SvnCatCommand getCatCommand()
-  {
+  public SvnCatCommand getCatCommand() {
     return new SvnCatCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public SvnDiffCommand getDiffCommand()
-  {
+  public SvnDiffCommand getDiffCommand() {
     return new SvnDiffCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public SvnLogCommand getLogCommand()
-  {
+  public SvnLogCommand getLogCommand() {
     return new SvnLogCommand(context);
   }
 
@@ -171,27 +115,13 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
     return new SvnLookupCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Set<Command> getSupportedCommands()
-  {
+  public Set<Command> getSupportedCommands() {
     return COMMANDS;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public UnbundleCommand getUnbundleCommand()
-  {
+  public UnbundleCommand getUnbundleCommand() {
     return new SvnUnbundleCommand(context, hookContextFactory, eventBus, new SvnLogCommand(context));
   }
 }

@@ -27,7 +27,6 @@ import com.google.common.io.ByteSource;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Ref;
-import org.eclipse.jgit.lib.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
@@ -36,7 +35,6 @@ import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookEvent;
-import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
@@ -51,6 +49,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
 import static sonia.scm.util.Archives.extractTar;
 
 public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCommand {
@@ -91,12 +90,11 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
 
   private void firePostReceiveRepositoryHookEvent() {
     try {
-      Repository repository = context.open();
-      Git git = Git.wrap(repository);
+      Git git = Git.wrap(context.open());
       List<String> branches = extractBranches(git);
       List<Tag> tags = extractTags(git);
       GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(context.getRepository(), git);
-      eventBus.post(createEvent(changesetConverterFactory.create(repository), branches, tags, changesetResolver));
+      eventBus.post(createEvent(changesetConverterFactory.create(context.open()), branches, tags, changesetResolver));
     } catch (IOException | GitAPIException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(context.getRepository()).build(),
@@ -107,7 +105,9 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
   }
 
   private List<Tag> extractTags(Git git) throws GitAPIException {
-    return git.tagList().call().stream().map(r -> new Tag(r.getName(), r.getObjectId().toString())).collect(Collectors.toList());
+    return git.tagList().call().stream()
+      .map(r -> new Tag(r.getName(), r.getObjectId().getName()))
+      .collect(Collectors.toList());
   }
 
   private List<String> extractBranches(Git git) throws GitAPIException {
@@ -123,7 +123,7 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
   ) {
     GitImportHookContextProvider contextProvider = new GitImportHookContextProvider(converter, branches, tags, changesetResolver);
     HookContext context = hookContextFactory.createContext(contextProvider, this.context.getRepository());
-    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, this.context.getRepository(), RepositoryHookType.POST_RECEIVE);
+    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, this.context.getRepository(), POST_RECEIVE);
     return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
   }
 

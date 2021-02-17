@@ -32,7 +32,6 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookEvent;
-import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
@@ -45,6 +44,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
 import static sonia.scm.util.Archives.extractTar;
 
 public class HgUnbundleCommand implements UnbundleCommand {
@@ -98,7 +98,7 @@ public class HgUnbundleCommand implements UnbundleCommand {
   private PostReceiveRepositoryHookEvent createEvent(List<String> branches, List<Tag> tags, HgLazyChangesetResolver changesetResolver) {
     HgImportHookContextProvider contextProvider = new HgImportHookContextProvider(branches, tags, changesetResolver);
     HookContext context = hookContextFactory.createContext(contextProvider, this.context.getScmRepository());
-    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, this.context.getScmRepository(), RepositoryHookType.POST_RECEIVE);
+    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, this.context.getScmRepository(), POST_RECEIVE);
     return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
   }
 
