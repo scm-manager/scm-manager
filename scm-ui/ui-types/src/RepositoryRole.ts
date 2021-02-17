@@ -28,11 +28,12 @@ export type RepositoryRoleBase = {
   name: string;
   verbs: string[];
   type?: string;
+};
+
+export type RepositoryRole = HalRepresentation & RepositoryRoleBase & {
   creationDate?: string;
   lastModified?: string;
 };
-
-export type RepositoryRole = HalRepresentation & RepositoryRoleBase;
 export type RepositoryRoleCreation = RepositoryRoleBase;
 
 type RepositoryRoleEmbedded = {
