@@ -42,7 +42,6 @@ import {
   useCreatePermission,
   useDeletePermission,
   usePermissions,
-  useRepositoryRoles,
   useRepositoryVerbs,
   useUpdatePermission
 } from "./permissions";
@@ -132,21 +131,6 @@ describe("permission hooks test", () => {
   beforeEach(() => {
     queryClient.clear();
     fetchMock.reset();
-  });
-
-  describe("useRepositoryRoles tests", () => {
-    it("should return available roles", async () => {
-      setIndexLink(queryClient, "repositoryRoles", "/roles");
-      fetchMock.get("/api/v2/roles", roleCollection);
-
-      const { result, waitFor } = renderHook(() => useRepositoryRoles(), {
-        wrapper: createWrapper(undefined, queryClient)
-      });
-      await waitFor(() => {
-        return !!result.current.data;
-      });
-      expect(result.current.data).toEqual(roleCollection);
-    });
   });
 
   describe("useRepositoryVerbs tests", () => {

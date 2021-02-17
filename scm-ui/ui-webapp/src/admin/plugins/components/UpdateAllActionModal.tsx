@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {FC, useEffect} from "react";
-import {useTranslation} from "react-i18next";
-import {PluginCollection} from "@scm-manager/ui-types";
+import React, { FC, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { PluginCollection } from "@scm-manager/ui-types";
 import PluginActionModal from "./PluginActionModal";
-import {useUpdatePlugins} from "@scm-manager/ui-api";
+import { useUpdatePlugins } from "@scm-manager/ui-api";
 
 type Props = {
   onClose: () => void;
