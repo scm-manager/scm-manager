@@ -20,24 +20,36 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
-// TODO move apiClient and urls from ui-components
+import { File, Repository } from "@scm-manager/ui-types";
+import { requiredLink } from "./links";
+import { apiClient, urls } from "@scm-manager/ui-components";
+import { useQuery } from "react-query";
+import { ApiResult } from "./base";
+import { repoQueryKey } from "./keys";
 
-export * from "./base";
-export * from "./login";
-export * from "./groups";
-export * from "./users";
-export * from "./repositories";
-export * from "./namespaces";
-export * from "./branches";
-export * from "./changesets";
-export * from "./tags";
-export * from "./config";
-export * from "./admin";
-export * from "./plugins";
-export * from "./repository-roles";
-export * from "./permissions";
-export * from "./sources";
+export type UseSourcesOptions = {
+  revision?: string;
+  path?: string;
+  enabled: boolean;
+};
 
-export { default as ApiProvider } from "./ApiProvider";
+export const useSources = (repository: Repository, options: UseSourcesOptions = { enabled: true }): ApiResult<File> => {
+  let link = requiredLink(repository, "sources");
+  if (options.revision) {
+    link = urls.concat(link, encodeURIComponent(options.revision));
+
+    if (options.path) {
+      link = urls.concat(link, options.path);
+    }
+  }
+  return useQuery<File, Error>(
+    repoQueryKey(repository, "sources", options.revision || "", options.path || ""),
+    () => apiClient.get(link).then(response => response.json()),
+    {
+      enabled: options.enabled
+    }
+  );
+};
