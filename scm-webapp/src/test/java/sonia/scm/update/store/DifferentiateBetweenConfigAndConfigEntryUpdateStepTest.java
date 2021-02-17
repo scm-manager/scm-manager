@@ -44,12 +44,12 @@ class DifferentiateBetweenConfigAndConfigEntryUpdateStepTest {
   void shouldNotModifyConfigFile(@TempDir Path temp) throws IOException {
     Path configFile = temp.resolve("some.store.xml");
     copy(
-      getResource("sonia/scm/update/store/config_file.xml"),
+      getResource("sonia/scm/update/store/config_file.xml.content"),
       newOutputStream(configFile));
 
     new DifferentiateBetweenConfigAndConfigEntryUpdateStep().updateAllInDirectory(temp);
 
-    assertContent(configFile, "sonia/scm/update/store/config_file.xml");
+    assertContent(configFile, "sonia/scm/update/store/config_file.xml.content");
   }
 
   @Test
@@ -67,24 +67,24 @@ class DifferentiateBetweenConfigAndConfigEntryUpdateStepTest {
   void shouldIgnoreFilesWithoutXmlSuffix(@TempDir Path temp) throws IOException {
     Path otherfileFile = temp.resolve("some.other.file");
     copy(
-      getResource("sonia/scm/update/store/config_entry_file_without_mark.xml"),
+      getResource("sonia/scm/update/store/config_entry_file_without_mark.xml.content"),
       newOutputStream(otherfileFile));
 
     new DifferentiateBetweenConfigAndConfigEntryUpdateStep().updateAllInDirectory(temp);
 
-    assertContent(otherfileFile, "sonia/scm/update/store/config_entry_file_without_mark.xml");
+    assertContent(otherfileFile, "sonia/scm/update/store/config_entry_file_without_mark.xml.content");
   }
 
   @Test
   void shouldHandleConfigEntryFile(@TempDir Path temp) throws IOException {
     Path configFile = temp.resolve("some.store.xml");
     copy(
-      getResource("sonia/scm/update/store/config_entry_file_without_mark.xml"),
+      getResource("sonia/scm/update/store/config_entry_file_without_mark.xml.content"),
       newOutputStream(configFile));
 
     new DifferentiateBetweenConfigAndConfigEntryUpdateStep().updateAllInDirectory(temp);
 
-    assertContent(configFile, "sonia/scm/update/store/config_entry_file.xml");
+    assertContent(configFile, "sonia/scm/update/store/config_entry_file.xml.content");
   }
 
   private void assertContent(Path configFile, String expectedContentResource) {
