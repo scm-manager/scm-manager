@@ -45,7 +45,7 @@ class HgLazyChangesetResolver implements Callable<List<Changeset>> {
   public List<Changeset> call() {
     return LogCommand.on(repository).execute().stream()
       .map(changeset -> new Changeset(
-        changeset.toString(),
+        changeset.getNode(),
         changeset.getTimestamp().getDate().getTime(),
         Person.toPerson(changeset.getUser()),
         changeset.getMessage())

@@ -49,7 +49,11 @@ public class GitLazyChangesetResolver implements Callable<Iterable<RevCommit>> {
     try {
       return git.log().all().call();
     } catch (IOException | GitAPIException e) {
-      throw new ImportFailedException(entity(repository).build(), "Could not resolve changesets for imported repository", e);
+      throw new ImportFailedException(
+        entity(repository).build(),
+        "Could not resolve changesets for imported repository",
+        e
+      );
     }
   }
 }

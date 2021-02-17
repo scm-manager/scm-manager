@@ -38,7 +38,6 @@ import sonia.scm.io.INISection;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookEvent;
-import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
@@ -51,6 +50,8 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
+
 public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgPullCommand.class);
@@ -58,7 +59,11 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
   private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
 
-  public HgPullCommand(HgRepositoryHandler handler, HgCommandContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
+  public HgPullCommand(HgRepositoryHandler handler,
+                       HgCommandContext context,
+                       HookContextFactory hookContextFactory,
+                       ScmEventBus eventBus
+  ) {
     super(handler, context);
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
@@ -94,8 +99,8 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
   private void firePostReceiveRepositoryHookEvent(List<Changeset> result) {
     List<String> branches = getBranchesFromPullResult(result);
     List<Tag> tags = getTagsFromPullResult(result);
-
-    eventBus.post(createEvent(branches, tags, new HgLazyChangesetResolver(context.open())));
+    HgLazyChangesetResolver changesetResolver = new HgLazyChangesetResolver(context.open());
+    eventBus.post(createEvent(branches, tags, changesetResolver));
   }
 
   private List<Tag> getTagsFromPullResult(List<Changeset> result) {
@@ -116,8 +121,9 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
   }
 
   private PostReceiveRepositoryHookEvent createEvent(List<String> branches, List<Tag> tags, HgLazyChangesetResolver changesetResolver) {
-    HookContext context = hookContextFactory.createContext(new HgImportHookContextProvider(branches, tags, changesetResolver), this.context.getScmRepository());
-    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, this.context.getScmRepository(), RepositoryHookType.POST_RECEIVE);
+    HgImportHookContextProvider contextProvider = new HgImportHookContextProvider(branches, tags, changesetResolver);
+    HookContext context = hookContextFactory.createContext(contextProvider, this.context.getScmRepository());
+    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, this.context.getScmRepository(), POST_RECEIVE);
     return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
   }
 

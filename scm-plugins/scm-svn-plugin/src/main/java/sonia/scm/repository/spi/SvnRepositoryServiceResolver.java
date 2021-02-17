@@ -41,7 +41,11 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
   private final ScmEventBus eventBus;
 
   @Inject
-  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler, SvnWorkingCopyFactory workingCopyFactory, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
+  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler,
+                                      SvnWorkingCopyFactory workingCopyFactory,
+                                      HookContextFactory hookContextFactory,
+                                      ScmEventBus eventBus
+  ) {
     this.handler = handler;
     this.workingCopyFactory = workingCopyFactory;
     this.hookContextFactory = hookContextFactory;
