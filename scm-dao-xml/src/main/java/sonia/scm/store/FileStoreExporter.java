@@ -34,6 +34,9 @@ import sonia.scm.repository.RepositoryLocationResolver;
 import sonia.scm.repository.api.ExportFailedException;
 
 import javax.inject.Inject;
+import javax.xml.XMLConstants;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.io.IOException;
 import java.io.InputStream;
@@ -136,8 +139,11 @@ public class FileStoreExporter implements StoreExporter {
   }
 
   private StoreType determineConfigType(Path storePath) {
+    // We don't want to read too much of this file, so we use a SAX parser.
+    // Sadly though, there's no way to stop parsing without an exception, so
+    // we use this somewhat cumbersome way here.
     try (InputStream in = Files.newInputStream(storePath)) {
-      SAXParserFactory.newInstance().newSAXParser().parse(in, new DefaultHandler() {
+      createSaxParser().parse(in, new DefaultHandler() {
         @Override
         public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
           if ("configuration".equals(qName) && "config-entry".equals(attributes.getValue("type"))) {
@@ -148,10 +154,19 @@ public class FileStoreExporter implements StoreExporter {
       });
     } catch (ConfigurationEntrySAXException e) {
       return StoreType.CONFIG_ENTRY;
-    } catch (Exception e) {
-      // nothing to do; this file probably is a config file
+    } catch (ConfigurationSAXException e) {
+      return StoreType.CONFIG;
+    } catch (SAXException | ParserConfigurationException | IOException e) {
+      throw new ExportFailedException(noContext(), "Failed to read store file " + storePath, e);
     }
-    return StoreType.CONFIG;
+    throw new ExportFailedException(noContext(), "Failed to determine store type for file " + storePath);
+  }
+
+  private SAXParser createSaxParser() throws ParserConfigurationException, SAXException {
+    SAXParser parser = SAXParserFactory.newInstance().newSAXParser();
+    parser.setProperty(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    parser.setProperty(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+    return parser;
   }
 
   private static class ConfigurationEntrySAXException extends SAXException {
