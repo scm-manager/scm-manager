@@ -25,17 +25,17 @@
 import React, { FC } from "react";
 import SyntaxHighlighter from "./SyntaxHighlighter";
 import { ExtensionPoint, useBinder } from "@scm-manager/ui-extensions";
-import { connect } from "react-redux";
+import { useIndexLinks } from "@scm-manager/ui-api";
 
 type Props = {
   language?: string;
   value: string;
-  indexLinks: { [key: string]: any };
 };
 
-const MarkdownCodeRenderer: FC<Props> = (props) => {
+const MarkdownCodeRenderer: FC<Props> = props => {
   const binder = useBinder();
-  const { language, indexLinks } = props;
+  const indexLinks = useIndexLinks();
+  const { language } = props;
   const extensionKey = `markdown-renderer.code.${language}`;
   if (binder.hasExtension(extensionKey, props)) {
     return <ExtensionPoint name={extensionKey} props={{ ...props, indexLinks }} />;
@@ -43,12 +43,4 @@ const MarkdownCodeRenderer: FC<Props> = (props) => {
   return <SyntaxHighlighter {...props} />;
 };
 
-const mapStateToProps = (state: any) => {
-  const indexLinks = state.indexResources.links;
-
-  return {
-    indexLinks,
-  };
-};
-
-export default connect(mapStateToProps)(MarkdownCodeRenderer);
+export default MarkdownCodeRenderer;

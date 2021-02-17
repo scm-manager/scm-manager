@@ -22,8 +22,6 @@
  * SOFTWARE.
  */
 
-// TODO move apiClient and urls from ui-components
-
 export * from "./base";
 export * from "./login";
 export * from "./groups";
@@ -39,5 +37,9 @@ export * from "./plugins";
 export * from "./repository-roles";
 export * from "./permissions";
 export * from "./sources";
+
+export * as urls from "./urls";
+export * from "./errors";
+export * from "./apiclient";
 
 export { default as ApiProvider } from "./ApiProvider";
