@@ -25,7 +25,6 @@
 // @create-index
 
 import * as validation from "./validation";
-import * as urls from "./urls";
 import * as repositories from "./repositories";
 
 // not sure if it is required
@@ -41,7 +40,7 @@ import {
   DiffEventContext
 } from "./repos";
 
-export { validation, urls, repositories };
+export { validation, repositories };
 
 export { default as DateFromNow } from "./DateFromNow";
 export { default as DateShort } from "./DateShort";
@@ -63,7 +62,6 @@ export { default as Help } from "./Help";
 export { default as HelpIcon } from "./HelpIcon";
 export { default as Tag } from "./Tag";
 export { default as Tooltip } from "./Tooltip";
-// TODO do we need this? getPageFromMatch is already exported by urls
 export { getPageFromMatch } from "./urls";
 export { default as Autocomplete } from "./Autocomplete";
 export { default as GroupAutocomplete } from "./GroupAutocomplete";
@@ -85,6 +83,7 @@ export { regExpPattern as changesetShortLinkRegex } from "./remarkChangesetShort
 export { default as comparators } from "./comparators";
 
 export { apiClient } from "./apiclient";
+export { default as urls } from "./urls";
 export * from "./errors";
 export { isDevBuild, createAttributesForTesting } from "./devBuild";
 
