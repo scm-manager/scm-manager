@@ -39,7 +39,7 @@ import java.nio.file.Path;
 import java.util.Scanner;
 import java.util.stream.Stream;
 
-public class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
+abstract class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
 
   private static final Logger LOG = LoggerFactory.getLogger(DifferentiateBetweenConfigAndConfigEntryUpdateStep.class);
 

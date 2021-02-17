@@ -31,6 +31,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Collections;
 
 import static com.google.common.io.Resources.copy;
 import static com.google.common.io.Resources.getResource;
@@ -47,9 +48,20 @@ class DifferentiateBetweenConfigAndConfigEntryUpdateStepTest {
       getResource("sonia/scm/update/store/config_file.xml.content"),
       newOutputStream(configFile));
 
-    new DifferentiateBetweenConfigAndConfigEntryUpdateStep().updateAllInDirectory(temp);
+    new DifferentiateBetweenConfigAndConfigEntryUpdateStep() {}.updateAllInDirectory(temp);
 
     assertContent(configFile, "sonia/scm/update/store/config_file.xml.content");
+  }
+
+  @Test
+  void shouldNotModifySingleLineFile(@TempDir Path temp) throws IOException {
+    String singleLineContent = "<data><empty /></data>";
+    Path configFile = temp.resolve("some.store.xml");
+    Files.write(configFile, Collections.singletonList(singleLineContent));
+
+    new DifferentiateBetweenConfigAndConfigEntryUpdateStep() {}.updateAllInDirectory(temp);
+
+    assertThat(configFile).hasContent(singleLineContent);
   }
 
   @Test
@@ -58,21 +70,21 @@ class DifferentiateBetweenConfigAndConfigEntryUpdateStepTest {
     Path configFile = temp.resolve("some.store.xml");
     Files.createDirectories(configFile);
 
-    new DifferentiateBetweenConfigAndConfigEntryUpdateStep().updateAllInDirectory(temp);
+    new DifferentiateBetweenConfigAndConfigEntryUpdateStep() {}.updateAllInDirectory(temp);
 
     // no exception expected
   }
 
   @Test
   void shouldIgnoreFilesWithoutXmlSuffix(@TempDir Path temp) throws IOException {
-    Path otherfileFile = temp.resolve("some.other.file");
+    Path otherFile = temp.resolve("some.other.file");
     copy(
       getResource("sonia/scm/update/store/config_entry_file_without_mark.xml.content"),
-      newOutputStream(otherfileFile));
+      newOutputStream(otherFile));
 
-    new DifferentiateBetweenConfigAndConfigEntryUpdateStep().updateAllInDirectory(temp);
+    new DifferentiateBetweenConfigAndConfigEntryUpdateStep() {}.updateAllInDirectory(temp);
 
-    assertContent(otherfileFile, "sonia/scm/update/store/config_entry_file_without_mark.xml.content");
+    assertContent(otherFile, "sonia/scm/update/store/config_entry_file_without_mark.xml.content");
   }
 
   @Test
@@ -82,7 +94,7 @@ class DifferentiateBetweenConfigAndConfigEntryUpdateStepTest {
       getResource("sonia/scm/update/store/config_entry_file_without_mark.xml.content"),
       newOutputStream(configFile));
 
-    new DifferentiateBetweenConfigAndConfigEntryUpdateStep().updateAllInDirectory(temp);
+    new DifferentiateBetweenConfigAndConfigEntryUpdateStep() {}.updateAllInDirectory(temp);
 
     assertContent(configFile, "sonia/scm/update/store/config_entry_file.xml.content");
   }
