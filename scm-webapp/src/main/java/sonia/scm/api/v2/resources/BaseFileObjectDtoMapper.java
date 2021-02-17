@@ -66,7 +66,7 @@ abstract class BaseFileObjectDtoMapper extends HalAppenderMapper implements Inst
       links.single(link("annotate", resourceLinks.annotate().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path)));
     }
     if (fileObject.isTruncated()) {
-      links.single(link("proceed", resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path) + "?offset=" + (offset + BrowseCommandRequest.DEFAULT_REQUEST_LIMIT)));
+      links.single(link("proceed", resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path) + "?offset=" + (offset + BrowseCommandRequest.DEFAULT_REQUEST_LIMIT)));
     }
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();
