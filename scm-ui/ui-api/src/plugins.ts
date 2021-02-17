@@ -38,7 +38,8 @@ export const useAvailablePlugins = ({ enabled }: UseAvailablePluginsOptions = {}
     ["plugins", "available"],
     () => apiClient.get(indexLink).then(response => response.json()),
     {
-      enabled
+      enabled,
+      retry: 3
     }
   );
 };
@@ -53,7 +54,8 @@ export const useInstalledPlugins = ({ enabled }: UseInstalledPluginsOptions = {}
     ["plugins", "installed"],
     () => apiClient.get(indexLink).then(response => response.json()),
     {
-      enabled
+      enabled,
+      retry: 3
     }
   );
 };
@@ -64,7 +66,8 @@ export const usePendingPlugins = (): ApiResult<PendingPlugins> => {
     ["plugins", "pending"],
     () => apiClient.get(indexLink!).then(response => response.json()),
     {
-      enabled: !!indexLink
+      enabled: !!indexLink,
+      retry: 3
     }
   );
 };

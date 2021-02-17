@@ -72,10 +72,10 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
     error: installedPluginsError
   } = useInstalledPlugins({ enabled: installed });
   const { data: pendingPlugins, isLoading: isLoadingPendingPlugins, error: pendingPluginsError } = usePendingPlugins();
-  const [showPendingModal, setShowPendingModal] = useState<boolean>();
-  const [showExecutePendingModal, setShowExecutePendingModal] = useState<boolean>();
-  const [showUpdateAllModal, setShowUpdateAllModal] = useState<boolean>();
-  const [showCancelModal, setShowCancelModal] = useState<boolean>();
+  const [showPendingModal, setShowPendingModal] = useState(false);
+  const [showExecutePendingModal, setShowExecutePendingModal] = useState(false);
+  const [showUpdateAllModal, setShowUpdateAllModal] = useState(false);
+  const [showCancelModal, setShowCancelModal] = useState(false);
   const [pluginModalContent, setPluginModalContent] = useState<PluginModalContent | null>(null);
   const collection = installed ? installedPlugins : availablePlugins;
   const error = (installed ? installedPluginsError : availablePluginsError) || pendingPluginsError;
