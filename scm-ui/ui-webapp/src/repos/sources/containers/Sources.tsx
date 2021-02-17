@@ -62,7 +62,11 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
       history.replace(`${baseUrl}/sources/${encodeURIComponent(defaultBranch.name)}/`);
     }
   }, [branches, selectedBranch]);
-  const { isLoading, error, data: file } = useSources(repository, { revision, path, enabled: !!selectedBranch });
+  const { isLoading, error, data: file, ...rest } = useSources(repository, {
+    revision,
+    path,
+    enabled: !!selectedBranch
+  });
 
   if (error) {
     return <ErrorNotification error={error} />;
@@ -122,7 +126,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
         />
         <div className="panel">
           {renderBreadcrumb()}
-          <FileTree directory={file} revision={revision} baseUrl={baseUrl + "/sources"} />
+          <FileTree directory={file} revision={revision} baseUrl={baseUrl + "/sources"} {...rest} />
         </div>
       </>
     );
