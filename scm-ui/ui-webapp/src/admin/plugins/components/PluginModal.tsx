@@ -27,7 +27,6 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { Plugin } from "@scm-manager/ui-types";
 import { Button, ButtonGroup, Checkbox, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
-import waitForRestart from "./waitForRestart";
 import SuccessNotification from "./SuccessNotification";
 import { useInstallPlugin, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
 import { PluginAction } from "../containers/PluginsOverview";
@@ -54,37 +53,27 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
   const { isLoading: isInstalling, error: installError, install, isInstalled } = useInstallPlugin();
   const { isLoading: isUninstalling, error: uninstallError, uninstall, isUninstalled } = useUninstallPlugin();
   const { isLoading: isUpdating, error: updateError, update, isUpdated } = useUpdatePlugins();
-  const [restarting, setRestarting] = useState<boolean>(false);
-  const [restarted, setRestarted] = useState<boolean>(false);
   const error = installError || uninstallError || updateError;
-  const loading = isInstalling || isUninstalling || isUpdating || restarting;
+  const loading = isInstalling || isUninstalling || isUpdating;
   const isDone = isInstalled || isUninstalled || isUpdated;
 
   useEffect(() => {
-    if (isDone) {
-      if (shouldRestart) {
-        setRestarting(true);
-        waitForRestart().then(() => {
-          setRestarting(false);
-          setRestarted(true);
-        });
-      } else {
-        onClose();
-      }
+    if (isDone && !shouldRestart) {
+      onClose();
     }
-  }, [isDone, shouldRestart, restarted]);
+  }, [isDone]);
 
   const handlePluginAction = (e: Event) => {
     e.preventDefault();
     switch (pluginAction) {
       case PluginAction.INSTALL:
-        install(plugin, shouldRestart);
+        install(plugin, { restart: shouldRestart });
         break;
       case PluginAction.UNINSTALL:
-        uninstall(plugin, shouldRestart);
+        uninstall(plugin, { restart: shouldRestart });
         break;
       case PluginAction.UPDATE:
-        update(plugin, shouldRestart);
+        update(plugin, { restart: shouldRestart });
         break;
       default:
         throw new Error(`Unkown plugin action ${pluginAction}`);
@@ -157,7 +146,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
           <ErrorNotification error={error} />
         </div>
       );
-    } else if (restarted) {
+    } else if (isDone && shouldRestart) {
       return (
         <div className="media">
           <SuccessNotification pluginAction={pluginAction} />

@@ -28,6 +28,40 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient } from "@scm-manager/ui-components";
 import { requiredLink } from "./links";
 
+type WaitForRestartOptions = {
+  initialDelay?: number;
+  timeout?: number;
+};
+
+const waitForRestartAfter = (
+  promise: Promise<any>,
+  { initialDelay = 1000, timeout = 500 }: WaitForRestartOptions = {}
+): Promise<void> => {
+  const endTime = Number(new Date()) + 60000;
+  let started = false;
+
+  const executor = <T = any>(data: T) => (resolve: (result: T) => void, reject: (error: Error) => void) => {
+    // we need some initial delay
+    if (!started) {
+      started = true;
+      setTimeout(executor(data), initialDelay, resolve, reject);
+    } else {
+      apiClient
+        .get("")
+        .then(() => resolve(data))
+        .catch(() => {
+          if (Number(new Date()) < endTime) {
+            setTimeout(executor(data), timeout, resolve, reject);
+          } else {
+            reject(new Error("timeout reached"));
+          }
+        });
+    }
+  };
+
+  return promise.then(data => new Promise<void>(executor(data)));
+};
+
 export type UseAvailablePluginsOptions = {
   enabled?: boolean;
 };
@@ -79,23 +113,38 @@ const linkWithRestart = (link: string, restart?: boolean) => {
   return link;
 };
 
+type RestartOptions = WaitForRestartOptions & {
+  restart?: boolean;
+};
+
 type PluginActionOptions = {
   plugin: Plugin;
-  restart?: boolean;
+  restartOptions: RestartOptions;
 };
 
 export const useInstallPlugin = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, PluginActionOptions>(
-    ({ plugin, restart }) => apiClient.post(requiredLink(plugin, linkWithRestart("install", restart))),
+    ({ plugin, restartOptions: { restart, ...waitForRestartOptions } }) => {
+      const promise = apiClient.post(requiredLink(plugin, linkWithRestart("install", restart)));
+      if (restart) {
+        return waitForRestartAfter(promise, waitForRestartOptions);
+      }
+      return promise;
+    },
     {
       onSuccess: () => queryClient.invalidateQueries("plugins")
     }
   );
   return {
-    install: (plugin: Plugin, restart?: boolean) => mutate({ plugin, restart }),
+    install: (plugin: Plugin, restartOptions: RestartOptions = {}) =>
+      mutate({
+        plugin,
+        restartOptions
+      }),
     isLoading,
     error,
+    data,
     isInstalled: !!data
   };
 };
@@ -103,13 +152,23 @@ export const useInstallPlugin = () => {
 export const useUninstallPlugin = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, PluginActionOptions>(
-    ({ plugin, restart }) => apiClient.post(requiredLink(plugin, linkWithRestart("uninstall", restart))),
+    ({ plugin, restartOptions: { restart, ...waitForRestartOptions } }) => {
+      const promise = apiClient.post(requiredLink(plugin, linkWithRestart("uninstall", restart)));
+      if (restart) {
+        return waitForRestartAfter(promise, waitForRestartOptions);
+      }
+      return promise;
+    },
     {
       onSuccess: () => queryClient.invalidateQueries("plugins")
     }
   );
   return {
-    uninstall: (plugin: Plugin, restart?: boolean) => mutate({ plugin, restart }),
+    uninstall: (plugin: Plugin, restartOptions: RestartOptions = {}) =>
+      mutate({
+        plugin,
+        restartOptions
+      }),
     isLoading,
     error,
     isUninstalled: !!data
@@ -118,38 +177,55 @@ export const useUninstallPlugin = () => {
 
 type UpdatePluginsOptions = {
   plugins: Plugin | PluginCollection;
-  restart?: boolean;
+  restartOptions: RestartOptions;
 };
 
 export const useUpdatePlugins = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, UpdatePluginsOptions>(
-    ({ plugins, restart }) =>
-      apiClient.post(
-        requiredLink(plugins, isPluginCollection(plugins) ? "update" : linkWithRestart("update", restart))
-      ),
+    ({ plugins, restartOptions: { restart, ...waitForRestartOptions } }) => {
+      const isCollection = isPluginCollection(plugins);
+      const promise = apiClient.post(
+        requiredLink(plugins, isCollection ? "update" : linkWithRestart("update", restart))
+      );
+      if (restart && !isCollection) {
+        return waitForRestartAfter(promise, waitForRestartOptions);
+      }
+      return promise;
+    },
     {
       onSuccess: () => queryClient.invalidateQueries("plugins")
     }
   );
   return {
-    update: (plugin: Plugin | PluginCollection, restart?: boolean) => mutate({ plugins: plugin, restart }),
+    update: (plugin: Plugin | PluginCollection, restartOptions: RestartOptions = {}) =>
+      mutate({
+        plugins: plugin,
+        restartOptions
+      }),
     isLoading,
     error,
     isUpdated: !!data
   };
 };
 
+type ExecutePendingPlugins = {
+  pending: PendingPlugins;
+  restartOptions: WaitForRestartOptions;
+};
+
 export const useExecutePendingPlugins = () => {
   const queryClient = useQueryClient();
-  const { mutate, isLoading, error, data } = useMutation<unknown, Error, PendingPlugins>(
-    pending => apiClient.post(requiredLink(pending, "execute")),
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, ExecutePendingPlugins>(
+    ({ pending, restartOptions }) =>
+      waitForRestartAfter(apiClient.post(requiredLink(pending, "execute")), restartOptions),
     {
       onSuccess: () => queryClient.invalidateQueries("plugins")
     }
   );
   return {
-    update: (pending: PendingPlugins) => mutate(pending),
+    update: (pending: PendingPlugins, restartOptions: WaitForRestartOptions = {}) =>
+      mutate({ pending, restartOptions }),
     isLoading,
     error,
     isExecuted: !!data
