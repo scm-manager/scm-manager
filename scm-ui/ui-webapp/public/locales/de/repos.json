@@ -7,7 +7,7 @@
     "description": "Beschreibung",
     "creationDate": "Erstellt",
     "lastModified": "Zuletzt bearbeitet",
-    "archived":  "archiviert",
+    "archived": "archiviert",
     "exporting": "Wird exportiert"
   },
   "validation": {
@@ -90,7 +90,7 @@
     },
     "pending": {
       "subtitle": "Repository wird importiert...",
-      "infoText": "Ihr Repository wird gerade importiert. Dies kann einen Moment dauern. Sie werden weitergeleitet, sobald der Import abgeschlossen ist. Wenn Sie diese Seite verlassen, können Sie nicht zurückkehren, um den Import-Status zu erfahren."
+      "infoText": "Ihr Repository wird gerade importiert. Dies kann einen Moment dauern. Sie werden weitergeleitet, sobald der Import abgeschlossen ist. Wenn Sie diese Seite verlassen, können Sie nicht zurückkehren, um den Import-Status zu erfahren. Sie können den SCM-Manager in einem anderem Tab/Fenster weiter verwenden."
     },
     "importTypes": {
       "label": "Import Modus",
@@ -106,7 +106,8 @@
         "label": "Import aus Archiv mit Metadaten (Experimentell)",
         "helpText": "Das Repository inkl. der Metadaten wird aus einem archivierten Dump importiert. Das Import Archiv muss von einem anderen SCM-Manager generiert worden sein."
       }
-    }
+    },
+    "navigationWarning": "Es wird dringend empfohlen auf dieser Seite zu warten bis der Import abgeschlossen ist. Beim Verlassen der Seite könnte der Import abbrechen. Seite trotzdem verlassen?"
   },
   "branches": {
     "overview": {
@@ -223,7 +224,7 @@
       "title": "Changeset {{id}} aus {{namespace}}/{{name}}"
     },
     "parents": {
-      "label" : "Parent",
+      "label": "Parent",
       "label_plural": "Parents"
     },
     "contributors": {
@@ -287,7 +288,7 @@
       "helpText": "Wird ein Passwort angegeben, wird die Export Datei damit verschlüsselt."
     },
     "exportButton": "Repository exportieren",
-    "exportStarted":  "Der Repository Export wurde gestartet. Abhängig von der Größe des Repository kann dies einige Momente dauern."
+    "exportStarted": "Der Repository Export wurde gestartet. Abhängig von der Größe des Repository kann dies einige Momente dauern."
   },
   "sources": {
     "fileTree": {

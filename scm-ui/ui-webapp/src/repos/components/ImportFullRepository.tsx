@@ -28,7 +28,6 @@ import RepositoryInformationForm from "./RepositoryInformationForm";
 import { apiClient, ErrorNotification, Level, SubmitButton } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import ImportFromBundleForm from "./ImportFromBundleForm";
 import ImportFullRepositoryForm from "./ImportFullRepositoryForm";
 
 type Props = {
@@ -77,6 +76,7 @@ const ImportFullRepository: FC<Props> = ({ url, repositoryType, setImportPending
       })
       .then(response => response.json())
       .then(repo => {
+        handleImportLoading(false);
         if (history.location.pathname === currentPath) {
           history.push(`/repo/${repo.namespace}/${repo.name}/code/sources`);
         }

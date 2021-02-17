@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.cache;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -29,17 +29,16 @@ package sonia.scm.cache;
 import java.io.Closeable;
 
 /**
- * The {@link CacheManager} holds references to {@link Cache} 
+ * The {@link CacheManager} holds references to {@link Cache}
  * and manages their creation.
  * This class is a singleton which can be retrieved via injection.
  *
  * @author Sebastian Sdorra
  */
-public interface CacheManager extends Closeable
-{
+public interface CacheManager extends Closeable {
 
   /**
-   * Returns the cache with the specified types and name. 
+   * Returns the cache with the specified types and name.
    * If the cache does not exist, a new cache is created.
    *
    * @param name - The name of the cache
@@ -48,5 +47,5 @@ public interface CacheManager extends Closeable
    *
    * @return the cache with the specified types and name
    */
-  public <K, V> Cache<K, V> getCache(String name);
+  <K, V> Cache<K, V> getCache(String name);
 }

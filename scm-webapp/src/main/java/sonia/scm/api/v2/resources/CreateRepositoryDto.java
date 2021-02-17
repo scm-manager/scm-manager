@@ -46,8 +46,4 @@ interface CreateRepositoryDto {
   String getContact();
 
   String getDescription();
-
-  List<HealthCheckFailureDto> getHealthCheckFailures();
-
-  Instant getLastModified();
 }

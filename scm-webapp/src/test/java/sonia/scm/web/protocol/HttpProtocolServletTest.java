@@ -46,8 +46,6 @@ import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.spi.HttpScmProtocol;
-import sonia.scm.security.AnonymousMode;
-import sonia.scm.security.AnonymousToken;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.UserAgent;
 import sonia.scm.web.UserAgentParser;
@@ -62,6 +60,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("java:S5979") // This seems to be erroneous here (not initialized mocks)
 class HttpProtocolServletTest {
 
   @Mock

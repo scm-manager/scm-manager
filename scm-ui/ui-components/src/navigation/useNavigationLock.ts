@@ -22,43 +22,22 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security;
+import { useEffect } from "react";
 
-import org.apache.shiro.SecurityUtils;
-import sonia.scm.SCMContext;
+// This hook can be used to warn the user on reloading or closing the current page if the navigation lock is enabled.
+const useNavigationLock = (enabled: boolean) => {
+  useEffect(() => {
+    if (enabled) {
+      window.onbeforeunload = () => true;
+    } else {
+      // @ts-ignore We need to reset this listener if the lock was disabled
+      window.onbeforeunload = undefined;
+    }
+    return () => {
+      // @ts-ignore Remove this listener when the hook will be unmounted
+      window.onbeforeunload = undefined;
+    };
+  }, [enabled]);
+};
 
-public class Authentications {
-
-  /**
-   * Username of the system account.
-   * @since 2.14.0
-   */
-  public static final String PRINCIPAL_SYSTEM = "_scmsystem";
-
-  /**
-   * Username of the anonymous account.
-   * @since 2.14.0
-   */
-  public static final String PRINCIPAL_ANONYMOUS = SCMContext.USER_ANONYMOUS;
-
-  private Authentications() {}
-
-  public static boolean isAuthenticatedSubjectAnonymous() {
-    return isSubjectAnonymous((String) SecurityUtils.getSubject().getPrincipal());
-  }
-
-  public static boolean isSubjectAnonymous(String principal) {
-    return PRINCIPAL_ANONYMOUS.equals(principal);
-  }
-
-  /**
-   * Returns true if the given principal is equal to the one from the system account.
-   *
-   * @param principal principal
-   * @return {@code true}
-   * @since 2.14.0
-   */
-  public static boolean isSubjectSystemAccount(String principal) {
-    return PRINCIPAL_SYSTEM.equals(principal);
-  }
-}
+export default useNavigationLock;

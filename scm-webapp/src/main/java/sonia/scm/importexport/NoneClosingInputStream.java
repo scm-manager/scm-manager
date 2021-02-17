@@ -22,43 +22,21 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security;
+package sonia.scm.importexport;
 
-import org.apache.shiro.SecurityUtils;
-import sonia.scm.SCMContext;
+import java.io.FilterInputStream;
+import java.io.InputStream;
 
-public class Authentications {
+@SuppressWarnings("java:S4929")
+  // we only want to override close here
+class NoneClosingInputStream extends FilterInputStream {
 
-  /**
-   * Username of the system account.
-   * @since 2.14.0
-   */
-  public static final String PRINCIPAL_SYSTEM = "_scmsystem";
-
-  /**
-   * Username of the anonymous account.
-   * @since 2.14.0
-   */
-  public static final String PRINCIPAL_ANONYMOUS = SCMContext.USER_ANONYMOUS;
-
-  private Authentications() {}
-
-  public static boolean isAuthenticatedSubjectAnonymous() {
-    return isSubjectAnonymous((String) SecurityUtils.getSubject().getPrincipal());
+  NoneClosingInputStream(InputStream delegate) {
+    super(delegate);
   }
 
-  public static boolean isSubjectAnonymous(String principal) {
-    return PRINCIPAL_ANONYMOUS.equals(principal);
-  }
-
-  /**
-   * Returns true if the given principal is equal to the one from the system account.
-   *
-   * @param principal principal
-   * @return {@code true}
-   * @since 2.14.0
-   */
-  public static boolean isSubjectSystemAccount(String principal) {
-    return PRINCIPAL_SYSTEM.equals(principal);
+  @Override
+  public void close() {
+    // Avoid closing stream because JAXB tries to close the stream
   }
 }

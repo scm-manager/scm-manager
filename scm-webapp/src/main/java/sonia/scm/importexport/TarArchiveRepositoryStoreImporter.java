@@ -48,7 +48,7 @@ public class TarArchiveRepositoryStoreImporter {
   }
 
   public void importFromTarArchive(Repository repository, InputStream inputStream) {
-    try (TarArchiveInputStream tais = new TarArchiveInputStream(inputStream)) {
+    try (TarArchiveInputStream tais = new NoneClosingTarArchiveInputStream(inputStream)) {
       ArchiveEntry entry = tais.getNextEntry();
       while (entry != null) {
         String[] entryPathParts = entry.getName().split(File.separator);
@@ -101,7 +101,18 @@ public class TarArchiveRepositoryStoreImporter {
         return entryPathParts.length == 3;
       }
     }
-    // We only support config and data stores yet
     return false;
+  }
+
+  static class NoneClosingTarArchiveInputStream extends TarArchiveInputStream {
+
+    public NoneClosingTarArchiveInputStream(InputStream is) {
+      super(is);
+    }
+
+    @Override
+    public void close() throws IOException {
+      // Do not close this input stream
+    }
   }
 }

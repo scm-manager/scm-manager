@@ -22,43 +22,18 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security;
+package sonia.scm.importexport;
 
-import org.apache.shiro.SecurityUtils;
-import sonia.scm.SCMContext;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 
-public class Authentications {
+import java.io.InputStream;
 
-  /**
-   * Username of the system account.
-   * @since 2.14.0
-   */
-  public static final String PRINCIPAL_SYSTEM = "_scmsystem";
+interface ImportStep {
+  boolean handle(TarArchiveEntry currentEntry, ImportState state, InputStream inputStream);
 
-  /**
-   * Username of the anonymous account.
-   * @since 2.14.0
-   */
-  public static final String PRINCIPAL_ANONYMOUS = SCMContext.USER_ANONYMOUS;
-
-  private Authentications() {}
-
-  public static boolean isAuthenticatedSubjectAnonymous() {
-    return isSubjectAnonymous((String) SecurityUtils.getSubject().getPrincipal());
+  default void finish(ImportState state) {
   }
 
-  public static boolean isSubjectAnonymous(String principal) {
-    return PRINCIPAL_ANONYMOUS.equals(principal);
-  }
-
-  /**
-   * Returns true if the given principal is equal to the one from the system account.
-   *
-   * @param principal principal
-   * @return {@code true}
-   * @since 2.14.0
-   */
-  public static boolean isSubjectSystemAccount(String principal) {
-    return PRINCIPAL_SYSTEM.equals(principal);
+  default void cleanup(ImportState state) {
   }
 }
