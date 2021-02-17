@@ -24,6 +24,7 @@
 
 package sonia.scm.update.store;
 
+import org.assertj.core.api.Condition;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 
@@ -96,7 +97,9 @@ class DifferentiateBetweenConfigAndConfigEntryUpdateStepTest {
 
     new DifferentiateBetweenConfigAndConfigEntryUpdateStep() {}.updateAllInDirectory(temp);
 
-    assertContent(configFile, "sonia/scm/update/store/config_entry_file.xml.content");
+    assertThat(Files.readAllLines(configFile))
+      .areAtLeastOne(new Condition<>(line -> line.contains("<configuration type=\"config-entry\">"), "line containing start tag with attribute"))
+      .endsWith(Files.readAllLines(Paths.get(getResource("sonia/scm/update/store/config_entry_file.xml.content").getFile())).toArray(new String[9]));
   }
 
   private void assertContent(Path configFile, String expectedContentResource) {

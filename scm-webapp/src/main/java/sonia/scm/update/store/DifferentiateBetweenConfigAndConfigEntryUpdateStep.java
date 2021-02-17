@@ -26,24 +26,32 @@ package sonia.scm.update.store;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 import sonia.scm.migration.UpdateException;
 import sonia.scm.store.CopyOnWrite;
 import sonia.scm.version.Version;
+import sonia.scm.xml.XmlStreams;
 
+import javax.xml.XMLConstants;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Scanner;
 import java.util.stream.Stream;
 
 abstract class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
 
   private static final Logger LOG = LoggerFactory.getLogger(DifferentiateBetweenConfigAndConfigEntryUpdateStep.class);
-
-  private static final String CONFIG_HEADER = "<?xml version=\"1.0\" ?>";
 
   public Version getTargetVersion() {
     return Version.parse("2.0.0");
@@ -65,40 +73,59 @@ abstract class DifferentiateBetweenConfigAndConfigEntryUpdateStep {
 
   private boolean isConfigEntryFile(Path potentialFile) {
     LOG.trace("Testing whether file is config entry file without mark: {}", potentialFile);
-    try (InputStream inputStream = openFile(potentialFile);
-      Scanner s = new Scanner(inputStream)) {
-      return CONFIG_HEADER.equals(s.nextLine()) && "<configuration>".equals(s.nextLine());
-    } catch (IOException e) {
+    XMLStreamReader reader = null;
+    try {
+      reader = XmlStreams.createReader(potentialFile);
+      reader.nextTag();
+      if ("configuration".equals(reader.getLocalName())) {
+        reader.nextTag();
+        if ("entry".equals(reader.getLocalName())) {
+          return true;
+        }
+      }
+    } catch (XMLStreamException | IOException e) {
       throw new UpdateException("Error reading file " + potentialFile, e);
+    } finally {
+      XmlStreams.close(reader);
     }
+    return false;
   }
 
   private void updateSingleFile(Path configFile) {
     LOG.info("Updating config entry file: {}", configFile);
-      CopyOnWrite.withTemporaryFile(
-        temporaryFile -> {
-    try (OutputStream tempStream = Files.newOutputStream(temporaryFile);
-         PrintStream tempPrintStream = new PrintStream(tempStream);
-         InputStream inputStream = openFile(configFile);
-         Scanner s = new Scanner(inputStream)) {
-      tempPrintStream.println(s.nextLine()); // print xml header
-      s.nextLine(); // drop line with old <configuration> tag
-      tempPrintStream.println("<configuration type=\"config-entry\">"); // print correct configuration tag
-      while (s.hasNextLine()) { // copy remaining file
-        tempPrintStream.println(s.nextLine());
-      }
+
+    Document configEntryDocument = readAsXmlDocument(configFile);
+
+    configEntryDocument.getDocumentElement().setAttribute("type", "config-entry");
+
+    CopyOnWrite.withTemporaryFile(
+      temporaryFile -> writeXmlDocument(configEntryDocument, temporaryFile), configFile
+    );
+  }
+
+  private void writeXmlDocument(Document configEntryDocument, Path temporaryFile) throws TransformerException {
+    try {
+      TransformerFactory factory = TransformerFactory.newInstance();
+      factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+      factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+      Transformer transformer = factory.newTransformer();
+      DOMSource domSource = new DOMSource(configEntryDocument);
+      StreamResult streamResult = new StreamResult(Files.newOutputStream(temporaryFile));
+      transformer.transform(domSource, streamResult);
     } catch (IOException e) {
       throw new UpdateException("Could not write modified config entry file", e);
     }
-        }, configFile
-      );
   }
 
-  private InputStream openFile(Path potentialFile) {
+  private Document readAsXmlDocument(Path configFile) {
     try {
-      return Files.newInputStream(potentialFile);
-    } catch (IOException e) {
-      throw new UpdateException("Could not open file " + potentialFile, e);
+      DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+      factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+      factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_SCHEMA, "");
+      DocumentBuilder builder = factory.newDocumentBuilder();
+      return builder.parse(Files.newInputStream(configFile));
+    } catch (ParserConfigurationException | SAXException | IOException e) {
+      throw new UpdateException("Could not read config entry file", e);
     }
   }
 }

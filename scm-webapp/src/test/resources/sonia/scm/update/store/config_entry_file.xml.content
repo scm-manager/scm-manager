@@ -1,5 +1,3 @@
-<?xml version="1.0" ?>
-<configuration type="config-entry">
   <entry>
     <key>sonia.scm.pullrequest.comment.data.xml</key>
     <value>
