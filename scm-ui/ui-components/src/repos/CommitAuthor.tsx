@@ -25,16 +25,15 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import Notification from "../Notification";
-import { Me } from "@scm-manager/ui-types";
-import { connect } from "react-redux";
+import { useMe } from "@scm-manager/ui-api";
 
-type Props = {
-  // props from global state
-  me: Me;
-};
-
-const CommitAuthor: FC<Props> = ({ me }) => {
+const CommitAuthor: FC = () => {
   const [t] = useTranslation("repos");
+  const { data: me } = useMe();
+
+  if (!me) {
+    return null;
+  }
 
   const mail = me.mail ? me.mail : me.fallbackMail;
 
@@ -48,13 +47,4 @@ const CommitAuthor: FC<Props> = ({ me }) => {
   );
 };
 
-const mapStateToProps = (state: any) => {
-  const { auth } = state;
-  const me = auth.me;
-
-  return {
-    me
-  };
-};
-
-export default connect(mapStateToProps)(CommitAuthor);
+export default CommitAuthor;
