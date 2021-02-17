@@ -21,11 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import { compose } from "redux";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
 import { binder } from "@scm-manager/ui-extensions";
 import { File, Repository } from "@scm-manager/ui-types";
@@ -46,7 +46,7 @@ type Hunk = {
   error: Error;
 };
 
-type Props = WithTranslation & {
+type PropsClass = WithTranslation & {
   repository: Repository;
   revision: string;
   path: string;
@@ -66,29 +66,13 @@ type State = {
   stoppableUpdateHandler: number[];
 };
 
-const FixedWidthTh = styled.th`
-  width: 16px;
-`;
-
-export function findParent(path: string) {
-  if (path.endsWith("/")) {
-    path = path.substring(0, path.length - 1);
-  }
-
-  const index = path.lastIndexOf("/");
-  if (index > 0) {
-    return path.substring(0, index);
-  }
-  return "";
-}
-
-class FileTree extends React.Component<Props, State> {
-  constructor(props: Props) {
+class FileTreeClass extends React.Component<PropsClass, State> {
+  constructor(props: PropsClass) {
     super(props);
     this.state = { stoppableUpdateHandler: [] };
   }
 
-  componentDidUpdate(prevProps: Readonly<Props>, prevState: Readonly<State>): void {
+  componentDidUpdate(prevProps: Readonly<PropsClass>, prevState: Readonly<State>): void {
     if (prevState.stoppableUpdateHandler === this.state.stoppableUpdateHandler) {
       const { hunks, updateSources } = this.props;
       hunks?.forEach((hunk, index) => {
@@ -219,7 +203,7 @@ class FileTree extends React.Component<Props, State> {
   }
 }
 
-const mapDispatchToProps = (dispatch: any, ownProps: Props) => {
+const mapDispatchToProps = (dispatch: any, ownProps: PropsClass) => {
   const { repository, revision, path } = ownProps;
 
   return {
@@ -230,7 +214,7 @@ const mapDispatchToProps = (dispatch: any, ownProps: Props) => {
   };
 };
 
-const mapStateToProps = (state: any, ownProps: Props) => {
+const mapStateToProps = (state: any, ownProps: PropsClass) => {
   const { repository, revision, path } = ownProps;
 
   const error = getFetchSourcesFailure(state, repository, revision, path, 0);
@@ -255,4 +239,79 @@ const mapStateToProps = (state: any, ownProps: Props) => {
   };
 };
 
-export default compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(withTranslation("repos")(FileTree));
+compose(withRouter, connect(mapStateToProps, mapDispatchToProps))(withTranslation("repos")(FileTreeClass));
+
+// the new stuff begins here
+
+type Props = {
+  directory: File;
+  baseUrl: string;
+  revision: string;
+};
+
+const FixedWidthTh = styled.th`
+  width: 16px;
+`;
+
+export function findParent(path: string) {
+  if (path.endsWith("/")) {
+    path = path.substring(0, path.length - 1);
+  }
+
+  const index = path.lastIndexOf("/");
+  if (index > 0) {
+    return path.substring(0, index);
+  }
+  return "";
+}
+
+const FileTree: FC<Props> = ({ directory, baseUrl, revision }) => {
+  const [t] = useTranslation("repos");
+  const { path } = directory;
+  const files: File[] = [];
+
+  if (path) {
+    files.push({
+      name: "..",
+      path: findParent(path),
+      directory: true,
+      revision,
+      _links: {},
+      _embedded: {
+        children: []
+      }
+    });
+  }
+
+  files.push(...(directory._embedded.children || []));
+
+  const baseUrlWithRevision = baseUrl + "/" + encodeURIComponent(revision);
+
+  if (!files || files.length === 0) {
+    return <Notification type="info">{t("sources.noSources")}</Notification>;
+  }
+
+  return (
+    <div className="panel-block">
+      <table className="table table-hover table-sm is-fullwidth">
+        <thead>
+          <tr>
+            <FixedWidthTh />
+            <th>{t("sources.fileTree.name")}</th>
+            <th className="is-hidden-mobile">{t("sources.fileTree.length")}</th>
+            <th className="is-hidden-mobile">{t("sources.fileTree.commitDate")}</th>
+            <th className="is-hidden-touch">{t("sources.fileTree.description")}</th>
+            {binder.hasExtension("repos.sources.tree.row.right") && <th className="is-hidden-mobile" />}
+          </tr>
+        </thead>
+        <tbody>
+          {files.map((file: File) => (
+            <FileTreeLeaf key={file.name} file={file} baseUrl={baseUrlWithRevision} />
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
+export default FileTree;
