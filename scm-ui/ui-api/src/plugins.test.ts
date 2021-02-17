@@ -33,7 +33,8 @@ import {
   useInstalledPlugins,
   useInstallPlugin,
   usePendingPlugins,
-  useUninstallPlugin, useUpdatePlugins
+  useUninstallPlugin,
+  useUpdatePlugins
 } from "./plugins";
 import { act } from "react-test-renderer";
 
@@ -105,7 +106,7 @@ describe("Test plugin hooks", () => {
     _links: {
       update: {
         href: "/plugins/update"
-      },
+      }
     },
     _embedded: {
       plugins
@@ -176,14 +177,16 @@ describe("Test plugin hooks", () => {
       queryClient.setQueryData(["plugins", "installed"], createPluginCollection([]));
       queryClient.setQueryData(["plugins", "pending"], createPendingPlugins());
       fetchMock.post("/api/v2/plugins/available/heart-of-gold-plugin/install?restart=true", installedPlugin);
-      const { result, waitForNextUpdate } = renderHook(() => useInstallPlugin(), {
+      fetchMock.get("/api/v2/", "Restarted");
+      const { result, waitFor, waitForNextUpdate } = renderHook(() => useInstallPlugin(), {
         wrapper: createWrapper(undefined, queryClient)
       });
       await act(() => {
         const { install } = result.current;
-        install(availablePlugin, true);
+        install(availablePlugin, { restart: true, initialDelay: 5, timeout: 5 });
         return waitForNextUpdate();
       });
+      await waitFor(() => result.current.isInstalled);
       expect(queryClient.getQueryState("plugins")!.isInvalidated).toBe(true);
     });
 
@@ -212,14 +215,16 @@ describe("Test plugin hooks", () => {
       queryClient.setQueryData(["plugins", "installed"], createPluginCollection([installedPlugin]));
       queryClient.setQueryData(["plugins", "pending"], createPendingPlugins());
       fetchMock.post("/api/v2/plugins/installed/heart-of-gold-plugin/uninstall?restart=true", availablePlugin);
-      const { result, waitForNextUpdate } = renderHook(() => useUninstallPlugin(), {
+      fetchMock.get("/api/v2/", "Restarted");
+      const { result, waitForNextUpdate, waitFor } = renderHook(() => useUninstallPlugin(), {
         wrapper: createWrapper(undefined, queryClient)
       });
       await act(() => {
         const { uninstall } = result.current;
-        uninstall(installedPlugin, true);
+        uninstall(installedPlugin, { restart: true, initialDelay: 5, timeout: 5 });
         return waitForNextUpdate();
       });
+      await waitFor(() => result.current.isUninstalled);
       expect(queryClient.getQueryState("plugins")!.isInvalidated).toBe(true);
     });
 
@@ -248,14 +253,16 @@ describe("Test plugin hooks", () => {
       queryClient.setQueryData(["plugins", "installed"], createPluginCollection([installedPlugin]));
       queryClient.setQueryData(["plugins", "pending"], createPendingPlugins());
       fetchMock.post("/api/v2/plugins/available/heart-of-gold-plugin/install?restart=true", installedPlugin);
-      const { result, waitForNextUpdate } = renderHook(() => useUpdatePlugins(), {
+      fetchMock.get("/api/v2/", "Restarted");
+      const { result, waitForNextUpdate, waitFor } = renderHook(() => useUpdatePlugins(), {
         wrapper: createWrapper(undefined, queryClient)
       });
       await act(() => {
         const { update } = result.current;
-        update(installedPlugin, true);
+        update(installedPlugin, { restart: true, timeout: 5, initialDelay: 5 });
         return waitForNextUpdate();
       });
+      await waitFor(() => result.current.isUpdated);
       expect(queryClient.getQueryState("plugins")!.isInvalidated).toBe(true);
     });
     it("should update collection", async () => {
@@ -285,7 +292,7 @@ describe("Test plugin hooks", () => {
       });
       await act(() => {
         const { update } = result.current;
-        update(createPluginCollection([installedPlugin, installedCorePlugin]), true);
+        update(createPluginCollection([installedPlugin, installedCorePlugin]), { restart: true });
         return waitForNextUpdate();
       });
       expect(queryClient.getQueryState("plugins")!.isInvalidated).toBe(true);
