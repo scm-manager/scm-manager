@@ -31,17 +31,13 @@ import { branchQueryKey, repoQueryKey } from "./keys";
 import { apiClient, urls } from "@scm-manager/ui-components";
 
 export const useBranches = (repository: Repository): ApiResult<BranchCollection> => {
-  const link = (repository._links.branches as Link)?.href;
+  const link = requiredLink(repository, "branches");
   return useQuery<BranchCollection, Error>(
     repoQueryKey(repository, "branches"),
-    () => apiClient.get(link).then(response => response.json()), {
-      // we could not throw an error if the link is missing,
-      // because some scm systems do not have branches like svn
-      enabled: !!link
-      // we do not populate the cache for a single branch,
-      // because we have no pagination for branches and if we have a lot of them
-      // the population slows us down
-    }
+    () => apiClient.get(link).then(response => response.json())
+    // we do not populate the cache for a single branch,
+    // because we have no pagination for branches and if we have a lot of them
+    // the population slows us down
   );
 };
 
