@@ -27,8 +27,6 @@ package sonia.scm.util;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import sonia.scm.ContextEntry;
-import sonia.scm.repository.api.ExportFailedException;
 
 import java.io.BufferedOutputStream;
 import java.io.IOException;
@@ -121,9 +119,8 @@ public final class Archives {
           createArchiveEntryForFile(filePath, fileOrDir, taos);
         }
       } catch (IOException e) {
-        throw new ExportFailedException(
-          ContextEntry.ContextBuilder.noContext(),
-          "Could not export repository. Error on bundling files.",
+        throw new ArchiveException(
+          "Could not add file '" + fileOrDir + "' to tar archive as '" + path + "'",
           e
         );
       }
@@ -163,6 +160,12 @@ public final class Archives {
       if (!Files.exists(directory)) {
         Files.createDirectories(directory);
       }
+    }
+  }
+
+  public static final class ArchiveException extends RuntimeException {
+    public ArchiveException(String message, Throwable cause) {
+      super(message, cause);
     }
   }
 }
