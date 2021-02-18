@@ -809,7 +809,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     MockHttpRequest request = MockHttpRequest
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full")
-      .contentType(VndMediaType.ENCRYPTION)
+      .contentType(VndMediaType.REPOSITORY_EXPORT)
       .content("{\"password\": \"hitchhiker\"}".getBytes());
     MockHttpResponse response = new MockHttpResponse();
 
@@ -834,7 +834,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     MockHttpRequest request = MockHttpRequest
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full")
-      .contentType(VndMediaType.ENCRYPTION)
+      .contentType(VndMediaType.REPOSITORY_EXPORT)
       .content("{\"password\": \"hitchhiker\", \"async\":\"true\"}".getBytes());
     MockHttpResponse response = new MockHttpResponse();
 
@@ -842,6 +842,30 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     assertEquals(SC_ACCEPTED, response.getStatus());
     assertEquals("broken_test_link", response.getOutputHeaders().getFirst("SCM-Export-Download"));
+  }
+
+  @Test
+  public void shouldReturnConflictIfRepositoryAlreadyExporting() throws URISyntaxException {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = createRepository(namespace, name, "svn");
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
+
+    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
+    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+
+    when(exportService.isExporting(repository)).thenReturn(true);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full")
+      .contentType(VndMediaType.REPOSITORY_EXPORT)
+      .content("{\"password\": \"hitchhiker\", \"async\":\"true\"}".getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_CONFLICT, response.getStatus());
   }
 
   private void mockRepositoryHandler(Set<Command> cmds) {

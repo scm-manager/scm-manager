@@ -25,6 +25,7 @@
 package sonia.scm.importexport;
 
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
 import sonia.scm.store.BlobStoreFactory;
@@ -36,6 +37,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
 import java.util.UUID;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 @Singleton
 public class ExportService {
@@ -49,7 +52,7 @@ public class ExportService {
     this.blobStoreFactory = blobStoreFactory;
   }
 
-  public OutputStream store(Repository repository) throws IOException {
+  public OutputStream store(Repository repository) {
     pendingExports.add(repository.getId());
     BlobStore store = createStore(repository);
     if (!store.getAll().isEmpty()) {
@@ -58,14 +61,30 @@ public class ExportService {
 
     //TODO Is random id really better than repository id?
     Blob blob = store.create(UUID.randomUUID().toString());
-    return blob.getOutputStream();
+    try {
+      return blob.getOutputStream();
+    } catch (IOException e) {
+      throw new ExportFailedException(
+        entity(repository).build(),
+        "Could not store repository export to blob file",
+        e
+      );
+    }
   }
 
-  public InputStream get(Repository repository) throws IOException {
-    return createStore(repository)
-      .getAll()
-      .get(0)
-      .getInputStream();
+  public InputStream get(Repository repository) {
+    try {
+      return createStore(repository)
+        .getAll()
+        .get(0)
+        .getInputStream();
+    } catch (IOException e) {
+      throw new ExportFailedException(
+        entity(repository).build(),
+        "Could not stored repository export from blob",
+        e
+      );
+    }
   }
 
   public void clear(Repository repository) {

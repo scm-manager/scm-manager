@@ -36,6 +36,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import sonia.scm.BadRequestException;
+import sonia.scm.ConcurrentModificationException;
 import sonia.scm.Type;
 import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.FullScmRepositoryExporter;
@@ -141,7 +142,7 @@ public class RepositoryExportResource {
                                    @DefaultValue("false") @QueryParam("compressed") boolean compressed
   ) {
     Repository repository = getVerifiedRepository(namespace, name, type);
-    return exportRepository(repository, compressed, NO_PASSWORD);
+    return exportRepository(repository, NO_PASSWORD, compressed, false);
   }
 
   /**
@@ -182,7 +183,7 @@ public class RepositoryExportResource {
                                        @PathParam("name") String name
   ) {
     Repository repository = getVerifiedRepository(namespace, name);
-    return exportFullRepository(repository, NO_PASSWORD);
+    return exportFullRepository(repository, NO_PASSWORD, false);
   }
 
   /**
@@ -199,7 +200,7 @@ public class RepositoryExportResource {
    */
   @POST
   @Path("{type: ^(?!full$)[^/]+$}")
-  @Consumes(VndMediaType.ENCRYPTION)
+  @Consumes(VndMediaType.REPOSITORY_EXPORT)
   @Operation(summary = "Exports the repository", description = "Exports the repository.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
@@ -212,6 +213,10 @@ public class RepositoryExportResource {
   @ApiResponse(
     responseCode = "403",
     description = "not authorized, the current user has no privileges to read the repository"
+  )
+  @ApiResponse(
+    responseCode = "409",
+    description = "Repository export already started."
   )
   @ApiResponse(
     responseCode = "500",
@@ -228,10 +233,19 @@ public class RepositoryExportResource {
                                                @DefaultValue("false") @QueryParam("compressed") boolean compressed,
                                                @Valid ExportDto request
   ) throws Exception {
+    Repository repository = getVerifiedRepository(namespace, name, type);
+    checkRepositoryIsAlreadyExporting(repository);
     return exportAsync(request, () -> {
-      Repository repository = getVerifiedRepository(namespace, name, type);
-      return exportRepository(repository, compressed, request.getPassword());
+      Response response = exportRepository(repository, request.getPassword(), compressed, request.isAsync());
+      exportService.setExportFinished(repository);
+      return response;
     });
+  }
+
+  private void checkRepositoryIsAlreadyExporting(Repository repository) {
+    if (exportService.isExporting(repository)) {
+     throw new ConcurrentModificationException(Repository.class, repository.getId());
+    }
   }
 
   /**
@@ -247,7 +261,7 @@ public class RepositoryExportResource {
    */
   @POST
   @Path("full")
-  @Consumes(VndMediaType.ENCRYPTION)
+  @Consumes(VndMediaType.REPOSITORY_EXPORT)
   @Operation(summary = "Exports the repository", description = "Exports the repository with metadata and environment information.", tags = "Repository")
   @ApiResponse(
     responseCode = "200",
@@ -274,9 +288,12 @@ public class RepositoryExportResource {
                                                    @PathParam("name") String name,
                                                    @Valid ExportDto request
   ) throws Exception {
+    Repository repository = getVerifiedRepository(namespace, name);
+    checkRepositoryIsAlreadyExporting(repository);
     return exportAsync(request, () -> {
-      Repository repository = getVerifiedRepository(namespace, name);
-      return exportFullRepository(repository, request.getPassword());
+      Response response = exportFullRepository(repository, request.getPassword(), request.isAsync());
+      exportService.setExportFinished(repository);
+      return response;
     });
   }
 
@@ -307,13 +324,22 @@ public class RepositoryExportResource {
     return repository;
   }
 
-  private Response exportFullRepository(Repository repository, String password) {
-    StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os, password);
+  private Response exportFullRepository(Repository repository, String password, boolean async) {
+    if (async) {
+      OutputStream blobOutputStream = exportService.store(repository);
+      fullScmRepositoryExporter.export(repository, blobOutputStream, password);
+      exportService.setExportFinished(repository);
+      //TODO Cleanup
+      // Return value will be ignored for async export
+      return null;
+    } else {
+      StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os, password);
 
-    return Response
-      .ok(output, "application/x-gzip")
-      .header("content-disposition", createContentDispositionHeaderValue(repository, resolveFullExportFileExtension(password)))
-      .build();
+      return Response
+        .ok(output, "application/x-gzip")
+        .header("content-disposition", createContentDispositionHeaderValue(repository, resolveFullExportFileExtension(password)))
+        .build();
+    }
   }
 
   private String resolveFullExportFileExtension(String password) {
@@ -323,7 +349,7 @@ public class RepositoryExportResource {
     return "tar.gz";
   }
 
-  private Response exportRepository(Repository repository, boolean compressed, String password) {
+  private Response exportRepository(Repository repository, String password, boolean compressed, boolean async) {
     StreamingOutput output;
     String fileExtension;
     try (final RepositoryService service = serviceFactory.create(repository)) {
@@ -331,7 +357,13 @@ public class RepositoryExportResource {
       fileExtension = resolveFileExtension(bundleCommand, compressed, !Strings.isNullOrEmpty(password));
       output = os -> {
         try {
-          OutputStream cos = repositoryImportExportEncryption.optionallyEncrypt(os, password);
+          OutputStream cos;
+          if (async) {
+            OutputStream blobOutputStream = exportService.store(repository);
+            cos = repositoryImportExportEncryption.optionallyEncrypt(blobOutputStream, password);
+          } else {
+            cos = repositoryImportExportEncryption.optionallyEncrypt(os, password);
+          }
           if (compressed) {
             GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(cos);
             bundleCommand.bundle(gzipCompressorOutputStream);
@@ -406,7 +438,7 @@ public class RepositoryExportResource {
   @Getter
   @Setter
   @NoArgsConstructor
-  static class ExportDto {
+  private static class ExportDto {
     private String password;
     private boolean async;
   }

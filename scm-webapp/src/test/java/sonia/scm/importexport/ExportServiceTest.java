@@ -81,19 +81,17 @@ public class ExportServiceTest {
     assertThat(blobs).hasSize(1);
 
     //Verify content
-    byte[] bytes = new byte[1024];
+    byte[] bytes = new byte[18];
     exportService.get(REPOSITORY).read(bytes);
     assertThat(new String(bytes)).isEqualTo(newContent);
   }
 
   @Test
-  void shouldShowCorrectExportStatus() throws IOException {
+  void shouldShowCorrectExportStatus() {
     exportService.store(REPOSITORY);
-
     assertThat(exportService.isExporting(REPOSITORY)).isTrue();
 
     exportService.setExportFinished(REPOSITORY);
-
     assertThat(exportService.isExporting(REPOSITORY)).isFalse();
   }
 
