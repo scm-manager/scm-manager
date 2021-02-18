@@ -24,6 +24,7 @@
 
 package sonia.scm.importexport;
 
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.store.Blob;
@@ -36,7 +37,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.HashSet;
-import java.util.UUID;
+import java.util.List;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
@@ -52,15 +53,14 @@ public class ExportService {
     this.blobStoreFactory = blobStoreFactory;
   }
 
-  public OutputStream store(Repository repository) {
+  public OutputStream store(Repository repository, String fileExtension) {
     pendingExports.add(repository.getId());
     BlobStore store = createStore(repository);
     if (!store.getAll().isEmpty()) {
       store.clear();
     }
 
-    //TODO Is random id really better than repository id?
-    Blob blob = store.create(UUID.randomUUID().toString());
+    Blob blob = store.create(fileExtension);
     try {
       return blob.getOutputStream();
     } catch (IOException e) {
@@ -72,12 +72,13 @@ public class ExportService {
     }
   }
 
-  public InputStream get(Repository repository) {
+  public String getFileExtension(Repository repository) {
+    return getBlob(repository).getId();
+  }
+
+  public InputStream getData(Repository repository) {
     try {
-      return createStore(repository)
-        .getAll()
-        .get(0)
-        .getInputStream();
+      return getBlob(repository).getInputStream();
     } catch (IOException e) {
       throw new ExportFailedException(
         entity(repository).build(),
@@ -85,6 +86,10 @@ public class ExportService {
         e
       );
     }
+  }
+
+  public void checkExportExists(Repository repository) {
+    getBlob(repository);
   }
 
   public void clear(Repository repository) {
@@ -97,6 +102,14 @@ public class ExportService {
 
   public boolean isExporting(Repository repository) {
     return pendingExports.stream().anyMatch(e -> e.equals(repository.getId()));
+  }
+
+  private Blob getBlob(Repository repository) {
+    List<Blob> blobs = createStore(repository).getAll();
+    if (blobs.isEmpty()) {
+      throw new NotFoundException("repository-export", repository.getId());
+    }
+    return blobs.get(0);
   }
 
   private BlobStore createStore(Repository repository) {

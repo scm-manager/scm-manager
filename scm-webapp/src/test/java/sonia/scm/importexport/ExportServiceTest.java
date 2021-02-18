@@ -71,7 +71,7 @@ public class ExportServiceTest {
     blobStore.create();
 
     String newContent = "Scm-Manager-Export";
-    OutputStream os = exportService.store(REPOSITORY);
+    OutputStream os = exportService.store(REPOSITORY, "dump");
     os.write(newContent.getBytes());
     os.flush();
     os.close();
@@ -82,13 +82,13 @@ public class ExportServiceTest {
 
     //Verify content
     byte[] bytes = new byte[18];
-    exportService.get(REPOSITORY).read(bytes);
+    exportService.getData(REPOSITORY).read(bytes);
     assertThat(new String(bytes)).isEqualTo(newContent);
   }
 
   @Test
   void shouldShowCorrectExportStatus() {
-    exportService.store(REPOSITORY);
+    exportService.store(REPOSITORY, "tar.gz");
     assertThat(exportService.isExporting(REPOSITORY)).isTrue();
 
     exportService.setExportFinished(REPOSITORY);

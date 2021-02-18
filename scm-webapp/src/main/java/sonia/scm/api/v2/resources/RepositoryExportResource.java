@@ -50,13 +50,16 @@ import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.util.IOUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
+import javax.ws.rs.HEAD;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -142,6 +145,7 @@ public class RepositoryExportResource {
                                    @DefaultValue("false") @QueryParam("compressed") boolean compressed
   ) {
     Repository repository = getVerifiedRepository(namespace, name, type);
+    RepositoryPermissions.export(repository).check();
     return exportRepository(repository, NO_PASSWORD, compressed, false);
   }
 
@@ -183,6 +187,7 @@ public class RepositoryExportResource {
                                        @PathParam("name") String name
   ) {
     Repository repository = getVerifiedRepository(namespace, name);
+    RepositoryPermissions.export(repository).check();
     return exportFullRepository(repository, NO_PASSWORD, false);
   }
 
@@ -234,6 +239,7 @@ public class RepositoryExportResource {
                                                @Valid ExportDto request
   ) throws Exception {
     Repository repository = getVerifiedRepository(namespace, name, type);
+    RepositoryPermissions.export(repository).check();
     checkRepositoryIsAlreadyExporting(repository);
     return exportAsync(request, () -> {
       Response response = exportRepository(repository, request.getPassword(), compressed, request.isAsync());
@@ -244,7 +250,7 @@ public class RepositoryExportResource {
 
   private void checkRepositoryIsAlreadyExporting(Repository repository) {
     if (exportService.isExporting(repository)) {
-     throw new ConcurrentModificationException(Repository.class, repository.getId());
+      throw new ConcurrentModificationException(Repository.class, repository.getId());
     }
   }
 
@@ -289,12 +295,105 @@ public class RepositoryExportResource {
                                                    @Valid ExportDto request
   ) throws Exception {
     Repository repository = getVerifiedRepository(namespace, name);
+    RepositoryPermissions.export(repository).check();
     checkRepositoryIsAlreadyExporting(repository);
     return exportAsync(request, () -> {
       Response response = exportFullRepository(repository, request.getPassword(), request.isAsync());
       exportService.setExportFinished(repository);
       return response;
     });
+  }
+
+  @HEAD
+  @Path("status")
+  @Operation(summary = "Check repository export status", description = "Checks if the repository export is ready for download.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "204",
+    description = "Repository export is ready"
+  )
+  @ApiResponse(
+    responseCode = "404",
+    description = "Repository export not found"
+  )
+  @ApiResponse(
+    responseCode = "409",
+    description = "Repository export not ready yet"
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response checkExportStatus(@Context UriInfo uriInfo,
+                                    @PathParam("namespace") String namespace,
+                                    @PathParam("name") String name) {
+    Repository repository = getVerifiedRepository(namespace, name);
+    RepositoryPermissions.export(repository).check();
+    checkRepositoryIsAlreadyExporting(repository);
+    exportService.checkExportExists(repository);
+    return Response.noContent().build();
+  }
+
+
+  @DELETE
+  @Path("")
+  @Operation(summary = "Deletes repository export", description = "Deletes repository export if stored.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "204",
+    description = "Repository export was deleted"
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response deleteExport(@Context UriInfo uriInfo,
+                               @PathParam("namespace") String namespace,
+                               @PathParam("name") String name) {
+    Repository repository = getVerifiedRepository(namespace, name);
+    RepositoryPermissions.export(repository).check();
+    exportService.clear(repository);
+    return Response.noContent().build();
+  }
+
+  @GET
+  @Path("download")
+  @Operation(summary = "Download stored repository export", description = "Download the stored repository export.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "Repository export was downloaded"
+  )
+  @ApiResponse(
+    responseCode = "404",
+    description = "Repository export not found"
+  )
+  @ApiResponse(
+    responseCode = "409",
+    description = "Repository export is not ready yet"
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response downloadExport(@Context UriInfo uriInfo,
+                               @PathParam("namespace") String namespace,
+                               @PathParam("name") String name) {
+    Repository repository = getVerifiedRepository(namespace, name);
+    RepositoryPermissions.export(repository).check();
+    checkRepositoryIsAlreadyExporting(repository);
+    exportService.checkExportExists(repository);
+    StreamingOutput output = os -> IOUtil.copy(exportService.getData(repository), os);
+    return createResponse(repository, exportService.getFileExtension(repository), true, output);
   }
 
   private Response exportAsync(ExportDto exportDto, Callable<Response> call) throws Exception {
@@ -325,8 +424,9 @@ public class RepositoryExportResource {
   }
 
   private Response exportFullRepository(Repository repository, String password, boolean async) {
+    String fileExtension = resolveFullExportFileExtension(password);
     if (async) {
-      OutputStream blobOutputStream = exportService.store(repository);
+      OutputStream blobOutputStream = exportService.store(repository, fileExtension);
       fullScmRepositoryExporter.export(repository, blobOutputStream, password);
       exportService.setExportFinished(repository);
       //TODO Cleanup
@@ -337,7 +437,7 @@ public class RepositoryExportResource {
 
       return Response
         .ok(output, "application/x-gzip")
-        .header("content-disposition", createContentDispositionHeaderValue(repository, resolveFullExportFileExtension(password)))
+        .header("content-disposition", createContentDispositionHeaderValue(repository, fileExtension))
         .build();
     }
   }
@@ -359,7 +459,7 @@ public class RepositoryExportResource {
         try {
           OutputStream cos;
           if (async) {
-            OutputStream blobOutputStream = exportService.store(repository);
+            OutputStream blobOutputStream = exportService.store(repository, fileExtension);
             cos = repositoryImportExportEncryption.optionallyEncrypt(blobOutputStream, password);
           } else {
             cos = repositoryImportExportEncryption.optionallyEncrypt(os, password);
