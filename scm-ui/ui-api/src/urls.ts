@@ -23,7 +23,6 @@
  */
 
 import queryString from "query-string";
-import { RouteComponentProps } from "react-router-dom";
 
 //@ts-ignore
 export const contextPath = window.ctxPath || "";
@@ -93,7 +92,7 @@ export function matchedUrlFromMatch(match: any) {
   return stripEndingSlash(match.url);
 }
 
-export function matchedUrl(props: RouteComponentProps) {
+export function matchedUrl(props: any) {
   const match = props.match;
   return matchedUrlFromMatch(match);
 }
