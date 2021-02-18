@@ -25,7 +25,7 @@ import React, { FC } from "react";
 import { Route, useLocation } from "react-router-dom";
 import Sources from "../../sources/containers/Sources";
 import ChangesetsRoot from "../../containers/ChangesetsRoot";
-import { Repository } from "@scm-manager/ui-types";
+import { Branch, Repository } from "@scm-manager/ui-types";
 import { ErrorPage, Loading } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useBranches } from "@scm-manager/ui-api";
@@ -42,7 +42,18 @@ const useSelectedBranch = () => {
   return branchFromURL && branchFromURL !== "undefined" ? branchFromURL : "";
 };
 
+const supportBranches = (repository: Repository) => {
+  return !!repository._links.branches;
+};
+
 const CodeOverview: FC<Props> = ({ baseUrl, repository }) => {
+  if (supportBranches(repository)) {
+    return <CodeOverviewWithBranches baseUrl={baseUrl} repository={repository} />;
+  }
+  return <CodeRouting baseUrl={baseUrl} repository={repository} />;
+};
+
+const CodeOverviewWithBranches: FC<Props> = ({ repository, baseUrl }) => {
   const { isLoading, error, data } = useBranches(repository);
   const selectedBranch = useSelectedBranch();
   const [t] = useTranslation("repos");
@@ -58,22 +69,31 @@ const CodeOverview: FC<Props> = ({ baseUrl, repository }) => {
     );
   }
 
-  return (
-    <>
-      <Route path={`${baseUrl}/sources`} exact={true}>
-        <Sources repository={repository} baseUrl={baseUrl} branches={branches} />
-      </Route>
-      <Route path={`${baseUrl}/sources/:revision/:path*`}>
-        <Sources repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
-      </Route>
-      <Route path={`${baseUrl}/changesets`}>
-        <ChangesetsRoot repository={repository} baseUrl={baseUrl} branches={branches} />
-      </Route>
-      <Route path={`${baseUrl}/branch/:branch/changesets/`}>
-        <ChangesetsRoot repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
-      </Route>
-    </>
-  );
+  return <CodeRouting repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />;
 };
+
+type RoutingProps = {
+  repository: Repository;
+  baseUrl: string;
+  branches?: Branch[];
+  selectedBranch?: string;
+};
+
+const CodeRouting: FC<RoutingProps> = ({ repository, baseUrl, branches, selectedBranch }) => (
+  <>
+    <Route path={`${baseUrl}/sources`} exact={true}>
+      <Sources repository={repository} baseUrl={baseUrl} branches={branches} />
+    </Route>
+    <Route path={`${baseUrl}/sources/:revision/:path*`}>
+      <Sources repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
+    </Route>
+    <Route path={`${baseUrl}/changesets`}>
+      <ChangesetsRoot repository={repository} baseUrl={baseUrl} branches={branches} />
+    </Route>
+    <Route path={`${baseUrl}/branch/:branch/changesets/`}>
+      <ChangesetsRoot repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
+    </Route>
+  </>
+);
 
 export default CodeOverview;
