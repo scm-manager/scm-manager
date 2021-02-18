@@ -24,6 +24,10 @@
 
 package sonia.scm.importexport;
 
+import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,18 +35,25 @@ import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
 import sonia.scm.store.BlobStoreFactory;
 import sonia.scm.store.InMemoryBlobStore;
+import sonia.scm.user.User;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.time.Clock;
+import java.time.Instant;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static sonia.scm.importexport.ExportService.STORE_NAME;
 
@@ -56,13 +67,31 @@ public class ExportServiceTest {
 
   private BlobStore blobStore;
 
+  @Mock
+  private Clock clock;
+  @Mock
+  private Subject subject;
+
   @InjectMocks
   private ExportService exportService;
 
   @BeforeEach
-  void mockBlobStore() {
+  void initMocks() {
+    ThreadContext.bind(subject);
+    PrincipalCollection principalCollection = mock(PrincipalCollection.class);
+    lenient().when(subject.getPrincipals()).thenReturn(principalCollection);
+    lenient().when(principalCollection.oneByType(User.class)).thenReturn(
+      new User("trillian", "Trillian", "trillian@hitchhiker.org")
+    );
+
     blobStore = new InMemoryBlobStore();
     when(blobStoreFactory.withName(STORE_NAME).forRepository(REPOSITORY).build()).thenReturn(blobStore);
+    lenient().when(clock.instant()).thenReturn(Instant.ofEpochMilli(0));
+  }
+
+  @AfterEach
+  void tearDown() {
+    ThreadContext.unbindSubject();
   }
 
   @Test
@@ -102,5 +131,22 @@ public class ExportServiceTest {
     exportService.clear(REPOSITORY);
 
     assertThat(blobStore.getAll()).isEmpty();
+  }
+
+  @Test
+  void shouldGetExportInformation() {
+    exportService.store(REPOSITORY, "tar.gz");
+    ExportService.RepositoryExportInformation exportInformation = exportService.getExportInformation(REPOSITORY);
+
+    assertThat(exportInformation.getUsername()).isEqualTo("trillian");
+    assertThat(exportInformation.getMail()).isEqualTo("trillian@hitchhiker.org");
+    assertThat(exportInformation.getWhen()).isEqualTo(Instant.ofEpochSecond(0).toString());
+  }
+
+  @Test
+  void shouldThrowNotFoundException() {
+    assertThrows(NotFoundException.class, () -> exportService.getExportInformation(REPOSITORY));
+    assertThrows(NotFoundException.class, () -> exportService.getFileExtension(REPOSITORY));
+    assertThrows(NotFoundException.class, () -> exportService.getData(REPOSITORY));
   }
 }

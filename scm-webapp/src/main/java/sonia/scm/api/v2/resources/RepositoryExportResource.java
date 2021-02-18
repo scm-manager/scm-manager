@@ -248,12 +248,6 @@ public class RepositoryExportResource {
     });
   }
 
-  private void checkRepositoryIsAlreadyExporting(Repository repository) {
-    if (exportService.isExporting(repository)) {
-      throw new ConcurrentModificationException(Repository.class, repository.getId());
-    }
-  }
-
   /**
    * Exports an existing repository with all additional metadata and environment information. The method can
    * only be used, if the repository type supports the {@link Command#BUNDLE}.
@@ -393,7 +387,8 @@ public class RepositoryExportResource {
     checkRepositoryIsAlreadyExporting(repository);
     exportService.checkExportExists(repository);
     StreamingOutput output = os -> IOUtil.copy(exportService.getData(repository), os);
-    return createResponse(repository, exportService.getFileExtension(repository), true, output);
+    String fileExtension = exportService.getFileExtension(repository);
+    return createResponse(repository, fileExtension, fileExtension.contains(".gz"), output);
   }
 
   private Response exportAsync(ExportDto exportDto, Callable<Response> call) throws Exception {
@@ -403,6 +398,12 @@ public class RepositoryExportResource {
       return Response.status(202).header("SCM-Export-Download", "testlink").build();
     } else {
       return call.call();
+    }
+  }
+
+  private void checkRepositoryIsAlreadyExporting(Repository repository) {
+    if (exportService.isExporting(repository)) {
+      throw new ConcurrentModificationException(Repository.class, repository.getId());
     }
   }
 
