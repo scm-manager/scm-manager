@@ -27,7 +27,7 @@ import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
 import { Namespace, NamespaceCollection, NamespaceStrategies } from "@scm-manager/ui-types";
 import { useQuery } from "react-query";
 import { apiClient } from "./apiclient";
-import * as urls from "./urls";
+import { concat } from "./urls";
 
 export const useNamespaces = () => {
   return useIndexJsonResource<NamespaceCollection>("namespaces");
@@ -36,7 +36,7 @@ export const useNamespaces = () => {
 export const useNamespace = (name: string): ApiResult<Namespace> => {
   const namespacesLink = useRequiredIndexLink("namespaces");
   return useQuery<Namespace, Error>(["namespace", name], () =>
-    apiClient.get(urls.concat(namespacesLink, name)).then(response => response.json())
+    apiClient.get(concat(namespacesLink, name)).then(response => response.json())
   );
 };
 

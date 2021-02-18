@@ -27,9 +27,9 @@ import { Branch, Changeset, ChangesetCollection, NamespaceAndName, Repository } 
 import { useQuery, useQueryClient } from "react-query";
 import { requiredLink } from "./links";
 import { apiClient } from "./apiclient";
-import * as urls from "./urls";
 import { ApiResult } from "./base";
 import { branchQueryKey, repoQueryKey } from "./keys";
+import { concat } from "./urls";
 
 type UseChangesetsRequest = {
   branch?: Branch;
@@ -72,6 +72,6 @@ export const useChangesets = (
 export const useChangeset = (repository: Repository, id: string): ApiResult<Changeset> => {
   const changesetsLink = requiredLink(repository, "changesets");
   return useQuery<Changeset, Error>(changesetQueryKey(repository, id), () =>
-    apiClient.get(urls.concat(changesetsLink, id)).then(response => response.json())
+    apiClient.get(concat(changesetsLink, id)).then(response => response.json())
   );
 };

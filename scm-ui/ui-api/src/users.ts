@@ -26,8 +26,8 @@ import { ApiResult, useRequiredIndexLink } from "./base";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Link, User, UserCollection, UserCreation } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
-import * as urls from "./urls";
 import { createQueryString } from "./utils";
+import { concat } from "./urls";
 
 export type UseUsersRequest = {
   page?: number | string;
@@ -60,7 +60,7 @@ export const useUsers = (request?: UseUsersRequest): ApiResult<UserCollection> =
 export const useUser = (name: string): ApiResult<User> => {
   const indexLink = useRequiredIndexLink("users");
   return useQuery<User, Error>(["user", name], () =>
-    apiClient.get(urls.concat(indexLink, name)).then(response => response.json())
+    apiClient.get(concat(indexLink, name)).then(response => response.json())
   );
 };
 

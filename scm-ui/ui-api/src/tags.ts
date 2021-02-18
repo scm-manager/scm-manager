@@ -29,7 +29,7 @@ import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query"
 import { ApiResult } from "./base";
 import { repoQueryKey } from "./keys";
 import { apiClient } from "./apiclient";
-import * as urls from "./urls";
+import { concat } from "./urls";
 
 const tagQueryKey = (repository: NamespaceAndName, tag: string) => {
   return repoQueryKey(repository, "tag", tag);
@@ -49,7 +49,7 @@ export const useTags = (repository: Repository): ApiResult<TagCollection> => {
 export const useTag = (repository: Repository, name: string): ApiResult<Tag> => {
   const link = requiredLink(repository, "tags");
   return useQuery<Tag, Error>(tagQueryKey(repository, name), () =>
-    apiClient.get(urls.concat(link, name)).then(response => response.json())
+    apiClient.get(concat(link, name)).then(response => response.json())
   );
 };
 
