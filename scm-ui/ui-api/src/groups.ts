@@ -26,8 +26,8 @@ import { ApiResult, useRequiredIndexLink } from "./base";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Group, GroupCollection, GroupCreation, Link } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
-import * as urls from "./urls";
 import { createQueryString } from "./utils";
+import { concat } from "./urls";
 
 export type UseGroupsRequest = {
   page?: number | string;
@@ -60,7 +60,7 @@ export const useGroups = (request?: UseGroupsRequest): ApiResult<GroupCollection
 export const useGroup = (name: string): ApiResult<Group> => {
   const indexLink = useRequiredIndexLink("groups");
   return useQuery<Group, Error>(["group", name], () =>
-    apiClient.get(urls.concat(indexLink, name)).then(response => response.json())
+    apiClient.get(concat(indexLink, name)).then(response => response.json())
   );
 };
 

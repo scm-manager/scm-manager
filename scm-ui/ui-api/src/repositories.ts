@@ -32,11 +32,11 @@ import {
 } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient } from "./apiclient";
-import * as urls from "./urls";
 import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
 import { createQueryString } from "./utils";
 import { requiredLink } from "./links";
 import { repoQueryKey } from "./keys";
+import { concat } from "./urls";
 
 export type UseRepositoriesRequest = {
   namespace?: Namespace;
@@ -136,7 +136,7 @@ export const useRepositoryTypes = () => {
 export const useRepository = (namespace: string, name: string): ApiResult<Repository> => {
   const link = useRequiredIndexLink("repositories");
   return useQuery<Repository, Error>(["repository", namespace, name], () =>
-    apiClient.get(urls.concat(link, namespace, name)).then(response => response.json())
+    apiClient.get(concat(link, namespace, name)).then(response => response.json())
   );
 };
 
