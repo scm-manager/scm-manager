@@ -22,6 +22,12 @@
  * SOFTWARE.
  */
 
+import * as urls from "./urls";
+export { urls };
+
+export * from "./errors";
+export * from "./apiclient";
+
 export * from "./base";
 export * from "./login";
 export * from "./groups";
@@ -37,9 +43,5 @@ export * from "./plugins";
 export * from "./repository-roles";
 export * from "./permissions";
 export * from "./sources";
-
-export * as urls from "./urls";
-export * from "./errors";
-export * from "./apiclient";
 
 export { default as ApiProvider } from "./ApiProvider";
