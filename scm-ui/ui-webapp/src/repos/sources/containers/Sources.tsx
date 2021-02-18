@@ -33,7 +33,7 @@ import { useHistory, useLocation, useParams } from "react-router-dom";
 
 type Props = {
   repository: Repository;
-  branches: Branch[];
+  branches?: Branch[];
   selectedBranch?: string;
   baseUrl: string;
 };
@@ -57,7 +57,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   const location = useLocation();
   // redirect to default branch is non branch selected
   useEffect(() => {
-    if (branches?.length > 0 && !selectedBranch) {
+    if (branches && branches.length > 0 && !selectedBranch) {
       const defaultBranch = branches?.filter(b => b.defaultBranch === true)[0];
       history.replace(`${baseUrl}/sources/${encodeURIComponent(defaultBranch.name)}/`);
     }
@@ -65,14 +65,16 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   const { isLoading, error, data: file, ...rest } = useSources(repository, {
     revision,
     path,
-    enabled: !!selectedBranch
+    // we have to wait until a branch is selected,
+    // expect if we have no branches (svn)
+    enabled: !branches || !!selectedBranch
   });
 
   if (error) {
     return <ErrorNotification error={error} />;
   }
 
-  if (isLoading || !revision || !file) {
+  if (isLoading || !file) {
     return <Loading />;
   }
 
@@ -104,7 +106,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
     return (
       <Breadcrumb
         repository={repository}
-        revision={revision}
+        revision={revision || file.revision}
         path={path || ""}
         baseUrl={baseUrl + "/sources"}
         branch={branches?.filter(b => b.name === selectedBranch)[0]}
@@ -126,7 +128,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
         />
         <div className="panel">
           {renderBreadcrumb()}
-          <FileTree directory={file} revision={revision} baseUrl={baseUrl + "/sources"} {...rest} />
+          <FileTree directory={file} revision={revision || file.revision} baseUrl={baseUrl + "/sources"} {...rest} />
         </div>
       </>
     );
@@ -139,7 +141,13 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
           onSelectBranch={onSelectBranch}
           switchViewLink={evaluateSwitchViewLink()}
         />
-        <Content file={file} repository={repository} revision={revision} path={path} breadcrumb={renderBreadcrumb()} />
+        <Content
+          file={file}
+          repository={repository}
+          revision={revision || file.revision}
+          path={path}
+          breadcrumb={renderBreadcrumb()}
+        />
       </>
     );
   }

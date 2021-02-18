@@ -94,7 +94,7 @@ function createReduxStore() {
     return { ...appReducer(state, action), tokenExpired: state.tokenExpired };
   };
 
-  const store = createStore(reducer, EMPTY_STATE, composeEnhancers(applyMiddleware(thunk, logger)));
+  const store = createStore(reducer, EMPTY_STATE, composeEnhancers(applyMiddleware(thunk)));
   apiClient.onError(error => {
     if (error instanceof UnauthorizedError) {
       store.dispatch({ type: "API_CLIENT_UNAUTHORIZED", error });

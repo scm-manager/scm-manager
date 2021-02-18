@@ -35,8 +35,8 @@ import { withContextPath } from "./urls";
 
 type Props = {
   repository: Repository;
-  branch: Branch;
-  defaultBranch: Branch;
+  branch?: Branch;
+  defaultBranch?: Branch;
   revision: string;
   path: string;
   baseUrl: string;
