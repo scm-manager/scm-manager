@@ -109,27 +109,21 @@ public class InMemoryBlobStore implements BlobStore {
 
     @Override
     public OutputStream getOutputStream() throws IOException {
-      return new InMemoryBlobByteArrayOutputStream(bytes);
+      return new InMemoryBlobByteArrayOutputStream();
     }
 
     @Override
     public long getSize() {
       return bytes.length;
     }
-  }
 
-  private static class InMemoryBlobByteArrayOutputStream extends ByteArrayOutputStream {
+    private class InMemoryBlobByteArrayOutputStream extends ByteArrayOutputStream {
 
-    private byte[] bytes;
-
-    private InMemoryBlobByteArrayOutputStream(byte[] bytes) {
-      this.bytes = bytes;
-    }
-
-    @Override
-    public void close() throws IOException {
-      bytes = super.toByteArray();
-      super.close();
+      @Override
+      public void close() throws IOException {
+        bytes = super.toByteArray();
+        super.close();
+      }
     }
   }
 }

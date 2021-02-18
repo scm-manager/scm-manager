@@ -43,7 +43,7 @@ class InMemoryBlobStoreTest {
     os.flush();
     os.close();
 
-    byte[] result = new byte[1024];
+    byte[] result = new byte[11];
     blob.getInputStream().read(result);
     assertThat(new String(result)).isEqualTo(content);
   }
