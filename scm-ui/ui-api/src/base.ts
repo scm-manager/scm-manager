@@ -24,8 +24,9 @@
 
 import { IndexResources, Link } from "@scm-manager/ui-types";
 import { useQuery } from "react-query";
-import { apiClient } from "@scm-manager/ui-components";
+import { apiClient } from "./apiclient";
 import { useLegacyContext } from "./LegacyContext";
+import { MissingLinkError } from "./errors";
 
 export type ApiResult<T> = {
   isLoading: boolean;
@@ -67,7 +68,7 @@ export const useIndexLinks = () => {
 export const useRequiredIndexLink = (name: string): string => {
   const link = useIndexLink(name);
   if (!link) {
-    throw new Error(`Could not find link ${name} in index resource`);
+    throw new MissingLinkError(`Could not find link ${name} in index resource`);
   }
   return link;
 };

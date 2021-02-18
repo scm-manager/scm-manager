@@ -25,7 +25,8 @@
 import { ApiResult, useRequiredIndexLink } from "./base";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Group, GroupCollection, GroupCreation, Link } from "@scm-manager/ui-types";
-import { apiClient, urls } from "@scm-manager/ui-components";
+import { apiClient } from "./apiclient";
+import * as urls from "./urls";
 import { createQueryString } from "./utils";
 
 export type UseGroupsRequest = {

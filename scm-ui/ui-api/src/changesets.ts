@@ -26,7 +26,8 @@
 import { Branch, Changeset, ChangesetCollection, NamespaceAndName, Repository } from "@scm-manager/ui-types";
 import { useQuery, useQueryClient } from "react-query";
 import { requiredLink } from "./links";
-import { apiClient, urls } from "@scm-manager/ui-components";
+import { apiClient } from "./apiclient";
+import * as urls from "./urls";
 import { ApiResult } from "./base";
 import { branchQueryKey, repoQueryKey } from "./keys";
 

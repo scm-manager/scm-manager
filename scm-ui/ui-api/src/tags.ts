@@ -23,12 +23,13 @@
  *
  */
 
-import { Branch, Changeset, Link, NamespaceAndName, Repository, Tag, TagCollection } from "@scm-manager/ui-types";
+import { Changeset, Link, NamespaceAndName, Repository, Tag, TagCollection } from "@scm-manager/ui-types";
 import { requiredLink } from "./links";
 import { QueryClient, useMutation, useQuery, useQueryClient } from "react-query";
 import { ApiResult } from "./base";
-import { branchQueryKey, repoQueryKey } from "./keys";
-import { apiClient, urls } from "@scm-manager/ui-components";
+import { repoQueryKey } from "./keys";
+import { apiClient } from "./apiclient";
+import * as urls from "./urls";
 
 const tagQueryKey = (repository: NamespaceAndName, tag: string) => {
   return repoQueryKey(repository, "tag", tag);

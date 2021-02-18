@@ -28,7 +28,8 @@ import { requiredLink } from "./links";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { ApiResult } from "./base";
 import { branchQueryKey, repoQueryKey } from "./keys";
-import { apiClient, urls } from "@scm-manager/ui-components";
+import { apiClient } from "./apiclient";
+import * as urls from "./urls";
 
 export const useBranches = (repository: Repository): ApiResult<BranchCollection> => {
   const link = requiredLink(repository, "branches");

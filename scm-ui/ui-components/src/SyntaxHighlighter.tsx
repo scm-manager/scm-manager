@@ -28,7 +28,7 @@ import { defaultLanguage, determineLanguage } from "./languages";
 // eslint-disable-next-line no-restricted-imports
 import highlightingTheme from "./syntax-highlighting";
 import { useLocation } from "react-router-dom";
-import { withContextPath } from "./urls";
+import { urls } from "@scm-manager/ui-api";
 import createSyntaxHighlighterRenderer from "./SyntaxHighlighterRenderer";
 import useScrollToElement from "./useScrollToElement";
 
@@ -60,7 +60,7 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
     window.location.protocol +
     "//" +
     window.location.host +
-    withContextPath((permalink || location.pathname) + "#line-" + lineNumber);
+    urls.withContextPath((permalink || location.pathname) + "#line-" + lineNumber);
 
   const defaultRenderer = createSyntaxHighlighterRenderer(createLinePermaLink, showLineNumbers);
 

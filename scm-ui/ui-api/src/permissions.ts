@@ -33,7 +33,7 @@ import {
   Repository,
   RepositoryVerbs
 } from "@scm-manager/ui-types";
-import { apiClient } from "@scm-manager/ui-components";
+import { apiClient } from "./apiclient";
 import { requiredLink } from "./links";
 import { repoQueryKey } from "./keys";
 import { useRepositoryRoles } from "./repository-roles";
