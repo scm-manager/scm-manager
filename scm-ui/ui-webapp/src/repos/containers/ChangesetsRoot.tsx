@@ -32,7 +32,7 @@ import { urls } from "@scm-manager/ui-components";
 type Props = {
   repository: Repository;
   baseUrl: string;
-  branches: Branch[];
+  branches?: Branch[];
   selectedBranch?: string;
 };
 

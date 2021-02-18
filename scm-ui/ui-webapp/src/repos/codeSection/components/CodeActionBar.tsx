@@ -50,7 +50,7 @@ const FlexShrinkLevel = styled(Level)`
 
 type Props = {
   selectedBranch?: string;
-  branches: Branch[];
+  branches?: Branch[];
   onSelectBranch: () => void;
   switchViewLink: string;
 };
@@ -63,7 +63,7 @@ const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, sw
     <ActionBar>
       <FlexShrinkLevel
         left={
-          branches?.length > 0 && (
+          branches && branches?.length > 0 && (
             <BranchSelector
               label={t("code.branchSelector")}
               branches={branches}
