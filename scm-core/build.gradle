@@ -98,6 +98,9 @@ dependencies {
   annotationProcessor libraries.sspProcessor
   testImplementation libraries.shiroUnit
 
+  // compression
+  implementation libraries.commonsCompress
+
   // tests
   testImplementation libraries.junitJupiterApi
   testImplementation libraries.junitJupiterParams
