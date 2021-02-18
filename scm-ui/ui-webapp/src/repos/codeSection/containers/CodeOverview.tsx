@@ -58,20 +58,14 @@ const CodeOverview: FC<Props> = ({ baseUrl, repository }) => {
     );
   }
 
-
   return (
     <>
-      <Route
-        path={`${baseUrl}/sources`}
-        exact={true}
-        render={() => <Sources repository={repository} baseUrl={baseUrl} branches={branches} />}
-      />
-      <Route
-        path={`${baseUrl}/sources/:revision/:path*`}
-        render={() => (
-          <Sources repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
-        )}
-      />
+      <Route path={`${baseUrl}/sources`} exact={true}>
+        <Sources repository={repository} baseUrl={baseUrl} branches={branches} />
+      </Route>
+      <Route path={`${baseUrl}/sources/:revision/:path*`}>
+        <Sources repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
+      </Route>
       <Route path={`${baseUrl}/changesets`}>
         <ChangesetsRoot repository={repository} baseUrl={baseUrl} branches={branches} />
       </Route>
