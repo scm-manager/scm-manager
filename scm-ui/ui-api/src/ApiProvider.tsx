@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { FC, useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { LegacyContext, LegacyContextProvider } from "./LegacyContext";
+import { IndexResources, Me } from "@scm-manager/ui-types";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -35,14 +36,37 @@ const queryClient = new QueryClient({
   }
 });
 
-type Props = LegacyContext;
+type Props = LegacyContext & {
+  index?: IndexResources;
+  me?: Me;
+};
 
-const ApiProvider: FC<Props> = ({ children, ...legacyContextProps }) => (
-  <QueryClientProvider client={queryClient}>
-    <LegacyContextProvider {...legacyContextProps}>{children}</LegacyContextProvider>
-    <ReactQueryDevtools initialIsOpen={false} />
-  </QueryClientProvider>
-);
+const ApiProvider: FC<Props> = ({ children, index, me, onMeFetched, onIndexFetched }) => {
+  useEffect(() => {
+    if (index) {
+      queryClient.setQueryData("index", index);
+      if (onIndexFetched) {
+        onIndexFetched(index);
+      }
+    }
+  }, [index, onIndexFetched]);
+  useEffect(() => {
+    if (me) {
+      queryClient.setQueryData("me", me);
+      if (onMeFetched) {
+        onMeFetched(me);
+      }
+    }
+  }, [me, onMeFetched]);
+  return (
+    <QueryClientProvider client={queryClient}>
+      <LegacyContextProvider onIndexFetched={onIndexFetched} onMeFetched={onMeFetched}>
+        {children}
+      </LegacyContextProvider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+};
 
 export { Props as ApiProviderProps };
 export default ApiProvider;

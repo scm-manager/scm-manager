@@ -20,22 +20,27 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
-import React from "react";
-import {createStore} from "redux";
-import { Provider } from 'react-redux'
+import * as React from "react";
+import { ApiProvider } from "@scm-manager/ui-api";
 
-const reducer = (state, action) => {
-  return state;
-};
-
-const withRedux = (storyFn) => {
-  return React.createElement(Provider, {
-    store: createStore(reducer, {}),
+const withApiProvider = (storyFn) => {
+  return React.createElement(ApiProvider, {
+    index: {
+      version: "x.y.z",
+      _links: {}
+    },
+    me: {
+      name: "trillian",
+      displayName: "Trillian McMillan",
+      mail: "trillian@hitchhiker.com",
+      groups: [],
+      _links: {}
+    },
     children: storyFn()
   });
 }
 
-
-export default withRedux;
+export default withApiProvider;
