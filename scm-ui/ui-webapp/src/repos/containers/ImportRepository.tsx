@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useState } from "react";
 import { Link, RepositoryType } from "@scm-manager/ui-types";
 
 import { useTranslation } from "react-i18next";
@@ -31,24 +31,9 @@ import ImportTypeSelect from "../components/ImportTypeSelect";
 import ImportRepositoryFromUrl from "../components/ImportRepositoryFromUrl";
 import { Loading, Notification, Page } from "@scm-manager/ui-components";
 import RepositoryFormSwitcher from "../components/form/RepositoryFormSwitcher";
-import {
-  fetchRepositoryTypesIfNeeded,
-  getFetchRepositoryTypesFailure,
-  getRepositoryTypes,
-  isFetchRepositoryTypesPending,
-} from "../modules/repositoryTypes";
-import { connect } from "react-redux";
-import { fetchNamespaceStrategiesIfNeeded } from "../../admin/modules/namespaceStrategies";
 import ImportRepositoryFromBundle from "../components/ImportRepositoryFromBundle";
 import ImportFullRepository from "../components/ImportFullRepository";
-
-type Props = {
-  repositoryTypes: RepositoryType[];
-  pageLoading: boolean;
-  error?: Error;
-  fetchRepositoryTypesIfNeeded: () => void;
-  fetchNamespaceStrategiesIfNeeded: () => void;
-};
+import { useRepositoryTypes } from "@scm-manager/ui-api";
 
 const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => {
   const [t] = useTranslation("repos");
@@ -64,22 +49,12 @@ const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => 
   );
 };
 
-const ImportRepository: FC<Props> = ({
-  repositoryTypes,
-  pageLoading,
-  error,
-  fetchRepositoryTypesIfNeeded,
-  fetchNamespaceStrategiesIfNeeded,
-}) => {
+const ImportRepository: FC = () => {
+  const { data: repositoryTypes, error, isLoading } = useRepositoryTypes();
   const [importPending, setImportPending] = useState(false);
   const [repositoryType, setRepositoryType] = useState<RepositoryType | undefined>();
   const [importType, setImportType] = useState("");
   const [t] = useTranslation("repos");
-
-  useEffect(() => {
-    fetchRepositoryTypesIfNeeded();
-    fetchNamespaceStrategiesIfNeeded();
-  }, [repositoryTypes]);
 
   const changeRepositoryType = (repositoryType: RepositoryType) => {
     setRepositoryType(repositoryType);
@@ -110,7 +85,9 @@ const ImportRepository: FC<Props> = ({
     if (importType === "fullImport") {
       return (
         <ImportFullRepository
-          url={((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "fullImport") as Link).href}
+          url={
+            ((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "fullImport") as Link).href
+          }
           repositoryType={repositoryType!.name}
           setImportPending={setImportPending}
         />
@@ -125,13 +102,13 @@ const ImportRepository: FC<Props> = ({
       title={t("create.title")}
       subtitle={t("import.subtitle")}
       afterTitle={<RepositoryFormSwitcher creationMode={"IMPORT"} />}
-      loading={pageLoading}
-      error={error}
+      loading={isLoading}
+      error={error || undefined}
       showContentOnError={true}
     >
       <ImportPendingLoading importPending={importPending} />
       <ImportRepositoryTypeSelect
-        repositoryTypes={repositoryTypes}
+        repositoryTypes={repositoryTypes?._embedded.repositoryTypes || []}
         repositoryType={repositoryType}
         setRepositoryType={changeRepositoryType}
         disabled={importPending}
@@ -153,27 +130,4 @@ const ImportRepository: FC<Props> = ({
   );
 };
 
-const mapStateToProps = (state: any) => {
-  const repositoryTypes = getRepositoryTypes(state);
-  const pageLoading = isFetchRepositoryTypesPending(state);
-  const error = getFetchRepositoryTypesFailure(state);
-
-  return {
-    repositoryTypes,
-    pageLoading,
-    error,
-  };
-};
-
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchRepositoryTypesIfNeeded: () => {
-      dispatch(fetchRepositoryTypesIfNeeded());
-    },
-    fetchNamespaceStrategiesIfNeeded: () => {
-      dispatch(fetchNamespaceStrategiesIfNeeded());
-    },
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(ImportRepository);
+export default ImportRepository;
