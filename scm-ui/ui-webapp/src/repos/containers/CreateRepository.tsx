@@ -31,7 +31,7 @@ import { useCreateRepository, useIndex, useNamespaceStrategies, useRepositoryTyp
 
 const useCreateRepositoryData = () => {
   const { isLoading: isLoadingNS, error: errorNS, data: namespaceStrategies } = useNamespaceStrategies();
-  const { isLoading: isLoadingRT, error: errorRT, repositoryTypes } = useRepositoryTypes();
+  const { isLoading: isLoadingRT, error: errorRT, data: repositoryTypes } = useRepositoryTypes();
   const { isLoading: isLoadingIdx, error: errorIdx, data: index } = useIndex();
   return {
     isPageLoading: isLoadingNS || isLoadingRT || isLoadingIdx,
@@ -62,7 +62,7 @@ const CreateRepository: FC = () => {
     >
       {namespaceStrategies && repositoryTypes ? (
         <RepositoryForm
-          repositoryTypes={repositoryTypes}
+          repositoryTypes={repositoryTypes._embedded.repositoryTypes}
           loading={isLoading}
           namespaceStrategy={namespaceStrategies!.current}
           createRepository={create}

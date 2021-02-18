@@ -50,6 +50,8 @@ const OverviewPageActions: FC<Props> = ({
 }) => {
   const history = useHistory();
   const location = useLocation();
+  const [filterValue, setFilterValue] = useState(urls.getQueryStringFromLocation(location));
+  
   const groupSelector = groups && (
     <div className={"column is-flex"}>
       <DropDown
@@ -60,8 +62,6 @@ const OverviewPageActions: FC<Props> = ({
       />
     </div>
   );
-
-  const [filterValue, setFilterValue] = useState(urls.getQueryStringFromLocation(location));
 
   const renderCreateButton = () => {
     if (showCreateButton) {

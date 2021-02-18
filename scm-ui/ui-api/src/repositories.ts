@@ -124,14 +124,7 @@ export const useCreateRepository = () => {
 };
 
 // TODO increase staleTime, infinite?
-export const useRepositoryTypes = () => {
-  const { isLoading, error, data } = useIndexJsonResource<RepositoryTypeCollection>("repositoryTypes");
-  return {
-    isLoading,
-    error,
-    repositoryTypes: data?._embedded.repositoryTypes
-  };
-};
+export const useRepositoryTypes = () => useIndexJsonResource<RepositoryTypeCollection>("repositoryTypes");
 
 export const useRepository = (namespace: string, name: string): ApiResult<Repository> => {
   const link = useRequiredIndexLink("repositories");
