@@ -29,7 +29,7 @@ import { useMutation, useQuery, useQueryClient } from "react-query";
 import { ApiResult } from "./base";
 import { branchQueryKey, repoQueryKey } from "./keys";
 import { apiClient } from "./apiclient";
-import * as urls from "./urls";
+import { concat } from "./urls";
 
 export const useBranches = (repository: Repository): ApiResult<BranchCollection> => {
   const link = requiredLink(repository, "branches");
@@ -45,7 +45,7 @@ export const useBranches = (repository: Repository): ApiResult<BranchCollection>
 export const useBranch = (repository: Repository, name: string): ApiResult<Branch> => {
   const link = requiredLink(repository, "branches");
   return useQuery<Branch, Error>(branchQueryKey(repository, name), () =>
-    apiClient.get(urls.concat(link, name)).then(response => response.json())
+    apiClient.get(concat(link, name)).then(response => response.json())
   );
 };
 
