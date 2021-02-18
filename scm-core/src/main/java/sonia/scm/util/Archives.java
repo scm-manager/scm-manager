@@ -24,12 +24,21 @@
 
 package sonia.scm.util;
 
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
+import sonia.scm.ContextEntry;
+import sonia.scm.repository.api.ExportFailedException;
 
 import java.io.BufferedOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
+import java.util.function.Predicate;
+import java.util.stream.Stream;
 
 public final class Archives {
 
@@ -54,5 +63,103 @@ public final class Archives {
    */
   public static TarArchiveInputStream readTarStream(InputStream source) {
     return new TarArchiveInputStream(source);
+  }
+
+  public static TarWriter addPathToTar(Path path, TarArchiveOutputStream taos) {
+    return new TarWriter(path, taos);
+  }
+
+  public static TarExtractor extractTar(InputStream inputStream, Path targetPath) {
+    return new TarExtractor(inputStream, targetPath);
+  }
+
+  public static class TarWriter {
+    private final Path path;
+    private final TarArchiveOutputStream tarArchiveOutputStream;
+
+    private String basePath = "";
+    private Predicate<Path> filter = path -> true;
+
+    TarWriter(Path path, TarArchiveOutputStream tarArchiveOutputStream) {
+      this.path = path;
+      this.tarArchiveOutputStream = tarArchiveOutputStream;
+    }
+
+    public TarWriter withBasePath(String basePath) {
+      this.basePath = basePath;
+      return this;
+    }
+
+    public TarWriter withFilter(Predicate<Path> filter) {
+      this.filter = filter;
+      return this;
+    }
+
+    public void run() throws IOException {
+      createTarEntryForFiles(basePath, path, tarArchiveOutputStream);
+    }
+
+    private void createTarEntryForFiles(String path, Path fileOrDir, TarArchiveOutputStream taos) throws IOException {
+      try (Stream<Path> files = Files.list(fileOrDir)) {
+        if (files != null) {
+          files
+            .filter(filter)
+            .forEach(f -> bundleFileOrDir(path, f, taos));
+        }
+      }
+    }
+
+    private void bundleFileOrDir(String path, Path fileOrDir, TarArchiveOutputStream taos) {
+      try {
+        String filePath = path + "/" + fileOrDir.getFileName().toString();
+        if (Files.isDirectory(fileOrDir)) {
+          createTarEntryForFiles(filePath, fileOrDir, taos);
+        } else {
+          createArchiveEntryForFile(filePath, fileOrDir, taos);
+        }
+      } catch (IOException e) {
+        throw new ExportFailedException(
+          ContextEntry.ContextBuilder.noContext(),
+          "Could not export repository. Error on bundling files.",
+          e
+        );
+      }
+    }
+
+    private void createArchiveEntryForFile(String filePath, Path path, TarArchiveOutputStream taos) throws IOException {
+      TarArchiveEntry entry = new TarArchiveEntry(filePath);
+      entry.setSize(path.toFile().length());
+      taos.putArchiveEntry(entry);
+      Files.copy(path, taos);
+      taos.closeArchiveEntry();
+    }
+  }
+
+  public static class TarExtractor {
+    private final InputStream inputStream;
+    private final Path targetPath;
+
+    public TarExtractor(InputStream inputStream, Path targetPath) {
+      this.inputStream = inputStream;
+      this.targetPath = targetPath;
+    }
+
+    public void run() throws IOException {
+      try (TarArchiveInputStream tais = readTarStream(inputStream)) {
+        TarArchiveEntry entry;
+        while ((entry = tais.getNextTarEntry()) != null) {
+          Path filePath = targetPath.resolve(entry.getName());
+          createDirectoriesIfNestedFile(filePath);
+          Files.copy(tais, filePath, StandardCopyOption.REPLACE_EXISTING);
+        }
+      }
+    }
+
+    private void createDirectoriesIfNestedFile(Path filePath) throws IOException {
+      Path directory = filePath.getParent();
+      if (!Files.exists(directory)) {
+        Files.createDirectories(directory);
+      }
+    }
   }
 }

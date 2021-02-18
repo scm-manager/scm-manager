@@ -24,8 +24,6 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.io.ByteSource;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.api.UnbundleResponse;
@@ -33,10 +31,9 @@ import sonia.scm.repository.api.UnbundleResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static sonia.scm.util.Archives.readTarStream;
+import static sonia.scm.util.Archives.extractTar;
 
 public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCommand {
 
@@ -61,20 +58,6 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
   }
 
   private void unbundleRepositoryFromRequest(UnbundleCommandRequest request, Path repositoryDir) throws IOException {
-    try (TarArchiveInputStream tais = readTarStream(request.getArchive().openBufferedStream())) {
-      TarArchiveEntry entry;
-      while ((entry = tais.getNextTarEntry()) != null) {
-        Path filePath = repositoryDir.resolve(entry.getName());
-        createDirectoriesIfNestedFile(filePath);
-        Files.copy(tais, filePath, StandardCopyOption.REPLACE_EXISTING);
-      }
-    }
-  }
-
-  private void createDirectoriesIfNestedFile(Path filePath) throws IOException {
-    Path directory = filePath.getParent();
-    if (!Files.exists(directory)) {
-        Files.createDirectories(directory);
-    }
+    extractTar(request.getArchive().openBufferedStream(), repositoryDir).run();
   }
 }

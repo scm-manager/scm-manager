@@ -24,7 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.api.BundleResponse;
@@ -35,7 +34,8 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Stream;
+
+import static sonia.scm.util.Archives.addPathToTar;
 
 public class HgBundleCommand implements BundleCommand {
 
@@ -54,7 +54,7 @@ public class HgBundleCommand implements BundleCommand {
       try (OutputStream os = request.getArchive().openStream();
            TarArchiveOutputStream taos = Archives.writeTarStream(os)) {
 
-        createTarEntryForFiles("", repoDir, taos);
+        addPathToTar(repoDir, taos).run();
         taos.finish();
       }
     } else {
@@ -69,38 +69,5 @@ public class HgBundleCommand implements BundleCommand {
   @Override
   public String getFileExtension() {
     return TAR_ARCHIVE;
-  }
-
-  private void createTarEntryForFiles(String path, Path fileOrDir, TarArchiveOutputStream taos) throws IOException {
-    try (Stream<Path> files = Files.list(fileOrDir)) {
-      if (files != null) {
-        files.forEach(f -> bundleFileOrDir(path, f, taos));
-      }
-    }
-  }
-
-  private void bundleFileOrDir(String path, Path fileOrDir, TarArchiveOutputStream taos) {
-    try {
-      String filePath = path + "/" + fileOrDir.getFileName().toString();
-      if (Files.isDirectory(fileOrDir)) {
-        createTarEntryForFiles(filePath, fileOrDir, taos);
-      } else {
-        createArchiveEntryForFile(filePath, fileOrDir, taos);
-      }
-    } catch (IOException e) {
-      throw new ExportFailedException(
-        ContextEntry.ContextBuilder.noContext(),
-        "Could not export repository. Error on bundling files.",
-        e
-      );
-    }
-  }
-
-  private void createArchiveEntryForFile(String filePath, Path path, TarArchiveOutputStream taos) throws IOException {
-    TarArchiveEntry entry = new TarArchiveEntry(filePath);
-    entry.setSize(path.toFile().length());
-    taos.putArchiveEntry(entry);
-    Files.copy(path, taos);
-    taos.closeArchiveEntry();
   }
 }
