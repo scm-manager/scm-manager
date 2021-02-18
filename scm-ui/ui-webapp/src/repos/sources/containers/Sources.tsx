@@ -62,7 +62,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
       history.replace(`${baseUrl}/sources/${encodeURIComponent(defaultBranch.name)}/`);
     }
   }, [branches, selectedBranch]);
-  const { isLoading, error, data: file, ...rest } = useSources(repository, {
+  const { isLoading, error, data: file, isFetchingNextPage, fetchNextPage } = useSources(repository, {
     revision,
     path,
     // we have to wait until a branch is selected,
@@ -128,7 +128,13 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
         />
         <div className="panel">
           {renderBreadcrumb()}
-          <FileTree directory={file} revision={revision || file.revision} baseUrl={baseUrl + "/sources"} {...rest} />
+          <FileTree
+            directory={file}
+            revision={revision || file.revision}
+            baseUrl={baseUrl + "/sources"}
+            isFetchingNextPage={isFetchingNextPage}
+            fetchNextPage={fetchNextPage}
+          />
         </div>
       </>
     );
