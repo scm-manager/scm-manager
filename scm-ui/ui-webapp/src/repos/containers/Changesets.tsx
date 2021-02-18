@@ -37,7 +37,7 @@ import { useChangesets } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
-  branch: Branch;
+  branch?: Branch;
 };
 
 const usePage = () => {
