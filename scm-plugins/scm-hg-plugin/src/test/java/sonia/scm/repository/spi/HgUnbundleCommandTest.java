@@ -31,6 +31,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import sonia.scm.util.Archives;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -82,9 +83,10 @@ class HgUnbundleCommandTest {
 
   private UnbundleCommandRequest createUnbundleCommandRequestForFile(Path temp, String filePath, String fileContent) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    TarArchiveOutputStream taos = new TarArchiveOutputStream(baos);
+    TarArchiveOutputStream taos = Archives.writeTarStream(baos);
     addEntry(taos, filePath, fileContent);
     taos.finish();
+    taos.close();
 
     when(hgContext.getDirectory()).thenReturn(temp.toFile());
     ByteSource byteSource = ByteSource.wrap(baos.toByteArray());

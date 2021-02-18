@@ -33,10 +33,10 @@ import sonia.scm.repository.api.UnbundleResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static sonia.scm.util.Archives.readTarStream;
 
 public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCommand {
 
@@ -61,7 +61,7 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
   }
 
   private void unbundleRepositoryFromRequest(UnbundleCommandRequest request, Path repositoryDir) throws IOException {
-    try (TarArchiveInputStream tais = new TarArchiveInputStream(request.getArchive().openBufferedStream())) {
+    try (TarArchiveInputStream tais = readTarStream(request.getArchive().openBufferedStream())) {
       TarArchiveEntry entry;
       while ((entry = tais.getNextTarEntry()) != null) {
         Path filePath = repositoryDir.resolve(entry.getName());

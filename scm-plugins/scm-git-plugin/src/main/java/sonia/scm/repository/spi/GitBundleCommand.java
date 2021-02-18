@@ -28,8 +28,8 @@ import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.api.BundleResponse;
 import sonia.scm.repository.api.ExportFailedException;
+import sonia.scm.util.Archives;
 
-import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
@@ -49,8 +49,7 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
     Path repoDir = context.getDirectory().toPath();
     if (Files.exists(repoDir)) {
       try (OutputStream os = request.getArchive().openStream();
-           BufferedOutputStream bos = new BufferedOutputStream(os);
-           TarArchiveOutputStream taos = new TarArchiveOutputStream(bos)) {
+           TarArchiveOutputStream taos = Archives.writeTarStream(os)) {
 
         createTarEntryForFiles("", repoDir, taos);
         taos.finish();
