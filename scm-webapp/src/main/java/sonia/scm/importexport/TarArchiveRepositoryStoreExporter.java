@@ -58,7 +58,7 @@ public class TarArchiveRepositoryStoreExporter {
 
   public void export(Repository repository, OutputStream output) {
     try (
-      final TarArchiveOutputStream taos = Archives.writeTarStream(output)
+      final TarArchiveOutputStream taos = Archives.createTarOutputStream(output)
     ) {
       List<ExportableStore> exportableStores = storeExporter.listExportableStores(repository);
       for (ExportableStore store : exportableStores) {

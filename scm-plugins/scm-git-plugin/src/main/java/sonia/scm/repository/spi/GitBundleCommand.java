@@ -23,11 +23,9 @@
  */
 package sonia.scm.repository.spi;
 
-import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import sonia.scm.ContextEntry;
 import sonia.scm.repository.api.BundleResponse;
 import sonia.scm.repository.api.ExportFailedException;
-import sonia.scm.util.Archives;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -48,11 +46,8 @@ public class GitBundleCommand extends AbstractGitCommand implements BundleComman
   public BundleResponse bundle(BundleCommandRequest request) throws IOException {
     Path repoDir = context.getDirectory().toPath();
     if (Files.exists(repoDir)) {
-      try (OutputStream os = request.getArchive().openStream();
-           TarArchiveOutputStream taos = Archives.writeTarStream(os)) {
-
-        addPathToTar(repoDir, taos).withFilter(this::shouldIncludeFile).run();
-        taos.finish();
+      try (OutputStream os = request.getArchive().openStream()) {
+        addPathToTar(repoDir, os).withFilter(this::shouldIncludeFile).run();
       }
     } else {
       throw new ExportFailedException(

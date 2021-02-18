@@ -49,7 +49,7 @@ public final class Archives {
    * Creates a tar output stream that is backed by the given output stream.
    * @param dest The stream the tar should be written to.
    */
-  public static TarArchiveOutputStream writeTarStream(OutputStream dest) {
+  public static TarArchiveOutputStream createTarOutputStream(OutputStream dest) {
     BufferedOutputStream bos = new BufferedOutputStream(dest);
     TarArchiveOutputStream tarArchiveOutputStream = new TarArchiveOutputStream(bos);
     tarArchiveOutputStream.setLongFileMode(TarArchiveOutputStream.LONGFILE_POSIX);
@@ -61,12 +61,12 @@ public final class Archives {
    * Creates a tar input stream that takes its bytes from the given input stream.
    * @param source The stream the tar should be extracted from.
    */
-  public static TarArchiveInputStream readTarStream(InputStream source) {
+  public static TarArchiveInputStream createTarInputStream(InputStream source) {
     return new TarArchiveInputStream(source);
   }
 
-  public static TarWriter addPathToTar(Path path, TarArchiveOutputStream taos) {
-    return new TarWriter(path, taos);
+  public static TarWriter addPathToTar(Path path, OutputStream outputStream) {
+    return new TarWriter(path, outputStream);
   }
 
   public static TarExtractor extractTar(InputStream inputStream, Path targetPath) {
@@ -75,14 +75,14 @@ public final class Archives {
 
   public static class TarWriter {
     private final Path path;
-    private final TarArchiveOutputStream tarArchiveOutputStream;
+    private final OutputStream outputStream;
 
     private String basePath = "";
     private Predicate<Path> filter = path -> true;
 
-    TarWriter(Path path, TarArchiveOutputStream tarArchiveOutputStream) {
+    TarWriter(Path path, OutputStream outputStream) {
       this.path = path;
-      this.tarArchiveOutputStream = tarArchiveOutputStream;
+      this.outputStream = outputStream;
     }
 
     public TarWriter withBasePath(String basePath) {
@@ -96,7 +96,10 @@ public final class Archives {
     }
 
     public void run() throws IOException {
-      createTarEntryForFiles(basePath, path, tarArchiveOutputStream);
+      try (TarArchiveOutputStream tarArchiveOutputStream = Archives.createTarOutputStream(outputStream)) {
+        createTarEntryForFiles(basePath, path, tarArchiveOutputStream);
+        tarArchiveOutputStream.finish();
+      }
     }
 
     private void createTarEntryForFiles(String path, Path fileOrDir, TarArchiveOutputStream taos) throws IOException {
@@ -145,7 +148,7 @@ public final class Archives {
     }
 
     public void run() throws IOException {
-      try (TarArchiveInputStream tais = readTarStream(inputStream)) {
+      try (TarArchiveInputStream tais = createTarInputStream(inputStream)) {
         TarArchiveEntry entry;
         while ((entry = tais.getNextTarEntry()) != null) {
           Path filePath = targetPath.resolve(entry.getName());

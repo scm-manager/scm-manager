@@ -85,7 +85,7 @@ public class FullScmRepositoryExporter {
       RepositoryService service = serviceFactory.create(repository);
       BufferedOutputStream bos = new BufferedOutputStream(outputStream);
       GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(bos);
-      TarArchiveOutputStream taos = Archives.writeTarStream(gzos)
+      TarArchiveOutputStream taos = Archives.createTarOutputStream(gzos)
     ) {
       writeEnvironmentData(taos);
       writeMetadata(repository, taos);

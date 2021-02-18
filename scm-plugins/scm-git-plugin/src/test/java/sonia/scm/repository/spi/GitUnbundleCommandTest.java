@@ -82,7 +82,7 @@ class GitUnbundleCommandTest extends AbstractGitCommandTestBase {
 
   private UnbundleCommandRequest createUnbundleCommandRequestForFile(Path temp, String filePath, String fileContent) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    TarArchiveOutputStream taos = Archives.writeTarStream(baos);
+    TarArchiveOutputStream taos = Archives.createTarOutputStream(baos);
     addEntry(taos, filePath, fileContent);
     taos.finish();
     taos.close();

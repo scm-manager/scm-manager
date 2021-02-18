@@ -43,7 +43,7 @@ import java.nio.file.StandardCopyOption;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static sonia.scm.util.Archives.readTarStream;
+import static sonia.scm.util.Archives.createTarInputStream;
 
 class HgBundleCommandTest {
 
@@ -96,7 +96,7 @@ class HgBundleCommandTest {
   }
 
   private void assertStreamContainsContent(ByteArrayOutputStream baos, String content) throws IOException {
-    TarArchiveInputStream tais = readTarStream(new BufferedInputStream(new ByteArrayInputStream(baos.toByteArray())));
+    TarArchiveInputStream tais = createTarInputStream(new BufferedInputStream(new ByteArrayInputStream(baos.toByteArray())));
     tais.getNextEntry();
 
     byte[] result = IOUtils.toByteArray(tais);
