@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import org.junit.Test;
 import sonia.scm.repository.Changeset;
+import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.Person;
 
 import java.util.List;
@@ -36,7 +37,7 @@ public class HgLazyChangesetResolverTest extends AbstractHgCommandTestBase {
 
   @Test
   public void shouldResolveChangesets() {
-    HgLazyChangesetResolver changesetResolver = new HgLazyChangesetResolver(cmdContext.open());
+    HgLazyChangesetResolver changesetResolver = new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), repository);
     List<Changeset> changesets = changesetResolver.call();
 
     Changeset firstChangeset = changesets.get(0);

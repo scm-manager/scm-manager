@@ -58,15 +58,17 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
   private static final String AUTH_SECTION = "auth";
   private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
+  private final HgLazyChangesetResolver changesetResolver;
 
   public HgPullCommand(HgRepositoryHandler handler,
                        HgCommandContext context,
                        HookContextFactory hookContextFactory,
-                       ScmEventBus eventBus
-  ) {
+                       ScmEventBus eventBus,
+                       HgLazyChangesetResolver changesetResolver) {
     super(handler, context);
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
+    this.changesetResolver = changesetResolver;
   }
 
   @Override
@@ -99,7 +101,6 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
   private void firePostReceiveRepositoryHookEvent(List<Changeset> result) {
     List<String> branches = getBranchesFromPullResult(result);
     List<Tag> tags = getTagsFromPullResult(result);
-    HgLazyChangesetResolver changesetResolver = new HgLazyChangesetResolver(context.open());
     eventBus.post(createEvent(branches, tags, changesetResolver));
   }
 

@@ -33,6 +33,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import sonia.scm.repository.HgTestUtil;
 import sonia.scm.util.Archives;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Changeset;
@@ -73,7 +74,7 @@ public class HgUnbundleCommandTest extends AbstractHgCommandTestBase {
     when(hookContextFactory.createContext(any(), eq(cmdContext.getScmRepository()))).thenReturn(hookContext);
     hookChangesetBuilder = mock(HookChangesetBuilder.class);
     when(hookContext.getChangesetProvider()).thenReturn(hookChangesetBuilder);
-    unbundleCommand = new HgUnbundleCommand(cmdContext, hookContextFactory, eventBus);
+    unbundleCommand = new HgUnbundleCommand(cmdContext, hookContextFactory, eventBus, new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), null));
   }
 
   @Test

@@ -53,11 +53,13 @@ public class HgUnbundleCommand implements UnbundleCommand {
   private final HgCommandContext context;
   private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
+  private final HgLazyChangesetResolver changesetResolver;
 
-  HgUnbundleCommand(HgCommandContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
+  HgUnbundleCommand(HgCommandContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus, HgLazyChangesetResolver changesetResolver) {
     this.context = context;
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
+    this.changesetResolver = changesetResolver;
   }
 
   @Override
@@ -79,7 +81,6 @@ public class HgUnbundleCommand implements UnbundleCommand {
     Repository repository = context.open();
     List<String> branches = extractBranches(repository);
     List<Tag> tags = extractTags(repository);
-    HgLazyChangesetResolver changesetResolver = new HgLazyChangesetResolver(repository);
     eventBus.post(createEvent(branches, tags, changesetResolver));
   }
 
