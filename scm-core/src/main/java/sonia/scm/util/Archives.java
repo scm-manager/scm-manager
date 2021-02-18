@@ -63,14 +63,45 @@ public final class Archives {
     return new TarArchiveInputStream(source);
   }
 
+  /**
+   * Prepare bundling a complete {@link Path} in a tar. Aside from the path whose files shall be added to the tar,
+   * it is possible to specify a base path for the tar archive ({@link TarWriter#withBasePath(String)}) and to
+   * specify a filter to select what files shall be added ({@link TarWriter#withFilter(Predicate)}). To start
+   * the process, {@link TarWriter#run()} has to be called.
+   * <br>
+   * Example:
+   * <pre>
+   *   Archives.addPathToTar(Paths.get("some/dir"), Files.newOutputStream("my.tar"))
+   *     .filter(path -> !path.toString().endsWith("~"))
+   *     .run();
+   * </pre>
+   * @param path The path containing the files to be added to the tar.
+   * @param outputStream The output stream the tar shall be written to.
+   * @return Instance of {@link TarWriter}.
+   */
   public static TarWriter addPathToTar(Path path, OutputStream outputStream) {
     return new TarWriter(path, outputStream);
   }
 
+  /**
+   * Extracts files from a input stream with a tar.
+   * <br>
+   * Example:
+   * <pre>
+   *   Archives.extractTar(Files.newOutputStream("my.tar"), Paths.get("target/dir"))
+   *     .run();
+   * </pre>
+   * @param inputStream The input stream providing the tar stream.
+   * @param targetPath The target path to write the files to.
+   * @return Instance of {@link TarExtractor}.
+   */
   public static TarExtractor extractTar(InputStream inputStream, Path targetPath) {
     return new TarExtractor(inputStream, targetPath);
   }
 
+  /**
+   * Class used in {@link #addPathToTar(Path, OutputStream)}.
+   */
   public static class TarWriter {
     private final Path path;
     private final OutputStream outputStream;
@@ -83,16 +114,25 @@ public final class Archives {
       this.outputStream = outputStream;
     }
 
+    /**
+     * Sets a base path that will be prepended to every tar entry in the archive.
+     */
     public TarWriter withBasePath(String basePath) {
       this.basePath = basePath;
       return this;
     }
 
+    /**
+     * Sets a filter to select which files shall be added to the archive.
+     */
     public TarWriter withFilter(Predicate<Path> filter) {
       this.filter = filter;
       return this;
     }
 
+    /**
+     * Starts the process.
+     */
     public void run() throws IOException {
       try (TarArchiveOutputStream tarArchiveOutputStream = Archives.createTarOutputStream(outputStream)) {
         createTarEntryForFiles(basePath, path, tarArchiveOutputStream);
@@ -110,6 +150,7 @@ public final class Archives {
       }
     }
 
+    @SuppressWarnings("java:S1075") // We use / here because we build tar entries, not files
     private void bundleFileOrDir(String path, Path fileOrDir, TarArchiveOutputStream taos) {
       try {
         String filePath = path + "/" + fileOrDir.getFileName().toString();
@@ -135,15 +176,21 @@ public final class Archives {
     }
   }
 
+  /**
+   * Classed used in {@link #extractTar(InputStream, Path)}.
+   */
   public static class TarExtractor {
     private final InputStream inputStream;
     private final Path targetPath;
 
-    public TarExtractor(InputStream inputStream, Path targetPath) {
+    TarExtractor(InputStream inputStream, Path targetPath) {
       this.inputStream = inputStream;
       this.targetPath = targetPath;
     }
 
+    /**
+     * Starts the process.
+     */
     public void run() throws IOException {
       try (TarArchiveInputStream tais = createTarInputStream(inputStream)) {
         TarArchiveEntry entry;
