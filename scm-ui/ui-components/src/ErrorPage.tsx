@@ -23,7 +23,7 @@
  */
 import React from "react";
 import ErrorNotification from "./ErrorNotification";
-import { BackendError, ForbiddenError } from "./errors";
+import { BackendError, ForbiddenError } from "@scm-manager/ui-api";
 
 type Props = {
   error: Error;

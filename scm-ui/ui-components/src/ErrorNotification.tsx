@@ -23,11 +23,10 @@
  */
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { BackendError, ForbiddenError, UnauthorizedError } from "./errors";
+import { BackendError, ForbiddenError, UnauthorizedError, urls } from "@scm-manager/ui-api";
 import Notification from "./Notification";
 import BackendErrorNotification from "./BackendErrorNotification";
 import { useLocation } from "react-router-dom";
-import { withContextPath } from "./urls";
 
 type Props = {
   error?: Error | null;
@@ -38,7 +37,7 @@ const LoginLink: FC = () => {
   const location = useLocation();
   const from = encodeURIComponent(location.hash ? location.pathname + location.hash : location.pathname);
 
-  return <a href={withContextPath(`/login?from=${from}`)}>{t("errorNotification.loginLink")}</a>;
+  return <a href={urls.withContextPath(`/login?from=${from}`)}>{t("errorNotification.loginLink")}</a>;
 };
 
 const ErrorNotification: FC<Props> = ({ error }) => {

@@ -4570,11 +4570,12 @@
     xml2js "^0.4.23"
     yargs "^16.1.0"
 
-"@scm-manager/jest-preset@^2.12.3", "@scm-manager/jest-preset@^2.12.4":
-  version "2.12.4"
-  resolved "https://registry.yarnpkg.com/@scm-manager/jest-preset/-/jest-preset-2.12.4.tgz#f72c6afd83b84b2cd70ecc71f059ae7922d2d14c"
-  integrity sha512-Cjyxy96n7GGu1dL89HT5RRFVfJTGDUXwGNpe/iM6ZBqPETC8YElTC4qoDy80anf+BhUZgN7hIKf0u9g2nHPFhQ==
+"@scm-manager/jest-preset@^2.12.5":
+  version "2.12.5"
+  resolved "https://registry.yarnpkg.com/@scm-manager/jest-preset/-/jest-preset-2.12.5.tgz#8000fa20a5d620263d9ac77118197d08cb360c53"
+  integrity sha512-lpjgiI3qs6c92YqWXfEa6ANKS75T3/XOIMUuS1CWXcAwNnb1xA3MK5AVMCEf1gNdMV9HPyFUksk1FVLnRpXMow==
   dependencies:
+    "@scm-manager/babel-preset" "^2.11.2"
     babel-jest "^26.6.3"
     babel-plugin-require-context-hook "^1.0.0"
     is-ci "^2.0.0"

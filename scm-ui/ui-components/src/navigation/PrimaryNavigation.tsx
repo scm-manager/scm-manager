@@ -26,7 +26,7 @@ import { WithTranslation, withTranslation } from "react-i18next";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
 import { Links } from "@scm-manager/ui-types";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
-import {withContextPath} from "../urls";
+import { urls } from "@scm-manager/ui-api";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
 type Props = RouteComponentProps & WithTranslation & {
@@ -75,7 +75,7 @@ class PrimaryNavigation extends React.Component<Props> {
     const props = {
       links,
       label: t("primary-navigation.login"),
-      loginUrl: withContextPath(loginPath),
+      loginUrl: urls.withContextPath(loginPath),
       from
     };
 

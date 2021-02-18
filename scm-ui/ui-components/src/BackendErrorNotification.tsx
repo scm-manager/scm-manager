@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React from "react";
-import { BackendError } from "./errors";
+import { BackendError } from "@scm-manager/ui-api";
 import Notification from "./Notification";
 
 import { WithTranslation, withTranslation } from "react-i18next";
