@@ -4570,17 +4570,18 @@
     xml2js "^0.4.23"
     yargs "^16.1.0"
 
-"@scm-manager/jest-preset@^2.12.5":
-  version "2.12.5"
-  resolved "https://registry.yarnpkg.com/@scm-manager/jest-preset/-/jest-preset-2.12.5.tgz#8000fa20a5d620263d9ac77118197d08cb360c53"
-  integrity sha512-lpjgiI3qs6c92YqWXfEa6ANKS75T3/XOIMUuS1CWXcAwNnb1xA3MK5AVMCEf1gNdMV9HPyFUksk1FVLnRpXMow==
+"@scm-manager/jest-preset@^2.12.7":
+  version "2.12.7"
+  resolved "https://registry.yarnpkg.com/@scm-manager/jest-preset/-/jest-preset-2.12.7.tgz#75b4ea33e0383836c5d8370ff83f074e5c0cf00b"
+  integrity sha512-ktwM/1igf7BSV1lAW3+p5cyPji+HpjNSj+OwnmN6JVPHnGFLvdAa/1yojBHNsqYEkfhn3AJNWPUI/x2wF1rJUA==
   dependencies:
-    "@scm-manager/babel-preset" "^2.11.2"
     babel-jest "^26.6.3"
     babel-plugin-require-context-hook "^1.0.0"
+    core-js "^3.8.3"
     is-ci "^2.0.0"
     jest "^26.6.3"
     jest-junit "^12.0.0"
+    regenerator-runtime "^0.13.7"
 
 "@scm-manager/plugin-scripts@^1.0.1":
   version "1.0.1"
@@ -8665,7 +8666,7 @@ core-js@^2.4.0, core-js@^2.5.0, core-js@^2.6.5, core-js@^2.6.9:
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-2.6.11.tgz#38831469f9922bded8ee21c9dc46985e0399308c"
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
-core-js@^3.0.0:
+core-js@^3.0.0, core-js@^3.8.3:
   version "3.8.3"
   resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.8.3.tgz#c21906e1f14f3689f93abcc6e26883550dd92dd0"
   integrity sha512-KPYXeVZYemC2TkNEkX/01I+7yd+nX3KddKwZ1Ww7SKWdI2wQprSgLmrTddT8nw92AjEklTsPBoSdQBhbI1bQ6Q==
