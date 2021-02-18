@@ -24,7 +24,7 @@
 
 import { Me } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { apiClient } from "@scm-manager/ui-components";
+import { apiClient } from "./apiclient";
 import { ApiResult, useIndexLink } from "./base";
 import { useLegacyContext } from "./LegacyContext";
 

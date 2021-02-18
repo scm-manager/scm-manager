@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ExternalLink from "./navigation/ExternalLink";
-import { withContextPath } from "./urls";
+import { urls } from "@scm-manager/ui-api";
 
 const externalLinkRegex = new RegExp("^http(s)?://");
 export const isExternalLink = (link: string) => {
@@ -116,7 +116,7 @@ const MarkdownLinkRenderer: FC<Props> = ({ href, base, children }) => {
   } else if (isLinkWithProtocol(href)) {
     return <a href={href}>{children}</a>;
   } else if (isAnchorLink(href)) {
-    return <a href={withContextPath(location.pathname) + href}>{children}</a>;
+    return <a href={urls.withContextPath(location.pathname) + href}>{children}</a>;
   } else {
     const localLink = createLocalLink(base, location.pathname, href);
     return <Link to={localLink}>{children}</Link>;

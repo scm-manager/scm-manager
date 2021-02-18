@@ -24,11 +24,12 @@
  */
 
 import { HalRepresentation } from "@scm-manager/ui-types";
+import { MissingLinkError } from "./errors";
 
 export const requiredLink = (object: HalRepresentation, name: string) => {
   const link = object._links[name];
   if (!link) {
-    throw new Error(`could not find link with name ${name}`);
+    throw new MissingLinkError(`could not find link with name ${name}`);
   }
   if (Array.isArray(link)) {
     throw new Error(`could not return href, link ${name} is a multi link`);

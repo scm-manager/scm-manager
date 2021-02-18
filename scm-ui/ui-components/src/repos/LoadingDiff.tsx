@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React from "react";
-import { apiClient } from "../apiclient";
+import { apiClient, NotFoundError } from "@scm-manager/ui-api";
 import ErrorNotification from "../ErrorNotification";
 // @ts-ignore
 import parser from "gitdiff-parser";
@@ -30,7 +30,6 @@ import parser from "gitdiff-parser";
 import Loading from "../Loading";
 import Diff from "./Diff";
 import { DiffObjectProps, File } from "./DiffTypes";
-import { NotFoundError } from "../errors";
 import { Notification } from "../index";
 import { withTranslation, WithTranslation } from "react-i18next";
 

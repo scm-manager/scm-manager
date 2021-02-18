@@ -23,12 +23,10 @@
  */
 import React, { FC, ReactNode } from "react";
 import ErrorNotification from "./ErrorNotification";
-import { MissingLinkError } from "./errors";
-import { withContextPath } from "./urls";
+import { MissingLinkError, urls, useIndexLink } from "@scm-manager/ui-api";
 import { RouteComponentProps, useLocation, withRouter } from "react-router-dom";
 import ErrorPage from "./ErrorPage";
 import { useTranslation } from "react-i18next";
-import { useIndexLink } from "@scm-manager/ui-api";
 
 type ExportedProps = {
   fallback?: React.ComponentType<any>;
@@ -59,7 +57,8 @@ const ErrorDisplay: FC<ErrorDisplayProps> = ({ error, errorInfo, fallback: Fallb
 
   if (error instanceof MissingLinkError) {
     if (loginLink) {
-      window.location.assign(withContextPath("/login?from=" + location.pathname));
+      window.location.assign(urls.withContextPath("/login?from=" + location.pathname));
+      return null;
     } else {
       return (
         <ErrorPage error={error} title={t("errorNotification.prefix")} subtitle={t("errorNotification.forbidden")} />
@@ -68,7 +67,7 @@ const ErrorDisplay: FC<ErrorDisplayProps> = ({ error, errorInfo, fallback: Fallb
   }
 
   if (!FallbackComponent) {
-    FallbackComponent = ErrorNotification;
+    return <ErrorNotification error={error} />;
   }
 
   const fallbackProps = {

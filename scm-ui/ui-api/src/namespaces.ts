@@ -26,7 +26,8 @@
 import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
 import { Namespace, NamespaceCollection, NamespaceStrategies } from "@scm-manager/ui-types";
 import { useQuery } from "react-query";
-import { apiClient, urls } from "@scm-manager/ui-components";
+import { apiClient } from "./apiclient";
+import * as urls from "./urls";
 
 export const useNamespaces = () => {
   return useIndexJsonResource<NamespaceCollection>("namespaces");

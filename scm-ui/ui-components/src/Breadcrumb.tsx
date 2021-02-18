@@ -31,7 +31,7 @@ import { Branch, Repository, File } from "@scm-manager/ui-types";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 import copyToClipboard from "./CopyToClipboard";
-import { withContextPath } from "./urls";
+import { urls } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
@@ -121,7 +121,7 @@ const Breadcrumb: FC<Props> = ({ repository, branch, defaultBranch, revision, pa
     history.push(location.pathname);
     setCopying(true);
     copyToClipboard(
-      window.location.protocol + "//" + window.location.host + withContextPath(permalink || location.pathname)
+      window.location.protocol + "//" + window.location.host + urls.withContextPath(permalink || location.pathname)
     ).finally(() => setCopying(false));
   };
 

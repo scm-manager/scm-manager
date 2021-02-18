@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React from "react";
-import { withContextPath } from "./urls";
+import { urls } from "@scm-manager/ui-api";
 
 type Props = {
   src: string;
@@ -37,7 +37,7 @@ class Image extends React.Component<Props> {
     if (src.startsWith("http")) {
       return src;
     }
-    return withContextPath(src);
+    return urls.withContextPath(src);
   };
 
   render() {
