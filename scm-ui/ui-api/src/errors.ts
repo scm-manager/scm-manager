@@ -26,11 +26,13 @@ type Context = {
   type: string;
   id: string;
 }[];
+
 export type Violation = {
   path?: string;
   message: string;
   key?: string;
 };
+
 export type AdditionalMessage = {
   key?: string;
   message?: string;

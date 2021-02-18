@@ -25,12 +25,9 @@ import i18next from "i18next";
 import { initReactI18next } from "react-i18next";
 import { addDecorator, configure } from "@storybook/react";
 import { withI18next } from "storybook-addon-i18next";
-
 import "!style-loader!css-loader!sass-loader!../../ui-styles/src/scm.scss";
 import React from "react";
-import { MemoryRouter } from "react-router-dom";
-import withRedux from "./withRedux";
-
+import withApiProvider from "./withApiProvider";
 
 let i18n = i18next;
 
@@ -38,11 +35,10 @@ let i18n = i18next;
 // and not for storyshots
 if (!process.env.JEST_WORKER_ID) {
   const Backend = require("i18next-fetch-backend");
-  i18n = i18n.use(Backend.default)
+  i18n = i18n.use(Backend.default);
 }
 
-i18n
-.use(initReactI18next).init({
+i18n.use(initReactI18next).init({
   whitelist: ["en", "de", "es"],
   lng: "en",
   fallbackLng: "en",
@@ -71,6 +67,6 @@ addDecorator(
   })
 );
 
-addDecorator(withRedux);
+addDecorator(withApiProvider);
 
 configure(require.context("../src", true, /\.stories\.tsx?$/), module);
