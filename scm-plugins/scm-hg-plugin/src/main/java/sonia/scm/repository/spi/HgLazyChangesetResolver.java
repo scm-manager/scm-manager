@@ -45,14 +45,15 @@ class HgLazyChangesetResolver implements Callable<List<Changeset>> {
   }
 
   @Override
-  public List<Changeset> call() {
-    return LogCommand.on(factory.openForRead(repository)).execute().stream()
+  public Iterable<Changeset> call() {
+    Iterator<Changeset> iterator = LogCommand.on(factory.openForRead(repository)).execute().stream()
       .map(changeset -> new Changeset(
         changeset.getNode(),
         changeset.getTimestamp().getDate().getTime(),
         Person.toPerson(changeset.getUser()),
         changeset.getMessage())
       )
-      .collect(Collectors.toList());
+      .iterator();
+    return () -> iterator;
   }
 }

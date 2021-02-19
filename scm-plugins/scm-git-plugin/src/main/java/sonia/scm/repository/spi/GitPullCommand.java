@@ -233,15 +233,15 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
   private List<Tag> getTagsFromFetchResult(FetchResult result) {
     return result.getAdvertisedRefs().stream()
-      .filter(r -> r.getName().startsWith("refs/tags"))
-      .map(r -> new Tag(r.getName(), r.getObjectId().getName()))
+      .filter(r -> r.getName().startsWith("refs/tags/"))
+      .map(r -> new Tag(r.getName().substring("refs/tags/".length()), r.getObjectId().getName()))
       .collect(Collectors.toList());
   }
 
   private List<String> getBranchesFromFetchResult(FetchResult result) {
     return result.getAdvertisedRefs().stream()
-      .filter(r -> r.getName().startsWith("refs/heads"))
-      .map(r -> r.getLeaf().getName())
+      .filter(r -> r.getName().startsWith("refs/heads/"))
+      .map(r -> r.getLeaf().getName().substring("refs/heads/".length()))
       .collect(Collectors.toList());
   }
 
