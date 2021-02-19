@@ -150,11 +150,14 @@ export function createUrlWithIdentifiers(url: string): string {
 
 type ErrorListener = (error: Error) => void;
 
+type RequestListener = (url: string, options?: RequestInit) => void;
+
 class ApiClient {
   errorListeners: ErrorListener[] = [];
+  requestListeners: RequestListener[] = [];
 
   get = (url: string): Promise<Response> => {
-    return fetch(createUrl(url), applyFetchOptions({}))
+    return this.request(url, applyFetchOptions({}))
       .then(handleFailure)
       .catch(this.notifyAndRethrow);
   };
@@ -197,7 +200,7 @@ class ApiClient {
       method: "HEAD"
     };
     options = applyFetchOptions(options);
-    return fetch(createUrl(url), options)
+    return this.request(url, options)
       .then(handleFailure)
       .catch(this.notifyAndRethrow);
   };
@@ -207,7 +210,7 @@ class ApiClient {
       method: "DELETE"
     };
     options = applyFetchOptions(options);
-    return fetch(createUrl(url), options)
+    return this.request(url, options)
       .then(handleFailure)
       .catch(this.notifyAndRethrow);
   };
@@ -253,9 +256,14 @@ class ApiClient {
       options.headers["Content-Type"] = contentType;
     }
 
-    return fetch(createUrl(url), options)
+    return this.request(url, options)
       .then(handleFailure)
       .catch(this.notifyAndRethrow);
+  };
+
+  request = (url: string, options: RequestInit) => {
+    this.notifyRequestListeners(url, options);
+    return fetch(createUrl(url), options);
   };
 
   subscribe(url: string, argument: SubscriptionArgument): Cancel {
@@ -286,6 +294,14 @@ class ApiClient {
 
     return () => es.close();
   }
+
+  onRequest = (requestListener: RequestListener) => {
+    this.requestListeners.push(requestListener);
+  };
+
+  private notifyRequestListeners = (url: string, options: RequestInit) => {
+    this.requestListeners.forEach(requestListener => requestListener(url, options));
+  };
 
   onError = (errorListener: ErrorListener) => {
     this.errorListeners.push(errorListener);

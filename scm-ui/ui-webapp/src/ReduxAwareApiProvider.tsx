@@ -25,16 +25,16 @@
 import React, { FC } from "react";
 import { ApiProvider } from "@scm-manager/ui-api";
 import { IndexResources, Me } from "@scm-manager/ui-types";
-import { ApiProviderProps } from "@scm-manager/ui-api/src/ApiProvider";
-import { fetchIndexResourcesSuccess } from "./modules/indexResource";
-import { fetchMeSuccess } from "./modules/auth";
-import {connect} from "react-redux";
+import { ApiProviderProps } from "@scm-manager/ui-api";
+
+import { connect, Dispatch } from "react-redux";
+import { ActionTypes, fetchIndexResourcesSuccess, fetchMeSuccess } from "./LegacyReduxProvider";
 
 const ReduxAwareApiProvider: FC<ApiProviderProps> = ({ children, ...listeners }) => (
   <ApiProvider {...listeners}>{children}</ApiProvider>
 );
 
-const mapDispatchToProps = (dispatch: any) => {
+const mapDispatchToProps = (dispatch: Dispatch<ActionTypes>) => {
   return {
     onIndexFetched: (index: IndexResources) => {
       dispatch(fetchIndexResourcesSuccess(index));
