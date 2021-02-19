@@ -23,8 +23,7 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { Repository } from "@scm-manager/ui-types";
-import { CUSTOM_NAMESPACE_STRATEGY } from "../modules/repos";
+import { Repository, CUSTOM_NAMESPACE_STRATEGY } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { InputField } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
