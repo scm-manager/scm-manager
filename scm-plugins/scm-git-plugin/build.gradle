@@ -38,6 +38,7 @@ dependencies {
   implementation libraries.commonsCompress
 
   testImplementation libraries.shiroUnit
+  testImplementation libraries.awaitility
 }
 
 scmPlugin {
