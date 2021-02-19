@@ -23,30 +23,20 @@
  */
 package sonia.scm.repository.spi;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.io.ByteSource;
-import com.google.common.io.Files;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Captor;
-import sonia.scm.util.Archives;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.Changeset;
-import sonia.scm.repository.GitChangesetConverterFactory;
-import sonia.scm.repository.Person;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
-import sonia.scm.repository.api.HookChangesetBuilder;
-import sonia.scm.repository.api.HookContext;
-import sonia.scm.repository.api.HookContextFactory;
+import sonia.scm.repository.RepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookType;
+import sonia.scm.util.Archives;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
@@ -56,30 +46,21 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class GitUnbundleCommandTest extends AbstractGitCommandTestBase {
-  private HookChangesetBuilder hookChangesetBuilder;
   private ScmEventBus eventBus;
   private GitUnbundleCommand unbundleCommand;
-
-  @Captor
-  private final ArgumentCaptor<PostReceiveRepositoryHookEvent> eventCaptor =
-    ArgumentCaptor.forClass(PostReceiveRepositoryHookEvent.class);
+  private GitPostReceiveRepositoryHookEventFactory eventFactory;
 
   @Before
   public void initUnbundleCommand() {
     eventBus = mock(ScmEventBus.class);
-    HookContextFactory hookContextFactory = mock(HookContextFactory.class);
-    HookContext hookContext = mock(HookContext.class);
-    when(hookContextFactory.createContext(any(), eq(createContext().getRepository()))).thenReturn(hookContext);
-    hookChangesetBuilder = mock(HookChangesetBuilder.class);
-    when(hookContext.getChangesetProvider()).thenReturn(hookChangesetBuilder);
-    GitChangesetConverterFactory changesetConverterFactory = mock(GitChangesetConverterFactory.class);
-    unbundleCommand = new GitUnbundleCommand(createContext(), hookContextFactory, eventBus, changesetConverterFactory);
+    eventFactory = mock(GitPostReceiveRepositoryHookEventFactory.class);
+    unbundleCommand = new GitUnbundleCommand(createContext(), eventBus, eventFactory);
   }
 
   @Test
   public void shouldUnbundleRepositoryFiles() throws IOException {
-    Changeset first = new Changeset("1", 0L, new Person("trillian"), "first");
-    when(hookChangesetBuilder.getChangesetList()).thenReturn(ImmutableList.of(first));
+    when(eventFactory.createEvent(eq(createContext()), any(), any(), any()))
+      .thenReturn(new PostReceiveRepositoryHookEvent(new RepositoryHookEvent(null, repository, RepositoryHookType.POST_RECEIVE)));
 
     String filePath = "test-input";
     String fileContent = "HeartOfGold";
@@ -89,10 +70,7 @@ public class GitUnbundleCommandTest extends AbstractGitCommandTestBase {
 
     assertFileWithContentWasCreated(createContext().getDirectory(), filePath, fileContent);
 
-    verify(eventBus).post(eventCaptor.capture());
-    PostReceiveRepositoryHookEvent event = eventCaptor.getValue();
-    List<Changeset> changesets = event.getContext().getChangesetProvider().getChangesetList();
-    assertThat(changesets).containsExactly(first);
+    verify(eventBus).post(any(PostReceiveRepositoryHookEvent.class));
   }
 
   @Test

@@ -40,16 +40,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.GitChangesetConverter;
-import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
-import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.Tag;
-import sonia.scm.repository.api.HookContext;
-import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullResponse;
 
@@ -59,8 +53,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
-
 /**
  * @author Sebastian Sdorra
  */
@@ -69,20 +61,17 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
   private static final String REF_SPEC = "refs/heads/*:refs/heads/*";
   private static final Logger LOG = LoggerFactory.getLogger(GitPullCommand.class);
-  private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
-  private final GitChangesetConverterFactory changesetConverterFactory;
+  private final GitPostReceiveRepositoryHookEventFactory eventFactory;
 
   @Inject
   public GitPullCommand(GitRepositoryHandler handler,
                         GitContext context,
-                        HookContextFactory hookContextFactory,
                         ScmEventBus eventBus,
-                        GitChangesetConverterFactory changesetConverterFactory) {
+                        GitPostReceiveRepositoryHookEventFactory eventFactory) {
     super(handler, context);
-    this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
-    this.changesetConverterFactory = changesetConverterFactory;
+    this.eventFactory = eventFactory;
   }
 
   @Override
@@ -221,7 +210,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
       List<String> branches = getBranchesFromFetchResult(result);
       List<Tag> tags = getTagsFromFetchResult(result);
       GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(context.getRepository(), git);
-      eventBus.post(createEvent(changesetConverterFactory.create(context.open()), branches, tags, changesetResolver));
+      eventBus.post(eventFactory.createEvent(context, branches, tags, changesetResolver));
     } catch (IOException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(context.getRepository()).build(),
@@ -243,16 +232,5 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
       .filter(r -> r.getName().startsWith("refs/heads/"))
       .map(r -> r.getLeaf().getName().substring("refs/heads/".length()))
       .collect(Collectors.toList());
-  }
-
-  private PostReceiveRepositoryHookEvent createEvent(GitChangesetConverter converter,
-                                                     List<String> branches,
-                                                     List<Tag> tags,
-                                                     GitLazyChangesetResolver changesetResolver
-  ) {
-    GitImportHookContextProvider contextProvider = new GitImportHookContextProvider(converter, branches, tags, changesetResolver);
-    HookContext context = hookContextFactory.createContext(contextProvider, this.context.getRepository());
-    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, this.context.getRepository(), POST_RECEIVE);
-    return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
   }
 }

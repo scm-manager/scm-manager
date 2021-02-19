@@ -24,36 +24,30 @@
 
 package sonia.scm.repository.spi;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.revwalk.RevCommit;
-import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookEvent;
+import sonia.scm.repository.Tag;
+import sonia.scm.repository.api.HookContext;
+import sonia.scm.repository.api.HookContextFactory;
 
-import java.io.IOException;
-import java.util.concurrent.Callable;
+import javax.inject.Inject;
+import java.util.List;
 
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
 
-class GitLazyChangesetResolver implements Callable<Iterable<RevCommit>> {
-  private final Repository repository;
-  private final Git git;
+public class HgPostReceiveRepositoryHookEventFactory {
 
-  public GitLazyChangesetResolver(Repository repository, Git git) {
-    this.repository = repository;
-    this.git = git;
+  private final HookContextFactory hookContextFactory;
+
+  @Inject
+  public HgPostReceiveRepositoryHookEventFactory(HookContextFactory hookContextFactory) {
+    this.hookContextFactory = hookContextFactory;
   }
 
-  @Override
-  public Iterable<RevCommit> call() {
-    try {
-      return git.log().all().call();
-    } catch (IOException | GitAPIException e) {
-      throw new InternalRepositoryException(
-        entity(repository).build(),
-        "Could not resolve changesets for imported repository",
-        e
-      );
-    }
+  PostReceiveRepositoryHookEvent createEvent(HgCommandContext hgContext, List<String> branches, List<Tag> tags, HgLazyChangesetResolver changesetResolver) {
+    HgImportHookContextProvider contextProvider = new HgImportHookContextProvider(branches, tags, changesetResolver);
+    HookContext context = hookContextFactory.createContext(contextProvider, hgContext.getScmRepository());
+    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, hgContext.getScmRepository(), POST_RECEIVE);
+    return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
   }
 }

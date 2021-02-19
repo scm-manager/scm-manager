@@ -165,7 +165,7 @@ public class SvnUnbundleCommand extends AbstractSvnCommand implements UnbundleCo
 
     @Override
     public Iterable<Changeset> call() {
-        return SingleLogRequestChangesetIterator::new;
+      return SingleLogRequestChangesetIterator::new;
     }
 
     private class SingleLogRequestChangesetIterator implements Iterator<Changeset> {

@@ -24,36 +24,23 @@
 
 package sonia.scm.repository.spi;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.revwalk.RevCommit;
-import sonia.scm.repository.InternalRepositoryException;
-import sonia.scm.repository.Repository;
+import com.aragost.javahg.Branch;
+import sonia.scm.repository.Tag;
 
-import java.io.IOException;
-import java.util.concurrent.Callable;
+import java.util.List;
+import java.util.stream.Collectors;
 
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
+public class HgBranchesTagsExtractor {
 
-class GitLazyChangesetResolver implements Callable<Iterable<RevCommit>> {
-  private final Repository repository;
-  private final Git git;
-
-  public GitLazyChangesetResolver(Repository repository, Git git) {
-    this.repository = repository;
-    this.git = git;
+  static List<Tag> extractTags(HgCommandContext context) {
+    return com.aragost.javahg.commands.TagsCommand.on(context.open()).execute().stream()
+      .map(t -> new Tag(t.getName(), t.getChangeset().toString()))
+      .collect(Collectors.toList());
   }
 
-  @Override
-  public Iterable<RevCommit> call() {
-    try {
-      return git.log().all().call();
-    } catch (IOException | GitAPIException e) {
-      throw new InternalRepositoryException(
-        entity(repository).build(),
-        "Could not resolve changesets for imported repository",
-        e
-      );
-    }
+  static List<String> extractBranches(HgCommandContext context) {
+    return com.aragost.javahg.commands.BranchesCommand.on(context.open()).execute().stream()
+      .map(Branch::getName)
+      .collect(Collectors.toList());
   }
 }

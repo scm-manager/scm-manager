@@ -83,7 +83,7 @@ class HgImportHookContextProvider extends HookContextProvider {
 
   @Override
   public HookChangesetProvider getChangesetProvider() {
-    List<Changeset> changesets = changesetResolver.call();
+    Iterable<Changeset> changesets = changesetResolver.call();
     return r -> new HookChangesetResponse(changesets);
   }
 }

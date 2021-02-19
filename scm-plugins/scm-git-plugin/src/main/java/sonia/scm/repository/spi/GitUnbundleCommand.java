@@ -31,13 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.GitChangesetConverter;
-import sonia.scm.repository.GitChangesetConverterFactory;
-import sonia.scm.repository.PostReceiveRepositoryHookEvent;
-import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.Tag;
-import sonia.scm.repository.api.HookContext;
-import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.UnbundleResponse;
 
@@ -49,32 +43,27 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
 import static sonia.scm.util.Archives.extractTar;
 
 public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(GitUnbundleCommand.class);
 
-  private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
-  private final GitChangesetConverterFactory changesetConverterFactory;
+  private final GitPostReceiveRepositoryHookEventFactory eventFactory;
 
   @Inject
   GitUnbundleCommand(GitContext context,
-                     HookContextFactory hookContextFactory,
                      ScmEventBus eventBus,
-                     GitChangesetConverterFactory changesetConverterFactory
-  ) {
+                     GitPostReceiveRepositoryHookEventFactory eventFactory) {
     super(context);
-    this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
-    this.changesetConverterFactory = changesetConverterFactory;
+    this.eventFactory = eventFactory;
   }
 
   @Override
   public UnbundleResponse unbundle(UnbundleCommandRequest request) throws IOException {
-    ByteSource archive = checkNotNull(request.getArchive(),"archive is required");
+    ByteSource archive = checkNotNull(request.getArchive(), "archive is required");
     Path repositoryDir = context.getDirectory().toPath();
     LOG.debug("archive repository {} to {}", repositoryDir, archive);
 
@@ -94,7 +83,7 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
       List<String> branches = extractBranches(git);
       List<Tag> tags = extractTags(git);
       GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(context.getRepository(), git);
-      eventBus.post(createEvent(changesetConverterFactory.create(context.open()), branches, tags, changesetResolver));
+      eventBus.post(eventFactory.createEvent(context, branches, tags, changesetResolver));
     } catch (IOException | GitAPIException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(context.getRepository()).build(),
@@ -114,17 +103,6 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
     return git.branchList().call().stream()
       .map(Ref::getName)
       .collect(Collectors.toList());
-  }
-
-  private PostReceiveRepositoryHookEvent createEvent(GitChangesetConverter converter,
-                                                     List<String> branches,
-                                                     List<Tag> tags,
-                                                     GitLazyChangesetResolver changesetResolver
-  ) {
-    GitImportHookContextProvider contextProvider = new GitImportHookContextProvider(converter, branches, tags, changesetResolver);
-    HookContext context = hookContextFactory.createContext(contextProvider, this.context.getRepository());
-    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, this.context.getRepository(), POST_RECEIVE);
-    return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
   }
 
   private void unbundleRepositoryFromRequest(UnbundleCommandRequest request, Path repositoryDir) throws IOException {

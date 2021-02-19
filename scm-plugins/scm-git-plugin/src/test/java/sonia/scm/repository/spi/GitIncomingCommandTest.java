@@ -87,13 +87,18 @@ public class GitIncomingCommandTest
    * @throws IOException
    */
   @Test
-  public void testGetIncomingChangesetsWithAllreadyPullChangesets()
+  public void testGetIncomingChangesetsWithAlreadyPulledChangesets()
     throws IOException, GitAPIException {
     write(outgoing, outgoingDirectory, "a.txt", "content of a.txt");
 
     commit(outgoing, "added a");
 
-    GitPullCommand pull = new GitPullCommand(handler, new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory()), new GitConfig()), hookContextFactory, eventBus, GitTestHelper.createConverterFactory());
+    GitPullCommand pull = new GitPullCommand(
+      handler,
+      new GitContext(incomingDirectory, incomingRepository, new GitRepositoryConfigStoreProvider(new InMemoryConfigurationStoreFactory()), new GitConfig()),
+      eventBus,
+      eventFactory
+    );
     PullCommandRequest req = new PullCommandRequest();
     req.setRemoteRepository(outgoingRepository);
     pull.pull(req);

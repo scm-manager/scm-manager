@@ -30,10 +30,8 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.api.HookContextFactory;
 
 /**
- *
  * @author Sebastian Sdorra
  */
 @Extension
@@ -41,15 +39,19 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver {
 
   private final HgRepositoryHandler handler;
   private final HgRepositoryFactory factory;
-  private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
+  private final HgPostReceiveRepositoryHookEventFactory eventFactory;
 
   @Inject
-  public HgRepositoryServiceResolver(HgRepositoryHandler handler, HgRepositoryFactory factory, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
+  public HgRepositoryServiceResolver(HgRepositoryHandler handler,
+                                     HgRepositoryFactory factory,
+                                     ScmEventBus eventBus,
+                                     HgPostReceiveRepositoryHookEventFactory eventFactory
+  ) {
     this.handler = handler;
     this.factory = factory;
-    this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
+    this.eventFactory = eventFactory;
   }
 
   @Override
@@ -57,7 +59,7 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver {
     HgRepositoryServiceProvider provider = null;
 
     if (HgRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new HgRepositoryServiceProvider(handler, factory, hookContextFactory, eventBus, repository);
+      provider = new HgRepositoryServiceProvider(handler, factory, eventFactory, eventBus, repository);
     }
 
     return provider;

@@ -30,11 +30,10 @@ import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 
-import java.util.List;
+import java.util.Iterator;
 import java.util.concurrent.Callable;
-import java.util.stream.Collectors;
 
-class HgLazyChangesetResolver implements Callable<List<Changeset>> {
+class HgLazyChangesetResolver implements Callable<Iterable<Changeset>> {
 
   private final HgRepositoryFactory factory;
   private final Repository repository;

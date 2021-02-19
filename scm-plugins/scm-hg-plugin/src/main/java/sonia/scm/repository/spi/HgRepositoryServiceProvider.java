@@ -32,7 +32,6 @@ import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.CommandNotSupportedException;
-import sonia.scm.repository.api.HookContextFactory;
 
 import java.io.IOException;
 import java.util.EnumSet;
@@ -66,19 +65,18 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   private final HgRepositoryHandler handler;
   private final HgCommandContext context;
-  private final HookContextFactory hookContextFactory;
-  private final ScmEventBus eventBus;
   private final HgLazyChangesetResolver lazyChangesetResolver;
+  private final HgPostReceiveRepositoryHookEventFactory eventFactory;
+  private final ScmEventBus eventBus;
 
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
                               HgRepositoryFactory factory,
-                              HookContextFactory hookContextFactory,
+                              HgPostReceiveRepositoryHookEventFactory eventFactory,
                               ScmEventBus eventBus,
-                              Repository repository
-  ) {
+                              Repository repository) {
     this.handler = handler;
-    this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
+    this.eventFactory = eventFactory;
     this.context = new HgCommandContext(handler, factory, repository);
     this.lazyChangesetResolver = new HgLazyChangesetResolver(factory, repository);
   }
@@ -146,7 +144,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public PullCommand getPullCommand() {
-    return new HgPullCommand(handler, context, hookContextFactory, eventBus, lazyChangesetResolver);
+    return new HgPullCommand(handler, context, eventBus, lazyChangesetResolver, eventFactory);
   }
 
   @Override
@@ -186,6 +184,6 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public UnbundleCommand getUnbundleCommand() {
-    return new HgUnbundleCommand(context, hookContextFactory, eventBus, lazyChangesetResolver);
+    return new HgUnbundleCommand(context, eventBus, lazyChangesetResolver, eventFactory);
   }
 }

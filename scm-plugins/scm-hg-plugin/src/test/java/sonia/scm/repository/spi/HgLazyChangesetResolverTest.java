@@ -29,8 +29,6 @@ import sonia.scm.repository.Changeset;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.Person;
 
-import java.util.List;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class HgLazyChangesetResolverTest extends AbstractHgCommandTestBase {
@@ -38,9 +36,9 @@ public class HgLazyChangesetResolverTest extends AbstractHgCommandTestBase {
   @Test
   public void shouldResolveChangesets() {
     HgLazyChangesetResolver changesetResolver = new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), repository);
-    List<Changeset> changesets = changesetResolver.call();
+    Iterable<Changeset> changesets = changesetResolver.call();
 
-    Changeset firstChangeset = changesets.get(0);
+    Changeset firstChangeset = changesets.iterator().next();
     assertThat(firstChangeset.getId()).isEqualTo("2baab8e80280ef05a9aa76c49c76feca2872afb7");
     assertThat(firstChangeset.getDate()).isEqualTo(1339586381000L);
     assertThat(firstChangeset.getAuthor()).isEqualTo(Person.toPerson("Zaphod Beeblebrox <zaphod.beeblebrox@hitchhiker.com>"));
