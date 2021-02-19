@@ -38,18 +38,18 @@ import java.util.Set;
 class RepositoryUpdateAfterCreationHook {
 
   private final Set<RepositoryUpdateStep> repositorySteps;
-  private final RepositoryUpdateStepStore repositoryUpdateStepStore;
+  private final UpdateStepStore updateStepStore;
 
   @Inject
-  RepositoryUpdateAfterCreationHook(Set<RepositoryUpdateStep> repositorySteps, RepositoryUpdateStepStore repositoryUpdateStepStore) {
+  RepositoryUpdateAfterCreationHook(Set<RepositoryUpdateStep> repositorySteps, UpdateStepStore updateStepStore) {
     this.repositorySteps = repositorySteps;
-    this.repositoryUpdateStepStore = repositoryUpdateStepStore;
+    this.updateStepStore = updateStepStore;
   }
 
   @Subscribe
   public void updateRepository(RepositoryEvent event) {
     if (event.getEventType() == HandlerEventType.CREATE) {
-      repositorySteps.forEach(updateStep -> repositoryUpdateStepStore.storeExecutedUpdate(event.getItem().getId(), updateStep));
+      repositorySteps.forEach(updateStep -> updateStepStore.storeExecutedUpdate(event.getItem().getId(), updateStep));
     }
   }
 }

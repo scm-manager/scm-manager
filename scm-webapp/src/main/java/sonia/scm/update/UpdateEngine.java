@@ -31,8 +31,6 @@ import sonia.scm.migration.RepositoryUpdateStep;
 import sonia.scm.migration.UpdateException;
 import sonia.scm.migration.UpdateStep;
 import sonia.scm.migration.UpdateStepTarget;
-import sonia.scm.store.ConfigurationEntryStore;
-import sonia.scm.store.ConfigurationEntryStoreFactory;
 import sonia.scm.version.Version;
 
 import javax.inject.Inject;
@@ -48,23 +46,19 @@ public class UpdateEngine {
 
   public static final Logger LOG = LoggerFactory.getLogger(UpdateEngine.class);
 
-  private static final String STORE_NAME = "executedUpdates";
 
   private final List<UpdateStepWrapper> steps;
-  private final ConfigurationEntryStore<UpdateVersionInfo> store;
-  private final ConfigurationEntryStoreFactory storeFactory;
   private final RepositoryUpdateIterator repositoryUpdateIterator;
+  private final UpdateStepStore updateStepStore;
 
   @Inject
   public UpdateEngine(
     Set<UpdateStep> globalSteps,
     Set<RepositoryUpdateStep> repositorySteps,
-    ConfigurationEntryStoreFactory storeFactory,
-    RepositoryUpdateIterator repositoryUpdateIterator
-  ) {
-    this.storeFactory = storeFactory;
+    RepositoryUpdateIterator repositoryUpdateIterator,
+    UpdateStepStore updateStepStore) {
     this.repositoryUpdateIterator = repositoryUpdateIterator;
-    this.store = storeFactory.withType(UpdateVersionInfo.class).withName(STORE_NAME).build();
+    this.updateStepStore = updateStepStore;
     this.steps = sortSteps(globalSteps, repositorySteps);
   }
 
@@ -127,32 +121,12 @@ public class UpdateEngine {
     }
   }
 
-  private void storeNewVersion(ConfigurationEntryStore<UpdateVersionInfo> store, UpdateStepTarget updateStep) {
-    UpdateVersionInfo newVersionInfo = new UpdateVersionInfo(updateStep.getTargetVersion().getParsedVersion());
-    store.put(updateStep.getAffectedDataType(), newVersionInfo);
-  }
-
   private boolean notRunYet(UpdateStep updateStep) {
     LOG.trace("checking whether to run update step for type {} and version {}",
       updateStep.getAffectedDataType(),
       updateStep.getTargetVersion()
     );
-    return notRunYet(this.store, updateStep);
-  }
-
-  private boolean notRunYet(ConfigurationEntryStore<UpdateVersionInfo> store, UpdateStepTarget updateStep) {
-    UpdateVersionInfo updateVersionInfo = store.get(updateStep.getAffectedDataType());
-    if (updateVersionInfo == null) {
-      LOG.trace("no updates for type {} run yet; step will be executed", updateStep.getAffectedDataType());
-      return true;
-    }
-    boolean result = updateStep.getTargetVersion().isNewer(updateVersionInfo.getLatestVersion());
-    LOG.trace("latest version for type {}: {}; step will be executed: {}",
-      updateStep.getAffectedDataType(),
-      updateVersionInfo.getLatestVersion(),
-      result
-    );
-    return result;
+    return updateStepStore.notRunYet(updateStep);
   }
 
   private abstract static class UpdateStepWrapper implements UpdateStepTarget {
@@ -219,7 +193,7 @@ public class UpdateEngine {
         delegate.getClass().getName()
       );
       delegate.doUpdate();
-      storeNewVersion(store, delegate);
+      updateStepStore.storeExecutedUpdate(delegate);
     }
 
     void doUpdate(String repositoryId) {
@@ -261,7 +235,7 @@ public class UpdateEngine {
           repositoryId
         );
         delegate.doUpdate(new RepositoryUpdateContext(repositoryId));
-        storeNewVersion(storeForRepository(repositoryId), delegate);
+        updateStepStore.storeExecutedUpdate(repositoryId, delegate);
       }
     }
 
@@ -271,11 +245,7 @@ public class UpdateEngine {
         delegate.getTargetVersion(),
         repositoryId
       );
-      return UpdateEngine.this.notRunYet(storeForRepository(repositoryId), delegate);
-    }
-
-    private ConfigurationEntryStore<UpdateVersionInfo> storeForRepository(String repositoryId) {
-      return storeFactory.withType(UpdateVersionInfo.class).withName(STORE_NAME).forRepository(repositoryId).build();
+      return updateStepStore.notRunYet(repositoryId, delegate);
     }
   }
 }

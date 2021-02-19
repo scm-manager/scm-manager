@@ -52,6 +52,7 @@ class UpdateEngineTest {
 
   ConfigurationEntryStoreFactory storeFactory = new InMemoryConfigurationEntryStoreFactory();
   RepositoryUpdateIterator repositoryUpdateIterator = mock(RepositoryUpdateIterator.class, CALLS_REAL_METHODS);
+  UpdateStepStore updateStepStore = new UpdateStepStore(storeFactory);
 
   List<String> processedUpdates = new ArrayList<>();
 
@@ -73,7 +74,7 @@ class UpdateEngineTest {
     updateSteps.add(new FixedVersionUpdateStep("test", "1.2.0"));
     updateSteps.add(new FixedVersionUpdateStep("test", "1.1.0"));
 
-    UpdateEngine updateEngine = new UpdateEngine(updateSteps, emptySet(), storeFactory, repositoryUpdateIterator);
+    UpdateEngine updateEngine = new UpdateEngine(updateSteps, emptySet(), repositoryUpdateIterator, updateStepStore);
     updateEngine.update();
 
     assertThat(processedUpdates)
@@ -89,7 +90,7 @@ class UpdateEngineTest {
     updateSteps.add(new FixedVersionUpdateStep("test", "1.2.0"));
     repositoryUpdateSteps.add(new FixedVersionUpdateStep("test", "1.1.0"));
 
-    UpdateEngine updateEngine = new UpdateEngine(updateSteps, repositoryUpdateSteps, storeFactory, repositoryUpdateIterator);
+    UpdateEngine updateEngine = new UpdateEngine(updateSteps, repositoryUpdateSteps, repositoryUpdateIterator, updateStepStore);
     updateEngine.update();
 
     assertThat(processedUpdates)
@@ -105,7 +106,7 @@ class UpdateEngineTest {
     repositoryUpdateSteps.add(new FixedVersionUpdateStep("test", "1.1.1"));
     repositoryUpdateSteps.add(new FixedVersionUpdateStep("test", "1.1.0"));
 
-    UpdateEngine updateEngine = new UpdateEngine(updateSteps, repositoryUpdateSteps, storeFactory, repositoryUpdateIterator);
+    UpdateEngine updateEngine = new UpdateEngine(updateSteps, repositoryUpdateSteps, repositoryUpdateIterator, updateStepStore);
     updateEngine.update("1337");
 
     assertThat(processedUpdates)
@@ -119,7 +120,7 @@ class UpdateEngineTest {
     updateSteps.add(new FixedVersionUpdateStep("test", "1.2.0"));
     updateSteps.add(new CoreFixedVersionUpdateStep("core", "1.2.0"));
 
-    UpdateEngine updateEngine = new UpdateEngine(updateSteps, emptySet(), storeFactory, repositoryUpdateIterator);
+    UpdateEngine updateEngine = new UpdateEngine(updateSteps, emptySet(), repositoryUpdateIterator, updateStepStore);
     updateEngine.update();
 
     assertThat(processedUpdates)
@@ -131,7 +132,7 @@ class UpdateEngineTest {
     Set<UpdateStep> updateSteps = singleton(new FixedVersionUpdateStep("test", "1.2.0"));
     Set<RepositoryUpdateStep> repositoryUpdateSteps = singleton(new FixedVersionUpdateStep("test", "1.2.0"));
 
-    UpdateEngine updateEngine = new UpdateEngine(updateSteps, repositoryUpdateSteps, storeFactory, repositoryUpdateIterator);
+    UpdateEngine updateEngine = new UpdateEngine(updateSteps, repositoryUpdateSteps, repositoryUpdateIterator, updateStepStore);
     updateEngine.update();
 
     assertThat(processedUpdates)
@@ -144,12 +145,12 @@ class UpdateEngineTest {
 
     updateSteps.add(new FixedVersionUpdateStep("test", "1.1.1"));
 
-    UpdateEngine firstUpdateEngine = new UpdateEngine(updateSteps, emptySet(), storeFactory, repositoryUpdateIterator);
+    UpdateEngine firstUpdateEngine = new UpdateEngine(updateSteps, emptySet(), repositoryUpdateIterator, updateStepStore);
     firstUpdateEngine.update();
 
     processedUpdates.clear();
 
-    UpdateEngine secondUpdateEngine = new UpdateEngine(updateSteps, emptySet(), storeFactory, repositoryUpdateIterator);
+    UpdateEngine secondUpdateEngine = new UpdateEngine(updateSteps, emptySet(), repositoryUpdateIterator, updateStepStore);
     secondUpdateEngine.update();
 
     assertThat(processedUpdates).isEmpty();
@@ -161,13 +162,13 @@ class UpdateEngineTest {
 
     repositoryUpdateSteps.add(new FixedVersionUpdateStep("test", "1.1.1"));
 
-    UpdateEngine firstUpdateEngine = new UpdateEngine(emptySet(), repositoryUpdateSteps, storeFactory, repositoryUpdateIterator);
+    UpdateEngine firstUpdateEngine = new UpdateEngine(emptySet(), repositoryUpdateSteps, repositoryUpdateIterator, updateStepStore);
     firstUpdateEngine.update();
 
     processedUpdates.clear();
 
     repositoryUpdateSteps.add(new FixedVersionUpdateStep("test", "1.2.0"));
-    UpdateEngine secondUpdateEngine = new UpdateEngine(emptySet(), repositoryUpdateSteps, storeFactory, repositoryUpdateIterator);
+    UpdateEngine secondUpdateEngine = new UpdateEngine(emptySet(), repositoryUpdateSteps, repositoryUpdateIterator, updateStepStore);
     secondUpdateEngine.update();
 
     assertThat(processedUpdates)
@@ -180,14 +181,14 @@ class UpdateEngineTest {
 
     updateSteps.add(new FixedVersionUpdateStep("test", "1.1.1"));
 
-    UpdateEngine updateEngine = new UpdateEngine(updateSteps, emptySet(), storeFactory, repositoryUpdateIterator);
+    UpdateEngine updateEngine = new UpdateEngine(updateSteps, emptySet(), repositoryUpdateIterator, updateStepStore);
     updateEngine.update();
 
     processedUpdates.clear();
 
     updateSteps.add(new FixedVersionUpdateStep("other", "1.1.1"));
 
-    updateEngine = new UpdateEngine(updateSteps, emptySet(), storeFactory, repositoryUpdateIterator);
+    updateEngine = new UpdateEngine(updateSteps, emptySet(), repositoryUpdateIterator, updateStepStore);
     updateEngine.update();
 
     assertThat(processedUpdates).containsExactly("other:1.1.1");
