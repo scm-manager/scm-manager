@@ -63,17 +63,17 @@ public class TarArchiveRepositoryStoreImporter {
 
   private void importStoreByType(Repository repository, TarArchiveInputStream tais, String[] entryPathParts) {
     String storeType = entryPathParts[1];
-    if (storeType.equals(StoreType.DATA.getValue())) {
+    if (isDataStore(storeType)) {
       repositoryStoreImporter
         .doImport(repository)
         .importStore(new StoreEntryMetaData(StoreType.DATA, entryPathParts[2]))
         .importEntry(entryPathParts[3], tais);
-    } else if (storeType.equals(StoreType.CONFIG.getValue()) || storeType.equals(StoreType.CONFIG_ENTRY.getValue())){
+    } else if (isConfigStore(storeType)){
       repositoryStoreImporter
         .doImport(repository)
         .importStore(new StoreEntryMetaData(StoreType.CONFIG, ""))
         .importEntry(entryPathParts[2], tais);
-    } else if(storeType.equals(StoreType.BLOB.getValue())) {
+    } else if(isBlobStore(storeType)) {
       repositoryStoreImporter
         .doImport(repository)
         .importStore(new StoreEntryMetaData(StoreType.BLOB, entryPathParts[2]))
@@ -94,14 +94,26 @@ public class TarArchiveRepositoryStoreImporter {
     //This prevents array out of bound exceptions
     if (entryPathParts.length > 1) {
       String storeType = entryPathParts[1];
-      if (storeType.equals(StoreType.DATA.getValue()) || storeType.equals(StoreType.BLOB.getValue())) {
+      if (isDataStore(storeType) || isBlobStore(storeType)) {
         return entryPathParts.length == 4;
       }
-      if (storeType.equals(StoreType.CONFIG.getValue()) || storeType.equals(StoreType.CONFIG_ENTRY.getValue())) {
+      if (isConfigStore(storeType)) {
         return entryPathParts.length == 3;
       }
     }
     return false;
+  }
+
+  private boolean isBlobStore(String storeType) {
+    return storeType.equals(StoreType.BLOB.getValue());
+  }
+
+  private boolean isDataStore(String storeType) {
+    return storeType.equals(StoreType.DATA.getValue());
+  }
+
+  private boolean isConfigStore(String storeType) {
+    return storeType.equals(StoreType.CONFIG.getValue()) || storeType.equals(StoreType.CONFIG_ENTRY.getValue());
   }
 
   static class NoneClosingTarArchiveInputStream extends TarArchiveInputStream {
