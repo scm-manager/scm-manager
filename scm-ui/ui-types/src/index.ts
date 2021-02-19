@@ -59,7 +59,7 @@ export * from "./Plugin";
 export * from "./RepositoryRole";
 export * from "./RepositoryVerbs";
 
-export { NamespaceStrategies } from "./NamespaceStrategies";
+export * from "./NamespaceStrategies";
 
 export * from "./LoginInfo";
 
