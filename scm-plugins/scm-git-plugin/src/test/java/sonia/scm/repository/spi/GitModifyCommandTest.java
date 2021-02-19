@@ -42,7 +42,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 
+import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.description;
 import static org.mockito.Mockito.verify;
@@ -347,7 +350,9 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
     verify(transportProtocolRule.repositoryManager, description("pre receive hook event expected"))
       .fireHookEvent(argThat(argument -> argument.getType() == RepositoryHookType.PRE_RECEIVE));
-    verify(transportProtocolRule.repositoryManager, description("post receive hook event expected"))
-      .fireHookEvent(argThat(argument -> argument.getType() == RepositoryHookType.POST_RECEIVE));
+    await().pollInterval(50, MILLISECONDS).atMost(1, SECONDS).untilAsserted(() ->
+      verify(transportProtocolRule.repositoryManager, description("post receive hook event expected"))
+        .fireHookEvent(argThat(argument -> argument.getType() == RepositoryHookType.POST_RECEIVE))
+    );
   }
 }
