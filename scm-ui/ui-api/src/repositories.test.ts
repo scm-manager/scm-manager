@@ -304,11 +304,11 @@ describe("Test repository hooks", () => {
         wrapper: createWrapper(undefined, queryClient)
       });
       await waitFor(() => {
-        return !!result.current.repositoryTypes;
+        return !!result.current.data;
       });
-      expect(result.current?.repositoryTypes).toBeDefined();
-      if (result.current?.repositoryTypes) {
-        expect(result.current?.repositoryTypes[0].name).toEqual("git");
+      expect(result.current.data).toBeDefined();
+      if (result.current?.data) {
+        expect(result.current?.data._embedded.repositoryTypes[0].name).toEqual("git");
       }
     });
   });
