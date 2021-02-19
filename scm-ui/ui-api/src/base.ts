@@ -26,7 +26,7 @@ import { IndexResources, Link } from "@scm-manager/ui-types";
 import { useQuery } from "react-query";
 import { apiClient } from "./apiclient";
 import { useLegacyContext } from "./LegacyContext";
-import { MissingLinkError } from "./errors";
+import { MissingLinkError, UnauthorizedError } from "./errors";
 
 export type ApiResult<T> = {
   isLoading: boolean;
@@ -39,9 +39,16 @@ export const useIndex = (): ApiResult<IndexResources> => {
   const legacy = useLegacyContext();
   return useQuery<IndexResources, Error>("index", () => apiClient.get("/").then(response => response.json()), {
     onSuccess: index => {
+      // ensure legacy code is notified
       if (legacy.onIndexFetched) {
         legacy.onIndexFetched(index);
       }
+    },
+    retry: (failureCount, error) => {
+      // The index resource returns a 401 if the access token expired.
+      // This only happens once because the error response automatically invalidates the cookie.
+      // In this event, we have to try the request once again.
+      return error instanceof UnauthorizedError && failureCount === 0;
     }
   });
 };

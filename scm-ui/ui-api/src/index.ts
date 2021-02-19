@@ -45,3 +45,4 @@ export * from "./permissions";
 export * from "./sources";
 
 export { default as ApiProvider } from "./ApiProvider";
+export * from "./ApiProvider";

@@ -20,40 +20,27 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
-import React from "react";
-import ReactDOM from "react-dom";
-import Index from "./containers/Index";
 
-import { I18nextProvider } from "react-i18next";
-import i18n from "./i18n";
+import { apiClient, clearCache, UnauthorizedError } from "@scm-manager/ui-api";
 
-import { BrowserRouter as Router } from "react-router-dom";
+let tokenExpired = false;
 
-import { urls } from "@scm-manager/ui-components";
-import { binder } from "@scm-manager/ui-extensions";
-import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink";
+// We assume that an UnauthorizedError means that the access token is expired.
+// If the token is expired we want to show an error with the login link.
+// This error should be displayed with the state (e.g. navigation) of the previous logged in user.
+// But if the user navigates away, we want to reset the state to an anonymous one.
 
-import "./tokenExpired";
-import LegacyReduxProvider from "./LegacyReduxProvider";
-import ReduxAwareApiProvider from "./ReduxAwareApiProvider";
+apiClient.onError(error => {
+  if (error instanceof UnauthorizedError) {
+    tokenExpired = true;
+  }
+});
 
-binder.bind("changeset.description.tokens", ChangesetShortLink);
-
-const root = document.getElementById("root");
-if (!root) {
-  throw new Error("could not find root element");
-}
-
-ReactDOM.render(
-  <LegacyReduxProvider>
-    <ReduxAwareApiProvider>
-      <I18nextProvider i18n={i18n}>
-        <Router basename={urls.contextPath}>
-          <Index />
-        </Router>
-      </I18nextProvider>
-    </ReduxAwareApiProvider>
-  </LegacyReduxProvider>,
-  root
-);
+apiClient.onRequest(() => {
+  if (tokenExpired) {
+    clearCache();
+    tokenExpired = false;
+  }
+});

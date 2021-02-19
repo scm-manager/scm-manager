@@ -31,7 +31,9 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       // TODO what makes sense for us
-      retry: false
+      retry: false,
+      // refetch on focus can reset form inputs
+      refetchOnWindowFocus: false
     }
   }
 });
@@ -69,4 +71,9 @@ const ApiProvider: FC<Props> = ({ children, index, me, onMeFetched, onIndexFetch
 };
 
 export { Props as ApiProviderProps };
+
+export const clearCache = () => {
+  queryClient.clear();
+};
+
 export default ApiProvider;
