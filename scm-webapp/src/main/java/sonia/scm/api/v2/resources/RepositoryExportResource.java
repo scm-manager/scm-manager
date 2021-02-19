@@ -37,6 +37,7 @@ import lombok.Setter;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
+import sonia.scm.NotFoundException;
 import sonia.scm.Type;
 import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.FullScmRepositoryExporter;
@@ -70,6 +71,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.Instant;
 import java.util.concurrent.Callable;
@@ -90,17 +92,19 @@ public class RepositoryExportResource {
   private final RepositoryImportExportEncryption repositoryImportExportEncryption;
   private final ExecutorService repositoryExportHandler;
   private final ExportService exportService;
+  private final ResourceLinks resourceLinks;
 
   @Inject
   public RepositoryExportResource(RepositoryManager manager,
                                   RepositoryServiceFactory serviceFactory,
                                   FullScmRepositoryExporter fullScmRepositoryExporter,
-                                  RepositoryImportExportEncryption repositoryImportExportEncryption, ExportService exportService) {
+                                  RepositoryImportExportEncryption repositoryImportExportEncryption, ExportService exportService, ResourceLinks resourceLinks) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.fullScmRepositoryExporter = fullScmRepositoryExporter;
     this.repositoryImportExportEncryption = repositoryImportExportEncryption;
     this.exportService = exportService;
+    this.resourceLinks = resourceLinks;
     this.repositoryExportHandler = this.createExportHandlerPool();
   }
 
@@ -241,7 +245,7 @@ public class RepositoryExportResource {
     Repository repository = getVerifiedRepository(namespace, name, type);
     RepositoryPermissions.export(repository).check();
     checkRepositoryIsAlreadyExporting(repository);
-    return exportAsync(request, () -> {
+    return exportAsync(repository, request, () -> {
       Response response = exportRepository(repository, request.getPassword(), compressed, request.isAsync());
       exportService.setExportFinished(repository);
       return response;
@@ -291,7 +295,7 @@ public class RepositoryExportResource {
     Repository repository = getVerifiedRepository(namespace, name);
     RepositoryPermissions.export(repository).check();
     checkRepositoryIsAlreadyExporting(repository);
-    return exportAsync(request, () -> {
+    return exportAsync(repository, request, () -> {
       Response response = exportFullRepository(repository, request.getPassword(), request.isAsync());
       exportService.setExportFinished(repository);
       return response;
@@ -327,7 +331,7 @@ public class RepositoryExportResource {
     Repository repository = getVerifiedRepository(namespace, name);
     RepositoryPermissions.export(repository).check();
     checkRepositoryIsAlreadyExporting(repository);
-    exportService.checkExportExists(repository);
+    exportService.checkExportIsAvailable(repository);
     return Response.noContent().build();
   }
 
@@ -352,7 +356,7 @@ public class RepositoryExportResource {
                                @PathParam("name") String name) {
     Repository repository = getVerifiedRepository(namespace, name);
     RepositoryPermissions.export(repository).check();
-    exportService.clear(repository);
+    exportService.clear(repository.getId());
     return Response.noContent().build();
   }
 
@@ -380,22 +384,26 @@ public class RepositoryExportResource {
     )
   )
   public Response downloadExport(@Context UriInfo uriInfo,
-                               @PathParam("namespace") String namespace,
-                               @PathParam("name") String name) {
+                                 @PathParam("namespace") String namespace,
+                                 @PathParam("name") String name) throws IOException {
     Repository repository = getVerifiedRepository(namespace, name);
     RepositoryPermissions.export(repository).check();
     checkRepositoryIsAlreadyExporting(repository);
-    exportService.checkExportExists(repository);
-    StreamingOutput output = os -> IOUtil.copy(exportService.getData(repository), os);
-    String fileExtension = exportService.getFileExtension(repository);
-    return createResponse(repository, fileExtension, fileExtension.contains(".gz"), output);
+    exportService.checkExportIsAvailable(repository);
+    try (InputStream is = exportService.getData(repository)) {
+      StreamingOutput output = os -> IOUtil.copy(is, os);
+      String fileExtension = exportService.getFileExtension(repository);
+      return createResponse(repository, fileExtension, fileExtension.contains(".gz"), output);
+    }
   }
 
-  private Response exportAsync(ExportDto exportDto, Callable<Response> call) throws Exception {
+  private Response exportAsync(Repository repository, ExportDto exportDto, Callable<Response> call) throws Exception {
     if (exportDto.isAsync()) {
       repositoryExportHandler.submit(call);
-      //TODO Use ResourceLinks
-      return Response.status(202).header("SCM-Export-Download", "testlink").build();
+      return Response.status(202).header(
+        "SCM-Export-Download",
+        resourceLinks.repository().downloadExport(repository.getNamespace(), repository.getName())
+      ).build();
     } else {
       return call.call();
     }
@@ -403,12 +411,16 @@ public class RepositoryExportResource {
 
   private void checkRepositoryIsAlreadyExporting(Repository repository) {
     if (exportService.isExporting(repository)) {
+      //TODO Throw specific exception that repository is still exporting which is resolved to 409
       throw new ConcurrentModificationException(Repository.class, repository.getId());
     }
   }
 
   private Repository getVerifiedRepository(String namespace, String name) {
     Repository repository = manager.get(new NamespaceAndName(namespace, name));
+    if (repository == null) {
+      throw new NotFoundException(Repository.class, namespace + "/" + name);
+    }
     RepositoryPermissions.read().check(repository);
     return repository;
   }
@@ -427,7 +439,7 @@ public class RepositoryExportResource {
   private Response exportFullRepository(Repository repository, String password, boolean async) {
     String fileExtension = resolveFullExportFileExtension(password);
     if (async) {
-      OutputStream blobOutputStream = exportService.store(repository, fileExtension);
+      OutputStream blobOutputStream = exportService.store(repository, true, true, !Strings.isNullOrEmpty(password));
       fullScmRepositoryExporter.export(repository, blobOutputStream, password);
       exportService.setExportFinished(repository);
       //TODO Cleanup
@@ -460,7 +472,7 @@ public class RepositoryExportResource {
         try {
           OutputStream cos;
           if (async) {
-            OutputStream blobOutputStream = exportService.store(repository, fileExtension);
+            OutputStream blobOutputStream = exportService.store(repository, false, compressed, !Strings.isNullOrEmpty(password));
             cos = repositoryImportExportEncryption.optionallyEncrypt(blobOutputStream, password);
           } else {
             cos = repositoryImportExportEncryption.optionallyEncrypt(os, password);
@@ -521,6 +533,7 @@ public class RepositoryExportResource {
         .build()
     );
   }
+
 
   private static class WrongTypeException extends BadRequestException {
 

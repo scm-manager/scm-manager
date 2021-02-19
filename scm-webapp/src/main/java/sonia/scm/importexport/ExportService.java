@@ -25,62 +25,58 @@
 package sonia.scm.importexport;
 
 import com.google.common.annotations.VisibleForTesting;
-import lombok.Value;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
 import sonia.scm.store.BlobStoreFactory;
+import sonia.scm.store.DataStore;
+import sonia.scm.store.DataStoreFactory;
 import sonia.scm.user.User;
 
 import javax.inject.Inject;
-import javax.inject.Singleton;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.Clock;
 import java.time.Instant;
-import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-@Singleton
 public class ExportService {
 
   static final String STORE_NAME = "repository-export";
   private final BlobStoreFactory blobStoreFactory;
+  private final DataStoreFactory dataStoreFactory;
+  private final ExportFileExtensionResolver fileExtensionResolver;
   private final Clock clock;
-  private final HashSet<String> pendingExports = new HashSet<>();
 
   @Inject
-  public ExportService(BlobStoreFactory blobStoreFactory) {
+  public ExportService(BlobStoreFactory blobStoreFactory, DataStoreFactory dataStoreFactory, ExportFileExtensionResolver fileExtensionResolver) {
     this.blobStoreFactory = blobStoreFactory;
+    this.dataStoreFactory = dataStoreFactory;
+    this.fileExtensionResolver = fileExtensionResolver;
     this.clock = Clock.systemUTC();
   }
 
   @VisibleForTesting
-  ExportService(BlobStoreFactory blobStoreFactory, Clock clock) {
+  ExportService(BlobStoreFactory blobStoreFactory, DataStoreFactory dataStoreFactory, ExportFileExtensionResolver fileExtensionResolver, Clock clock) {
     this.blobStoreFactory = blobStoreFactory;
+    this.dataStoreFactory = dataStoreFactory;
+    this.fileExtensionResolver = fileExtensionResolver;
     this.clock = clock;
   }
 
-  public OutputStream store(Repository repository, String fileExtension) {
-    pendingExports.add(repository.getId());
-    BlobStore store = createStore(repository);
-    if (!store.getAll().isEmpty()) {
-      store.clear();
-    }
-
-    Blob blob = store.create(fileExtension);
+  public OutputStream store(Repository repository, boolean withMetadata, boolean compressed, boolean encrypted) {
+    storeExportInformation(repository.getId(), withMetadata, compressed, encrypted);
     try {
-      OutputStream os = blob.getOutputStream();
-      storeExportInformation(repository, os);
-      return os;
+      return storeNewBlob(repository.getId()).getOutputStream();
     } catch (IOException e) {
       throw new ExportFailedException(
         entity(repository).build(),
@@ -90,99 +86,92 @@ public class ExportService {
     }
   }
 
-  private void storeExportInformation(Repository repository, OutputStream os) {
-    try {
-      byte[] exportInformation = createExportInformation().getBytes();
-      try (DataOutputStream dos = new DataOutputStream(os)) {
-        dos.writeInt(exportInformation.length);
-        dos.write(exportInformation);
-      }
-    } catch (IOException e) {
-      throw new ExportFailedException(
-        entity(repository).build(),
-        "Could not write export information to export-blob",
-        e
-      );
+  public RepositoryExportInformation getExportInformation(Repository repository) {
+    RepositoryExportInformation info = createDataStore().get(repository.getId());
+    if (info == null) {
+      throw new NotFoundException(RepositoryExportInformation.class, repository.getId());
     }
+    return info;
+  }
+
+  public InputStream getData(Repository repository) throws IOException {
+    Blob blob = getBlob(repository.getId());
+    if (blob == null) {
+      throw new NotFoundException(Blob.class, repository.getId());
+    }
+    return blob.getInputStream();
+  }
+
+  public boolean checkExportIsAvailable(Repository repository) {
+    RepositoryExportInformation info = createDataStore().get(repository.getId());
+    return info != null && info.getStatus() == ExportStatus.FINISHED;
   }
 
   public String getFileExtension(Repository repository) {
-    return getBlob(repository).getId();
+    return fileExtensionResolver.resolve(repository, getExportInformation(repository));
   }
 
-  public InputStream getData(Repository repository) {
-    try {
-      InputStream is = getBlob(repository).getInputStream();
-      readExportInformation(is);
-      return is;
-    } catch (IOException e) {
-      throw new ExportFailedException(
-        entity(repository).build(),
-        "Could not stored repository export from blob",
-        e
-      );
-    }
-  }
-
-  public void checkExportExists(Repository repository) {
-    getBlob(repository);
-  }
-
-  public void clear(Repository repository) {
-    createStore(repository).clear();
+  public void clear(String repositoryId) {
+    createDataStore().remove(repositoryId);
+    createBlobStore(repositoryId).clear();
   }
 
   public void setExportFinished(Repository repository) {
-    pendingExports.remove(repository.getId());
+    DataStore<RepositoryExportInformation> dataStore = createDataStore();
+    RepositoryExportInformation info = dataStore.get(repository.getId());
+    info.setStatus(ExportStatus.FINISHED);
+    dataStore.put(repository.getId(), info);
   }
 
   public boolean isExporting(Repository repository) {
-    return pendingExports.stream().anyMatch(e -> e.equals(repository.getId()));
+    RepositoryExportInformation info = createDataStore().get(repository.getId());
+    return info != null && info.getStatus() != ExportStatus.FINISHED;
   }
 
+  public void cleanupUnfinishedExports() {
+    DataStore<RepositoryExportInformation> dataStore = createDataStore();
+    List<Map.Entry<String, RepositoryExportInformation>> unfinishedExports = dataStore.getAll().entrySet().stream()
+      .filter(e -> e.getValue().getStatus() == ExportStatus.EXPORTING)
+      .collect(Collectors.toList());
 
-  private String createExportInformation() {
+    for (Map.Entry<String, RepositoryExportInformation> export : unfinishedExports) {
+      createBlobStore(export.getKey()).clear();
+      RepositoryExportInformation info = dataStore.get(export.getKey());
+      info.setStatus(ExportStatus.INTERRUPTED);
+      dataStore.put(export.getKey(), info);
+    }
+  }
+
+  private Blob storeNewBlob(String repositoryId) {
+    BlobStore store = createBlobStore(repositoryId);
+    if (!store.getAll().isEmpty()) {
+      store.clear();
+    }
+
+    return store.create(repositoryId);
+  }
+
+  private void storeExportInformation(String repositoryId, boolean withMetadata, boolean compressed, boolean encrypted) {
+    DataStore<RepositoryExportInformation> dataStore = createDataStore();
+    if (dataStore.get(repositoryId) != null) {
+      dataStore.remove(repositoryId);
+    }
+
     User exporter = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
     Instant instant = clock.instant();
-
-    return String.format("%s|%s|%s", exporter.getName(), exporter.getMail(), instant.toString());
+    RepositoryExportInformation info = new RepositoryExportInformation(exporter, instant, withMetadata, compressed, encrypted, ExportStatus.EXPORTING);
+    dataStore.put(repositoryId, info);
   }
 
-  public RepositoryExportInformation getExportInformation(Repository repository) {
-    try {
-      String information = readExportInformation(getBlob(repository).getInputStream());
-      String[] splitInformation = information.split("\\|");
-      return new RepositoryExportInformation(splitInformation[0], splitInformation[1], Instant.parse(splitInformation[2]));
-    } catch (IOException e) {
-      throw new ExportFailedException(entity(repository).build(), "Could not read export information from export-blob", e);
-    }
+  private Blob getBlob(String repositoryId) {
+    return createBlobStore(repositoryId).get(repositoryId);
   }
 
-  private String readExportInformation(InputStream is) throws IOException {
-    try (DataInputStream dis = new DataInputStream(is)) {
-      int length = dis.readInt();
-      byte[] exportInformation = new byte[length];
-      dis.read(exportInformation);
-      return new String(exportInformation);
-    }
+  private DataStore<RepositoryExportInformation> createDataStore() {
+    return dataStoreFactory.withType(RepositoryExportInformation.class).withName(STORE_NAME).build();
   }
 
-  private Blob getBlob(Repository repository) {
-    List<Blob> blobs = createStore(repository).getAll();
-    if (blobs.isEmpty()) {
-      throw new NotFoundException("repository-export", repository.getId());
-    }
-    return blobs.get(0);
-  }
-
-  private BlobStore createStore(Repository repository) {
-    return blobStoreFactory.withName(STORE_NAME).forRepository(repository).build();
-  }
-
-  @Value
-  static class RepositoryExportInformation {
-    String username;
-    String mail;
-    Instant when;
+  private BlobStore createBlobStore(String repositoryId) {
+    return blobStoreFactory.withName(STORE_NAME).forRepository(repositoryId).build();
   }
 }

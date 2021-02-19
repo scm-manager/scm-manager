@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.lifecycle;
 
 import com.google.common.collect.Lists;
@@ -39,6 +39,7 @@ import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
+import sonia.scm.importexport.ExportService;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
@@ -81,6 +82,9 @@ class SetupContextListenerTest {
 
   @Mock
   private GroupManager groupManager;
+
+  @Mock
+  private ExportService exportService;
 
   @Mock
   private PermissionAssigner permissionAssigner;
@@ -207,6 +211,13 @@ class SetupContextListenerTest {
     setupContextListener.contextInitialized(null);
 
     verify(groupManager, never()).create(any());
+  }
+
+  @Test
+  void shouldCleanupUnfinishedRepositoryExports() {
+    setupContextListener.contextInitialized(null);
+
+    verify(exportService).cleanupUnfinishedExports();
   }
 
   private void verifyAdminPermissionsAssigned() {

@@ -184,7 +184,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
     super.repositoryImportResource = new RepositoryImportResource(repositoryManager, dtoToRepositoryMapper, serviceFactory, resourceLinks, eventBus, fullScmRepositoryImporter, repositoryImportExportEncryption);
-    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryImportExportEncryption, exportService);
+    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryImportExportEncryption, exportService, resourceLinks);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
@@ -842,7 +842,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(SC_ACCEPTED, response.getStatus());
-    assertEquals("broken_test_link", response.getOutputHeaders().getFirst("SCM-Export-Download"));
+    assertEquals("/v2/repositories/space/repo/export/download", response.getOutputHeaders().getFirst("SCM-Export-Download"));
   }
 
   @Test
@@ -925,7 +925,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
 
     when(exportService.isExporting(repository)).thenReturn(false);
-    doThrow(NotFoundException.class).when(exportService).checkExportExists(repository);
+    doThrow(NotFoundException.class).when(exportService).checkExportIsAvailable(repository);
 
     MockHttpRequest request = MockHttpRequest
       .head("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/status");
@@ -937,7 +937,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldDeleteRepositoryExport() throws URISyntaxException {
+  public void shouldDeleteRepositoryExport() throws URISyntaxException, IOException {
     String namespace = "space";
     String name = "repo";
     Repository repository = createRepository(namespace, name, "svn");
@@ -957,7 +957,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(SC_NO_CONTENT, response.getStatus());
-    verify(exportService).clear(repository);
+    verify(exportService).clear(repository.getId());
   }
 
   @Test
@@ -972,7 +972,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
 
     when(exportService.isExporting(repository)).thenReturn(false);
-    doThrow(NotFoundException.class).when(exportService).checkExportExists(repository);
+    doThrow(NotFoundException.class).when(exportService).checkExportIsAvailable(repository);
 
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/download");
@@ -981,7 +981,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(SC_NOT_FOUND, response.getStatus());
-    verify(exportService).checkExportExists(repository);
+    verify(exportService).checkExportIsAvailable(repository);
   }
 
   @Test
@@ -1007,7 +1007,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldDownloadRepositoryExportIfReady() throws URISyntaxException {
+  public void shouldDownloadRepositoryExportIfReady() throws URISyntaxException, IOException {
     String namespace = "space";
     String name = "repo";
     Repository repository = createRepository(namespace, name, "svn");
@@ -1019,6 +1019,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     when(exportService.isExporting(repository)).thenReturn(false);
     when(exportService.getData(repository)).thenReturn(new ByteArrayInputStream("content".getBytes()));
+    when(exportService.getFileExtension(repository)).thenReturn("tar.gz.enc");
 
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/download");
