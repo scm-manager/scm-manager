@@ -32,18 +32,31 @@ import sonia.scm.plugin.Extension;
 import sonia.scm.repository.RepositoryEvent;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Extension @EagerSingleton
 class RepositoryUpdateAfterCreationHook {
 
-  private final Set<RepositoryUpdateStep> repositorySteps;
+  private final List<RepositoryUpdateStep> repositorySteps;
   private final UpdateStepStore updateStepStore;
 
   @Inject
   RepositoryUpdateAfterCreationHook(Set<RepositoryUpdateStep> repositorySteps, UpdateStepStore updateStepStore) {
-    this.repositorySteps = repositorySteps;
+    this.repositorySteps = determineStepsWithHighestVersion(repositorySteps);
     this.updateStepStore = updateStepStore;
+  }
+
+  private ArrayList<RepositoryUpdateStep> determineStepsWithHighestVersion(Set<RepositoryUpdateStep> repositorySteps) {
+    List<RepositoryUpdateStep> temporarySteps = new ArrayList<>(repositorySteps);
+    temporarySteps.sort(Comparator.comparing(RepositoryUpdateStep::getTargetVersion).reversed());
+    Map<String, RepositoryUpdateStep> stepsForDataType = new HashMap<>();
+    temporarySteps.forEach(step -> stepsForDataType.put(step.getAffectedDataType(), step));
+    return new ArrayList<>(stepsForDataType.values());
   }
 
   @Subscribe
