@@ -21,10 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.cache;
 
 //~--- JDK imports ------------------------------------------------------------
+
+import com.google.inject.ImplementedBy;
 
 import java.io.File;
 
@@ -33,35 +35,14 @@ import java.net.URL;
 import java.util.Iterator;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public interface CacheConfigurationLoader
-{
+@ImplementedBy(DefaultCacheConfigurationLoader.class)
+public interface CacheConfigurationLoader {
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public URL getDefaultResource();
+  URL getDefaultResource();
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public File getManualFileResource();
+  File getManualFileResource();
 
-  /**
-   * Method description
-   *
-   *
-   * @param path
-   *
-   * @return
-   */
-  public Iterator<URL> getModuleResources();
+  Iterator<URL> getModuleResources();
 }

@@ -35,7 +35,7 @@ import java.util.concurrent.Callable;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-public class GitLazyChangesetResolver implements Callable<Iterable<RevCommit>> {
+class GitLazyChangesetResolver implements Callable<Iterable<RevCommit>> {
   private final Repository repository;
   private final Git git;
 

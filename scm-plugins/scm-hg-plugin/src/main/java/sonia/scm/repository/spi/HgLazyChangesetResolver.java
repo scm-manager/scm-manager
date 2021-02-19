@@ -24,10 +24,11 @@
 
 package sonia.scm.repository.spi;
 
-import com.aragost.javahg.Repository;
 import com.aragost.javahg.commands.LogCommand;
 import sonia.scm.repository.Changeset;
+import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.Person;
+import sonia.scm.repository.Repository;
 
 import java.util.List;
 import java.util.concurrent.Callable;
@@ -35,21 +36,24 @@ import java.util.stream.Collectors;
 
 class HgLazyChangesetResolver implements Callable<List<Changeset>> {
 
+  private final HgRepositoryFactory factory;
   private final Repository repository;
 
-  HgLazyChangesetResolver(Repository repository) {
+  HgLazyChangesetResolver(HgRepositoryFactory factory, Repository repository) {
+    this.factory = factory;
     this.repository = repository;
   }
 
   @Override
-  public List<Changeset> call() {
-    return LogCommand.on(repository).execute().stream()
+  public Iterable<Changeset> call() {
+    Iterator<Changeset> iterator = LogCommand.on(factory.openForRead(repository)).execute().stream()
       .map(changeset -> new Changeset(
         changeset.getNode(),
         changeset.getTimestamp().getDate().getTime(),
         Person.toPerson(changeset.getUser()),
         changeset.getMessage())
       )
-      .collect(Collectors.toList());
+      .iterator();
+    return () -> iterator;
   }
 }

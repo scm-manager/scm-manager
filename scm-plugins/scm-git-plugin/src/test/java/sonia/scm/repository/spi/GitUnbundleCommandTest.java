@@ -32,6 +32,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import sonia.scm.util.Archives;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitChangesetConverterFactory;
@@ -91,8 +92,7 @@ public class GitUnbundleCommandTest extends AbstractGitCommandTestBase {
     verify(eventBus).post(eventCaptor.capture());
     PostReceiveRepositoryHookEvent event = eventCaptor.getValue();
     List<Changeset> changesets = event.getContext().getChangesetProvider().getChangesetList();
-    assertThat(changesets).contains(first);
-    assertThat(changesets).hasSize(1);
+    assertThat(changesets).containsExactly(first);
   }
 
   @Test
@@ -109,14 +109,15 @@ public class GitUnbundleCommandTest extends AbstractGitCommandTestBase {
   private void assertFileWithContentWasCreated(File temp, String filePath, String fileContent) throws IOException {
     File createdFile = temp.toPath().resolve(filePath).toFile();
     assertThat(createdFile).exists();
-    assertThat(Files.readLines(createdFile, StandardCharsets.UTF_8).get(0)).isEqualTo(fileContent);
+    assertThat(createdFile).hasContent(fileContent);
   }
 
   private UnbundleCommandRequest createUnbundleCommandRequestForFile(String filePath, String fileContent) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    TarArchiveOutputStream taos = new TarArchiveOutputStream(baos);
+    TarArchiveOutputStream taos = Archives.createTarOutputStream(baos);
     addEntry(taos, filePath, fileContent);
     taos.finish();
+    taos.close();
 
     ByteSource byteSource = ByteSource.wrap(baos.toByteArray());
     UnbundleCommandRequest unbundleCommandRequest = new UnbundleCommandRequest(byteSource);

@@ -27,8 +27,6 @@ package sonia.scm.repository.spi;
 import com.aragost.javahg.Branch;
 import com.aragost.javahg.Repository;
 import com.google.common.io.ByteSource;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
@@ -42,12 +40,12 @@ import sonia.scm.repository.api.UnbundleResponse;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
+import static sonia.scm.util.Archives.extractTar;
 
 public class HgUnbundleCommand implements UnbundleCommand {
   private static final Logger LOG = LoggerFactory.getLogger(HgUnbundleCommand.class);
@@ -55,11 +53,13 @@ public class HgUnbundleCommand implements UnbundleCommand {
   private final HgCommandContext context;
   private final HookContextFactory hookContextFactory;
   private final ScmEventBus eventBus;
+  private final HgLazyChangesetResolver changesetResolver;
 
-  HgUnbundleCommand(HgCommandContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus) {
+  HgUnbundleCommand(HgCommandContext context, HookContextFactory hookContextFactory, ScmEventBus eventBus, HgLazyChangesetResolver changesetResolver) {
     this.context = context;
     this.hookContextFactory = hookContextFactory;
     this.eventBus = eventBus;
+    this.changesetResolver = changesetResolver;
   }
 
   @Override
@@ -81,7 +81,6 @@ public class HgUnbundleCommand implements UnbundleCommand {
     Repository repository = context.open();
     List<String> branches = extractBranches(repository);
     List<Tag> tags = extractTags(repository);
-    HgLazyChangesetResolver changesetResolver = new HgLazyChangesetResolver(repository);
     eventBus.post(createEvent(branches, tags, changesetResolver));
   }
 
@@ -105,20 +104,6 @@ public class HgUnbundleCommand implements UnbundleCommand {
   }
 
   private void unbundleRepositoryFromRequest(UnbundleCommandRequest request, Path repositoryDir) throws IOException {
-    try (TarArchiveInputStream tais = new TarArchiveInputStream(request.getArchive().openBufferedStream())) {
-      TarArchiveEntry entry;
-      while ((entry = tais.getNextTarEntry()) != null) {
-        Path filePath = repositoryDir.resolve(entry.getName());
-        createDirectoriesIfNestedFile(filePath);
-        Files.copy(tais, filePath, StandardCopyOption.REPLACE_EXISTING);
-      }
-    }
-  }
-
-  private void createDirectoriesIfNestedFile(Path filePath) throws IOException {
-    Path directory = filePath.getParent();
-    if (!Files.exists(directory)) {
-      Files.createDirectories(directory);
-    }
+    extractTar(request.getArchive().openBufferedStream(), repositoryDir).run();
   }
 }

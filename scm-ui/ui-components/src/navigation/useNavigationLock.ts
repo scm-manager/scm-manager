@@ -22,47 +22,22 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+import { useEffect } from "react";
 
-import sonia.scm.ContextEntry;
-import sonia.scm.repository.api.BundleResponse;
-import sonia.scm.repository.api.ExportFailedException;
-
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-
-import static sonia.scm.util.Archives.addPathToTar;
-
-public class HgBundleCommand implements BundleCommand {
-
-  private static final String TAR_ARCHIVE = "tar";
-  private final HgCommandContext context;
-
-
-  public HgBundleCommand(HgCommandContext context) {
-    this.context = context;
-  }
-
-  @Override
-  public BundleResponse bundle(BundleCommandRequest request) throws IOException {
-    Path repoDir = context.getDirectory().toPath();
-    if (Files.exists(repoDir)) {
-      try (OutputStream os = request.getArchive().openStream()) {
-        addPathToTar(repoDir, os).run();
-      }
+// This hook can be used to warn the user on reloading or closing the current page if the navigation lock is enabled.
+const useNavigationLock = (enabled: boolean) => {
+  useEffect(() => {
+    if (enabled) {
+      window.onbeforeunload = () => true;
     } else {
-      throw new ExportFailedException(
-        ContextEntry.ContextBuilder.noContext(),
-        "Could not export repository. Repository directory does not exist."
-      );
+      // @ts-ignore We need to reset this listener if the lock was disabled
+      window.onbeforeunload = undefined;
     }
-    return new BundleResponse(0);
-  }
+    return () => {
+      // @ts-ignore Remove this listener when the hook will be unmounted
+      window.onbeforeunload = undefined;
+    };
+  }, [enabled]);
+};
 
-  @Override
-  public String getFileExtension() {
-    return TAR_ARCHIVE;
-  }
-}
+export default useNavigationLock;

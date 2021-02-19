@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.cache;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -76,7 +76,7 @@ public class GuavaCacheManagerConfiguration
   {
     if (caches == null)
     {
-      caches = Collections.EMPTY_LIST;
+      caches = Collections.emptyList();
     }
 
     return caches;

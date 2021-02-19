@@ -67,21 +67,22 @@ const ImportFullRepository: FC<Props> = ({ url, repositoryType, setImportPending
     setError(undefined);
     handleImportLoading(true);
     apiClient
-      .postBinary(url, (formData) => {
+      .postBinary(url, formData => {
         formData.append("bundle", file, file?.name);
         formData.append("repository", JSON.stringify(repo));
       })
-      .then((response) => {
+      .then(response => {
         const location = response.headers.get("Location");
         return apiClient.get(location!);
       })
-      .then((response) => response.json())
-      .then((repo) => {
+      .then(response => response.json())
+      .then(repo => {
+        handleImportLoading(false);
         if (history.location.pathname === currentPath) {
           history.push(`/repo/${repo.namespace}/${repo.name}/code/sources`);
         }
       })
-      .catch((error) => {
+      .catch(error => {
         setError(error);
         handleImportLoading(false);
       });

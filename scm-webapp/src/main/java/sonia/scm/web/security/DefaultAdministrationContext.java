@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.security;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -39,12 +39,10 @@ import org.apache.shiro.util.ThreadState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
+import sonia.scm.security.Authentications;
 import sonia.scm.security.Role;
 import sonia.scm.user.User;
 import sonia.scm.util.AssertUtil;
-
-import javax.xml.bind.JAXB;
-import java.net.URL;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -57,8 +55,13 @@ public class DefaultAdministrationContext implements AdministrationContext
 {
 
   /** Field description */
-  public static final String SYSTEM_ACCOUNT =
-    "/sonia/scm/web/security/system-account.xml";
+  private static final User SYSTEM_ACCOUNT = new User(
+    Authentications.PRINCIPAL_SYSTEM,
+    "SCM-Manager System Account",
+    null
+  );
+
+
 
   /** Field description */
   static final String REALM = "AdminRealm";
@@ -83,16 +86,7 @@ public class DefaultAdministrationContext implements AdministrationContext
     this.injector = injector;
     this.securityManager = securityManager;
 
-    URL url = DefaultAdministrationContext.class.getResource(SYSTEM_ACCOUNT);
-
-    if (url == null)
-    {
-      throw new RuntimeException("could not find resource for system account");
-    }
-
-    User adminUser = JAXB.unmarshal(url, User.class);
-
-    principalCollection = createAdminCollection(adminUser);
+    principalCollection = createAdminCollection(SYSTEM_ACCOUNT);
   }
 
   //~--- methods --------------------------------------------------------------

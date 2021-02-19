@@ -35,9 +35,9 @@ import sonia.scm.store.ExportableStore;
 import sonia.scm.store.StoreEntryMetaData;
 import sonia.scm.store.StoreExporter;
 import sonia.scm.store.StoreType;
+import sonia.scm.util.Archives;
 
 import javax.inject.Inject;
-import java.io.BufferedOutputStream;
 import java.io.FilterOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -58,8 +58,7 @@ public class TarArchiveRepositoryStoreExporter {
 
   public void export(Repository repository, OutputStream output) {
     try (
-      BufferedOutputStream bos = new BufferedOutputStream(output);
-      final TarArchiveOutputStream taos = new TarArchiveOutputStream(bos)
+      final TarArchiveOutputStream taos = Archives.createTarOutputStream(output)
     ) {
       List<ExportableStore> exportableStores = storeExporter.listExportableStores(repository);
       for (ExportableStore store : exportableStores) {

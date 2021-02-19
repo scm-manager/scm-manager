@@ -43,18 +43,15 @@ class GitConvertingChangesetIterable implements Iterable<Changeset> {
 
   @Override
   public Iterator<Changeset> iterator() {
-    return new ConvertingChangesetIterator(commitIterable.iterator(), converter);
+    return new ConvertingChangesetIterator(commitIterable.iterator());
   }
 
-  static class ConvertingChangesetIterator implements Iterator<Changeset> {
+  class ConvertingChangesetIterator implements Iterator<Changeset> {
 
     private final Iterator<RevCommit> commitIterator;
-    private final GitChangesetConverter converter;
 
-    private ConvertingChangesetIterator(Iterator<RevCommit> commitIterator,
-                                        GitChangesetConverter converter) {
+    private ConvertingChangesetIterator(Iterator<RevCommit> commitIterator) {
       this.commitIterator = commitIterator;
-      this.converter = converter;
     }
 
     @Override

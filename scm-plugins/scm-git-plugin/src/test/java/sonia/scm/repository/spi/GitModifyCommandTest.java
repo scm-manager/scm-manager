@@ -44,6 +44,7 @@ import java.nio.file.Files;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.description;
 import static org.mockito.Mockito.verify;
 
 public class GitModifyCommandTest extends GitModifyCommandTestBase {
@@ -344,7 +345,9 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
     command.execute(request);
 
-    verify(transportProtocolRule.repositoryManager).fireHookEvent(argThat(argument -> argument.getType() == RepositoryHookType.PRE_RECEIVE));
-    verify(transportProtocolRule.repositoryManager).fireHookEvent(argThat(argument -> argument.getType() == RepositoryHookType.POST_RECEIVE));
+    verify(transportProtocolRule.repositoryManager, description("pre receive hook event expected"))
+      .fireHookEvent(argThat(argument -> argument.getType() == RepositoryHookType.PRE_RECEIVE));
+    verify(transportProtocolRule.repositoryManager, description("post receive hook event expected"))
+      .fireHookEvent(argThat(argument -> argument.getType() == RepositoryHookType.POST_RECEIVE));
   }
 }

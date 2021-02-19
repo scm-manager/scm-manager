@@ -48,7 +48,9 @@ import sonia.scm.repository.api.UnbundleResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import java.util.concurrent.Callable;
 
@@ -151,7 +153,7 @@ public class SvnUnbundleCommand extends AbstractSvnCommand implements UnbundleCo
     }
   }
 
-  private static class ChangesetResolver implements Callable<List<Changeset>> {
+  private static class ChangesetResolver implements Callable<Iterable<Changeset>> {
 
     private final Repository repository;
     private final LogCommand logCommand;
@@ -162,18 +164,58 @@ public class SvnUnbundleCommand extends AbstractSvnCommand implements UnbundleCo
     }
 
     @Override
-    public List<Changeset> call() {
-      try {
-      LogCommandRequest request = new LogCommandRequest();
-      // Setting paging limit to "-1" doesn't work
-      request.setPagingLimit(999999);
-      return logCommand.getChangesets(request).getChangesets();
-      } catch (IOException e) {
-        throw new ImportFailedException(
-          ContextEntry.ContextBuilder.entity(repository).build(),
-          "Could not provide changesets for imported repository",
-          e
-        );
+    public Iterable<Changeset> call() {
+        return SingleLogRequestChangesetIterator::new;
+    }
+
+    private class SingleLogRequestChangesetIterator implements Iterator<Changeset> {
+
+      private int currentNumber = 0;
+      private Changeset nextChangeset;
+
+      SingleLogRequestChangesetIterator() {
+        prefetch();
+      }
+
+      @Override
+      public boolean hasNext() {
+        return nextChangeset != null;
+      }
+
+      @Override
+      public Changeset next() {
+        if (nextChangeset == null) {
+          throw new NoSuchElementException();
+        }
+        Changeset currentChangeset = nextChangeset;
+        prefetch();
+        return currentChangeset;
+      }
+
+      private void prefetch() {
+        try {
+          List<Changeset> changesets = fetchSingleChangesetPage();
+          if (changesets.isEmpty()) {
+            nextChangeset = null;
+          } else {
+            nextChangeset = changesets.get(0);
+          }
+        } catch (IOException e) {
+          throw new ImportFailedException(
+            ContextEntry.ContextBuilder.entity(repository).build(),
+            "Could not provide changeset nr " + currentNumber + " for imported repository",
+            e
+          );
+        }
+      }
+
+      private List<Changeset> fetchSingleChangesetPage() throws IOException {
+        LogCommandRequest request = new LogCommandRequest();
+        request.setPagingStart(currentNumber);
+        request.setPagingLimit(1);
+        List<Changeset> changesets = logCommand.getChangesets(request).getChangesets();
+        currentNumber = currentNumber + 1;
+        return changesets;
       }
     }
   }

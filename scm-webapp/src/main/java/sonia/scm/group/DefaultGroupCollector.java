@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.group;
 
 import com.cronutils.utils.VisibleForTesting;
@@ -63,12 +63,15 @@ public class DefaultGroupCollector implements GroupCollector {
   public Set<String> collect(String principal) {
     ImmutableSet.Builder<String> builder = ImmutableSet.builder();
 
-    if (!Authentications.isSubjectAnonymous(principal)) {
+    if (Authentications.isSubjectAnonymous(principal)) {
+      appendInternalGroups(principal, builder);
+    } else if (Authentications.isSubjectSystemAccount(principal)) {
       builder.add(AUTHENTICATED);
+    } else {
+      builder.add(AUTHENTICATED);
+      builder.addAll(resolveExternalGroups(principal));
+      appendInternalGroups(principal, builder);
     }
-
-    builder.addAll(resolveExternalGroups(principal));
-    appendInternalGroups(principal, builder);
 
     Set<String> groups = builder.build();
     LOG.debug("collected following groups for principal {}: {}", principal, groups);

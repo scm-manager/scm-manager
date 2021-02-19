@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.group;
 
 import com.google.common.collect.ImmutableSet;
@@ -32,8 +32,10 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.SCMContext;
 import sonia.scm.cache.MapCache;
 import sonia.scm.cache.MapCacheManager;
+import sonia.scm.security.Authentications;
 
 import java.util.HashSet;
 import java.util.List;
@@ -43,6 +45,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static sonia.scm.security.Authentications.PRINCIPAL_ANONYMOUS;
+import static sonia.scm.security.Authentications.PRINCIPAL_SYSTEM;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultGroupCollectorTest {
@@ -93,6 +97,28 @@ class DefaultGroupCollectorTest {
 
     verify(groupResolver, never()).resolve("trillian");
   }
+
+  @Test
+  void shouldNotCallResolverForAnonymous() {
+    groupResolvers.add(groupResolver);
+    Set<String> groups = collector.collect(PRINCIPAL_ANONYMOUS);
+    verify(groupResolver, never()).resolve(PRINCIPAL_ANONYMOUS);
+  }
+
+  @Test
+  void shouldNotCallResolverForSystemAccount() {
+    groupResolvers.add(groupResolver);
+    Set<String> groups = collector.collect(PRINCIPAL_SYSTEM);
+    verify(groupResolver, never()).resolve(PRINCIPAL_SYSTEM);
+  }
+
+  @Test
+  void shouldNotResolveInternalGroupsForSystemAccount() {
+    Set<String> groups = collector.collect(PRINCIPAL_SYSTEM);
+    verify(groupDAO, never()).getAll();
+  }
+
+
 
   @Nested
   class WithGroupsFromDao {

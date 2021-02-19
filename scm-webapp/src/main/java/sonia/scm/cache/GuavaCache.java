@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.cache;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -47,8 +47,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @param <K>
  * @param <V>
  */
-public class GuavaCache<K, V>
-  implements Cache<K, V>, org.apache.shiro.cache.Cache<K, V>
+public class GuavaCache<K, V> implements Cache<K, V>
 {
 
   /**
@@ -106,7 +105,7 @@ public class GuavaCache<K, V>
       this.copyStrategy = CopyStrategy.NONE;
     }
   }
-  
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -196,6 +195,7 @@ public class GuavaCache<K, V>
    * @return
    */
   @Override
+  @SuppressWarnings("java:S4738") // we have to use guava predicate for compatibility
   public Iterable<V> removeAll(Predicate<K> filter)
   {
     Set<V> removedValues = Sets.newHashSet();

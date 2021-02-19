@@ -22,47 +22,21 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.importexport;
 
-import sonia.scm.ContextEntry;
-import sonia.scm.repository.api.BundleResponse;
-import sonia.scm.repository.api.ExportFailedException;
+import java.io.FilterInputStream;
+import java.io.InputStream;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
+@SuppressWarnings("java:S4929")
+  // we only want to override close here
+class NoneClosingInputStream extends FilterInputStream {
 
-import static sonia.scm.util.Archives.addPathToTar;
-
-public class HgBundleCommand implements BundleCommand {
-
-  private static final String TAR_ARCHIVE = "tar";
-  private final HgCommandContext context;
-
-
-  public HgBundleCommand(HgCommandContext context) {
-    this.context = context;
+  NoneClosingInputStream(InputStream delegate) {
+    super(delegate);
   }
 
   @Override
-  public BundleResponse bundle(BundleCommandRequest request) throws IOException {
-    Path repoDir = context.getDirectory().toPath();
-    if (Files.exists(repoDir)) {
-      try (OutputStream os = request.getArchive().openStream()) {
-        addPathToTar(repoDir, os).run();
-      }
-    } else {
-      throw new ExportFailedException(
-        ContextEntry.ContextBuilder.noContext(),
-        "Could not export repository. Repository directory does not exist."
-      );
-    }
-    return new BundleResponse(0);
-  }
-
-  @Override
-  public String getFileExtension() {
-    return TAR_ARCHIVE;
+  public void close() {
+    // Avoid closing stream because JAXB tries to close the stream
   }
 }

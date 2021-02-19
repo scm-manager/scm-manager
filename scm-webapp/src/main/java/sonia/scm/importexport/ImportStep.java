@@ -22,47 +22,18 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.importexport;
 
-import sonia.scm.ContextEntry;
-import sonia.scm.repository.api.BundleResponse;
-import sonia.scm.repository.api.ExportFailedException;
+import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.io.InputStream;
 
-import static sonia.scm.util.Archives.addPathToTar;
+interface ImportStep {
+  boolean handle(TarArchiveEntry currentEntry, ImportState state, InputStream inputStream);
 
-public class HgBundleCommand implements BundleCommand {
-
-  private static final String TAR_ARCHIVE = "tar";
-  private final HgCommandContext context;
-
-
-  public HgBundleCommand(HgCommandContext context) {
-    this.context = context;
+  default void finish(ImportState state) {
   }
 
-  @Override
-  public BundleResponse bundle(BundleCommandRequest request) throws IOException {
-    Path repoDir = context.getDirectory().toPath();
-    if (Files.exists(repoDir)) {
-      try (OutputStream os = request.getArchive().openStream()) {
-        addPathToTar(repoDir, os).run();
-      }
-    } else {
-      throw new ExportFailedException(
-        ContextEntry.ContextBuilder.noContext(),
-        "Could not export repository. Repository directory does not exist."
-      );
-    }
-    return new BundleResponse(0);
-  }
-
-  @Override
-  public String getFileExtension() {
-    return TAR_ARCHIVE;
+  default void cleanup(ImportState state) {
   }
 }

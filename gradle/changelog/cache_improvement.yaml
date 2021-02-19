@@ -1,0 +1,4 @@
+- type: changed
+  description: Allow usage of cache as shiro authentication and authorization cache ([#1540](https://github.com/scm-manager/scm-manager/pull/1540))
+- type: fixed
+  description: Loading of cache configuration from plugins ([#1540](https://github.com/scm-manager/scm-manager/pull/1540))

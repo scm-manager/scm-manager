@@ -33,6 +33,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
+import sonia.scm.repository.HgTestUtil;
+import sonia.scm.util.Archives;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Person;
@@ -72,7 +74,7 @@ public class HgUnbundleCommandTest extends AbstractHgCommandTestBase {
     when(hookContextFactory.createContext(any(), eq(cmdContext.getScmRepository()))).thenReturn(hookContext);
     hookChangesetBuilder = mock(HookChangesetBuilder.class);
     when(hookContext.getChangesetProvider()).thenReturn(hookChangesetBuilder);
-    unbundleCommand = new HgUnbundleCommand(cmdContext, hookContextFactory, eventBus);
+    unbundleCommand = new HgUnbundleCommand(cmdContext, hookContextFactory, eventBus, new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), null));
   }
 
   @Test
@@ -114,9 +116,10 @@ public class HgUnbundleCommandTest extends AbstractHgCommandTestBase {
 
   private UnbundleCommandRequest createUnbundleCommandRequestForFile(String filePath, String fileContent) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
-    TarArchiveOutputStream taos = new TarArchiveOutputStream(baos);
+    TarArchiveOutputStream taos = Archives.createTarOutputStream(baos);
     addEntry(taos, filePath, fileContent);
     taos.finish();
+    taos.close();
 
     ByteSource byteSource = ByteSource.wrap(baos.toByteArray());
     return new UnbundleCommandRequest(byteSource);
