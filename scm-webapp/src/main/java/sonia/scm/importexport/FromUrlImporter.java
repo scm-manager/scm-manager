@@ -60,12 +60,14 @@ public class FromUrlImporter {
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
   private final ScmEventBus eventBus;
+  private final RepositoryImportLoggerFactory loggerFactory;
 
   @Inject
-  public FromUrlImporter(RepositoryManager manager, RepositoryServiceFactory serviceFactory, ScmEventBus eventBus) {
+  public FromUrlImporter(RepositoryManager manager, RepositoryServiceFactory serviceFactory, ScmEventBus eventBus, RepositoryImportLoggerFactory loggerFactory) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.eventBus = eventBus;
+    this.loggerFactory = loggerFactory;
   }
 
   public Repository importFromUrl(RepositoryImportParameters parameters, Repository repository) {
@@ -93,16 +95,22 @@ public class FromUrlImporter {
   @VisibleForTesting
   Consumer<Repository> pullChangesFromRemoteUrl(RepositoryImportParameters parameters) {
     return repository -> {
+      RepositoryImportLogger logger = loggerFactory.createLogger();
+      logger.start(RepositoryImportLog.ImportType.URL, repository);
       try (RepositoryService service = serviceFactory.create(repository)) {
         PullCommandBuilder pullCommand = service.getPullCommand();
         if (!Strings.isNullOrEmpty(parameters.getUsername()) && !Strings.isNullOrEmpty(parameters.getPassword())) {
+          logger.step("setting username and password for pull");
           pullCommand
             .withUsername(parameters.getUsername())
             .withPassword(parameters.getPassword());
         }
 
+        logger.step("pulling repository from " + parameters.getImportUrl());
         pullCommand.pull(parameters.getImportUrl());
+        logger.finished();
       } catch (IOException e) {
+        logger.failed(e);
         throw new InternalRepositoryException(repository, "Failed to import from remote url", e);
       }
     };

@@ -40,6 +40,7 @@ import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
@@ -59,12 +60,16 @@ public class FromBundleImporter {
   private final RepositoryManager manager;
   private final RepositoryServiceFactory serviceFactory;
   private final ScmEventBus eventBus;
+  private final WorkdirProvider workdirProvider;
+  private final RepositoryImportLoggerFactory loggerFactory;
 
   @Inject
-  public FromBundleImporter(RepositoryManager manager, RepositoryServiceFactory serviceFactory, ScmEventBus eventBus) {
+  public FromBundleImporter(RepositoryManager manager, RepositoryServiceFactory serviceFactory, ScmEventBus eventBus, WorkdirProvider workdirProvider, RepositoryImportLoggerFactory loggerFactory) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.eventBus = eventBus;
+    this.workdirProvider = workdirProvider;
+    this.loggerFactory = loggerFactory;
   }
 
   public Repository importFromBundle(boolean compressed, InputStream inputStream, Repository repository) {
@@ -89,17 +94,23 @@ public class FromBundleImporter {
   @VisibleForTesting
   Consumer<Repository> unbundleImport(InputStream inputStream, boolean compressed) {
     return repository -> {
-      File file = null;
+      RepositoryImportLogger logger = loggerFactory.createLogger();
+      logger.start(RepositoryImportLog.ImportType.DUMP, repository);
+      File workdir = workdirProvider.createNewWorkdir(repository.getId());
       try (RepositoryService service = serviceFactory.create(repository)) {
-        file = File.createTempFile("scm-import-", ".bundle");
+        logger.step("writing temporary dump file");
+        File file = File.createTempFile("scm-import-", ".bundle", workdir);
         long length = Files.asByteSink(file).writeFrom(inputStream);
         LOG.info("copied {} bytes to temp, start bundle import", length);
+        logger.step("importing repository data from dump file");
         service.getUnbundleCommand().setCompressed(compressed).unbundle(file);
+        logger.finished();
       } catch (IOException e) {
+        logger.failed(e);
         throw new InternalRepositoryException(repository, "Failed to import from bundle", e);
       } finally {
         try {
-          IOUtil.delete(file);
+          IOUtil.delete(workdir);
         } catch (IOException ex) {
           LOG.warn("could not delete temporary file", ex);
         }
