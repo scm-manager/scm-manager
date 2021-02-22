@@ -37,6 +37,7 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -50,6 +51,7 @@ import java.io.InputStream;
 import java.util.function.Consumer;
 
 import static java.util.Collections.singletonList;
+import static sonia.scm.importexport.RepositoryImportLog.ImportType.DUMP;
 import static sonia.scm.importexport.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.importexport.RepositoryTypeSupportChecker.type;
 
@@ -73,6 +75,8 @@ public class FromBundleImporter {
   }
 
   public Repository importFromBundle(boolean compressed, InputStream inputStream, Repository repository) {
+    RepositoryPermissions.create().check();
+
     Type t = type(manager, repository.getType());
     checkSupport(t, Command.UNBUNDLE);
 
@@ -80,8 +84,11 @@ public class FromBundleImporter {
       new RepositoryPermission(SecurityUtils.getSubject().getPrincipal().toString(), "OWNER", false)
     ));
 
+    RepositoryImportLogger logger = loggerFactory.createLogger();
+
     try {
-      repository = manager.create(repository, unbundleImport(inputStream, compressed));
+      logger.start(DUMP, repository);
+      repository = manager.create(repository, unbundleImport(inputStream, compressed, logger));
       eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, false));
     } catch (Exception e) {
       eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, true));
@@ -91,11 +98,8 @@ public class FromBundleImporter {
     return repository;
   }
 
-  @VisibleForTesting
-  Consumer<Repository> unbundleImport(InputStream inputStream, boolean compressed) {
+  private Consumer<Repository> unbundleImport(InputStream inputStream, boolean compressed, RepositoryImportLogger logger) {
     return repository -> {
-      RepositoryImportLogger logger = loggerFactory.createLogger();
-      logger.start(RepositoryImportLog.ImportType.DUMP, repository);
       File workdir = workdirProvider.createNewWorkdir(repository.getId());
       try (RepositoryService service = serviceFactory.create(repository)) {
         logger.step("writing temporary dump file");

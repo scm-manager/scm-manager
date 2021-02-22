@@ -62,6 +62,10 @@ class FromUrlImporterTest {
   private RepositoryService service;
   @Mock
   private ScmEventBus eventBus;
+  @Mock
+  private RepositoryImportLoggerFactory loggerFactory;
+  @Mock
+  private RepositoryImportLogger logger;
 
   @InjectMocks
   private FromUrlImporter importer;
@@ -69,6 +73,7 @@ class FromUrlImporterTest {
   @BeforeEach
   void setUpMocks() {
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
+    when(loggerFactory.createLogger()).thenReturn(logger);
   }
 
   @Test
