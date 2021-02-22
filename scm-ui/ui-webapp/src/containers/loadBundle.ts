@@ -114,12 +114,15 @@ expose("react", React);
 expose("react-dom", ReactDOM);
 expose("react-router-dom", ReactRouterDom);
 expose("styled-components", SytleComponents, SytleComponentsDefault);
-expose("redux", Redux);
-expose("react-redux", ReactRedux);
 expose("react-i18next", ReactI18Next);
 expose("classnames", ClassNames, ClassNamesDefault);
 expose("query-string", QueryString, QueryStringDefault);
 expose("@scm-manager/ui-extensions", UIExtensions);
 expose("@scm-manager/ui-components", UIComponents);
+
+// redux is deprecated in favor of ui-api,
+// which will be exported soon
+expose("redux", Redux);
+expose("react-redux", ReactRedux);
 
 export default (plugin: string) => SystemJS.import(plugin);
