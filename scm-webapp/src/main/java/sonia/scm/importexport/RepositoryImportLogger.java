@@ -49,6 +49,7 @@ class RepositoryImportLogger {
     log.setRepositoryType(repository.getType());
     log.setNamespace(repository.getNamespace());
     log.setName(repository.getName());
+    log.setRepositoryType(repository.getType());
     logId = logStore.put(log);
     addLogEntry(new RepositoryImportLog.Entry("import started"));
   }
