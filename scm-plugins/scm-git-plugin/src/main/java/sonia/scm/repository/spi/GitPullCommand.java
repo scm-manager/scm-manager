@@ -24,8 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
@@ -41,15 +39,19 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullResponse;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author Sebastian Sdorra
@@ -57,39 +59,21 @@ import java.io.IOException;
 public class GitPullCommand extends AbstractGitPushOrPullCommand
   implements PullCommand {
 
-  /**
-   * Field description
-   */
   private static final String REF_SPEC = "refs/heads/*:refs/heads/*";
+  private static final Logger LOG = LoggerFactory.getLogger(GitPullCommand.class);
+  private final ScmEventBus eventBus;
+  private final GitPostReceiveRepositoryHookEventFactory eventFactory;
 
-  /**
-   * Field description
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitPullCommand.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   * @param handler
-   * @param context
-   */
   @Inject
-  public GitPullCommand(GitRepositoryHandler handler, GitContext context) {
+  public GitPullCommand(GitRepositoryHandler handler,
+                        GitContext context,
+                        ScmEventBus eventBus,
+                        GitPostReceiveRepositoryHookEventFactory eventFactory) {
     super(handler, context);
+    this.eventBus = eventBus;
+    this.eventFactory = eventFactory;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @param request
-   * @return
-   * @throws IOException
-   */
   @Override
   public PullResponse pull(PullCommandRequest request)
     throws IOException {
@@ -108,24 +92,17 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   }
 
   private PullResponse convert(Git git, FetchResult fetch) {
-    long counter = 0l;
+    long counter = 0;
 
     for (TrackingRefUpdate tru : fetch.getTrackingRefUpdates()) {
       counter += count(git, tru);
     }
 
-    logger.debug("received {} changesets by pull", counter);
+    LOG.debug("received {} changesets by pull", counter);
 
     return new PullResponse(counter);
   }
 
-  /**
-   * Method description
-   *
-   * @param git
-   * @param tru
-   * @return
-   */
   private long count(Git git, TrackingRefUpdate tru) {
     long counter = 0;
 
@@ -151,12 +128,12 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
           counter += Iterables.size(commits);
         }
 
-        logger.trace("counting {} commits for ref update {}", counter, tru);
+        LOG.trace("counting {} commits for ref update {}", counter, tru);
       } catch (Exception ex) {
-        logger.error("could not count pushed/pulled changesets", ex);
+        LOG.error("could not count pushed/pulled changesets", ex);
       }
     } else {
-      logger.debug("do not count non branch ref update {}", tru);
+      LOG.debug("do not count non branch ref update {}", tru);
     }
 
     return counter;
@@ -174,10 +151,10 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     Preconditions.checkArgument(sourceDirectory.exists(),
       "target repository directory does not exists");
 
-    logger.debug("pull changes from {} to {}",
+    LOG.debug("pull changes from {} to {}",
       sourceDirectory.getAbsolutePath(), repository.getId());
 
-    PullResponse response = null;
+    PullResponse response;
 
     org.eclipse.jgit.lib.Repository source = null;
 
@@ -193,14 +170,14 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
   private PullResponse pullFromUrl(PullCommandRequest request)
     throws IOException {
-    logger.debug("pull changes from {} to {}", request.getRemoteUrl(), repository);
+    LOG.debug("pull changes from {} to {}", request.getRemoteUrl(), repository);
 
     PullResponse response;
     Git git = Git.wrap(open());
-
+    FetchResult result;
     try {
       //J-
-      FetchResult result = git.fetch()
+      result = git.fetch()
         .setCredentialsProvider(
           new UsernamePasswordCredentialsProvider(
             Strings.nullToEmpty(request.getUsername()),
@@ -223,6 +200,37 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
       );
     }
 
+    firePostReceiveRepositoryHookEvent(git, result);
+
     return response;
+  }
+
+  private void firePostReceiveRepositoryHookEvent(Git git, FetchResult result) {
+    try {
+      List<String> branches = getBranchesFromFetchResult(result);
+      List<Tag> tags = getTagsFromFetchResult(result);
+      GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(context.getRepository(), git);
+      eventBus.post(eventFactory.createEvent(context, branches, tags, changesetResolver));
+    } catch (IOException e) {
+      throw new ImportFailedException(
+        ContextEntry.ContextBuilder.entity(context.getRepository()).build(),
+        "Could not fire post receive repository hook event after unbundle",
+        e
+      );
+    }
+  }
+
+  private List<Tag> getTagsFromFetchResult(FetchResult result) {
+    return result.getAdvertisedRefs().stream()
+      .filter(r -> r.getName().startsWith("refs/tags/"))
+      .map(r -> new Tag(r.getName().substring("refs/tags/".length()), r.getObjectId().getName()))
+      .collect(Collectors.toList());
+  }
+
+  private List<String> getBranchesFromFetchResult(FetchResult result) {
+    return result.getAdvertisedRefs().stream()
+      .filter(r -> r.getName().startsWith("refs/heads/"))
+      .map(r -> r.getLeaf().getName().substring("refs/heads/".length()))
+      .collect(Collectors.toList());
   }
 }

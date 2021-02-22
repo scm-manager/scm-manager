@@ -24,42 +24,34 @@
 
 package sonia.scm.repository.spi;
 
-import com.google.inject.Inject;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.Repository;
-import sonia.scm.repository.SvnRepositoryHandler;
-import sonia.scm.repository.SvnWorkingCopyFactory;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookEvent;
+import sonia.scm.repository.Tag;
+import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 
-@Extension
-public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
+import javax.inject.Inject;
+import java.util.List;
 
-  private final SvnRepositoryHandler handler;
-  private final SvnWorkingCopyFactory workingCopyFactory;
+import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
+import static sonia.scm.repository.spi.HgBranchesTagsExtractor.extractBranches;
+import static sonia.scm.repository.spi.HgBranchesTagsExtractor.extractTags;
+
+class HgPostReceiveRepositoryHookEventFactory {
+
   private final HookContextFactory hookContextFactory;
-  private final ScmEventBus eventBus;
 
   @Inject
-  public SvnRepositoryServiceResolver(SvnRepositoryHandler handler,
-                                      SvnWorkingCopyFactory workingCopyFactory,
-                                      HookContextFactory hookContextFactory,
-                                      ScmEventBus eventBus
-  ) {
-    this.handler = handler;
-    this.workingCopyFactory = workingCopyFactory;
+  public HgPostReceiveRepositoryHookEventFactory(HookContextFactory hookContextFactory) {
     this.hookContextFactory = hookContextFactory;
-    this.eventBus = eventBus;
   }
 
-  @Override
-  public SvnRepositoryServiceProvider resolve(Repository repository) {
-    SvnRepositoryServiceProvider provider = null;
-
-    if (SvnRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new SvnRepositoryServiceProvider(handler, repository, workingCopyFactory, hookContextFactory, eventBus);
-    }
-
-    return provider;
+  PostReceiveRepositoryHookEvent createEvent(HgCommandContext hgContext, HgLazyChangesetResolver changesetResolver) {
+    List<String> branches = extractBranches(hgContext);
+    List<Tag> tags = extractTags(hgContext);
+    HgImportHookContextProvider contextProvider = new HgImportHookContextProvider(branches, tags, changesetResolver);
+    HookContext context = hookContextFactory.createContext(contextProvider, hgContext.getScmRepository());
+    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, hgContext.getScmRepository(), POST_RECEIVE);
+    return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
   }
 }

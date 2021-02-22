@@ -168,7 +168,7 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public UnbundleCommand getUnbundleCommand() {
-    return new GitUnbundleCommand(context);
+    return commandInjector.getInstance(GitUnbundleCommand.class);
   }
 
   @Override

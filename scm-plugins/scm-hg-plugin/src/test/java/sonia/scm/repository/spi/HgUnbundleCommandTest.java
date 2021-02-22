@@ -28,70 +28,82 @@ import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.io.TempDir;
+import org.junit.Before;
+import org.junit.Test;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.HgTestUtil;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.util.Archives;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-class HgUnbundleCommandTest {
-  private HgCommandContext hgContext;
-  private HgUnbundleCommand unbundleCommand;
+public class HgUnbundleCommandTest extends AbstractHgCommandTestBase {
 
-  @BeforeEach
-  void initCommand() {
-    hgContext = mock(HgCommandContext.class);
-    unbundleCommand = new HgUnbundleCommand(hgContext);
+  private ScmEventBus eventBus;
+  private HgUnbundleCommand unbundleCommand;
+  private HgPostReceiveRepositoryHookEventFactory eventFactory;
+
+  @Before
+  public void initUnbundleCommand() {
+    eventBus = mock(ScmEventBus.class);
+    eventFactory = mock(HgPostReceiveRepositoryHookEventFactory.class);
+    unbundleCommand = new HgUnbundleCommand(cmdContext, eventBus, new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), null), eventFactory);
   }
 
   @Test
-  void shouldUnbundleRepositoryFiles(@TempDir Path temp) throws IOException {
+  public void shouldUnbundleRepositoryFiles() throws IOException {
+    when(eventFactory.createEvent(eq(cmdContext), any()))
+      .thenReturn(new PostReceiveRepositoryHookEvent(new RepositoryHookEvent(null, repository, RepositoryHookType.POST_RECEIVE)));
+
+
     String filePath = "test-input";
     String fileContent = "HeartOfGold";
-    UnbundleCommandRequest unbundleCommandRequest = createUnbundleCommandRequestForFile(temp, filePath, fileContent);
+    UnbundleCommandRequest unbundleCommandRequest = createUnbundleCommandRequestForFile(filePath, fileContent);
 
     unbundleCommand.unbundle(unbundleCommandRequest);
 
-    assertFileWithContentWasCreated(temp, filePath, fileContent);
+    assertFileWithContentWasCreated(cmdContext.getDirectory(), filePath, fileContent);
+    verify(eventBus).post(any(PostReceiveRepositoryHookEvent.class));
   }
 
   @Test
-  void shouldUnbundleNestedRepositoryFiles(@TempDir Path temp) throws IOException {
+  public void shouldUnbundleNestedRepositoryFiles() throws IOException {
     String filePath = "objects/pack/test-input";
     String fileContent = "hitchhiker";
-    UnbundleCommandRequest unbundleCommandRequest = createUnbundleCommandRequestForFile(temp, filePath, fileContent);
+    UnbundleCommandRequest unbundleCommandRequest = createUnbundleCommandRequestForFile(filePath, fileContent);
 
     unbundleCommand.unbundle(unbundleCommandRequest);
 
-    assertFileWithContentWasCreated(temp, filePath, fileContent);
+    assertFileWithContentWasCreated(cmdContext.getDirectory(), filePath, fileContent);
   }
 
-  private void assertFileWithContentWasCreated(@TempDir Path temp, String filePath, String fileContent) throws IOException {
-    File createdFile = temp.resolve(filePath).toFile();
+  private void assertFileWithContentWasCreated(File temp, String filePath, String fileContent) throws IOException {
+    File createdFile = temp.toPath().resolve(filePath).toFile();
     assertThat(createdFile).exists();
     assertThat(Files.readLines(createdFile, StandardCharsets.UTF_8).get(0)).isEqualTo(fileContent);
   }
 
-  private UnbundleCommandRequest createUnbundleCommandRequestForFile(Path temp, String filePath, String fileContent) throws IOException {
+  private UnbundleCommandRequest createUnbundleCommandRequestForFile(String filePath, String fileContent) throws IOException {
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
     TarArchiveOutputStream taos = Archives.createTarOutputStream(baos);
     addEntry(taos, filePath, fileContent);
     taos.finish();
     taos.close();
 
-    when(hgContext.getDirectory()).thenReturn(temp.toFile());
     ByteSource byteSource = ByteSource.wrap(baos.toByteArray());
-    UnbundleCommandRequest unbundleCommandRequest = new UnbundleCommandRequest(byteSource);
-    return unbundleCommandRequest;
+    return new UnbundleCommandRequest(byteSource);
   }
 
   private void addEntry(TarArchiveOutputStream taos, String name, String input) throws IOException {

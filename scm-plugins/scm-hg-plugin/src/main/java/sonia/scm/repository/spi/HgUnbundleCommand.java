@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import com.google.common.io.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.api.UnbundleResponse;
 
 import java.io.IOException;
@@ -36,19 +37,28 @@ import java.nio.file.Path;
 import static com.google.common.base.Preconditions.checkNotNull;
 import static sonia.scm.util.Archives.extractTar;
 
-
-public class HgUnbundleCommand  implements UnbundleCommand {
+public class HgUnbundleCommand implements UnbundleCommand {
   private static final Logger LOG = LoggerFactory.getLogger(HgUnbundleCommand.class);
 
   private final HgCommandContext context;
+  private final ScmEventBus eventBus;
+  private final HgLazyChangesetResolver changesetResolver;
+  private final HgPostReceiveRepositoryHookEventFactory eventFactory;
 
-  HgUnbundleCommand(HgCommandContext context) {
+  HgUnbundleCommand(HgCommandContext context,
+                    ScmEventBus eventBus,
+                    HgLazyChangesetResolver changesetResolver,
+                    HgPostReceiveRepositoryHookEventFactory eventFactory
+  ) {
     this.context = context;
+    this.eventBus = eventBus;
+    this.changesetResolver = changesetResolver;
+    this.eventFactory = eventFactory;
   }
 
   @Override
   public UnbundleResponse unbundle(UnbundleCommandRequest request) throws IOException {
-    ByteSource archive = checkNotNull(request.getArchive(),"archive is required");
+    ByteSource archive = checkNotNull(request.getArchive(), "archive is required");
     Path repositoryDir = context.getDirectory().toPath();
     LOG.debug("archive repository {} to {}", repositoryDir, archive);
 
@@ -57,7 +67,12 @@ public class HgUnbundleCommand  implements UnbundleCommand {
     }
 
     unbundleRepositoryFromRequest(request, repositoryDir);
+    firePostReceiveRepositoryHookEvent();
     return new UnbundleResponse(0);
+  }
+
+  private void firePostReceiveRepositoryHookEvent() {
+    eventBus.post(eventFactory.createEvent(context, changesetResolver));
   }
 
   private void unbundleRepositoryFromRequest(UnbundleCommandRequest request, Path repositoryDir) throws IOException {

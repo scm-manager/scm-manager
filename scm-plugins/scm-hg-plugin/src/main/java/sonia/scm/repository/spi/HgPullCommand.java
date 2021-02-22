@@ -30,6 +30,7 @@ import com.google.common.base.Strings;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.io.INIConfiguration;
 import sonia.scm.io.INIConfigurationReader;
 import sonia.scm.io.INIConfigurationWriter;
@@ -47,9 +48,20 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
 
   private static final Logger LOG = LoggerFactory.getLogger(HgPullCommand.class);
   private static final String AUTH_SECTION = "auth";
+  private final ScmEventBus eventBus;
+  private final HgLazyChangesetResolver changesetResolver;
+  private final HgPostReceiveRepositoryHookEventFactory eventFactory;
 
-  public HgPullCommand(HgRepositoryHandler handler, HgCommandContext context) {
+  public HgPullCommand(HgRepositoryHandler handler,
+                       HgCommandContext context,
+                       ScmEventBus eventBus,
+                       HgLazyChangesetResolver changesetResolver,
+                       HgPostReceiveRepositoryHookEventFactory eventFactory
+  ) {
     super(handler, context);
+    this.eventBus = eventBus;
+    this.changesetResolver = changesetResolver;
+    this.eventFactory = eventFactory;
   }
 
   @Override
@@ -74,7 +86,13 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
       removeAuthenticationConfig();
     }
 
+    firePostReceiveRepositoryHookEvent();
+
     return new PullResponse(result.size());
+  }
+
+  private void firePostReceiveRepositoryHookEvent() {
+    eventBus.post(eventFactory.createEvent(context, changesetResolver));
   }
 
   public void addAuthenticationConfig(PullCommandRequest request, String url) throws IOException {

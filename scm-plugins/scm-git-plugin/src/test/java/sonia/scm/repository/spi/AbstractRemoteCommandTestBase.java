@@ -28,7 +28,6 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Charsets;
 import com.google.common.io.Files;
-import com.google.inject.Provider;
 import org.eclipse.jgit.api.CommitCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
@@ -39,8 +38,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.Repository;
@@ -57,22 +56,18 @@ import static org.mockito.Mockito.when;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class AbstractRemoteCommandTestBase
-{
+public class AbstractRemoteCommandTestBase {
 
   /**
    * Method description
-   *
    *
    * @throws GitAPIException
    * @throws IOException
    */
   @Before
-  public void setup() throws IOException, GitAPIException
-  {
+  public void setup() throws IOException, GitAPIException {
     incomingDirectory = tempFolder.newFile("incoming");
     incomingDirectory.delete();
     outgoingDirectory = tempFolder.newFile("outgoing");
@@ -84,6 +79,9 @@ public class AbstractRemoteCommandTestBase
     incoming = Git.init().setDirectory(incomingDirectory).setBare(false).call();
     outgoing = Git.init().setDirectory(outgoingDirectory).setBare(false).call();
 
+    eventBus = mock(ScmEventBus.class);
+    eventFactory = mock(GitPostReceiveRepositoryHookEventFactory.class);
+
     handler = mock(GitRepositoryHandler.class);
     when(handler.getDirectory(incomingRepository.getId())).thenReturn(
       incomingDirectory);
@@ -93,11 +91,9 @@ public class AbstractRemoteCommandTestBase
 
   /**
    * Method description
-   *
    */
   @After
-  public void tearDownProtocol()
-  {
+  public void tearDownProtocol() {
     Transport.unregister(proto);
   }
 
@@ -105,11 +101,9 @@ public class AbstractRemoteCommandTestBase
 
   /**
    * Method description
-   *
    */
   @Before
-  public void setUpProtocol()
-  {
+  public void setUpProtocol() {
 
     // store reference to handle weak references
     proto = new ScmTransportProtocol(GitTestHelper::createConverterFactory, () -> null, () -> null);
@@ -121,12 +115,10 @@ public class AbstractRemoteCommandTestBase
   /**
    * Method description
    *
-   *
    * @param expected
    * @param actual
    */
-  protected void assertCommitsEquals(RevCommit expected, Changeset actual)
-  {
+  protected void assertCommitsEquals(RevCommit expected, Changeset actual) {
     assertEquals(expected.getId().name(), actual.getId());
     assertEquals(expected.getAuthorIdent().getName(),
       actual.getAuthor().getName());
@@ -138,16 +130,12 @@ public class AbstractRemoteCommandTestBase
   /**
    * Method description
    *
-   *
    * @param git
    * @param message
-   *
    * @return
-   *
    * @throws GitAPIException
    */
-  protected RevCommit commit(Git git, String message) throws GitAPIException
-  {
+  protected RevCommit commit(Git git, String message) throws GitAPIException {
     User trillian = UserTestData.createTrillian();
     CommitCommand cc = git.commit();
 
@@ -160,18 +148,15 @@ public class AbstractRemoteCommandTestBase
   /**
    * Method description
    *
-   *
    * @param git
    * @param parent
    * @param name
    * @param content
-   *
    * @throws GitAPIException
    * @throws IOException
    */
   protected void write(Git git, File parent, String name, String content)
-    throws IOException, GitAPIException
-  {
+    throws IOException, GitAPIException {
     File file = new File(parent, name);
 
     Files.write(content, file, Charsets.UTF_8);
@@ -180,31 +165,52 @@ public class AbstractRemoteCommandTestBase
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /**
+   * Field description
+   */
   @Rule
   public TemporaryFolder tempFolder = new TemporaryFolder();
 
-  /** Field description */
+  /**
+   * Field description
+   */
   protected GitRepositoryHandler handler;
 
-  /** Field description */
+  /**
+   * Field description
+   */
   protected Repository incomingRepository;
 
-  /** Field description */
+  /**
+   * Field description
+   */
   protected Git incoming;
 
-  /** Field description */
+  /**
+   * Field description
+   */
   protected File incomingDirectory;
 
-  /** Field description */
+  /**
+   * Field description
+   */
   protected Git outgoing;
 
-  /** Field description */
+  /**
+   * Field description
+   */
   protected File outgoingDirectory;
 
-  /** Field description */
+  /**
+   * Field description
+   */
   protected Repository outgoingRepository;
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private ScmTransportProtocol proto;
+
+  protected ScmEventBus eventBus;
+  protected GitPostReceiveRepositoryHookEventFactory eventFactory;
 }

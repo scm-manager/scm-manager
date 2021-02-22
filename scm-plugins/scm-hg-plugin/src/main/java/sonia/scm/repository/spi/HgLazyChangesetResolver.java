@@ -24,44 +24,35 @@
 
 package sonia.scm.repository.spi;
 
-import com.google.inject.Inject;
-import sonia.scm.event.ScmEventBus;
-import sonia.scm.plugin.Extension;
+import com.aragost.javahg.commands.LogCommand;
+import sonia.scm.repository.Changeset;
 import sonia.scm.repository.HgRepositoryFactory;
-import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.Person;
 import sonia.scm.repository.Repository;
 
-/**
- * @author Sebastian Sdorra
- */
-@Extension
-public class HgRepositoryServiceResolver implements RepositoryServiceResolver {
+import java.util.Iterator;
+import java.util.concurrent.Callable;
 
-  private final HgRepositoryHandler handler;
+class HgLazyChangesetResolver implements Callable<Iterable<Changeset>> {
+
   private final HgRepositoryFactory factory;
-  private final ScmEventBus eventBus;
-  private final HgPostReceiveRepositoryHookEventFactory eventFactory;
+  private final Repository repository;
 
-  @Inject
-  public HgRepositoryServiceResolver(HgRepositoryHandler handler,
-                                     HgRepositoryFactory factory,
-                                     ScmEventBus eventBus,
-                                     HgPostReceiveRepositoryHookEventFactory eventFactory
-  ) {
-    this.handler = handler;
+  HgLazyChangesetResolver(HgRepositoryFactory factory, Repository repository) {
     this.factory = factory;
-    this.eventBus = eventBus;
-    this.eventFactory = eventFactory;
+    this.repository = repository;
   }
 
   @Override
-  public HgRepositoryServiceProvider resolve(Repository repository) {
-    HgRepositoryServiceProvider provider = null;
-
-    if (HgRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new HgRepositoryServiceProvider(handler, factory, eventFactory, eventBus, repository);
-    }
-
-    return provider;
+  public Iterable<Changeset> call() {
+    Iterator<Changeset> iterator = LogCommand.on(factory.openForRead(repository)).execute().stream()
+      .map(changeset -> new Changeset(
+        changeset.getNode(),
+        changeset.getTimestamp().getDate().getTime(),
+        Person.toPerson(changeset.getUser()),
+        changeset.getMessage())
+      )
+      .iterator();
+    return () -> iterator;
   }
 }

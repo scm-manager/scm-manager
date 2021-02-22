@@ -26,23 +26,21 @@ package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.SvnWorkingCopyFactory;
 import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.HookContextFactory;
 
-import javax.inject.Inject;
 import java.io.IOException;
 import java.util.Set;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
-{
+public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
 
-  /** Field description */
   //J-
   public static final Set<Command> COMMANDS = ImmutableSet.of(
     Command.BLAME, Command.BROWSE, Command.CAT, Command.DIFF,
@@ -50,101 +48,55 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
   );
   //J+
 
-  //~--- constructors ---------------------------------------------------------
 
-  @Inject
+  private final SvnContext context;
+  private final SvnWorkingCopyFactory workingCopyFactory;
+  private final HookContextFactory hookContextFactory;
+  private final ScmEventBus eventBus;
+
   SvnRepositoryServiceProvider(SvnRepositoryHandler handler,
-    Repository repository, SvnWorkingCopyFactory workingCopyFactory)
-  {
+                               Repository repository,
+                               SvnWorkingCopyFactory workingCopyFactory,
+                               HookContextFactory hookContextFactory,
+                               ScmEventBus eventBus) {
     this.context = new SvnContext(repository, handler.getDirectory(repository.getId()));
     this.workingCopyFactory = workingCopyFactory;
+    this.hookContextFactory = hookContextFactory;
+    this.eventBus = eventBus;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
-  public void close() throws IOException
-  {
+  public void close() throws IOException {
     Closeables.close(context, true);
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public SvnBlameCommand getBlameCommand()
-  {
+  public SvnBlameCommand getBlameCommand() {
     return new SvnBlameCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public SvnBrowseCommand getBrowseCommand()
-  {
+  public SvnBrowseCommand getBrowseCommand() {
     return new SvnBrowseCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public BundleCommand getBundleCommand()
-  {
+  public BundleCommand getBundleCommand() {
     return new SvnBundleCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public SvnCatCommand getCatCommand()
-  {
+  public SvnCatCommand getCatCommand() {
     return new SvnCatCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public SvnDiffCommand getDiffCommand()
-  {
+  public SvnDiffCommand getDiffCommand() {
     return new SvnDiffCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public SvnLogCommand getLogCommand()
-  {
+  public SvnLogCommand getLogCommand() {
     return new SvnLogCommand(context);
   }
 
@@ -163,34 +115,13 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider
     return new SvnLookupCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Set<Command> getSupportedCommands()
-  {
+  public Set<Command> getSupportedCommands() {
     return COMMANDS;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public UnbundleCommand getUnbundleCommand()
-  {
-    return new SvnUnbundleCommand(context);
+  public UnbundleCommand getUnbundleCommand() {
+    return new SvnUnbundleCommand(context, hookContextFactory, eventBus, new SvnLogCommand(context));
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final SvnContext context;
-
-  private final SvnWorkingCopyFactory workingCopyFactory;
 }
