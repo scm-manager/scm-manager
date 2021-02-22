@@ -44,6 +44,7 @@ export const useIndex = (): ApiResult<IndexResources> => {
         legacy.onIndexFetched(index);
       }
     },
+    refetchOnMount: false,
     retry: (failureCount, error) => {
       // The index resource returns a 401 if the access token expired.
       // This only happens once because the error response automatically invalidates the cookie.

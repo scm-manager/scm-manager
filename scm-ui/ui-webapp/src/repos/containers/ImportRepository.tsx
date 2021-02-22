@@ -41,8 +41,6 @@ type Props = {
   repositoryTypes: RepositoryType[];
   pageLoading: boolean;
   error?: Error;
-  fetchRepositoryTypesIfNeeded: () => void;
-  fetchNamespaceStrategiesIfNeeded: () => void;
 };
 
 const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => {

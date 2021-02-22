@@ -23,10 +23,11 @@
  */
 
 import { Me } from "@scm-manager/ui-types";
-import { useMutation, useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { apiClient } from "./apiclient";
 import { ApiResult, useIndexLink } from "./base";
 import { useLegacyContext } from "./LegacyContext";
+import { useReset } from "./reset";
 
 export const useMe = (): ApiResult<Me> => {
   const legacy = useLegacyContext();
@@ -72,17 +73,18 @@ type Credentials = {
 
 export const useLogin = () => {
   const link = useIndexLink("login");
-  const queryClient = useQueryClient();
+  const reset = useReset();
   const { mutate, isLoading, error } = useMutation<unknown, Error, Credentials>(
     credentials => apiClient.post(link!, credentials),
     {
-      onSuccess: () => {
-        return queryClient.invalidateQueries();
-      }
+      onSuccess: reset
     }
   );
 
   const login = (username: string, password: string) => {
+    // grant_type is specified by the oauth standard with the underscore
+    // so we stick with it, even if eslint does not like it.
+    // eslint-disable-next-line @typescript-eslint/camelcase
     mutate({ cookie: true, grant_type: "password", username, password });
   };
 
@@ -95,13 +97,12 @@ export const useLogin = () => {
 
 export const useLogout = () => {
   const link = useIndexLink("logout");
-  const queryClient = useQueryClient();
+  const reset = useReset();
+
   const { mutate, isLoading, error, data } = useMutation<boolean, Error, unknown>(
     () => apiClient.delete(link!).then(() => true),
     {
-      onSuccess: () => {
-        return queryClient.invalidateQueries();
-      }
+      onSuccess: reset
     }
   );
 

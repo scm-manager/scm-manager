@@ -26,6 +26,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { LegacyContext, LegacyContextProvider } from "./LegacyContext";
 import { IndexResources, Me } from "@scm-manager/ui-types";
+import { reset } from "./reset";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -73,7 +74,9 @@ const ApiProvider: FC<Props> = ({ children, index, me, onMeFetched, onIndexFetch
 export { Props as ApiProviderProps };
 
 export const clearCache = () => {
-  queryClient.clear();
+  // we do a safe reset instead of clearing the whole cache
+  // this should avoid missing link errors for index
+  return reset(queryClient);
 };
 
 export default ApiProvider;

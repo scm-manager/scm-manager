@@ -261,11 +261,6 @@ class ApiClient {
       .catch(this.notifyAndRethrow);
   };
 
-  request = (url: string, options: RequestInit) => {
-    this.notifyRequestListeners(url, options);
-    return fetch(createUrl(url), options);
-  };
-
   subscribe(url: string, argument: SubscriptionArgument): Cancel {
     const es = new EventSource(createUrlWithIdentifiers(url), {
       withCredentials: true
@@ -299,12 +294,17 @@ class ApiClient {
     this.requestListeners.push(requestListener);
   };
 
-  private notifyRequestListeners = (url: string, options: RequestInit) => {
-    this.requestListeners.forEach(requestListener => requestListener(url, options));
-  };
-
   onError = (errorListener: ErrorListener) => {
     this.errorListeners.push(errorListener);
+  };
+
+  private request = (url: string, options: RequestInit) => {
+    this.notifyRequestListeners(url, options);
+    return fetch(createUrl(url), options);
+  };
+
+  private notifyRequestListeners = (url: string, options: RequestInit) => {
+    this.requestListeners.forEach(requestListener => requestListener(url, options));
   };
 
   private notifyAndRethrow = (error: Error): never => {
