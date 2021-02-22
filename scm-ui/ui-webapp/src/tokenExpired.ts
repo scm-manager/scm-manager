@@ -40,7 +40,8 @@ apiClient.onError(error => {
 
 apiClient.onRequest(() => {
   if (tokenExpired) {
-    clearCache();
-    tokenExpired = false;
+    clearCache().then(() => {
+      tokenExpired = false;
+    });
   }
 });
