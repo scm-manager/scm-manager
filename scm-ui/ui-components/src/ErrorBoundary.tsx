@@ -21,15 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, ReactNode } from "react";
+import React, { FC, ReactNode, useEffect } from "react";
 import ErrorNotification from "./ErrorNotification";
 import { MissingLinkError, urls, useIndexLink } from "@scm-manager/ui-api";
 import { RouteComponentProps, useLocation, withRouter } from "react-router-dom";
 import ErrorPage from "./ErrorPage";
 import { useTranslation } from "react-i18next";
+import { Subtitle, Title } from "./layout";
+import Icon from "./Icon";
+import styled from "styled-components";
+
+type State = {
+  error?: Error;
+  errorInfo?: ErrorInfo;
+};
 
 type ExportedProps = {
-  fallback?: React.ComponentType<any>;
+  fallback?: React.ComponentType<State>;
   children: ReactNode;
 };
 
@@ -39,27 +47,55 @@ type ErrorInfo = {
   componentStack: string;
 };
 
-type State = {
-  error?: Error;
-  errorInfo?: ErrorInfo;
-};
-
 type ErrorDisplayProps = {
-  fallback?: React.ComponentType<any>;
+  fallback?: React.ComponentType<State>;
   error: Error;
   errorInfo: ErrorInfo;
+};
+
+const RedirectIconContainer = styled.div`
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 256px;
+`;
+
+const RedirectPage = () => {
+  const [t] = useTranslation("commons");
+  // we use an icon instead of loading spinner,
+  // because a redirect is synchron and a spinner does not spin on a synchron action
+  return (
+    <section className="section">
+      <div className="container">
+        <Title>{t("errorBoundary.redirect.title")}</Title>
+        <Subtitle>{t("errorBoundary.redirect.subtitle")}</Subtitle>
+        <RedirectIconContainer className="is-flex">
+          <Icon name="directions" className="fa-7x" />
+        </RedirectIconContainer>
+      </div>
+    </section>
+  );
 };
 
 const ErrorDisplay: FC<ErrorDisplayProps> = ({ error, errorInfo, fallback: FallbackComponent }) => {
   const loginLink = useIndexLink("login");
   const [t] = useTranslation("commons");
   const location = useLocation();
-
-  if (error instanceof MissingLinkError) {
-    if (loginLink) {
+  const isMissingLink = error instanceof MissingLinkError;
+  useEffect(() => {
+    if (isMissingLink && loginLink) {
       window.location.assign(urls.withContextPath("/login?from=" + location.pathname));
-      return null;
+    }
+  }, [isMissingLink, loginLink, location.pathname]);
+
+  if (isMissingLink) {
+    if (loginLink) {
+      // we can render a loading screen,
+      // because the effect hook above should redirect
+      return <RedirectPage />;
     } else {
+      // missing link error without login link means we have no permissions
+      // and we should render an error
       return (
         <ErrorPage error={error} title={t("errorNotification.prefix")} subtitle={t("errorNotification.forbidden")} />
       );

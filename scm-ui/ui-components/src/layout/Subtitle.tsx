@@ -31,9 +31,11 @@ type Props = {
 
 class Subtitle extends React.Component<Props> {
   render() {
-    const { subtitle, className } = this.props;
+    const { subtitle, className, children } = this.props;
     if (subtitle) {
       return <h2 className={classNames("subtitle", className)}>{subtitle}</h2>;
+    } else if (children) {
+      return <h2 className={classNames("subtitle", className)}>{children}</h2>;
     }
     return null;
   }

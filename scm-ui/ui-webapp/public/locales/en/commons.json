@@ -35,6 +35,12 @@
     "wrongLoginCredentials": "Invalid credentials",
     "forbidden": "You don't have permission to view this entity"
   },
+  "errorBoundary": {
+    "redirect": {
+      "title": "Redirecting",
+      "subtitle": "You will be redirected to the login page shortly"
+    }
+  },
   "markdownErrorNotification": {
     "title": "Markdown content could not be parsed",
     "description": "The Content does not contain valid markdown. If you use XML, please ensure that it is wrapped in a code block e.g.:",
