@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.importexport;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +36,7 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Response;
 import java.util.Set;
 
-class RepositoryTypeSupportChecker {
+public class RepositoryTypeSupportChecker {
 
   private RepositoryTypeSupportChecker() {
   }
@@ -49,7 +49,7 @@ class RepositoryTypeSupportChecker {
    * @param type repository type
    * @param cmd  command
    */
-  static void checkSupport(Type type, Command cmd) {
+  public static void checkSupport(Type type, Command cmd) {
     if (!(type instanceof RepositoryType)) {
       logger.warn("type {} is not a repository type", type.getName());
       throw new WebApplicationException(Response.Status.BAD_REQUEST);
@@ -65,7 +65,7 @@ class RepositoryTypeSupportChecker {
   }
 
   @SuppressWarnings("javasecurity:S5145") // the type parameter is validated in the resource to only contain valid characters (\w)
-  static Type type(RepositoryManager manager, String type) {
+  public static Type type(RepositoryManager manager, String type) {
     RepositoryHandler handler = manager.getHandler(type);
     if (handler == null) {
       logger.warn("no handler for type {} found", type);

@@ -48,6 +48,8 @@ import sonia.scm.event.ScmEventBus;
 import sonia.scm.importexport.ExportFileExtensionResolver;
 import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.ExportStatus;
+import sonia.scm.importexport.FromBundleImporter;
+import sonia.scm.importexport.FromUrlImporter;
 import sonia.scm.importexport.FullScmRepositoryExporter;
 import sonia.scm.importexport.FullScmRepositoryImporter;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
@@ -64,11 +66,8 @@ import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.BundleCommandBuilder;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.ImportFailedException;
-import sonia.scm.repository.api.PullCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.repository.api.UnbundleCommandBuilder;
-import sonia.scm.repository.api.UnbundleResponse;
 import sonia.scm.user.User;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
@@ -77,7 +76,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -92,7 +90,6 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
@@ -107,13 +104,10 @@ import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.RETURNS_SELF;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -166,6 +160,10 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Mock
   private RepositoryImportExportEncryption repositoryImportExportEncryption;
   @Mock
+  private FromUrlImporter fromUrlImporter;
+  @Mock
+  private FromBundleImporter fromBundleImporter;
+  @Mock
   private ExportFileExtensionResolver fileExtensionResolver;
   @Mock
   private ExportService exportService;
@@ -175,7 +173,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
-  private Repository repositoryMarkedAsExported;
 
   @InjectMocks
   private RepositoryToRepositoryDtoMapperImpl repositoryToDtoMapper;
@@ -190,7 +187,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     super.manager = repositoryManager;
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
-    super.repositoryImportResource = new RepositoryImportResource(repositoryManager, dtoToRepositoryMapper, serviceFactory, resourceLinks, eventBus, fullScmRepositoryImporter, repositoryImportExportEncryption);
+    super.repositoryImportResource = new RepositoryImportResource(dtoToRepositoryMapper, resourceLinks, fullScmRepositoryImporter, new RepositoryImportDtoToRepositoryImportParametersMapperImpl(), repositoryImportExportEncryption, fromUrlImporter, fromBundleImporter);
     super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryImportExportEncryption, exportService, exportInformationToDtoMapper, fileExtensionResolver, resourceLinks);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
@@ -552,88 +549,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldPullChangesFromRemoteUrl() throws IOException {
-    PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
-    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
-
-    Repository repository = RepositoryTestData.createHeartOfGold();
-    RepositoryImportResource.RepositoryImportFromUrlDto repositoryImportFromUrlDto = new RepositoryImportResource.RepositoryImportFromUrlDto();
-    repositoryImportFromUrlDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-    repositoryImportFromUrlDto.setNamespace("scmadmin");
-    repositoryImportFromUrlDto.setName("scm-manager");
-
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportFromUrlDto);
-    repositoryConsumer.accept(repository);
-
-    verify(pullCommandBuilder).pull("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-  }
-
-  @Test
-  public void shouldPullChangesFromRemoteUrlWithCredentials() {
-    PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
-    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
-
-    Repository repository = RepositoryTestData.createHeartOfGold();
-    RepositoryImportResource.RepositoryImportFromUrlDto repositoryImportFromUrlDto = new RepositoryImportResource.RepositoryImportFromUrlDto();
-    repositoryImportFromUrlDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-    repositoryImportFromUrlDto.setNamespace("scmadmin");
-    repositoryImportFromUrlDto.setName("scm-manager");
-    repositoryImportFromUrlDto.setUsername("trillian");
-    repositoryImportFromUrlDto.setPassword("secret");
-
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportFromUrlDto);
-    repositoryConsumer.accept(repository);
-
-    verify(pullCommandBuilder).withUsername("trillian");
-    verify(pullCommandBuilder).withPassword("secret");
-  }
-
-  @Test
-  public void shouldThrowImportFailedEvent() throws IOException {
-    PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
-    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
-    doThrow(ImportFailedException.class).when(pullCommandBuilder).pull(anyString());
-
-    Repository repository = RepositoryTestData.createHeartOfGold();
-    RepositoryImportResource.RepositoryImportFromUrlDto repositoryImportFromUrlDto = new RepositoryImportResource.RepositoryImportFromUrlDto();
-    repositoryImportFromUrlDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-    repositoryImportFromUrlDto.setNamespace("scmadmin");
-    repositoryImportFromUrlDto.setName("scm-manager");
-
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportFromUrlDto);
-    assertThrows(ImportFailedException.class, () -> repositoryConsumer.accept(repository));
-  }
-
-  @Test
-  public void shouldImportRepositoryFromBundle() throws IOException, URISyntaxException {
-    when(manager.getHandler("svn")).thenReturn(repositoryHandler);
-    when(repositoryHandler.getType()).thenReturn(new RepositoryType("svn", "svn", ImmutableSet.of(Command.UNBUNDLE)));
-    when(repositoryManager.create(any(), any())).thenReturn(RepositoryTestData.createHeartOfGold());
-
-    RepositoryDto repositoryDto = new RepositoryDto();
-    repositoryDto.setName("HeartOfGold");
-    repositoryDto.setNamespace("hitchhiker");
-    repositoryDto.setType("svn");
-
-    URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump");
-    byte[] svnDump = Resources.toByteArray(dumpUrl);
-
-    MockHttpRequest request = MockHttpRequest
-      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "import/svn/bundle");
-    MockHttpResponse response = new MockHttpResponse();
-
-    multipartRequest(request, Collections.singletonMap("bundle", new ByteArrayInputStream(svnDump)), repositoryDto);
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
-    assertEquals("/v2/repositories/hitchhiker/HeartOfGold", response.getOutputHeaders().get("Location").get(0).toString());
-    ArgumentCaptor<RepositoryImportEvent> event = ArgumentCaptor.forClass(RepositoryImportEvent.class);
-    verify(eventBus).post(event.capture());
-    assertFalse(event.getValue().isFailed());
-  }
-
-  @Test
   public void shouldThrowFailedEventOnImportRepositoryFromBundle() throws IOException, URISyntaxException {
     when(manager.getHandler("svn")).thenReturn(repositoryHandler);
     when(repositoryHandler.getType()).thenReturn(new RepositoryType("svn", "svn", ImmutableSet.of(Command.UNBUNDLE)));
@@ -659,44 +574,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     ArgumentCaptor<RepositoryImportEvent> event = ArgumentCaptor.forClass(RepositoryImportEvent.class);
     verify(eventBus).post(event.capture());
     assertTrue(event.getValue().isFailed());
-  }
-
-  @Test
-  public void shouldImportCompressedBundle() throws IOException {
-    URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump.gz");
-    byte[] svnDump = Resources.toByteArray(dumpUrl);
-
-    UnbundleCommandBuilder ubc = mock(UnbundleCommandBuilder.class, RETURNS_SELF);
-    when(ubc.unbundle(any(File.class))).thenReturn(new UnbundleResponse(42));
-    RepositoryService service = mock(RepositoryService.class);
-    when(serviceFactory.create(any(Repository.class))).thenReturn(service);
-    when(service.getUnbundleCommand()).thenReturn(ubc);
-    InputStream in = new ByteArrayInputStream(svnDump);
-
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.unbundleImport(in, true);
-    repositoryConsumer.accept(RepositoryTestData.createHeartOfGold("svn"));
-
-    verify(ubc).setCompressed(true);
-    verify(ubc).unbundle(any(File.class));
-  }
-
-  @Test
-  public void shouldImportNonCompressedBundle() throws IOException {
-    URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump");
-    byte[] svnDump = Resources.toByteArray(dumpUrl);
-
-    UnbundleCommandBuilder ubc = mock(UnbundleCommandBuilder.class, RETURNS_SELF);
-    when(ubc.unbundle(any(File.class))).thenReturn(new UnbundleResponse(21));
-    RepositoryService service = mock(RepositoryService.class);
-    when(serviceFactory.create(any(Repository.class))).thenReturn(service);
-    when(service.getUnbundleCommand()).thenReturn(ubc);
-    InputStream in = new ByteArrayInputStream(svnDump);
-
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.unbundleImport(in, false);
-    repositoryConsumer.accept(RepositoryTestData.createHeartOfGold("svn"));
-
-    verify(ubc, never()).setCompressed(true);
-    verify(ubc).unbundle(any(File.class));
   }
 
   @Test

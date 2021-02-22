@@ -27,10 +27,8 @@ package sonia.scm.api.v2.resources;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import com.google.common.io.ByteSource;
-import com.google.common.io.Files;
 import com.google.inject.Inject;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -39,30 +37,20 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.apache.shiro.SecurityUtils;
 import org.jboss.resteasy.plugins.providers.multipart.InputPart;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartInputImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
-import sonia.scm.HandlerEventType;
-import sonia.scm.Type;
-import sonia.scm.event.ScmEventBus;
+import sonia.scm.importexport.FromBundleImporter;
+import sonia.scm.importexport.FromUrlImporter;
 import sonia.scm.importexport.FullScmRepositoryImporter;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryImportEvent;
-import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.ImportFailedException;
-import sonia.scm.repository.api.PullCommandBuilder;
-import sonia.scm.repository.api.RepositoryService;
-import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.util.IOUtil;
 import sonia.scm.web.VndMediaType;
 import sonia.scm.web.api.DtoValidator;
 
@@ -80,46 +68,40 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
-import static java.util.Collections.singletonList;
-import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
-import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
 
 public class RepositoryImportResource {
 
   private static final Logger logger = LoggerFactory.getLogger(RepositoryImportResource.class);
 
-  private final RepositoryManager manager;
   private final RepositoryDtoToRepositoryMapper mapper;
-  private final RepositoryServiceFactory serviceFactory;
   private final ResourceLinks resourceLinks;
-  private final ScmEventBus eventBus;
   private final FullScmRepositoryImporter fullScmRepositoryImporter;
   private final RepositoryImportExportEncryption repositoryImportExportEncryption;
+  private final RepositoryImportDtoToRepositoryImportParametersMapper importParametersMapper;
+  private final FromUrlImporter fromUrlImporter;
+  private final FromBundleImporter fromBundleImporter;
 
   @Inject
-  public RepositoryImportResource(RepositoryManager manager,
-                                  RepositoryDtoToRepositoryMapper mapper,
-                                  RepositoryServiceFactory serviceFactory,
+  public RepositoryImportResource(RepositoryDtoToRepositoryMapper mapper,
                                   ResourceLinks resourceLinks,
-                                  ScmEventBus eventBus,
                                   FullScmRepositoryImporter fullScmRepositoryImporter,
-                                  RepositoryImportExportEncryption repositoryImportExportEncryption) {
-    this.manager = manager;
+                                  RepositoryImportDtoToRepositoryImportParametersMapper importParametersMapper,
+                                  RepositoryImportExportEncryption repositoryImportExportEncryption, FromUrlImporter fromUrlImporter,
+                                  FromBundleImporter fromBundleImporter) {
     this.mapper = mapper;
-    this.serviceFactory = serviceFactory;
     this.resourceLinks = resourceLinks;
-    this.eventBus = eventBus;
     this.fullScmRepositoryImporter = fullScmRepositoryImporter;
     this.repositoryImportExportEncryption = repositoryImportExportEncryption;
+    this.importParametersMapper = importParametersMapper;
+    this.fromUrlImporter = fromUrlImporter;
+    this.fromBundleImporter = fromBundleImporter;
   }
 
   /**
@@ -166,49 +148,13 @@ public class RepositoryImportResource {
   public Response importFromUrl(@Context UriInfo uriInfo,
                                 @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
                                 @Valid RepositoryImportResource.RepositoryImportFromUrlDto request) {
-    RepositoryPermissions.create().check();
-
-    Type t = type(manager, type);
-    if (!t.getName().equals(request.getType())) {
+    if (!type.equals(request.getType())) {
       throw new WebApplicationException("type of import url and repository does not match", Response.Status.BAD_REQUEST);
     }
-    checkSupport(t, Command.PULL);
 
-    logger.info("start {} import for external url {}", type, request.getImportUrl());
+    Repository repository = fromUrlImporter.importFromUrl(importParametersMapper.map(request), mapper.map(request));
 
-    Repository repository = mapper.map(request);
-    repository.setPermissions(singletonList(new RepositoryPermission(SecurityUtils.getSubject().getPrincipal().toString(), "OWNER", false)));
-
-    try {
-      repository = manager.create(
-        repository,
-        pullChangesFromRemoteUrl(request)
-      );
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, false));
-
-      return Response.created(URI.create(resourceLinks.repository().self(repository.getNamespace(), repository.getName()))).build();
-    } catch (Exception e) {
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, true));
-      throw e;
-    }
-  }
-
-  @VisibleForTesting
-  Consumer<Repository> pullChangesFromRemoteUrl(RepositoryImportFromUrlDto request) {
-    return repository -> {
-      try (RepositoryService service = serviceFactory.create(repository)) {
-        PullCommandBuilder pullCommand = service.getPullCommand();
-        if (!Strings.isNullOrEmpty(request.getUsername()) && !Strings.isNullOrEmpty(request.getPassword())) {
-          pullCommand
-            .withUsername(request.getUsername())
-            .withPassword(request.getPassword());
-        }
-
-        pullCommand.pull(request.getImportUrl());
-      } catch (IOException e) {
-        throw new InternalRepositoryException(repository, "Failed to import from remote url", e);
-      }
-    };
+    return Response.created(URI.create(resourceLinks.repository().self(repository.getNamespace(), repository.getName()))).build();
   }
 
   /**
@@ -332,25 +278,13 @@ public class RepositoryImportResource {
       inputStream = decryptInputStream(inputStream, repositoryDto.getPassword());
     }
 
-    Type t = type(manager, type);
-    checkSupport(t, Command.UNBUNDLE);
+    if (!type.equals(repositoryDto.getType())) {
+      throw new WebApplicationException("type of import url and repository does not match", Response.Status.BAD_REQUEST);
+    }
 
     Repository repository = mapper.map(repositoryDto);
-    repository.setPermissions(singletonList(
-      new RepositoryPermission(SecurityUtils.getSubject().getPrincipal().toString(), "OWNER", false)
-    ));
 
-    try {
-      repository = manager.create(
-        repository,
-        unbundleImport(inputStream, compressed)
-      );
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, false));
-
-    } catch (Exception e) {
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, true));
-      throw e;
-    }
+    repository = fromBundleImporter.importFromBundle(compressed, inputStream, repository);
 
     return repository;
   }
@@ -361,27 +295,6 @@ public class RepositoryImportResource {
     } catch (IOException e) {
       throw new ImportFailedException(ContextEntry.ContextBuilder.noContext(), "import failed", e);
     }
-  }
-
-  @VisibleForTesting
-  Consumer<Repository> unbundleImport(InputStream inputStream, boolean compressed) {
-    return repository -> {
-      File file = null;
-      try (RepositoryService service = serviceFactory.create(repository)) {
-        file = File.createTempFile("scm-import-", ".bundle");
-        long length = Files.asByteSink(file).writeFrom(inputStream);
-        logger.info("copied {} bytes to temp, start bundle import", length);
-        service.getUnbundleCommand().setCompressed(compressed).unbundle(file);
-      } catch (IOException e) {
-        throw new InternalRepositoryException(repository, "Failed to import from bundle", e);
-      } finally {
-        try {
-          IOUtil.delete(file);
-        } catch (IOException ex) {
-          logger.warn("could not delete temporary file", ex);
-        }
-      }
-    };
   }
 
   private RepositoryImportFromFileDto extractRepositoryDto(Map<String, List<InputPart>> formParts) {
