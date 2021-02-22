@@ -24,7 +24,6 @@
     "react-test-renderer": "^17.0.1"
   },
   "dependencies": {
-    "@scm-manager/ui-components": "^2.13.1-SNAPSHOT",
     "@scm-manager/ui-types": "^2.13.1-SNAPSHOT",
     "fetch-mock-jest": "^1.5.1",
     "react": "^16.8.6",
