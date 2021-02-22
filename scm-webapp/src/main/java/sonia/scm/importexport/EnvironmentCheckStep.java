@@ -60,6 +60,7 @@ class EnvironmentCheckStep implements ImportStep {
       if (!validEnvironment) {
         throw new IncompatibleEnvironmentForImportException();
       }
+      state.getLogger().step("checked environment");
       state.environmentChecked();
       return true;
     }

@@ -42,6 +42,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static java.util.Arrays.stream;
+import static sonia.scm.importexport.RepositoryImportLog.ImportType.FULL;
 import static sonia.scm.util.Archives.createTarInputStream;
 import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 
@@ -53,6 +54,7 @@ public class FullScmRepositoryImporter {
   private final RepositoryManager repositoryManager;
   private final RepositoryImportExportEncryption repositoryImportExportEncryption;
   private final ScmEventBus eventBus;
+  private final RepositoryImportLoggerFactory loggerFactory;
 
   @Inject
   public FullScmRepositoryImporter(EnvironmentCheckStep environmentCheckStep,
@@ -61,15 +63,18 @@ public class FullScmRepositoryImporter {
                                    RepositoryImportStep repositoryImportStep,
                                    RepositoryManager repositoryManager,
                                    RepositoryImportExportEncryption repositoryImportExportEncryption,
+                                   RepositoryImportLoggerFactory loggerFactory,
                                    ScmEventBus eventBus
   ) {
     this.repositoryManager = repositoryManager;
+    this.loggerFactory = loggerFactory;
     this.repositoryImportExportEncryption = repositoryImportExportEncryption;
     importSteps = new ImportStep[]{environmentCheckStep, metadataImportStep, storeImportStep, repositoryImportStep};
     this.eventBus = eventBus;
   }
 
   public Repository importFromStream(Repository repository, InputStream inputStream, String password) {
+    RepositoryImportLogger logger = startLogger(repository);
     try {
       if (inputStream.available() > 0) {
         try (
@@ -78,7 +83,7 @@ public class FullScmRepositoryImporter {
           GzipCompressorInputStream gcis = new GzipCompressorInputStream(cif);
           TarArchiveInputStream tais = createTarInputStream(gcis)
         ) {
-          return run(repository, tais);
+          return run(repository, tais, logger);
         }
       } else {
         throw new ImportFailedException(
@@ -103,8 +108,15 @@ public class FullScmRepositoryImporter {
     }
   }
 
-  private Repository run(Repository repository, TarArchiveInputStream tais) throws IOException {
-    ImportState state = new ImportState(repositoryManager.create(repository));
+  private RepositoryImportLogger startLogger(Repository repository) {
+    RepositoryImportLogger logger = loggerFactory.createLogger();
+    logger.start(FULL, repository);
+    return logger;
+  }
+
+  private Repository run(Repository repository, TarArchiveInputStream tais, RepositoryImportLogger logger) throws IOException {
+    ImportState state = new ImportState(repositoryManager.create(repository), logger);
+    logger.repositoryCreated(state.getRepository());
     try {
       TarArchiveEntry tarArchiveEntry;
       while ((tarArchiveEntry = tais.getNextTarEntry()) != null) {
@@ -112,7 +124,11 @@ public class FullScmRepositoryImporter {
         handle(tais, state, tarArchiveEntry);
       }
       stream(importSteps).forEach(step -> step.finish(state));
+      logger.finished();
       return state.getRepository();
+    } catch (RuntimeException | IOException e) {
+      logger.failed(e);
+      throw e;
     } finally {
       stream(importSteps).forEach(step -> step.cleanup(state));
       if (state.success()) {
@@ -127,6 +143,7 @@ public class FullScmRepositoryImporter {
   }
 
   private void handle(TarArchiveInputStream tais, ImportState state, TarArchiveEntry currentEntry) {
+    state.getLogger().step("inspecting file " + currentEntry.getName());
     for (ImportStep step : importSteps) {
       if (step.handle(currentEntry, state, tais)) {
         return;

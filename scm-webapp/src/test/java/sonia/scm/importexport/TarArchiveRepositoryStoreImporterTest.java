@@ -53,6 +53,8 @@ class TarArchiveRepositoryStoreImporterTest {
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private RepositoryStoreImporter repositoryStoreImporter;
+  @Mock
+  private RepositoryImportLogger logger;
 
   @InjectMocks
   private TarArchiveRepositoryStoreImporter tarArchiveRepositoryStoreImporter;
@@ -60,20 +62,20 @@ class TarArchiveRepositoryStoreImporterTest {
   @Test
   void shouldDoNothingIfNoEntries() {
     ByteArrayInputStream bais = new ByteArrayInputStream("".getBytes());
-    tarArchiveRepositoryStoreImporter.importFromTarArchive(repository, bais);
+    tarArchiveRepositoryStoreImporter.importFromTarArchive(repository, bais, logger);
     verify(repositoryStoreImporter, never()).doImport(any(Repository.class));
   }
 
   @Test
   void shouldImportEachEntry() throws IOException {
     InputStream inputStream = Resources.getResource("sonia/scm/repository/import/scm-metadata.tar").openStream();
-    tarArchiveRepositoryStoreImporter.importFromTarArchive(repository, inputStream);
+    tarArchiveRepositoryStoreImporter.importFromTarArchive(repository, inputStream, logger);
     verify(repositoryStoreImporter, times(2)).doImport(repository);
   }
 
   @Test
   void shouldThrowImportFailedExceptionIfInvalidStorePath() throws IOException {
     InputStream inputStream = Resources.getResource("sonia/scm/repository/import/scm-metadata_invalid.tar").openStream();
-    assertThrows(ImportFailedException.class, () -> tarArchiveRepositoryStoreImporter.importFromTarArchive(repository, inputStream));
+    assertThrows(ImportFailedException.class, () -> tarArchiveRepositoryStoreImporter.importFromTarArchive(repository, inputStream, logger));
   }
 }

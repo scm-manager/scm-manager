@@ -62,12 +62,14 @@ class RepositoryImportStep implements ImportStep {
 
   @Override
   public boolean handle(TarArchiveEntry currentEntry, ImportState state, InputStream inputStream) {
-    if (!currentEntry.isDirectory()) {
+    if (!currentEntry.isDirectory() && !currentEntry.getName().contains("/")) {
       if (state.isStoreImported()) {
         LOG.trace("Importing directly from tar stream (entry '{}')", currentEntry.getName());
+        state.getLogger().step("directly importing repository data");
         unbundleRepository(state, inputStream);
       } else {
-        LOG.debug("Temporally storing tar entry '{}' in work dir", currentEntry.getName());
+        LOG.debug("Temporarily storing tar entry '{}' in work dir", currentEntry.getName());
+        state.getLogger().step("temporarily storing repository data for later import");
         Path path = saveRepositoryDataFromTarArchiveEntry(state.getRepository(), inputStream);
         state.setTemporaryRepositoryBundle(path);
       }
@@ -90,6 +92,7 @@ class RepositoryImportStep implements ImportStep {
 
   private void importFromTemporaryPath(ImportState state, Path path) {
     LOG.debug("Importing repository from temporary location in work dir");
+    state.getLogger().step("importing repository from temporary location");
     try {
       unbundleRepository(state, Files.newInputStream(path));
     } catch (IOException e) {

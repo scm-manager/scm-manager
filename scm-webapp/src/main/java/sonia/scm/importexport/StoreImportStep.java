@@ -52,17 +52,18 @@ class StoreImportStep implements ImportStep {
   public boolean handle(TarArchiveEntry entry, ImportState state, InputStream inputStream) {
     if (entry.getName().equals(STORE_DATA_FILE_NAME) && !entry.isDirectory()) {
       LOG.trace("Importing store from tar");
+      state.getLogger().step("importing stores");
       // Inside the repository tar archive stream is another tar archive.
       // The nested tar archive is wrapped in another TarArchiveInputStream inside the storeImporter
-      importStores(state.getRepository(), inputStream);
+      importStores(state.getRepository(), inputStream, state.getLogger());
       state.storeImported();
       return true;
     }
     return false;
   }
 
-  private void importStores(Repository repository, InputStream inputStream) {
-    storeImporter.importFromTarArchive(repository, inputStream);
+  private void importStores(Repository repository, InputStream inputStream, RepositoryImportLogger logger) {
+    storeImporter.importFromTarArchive(repository, inputStream, logger);
     updateEngine.update(repository.getId());
   }
 }

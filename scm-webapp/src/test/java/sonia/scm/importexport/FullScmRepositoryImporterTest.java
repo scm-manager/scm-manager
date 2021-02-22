@@ -94,6 +94,10 @@ class FullScmRepositoryImporterTest {
   private RepositoryImportExportEncryption repositoryImportExportEncryption;
   @Mock
   private WorkdirProvider workdirProvider;
+  @Mock
+  private RepositoryImportLogger logger;
+  @Mock
+  private RepositoryImportLoggerFactory loggerFactory;
 
   @InjectMocks
   private EnvironmentCheckStep environmentCheckStep;
@@ -124,6 +128,7 @@ class FullScmRepositoryImporterTest {
       repositoryImportStep,
       repositoryManager,
       repositoryImportExportEncryption,
+      loggerFactory,
       eventBus
     );
   }
@@ -132,6 +137,7 @@ class FullScmRepositoryImporterTest {
   void initRepositoryService() {
     lenient().when(serviceFactory.create(REPOSITORY)).thenReturn(service);
     lenient().when(service.getUnbundleCommand()).thenReturn(unbundleCommandBuilder);
+    lenient().when(loggerFactory.createLogger()).thenReturn(logger);
   }
 
   @Test
@@ -174,7 +180,7 @@ class FullScmRepositoryImporterTest {
       Repository repository = fullImporter.importFromStream(REPOSITORY, stream, "");
 
       assertThat(repository).isEqualTo(REPOSITORY);
-      verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class));
+      verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class), eq(logger));
       verify(repositoryManager).modify(REPOSITORY);
       Collection<RepositoryPermission> updatedPermissions = REPOSITORY.getPermissions();
       assertThat(updatedPermissions).hasSize(2);
@@ -207,7 +213,7 @@ class FullScmRepositoryImporterTest {
       Repository repository = fullImporter.importFromStream(REPOSITORY, stream, "");
 
       assertThat(repository).isEqualTo(REPOSITORY);
-      verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class));
+      verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class), eq(logger));
       verify(repositoryManager).modify(REPOSITORY);
       verify(unbundleCommandBuilder).unbundle((InputStream) argThat(argument -> argument.getClass().equals(NoneClosingInputStream.class)));
       verify(workdirProvider, never()).createNewWorkdir(REPOSITORY.getId());
