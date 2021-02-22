@@ -47,6 +47,7 @@ import sonia.scm.importexport.FromBundleImporter;
 import sonia.scm.importexport.FromUrlImporter;
 import sonia.scm.importexport.FullScmRepositoryImporter;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
+import sonia.scm.importexport.RepositoryImportLoggerFactory;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.Command;
@@ -59,14 +60,17 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
 import javax.ws.rs.core.UriInfo;
 import java.io.IOException;
 import java.io.InputStream;
@@ -87,6 +91,7 @@ public class RepositoryImportResource {
   private final RepositoryImportDtoToRepositoryImportParametersMapper importParametersMapper;
   private final FromUrlImporter fromUrlImporter;
   private final FromBundleImporter fromBundleImporter;
+  private final RepositoryImportLoggerFactory importLoggerFactory;
 
   @Inject
   public RepositoryImportResource(RepositoryDtoToRepositoryMapper mapper,
@@ -94,7 +99,8 @@ public class RepositoryImportResource {
                                   FullScmRepositoryImporter fullScmRepositoryImporter,
                                   RepositoryImportDtoToRepositoryImportParametersMapper importParametersMapper,
                                   RepositoryImportExportEncryption repositoryImportExportEncryption, FromUrlImporter fromUrlImporter,
-                                  FromBundleImporter fromBundleImporter) {
+                                  FromBundleImporter fromBundleImporter,
+                                  RepositoryImportLoggerFactory importLoggerFactory) {
     this.mapper = mapper;
     this.resourceLinks = resourceLinks;
     this.fullScmRepositoryImporter = fullScmRepositoryImporter;
@@ -102,6 +108,7 @@ public class RepositoryImportResource {
     this.importParametersMapper = importParametersMapper;
     this.fromUrlImporter = fromUrlImporter;
     this.fromBundleImporter = fromBundleImporter;
+    this.importLoggerFactory = importLoggerFactory;
   }
 
   /**
@@ -252,6 +259,13 @@ public class RepositoryImportResource {
     RepositoryPermissions.create().check();
     Repository createdRepository = importFullRepositoryFromInput(input);
     return Response.created(URI.create(resourceLinks.repository().self(createdRepository.getNamespace(), createdRepository.getName()))).build();
+  }
+
+  @GET
+  @Path("log/{logId}")
+  @Produces(MediaType.TEXT_PLAIN)
+  public StreamingOutput getImportLog(@PathParam("logId") String logId) {
+    return out -> importLoggerFactory.getLog(logId, out);
   }
 
   private Repository importFullRepositoryFromInput(MultipartFormDataInput input) {

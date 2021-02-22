@@ -24,11 +24,14 @@
 
 package sonia.scm.importexport;
 
+import sonia.scm.NotFoundException;
 import sonia.scm.store.DataStoreFactory;
 
 import javax.inject.Inject;
+import java.io.OutputStream;
+import java.io.PrintStream;
 
-class RepositoryImportLoggerFactory {
+public class RepositoryImportLoggerFactory {
 
   private final DataStoreFactory dataStoreFactory;
 
@@ -39,5 +42,15 @@ class RepositoryImportLoggerFactory {
 
   RepositoryImportLogger createLogger() {
     return new RepositoryImportLogger(dataStoreFactory.withType(RepositoryImportLog.class).withName("imports").build());
+  }
+
+  public void getLog(String logId, OutputStream out) {
+    RepositoryImportLog log = dataStoreFactory.withType(RepositoryImportLog.class).withName("imports").build().getOptional(logId).orElseThrow(() -> new NotFoundException("Log", logId));
+    PrintStream printStream = new PrintStream(out);
+    log.toLogHeader().forEach(printStream::println);
+    log.getEntries()
+      .stream()
+      .map(RepositoryImportLog.Entry::toLogMessage)
+      .forEach(printStream::println);
   }
 }

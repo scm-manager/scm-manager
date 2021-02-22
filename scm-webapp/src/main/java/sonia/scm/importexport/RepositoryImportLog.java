@@ -35,6 +35,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import static java.lang.String.format;
+import static java.util.Arrays.asList;
 import static java.util.Collections.unmodifiableList;
 
 @XmlRootElement(name = "import")
@@ -65,6 +67,16 @@ class RepositoryImportLog {
     return unmodifiableList(entries);
   }
 
+  public List<String> toLogHeader() {
+    return asList(
+      format("Import of repository %s/%s", namespace, name),
+      format("Repository type: %s", repositoryId),
+      format("Imported from: %s", type),
+      format("Imported by %s (%s)", userId, userName),
+      success ? "Finished successful" : "Import failed"
+    );
+  }
+
   enum ImportType {
     FULL, URL, DUMP
   }
@@ -81,6 +93,10 @@ class RepositoryImportLog {
 
     Entry(String message) {
       this.message = message;
+    }
+
+    public String toLogMessage() {
+      return time + " - " + message;
     }
   }
 }

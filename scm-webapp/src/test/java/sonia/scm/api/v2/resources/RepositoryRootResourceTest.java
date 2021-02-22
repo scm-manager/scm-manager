@@ -53,6 +53,7 @@ import sonia.scm.importexport.FromUrlImporter;
 import sonia.scm.importexport.FullScmRepositoryExporter;
 import sonia.scm.importexport.FullScmRepositoryImporter;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
+import sonia.scm.importexport.RepositoryImportLoggerFactory;
 import sonia.scm.repository.CustomNamespaceStrategy;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.NamespaceStrategy;
@@ -166,6 +167,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Mock
   private ExportFileExtensionResolver fileExtensionResolver;
   @Mock
+  private RepositoryImportLoggerFactory importLoggerFactory;
+  @Mock
   private ExportService exportService;
 
   @Captor
@@ -187,7 +190,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     super.manager = repositoryManager;
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
-    super.repositoryImportResource = new RepositoryImportResource(dtoToRepositoryMapper, resourceLinks, fullScmRepositoryImporter, new RepositoryImportDtoToRepositoryImportParametersMapperImpl(), repositoryImportExportEncryption, fromUrlImporter, fromBundleImporter);
+    super.repositoryImportResource = new RepositoryImportResource(dtoToRepositoryMapper, resourceLinks, fullScmRepositoryImporter, new RepositoryImportDtoToRepositoryImportParametersMapperImpl(), repositoryImportExportEncryption, fromUrlImporter, fromBundleImporter, importLoggerFactory);
     super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryImportExportEncryption, exportService, exportInformationToDtoMapper, fileExtensionResolver, resourceLinks);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
