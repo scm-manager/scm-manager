@@ -28,17 +28,13 @@ import com.google.common.io.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.UnbundleResponse;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 import static com.google.common.base.Preconditions.checkNotNull;
-import static sonia.scm.repository.spi.HgBranchesTagsExtractor.extractBranches;
-import static sonia.scm.repository.spi.HgBranchesTagsExtractor.extractTags;
 import static sonia.scm.util.Archives.extractTar;
 
 public class HgUnbundleCommand implements UnbundleCommand {
@@ -76,9 +72,7 @@ public class HgUnbundleCommand implements UnbundleCommand {
   }
 
   private void firePostReceiveRepositoryHookEvent() {
-    List<String> branches = extractBranches(context);
-    List<Tag> tags = extractTags(context);
-    eventBus.post(eventFactory.createEvent(context, branches, tags, changesetResolver));
+    eventBus.post(eventFactory.createEvent(context, changesetResolver));
   }
 
   private void unbundleRepositoryFromRequest(UnbundleCommandRequest request, Path repositoryDir) throws IOException {

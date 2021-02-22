@@ -64,12 +64,7 @@ public class HgPostReceiveRepositoryHookEventFactoryTest extends AbstractHgComma
 
     HgLazyChangesetResolver changesetResolver = mock(HgLazyChangesetResolver.class);
 
-    PostReceiveRepositoryHookEvent event = eventFactory.createEvent(
-      cmdContext,
-      branches,
-      tags,
-      changesetResolver
-    );
+    PostReceiveRepositoryHookEvent event = eventFactory.createEvent(cmdContext, changesetResolver);
 
     assertThat(event.getContext().getBranchProvider().getCreatedOrModified()).isSameAs(branches);
     assertThat(event.getContext().getTagProvider().getCreatedTags()).isSameAs(tags);

@@ -64,7 +64,7 @@ public class HgUnbundleCommandTest extends AbstractHgCommandTestBase {
 
   @Test
   public void shouldUnbundleRepositoryFiles() throws IOException {
-    when(eventFactory.createEvent(eq(cmdContext), any(), any(), any()))
+    when(eventFactory.createEvent(eq(cmdContext), any()))
       .thenReturn(new PostReceiveRepositoryHookEvent(new RepositoryHookEvent(null, repository, RepositoryHookType.POST_RECEIVE)));
 
 

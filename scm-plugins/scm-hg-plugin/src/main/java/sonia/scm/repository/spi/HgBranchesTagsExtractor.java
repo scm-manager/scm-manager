@@ -30,7 +30,11 @@ import sonia.scm.repository.Tag;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class HgBranchesTagsExtractor {
+@SuppressWarnings("java:S3252") // This is just how to use javahg
+final class HgBranchesTagsExtractor {
+
+  private HgBranchesTagsExtractor() {
+  }
 
   static List<Tag> extractTags(HgCommandContext context) {
     return com.aragost.javahg.commands.TagsCommand.on(context.open()).execute().stream()

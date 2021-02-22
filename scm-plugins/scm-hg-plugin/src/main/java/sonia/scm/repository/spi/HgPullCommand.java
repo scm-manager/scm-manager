@@ -36,7 +36,6 @@ import sonia.scm.io.INIConfigurationReader;
 import sonia.scm.io.INIConfigurationWriter;
 import sonia.scm.io.INISection;
 import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullResponse;
 
@@ -44,9 +43,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.util.List;
-
-import static sonia.scm.repository.spi.HgBranchesTagsExtractor.extractBranches;
-import static sonia.scm.repository.spi.HgBranchesTagsExtractor.extractTags;
 
 public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCommand {
 
@@ -96,9 +92,7 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
   }
 
   private void firePostReceiveRepositoryHookEvent() {
-    List<String> branches = extractBranches(context);
-    List<Tag> tags = extractTags(context);
-    eventBus.post(eventFactory.createEvent(context, branches, tags, changesetResolver));
+    eventBus.post(eventFactory.createEvent(context, changesetResolver));
   }
 
   public void addAuthenticationConfig(PullCommandRequest request, String url) throws IOException {

@@ -38,7 +38,7 @@ import java.util.List;
 
 import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
 
-public class GitPostReceiveRepositoryHookEventFactory {
+class GitPostReceiveRepositoryHookEventFactory {
 
   private final HookContextFactory hookContextFactory;
   private final GitChangesetConverterFactory changesetConverterFactory;

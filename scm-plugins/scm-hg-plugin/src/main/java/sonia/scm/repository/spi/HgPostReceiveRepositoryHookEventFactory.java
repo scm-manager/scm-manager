@@ -34,8 +34,10 @@ import javax.inject.Inject;
 import java.util.List;
 
 import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
+import static sonia.scm.repository.spi.HgBranchesTagsExtractor.extractBranches;
+import static sonia.scm.repository.spi.HgBranchesTagsExtractor.extractTags;
 
-public class HgPostReceiveRepositoryHookEventFactory {
+class HgPostReceiveRepositoryHookEventFactory {
 
   private final HookContextFactory hookContextFactory;
 
@@ -44,7 +46,9 @@ public class HgPostReceiveRepositoryHookEventFactory {
     this.hookContextFactory = hookContextFactory;
   }
 
-  PostReceiveRepositoryHookEvent createEvent(HgCommandContext hgContext, List<String> branches, List<Tag> tags, HgLazyChangesetResolver changesetResolver) {
+  PostReceiveRepositoryHookEvent createEvent(HgCommandContext hgContext, HgLazyChangesetResolver changesetResolver) {
+    List<String> branches = extractBranches(hgContext);
+    List<Tag> tags = extractTags(hgContext);
     HgImportHookContextProvider contextProvider = new HgImportHookContextProvider(branches, tags, changesetResolver);
     HookContext context = hookContextFactory.createContext(contextProvider, hgContext.getScmRepository());
     RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, hgContext.getScmRepository(), POST_RECEIVE);
