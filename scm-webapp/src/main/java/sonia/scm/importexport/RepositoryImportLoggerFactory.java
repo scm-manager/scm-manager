@@ -24,7 +24,11 @@
 
 package sonia.scm.importexport;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.subject.Subject;
 import sonia.scm.NotFoundException;
+import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
 
 import javax.inject.Inject;
@@ -45,12 +49,21 @@ public class RepositoryImportLoggerFactory {
   }
 
   public void getLog(String logId, OutputStream out) {
-    RepositoryImportLog log = dataStoreFactory.withType(RepositoryImportLog.class).withName("imports").build().getOptional(logId).orElseThrow(() -> new NotFoundException("Log", logId));
+    DataStore<RepositoryImportLog> importStore = dataStoreFactory.withType(RepositoryImportLog.class).withName("imports").build();
+    RepositoryImportLog log = importStore.getOptional(logId).orElseThrow(() -> new NotFoundException("Log", logId));
+    checkPermission(log);
     PrintStream printStream = new PrintStream(out);
     log.toLogHeader().forEach(printStream::println);
     log.getEntries()
       .stream()
       .map(RepositoryImportLog.Entry::toLogMessage)
       .forEach(printStream::println);
+  }
+
+  private void checkPermission(RepositoryImportLog log) {
+    Subject subject = SecurityUtils.getSubject();
+    if (!subject.isPermitted("only:admin:allowed") && !subject.getPrincipal().toString().equals(log.getUserId())) {
+      throw new AuthorizationException("not permitted");
+    }
   }
 }
