@@ -112,6 +112,9 @@ public class FromUrlImporter {
       } catch (IOException e) {
         logger.failed(e);
         throw new InternalRepositoryException(repository, "Failed to import from remote url", e);
+      } catch (RuntimeException e) {
+        logger.failed(e);
+        throw e;
       }
     };
   }

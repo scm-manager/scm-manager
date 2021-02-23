@@ -58,12 +58,14 @@ class RepositoryImportLogger {
   public void finished() {
     log.setSuccess(true);
     step("import finished successfully");
+    writeLog();
   }
 
   public void failed(Exception e) {
     log.setSuccess(false);
     step("import failed (see next log entry)");
     step(e.getMessage());
+    writeLog();
   }
 
   public void repositoryCreated(Repository createdRepository) {
@@ -77,8 +79,11 @@ class RepositoryImportLogger {
     addLogEntry(new RepositoryImportLog.Entry(message));
   }
 
+  private void writeLog() {
+    logStore.put(logId, log);
+  }
+
   private void addLogEntry(RepositoryImportLog.Entry entry) {
     log.addEntry(entry);
-    logStore.put(logId, log);
   }
 }
