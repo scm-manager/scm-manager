@@ -73,8 +73,18 @@ class RepositoryImportLog {
       format("Repository type: %s", repositoryId),
       format("Imported from: %s", type),
       format("Imported by %s (%s)", userId, userName),
-      success ? "Finished successful" : "Import failed"
+      status()
     );
+  }
+
+  private String status() {
+    if (success == null) {
+      return "Not finished";
+    } else if (success) {
+      return "Finished successful";
+    } else {
+      return "Import failed";
+    }
   }
 
   enum ImportType {
