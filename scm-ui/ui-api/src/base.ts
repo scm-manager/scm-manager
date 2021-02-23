@@ -95,7 +95,6 @@ export const useVersion = (): string => {
 export const useIndexJsonResource = <T>(name: string): ApiResult<T> => {
   const link = useIndexLink(name);
   return useQuery<T, Error>(name, () => apiClient.get(link!).then(response => response.json()), {
-    // TODO does this make sense
     enabled: !!link
   });
 };

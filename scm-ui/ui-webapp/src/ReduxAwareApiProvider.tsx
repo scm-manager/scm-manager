@@ -23,9 +23,8 @@
  */
 
 import React, { FC } from "react";
-import { ApiProvider } from "@scm-manager/ui-api";
+import { ApiProvider, ApiProviderProps } from "@scm-manager/ui-api";
 import { IndexResources, Me } from "@scm-manager/ui-types";
-import { ApiProviderProps } from "@scm-manager/ui-api";
 
 import { connect, Dispatch } from "react-redux";
 import { ActionTypes, fetchIndexResourcesSuccess, fetchMeSuccess } from "./LegacyReduxProvider";

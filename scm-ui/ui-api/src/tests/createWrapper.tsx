@@ -22,9 +22,8 @@
  * SOFTWARE.
  */
 
-import * as React from "react";
+import React, { FC } from "react";
 import { LegacyContext, LegacyContextProvider } from "../LegacyContext";
-import { FC } from "react";
 import { QueryClient, QueryClientProvider } from "react-query";
 
 const createWrapper = (context?: LegacyContext, queryClient?: QueryClient): FC => {
