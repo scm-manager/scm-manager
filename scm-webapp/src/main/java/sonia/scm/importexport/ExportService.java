@@ -28,7 +28,6 @@ import com.google.common.annotations.VisibleForTesting;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
@@ -43,6 +42,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.time.Clock;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -55,22 +56,12 @@ public class ExportService {
   private final BlobStoreFactory blobStoreFactory;
   private final DataStoreFactory dataStoreFactory;
   private final ExportFileExtensionResolver fileExtensionResolver;
-  private final Clock clock;
 
   @Inject
   public ExportService(BlobStoreFactory blobStoreFactory, DataStoreFactory dataStoreFactory, ExportFileExtensionResolver fileExtensionResolver) {
     this.blobStoreFactory = blobStoreFactory;
     this.dataStoreFactory = dataStoreFactory;
     this.fileExtensionResolver = fileExtensionResolver;
-    this.clock = Clock.systemUTC();
-  }
-
-  @VisibleForTesting
-  ExportService(BlobStoreFactory blobStoreFactory, DataStoreFactory dataStoreFactory, ExportFileExtensionResolver fileExtensionResolver, Clock clock) {
-    this.blobStoreFactory = blobStoreFactory;
-    this.dataStoreFactory = dataStoreFactory;
-    this.fileExtensionResolver = fileExtensionResolver;
-    this.clock = clock;
   }
 
   public OutputStream store(Repository repository, boolean withMetadata, boolean compressed, boolean encrypted) {
@@ -102,9 +93,10 @@ public class ExportService {
     return blob.getInputStream();
   }
 
-  public boolean checkExportIsAvailable(Repository repository) {
-    RepositoryExportInformation info = createDataStore().get(repository.getId());
-    return info != null && info.getStatus() == ExportStatus.FINISHED;
+  public void checkExportIsAvailable(Repository repository) {
+    if (createDataStore().get(repository.getId()) == null) {
+      throw new NotFoundException(RepositoryExportInformation.class, repository.getId());
+    }
   }
 
   public String getFileExtension(Repository repository) {
@@ -142,6 +134,29 @@ public class ExportService {
     }
   }
 
+  void cleanupOutdatedExports() {
+    DataStore<RepositoryExportInformation> dataStore = createDataStore();
+    List<String> outdatedExportIds = collectOutdatedExportIds(dataStore);
+
+    for (String id : outdatedExportIds) {
+      createBlobStore(id).clear();
+    }
+    outdatedExportIds.forEach(dataStore::remove);
+  }
+
+  private List<String> collectOutdatedExportIds(DataStore<RepositoryExportInformation> dataStore) {
+    List<String> outdatedExportIds = new ArrayList<>();
+    Instant expireDate = Instant.now().minus(10, ChronoUnit.DAYS);
+
+    dataStore
+      .getAll()
+      .entrySet()
+      .stream()
+      .filter(e -> e.getValue().getCreated().isBefore(expireDate))
+      .forEach(e -> outdatedExportIds.add(e.getKey()));
+    return outdatedExportIds;
+  }
+
   private Blob storeNewBlob(String repositoryId) {
     BlobStore store = createBlobStore(repositoryId);
     if (!store.getAll().isEmpty()) {
@@ -158,8 +173,7 @@ public class ExportService {
     }
 
     User exporter = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
-    Instant instant = clock.instant();
-    RepositoryExportInformation info = new RepositoryExportInformation(exporter, instant, withMetadata, compressed, encrypted, ExportStatus.EXPORTING);
+    RepositoryExportInformation info = new RepositoryExportInformation(exporter, Instant.now(), withMetadata, compressed, encrypted, ExportStatus.EXPORTING);
     dataStore.put(repositoryId, info);
   }
 

@@ -37,7 +37,6 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
@@ -50,8 +49,8 @@ import sonia.scm.user.User;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.time.Clock;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -79,8 +78,6 @@ public class ExportServiceTest {
   private DataStore<RepositoryExportInformation> dataStore;
 
   @Mock
-  private Clock clock;
-  @Mock
   private Subject subject;
 
   @InjectMocks
@@ -98,7 +95,6 @@ public class ExportServiceTest {
     blobStore = new InMemoryBlobStore();
     when(blobStoreFactory.withName(STORE_NAME).forRepository(REPOSITORY.getId()).build())
       .thenReturn(blobStore);
-    lenient().when(clock.instant()).thenReturn(Instant.ofEpochMilli(0));
 
     dataStore = new InMemoryDataStore<>();
     when(dataStoreFactory.withType(RepositoryExportInformation.class).withName(STORE_NAME).build())
@@ -162,7 +158,7 @@ public class ExportServiceTest {
 
     assertThat(exportInformation.getExporter().getName()).isEqualTo("trillian");
     assertThat(exportInformation.getExporter().getMail()).isEqualTo("trillian@hitchhiker.org");
-    assertThat(exportInformation.getCreated()).isEqualTo(Instant.ofEpochSecond(0).toString());
+    assertThat(exportInformation.getCreated()).isNotNull();
   }
 
   @Test
@@ -186,7 +182,7 @@ public class ExportServiceTest {
   }
 
   @Test
-  void shouldOnlyCleanupUnfinishedExports() {    
+  void shouldOnlyCleanupUnfinishedExports() {
     blobStore.create(REPOSITORY.getId());
     RepositoryExportInformation info = new RepositoryExportInformation();
     info.setStatus(ExportStatus.EXPORTING);
@@ -213,5 +209,31 @@ public class ExportServiceTest {
     assertThat(dataStore.get(REPOSITORY.getId()).getStatus()).isEqualTo(ExportStatus.INTERRUPTED);
     assertThat(finishedExportBlobStore.get(finishedExport.getId())).isEqualTo(finishedExportBlob);
     assertThat(dataStore.get(finishedExport.getId()).getStatus()).isEqualTo(ExportStatus.FINISHED);
+  }
+
+  @Test
+  void shouldOnlyCleanupOutdatedExports() {
+    blobStore.create(REPOSITORY.getId());
+    Instant now = Instant.now();
+    RepositoryExportInformation newExportInfo = new RepositoryExportInformation();
+    newExportInfo.setCreated(now);
+    dataStore.put(REPOSITORY.getId(), newExportInfo);
+
+    Repository oldExportRepo = RepositoryTestData.createHappyVerticalPeopleTransporter();
+    BlobStore oldExportBlobStore = new InMemoryBlobStore();
+    oldExportBlobStore.create(oldExportRepo.getId());
+    RepositoryExportInformation oldExportInfo = new RepositoryExportInformation();
+    Instant old = Instant.now().minus(11, ChronoUnit.DAYS);
+    oldExportInfo.setCreated(old);
+    dataStore.put(oldExportRepo.getId(), oldExportInfo);
+    when(blobStoreFactory.withName(STORE_NAME).forRepository(oldExportRepo.getId()).build())
+      .thenReturn(oldExportBlobStore);
+
+    exportService.cleanupOutdatedExports();
+
+    assertThat(blobStore.getAll()).hasSize(1);
+    assertThat(oldExportBlobStore.getAll()).isEmpty();
+    assertThat(dataStore.get(REPOSITORY.getId()).getCreated()).isEqualTo(now);
+    assertThat(dataStore.get(oldExportRepo.getId())).isNull();
   }
 }
