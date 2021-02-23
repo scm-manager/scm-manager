@@ -49,7 +49,7 @@ type InitialAction = {
 export type ActionTypes = IndexActionSuccess | MeActionSuccess | InitialAction;
 
 type State = {
-  index?: {
+  indexResources?: {
     version: string;
     links: Links;
   };
@@ -63,7 +63,7 @@ const reducer = (state: State = initialState, action: ActionTypes = { type: ACTI
     case "scm/index_success": {
       return {
         ...state,
-        index: {
+        indexResources: {
           version: action.payload.version,
           links: action.payload._links
         }
@@ -81,6 +81,8 @@ const reducer = (state: State = initialState, action: ActionTypes = { type: ACTI
   }
 };
 
+// add window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__() as last argument of createStore
+// to enable redux devtools
 const store = createStore(reducer, initialState);
 
 export const fetchIndexResourcesSuccess = (index: IndexResources): ActionTypes => {
