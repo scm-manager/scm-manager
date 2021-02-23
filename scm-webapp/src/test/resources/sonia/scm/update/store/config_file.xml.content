@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jenkins-config>
+    <disable-repository-configuration>false</disable-repository-configuration>
+    <disable-mercurial-trigger>false</disable-mercurial-trigger>
+    <disable-git-trigger>false</disable-git-trigger>
+    <disable-subversion-trigger>false</disable-subversion-trigger>
+    <disable-event-trigger>false</disable-event-trigger>
+    <username>scmadmin</username>
+    <apiToken>{enc}v2:7iwd7q8K8i8sU2VB_ZzfCrJj_KMZPCCGLk82zVGA6PKp860Wou1VDA==</apiToken>
+    <url>http://localhost:8080/jenkins/1</url>
+</jenkins-config>

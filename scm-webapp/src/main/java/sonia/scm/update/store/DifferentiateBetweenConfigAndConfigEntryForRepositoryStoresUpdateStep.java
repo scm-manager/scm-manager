@@ -22,35 +22,28 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.update.store;
 
-import java.io.IOException;
+import sonia.scm.migration.RepositoryUpdateContext;
+import sonia.scm.migration.RepositoryUpdateStep;
+import sonia.scm.plugin.Extension;
+import sonia.scm.repository.RepositoryLocationResolver;
+
+import javax.inject.Inject;
 import java.nio.file.Path;
-import java.util.Optional;
-import java.util.function.Function;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-import static sonia.scm.store.ExportCopier.putFileContentIntoStream;
+@Extension
+public class DifferentiateBetweenConfigAndConfigEntryForRepositoryStoresUpdateStep extends DifferentiateBetweenConfigAndConfigEntryUpdateStep implements RepositoryUpdateStep {
 
-class ExportableConfigFileStore implements ExportableStore {
+  private final RepositoryLocationResolver locationResolver;
 
-  private final Path file;
-
-  static final Function<StoreType, Optional<Function<Path, ExportableStore>>> CONFIG_FACTORY =
-    storeType -> storeType == StoreType.CONFIG ? of(ExportableConfigFileStore::new) : empty();
-
-  ExportableConfigFileStore(Path file) {
-    this.file = file;
+  @Inject
+  public DifferentiateBetweenConfigAndConfigEntryForRepositoryStoresUpdateStep(RepositoryLocationResolver locationResolver) {
+    this.locationResolver = locationResolver;
   }
 
   @Override
-  public StoreEntryMetaData getMetaData() {
-    return new StoreEntryMetaData(StoreType.CONFIG, file.getFileName().toString());
-  }
-
-  @Override
-  public void export(Exporter exporter) throws IOException {
-    putFileContentIntoStream(exporter, file);
+  public void doUpdate(RepositoryUpdateContext repositoryUpdateContext) throws Exception {
+    updateAllInDirectory(locationResolver.forClass(Path.class).getLocation(repositoryUpdateContext.getRepositoryId()));
   }
 }

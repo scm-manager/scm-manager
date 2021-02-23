@@ -33,20 +33,20 @@ import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static sonia.scm.store.ExportCopier.putFileContentIntoStream;
 
-class ExportableConfigFileStore implements ExportableStore {
+class ExportableConfigEntryFileStore implements ExportableStore {
 
   private final Path file;
 
-  static final Function<StoreType, Optional<Function<Path, ExportableStore>>> CONFIG_FACTORY =
-    storeType -> storeType == StoreType.CONFIG ? of(ExportableConfigFileStore::new) : empty();
+  static final Function<StoreType, Optional<Function<Path, ExportableStore>>> CONFIG_ENTRY_FACTORY =
+    storeType -> storeType == StoreType.CONFIG_ENTRY ? of(ExportableConfigEntryFileStore::new) : empty();
 
-  ExportableConfigFileStore(Path file) {
+  ExportableConfigEntryFileStore(Path file) {
     this.file = file;
   }
 
   @Override
   public StoreEntryMetaData getMetaData() {
-    return new StoreEntryMetaData(StoreType.CONFIG, file.getFileName().toString());
+    return new StoreEntryMetaData(StoreType.CONFIG_ENTRY, file.getFileName().toString());
   }
 
   @Override

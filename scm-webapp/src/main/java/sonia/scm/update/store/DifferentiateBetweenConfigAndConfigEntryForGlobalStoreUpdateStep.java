@@ -22,35 +22,29 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.update.store;
 
-import java.io.IOException;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.migration.UpdateStep;
+import sonia.scm.plugin.Extension;
+
+import javax.inject.Inject;
+import java.io.File;
 import java.nio.file.Path;
-import java.util.Optional;
-import java.util.function.Function;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-import static sonia.scm.store.ExportCopier.putFileContentIntoStream;
+@Extension
+public class DifferentiateBetweenConfigAndConfigEntryForGlobalStoreUpdateStep extends DifferentiateBetweenConfigAndConfigEntryUpdateStep implements UpdateStep {
 
-class ExportableConfigFileStore implements ExportableStore {
+  private final SCMContextProvider contextProvider;
 
-  private final Path file;
-
-  static final Function<StoreType, Optional<Function<Path, ExportableStore>>> CONFIG_FACTORY =
-    storeType -> storeType == StoreType.CONFIG ? of(ExportableConfigFileStore::new) : empty();
-
-  ExportableConfigFileStore(Path file) {
-    this.file = file;
+  @Inject
+  public DifferentiateBetweenConfigAndConfigEntryForGlobalStoreUpdateStep(SCMContextProvider contextProvider) {
+    this.contextProvider = contextProvider;
   }
 
   @Override
-  public StoreEntryMetaData getMetaData() {
-    return new StoreEntryMetaData(StoreType.CONFIG, file.getFileName().toString());
-  }
-
-  @Override
-  public void export(Exporter exporter) throws IOException {
-    putFileContentIntoStream(exporter, file);
+  public void doUpdate() throws Exception {
+    Path configPath = new File(contextProvider.getBaseDirectory(), "config").toPath();
+    updateAllInDirectory(configPath);
   }
 }

@@ -1,0 +1,13 @@
+  <entry>
+    <key>sonia.scm.pullrequest.comment.data.xml</key>
+    <value>
+      <latestVersion>2.0.2</latestVersion>
+    </value>
+  </entry>
+  <entry>
+    <key>sonia.scm.plugin.svn</key>
+    <value>
+      <latestVersion>2.0.0</latestVersion>
+    </value>
+  </entry>
+</configuration>
