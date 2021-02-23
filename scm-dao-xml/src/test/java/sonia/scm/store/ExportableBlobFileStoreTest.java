@@ -24,33 +24,47 @@
 
 package sonia.scm.store;
 
+
+import org.junit.jupiter.api.Test;
+
 import java.nio.file.Path;
-import java.util.Optional;
-import java.util.function.Function;
+import java.nio.file.Paths;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
+import static org.assertj.core.api.Assertions.assertThat;
 
-class ExportableBlobFileStore extends ExportableDirectoryBasedFileStore {
+class ExportableBlobFileStoreTest {
 
-  private static final String EXCLUDED_EXPORT_STORE = "repository-export";
+  @Test
+  void shouldIgnoreStoreIfExcludedStore() {
+    Path dir = Paths.get("test/path/repository-export");
+    ExportableBlobFileStore exportableBlobFileStore = new ExportableBlobFileStore(dir);
 
-  static Function<StoreType, Optional<Function<Path, ExportableStore>>> BLOB_FACTORY =
-    storeType -> storeType == StoreType.BLOB ? of(ExportableBlobFileStore::new) : empty();
+    Path file = Paths.get(dir.toString(), "some.blob");
+    boolean result = exportableBlobFileStore.shouldIncludeFile(file);
 
-  ExportableBlobFileStore(Path directory) {
-    super(directory);
+    assertThat(result).isFalse();
   }
 
-  @Override
-  StoreType getStoreType() {
-    return StoreType.BLOB;
+  @Test
+  void shouldIgnoreStoreIfNotBlob() {
+    Path dir = Paths.get("test/path/any-store");
+    ExportableBlobFileStore exportableBlobFileStore = new ExportableBlobFileStore(dir);
+
+    Path file = Paths.get(dir.toString(), "some.unblob");
+    boolean result = exportableBlobFileStore.shouldIncludeFile(file);
+
+    assertThat(result).isFalse();
   }
 
-  boolean shouldIncludeFile(Path file) {
-    if (getDirectory().toString().endsWith(EXCLUDED_EXPORT_STORE)) {
-      return false;
-    }
-    return file.getFileName().toString().endsWith(".blob");
+  @Test
+  void shouldIncludeStore() {
+    Path dir = Paths.get("test/path/any-blob-store");
+    ExportableBlobFileStore exportableBlobFileStore = new ExportableBlobFileStore(dir);
+
+    Path file = Paths.get(dir.toString(), "some.blob");
+    boolean result = exportableBlobFileStore.shouldIncludeFile(file);
+
+    assertThat(result).isTrue();
   }
+
 }
