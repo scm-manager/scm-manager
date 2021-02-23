@@ -50,7 +50,7 @@ const ImportRepositoryFromBundle: FC<Props> = ({ url, repositoryType, setImportP
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | undefined>();
   const [file, setFile] = useState<File | null>(null);
-  const [compressed, setCompressed] = useState(false);
+  const [compressed, setCompressed] = useState(true);
   const history = useHistory();
   const [t] = useTranslation("repos");
 
