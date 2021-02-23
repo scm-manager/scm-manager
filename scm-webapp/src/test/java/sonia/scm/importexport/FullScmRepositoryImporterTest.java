@@ -25,6 +25,9 @@
 package sonia.scm.importexport;
 
 import com.google.common.io.Resources;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -64,6 +67,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -98,6 +102,8 @@ class FullScmRepositoryImporterTest {
   private RepositoryImportLogger logger;
   @Mock
   private RepositoryImportLoggerFactory loggerFactory;
+  @Mock
+  private Subject subject;
 
   @InjectMocks
   private EnvironmentCheckStep environmentCheckStep;
@@ -140,6 +146,16 @@ class FullScmRepositoryImporterTest {
     lenient().when(loggerFactory.createLogger()).thenReturn(logger);
   }
 
+  @BeforeEach
+  void initSubject() {
+    ThreadContext.bind(subject);
+  }
+
+  @BeforeEach
+  void cleanupSubject() {
+    ThreadContext.unbindSubject();
+  }
+
   @Test
   void shouldNotImportRepositoryIfFileNotExists(@TempDir Path temp) throws IOException {
     Path emptyFile = temp.resolve("empty");
@@ -160,6 +176,18 @@ class FullScmRepositoryImporterTest {
       IncompatibleEnvironmentForImportException.class,
       () -> fullImporter.importFromStream(REPOSITORY, importStream, "")
     );
+  }
+
+  @Test
+  void shouldNotImportRepositoryWithoutPermission() throws IOException {
+    doThrow(AuthorizationException.class).when(subject).checkPermission("repository:create");
+
+    InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
+
+    assertThrows(AuthorizationException.class, () -> fullImporter.importFromStream(REPOSITORY, stream, null));
+
+    verify(storeImporter, never()).importFromTarArchive(any(Repository.class), any(InputStream.class), any(RepositoryImportLogger.class));
+    verify(repositoryManager, never()).modify(any());
   }
 
   @Nested
@@ -214,6 +242,7 @@ class FullScmRepositoryImporterTest {
 
       assertThat(repository).isEqualTo(REPOSITORY);
       verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class), eq(logger));
+      verify(repositoryManager).create(REPOSITORY);
       verify(repositoryManager).modify(REPOSITORY);
       verify(unbundleCommandBuilder).unbundle((InputStream) argThat(argument -> argument.getClass().equals(NoneClosingInputStream.class)));
       verify(workdirProvider, never()).createNewWorkdir(REPOSITORY.getId());

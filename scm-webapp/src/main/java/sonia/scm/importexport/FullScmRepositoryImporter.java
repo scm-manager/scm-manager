@@ -34,6 +34,7 @@ import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.ImportFailedException;
 
 import javax.inject.Inject;
@@ -74,6 +75,7 @@ public class FullScmRepositoryImporter {
   }
 
   public Repository importFromStream(Repository repository, InputStream inputStream, String password) {
+    RepositoryPermissions.create().check();
     RepositoryImportLogger logger = startLogger(repository);
     try {
       if (inputStream.available() > 0) {

@@ -49,7 +49,6 @@ import sonia.scm.importexport.FullScmRepositoryImporter;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
 import sonia.scm.importexport.RepositoryImportLoggerFactory;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.web.VndMediaType;
@@ -206,7 +205,6 @@ public class RepositoryImportResource {
                                    @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
                                    MultipartFormDataInput input,
                                    @QueryParam("compressed") @DefaultValue("false") boolean compressed) {
-    RepositoryPermissions.create().check();
     Repository repository = doImportFromBundle(type, input, compressed);
 
     return Response.created(URI.create(resourceLinks.repository().self(repository.getNamespace(), repository.getName()))).build();
@@ -256,7 +254,6 @@ public class RepositoryImportResource {
   public Response importFullRepository(@Context UriInfo uriInfo,
                                        @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
                                        MultipartFormDataInput input) {
-    RepositoryPermissions.create().check();
     Repository createdRepository = importFullRepositoryFromInput(input);
     return Response.created(URI.create(resourceLinks.repository().self(createdRepository.getNamespace(), createdRepository.getName()))).build();
   }
