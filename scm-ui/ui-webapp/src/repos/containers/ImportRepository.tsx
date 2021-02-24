@@ -37,12 +37,6 @@ import ImportFullRepository from "../components/ImportFullRepository";
 import { useRepositoryTypes } from "@scm-manager/ui-api";
 import { Prompt } from "react-router-dom";
 
-type Props = {
-  repositoryTypes: RepositoryType[];
-  pageLoading: boolean;
-  error?: Error;
-};
-
 const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => {
   const [t] = useTranslation("repos");
   if (!importPending) {
