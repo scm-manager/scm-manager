@@ -77,7 +77,6 @@ public class FullScmRepositoryImporter {
 
   public Repository importFromStream(Repository repository, InputStream inputStream, String password) {
     RepositoryPermissions.create().check();
-    RepositoryImportLogger logger = startLogger(repository);
     try {
       if (inputStream.available() > 0) {
         try (
@@ -86,7 +85,7 @@ public class FullScmRepositoryImporter {
           GzipCompressorInputStream gcis = new GzipCompressorInputStream(cif);
           TarArchiveInputStream tais = createTarInputStream(gcis)
         ) {
-          return run(repository, tais, logger);
+          return run(repository, tais);
         }
       } else {
         throw new ImportFailedException(
@@ -117,8 +116,10 @@ public class FullScmRepositoryImporter {
     return logger;
   }
 
-  private Repository run(Repository repository, TarArchiveInputStream tais, RepositoryImportLogger logger) throws IOException {
-    ImportState state = new ImportState(repositoryManager.create(repository), logger);
+  private Repository run(Repository repository, TarArchiveInputStream tais) throws IOException {
+    Repository createdRepository = repositoryManager.create(repository);
+    RepositoryImportLogger logger = startLogger(repository);
+    ImportState state = new ImportState(createdRepository, logger);
     logger.repositoryCreated(state.getRepository());
     try {
       TarArchiveEntry tarArchiveEntry;
@@ -127,10 +128,10 @@ public class FullScmRepositoryImporter {
         handle(tais, state, tarArchiveEntry);
       }
       stream(importSteps).forEach(step -> step.finish(state));
-      logger.finished();
+      state.getLogger().finished();
       return state.getRepository();
     } catch (RuntimeException | IOException e) {
-      logger.failed(e);
+      state.getLogger().failed(e);
       throw e;
     } finally {
       stream(importSteps).forEach(step -> step.cleanup(state));
@@ -140,7 +141,7 @@ public class FullScmRepositoryImporter {
       } else {
         // Delete the repository if any error occurs during the import
         repositoryManager.delete(state.getRepository());
-        eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, logger.getLogId(), true));
+        eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, true));
       }
 
     }

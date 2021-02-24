@@ -28,7 +28,6 @@ import com.google.common.io.Resources;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
-import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -62,6 +61,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -239,15 +239,20 @@ class FullScmRepositoryImporterTest {
     @Test
     void shouldSendImportedEventForImportedRepository() throws IOException {
       InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
+      when(unbundleCommandBuilder.setPostEventSink(any())).thenAnswer(
+        invocation -> {
+          invocation.getArgument(0, Consumer.class).accept(new RepositoryHookEvent(null, REPOSITORY, null));
+          return null;
+        }
+      );
 
       fullImporter.importFromStream(REPOSITORY, stream, null);
 
       verify(eventBus).post(argThat(
         event -> {
-          assertThat(event).isInstanceOf(RepositoryImportEvent.class);
-          RepositoryImportEvent repositoryImportEvent = (RepositoryImportEvent) event;
-          assertThat(repositoryImportEvent.getItem()).isEqualTo(REPOSITORY);
-          assertThat(repositoryImportEvent.isFailed()).isFalse();
+          assertThat(event).isInstanceOf(ImportRepositoryHookEvent.class);
+          ImportRepositoryHookEvent repositoryImportEvent = (ImportRepositoryHookEvent) event;
+          assertThat(repositoryImportEvent.getRepository()).isEqualTo(REPOSITORY);
           return true;
         }
       ));

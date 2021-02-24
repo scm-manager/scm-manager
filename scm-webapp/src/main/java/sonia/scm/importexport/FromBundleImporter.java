@@ -86,21 +86,21 @@ public class FromBundleImporter {
     RepositoryImportLogger logger = loggerFactory.createLogger();
 
     try {
-      logger.start(DUMP, repository);
       repository = manager.create(repository, unbundleImport(inputStream, compressed, logger));
       logger.finished();
     } catch (Exception e) {
       logger.failed(e);
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, logger.getLogId(), true));
+      eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, true));
       throw e;
     }
 
-    eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, logger.getLogId(), false));
+    eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, false));
     return repository;
   }
 
   private Consumer<Repository> unbundleImport(InputStream inputStream, boolean compressed, RepositoryImportLogger logger) {
     return repository -> {
+      logger.start(DUMP, repository);
       File workdir = workdirProvider.createNewWorkdir(repository.getId());
       try (RepositoryService service = serviceFactory.create(repository)) {
         logger.step("writing temporary dump file");

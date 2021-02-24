@@ -34,7 +34,7 @@ class RepositoryImportLogger {
 
   private final DataStore<RepositoryImportLog> logStore;
   private RepositoryImportLog log;
-  private String logId;
+  private String repositoryId;
 
   RepositoryImportLogger(DataStore<RepositoryImportLog> logStore) {
     this.logStore = logStore;
@@ -42,6 +42,7 @@ class RepositoryImportLogger {
 
   void start(ImportType importType, Repository repository) {
     User user = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
+    repositoryId = repository.getId();
     log = new RepositoryImportLog();
     log.setType(importType);
     log.setUserId(user.getId());
@@ -50,12 +51,8 @@ class RepositoryImportLogger {
     log.setNamespace(repository.getNamespace());
     log.setName(repository.getName());
     log.setRepositoryType(repository.getType());
-    logId = logStore.put(log);
+    logStore.put(repositoryId, log);
     addLogEntry(new RepositoryImportLog.Entry("import started"));
-  }
-
-  public String getLogId() {
-    return logId;
   }
 
   public void finished() {
@@ -83,7 +80,7 @@ class RepositoryImportLogger {
   }
 
   private void writeLog() {
-    logStore.put(logId, log);
+    logStore.put(repositoryId, log);
   }
 
   private void addLogEntry(RepositoryImportLog.Entry entry) {

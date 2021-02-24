@@ -81,25 +81,24 @@ public class FromUrlImporter {
     repository.setPermissions(singletonList(new RepositoryPermission(SecurityUtils.getSubject().getPrincipal().toString(), "OWNER", false)));
 
     RepositoryImportLogger logger = loggerFactory.createLogger();
-    logger.start(RepositoryImportLog.ImportType.URL, repository);
     Repository createdRepository;
     try {
-      logger.step("creating repository");
       createdRepository = manager.create(
         repository,
         pullChangesFromRemoteUrl(parameters, logger)
       );
     } catch (Exception e) {
       logger.failed(e);
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, logger.getLogId(), true));
+      eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, true));
       throw new ImportFailedException(noContext(), "Could not import repository from url " + parameters.getImportUrl(), e);
     }
-    eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, createdRepository, logger.getLogId(), false));
+    eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, createdRepository, false));
     return createdRepository;
   }
 
   private Consumer<Repository> pullChangesFromRemoteUrl(RepositoryImportParameters parameters, RepositoryImportLogger logger) {
     return repository -> {
+      logger.start(RepositoryImportLog.ImportType.URL, repository);
       try (RepositoryService service = serviceFactory.create(repository)) {
         PullCommandBuilder pullCommand = service.getPullCommand();
         if (!Strings.isNullOrEmpty(parameters.getUsername()) && !Strings.isNullOrEmpty(parameters.getPassword())) {
@@ -124,6 +123,5 @@ public class FromUrlImporter {
     private String importUrl;
     private String username;
     private String password;
-
   }
 }
