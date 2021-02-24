@@ -46,8 +46,10 @@ import sonia.scm.PageResult;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.importexport.ExportService;
+import sonia.scm.importexport.ExportStatus;
 import sonia.scm.importexport.FullScmRepositoryExporter;
 import sonia.scm.importexport.FullScmRepositoryImporter;
+import sonia.scm.importexport.RepositoryExportInformation;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
 import sonia.scm.repository.CustomNamespaceStrategy;
 import sonia.scm.repository.NamespaceAndName;
@@ -85,6 +87,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
@@ -872,73 +875,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldReturnConflictIfRepositoryStillExporting() throws URISyntaxException {
-    String namespace = "space";
-    String name = "repo";
-    Repository repository = createRepository(namespace, name, "svn");
-    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
-    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
-
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
-    when(exportService.isExporting(repository)).thenReturn(true);
-
-    MockHttpRequest request = MockHttpRequest
-      .head("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/status");
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(SC_CONFLICT, response.getStatus());
-  }
-
-  @Test
-  public void shouldCheckIfRepositoryExportIsReady() throws URISyntaxException {
-    String namespace = "space";
-    String name = "repo";
-    Repository repository = createRepository(namespace, name, "svn");
-    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
-    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
-
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
-    when(exportService.isExporting(repository)).thenReturn(false);
-
-    MockHttpRequest request = MockHttpRequest
-      .head("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/status");
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(SC_NO_CONTENT, response.getStatus());
-  }
-
-  @Test
-  public void shouldReturnNotFoundIfNoExportBlobExist() throws URISyntaxException {
-    String namespace = "space";
-    String name = "repo";
-    Repository repository = createRepository(namespace, name, "svn");
-    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
-    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
-
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
-    when(exportService.isExporting(repository)).thenReturn(false);
-    doThrow(NotFoundException.class).when(exportService).checkExportIsAvailable(repository);
-
-    MockHttpRequest request = MockHttpRequest
-      .head("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/status");
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(SC_NOT_FOUND, response.getStatus());
-  }
-
-  @Test
   public void shouldDeleteRepositoryExport() throws URISyntaxException, IOException {
     String namespace = "space";
     String name = "repo";
@@ -1031,6 +967,38 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     assertEquals(SC_OK, response.getStatus());
     verify(exportService).getData(repository);
+  }
+
+  @Test
+  public void shouldReturnExportInfo() throws URISyntaxException, IOException {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = createRepository(namespace, name, "svn");
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
+
+    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
+    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+
+    RepositoryExportInformationDto dto = new RepositoryExportInformationDto();
+    dto.setExporterName("trillian");
+    dto.setCreated(Instant.ofEpochMilli(100));
+    dto.setStatus(ExportStatus.EXPORTING);
+    when(exportInformationToDtoMapper.map(any(), eq(repository))).thenReturn(dto);
+
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/info");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(
+      "{\"exporterName\":\"trillian\",\"created\":0.100000000,\"withMetadata"
+        + "\":false,\"compressed\":false,\"encrypted\":false,\"status\":\"EXPORTING\"}",
+      response.getContentAsString()
+    );
+    assertEquals(SC_OK, response.getStatus());
+    verify(exportService).getExportInformation(repository);
   }
 
   private void mockRepositoryHandler(Set<Command> cmds) {

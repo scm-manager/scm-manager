@@ -39,7 +39,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RepositoryImportExportEncryptionTest {
 
-  private RepositoryImportExportEncryption encryption = new RepositoryImportExportEncryption();
+  private final RepositoryImportExportEncryption encryption = new RepositoryImportExportEncryption();
 
   @Test
   void shouldNotEncryptWithoutPassword() throws IOException {
@@ -51,7 +51,7 @@ class RepositoryImportExportEncryptionTest {
     os.write(content.getBytes());
     os.flush();
 
-    assertThat(os.toString()).isEqualTo(content);
+    assertThat(os).hasToString(content);
   }
 
   @Test

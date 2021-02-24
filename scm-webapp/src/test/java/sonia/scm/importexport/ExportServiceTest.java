@@ -61,7 +61,7 @@ import static org.mockito.Mockito.when;
 import static sonia.scm.importexport.ExportService.STORE_NAME;
 
 @ExtendWith(MockitoExtension.class)
-public class ExportServiceTest {
+class ExportServiceTest {
 
   private static final Repository REPOSITORY = RepositoryTestData.createHeartOfGold();
 

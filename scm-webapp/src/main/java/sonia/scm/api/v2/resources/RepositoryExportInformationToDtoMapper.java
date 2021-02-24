@@ -51,6 +51,11 @@ public abstract class RepositoryExportInformationToDtoMapper {
     this.resourceLinks = resourceLinks;
   }
 
+  @VisibleForTesting
+  void setExportService(ExportService exportService) {
+    this.exportService = exportService;
+  }
+
   abstract RepositoryExportInformationDto map(RepositoryExportInformation info, @Context Repository repository);
 
   @ObjectFactory

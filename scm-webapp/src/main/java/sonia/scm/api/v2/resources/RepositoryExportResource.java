@@ -416,7 +416,6 @@ public class RepositoryExportResource {
 
   private void checkRepositoryIsAlreadyExporting(Repository repository) {
     if (exportService.isExporting(repository)) {
-      //TODO Throw specific exception that repository is still exporting which is resolved to 409
       throw new ConcurrentModificationException(Repository.class, repository.getId());
     }
   }

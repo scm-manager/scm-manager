@@ -36,6 +36,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @NoArgsConstructor
+@SuppressWarnings("squid:S2160") // we do not need equals for dto
 public class RepositoryExportInformationDto extends HalRepresentation {
 
   private String exporterName;

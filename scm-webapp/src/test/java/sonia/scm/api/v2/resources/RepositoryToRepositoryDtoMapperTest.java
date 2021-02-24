@@ -285,40 +285,15 @@ public class RepositoryToRepositoryDtoMapperTest {
   }
 
   @Test
-  public void shouldCreateExportLink() {
+  public void shouldCreateExportLinks() {
     Repository repository = createTestRepository();
-    repository.setType("svn");
     RepositoryDto dto = mapper.map(repository);
     assertEquals(
       "http://example.com/base/v2/repositories/testspace/test/export/svn",
       dto.getLinks().getLinkBy("export").get().getHref());
-  }
-
-  @Test
-  public void shouldCreateFullExportLink() {
-    Repository repository = createTestRepository();
-    repository.setType("svn");
-    RepositoryDto dto = mapper.map(repository);
     assertEquals(
       "http://example.com/base/v2/repositories/testspace/test/export/full",
       dto.getLinks().getLinkBy("fullExport").get().getHref());
-  }
-
-  @Test
-  public void shouldCreateCheckExportStatusLink() {
-    Repository repository = createTestRepository();
-    repository.setType("svn");
-    RepositoryDto dto = mapper.map(repository);
-    assertEquals(
-      "http://example.com/base/v2/repositories/testspace/test/export/status",
-      dto.getLinks().getLinkBy("exportStatus").get().getHref());
-  }
-
-  @Test
-  public void shouldCreateExportInfoLink() {
-    Repository repository = createTestRepository();
-    repository.setType("svn");
-    RepositoryDto dto = mapper.map(repository);
     assertEquals(
       "http://example.com/base/v2/repositories/testspace/test/export/info",
       dto.getLinks().getLinkBy("exportInfo").get().getHref());

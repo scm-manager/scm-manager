@@ -36,6 +36,7 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
+@SuppressWarnings("squid:S2160") // we do not need equals for dto
 public class RepositoryExportDto extends HalRepresentation {
 
   private PersonDto exporter;

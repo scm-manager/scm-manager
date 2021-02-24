@@ -288,9 +288,9 @@ export const useExportRepository = () => {
                   resolve(info);
                 }
               })
-              .catch(error => {
+              .catch(e => {
                 clearInterval(id);
-                reject(error);
+                reject(e);
               });
           }, 1000);
           setIntervalId(id);

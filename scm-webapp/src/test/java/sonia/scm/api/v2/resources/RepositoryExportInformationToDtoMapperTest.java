@@ -27,9 +27,11 @@ package sonia.scm.api.v2.resources;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.ExportStatus;
 import sonia.scm.importexport.RepositoryExportInformation;
 import sonia.scm.repository.Repository;
@@ -39,6 +41,7 @@ import java.net.URI;
 import java.time.Instant;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class RepositoryExportInformationToDtoMapperTest {
@@ -47,16 +50,23 @@ class RepositoryExportInformationToDtoMapperTest {
 
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(URI.create("/scm/api/"));
 
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private ExportService exportService;
+
   private RepositoryExportInformationToDtoMapperImpl mapper;
 
   @BeforeEach
   void initResourceLinks() {
     mapper = new RepositoryExportInformationToDtoMapperImpl();
     mapper.setResourceLinks(resourceLinks);
+    mapper.setExportService(exportService);
   }
 
   @Test
   void shouldMapToInfoDtoWithLinks() {
+    when(exportService.isExporting(REPOSITORY)).thenReturn(false);
+    when(exportService.getExportInformation(REPOSITORY).getStatus()).thenReturn(ExportStatus.FINISHED);
+
     String exporterName = "trillian";
     Instant now = Instant.now();
     RepositoryExportInformation info = new RepositoryExportInformation(exporterName, now, true, true, false, ExportStatus.FINISHED);
@@ -71,5 +81,19 @@ class RepositoryExportInformationToDtoMapperTest {
     assertThat(dto.getStatus()).isEqualTo(ExportStatus.FINISHED);
     assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo("/scm/api/v2/repositories/hitchhiker/HeartOfGold/export/info");
     assertThat(dto.getLinks().getLinkBy("download").get().getHref()).isEqualTo("/scm/api/v2/repositories/hitchhiker/HeartOfGold/export/download");
+  }
+
+  @Test
+  void shouldNotAppendDownloadLink() {
+    when(exportService.isExporting(REPOSITORY)).thenReturn(true);
+
+    String exporterName = "trillian";
+    Instant now = Instant.now();
+    RepositoryExportInformation info = new RepositoryExportInformation(exporterName, now, true, true, false, ExportStatus.EXPORTING);
+
+    RepositoryExportInformationDto dto = mapper.map(info, REPOSITORY);
+
+    assertThat(dto.getLinks().getLinkBy("self").get().getHref()).isEqualTo("/scm/api/v2/repositories/hitchhiker/HeartOfGold/export/info");
+    assertThat(dto.getLinks().getLinkBy("download")).isNotPresent();
   }
 }

@@ -287,7 +287,7 @@
       "created": "Created on: ",
       "repository": "This export contains: \n- the repository",
       "repositoryArchive": "This export contains: \n- the repository\n- the metadata which exist for this repository, e.g. from plugins\n- an environment description for the exporting SCM-Manager\n- additional information for this repository",
-      "encrypted": "Encrypted: The stored export has been encrypted. The correct password is required for decryption."
+      "encrypted": "Encrypted: The stored export has been encrypted."
     }
   },
   "sources": {
