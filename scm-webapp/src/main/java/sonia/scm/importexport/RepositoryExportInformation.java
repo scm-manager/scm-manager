@@ -31,6 +31,8 @@ import lombok.Setter;
 import sonia.scm.user.User;
 import sonia.scm.xml.XmlInstantAdapter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.Instant;
@@ -41,6 +43,7 @@ import java.time.Instant;
 @Getter
 @Setter
 @XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
 public class RepositoryExportInformation {
 
   private User exporter;
