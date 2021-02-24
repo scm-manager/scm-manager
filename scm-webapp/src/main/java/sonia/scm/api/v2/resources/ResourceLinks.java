@@ -393,10 +393,6 @@ class ResourceLinks {
       return repositoryExportLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("export").parameters().method("exportFullRepository").parameters(type).href();
     }
 
-    String exportStatus(String namespace, String name) {
-      return repositoryExportLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("export").parameters().method("checkExportStatus").parameters().href();
-    }
-
     String downloadExport(String namespace, String name) {
       return repositoryExportLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("export").parameters().method("downloadExport").parameters().href();
     }

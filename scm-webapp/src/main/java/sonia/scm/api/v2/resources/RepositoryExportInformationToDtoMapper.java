@@ -29,6 +29,8 @@ import de.otto.edison.hal.Links;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
 import org.mapstruct.ObjectFactory;
+import sonia.scm.importexport.ExportService;
+import sonia.scm.importexport.ExportStatus;
 import sonia.scm.importexport.RepositoryExportInformation;
 import sonia.scm.repository.Repository;
 
@@ -41,6 +43,8 @@ public abstract class RepositoryExportInformationToDtoMapper {
 
   @Inject
   private ResourceLinks resourceLinks;
+  @Inject
+  private ExportService exportService;
 
   @VisibleForTesting
   void setResourceLinks(ResourceLinks resourceLinks) {
@@ -51,9 +55,11 @@ public abstract class RepositoryExportInformationToDtoMapper {
 
   @ObjectFactory
   RepositoryExportInformationDto createDto(@Context Repository repository) {
-    Links.Builder links = Links.linkingTo()
-      .self(resourceLinks.repository().exportInfo(repository.getNamespace(), repository.getName()))
-      .single(link("download", resourceLinks.repository().downloadExport(repository.getNamespace(), repository.getName())));
+    Links.Builder links = Links.linkingTo();
+    links.self(resourceLinks.repository().exportInfo(repository.getNamespace(), repository.getName()));
+    if (!exportService.isExporting(repository) && exportService.getExportInformation(repository).getStatus() == ExportStatus.FINISHED) {
+      links.single(link("download", resourceLinks.repository().downloadExport(repository.getNamespace(), repository.getName())));
+    }
     return new RepositoryExportInformationDto(links.build());
   }
 }

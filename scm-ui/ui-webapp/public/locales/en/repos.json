@@ -279,16 +279,8 @@
       "label": "Password",
       "helpText": "If a password is set, it will be used the encrypt the export file."
     },
-    "encrypt": {
-      "label": "Encrypt",
-      "helpText": "The export file will be encrypted using the provided password."
-    },
-    "password": {
-      "label": "Password",
-      "helpText": "If a password is set, it will be used the encrypt the export file."
-    },
-    "exportButton": "Export Repository",
-    "exportStarted":  "The repository export was started. Depending on the repository size this may take a while."
+    "createExportButton": "Create new Export",
+    "downloadExportButton":  "Download Export"
   },
   "sources": {
     "fileTree": {

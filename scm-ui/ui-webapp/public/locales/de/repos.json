@@ -279,16 +279,8 @@
       "label": "Passwort",
       "helpText": "Wird ein Passwort angegeben, wird die Export Datei damit verschlüsselt."
     },
-    "encrypt": {
-      "label": "Verschlüsseln",
-      "helpText": "Die Export Datei wird mit dem gesetzen Passwort verschlüsselt."
-    },
-    "password": {
-      "label": "Passwort",
-      "helpText": "Wird ein Passwort angegeben, wird die Export Datei damit verschlüsselt."
-    },
-    "exportButton": "Repository exportieren",
-    "exportStarted": "Der Repository Export wurde gestartet. Abhängig von der Größe des Repository kann dies einige Momente dauern."
+    "createExportButton": "Neuen Export erstellen",
+    "downloadExportButton": "Export herunterladen"
   },
   "sources": {
     "fileTree": {

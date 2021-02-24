@@ -41,7 +41,6 @@ import sonia.scm.NotFoundException;
 import sonia.scm.Type;
 import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.FullScmRepositoryExporter;
-import sonia.scm.importexport.RepositoryExportInformation;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -61,10 +60,10 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
-import javax.ws.rs.HEAD;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
@@ -308,40 +307,6 @@ public class RepositoryExportResource {
     });
   }
 
-  @HEAD
-  @Path("status")
-  @Operation(summary = "Check repository export status", description = "Checks if the repository export is ready for download.", tags = "Repository")
-  @ApiResponse(
-    responseCode = "204",
-    description = "Repository export is ready"
-  )
-  @ApiResponse(
-    responseCode = "404",
-    description = "Repository export not found"
-  )
-  @ApiResponse(
-    responseCode = "409",
-    description = "Repository export not ready yet"
-  )
-  @ApiResponse(
-    responseCode = "500",
-    description = "internal server error",
-    content = @Content(
-      mediaType = VndMediaType.ERROR_TYPE,
-      schema = @Schema(implementation = ErrorDto.class)
-    )
-  )
-  public Response checkExportStatus(@Context UriInfo uriInfo,
-                                    @PathParam("namespace") String namespace,
-                                    @PathParam("name") String name) {
-    Repository repository = getVerifiedRepository(namespace, name);
-    RepositoryPermissions.export(repository).check();
-    checkRepositoryIsAlreadyExporting(repository);
-    exportService.checkExportIsAvailable(repository);
-    return Response.noContent().build();
-  }
-
-
   @DELETE
   @Path("")
   @Operation(summary = "Deletes repository export", description = "Deletes repository export if stored.", tags = "Repository")
@@ -391,19 +356,22 @@ public class RepositoryExportResource {
   )
   public Response downloadExport(@Context UriInfo uriInfo,
                                  @PathParam("namespace") String namespace,
-                                 @PathParam("name") String name) throws IOException {
+                                 @PathParam("name") String name) {
     Repository repository = getVerifiedRepository(namespace, name);
     RepositoryPermissions.export(repository).check();
     checkRepositoryIsAlreadyExporting(repository);
     exportService.checkExportIsAvailable(repository);
-    try (InputStream is = exportService.getData(repository)) {
-      StreamingOutput output = os -> IOUtil.copy(is, os);
-      String fileExtension = exportService.getFileExtension(repository);
-      return createResponse(repository, fileExtension, fileExtension.contains(".gz"), output);
-    }
+    StreamingOutput output = os -> {
+      try (InputStream is = exportService.getData(repository)) {
+        IOUtil.copy(is, os);
+      }
+    };
+    String fileExtension = exportService.getFileExtension(repository);
+    return createResponse(repository, fileExtension, fileExtension.contains(".gz"), output);
   }
 
   @GET
+  @Produces(VndMediaType.REPOSITORY_EXPORT_INFO)
   @Path("info")
   @Operation(summary = "Returns stored repository export information", description = "Returns the stored repository export information.", tags = "Repository")
   @ApiResponse(
@@ -423,14 +391,15 @@ public class RepositoryExportResource {
     )
   )
   public RepositoryExportInformationDto getExportInformation(@Context UriInfo uriInfo,
-                                 @PathParam("namespace") String namespace,
-                                 @PathParam("name") String name) {
+                                                             @PathParam("namespace") String namespace,
+                                                             @PathParam("name") String name) {
     Repository repository = getVerifiedRepository(namespace, name);
     RepositoryPermissions.export(repository).check();
     return informationToDtoMapper.map(exportService.getExportInformation(repository), repository);
   }
 
-  private Response exportAsync(Repository repository, ExportDto exportDto, Callable<Response> call) throws Exception {
+  private Response exportAsync(Repository repository, ExportDto exportDto, Callable<Response> call) throws
+    Exception {
     if (exportDto.isAsync()) {
       repositoryExportHandler.submit(call);
       return Response.status(202).header(
@@ -526,7 +495,8 @@ public class RepositoryExportResource {
     return createResponse(repository, fileExtension, compressed, output);
   }
 
-  private Response createResponse(Repository repository, String fileExtension, boolean compressed, StreamingOutput output) {
+  private Response createResponse(Repository repository, String fileExtension, boolean compressed, StreamingOutput
+    output) {
     return Response
       .ok(output, compressed ? "application/x-gzip" : MediaType.APPLICATION_OCTET_STREAM)
       .header("content-disposition", createContentDispositionHeaderValue(repository, fileExtension))

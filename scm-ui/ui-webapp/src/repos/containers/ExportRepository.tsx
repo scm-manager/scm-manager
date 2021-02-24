@@ -21,10 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
-import { Button, Checkbox, InputField, Level, Notification, Subtitle } from "@scm-manager/ui-components";
+import React, { FC, useEffect, useState } from "react";
+import {
+  Button,
+  ButtonGroup,
+  Checkbox,
+  ErrorNotification,
+  InputField,
+  Level,
+  Notification,
+  Subtitle
+} from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { Link, Repository } from "@scm-manager/ui-types";
+import { useExportInfo, useExportRepository } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
@@ -36,21 +46,21 @@ const ExportRepository: FC<Props> = ({ repository }) => {
   const [fullExport, setFullExport] = useState(false);
   const [encrypt, setEncrypt] = useState(false);
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { isLoading: isLoadingInfo, error: errorInfo, data: exportInfo } = useExportInfo(repository);
+  const {
+    isLoading: isLoadingExport,
+    error: errorExport,
+    data: exportedInfo,
+    exportRepository
+  } = useExportRepository();
 
-  const createExportLink = () => {
-    if (fullExport) {
-      return (repository?._links?.fullExport as Link).href;
-    } else {
-      let exportLink = (repository?._links.export as Link).href;
-      if (compressed) {
-        exportLink += "?compressed=true";
-      }
-      return exportLink;
+  useEffect(() => {
+    if (exportedInfo && exportedInfo?._links.download) {
+      window.location.href = (exportedInfo?._links.download as Link).href;
     }
-  };
+  }, [exportedInfo]);
 
-  if (!repository?._links?.export) {
+  if (!repository._links.export) {
     return null;
   }
 
@@ -58,9 +68,9 @@ const ExportRepository: FC<Props> = ({ repository }) => {
     <>
       <hr />
       <Subtitle subtitle={t("export.subtitle")} />
-      <Notification type="inherit">
-        {t("export.notification")}
-      </Notification>
+      <ErrorNotification error={errorInfo} />
+      <ErrorNotification error={errorExport} />
+      <Notification type="inherit">{t("export.notification")}</Notification>
       <>
         <Checkbox
           checked={fullExport || compressed}
@@ -96,15 +106,35 @@ const ExportRepository: FC<Props> = ({ repository }) => {
         )}
         <Level
           right={
-            //TODO change this <a> to async download
-            <a color="primary" href={createExportLink()} onClick={() => setLoading(true)}>
-              <Button color="primary" label={t("export.exportButton")} icon="file-export" />
-            </a>
+            <ButtonGroup>
+              <a color="info" href={(exportInfo?._links.download as Link)?.href}>
+                <Button
+                  color="info"
+                  disabled={isLoadingInfo || isLoadingExport || !exportInfo?._links.download}
+                  label={t("export.downloadExportButton")}
+                  icon="download"
+                />
+              </a>
+              <Button
+                color="primary"
+                action={() =>
+                  exportRepository(repository, {
+                    compressed,
+                    password: encrypt ? password : "",
+                    withMetadata: fullExport
+                  })
+                }
+                loading={isLoadingInfo || isLoadingExport}
+                disabled={isLoadingInfo || isLoadingExport}
+                label={t("export.createExportButton")}
+                icon="file-export"
+              />
+            </ButtonGroup>
           }
         />
-        {loading && <Notification onClose={() => setLoading(false)}>{t("export.exportStarted")}</Notification>}
       </>
     </>
   );
 };
+
 export default ExportRepository;
