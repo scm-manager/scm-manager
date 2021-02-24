@@ -48,6 +48,7 @@ import Admin from "../admin/containers/Admin";
 import Profile from "./Profile";
 import NamespaceRoot from "../repos/namespaces/containers/NamespaceRoot";
 import ImportRepository from "../repos/containers/ImportRepository";
+import ImportLog from "../repos/importlog/ImportLog";
 
 type Props = {
   me: Me;
@@ -96,6 +97,7 @@ class Main extends React.Component<Props> {
             <ProtectedRoute exact path="/groups/:page" component={Groups} authenticated={authenticated} />
             <ProtectedRoute path="/admin" component={Admin} authenticated={authenticated} />
             <ProtectedRoute path="/me" component={Profile} authenticated={authenticated} />
+            <ProtectedRoute path="/importlog/:logId" component={ImportLog} authenticated={authenticated} />
             <ExtensionPoint
               name="main.route"
               renderAll={true}

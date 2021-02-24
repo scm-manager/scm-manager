@@ -39,7 +39,7 @@ type Props = {
   afterTitle?: ReactNode;
   subtitle?: string;
   loading?: boolean;
-  error?: Error;
+  error?: Error | null;
   showContentOnError?: boolean;
   children: ReactNode;
 };

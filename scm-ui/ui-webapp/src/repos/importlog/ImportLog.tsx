@@ -22,29 +22,24 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+import React, { FC } from "react";
+import { useImportLog, useIndex } from "@scm-manager/ui-api";
+import { useParams } from "react-router-dom";
+import { Page } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import sonia.scm.HandlerEventType;
-import sonia.scm.event.Event;
-
-/**
- * Event which is fired whenever repository import is successful or failed.
- *
- * @since 2.11.0
- */
-@Event
-@Getter
-@EqualsAndHashCode(callSuper = true)
-public class RepositoryImportEvent extends RepositoryEvent {
-
-  private final String logId;
-  private final boolean failed;
-
-  public RepositoryImportEvent(HandlerEventType eventType, Repository repository, boolean failed) {
-    super(eventType, repository);
-    this.logId = repository.getId();
-    this.failed = failed;
-  }
+type Params = {
+  logId: string;
 }
+
+const ImportLog: FC = () => {
+  const {logId} = useParams<Params>();
+  const {isLoading, data, error} = useImportLog(logId);
+  const [t] = useTranslation("commons");
+
+  return <Page title={t("importLog.title")} loading={isLoading} error={error}>
+    <pre>{data ? data : null}</pre>
+  </Page>;
+}
+
+export default ImportLog;
