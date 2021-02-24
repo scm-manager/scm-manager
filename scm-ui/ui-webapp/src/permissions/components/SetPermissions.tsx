@@ -21,166 +21,104 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { connect } from "react-redux";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC, FormEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "@scm-manager/ui-types";
 import { ErrorNotification, Level, Notification, SubmitButton, Subtitle } from "@scm-manager/ui-components";
-import { getLink } from "../../modules/indexResource";
-import { loadPermissionsForEntity, setPermissions } from "./handlePermissions";
+import { loadPermissionsForEntity, setPermissions as updatePermissions } from "./handlePermissions";
 import PermissionsWrapper from "./PermissionsWrapper";
+import { useRequiredIndexLink } from "@scm-manager/ui-api";
 
-type Props = WithTranslation & {
-  availablePermissionLink: string;
+type Props = {
   selectedPermissionsLink: Link;
 };
 
-type State = {
-  permissions: {
+const SetPermissions: FC<Props> = ({ selectedPermissionsLink }) => {
+  const [t] = useTranslation("permissions");
+  const availablePermissionLink = useRequiredIndexLink("permissions");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null | undefined>();
+  const [permissionsSubmitted, setPermissionsSubmitted] = useState(false);
+  const [permissionsChanged, setPermissionsChanged] = useState(false);
+  const [overwritePermissionsLink, setOverwritePermissionsLink] = useState<Link | undefined>();
+  const [permissions, setPermissions] = useState<{
     [key: string]: boolean;
-  };
-  loading: boolean;
-  error?: Error;
-  permissionsChanged: boolean;
-  permissionsSubmitted: boolean;
-  overwritePermissionsLink?: Link;
-};
+  }>({});
 
-class SetPermissions extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      permissions: {},
-      loading: true,
-      permissionsChanged: false,
-      permissionsSubmitted: false,
-      overwritePermissionsLink: undefined
-    };
-  }
-
-  setLoadingState = () => {
-    this.setState({
-      loading: true
+  useEffect(() => {
+    loadPermissionsForEntity(availablePermissionLink, selectedPermissionsLink.href).then(response => {
+      const { permissions, overwriteLink } = response;
+      setPermissions(permissions);
+      setOverwritePermissionsLink(overwriteLink);
+      setLoading(false);
     });
+  }, [availablePermissionLink, selectedPermissionsLink]);
+
+  const setLoadingState = () => setLoading(true);
+
+  const setErrorState = (error: Error) => {
+    setLoading(false);
+    setError(error);
   };
 
-  setErrorState = (error: Error) => {
-    this.setState({
-      error: error,
-      loading: false
+  const setSuccessfulState = () => {
+    setLoading(false);
+    setError(undefined);
+    setPermissionsSubmitted(true);
+    setPermissionsChanged(false);
+  };
+
+  const valueChanged = (value: boolean, name: string) => {
+    setPermissions({
+      ...permissions,
+      [name]: value
     });
+    setPermissionsChanged(true);
   };
 
-  setSuccessfulState = () => {
-    this.setState({
-      loading: false,
-      error: undefined,
-      permissionsSubmitted: true,
-      permissionsChanged: false
-    });
-  };
+  const onClose = () => setPermissionsSubmitted(false);
 
-  componentDidMount(): void {
-    loadPermissionsForEntity(this.props.availablePermissionLink, this.props.selectedPermissionsLink.href).then(
-      response => {
-        const { permissions, overwriteLink } = response;
-        this.setState({
-          permissions: permissions,
-          loading: false,
-          overwritePermissionsLink: overwriteLink
-        });
-      }
-    );
-  }
-
-  submit = (event: Event) => {
+  const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (this.state.permissions) {
-      const { permissions } = this.state;
-      this.setLoadingState();
+    if (permissions) {
+      setLoadingState();
       const selectedPermissions = Object.entries(permissions)
         .filter(e => e[1])
         .map(e => e[0]);
-      if (this.state.overwritePermissionsLink) {
-        setPermissions(this.state.overwritePermissionsLink.href, selectedPermissions)
-          .then(result => {
-            this.setSuccessfulState();
-          })
-          .catch(err => {
-            this.setErrorState(err);
-          });
+      if (overwritePermissionsLink) {
+        updatePermissions(overwritePermissionsLink.href, selectedPermissions)
+          .then(_ => setSuccessfulState())
+          .catch(err => setErrorState(err));
       }
     }
   };
 
-  render() {
-    const { t } = this.props;
-    const { loading, permissionsSubmitted, error } = this.state;
+  let message = null;
 
-    let message = null;
-
-    if (permissionsSubmitted) {
-      message = (
-        <Notification
-          type={"success"}
-          children={t("setPermissions.setPermissionsSuccessful")}
-          onClose={() => this.onClose()}
-        />
-      );
-    } else if (error) {
-      message = <ErrorNotification error={error} />;
-    }
-
-    return (
-      <form onSubmit={this.submit}>
-        <Subtitle subtitle={t("setPermissions.subtitle")} />
-        {message}
-        {this.renderPermissions()}
-        <Level
-          right={
-            <SubmitButton
-              disabled={!this.state.permissionsChanged}
-              loading={loading}
-              label={t("setPermissions.button")}
-              testId="set-permissions-button"
-            />
-          }
-        />
-      </form>
+  if (permissionsSubmitted) {
+    message = (
+      <Notification type={"success"} children={t("setPermissions.setPermissionsSuccessful")} onClose={onClose} />
     );
+  } else if (error) {
+    message = <ErrorNotification error={error} />;
   }
 
-  renderPermissions = () => {
-    const { overwritePermissionsLink, permissions } = this.state;
-    return (
-      <PermissionsWrapper permissions={permissions} onChange={this.valueChanged} disabled={!overwritePermissionsLink} />
-    );
-  };
-
-  valueChanged = (value: boolean, name: string) => {
-    this.setState(state => {
-      const newPermissions = state.permissions;
-      newPermissions[name] = value;
-      return {
-        permissions: newPermissions,
-        permissionsChanged: true
-      };
-    });
-  };
-
-  onClose = () => {
-    this.setState({
-      permissionsSubmitted: false
-    });
-  };
-}
-
-const mapStateToProps = (state: any) => {
-  const availablePermissionLink = getLink(state, "permissions");
-  return {
-    availablePermissionLink
-  };
+  return (
+    <form onSubmit={submit}>
+      <Subtitle subtitle={t("setPermissions.subtitle")} />
+      {message}
+      <PermissionsWrapper permissions={permissions} onChange={valueChanged} disabled={!overwritePermissionsLink} />
+      <Level
+        right={
+          <SubmitButton
+            disabled={!permissionsChanged}
+            loading={loading}
+            label={t("setPermissions.button")}
+            testId="set-permissions-button"
+          />
+        }
+      />
+    </form>
+  );
 };
-
-export default connect(mapStateToProps)(withTranslation("permissions")(SetPermissions));
+export default SetPermissions;

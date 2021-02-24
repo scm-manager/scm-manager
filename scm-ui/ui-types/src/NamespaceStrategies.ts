@@ -24,6 +24,8 @@
 
 import { Links } from "./hal";
 
+export const CUSTOM_NAMESPACE_STRATEGY = "CustomNamespaceStrategy";
+
 export type NamespaceStrategies = {
   current: string;
   available: string[];

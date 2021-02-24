@@ -66,9 +66,6 @@ public class AbstractTestBase
 
   private File tempDirectory;
 
-  protected DefaultFileSystem fileSystem;
-
-  protected RepositoryDAO repositoryDAO = mock(RepositoryDAO.class);
   protected RepositoryLocationResolver repositoryLocationResolver;
 
   @BeforeEach
@@ -79,7 +76,6 @@ public class AbstractTestBase
       UUID.randomUUID().toString());
     assertTrue(tempDirectory.mkdirs());
     contextProvider = MockUtil.getSCMContextProvider(tempDirectory);
-    fileSystem = new DefaultFileSystem();
     InitialRepositoryLocationResolver initialRepoLocationResolver = new InitialRepositoryLocationResolver();
     repositoryLocationResolver = new TempDirRepositoryLocationResolver(tempDirectory);
     postSetUp();

@@ -23,20 +23,15 @@
  */
 import React from "react";
 import InfoBox from "./InfoBox";
-import { InfoItem } from "./InfoItem";
+import { LoginInfo as LoginInfoResponse } from "@scm-manager/ui-types";
 import LoginForm from "./LoginForm";
 import { Loading } from "@scm-manager/ui-components";
 
 type Props = {
   loginInfoLink?: string;
   loading?: boolean;
-  error?: Error;
+  error?: Error | null;
   loginHandler: (username: string, password: string) => void;
-};
-
-type LoginInfoResponse = {
-  plugin?: InfoItem;
-  feature?: InfoItem;
 };
 
 type State = {

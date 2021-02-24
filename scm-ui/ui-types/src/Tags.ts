@@ -22,13 +22,18 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import { Embedded, HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
 import { Signature } from "./Signature";
 
-export type Tag = {
+export type Tag = HalRepresentation & {
   name: string;
   revision: string;
   date?: Date;
   signatures: Signature[];
-  _links: Links;
 };
+
+type EmbeddedTags = {
+  tags: Tag[];
+} & Embedded;
+
+export type TagCollection = HalRepresentationWithEmbedded<EmbeddedTags>;

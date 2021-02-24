@@ -37,7 +37,7 @@ class ExportableConfigFileStore implements ExportableStore {
 
   private final Path file;
 
-  static Function<StoreType, Optional<Function<Path, ExportableStore>>> CONFIG_FACTORY =
+  static final Function<StoreType, Optional<Function<Path, ExportableStore>>> CONFIG_FACTORY =
     storeType -> storeType == StoreType.CONFIG ? of(ExportableConfigFileStore::new) : empty();
 
   ExportableConfigFileStore(Path file) {
@@ -51,8 +51,6 @@ class ExportableConfigFileStore implements ExportableStore {
 
   @Override
   public void export(Exporter exporter) throws IOException {
-    if (file.getFileName().toString().endsWith(".xml")) {
-      putFileContentIntoStream(exporter, file);
-    }
+    putFileContentIntoStream(exporter, file);
   }
 }

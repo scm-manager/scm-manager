@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FormEvent } from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { Branch, BranchRequest, Repository } from "@scm-manager/ui-types";
+import { Branch, BranchCreation, Repository } from "@scm-manager/ui-types";
 import { InputField, Level, Select, SubmitButton, validation as validator } from "@scm-manager/ui-components";
 import { orderBranches } from "../util/orderBranches";
 
 type Props = WithTranslation & {
-  submitForm: (p: BranchRequest) => void;
+  submitForm: (p: BranchCreation) => void;
   repository: Repository;
   branches: Branch[];
   loading?: boolean;
@@ -52,7 +52,7 @@ class BranchForm extends React.Component<Props, State> {
     };
   }
 
-  isFalsy(value) {
+  isFalsy(value?: string) {
     return !value;
   }
 
@@ -61,12 +61,12 @@ class BranchForm extends React.Component<Props, State> {
     return !(this.state.nameValidationError || this.isFalsy(source) || this.isFalsy(name));
   };
 
-  submit = (event: Event) => {
+  submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (this.isValid()) {
       this.props.submitForm({
-        name: this.state.name,
-        parent: this.state.source
+        name: this.state.name!,
+        parent: this.state.source!
       });
     }
   };

@@ -21,11 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { connect } from "react-redux";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Link, NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
+import React, { FC, useState } from "react";
+import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import {
   CreateButton,
   LinkPaginator,
@@ -35,178 +33,126 @@ import {
   PageActions,
   urls
 } from "@scm-manager/ui-components";
-import { getNamespacesLink, getRepositoriesLink } from "../../modules/indexResource";
-import {
-  fetchNamespaces,
-  fetchReposByPage,
-  getFetchReposFailure,
-  getNamespaceCollection,
-  getRepositoryCollection,
-  isAbleToCreateRepos,
-  isFetchNamespacesPending,
-  isFetchReposPending
-} from "../modules/repos";
 import RepositoryList from "../components/list";
+import { useNamespaces, useRepositories } from "@scm-manager/ui-api";
+import { NamespaceCollection, RepositoryCollection } from "@scm-manager/ui-types";
 
-type Props = WithTranslation &
-  RouteComponentProps & {
-    loading: boolean;
-    error: Error;
-    showCreateButton: boolean;
-    collection: RepositoryCollection;
-    namespaces: NamespaceCollection;
-    page: number;
-    namespace: string;
-    reposLink: string;
-    namespacesLink: string;
+const useUrlParams = () => {
+  const params = useParams();
+  return urls.getNamespaceAndPageFromMatch({ params });
+};
 
-    // dispatched functions
-    fetchReposByPage: (link: string, page: number, filter?: string) => void;
-    fetchNamespaces: (link: string, callback?: () => void) => void;
+const useOverviewData = () => {
+  const { namespace, page } = useUrlParams();
+  const { isLoading: isLoadingNamespaces, error: errorNamespaces, data: namespaces } = useNamespaces();
+  const location = useLocation();
+  const search = urls.getQueryStringFromLocation(location);
+
+  const request = {
+    namespace: namespaces?._embedded.namespaces.find(n => n.namespace === namespace),
+    // ui starts counting by 1,
+    // but backend starts counting by 0
+    page: page - 1,
+    search,
+    // if a namespaces is selected we have to wait
+    // until the list of namespaces are loaded from the server
+    disabled: !!namespace && !namespaces
   };
+  const { isLoading: isLoadingRepositories, error: errorRepositories, data: repositories } = useRepositories(request);
 
-class Overview extends React.Component<Props> {
-  componentDidMount() {
-    const { fetchNamespaces, namespacesLink } = this.props;
-    fetchNamespaces(namespacesLink, () => this.fetchRepos());
+  return {
+    isLoading: isLoadingNamespaces || isLoadingRepositories,
+    error: errorNamespaces || errorRepositories || undefined,
+    namespaces,
+    namespace,
+    repositories,
+    search,
+    page
+  };
+};
+
+type RepositoriesProps = {
+  namespaces?: NamespaceCollection;
+  repositories?: RepositoryCollection;
+  search: string;
+  page: number;
+};
+
+const Repositories: FC<RepositoriesProps> = ({ namespaces, repositories, search, page }) => {
+  const [t] = useTranslation("repos");
+  if (namespaces && repositories) {
+    if (repositories._embedded && repositories._embedded.repositories.length > 0) {
+      return (
+        <>
+          <RepositoryList repositories={repositories._embedded.repositories} namespaces={namespaces} />
+          <LinkPaginator collection={repositories} page={page} filter={search} />
+        </>
+      );
+    } else {
+      return <Notification type="info">{t("overview.noRepositories")}</Notification>;
+    }
+  } else {
+    return null;
+  }
+};
+
+const Overview: FC = () => {
+  const { isLoading, error, namespace, namespaces, repositories, search, page } = useOverviewData();
+  const history = useHistory();
+  const [t] = useTranslation("repos");
+
+  // we keep the create permission in the state,
+  // because it does not change during searching or paging
+  // and we can avoid bouncing of search bar elements
+  const [showCreateButton, setShowCreateButton] = useState(false);
+  if (!showCreateButton && !!repositories?._links.create) {
+    setShowCreateButton(true);
   }
 
-  componentDidUpdate = (prevProps: Props) => {
-    const { loading, collection, namespace, namespaces, page, location } = this.props;
-    if (namespaces !== prevProps.namespaces && namespace) {
-      this.fetchRepos();
-    } else if (collection && (page || namespace) && !loading) {
-      const statePage: number = collection.page + 1;
-      if (page !== statePage || prevProps.location.search !== location.search || prevProps.namespace !== namespace) {
-        this.fetchRepos();
-      }
-    }
-  };
+  // We need to keep track if we have already load the site,
+  // because we only know if we can create repositories and
+  // we need this information to show the create button.
+  // In order to avoid bouncing of the ui elements we want to
+  // wait until we have all information before we show the top
+  // action bar.
+  const [showActions, setShowActions] = useState(false);
+  if (!showActions && repositories) {
+    setShowActions(true);
+  }
 
-  fetchRepos = () => {
-    const { page, location, fetchReposByPage } = this.props;
-    const link = this.getReposLink();
-    if (link) {
-      fetchReposByPage(link, page, urls.getQueryStringFromLocation(location));
-    }
-  };
-
-  getReposLink = () => {
-    const { namespace, namespaces, reposLink } = this.props;
-    if (namespace) {
-      return (namespaces?._embedded.namespaces.find(n => n.namespace === namespace)?._links?.repositories as Link)
-        ?.href;
+  const allNamespacesPlaceholder = t("overview.allNamespaces");
+  let namespacesToRender: string[] = [];
+  if (namespaces) {
+    namespacesToRender = [allNamespacesPlaceholder, ...namespaces._embedded.namespaces.map(n => n.namespace).sort()];
+  }
+  const namespaceSelected = (newNamespace: string) => {
+    if (newNamespace === allNamespacesPlaceholder) {
+      history.push("/repos/");
     } else {
-      return reposLink;
+      history.push(`/repos/${newNamespace}/`);
     }
   };
 
-  getNamespaceFilterPlaceholder = () => {
-    return this.props.t("overview.allNamespaces");
-  };
-
-  namespaceSelected = (newNamespace: string) => {
-    if (newNamespace === this.getNamespaceFilterPlaceholder()) {
-      this.props.history.push("/repos/");
-    } else {
-      this.props.history.push(`/repos/${newNamespace}/`);
-    }
-  };
-
-  render() {
-    const { error, loading, showCreateButton, namespace, namespaces, t } = this.props;
-    const namespaceFilterPlaceholder = this.getNamespaceFilterPlaceholder();
-    const namespacesToRender = namespaces
-      ? [namespaceFilterPlaceholder, ...namespaces._embedded.namespaces.map(n => n.namespace).sort()]
-      : [];
-
-    return (
-      <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={loading} error={error}>
-        {this.renderOverview()}
-        <PageActions>
+  return (
+    <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={isLoading} error={error}>
+      <Repositories namespaces={namespaces} repositories={repositories} search={search} page={page} />
+      {showCreateButton ? <CreateButton label={t("overview.createButton")} link="/repos/create" /> : null}
+      <PageActions>
+        {showActions ? (
           <OverviewPageActions
             showCreateButton={showCreateButton}
-            currentGroup={namespace}
+            currentGroup={namespace || ""}
             groups={namespacesToRender}
-            groupSelected={this.namespaceSelected}
+            groupSelected={namespaceSelected}
             link={namespace ? `repos/${namespace}` : "repos"}
             label={t("overview.createButton")}
             testId="repository-overview"
             searchPlaceholder={t("overview.searchRepository")}
           />
-        </PageActions>
-      </Page>
-    );
-  }
-
-  renderRepositoryList() {
-    const { collection, page, location, namespaces, t } = this.props;
-
-    if (collection._embedded && collection._embedded.repositories.length > 0) {
-      return (
-        <>
-          <RepositoryList repositories={collection._embedded.repositories} namespaces={namespaces} />
-          <LinkPaginator collection={collection} page={page} filter={urls.getQueryStringFromLocation(location)} />
-        </>
-      );
-    }
-    return <Notification type="info">{t("overview.noRepositories")}</Notification>;
-  }
-
-  renderOverview() {
-    const { collection } = this.props;
-    if (collection) {
-      return (
-        <>
-          {this.renderRepositoryList()}
-          {this.renderCreateButton()}
-        </>
-      );
-    }
-    return null;
-  }
-
-  renderCreateButton() {
-    const { showCreateButton, t } = this.props;
-    if (showCreateButton) {
-      return <CreateButton label={t("overview.createButton")} link="/repos/create" />;
-    }
-    return null;
-  }
-}
-
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const { match } = ownProps;
-  const collection = getRepositoryCollection(state);
-  const namespaces = getNamespaceCollection(state);
-  const loading = isFetchReposPending(state) || isFetchNamespacesPending(state);
-  const error = getFetchReposFailure(state);
-  const { namespace, page } = urls.getNamespaceAndPageFromMatch(match);
-  const showCreateButton = isAbleToCreateRepos(state);
-  const reposLink = getRepositoriesLink(state);
-  const namespacesLink = getNamespacesLink(state);
-  return {
-    collection,
-    namespaces,
-    loading,
-    error,
-    page,
-    namespace,
-    showCreateButton,
-    reposLink,
-    namespacesLink
-  };
+        ) : null}
+      </PageActions>
+    </Page>
+  );
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchReposByPage: (link: string, page: number, filter?: string) => {
-      dispatch(fetchReposByPage(link, page, filter));
-    },
-    fetchNamespaces: (link: string, callback?: () => void) => {
-      dispatch(fetchNamespaces(link, callback));
-    }
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("repos")(withRouter(Overview)));
+export default Overview;

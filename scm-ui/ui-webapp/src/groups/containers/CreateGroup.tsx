@@ -21,49 +21,30 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { connect } from "react-redux";
-import { compose } from "redux";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
-import { DisplayedUser, Group } from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { DisplayedUser, Link } from "@scm-manager/ui-types";
 import { apiClient, Page } from "@scm-manager/ui-components";
-import { getUserAutoCompleteLink, mustGetGroupsLink } from "../../modules/indexResource";
-import { createGroup, createGroupReset, getCreateGroupFailure, isCreateGroupPending } from "../modules/groups";
 import GroupForm from "../components/GroupForm";
+import { useCreateGroup, useIndexLinks } from "@scm-manager/ui-api";
+import { Redirect } from "react-router-dom";
 
-type Props = WithTranslation & {
-  createGroup: (link: string, group: Group, callback?: () => void) => void;
-  history: History;
-  loading?: boolean;
-  error?: Error;
-  resetForm: () => void;
-  createLink: string;
-  autocompleteLink: string;
-};
+const CreateGroup: FC = () => {
+  const [t] = useTranslation("groups");
+  const { isLoading, create, error, group } = useCreateGroup();
+  const indexLinks = useIndexLinks();
 
-class CreateGroup extends React.Component<Props> {
-  componentDidMount() {
-    this.props.resetForm();
+  if (group) {
+    return <Redirect to={`/group/${group.name}`} />;
   }
 
-  render() {
-    const { t, loading, error } = this.props;
-    return (
-      <Page title={t("add-group.title")} subtitle={t("add-group.subtitle")} error={error}>
-        <div>
-          <GroupForm
-            submitForm={group => this.createGroup(group)}
-            loading={loading}
-            loadUserSuggestions={this.loadUserAutocompletion}
-          />
-        </div>
-      </Page>
-    );
-  }
-
-  loadUserAutocompletion = (inputValue: string) => {
-    const url = this.props.autocompleteLink + "?q=";
+  // TODO: Replace with react-query hook
+  const loadUserAutocompletion = (inputValue: string) => {
+    const autocompleteLink = (indexLinks.autocomplete as Link[]).find(i => i.name === "users");
+    if (!autocompleteLink) {
+      return [];
+    }
+    const url = autocompleteLink.href + "?q=";
     return apiClient
       .get(url + inputValue)
       .then(response => response.json())
@@ -76,34 +57,14 @@ class CreateGroup extends React.Component<Props> {
         });
       });
   };
-  groupCreated = (group: Group) => {
-    this.props.history.push("/group/" + group.name);
-  };
-  createGroup = (group: Group) => {
-    this.props.createGroup(this.props.createLink, group, () => this.groupCreated(group));
-  };
-}
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    createGroup: (link: string, group: Group, callback?: () => void) => dispatch(createGroup(link, group, callback)),
-    resetForm: () => {
-      dispatch(createGroupReset());
-    }
-  };
+  return (
+    <Page title={t("add-group.title")} subtitle={t("add-group.subtitle")} error={error || undefined}>
+      <div>
+        <GroupForm submitForm={create} loading={isLoading} loadUserSuggestions={loadUserAutocompletion} />
+      </div>
+    </Page>
+  );
 };
 
-const mapStateToProps = (state: any) => {
-  const loading = isCreateGroupPending(state);
-  const error = getCreateGroupFailure(state);
-  const createLink = mustGetGroupsLink(state);
-  const autocompleteLink = getUserAutoCompleteLink(state);
-  return {
-    createLink,
-    loading,
-    error,
-    autocompleteLink
-  };
-};
-
-export default compose(connect(mapStateToProps, mapDispatchToProps), withTranslation("groups"))(CreateGroup);
+export default CreateGroup;

@@ -41,6 +41,7 @@ export const DangerZoneContainer = styled.div`
   padding: 1.5rem 1rem;
   border: 1px solid #ff6a88;
   border-radius: 5px;
+
   > .level {
     flex-flow: wrap;
 
@@ -52,6 +53,7 @@ export const DangerZoneContainer = styled.div`
       margin-top: 0.75rem;
     }
   }
+
   > *:not(:last-child) {
     padding-bottom: 1.5rem;
     border-bottom: solid 2px whitesmoke;
@@ -66,15 +68,12 @@ const RepositoryDangerZone: FC<Props> = ({ repository, indexLinks }) => {
     dangerZone.push(<RenameRepository repository={repository} indexLinks={indexLinks} />);
   }
   if (repository?._links?.delete) {
-    // @ts-ignore
     dangerZone.push(<DeleteRepo repository={repository} />);
   }
   if (repository?._links?.archive) {
-    // @ts-ignore
     dangerZone.push(<ArchiveRepo repository={repository} />);
   }
   if (repository?._links?.unarchive) {
-    // @ts-ignore
     dangerZone.push(<UnarchiveRepo repository={repository} />);
   }
 

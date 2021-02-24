@@ -23,34 +23,26 @@
  */
 
 export { Action } from "./Action";
-export { Link, Links, Collection, PagedCollection } from "./hal";
+export * from "./hal";
 
 export { Me } from "./Me";
-export { DisplayedUser, User } from "./User";
-export { Group, Member } from "./Group";
+export * from "./User";
+export * from "./Group";
 
-export {
-  Repository,
-  RepositoryCollection,
-  RepositoryGroup,
-  RepositoryCreation,
-  Namespace,
-  NamespaceCollection,
-  RepositoryUrlImport
-} from "./Repositories";
+export * from "./Repositories";
 export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
 
-export { Branch, BranchRequest } from "./Branches";
+export * from "./Branches";
 
 export { Person } from "./Person";
 
-export { Changeset, Contributor, ParentChangeset } from "./Changesets";
+export * from "./Changesets";
 
 export { Signature } from "./Signature";
 
 export { AnnotatedSource, AnnotatedLine } from "./Annotate";
 
-export { Tag } from "./Tags";
+export * from "./Tags";
 
 export { Config, AnonymousMode } from "./Config";
 
@@ -62,8 +54,13 @@ export { SubRepository, File } from "./Sources";
 
 export { SelectValue, AutocompleteObject } from "./Autocomplete";
 
-export { Plugin, PluginCollection, PluginGroup, PendingPlugins } from "./Plugin";
+export * from "./Plugin";
 
-export { RepositoryRole } from "./RepositoryRole";
+export * from "./RepositoryRole";
+export * from "./RepositoryVerbs";
 
-export { NamespaceStrategies } from "./NamespaceStrategies";
+export * from "./NamespaceStrategies";
+
+export * from "./LoginInfo";
+
+export * from "./Admin";

@@ -40,6 +40,7 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static java.util.Arrays.stream;
+import static sonia.scm.util.Archives.createTarInputStream;
 import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 
 public class FullScmRepositoryImporter {
@@ -69,7 +70,7 @@ public class FullScmRepositoryImporter {
           BufferedInputStream bif = new BufferedInputStream(inputStream);
           InputStream cif = repositoryImportExportEncryption.decrypt(bif, password);
           GzipCompressorInputStream gcis = new GzipCompressorInputStream(cif);
-          TarArchiveInputStream tais = new TarArchiveInputStream(gcis)
+          TarArchiveInputStream tais = createTarInputStream(gcis)
         ) {
           return run(repository, tais);
         }

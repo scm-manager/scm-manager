@@ -22,45 +22,30 @@
  * SOFTWARE.
  */
 import React, { FC, useState } from "react";
-import { connect } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { Button, ConfirmAlert, ErrorNotification, Level } from "@scm-manager/ui-components";
-import { getModifyRepoFailure, isModifyRepoPending, unarchiveRepo } from "../modules/repos";
+import { useUnarchiveRepository } from "@scm-manager/ui-api";
 
 type Props = {
-  loading: boolean;
-  error: Error;
   repository: Repository;
   confirmDialog?: boolean;
-  unarchiveRepo: (p1: Repository, p2: () => void) => void;
 };
 
-const UnarchiveRepo: FC<Props> = ({ confirmDialog = true, repository, unarchiveRepo, loading, error }: Props) => {
+const UnarchiveRepo: FC<Props> = ({ repository, confirmDialog = true }) => {
+  const { isLoading, error, unarchive } = useUnarchiveRepository();
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("repos");
 
-  const unarchived = () => {
-    window.location.reload();
-  };
-
   const unarchiveRepoCallback = () => {
-    unarchiveRepo(repository, unarchived);
+    unarchive(repository);
   };
 
   const confirmUnarchive = () => {
     setShowConfirmAlert(true);
   };
 
-  const isUnarchiveable = () => {
-    return repository._links.unarchive;
-  };
-
   const action = confirmDialog ? confirmUnarchive : unarchiveRepoCallback;
-
-  if (!isUnarchiveable()) {
-    return null;
-  }
 
   const confirmAlert = (
     <ConfirmAlert
@@ -70,12 +55,13 @@ const UnarchiveRepo: FC<Props> = ({ confirmDialog = true, repository, unarchiveR
         {
           className: "is-outlined",
           label: t("unarchiveRepo.confirmAlert.submit"),
-          onClick: () => unarchiveRepoCallback(),
+          isLoading,
+          onClick: () => unarchiveRepoCallback()
         },
         {
           label: t("unarchiveRepo.confirmAlert.cancel"),
-          onClick: () => null,
-        },
+          onClick: () => null
+        }
       ]}
       close={() => setShowConfirmAlert(false)}
     />
@@ -94,29 +80,17 @@ const UnarchiveRepo: FC<Props> = ({ confirmDialog = true, repository, unarchiveR
           </p>
         }
         right={
-          <Button color="warning" icon="box-open" label={t("unarchiveRepo.button")} action={action} loading={loading} />
+          <Button
+            color="warning"
+            icon="box-open"
+            label={t("unarchiveRepo.button")}
+            action={action}
+            loading={isLoading}
+          />
         }
       />
     </>
   );
 };
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const { namespace, name } = ownProps.repository;
-  const loading = isModifyRepoPending(state, namespace, name);
-  const error = getModifyRepoFailure(state, namespace, name);
-  return {
-    loading,
-    error,
-  };
-};
-
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    unarchiveRepo: (repo: Repository, callback: () => void) => {
-      dispatch(unarchiveRepo(repo, callback));
-    },
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(UnarchiveRepo);
+export default UnarchiveRepo;

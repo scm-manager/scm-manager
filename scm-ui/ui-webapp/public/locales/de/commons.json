@@ -34,6 +34,12 @@
     "wrongLoginCredentials": "Ungültige Anmeldedaten",
     "forbidden": "Sie haben nicht die Berechtigung, diesen Datensatz zu sehen"
   },
+  "errorBoundary": {
+    "redirect": {
+      "title": "Weiterleitung",
+      "subtitle": "Sie werden in kürze zur Anmeldeseite weitergeleitet"
+    }
+  },
   "markdownErrorNotification": {
     "title": "Markdown Inhalt konnte nicht geparsed werden",
     "description": "Der Inhalt enthält kein valides Markdown. Wenn XML im Inhalt verwendet wird, muss sichergestellt werden, dass sich dieser in einem Code-Block befindet z. B.:",

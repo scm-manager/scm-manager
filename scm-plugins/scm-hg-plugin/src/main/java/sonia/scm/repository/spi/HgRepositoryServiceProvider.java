@@ -25,6 +25,7 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.io.Closeables;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.HgRepositoryHandler;
@@ -37,7 +38,6 @@ import java.util.EnumSet;
 import java.util.Set;
 
 /**
- *
  * @author Sebastian Sdorra
  */
 public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
@@ -65,49 +65,34 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   private final HgRepositoryHandler handler;
   private final HgCommandContext context;
+  private final HgLazyChangesetResolver lazyChangesetResolver;
+  private final HgPostReceiveRepositoryHookEventFactory eventFactory;
+  private final ScmEventBus eventBus;
 
-  HgRepositoryServiceProvider(HgRepositoryHandler handler, HgRepositoryFactory factory, Repository repository) {
+  HgRepositoryServiceProvider(HgRepositoryHandler handler,
+                              HgRepositoryFactory factory,
+                              HgPostReceiveRepositoryHookEventFactory eventFactory,
+                              ScmEventBus eventBus,
+                              Repository repository) {
     this.handler = handler;
+    this.eventBus = eventBus;
+    this.eventFactory = eventFactory;
     this.context = new HgCommandContext(handler, factory, repository);
+    this.lazyChangesetResolver = new HgLazyChangesetResolver(factory, repository);
   }
-  //~--- methods --------------------------------------------------------------
 
-
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @Override
-  public void close() throws IOException
-  {
+  public void close() throws IOException {
     Closeables.close(context, true);
   }
-  //~--- get methods ----------------------------------------------------------
 
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public HgBlameCommand getBlameCommand()
-  {
+  public HgBlameCommand getBlameCommand() {
     return new HgBlameCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public BranchesCommand getBranchesCommand()
-  {
+  public BranchesCommand getBranchesCommand() {
     return new HgBranchesCommand(context);
   }
 
@@ -116,63 +101,28 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
     return new HgBranchCommand(context, handler.getWorkingCopyFactory());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public HgBrowseCommand getBrowseCommand()
-  {
+  public HgBrowseCommand getBrowseCommand() {
     return new HgBrowseCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public HgCatCommand getCatCommand()
-  {
+  public HgCatCommand getCatCommand() {
     return new HgCatCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public HgDiffCommand getDiffCommand()
-  {
+  public HgDiffCommand getDiffCommand() {
     return new HgDiffCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public IncomingCommand getIncomingCommand()
-  {
+  public IncomingCommand getIncomingCommand() {
     return new HgIncomingCommand(context, handler);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public HgLogCommand getLogCommand()
-  {
+  public HgLogCommand getLogCommand() {
     return new HgLogCommand(context);
   }
 
@@ -187,39 +137,18 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
     return new HgModificationsCommand(context);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public OutgoingCommand getOutgoingCommand()
-  {
+  public OutgoingCommand getOutgoingCommand() {
     return new HgOutgoingCommand(context, handler);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public PullCommand getPullCommand()
-  {
-    return new HgPullCommand(handler, context);
+  public PullCommand getPullCommand() {
+    return new HgPullCommand(handler, context, eventBus, lazyChangesetResolver, eventFactory);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public PushCommand getPushCommand()
-  {
+  public PushCommand getPushCommand() {
     return new HgPushCommand(handler, context);
   }
 
@@ -228,39 +157,18 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
     return new HgModifyCommand(context, handler.getWorkingCopyFactory());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Set<Command> getSupportedCommands()
-  {
+  public Set<Command> getSupportedCommands() {
     return COMMANDS;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Set<Feature> getSupportedFeatures()
-  {
+  public Set<Feature> getSupportedFeatures() {
     return FEATURES;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public TagsCommand getTagsCommand()
-  {
+  public TagsCommand getTagsCommand() {
     return new HgTagsCommand(context);
   }
 
@@ -276,6 +184,6 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public UnbundleCommand getUnbundleCommand() {
-    return new HgUnbundleCommand(context);
+    return new HgUnbundleCommand(context, eventBus, lazyChangesetResolver, eventFactory);
   }
 }

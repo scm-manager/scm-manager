@@ -21,40 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { PluginCollection } from "@scm-manager/ui-types";
-import { apiClient } from "@scm-manager/ui-components";
 import PluginActionModal from "./PluginActionModal";
+import { useUpdatePlugins } from "@scm-manager/ui-api";
 
-type Props = WithTranslation & {
+type Props = {
   onClose: () => void;
-  refresh: () => void;
   installedPlugins: PluginCollection;
 };
 
-class UpdateAllActionModal extends React.Component<Props> {
-  render() {
-    const { onClose, installedPlugins, t } = this.props;
+const UpdateAllActionModal: FC<Props> = ({ installedPlugins, onClose }) => {
+  const [t] = useTranslation("admin");
+  const { update, isLoading, error, isUpdated } = useUpdatePlugins();
 
-    return (
-      <PluginActionModal
-        description={t("plugins.modal.updateAll")}
-        label={t("plugins.updateAll")}
-        onClose={onClose}
-        installedPlugins={installedPlugins}
-        execute={this.updateAll}
-      />
-    );
-  }
+  useEffect(() => {
+    if (isUpdated) {
+      onClose();
+    }
+  }, [onClose, isUpdated]);
 
-  updateAll = () => {
-    const { installedPlugins, refresh, onClose } = this.props;
-    return apiClient
-      .post(installedPlugins._links.update.href)
-      .then(refresh)
-      .then(onClose);
-  };
-}
-
-export default withTranslation("admin")(UpdateAllActionModal);
+  return (
+    <PluginActionModal
+      description={t("plugins.modal.updateAll")}
+      label={t("plugins.updateAll")}
+      onClose={onClose}
+      installedPlugins={installedPlugins}
+      error={error}
+      loading={isLoading}
+      success={isUpdated}
+      execute={() => update(installedPlugins)}
+    />
+  );
+};
+export default UpdateAllActionModal;

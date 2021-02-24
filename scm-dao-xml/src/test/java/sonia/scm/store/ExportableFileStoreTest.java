@@ -92,16 +92,6 @@ class ExportableFileStoreTest {
   }
 
   @Test
-  void shouldFilterNoneConfigFiles(@TempDir Path temp) throws IOException {
-    createFile(temp, "config", "", "first.bck");
-    ExportableStore exportableConfigFileStore = new ExportableConfigFileStore(temp.resolve("config").resolve("first.bck"));
-
-    exportableConfigFileStore.export(exporter);
-
-    verify(exporter, never()).put(anyString(), anyLong());
-  }
-
-  @Test
   void shouldPutContentIntoExporterForBlobStore(@TempDir Path temp) throws IOException {
     createFile(temp, "blob", "assets", "first.blob");
     ByteArrayOutputStream os = new ByteArrayOutputStream();

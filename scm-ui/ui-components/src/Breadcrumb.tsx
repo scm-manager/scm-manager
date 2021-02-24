@@ -27,16 +27,16 @@ import { useHistory, useLocation, Link } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Branch, Repository } from "@scm-manager/ui-types";
+import { Branch, Repository, File } from "@scm-manager/ui-types";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 import copyToClipboard from "./CopyToClipboard";
-import { withContextPath } from "./urls";
+import { urls } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
-  branch: Branch;
-  defaultBranch: Branch;
+  branch?: Branch;
+  defaultBranch?: Branch;
   revision: string;
   path: string;
   baseUrl: string;
@@ -53,6 +53,7 @@ const PermaLinkWrapper = styled.div`
     color: #dbdbdb;
     opacity: 0.75;
   }
+
   &:hover i {
     color: #b5b5b5;
     opacity: 1;
@@ -108,7 +109,7 @@ const Breadcrumb: FC<Props> = ({ repository, branch, defaultBranch, revision, pa
         }
         return (
           <li key={index}>
-            <Link to={baseUrl + "/" + revision + "/" + currPath}>{pathFragment}</Link>
+            <Link to={baseUrl + "/" + encodeURIComponent(revision) + "/" + currPath}>{pathFragment}</Link>
           </li>
         );
       });
@@ -120,7 +121,7 @@ const Breadcrumb: FC<Props> = ({ repository, branch, defaultBranch, revision, pa
     history.push(location.pathname);
     setCopying(true);
     copyToClipboard(
-      window.location.protocol + "//" + window.location.host + withContextPath(permalink || location.pathname)
+      window.location.protocol + "//" + window.location.host + urls.withContextPath(permalink || location.pathname)
     ).finally(() => setCopying(false));
   };
 
@@ -161,7 +162,7 @@ const Breadcrumb: FC<Props> = ({ repository, branch, defaultBranch, revision, pa
                 branch: branch ? branch : defaultBranch,
                 path,
                 sources,
-                repository,
+                repository
               }}
               renderAll={true}
             />

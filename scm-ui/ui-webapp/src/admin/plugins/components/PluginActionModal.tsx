@@ -29,35 +29,20 @@ import SuccessNotification from "./SuccessNotification";
 
 type Props = WithTranslation & {
   onClose: () => void;
-  actionType: string;
   pendingPlugins?: PendingPlugins;
   installedPlugins?: PluginCollection;
-  refresh: () => void;
-  execute: () => Promise<any>;
+  execute: () => void;
   description: string;
   label: string;
-
+  loading: boolean;
+  error?: Error | null;
+  success: boolean;
   children?: React.Node;
 };
 
-type State = {
-  loading: boolean;
-  success: boolean;
-  error?: Error;
-};
-
-class PluginActionModal extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      loading: false,
-      success: false
-    };
-  }
-
+class PluginActionModal extends React.Component<Props> {
   renderNotifications = () => {
-    const { children } = this.props;
-    const { error, success } = this.state;
+    const { children, error, success } = this.props;
     if (error) {
       return <ErrorNotification error={error} />;
     } else if (success) {
@@ -65,28 +50,6 @@ class PluginActionModal extends React.Component<Props, State> {
     } else {
       return children;
     }
-  };
-
-  executeAction = () => {
-    this.setState({
-      loading: true
-    });
-
-    this.props
-      .execute()
-      .then(() => {
-        this.setState({
-          success: true,
-          loading: false
-        });
-      })
-      .catch(error => {
-        this.setState({
-          success: false,
-          loading: false,
-          error: error
-        });
-      });
   };
 
   renderModalContent = () => {
@@ -189,16 +152,15 @@ class PluginActionModal extends React.Component<Props, State> {
   };
 
   renderFooter = () => {
-    const { onClose, t } = this.props;
-    const { loading, error, success } = this.state;
+    const { onClose, t, loading, error, success } = this.props;
     return (
       <ButtonGroup>
         <Button
           color="warning"
           label={this.props.label}
           loading={loading}
-          action={this.executeAction}
-          disabled={error || success}
+          action={this.props.execute}
+          disabled={!!error || success}
         />
         <Button label={t("plugins.modal.abort")} action={onClose} />
       </ButtonGroup>

@@ -35,7 +35,7 @@ class ExportableBlobFileStore extends ExportableDirectoryBasedFileStore {
 
   private static final String EXCLUDED_EXPORT_STORE = "repository-export";
 
-  static Function<StoreType, Optional<Function<Path, ExportableStore>>> BLOB_FACTORY =
+  static final Function<StoreType, Optional<Function<Path, ExportableStore>>> BLOB_FACTORY =
     storeType -> storeType == StoreType.BLOB ? of(ExportableBlobFileStore::new) : empty();
 
   ExportableBlobFileStore(Path directory) {

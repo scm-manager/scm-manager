@@ -65,6 +65,7 @@ class ConfigForm extends React.Component<Props, State> {
         dateFormat: "",
         anonymousMode: "OFF",
         baseUrl: "",
+        mailDomainName: "",
         forceBaseUrl: false,
         loginAttemptLimit: 0,
         proxyExcludes: [],

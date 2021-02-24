@@ -21,28 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+
 import React, { FC, useEffect, useState } from "react";
-import { Repository } from "@scm-manager/ui-types";
-import { CUSTOM_NAMESPACE_STRATEGY } from "../modules/repos";
+import { Repository, CUSTOM_NAMESPACE_STRATEGY } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { InputField } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import * as validator from "./form/repositoryValidation";
-import { getNamespaceStrategies } from "../../admin/modules/namespaceStrategies";
-import { connect } from "react-redux";
+import { useNamespaceStrategies } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
   onChange: (repository: Repository) => void;
-  namespaceStrategy: string;
   setValid: (valid: boolean) => void;
   disabled?: boolean;
 };
 
-const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, namespaceStrategy, setValid, disabled }) => {
-  const [t] = useTranslation("repos");
-  const [namespaceValidationError, setNamespaceValidationError] = useState(false);
+const useNamespaceStrategy = () => {
+  const { data } = useNamespaceStrategies();
+  if (data) {
+    return data.current;
+  }
+  return "";
+};
+
+const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, disabled }) => {
+  const namespaceStrategy = useNamespaceStrategy();
   const [nameValidationError, setNameValidationError] = useState(false);
+  const [namespaceValidationError, setNamespaceValidationError] = useState(false);
+  const [t] = useTranslation("repos");
 
   useEffect(() => {
     if (repository.name) {
@@ -93,6 +100,11 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, namespaceStra
     return <ExtensionPoint name="repos.create.namespace" props={props} renderAll={false} />;
   };
 
+  // not yet loaded
+  if (namespaceStrategy === "") {
+    return null;
+  }
+
   return (
     <>
       {renderNamespaceField()}
@@ -109,11 +121,4 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, namespaceStra
   );
 };
 
-const mapStateToProps = (state: any) => {
-  const namespaceStrategy = getNamespaceStrategies(state).current;
-  return {
-    namespaceStrategy
-  };
-};
-
-export default connect(mapStateToProps)(NamespaceAndNameFields);
+export default NamespaceAndNameFields;

@@ -24,7 +24,7 @@
 import React from "react";
 import { SelectValue, AutocompleteObject } from "@scm-manager/ui-types";
 import Autocomplete from "./Autocomplete";
-import { apiClient } from "./apiclient";
+import { apiClient } from "@scm-manager/ui-api";
 
 export type AutocompleteProps = {
   autocompleteLink?: string;

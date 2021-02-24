@@ -21,24 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import BranchRow from "./BranchRow";
-import { Branch, Link } from "@scm-manager/ui-types";
-import { apiClient, ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { Branch, Repository } from "@scm-manager/ui-types";
+import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { useDeleteBranch } from "@scm-manager/ui-api";
 
 type Props = {
   baseUrl: string;
+  repository: Repository;
   branches: Branch[];
   type: string;
-  fetchBranches: () => void;
 };
 
-const BranchTable: FC<Props> = ({ baseUrl, branches, type, fetchBranches }) => {
+const BranchTable: FC<Props> = ({ repository, baseUrl, branches, type }) => {
+  const { isLoading, error, remove, isDeleted } = useDeleteBranch(repository);
   const [t] = useTranslation("repos");
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
-  const [error, setError] = useState<Error | undefined>();
   const [branchToBeDeleted, setBranchToBeDeleted] = useState<Branch | undefined>();
+  useEffect(() => {
+    if (isDeleted) {
+      closeAndResetDialog();
+    }
+  }, [isDeleted]);
+
+  const closeAndResetDialog = () => {
+    setBranchToBeDeleted(undefined);
+    setShowConfirmAlert(false);
+  };
 
   const onDelete = (branch: Branch) => {
     setBranchToBeDeleted(branch);
@@ -46,57 +57,48 @@ const BranchTable: FC<Props> = ({ baseUrl, branches, type, fetchBranches }) => {
   };
 
   const abortDelete = () => {
-    setBranchToBeDeleted(undefined);
-    setShowConfirmAlert(false);
+    closeAndResetDialog();
   };
 
   const deleteBranch = () => {
-    apiClient
-      .delete((branchToBeDeleted?._links.delete as Link).href)
-      .then(() => fetchBranches())
-      .catch(setError);
-  };
-
-  const renderRow = () => {
-    let rowContent = null;
-    if (branches) {
-      rowContent = branches.map((branch, index) => {
-        return <BranchRow key={index} baseUrl={baseUrl} branch={branch} onDelete={onDelete} />;
-      });
+    if (branchToBeDeleted) {
+      remove(branchToBeDeleted);
     }
-    return rowContent;
   };
-
-  const confirmAlert = (
-    <ConfirmAlert
-      title={t("branch.delete.confirmAlert.title")}
-      message={t("branch.delete.confirmAlert.message", { branch: branchToBeDeleted?.name })}
-      buttons={[
-        {
-          className: "is-outlined",
-          label: t("branch.delete.confirmAlert.submit"),
-          onClick: () => deleteBranch()
-        },
-        {
-          label: t("branch.delete.confirmAlert.cancel"),
-          onClick: () => abortDelete()
-        }
-      ]}
-      close={() => abortDelete()}
-    />
-  );
 
   return (
     <>
-      {showConfirmAlert && confirmAlert}
-      {error && <ErrorNotification error={error} />}
+      {showConfirmAlert ? (
+        <ConfirmAlert
+          title={t("branch.delete.confirmAlert.title")}
+          message={t("branch.delete.confirmAlert.message", { branch: branchToBeDeleted?.name })}
+          buttons={[
+            {
+              className: "is-outlined",
+              label: t("branch.delete.confirmAlert.submit"),
+              isLoading,
+              onClick: () => deleteBranch()
+            },
+            {
+              label: t("branch.delete.confirmAlert.cancel"),
+              onClick: () => abortDelete()
+            }
+          ]}
+          close={() => abortDelete()}
+        />
+      ) : null}
+      {error ? <ErrorNotification error={error} /> : null}
       <table className="card-table table is-hoverable is-fullwidth is-word-break">
         <thead>
           <tr>
             <th>{t(`branches.table.branches.${type}`)}</th>
           </tr>
         </thead>
-        <tbody>{renderRow()}</tbody>
+        <tbody>
+          {(branches || []).map(branch => (
+            <BranchRow key={branch.name} baseUrl={baseUrl} branch={branch} onDelete={onDelete} />
+          ))}
+        </tbody>
       </table>
     </>
   );

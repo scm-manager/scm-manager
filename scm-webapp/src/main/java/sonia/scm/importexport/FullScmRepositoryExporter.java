@@ -34,6 +34,7 @@ import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.repository.work.WorkdirProvider;
+import sonia.scm.util.Archives;
 import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
@@ -89,7 +90,7 @@ public class FullScmRepositoryExporter {
       BufferedOutputStream bos = new BufferedOutputStream(outputStream);
       OutputStream cos = repositoryImportExportEncryption.optionallyEncrypt(bos, password);
       GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(cos);
-      TarArchiveOutputStream taos = new TarArchiveOutputStream(gzos);
+      TarArchiveOutputStream taos = Archives.createTarOutputStream(gzos);
     ) {
       writeEnvironmentData(taos);
       writeMetadata(repository, taos);

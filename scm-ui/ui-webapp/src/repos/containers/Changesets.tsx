@@ -21,127 +21,62 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { connect } from "react-redux";
-import { compose } from "redux";
-import { withRouter, RouteComponentProps } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Branch, Changeset, PagedCollection, Repository } from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import { useRouteMatch } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { Branch, Repository } from "@scm-manager/ui-types";
 import {
   ChangesetList,
   ErrorNotification,
-  getPageFromMatch,
+  urls,
   LinkPaginator,
   Loading,
   Notification
 } from "@scm-manager/ui-components";
-import {
-  fetchChangesets,
-  getChangesets,
-  getFetchChangesetsFailure,
-  isFetchChangesetsPending,
-  selectListAsCollection
-} from "../modules/changesets";
+import { useChangesets } from "@scm-manager/ui-api";
 
-type Props = RouteComponentProps &
-  WithTranslation & {
-    repository: Repository;
-    branch: Branch;
-    page: number;
+type Props = {
+  repository: Repository;
+  branch?: Branch;
+};
 
-    // State props
-    changesets: Changeset[];
-    list: PagedCollection;
-    loading: boolean;
-    error: Error;
+const usePage = () => {
+  const match = useRouteMatch();
+  return urls.getPageFromMatch(match);
+};
 
-    // Dispatch props
-    fetchChangesets: (p1: Repository, p2: Branch, p3: number) => void;
-  };
+const Changesets: FC<Props> = ({ repository, branch }) => {
+  const page = usePage();
+  const { isLoading, error, data } = useChangesets(repository, { branch, page: page - 1 });
+  const [t] = useTranslation("repos");
+  const changesets = data?._embedded.changesets;
 
-class Changesets extends React.Component<Props> {
-  componentDidMount() {
-    const { fetchChangesets, repository, branch, page } = this.props;
-    fetchChangesets(repository, branch, page);
+  if (error) {
+    return <ErrorNotification error={error} />;
   }
 
-  shouldComponentUpdate(nextProps: Readonly<Props>): boolean {
-    return this.props.changesets !== nextProps.changesets ||
-      this.props.loading !== nextProps.loading ||
-      this.props.error !== nextProps.error;
+  if (isLoading) {
+    return <Loading />;
   }
 
-  render() {
-    const { changesets, loading, error, t } = this.props;
-
-    if (error) {
-      return <ErrorNotification error={error} />;
-    }
-
-    if (loading) {
-      return <Loading />;
-    }
-
-    if (!changesets || changesets.length === 0) {
-      return (
-        <div className="panel-block">
-          <Notification type="info">{t("changesets.noChangesets")}</Notification>
-        </div>
-      );
-    }
+  if (!data || !changesets || changesets.length === 0) {
     return (
-      <>
-        {this.renderList()}
-        {this.renderPaginator()}
-      </>
+      <div className="panel-block">
+        <Notification type="info">{t("changesets.noChangesets")}</Notification>
+      </div>
     );
   }
 
-  renderList = () => {
-    const { repository, changesets } = this.props;
-    return (
+  return (
+    <>
       <div className="panel-block">
         <ChangesetList repository={repository} changesets={changesets} />
       </div>
-    );
-  };
-
-  renderPaginator = () => {
-    const { page, list } = this.props;
-    if (list) {
-      return (
-        <div className="panel-footer">
-          <LinkPaginator page={page} collection={list} />
-        </div>
-      );
-    }
-    return null;
-  };
-}
-
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchChangesets: (repo: Repository, branch: Branch, page: number) => {
-      dispatch(fetchChangesets(repo, branch, page));
-    }
-  };
+      <div className="panel-footer">
+        <LinkPaginator page={page} collection={data} />
+      </div>
+    </>
+  );
 };
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const { repository, branch, match } = ownProps;
-  const changesets = getChangesets(state, repository, branch);
-  const loading = isFetchChangesetsPending(state, repository, branch);
-  const error = getFetchChangesetsFailure(state, repository, branch);
-  const list = selectListAsCollection(state, repository, branch);
-  const page = getPageFromMatch(match);
-
-  return {
-    changesets,
-    list,
-    page,
-    loading,
-    error
-  };
-};
-
-export default compose(withTranslation("repos"), withRouter, connect(mapStateToProps, mapDispatchToProps))(Changesets);
+export default Changesets;

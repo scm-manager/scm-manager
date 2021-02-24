@@ -33,7 +33,6 @@ import sonia.scm.version.Version;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.IOException;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -44,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class ReleaseFeedParser {
 
-  public static final int DEFAULT_TIMEOUT_IN_MILLIS = 1000;
+  public static final int DEFAULT_TIMEOUT_IN_MILLIS = 5000;
 
   private static final Logger LOG = LoggerFactory.getLogger(ReleaseFeedParser.class);
   

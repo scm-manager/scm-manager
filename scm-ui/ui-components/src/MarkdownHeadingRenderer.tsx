@@ -23,7 +23,7 @@
  */
 import React, { ReactNode } from "react";
 import { withRouter, RouteComponentProps } from "react-router-dom";
-import { withContextPath } from "./urls";
+import { urls } from "@scm-manager/ui-api";
 
 /**
  * Adds anchor links to markdown headings.
@@ -54,7 +54,7 @@ function MarkdownHeadingRenderer(props: Props) {
   const heading = children.reduce(flatten, "");
   const anchorId = headingToAnchorId(heading);
   const headingElement = React.createElement("h" + props.level, {}, props.children);
-  const href = withContextPath(props.location.pathname + "#" + anchorId);
+  const href = urls.withContextPath(props.location.pathname + "#" + anchorId);
 
   return (
     <a id={`${anchorId}`} className="anchor" href={href}>

@@ -24,7 +24,7 @@
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Notification } from "@scm-manager/ui-components";
-import { PluginAction } from "./PluginEntry";
+import { PluginAction } from "../containers/PluginsOverview";
 
 type Props = WithTranslation & {
   pluginAction?: string;
@@ -48,7 +48,7 @@ class InstallSuccessNotification extends React.Component<Props> {
     return (
       <Notification type="success">
         {this.createMessageForPluginAction()}{" "}
-        <a onClick={e => window.location.reload(true)}>{t("plugins.modal.reload")}</a>
+        <a onClick={_ => window.location.reload(true)}>{t("plugins.modal.reload")}</a>
       </Notification>
     );
   }

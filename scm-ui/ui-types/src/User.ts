@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import { HalRepresentation, PagedCollection } from "./hal";
 
 export type DisplayedUser = {
   id: string;
@@ -30,7 +30,7 @@ export type DisplayedUser = {
   mail?: string;
 };
 
-export type User = {
+export type UserBase = {
   displayName: string;
   name: string;
   mail?: string;
@@ -40,5 +40,11 @@ export type User = {
   creationDate?: string;
   lastModified?: string;
   external: boolean;
-  _links: Links;
 };
+
+export type User = HalRepresentation & UserBase;
+export type UserCreation = User;
+
+export type UserCollection = PagedCollection<{
+  users: User[];
+}>;

@@ -24,82 +24,74 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
+import com.google.common.collect.ImmutableSet;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Closeables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
-
+import sonia.scm.ContextEntry;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.SvnUtil;
+import sonia.scm.repository.api.HookContext;
+import sonia.scm.repository.api.HookContextFactory;
+import sonia.scm.repository.api.HookFeature;
+import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.UnbundleResponse;
-
-import static com.google.common.base.Preconditions.*;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Iterator;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.concurrent.Callable;
+
+import static com.google.common.base.Preconditions.checkNotNull;
+import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
 
 /**
- *
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
  */
-public class SvnUnbundleCommand extends AbstractSvnCommand
-  implements UnbundleCommand
-{
+public class SvnUnbundleCommand extends AbstractSvnCommand implements UnbundleCommand {
 
-  /** Field description */
-  private static final Logger logger =
-    LoggerFactory.getLogger(SvnUnbundleCommand.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SvnUnbundleCommand.class);
+  private final HookContextFactory hookContextFactory;
+  private final ScmEventBus eventBus;
+  private final SvnLogCommand svnLogCommand;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *  @param context
-   *
-   */
-  public SvnUnbundleCommand(SvnContext context)
-  {
+  public SvnUnbundleCommand(SvnContext context,
+                            HookContextFactory hookContextFactory,
+                            ScmEventBus eventBus,
+                            SvnLogCommand svnLogCommand
+  ) {
     super(context);
+    this.hookContextFactory = hookContextFactory;
+    this.eventBus = eventBus;
+    this.svnLogCommand = svnLogCommand;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   @Override
   public UnbundleResponse unbundle(UnbundleCommandRequest request)
-    throws IOException
-  {
+    throws IOException {
     ByteSource archive = checkNotNull(request.getArchive(),
-                           "archive is required");
+      "archive is required");
 
-    logger.debug("archive repository {} to {}", context.getDirectory(),
+    LOG.debug("archive repository {} to {}", context.getDirectory(),
       archive);
 
     UnbundleResponse response;
 
     SVNClientManager clientManager = null;
 
-    try
-    {
+    try {
       clientManager = SVNClientManager.newInstance();
 
       SVNAdminClient adminClient = clientManager.getAdminClient();
@@ -107,44 +99,124 @@ public class SvnUnbundleCommand extends AbstractSvnCommand
       restore(adminClient, archive, context.getDirectory());
 
       response = new UnbundleResponse(context.open().getLatestRevision());
-    }
-    catch (SVNException ex)
-    {
+    } catch (SVNException ex) {
       throw new IOException("could not restore dump", ex);
-    }
-    finally
-    {
+    } finally {
       SvnUtil.dispose(clientManager);
     }
 
+    firePostReceiveRepositoryHookEvent();
     return response;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param adminClient
-   * @param dump
-   * @param repository
-   *
-   * @throws IOException
-   * @throws SVNException
-   */
-  private void restore(SVNAdminClient adminClient, ByteSource dump,
-    File repository)
-    throws SVNException, IOException
-  {
+  private void firePostReceiveRepositoryHookEvent() {
+    eventBus.post(createEvent());
+  }
+
+  private PostReceiveRepositoryHookEvent createEvent() {
+    Repository repository = this.context.getRepository();
+    HookContext context = hookContextFactory.createContext(new SvnImportHookContextProvider(repository, svnLogCommand), repository);
+    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, repository, POST_RECEIVE);
+    return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
+  }
+
+  private void restore(SVNAdminClient adminClient, ByteSource dump, File repository) throws SVNException, IOException {
     InputStream inputStream = null;
 
-    try
-    {
+    try {
       inputStream = dump.openBufferedStream();
       adminClient.doLoad(repository, inputStream);
-    }
-    finally
-    {
+    } finally {
       Closeables.close(inputStream, true);
+    }
+  }
+
+  private static class SvnImportHookContextProvider extends HookContextProvider {
+
+    private final Repository repository;
+    private final LogCommand logCommand;
+
+    private SvnImportHookContextProvider(Repository repository, SvnLogCommand logCommand) {
+      this.repository = repository;
+      this.logCommand = logCommand;
+    }
+
+    @Override
+    public Set<HookFeature> getSupportedFeatures() {
+      return ImmutableSet.of(HookFeature.CHANGESET_PROVIDER);
+    }
+
+    @Override
+    public HookChangesetProvider getChangesetProvider() {
+      ChangesetResolver changesetResolver = new ChangesetResolver(repository, logCommand);
+      return r -> new HookChangesetResponse(changesetResolver.call());
+    }
+  }
+
+  private static class ChangesetResolver implements Callable<Iterable<Changeset>> {
+
+    private final Repository repository;
+    private final LogCommand logCommand;
+
+    ChangesetResolver(Repository repository, LogCommand logCommand) {
+      this.repository = repository;
+      this.logCommand = logCommand;
+    }
+
+    @Override
+    public Iterable<Changeset> call() {
+      return SingleLogRequestChangesetIterator::new;
+    }
+
+    private class SingleLogRequestChangesetIterator implements Iterator<Changeset> {
+
+      private int currentNumber = 0;
+      private Changeset nextChangeset;
+
+      SingleLogRequestChangesetIterator() {
+        prefetch();
+      }
+
+      @Override
+      public boolean hasNext() {
+        return nextChangeset != null;
+      }
+
+      @Override
+      public Changeset next() {
+        if (nextChangeset == null) {
+          throw new NoSuchElementException();
+        }
+        Changeset currentChangeset = nextChangeset;
+        prefetch();
+        return currentChangeset;
+      }
+
+      private void prefetch() {
+        try {
+          List<Changeset> changesets = fetchSingleChangesetPage();
+          if (changesets.isEmpty()) {
+            nextChangeset = null;
+          } else {
+            nextChangeset = changesets.get(0);
+          }
+        } catch (IOException e) {
+          throw new ImportFailedException(
+            ContextEntry.ContextBuilder.entity(repository).build(),
+            "Could not provide changeset nr " + currentNumber + " for imported repository",
+            e
+          );
+        }
+      }
+
+      private List<Changeset> fetchSingleChangesetPage() throws IOException {
+        LogCommandRequest request = new LogCommandRequest();
+        request.setPagingStart(currentNumber);
+        request.setPagingLimit(1);
+        List<Changeset> changesets = logCommand.getChangesets(request).getChangesets();
+        currentNumber = currentNumber + 1;
+        return changesets;
+      }
     }
   }
 }

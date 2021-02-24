@@ -25,32 +25,40 @@
 package sonia.scm.repository.spi;
 
 import com.google.common.io.ByteSource;
-import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
-import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.api.UnbundleResponse;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 
 import static com.google.common.base.Preconditions.checkNotNull;
+import static sonia.scm.util.Archives.extractTar;
 
-
-public class HgUnbundleCommand  implements UnbundleCommand {
+public class HgUnbundleCommand implements UnbundleCommand {
   private static final Logger LOG = LoggerFactory.getLogger(HgUnbundleCommand.class);
 
   private final HgCommandContext context;
+  private final ScmEventBus eventBus;
+  private final HgLazyChangesetResolver changesetResolver;
+  private final HgPostReceiveRepositoryHookEventFactory eventFactory;
 
-  HgUnbundleCommand(HgCommandContext context) {
+  HgUnbundleCommand(HgCommandContext context,
+                    ScmEventBus eventBus,
+                    HgLazyChangesetResolver changesetResolver,
+                    HgPostReceiveRepositoryHookEventFactory eventFactory
+  ) {
     this.context = context;
+    this.eventBus = eventBus;
+    this.changesetResolver = changesetResolver;
+    this.eventFactory = eventFactory;
   }
 
   @Override
   public UnbundleResponse unbundle(UnbundleCommandRequest request) throws IOException {
-    ByteSource archive = checkNotNull(request.getArchive(),"archive is required");
+    ByteSource archive = checkNotNull(request.getArchive(), "archive is required");
     Path repositoryDir = context.getDirectory().toPath();
     LOG.debug("archive repository {} to {}", repositoryDir, archive);
 
@@ -59,24 +67,15 @@ public class HgUnbundleCommand  implements UnbundleCommand {
     }
 
     unbundleRepositoryFromRequest(request, repositoryDir);
+    firePostReceiveRepositoryHookEvent();
     return new UnbundleResponse(0);
   }
 
-  private void unbundleRepositoryFromRequest(UnbundleCommandRequest request, Path repositoryDir) throws IOException {
-    try (TarArchiveInputStream tais = new TarArchiveInputStream(request.getArchive().openBufferedStream())) {
-      TarArchiveEntry entry;
-      while ((entry = tais.getNextTarEntry()) != null) {
-        Path filePath = repositoryDir.resolve(entry.getName());
-        createDirectoriesIfNestedFile(filePath);
-        Files.copy(tais, filePath, StandardCopyOption.REPLACE_EXISTING);
-      }
-    }
+  private void firePostReceiveRepositoryHookEvent() {
+    eventBus.post(eventFactory.createEvent(context, changesetResolver));
   }
 
-  private void createDirectoriesIfNestedFile(Path filePath) throws IOException {
-    Path directory = filePath.getParent();
-    if (!Files.exists(directory)) {
-      Files.createDirectories(directory);
-    }
+  private void unbundleRepositoryFromRequest(UnbundleCommandRequest request, Path repositoryDir) throws IOException {
+    extractTar(request.getArchive().openBufferedStream(), repositoryDir).run();
   }
 }

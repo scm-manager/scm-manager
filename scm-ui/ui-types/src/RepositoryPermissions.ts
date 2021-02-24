@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import { HalRepresentationWithEmbedded, Links } from "./hal";
 
 export type PermissionCreateEntry = {
   name: string;
@@ -35,4 +35,10 @@ export type Permission = PermissionCreateEntry & {
   _links: Links;
 };
 
-export type PermissionCollection = Permission[];
+type PermissionEmbedded = {
+  permissions: Permission[];
+};
+
+// TODO fix wrong usage of PermissionCollection
+
+export type PermissionCollection = HalRepresentationWithEmbedded<PermissionEmbedded>;

@@ -76,9 +76,18 @@ pipeline {
         sh 'git fetch origin develop'
         script {
           withSonarQubeEnv('sonarcloud.io-scm') {
-            String parameters = " -Dsonar.organization=scm-manager -Dsonar.branch.name=${env.BRANCH_NAME}"
-            if (env.BRANCH_NAME != "develop") {
-              parameters += " -Dsonar.branch.target=develop"
+            String parameters = ' -Dsonar.organization=scm-manager'
+            if (env.CHANGE_ID) {
+              parameters += ' -Dsonar.pullrequest.provider=GitHub'
+              parameters += ' -Dsonar.pullrequest.github.repository=scm-manager/scm-manager'
+              parameters += " -Dsonar.pullrequest.key=${env.CHANGE_ID}"
+              parameters += " -Dsonar.pullrequest.branch=${env.CHANGE_BRANCH}"
+              parameters += " -Dsonar.pullrequest.base=${env.CHANGE_TARGET}"
+            } else {
+              parameters += " -Dsonar.branch.name=${env.BRANCH_NAME}"
+              if (env.BRANCH_NAME != "develop") {
+                parameters += " -Dsonar.branch.target=develop"
+              }
             }
             gradle "sonarqube ${parameters}"
           }
