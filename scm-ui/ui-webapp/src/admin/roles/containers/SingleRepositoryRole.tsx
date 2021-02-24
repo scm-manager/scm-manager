@@ -21,102 +21,50 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { connect } from "react-redux";
-import { Route, RouteComponentProps, withRouter } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { History } from "history";
+import React, { FC } from "react";
+import { Route, useParams, useRouteMatch } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { RepositoryRole } from "@scm-manager/ui-types";
-import { ErrorPage, Loading, Title } from "@scm-manager/ui-components";
-import { mustGetRepositoryRolesLink } from "../../../modules/indexResource";
-import { fetchRoleByName, getFetchRoleFailure, getRoleByName, isFetchRolePending } from "../modules/roles";
+import { ErrorPage, Loading, Title, urls } from "@scm-manager/ui-components";
 import PermissionRoleDetail from "../components/PermissionRoleDetails";
 import EditRepositoryRole from "./EditRepositoryRole";
-import { compose } from "redux";
-import { urls } from "@scm-manager/ui-components";
+import { useRepositoryRole } from "@scm-manager/ui-api";
 
-type Props = WithTranslation &
-  RouteComponentProps & {
-    roleName: string;
-    role: RepositoryRole;
-    loading: boolean;
-    error: Error;
-    repositoryRolesLink: string;
-    disabled: boolean;
+const SingleRepositoryRole: FC = () => {
+  const [t] = useTranslation("admin");
+  const match = useRouteMatch();
+  const { role: roleName } = useParams<{ role: string }>();
+  const { data: role, error, isLoading: loading } = useRepositoryRole(roleName);
 
-    // dispatcher function
-    fetchRoleByName: (p1: string, p2: string) => void;
-
-    // context objects
-    history: History;
-  };
-
-class SingleRepositoryRole extends React.Component<Props> {
-  componentDidMount() {
-    this.props.fetchRoleByName(this.props.repositoryRolesLink, this.props.roleName);
-  }
-
-  render() {
-    const { t, loading, error, role } = this.props;
-
-    if (error) {
-      return (
-        <ErrorPage title={t("repositoryRole.errorTitle")} subtitle={t("repositoryRole.errorSubtitle")} error={error} />
-      );
-    }
-
-    if (!role || loading) {
-      return <Loading />;
-    }
-
-    const url = urls.matchedUrl(this.props);
-
-    const extensionProps = {
-      role,
-      url
-    };
-
+  if (error) {
     return (
-      <>
-        <Title title={t("repositoryRole.title")} />
-        <Route path={`${url}/info`} component={() => <PermissionRoleDetail role={role} url={url} />} />
-        <Route
-          path={`${url}/edit`}
-          exact
-          component={() => <EditRepositoryRole role={role} history={this.props.history} />}
-        />
-        <ExtensionPoint name="roles.route" props={extensionProps} renderAll={true} />
-      </>
+      <ErrorPage title={t("repositoryRole.errorTitle")} subtitle={t("repositoryRole.errorSubtitle")} error={error} />
     );
   }
-}
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const roleName = ownProps.match.params.role;
-  const role = getRoleByName(state, roleName);
-  const loading = isFetchRolePending(state, roleName);
-  const error = getFetchRoleFailure(state, roleName);
-  const repositoryRolesLink = mustGetRepositoryRolesLink(state);
-  return {
-    repositoryRolesLink,
-    roleName,
+  if (!role || loading) {
+    return <Loading />;
+  }
+
+  const url = urls.matchedUrlFromMatch(match);
+
+  const extensionProps = {
     role,
-    loading,
-    error
+    url
   };
+
+  return (
+    <>
+      <Title title={t("repositoryRole.title")} />
+      <Route path={`${url}/info`}>
+        <PermissionRoleDetail role={role} url={url} />
+      </Route>
+      <Route path={`${url}/edit`} exact>
+        <EditRepositoryRole role={role} />
+      </Route>
+      <ExtensionPoint name="roles.route" props={extensionProps} renderAll={true} />
+    </>
+  );
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchRoleByName: (link: string, name: string) => {
-      dispatch(fetchRoleByName(link, name));
-    }
-  };
-};
-
-export default compose(
-  withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
-  withTranslation("admin")
-)(SingleRepositoryRole);
+export default SingleRepositoryRole;

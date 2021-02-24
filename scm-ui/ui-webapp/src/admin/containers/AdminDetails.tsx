@@ -21,27 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { connect } from "react-redux";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { apiClient, Image, Loading, Subtitle, Title } from "@scm-manager/ui-components";
-import { getAppVersion, getUpdateInfoLink } from "../../modules/indexResource";
-
-type Props = WithTranslation & {
-  version: string;
-  updateInfoLink?: string;
-};
-
-type State = {
-  loading: boolean;
-  updateInfo?: UpdateInfo;
-};
-
-type UpdateInfo = {
-  latestVersion: string;
-  link: string;
-};
+import { ErrorNotification, Image, Loading, Subtitle, Title } from "@scm-manager/ui-components";
+import { useUpdateInfo, useVersion } from "@scm-manager/ui-api";
 
 const BottomMarginDiv = styled.div`
   margin-bottom: 1.5rem;
@@ -59,129 +43,93 @@ const ImageWrapper = styled.div`
   padding: 0.2rem 0.4rem;
 `;
 
-class AdminDetails extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+const AdminDetails: FC = () => {
+  const [t] = useTranslation("admin");
+  const version = useVersion();
+  const { data: updateInfo, error, isLoading } = useUpdateInfo();
 
-    this.state = {
-      loading: false
-    };
+  if (isLoading) {
+    return <Loading />;
   }
 
-  componentDidMount() {
-    const { updateInfoLink } = this.props;
-
-    if (updateInfoLink) {
-      this.setState({ loading: true }, () =>
-        apiClient
-          .get(updateInfoLink)
-          .then(r => r.json())
-          .then(updateInfo => this.setState({ updateInfo }))
-          .then(() => this.setState({ loading: false }))
-          // ignore errors for this action
-          .catch(() => this.setState({ loading: false }))
-      );
-    }
+  if (error) {
+    return <ErrorNotification error={error} />;
   }
 
-  renderUpdateInfo() {
-    const { loading, updateInfo } = this.state;
-    const { t } = this.props;
-
-    if (loading) {
-      return <Loading />;
-    }
-
-    return (
-      updateInfo && (
-        <>
-          <BoxShadowBox className="box">
-            <article className="media">
-              <ImageWrapper className="media-left image is-96x96">
-                <Image src="/images/blib.jpg" alt={t("admin.info.logo")} />
-              </ImageWrapper>
-              <div className="media-content">
-                <div className="content">
-                  <h3 className="has-text-weight-medium">{t("admin.info.newRelease.title")}</h3>
-                  <p>
-                    {t("admin.info.newRelease.description", {
-                      version: updateInfo?.latestVersion
-                    })}
-                  </p>
-                  <a className="button is-warning is-pulled-right" target="_blank" href={updateInfo?.link}>
-                    {t("admin.info.newRelease.downloadButton")}
-                  </a>
-                </div>
-              </div>
-            </article>
-          </BoxShadowBox>
-          <hr />
-        </>
-      )
-    );
-  }
-
-  render() {
-    const { version, t } = this.props;
-
-    return (
-      <>
-        <Title title={t("admin.info.title")} />
-        <NoBottomMarginSubtitle subtitle={t("admin.info.currentAppVersion")} />
-        <BottomMarginDiv>{version}</BottomMarginDiv>
-        {this.renderUpdateInfo()}
-        <BoxShadowBox className="box">
-          <article className="media">
-            <ImageWrapper className="media-left">
-              <Image src="/images/iconCommunitySupport.png" alt={t("admin.info.communityIconAlt")} />
-            </ImageWrapper>
-            <div className="media-content">
-              <div className="content">
-                <h3 className="has-text-weight-medium">{t("admin.info.communityTitle")}</h3>
-                <p>{t("admin.info.communityInfo")}</p>
-                <a className="button is-info is-pulled-right" target="_blank" href="https://scm-manager.org/support/">
-                  {t("admin.info.communityButton")}
-                </a>
-              </div>
+  const renderUpdateInfo = () => (
+    <>
+      <BoxShadowBox className="box">
+        <article className="media">
+          <ImageWrapper className="media-left image is-96x96">
+            <Image src="/images/blib.jpg" alt={t("admin.info.logo")} />
+          </ImageWrapper>
+          <div className="media-content">
+            <div className="content">
+              <h3 className="has-text-weight-medium">{t("admin.info.newRelease.title")}</h3>
+              <p>
+                {t("admin.info.newRelease.description", {
+                  version: updateInfo?.latestVersion
+                })}
+              </p>
+              <a className="button is-warning is-pulled-right" target="_blank" href={updateInfo?.link}>
+                {t("admin.info.newRelease.downloadButton")}
+              </a>
             </div>
-          </article>
-        </BoxShadowBox>
-        <BoxShadowBox className="box">
-          <article className="media">
-            <ImageWrapper className="media-left">
-              <Image src="/images/iconEnterpriseSupport.png" alt={t("admin.info.enterpriseIconAlt")} />
-            </ImageWrapper>
-            <div className="media-content">
-              <div className="content">
-                <h3 className="has-text-weight-medium">{t("admin.info.enterpriseTitle")}</h3>
-                <p>
-                  {t("admin.info.enterpriseInfo")}
-                  <br />
-                  <strong>{t("admin.info.enterprisePartner")}</strong>
-                </p>
-                <a
-                  className="button is-info is-pulled-right is-normal"
-                  target="_blank"
-                  href={t("admin.info.enterpriseLink")}
-                >
-                  {t("admin.info.enterpriseButton")}
-                </a>
-              </div>
-            </div>
-          </article>
-        </BoxShadowBox>
-      </>
-    );
-  }
-}
+          </div>
+        </article>
+      </BoxShadowBox>
+      <hr />
+    </>
+  );
 
-const mapStateToProps = (state: any) => {
-  const version = getAppVersion(state);
-  const updateInfoLink = getUpdateInfoLink(state);
-  return {
-    version,
-    updateInfoLink
-  };
+  return (
+    <>
+      <Title title={t("admin.info.title")} />
+      <NoBottomMarginSubtitle subtitle={t("admin.info.currentAppVersion")} />
+      <BottomMarginDiv>{version}</BottomMarginDiv>
+      {updateInfo ? renderUpdateInfo() : null}
+      <BoxShadowBox className="box">
+        <article className="media">
+          <ImageWrapper className="media-left">
+            <Image src="/images/iconCommunitySupport.png" alt={t("admin.info.communityIconAlt")} />
+          </ImageWrapper>
+          <div className="media-content">
+            <div className="content">
+              <h3 className="has-text-weight-medium">{t("admin.info.communityTitle")}</h3>
+              <p>{t("admin.info.communityInfo")}</p>
+              <a className="button is-info is-pulled-right" target="_blank" href="https://scm-manager.org/support/">
+                {t("admin.info.communityButton")}
+              </a>
+            </div>
+          </div>
+        </article>
+      </BoxShadowBox>
+      <BoxShadowBox className="box">
+        <article className="media">
+          <ImageWrapper className="media-left">
+            <Image src="/images/iconEnterpriseSupport.png" alt={t("admin.info.enterpriseIconAlt")} />
+          </ImageWrapper>
+          <div className="media-content">
+            <div className="content">
+              <h3 className="has-text-weight-medium">{t("admin.info.enterpriseTitle")}</h3>
+              <p>
+                {t("admin.info.enterpriseInfo")}
+                <br />
+                <strong>{t("admin.info.enterprisePartner")}</strong>
+              </p>
+              <a
+                className="button is-info is-pulled-right is-normal"
+                target="_blank"
+                href={t("admin.info.enterpriseLink")}
+              >
+                {t("admin.info.enterpriseButton")}
+              </a>
+            </div>
+          </div>
+        </article>
+      </BoxShadowBox>
+    </>
+  );
 };
 
-export default connect(mapStateToProps)(withTranslation("admin")(AdminDetails));
+export default AdminDetails;

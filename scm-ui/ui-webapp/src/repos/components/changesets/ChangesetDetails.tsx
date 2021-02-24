@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 import React, { FC, useState } from "react";
-import { Trans, useTranslation, WithTranslation, withTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Changeset, Link, ParentChangeset, Repository, Tag } from "@scm-manager/ui-types";
+import { Changeset, Link, ParentChangeset, Repository } from "@scm-manager/ui-types";
 import {
   AvatarImage,
   AvatarWrapper,
@@ -42,18 +42,16 @@ import {
   Icon,
   Level,
   SignatureIcon,
-  Tooltip,
-  ErrorNotification,
-  CreateTagModal
+  Tooltip
 } from "@scm-manager/ui-components";
 import ContributorTable from "./ContributorTable";
 import { Link as ReactLink } from "react-router-dom";
+import CreateTagModal from "./CreateTagModal";
 
-type Props = WithTranslation & {
+type Props = {
   changeset: Changeset;
   repository: Repository;
   fileControlFactory?: FileControlFactory;
-  refetchChangeset?: () => void;
 };
 
 const RightMarginP = styled.p`
@@ -112,6 +110,7 @@ const ChangesetSummary = styled.div`
 
 const SeparatedParents = styled.div`
   margin-left: 1em;
+
   a + a:before {
     content: ",\\00A0";
     color: #4a4a4a;
@@ -158,15 +157,15 @@ const Contributors: FC<{ changeset: Changeset }> = ({ changeset }) => {
   );
 };
 
-const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory, t, refetchChangeset }) => {
+const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [isTagCreationModalVisible, setTagCreationModalVisible] = useState(false);
-  const [error, setError] = useState<Error | undefined>();
+  const [t] = useTranslation("repos");
 
   const description = changesets.parseDescription(changeset.description);
   const id = <ChangesetId repository={repository} changeset={changeset} link={false} />;
   const date = <DateFromNow date={changeset.date} />;
-  const parents = changeset._embedded.parents.map((parent: ParentChangeset, index: number) => (
+  const parents = changeset._embedded.parents?.map((parent: ParentChangeset, index: number) => (
     <ReactLink title={parent.id} to={parent.id} key={index}>
       {parent.id.substring(0, 7)}
     </ReactLink>
@@ -176,10 +175,6 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
   const collapseDiffs = () => {
     setCollapsed(!collapsed);
   };
-
-  if (error) {
-    return <ErrorNotification error={error} />;
-  }
 
   return (
     <>
@@ -208,12 +203,12 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
               <p>
                 <Trans i18nKey="repos:changeset.summary" components={[id, date]} />
               </p>
-              {parents?.length > 0 && (
+              {parents && parents?.length > 0 ? (
                 <SeparatedParents>
                   {t("changeset.parents.label", { count: parents?.length }) + ": "}
                   {parents}
                 </SeparatedParents>
-              )}
+              ) : null}
             </ChangesetSummary>
           </div>
           <div className="media-right">
@@ -235,15 +230,9 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
           )}
           {isTagCreationModalVisible && (
             <CreateTagModal
-              revision={changeset.id}
+              repository={repository}
+              changeset={changeset}
               onClose={() => setTagCreationModalVisible(false)}
-              onCreated={() => {
-                refetchChangeset?.();
-                setTagCreationModalVisible(false);
-              }}
-              onError={setError}
-              tagCreationLink={(changeset._links["tag"] as Link).href}
-              existingTagsLink={(repository._links["tags"] as Link).href}
             />
           )}
         </article>
@@ -285,4 +274,4 @@ const ChangesetDetails: FC<Props> = ({ changeset, repository, fileControlFactory
   );
 };
 
-export default withTranslation("repos")(ChangesetDetails);
+export default ChangesetDetails;

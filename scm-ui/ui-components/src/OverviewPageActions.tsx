@@ -30,7 +30,7 @@ import { FilterInput } from "./forms";
 type Props = {
   showCreateButton: boolean;
   currentGroup: string;
-  groups: string[];
+  groups?: string[];
   link: string;
   groupSelected: (namespace: string) => void;
   label?: string;
@@ -51,6 +51,7 @@ const OverviewPageActions: FC<Props> = ({
   const history = useHistory();
   const location = useLocation();
   const [filterValue, setFilterValue] = useState(urls.getQueryStringFromLocation(location));
+  
   const groupSelector = groups && (
     <div className={"column is-flex"}>
       <DropDown

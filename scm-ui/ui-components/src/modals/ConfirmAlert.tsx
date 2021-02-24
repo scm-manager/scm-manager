@@ -30,6 +30,7 @@ import classNames from "classnames";
 type Button = {
   className?: string;
   label: string;
+  isLoading?: boolean;
   onClick?: () => void | null;
 };
 
@@ -65,7 +66,7 @@ export const ConfirmAlert: FC<Props> = ({ title, message, buttons, close }) => {
       {buttons.map((button, index) => (
         <p className="control" key={index}>
           <a
-            className={classNames("button", "is-info", button.className)}
+            className={classNames("button", "is-info", button.className, button.isLoading ? "is-loading" : "")}
             key={index}
             onClick={() => handleClickButton(button)}
           >

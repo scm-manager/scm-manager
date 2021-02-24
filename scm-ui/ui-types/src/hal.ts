@@ -34,12 +34,26 @@ export type Links = {
   [key: string]: LinkValue;
 };
 
-export type Collection = {
-  _embedded?: any;
+export type Embedded = {
+  [key: string]: unknown;
+};
+
+export type HalRepresentation = {
+  _embedded?: Embedded;
   _links: Links;
 };
 
-export type PagedCollection = Collection & {
+export type HalRepresentationWithEmbedded<T extends Embedded> = HalRepresentation & {
+  _embedded: T;
+};
+
+export type PagedCollection<T extends Embedded = Embedded> = HalRepresentationWithEmbedded<T> & {
   page: number;
   pageTotal: number;
 };
+
+/**
+ * @deprecated use HalRepresentation instead
+ */
+export type Collection = HalRepresentation;
+

@@ -37,6 +37,9 @@ type Props = WithTranslation & {
   revision: string;
 };
 
+/**
+ * @deprecated
+ */
 const CreateTagModal: FC<Props> = ({ t, onClose, tagCreationLink, existingTagsLink, onCreated, onError, revision }) => {
   const [newTagName, setNewTagName] = useState("");
   const [loading, setLoading] = useState(false);

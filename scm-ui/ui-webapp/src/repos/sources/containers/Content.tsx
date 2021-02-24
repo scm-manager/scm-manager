@@ -22,21 +22,18 @@
  * SOFTWARE.
  */
 import React, { ReactNode } from "react";
-import { connect } from "react-redux";
 import { WithTranslation, withTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { File, Repository } from "@scm-manager/ui-types";
 import { DateFromNow, ErrorNotification, FileSize, Icon, OpenInFullscreenButton } from "@scm-manager/ui-components";
-import { getSources } from "../modules/sources";
 import FileButtonAddons from "../components/content/FileButtonAddons";
 import SourcesView from "./SourcesView";
 import HistoryView from "./HistoryView";
 import AnnotateView from "./AnnotateView";
 
 type Props = WithTranslation & {
-  loading: boolean;
   file: File;
   repository: Repository;
   revision: string;
@@ -181,7 +178,7 @@ class Content extends React.Component<Props, State> {
                 </tr>
                 <tr>
                   <td>{t("sources.content.branch")}</td>
-                  <td className="is-word-break">{decodeURIComponent(revision)}</td>
+                  <td className="is-word-break">{revision}</td>
                 </tr>
                 <tr>
                   <td>{t("sources.content.size")}</td>
@@ -246,14 +243,4 @@ class Content extends React.Component<Props, State> {
   }
 }
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const { repository, revision, path } = ownProps;
-
-  const file = getSources(state, repository, revision, path);
-
-  return {
-    file
-  };
-};
-
-export default connect(mapStateToProps)(withTranslation("repos")(Content));
+export default withTranslation("repos")(Content);

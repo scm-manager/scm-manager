@@ -21,24 +21,22 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import { CardColumnGroup } from "@scm-manager/ui-components";
 import { PluginGroup } from "@scm-manager/ui-types";
 import PluginEntry from "./PluginEntry";
+import { PluginModalContent } from "../containers/PluginsOverview";
 
 type Props = {
   group: PluginGroup;
-  refresh: () => void;
+  openModal: (content: PluginModalContent) => void;
 };
 
-class PluginGroupEntry extends React.Component<Props> {
-  render() {
-    const { group, refresh } = this.props;
-    const entries = group.plugins.map(plugin => {
-      return <PluginEntry plugin={plugin} key={plugin.name} refresh={refresh} />;
-    });
-    return <CardColumnGroup name={group.name} elements={entries} />;
-  }
-}
+const PluginGroupEntry: FC<Props> = ({ openModal, group }) => {
+  const entries = group.plugins.map(plugin => {
+    return <PluginEntry plugin={plugin} openModal={openModal} key={plugin.name} />;
+  });
+  return <CardColumnGroup name={group.name} elements={entries} />;
+};
 
 export default PluginGroupEntry;

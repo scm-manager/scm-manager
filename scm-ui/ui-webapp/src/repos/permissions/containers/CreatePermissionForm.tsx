@@ -21,11 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { PermissionCollection, PermissionCreateEntry, RepositoryRole, SelectValue } from "@scm-manager/ui-types";
+import React, { FC, FormEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  Link,
+  Namespace,
+  PermissionCollection,
+  PermissionCreateEntry,
+  Repository,
+  RepositoryRole,
+  SelectValue
+} from "@scm-manager/ui-types";
 import {
   Button,
+  ErrorNotification,
   GroupAutocomplete,
   LabelWithHelpIcon,
   Level,
@@ -34,222 +43,199 @@ import {
   Subtitle,
   UserAutocomplete
 } from "@scm-manager/ui-components";
-import * as validator from "../components/permissionValidation";
+import * as validator from "../utils/permissionValidation";
 import RoleSelector from "../components/RoleSelector";
 import AdvancedPermissionsDialog from "./AdvancedPermissionsDialog";
-import { findVerbsForRole } from "../modules/permissions";
+import { useCreatePermission, useIndexLinks } from "@scm-manager/ui-api";
+import findVerbsForRole from "../utils/findVerbsForRole";
 
-type Props = WithTranslation & {
+type Props = {
   availableRoles: RepositoryRole[];
   availableVerbs: string[];
-  createPermission: (permission: PermissionCreateEntry) => void;
-  loading: boolean;
   currentPermissions: PermissionCollection;
-  groupAutocompleteLink: string;
-  userAutocompleteLink: string;
+  namespaceOrRepository: Namespace | Repository;
 };
 
-type State = {
-  name: string;
-  role?: string;
-  verbs?: string[];
-  groupPermission: boolean;
+type PermissionState = PermissionCreateEntry & {
   valid: boolean;
   value?: SelectValue;
-  showAdvancedDialog: boolean;
 };
 
-class CreatePermissionForm extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      name: "",
-      role: props.availableRoles[0].name,
-      verbs: undefined,
-      groupPermission: false,
-      valid: true,
-      value: undefined,
-      showAdvancedDialog: false
-    };
-  }
-
-  groupPermissionScopeChanged = (value: boolean) => {
-    if (value) {
-      this.permissionScopeChanged(true);
-    }
+const useAutoCompleteLinks = () => {
+  const links = useIndexLinks()?.autocomplete as Link[];
+  return {
+    groups: links?.find(l => l.name === "groups"),
+    users: links?.find(l => l.name === "users")
   };
+};
 
-  userPermissionScopeChanged = (value: boolean) => {
-    if (value) {
-      this.permissionScopeChanged(false);
-    }
+const CreatePermissionForm: FC<Props> = ({
+  availableRoles,
+  availableVerbs,
+  currentPermissions,
+  namespaceOrRepository
+}) => {
+  const initialPermissionState = {
+    name: "",
+    role: availableRoles[0].name,
+    verbs: [],
+    groupPermission: false,
+    valid: false
   };
+  const links = useAutoCompleteLinks();
+  const { isLoading, error, create, permission: createdPermission } = useCreatePermission(namespaceOrRepository);
+  const [showAdvancedDialog, setShowAdvancedDialog] = useState(false);
+  const [permission, setPermission] = useState<PermissionState>(initialPermissionState);
+  const [t] = useTranslation("repos");
+  useEffect(() => {
+    setPermission(initialPermissionState);
+  }, [createdPermission]);
+  const selectedVerbs = permission.role ? findVerbsForRole(availableRoles, permission.role) : permission.verbs;
 
-  permissionScopeChanged = (groupPermission: boolean) => {
-    this.setState({
-      value: undefined,
-      name: "",
-      groupPermission,
-      valid: false
-    });
-  };
-
-  renderAutocompletionField = () => {
-    const group = this.state.groupPermission;
-    if (group) {
-      return (
-        <GroupAutocomplete
-          autocompleteLink={this.props.groupAutocompleteLink}
-          valueSelected={this.selectName}
-          value={this.state.value ? this.state.value : ""}
-        />
-      );
-    }
-    return (
-      <UserAutocomplete
-        autocompleteLink={this.props.userAutocompleteLink}
-        valueSelected={this.selectName}
-        value={this.state.value ? this.state.value : ""}
-      />
-    );
-  };
-
-  selectName = (value: SelectValue) => {
-    this.setState({
+  const selectName = (value: SelectValue) => {
+    setPermission({
+      ...permission,
       value,
       name: value.value.id,
-      valid: validator.isPermissionValid(value.value.id, this.state.groupPermission, this.props.currentPermissions)
+      valid: validator.isPermissionValid(
+        value.value.id,
+        permission.groupPermission,
+        currentPermissions._embedded.permissions
+      )
     });
   };
 
-  render() {
-    const { t, availableRoles, availableVerbs, loading } = this.props;
-    const { role, verbs, showAdvancedDialog } = this.state;
-
-    const availableRoleNames = availableRoles.map(r => r.name);
-
-    const selectedVerbs = role ? findVerbsForRole(availableRoles, role) : verbs;
-
-    const advancedDialog = showAdvancedDialog ? (
-      <AdvancedPermissionsDialog
-        availableVerbs={availableVerbs}
-        selectedVerbs={selectedVerbs}
-        onClose={this.toggleAdvancedPermissionsDialog}
-        onSubmit={this.submitAdvancedPermissionsDialog}
-      />
-    ) : null;
-
-    return (
-      <>
-        <hr />
-        <Subtitle subtitle={t("permission.add-permission.add-permission-heading")} />
-        {advancedDialog}
-        <form onSubmit={this.submit}>
-          <div className="field is-grouped">
-            <div className="control">
-              <Radio
-                name="permission_scope"
-                value="USER_PERMISSION"
-                checked={!this.state.groupPermission}
-                label={t("permission.user-permission")}
-                onChange={this.userPermissionScopeChanged}
-              />
-              <Radio
-                name="permission_scope"
-                value="GROUP_PERMISSION"
-                checked={this.state.groupPermission}
-                label={t("permission.group-permission")}
-                onChange={this.groupPermissionScopeChanged}
-              />
-            </div>
-          </div>
-          <div className="columns">
-            <div className="column is-half">{this.renderAutocompletionField()}</div>
-            <div className="column is-half">
-              <div className="columns">
-                <div className="column is-narrow">
-                  <RoleSelector
-                    availableRoles={availableRoleNames}
-                    label={t("permission.role")}
-                    helpText={t("permission.help.roleHelpText")}
-                    handleRoleChange={this.handleRoleChange}
-                    role={role}
-                  />
-                </div>
-                <div className="column">
-                  <LabelWithHelpIcon
-                    label={t("permission.permissions")}
-                    helpText={t("permission.help.permissionsHelpText")}
-                  />
-                  <Button label={t("permission.advanced-button.label")} action={this.toggleAdvancedPermissionsDialog} />
-                </div>
-              </div>
-            </div>
-          </div>
-          <Level
-            right={
-              <SubmitButton
-                label={t("permission.add-permission.submit-button")}
-                loading={loading}
-                disabled={!this.state.valid || this.state.name === ""}
-              />
-            }
-          />
-        </form>
-      </>
-    );
-  }
-
-  toggleAdvancedPermissionsDialog = () => {
-    this.setState(prevState => ({
-      showAdvancedDialog: !prevState.showAdvancedDialog
-    }));
+  const groupPermissionScopeChanged = (value: boolean) => {
+    if (value) {
+      permissionScopeChanged(true);
+    }
   };
 
-  submitAdvancedPermissionsDialog = (newVerbs: string[]) => {
-    this.setState({
-      showAdvancedDialog: false,
-      role: undefined,
-      verbs: newVerbs
+  const userPermissionScopeChanged = (value: boolean) => {
+    if (value) {
+      permissionScopeChanged(false);
+    }
+  };
+
+  const permissionScopeChanged = (groupPermission: boolean) => {
+    setPermission({
+      ...permission,
+      groupPermission
     });
   };
 
-  submit = e => {
-    this.props.createPermission({
-      name: this.state.name,
-      role: this.state.role,
-      verbs: this.state.verbs,
-      groupPermission: this.state.groupPermission
-    });
-    this.removeState();
-    e.preventDefault();
-  };
-
-  removeState = () => {
-    this.setState({
-      name: "",
-      role: this.props.availableRoles[0].name,
-      verbs: undefined,
-      valid: true,
-      value: undefined
-    });
-  };
-
-  handleRoleChange = (role: string) => {
-    const selectedRole = this.findAvailableRole(role);
+  const handleRoleChange = (role: string) => {
+    const selectedRole = findAvailableRole(role);
     if (!selectedRole) {
       return;
     }
-    this.setState({
-      role: selectedRole.name,
-      verbs: []
+    setPermission({
+      ...permission,
+      verbs: [],
+      role
     });
   };
 
-  findAvailableRole = (roleName: string) => {
-    return this.props.availableRoles.find(role => role.name === roleName);
+  const submitAdvancedPermissionsDialog = (verbs: string[]) => {
+    setPermission({
+      ...permission,
+      role: undefined,
+      verbs
+    });
+    setShowAdvancedDialog(false);
   };
-}
 
-export default withTranslation("repos")(CreatePermissionForm);
+  const submit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    create(permission);
+  };
+
+  const findAvailableRole = (roleName: string) => {
+    return availableRoles.find(role => role.name === roleName);
+  };
+
+  return (
+    <>
+      <hr />
+      <Subtitle subtitle={t("permission.add-permission.add-permission-heading")} />
+      {showAdvancedDialog ? (
+        <AdvancedPermissionsDialog
+          availableVerbs={availableVerbs}
+          selectedVerbs={selectedVerbs || []}
+          onClose={() => setShowAdvancedDialog(false)}
+          onSubmit={submitAdvancedPermissionsDialog}
+        />
+      ) : null}
+      <ErrorNotification error={error} />
+      <form onSubmit={submit}>
+        <div className="field is-grouped">
+          <div className="control">
+            <Radio
+              name="permission_scope"
+              value="USER_PERMISSION"
+              checked={!permission.groupPermission}
+              label={t("permission.user-permission")}
+              onChange={userPermissionScopeChanged}
+            />
+            <Radio
+              name="permission_scope"
+              value="GROUP_PERMISSION"
+              checked={permission.groupPermission}
+              label={t("permission.group-permission")}
+              onChange={groupPermissionScopeChanged}
+            />
+          </div>
+        </div>
+        <div className="columns">
+          <div className="column is-half">
+            {permission.groupPermission && links.groups ? (
+              <GroupAutocomplete
+                autocompleteLink={links.groups.href}
+                valueSelected={selectName}
+                value={permission.value || ""}
+              />
+            ) : null}
+            {!permission.groupPermission && links.users ? (
+              <UserAutocomplete
+                autocompleteLink={links.users.href}
+                valueSelected={selectName}
+                value={permission.value || ""}
+              />
+            ) : null}
+          </div>
+          <div className="column is-half">
+            <div className="columns">
+              <div className="column is-narrow">
+                <RoleSelector
+                  availableRoles={availableRoles.map(r => r.name)}
+                  label={t("permission.role")}
+                  helpText={t("permission.help.roleHelpText")}
+                  handleRoleChange={handleRoleChange}
+                  role={permission.role || ""}
+                />
+              </div>
+              <div className="column">
+                <LabelWithHelpIcon
+                  label={t("permission.permissions")}
+                  helpText={t("permission.help.permissionsHelpText")}
+                />
+                <Button label={t("permission.advanced-button.label")} action={() => setShowAdvancedDialog(true)} />
+              </div>
+            </div>
+          </div>
+        </div>
+        <Level
+          right={
+            <SubmitButton
+              label={t("permission.add-permission.submit-button")}
+              loading={isLoading}
+              disabled={!permission.valid || permission.name === ""}
+            />
+          }
+        />
+      </form>
+    </>
+  );
+};
+
+export default CreatePermissionForm;

@@ -21,87 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
+import React, { FC } from "react";
+import { Redirect } from "react-router-dom";
 import UserForm from "../components/UserForm";
 import DeleteUser from "./DeleteUser";
 import { User } from "@scm-manager/ui-types";
-import {
-  fetchUserByLink,
-  getModifyUserFailure,
-  isModifyUserPending,
-  modifyUser,
-  modifyUserReset
-} from "../modules/users";
-import { History } from "history";
 import { ErrorNotification } from "@scm-manager/ui-components";
-import { compose } from "redux";
 import UserConverter from "../components/UserConverter";
+import { useUpdateUser } from "@scm-manager/ui-api";
 
 type Props = {
-  loading: boolean;
-  error: Error;
-
-  // dispatch functions
-  modifyUser: (user: User, callback?: () => void) => void;
-  modifyUserReset: (p: User) => void;
-  fetchUser: (user: User) => void;
-
-  // context objects
   user: User;
-  history: History;
 };
 
-class EditUser extends React.Component<Props> {
-  componentDidMount() {
-    const { modifyUserReset, user } = this.props;
-    modifyUserReset(user);
+const EditUser: FC<Props> = ({ user }) => {
+  const { error, isLoading, update, isUpdated } = useUpdateUser();
+
+  if (isUpdated) {
+    return <Redirect to={`/user/${user.name}`} />;
   }
 
-  userModified = (user: User) => () => {
-    this.props.history.push(`/user/${user.name}`);
-  };
-
-  modifyUser = (user: User) => {
-    this.props.modifyUser(user, this.userModified(user));
-  };
-
-  render() {
-    const { user, loading, error } = this.props;
-    return (
-      <div>
-        <ErrorNotification error={error} />
-        <UserForm submitForm={this.modifyUser} user={user} loading={loading} />
-        <hr />
-        <UserConverter user={user} fetchUser={this.props.fetchUser} />
-        <DeleteUser user={user} />
-      </div>
-    );
-  }
-}
-
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const loading = isModifyUserPending(state, ownProps.user.name);
-  const error = getModifyUserFailure(state, ownProps.user.name);
-  return {
-    loading,
-    error
-  };
+  return (
+    <div>
+      <ErrorNotification error={error || undefined} />
+      <UserForm submitForm={update} user={user} loading={isLoading} />
+      <hr />
+      <UserConverter user={user} />
+      <DeleteUser user={user} />
+    </div>
+  );
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    modifyUser: (user: User, callback?: () => void) => {
-      dispatch(modifyUser(user, callback));
-    },
-    modifyUserReset: (user: User) => {
-      dispatch(modifyUserReset(user));
-    },
-    fetchUser: (user: User) => {
-      dispatch(fetchUserByLink(user));
-    }
-  };
-};
-
-export default compose(connect(mapStateToProps, mapDispatchToProps), withRouter)(EditUser);
+export default EditUser;

@@ -21,36 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Plugin } from "@scm-manager/ui-types";
-import {
-  apiClient,
-  Button,
-  ButtonGroup,
-  Checkbox,
-  ErrorNotification,
-  Modal,
-  Notification
-} from "@scm-manager/ui-components";
-import waitForRestart from "./waitForRestart";
+import { Button, ButtonGroup, Checkbox, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
 import SuccessNotification from "./SuccessNotification";
-import { PluginAction } from "./PluginEntry";
+import { useInstallPlugin, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
+import { PluginAction } from "../containers/PluginsOverview";
 
-type Props = WithTranslation & {
+type Props = {
   plugin: Plugin;
   pluginAction: string;
-  refresh: () => void;
   onClose: () => void;
-};
-
-type State = {
-  success: boolean;
-  restart: boolean;
-  loading: boolean;
-  error?: Error;
 };
 
 const ListParent = styled.div`
@@ -63,88 +47,43 @@ const ListChild = styled.div`
   flex-grow: 4;
 `;
 
-class PluginModal extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      loading: false,
-      restart: false,
-      success: false
-    };
-  }
+const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
+  const [t] = useTranslation("admin");
+  const [shouldRestart, setShouldRestart] = useState<boolean>(false);
+  const { isLoading: isInstalling, error: installError, install, isInstalled } = useInstallPlugin();
+  const { isLoading: isUninstalling, error: uninstallError, uninstall, isUninstalled } = useUninstallPlugin();
+  const { isLoading: isUpdating, error: updateError, update, isUpdated } = useUpdatePlugins();
+  const error = installError || uninstallError || updateError;
+  const loading = isInstalling || isUninstalling || isUpdating;
+  const isDone = isInstalled || isUninstalled || isUpdated;
 
-  onSuccess = () => {
-    const { restart } = this.state;
-    const { refresh, onClose } = this.props;
-
-    const newState = {
-      loading: false,
-      error: undefined
-    };
-
-    if (restart) {
-      waitForRestart()
-        .then(() => {
-          this.setState({
-            ...newState,
-            success: true
-          });
-        })
-        .catch(error => {
-          this.setState({
-            loading: false,
-            success: false,
-            error
-          });
-        });
-    } else {
-      this.setState(newState, () => {
-        refresh();
-        onClose();
-      });
+  useEffect(() => {
+    if (isDone && !shouldRestart) {
+      onClose();
     }
-  };
+  }, [isDone]);
 
-  createPluginActionLink = () => {
-    const { plugin, pluginAction } = this.props;
-    const { restart } = this.state;
-
-    let pluginActionLink = "";
-
-    if (pluginAction === PluginAction.INSTALL) {
-      pluginActionLink = plugin._links.install.href;
-    } else if (pluginAction === PluginAction.UPDATE) {
-      pluginActionLink = plugin._links.update.href;
-    } else if (pluginAction === PluginAction.UNINSTALL) {
-      pluginActionLink = plugin._links.uninstall.href;
-    }
-    return pluginActionLink + "?restart=" + restart.toString();
-  };
-
-  handlePluginAction = (e: Event) => {
-    this.setState({
-      loading: true
-    });
+  const handlePluginAction = (e: Event) => {
     e.preventDefault();
-    apiClient
-      .post(this.createPluginActionLink())
-      .then(this.onSuccess)
-      .catch(error => {
-        this.setState({
-          loading: false,
-          success: false,
-          error: error
-        });
-      });
+    switch (pluginAction) {
+      case PluginAction.INSTALL:
+        install(plugin, { restart: shouldRestart });
+        break;
+      case PluginAction.UNINSTALL:
+        uninstall(plugin, { restart: shouldRestart });
+        break;
+      case PluginAction.UPDATE:
+        update(plugin, { restart: shouldRestart });
+        break;
+      default:
+        throw new Error(`Unkown plugin action ${pluginAction}`);
+    }
   };
 
-  footer = () => {
-    const { pluginAction, onClose, t } = this.props;
-    const { loading, error, restart, success } = this.state;
-
+  const footer = () => {
     let color = pluginAction === PluginAction.UNINSTALL ? "warning" : "primary";
     let label = `plugins.modal.${pluginAction}`;
-    if (restart) {
+    if (shouldRestart) {
       color = "warning";
       label = `plugins.modal.${pluginAction}AndRestart`;
     }
@@ -153,18 +92,16 @@ class PluginModal extends React.Component<Props, State> {
         <Button
           label={t(label)}
           color={color}
-          action={this.handlePluginAction}
+          action={handlePluginAction}
           loading={loading}
-          disabled={!!error || success}
+          disabled={!!error || isDone}
         />
         <Button label={t("plugins.modal.abort")} action={onClose} />
       </ButtonGroup>
     );
   };
 
-  renderDependencies() {
-    const { plugin, t } = this.props;
-
+  const renderDependencies = () => {
     let dependencies = null;
     if (plugin.dependencies && plugin.dependencies.length > 0) {
       dependencies = (
@@ -181,11 +118,9 @@ class PluginModal extends React.Component<Props, State> {
       );
     }
     return dependencies;
-  }
+  };
 
-  renderOptionalDependencies() {
-    const { plugin, t } = this.props;
-
+  const renderOptionalDependencies = () => {
     let optionalDependencies = null;
     if (plugin.optionalDependencies && plugin.optionalDependencies.length > 0) {
       optionalDependencies = (
@@ -202,24 +137,22 @@ class PluginModal extends React.Component<Props, State> {
       );
     }
     return optionalDependencies;
-  }
+  };
 
-  renderNotifications = () => {
-    const { t, pluginAction } = this.props;
-    const { restart, error, success } = this.state;
+  const renderNotifications = () => {
     if (error) {
       return (
         <div className="media">
           <ErrorNotification error={error} />
         </div>
       );
-    } else if (success) {
+    } else if (isDone && shouldRestart) {
       return (
         <div className="media">
           <SuccessNotification pluginAction={pluginAction} />
         </div>
       );
-    } else if (restart) {
+    } else if (shouldRestart) {
       return (
         <div className="media">
           <Notification type="warning">{t("plugins.modal.restartNotification")}</Notification>
@@ -229,22 +162,13 @@ class PluginModal extends React.Component<Props, State> {
     return null;
   };
 
-  handleRestartChange = (value: boolean) => {
-    this.setState({
-      restart: value
-    });
-  };
-
-  createRestartSectionContent = () => {
-    const { restart } = this.state;
-    const { plugin, pluginAction, t } = this.props;
-
+  const createRestartSectionContent = () => {
     if (plugin._links[pluginAction + "WithRestart"]) {
       return (
         <Checkbox
-          checked={restart}
+          checked={shouldRestart}
           label={t("plugins.modal.restart")}
-          onChange={this.handleRestartChange}
+          onChange={setShouldRestart}
           disabled={false}
         />
       );
@@ -253,71 +177,67 @@ class PluginModal extends React.Component<Props, State> {
     }
   };
 
-  render() {
-    const { plugin, pluginAction, onClose, t } = this.props;
-
-    const body = (
-      <>
-        <div className="media">
-          <div className="media-content">
-            <p>{plugin.description}</p>
-          </div>
+  const body = (
+    <>
+      <div className="media">
+        <div className="media-content">
+          <p>{plugin.description}</p>
         </div>
-        <div className="media">
-          <div className="media-content">
+      </div>
+      <div className="media">
+        <div className="media-content">
+          <div className="field is-horizontal">
+            <ListParent className={classNames("field-label", "is-inline-flex")} pluginAction={pluginAction}>
+              {t("plugins.modal.author")}:
+            </ListParent>
+            <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.author}</ListChild>
+          </div>
+          {pluginAction === PluginAction.INSTALL && (
             <div className="field is-horizontal">
               <ListParent className={classNames("field-label", "is-inline-flex")} pluginAction={pluginAction}>
-                {t("plugins.modal.author")}:
+                {t("plugins.modal.version")}:
               </ListParent>
-              <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.author}</ListChild>
+              <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.version}</ListChild>
             </div>
-            {pluginAction === PluginAction.INSTALL && (
-              <div className="field is-horizontal">
-                <ListParent className={classNames("field-label", "is-inline-flex")} pluginAction={pluginAction}>
-                  {t("plugins.modal.version")}:
-                </ListParent>
-                <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.version}</ListChild>
-              </div>
-            )}
-            {(pluginAction === PluginAction.UPDATE || pluginAction === PluginAction.UNINSTALL) && (
-              <div className="field is-horizontal">
-                <ListParent className={classNames("field-label", "is-inline-flex")}>
-                  {t("plugins.modal.currentVersion")}:
-                </ListParent>
-                <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.version}</ListChild>
-              </div>
-            )}
-            {pluginAction === PluginAction.UPDATE && (
-              <div className="field is-horizontal">
-                <ListParent className={classNames("field-label", "is-inline-flex")}>
-                  {t("plugins.modal.newVersion")}:
-                </ListParent>
-                <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.newVersion}</ListChild>
-              </div>
-            )}
-            {this.renderDependencies()}
-            {this.renderOptionalDependencies()}
-          </div>
+          )}
+          {(pluginAction === PluginAction.UPDATE || pluginAction === PluginAction.UNINSTALL) && (
+            <div className="field is-horizontal">
+              <ListParent className={classNames("field-label", "is-inline-flex")}>
+                {t("plugins.modal.currentVersion")}:
+              </ListParent>
+              <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.version}</ListChild>
+            </div>
+          )}
+          {pluginAction === PluginAction.UPDATE && (
+            <div className="field is-horizontal">
+              <ListParent className={classNames("field-label", "is-inline-flex")}>
+                {t("plugins.modal.newVersion")}:
+              </ListParent>
+              <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.newVersion}</ListChild>
+            </div>
+          )}
+          {renderDependencies()}
+          {renderOptionalDependencies()}
         </div>
-        <div className="media">
-          <div className="media-content">{this.createRestartSectionContent()}</div>
-        </div>
-        {this.renderNotifications()}
-      </>
-    );
+      </div>
+      <div className="media">
+        <div className="media-content">{createRestartSectionContent()}</div>
+      </div>
+      {renderNotifications()}
+    </>
+  );
 
-    return (
-      <Modal
-        title={t(`plugins.modal.title.${pluginAction}`, {
-          name: plugin.displayName ? plugin.displayName : plugin.name
-        })}
-        closeFunction={() => onClose()}
-        body={body}
-        footer={this.footer()}
-        active={true}
-      />
-    );
-  }
-}
+  return (
+    <Modal
+      title={t(`plugins.modal.title.${pluginAction}`, {
+        name: plugin.displayName ? plugin.displayName : plugin.name
+      })}
+      closeFunction={onClose}
+      body={body}
+      footer={footer()}
+      active={true}
+    />
+  );
+};
 
-export default withTranslation("admin")(PluginModal);
+export default PluginModal;

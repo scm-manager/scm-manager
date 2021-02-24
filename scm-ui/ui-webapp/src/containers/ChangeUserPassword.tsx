@@ -33,7 +33,7 @@ import {
 } from "@scm-manager/ui-components";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
-import { changePassword } from "../modules/changePassword";
+import { changePassword } from "../utils/changePassword";
 
 type Props = WithTranslation & {
   me: Me;

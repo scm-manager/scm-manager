@@ -22,7 +22,13 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import { Embedded, HalRepresentationWithEmbedded, Links } from "./hal";
+
+type EmbeddedBranches = {
+  branches: Branch[];
+} & Embedded;
+
+export type BranchCollection = HalRepresentationWithEmbedded<EmbeddedBranches>;
 
 export type Branch = {
   name: string;
@@ -33,7 +39,10 @@ export type Branch = {
   _links: Links;
 };
 
-export type BranchRequest = {
+export type BranchCreation = {
   name: string;
   parent: string;
 };
+
+// @deprecated use BranchCreation instead
+export type BranchRequest = BranchCreation;

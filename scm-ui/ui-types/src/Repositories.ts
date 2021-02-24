@@ -22,22 +22,28 @@
  * SOFTWARE.
  */
 
-import { PagedCollection, Links } from "./hal";
+import { PagedCollection, Links, HalRepresentation } from "./hal";
 
-export type Repository = {
+export type NamespaceAndName = {
   namespace: string;
   name: string;
+};
+
+export type RepositoryBase = NamespaceAndName & {
   type: string;
   contact?: string;
   description?: string;
-  creationDate?: string;
-  lastModified?: string;
-  archived?: boolean;
-  exporting?: boolean;
-  _links: Links;
-};
+}
 
-export type RepositoryCreation = Repository & {
+export type Repository = HalRepresentation &
+  RepositoryBase & {
+    creationDate?: string;
+    lastModified?: string;
+    archived?: boolean;
+    exporting?: boolean;
+  };
+
+export type RepositoryCreation = RepositoryBase & {
   contextEntries: { [key: string]: any };
 };
 
@@ -52,11 +58,11 @@ export type Namespace = {
   _links: Links;
 };
 
-export type RepositoryCollection = PagedCollection & {
-  _embedded: {
-    repositories: Repository[] | string[];
-  };
+type RepositoryEmbedded = {
+  repositories: Repository[];
 };
+
+export type RepositoryCollection = PagedCollection<RepositoryEmbedded>;
 
 export type NamespaceCollection = {
   _embedded: {

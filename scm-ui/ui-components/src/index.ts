@@ -22,11 +22,10 @@
  * SOFTWARE.
  */
 
-// @create-index
-
 import * as validation from "./validation";
-import * as urls from "./urls";
 import * as repositories from "./repositories";
+
+import { urls } from "@scm-manager/ui-api";
 
 // not sure if it is required
 import {
@@ -41,7 +40,7 @@ import {
   DiffEventContext
 } from "./repos";
 
-export { validation, urls, repositories };
+export { validation, repositories };
 
 export { default as DateFromNow } from "./DateFromNow";
 export { default as DateShort } from "./DateShort";
@@ -63,8 +62,6 @@ export { default as Help } from "./Help";
 export { default as HelpIcon } from "./HelpIcon";
 export { default as Tag } from "./Tag";
 export { default as Tooltip } from "./Tooltip";
-// TODO do we need this? getPageFromMatch is already exported by urls
-export { getPageFromMatch } from "./urls";
 export { default as Autocomplete } from "./Autocomplete";
 export { default as GroupAutocomplete } from "./GroupAutocomplete";
 export { default as UserAutocomplete } from "./UserAutocomplete";
@@ -84,8 +81,6 @@ export { regExpPattern as changesetShortLinkRegex } from "./remarkChangesetShort
 
 export { default as comparators } from "./comparators";
 
-export { apiClient } from "./apiclient";
-export * from "./errors";
 export { isDevBuild, createAttributesForTesting } from "./devBuild";
 
 export * from "./avatar";
@@ -111,3 +106,23 @@ export {
   DiffEventHandler,
   DiffEventContext
 };
+
+// Re-export from ui-api
+export { apiClient } from "@scm-manager/ui-api";
+export {
+  Violation,
+  AdditionalMessage,
+  BackendErrorContent,
+  BackendError,
+  UnauthorizedError,
+  ForbiddenError,
+  NotFoundError,
+  ConflictError,
+  MissingLinkError,
+  createBackendError,
+  isBackendError,
+  TOKEN_EXPIRED_ERROR_CODE
+} from "@scm-manager/ui-api";
+
+export { urls };
+export const getPageFromMatch = urls.getPageFromMatch;

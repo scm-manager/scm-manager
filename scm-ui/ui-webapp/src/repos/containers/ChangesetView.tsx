@@ -21,95 +21,44 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { connect } from "react-redux";
-import { compose } from "redux";
-import { withRouter } from "react-router-dom";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { Changeset, Repository } from "@scm-manager/ui-types";
 import { ErrorPage, Loading } from "@scm-manager/ui-components";
-import {
-  fetchChangeset,
-  fetchChangesetIfNeeded,
-  getChangeset,
-  getFetchChangesetFailure,
-  isFetchChangesetPending
-} from "../modules/changesets";
 import ChangesetDetails from "../components/changesets/ChangesetDetails";
 import { FileControlFactory } from "@scm-manager/ui-components";
+import { useChangeset } from "@scm-manager/ui-api";
+import { useParams } from "react-router-dom";
 
-type Props = WithTranslation & {
-  id: string;
-  changeset: Changeset;
+type Props = {
   repository: Repository;
   fileControlFactoryFactory?: (changeset: Changeset) => FileControlFactory;
-  loading: boolean;
-  error: Error;
-  fetchChangesetIfNeeded: (repository: Repository, id: string) => void;
-  refetchChangeset: (repository: Repository, id: string) => void;
-  match: any;
 };
 
-class ChangesetView extends React.Component<Props> {
-  componentDidMount() {
-    const { fetchChangesetIfNeeded, repository, id } = this.props;
-    fetchChangesetIfNeeded(repository, id);
-  }
-
-  componentDidUpdate(prevProps: Props) {
-    const { fetchChangesetIfNeeded, repository, id } = this.props;
-    if (prevProps.id !== id) {
-      fetchChangesetIfNeeded(repository, id);
-    }
-  }
-
-  render() {
-    const { changeset, loading, error, t, repository, fileControlFactoryFactory, refetchChangeset } = this.props;
-
-    if (error) {
-      return <ErrorPage title={t("changesets.errorTitle")} subtitle={t("changesets.errorSubtitle")} error={error} />;
-    }
-
-    if (!changeset || loading) return <Loading />;
-
-    return (
-      <ChangesetDetails
-        changeset={changeset}
-        repository={repository}
-        fileControlFactory={fileControlFactoryFactory && fileControlFactoryFactory(changeset)}
-        refetchChangeset={() => refetchChangeset(repository, changeset.id)}
-      />
-    );
-  }
-}
-
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const repository = ownProps.repository;
-  const id = ownProps.match.params.id;
-  const changeset = getChangeset(state, repository, id);
-  const loading = isFetchChangesetPending(state, repository, id);
-  const error = getFetchChangesetFailure(state, repository, id);
-  return {
-    id,
-    changeset,
-    error,
-    loading
-  };
+type Params = {
+  id: string;
 };
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchChangesetIfNeeded: (repository: Repository, id: string) => {
-      dispatch(fetchChangesetIfNeeded(repository, id));
-    },
-    refetchChangeset: (repository: Repository, id: string) => {
-      dispatch(fetchChangeset(repository, id));
-    }
-  };
+const ChangesetView: FC<Props> = ({ repository, fileControlFactoryFactory }) => {
+  const { id } = useParams<Params>();
+  const { isLoading, error, data: changeset } = useChangeset(repository, id);
+  const [t] = useTranslation("repos");
+
+  if (error) {
+    return <ErrorPage title={t("changesets.errorTitle")} subtitle={t("changesets.errorSubtitle")} error={error} />;
+  }
+
+  if (!changeset || isLoading) {
+    return <Loading />;
+  }
+
+  return (
+    <ChangesetDetails
+      changeset={changeset}
+      repository={repository}
+      fileControlFactory={fileControlFactoryFactory && fileControlFactoryFactory(changeset)}
+    />
+  );
 };
 
-export default compose(
-  withRouter,
-  connect(mapStateToProps, mapDispatchToProps),
-  withTranslation("repos")
-)(ChangesetView);
+export default ChangesetView;

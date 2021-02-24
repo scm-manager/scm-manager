@@ -28,18 +28,17 @@ import Index from "./containers/Index";
 import { I18nextProvider } from "react-i18next";
 import i18n from "./i18n";
 
-import { Provider } from "react-redux";
-
-import createReduxStore from "./createReduxStore";
 import { BrowserRouter as Router } from "react-router-dom";
 
 import { urls } from "@scm-manager/ui-components";
 import { binder } from "@scm-manager/ui-extensions";
 import ChangesetShortLink from "./repos/components/changesets/ChangesetShortLink";
 
-binder.bind("changeset.description.tokens", ChangesetShortLink);
+import "./tokenExpired";
+import LegacyReduxProvider from "./LegacyReduxProvider";
+import ReduxAwareApiProvider from "./ReduxAwareApiProvider";
 
-const store = createReduxStore();
+binder.bind("changeset.description.tokens", ChangesetShortLink);
 
 const root = document.getElementById("root");
 if (!root) {
@@ -47,12 +46,14 @@ if (!root) {
 }
 
 ReactDOM.render(
-  <Provider store={store}>
-    <I18nextProvider i18n={i18n}>
-      <Router basename={urls.contextPath}>
-        <Index />
-      </Router>
-    </I18nextProvider>
-  </Provider>,
+  <LegacyReduxProvider>
+    <ReduxAwareApiProvider>
+      <I18nextProvider i18n={i18n}>
+        <Router basename={urls.contextPath}>
+          <Index />
+        </Router>
+      </I18nextProvider>
+    </ReduxAwareApiProvider>
+  </LegacyReduxProvider>,
   root
 );

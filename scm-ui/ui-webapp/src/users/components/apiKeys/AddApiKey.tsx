@@ -22,49 +22,41 @@
  * SOFTWARE.
  */
 
-import React, { FC, useEffect, useState } from "react";
-import { apiClient, ErrorNotification, InputField, Level, Loading, SubmitButton, Subtitle } from "@scm-manager/ui-components";
+import React, { FC, useState } from "react";
+import {
+  apiClient,
+  ErrorNotification,
+  InputField,
+  Level,
+  Loading,
+  SubmitButton,
+  Subtitle
+} from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { CONTENT_TYPE_API_KEY } from "./SetApiKeys";
-import { connect } from "react-redux";
-import {
-  fetchAvailablePermissionsIfNeeded,
-  getAvailableRepositoryRoles
-} from "../../../repos/permissions/modules/permissions";
-import { RepositoryRole } from "@scm-manager/ui-types";
-import { getRepositoryRolesLink, getRepositoryVerbsLink } from "../../../modules/indexResource";
 import RoleSelector from "../../../repos/permissions/components/RoleSelector";
 import ApiKeyCreatedModal from "./ApiKeyCreatedModal";
+import { useRepositoryRoles } from "@scm-manager/ui-api";
 
 type Props = {
   createLink: string;
   refresh: () => void;
-  repositoryRolesLink: string;
-  repositoryVerbsLink: string;
-  fetchAvailablePermissionsIfNeeded: (repositoryRolesLink: string, repositoryVerbsLink: string) => void;
-  availableRepositoryRoles?: RepositoryRole[];
 };
 
-const AddApiKey: FC<Props> = ({
-  createLink,
-  refresh,
-  fetchAvailablePermissionsIfNeeded,
-  repositoryRolesLink,
-  repositoryVerbsLink,
-  availableRepositoryRoles
-}) => {
+const AddApiKey: FC<Props> = ({ createLink, refresh }) => {
   const [t] = useTranslation("users");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<undefined | Error>();
+  const [isCurrentlyAddingKey, setCurrentlyAddingKey] = useState(false);
+  const [errorAddingKey, setErrorAddingKey] = useState<undefined | Error>();
   const [displayName, setDisplayName] = useState("");
   const [permissionRole, setPermissionRole] = useState("");
   const [addedKey, setAddedKey] = useState("");
-
-  useEffect(() => {
-    if (!availableRepositoryRoles) {
-      fetchAvailablePermissionsIfNeeded(repositoryRolesLink, repositoryVerbsLink);
-    }
-  }, [repositoryRolesLink, repositoryVerbsLink]);
+  const {
+    isLoading: isLoadingRepositoryRoles,
+    data: availableRepositoryRoles,
+    error: errorLoadingRepositoryRoles
+  } = useRepositoryRoles();
+  const loading = isCurrentlyAddingKey || isLoadingRepositoryRoles;
+  const error = errorAddingKey || errorLoadingRepositoryRoles;
 
   const isValid = () => {
     return !!displayName && !!permissionRole;
@@ -76,13 +68,13 @@ const AddApiKey: FC<Props> = ({
   };
 
   const addKey = () => {
-    setLoading(true);
+    setCurrentlyAddingKey(true);
     apiClient
       .post(createLink, { displayName: displayName, permissionRole: permissionRole }, CONTENT_TYPE_API_KEY)
       .then(response => response.text())
       .then(setAddedKey)
-      .then(() => setLoading(false))
-      .catch(setError);
+      .then(() => setCurrentlyAddingKey(false))
+      .catch(setErrorAddingKey);
   };
 
   if (error) {
@@ -93,7 +85,9 @@ const AddApiKey: FC<Props> = ({
     return <Loading />;
   }
 
-  const availableRoleNames = availableRepositoryRoles ? availableRepositoryRoles.map(r => r.name) : [];
+  const availableRoleNames = availableRepositoryRoles
+    ? availableRepositoryRoles._embedded.repositoryRoles.map(r => r.name)
+    : [];
 
   const closeModal = () => {
     resetForm();
@@ -124,24 +118,4 @@ const AddApiKey: FC<Props> = ({
   );
 };
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const availableRepositoryRoles = getAvailableRepositoryRoles(state);
-  const repositoryRolesLink = getRepositoryRolesLink(state);
-  const repositoryVerbsLink = getRepositoryVerbsLink(state);
-
-  return {
-    availableRepositoryRoles,
-    repositoryRolesLink,
-    repositoryVerbsLink
-  };
-};
-
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchAvailablePermissionsIfNeeded: (repositoryRolesLink: string, repositoryVerbsLink: string) => {
-      dispatch(fetchAvailablePermissionsIfNeeded(repositoryRolesLink, repositoryVerbsLink));
-    }
-  };
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(AddApiKey);
+export default AddApiKey;

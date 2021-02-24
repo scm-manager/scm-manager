@@ -22,23 +22,29 @@
  * SOFTWARE.
  */
 
-import React, { FC, useState } from "react";
-import { Link, Tag } from "@scm-manager/ui-types";
+import React, { FC, useEffect, useState } from "react";
+import { Link, Repository, Tag } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import TagRow from "./TagRow";
 import { apiClient, ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { useDeleteTag } from "@scm-manager/ui-api";
 
 type Props = {
+  repository: Repository;
   baseUrl: string;
   tags: Tag[];
-  fetchTags: () => void;
 };
 
-const TagTable: FC<Props> = ({ baseUrl, tags, fetchTags }) => {
+const TagTable: FC<Props> = ({ repository, baseUrl, tags }) => {
+  const { isLoading, error, remove, isDeleted } = useDeleteTag(repository);
   const [t] = useTranslation("repos");
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
-  const [error, setError] = useState<Error | undefined>();
   const [tagToBeDeleted, setTagToBeDeleted] = useState<Tag | undefined>();
+  useEffect(() => {
+    if (isDeleted) {
+      resetAndCloseDialog();
+    }
+  }, [isDeleted]);
 
   const onDelete = (tag: Tag) => {
     setTagToBeDeleted(tag);
@@ -46,57 +52,53 @@ const TagTable: FC<Props> = ({ baseUrl, tags, fetchTags }) => {
   };
 
   const abortDelete = () => {
+    resetAndCloseDialog();
+  };
+
+  const resetAndCloseDialog = () => {
     setTagToBeDeleted(undefined);
     setShowConfirmAlert(false);
   };
 
   const deleteTag = () => {
-    apiClient
-      .delete((tagToBeDeleted?._links.delete as Link).href)
-      .then(() => fetchTags())
-      .catch(setError);
-  };
-
-  const renderRow = () => {
-    let rowContent = null;
-    if (tags) {
-      rowContent = tags.map((tag, index) => {
-        return <TagRow key={index} baseUrl={baseUrl} tag={tag} onDelete={onDelete} />;
-      });
+    if (tagToBeDeleted) {
+      remove(tagToBeDeleted);
     }
-    return rowContent;
   };
-
-  const confirmAlert = (
-    <ConfirmAlert
-      title={t("tag.delete.confirmAlert.title")}
-      message={t("tag.delete.confirmAlert.message", { tag: tagToBeDeleted?.name })}
-      buttons={[
-        {
-          className: "is-outlined",
-          label: t("tag.delete.confirmAlert.submit"),
-          onClick: () => deleteTag()
-        },
-        {
-          label: t("tag.delete.confirmAlert.cancel"),
-          onClick: () => abortDelete()
-        }
-      ]}
-      close={() => abortDelete()}
-    />
-  );
 
   return (
     <>
-      {showConfirmAlert && confirmAlert}
-      {error && <ErrorNotification error={error} />}
+      {showConfirmAlert ? (
+        <ConfirmAlert
+          title={t("tag.delete.confirmAlert.title")}
+          message={t("tag.delete.confirmAlert.message", { tag: tagToBeDeleted?.name })}
+          buttons={[
+            {
+              className: "is-outlined",
+              label: t("tag.delete.confirmAlert.submit"),
+              isLoading,
+              onClick: () => deleteTag()
+            },
+            {
+              label: t("tag.delete.confirmAlert.cancel"),
+              onClick: () => abortDelete()
+            }
+          ]}
+          close={() => abortDelete()}
+        />
+      ) : null}
+      {error ? <ErrorNotification error={error} /> : null}
       <table className="card-table table is-hoverable is-fullwidth is-word-break">
         <thead>
           <tr>
             <th>{t("tags.table.tags")}</th>
           </tr>
         </thead>
-        <tbody>{renderRow()}</tbody>
+        <tbody>
+          {tags.map(tag => (
+            <TagRow key={tag.name} baseUrl={baseUrl} tag={tag} onDelete={onDelete} />
+          ))}
+        </tbody>
       </table>
     </>
   );

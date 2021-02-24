@@ -22,13 +22,9 @@
  * SOFTWARE.
  */
 
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { connect } from "react-redux";
-import { Redirect, Route, RouteComponentProps, Switch } from "react-router-dom";
-import { fetchNamespaceByName, getNamespace, isFetchNamespacePending } from "../../modules/repos";
-import { getNamespacesLink } from "../../../modules/indexResource";
-import { Namespace } from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import {
   CustomQueryFlexWrappedColumns,
   ErrorPage,
@@ -44,94 +40,63 @@ import Permissions from "../../permissions/containers/Permissions";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import PermissionsNavLink from "./PermissionsNavLink";
 import { urls } from "@scm-manager/ui-components";
+import { useNamespace } from "@scm-manager/ui-api";
 
-type Props = RouteComponentProps &
-  WithTranslation & {
-    loading: boolean;
-    namespaceName: string;
-    namespacesLink: string;
-    namespace: Namespace;
-    error: Error;
+type Params = {
+  namespaceName: string;
+};
 
-    // dispatch functions
-    fetchNamespace: (link: string, namespace: string) => void;
-  };
+const NamespaceRoot: FC = () => {
+  const match = useRouteMatch<Params>();
+  const { isLoading, error, data: namespace } = useNamespace(match.params.namespaceName);
+  const [t] = useTranslation("namespaces");
+  const url = urls.matchedUrlFromMatch(match);
 
-class NamespaceRoot extends React.Component<Props> {
-  componentDidMount() {
-    const { namespacesLink, namespaceName, fetchNamespace } = this.props;
-    fetchNamespace(namespacesLink, namespaceName);
-  }
-
-  render() {
-    const { loading, error, namespaceName, namespace, t } = this.props;
-    const url = urls.matchedUrl(this.props);
-
-    const extensionProps = {
-      namespace,
-      url
-    };
-
-    if (error) {
-      return (
-        <ErrorPage title={t("namespaceRoot.errorTitle")} subtitle={t("namespaceRoot.errorSubtitle")} error={error} />
-      );
-    }
-
-    if (!namespace || loading) {
-      return <Loading />;
-    }
-
+  if (error) {
     return (
-      <StateMenuContextProvider>
-        <Page title={namespaceName}>
-          <CustomQueryFlexWrappedColumns>
-            <PrimaryContentColumn>
-              <Switch>
-                <Redirect exact from={`${url}/settings`} to={`${url}/settings/permissions`} />
-                <Route
-                  path={`${url}/settings/permissions`}
-                  render={() => {
-                    return <Permissions namespace={namespaceName} />;
-                  }}
-                />
-              </Switch>
-            </PrimaryContentColumn>
-            <SecondaryNavigationColumn>
-              <SecondaryNavigation label={t("namespaceRoot.menu.navigationLabel")}>
-                <ExtensionPoint name="namespace.navigation.topLevel" props={extensionProps} renderAll={true} />
-                <ExtensionPoint name="namespace.route" props={extensionProps} renderAll={true} />
-                <SubNavigation
-                  to={`${url}/settings`}
-                  label={t("namespaceRoot.menu.settingsNavLink")}
-                  title={t("namespaceRoot.menu.settingsNavLink")}
-                >
-                  <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} namespace={namespace} />
-                  <ExtensionPoint name="namespace.setting" props={extensionProps} renderAll={true} />
-                </SubNavigation>
-              </SecondaryNavigation>
-            </SecondaryNavigationColumn>
-          </CustomQueryFlexWrappedColumns>
-        </Page>
-      </StateMenuContextProvider>
+      <ErrorPage title={t("namespaceRoot.errorTitle")} subtitle={t("namespaceRoot.errorSubtitle")} error={error} />
     );
   }
-}
 
-const mapStateToProps = (state: any, ownProps: Props) => {
-  const { namespaceName } = ownProps.match.params;
-  const namespacesLink = getNamespacesLink(state);
-  const namespace = getNamespace(state, namespaceName);
-  const loading = isFetchNamespacePending(state);
-  return { namespaceName, namespacesLink, loading, namespace };
-};
+  if (!namespace || isLoading) {
+    return <Loading />;
+  }
 
-const mapDispatchToProps = (dispatch: any) => {
-  return {
-    fetchNamespace: (link: string, namespaceName: string) => {
-      dispatch(fetchNamespaceByName(link, namespaceName));
-    }
+  const extensionProps = {
+    namespace,
+    url
   };
+
+  return (
+    <StateMenuContextProvider>
+      <Page title={namespace.namespace}>
+        <CustomQueryFlexWrappedColumns>
+          <PrimaryContentColumn>
+            <Switch>
+              <Redirect exact from={`${url}/settings`} to={`${url}/settings/permissions`} />
+              <Route path={`${url}/settings/permissions`}>
+                <Permissions namespaceOrRepository={namespace} />
+              </Route>
+            </Switch>
+          </PrimaryContentColumn>
+          <SecondaryNavigationColumn>
+            <SecondaryNavigation label={t("namespaceRoot.menu.navigationLabel")}>
+              <ExtensionPoint name="namespace.navigation.topLevel" props={extensionProps} renderAll={true} />
+              <ExtensionPoint name="namespace.route" props={extensionProps} renderAll={true} />
+              <SubNavigation
+                to={`${url}/settings`}
+                label={t("namespaceRoot.menu.settingsNavLink")}
+                title={t("namespaceRoot.menu.settingsNavLink")}
+              >
+                <PermissionsNavLink permissionUrl={`${url}/settings/permissions`} namespace={namespace} />
+                <ExtensionPoint name="namespace.setting" props={extensionProps} renderAll={true} />
+              </SubNavigation>
+            </SecondaryNavigation>
+          </SecondaryNavigationColumn>
+        </CustomQueryFlexWrappedColumns>
+      </Page>
+    </StateMenuContextProvider>
+  );
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(withTranslation("namespaces")(NamespaceRoot));
+export default NamespaceRoot;

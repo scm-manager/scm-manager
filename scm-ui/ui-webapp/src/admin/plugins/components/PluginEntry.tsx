@@ -21,29 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import { Plugin } from "@scm-manager/ui-types";
+import { Link, Plugin } from "@scm-manager/ui-types";
 import { CardColumn, Icon } from "@scm-manager/ui-components";
 import PluginAvatar from "./PluginAvatar";
-import PluginModal from "./PluginModal";
+import { PluginAction, PluginModalContent } from "../containers/PluginsOverview";
 
-export const PluginAction = {
-  INSTALL: "install",
-  UPDATE: "update",
-  UNINSTALL: "uninstall"
-};
-
-type Props = WithTranslation & {
+type Props = {
   plugin: Plugin;
-  refresh: () => void;
-};
-
-type State = {
-  showInstallModal: boolean;
-  showUpdateModal: boolean;
-  showUninstallModal: boolean;
+  openModal: (content: PluginModalContent) => void;
 };
 
 const ActionbarWrapper = styled.div`
@@ -65,136 +53,48 @@ const IconWrapper = styled.span`
   }
 `;
 
-class PluginEntry extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
+const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
+  const [t] = useTranslation("admin");
+  const isInstallable = plugin._links.install && (plugin._links.install as Link).href;
+  const isUpdatable = plugin._links.update && (plugin._links.update as Link).href;
+  const isUninstallable = plugin._links.uninstall && (plugin._links.uninstall as Link).href;
 
-    this.state = {
-      showInstallModal: false,
-      showUpdateModal: false,
-      showUninstallModal: false
-    };
-  }
+  const pendingSpinner = () => (
+    <Icon className="fa-spin fa-lg" name="spinner" color={plugin.markedForUninstall ? "danger" : "info"} />
+  );
+  const actionBar = () => (
+    <ActionbarWrapper className="is-flex">
+      {isInstallable && (
+        <IconWrapper className="level-item" onClick={() => openModal({ plugin, action: PluginAction.INSTALL })}>
+          <Icon title={t("plugins.modal.install")} name="download" color="info" />
+        </IconWrapper>
+      )}
+      {isUninstallable && (
+        <IconWrapper className="level-item" onClick={() => openModal({ plugin, action: PluginAction.UNINSTALL })}>
+          <Icon title={t("plugins.modal.uninstall")} name="trash" color="info" />
+        </IconWrapper>
+      )}
+      {isUpdatable && (
+        <IconWrapper className="level-item" onClick={() => openModal({ plugin, action: PluginAction.UPDATE })}>
+          <Icon title={t("plugins.modal.update")} name="sync-alt" color="info" />
+        </IconWrapper>
+      )}
+    </ActionbarWrapper>
+  );
 
-  createAvatar = (plugin: Plugin) => {
-    return <PluginAvatar plugin={plugin} />;
-  };
+  return (
+    <>
+      <CardColumn
+        action={isInstallable ? () => openModal({ plugin, action: PluginAction.INSTALL }) : undefined}
+        avatar={<PluginAvatar plugin={plugin} />}
+        title={plugin.displayName ? <strong>{plugin.displayName}</strong> : <strong>{plugin.name}</strong>}
+        description={plugin.description}
+        contentRight={plugin.pending || plugin.markedForUninstall ? pendingSpinner() : actionBar()}
+        footerLeft={<small>{plugin.version}</small>}
+        footerRight={<small className="level-item is-block shorten-text">{plugin.author}</small>}
+      />
+    </>
+  );
+};
 
-  toggleModal = (showModal: string) => {
-    const oldValue = this.state[showModal];
-    this.setState({
-      [showModal]: !oldValue
-    });
-  };
-
-  createFooterLeft = (plugin: Plugin) => {
-      return <small>{plugin.version}</small>;
-  };
-
-  createFooterRight = (plugin: Plugin) => {
-    return <small className="level-item is-block shorten-text">{plugin.author}</small>;
-  };
-
-  isInstallable = () => {
-    const { plugin } = this.props;
-    return plugin._links && plugin._links.install && plugin._links.install.href;
-  };
-
-  isUpdatable = () => {
-    const { plugin } = this.props;
-    return plugin._links && plugin._links.update && plugin._links.update.href;
-  };
-
-  isUninstallable = () => {
-    const { plugin } = this.props;
-    return plugin._links && plugin._links.uninstall && plugin._links.uninstall.href;
-  };
-
-  createActionbar = () => {
-    const { t } = this.props;
-    return (
-      <ActionbarWrapper className="is-flex">
-        {this.isInstallable() && (
-          <IconWrapper className="level-item" onClick={() => this.toggleModal("showInstallModal")}>
-            <Icon title={t("plugins.modal.install")} name="download" color="info" />
-          </IconWrapper>
-        )}
-        {this.isUninstallable() && (
-          <IconWrapper className="level-item" onClick={() => this.toggleModal("showUninstallModal")}>
-            <Icon title={t("plugins.modal.uninstall")} name="trash" color="info" />
-          </IconWrapper>
-        )}
-        {this.isUpdatable() && (
-          <IconWrapper className="level-item" onClick={() => this.toggleModal("showUpdateModal")}>
-            <Icon title={t("plugins.modal.update")} name="sync-alt" color="info" />
-          </IconWrapper>
-        )}
-      </ActionbarWrapper>
-    );
-  };
-
-  renderModal = () => {
-    const { plugin, refresh } = this.props;
-    if (this.state.showInstallModal && this.isInstallable()) {
-      return (
-        <PluginModal
-          plugin={plugin}
-          pluginAction={PluginAction.INSTALL}
-          refresh={refresh}
-          onClose={() => this.toggleModal("showInstallModal")}
-        />
-      );
-    } else if (this.state.showUpdateModal && this.isUpdatable()) {
-      return (
-        <PluginModal
-          plugin={plugin}
-          pluginAction={PluginAction.UPDATE}
-          refresh={refresh}
-          onClose={() => this.toggleModal("showUpdateModal")}
-        />
-      );
-    } else if (this.state.showUninstallModal && this.isUninstallable()) {
-      return (
-        <PluginModal
-          plugin={plugin}
-          pluginAction={PluginAction.UNINSTALL}
-          refresh={refresh}
-          onClose={() => this.toggleModal("showUninstallModal")}
-        />
-      );
-    } else {
-      return null;
-    }
-  };
-
-  createPendingSpinner = () => {
-    const { plugin } = this.props;
-    return <Icon className="fa-spin fa-lg" name="spinner" color={plugin.markedForUninstall ? "danger" : "info"} />;
-  };
-
-  render() {
-    const { plugin } = this.props;
-    const avatar = this.createAvatar(plugin);
-    const actionbar = this.createActionbar();
-    const footerLeft = this.createFooterLeft(plugin);
-    const footerRight = this.createFooterRight(plugin);
-    const modal = this.renderModal();
-
-    return (
-      <>
-        <CardColumn
-          action={this.isInstallable() ? () => this.toggleModal("showInstallModal") : null}
-          avatar={avatar}
-          title={plugin.displayName ? <strong>{plugin.displayName}</strong> : <strong>{plugin.name}</strong>}
-          description={plugin.description}
-          contentRight={plugin.pending || plugin.markedForUninstall ? this.createPendingSpinner() : actionbar}
-          footerLeft={footerLeft}
-          footerRight={footerRight}
-        />
-        {modal}
-      </>
-    );
-  }
-}
-
-export default withTranslation("admin")(PluginEntry);
+export default PluginEntry;

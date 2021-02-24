@@ -22,15 +22,14 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
-import { BackendError, ForbiddenError, UnauthorizedError } from "./errors";
+import { useTranslation } from "react-i18next";
+import { BackendError, ForbiddenError, UnauthorizedError, urls } from "@scm-manager/ui-api";
 import Notification from "./Notification";
 import BackendErrorNotification from "./BackendErrorNotification";
 import { useLocation } from "react-router-dom";
-import { withContextPath } from "./urls";
 
-type Props = WithTranslation & {
-  error?: Error;
+type Props = {
+  error?: Error | null;
 };
 
 const LoginLink: FC = () => {
@@ -38,37 +37,35 @@ const LoginLink: FC = () => {
   const location = useLocation();
   const from = encodeURIComponent(location.hash ? location.pathname + location.hash : location.pathname);
 
-  return <a href={withContextPath(`/login?from=${from}`)}>{t("errorNotification.loginLink")}</a>;
+  return <a href={urls.withContextPath(`/login?from=${from}`)}>{t("errorNotification.loginLink")}</a>;
 };
 
-class ErrorNotification extends React.Component<Props> {
-  render() {
-    const { t, error } = this.props;
-    if (error) {
-      if (error instanceof BackendError) {
-        return <BackendErrorNotification error={error} />;
-      } else if (error instanceof UnauthorizedError) {
-        return (
-          <Notification type="danger">
-            <strong>{t("errorNotification.prefix")}:</strong> {t("errorNotification.timeout")} <LoginLink />
-          </Notification>
-        );
-      } else if (error instanceof ForbiddenError) {
-        return (
-          <Notification type="danger">
-            <strong>{t("errorNotification.prefix")}:</strong> {t("errorNotification.forbidden")}
-          </Notification>
-        );
-      } else {
-        return (
-          <Notification type="danger">
-            <strong>{t("errorNotification.prefix")}:</strong> {error.message}
-          </Notification>
-        );
-      }
+const ErrorNotification: FC<Props> = ({ error }) => {
+  const [t] = useTranslation("commons");
+  if (error) {
+    if (error instanceof BackendError) {
+      return <BackendErrorNotification error={error} />;
+    } else if (error instanceof UnauthorizedError) {
+      return (
+        <Notification type="danger">
+          <strong>{t("errorNotification.prefix")}:</strong> {t("errorNotification.timeout")} <LoginLink />
+        </Notification>
+      );
+    } else if (error instanceof ForbiddenError) {
+      return (
+        <Notification type="danger">
+          <strong>{t("errorNotification.prefix")}:</strong> {t("errorNotification.forbidden")}
+        </Notification>
+      );
+    } else {
+      return (
+        <Notification type="danger">
+          <strong>{t("errorNotification.prefix")}:</strong> {error.message}
+        </Notification>
+      );
     }
-    return null;
   }
-}
+  return null;
+};
 
-export default withTranslation("commons")(ErrorNotification);
+export default ErrorNotification;
