@@ -250,7 +250,7 @@ public class RepositoryExportResource {
     Repository repository = getVerifiedRepository(namespace, name, type);
     RepositoryPermissions.export(repository).check();
     checkRepositoryIsAlreadyExporting(repository);
-    return exportAsync(repository, request, () -> {
+    return exportAsync(repository, request.isAsync(), () -> {
       Response response = exportRepository(repository, request.getPassword(), compressed, request.isAsync());
       exportService.setExportFinished(repository);
       return response;
@@ -277,6 +277,10 @@ public class RepositoryExportResource {
     description = "Repository export was successful"
   )
   @ApiResponse(
+    responseCode = "204",
+    description = "Repository export was started successfully"
+  )
+  @ApiResponse(
     responseCode = "401",
     description = "not authenticated / invalid credentials"
   )
@@ -300,7 +304,7 @@ public class RepositoryExportResource {
     Repository repository = getVerifiedRepository(namespace, name);
     RepositoryPermissions.export(repository).check();
     checkRepositoryIsAlreadyExporting(repository);
-    return exportAsync(repository, request, () -> {
+    return exportAsync(repository, request.isAsync(), () -> {
       Response response = exportFullRepository(repository, request.getPassword(), request.isAsync());
       exportService.setExportFinished(repository);
       return response;
@@ -398,9 +402,8 @@ public class RepositoryExportResource {
     return informationToDtoMapper.map(exportService.getExportInformation(repository), repository);
   }
 
-  private Response exportAsync(Repository repository, ExportDto exportDto, Callable<Response> call) throws
-    Exception {
-    if (exportDto.isAsync()) {
+  private Response exportAsync(Repository repository, boolean async, Callable<Response> call) throws Exception {
+    if (async) {
       repositoryExportHandler.submit(call);
       return Response.status(202).header(
         "SCM-Export-Download",
@@ -444,9 +447,7 @@ public class RepositoryExportResource {
       OutputStream blobOutputStream = exportService.store(repository, true, true, !Strings.isNullOrEmpty(password));
       fullScmRepositoryExporter.export(repository, blobOutputStream, password);
       exportService.setExportFinished(repository);
-      //TODO Cleanup
-      // Return value will be ignored for async export
-      return null;
+      return Response.status(204).build();
     } else {
       StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os, password);
 
@@ -465,34 +466,34 @@ public class RepositoryExportResource {
   }
 
   private Response exportRepository(Repository repository, String password, boolean compressed, boolean async) {
-    StreamingOutput output;
-    String fileExtension;
     try (final RepositoryService service = serviceFactory.create(repository)) {
       BundleCommandBuilder bundleCommand = service.getBundleCommand();
-      fileExtension = resolveFileExtension(bundleCommand, compressed, !Strings.isNullOrEmpty(password));
-      output = os -> {
-        try {
-          OutputStream cos;
-          if (async) {
-            OutputStream blobOutputStream = exportService.store(repository, false, compressed, !Strings.isNullOrEmpty(password));
-            cos = repositoryImportExportEncryption.optionallyEncrypt(blobOutputStream, password);
-          } else {
-            cos = repositoryImportExportEncryption.optionallyEncrypt(os, password);
-          }
-          if (compressed) {
-            GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(cos);
-            bundleCommand.bundle(gzipCompressorOutputStream);
-            gzipCompressorOutputStream.finish();
-          } else {
-            bundleCommand.bundle(os);
-          }
-        } catch (IOException e) {
-          throw new ExportFailedException(entity(repository).build(), "repository export failed", e);
-        }
-      };
+      String fileExtension = resolveFileExtension(bundleCommand, compressed, !Strings.isNullOrEmpty(password));
+      if (async) {
+        OutputStream blobOutputStream = exportService.store(repository, false, compressed, !Strings.isNullOrEmpty(password));
+        OutputStream os = repositoryImportExportEncryption.optionallyEncrypt(blobOutputStream, password);
+        bundleRepository(os, compressed, bundleCommand);
+        return Response.status(204).build();
+      } else {
+        StreamingOutput output = os -> {
+          os = repositoryImportExportEncryption.optionallyEncrypt(os, password);
+          bundleRepository(os, compressed, bundleCommand);
+        };
+        return createResponse(repository, fileExtension, compressed, output);
+      }
+    } catch (IOException e) {
+      throw new ExportFailedException(entity(repository).build(), "repository export failed", e);
     }
+  }
 
-    return createResponse(repository, fileExtension, compressed, output);
+  private void bundleRepository(OutputStream os, boolean compressed, BundleCommandBuilder bundleCommand) throws IOException {
+    if (compressed) {
+      GzipCompressorOutputStream gzipCompressorOutputStream = new GzipCompressorOutputStream(os);
+      bundleCommand.bundle(gzipCompressorOutputStream);
+      gzipCompressorOutputStream.finish();
+    } else {
+      bundleCommand.bundle(os);
+    }
   }
 
   private Response createResponse(Repository repository, String fileExtension, boolean compressed, StreamingOutput

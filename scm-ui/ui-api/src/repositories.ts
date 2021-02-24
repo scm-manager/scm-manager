@@ -288,7 +288,10 @@ export const useExportRepository = () => {
                   resolve(info);
                 }
               })
-              .catch(reject);
+              .catch(error => {
+                clearInterval(id);
+                reject(error);
+              });
           }, 1000);
           setIntervalId(id);
         });
