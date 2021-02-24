@@ -262,7 +262,7 @@
   },
   "export": {
     "subtitle": "Repository Export",
-    "notification": "Attention: During the export the repository cannot be modified.",
+    "notification": "Attention: During the export the repository cannot be modified. Generated repository exports are automatically deleted after 10 days.",
     "compressed": {
       "label": "Compress",
       "helpText": "Compress the export dump size to reduce the download size."

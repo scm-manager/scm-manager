@@ -262,7 +262,7 @@
   },
   "export": {
     "subtitle": "Repository exportieren",
-    "notification": "Achtung: Während eines laufenden Exports kann auf das Repository nur lesend zugegriffen werden.",
+    "notification": "Achtung: Während eines laufenden Exports kann auf das Repository nur lesend zugegriffen werden. Erzeugte Repository Exporte werden nach 10 Tagen automatisch gelöscht.",
     "compressed": {
       "label": "Komprimieren",
       "helpText": "Export Datei vor dem Download komprimieren. Reduziert die Downloadgröße."
