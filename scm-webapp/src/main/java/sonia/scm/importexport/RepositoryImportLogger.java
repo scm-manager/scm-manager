@@ -54,6 +54,9 @@ class RepositoryImportLogger {
     addLogEntry(new RepositoryImportLog.Entry("import started"));
   }
 
+  public String getLogId() {
+    return logId;
+  }
 
   public void finished() {
     log.setSuccess(true);

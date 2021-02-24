@@ -338,6 +338,10 @@
     "8YR7aawFW1": {
       "displayName": "Wrong current password",
       "description": "The current password is wrong. Please try again."
+    },
+    "CISPvega31": {
+      "displayName": "Illegal repository type for import",
+      "description": "The import is not possible for the given repository type."
     }
   },
   "namespaceStrategies": {

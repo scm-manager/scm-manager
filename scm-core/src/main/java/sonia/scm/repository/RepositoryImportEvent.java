@@ -39,10 +39,12 @@ import sonia.scm.event.Event;
 @EqualsAndHashCode(callSuper = true)
 public class RepositoryImportEvent extends RepositoryEvent {
 
+  private final String logId;
   private final boolean failed;
 
-  public RepositoryImportEvent(HandlerEventType eventType, Repository repository, boolean failed) {
+  public RepositoryImportEvent(HandlerEventType eventType, Repository repository, String logId, boolean failed) {
     super(eventType, repository);
+    this.logId = logId;
     this.failed = failed;
   }
 }

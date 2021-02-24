@@ -24,7 +24,6 @@
 
 package sonia.scm.importexport;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
 import lombok.Getter;
 import lombok.Setter;
@@ -41,6 +40,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -50,6 +50,7 @@ import java.io.IOException;
 import java.util.function.Consumer;
 
 import static java.util.Collections.singletonList;
+import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 import static sonia.scm.importexport.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.importexport.RepositoryTypeSupportChecker.type;
 
@@ -79,24 +80,26 @@ public class FromUrlImporter {
 
     repository.setPermissions(singletonList(new RepositoryPermission(SecurityUtils.getSubject().getPrincipal().toString(), "OWNER", false)));
 
+    RepositoryImportLogger logger = loggerFactory.createLogger();
+    logger.start(RepositoryImportLog.ImportType.URL, repository);
+    Repository createdRepository;
     try {
-      repository = manager.create(
+      logger.step("creating repository");
+      createdRepository = manager.create(
         repository,
-        pullChangesFromRemoteUrl(parameters)
+        pullChangesFromRemoteUrl(parameters, logger)
       );
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, false));
     } catch (Exception e) {
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, true));
-      throw e;
+      logger.failed(e);
+      eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, logger.getLogId(), true));
+      throw new ImportFailedException(noContext(), "Could not import repository from url " + parameters.getImportUrl(), e);
     }
-    return repository;
+    eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, createdRepository, logger.getLogId(), false));
+    return createdRepository;
   }
 
-  @VisibleForTesting
-  Consumer<Repository> pullChangesFromRemoteUrl(RepositoryImportParameters parameters) {
+  private Consumer<Repository> pullChangesFromRemoteUrl(RepositoryImportParameters parameters, RepositoryImportLogger logger) {
     return repository -> {
-      RepositoryImportLogger logger = loggerFactory.createLogger();
-      logger.start(RepositoryImportLog.ImportType.URL, repository);
       try (RepositoryService service = serviceFactory.create(repository)) {
         PullCommandBuilder pullCommand = service.getPullCommand();
         if (!Strings.isNullOrEmpty(parameters.getUsername()) && !Strings.isNullOrEmpty(parameters.getPassword())) {
@@ -110,11 +113,7 @@ public class FromUrlImporter {
         pullCommand.pull(parameters.getImportUrl());
         logger.finished();
       } catch (IOException e) {
-        logger.failed(e);
-        throw new InternalRepositoryException(repository, "Failed to import from remote url", e);
-      } catch (RuntimeException e) {
-        logger.failed(e);
-        throw e;
+        throw new InternalRepositoryException(repository, "Failed to import from remote url: " + e.getMessage(), e);
       }
     };
   }

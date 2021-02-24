@@ -31,8 +31,10 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
+import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.ImportFailedException;
@@ -43,9 +45,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static java.util.Arrays.stream;
+import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 import static sonia.scm.importexport.RepositoryImportLog.ImportType.FULL;
 import static sonia.scm.util.Archives.createTarInputStream;
-import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 
 public class FullScmRepositoryImporter {
 
@@ -65,13 +67,12 @@ public class FullScmRepositoryImporter {
                                    RepositoryManager repositoryManager,
                                    RepositoryImportExportEncryption repositoryImportExportEncryption,
                                    RepositoryImportLoggerFactory loggerFactory,
-                                   ScmEventBus eventBus
-  ) {
+                                   ScmEventBus eventBus) {
     this.repositoryManager = repositoryManager;
     this.loggerFactory = loggerFactory;
     this.repositoryImportExportEncryption = repositoryImportExportEncryption;
-    importSteps = new ImportStep[]{environmentCheckStep, metadataImportStep, storeImportStep, repositoryImportStep};
     this.eventBus = eventBus;
+    importSteps = new ImportStep[]{environmentCheckStep, metadataImportStep, storeImportStep, repositoryImportStep};
   }
 
   public Repository importFromStream(Repository repository, InputStream inputStream, String password) {
@@ -139,6 +140,7 @@ public class FullScmRepositoryImporter {
       } else {
         // Delete the repository if any error occurs during the import
         repositoryManager.delete(state.getRepository());
+        eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, logger.getLogId(), true));
       }
 
     }

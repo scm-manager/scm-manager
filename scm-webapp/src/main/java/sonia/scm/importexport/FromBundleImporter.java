@@ -24,7 +24,6 @@
 
 package sonia.scm.importexport;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.io.Files;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
@@ -90,13 +89,13 @@ public class FromBundleImporter {
       logger.start(DUMP, repository);
       repository = manager.create(repository, unbundleImport(inputStream, compressed, logger));
       logger.finished();
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, false));
     } catch (Exception e) {
       logger.failed(e);
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.MODIFY, repository, true));
+      eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, logger.getLogId(), true));
       throw e;
     }
 
+    eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, logger.getLogId(), false));
     return repository;
   }
 

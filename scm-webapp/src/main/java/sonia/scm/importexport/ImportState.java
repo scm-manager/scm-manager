@@ -102,6 +102,7 @@ class ImportState {
   public void addPendingEvent(Object event) {
     this.pendingEvents.add(event);
   }
+
   RepositoryImportLogger getLogger() {
     return logger;
   }

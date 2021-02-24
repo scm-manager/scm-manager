@@ -24,6 +24,9 @@
 
 package sonia.scm.importexport;
 
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,8 +35,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryHandler;
+import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryTestData;
+import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
@@ -42,14 +48,18 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import java.io.IOException;
 import java.util.function.Consumer;
 
+import static java.util.Collections.singleton;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.RETURNS_SELF;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static sonia.scm.repository.api.Command.PULL;
 
 @ExtendWith(MockitoExtension.class)
 class FromUrlImporterTest {
@@ -66,14 +76,47 @@ class FromUrlImporterTest {
   private RepositoryImportLoggerFactory loggerFactory;
   @Mock
   private RepositoryImportLogger logger;
+  @Mock
+  private Subject subject;
 
   @InjectMocks
   private FromUrlImporter importer;
+
+  private final Repository repository = RepositoryTestData.createHeartOfGold("git");
 
   @BeforeEach
   void setUpMocks() {
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(loggerFactory.createLogger()).thenReturn(logger);
+    when(manager.create(any(), any())).thenAnswer(
+      invocation -> {
+        Repository repository = invocation.getArgument(0, Repository.class);
+        Repository createdRepository = repository.clone();
+        createdRepository.setNamespace("created");
+        invocation.getArgument(1, Consumer.class).accept(createdRepository);
+        return createdRepository;
+      }
+    );
+  }
+
+  @BeforeEach
+  void setUpRepositoryType() {
+    RepositoryHandler repositoryHandler = mock(RepositoryHandler.class);
+    when(manager.getHandler(repository.getType())).thenReturn(repositoryHandler);
+    RepositoryType repositoryType = mock(RepositoryType.class);
+    when(repositoryHandler.getType()).thenReturn(repositoryType);
+    when(repositoryType.getSupportedCommands()).thenReturn(singleton(PULL));
+  }
+
+  @BeforeEach
+  void mockSubject() {
+    ThreadContext.bind(subject);
+    when(subject.getPrincipal()).thenReturn("trillian");
+  }
+
+  @AfterEach
+  void cleanupSubject() {
+    ThreadContext.unbindSubject();
   }
 
   @Test
@@ -81,14 +124,23 @@ class FromUrlImporterTest {
     PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
     when(service.getPullCommand()).thenReturn(pullCommandBuilder);
 
-    Repository repository = RepositoryTestData.createHeartOfGold();
     FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
     parameters.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
 
-    Consumer<Repository> repositoryConsumer = importer.pullChangesFromRemoteUrl(parameters);
-    repositoryConsumer.accept(repository);
+    Repository createdRepository = importer.importFromUrl(parameters, repository);
 
+    assertThat(createdRepository.getNamespace()).isEqualTo("created");
     verify(pullCommandBuilder).pull("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+    verify(logger).finished();
+    verify(eventBus).post(argThat(
+      event -> {
+        assertThat(event).isInstanceOf(RepositoryImportEvent.class);
+        RepositoryImportEvent repositoryImportEvent = (RepositoryImportEvent) event;
+        assertThat(repositoryImportEvent.getItem().getNamespace()).isEqualTo("created");
+        assertThat(repositoryImportEvent.isFailed()).isFalse();
+        return true;
+      }
+    ));
   }
 
   @Test
@@ -96,14 +148,12 @@ class FromUrlImporterTest {
     PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
     when(service.getPullCommand()).thenReturn(pullCommandBuilder);
 
-    Repository repository = RepositoryTestData.createHeartOfGold();
     FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
     parameters.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
     parameters.setUsername("trillian");
     parameters.setPassword("secret");
 
-    Consumer<Repository> repositoryConsumer = importer.pullChangesFromRemoteUrl(parameters);
-    repositoryConsumer.accept(repository);
+    importer.importFromUrl(parameters, repository);
 
     verify(pullCommandBuilder).withUsername("trillian");
     verify(pullCommandBuilder).withPassword("secret");
@@ -113,13 +163,23 @@ class FromUrlImporterTest {
   void shouldThrowImportFailedEvent() throws IOException {
     PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
     when(service.getPullCommand()).thenReturn(pullCommandBuilder);
-    doThrow(ImportFailedException.class).when(pullCommandBuilder).pull(anyString());
+    doThrow(TestException.class).when(pullCommandBuilder).pull(anyString());
 
-    Repository repository = RepositoryTestData.createHeartOfGold();
     FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
     parameters.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
 
-    Consumer<Repository> repositoryConsumer = importer.pullChangesFromRemoteUrl(parameters);
-    assertThrows(ImportFailedException.class, () -> repositoryConsumer.accept(repository));
+    assertThrows(ImportFailedException.class, () -> importer.importFromUrl(parameters, repository));
+    verify(logger).failed(argThat(e -> e instanceof TestException));
+    verify(eventBus).post(argThat(
+      event -> {
+        assertThat(event).isInstanceOf(RepositoryImportEvent.class);
+        RepositoryImportEvent repositoryImportEvent = (RepositoryImportEvent) event;
+        assertThat(repositoryImportEvent.getItem()).isEqualTo(repository);
+        assertThat(repositoryImportEvent.isFailed()).isTrue();
+        return true;
+      }
+    ));
   }
+
+  private static class TestException extends RuntimeException {}
 }

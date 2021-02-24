@@ -28,6 +28,7 @@ import com.google.common.io.Resources;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
+import org.assertj.core.api.InstanceOfAssertFactories;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,7 @@ import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.ImportRepositoryHookEvent;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHookEvent;
+import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryTestData;
@@ -104,6 +106,8 @@ class FullScmRepositoryImporterTest {
   private RepositoryImportLoggerFactory loggerFactory;
   @Mock
   private Subject subject;
+  @Mock
+  private ScmEventBus eventBus;
 
   @InjectMocks
   private EnvironmentCheckStep environmentCheckStep;
@@ -113,9 +117,6 @@ class FullScmRepositoryImporterTest {
   private StoreImportStep storeImportStep;
   @InjectMocks
   private RepositoryImportStep repositoryImportStep;
-
-  @Mock
-  private ScmEventBus eventBus;
 
   @Mock
   private RepositoryHookEvent event;
@@ -135,8 +136,7 @@ class FullScmRepositoryImporterTest {
       repositoryManager,
       repositoryImportExportEncryption,
       loggerFactory,
-      eventBus
-    );
+      eventBus);
   }
 
   @BeforeEach
@@ -176,6 +176,16 @@ class FullScmRepositoryImporterTest {
       IncompatibleEnvironmentForImportException.class,
       () -> fullImporter.importFromStream(REPOSITORY, importStream, "")
     );
+
+    verify(eventBus).post(argThat(
+      event -> {
+        assertThat(event).isInstanceOf(RepositoryImportEvent.class);
+        RepositoryImportEvent repositoryImportEvent = (RepositoryImportEvent) event;
+        assertThat(repositoryImportEvent.getItem()).isEqualTo(REPOSITORY);
+        assertThat(repositoryImportEvent.isFailed()).isTrue();
+        return true;
+      }
+    ));
   }
 
   @Test
@@ -224,6 +234,23 @@ class FullScmRepositoryImporterTest {
 
       boolean workDirExists = Files.exists(temp);
       assertThat(workDirExists).isFalse();
+    }
+
+    @Test
+    void shouldSendImportedEventForImportedRepository() throws IOException {
+      InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
+
+      fullImporter.importFromStream(REPOSITORY, stream, null);
+
+      verify(eventBus).post(argThat(
+        event -> {
+          assertThat(event).isInstanceOf(RepositoryImportEvent.class);
+          RepositoryImportEvent repositoryImportEvent = (RepositoryImportEvent) event;
+          assertThat(repositoryImportEvent.getItem()).isEqualTo(REPOSITORY);
+          assertThat(repositoryImportEvent.isFailed()).isFalse();
+          return true;
+        }
+      ));
     }
 
     @Test
