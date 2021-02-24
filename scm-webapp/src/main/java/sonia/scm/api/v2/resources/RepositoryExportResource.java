@@ -41,6 +41,7 @@ import sonia.scm.NotFoundException;
 import sonia.scm.Type;
 import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.FullScmRepositoryExporter;
+import sonia.scm.importexport.RepositoryExportInformation;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -92,18 +93,23 @@ public class RepositoryExportResource {
   private final RepositoryImportExportEncryption repositoryImportExportEncryption;
   private final ExecutorService repositoryExportHandler;
   private final ExportService exportService;
+  private final RepositoryExportInformationToDtoMapper informationToDtoMapper;
   private final ResourceLinks resourceLinks;
 
   @Inject
   public RepositoryExportResource(RepositoryManager manager,
                                   RepositoryServiceFactory serviceFactory,
                                   FullScmRepositoryExporter fullScmRepositoryExporter,
-                                  RepositoryImportExportEncryption repositoryImportExportEncryption, ExportService exportService, ResourceLinks resourceLinks) {
+                                  RepositoryImportExportEncryption repositoryImportExportEncryption,
+                                  ExportService exportService,
+                                  RepositoryExportInformationToDtoMapper informationToDtoMapper,
+                                  ResourceLinks resourceLinks) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.fullScmRepositoryExporter = fullScmRepositoryExporter;
     this.repositoryImportExportEncryption = repositoryImportExportEncryption;
     this.exportService = exportService;
+    this.informationToDtoMapper = informationToDtoMapper;
     this.resourceLinks = resourceLinks;
     this.repositoryExportHandler = this.createExportHandlerPool();
   }
@@ -395,6 +401,33 @@ public class RepositoryExportResource {
       String fileExtension = exportService.getFileExtension(repository);
       return createResponse(repository, fileExtension, fileExtension.contains(".gz"), output);
     }
+  }
+
+  @GET
+  @Path("info")
+  @Operation(summary = "Returns stored repository export information", description = "Returns the stored repository export information.", tags = "Repository")
+  @ApiResponse(
+    responseCode = "200",
+    description = "Repository export information"
+  )
+  @ApiResponse(
+    responseCode = "404",
+    description = "Repository export information not found"
+  )
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public RepositoryExportInformationDto getExportInformation(@Context UriInfo uriInfo,
+                                 @PathParam("namespace") String namespace,
+                                 @PathParam("name") String name) {
+    Repository repository = getVerifiedRepository(namespace, name);
+    RepositoryPermissions.export(repository).check();
+    return informationToDtoMapper.map(exportService.getExportInformation(repository), repository);
   }
 
   private Response exportAsync(Repository repository, ExportDto exportDto, Callable<Response> call) throws Exception {

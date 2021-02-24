@@ -156,8 +156,7 @@ public class ExportServiceTest {
     exportService.store(REPOSITORY, true, true, false);
     RepositoryExportInformation exportInformation = exportService.getExportInformation(REPOSITORY);
 
-    assertThat(exportInformation.getExporter().getName()).isEqualTo("trillian");
-    assertThat(exportInformation.getExporter().getMail()).isEqualTo("trillian@hitchhiker.org");
+    assertThat(exportInformation.getExporterName()).isEqualTo("trillian");
     assertThat(exportInformation.getCreated()).isNotNull();
   }
 

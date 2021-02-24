@@ -400,6 +400,10 @@ class ResourceLinks {
     String downloadExport(String namespace, String name) {
       return repositoryExportLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("export").parameters().method("downloadExport").parameters().href();
     }
+
+    String exportInfo(String namespace, String name) {
+      return repositoryExportLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("export").parameters().method("getExportInformation").parameters().href();
+    }
   }
 
   RepositoryCollectionLinks repositoryCollection() {

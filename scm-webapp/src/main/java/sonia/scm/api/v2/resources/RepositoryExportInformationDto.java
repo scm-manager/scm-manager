@@ -22,35 +22,30 @@
  * SOFTWARE.
  */
 
-package sonia.scm.importexport;
+package sonia.scm.api.v2.resources;
 
-import lombok.AllArgsConstructor;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import sonia.scm.user.User;
-import sonia.scm.xml.XmlInstantAdapter;
+import sonia.scm.importexport.ExportStatus;
 
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.Instant;
 
-
-@NoArgsConstructor
-@AllArgsConstructor
 @Getter
 @Setter
-@XmlRootElement
-@XmlAccessorType(XmlAccessType.FIELD)
-public class RepositoryExportInformation {
+@NoArgsConstructor
+public class RepositoryExportInformationDto extends HalRepresentation {
 
   private String exporterName;
-  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
   private Instant created;
   private boolean withMetadata;
   private boolean compressed;
   private boolean encrypted;
   private ExportStatus status;
+
+  RepositoryExportInformationDto(Links links) {
+    super(links);
+  }
 }

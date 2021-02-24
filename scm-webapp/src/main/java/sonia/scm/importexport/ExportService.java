@@ -24,7 +24,6 @@
 
 package sonia.scm.importexport;
 
-import com.google.common.annotations.VisibleForTesting;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Repository;
@@ -40,7 +39,6 @@ import javax.inject.Inject;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.time.Clock;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
@@ -172,7 +170,7 @@ public class ExportService {
       dataStore.remove(repositoryId);
     }
 
-    User exporter = SecurityUtils.getSubject().getPrincipals().oneByType(User.class);
+    String exporter = SecurityUtils.getSubject().getPrincipals().oneByType(User.class).getName();
     RepositoryExportInformation info = new RepositoryExportInformation(exporter, Instant.now(), withMetadata, compressed, encrypted, ExportStatus.EXPORTING);
     dataStore.put(repositoryId, info);
   }
