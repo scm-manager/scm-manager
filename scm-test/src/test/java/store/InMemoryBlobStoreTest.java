@@ -22,9 +22,11 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package store;
 
 import org.junit.jupiter.api.Test;
+import sonia.scm.store.Blob;
+import sonia.scm.store.InMemoryBlobStore;
 
 import java.io.IOException;
 import java.io.OutputStream;
