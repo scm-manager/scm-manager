@@ -87,7 +87,6 @@ public class FromBundleImporter {
 
     try {
       repository = manager.create(repository, unbundleImport(inputStream, compressed, logger));
-      logger.finished();
     } catch (Exception e) {
       logger.failed(e);
       eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, true));
