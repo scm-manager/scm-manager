@@ -88,5 +88,7 @@ public class MapperModule extends AbstractModule {
     bind(PluginDtoMapper.class).to(Mappers.getMapperClass(PluginDtoMapper.class));
 
     bind(ApiKeyToApiKeyDtoMapper.class).to(Mappers.getMapperClass(ApiKeyToApiKeyDtoMapper.class));
+
+    bind(RepositoryExportInformationToDtoMapper.class).to(Mappers.getMapperClass(RepositoryExportInformationToDtoMapper.class));
   }
 }

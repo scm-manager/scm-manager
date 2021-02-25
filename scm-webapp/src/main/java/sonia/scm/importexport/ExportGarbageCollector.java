@@ -22,35 +22,27 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.importexport;
 
-import java.nio.file.Path;
-import java.util.Optional;
-import java.util.function.Function;
+import sonia.scm.Initable;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.schedule.Scheduler;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
+import javax.inject.Inject;
 
-class ExportableBlobFileStore extends ExportableDirectoryBasedFileStore {
+public class ExportGarbageCollector implements Initable {
 
-  private static final String EXCLUDED_EXPORT_STORE = "repository-export";
+  private final ExportService exportService;
+  private final Scheduler scheduler;
 
-  static final Function<StoreType, Optional<Function<Path, ExportableStore>>> BLOB_FACTORY =
-    storeType -> storeType == StoreType.BLOB ? of(ExportableBlobFileStore::new) : empty();
-
-  ExportableBlobFileStore(Path directory) {
-    super(directory);
+  @Inject
+  public ExportGarbageCollector(ExportService exportService, Scheduler scheduler) {
+    this.exportService = exportService;
+    this.scheduler = scheduler;
   }
 
   @Override
-  StoreType getStoreType() {
-    return StoreType.BLOB;
-  }
-
-  boolean shouldIncludeFile(Path file) {
-    if (getDirectory().toString().endsWith(EXCLUDED_EXPORT_STORE)) {
-      return false;
-    }
-    return file.getFileName().toString().endsWith(".blob");
+  public void init(SCMContextProvider context) {
+    scheduler.schedule("0 0 6 * * ?", exportService::cleanupOutdatedExports);
   }
 }

@@ -41,11 +41,16 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.importexport.ExportFileExtensionResolver;
+import sonia.scm.importexport.ExportService;
+import sonia.scm.importexport.ExportStatus;
 import sonia.scm.importexport.FullScmRepositoryExporter;
 import sonia.scm.importexport.FullScmRepositoryImporter;
+import sonia.scm.importexport.RepositoryImportExportEncryption;
 import sonia.scm.repository.CustomNamespaceStrategy;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.NamespaceStrategy;
@@ -82,16 +87,17 @@ import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.Instant;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
 
 import static java.util.Collections.singletonList;
 import static java.util.stream.Stream.of;
+import static javax.servlet.http.HttpServletResponse.SC_ACCEPTED;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
 import static javax.servlet.http.HttpServletResponse.SC_CREATED;
@@ -108,7 +114,6 @@ import static org.mockito.ArgumentMatchers.anyMap;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.RETURNS_SELF;
-import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
@@ -155,7 +160,15 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Mock
   private FullScmRepositoryExporter fullScmRepositoryExporter;
   @Mock
+  private RepositoryExportInformationToDtoMapper exportInformationToDtoMapper;
+  @Mock
   private FullScmRepositoryImporter fullScmRepositoryImporter;
+  @Mock
+  private RepositoryImportExportEncryption repositoryImportExportEncryption;
+  @Mock
+  private ExportFileExtensionResolver fileExtensionResolver;
+  @Mock
+  private ExportService exportService;
 
   @Captor
   private ArgumentCaptor<Predicate<Repository>> filterCaptor;
@@ -170,15 +183,15 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private RepositoryDtoToRepositoryMapperImpl dtoToRepositoryMapper;
 
   @Before
-  public void prepareEnvironment() {
+  public void prepareEnvironment() throws IOException {
     openMocks(this);
     super.repositoryToDtoMapper = repositoryToDtoMapper;
     super.dtoToRepositoryMapper = dtoToRepositoryMapper;
     super.manager = repositoryManager;
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
-    super.repositoryImportResource = new RepositoryImportResource(repositoryManager, dtoToRepositoryMapper, serviceFactory, resourceLinks, eventBus, fullScmRepositoryImporter);
-    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter);
+    super.repositoryImportResource = new RepositoryImportResource(repositoryManager, dtoToRepositoryMapper, serviceFactory, resourceLinks, eventBus, fullScmRepositoryImporter, repositoryImportExportEncryption);
+    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryImportExportEncryption, exportService, exportInformationToDtoMapper, fileExtensionResolver, resourceLinks);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
@@ -191,6 +204,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
         .principals(trillian)
         .authenticated(true)
         .buildSubject());
+    when(repositoryImportExportEncryption.optionallyEncrypt(any(), any())).thenAnswer(invocation -> invocation.getArgument(0));
   }
 
   @Test
@@ -543,12 +557,12 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(service.getPullCommand()).thenReturn(pullCommandBuilder);
 
     Repository repository = RepositoryTestData.createHeartOfGold();
-    RepositoryImportResource.RepositoryImportDto repositoryImportDto = new RepositoryImportResource.RepositoryImportDto();
-    repositoryImportDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-    repositoryImportDto.setNamespace("scmadmin");
-    repositoryImportDto.setName("scm-manager");
+    RepositoryImportResource.RepositoryImportFromUrlDto repositoryImportFromUrlDto = new RepositoryImportResource.RepositoryImportFromUrlDto();
+    repositoryImportFromUrlDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+    repositoryImportFromUrlDto.setNamespace("scmadmin");
+    repositoryImportFromUrlDto.setName("scm-manager");
 
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportDto);
+    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportFromUrlDto);
     repositoryConsumer.accept(repository);
 
     verify(pullCommandBuilder).pull("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
@@ -560,14 +574,14 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(service.getPullCommand()).thenReturn(pullCommandBuilder);
 
     Repository repository = RepositoryTestData.createHeartOfGold();
-    RepositoryImportResource.RepositoryImportDto repositoryImportDto = new RepositoryImportResource.RepositoryImportDto();
-    repositoryImportDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-    repositoryImportDto.setNamespace("scmadmin");
-    repositoryImportDto.setName("scm-manager");
-    repositoryImportDto.setUsername("trillian");
-    repositoryImportDto.setPassword("secret");
+    RepositoryImportResource.RepositoryImportFromUrlDto repositoryImportFromUrlDto = new RepositoryImportResource.RepositoryImportFromUrlDto();
+    repositoryImportFromUrlDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+    repositoryImportFromUrlDto.setNamespace("scmadmin");
+    repositoryImportFromUrlDto.setName("scm-manager");
+    repositoryImportFromUrlDto.setUsername("trillian");
+    repositoryImportFromUrlDto.setPassword("secret");
 
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportDto);
+    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportFromUrlDto);
     repositoryConsumer.accept(repository);
 
     verify(pullCommandBuilder).withUsername("trillian");
@@ -581,12 +595,12 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     doThrow(ImportFailedException.class).when(pullCommandBuilder).pull(anyString());
 
     Repository repository = RepositoryTestData.createHeartOfGold();
-    RepositoryImportResource.RepositoryImportDto repositoryImportDto = new RepositoryImportResource.RepositoryImportDto();
-    repositoryImportDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-    repositoryImportDto.setNamespace("scmadmin");
-    repositoryImportDto.setName("scm-manager");
+    RepositoryImportResource.RepositoryImportFromUrlDto repositoryImportFromUrlDto = new RepositoryImportResource.RepositoryImportFromUrlDto();
+    repositoryImportFromUrlDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
+    repositoryImportFromUrlDto.setNamespace("scmadmin");
+    repositoryImportFromUrlDto.setName("scm-manager");
 
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportDto);
+    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportFromUrlDto);
     assertThrows(ImportFailedException.class, () -> repositoryConsumer.accept(repository));
   }
 
@@ -732,6 +746,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
     when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+    when(bundleCommandBuilder.getFileExtension()).thenReturn(".bundle");
 
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/svn");
@@ -754,6 +769,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
     when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+    when(bundleCommandBuilder.getFileExtension()).thenReturn(".bundle");
 
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/svn?compressed=true");
@@ -785,7 +801,206 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     assertEquals(SC_OK, response.getStatus());
     assertEquals("application/x-gzip", response.getOutputHeaders().get("Content-Type").get(0).toString());
-    verify(fullScmRepositoryExporter).export(eq(repository), any(OutputStream.class));
+    verify(fullScmRepositoryExporter).export(eq(repository), any(OutputStream.class), any());
+  }
+
+  @Test
+  public void shouldExportFullRepositoryWithPassword() throws URISyntaxException {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = createRepository(namespace, name, "svn");
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
+
+    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
+    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full")
+      .contentType(VndMediaType.REPOSITORY_EXPORT)
+      .content("{\"password\": \"hitchhiker\"}".getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_OK, response.getStatus());
+    assertEquals("application/x-gzip", response.getOutputHeaders().get("Content-Type").get(0).toString());
+    verify(fullScmRepositoryExporter).export(eq(repository), any(OutputStream.class), any());
+  }
+
+
+  @Test
+  public void shouldExportFullRepositoryAsyncWithPassword() throws URISyntaxException {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = createRepository(namespace, name, "svn");
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
+
+    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
+    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full")
+      .contentType(VndMediaType.REPOSITORY_EXPORT)
+      .content("{\"password\": \"hitchhiker\", \"async\":\"true\"}".getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_ACCEPTED, response.getStatus());
+    assertEquals("/v2/repositories/space/repo/export/download", response.getOutputHeaders().getFirst("SCM-Export-Download"));
+  }
+
+  @Test
+  public void shouldReturnConflictIfRepositoryAlreadyExporting() throws URISyntaxException {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = createRepository(namespace, name, "svn");
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
+
+    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
+    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+
+    when(exportService.isExporting(repository)).thenReturn(true);
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full")
+      .contentType(VndMediaType.REPOSITORY_EXPORT)
+      .content("{\"password\": \"hitchhiker\", \"async\":\"true\"}".getBytes());
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_CONFLICT, response.getStatus());
+  }
+
+  @Test
+  public void shouldDeleteRepositoryExport() throws URISyntaxException, IOException {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = createRepository(namespace, name, "svn");
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
+
+    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
+    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+
+    when(exportService.isExporting(repository)).thenReturn(false);
+    when(exportService.getData(repository)).thenReturn(new ByteArrayInputStream("".getBytes()));
+
+    MockHttpRequest request = MockHttpRequest
+      .delete("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_NO_CONTENT, response.getStatus());
+    verify(exportService).clear(repository.getId());
+  }
+
+  @Test
+  public void shouldReturnNotFoundIfExportDoesNotExist() throws URISyntaxException {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = createRepository(namespace, name, "svn");
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
+
+    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
+    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+
+    when(exportService.isExporting(repository)).thenReturn(false);
+    doThrow(NotFoundException.class).when(exportService).checkExportIsAvailable(repository);
+
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/download");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_NOT_FOUND, response.getStatus());
+    verify(exportService).checkExportIsAvailable(repository);
+  }
+
+  @Test
+  public void shouldReturnConflictIfExportIsStillExporting() throws URISyntaxException {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = createRepository(namespace, name, "svn");
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
+
+    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
+    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+
+    when(exportService.isExporting(repository)).thenReturn(true);
+
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/download");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_CONFLICT, response.getStatus());
+  }
+
+  @Test
+  public void shouldDownloadRepositoryExportIfReady() throws URISyntaxException, IOException {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = createRepository(namespace, name, "svn");
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
+
+    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
+    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+
+    when(exportService.isExporting(repository)).thenReturn(false);
+    when(exportService.getData(repository)).thenReturn(new ByteArrayInputStream("content".getBytes()));
+    when(exportService.getFileExtension(repository)).thenReturn("tar.gz.enc");
+
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/download");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(SC_OK, response.getStatus());
+    verify(exportService).getData(repository);
+  }
+
+  @Test
+  public void shouldReturnExportInfo() throws URISyntaxException, IOException {
+    String namespace = "space";
+    String name = "repo";
+    Repository repository = createRepository(namespace, name, "svn");
+    when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
+    mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
+
+    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
+    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
+
+    RepositoryExportInformationDto dto = new RepositoryExportInformationDto();
+    dto.setExporterName("trillian");
+    dto.setCreated(Instant.ofEpochMilli(100));
+    dto.setStatus(ExportStatus.EXPORTING);
+    when(exportInformationToDtoMapper.map(any(), eq(repository))).thenReturn(dto);
+
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/info");
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(
+      "{\"exporterName\":\"trillian\",\"created\":0.100000000,\"withMetadata"
+        + "\":false,\"compressed\":false,\"encrypted\":false,\"status\":\"EXPORTING\"}",
+      response.getContentAsString()
+    );
+    assertEquals(SC_OK, response.getStatus());
+    verify(exportService).getExportInformation(repository);
   }
 
   private void mockRepositoryHandler(Set<Command> cmds) {

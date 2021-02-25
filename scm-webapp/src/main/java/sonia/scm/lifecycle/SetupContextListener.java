@@ -32,6 +32,7 @@ import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.Group;
 import sonia.scm.group.GroupManager;
+import sonia.scm.importexport.ExportService;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.PermissionAssigner;
@@ -80,17 +81,19 @@ public class SetupContextListener implements ServletContextListener {
     private final PermissionAssigner permissionAssigner;
     private final ScmConfiguration scmConfiguration;
     private final GroupManager groupManager;
+    private final ExportService exportService;
 
     @VisibleForTesting
     static final String AUTHENTICATED_GROUP_DESCRIPTION = "Includes all authenticated users";
 
     @Inject
-    public SetupAction(UserManager userManager, PasswordService passwordService, PermissionAssigner permissionAssigner, ScmConfiguration scmConfiguration, GroupManager groupManager) {
+    public SetupAction(UserManager userManager, PasswordService passwordService, PermissionAssigner permissionAssigner, ScmConfiguration scmConfiguration, GroupManager groupManager, ExportService exportService) {
       this.userManager = userManager;
       this.passwordService = passwordService;
       this.permissionAssigner = permissionAssigner;
       this.scmConfiguration = scmConfiguration;
       this.groupManager = groupManager;
+      this.exportService = exportService;
     }
 
     @Override
@@ -105,6 +108,8 @@ public class SetupContextListener implements ServletContextListener {
       if (authenticatedGroupDoesNotExists()) {
         createAuthenticatedGroup();
       }
+
+      exportService.cleanupUnfinishedExports();
     }
 
     private boolean anonymousUserRequiredButNotExists() {

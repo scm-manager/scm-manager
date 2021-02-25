@@ -17,6 +17,11 @@ repository is marked as archived, it can no longer be modified.
 
 In the "Export repository" section the repository can be exported in different formats.
 During the export the repository cannot be modified!
+When creating the export, the export file is saved on the server and can thus be downloaded repeatedly.
+If an export already exists on the server, it will be deleted beforehand when a new export is created, as there can only ever be one export per repository.
+Exports are automatically deleted from the SCM-Server 10 days after they are created.
+If an export exists, the blue info box shows by whom, when and how this export was created.
+
 The output format of the repository can be changed via the offered options:
 * `Standard`: If no options are selected, the repository will be exported in the standard format.
   Git and Mercurial are exported as `Tar archive` and Subversion uses the `Dump` format.
@@ -25,8 +30,9 @@ The output format of the repository can be changed via the offered options:
   besides the repository. When you use this, please make sure all installed plugins are up to date. An import of
   such an export is possible only in an SCM-Manager with the same or a newer version. The same is valid for all
   installed plugins.
+* `Encrypt`: The export file will be encrypted using the provided password. The same password must be used to decrypt this export file.
 
-![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
+![Repository-Settings-General-Export](assets/repository-settings-general-export.png)
 
 ### Permissions
 

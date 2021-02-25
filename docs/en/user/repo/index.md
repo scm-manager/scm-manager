@@ -46,6 +46,8 @@ In addition to the normal repository import, there is the possibility to import 
 This repository archive must have been exported from another SCM-Manager and is checked for data compatibility before
 import (the SCM-Manager and all its installed plugins have to have at least the versions of the system the export has
 been created on).
+If the file to be imported is encrypted, the correct password must be supplied for decryption.
+If no password is set, the SCM Manager assumes that the file is unencrypted.
 
 ![Import Repository](assets/import-repository.png)
 

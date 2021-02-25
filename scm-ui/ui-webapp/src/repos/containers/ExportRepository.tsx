@@ -21,70 +21,170 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useState } from "react";
-import { Button, Checkbox, Level, Notification, Subtitle } from "@scm-manager/ui-components";
+import React, { FC, useEffect, useState } from "react";
+import {
+  Button,
+  ButtonGroup,
+  Checkbox,
+  DateShort,
+  ErrorNotification,
+  InputField,
+  Level,
+  Notification,
+  Subtitle
+} from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import { Link, Repository } from "@scm-manager/ui-types";
+import { ExportInfo, Link, Repository } from "@scm-manager/ui-types";
+import { useExportInfo, useExportRepository } from "@scm-manager/ui-api";
+import styled from "styled-components";
+
+const InfoBox = styled.div`
+  white-space: pre-line;
+  background-color: #ccecf9;
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 2px;
+  border-left: 0.2rem solid;
+  border-color: #33b2e8;
+`;
 
 type Props = {
   repository: Repository;
+};
+
+const ExportInterruptedNotification = () => {
+  const [t] = useTranslation("repos");
+  return <Notification type="warning">{t("export.exportInfo.interrupted")}</Notification>;
+};
+
+const ExportInfoBox: FC<{ exportInfo: ExportInfo }> = ({ exportInfo }) => {
+  const [t] = useTranslation("repos");
+  return (
+    <InfoBox>
+      <strong>{t("export.exportInfo.infoBoxTitle")}</strong>
+      <p>{t("export.exportInfo.exporter", { username: exportInfo.exporterName })}</p>
+      <p>
+        {t("export.exportInfo.created")}
+        <DateShort date={exportInfo.created} />
+      </p>
+      <br />
+      <p>{exportInfo.withMetadata ? t("export.exportInfo.repositoryArchive") : t("export.exportInfo.repository")}</p>
+      {exportInfo.encrypted && (
+        <>
+          <br />
+          <p>{t("export.exportInfo.encrypted")}</p>
+        </>
+      )}
+    </InfoBox>
+  );
 };
 
 const ExportRepository: FC<Props> = ({ repository }) => {
   const [t] = useTranslation("repos");
   const [compressed, setCompressed] = useState(true);
   const [fullExport, setFullExport] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [encrypt, setEncrypt] = useState(false);
+  const [password, setPassword] = useState("");
+  const { isLoading: isLoadingInfo, error: errorInfo, data: exportInfo } = useExportInfo(repository);
+  const {
+    isLoading: isLoadingExport,
+    error: errorExport,
+    data: exportedInfo,
+    exportRepository
+  } = useExportRepository();
 
-  const createExportLink = () => {
-    if (fullExport) {
-      return (repository?._links?.fullExport as Link).href;
-    } else {
-      let exportLink = (repository?._links.export as Link).href;
-      if (compressed) {
-        exportLink += "?compressed=true";
-      }
-      return exportLink;
+  useEffect(() => {
+    if (exportedInfo && exportedInfo?._links.download) {
+      window.location.href = (exportedInfo?._links.download as Link).href;
     }
-  };
+  }, [exportedInfo]);
 
-  if (!repository?._links?.export) {
+  if (!repository._links.export) {
     return null;
   }
+
+  const renderExportInfo = () => {
+    if (!exportInfo) {
+      return null;
+    }
+
+    if (exportInfo.status === "INTERRUPTED") {
+      return <ExportInterruptedNotification />;
+    } else {
+      return <ExportInfoBox exportInfo={exportInfo} />;
+    }
+  };
 
   return (
     <>
       <hr />
       <Subtitle subtitle={t("export.subtitle")} />
-      <Notification type="inherit">
-        {t("export.notification")}
-      </Notification>
-      <>
+      <ErrorNotification error={errorInfo} />
+      <ErrorNotification error={errorExport} />
+      <Notification type="inherit">{t("export.notification")}</Notification>
+      <Checkbox
+        checked={fullExport || compressed}
+        label={t("export.compressed.label")}
+        onChange={setCompressed}
+        helpText={t("export.compressed.helpText")}
+        disabled={fullExport}
+      />
+      {repository?._links?.fullExport && (
         <Checkbox
-          checked={fullExport || compressed}
-          label={t("export.compressed.label")}
-          onChange={setCompressed}
-          helpText={t("export.compressed.helpText")}
-          disabled={fullExport}
+          checked={fullExport}
+          label={t("export.fullExport.label")}
+          onChange={setFullExport}
+          helpText={t("export.fullExport.helpText")}
         />
-        {repository?._links?.fullExport && (
-          <Checkbox
-            checked={fullExport}
-            label={t("export.fullExport.label")}
-            onChange={setFullExport}
-            helpText={t("export.fullExport.helpText")}
+      )}
+      <Checkbox
+        checked={encrypt}
+        label={t("export.encrypt.label")}
+        onChange={setEncrypt}
+        helpText={t("export.encrypt.helpText")}
+      />
+      {encrypt && (
+        <div className="columns column is-half">
+          <InputField
+            label={t("export.password.label")}
+            helpText={t("export.password.helpText")}
+            value={password}
+            onChange={setPassword}
+            type="password"
           />
-        )}
-        <Level
-          right={
-            <a color="primary" href={createExportLink()} onClick={() => setLoading(true)}>
-              <Button color="primary" label={t("export.exportButton")} icon="file-export" />
+        </div>
+      )}
+      {renderExportInfo()}
+      <Level
+        right={
+          <ButtonGroup>
+            <a color="info" href={(exportInfo?._links.download as Link)?.href}>
+              <Button
+                color="info"
+                disabled={isLoadingInfo || isLoadingExport || !exportInfo?._links.download}
+                label={t("export.downloadExportButton")}
+                icon="download"
+              />
             </a>
-          }
-        />
-        {loading && <Notification onClose={() => setLoading(false)}>{t("export.exportStarted")}</Notification>}
-      </>
+            <Button
+              color="primary"
+              action={() =>
+                exportRepository(repository, {
+                  compressed,
+                  password: encrypt ? password : "",
+                  withMetadata: fullExport
+                })
+              }
+              loading={isLoadingInfo || isLoadingExport}
+              disabled={isLoadingInfo || isLoadingExport}
+              label={t("export.createExportButton")}
+              icon="file-export"
+            />
+          </ButtonGroup>
+        }
+      />
     </>
   );
 };
+
 export default ExportRepository;

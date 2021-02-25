@@ -18,7 +18,12 @@ Strategie `benutzerdefiniert` ausgewählt ist, kann zusätzlich zum Repository N
 Ein archiviertes Repository kann nicht mehr verändert werden.
 
 In dem Bereich "Repository exportieren" kann das Repository in unterschiedlichen Formaten exportiert werden.
-Während des laufenden Exports kann auf das Repository nur lesend zugriffen werden. 
+Während eines laufenden Exports, kann auf das Repository nur lesend zugriffen werden. 
+Der Repository Export wird asynchron erstellt und auf dem Server gespeichert.
+Existiert bereits ein Export für dieses Repository auf dem Server, wird dieser vorher gelöscht, da es immer nur einen Export pro Repository geben kann. 
+Exporte werden 10 Tage nach deren Erstellung automatisch vom SCM-Server gelöscht.
+Falls ein Export existiert, wird über die blaue Info-Box angezeigt von wem, wann und wie dieser Export erzeugt wurde.
+
 Das Ausgabeformat des Repository kann über die angebotenen Optionen verändert werden:
 * `Standard`: Werden keine Optionen ausgewählt, wird das Repository im Standard Format exportiert.
   Git und Mercurial werden dabei als `Tar Archiv` exportiert und Subversion nutzt das `Dump` Format.
@@ -27,8 +32,9 @@ Das Ausgabeformat des Repository kann über die angebotenen Optionen verändert 
   weitere Metadaten enthält. Für diesen Export sollte sichergestellt werden, dass alle installierten Plugins aktuell sind.
   Ein Import eines so exportierten Repositories ist nur in einem SCM-Manager mit derselben oder einer neueren Version
   möglich. Dieses gilt ebenso für alle installierten Plugins.
+* `Verschlüsseln`: Die Export-Datei wird mit dem gesetzten Passwort verschlüsselt. Zum Entschlüsseln muss das exakt gleiche Passwort verwendet werden.
 
-![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
+![Repository-Settings-General-Export](assets/repository-settings-general-export.png)
 
 ### Berechtigungen
 

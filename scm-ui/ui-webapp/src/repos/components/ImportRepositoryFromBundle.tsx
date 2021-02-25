@@ -45,12 +45,12 @@ const ImportRepositoryFromBundle: FC<Props> = ({ url, repositoryType, setImportP
     description: "",
     _links: {}
   });
-
+  const [password, setPassword] = useState("");
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, file: false });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<Error | undefined>();
   const [file, setFile] = useState<File | null>(null);
-  const [compressed, setCompressed] = useState(false);
+  const [compressed, setCompressed] = useState(true);
   const history = useHistory();
   const [t] = useTranslation("repos");
 
@@ -69,7 +69,7 @@ const ImportRepositoryFromBundle: FC<Props> = ({ url, repositoryType, setImportP
     apiClient
       .postBinary(compressed ? url + "?compressed=true" : url, formData => {
         formData.append("bundle", file, file?.name);
-        formData.append("repository", JSON.stringify(repo));
+        formData.append("repository", JSON.stringify({ ...repo, password }));
       })
       .then(response => {
         const location = response.headers.get("Location");
@@ -96,6 +96,8 @@ const ImportRepositoryFromBundle: FC<Props> = ({ url, repositoryType, setImportP
         setValid={(file: boolean) => setValid({ ...valid, file })}
         compressed={compressed}
         setCompressed={setCompressed}
+        password={password}
+        setPassword={setPassword}
         disabled={loading}
       />
       <hr />

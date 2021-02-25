@@ -41,6 +41,7 @@ import java.io.InputStream;
 
 import static java.util.Arrays.stream;
 import static sonia.scm.util.Archives.createTarInputStream;
+import static sonia.scm.ContextEntry.ContextBuilder.noContext;
 
 public class FullScmRepositoryImporter {
 
@@ -48,24 +49,27 @@ public class FullScmRepositoryImporter {
 
   private final ImportStep[] importSteps;
   private final RepositoryManager repositoryManager;
+  private final RepositoryImportExportEncryption repositoryImportExportEncryption;
 
   @Inject
   public FullScmRepositoryImporter(EnvironmentCheckStep environmentCheckStep,
                                    MetadataImportStep metadataImportStep,
                                    StoreImportStep storeImportStep,
                                    RepositoryImportStep repositoryImportStep,
-                                   RepositoryManager repositoryManager
-  ) {
+                                   RepositoryManager repositoryManager,
+                                   RepositoryImportExportEncryption repositoryImportExportEncryption) {
     this.repositoryManager = repositoryManager;
+    this.repositoryImportExportEncryption = repositoryImportExportEncryption;
     importSteps = new ImportStep[]{environmentCheckStep, metadataImportStep, storeImportStep, repositoryImportStep};
   }
 
-  public Repository importFromStream(Repository repository, InputStream inputStream) {
+  public Repository importFromStream(Repository repository, InputStream inputStream, String password) {
     try {
       if (inputStream.available() > 0) {
         try (
           BufferedInputStream bif = new BufferedInputStream(inputStream);
-          GzipCompressorInputStream gcis = new GzipCompressorInputStream(bif);
+          InputStream cif = repositoryImportExportEncryption.decrypt(bif, password);
+          GzipCompressorInputStream gcis = new GzipCompressorInputStream(cif);
           TarArchiveInputStream tais = createTarInputStream(gcis)
         ) {
           return run(repository, tais);
@@ -78,7 +82,7 @@ public class FullScmRepositoryImporter {
       }
     } catch (IOException e) {
       throw new ImportFailedException(
-        ContextEntry.ContextBuilder.entity(repository).build(),
+        noContext(),
         "Could not import repository data from stream; got io exception while reading",
         e
       );

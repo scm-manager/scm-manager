@@ -22,35 +22,10 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.importexport;
 
-import java.nio.file.Path;
-import java.util.Optional;
-import java.util.function.Function;
-
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
-
-class ExportableBlobFileStore extends ExportableDirectoryBasedFileStore {
-
-  private static final String EXCLUDED_EXPORT_STORE = "repository-export";
-
-  static final Function<StoreType, Optional<Function<Path, ExportableStore>>> BLOB_FACTORY =
-    storeType -> storeType == StoreType.BLOB ? of(ExportableBlobFileStore::new) : empty();
-
-  ExportableBlobFileStore(Path directory) {
-    super(directory);
-  }
-
-  @Override
-  StoreType getStoreType() {
-    return StoreType.BLOB;
-  }
-
-  boolean shouldIncludeFile(Path file) {
-    if (getDirectory().toString().endsWith(EXCLUDED_EXPORT_STORE)) {
-      return false;
-    }
-    return file.getFileName().toString().endsWith(".blob");
-  }
+public enum ExportStatus {
+  EXPORTING,
+  INTERRUPTED,
+  FINISHED
 }

@@ -392,6 +392,14 @@ class ResourceLinks {
     String fullExport(String namespace, String name, String type) {
       return repositoryExportLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("export").parameters().method("exportFullRepository").parameters(type).href();
     }
+
+    String downloadExport(String namespace, String name) {
+      return repositoryExportLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("export").parameters().method("downloadExport").parameters().href();
+    }
+
+    String exportInfo(String namespace, String name) {
+      return repositoryExportLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("export").parameters().method("getExportInformation").parameters().href();
+    }
   }
 
   RepositoryCollectionLinks repositoryCollection() {

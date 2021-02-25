@@ -74,11 +74,19 @@
     },
     "bundle": {
       "title": "Dump File",
-      "helpText": "Select your dump file from which the repository should be imported."
+      "helpText": "Select your dump file from which the repository should be imported.",
+      "password": {
+        "title": "Password",
+        "helpText": "If the imported dump have to be decrypted the correct password must be provided."
+      }
     },
     "fullImport": {
       "title": "SCM-Manager Repository Archive",
-      "helpText": "Select the archive file which should be imported. The archive must have been exported from an SCM-Manager instance. This instance and all installed plugins have to be of the same or a newer version."
+      "helpText": "Select the archive file which should be imported. The archive must have been exported from an SCM-Manager instance.",
+      "password": {
+        "title": "Password",
+        "helpText": "If the imported repository archive have to be decrypted the correct password must be provided."
+      }
     },
     "pending": {
       "subtitle": "Importing Repository...",
@@ -254,7 +262,7 @@
   },
   "export": {
     "subtitle": "Repository Export",
-    "notification": "Attention: During the export the repository cannot be modified.",
+    "notification": "Attention: During the export the repository cannot be modified. Generated repository exports are automatically deleted after 10 days.",
     "compressed": {
       "label": "Compress",
       "helpText": "Compress the export dump size to reduce the download size."
@@ -263,8 +271,25 @@
       "label": "With metadata (Experimental)",
       "helpText": "In addition to the repository dump, metadata about the repository and SCM instance is exported. If possible, ensure that installed plugins are up to date. However, stored passwords will not work if this is imported in other instances of SCM-Manager. This feature is still experimental. Do not use this as a backup mechanism (yet)!"
     },
-    "exportButton": "Export Repository",
-    "exportStarted":  "The repository export was started. Depending on the repository size this may take a while."
+    "encrypt": {
+      "label": "Encrypt",
+      "helpText": "The export file will be encrypted using the provided password."
+    },
+    "password": {
+      "label": "Password",
+      "helpText": "If a password is set, it will be used the encrypt the export file."
+    },
+    "createExportButton": "Create new Export",
+    "downloadExportButton":  "Download Export",
+    "exportInfo": {
+      "infoBoxTitle": "Stored Repository Export Information",
+      "exporter": "Created by: {{username}}",
+      "created": "Created on: ",
+      "repository": "This export contains: \n- the repository",
+      "repositoryArchive": "This export contains: \n- the repository\n- the metadata which exist for this repository, e.g. from plugins\n- an environment description for the exporting SCM-Manager\n- additional information for this repository",
+      "encrypted": "Encrypted: The stored export has been encrypted.",
+      "interrupted": "Interrupted: The export was aborted during creation. Possibly due to a server restart."
+    }
   },
   "sources": {
     "fileTree": {

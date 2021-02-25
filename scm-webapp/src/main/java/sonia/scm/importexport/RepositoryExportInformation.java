@@ -22,35 +22,34 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.importexport;
 
-import java.nio.file.Path;
-import java.util.Optional;
-import java.util.function.Function;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import sonia.scm.xml.XmlInstantAdapter;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.time.Instant;
 
-class ExportableBlobFileStore extends ExportableDirectoryBasedFileStore {
 
-  private static final String EXCLUDED_EXPORT_STORE = "repository-export";
+@NoArgsConstructor
+@AllArgsConstructor
+@Getter
+@Setter
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class RepositoryExportInformation {
 
-  static final Function<StoreType, Optional<Function<Path, ExportableStore>>> BLOB_FACTORY =
-    storeType -> storeType == StoreType.BLOB ? of(ExportableBlobFileStore::new) : empty();
-
-  ExportableBlobFileStore(Path directory) {
-    super(directory);
-  }
-
-  @Override
-  StoreType getStoreType() {
-    return StoreType.BLOB;
-  }
-
-  boolean shouldIncludeFile(Path file) {
-    if (getDirectory().toString().endsWith(EXCLUDED_EXPORT_STORE)) {
-      return false;
-    }
-    return file.getFileName().toString().endsWith(".blob");
-  }
+  private String exporterName;
+  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
+  private Instant created;
+  private boolean withMetadata;
+  private boolean compressed;
+  private boolean encrypted;
+  private ExportStatus status;
 }

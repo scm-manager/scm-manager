@@ -85,6 +85,8 @@ class FullScmRepositoryImporterTest {
   @Mock
   private UpdateEngine updateEngine;
   @Mock
+  private RepositoryImportExportEncryption repositoryImportExportEncryption;
+  @Mock
   private WorkdirProvider workdirProvider;
 
   @InjectMocks
@@ -100,13 +102,20 @@ class FullScmRepositoryImporterTest {
 
   @BeforeEach
   void initTestObject() {
-    fullImporter = new FullScmRepositoryImporter(environmentCheckStep, metadataImportStep, storeImportStep, repositoryImportStep, repositoryManager);
+    fullImporter = new FullScmRepositoryImporter(
+      environmentCheckStep,
+      metadataImportStep,
+      storeImportStep,
+      repositoryImportStep,
+      repositoryManager,
+      repositoryImportExportEncryption);
   }
 
   @BeforeEach
-  void initRepositoryService() {
+  void initRepositoryService() throws IOException {
     lenient().when(serviceFactory.create(REPOSITORY)).thenReturn(service);
     lenient().when(service.getUnbundleCommand()).thenReturn(unbundleCommandBuilder);
+    lenient().when(repositoryImportExportEncryption.decrypt(any(), any())).thenAnswer(invocation -> invocation.getArgument(0));
   }
 
   @Test
@@ -116,7 +125,7 @@ class FullScmRepositoryImporterTest {
     FileInputStream inputStream = new FileInputStream(emptyFile.toFile());
     assertThrows(
       ImportFailedException.class,
-      () -> fullImporter.importFromStream(REPOSITORY, inputStream)
+      () -> fullImporter.importFromStream(REPOSITORY, inputStream, "")
     );
   }
 
@@ -127,7 +136,7 @@ class FullScmRepositoryImporterTest {
     InputStream importStream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
     assertThrows(
       IncompatibleEnvironmentForImportException.class,
-      () -> fullImporter.importFromStream(REPOSITORY, importStream)
+      () -> fullImporter.importFromStream(REPOSITORY, importStream, "")
     );
   }
 
@@ -146,7 +155,7 @@ class FullScmRepositoryImporterTest {
     void shouldImportScmRepositoryArchiveWithWorkDir() throws IOException {
       InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
 
-      Repository repository = fullImporter.importFromStream(REPOSITORY, stream);
+      Repository repository = fullImporter.importFromStream(REPOSITORY, stream, "");
 
       assertThat(repository).isEqualTo(REPOSITORY);
       verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class));
@@ -161,7 +170,7 @@ class FullScmRepositoryImporterTest {
     void shouldNotExistWorkDirAfterRepositoryImportIsFinished(@TempDir Path temp) throws IOException {
       when(workdirProvider.createNewWorkdir(REPOSITORY.getId())).thenReturn(temp.toFile());
       InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
-      fullImporter.importFromStream(REPOSITORY, stream);
+      fullImporter.importFromStream(REPOSITORY, stream, "");
 
       boolean workDirExists = Files.exists(temp);
       assertThat(workDirExists).isFalse();
@@ -171,7 +180,7 @@ class FullScmRepositoryImporterTest {
     void shouldTriggerUpdateForImportedRepository() throws IOException {
       InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
 
-      fullImporter.importFromStream(REPOSITORY, stream);
+      fullImporter.importFromStream(REPOSITORY, stream, "");
 
       verify(updateEngine).update(REPOSITORY.getId());
     }
@@ -179,7 +188,7 @@ class FullScmRepositoryImporterTest {
     @Test
     void shouldImportRepositoryDirectlyWithoutCopyInWorkDir() throws IOException {
       InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import-stores-before-repository.tar.gz").openStream();
-      Repository repository = fullImporter.importFromStream(REPOSITORY, stream);
+      Repository repository = fullImporter.importFromStream(REPOSITORY, stream, "");
 
       assertThat(repository).isEqualTo(REPOSITORY);
       verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class));

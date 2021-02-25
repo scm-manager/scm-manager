@@ -32,8 +32,6 @@ import com.google.common.base.Strings;
 import com.google.common.io.ByteSource;
 import com.google.common.io.Files;
 import com.google.inject.Inject;
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.Links;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -47,10 +45,12 @@ import org.jboss.resteasy.plugins.providers.multipart.MultipartFormDataInput;
 import org.jboss.resteasy.plugins.providers.multipart.MultipartInputImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.ContextEntry;
 import sonia.scm.HandlerEventType;
 import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.importexport.FullScmRepositoryImporter;
+import sonia.scm.importexport.RepositoryImportExportEncryption;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryImportEvent;
@@ -58,16 +58,15 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.IOUtil;
-import sonia.scm.util.ValidationUtil;
 import sonia.scm.web.VndMediaType;
 import sonia.scm.web.api.DtoValidator;
 
 import javax.validation.Valid;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
@@ -104,6 +103,7 @@ public class RepositoryImportResource {
   private final ResourceLinks resourceLinks;
   private final ScmEventBus eventBus;
   private final FullScmRepositoryImporter fullScmRepositoryImporter;
+  private final RepositoryImportExportEncryption repositoryImportExportEncryption;
 
   @Inject
   public RepositoryImportResource(RepositoryManager manager,
@@ -111,13 +111,15 @@ public class RepositoryImportResource {
                                   RepositoryServiceFactory serviceFactory,
                                   ResourceLinks resourceLinks,
                                   ScmEventBus eventBus,
-                                  FullScmRepositoryImporter fullScmRepositoryImporter) {
+                                  FullScmRepositoryImporter fullScmRepositoryImporter,
+                                  RepositoryImportExportEncryption repositoryImportExportEncryption) {
     this.manager = manager;
     this.mapper = mapper;
     this.serviceFactory = serviceFactory;
     this.resourceLinks = resourceLinks;
     this.eventBus = eventBus;
     this.fullScmRepositoryImporter = fullScmRepositoryImporter;
+    this.repositoryImportExportEncryption = repositoryImportExportEncryption;
   }
 
   /**
@@ -142,7 +144,7 @@ public class RepositoryImportResource {
     description = "Repository import was successful",
     content = @Content(
       mediaType = VndMediaType.REPOSITORY,
-      schema = @Schema(implementation = ImportRepositoryDto.class)
+      schema = @Schema(implementation = ImportRepositoryFromUrlDto.class)
     )
   )
   @ApiResponse(
@@ -163,7 +165,7 @@ public class RepositoryImportResource {
   )
   public Response importFromUrl(@Context UriInfo uriInfo,
                                 @Pattern(regexp = "\\w{1,10}") @PathParam("type") String type,
-                                @Valid RepositoryImportDto request) {
+                                @Valid RepositoryImportResource.RepositoryImportFromUrlDto request) {
     RepositoryPermissions.create().check();
 
     Type t = type(manager, type);
@@ -192,7 +194,7 @@ public class RepositoryImportResource {
   }
 
   @VisibleForTesting
-  Consumer<Repository> pullChangesFromRemoteUrl(RepositoryImportDto request) {
+  Consumer<Repository> pullChangesFromRemoteUrl(RepositoryImportFromUrlDto request) {
     return repository -> {
       try (RepositoryService service = serviceFactory.create(repository)) {
         PullCommandBuilder pullCommand = service.getPullCommand();
@@ -309,8 +311,9 @@ public class RepositoryImportResource {
   private Repository importFullRepositoryFromInput(MultipartFormDataInput input) {
     Map<String, List<InputPart>> formParts = input.getFormDataMap();
     InputStream inputStream = extractInputStream(formParts);
-    RepositoryDto repositoryDto = extractRepositoryDto(formParts);
-    return fullScmRepositoryImporter.importFromStream(mapper.map(repositoryDto), inputStream);
+    RepositoryImportFromFileDto repositoryDto = extractRepositoryDto(formParts);
+
+    return fullScmRepositoryImporter.importFromStream(mapper.map(repositoryDto), inputStream, repositoryDto.getPassword());
   }
 
   /**
@@ -324,7 +327,8 @@ public class RepositoryImportResource {
   private Repository doImportFromBundle(String type, MultipartFormDataInput input, boolean compressed) {
     Map<String, List<InputPart>> formParts = input.getFormDataMap();
     InputStream inputStream = extractInputStream(formParts);
-    RepositoryDto repositoryDto = extractRepositoryDto(formParts);
+    RepositoryImportFromFileDto repositoryDto = extractRepositoryDto(formParts);
+    inputStream = decryptInputStream(inputStream, repositoryDto.getPassword());
 
     Type t = type(manager, type);
     checkSupport(t, Command.UNBUNDLE);
@@ -349,6 +353,14 @@ public class RepositoryImportResource {
     return repository;
   }
 
+  private InputStream decryptInputStream(InputStream inputStream, String password) {
+    try {
+      return repositoryImportExportEncryption.decrypt(inputStream, password);
+    } catch (IOException e) {
+      throw new ImportFailedException(ContextEntry.ContextBuilder.noContext(), "import failed", e);
+    }
+  }
+
   @VisibleForTesting
   Consumer<Repository> unbundleImport(InputStream inputStream, boolean compressed) {
     return repository -> {
@@ -370,8 +382,8 @@ public class RepositoryImportResource {
     };
   }
 
-  private RepositoryDto extractRepositoryDto(Map<String, List<InputPart>> formParts) {
-    RepositoryDto repositoryDto = extractFromInputPart(formParts.get("repository"), RepositoryDto.class);
+  private RepositoryImportFromFileDto extractRepositoryDto(Map<String, List<InputPart>> formParts) {
+    RepositoryImportFromFileDto repositoryDto = extractFromInputPart(formParts.get("repository"), RepositoryImportFromFileDto.class);
     checkNotNull(repositoryDto, "repository data is required");
     DtoValidator.validate(repositoryDto);
     return repositoryDto;
@@ -416,37 +428,31 @@ public class RepositoryImportResource {
   @Setter
   @NoArgsConstructor
   @SuppressWarnings("java:S2160")
-  public static class RepositoryImportDto extends RepositoryDto implements ImportRepositoryDto {
-
+  public static class RepositoryImportFromUrlDto extends RepositoryDto implements ImportRepositoryFromUrlDto {
     @NotEmpty
     private String importUrl;
     private String username;
     private String password;
-
-    RepositoryImportDto(Links links, Embedded embedded) {
-      super(links, embedded);
-    }
   }
 
-  interface ImportRepositoryDto {
-    String getNamespace();
+  @Getter
+  @Setter
+  @NoArgsConstructor
+  @SuppressWarnings("java:S2160")
+  public static class RepositoryImportFromFileDto extends RepositoryDto implements ImportRepositoryFromFileDto {
+    private String password;
+  }
 
-    @Pattern(regexp = ValidationUtil.REGEX_REPOSITORYNAME)
-    String getName();
-
-    @NotEmpty
-    String getType();
-
-    @Email
-    String getContact();
-
-    String getDescription();
-
+  interface ImportRepositoryFromUrlDto extends CreateRepositoryDto {
     @NotEmpty
     String getImportUrl();
 
     String getUsername();
 
+    String getPassword();
+  }
+
+  interface ImportRepositoryFromFileDto extends CreateRepositoryDto {
     String getPassword();
   }
 }

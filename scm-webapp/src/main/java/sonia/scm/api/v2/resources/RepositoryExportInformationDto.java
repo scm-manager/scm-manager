@@ -22,35 +22,31 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.api.v2.resources;
 
-import java.nio.file.Path;
-import java.util.Optional;
-import java.util.function.Function;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import sonia.scm.importexport.ExportStatus;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
+import java.time.Instant;
 
-class ExportableBlobFileStore extends ExportableDirectoryBasedFileStore {
+@Getter
+@Setter
+@NoArgsConstructor
+@SuppressWarnings("squid:S2160") // we do not need equals for dto
+public class RepositoryExportInformationDto extends HalRepresentation {
 
-  private static final String EXCLUDED_EXPORT_STORE = "repository-export";
+  private String exporterName;
+  private Instant created;
+  private boolean withMetadata;
+  private boolean compressed;
+  private boolean encrypted;
+  private ExportStatus status;
 
-  static final Function<StoreType, Optional<Function<Path, ExportableStore>>> BLOB_FACTORY =
-    storeType -> storeType == StoreType.BLOB ? of(ExportableBlobFileStore::new) : empty();
-
-  ExportableBlobFileStore(Path directory) {
-    super(directory);
-  }
-
-  @Override
-  StoreType getStoreType() {
-    return StoreType.BLOB;
-  }
-
-  boolean shouldIncludeFile(Path file) {
-    if (getDirectory().toString().endsWith(EXCLUDED_EXPORT_STORE)) {
-      return false;
-    }
-    return file.getFileName().toString().endsWith(".blob");
+  RepositoryExportInformationDto(Links links) {
+    super(links);
   }
 }

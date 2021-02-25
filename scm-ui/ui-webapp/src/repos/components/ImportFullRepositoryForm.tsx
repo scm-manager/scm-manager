@@ -23,27 +23,38 @@
  */
 
 import React, { FC } from "react";
-import { FileUpload, LabelWithHelpIcon, Checkbox } from "@scm-manager/ui-components";
+import { FileUpload, InputField, LabelWithHelpIcon } from "@scm-manager/ui-components";
 import { File } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 
 type Props = {
   setFile: (file: File) => void;
   setValid: (valid: boolean) => void;
+  password: string;
+  setPassword: (password: string) => void;
 };
 
-const ImportFullRepositoryForm: FC<Props> = ({ setFile, setValid}) => {
+const ImportFullRepositoryForm: FC<Props> = ({ setFile, setValid, password, setPassword }) => {
   const [t] = useTranslation("repos");
 
   return (
     <div className="columns">
-      <div className="column is-vcentered">
+      <div className="column is-half is-vcentered">
         <LabelWithHelpIcon label={t("import.fullImport.title")} helpText={t("import.fullImport.helpText")} />
         <FileUpload
           handleFile={(file: File) => {
             setFile(file);
             setValid(!!file);
           }}
+        />
+      </div>
+      <div className="column is-half is-vcentered">
+        <InputField
+          value={password}
+          onChange={value => setPassword(value)}
+          type="password"
+          label={t("import.bundle.password.title")}
+          helpText={t("import.bundle.password.helpText")}
         />
       </div>
     </div>

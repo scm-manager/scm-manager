@@ -89,6 +89,9 @@ public class VndMediaType {
   public static final String API_KEY = PREFIX + "apiKey" + SUFFIX;
   public static final String API_KEY_COLLECTION = PREFIX + "apiKeyCollection" + SUFFIX;
 
+  public static final String REPOSITORY_EXPORT = PREFIX + "repositoryExport" + SUFFIX;
+  public static final String REPOSITORY_EXPORT_INFO = PREFIX + "repositoryExportInfo" + SUFFIX;
+
   private VndMediaType() {
   }
 

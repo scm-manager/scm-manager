@@ -23,12 +23,13 @@
  */
 
 import {
+  ExportInfo,
   Link,
   Namespace,
   Repository,
   RepositoryCollection,
   RepositoryCreation,
-  RepositoryTypeCollection,
+  RepositoryTypeCollection
 } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient } from "./apiclient";
@@ -37,6 +38,8 @@ import { createQueryString } from "./utils";
 import { requiredLink } from "./links";
 import { repoQueryKey } from "./keys";
 import { concat } from "./urls";
+import { useEffect, useState } from "react";
+import { NotFoundError } from "./errors";
 
 export type UseRepositoriesRequest = {
   namespace?: Namespace;
@@ -225,5 +228,91 @@ export const useUnarchiveRepository = () => {
     isLoading,
     error,
     isUnarchived: !!data
+  };
+};
+
+export const useExportInfo = (repository: Repository): ApiResult<ExportInfo> => {
+  const link = requiredLink(repository, "exportInfo");
+  //TODO Refetch while exporting to update the page
+  const { isLoading, error, data } = useQuery<ExportInfo, Error>(
+    ["repository", repository.namespace, repository.name, "exportInfo"],
+    () => apiClient.get(link).then(response => response.json()),
+    {}
+  );
+
+  return {
+    isLoading,
+    error: error instanceof NotFoundError ? null : error,
+    data
+  };
+};
+
+type ExportOptions = {
+  compressed: boolean;
+  withMetadata: boolean;
+  password?: string;
+};
+
+type ExportRepositoryMutateOptions = {
+  repository: Repository;
+  options: ExportOptions;
+};
+
+const EXPORT_MEDIA_TYPE = "application/vnd.scmm-repositoryExport+json;v=2";
+
+export const useExportRepository = () => {
+  const queryClient = useQueryClient();
+  const [intervalId, setIntervalId] = useState<number | undefined>();
+  useEffect(() => {
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [intervalId]);
+  const { mutate, isLoading, error, data } = useMutation<ExportInfo, Error, ExportRepositoryMutateOptions>(
+    ({ repository, options }) => {
+      const infolink = requiredLink(repository, "exportInfo");
+      let link = requiredLink(repository, options.withMetadata ? "fullExport" : "export");
+      if (options.compressed) {
+        link += "?compressed=true";
+      }
+      return apiClient
+        .post(link, { password: options.password, async: true }, EXPORT_MEDIA_TYPE)
+        .then(() => queryClient.invalidateQueries(repoQueryKey(repository)))
+        .then(() => queryClient.invalidateQueries(["repositories"]))
+        .then(() => {
+          return new Promise<ExportInfo>((resolve, reject) => {
+            const id = setInterval(() => {
+              apiClient
+                .get(infolink)
+                .then(r => r.json())
+                .then((info: ExportInfo) => {
+                  if (info._links.download) {
+                    clearInterval(id);
+                    resolve(info);
+                  }
+                })
+                .catch(e => {
+                  clearInterval(id);
+                  reject(e);
+                });
+            }, 1000);
+            setIntervalId(id);
+          });
+        });
+    },
+    {
+      onSuccess: async (_, { repository }) => {
+        await queryClient.invalidateQueries(repoQueryKey(repository));
+        await queryClient.invalidateQueries(["repositories"]);
+      }
+    }
+  );
+  return {
+    exportRepository: (repository: Repository, options: ExportOptions) => mutate({ repository, options }),
+    isLoading,
+    error,
+    data
   };
 };

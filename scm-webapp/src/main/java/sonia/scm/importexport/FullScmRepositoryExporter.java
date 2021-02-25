@@ -46,6 +46,7 @@ import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+
 public class FullScmRepositoryExporter {
 
   static final String SCM_ENVIRONMENT_FILE_NAME = "scm-environment.xml";
@@ -57,6 +58,7 @@ public class FullScmRepositoryExporter {
   private final TarArchiveRepositoryStoreExporter storeExporter;
   private final WorkdirProvider workdirProvider;
   private final RepositoryExportingCheck repositoryExportingCheck;
+  private final RepositoryImportExportEncryption repositoryImportExportEncryption;
 
   @Inject
   public FullScmRepositoryExporter(EnvironmentInformationXmlGenerator environmentGenerator,
@@ -64,28 +66,31 @@ public class FullScmRepositoryExporter {
                                    RepositoryServiceFactory serviceFactory,
                                    TarArchiveRepositoryStoreExporter storeExporter,
                                    WorkdirProvider workdirProvider,
-                                   RepositoryExportingCheck repositoryExportingCheck) {
+                                   RepositoryExportingCheck repositoryExportingCheck,
+                                   RepositoryImportExportEncryption repositoryImportExportEncryption) {
     this.environmentGenerator = environmentGenerator;
     this.metadataGenerator = metadataGenerator;
     this.serviceFactory = serviceFactory;
     this.storeExporter = storeExporter;
     this.workdirProvider = workdirProvider;
     this.repositoryExportingCheck = repositoryExportingCheck;
+    this.repositoryImportExportEncryption = repositoryImportExportEncryption;
   }
 
-  public void export(Repository repository, OutputStream outputStream) {
+  public void export(Repository repository, OutputStream outputStream, String password) {
     repositoryExportingCheck.withExportingLock(repository, () -> {
-      exportInLock(repository, outputStream);
+      exportInLock(repository, outputStream, password);
       return null;
     });
   }
 
-  private void exportInLock(Repository repository, OutputStream outputStream) {
+  private void exportInLock(Repository repository, OutputStream outputStream, String password) {
     try (
       RepositoryService service = serviceFactory.create(repository);
       BufferedOutputStream bos = new BufferedOutputStream(outputStream);
-      GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(bos);
-      TarArchiveOutputStream taos = Archives.createTarOutputStream(gzos)
+      OutputStream cos = repositoryImportExportEncryption.optionallyEncrypt(bos, password);
+      GzipCompressorOutputStream gzos = new GzipCompressorOutputStream(cos);
+      TarArchiveOutputStream taos = Archives.createTarOutputStream(gzos);
     ) {
       writeEnvironmentData(taos);
       writeMetadata(repository, taos);

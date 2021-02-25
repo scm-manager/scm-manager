@@ -73,4 +73,8 @@ abstract class ExportableDirectoryBasedFileStore implements ExportableStore {
       putFileContentIntoStream(exporter, fileOrDir);
     }
   }
+
+  protected Path getDirectory() {
+    return directory;
+  }
 }

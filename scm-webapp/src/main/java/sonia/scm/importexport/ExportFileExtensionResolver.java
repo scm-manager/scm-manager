@@ -22,35 +22,38 @@
  * SOFTWARE.
  */
 
-package sonia.scm.store;
+package sonia.scm.importexport;
 
-import java.nio.file.Path;
-import java.util.Optional;
-import java.util.function.Function;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 
-import static java.util.Optional.empty;
-import static java.util.Optional.of;
+import javax.inject.Inject;
 
-class ExportableBlobFileStore extends ExportableDirectoryBasedFileStore {
+public class ExportFileExtensionResolver {
 
-  private static final String EXCLUDED_EXPORT_STORE = "repository-export";
+  private final RepositoryServiceFactory serviceFactory;
 
-  static final Function<StoreType, Optional<Function<Path, ExportableStore>>> BLOB_FACTORY =
-    storeType -> storeType == StoreType.BLOB ? of(ExportableBlobFileStore::new) : empty();
-
-  ExportableBlobFileStore(Path directory) {
-    super(directory);
+  @Inject
+  public ExportFileExtensionResolver(RepositoryServiceFactory serviceFactory) {
+    this.serviceFactory = serviceFactory;
   }
 
-  @Override
-  StoreType getStoreType() {
-    return StoreType.BLOB;
-  }
-
-  boolean shouldIncludeFile(Path file) {
-    if (getDirectory().toString().endsWith(EXCLUDED_EXPORT_STORE)) {
-      return false;
+  public String resolve(Repository repository, boolean withMetadata, boolean compressed, boolean encrypted) {
+    StringBuilder builder = new StringBuilder();
+    if (withMetadata) {
+      builder.append("tar.gz");
+    } else {
+      try (RepositoryService service = serviceFactory.create(repository)) {
+        builder.append(service.getBundleCommand().getFileExtension());
+      }
+      if (compressed) {
+        builder.append(".gz");
+      }
     }
-    return file.getFileName().toString().endsWith(".blob");
+    if (encrypted) {
+      builder.append(".enc");
+    }
+    return builder.toString();
   }
 }

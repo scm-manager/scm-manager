@@ -33,7 +33,7 @@ export type RepositoryBase = NamespaceAndName & {
   type: string;
   contact?: string;
   description?: string;
-}
+};
 
 export type Repository = HalRepresentation &
   RepositoryBase & {
@@ -51,6 +51,15 @@ export type RepositoryUrlImport = Repository & {
   importUrl: string;
   username?: string;
   password?: string;
+};
+
+export type ExportInfo = HalRepresentation & {
+  exporterName: string;
+  created: Date;
+  withMetadata: boolean;
+  compressed: boolean;
+  encrypted: boolean;
+  status: "FINISHED" | "INTERRUPTED" | "EXPORTING";
 };
 
 export type Namespace = {
