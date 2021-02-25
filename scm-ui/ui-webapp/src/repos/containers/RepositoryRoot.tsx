@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React from "react";
-import { Redirect, Route, Link as RouteLink, Switch, useRouteMatch, match } from "react-router-dom";
+import { Redirect, Route, Link as RouteLink, Switch, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Changeset, Link } from "@scm-manager/ui-types";
@@ -245,7 +245,9 @@ const RepositoryRoot = () => {
               <Redirect exact from={`${url}/changesets`} to={`${url}/code/changesets`} />
               <Redirect from={`${url}/branch/:branch/changesets`} to={`${url}/code/branch/:branch/changesets/`} />
 
-              <Route path={`${url}/info`} exact component={() => <RepositoryDetails repository={repository} />} />
+              <Route path={`${url}/info`} exact>
+                <RepositoryDetails repository={repository} />
+              </Route>
               <Route path={`${url}/settings/general`}>
                 <EditRepo repository={repository} />
               </Route>

@@ -31,9 +31,7 @@ import { reset } from "./reset";
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: false,
-      // refetch on focus can reset form inputs
-      refetchOnWindowFocus: false
+      retry: false
     }
   }
 });
