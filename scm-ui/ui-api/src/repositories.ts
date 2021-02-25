@@ -236,7 +236,7 @@ export const useExportInfo = (repository: Repository): ApiResult<ExportInfo> => 
   const { isLoading, error, data } = useQuery<ExportInfo, Error>(
     ["repository", repository.namespace, repository.name, "exportInfo"],
     () => apiClient.get(link).then(response => response.json()),
-    { cacheTime: 0 }
+    { refetchInterval: 1000 }
   );
 
   return {
@@ -276,26 +276,30 @@ export const useExportRepository = () => {
       if (options.compressed) {
         link += "?compressed=true";
       }
-      return apiClient.post(link, { password: options.password, async: true }, EXPORT_MEDIA_TYPE).then(() => {
-        return new Promise<ExportInfo>((resolve, reject) => {
-          const id = setInterval(() => {
-            apiClient
-              .get(infolink)
-              .then(r => r.json())
-              .then((info: ExportInfo) => {
-                if (info._links.download) {
+      return apiClient
+        .post(link, { password: options.password, async: true }, EXPORT_MEDIA_TYPE)
+        .then(() => queryClient.invalidateQueries(repoQueryKey(repository)))
+        .then(() => queryClient.invalidateQueries(["repositories"]))
+        .then(() => {
+          return new Promise<ExportInfo>((resolve, reject) => {
+            const id = setInterval(() => {
+              apiClient
+                .get(infolink)
+                .then(r => r.json())
+                .then((info: ExportInfo) => {
+                  if (info._links.download) {
+                    clearInterval(id);
+                    resolve(info);
+                  }
+                })
+                .catch(e => {
                   clearInterval(id);
-                  resolve(info);
-                }
-              })
-              .catch(e => {
-                clearInterval(id);
-                reject(e);
-              });
-          }, 1000);
-          setIntervalId(id);
+                  reject(e);
+                });
+            }, 1000);
+            setIntervalId(id);
+          });
         });
-      });
     },
     {
       onSuccess: async (_, { repository }) => {
