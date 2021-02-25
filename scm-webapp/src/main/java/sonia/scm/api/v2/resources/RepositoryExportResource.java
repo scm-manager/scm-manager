@@ -42,7 +42,6 @@ import sonia.scm.Type;
 import sonia.scm.importexport.ExportFileExtensionResolver;
 import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.FullScmRepositoryExporter;
-import sonia.scm.importexport.RepositoryExportInformation;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
