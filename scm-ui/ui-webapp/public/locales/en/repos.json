@@ -262,7 +262,7 @@
   },
   "export": {
     "subtitle": "Repository Export",
-    "notification": "Attention: During the export the repository cannot be modified. Generated repository exports are automatically deleted after 10 days.",
+    "notification": "Attention: During the export the repository cannot be modified. When creating a new export, the old export is deleted. Generated repository exports are automatically deleted after 10 days.",
     "compressed": {
       "label": "Compress",
       "helpText": "Compress the export dump size to reduce the download size."
@@ -283,8 +283,8 @@
     "downloadExportButton":  "Download Export",
     "exportInfo": {
       "infoBoxTitle": "Stored Repository Export Information",
-      "exporter": "Created by: {{username}}",
-      "created": "Created on: ",
+      "exporter": "Creator: {{username}}",
+      "created": "Created ",
       "repository": "This export contains: \n- the repository",
       "repositoryArchive": "This export contains: \n- the repository\n- the metadata which exist for this repository, e.g. from plugins\n- an environment description for the exporting SCM-Manager\n- additional information for this repository",
       "encrypted": "Encrypted: The stored export has been encrypted.",

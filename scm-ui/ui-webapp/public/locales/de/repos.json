@@ -262,7 +262,7 @@
   },
   "export": {
     "subtitle": "Repository exportieren",
-    "notification": "Achtung: Während eines laufenden Exports kann auf das Repository nur lesend zugegriffen werden. Erzeugte Repository Exporte werden nach 10 Tagen automatisch gelöscht.",
+    "notification": "Achtung: Während eines laufenden Exports kann auf das Repository nur lesend zugegriffen werden. Beim Erstellen eines Exports wird der alte Export gelöscht. Alle Exports werden 10 Tage nach dem Erstelldatum automatisch gelöscht.",
     "compressed": {
       "label": "Komprimieren",
       "helpText": "Export Datei vor dem Download komprimieren. Reduziert die Downloadgröße."
@@ -283,8 +283,8 @@
     "downloadExportButton": "Export herunterladen",
     "exportInfo": {
       "infoBoxTitle": "Informationen zum gespeicherten Repository Export",
-      "exporter": "Erstellt von: {{username}}",
-      "created": "Erstellt am: ",
+      "exporter": "Ersteller: {{username}}",
+      "created": "Erstellt ",
       "repository": "Der Export enthält: \n- das Repository",
       "repositoryArchive": "Der Export enthält: \n- das Repository\n- die Metadaten zum Repository, z. B. aus den Plugins\n- eine Umgebungsbeschreibung des exportierenden SCM-Managers\n- weitere Informationen zum Repository",
       "encrypted": "Verschlüsselt: Der gespeicherte Export wurde verschlüsselt.",

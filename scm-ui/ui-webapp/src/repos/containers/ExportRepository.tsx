@@ -26,7 +26,7 @@ import {
   Button,
   ButtonGroup,
   Checkbox,
-  DateShort,
+  DateFromNow,
   ErrorNotification,
   InputField,
   Level,
@@ -65,7 +65,7 @@ const ExportInfoBox: FC<{ exportInfo: ExportInfo }> = ({ exportInfo }) => {
       <p>{t("export.exportInfo.exporter", { username: exportInfo.exporterName })}</p>
       <p>
         {t("export.exportInfo.created")}
-        <DateShort date={exportInfo.created} />
+        <DateFromNow date={exportInfo.created} />
       </p>
       <br />
       <p>{exportInfo.withMetadata ? t("export.exportInfo.repositoryArchive") : t("export.exportInfo.repository")}</p>
