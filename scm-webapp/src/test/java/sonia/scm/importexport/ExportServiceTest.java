@@ -55,6 +55,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -129,6 +130,7 @@ class ExportServiceTest {
 
   @Test
   void shouldShowCorrectExportStatus() {
+    doNothing().when(subject).checkPermission("repository:export:id-1");
     exportService.store(REPOSITORY, false, false, false);
     assertThat(exportService.isExporting(REPOSITORY)).isTrue();
 
@@ -138,6 +140,7 @@ class ExportServiceTest {
 
   @Test
   void shouldOnlyClearRepositoryExports() {
+    doNothing().when(subject).checkPermission("repository:export:id-1");
     Repository hvpt = RepositoryTestData.createHappyVerticalPeopleTransporter();
     dataStore.put(hvpt.getId(), new RepositoryExportInformation());
 
@@ -153,6 +156,7 @@ class ExportServiceTest {
 
   @Test
   void shouldGetExportInformation() {
+    doNothing().when(subject).checkPermission("repository:export:id-1");
     exportService.store(REPOSITORY, true, true, false);
     RepositoryExportInformation exportInformation = exportService.getExportInformation(REPOSITORY);
 
@@ -169,6 +173,7 @@ class ExportServiceTest {
 
   @Test
   void shouldResolveFileExtension() {
+    doNothing().when(subject).checkPermission("repository:export:id-1");
     String extension = "tar.gz.enc";
     RepositoryExportInformation info = new RepositoryExportInformation();
     dataStore.put(REPOSITORY.getId(), info);

@@ -27,6 +27,7 @@ package sonia.scm.importexport;
 import org.apache.shiro.SecurityUtils;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.ExportFailedException;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
@@ -63,6 +64,7 @@ public class ExportService {
   }
 
   public OutputStream store(Repository repository, boolean withMetadata, boolean compressed, boolean encrypted) {
+    RepositoryPermissions.export(repository).check();
     storeExportInformation(repository.getId(), withMetadata, compressed, encrypted);
     try {
       return storeNewBlob(repository.getId()).getOutputStream();
@@ -76,6 +78,7 @@ public class ExportService {
   }
 
   public RepositoryExportInformation getExportInformation(Repository repository) {
+    RepositoryPermissions.export(repository).check();
     RepositoryExportInformation info = createDataStore().get(repository.getId());
     if (info == null) {
       throw new NotFoundException(RepositoryExportInformation.class, repository.getId());
@@ -84,6 +87,7 @@ public class ExportService {
   }
 
   public InputStream getData(Repository repository) throws IOException {
+    RepositoryPermissions.export(repository).check();
     Blob blob = getBlob(repository.getId());
     if (blob == null) {
       throw new NotFoundException(Blob.class, repository.getId());
@@ -92,22 +96,26 @@ public class ExportService {
   }
 
   public void checkExportIsAvailable(Repository repository) {
+    RepositoryPermissions.export(repository).check();
     if (createDataStore().get(repository.getId()) == null) {
       throw new NotFoundException(RepositoryExportInformation.class, repository.getId());
     }
   }
 
   public String getFileExtension(Repository repository) {
+    RepositoryPermissions.export(repository).check();
     RepositoryExportInformation exportInfo = getExportInformation(repository);
     return fileExtensionResolver.resolve(repository, exportInfo.isWithMetadata(), exportInfo.isCompressed(), exportInfo.isEncrypted());
   }
 
   public void clear(String repositoryId) {
+    RepositoryPermissions.export(repositoryId).check();
     createDataStore().remove(repositoryId);
     createBlobStore(repositoryId).clear();
   }
 
   public void setExportFinished(Repository repository) {
+    RepositoryPermissions.export(repository).check();
     DataStore<RepositoryExportInformation> dataStore = createDataStore();
     RepositoryExportInformation info = dataStore.get(repository.getId());
     info.setStatus(ExportStatus.FINISHED);
@@ -115,6 +123,7 @@ public class ExportService {
   }
 
   public boolean isExporting(Repository repository) {
+    RepositoryPermissions.export(repository).check();
     RepositoryExportInformation info = createDataStore().get(repository.getId());
     return info != null && info.getStatus() == ExportStatus.EXPORTING;
   }
