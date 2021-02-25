@@ -30,9 +30,7 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveOutputStream;
 import org.junit.Before;
 import org.junit.Test;
-import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.HgTestUtil;
-import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.util.Archives;
@@ -41,41 +39,41 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class HgUnbundleCommandTest extends AbstractHgCommandTestBase {
 
-  private ScmEventBus eventBus;
   private HgUnbundleCommand unbundleCommand;
-  private HgPostReceiveRepositoryHookEventFactory eventFactory;
+  private HgRepositoryHookEventFactory eventFactory;
 
   @Before
   public void initUnbundleCommand() {
-    eventBus = mock(ScmEventBus.class);
-    eventFactory = mock(HgPostReceiveRepositoryHookEventFactory.class);
-    unbundleCommand = new HgUnbundleCommand(cmdContext, eventBus, new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), null), eventFactory);
+    eventFactory = mock(HgRepositoryHookEventFactory.class);
+    unbundleCommand = new HgUnbundleCommand(cmdContext, new HgLazyChangesetResolver(HgTestUtil.createFactory(handler, repositoryDirectory), null), eventFactory);
   }
 
   @Test
   public void shouldUnbundleRepositoryFiles() throws IOException {
-    when(eventFactory.createEvent(eq(cmdContext), any()))
-      .thenReturn(new PostReceiveRepositoryHookEvent(new RepositoryHookEvent(null, repository, RepositoryHookType.POST_RECEIVE)));
+    RepositoryHookEvent event = new RepositoryHookEvent(null, repository, RepositoryHookType.POST_RECEIVE);
+    when(eventFactory.createEvent(eq(cmdContext), any())).thenReturn(event);
 
+    AtomicReference<RepositoryHookEvent> receivedEvent = new AtomicReference<>();
 
     String filePath = "test-input";
     String fileContent = "HeartOfGold";
     UnbundleCommandRequest unbundleCommandRequest = createUnbundleCommandRequestForFile(filePath, fileContent);
+    unbundleCommandRequest.setPostEventSink(receivedEvent::set);
 
     unbundleCommand.unbundle(unbundleCommandRequest);
 
     assertFileWithContentWasCreated(cmdContext.getDirectory(), filePath, fileContent);
-    verify(eventBus).post(any(PostReceiveRepositoryHookEvent.class));
+    assertThat(receivedEvent.get()).isSameAs(event);
   }
 
   @Test

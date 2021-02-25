@@ -62,13 +62,13 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   private static final String REF_SPEC = "refs/heads/*:refs/heads/*";
   private static final Logger LOG = LoggerFactory.getLogger(GitPullCommand.class);
   private final ScmEventBus eventBus;
-  private final GitPostReceiveRepositoryHookEventFactory eventFactory;
+  private final GitRepositoryHookEventFactory eventFactory;
 
   @Inject
   public GitPullCommand(GitRepositoryHandler handler,
                         GitContext context,
                         ScmEventBus eventBus,
-                        GitPostReceiveRepositoryHookEventFactory eventFactory) {
+                        GitRepositoryHookEventFactory eventFactory) {
     super(handler, context);
     this.eventBus = eventBus;
     this.eventFactory = eventFactory;

@@ -50,13 +50,13 @@ public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCo
   private static final String AUTH_SECTION = "auth";
   private final ScmEventBus eventBus;
   private final HgLazyChangesetResolver changesetResolver;
-  private final HgPostReceiveRepositoryHookEventFactory eventFactory;
+  private final HgRepositoryHookEventFactory eventFactory;
 
   public HgPullCommand(HgRepositoryHandler handler,
                        HgCommandContext context,
                        ScmEventBus eventBus,
                        HgLazyChangesetResolver changesetResolver,
-                       HgPostReceiveRepositoryHookEventFactory eventFactory
+                       HgRepositoryHookEventFactory eventFactory
   ) {
     super(handler, context);
     this.eventBus = eventBus;

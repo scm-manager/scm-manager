@@ -33,9 +33,7 @@ import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.wc.SVNClientManager;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
 import sonia.scm.ContextEntry;
-import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.SvnUtil;
@@ -64,17 +62,14 @@ public class SvnUnbundleCommand extends AbstractSvnCommand implements UnbundleCo
 
   private static final Logger LOG = LoggerFactory.getLogger(SvnUnbundleCommand.class);
   private final HookContextFactory hookContextFactory;
-  private final ScmEventBus eventBus;
   private final SvnLogCommand svnLogCommand;
 
   public SvnUnbundleCommand(SvnContext context,
                             HookContextFactory hookContextFactory,
-                            ScmEventBus eventBus,
                             SvnLogCommand svnLogCommand
   ) {
     super(context);
     this.hookContextFactory = hookContextFactory;
-    this.eventBus = eventBus;
     this.svnLogCommand = svnLogCommand;
   }
 
@@ -105,19 +100,18 @@ public class SvnUnbundleCommand extends AbstractSvnCommand implements UnbundleCo
       SvnUtil.dispose(clientManager);
     }
 
-    firePostReceiveRepositoryHookEvent();
+    fireHookEvent(request);
     return response;
   }
 
-  private void firePostReceiveRepositoryHookEvent() {
-    eventBus.post(createEvent());
+  private void fireHookEvent(UnbundleCommandRequest request) {
+    request.getPostEventSink().accept(createEvent());
   }
 
-  private PostReceiveRepositoryHookEvent createEvent() {
+  private RepositoryHookEvent createEvent() {
     Repository repository = this.context.getRepository();
     HookContext context = hookContextFactory.createContext(new SvnImportHookContextProvider(repository, svnLogCommand), repository);
-    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, repository, POST_RECEIVE);
-    return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
+    return new RepositoryHookEvent(context, repository, POST_RECEIVE);
   }
 
   private void restore(SVNAdminClient adminClient, ByteSource dump, File repository) throws SVNException, IOException {

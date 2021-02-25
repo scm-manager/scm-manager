@@ -29,6 +29,7 @@ import org.junit.Before;
 import org.junit.Test;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
@@ -43,14 +44,14 @@ public class HgPostReceiveRepositoryHookEventFactoryTest extends AbstractHgComma
 
   private HookContext hookContext;
 
-  private HgPostReceiveRepositoryHookEventFactory eventFactory;
+  private HgRepositoryHookEventFactory eventFactory;
 
   @Before
   public void init() {
     HookContextFactory hookContextFactory = mock(HookContextFactory.class);
     hookContext = mock(HookContext.class, RETURNS_DEEP_STUBS);
     when(hookContextFactory.createContext(any(), any())).thenReturn(hookContext);
-    eventFactory = new HgPostReceiveRepositoryHookEventFactory(hookContextFactory);
+    eventFactory = new HgRepositoryHookEventFactory(hookContextFactory);
   }
 
   @Test
@@ -64,7 +65,7 @@ public class HgPostReceiveRepositoryHookEventFactoryTest extends AbstractHgComma
 
     HgLazyChangesetResolver changesetResolver = mock(HgLazyChangesetResolver.class);
 
-    PostReceiveRepositoryHookEvent event = eventFactory.createEvent(cmdContext, changesetResolver);
+    RepositoryHookEvent event = eventFactory.createEvent(cmdContext, changesetResolver);
 
     assertThat(event.getContext().getBranchProvider().getCreatedOrModified()).isSameAs(branches);
     assertThat(event.getContext().getTagProvider().getCreatedTags()).isSameAs(tags);

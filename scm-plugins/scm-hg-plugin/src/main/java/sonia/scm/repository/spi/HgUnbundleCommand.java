@@ -27,7 +27,7 @@ package sonia.scm.repository.spi;
 import com.google.common.io.ByteSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.api.UnbundleResponse;
 
 import java.io.IOException;
@@ -41,17 +41,14 @@ public class HgUnbundleCommand implements UnbundleCommand {
   private static final Logger LOG = LoggerFactory.getLogger(HgUnbundleCommand.class);
 
   private final HgCommandContext context;
-  private final ScmEventBus eventBus;
   private final HgLazyChangesetResolver changesetResolver;
-  private final HgPostReceiveRepositoryHookEventFactory eventFactory;
+  private final HgRepositoryHookEventFactory eventFactory;
 
   HgUnbundleCommand(HgCommandContext context,
-                    ScmEventBus eventBus,
                     HgLazyChangesetResolver changesetResolver,
-                    HgPostReceiveRepositoryHookEventFactory eventFactory
+                    HgRepositoryHookEventFactory eventFactory
   ) {
     this.context = context;
-    this.eventBus = eventBus;
     this.changesetResolver = changesetResolver;
     this.eventFactory = eventFactory;
   }
@@ -67,12 +64,15 @@ public class HgUnbundleCommand implements UnbundleCommand {
     }
 
     unbundleRepositoryFromRequest(request, repositoryDir);
-    firePostReceiveRepositoryHookEvent();
+    fireHookEvent(request);
     return new UnbundleResponse(0);
   }
 
-  private void firePostReceiveRepositoryHookEvent() {
-    eventBus.post(eventFactory.createEvent(context, changesetResolver));
+  private void fireHookEvent(UnbundleCommandRequest request) {
+    RepositoryHookEvent event = eventFactory.createEvent(context, changesetResolver);
+    if (event != null) {
+      request.getPostEventSink().accept(event);
+    }
   }
 
   private void unbundleRepositoryFromRequest(UnbundleCommandRequest request, Path repositoryDir) throws IOException {

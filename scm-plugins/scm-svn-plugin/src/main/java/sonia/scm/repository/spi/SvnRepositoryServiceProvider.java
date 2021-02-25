@@ -26,7 +26,6 @@ package sonia.scm.repository.spi;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Closeables;
-import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.SvnWorkingCopyFactory;
@@ -52,17 +51,14 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
   private final SvnContext context;
   private final SvnWorkingCopyFactory workingCopyFactory;
   private final HookContextFactory hookContextFactory;
-  private final ScmEventBus eventBus;
 
   SvnRepositoryServiceProvider(SvnRepositoryHandler handler,
                                Repository repository,
                                SvnWorkingCopyFactory workingCopyFactory,
-                               HookContextFactory hookContextFactory,
-                               ScmEventBus eventBus) {
+                               HookContextFactory hookContextFactory) {
     this.context = new SvnContext(repository, handler.getDirectory(repository.getId()));
     this.workingCopyFactory = workingCopyFactory;
     this.hookContextFactory = hookContextFactory;
-    this.eventBus = eventBus;
   }
 
   @Override
@@ -122,6 +118,6 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public UnbundleCommand getUnbundleCommand() {
-    return new SvnUnbundleCommand(context, hookContextFactory, eventBus, new SvnLogCommand(context));
+    return new SvnUnbundleCommand(context, hookContextFactory, new SvnLogCommand(context));
   }
 }

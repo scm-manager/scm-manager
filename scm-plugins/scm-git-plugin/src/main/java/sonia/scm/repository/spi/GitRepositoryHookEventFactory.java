@@ -24,34 +24,38 @@
 
 package sonia.scm.repository.spi;
 
-import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.GitChangesetConverter;
+import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
 
 import javax.inject.Inject;
+import java.io.IOException;
 import java.util.List;
 
 import static sonia.scm.repository.RepositoryHookType.POST_RECEIVE;
-import static sonia.scm.repository.spi.HgBranchesTagsExtractor.extractBranches;
-import static sonia.scm.repository.spi.HgBranchesTagsExtractor.extractTags;
 
-class HgPostReceiveRepositoryHookEventFactory {
+class GitRepositoryHookEventFactory {
 
   private final HookContextFactory hookContextFactory;
+  private final GitChangesetConverterFactory changesetConverterFactory;
 
   @Inject
-  public HgPostReceiveRepositoryHookEventFactory(HookContextFactory hookContextFactory) {
+  public GitRepositoryHookEventFactory(HookContextFactory hookContextFactory, GitChangesetConverterFactory changesetConverterFactory) {
     this.hookContextFactory = hookContextFactory;
+    this.changesetConverterFactory = changesetConverterFactory;
   }
 
-  PostReceiveRepositoryHookEvent createEvent(HgCommandContext hgContext, HgLazyChangesetResolver changesetResolver) {
-    List<String> branches = extractBranches(hgContext);
-    List<Tag> tags = extractTags(hgContext);
-    HgImportHookContextProvider contextProvider = new HgImportHookContextProvider(branches, tags, changesetResolver);
-    HookContext context = hookContextFactory.createContext(contextProvider, hgContext.getScmRepository());
-    RepositoryHookEvent repositoryHookEvent = new RepositoryHookEvent(context, hgContext.getScmRepository(), POST_RECEIVE);
-    return new PostReceiveRepositoryHookEvent(repositoryHookEvent);
+  RepositoryHookEvent createEvent(GitContext gitContext,
+                                             List<String> branches,
+                                             List<Tag> tags,
+                                             GitLazyChangesetResolver changesetResolver
+  ) throws IOException {
+    GitChangesetConverter converter = changesetConverterFactory.create(gitContext.open());
+    GitImportHookContextProvider contextProvider = new GitImportHookContextProvider(converter, branches, tags, changesetResolver);
+    HookContext context = hookContextFactory.createContext(contextProvider, gitContext.getRepository());
+    return new RepositoryHookEvent(context, gitContext.getRepository(), POST_RECEIVE);
   }
 }

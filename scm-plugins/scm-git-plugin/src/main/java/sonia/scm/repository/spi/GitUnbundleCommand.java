@@ -30,7 +30,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
-import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.UnbundleResponse;
@@ -49,15 +49,11 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
 
   private static final Logger LOG = LoggerFactory.getLogger(GitUnbundleCommand.class);
 
-  private final ScmEventBus eventBus;
-  private final GitPostReceiveRepositoryHookEventFactory eventFactory;
+  private final GitRepositoryHookEventFactory eventFactory;
 
   @Inject
-  GitUnbundleCommand(GitContext context,
-                     ScmEventBus eventBus,
-                     GitPostReceiveRepositoryHookEventFactory eventFactory) {
+  GitUnbundleCommand(GitContext context, GitRepositoryHookEventFactory eventFactory) {
     super(context);
-    this.eventBus = eventBus;
     this.eventFactory = eventFactory;
   }
 
@@ -72,18 +68,21 @@ public class GitUnbundleCommand extends AbstractGitCommand implements UnbundleCo
     }
 
     unbundleRepositoryFromRequest(request, repositoryDir);
-    firePostReceiveRepositoryHookEvent();
+    fireRepositoryHookEvent(request);
 
     return new UnbundleResponse(0);
   }
 
-  private void firePostReceiveRepositoryHookEvent() {
+  private void fireRepositoryHookEvent(UnbundleCommandRequest request) {
     try {
       Git git = Git.wrap(context.open());
       List<String> branches = extractBranches(git);
       List<Tag> tags = extractTags(git);
       GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(context.getRepository(), git);
-      eventBus.post(eventFactory.createEvent(context, branches, tags, changesetResolver));
+      RepositoryHookEvent event = eventFactory.createEvent(context, branches, tags, changesetResolver);
+      if (event != null) {
+        request.getPostEventSink().accept(event);
+      }
     } catch (IOException | GitAPIException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(context.getRepository()).build(),

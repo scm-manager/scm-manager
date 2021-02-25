@@ -80,7 +80,7 @@ public class AbstractRemoteCommandTestBase {
     outgoing = Git.init().setDirectory(outgoingDirectory).setBare(false).call();
 
     eventBus = mock(ScmEventBus.class);
-    eventFactory = mock(GitPostReceiveRepositoryHookEventFactory.class);
+    eventFactory = mock(GitRepositoryHookEventFactory.class);
 
     handler = mock(GitRepositoryHandler.class);
     when(handler.getDirectory(incomingRepository.getId())).thenReturn(
@@ -212,5 +212,5 @@ public class AbstractRemoteCommandTestBase {
   private ScmTransportProtocol proto;
 
   protected ScmEventBus eventBus;
-  protected GitPostReceiveRepositoryHookEventFactory eventFactory;
+  protected GitRepositoryHookEventFactory eventFactory;
 }
