@@ -34,7 +34,7 @@ import {
   Subtitle
 } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import { Link, Repository } from "@scm-manager/ui-types";
+import { ExportInfo, Link, Repository } from "@scm-manager/ui-types";
 import { useExportInfo, useExportRepository } from "@scm-manager/ui-api";
 import styled from "styled-components";
 
@@ -50,6 +50,33 @@ const InfoBox = styled.div`
 
 type Props = {
   repository: Repository;
+};
+
+const ExportInterruptedNotification = () => {
+  const [t] = useTranslation("repos");
+  return <Notification type="warning">{t("export.exportInfo.interrupted")}</Notification>;
+};
+
+const ExportInfoBox: FC<{ exportInfo: ExportInfo }> = ({ exportInfo }) => {
+  const [t] = useTranslation("repos");
+  return (
+    <InfoBox>
+      <strong>{t("export.exportInfo.infoBoxTitle")}</strong>
+      <p>{t("export.exportInfo.exporter", { username: exportInfo.exporterName })}</p>
+      <p>
+        {t("export.exportInfo.created")}
+        <DateShort date={exportInfo.created} />
+      </p>
+      <br />
+      <p>{exportInfo.withMetadata ? t("export.exportInfo.repositoryArchive") : t("export.exportInfo.repository")}</p>
+      {exportInfo.encrypted && (
+        <>
+          <br />
+          <p>{t("export.exportInfo.encrypted")}</p>
+        </>
+      )}
+    </InfoBox>
+  );
 };
 
 const ExportRepository: FC<Props> = ({ repository }) => {
@@ -82,28 +109,9 @@ const ExportRepository: FC<Props> = ({ repository }) => {
     }
 
     if (exportInfo.status === "INTERRUPTED") {
-      return <Notification type="warning">{t("export.exportInfo.interrupted")}</Notification>;
+      return <ExportInterruptedNotification />;
     } else {
-      return (
-        <InfoBox>
-          <strong>{t("export.exportInfo.infoBoxTitle")}</strong>
-          <p>{t("export.exportInfo.exporter", { username: exportInfo.exporterName })}</p>
-          <p>
-            {t("export.exportInfo.created")}
-            <DateShort date={exportInfo.created} />
-          </p>
-          <br />
-          <p>
-            {exportInfo.withMetadata ? t("export.exportInfo.repositoryArchive") : t("export.exportInfo.repository")}
-          </p>
-          {exportInfo.encrypted && (
-            <>
-              <br />
-              <p>{t("export.exportInfo.encrypted")}</p>
-            </>
-          )}
-        </InfoBox>
-      );
+      return <ExportInfoBox exportInfo={exportInfo} />;
     }
   };
 

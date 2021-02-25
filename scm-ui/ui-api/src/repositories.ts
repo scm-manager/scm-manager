@@ -233,10 +233,11 @@ export const useUnarchiveRepository = () => {
 
 export const useExportInfo = (repository: Repository): ApiResult<ExportInfo> => {
   const link = requiredLink(repository, "exportInfo");
+  //TODO Refetch while exporting to update the page
   const { isLoading, error, data } = useQuery<ExportInfo, Error>(
     ["repository", repository.namespace, repository.name, "exportInfo"],
     () => apiClient.get(link).then(response => response.json()),
-    { refetchInterval: 1000 }
+    {}
   );
 
   return {
