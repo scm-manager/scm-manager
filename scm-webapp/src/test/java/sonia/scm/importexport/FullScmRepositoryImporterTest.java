@@ -31,10 +31,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Answers;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.ImportRepositoryHookEvent;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryTestData;
@@ -52,6 +57,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -98,6 +104,15 @@ class FullScmRepositoryImporterTest {
   @InjectMocks
   private RepositoryImportStep repositoryImportStep;
 
+  @Mock
+  private ScmEventBus eventBus;
+
+  @Mock
+  private RepositoryHookEvent event;
+
+  @Captor
+  private ArgumentCaptor<Consumer<RepositoryHookEvent>> eventSinkCaptor;
+
   private FullScmRepositoryImporter fullImporter;
 
   @BeforeEach
@@ -108,7 +123,9 @@ class FullScmRepositoryImporterTest {
       storeImportStep,
       repositoryImportStep,
       repositoryManager,
-      repositoryImportExportEncryption);
+      repositoryImportExportEncryption,
+      eventBus
+    );
   }
 
   @BeforeEach
@@ -194,16 +211,6 @@ class FullScmRepositoryImporterTest {
       verify(repositoryManager).modify(REPOSITORY);
       verify(unbundleCommandBuilder).unbundle((InputStream) argThat(argument -> argument.getClass().equals(NoneClosingInputStream.class)));
       verify(workdirProvider, never()).createNewWorkdir(REPOSITORY.getId());
-    }
-
-    @Test
-    void shouldDecryptStreamWhenPasswordSet() throws IOException {
-      InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
-      when(repositoryImportExportEncryption.decrypt(any(), eq("hg2tg"))).thenAnswer(invocation -> invocation.getArgument(0));
-
-      fullImporter.importFromStream(REPOSITORY, stream, "hg2tg");
-
-      verify(updateEngine).update(REPOSITORY.getId());
     }
   }
 }
