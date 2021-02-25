@@ -130,7 +130,7 @@ class ExportServiceTest {
 
   @Test
   void shouldShowCorrectExportStatus() {
-    doNothing().when(subject).checkPermission("repository:export:id-1");
+    doNothing().when(subject).checkPermission("repository:export:" + REPOSITORY.getId());
     exportService.store(REPOSITORY, false, false, false);
     assertThat(exportService.isExporting(REPOSITORY)).isTrue();
 
@@ -140,7 +140,7 @@ class ExportServiceTest {
 
   @Test
   void shouldOnlyClearRepositoryExports() {
-    doNothing().when(subject).checkPermission("repository:export:id-1");
+    doNothing().when(subject).checkPermission("repository:export:" + REPOSITORY.getId());
     Repository hvpt = RepositoryTestData.createHappyVerticalPeopleTransporter();
     dataStore.put(hvpt.getId(), new RepositoryExportInformation());
 
@@ -156,7 +156,7 @@ class ExportServiceTest {
 
   @Test
   void shouldGetExportInformation() {
-    doNothing().when(subject).checkPermission("repository:export:id-1");
+    doNothing().when(subject).checkPermission("repository:export:" + REPOSITORY.getId());
     exportService.store(REPOSITORY, true, true, false);
     RepositoryExportInformation exportInformation = exportService.getExportInformation(REPOSITORY);
 
@@ -173,7 +173,7 @@ class ExportServiceTest {
 
   @Test
   void shouldResolveFileExtension() {
-    doNothing().when(subject).checkPermission("repository:export:id-1");
+    doNothing().when(subject).checkPermission("repository:export:" + REPOSITORY.getId());
     String extension = "tar.gz.enc";
     RepositoryExportInformation info = new RepositoryExportInformation();
     dataStore.put(REPOSITORY.getId(), info);
