@@ -76,6 +76,37 @@ const ExportRepository: FC<Props> = ({ repository }) => {
     return null;
   }
 
+  const renderExportInfo = () => {
+    if (!exportInfo) {
+      return null;
+    }
+
+    if (exportInfo.status === "INTERRUPTED") {
+      return <Notification type="warning">{t("export.exportInfo.interrupted")}</Notification>;
+    } else {
+      return (
+        <InfoBox>
+          <strong>{t("export.exportInfo.infoBoxTitle")}</strong>
+          <p>{t("export.exportInfo.exporter", { username: exportInfo.exporterName })}</p>
+          <p>
+            {t("export.exportInfo.created")}
+            <DateShort date={exportInfo.created} />
+          </p>
+          <br />
+          <p>
+            {exportInfo.withMetadata ? t("export.exportInfo.repositoryArchive") : t("export.exportInfo.repository")}
+          </p>
+          {exportInfo.encrypted && (
+            <>
+              <br />
+              <p>{t("export.exportInfo.encrypted")}</p>
+            </>
+          )}
+        </InfoBox>
+      );
+    }
+  };
+
   return (
     <>
       <hr />
@@ -116,26 +147,7 @@ const ExportRepository: FC<Props> = ({ repository }) => {
             />
           </div>
         )}
-        {exportInfo && (
-          <InfoBox>
-            <strong>{t("export.exportInfo.infoBoxTitle")}</strong>
-            <p>{t("export.exportInfo.exporter", { username: exportInfo.exporterName })}</p>
-            <p>
-              {t("export.exportInfo.created")}
-              <DateShort date={exportInfo.created} />
-            </p>
-            <br />
-            <p>
-              {exportInfo.withMetadata ? t("export.exportInfo.repositoryArchive") : t("export.exportInfo.repository")}
-            </p>
-            {exportInfo.encrypted && (
-              <>
-                <br />
-                <p>{t("export.exportInfo.encrypted")}</p>
-              </>
-            )}
-          </InfoBox>
-        )}
+        {renderExportInfo()}
         <Level
           right={
             <ButtonGroup>

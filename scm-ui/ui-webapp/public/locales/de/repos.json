@@ -287,7 +287,8 @@
       "created": "Erstellt am: ",
       "repository": "Der Export enthält: \n- das Repository",
       "repositoryArchive": "Der Export enthält: \n- das Repository\n- die Metadaten zum Repository, z. B. aus den Plugins\n- eine Umgebungsbeschreibung des exportierenden SCM-Managers\n- weitere Informationen zum Repository",
-      "encrypted": "Verschlüsselt: Der gespeicherte Export wurde verschlüsselt."
+      "encrypted": "Verschlüsselt: Der gespeicherte Export wurde verschlüsselt.",
+      "interrupted": "Unterbrochen: Der Export wurde während der Erstellung abgebrochen. Womöglich durch einen Server-Neustart."
     }
   },
   "sources": {

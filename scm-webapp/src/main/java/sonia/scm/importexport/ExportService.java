@@ -115,7 +115,7 @@ public class ExportService {
 
   public boolean isExporting(Repository repository) {
     RepositoryExportInformation info = createDataStore().get(repository.getId());
-    return info != null && info.getStatus() != ExportStatus.FINISHED;
+    return info != null && info.getStatus() == ExportStatus.EXPORTING;
   }
 
   public void cleanupUnfinishedExports() {

@@ -287,7 +287,8 @@
       "created": "Created on: ",
       "repository": "This export contains: \n- the repository",
       "repositoryArchive": "This export contains: \n- the repository\n- the metadata which exist for this repository, e.g. from plugins\n- an environment description for the exporting SCM-Manager\n- additional information for this repository",
-      "encrypted": "Encrypted: The stored export has been encrypted."
+      "encrypted": "Encrypted: The stored export has been encrypted.",
+      "interrupted": "Interrupted: The export was aborted during creation. Possibly due to a server restart."
     }
   },
   "sources": {
