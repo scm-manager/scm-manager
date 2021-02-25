@@ -164,7 +164,7 @@ class FullScmRepositoryImporterTest {
       lenient().when(workdirProvider.createNewWorkdir(REPOSITORY.getId())).thenReturn(temp.toFile());
 
       when(compatibilityChecker.check(any())).thenReturn(true);
-      when(repositoryManager.create(eq(REPOSITORY))).thenReturn(REPOSITORY);
+      when(repositoryManager.create(REPOSITORY)).thenReturn(REPOSITORY);
     }
 
     @Test
