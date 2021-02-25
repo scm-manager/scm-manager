@@ -33,6 +33,8 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
+
 class FileBasedStoreEntryImporter implements StoreEntryImporter {
 
   private final Path directory;
@@ -50,7 +52,7 @@ class FileBasedStoreEntryImporter implements StoreEntryImporter {
   public void importEntry(String name, InputStream stream) {
     Path filePath = directory.resolve(name);
     try {
-      Files.copy(stream, filePath);
+      Files.copy(stream, filePath, REPLACE_EXISTING);
     } catch (IOException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.noContext(),
