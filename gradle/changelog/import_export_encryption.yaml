@@ -1,2 +1,4 @@
 - type: added
   description: Add option to encrypt repository exports with a password and decrypt them on repository import ([#1533](https://github.com/scm-manager/scm-manager/pull/1533))
+- type: added
+  description: Make repository export asynchronous. ([#1533](https://github.com/scm-manager/scm-manager/pull/1533))

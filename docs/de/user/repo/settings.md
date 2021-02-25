@@ -20,7 +20,7 @@ Ein archiviertes Repository kann nicht mehr verändert werden.
 In dem Bereich "Repository exportieren" kann das Repository in unterschiedlichen Formaten exportiert werden.
 Während eines laufenden Exports, kann auf das Repository nur lesend zugriffen werden. 
 Der Repository Export wird asynchron erstellt und auf dem Server gespeichert.
-Existiert bereits ein Export auf dem Server, wird dieser vorher gelöscht, da es immer nur einen Export geben kann. 
+Existiert bereits ein Export für dieses Repository auf dem Server, wird dieser vorher gelöscht, da es immer nur einen Export pro Repository geben kann. 
 Exporte werden 10 Tage nach deren Erstellung automatisch vom SCM-Server gelöscht.
 Falls ein Export existiert, wird über die blaue Info-Box angezeigt von wem, wann und wie dieser Export erzeugt wurde.
 
