@@ -45,11 +45,11 @@ import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.importexport.ExportFileExtensionResolver;
 import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.ExportStatus;
 import sonia.scm.importexport.FullScmRepositoryExporter;
 import sonia.scm.importexport.FullScmRepositoryImporter;
-import sonia.scm.importexport.RepositoryExportInformation;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
 import sonia.scm.repository.CustomNamespaceStrategy;
 import sonia.scm.repository.NamespaceAndName;
@@ -166,6 +166,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Mock
   private RepositoryImportExportEncryption repositoryImportExportEncryption;
   @Mock
+  private ExportFileExtensionResolver fileExtensionResolver;
+  @Mock
   private ExportService exportService;
 
   @Captor
@@ -189,7 +191,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
     super.repositoryImportResource = new RepositoryImportResource(repositoryManager, dtoToRepositoryMapper, serviceFactory, resourceLinks, eventBus, fullScmRepositoryImporter, repositoryImportExportEncryption);
-    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryImportExportEncryption, exportService, exportInformationToDtoMapper, resourceLinks);
+    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryImportExportEncryption, exportService, exportInformationToDtoMapper, fileExtensionResolver, resourceLinks);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     when(scmPathInfoStore.get()).thenReturn(uriInfo);

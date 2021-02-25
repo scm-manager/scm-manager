@@ -39,19 +39,19 @@ public class ExportFileExtensionResolver {
     this.serviceFactory = serviceFactory;
   }
 
-  public String resolve(Repository repository, RepositoryExportInformation info) {
+  public String resolve(Repository repository, boolean withMetadata, boolean compressed, boolean encrypted) {
     StringBuilder builder = new StringBuilder();
-    if (info.isWithMetadata()) {
+    if (withMetadata) {
       builder.append("tar.gz");
     } else {
       try (RepositoryService service = serviceFactory.create(repository)) {
         builder.append(service.getBundleCommand().getFileExtension());
       }
-      if (info.isCompressed()) {
+      if (compressed) {
         builder.append(".gz");
       }
     }
-    if (info.isEncrypted()) {
+    if (encrypted) {
       builder.append(".enc");
     }
     return builder.toString();

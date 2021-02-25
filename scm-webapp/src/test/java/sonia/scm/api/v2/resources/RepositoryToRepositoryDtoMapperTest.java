@@ -287,6 +287,7 @@ public class RepositoryToRepositoryDtoMapperTest {
   @Test
   public void shouldCreateExportLinks() {
     Repository repository = createTestRepository();
+    repository.setType("svn");
     RepositoryDto dto = mapper.map(repository);
     assertEquals(
       "http://example.com/base/v2/repositories/testspace/test/export/svn",

@@ -39,8 +39,10 @@ import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
 import sonia.scm.Type;
+import sonia.scm.importexport.ExportFileExtensionResolver;
 import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.FullScmRepositoryExporter;
+import sonia.scm.importexport.RepositoryExportInformation;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
@@ -93,6 +95,7 @@ public class RepositoryExportResource {
   private final ExecutorService repositoryExportHandler;
   private final ExportService exportService;
   private final RepositoryExportInformationToDtoMapper informationToDtoMapper;
+  private final ExportFileExtensionResolver fileExtensionResolver;
   private final ResourceLinks resourceLinks;
 
   @Inject
@@ -102,13 +105,14 @@ public class RepositoryExportResource {
                                   RepositoryImportExportEncryption repositoryImportExportEncryption,
                                   ExportService exportService,
                                   RepositoryExportInformationToDtoMapper informationToDtoMapper,
-                                  ResourceLinks resourceLinks) {
+                                  ExportFileExtensionResolver fileExtensionResolver, ResourceLinks resourceLinks) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.fullScmRepositoryExporter = fullScmRepositoryExporter;
     this.repositoryImportExportEncryption = repositoryImportExportEncryption;
     this.exportService = exportService;
     this.informationToDtoMapper = informationToDtoMapper;
+    this.fileExtensionResolver = fileExtensionResolver;
     this.resourceLinks = resourceLinks;
     this.repositoryExportHandler = this.createExportHandlerPool();
   }
@@ -441,9 +445,10 @@ public class RepositoryExportResource {
   }
 
   private Response exportFullRepository(Repository repository, String password, boolean async) {
-    String fileExtension = resolveFullExportFileExtension(password);
+    boolean encrypted = !Strings.isNullOrEmpty(password);
+    String fileExtension = fileExtensionResolver.resolve(repository, true, true, encrypted);
     if (async) {
-      OutputStream blobOutputStream = exportService.store(repository, true, true, !Strings.isNullOrEmpty(password));
+      OutputStream blobOutputStream = exportService.store(repository, true, true, encrypted);
       fullScmRepositoryExporter.export(repository, blobOutputStream, password);
       exportService.setExportFinished(repository);
       return Response.status(204).build();
@@ -457,17 +462,12 @@ public class RepositoryExportResource {
     }
   }
 
-  private String resolveFullExportFileExtension(String password) {
-    if (!Strings.isNullOrEmpty(password)) {
-      return "tar.gz.enc";
-    }
-    return "tar.gz";
-  }
 
   private Response exportRepository(Repository repository, String password, boolean compressed, boolean async) {
+    boolean encrypted = !Strings.isNullOrEmpty(password);
     try (final RepositoryService service = serviceFactory.create(repository)) {
       BundleCommandBuilder bundleCommand = service.getBundleCommand();
-      String fileExtension = resolveFileExtension(bundleCommand, compressed, !Strings.isNullOrEmpty(password));
+      String fileExtension = fileExtensionResolver.resolve(repository, false, compressed, encrypted);
       if (async) {
         OutputStream blobOutputStream = exportService.store(repository, false, compressed, !Strings.isNullOrEmpty(password));
         OutputStream os = repositoryImportExportEncryption.optionallyEncrypt(blobOutputStream, password);
@@ -503,16 +503,6 @@ public class RepositoryExportResource {
       .build();
   }
 
-  private String resolveFileExtension(BundleCommandBuilder bundleCommand, boolean compressed, boolean encrypted) {
-    StringBuilder fileExtensionBuilder = new StringBuilder(bundleCommand.getFileExtension());
-    if (compressed) {
-      fileExtensionBuilder.append(".gz");
-    }
-    if (encrypted) {
-      fileExtensionBuilder.append(".enc");
-    }
-    return fileExtensionBuilder.toString();
-  }
 
   private String createContentDispositionHeaderValue(Repository repository, String fileExtension) {
     String timestamp = createFormattedTimestamp();

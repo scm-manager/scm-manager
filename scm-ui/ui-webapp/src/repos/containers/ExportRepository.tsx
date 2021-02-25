@@ -114,69 +114,67 @@ const ExportRepository: FC<Props> = ({ repository }) => {
       <ErrorNotification error={errorInfo} />
       <ErrorNotification error={errorExport} />
       <Notification type="inherit">{t("export.notification")}</Notification>
-      <>
+      <Checkbox
+        checked={fullExport || compressed}
+        label={t("export.compressed.label")}
+        onChange={setCompressed}
+        helpText={t("export.compressed.helpText")}
+        disabled={fullExport}
+      />
+      {repository?._links?.fullExport && (
         <Checkbox
-          checked={fullExport || compressed}
-          label={t("export.compressed.label")}
-          onChange={setCompressed}
-          helpText={t("export.compressed.helpText")}
-          disabled={fullExport}
+          checked={fullExport}
+          label={t("export.fullExport.label")}
+          onChange={setFullExport}
+          helpText={t("export.fullExport.helpText")}
         />
-        {repository?._links?.fullExport && (
-          <Checkbox
-            checked={fullExport}
-            label={t("export.fullExport.label")}
-            onChange={setFullExport}
-            helpText={t("export.fullExport.helpText")}
+      )}
+      <Checkbox
+        checked={encrypt}
+        label={t("export.encrypt.label")}
+        onChange={setEncrypt}
+        helpText={t("export.encrypt.helpText")}
+      />
+      {encrypt && (
+        <div className="columns column is-half">
+          <InputField
+            label={t("export.password.label")}
+            helpText={t("export.password.helpText")}
+            value={password}
+            onChange={setPassword}
+            type="password"
           />
-        )}
-        <Checkbox
-          checked={encrypt}
-          label={t("export.encrypt.label")}
-          onChange={setEncrypt}
-          helpText={t("export.encrypt.helpText")}
-        />
-        {encrypt && (
-          <div className="columns column is-half">
-            <InputField
-              label={t("export.password.label")}
-              helpText={t("export.password.helpText")}
-              value={password}
-              onChange={setPassword}
-              type="password"
-            />
-          </div>
-        )}
-        {renderExportInfo()}
-        <Level
-          right={
-            <ButtonGroup>
-              <a color="info" href={(exportInfo?._links.download as Link)?.href}>
-                <Button
-                  color="info"
-                  disabled={isLoadingInfo || isLoadingExport || !exportInfo?._links.download}
-                  label={t("export.downloadExportButton")}
-                  icon="download"
-                />
-              </a>
+        </div>
+      )}
+      {renderExportInfo()}
+      <Level
+        right={
+          <ButtonGroup>
+            <a color="info" href={(exportInfo?._links.download as Link)?.href}>
               <Button
-                color="primary"
-                action={() =>
-                  exportRepository(repository, {
-                    compressed,
-                    password: encrypt ? password : "",
-                    withMetadata: fullExport
-                  })
-                }
-                loading={isLoadingInfo || isLoadingExport}
-                disabled={isLoadingInfo || isLoadingExport}
-                label={t("export.createExportButton")}
-                icon="file-export"
+                color="info"
+                disabled={isLoadingInfo || isLoadingExport || !exportInfo?._links.download}
+                label={t("export.downloadExportButton")}
+                icon="download"
               />
-            </ButtonGroup>
-          }
-        />
-      </>
+            </a>
+            <Button
+              color="primary"
+              action={() =>
+                exportRepository(repository, {
+                  compressed,
+                  password: encrypt ? password : "",
+                  withMetadata: fullExport
+                })
+              }
+              loading={isLoadingInfo || isLoadingExport}
+              disabled={isLoadingInfo || isLoadingExport}
+              label={t("export.createExportButton")}
+              icon="file-export"
+            />
+          </ButtonGroup>
+        }
+      />
     </>
   );
 };

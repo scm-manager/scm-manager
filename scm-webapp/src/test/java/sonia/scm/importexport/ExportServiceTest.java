@@ -173,7 +173,7 @@ class ExportServiceTest {
     RepositoryExportInformation info = new RepositoryExportInformation();
     dataStore.put(REPOSITORY.getId(), info);
 
-    when(resolver.resolve(REPOSITORY, info)).thenReturn(extension);
+    when(resolver.resolve(REPOSITORY, false, false, false)).thenReturn(extension);
 
     String fileExtension = exportService.getFileExtension(REPOSITORY);
 

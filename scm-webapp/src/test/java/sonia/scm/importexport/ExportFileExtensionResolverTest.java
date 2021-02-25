@@ -47,7 +47,6 @@ import static org.mockito.Mockito.when;
 class ExportFileExtensionResolverTest {
 
   private static final Repository REPOSITORY = RepositoryTestData.createHeartOfGold();
-  private RepositoryExportInformation info;
 
   @Mock
   private RepositoryServiceFactory serviceFactory;
@@ -59,26 +58,16 @@ class ExportFileExtensionResolverTest {
   @InjectMocks
   private ExportFileExtensionResolver resolver;
 
-  @BeforeEach
-  void initInfo() {
-    info = new RepositoryExportInformation(null, null, false, false, false, ExportStatus.EXPORTING);
-  }
-
   @Test
   void shouldResolveWithMetadata() {
-    info.setWithMetadata(true);
-
-    String result = resolver.resolve(REPOSITORY, info);
+    String result = resolver.resolve(REPOSITORY, true, false, false);
 
     assertThat(result).isEqualTo("tar.gz");
   }
 
   @Test
   void shouldResolveWithMetadataAndEncrypted() {
-    info.setWithMetadata(true);
-    info.setEncrypted(true);
-
-    String result = resolver.resolve(REPOSITORY, info);
+    String result = resolver.resolve(REPOSITORY, true, false, true);
 
     assertThat(result).isEqualTo("tar.gz.enc");
   }
@@ -95,35 +84,28 @@ class ExportFileExtensionResolverTest {
 
     @Test
     void shouldResolveDump() {
-      String result = resolver.resolve(REPOSITORY, info);
+      String result = resolver.resolve(REPOSITORY, false, false, false);
 
       assertThat(result).isEqualTo("dump");
     }
 
     @Test
     void shouldResolveDump_Compressed() {
-      info.setCompressed(true);
-
-      String result = resolver.resolve(REPOSITORY, info);
+      String result = resolver.resolve(REPOSITORY, false, true, false);
 
       assertThat(result).isEqualTo("dump.gz");
     }
 
     @Test
     void shouldResolveDump_Encrypted() {
-      info.setEncrypted(true);
-
-      String result = resolver.resolve(REPOSITORY, info);
+      String result = resolver.resolve(REPOSITORY, false, false, true);
 
       assertThat(result).isEqualTo("dump.enc");
     }
 
     @Test
     void shouldResolveDump_Compressed_Encrypted() {
-      info.setEncrypted(true);
-      info.setCompressed(true);
-
-      String result = resolver.resolve(REPOSITORY, info);
+      String result = resolver.resolve(REPOSITORY, false, true, true);
 
       assertThat(result).isEqualTo("dump.gz.enc");
     }

@@ -98,7 +98,8 @@ public class ExportService {
   }
 
   public String getFileExtension(Repository repository) {
-    return fileExtensionResolver.resolve(repository, getExportInformation(repository));
+    RepositoryExportInformation exportInfo = getExportInformation(repository);
+    return fileExtensionResolver.resolve(repository, exportInfo.isWithMetadata(), exportInfo.isCompressed(), exportInfo.isEncrypted());
   }
 
   public void clear(String repositoryId) {
