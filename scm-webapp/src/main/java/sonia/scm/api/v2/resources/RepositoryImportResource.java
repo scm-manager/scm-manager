@@ -328,7 +328,9 @@ public class RepositoryImportResource {
     Map<String, List<InputPart>> formParts = input.getFormDataMap();
     InputStream inputStream = extractInputStream(formParts);
     RepositoryImportFromFileDto repositoryDto = extractRepositoryDto(formParts);
-    inputStream = decryptInputStream(inputStream, repositoryDto.getPassword());
+    if (!Strings.isNullOrEmpty(repositoryDto.getPassword())) {
+      inputStream = decryptInputStream(inputStream, repositoryDto.getPassword());
+    }
 
     Type t = type(manager, type);
     checkSupport(t, Command.UNBUNDLE);

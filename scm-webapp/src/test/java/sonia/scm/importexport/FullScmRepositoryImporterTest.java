@@ -112,10 +112,9 @@ class FullScmRepositoryImporterTest {
   }
 
   @BeforeEach
-  void initRepositoryService() throws IOException {
+  void initRepositoryService() {
     lenient().when(serviceFactory.create(REPOSITORY)).thenReturn(service);
     lenient().when(service.getUnbundleCommand()).thenReturn(unbundleCommandBuilder);
-    lenient().when(repositoryImportExportEncryption.decrypt(any(), any())).thenAnswer(invocation -> invocation.getArgument(0));
   }
 
   @Test
@@ -195,6 +194,16 @@ class FullScmRepositoryImporterTest {
       verify(repositoryManager).modify(REPOSITORY);
       verify(unbundleCommandBuilder).unbundle((InputStream) argThat(argument -> argument.getClass().equals(NoneClosingInputStream.class)));
       verify(workdirProvider, never()).createNewWorkdir(REPOSITORY.getId());
+    }
+
+    @Test
+    void shouldDecryptStreamWhenPasswordSet() throws IOException {
+      InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
+      when(repositoryImportExportEncryption.decrypt(any(), eq("hg2tg"))).thenAnswer(invocation -> invocation.getArgument(0));
+
+      fullImporter.importFromStream(REPOSITORY, stream, "hg2tg");
+
+      verify(updateEngine).update(REPOSITORY.getId());
     }
   }
 }

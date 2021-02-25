@@ -24,6 +24,7 @@
 
 package sonia.scm.importexport;
 
+import com.google.common.base.Strings;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
 import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
@@ -68,7 +69,7 @@ public class FullScmRepositoryImporter {
       if (inputStream.available() > 0) {
         try (
           BufferedInputStream bif = new BufferedInputStream(inputStream);
-          InputStream cif = repositoryImportExportEncryption.decrypt(bif, password);
+          InputStream cif = decryptIfPasswordSet(bif, password);
           GzipCompressorInputStream gcis = new GzipCompressorInputStream(cif);
           TarArchiveInputStream tais = createTarInputStream(gcis)
         ) {
@@ -86,6 +87,14 @@ public class FullScmRepositoryImporter {
         "Could not import repository data from stream; got io exception while reading",
         e
       );
+    }
+  }
+
+  private InputStream decryptIfPasswordSet(InputStream potentiallyEncryptedStream, String password) throws IOException {
+    if (Strings.isNullOrEmpty(password)) {
+      return potentiallyEncryptedStream;
+    } else {
+      return repositoryImportExportEncryption.decrypt(potentiallyEncryptedStream, password);
     }
   }
 
