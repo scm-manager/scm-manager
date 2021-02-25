@@ -30,6 +30,7 @@ import lombok.Setter;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.AlreadyExistsException;
 import sonia.scm.HandlerEventType;
 import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
@@ -51,6 +52,7 @@ import java.util.function.Consumer;
 
 import static java.util.Collections.singletonList;
 import static sonia.scm.ContextEntry.ContextBuilder.noContext;
+import static sonia.scm.importexport.RepositoryImportLogger.ImportType.URL;
 import static sonia.scm.importexport.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.importexport.RepositoryTypeSupportChecker.type;
 
@@ -87,8 +89,12 @@ public class FromUrlImporter {
         repository,
         pullChangesFromRemoteUrl(parameters, logger)
       );
+    } catch (AlreadyExistsException e) {
+      throw e;
     } catch (Exception e) {
-      logger.failed(e);
+      if (logger.started()) {
+        logger.failed(e);
+      }
       eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, true));
       throw new ImportFailedException(noContext(), "Could not import repository from url " + parameters.getImportUrl(), e);
     }
@@ -98,7 +104,7 @@ public class FromUrlImporter {
 
   private Consumer<Repository> pullChangesFromRemoteUrl(RepositoryImportParameters parameters, RepositoryImportLogger logger) {
     return repository -> {
-      logger.start(RepositoryImportLog.ImportType.URL, repository);
+      logger.start(URL, repository);
       try (RepositoryService service = serviceFactory.create(repository)) {
         PullCommandBuilder pullCommand = service.getPullCommand();
         if (!Strings.isNullOrEmpty(parameters.getUsername()) && !Strings.isNullOrEmpty(parameters.getPassword())) {

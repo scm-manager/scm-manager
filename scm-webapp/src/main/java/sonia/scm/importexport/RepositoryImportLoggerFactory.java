@@ -28,42 +28,54 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import sonia.scm.NotFoundException;
-import sonia.scm.store.DataStore;
-import sonia.scm.store.DataStoreFactory;
+import sonia.scm.store.BlobStore;
+import sonia.scm.store.BlobStoreFactory;
+import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintStream;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 public class RepositoryImportLoggerFactory {
 
-  private final DataStoreFactory dataStoreFactory;
+  private final BlobStoreFactory blobStoreFactory;
 
   @Inject
-  RepositoryImportLoggerFactory(DataStoreFactory dataStoreFactory) {
-    this.dataStoreFactory = dataStoreFactory;
+  RepositoryImportLoggerFactory(BlobStoreFactory blobStoreFactory) {
+    this.blobStoreFactory = blobStoreFactory;
   }
 
   RepositoryImportLogger createLogger() {
-    return new RepositoryImportLogger(dataStoreFactory.withType(RepositoryImportLog.class).withName("imports").build());
+    return new RepositoryImportLogger(blobStoreFactory.withName("imports").build());
   }
 
-  public void getLog(String logId, OutputStream out) {
-    DataStore<RepositoryImportLog> importStore = dataStoreFactory.withType(RepositoryImportLog.class).withName("imports").build();
-    RepositoryImportLog log = importStore.getOptional(logId).orElseThrow(() -> new NotFoundException("Log", logId));
+  public void getLog(String logId, OutputStream out) throws IOException {
+    BlobStore importStore = blobStoreFactory.withName("imports").build();
+    InputStream log = importStore
+      .getOptional(logId).orElseThrow(() -> new NotFoundException("Log", logId))
+      .getInputStream();
     checkPermission(log);
-    PrintStream printStream = new PrintStream(out);
-    log.toLogHeader().forEach(printStream::println);
-    log.getEntries()
-      .stream()
-      .map(RepositoryImportLog.Entry::toLogMessage)
-      .forEach(printStream::println);
+    IOUtil.copy(log, out);
   }
 
-  private void checkPermission(RepositoryImportLog log) {
+  private void checkPermission(InputStream log) throws IOException {
     Subject subject = SecurityUtils.getSubject();
-    if (!subject.isPermitted("only:admin:allowed") && !subject.getPrincipal().toString().equals(log.getUserId())) {
+    String logUser = readUserFrom(log);
+    if (!subject.isPermitted("only:admin:allowed") && !subject.getPrincipal().toString().equals(logUser)) {
       throw new AuthorizationException("not permitted");
     }
+  }
+
+  private String readUserFrom(InputStream log) throws IOException {
+    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+    int b;
+    while ((b = log.read()) > 0) {
+      buffer.write(b);
+    }
+    return new String(buffer.toByteArray(), UTF_8);
   }
 }

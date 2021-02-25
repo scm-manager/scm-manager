@@ -24,6 +24,7 @@
 
 package sonia.scm.importexport;
 
+import com.google.common.io.Resources;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
@@ -31,10 +32,12 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import sonia.scm.NotFoundException;
-import sonia.scm.store.InMemoryDataStore;
-import sonia.scm.store.InMemoryDataStoreFactory;
+import sonia.scm.store.Blob;
+import sonia.scm.store.InMemoryBlobStore;
+import sonia.scm.store.InMemoryBlobStoreFactory;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -47,8 +50,8 @@ class RepositoryImportLoggerFactoryTest {
 
   private final Subject subject = mock(Subject.class);
 
-  private final InMemoryDataStore<RepositoryImportLog> store = new InMemoryDataStore<>();
-  private final RepositoryImportLoggerFactory factory = new RepositoryImportLoggerFactory(new InMemoryDataStoreFactory(store));
+  private final InMemoryBlobStore store = new InMemoryBlobStore();
+  private final RepositoryImportLoggerFactory factory = new RepositoryImportLoggerFactory(new InMemoryBlobStoreFactory(store));
 
   @BeforeEach
   void initSubject() {
@@ -61,7 +64,7 @@ class RepositoryImportLoggerFactoryTest {
   }
 
   @Test
-  void shouldReadLogForExportingUser() {
+  void shouldReadLogForExportingUser() throws IOException {
     when(subject.getPrincipal()).thenReturn("dent");
 
     createLog();
@@ -70,19 +73,11 @@ class RepositoryImportLoggerFactoryTest {
 
     factory.getLog("42", out);
 
-    assertThat(out).asString().contains(
-      "Import of repository hitchhiker/HeartOfGold",
-      "Repository type: null",
-      "Imported from: null",
-      "Imported by dent (Arthur Dent)",
-      "Finished successful"
-    )
-      .containsPattern(".+ - import started")
-      .containsPattern(".+ - import finished");
+    assertLogReadCorrectly(out);
   }
 
   @Test
-  void shouldReadLogForAdmin() {
+  void shouldReadLogForAdmin() throws IOException {
     when(subject.getPrincipal()).thenReturn("trillian");
     when(subject.isPermitted(anyString())).thenReturn(true);
 
@@ -92,15 +87,20 @@ class RepositoryImportLoggerFactoryTest {
 
     factory.getLog("42", out);
 
+    assertLogReadCorrectly(out);
+  }
+
+  private void assertLogReadCorrectly(ByteArrayOutputStream out) {
     assertThat(out).asString().contains(
       "Import of repository hitchhiker/HeartOfGold",
-      "Repository type: null",
-      "Imported from: null",
+      "Repository type: git",
+      "Imported from: URL",
       "Imported by dent (Arthur Dent)",
-      "Finished successful"
-    )
-      .containsPattern(".+ - import started")
-      .containsPattern(".+ - import finished");
+      "",
+      "Thu Feb 25 11:11:07 CET 2021 - import started",
+      "Thu Feb 25 11:11:07 CET 2021 - pulling repository from https://github.com/scm-manager/scm-manager",
+      "Thu Feb 25 11:11:08 CET 2021 - import finished successfully"
+    );
   }
 
   @Test
@@ -111,7 +111,7 @@ class RepositoryImportLoggerFactoryTest {
   }
 
   @Test
-  void shouldFailWithoutPermission() {
+  void shouldFailWithoutPermission() throws IOException {
     when(subject.getPrincipal()).thenReturn("trillian");
     createLog();
 
@@ -122,18 +122,12 @@ class RepositoryImportLoggerFactoryTest {
     assertThrows(AuthorizationException.class, () -> factory.getLog("42", out));
   }
 
-  private void createLog() {
-    RepositoryImportLog log = new RepositoryImportLog();
-    log.setRepositoryType("git");
-    log.setNamespace("hitchhiker");
-    log.setName("HeartOfGold");
-    log.setUserId("dent");
-    log.setUserName("Arthur Dent");
-    log.setSuccess(true);
-
-    log.addEntry(new RepositoryImportLog.Entry("import started"));
-    log.addEntry(new RepositoryImportLog.Entry("import finished"));
-
-    store.put("42", log);
+  @SuppressWarnings("UnstableApiUsage")
+  private void createLog() throws IOException {
+    Blob blob = store.create("42");
+    Resources.copy(
+      Resources.getResource("sonia/scm/importexport/importLog.blob"),
+      blob.getOutputStream());
+    blob.commit();
   }
 }

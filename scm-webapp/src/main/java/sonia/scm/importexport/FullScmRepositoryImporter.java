@@ -46,7 +46,7 @@ import java.io.InputStream;
 
 import static java.util.Arrays.stream;
 import static sonia.scm.ContextEntry.ContextBuilder.noContext;
-import static sonia.scm.importexport.RepositoryImportLog.ImportType.FULL;
+import static sonia.scm.importexport.RepositoryImportLogger.ImportType.FULL;
 import static sonia.scm.util.Archives.createTarInputStream;
 
 public class FullScmRepositoryImporter {

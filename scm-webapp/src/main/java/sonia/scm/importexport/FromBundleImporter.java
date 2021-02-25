@@ -50,7 +50,7 @@ import java.io.InputStream;
 import java.util.function.Consumer;
 
 import static java.util.Collections.singletonList;
-import static sonia.scm.importexport.RepositoryImportLog.ImportType.DUMP;
+import static sonia.scm.importexport.RepositoryImportLogger.ImportType.DUMP;
 import static sonia.scm.importexport.RepositoryTypeSupportChecker.checkSupport;
 import static sonia.scm.importexport.RepositoryTypeSupportChecker.type;
 
