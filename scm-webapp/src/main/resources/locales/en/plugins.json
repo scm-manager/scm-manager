@@ -51,7 +51,7 @@
       "read,export": {
         "*": {
           "displayName": "Export repositories",
-          "description": "May export all repositories"
+          "description": "Attention: May export all repositories including all metadata"
         }
       }
     },
@@ -157,7 +157,7 @@
       },
       "export": {
         "displayName": "export repository",
-        "description": "May export the repository"
+        "description": "Attention: May export the repository including all metadata"
       },
       "*": {
         "displayName": "own repository",
