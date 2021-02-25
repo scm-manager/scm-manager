@@ -31,12 +31,14 @@ import com.google.common.io.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.spi.UnbundleCommand;
 import sonia.scm.repository.spi.UnbundleCommandRequest;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.function.Consumer;
 import java.util.zip.GZIPInputStream;
 
 import static com.google.common.base.Preconditions.checkArgument;
@@ -155,6 +157,20 @@ public final class UnbundleCommandBuilder
     return this;
   }
 
+  /**
+   * Sets a event sink to receive a {@link RepositoryHookEvent} on successful unbundle.
+   * The default implementation wraps the event and sends it to the event bus.
+   *
+   * @param postEventSink consumer to process the event
+   * @return {@code this}
+   *
+   * @since 2.14.0
+   */
+  public UnbundleCommandBuilder setPostEventSink(Consumer<RepositoryHookEvent> postEventSink) {
+    this.postEventSink = postEventSink;
+    return this;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -200,7 +216,11 @@ public final class UnbundleCommandBuilder
       bs = source;
     }
 
-    return new UnbundleCommandRequest(bs);
+    UnbundleCommandRequest request = new UnbundleCommandRequest(bs);
+    if (postEventSink != null) {
+      request.setPostEventSink(postEventSink);
+    }
+    return request;
   }
 
   //~--- inner classes --------------------------------------------------------
@@ -255,4 +275,6 @@ public final class UnbundleCommandBuilder
 
   /** Field description */
   private boolean compressed = false;
+
+  private Consumer<RepositoryHookEvent> postEventSink;
 }

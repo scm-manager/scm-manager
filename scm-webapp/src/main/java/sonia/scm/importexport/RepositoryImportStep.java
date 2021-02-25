@@ -28,10 +28,13 @@ import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
+import sonia.scm.repository.ImportRepositoryHookEvent;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
+import sonia.scm.repository.api.UnbundleCommandBuilder;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.util.IOUtil;
 
@@ -40,6 +43,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
@@ -99,8 +103,18 @@ class RepositoryImportStep implements ImportStep {
 
   private void unbundleRepository(ImportState state, InputStream is) {
     try (RepositoryService service = serviceFactory.create(state.getRepository())) {
-      service.getUnbundleCommand().unbundle(new NoneClosingInputStream(is));
+      AtomicReference<RepositoryHookEvent> eventSink = new AtomicReference<>();
+
+      UnbundleCommandBuilder unbundleCommand = service.getUnbundleCommand();
+      unbundleCommand.setPostEventSink(eventSink::set);
+      unbundleCommand.unbundle(new NoneClosingInputStream(is));
+
       state.repositoryImported();
+
+      RepositoryHookEvent repositoryHookEvent = eventSink.get();
+      if (repositoryHookEvent != null) {
+        state.addPendingEvent(new ImportRepositoryHookEvent(repositoryHookEvent));
+      }
     } catch (IOException e) {
       throw new ImportFailedException(
         entity(state.getRepository()).build(),
