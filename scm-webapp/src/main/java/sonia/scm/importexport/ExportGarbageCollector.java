@@ -43,6 +43,6 @@ public class ExportGarbageCollector implements Initable {
 
   @Override
   public void init(SCMContextProvider context) {
-    scheduler.schedule("0 6 */1 * *", exportService::cleanupOutdatedExports);
+    scheduler.schedule("0 0 6 * * ?", exportService::cleanupOutdatedExports);
   }
 }
