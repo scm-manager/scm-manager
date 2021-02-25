@@ -58,18 +58,18 @@ public class GitUnbundleCommandTest extends AbstractGitCommandTestBase {
     RepositoryHookEvent event = new RepositoryHookEvent(null, repository, RepositoryHookType.POST_RECEIVE);
     when(eventFactory.createEvent(eq(createContext()), any(), any(), any())).thenReturn(event);
 
-    AtomicReference<RepositoryHookEvent> reveivedEvent = new AtomicReference<>();
+    AtomicReference<RepositoryHookEvent> receivedEvent = new AtomicReference<>();
 
     String filePath = "test-input";
     String fileContent = "HeartOfGold";
     UnbundleCommandRequest unbundleCommandRequest = createUnbundleCommandRequestForFile(filePath, fileContent);
-    unbundleCommandRequest.setPostEventSink(reveivedEvent::set);
+    unbundleCommandRequest.setPostEventSink(receivedEvent::set);
 
     unbundleCommand.unbundle(unbundleCommandRequest);
 
     assertFileWithContentWasCreated(createContext().getDirectory(), filePath, fileContent);
 
-    assertThat(reveivedEvent.get()).isSameAs(event);
+    assertThat(receivedEvent.get()).isSameAs(event);
   }
 
   @Test
