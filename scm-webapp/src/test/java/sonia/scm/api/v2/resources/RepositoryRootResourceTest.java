@@ -517,7 +517,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
     when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-    when(bundleCommandBuilder.getFileExtension()).thenReturn(".bundle");
 
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/svn");
@@ -539,7 +538,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
     when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-    when(bundleCommandBuilder.getFileExtension()).thenReturn(".bundle");
 
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/svn?compressed=true");
@@ -577,9 +575,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
 
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
     MockHttpRequest request = MockHttpRequest
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full")
       .contentType(VndMediaType.REPOSITORY_EXPORT)
@@ -602,9 +597,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
 
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
     MockHttpRequest request = MockHttpRequest
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full")
       .contentType(VndMediaType.REPOSITORY_EXPORT)
@@ -625,9 +617,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
 
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
     when(exportService.isExporting(repository)).thenReturn(true);
 
     MockHttpRequest request = MockHttpRequest
@@ -642,18 +631,12 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldDeleteRepositoryExport() throws URISyntaxException, IOException {
+  public void shouldDeleteRepositoryExport() throws URISyntaxException {
     String namespace = "space";
     String name = "repo";
     Repository repository = createRepository(namespace, name, "svn");
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
-
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
-    when(exportService.isExporting(repository)).thenReturn(false);
-    when(exportService.getData(repository)).thenReturn(new ByteArrayInputStream("".getBytes()));
 
     MockHttpRequest request = MockHttpRequest
       .delete("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export");
@@ -672,9 +655,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     Repository repository = createRepository(namespace, name, "svn");
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
-
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
 
     when(exportService.isExporting(repository)).thenReturn(false);
     doThrow(NotFoundException.class).when(exportService).checkExportIsAvailable(repository);
@@ -697,9 +677,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
 
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
     when(exportService.isExporting(repository)).thenReturn(true);
 
     MockHttpRequest request = MockHttpRequest
@@ -718,9 +695,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     Repository repository = createRepository(namespace, name, "svn");
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
-
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
 
     when(exportService.isExporting(repository)).thenReturn(false);
     when(exportService.getData(repository)).thenReturn(new ByteArrayInputStream("content".getBytes()));
@@ -743,9 +717,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     Repository repository = createRepository(namespace, name, "svn");
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
-
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
 
     RepositoryExportInformationDto dto = new RepositoryExportInformationDto();
     dto.setExporterName("trillian");

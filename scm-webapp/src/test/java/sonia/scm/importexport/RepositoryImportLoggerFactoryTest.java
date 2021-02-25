@@ -38,6 +38,7 @@ import sonia.scm.store.InMemoryBlobStoreFactory;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -125,9 +126,11 @@ class RepositoryImportLoggerFactoryTest {
   @SuppressWarnings("UnstableApiUsage")
   private void createLog() throws IOException {
     Blob blob = store.create("42");
-    Resources.copy(
-      Resources.getResource("sonia/scm/importexport/importLog.blob"),
-      blob.getOutputStream());
+    try (OutputStream outputStream = blob.getOutputStream()) {
+      Resources.copy(
+        Resources.getResource("sonia/scm/importexport/importLog.blob"),
+        outputStream);
+    }
     blob.commit();
   }
 }

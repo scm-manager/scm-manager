@@ -164,6 +164,7 @@ class FromUrlImporterTest {
     PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
     when(service.getPullCommand()).thenReturn(pullCommandBuilder);
     doThrow(TestException.class).when(pullCommandBuilder).pull(anyString());
+    when(logger.started()).thenReturn(true);
 
     FromUrlImporter.RepositoryImportParameters parameters = new FromUrlImporter.RepositoryImportParameters();
     parameters.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
