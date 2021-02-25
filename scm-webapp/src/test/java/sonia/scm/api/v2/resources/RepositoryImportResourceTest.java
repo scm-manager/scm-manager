@@ -289,6 +289,7 @@ public class RepositoryImportResourceTest extends RepositoryTestBase {
 
     assertThat(response.getStatus()).isEqualTo(SC_OK);
     assertThat(response.getContentAsString()).isEqualTo("some log");
+    verify(importLoggerFactory).checkCanReadLog("42");
   }
 
   private boolean streamHasContent(InputStream argument, String expectedContent) {

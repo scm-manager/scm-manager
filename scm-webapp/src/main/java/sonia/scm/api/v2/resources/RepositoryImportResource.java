@@ -261,7 +261,8 @@ public class RepositoryImportResource {
   @GET
   @Path("log/{logId}")
   @Produces(MediaType.TEXT_PLAIN)
-  public StreamingOutput getImportLog(@PathParam("logId") String logId) {
+  public StreamingOutput getImportLog(@PathParam("logId") String logId) throws IOException {
+    importLoggerFactory.checkCanReadLog(logId);
     return out -> importLoggerFactory.getLog(logId, out);
   }
 

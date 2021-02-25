@@ -53,13 +53,25 @@ public class RepositoryImportLoggerFactory {
     return new RepositoryImportLogger(blobStoreFactory.withName("imports").build());
   }
 
+  public void checkCanReadLog(String logId) throws IOException {
+    try (InputStream blob = getBlob(logId)) {
+      // nothing to read
+    }
+  }
+
   public void getLog(String logId, OutputStream out) throws IOException {
+    try (InputStream log = getBlob(logId)) {
+      IOUtil.copy(log, out);
+    }
+  }
+
+  private InputStream getBlob(String logId) throws IOException {
     BlobStore importStore = blobStoreFactory.withName("imports").build();
     InputStream log = importStore
       .getOptional(logId).orElseThrow(() -> new NotFoundException("Log", logId))
       .getInputStream();
     checkPermission(log);
-    IOUtil.copy(log, out);
+    return log;
   }
 
   private void checkPermission(InputStream log) throws IOException {
