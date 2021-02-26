@@ -61,7 +61,6 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
-import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -69,6 +68,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
@@ -245,17 +245,22 @@ class FullScmRepositoryImporterTest {
           return null;
         }
       );
+      ArgumentCaptor<Object> capturedEvents = ArgumentCaptor.forClass(Object.class);
+      doNothing().when(eventBus).post(capturedEvents.capture());
 
       fullImporter.importFromStream(REPOSITORY, stream, null);
 
-      verify(eventBus).post(argThat(
-        event -> {
-          assertThat(event).isInstanceOf(ImportRepositoryHookEvent.class);
-          ImportRepositoryHookEvent repositoryImportEvent = (ImportRepositoryHookEvent) event;
-          assertThat(repositoryImportEvent.getRepository()).isEqualTo(REPOSITORY);
-          return true;
-        }
-      ));
+      assertThat(capturedEvents.getAllValues()).hasSize(2);
+      assertThat(capturedEvents.getAllValues()).anyMatch(
+        event ->
+          event instanceof ImportRepositoryHookEvent &&
+            ((ImportRepositoryHookEvent) event).getRepository().equals(REPOSITORY)
+      );
+      assertThat(capturedEvents.getAllValues()).anyMatch(
+        event ->
+          event instanceof RepositoryImportEvent &&
+            ((RepositoryImportEvent) event).getItem().equals(REPOSITORY)
+      );
     }
 
     @Test

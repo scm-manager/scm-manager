@@ -28,7 +28,6 @@ import com.google.common.io.Files;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.HandlerEventType;
 import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.InternalRepositoryException;
@@ -89,11 +88,11 @@ public class FromBundleImporter {
       repository = manager.create(repository, unbundleImport(inputStream, compressed, logger));
     } catch (Exception e) {
       logger.failed(e);
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, true));
+      eventBus.post(new RepositoryImportEvent(repository, true));
       throw e;
     }
 
-    eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, false));
+    eventBus.post(new RepositoryImportEvent(repository, false));
     return repository;
   }
 
