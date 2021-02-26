@@ -30,8 +30,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.ImportRepositoryHookEvent;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
@@ -46,6 +48,7 @@ import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
 import static java.util.Collections.singletonList;
@@ -106,7 +109,7 @@ public class FromBundleImporter {
         long length = Files.asByteSink(file).writeFrom(inputStream);
         LOG.info("copied {} bytes to temp, start bundle import", length);
         logger.step("importing repository data from dump file");
-        service.getUnbundleCommand().setCompressed(compressed).unbundle(file);
+        runUnbundleCommand(compressed, service, file);
         logger.finished();
       } catch (IOException e) {
         logger.failed(e);
@@ -119,5 +122,17 @@ public class FromBundleImporter {
         }
       }
     };
+  }
+
+  private void runUnbundleCommand(boolean compressed, RepositoryService service, File file) throws IOException {
+    AtomicReference<RepositoryHookEvent> eventSink = new AtomicReference<>();
+    service.getUnbundleCommand()
+      .setCompressed(compressed)
+      .setPostEventSink(eventSink::set)
+      .unbundle(file);
+    RepositoryHookEvent repositoryHookEvent = eventSink.get();
+    if (repositoryHookEvent != null) {
+      eventBus.post(new ImportRepositoryHookEvent(repositoryHookEvent));
+    }
   }
 }
