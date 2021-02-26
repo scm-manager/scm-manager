@@ -31,7 +31,6 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
-import sonia.scm.HandlerEventType;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryImportEvent;
@@ -138,10 +137,11 @@ public class FullScmRepositoryImporter {
       if (state.success()) {
         // send all pending events on successful import
         state.getPendingEvents().forEach(eventBus::post);
+        eventBus.post(new RepositoryImportEvent(repository, false));
       } else {
         // Delete the repository if any error occurs during the import
         repositoryManager.delete(state.getRepository());
-        eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, true));
+        eventBus.post(new RepositoryImportEvent(repository, true));
       }
 
     }

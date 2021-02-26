@@ -31,7 +31,6 @@ import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.AlreadyExistsException;
-import sonia.scm.HandlerEventType;
 import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.InternalRepositoryException;
@@ -95,10 +94,10 @@ public class FromUrlImporter {
       if (logger.started()) {
         logger.failed(e);
       }
-      eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, repository, true));
+      eventBus.post(new RepositoryImportEvent(repository, true));
       throw new ImportFailedException(noContext(), "Could not import repository from url " + parameters.getImportUrl(), e);
     }
-    eventBus.post(new RepositoryImportEvent(HandlerEventType.CREATE, createdRepository, false));
+    eventBus.post(new RepositoryImportEvent(createdRepository, false));
     return createdRepository;
   }
 

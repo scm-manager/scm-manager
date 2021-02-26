@@ -25,6 +25,8 @@
 package sonia.scm.importexport;
 
 import org.apache.shiro.SecurityUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Repository;
 import sonia.scm.store.Blob;
 import sonia.scm.store.BlobStore;
@@ -38,6 +40,8 @@ import java.time.Instant;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 class RepositoryImportLogger {
+
+  private static final Logger LOG = LoggerFactory.getLogger(RepositoryImportLogger.class);
 
   private final BlobStore logStore;
   private PrintWriter print;
@@ -67,7 +71,7 @@ class RepositoryImportLogger {
       outputStream.write(user.getId().getBytes(UTF_8));
       outputStream.write(0);
     } catch (IOException e) {
-      e.printStackTrace();
+      LOG.warn("Could not write user to import log blob", e);
     }
   }
 
@@ -75,7 +79,7 @@ class RepositoryImportLogger {
     try {
       return blob.getOutputStream();
     } catch (IOException e) {
-      e.printStackTrace();
+      LOG.warn("Could not create logger for import; failed to get output stream from blob", e);
       return new OutputStream() {
         @Override
         public void write(int b) {
@@ -109,7 +113,7 @@ class RepositoryImportLogger {
     try {
       blob.commit();
     } catch (IOException e) {
-      e.printStackTrace();
+      LOG.warn("Could not commit blob with import log", e);
     }
   }
 

@@ -24,9 +24,7 @@
 
 package sonia.scm.repository;
 
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import sonia.scm.HandlerEventType;
 import sonia.scm.event.Event;
 
 /**
@@ -36,15 +34,15 @@ import sonia.scm.event.Event;
  */
 @Event
 @Getter
-@EqualsAndHashCode(callSuper = true)
-public class RepositoryImportEvent extends RepositoryEvent {
+public class RepositoryImportEvent {
 
+  private final Repository item;
   private final String logId;
   private final boolean failed;
 
-  public RepositoryImportEvent(HandlerEventType eventType, Repository repository, boolean failed) {
-    super(eventType, repository);
-    this.logId = repository.getId();
+  public RepositoryImportEvent(Repository item, boolean failed) {
+    this.item = item;
+    this.logId = item.getId();
     this.failed = failed;
   }
 }
