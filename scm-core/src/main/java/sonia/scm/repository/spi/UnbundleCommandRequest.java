@@ -21,13 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.base.Objects;
 import com.google.common.io.ByteSource;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookEvent;
+
+import java.util.function.Consumer;
 
 /**
  * Request object for the unbundle command.
@@ -35,17 +40,14 @@ import com.google.common.io.ByteSource;
  * @author Sebastian Sdorra <s.sdorra@gmail.com>
  * @since 1.43
  */
-public final class UnbundleCommandRequest
-{
+public final class UnbundleCommandRequest {
 
   /**
    * Constructs a new unbundle command request.
    *
-   *
    * @param archive byte source archive
    */
-  public UnbundleCommandRequest(ByteSource archive)
-  {
+  public UnbundleCommandRequest(ByteSource archive) {
     this.archive = archive;
   }
 
@@ -55,15 +57,12 @@ public final class UnbundleCommandRequest
    * {@inheritDoc}
    */
   @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
+  public boolean equals(Object obj) {
+    if (obj == null) {
       return false;
     }
 
-    if (getClass() != obj.getClass())
-    {
+    if (getClass() != obj.getClass()) {
       return false;
     }
 
@@ -76,8 +75,7 @@ public final class UnbundleCommandRequest
    * {@inheritDoc}
    */
   @Override
-  public int hashCode()
-  {
+  public int hashCode() {
     return Objects.hashCode(archive);
   }
 
@@ -86,16 +84,28 @@ public final class UnbundleCommandRequest
   /**
    * Returns the archive as {@link ByteSource}.
    *
-   *
    * @return {@link ByteSource} archive
    */
-  public ByteSource getArchive()
-  {
+  public ByteSource getArchive() {
     return archive;
+  }
+
+
+  public Consumer<RepositoryHookEvent> getPostEventSink() {
+    return postEventSink;
+  }
+
+  public void setPostEventSink(Consumer<RepositoryHookEvent> postEventSink) {
+    this.postEventSink = postEventSink;
   }
 
   //~--- fields ---------------------------------------------------------------
 
-  /** byte source archive */
+  private Consumer<RepositoryHookEvent> postEventSink = event ->
+    ScmEventBus.getInstance().post(new PostReceiveRepositoryHookEvent(event));
+
+  /**
+   * byte source archive
+   */
   private final ByteSource archive;
 }

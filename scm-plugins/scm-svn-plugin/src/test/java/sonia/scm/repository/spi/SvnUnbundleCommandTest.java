@@ -33,11 +33,10 @@ import org.mockito.Captor;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.io.SVNRepository;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
-import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Person;
-import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.SvnUtil;
 import sonia.scm.repository.api.HookChangesetBuilder;
@@ -48,30 +47,24 @@ import sonia.scm.repository.api.UnbundleResponse;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 public class SvnUnbundleCommandTest extends AbstractSvnCommandTestBase {
 
   private final Repository repository = RepositoryTestData.createHeartOfGold("svn");
   private HookContextFactory hookContextFactory;
-  private ScmEventBus eventBus;
   private SvnLogCommand logCommand;
   private HookChangesetBuilder hookChangesetBuilder;
-
-  @Captor
-  private final ArgumentCaptor<PostReceiveRepositoryHookEvent> eventCaptor =
-    ArgumentCaptor.forClass(PostReceiveRepositoryHookEvent.class);
 
   @Before
   public void initMocks() {
     hookContextFactory = mock(HookContextFactory.class);
-    eventBus = mock(ScmEventBus.class);
     logCommand = mock(SvnLogCommand.class);
     HookContext hookContext = mock(HookContext.class);
     hookChangesetBuilder = mock(HookChangesetBuilder.class);
@@ -80,28 +73,28 @@ public class SvnUnbundleCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test
-  public void shouldFirePostCommitEventAfterUnbundle() throws IOException, SVNException {
+  public void shouldFireRepositoryHookEventAfterUnbundle() throws IOException, SVNException {
     Changeset first = new Changeset("1", 0L, new Person("trillian"), "first commit");
     when(hookChangesetBuilder.getChangesetList()).thenReturn(ImmutableList.of(first));
 
     File bundle = bundle();
     SvnContext ctx = createEmptyContext();
-    //J-
-    UnbundleResponse res = new SvnUnbundleCommand(ctx, hookContextFactory, eventBus, logCommand)
-      .unbundle(new UnbundleCommandRequest(Files.asByteSource(bundle))
-      );
-    //J+
+
+    AtomicReference<RepositoryHookEvent> eventSink = new AtomicReference<>();
+    UnbundleCommandRequest request = new UnbundleCommandRequest(Files.asByteSource(bundle));
+    request.setPostEventSink(eventSink::set);
+
+    UnbundleResponse res = new SvnUnbundleCommand(ctx, hookContextFactory, logCommand)
+      .unbundle(request);
 
     assertThat(res).isNotNull();
     assertThat(res.getChangesetCount()).isEqualTo(5);
     SVNRepository repo = ctx.open();
     assertThat(repo.getLatestRevision()).isEqualTo(5);
 
-    verify(eventBus).post(eventCaptor.capture());
-    PostReceiveRepositoryHookEvent event = eventCaptor.getValue();
+    RepositoryHookEvent event = eventSink.get();
     List<Changeset> changesets = event.getContext().getChangesetProvider().getChangesetList();
-    assertThat(changesets).hasSize(1);
-    assertThat(changesets).contains(first);
+    assertThat(changesets).hasSize(1).contains(first);
 
     SvnUtil.closeSession(repo);
   }

@@ -30,7 +30,7 @@ import org.junit.Before;
 import org.junit.Test;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitChangesetConverterFactory;
-import sonia.scm.repository.PostReceiveRepositoryHookEvent;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
@@ -48,7 +48,7 @@ public class GitPostReceiveRepositoryHookEventFactoryTest extends AbstractGitCom
 
   private HookContext hookContext;
 
-  private GitPostReceiveRepositoryHookEventFactory eventFactory;
+  private GitRepositoryHookEventFactory eventFactory;
 
   @Before
   public void init() {
@@ -56,7 +56,7 @@ public class GitPostReceiveRepositoryHookEventFactoryTest extends AbstractGitCom
     hookContext = mock(HookContext.class, RETURNS_DEEP_STUBS);
     when(hookContextFactory.createContext(any(), eq(repository))).thenReturn(hookContext);
     GitChangesetConverterFactory converterFactory = mock(GitChangesetConverterFactory.class);
-    eventFactory = new GitPostReceiveRepositoryHookEventFactory(hookContextFactory, converterFactory);
+    eventFactory = new GitRepositoryHookEventFactory(hookContextFactory, converterFactory);
   }
 
   @Test
@@ -68,7 +68,7 @@ public class GitPostReceiveRepositoryHookEventFactoryTest extends AbstractGitCom
     when(hookContext.getBranchProvider().getCreatedOrModified()).thenReturn(branches);
     when(hookContext.getTagProvider().getCreatedTags()).thenReturn(tags);
 
-    PostReceiveRepositoryHookEvent event = eventFactory.createEvent(
+    RepositoryHookEvent event = eventFactory.createEvent(
       createContext(),
       branches,
       tags,

@@ -66,12 +66,12 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
   private final HgRepositoryHandler handler;
   private final HgCommandContext context;
   private final HgLazyChangesetResolver lazyChangesetResolver;
-  private final HgPostReceiveRepositoryHookEventFactory eventFactory;
+  private final HgRepositoryHookEventFactory eventFactory;
   private final ScmEventBus eventBus;
 
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
                               HgRepositoryFactory factory,
-                              HgPostReceiveRepositoryHookEventFactory eventFactory,
+                              HgRepositoryHookEventFactory eventFactory,
                               ScmEventBus eventBus,
                               Repository repository) {
     this.handler = handler;
@@ -184,6 +184,6 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public UnbundleCommand getUnbundleCommand() {
-    return new HgUnbundleCommand(context, eventBus, lazyChangesetResolver, eventFactory);
+    return new HgUnbundleCommand(context, lazyChangesetResolver, eventFactory);
   }
 }

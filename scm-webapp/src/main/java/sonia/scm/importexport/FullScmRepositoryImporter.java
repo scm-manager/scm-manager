@@ -31,6 +31,7 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorInputStream;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
+import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.api.ImportFailedException;
@@ -51,6 +52,7 @@ public class FullScmRepositoryImporter {
   private final ImportStep[] importSteps;
   private final RepositoryManager repositoryManager;
   private final RepositoryImportExportEncryption repositoryImportExportEncryption;
+  private final ScmEventBus eventBus;
 
   @Inject
   public FullScmRepositoryImporter(EnvironmentCheckStep environmentCheckStep,
@@ -58,10 +60,13 @@ public class FullScmRepositoryImporter {
                                    StoreImportStep storeImportStep,
                                    RepositoryImportStep repositoryImportStep,
                                    RepositoryManager repositoryManager,
-                                   RepositoryImportExportEncryption repositoryImportExportEncryption) {
+                                   RepositoryImportExportEncryption repositoryImportExportEncryption,
+                                   ScmEventBus eventBus
+  ) {
     this.repositoryManager = repositoryManager;
     this.repositoryImportExportEncryption = repositoryImportExportEncryption;
     importSteps = new ImportStep[]{environmentCheckStep, metadataImportStep, storeImportStep, repositoryImportStep};
+    this.eventBus = eventBus;
   }
 
   public Repository importFromStream(Repository repository, InputStream inputStream, String password) {
@@ -109,12 +114,15 @@ public class FullScmRepositoryImporter {
       stream(importSteps).forEach(step -> step.finish(state));
       return state.getRepository();
     } finally {
-      stream(importSteps)
-        .forEach(step -> step.cleanup(state));
-      if (!state.success()) {
+      stream(importSteps).forEach(step -> step.cleanup(state));
+      if (state.success()) {
+        // send all pending events on successful import
+        state.getPendingEvents().forEach(eventBus::post);
+      } else {
         // Delete the repository if any error occurs during the import
         repositoryManager.delete(state.getRepository());
       }
+
     }
   }
 

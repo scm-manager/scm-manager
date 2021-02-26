@@ -31,10 +31,15 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Answers;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.ImportRepositoryHookEvent;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryTestData;
@@ -52,6 +57,7 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -98,6 +104,15 @@ class FullScmRepositoryImporterTest {
   @InjectMocks
   private RepositoryImportStep repositoryImportStep;
 
+  @Mock
+  private ScmEventBus eventBus;
+
+  @Mock
+  private RepositoryHookEvent event;
+
+  @Captor
+  private ArgumentCaptor<Consumer<RepositoryHookEvent>> eventSinkCaptor;
+
   private FullScmRepositoryImporter fullImporter;
 
   @BeforeEach
@@ -108,7 +123,9 @@ class FullScmRepositoryImporterTest {
       storeImportStep,
       repositoryImportStep,
       repositoryManager,
-      repositoryImportExportEncryption);
+      repositoryImportExportEncryption,
+      eventBus
+    );
   }
 
   @BeforeEach
@@ -147,7 +164,7 @@ class FullScmRepositoryImporterTest {
       lenient().when(workdirProvider.createNewWorkdir(REPOSITORY.getId())).thenReturn(temp.toFile());
 
       when(compatibilityChecker.check(any())).thenReturn(true);
-      when(repositoryManager.create(eq(REPOSITORY))).thenReturn(REPOSITORY);
+      when(repositoryManager.create(REPOSITORY)).thenReturn(REPOSITORY);
     }
 
     @Test
@@ -197,13 +214,22 @@ class FullScmRepositoryImporterTest {
     }
 
     @Test
-    void shouldDecryptStreamWhenPasswordSet() throws IOException {
+    void shouldFireImportRepositoryHookEvent() throws IOException {
       InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
-      when(repositoryImportExportEncryption.decrypt(any(), eq("hg2tg"))).thenAnswer(invocation -> invocation.getArgument(0));
 
-      fullImporter.importFromStream(REPOSITORY, stream, "hg2tg");
+      // capture the event sink which is registered by RepositoryImportStep
+      // we use when here instead of verify, because for verify we have used it before
+      when(unbundleCommandBuilder.setPostEventSink(eventSinkCaptor.capture())).thenReturn(unbundleCommandBuilder);
+      // when the RepositoryImportStep calls unbundle we pass our mocked event to the captured sink
+      when(unbundleCommandBuilder.unbundle(any(InputStream.class))).then(ic -> {
+        eventSinkCaptor.getValue().accept(event);
+        // RepositoryImportStep does not evaluate the return value of unbundle
+        return null;
+      });
 
-      verify(updateEngine).update(REPOSITORY.getId());
+      fullImporter.importFromStream(REPOSITORY, stream, "");
+
+      verify(eventBus).post(any(ImportRepositoryHookEvent.class));
     }
   }
 }

@@ -28,8 +28,10 @@ import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermission;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 class ImportState {
@@ -43,6 +45,8 @@ class ImportState {
   private Collection<RepositoryPermission> repositoryPermissions;
 
   private Path temporaryRepositoryBundle;
+
+  private final List<Object> pendingEvents = new ArrayList<>();
 
   ImportState(Repository repository) {
     this.repository = repository;
@@ -94,5 +98,13 @@ class ImportState {
 
   public void repositoryImported() {
     this.repositoryImported = true;
+  }
+
+  public void addPendingEvent(Object event) {
+    this.pendingEvents.add(event);
+  }
+
+  public Collection<Object> getPendingEvents() {
+    return Collections.unmodifiableCollection(pendingEvents);
   }
 }

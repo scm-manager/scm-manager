@@ -40,13 +40,13 @@ public class HgRepositoryServiceResolver implements RepositoryServiceResolver {
   private final HgRepositoryHandler handler;
   private final HgRepositoryFactory factory;
   private final ScmEventBus eventBus;
-  private final HgPostReceiveRepositoryHookEventFactory eventFactory;
+  private final HgRepositoryHookEventFactory eventFactory;
 
   @Inject
   public HgRepositoryServiceResolver(HgRepositoryHandler handler,
                                      HgRepositoryFactory factory,
                                      ScmEventBus eventBus,
-                                     HgPostReceiveRepositoryHookEventFactory eventFactory
+                                     HgRepositoryHookEventFactory eventFactory
   ) {
     this.handler = handler;
     this.factory = factory;
