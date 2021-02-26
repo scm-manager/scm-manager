@@ -24,14 +24,16 @@
     
 package sonia.scm.security;
 
-import com.github.sdorra.shiro.ShiroRule;
-import com.github.sdorra.shiro.SubjectAware;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Answers;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.user.User;
 
 import java.sql.Date;
 import java.time.Clock;
@@ -44,23 +46,16 @@ import static java.time.temporal.ChronoUnit.SECONDS;
 import static java.util.concurrent.TimeUnit.MINUTES;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 
-@SubjectAware(
-  username = "user",
-  password = "secret",
-  configuration = "classpath:sonia/scm/repository/shiro.ini"
-)
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class JwtAccessTokenRefresherTest {
 
   private static final Instant NOW = Instant.now().truncatedTo(SECONDS);
   private static final Instant TOKEN_CREATION = NOW.minus(ofMinutes(1));
-
-  @Rule
-  public ShiroRule shiro = new ShiroRule();
 
   @Mock
   private SecureKeyResolver keyResolver;
@@ -68,14 +63,16 @@ public class JwtAccessTokenRefresherTest {
   private JwtAccessTokenRefreshStrategy refreshStrategy;
   @Mock
   private Clock refreshClock;
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private Subject subject;
 
-  private KeyGenerator keyGenerator = () -> "key";
+  private final KeyGenerator keyGenerator = () -> "key";
 
   private JwtAccessTokenRefresher refresher;
   private JwtAccessTokenBuilder tokenBuilder;
 
-  @Before
-  public void initKeyResolver() {
+  @BeforeEach
+  void initKeyResolver() {
     when(keyResolver.getSecureKey(any())).thenReturn(createSecureKey());
 
     Clock creationClock = mock(Clock.class);
@@ -85,7 +82,7 @@ public class JwtAccessTokenRefresherTest {
     JwtAccessTokenBuilderFactory refreshBuilderFactory = new JwtAccessTokenBuilderFactory(keyGenerator, keyResolver, Collections.emptySet(), refreshClock);
     refresher = new JwtAccessTokenRefresher(refreshBuilderFactory, refreshStrategy, refreshClock);
     when(refreshClock.instant()).thenReturn(NOW);
-    when(refreshStrategy.shouldBeRefreshed(any())).thenReturn(true);
+    lenient().when(refreshStrategy.shouldBeRefreshed(any())).thenReturn(true);
 
     // set default expiration values
     tokenBuilder
@@ -93,8 +90,20 @@ public class JwtAccessTokenRefresherTest {
       .refreshableFor(10, MINUTES);
   }
 
+  @BeforeEach
+  void initSubject() {
+    ThreadContext.bind(subject);
+    when(subject.getPrincipals().oneByType(Scope.class)).thenReturn(Scope.valueOf("trillian"));
+    when(subject.getPrincipal()).thenReturn(new User("trillian"));
+  }
+
+  @AfterEach
+  void tearDownSubject() {
+    ThreadContext.unbindSubject();
+  }
+
   @Test
-  public void shouldNotRefreshTokenWithDisabledRefresh() {
+  void shouldNotRefreshTokenWithDisabledRefresh() {
     JwtAccessToken oldToken = tokenBuilder
       .refreshableFor(0, MINUTES)
       .build();
@@ -105,7 +114,7 @@ public class JwtAccessTokenRefresherTest {
   }
 
   @Test
-  public void shouldNotRefreshTokenWhenTokenExpired() {
+  void shouldNotRefreshTokenWhenTokenExpired() {
     Instant afterNormalExpiration = NOW.plus(ofMinutes(6));
     when(refreshClock.instant()).thenReturn(afterNormalExpiration);
     JwtAccessToken oldToken = tokenBuilder.build();
@@ -116,7 +125,7 @@ public class JwtAccessTokenRefresherTest {
   }
 
   @Test
-  public void shouldNotRefreshTokenWhenRefreshExpired() {
+  void shouldNotRefreshTokenWhenRefreshExpired() {
     Instant afterRefreshExpiration = Instant.now().plus(ofMinutes(2));
     when(refreshClock.instant()).thenReturn(afterRefreshExpiration);
     JwtAccessToken oldToken = tokenBuilder
@@ -129,7 +138,7 @@ public class JwtAccessTokenRefresherTest {
   }
 
   @Test
-  public void shouldNotRefreshTokenWhenStrategyDoesNotSaySo() {
+  void shouldNotRefreshTokenWhenStrategyDoesNotSaySo() {
     JwtAccessToken oldToken = tokenBuilder.build();
     when(refreshStrategy.shouldBeRefreshed(oldToken)).thenReturn(false);
 
@@ -139,7 +148,7 @@ public class JwtAccessTokenRefresherTest {
   }
 
   @Test
-  public void shouldRefreshTokenWithParentId() {
+  void shouldRefreshTokenWithParentId() {
     JwtAccessToken oldToken = tokenBuilder.build();
     when(refreshStrategy.shouldBeRefreshed(oldToken)).thenReturn(true);
 
@@ -151,7 +160,7 @@ public class JwtAccessTokenRefresherTest {
   }
 
   @Test
-  public void shouldRefreshTokenWithSameExpiration() {
+  void shouldRefreshTokenWithSameExpiration() {
     JwtAccessToken oldToken = tokenBuilder.build();
     when(refreshStrategy.shouldBeRefreshed(oldToken)).thenReturn(true);
 
@@ -163,7 +172,7 @@ public class JwtAccessTokenRefresherTest {
   }
 
   @Test
-  public void shouldRefreshTokenWithSameRefreshExpiration() {
+  void shouldRefreshTokenWithSameRefreshExpiration() {
     JwtAccessToken oldToken = tokenBuilder.build();
     when(refreshStrategy.shouldBeRefreshed(oldToken)).thenReturn(true);
 
