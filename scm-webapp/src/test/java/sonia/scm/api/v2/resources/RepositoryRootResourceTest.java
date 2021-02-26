@@ -24,8 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.core.JsonFactory;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
@@ -37,38 +35,36 @@ import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.event.ScmEventBus;
 import sonia.scm.importexport.ExportFileExtensionResolver;
 import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.ExportStatus;
+import sonia.scm.importexport.FromBundleImporter;
+import sonia.scm.importexport.FromUrlImporter;
 import sonia.scm.importexport.FullScmRepositoryExporter;
 import sonia.scm.importexport.FullScmRepositoryImporter;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
+import sonia.scm.importexport.RepositoryImportLoggerFactory;
 import sonia.scm.repository.CustomNamespaceStrategy;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHandler;
-import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryInitializer;
 import sonia.scm.repository.RepositoryManager;
-import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.BundleCommandBuilder;
 import sonia.scm.repository.api.Command;
-import sonia.scm.repository.api.ImportFailedException;
-import sonia.scm.repository.api.PullCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.repository.api.UnbundleCommandBuilder;
-import sonia.scm.repository.api.UnbundleResponse;
 import sonia.scm.user.User;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
@@ -76,23 +72,14 @@ import sonia.scm.web.VndMediaType;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.StringWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.Instant;
-import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
-import java.util.UUID;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 import static java.util.Collections.singletonList;
@@ -100,27 +87,22 @@ import static java.util.stream.Stream.of;
 import static javax.servlet.http.HttpServletResponse.SC_ACCEPTED;
 import static javax.servlet.http.HttpServletResponse.SC_BAD_REQUEST;
 import static javax.servlet.http.HttpServletResponse.SC_CONFLICT;
-import static javax.servlet.http.HttpServletResponse.SC_CREATED;
 import static javax.servlet.http.HttpServletResponse.SC_NOT_FOUND;
 import static javax.servlet.http.HttpServletResponse.SC_NO_CONTENT;
 import static javax.servlet.http.HttpServletResponse.SC_OK;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThrows;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyMap;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.RETURNS_SELF;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.openMocks;
 
 @SubjectAware(
   username = "trillian",
@@ -128,6 +110,7 @@ import static org.mockito.MockitoAnnotations.openMocks;
   configuration = "classpath:sonia/scm/repository/shiro.ini"
 )
 @SuppressWarnings("UnstableApiUsage")
+@RunWith(MockitoJUnitRunner.class)
 public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   private static final String REALM = "AdminRealm";
@@ -156,8 +139,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Mock
   private Set<NamespaceStrategy> strategies;
   @Mock
-  private ScmEventBus eventBus;
-  @Mock
   private FullScmRepositoryExporter fullScmRepositoryExporter;
   @Mock
   private RepositoryExportInformationToDtoMapper exportInformationToDtoMapper;
@@ -166,7 +147,13 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   @Mock
   private RepositoryImportExportEncryption repositoryImportExportEncryption;
   @Mock
+  private FromUrlImporter fromUrlImporter;
+  @Mock
+  private FromBundleImporter fromBundleImporter;
+  @Mock
   private ExportFileExtensionResolver fileExtensionResolver;
+  @Mock
+  private RepositoryImportLoggerFactory importLoggerFactory;
   @Mock
   private ExportService exportService;
 
@@ -175,27 +162,25 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
-  private Repository repositoryMarkedAsExported;
 
   @InjectMocks
   private RepositoryToRepositoryDtoMapperImpl repositoryToDtoMapper;
   @InjectMocks
   private RepositoryDtoToRepositoryMapperImpl dtoToRepositoryMapper;
 
+  private final MockHttpResponse response = new MockHttpResponse();
+
   @Before
   public void prepareEnvironment() throws IOException {
-    openMocks(this);
     super.repositoryToDtoMapper = repositoryToDtoMapper;
     super.dtoToRepositoryMapper = dtoToRepositoryMapper;
     super.manager = repositoryManager;
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
-    super.repositoryImportResource = new RepositoryImportResource(repositoryManager, dtoToRepositoryMapper, serviceFactory, resourceLinks, eventBus, fullScmRepositoryImporter, repositoryImportExportEncryption);
+    super.repositoryImportResource = new RepositoryImportResource(dtoToRepositoryMapper, resourceLinks, fullScmRepositoryImporter, new RepositoryImportDtoToRepositoryImportParametersMapperImpl(), repositoryImportExportEncryption, fromUrlImporter, fromBundleImporter, importLoggerFactory);
     super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryImportExportEncryption, exportService, exportInformationToDtoMapper, fileExtensionResolver, resourceLinks);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
-    when(scmPathInfoStore.get()).thenReturn(uriInfo);
-    when(uriInfo.getApiRestUri()).thenReturn(URI.create("/x/y"));
     doReturn(ImmutableSet.of(new CustomNamespaceStrategy()).iterator()).when(strategies).iterator();
     SimplePrincipalCollection trillian = new SimplePrincipalCollection("trillian", REALM);
     trillian.add(new User("trillian"), REALM);
@@ -213,7 +198,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     createRepository("space", "repo");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/other");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -226,7 +210,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -241,7 +224,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -256,7 +238,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "?q=Rep");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -273,7 +254,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -290,7 +270,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space?q=Rep");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -310,7 +289,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
       .put("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo")
       .contentType(VndMediaType.REPOSITORY)
       .content(repository);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -328,7 +306,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
       .put("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo")
       .contentType(VndMediaType.REPOSITORY)
       .content(repository);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -347,7 +324,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
       .put("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo")
       .contentType(VndMediaType.REPOSITORY)
       .content(repository);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -367,7 +343,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
       .put("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "wrong/repo")
       .contentType(VndMediaType.REPOSITORY)
       .content(repository);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -380,7 +355,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     createRepository("space", "repo");
 
     MockHttpRequest request = MockHttpRequest.delete("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -403,7 +377,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2)
       .contentType(VndMediaType.REPOSITORY)
       .content(repositoryJson);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -424,7 +397,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "?initialize=true")
       .contentType(VndMediaType.REPOSITORY)
       .content(repositoryJson);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -454,7 +426,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2)
       .contentType(VndMediaType.REPOSITORY)
       .content(repositoryJson);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -473,7 +444,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(configuration.getNamespaceStrategy()).thenReturn("CustomNamespaceStrategy");
 
     MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -495,208 +465,11 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/rename")
       .contentType(VndMediaType.REPOSITORY)
       .content(repository);
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
     assertEquals(SC_NO_CONTENT, response.getStatus());
     verify(repositoryManager).rename(repository1, "space", "x");
-  }
-
-  @Test
-  public void shouldImportRepositoryFromUrl() throws URISyntaxException, IOException {
-    ArgumentCaptor<RepositoryImportEvent> captor = ArgumentCaptor.forClass(RepositoryImportEvent.class);
-    when(manager.getHandler("git")).thenReturn(repositoryHandler);
-    when(repositoryHandler.getType()).thenReturn(new RepositoryType("git", "git", ImmutableSet.of(Command.PULL)));
-    when(manager.create(any(Repository.class), any())).thenReturn(RepositoryTestData.create42Puzzle());
-
-    URL url = Resources.getResource("sonia/scm/api/v2/import-repo.json");
-    byte[] importRequest = Resources.toByteArray(url);
-
-    MockHttpRequest request = MockHttpRequest
-      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "import/git/url")
-      .contentType(VndMediaType.REPOSITORY)
-      .content(importRequest);
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(SC_CREATED, response.getStatus());
-    verify(eventBus).post(captor.capture());
-
-    assertThat(captor.getValue().isFailed()).isFalse();
-  }
-
-  @Test
-  public void shouldFailOnImportRepositoryFromUrl() throws URISyntaxException, IOException {
-    ArgumentCaptor<RepositoryImportEvent> captor = ArgumentCaptor.forClass(RepositoryImportEvent.class);
-    when(manager.getHandler("git")).thenReturn(repositoryHandler);
-    when(repositoryHandler.getType()).thenReturn(new RepositoryType("git", "git", ImmutableSet.of(Command.PULL)));
-    doThrow(ImportFailedException.class).when(manager).create(any(Repository.class), any());
-
-    URL url = Resources.getResource("sonia/scm/api/v2/import-repo.json");
-    byte[] importRequest = Resources.toByteArray(url);
-
-    MockHttpRequest request = MockHttpRequest
-      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "import/git/url")
-      .contentType(VndMediaType.REPOSITORY)
-      .content(importRequest);
-    MockHttpResponse response = new MockHttpResponse();
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(500, response.getStatus());
-    verify(eventBus).post(captor.capture());
-
-    assertThat(captor.getValue().isFailed()).isTrue();
-  }
-
-  @Test
-  public void shouldPullChangesFromRemoteUrl() throws IOException {
-    PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
-    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
-
-    Repository repository = RepositoryTestData.createHeartOfGold();
-    RepositoryImportResource.RepositoryImportFromUrlDto repositoryImportFromUrlDto = new RepositoryImportResource.RepositoryImportFromUrlDto();
-    repositoryImportFromUrlDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-    repositoryImportFromUrlDto.setNamespace("scmadmin");
-    repositoryImportFromUrlDto.setName("scm-manager");
-
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportFromUrlDto);
-    repositoryConsumer.accept(repository);
-
-    verify(pullCommandBuilder).pull("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-  }
-
-  @Test
-  public void shouldPullChangesFromRemoteUrlWithCredentials() {
-    PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
-    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
-
-    Repository repository = RepositoryTestData.createHeartOfGold();
-    RepositoryImportResource.RepositoryImportFromUrlDto repositoryImportFromUrlDto = new RepositoryImportResource.RepositoryImportFromUrlDto();
-    repositoryImportFromUrlDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-    repositoryImportFromUrlDto.setNamespace("scmadmin");
-    repositoryImportFromUrlDto.setName("scm-manager");
-    repositoryImportFromUrlDto.setUsername("trillian");
-    repositoryImportFromUrlDto.setPassword("secret");
-
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportFromUrlDto);
-    repositoryConsumer.accept(repository);
-
-    verify(pullCommandBuilder).withUsername("trillian");
-    verify(pullCommandBuilder).withPassword("secret");
-  }
-
-  @Test
-  public void shouldThrowImportFailedEvent() throws IOException {
-    PullCommandBuilder pullCommandBuilder = mock(PullCommandBuilder.class, RETURNS_SELF);
-    when(service.getPullCommand()).thenReturn(pullCommandBuilder);
-    doThrow(ImportFailedException.class).when(pullCommandBuilder).pull(anyString());
-
-    Repository repository = RepositoryTestData.createHeartOfGold();
-    RepositoryImportResource.RepositoryImportFromUrlDto repositoryImportFromUrlDto = new RepositoryImportResource.RepositoryImportFromUrlDto();
-    repositoryImportFromUrlDto.setImportUrl("https://scm-manager.org/scm/repo/scmadmin/scm-manager.git");
-    repositoryImportFromUrlDto.setNamespace("scmadmin");
-    repositoryImportFromUrlDto.setName("scm-manager");
-
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.pullChangesFromRemoteUrl(repositoryImportFromUrlDto);
-    assertThrows(ImportFailedException.class, () -> repositoryConsumer.accept(repository));
-  }
-
-  @Test
-  public void shouldImportRepositoryFromBundle() throws IOException, URISyntaxException {
-    when(manager.getHandler("svn")).thenReturn(repositoryHandler);
-    when(repositoryHandler.getType()).thenReturn(new RepositoryType("svn", "svn", ImmutableSet.of(Command.UNBUNDLE)));
-    when(repositoryManager.create(any(), any())).thenReturn(RepositoryTestData.createHeartOfGold());
-
-    RepositoryDto repositoryDto = new RepositoryDto();
-    repositoryDto.setName("HeartOfGold");
-    repositoryDto.setNamespace("hitchhiker");
-    repositoryDto.setType("svn");
-
-    URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump");
-    byte[] svnDump = Resources.toByteArray(dumpUrl);
-
-    MockHttpRequest request = MockHttpRequest
-      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "import/svn/bundle");
-    MockHttpResponse response = new MockHttpResponse();
-
-    multipartRequest(request, Collections.singletonMap("bundle", new ByteArrayInputStream(svnDump)), repositoryDto);
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(HttpServletResponse.SC_CREATED, response.getStatus());
-    assertEquals("/v2/repositories/hitchhiker/HeartOfGold", response.getOutputHeaders().get("Location").get(0).toString());
-    ArgumentCaptor<RepositoryImportEvent> event = ArgumentCaptor.forClass(RepositoryImportEvent.class);
-    verify(eventBus).post(event.capture());
-    assertFalse(event.getValue().isFailed());
-  }
-
-  @Test
-  public void shouldThrowFailedEventOnImportRepositoryFromBundle() throws IOException, URISyntaxException {
-    when(manager.getHandler("svn")).thenReturn(repositoryHandler);
-    when(repositoryHandler.getType()).thenReturn(new RepositoryType("svn", "svn", ImmutableSet.of(Command.UNBUNDLE)));
-    doThrow(ImportFailedException.class).when(repositoryManager).create(any(), any());
-
-    RepositoryDto repositoryDto = new RepositoryDto();
-    repositoryDto.setName("HeartOfGold");
-    repositoryDto.setNamespace("hitchhiker");
-    repositoryDto.setType("svn");
-
-    URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump");
-    byte[] svnDump = Resources.toByteArray(dumpUrl);
-
-    MockHttpRequest request = MockHttpRequest
-      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "import/svn/bundle");
-    MockHttpResponse response = new MockHttpResponse();
-
-    multipartRequest(request, Collections.singletonMap("bundle", new ByteArrayInputStream(svnDump)), repositoryDto);
-
-    dispatcher.invoke(request, response);
-
-    assertEquals(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, response.getStatus());
-    ArgumentCaptor<RepositoryImportEvent> event = ArgumentCaptor.forClass(RepositoryImportEvent.class);
-    verify(eventBus).post(event.capture());
-    assertTrue(event.getValue().isFailed());
-  }
-
-  @Test
-  public void shouldImportCompressedBundle() throws IOException {
-    URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump.gz");
-    byte[] svnDump = Resources.toByteArray(dumpUrl);
-
-    UnbundleCommandBuilder ubc = mock(UnbundleCommandBuilder.class, RETURNS_SELF);
-    when(ubc.unbundle(any(File.class))).thenReturn(new UnbundleResponse(42));
-    RepositoryService service = mock(RepositoryService.class);
-    when(serviceFactory.create(any(Repository.class))).thenReturn(service);
-    when(service.getUnbundleCommand()).thenReturn(ubc);
-    InputStream in = new ByteArrayInputStream(svnDump);
-
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.unbundleImport(in, true);
-    repositoryConsumer.accept(RepositoryTestData.createHeartOfGold("svn"));
-
-    verify(ubc).setCompressed(true);
-    verify(ubc).unbundle(any(File.class));
-  }
-
-  @Test
-  public void shouldImportNonCompressedBundle() throws IOException {
-    URL dumpUrl = Resources.getResource("sonia/scm/api/v2/svn.dump");
-    byte[] svnDump = Resources.toByteArray(dumpUrl);
-
-    UnbundleCommandBuilder ubc = mock(UnbundleCommandBuilder.class, RETURNS_SELF);
-    when(ubc.unbundle(any(File.class))).thenReturn(new UnbundleResponse(21));
-    RepositoryService service = mock(RepositoryService.class);
-    when(serviceFactory.create(any(Repository.class))).thenReturn(service);
-    when(service.getUnbundleCommand()).thenReturn(ubc);
-    InputStream in = new ByteArrayInputStream(svnDump);
-
-    Consumer<Repository> repositoryConsumer = repositoryImportResource.unbundleImport(in, false);
-    repositoryConsumer.accept(RepositoryTestData.createHeartOfGold("svn"));
-
-    verify(ubc, never()).setCompressed(true);
-    verify(ubc).unbundle(any(File.class));
   }
 
   @Test
@@ -709,7 +482,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     MockHttpRequest request = MockHttpRequest
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/archive")
       .content(new byte[]{});
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -728,7 +500,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     MockHttpRequest request = MockHttpRequest
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/unarchive")
       .content(new byte[]{});
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -746,11 +517,9 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
     when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-    when(bundleCommandBuilder.getFileExtension()).thenReturn(".bundle");
 
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/svn");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -769,11 +538,9 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
 
     BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
     when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-    when(bundleCommandBuilder.getFileExtension()).thenReturn(".bundle");
 
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/svn?compressed=true");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -790,12 +557,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
 
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
     MockHttpRequest request = MockHttpRequest
       .get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full");
-    MockHttpResponse response = new MockHttpResponse();
 
     dispatcher.invoke(request, response);
 
@@ -811,9 +574,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     Repository repository = createRepository(namespace, name, "svn");
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
-
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
 
     MockHttpRequest request = MockHttpRequest
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full")
@@ -837,9 +597,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
 
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
     MockHttpRequest request = MockHttpRequest
       .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export/full")
       .contentType(VndMediaType.REPOSITORY_EXPORT)
@@ -860,9 +617,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
 
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
     when(exportService.isExporting(repository)).thenReturn(true);
 
     MockHttpRequest request = MockHttpRequest
@@ -877,18 +631,12 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
-  public void shouldDeleteRepositoryExport() throws URISyntaxException, IOException {
+  public void shouldDeleteRepositoryExport() throws URISyntaxException {
     String namespace = "space";
     String name = "repo";
     Repository repository = createRepository(namespace, name, "svn");
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
-
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
-    when(exportService.isExporting(repository)).thenReturn(false);
-    when(exportService.getData(repository)).thenReturn(new ByteArrayInputStream("".getBytes()));
 
     MockHttpRequest request = MockHttpRequest
       .delete("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/export");
@@ -907,9 +655,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     Repository repository = createRepository(namespace, name, "svn");
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
-
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
 
     when(exportService.isExporting(repository)).thenReturn(false);
     doThrow(NotFoundException.class).when(exportService).checkExportIsAvailable(repository);
@@ -932,9 +677,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
 
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
-
     when(exportService.isExporting(repository)).thenReturn(true);
 
     MockHttpRequest request = MockHttpRequest
@@ -953,9 +695,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     Repository repository = createRepository(namespace, name, "svn");
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
-
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
 
     when(exportService.isExporting(repository)).thenReturn(false);
     when(exportService.getData(repository)).thenReturn(new ByteArrayInputStream("content".getBytes()));
@@ -978,9 +717,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     Repository repository = createRepository(namespace, name, "svn");
     when(manager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     mockRepositoryHandler(ImmutableSet.of(Command.BUNDLE));
-
-    BundleCommandBuilder bundleCommandBuilder = mock(BundleCommandBuilder.class);
-    when(service.getBundleCommand()).thenReturn(bundleCommandBuilder);
 
     RepositoryExportInformationDto dto = new RepositoryExportInformationDto();
     dto.setExporterName("trillian");
@@ -1011,7 +747,6 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(repositoryType.getSupportedCommands()).thenReturn(cmds);
   }
 
-
   private PageResult<Repository> createSingletonPageResult(Repository repository) {
     return new PageResult<>(singletonList(repository), 0);
   }
@@ -1038,49 +773,5 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     when(repositoryManager.get(new NamespaceAndName(namespace, name))).thenReturn(repository);
     when(repositoryManager.get(id)).thenReturn(repository);
     return repository;
-  }
-
-
-  /**
-   * This method is a slightly adapted copy of Lin Zaho's gist at https://gist.github.com/lin-zhao/9985191
-   */
-  private void multipartRequest(MockHttpRequest request, Map<String, InputStream> files, RepositoryDto repository) throws IOException {
-    String boundary = UUID.randomUUID().toString();
-    request.contentType("multipart/form-data; boundary=" + boundary);
-
-    //Make sure this is deleted in afterTest()
-    ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-    try (OutputStreamWriter formWriter = new OutputStreamWriter(buffer)) {
-      formWriter.append("--").append(boundary);
-
-      for (Map.Entry<String, InputStream> entry : files.entrySet()) {
-        formWriter.append("\n");
-        formWriter.append(String.format("Content-Disposition: form-data; name=\"%s\"; filename=\"%s\"",
-          entry.getKey(), entry.getKey())).append("\n");
-        formWriter.append("Content-Type: application/octet-stream").append("\n\n");
-
-        InputStream stream = entry.getValue();
-        int b = stream.read();
-        while (b >= 0) {
-          formWriter.write(b);
-          b = stream.read();
-        }
-        stream.close();
-        formWriter.append("\n").append("--").append(boundary);
-      }
-
-      if (repository != null) {
-        formWriter.append("\n");
-        formWriter.append("Content-Disposition: form-data; name=\"repository\"").append("\n\n");
-        StringWriter repositoryWriter = new StringWriter();
-        new JsonFactory().createGenerator(repositoryWriter).setCodec(new ObjectMapper()).writeObject(repository);
-        formWriter.append(repositoryWriter.getBuffer().toString()).append("\n");
-        formWriter.append("--").append(boundary);
-      }
-
-      formWriter.append("--");
-      formWriter.flush();
-    }
-    request.setInputStream(new ByteArrayInputStream(buffer.toByteArray()));
   }
 }

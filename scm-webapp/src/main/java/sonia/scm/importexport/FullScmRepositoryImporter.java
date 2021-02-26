@@ -33,7 +33,9 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryManager;
+import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.api.ImportFailedException;
 
 import javax.inject.Inject;
@@ -42,8 +44,9 @@ import java.io.IOException;
 import java.io.InputStream;
 
 import static java.util.Arrays.stream;
-import static sonia.scm.util.Archives.createTarInputStream;
 import static sonia.scm.ContextEntry.ContextBuilder.noContext;
+import static sonia.scm.importexport.RepositoryImportLogger.ImportType.FULL;
+import static sonia.scm.util.Archives.createTarInputStream;
 
 public class FullScmRepositoryImporter {
 
@@ -53,6 +56,7 @@ public class FullScmRepositoryImporter {
   private final RepositoryManager repositoryManager;
   private final RepositoryImportExportEncryption repositoryImportExportEncryption;
   private final ScmEventBus eventBus;
+  private final RepositoryImportLoggerFactory loggerFactory;
 
   @Inject
   public FullScmRepositoryImporter(EnvironmentCheckStep environmentCheckStep,
@@ -61,15 +65,17 @@ public class FullScmRepositoryImporter {
                                    RepositoryImportStep repositoryImportStep,
                                    RepositoryManager repositoryManager,
                                    RepositoryImportExportEncryption repositoryImportExportEncryption,
-                                   ScmEventBus eventBus
-  ) {
+                                   RepositoryImportLoggerFactory loggerFactory,
+                                   ScmEventBus eventBus) {
     this.repositoryManager = repositoryManager;
+    this.loggerFactory = loggerFactory;
     this.repositoryImportExportEncryption = repositoryImportExportEncryption;
-    importSteps = new ImportStep[]{environmentCheckStep, metadataImportStep, storeImportStep, repositoryImportStep};
     this.eventBus = eventBus;
+    importSteps = new ImportStep[]{environmentCheckStep, metadataImportStep, storeImportStep, repositoryImportStep};
   }
 
   public Repository importFromStream(Repository repository, InputStream inputStream, String password) {
+    RepositoryPermissions.create().check();
     try {
       if (inputStream.available() > 0) {
         try (
@@ -103,8 +109,17 @@ public class FullScmRepositoryImporter {
     }
   }
 
+  private RepositoryImportLogger startLogger(Repository repository) {
+    RepositoryImportLogger logger = loggerFactory.createLogger();
+    logger.start(FULL, repository);
+    return logger;
+  }
+
   private Repository run(Repository repository, TarArchiveInputStream tais) throws IOException {
-    ImportState state = new ImportState(repositoryManager.create(repository));
+    Repository createdRepository = repositoryManager.create(repository);
+    RepositoryImportLogger logger = startLogger(repository);
+    ImportState state = new ImportState(createdRepository, logger);
+    logger.repositoryCreated(state.getRepository());
     try {
       TarArchiveEntry tarArchiveEntry;
       while ((tarArchiveEntry = tais.getNextTarEntry()) != null) {
@@ -112,21 +127,28 @@ public class FullScmRepositoryImporter {
         handle(tais, state, tarArchiveEntry);
       }
       stream(importSteps).forEach(step -> step.finish(state));
+      state.getLogger().finished();
       return state.getRepository();
+    } catch (RuntimeException | IOException e) {
+      state.getLogger().failed(e);
+      throw e;
     } finally {
       stream(importSteps).forEach(step -> step.cleanup(state));
       if (state.success()) {
         // send all pending events on successful import
         state.getPendingEvents().forEach(eventBus::post);
+        eventBus.post(new RepositoryImportEvent(repository, false));
       } else {
         // Delete the repository if any error occurs during the import
         repositoryManager.delete(state.getRepository());
+        eventBus.post(new RepositoryImportEvent(repository, true));
       }
 
     }
   }
 
   private void handle(TarArchiveInputStream tais, ImportState state, TarArchiveEntry currentEntry) {
+    state.getLogger().step("inspecting file " + currentEntry.getName());
     for (ImportStep step : importSteps) {
       if (step.handle(currentEntry, state, tais)) {
         return;

@@ -116,6 +116,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       builder.single(link("repositoryTypes", resourceLinks.repositoryTypeCollection().self()));
       builder.single(link("namespaceStrategies", resourceLinks.namespaceStrategies().self()));
       builder.single(link("repositoryRoles", resourceLinks.repositoryRoleCollection().self()));
+      builder.single(link("importLog", resourceLinks.repository().importLog("IMPORT_LOG_ID").replace("IMPORT_LOG_ID", "{logId}")));
     } else {
       builder.single(link("login", resourceLinks.authentication().jsonLogin()));
     }

@@ -80,8 +80,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
-import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.checkSupport;
-import static sonia.scm.api.v2.resources.RepositoryTypeSupportChecker.type;
+import static sonia.scm.importexport.RepositoryTypeSupportChecker.checkSupport;
+import static sonia.scm.importexport.RepositoryTypeSupportChecker.type;
 
 public class RepositoryExportResource {
 

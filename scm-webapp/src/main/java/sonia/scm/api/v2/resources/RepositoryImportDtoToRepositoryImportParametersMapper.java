@@ -22,27 +22,12 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.api.v2.resources;
 
-import lombok.Getter;
-import sonia.scm.event.Event;
+import org.mapstruct.Mapper;
+import sonia.scm.importexport.FromUrlImporter;
 
-/**
- * Event which is fired whenever repository import is successful or failed.
- *
- * @since 2.11.0
- */
-@Event
-@Getter
-public class RepositoryImportEvent {
-
-  private final Repository item;
-  private final String logId;
-  private final boolean failed;
-
-  public RepositoryImportEvent(Repository item, boolean failed) {
-    this.item = item;
-    this.logId = item.getId();
-    this.failed = failed;
-  }
+@Mapper
+public interface RepositoryImportDtoToRepositoryImportParametersMapper {
+  FromUrlImporter.RepositoryImportParameters map(RepositoryImportResource.RepositoryImportFromUrlDto dto);
 }

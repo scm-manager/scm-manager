@@ -36,6 +36,8 @@ import java.util.Optional;
 
 class ImportState {
 
+  private final RepositoryImportLogger logger;
+
   private Repository repository;
 
   private boolean environmentChecked;
@@ -48,11 +50,8 @@ class ImportState {
 
   private final List<Object> pendingEvents = new ArrayList<>();
 
-  ImportState(Repository repository) {
-    this.repository = repository;
-  }
-
-  public void setRepository(Repository repository) {
+  ImportState(Repository repository, RepositoryImportLogger logger) {
+    this.logger = logger;
     this.repository = repository;
   }
 
@@ -102,6 +101,10 @@ class ImportState {
 
   public void addPendingEvent(Object event) {
     this.pendingEvents.add(event);
+  }
+
+  RepositoryImportLogger getLogger() {
+    return logger;
   }
 
   public Collection<Object> getPendingEvents() {

@@ -122,5 +122,8 @@
   },
   "fileUpload": {
     "label": "Upload File"
+  },
+  "importLog": {
+    "title": "Import Log"
   }
 }

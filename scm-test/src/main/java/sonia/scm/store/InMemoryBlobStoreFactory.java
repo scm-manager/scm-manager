@@ -22,27 +22,39 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.store;
 
-import lombok.Getter;
-import sonia.scm.event.Event;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * Event which is fired whenever repository import is successful or failed.
- *
- * @since 2.11.0
- */
-@Event
-@Getter
-public class RepositoryImportEvent {
+public class InMemoryBlobStoreFactory implements BlobStoreFactory {
 
-  private final Repository item;
-  private final String logId;
-  private final boolean failed;
+  private final Map<String, BlobStore> stores = new HashMap<>();
 
-  public RepositoryImportEvent(Repository item, boolean failed) {
-    this.item = item;
-    this.logId = item.getId();
-    this.failed = failed;
+  private final BlobStore fixedStore;
+
+  public InMemoryBlobStoreFactory() {
+    this(null);
+  }
+
+  public InMemoryBlobStoreFactory(BlobStore fixedStore) {
+    this.fixedStore = fixedStore;
+  }
+
+  @Override
+  public BlobStore getStore(StoreParameters storeParameters) {
+    if (fixedStore == null) {
+      return stores.computeIfAbsent(computeKey(storeParameters), key -> new InMemoryBlobStore());
+    } else {
+      return fixedStore;
+    }
+  }
+
+  private String computeKey(StoreParameters storeParameters) {
+    if (storeParameters.getRepositoryId() == null) {
+      return storeParameters.getName();
+    } else {
+      return storeParameters.getName() + "/" + storeParameters.getRepositoryId();
+    }
   }
 }

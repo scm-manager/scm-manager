@@ -22,27 +22,11 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+import { ApiResult, useRequiredIndexLink } from "./base";
+import { useQuery } from "react-query";
+import { apiClient } from "./apiclient";
 
-import lombok.Getter;
-import sonia.scm.event.Event;
-
-/**
- * Event which is fired whenever repository import is successful or failed.
- *
- * @since 2.11.0
- */
-@Event
-@Getter
-public class RepositoryImportEvent {
-
-  private final Repository item;
-  private final String logId;
-  private final boolean failed;
-
-  public RepositoryImportEvent(Repository item, boolean failed) {
-    this.item = item;
-    this.logId = item.getId();
-    this.failed = failed;
-  }
+export const useImportLog = (logId: string) : ApiResult<string> => {
+  const link = useRequiredIndexLink("importLog").replace("{logId}", logId);
+  return useQuery<string, Error>(["importLog", logId], () => apiClient.get(link).then(response => response.text()));
 }

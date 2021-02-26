@@ -121,5 +121,8 @@
   },
   "fileUpload": {
     "label": "Datei hochladen"
+  },
+  "importLog": {
+    "title": "Importprotokoll"
   }
 }

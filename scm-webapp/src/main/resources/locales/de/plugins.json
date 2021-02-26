@@ -338,6 +338,10 @@
     "5GSO9ZkzX1": {
       "displayName": "Inkompatible Umgebung",
       "description": "Die Version dieses SCM-Managers oder eines der installierten Plugins ist zu alt für den Import des Dumps. Bitte installieren Sie die neuesten Versionen. Nähere Informationen finden sich im Log."
+    },
+    "CISPvega31": {
+      "displayName": "Ungültiger Repository-Typ für Import",
+      "description": "Der Import ist für den gegebenen Repository-Typen nicht möglich."
     }
   },
   "namespaceStrategies": {

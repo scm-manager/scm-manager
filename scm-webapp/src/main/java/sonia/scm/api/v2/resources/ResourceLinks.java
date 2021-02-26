@@ -377,6 +377,10 @@ class ResourceLinks {
       return repositoryImportLinkBuilder.method("getRepositoryImportResource").parameters().method("importFullRepository").parameters(type).href();
     }
 
+    String importLog(String importLogId) {
+      return repositoryImportLinkBuilder.method("getRepositoryImportResource").parameters().method("getImportLog").parameters(importLogId).href();
+    }
+
     String archive(String namespace, String name) {
       return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("archive").parameters().href();
     }

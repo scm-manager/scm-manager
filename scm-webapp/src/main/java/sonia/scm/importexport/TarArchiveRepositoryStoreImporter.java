@@ -47,36 +47,40 @@ public class TarArchiveRepositoryStoreImporter {
     this.repositoryStoreImporter = repositoryStoreImporter;
   }
 
-  public void importFromTarArchive(Repository repository, InputStream inputStream) {
+  public void importFromTarArchive(Repository repository, InputStream inputStream, RepositoryImportLogger logger) {
     try (TarArchiveInputStream tais = new NoneClosingTarArchiveInputStream(inputStream)) {
       ArchiveEntry entry = tais.getNextEntry();
       while (entry != null) {
         String[] entryPathParts = entry.getName().split(File.separator);
         validateStorePath(repository, entryPathParts);
-        importStoreByType(repository, tais, entryPathParts);
+        importStoreByType(repository, tais, entryPathParts, logger);
         entry = tais.getNextEntry();
       }
     } catch (IOException e) {
-      throw  new ImportFailedException(ContextEntry.ContextBuilder.entity(repository).build(), "Could not import stores from metadata file.", e);
+      throw new ImportFailedException(ContextEntry.ContextBuilder.entity(repository).build(), "Could not import stores from metadata file.", e);
     }
   }
 
-  private void importStoreByType(Repository repository, TarArchiveInputStream tais, String[] entryPathParts) {
+  private void importStoreByType(Repository repository, TarArchiveInputStream tais, String[] entryPathParts, RepositoryImportLogger logger) {
     String storeType = entryPathParts[1];
+    String storeName = entryPathParts[2];
     if (isDataStore(storeType)) {
+      logger.step("importing data store entry for store " + storeName);
       repositoryStoreImporter
         .doImport(repository)
         .importStore(new StoreEntryMetaData(StoreType.DATA, entryPathParts[2]))
         .importEntry(entryPathParts[3], tais);
     } else if (isConfigStore(storeType)){
+      logger.step("importing data store entry for store " + storeName);
       repositoryStoreImporter
         .doImport(repository)
         .importStore(new StoreEntryMetaData(StoreType.CONFIG, ""))
-        .importEntry(entryPathParts[2], tais);
+        .importEntry(storeName, tais);
     } else if(isBlobStore(storeType)) {
+      logger.step("importing blob store entry for store " + storeName);
       repositoryStoreImporter
         .doImport(repository)
-        .importStore(new StoreEntryMetaData(StoreType.BLOB, entryPathParts[2]))
+        .importStore(new StoreEntryMetaData(StoreType.BLOB, storeName))
         .importEntry(entryPathParts[3], tais);
     }
   }

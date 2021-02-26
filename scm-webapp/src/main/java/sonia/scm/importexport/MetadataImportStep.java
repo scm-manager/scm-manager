@@ -58,6 +58,7 @@ class MetadataImportStep implements ImportStep {
       RepositoryMetadataXmlGenerator.RepositoryMetadata metadata = JAXB.unmarshal(new NoneClosingInputStream(inputStream), RepositoryMetadataXmlGenerator.RepositoryMetadata.class);
       if (metadata != null && metadata.getPermissions() != null) {
         state.setPermissions(new HashSet<>(metadata.getPermissions()));
+        state.getLogger().step("reading repository metadata with permissions");
       } else {
         state.setPermissions(Collections.emptySet());
       }
@@ -69,6 +70,7 @@ class MetadataImportStep implements ImportStep {
   @Override
   public void finish(ImportState state) {
     LOG.trace("Saving permissions for imported repository");
+    state.getLogger().step("setting permissions for repository from import");
     importRepositoryPermissions(state.getRepository(), state.getRepositoryPermissions());
   }
 

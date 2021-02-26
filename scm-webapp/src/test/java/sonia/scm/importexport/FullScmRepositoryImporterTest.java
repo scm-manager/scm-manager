@@ -25,6 +25,9 @@
 package sonia.scm.importexport;
 
 import com.google.common.io.Resources;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -40,6 +43,7 @@ import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.ImportRepositoryHookEvent;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryHookEvent;
+import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryTestData;
@@ -64,6 +68,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -94,6 +100,14 @@ class FullScmRepositoryImporterTest {
   private RepositoryImportExportEncryption repositoryImportExportEncryption;
   @Mock
   private WorkdirProvider workdirProvider;
+  @Mock
+  private RepositoryImportLogger logger;
+  @Mock
+  private RepositoryImportLoggerFactory loggerFactory;
+  @Mock
+  private Subject subject;
+  @Mock
+  private ScmEventBus eventBus;
 
   @InjectMocks
   private EnvironmentCheckStep environmentCheckStep;
@@ -103,9 +117,6 @@ class FullScmRepositoryImporterTest {
   private StoreImportStep storeImportStep;
   @InjectMocks
   private RepositoryImportStep repositoryImportStep;
-
-  @Mock
-  private ScmEventBus eventBus;
 
   @Mock
   private RepositoryHookEvent event;
@@ -124,14 +135,25 @@ class FullScmRepositoryImporterTest {
       repositoryImportStep,
       repositoryManager,
       repositoryImportExportEncryption,
-      eventBus
-    );
+      loggerFactory,
+      eventBus);
   }
 
   @BeforeEach
   void initRepositoryService() {
     lenient().when(serviceFactory.create(REPOSITORY)).thenReturn(service);
     lenient().when(service.getUnbundleCommand()).thenReturn(unbundleCommandBuilder);
+    lenient().when(loggerFactory.createLogger()).thenReturn(logger);
+  }
+
+  @BeforeEach
+  void initSubject() {
+    ThreadContext.bind(subject);
+  }
+
+  @BeforeEach
+  void cleanupSubject() {
+    ThreadContext.unbindSubject();
   }
 
   @Test
@@ -154,6 +176,28 @@ class FullScmRepositoryImporterTest {
       IncompatibleEnvironmentForImportException.class,
       () -> fullImporter.importFromStream(REPOSITORY, importStream, "")
     );
+
+    verify(eventBus).post(argThat(
+      event -> {
+        assertThat(event).isInstanceOf(RepositoryImportEvent.class);
+        RepositoryImportEvent repositoryImportEvent = (RepositoryImportEvent) event;
+        assertThat(repositoryImportEvent.getItem()).isEqualTo(REPOSITORY);
+        assertThat(repositoryImportEvent.isFailed()).isTrue();
+        return true;
+      }
+    ));
+  }
+
+  @Test
+  void shouldNotImportRepositoryWithoutPermission() throws IOException {
+    doThrow(AuthorizationException.class).when(subject).checkPermission("repository:create");
+
+    InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
+
+    assertThrows(AuthorizationException.class, () -> fullImporter.importFromStream(REPOSITORY, stream, null));
+
+    verify(storeImporter, never()).importFromTarArchive(any(Repository.class), any(InputStream.class), any(RepositoryImportLogger.class));
+    verify(repositoryManager, never()).modify(any());
   }
 
   @Nested
@@ -174,7 +218,7 @@ class FullScmRepositoryImporterTest {
       Repository repository = fullImporter.importFromStream(REPOSITORY, stream, "");
 
       assertThat(repository).isEqualTo(REPOSITORY);
-      verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class));
+      verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class), eq(logger));
       verify(repositoryManager).modify(REPOSITORY);
       Collection<RepositoryPermission> updatedPermissions = REPOSITORY.getPermissions();
       assertThat(updatedPermissions).hasSize(2);
@@ -193,6 +237,33 @@ class FullScmRepositoryImporterTest {
     }
 
     @Test
+    void shouldSendImportedEventForImportedRepository() throws IOException {
+      InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
+      when(unbundleCommandBuilder.setPostEventSink(any())).thenAnswer(
+        invocation -> {
+          invocation.getArgument(0, Consumer.class).accept(new RepositoryHookEvent(null, REPOSITORY, null));
+          return null;
+        }
+      );
+      ArgumentCaptor<Object> capturedEvents = ArgumentCaptor.forClass(Object.class);
+      doNothing().when(eventBus).post(capturedEvents.capture());
+
+      fullImporter.importFromStream(REPOSITORY, stream, null);
+
+      assertThat(capturedEvents.getAllValues()).hasSize(2);
+      assertThat(capturedEvents.getAllValues()).anyMatch(
+        event ->
+          event instanceof ImportRepositoryHookEvent &&
+            ((ImportRepositoryHookEvent) event).getRepository().equals(REPOSITORY)
+      );
+      assertThat(capturedEvents.getAllValues()).anyMatch(
+        event ->
+          event instanceof RepositoryImportEvent &&
+            ((RepositoryImportEvent) event).getItem().equals(REPOSITORY)
+      );
+    }
+
+    @Test
     void shouldTriggerUpdateForImportedRepository() throws IOException {
       InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
 
@@ -207,7 +278,8 @@ class FullScmRepositoryImporterTest {
       Repository repository = fullImporter.importFromStream(REPOSITORY, stream, "");
 
       assertThat(repository).isEqualTo(REPOSITORY);
-      verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class));
+      verify(storeImporter).importFromTarArchive(eq(REPOSITORY), any(InputStream.class), eq(logger));
+      verify(repositoryManager).create(REPOSITORY);
       verify(repositoryManager).modify(REPOSITORY);
       verify(unbundleCommandBuilder).unbundle((InputStream) argThat(argument -> argument.getClass().equals(NoneClosingInputStream.class)));
       verify(workdirProvider, never()).createNewWorkdir(REPOSITORY.getId());
