@@ -207,8 +207,7 @@ public class ScmConfiguration implements Configuration {
   private String mailDomainName = DEFAULT_MAIL_DOMAIN_NAME;
 
   /**
-   * Calls the {@link sonia.scm.ConfigChangedListener#configChanged(Object)}
-   * method of all registered listeners.
+   * Fires the {@link ScmConfigurationChangedEvent}.
    */
   public void fireChangeEvent() {
     if (logger.isDebugEnabled()) {
@@ -294,7 +293,7 @@ public class ScmConfiguration implements Configuration {
    * <li><b>os</b> = Operation System</li>
    * <li><b>arch</b> = Architecture</li>
    * </ul>
-   * For example http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&arch={arch}&snapshot=false
+   * For example `http://plugins.scm-manager.org/scm-plugin-backend/api/{version}/plugins?os={os}&amp;arch={arch}&amp;snapshot=false`
    *
    * @return the complete plugin url.
    */
@@ -313,6 +312,7 @@ public class ScmConfiguration implements Configuration {
 
   /**
    * Returns the mail domain, that will be used to create e-mail addresses for users without one whenever one is required.
+   *
    * @return default mail domain
    * @since 2.8.0
    */

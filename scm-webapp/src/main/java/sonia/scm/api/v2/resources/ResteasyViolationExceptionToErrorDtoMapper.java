@@ -43,6 +43,7 @@ public abstract class ResteasyViolationExceptionToErrorDtoMapper {
   @Mapping(target = "context", ignore = true)
   @Mapping(target = "url", ignore = true)
   @Mapping(target = "violations", ignore = true)
+  @Mapping(target = "additionalMessages", ignore = true)
   public abstract ErrorDto map(ConstraintViolationException exception);
 
   @AfterMapping

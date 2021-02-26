@@ -43,7 +43,7 @@ public interface ExportableStore {
   StoreEntryMetaData getMetaData();
 
   /**
-   * Exports the data of this store to the given {@param exporter}.
+   * Exports the data of this store to the given exporter.
    */
   void export(Exporter exporter) throws IOException;
 }

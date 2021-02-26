@@ -27,10 +27,12 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class BlameDto extends HalRepresentation {
 
   private List<BlameLineDto> lines;

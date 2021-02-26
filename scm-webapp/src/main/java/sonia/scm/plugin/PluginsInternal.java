@@ -73,7 +73,7 @@ public final class PluginsInternal
    * Method description
    *
    *
-   * @param classLoader
+   * @param classLoaderLifeCycle
    * @param directory
    *
    * @return

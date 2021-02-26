@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,19 +37,15 @@ import sonia.scm.util.AssertUtil;
  *
  * @author Sebastian Sdorra
  */
-public abstract class AbstractRepositoryManager implements RepositoryManager
-{
+public abstract class AbstractRepositoryManager implements RepositoryManager {
 
   /**
-   * Sends a {@link RepositoryHookEvent} to each registered
-   * {@link RepositoryHook} and sends the {@link RepositoryHookEvent} to
-   * the {@link ScmEventBus}.
+   * Sends the {@link RepositoryHookEvent} to the {@link ScmEventBus}.
    *
    * @param event event to be fired
    */
   @Override
-  public void fireHookEvent(RepositoryHookEvent event)
-  {
+  public void fireHookEvent(RepositoryHookEvent event) {
     AssertUtil.assertIsNotNull(event);
     AssertUtil.assertIsNotNull(event.getRepository());
     AssertUtil.assertIsNotNull(event.getType());
@@ -64,13 +60,12 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   /**
    * Send a {@link RepositoryEvent} to the {@link ScmEventBus}.
    *
-   * @param event type of change event
-   * @param repository repository that has changed
+   * @param event         type of change event
+   * @param repository    repository that has changed
    * @param oldRepository old repository
    */
   protected void fireEvent(HandlerEventType event, Repository repository,
-    Repository oldRepository)
-  {
+                           Repository oldRepository) {
     ScmEventBus.getInstance().post(new RepositoryModificationEvent(event, repository,
       oldRepository));
   }
@@ -78,25 +73,21 @@ public abstract class AbstractRepositoryManager implements RepositoryManager
   /**
    * Send a {@link RepositoryEvent} to the {@link ScmEventBus}.
    *
-   * @param event type of change event
+   * @param event      type of change event
    * @param repository repository that has changed
    */
-  protected void fireEvent(HandlerEventType event, Repository repository)
-  {
+  protected void fireEvent(HandlerEventType event, Repository repository) {
     ScmEventBus.getInstance().post(new RepositoryEvent(event, repository));
   }
 
   /**
    * Prepare a hook event before it is fired to the event system of SCM-Manager.
    *
-   *
    * @param event hook event
-   * @since 1.26
-   *
    * @return
+   * @since 1.26
    */
-  protected RepositoryHookEvent prepareHookEvent(RepositoryHookEvent event)
-  {
+  protected RepositoryHookEvent prepareHookEvent(RepositoryHookEvent event) {
     return event;
   }
 }

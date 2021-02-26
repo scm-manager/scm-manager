@@ -33,5 +33,6 @@ import sonia.scm.group.Group;
 public abstract class GroupDtoToGroupMapper extends BaseDtoMapper {
 
   @Mapping(target = "creationDate", ignore = true)
+  @Mapping(target = "properties", ignore = true)
   public abstract Group map(GroupDto groupDto);
 }

@@ -25,7 +25,7 @@
 package sonia.scm.filter;
 
 /**
- * Configuration for the {@link GZipFilter}.
+ * Configuration for the {@link GZipResponseFilter}.
  *
  * @author Sebastian Sdorra
  * @since 1.16

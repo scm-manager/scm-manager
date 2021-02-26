@@ -29,10 +29,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.util.List;
 
 @Data
+@EqualsAndHashCode(callSuper = false)
 public class DiffResultDto extends HalRepresentation {
 
   public DiffResultDto(Links links) {
@@ -42,6 +44,7 @@ public class DiffResultDto extends HalRepresentation {
   private List<FileDto> files;
 
   @Data
+  @EqualsAndHashCode(callSuper = false)
   @JsonInclude(JsonInclude.Include.NON_DEFAULT)
   public static class FileDto extends HalRepresentation {
 

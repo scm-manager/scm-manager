@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Links;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import sonia.scm.lifecycle.Restarter;
 import sonia.scm.plugin.AvailablePlugin;
@@ -51,6 +52,13 @@ public abstract class PluginDtoMapper {
   @Inject
   private Restarter restarter;
 
+  @Mapping(target = "newVersion", ignore = true)
+  @Mapping(target = "pending", ignore = true)
+  @Mapping(target = "core", ignore = true)
+  @Mapping(target = "markedForUninstall", ignore = true)
+  @Mapping(target = "dependencies", ignore = true)
+  @Mapping(target = "optionalDependencies", ignore = true)
+  @Mapping(target = "attributes", ignore = true)
   public abstract void map(PluginInformation plugin, @MappingTarget PluginDto dto);
 
   public PluginDto mapInstalled(InstalledPlugin plugin, List<AvailablePlugin> availablePlugins) {

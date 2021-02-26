@@ -37,6 +37,8 @@ import sonia.scm.user.User;
 public abstract class UserDtoToUserMapper extends BaseDtoMapper {
 
   @Mapping(target = "creationDate", ignore = true)
+  @Mapping(target = "active")
+  @Mapping(target = "properties", ignore = true)
   public abstract User map(UserDto userDto, @Context String usedPassword);
 
 

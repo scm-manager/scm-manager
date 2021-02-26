@@ -38,6 +38,7 @@ public interface ScmViolationExceptionToErrorDtoMapper {
   @Mapping(target = "errorCode", ignore = true)
   @Mapping(target = "transactionId", ignore = true)
   @Mapping(target = "context", ignore = true)
+  @Mapping(target = "additionalMessages", ignore = true)
   ErrorDto map(ScmConstraintViolationException exception);
 
   @AfterMapping

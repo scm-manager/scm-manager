@@ -32,9 +32,9 @@ package sonia.scm;
 public enum ServletContainer
 {
 	SCM_SERVER,
-	/** Jetty version <= 6 */
+	/** Jetty version &lt;= 6 */
 	JETTY,
-	/** Jetty version >= 7 */
+	/** Jetty version &gt;= 7 */
 	ECLIPSE_JETTY,
 	TOMCAT,
 	GLASSFISH,

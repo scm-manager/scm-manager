@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -39,11 +39,9 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class MustacheTemplate implements Template
-{
+public class MustacheTemplate implements Template {
 
   /**
    * the logger for MustacheTemplae
@@ -56,45 +54,32 @@ public class MustacheTemplate implements Template
   /**
    * Constructs ...
    *
-   *
-   *
    * @param templatePath
    * @param mustache
    */
-  public MustacheTemplate(String templatePath, Mustache mustache)
-  {
+  public MustacheTemplate(String templatePath, Mustache mustache) {
     this.templatePath = templatePath;
     this.mustache = mustache;
   }
 
-  //~--- methods --------------------------------------------------------------
-
   /**
    * Method description
    *
-   *
    * @param writer
-   * @param environment
    * @param model
-   *
    * @throws IOException
    */
   @Override
-  public void execute(Writer writer, Object model) throws IOException
-  {
-    if (logger.isDebugEnabled())
-    {
+  public void execute(Writer writer, Object model) throws IOException {
+    if (logger.isDebugEnabled()) {
       logger.debug("render mustache template at {}", templatePath);
     }
 
-    try
-    {
+    try {
 
       mustache.execute(writer, model);
 
-    }
-    catch (Exception ex)
-    {
+    } catch (Exception ex) {
       Throwables.propagateIfInstanceOf(ex, IOException.class);
 
       throw new TemplateRenderException(
@@ -104,9 +89,13 @@ public class MustacheTemplate implements Template
 
   //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private Mustache mustache;
 
-  /** Field description */
+  /**
+   * Field description
+   */
   private String templatePath;
 }
