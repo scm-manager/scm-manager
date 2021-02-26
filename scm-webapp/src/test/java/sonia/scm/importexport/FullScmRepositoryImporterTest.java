@@ -212,5 +212,24 @@ class FullScmRepositoryImporterTest {
       verify(unbundleCommandBuilder).unbundle((InputStream) argThat(argument -> argument.getClass().equals(NoneClosingInputStream.class)));
       verify(workdirProvider, never()).createNewWorkdir(REPOSITORY.getId());
     }
+
+    @Test
+    void shouldFireImportRepositoryHookEvent() throws IOException {
+      InputStream stream = Resources.getResource("sonia/scm/repository/import/scm-import.tar.gz").openStream();
+
+      // capture the event sink which is registered by RepositoryImportStep
+      // we use when here instead of verify, because for verify we have used it before
+      when(unbundleCommandBuilder.setPostEventSink(eventSinkCaptor.capture())).thenReturn(unbundleCommandBuilder);
+      // when the RepositoryImportStep calls unbundle we pass our mocked event to the captured sink
+      when(unbundleCommandBuilder.unbundle(any(InputStream.class))).then(ic -> {
+        eventSinkCaptor.getValue().accept(event);
+        // RepositoryImportStep does not evaluate the return value of unbundle
+        return null;
+      });
+
+      fullImporter.importFromStream(REPOSITORY, stream, "");
+
+      verify(eventBus).post(any(ImportRepositoryHookEvent.class));
+    }
   }
 }
