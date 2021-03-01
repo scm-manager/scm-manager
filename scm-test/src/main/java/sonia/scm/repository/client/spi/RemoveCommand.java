@@ -34,11 +34,5 @@ import java.io.IOException;
  */
 public interface RemoveCommand {
 
-  /**
-   * Method description
-   *
-   * @param path
-   * @throws IOException
-   */
-  public void remove(String path) throws IOException;
+  void remove(String path) throws IOException;
 }

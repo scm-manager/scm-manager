@@ -24,7 +24,6 @@
 
 package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.Subscribe;
 import com.google.common.base.Objects;
@@ -62,7 +61,6 @@ import java.util.stream.Collectors;
 
 import static java.util.Objects.isNull;
 
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * TODO add events
@@ -73,14 +71,8 @@ import static java.util.Objects.isNull;
 @Singleton
 public class DefaultSecuritySystem implements SecuritySystem {
 
-  /**
-   * Field description
-   */
   private static final String NAME = "security";
 
-  /**
-   * Field description
-   */
   private static final String PERMISSION_DESCRIPTOR =
     "META-INF/scm/permissions.xml";
 
@@ -90,15 +82,7 @@ public class DefaultSecuritySystem implements SecuritySystem {
   private static final Logger logger =
     LoggerFactory.getLogger(DefaultSecuritySystem.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   * @param storeFactory
-   */
   @Inject
-  @SuppressWarnings("unchecked")
   public DefaultSecuritySystem(ConfigurationEntryStoreFactory storeFactory, PluginLoader pluginLoader) {
     store = storeFactory
       .withType(AssignedPermission.class)
@@ -107,13 +91,6 @@ public class DefaultSecuritySystem implements SecuritySystem {
     this.availablePermissions = readAvailablePermissions(pluginLoader);
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @param permission
-   */
   @Override
   public void addPermission(AssignedPermission permission) {
     assertHasPermission();
@@ -130,11 +107,6 @@ public class DefaultSecuritySystem implements SecuritySystem {
     //J+
   }
 
-  /**
-   * Method description
-   *
-   * @param permission
-   */
   @Override
   public void deletePermission(AssignedPermission permission) {
     assertHasPermission();
@@ -148,11 +120,6 @@ public class DefaultSecuritySystem implements SecuritySystem {
     }
   }
 
-  /**
-   * Method description
-   *
-   * @param event
-   */
   @Subscribe
   public void handleEvent(final UserEvent event) {
     if (event.getEventType() == HandlerEventType.DELETE) {
@@ -161,11 +128,6 @@ public class DefaultSecuritySystem implements SecuritySystem {
     }
   }
 
-  /**
-   * Method description
-   *
-   * @param event
-   */
   @Subscribe
   public void handleEvent(final GroupEvent event) {
     if (event.getEventType() == HandlerEventType.DELETE) {
@@ -174,13 +136,6 @@ public class DefaultSecuritySystem implements SecuritySystem {
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @return
-   */
   @Override
   public Collection<PermissionDescriptor> getAvailablePermissions() {
     assertHasPermission();
@@ -188,12 +143,6 @@ public class DefaultSecuritySystem implements SecuritySystem {
     return availablePermissions;
   }
 
-  /**
-   * Method description
-   *
-   * @param predicate
-   * @return
-   */
   @Override
   public Collection<AssignedPermission> getPermissions(Predicate<AssignedPermission> predicate) {
     Builder<AssignedPermission> permissions = ImmutableSet.builder();
@@ -207,20 +156,10 @@ public class DefaultSecuritySystem implements SecuritySystem {
     return permissions.build();
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   */
   private void assertHasPermission() {
     PermissionPermissions.assign().check();
   }
 
-  /**
-   * Method description
-   *
-   * @param predicate
-   */
   private boolean deletePermissions(Predicate<AssignedPermission> predicate) {
     List<Entry<String, AssignedPermission>> toRemove =
       store.getAll()
@@ -231,13 +170,6 @@ public class DefaultSecuritySystem implements SecuritySystem {
     return !toRemove.isEmpty();
   }
 
-  /**
-   * Method description
-   *
-   * @param context
-   * @param descriptorUrl
-   * @return
-   */
   @SuppressWarnings("unchecked")
   private static List<PermissionDescriptor> parsePermissionDescriptor(
     JAXBContext context, URL descriptorUrl) {
@@ -260,11 +192,6 @@ public class DefaultSecuritySystem implements SecuritySystem {
     return descriptors;
   }
 
-  /**
-   * Method description
-   *
-   * @param pluginLoader
-   */
   private static ImmutableSet<PermissionDescriptor> readAvailablePermissions(PluginLoader pluginLoader) {
     ImmutableSet.Builder<PermissionDescriptor> builder = ImmutableSet.builder();
 
@@ -293,19 +220,12 @@ public class DefaultSecuritySystem implements SecuritySystem {
     return builder.build();
   }
 
-  /**
-   * Method description
-   *
-   * @param perm
-   */
   private void validatePermission(AssignedPermission perm) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(perm.getName()),
       "name is required");
     Preconditions.checkArgument(!isNull(perm.getPermission()),
       "permission is required");
   }
-
-  //~--- inner classes --------------------------------------------------------
 
   /**
    * Descriptor for permissions.
@@ -314,13 +234,6 @@ public class DefaultSecuritySystem implements SecuritySystem {
   @XmlAccessorType(XmlAccessType.FIELD)
   private static class PermissionDescriptors {
 
-    //~--- get methods --------------------------------------------------------
-
-    /**
-     * Method description
-     *
-     * @return
-     */
     @SuppressWarnings("unchecked")
     public List<PermissionDescriptor> getPermissions() {
       if (permissions == null) {
@@ -330,25 +243,11 @@ public class DefaultSecuritySystem implements SecuritySystem {
       return permissions;
     }
 
-    //~--- fields -------------------------------------------------------------
-
-    /**
-     * Field description
-     */
     @XmlElement(name = "permission")
     private List<PermissionDescriptor> permissions;
   }
 
-
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * Field description
-   */
   private final ConfigurationEntryStore<AssignedPermission> store;
 
-  /**
-   * Field description
-   */
   private final ImmutableSet<PermissionDescriptor> availablePermissions;
 }

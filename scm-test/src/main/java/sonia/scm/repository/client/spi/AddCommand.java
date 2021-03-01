@@ -34,11 +34,5 @@ import java.io.IOException;
  */
 public interface AddCommand {
 
-  /**
-   * Method description
-   *
-   * @param path
-   * @throws IOException
-   */
-  public void add(String path) throws IOException;
+  void add(String path) throws IOException;
 }

@@ -44,52 +44,24 @@ import java.util.List;
  */
 public final class RepositoryClientFactory {
 
-  /**
-   * Constructs ...
-   */
+  private Iterable<RepositoryClientFactoryProvider> providers;
+
   public RepositoryClientFactory() {
     this.providers =
       ServiceUtil.getServices(RepositoryClientFactoryProvider.class);
   }
 
-  /**
-   * Constructs ...
-   *
-   * @param providers
-   */
   public RepositoryClientFactory(
     Iterable<RepositoryClientFactoryProvider> providers) {
     this.providers = providers;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @param type
-   * @param main
-   * @param workingCopy
-   * @return
-   * @throws IOException
-   */
   public RepositoryClient create(String type, File main, File workingCopy)
     throws IOException {
 
     return new RepositoryClient(getProvider(type).create(main, workingCopy));
   }
 
-  /**
-   * Method description
-   *
-   * @param type
-   * @param url
-   * @param username
-   * @param password
-   * @param workingCopy
-   * @return
-   * @throws IOException
-   */
   public RepositoryClient create(String type, String url, String username,
                                  String password, File workingCopy)
     throws IOException {
@@ -102,13 +74,6 @@ public final class RepositoryClientFactory {
     return new RepositoryClient(getProvider(type).create(url, null, null, workingCopy));
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @return
-   */
   public Iterable<String> getAvailableTypes() {
     List<String> types = Lists.newArrayList();
 
@@ -119,12 +84,6 @@ public final class RepositoryClientFactory {
     return types;
   }
 
-  /**
-   * Method description
-   *
-   * @param type
-   * @return
-   */
   private RepositoryClientFactoryProvider getProvider(String type) {
     RepositoryClientFactoryProvider provider = null;
 
@@ -143,11 +102,4 @@ public final class RepositoryClientFactory {
 
     return provider;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * Field description
-   */
-  private Iterable<RepositoryClientFactoryProvider> providers;
 }

@@ -24,16 +24,10 @@
 
 package sonia.scm.template;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.github.mustachejava.Mustache;
-
 import com.google.common.base.Throwables;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.io.IOException;
 import java.io.Writer;
@@ -49,26 +43,11 @@ public class MustacheTemplate implements Template {
   private static final Logger logger =
     LoggerFactory.getLogger(MustacheTemplate.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   * @param templatePath
-   * @param mustache
-   */
   public MustacheTemplate(String templatePath, Mustache mustache) {
     this.templatePath = templatePath;
     this.mustache = mustache;
   }
 
-  /**
-   * Method description
-   *
-   * @param writer
-   * @param model
-   * @throws IOException
-   */
   @Override
   public void execute(Writer writer, Object model) throws IOException {
     if (logger.isDebugEnabled()) {
@@ -87,15 +66,7 @@ public class MustacheTemplate implements Template {
     }
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /**
-   * Field description
-   */
   private Mustache mustache;
 
-  /**
-   * Field description
-   */
   private String templatePath;
 }
