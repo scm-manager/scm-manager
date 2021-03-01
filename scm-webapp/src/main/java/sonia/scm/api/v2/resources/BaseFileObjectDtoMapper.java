@@ -60,7 +60,6 @@ abstract class BaseFileObjectDtoMapper extends HalAppenderMapper implements Inst
     Links.Builder links = Links.linkingTo();
     if (fileObject.isDirectory()) {
       links.self(resourceLinks.source().sourceWithPath(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path));
-      links.single(link("paths", resourceLinks.repository().paths(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision())));
     } else {
       links.self(resourceLinks.source().content(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path));
       links.single(link("history", resourceLinks.fileHistory().self(namespaceAndName.getNamespace(), namespaceAndName.getName(), browserResult.getRevision(), path)));

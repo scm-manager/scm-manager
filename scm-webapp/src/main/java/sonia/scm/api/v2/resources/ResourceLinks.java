@@ -407,8 +407,8 @@ class ResourceLinks {
       return repositoryExportLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("export").parameters().method("getExportInformation").parameters().href();
     }
 
-    String paths(String namespace, String name, String revision) {
-      return repositoryPathsLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("paths").parameters().method("collect").parameters(revision).href();
+    String paths(String namespace, String name) {
+      return repositoryPathsLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("paths").parameters().method("collect").parameters("_REVISION_").href().replace("_REVISION_", "{revision}");
     }
   }
 
