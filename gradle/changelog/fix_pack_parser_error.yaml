@@ -1,2 +1,0 @@
-- type: fixed
-  description: Sporadic error in reading git pack files ([#1518](https://github.com/scm-manager/scm-manager/issues/1518))

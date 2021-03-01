@@ -1,4 +1,0 @@
-- type: added
-  description: XML attribute in root element of config entry stores ([#1545](https://github.com/scm-manager/scm-manager/pull/1545))
-- type: changed
-  description: Config entry stores are handled explicitly in exports ([#1545](https://github.com/scm-manager/scm-manager/pull/1545))

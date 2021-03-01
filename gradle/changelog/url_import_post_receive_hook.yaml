@@ -1,2 +1,0 @@
-- type: changed
-  description: Fire post receive repository hook event after the repository import has been finished. ([#1544](https://github.com/scm-manager/scm-manager/pull/1544))

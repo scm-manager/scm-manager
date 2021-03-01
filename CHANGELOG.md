@@ -5,7 +5,35 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [2.13.0] - 2021-01-29 
+## [2.14.0] - 2021-03-01
+### Added
+- Repository data can be migrated independently to enable the import of dumps from older versions ([#1526](https://github.com/scm-manager/scm-manager/pull/1526))
+- XML attribute in root element of config entry stores ([#1545](https://github.com/scm-manager/scm-manager/pull/1545))
+- Add option to encrypt repository exports with a password and decrypt them on repository import ([#1533](https://github.com/scm-manager/scm-manager/pull/1533))
+- Make repository export asynchronous. ([#1533](https://github.com/scm-manager/scm-manager/pull/1533))
+- Lock repository to "read-only" access during export ([#1519](https://github.com/scm-manager/scm-manager/pull/1519))
+- Warn user to not leave page during repository import ([#1536](https://github.com/scm-manager/scm-manager/pull/1536))
+- Import repository permissions from repository archive ([#1520](https://github.com/scm-manager/scm-manager/pull/1520))
+- Added import protocols ([#1558](https://github.com/scm-manager/scm-manager/pull/1558))
+
+### Fixed
+- Loading of cache configuration from plugins ([#1540](https://github.com/scm-manager/scm-manager/pull/1540))
+- Missing error message for wrong password ([#1527](https://github.com/scm-manager/scm-manager/pull/1527))
+- Sporadic error in reading git pack files ([#1518](https://github.com/scm-manager/scm-manager/issues/1518))
+- Fix permission check for branch deletion ([#1515](https://github.com/scm-manager/scm-manager/pull/1515))
+- Fix broken mercurial http post args configuration ([#1532](https://github.com/scm-manager/scm-manager/issues/1532))
+- Do not resolve external groups for system accounts ([#1541](https://github.com/scm-manager/scm-manager/pull/1541))
+- Wrong redirect on paginated overviews  ([#1535](https://github.com/scm-manager/scm-manager/pull/1535))
+
+### Changed
+- Config entry stores are handled explicitly in exports ([#1545](https://github.com/scm-manager/scm-manager/pull/1545))
+- Allow usage of cache as shiro authentication and authorization cache ([#1540](https://github.com/scm-manager/scm-manager/pull/1540))
+- Implement new changelog process ([#1517](https://github.com/scm-manager/scm-manager/issues/1517))
+- Fire post receive repository hook event after the repository import has been finished. ([#1544](https://github.com/scm-manager/scm-manager/pull/1544))
+- improve frontend performance with stale while revalidate pattern ([#1555](https://github.com/scm-manager/scm-manager/pull/1555))
+- Change the order of files inside the repository archive ([#1538](https://github.com/scm-manager/scm-manager/pull/1538))
+
+## [2.13.0] - 2021-01-29
 ### Added
 - Repository export for Subversion ([#1488](https://github.com/scm-manager/scm-manager/pull/1488))
 - Provide more options for Helm chart ([#1485](https://github.com/scm-manager/scm-manager/pull/1485))
@@ -93,7 +121,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [2.9.1] - 2020-11-11
 ### Fixed
 - German translation for repositories view
-
 
 ## [2.9.0] - 2020-11-06
 ### Added
@@ -207,7 +234,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Remove obsolete revision encoding on sources ([#1315](https://github.com/scm-manager/scm-manager/pull/1315))
 - Map generic JaxRS 'web application exceptions' to appropriate response instead of "internal server error" ([#1318](https://github.com/scm-manager/scm-manager/pull/1312))
 
-
 ## [2.4.0] - 2020-08-14
 ### Added
 - Introduced merge detection for receive hooks ([#1278](https://github.com/scm-manager/scm-manager/pull/1278))
@@ -236,7 +262,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Avoid stacktrace logging when protocol url is accessed outside of request scope ([#1276](https://github.com/scm-manager/scm-manager/pull/1276))
 
 ## [2.3.0] - 2020-07-23
-
 ### Added
 - Add branch link provider to access branch links in plugins ([#1243](https://github.com/scm-manager/scm-manager/pull/1243))
 - Add key value input field component ([#1246](https://github.com/scm-manager/scm-manager/pull/1246))
@@ -251,7 +276,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixed file extension detection with new spotter version
 - Fixed wrong cache directory location ([#1236](https://github.com/scm-manager/scm-manager/issues/1236) and [#1242](https://github.com/scm-manager/scm-manager/issues/1242))
 - Fixed error in update step ([#1237](https://github.com/scm-manager/scm-manager/issues/1237) and [#1244](https://github.com/scm-manager/scm-manager/issues/1244))
-- Fix incorrect trimming of whitespaces in helm chart templates 
+- Fix incorrect trimming of whitespaces in helm chart templates
 - Fixed error on empty diff expand response ([#1247](https://github.com/scm-manager/scm-manager/pull/1247))
 - Ignore ports on proxy exclusions ([#1256](https://github.com/scm-manager/scm-manager/pull/1256))
 - Invalidate branches cache synchronously on create new branch ([#1261](https://github.com/scm-manager/scm-manager/pull/1261))
@@ -310,7 +335,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 - Detect renamed files in git and hg diffs ([#1157](https://github.com/scm-manager/scm-manager/pull/1157))
 - ClassLoader and Adapter parameters to typed store apis ([#1111](https://github.com/scm-manager/scm-manager/pull/1111))
-- Native packaging for Debian, Red Hat, Windows, Unix, Docker and Kubernetes ([#1165](https://github.com/scm-manager/scm-manager/pull/1165))  
+- Native packaging for Debian, Red Hat, Windows, Unix, Docker and Kubernetes ([#1165](https://github.com/scm-manager/scm-manager/pull/1165))
 - Cache for working directories ([#1166](https://github.com/scm-manager/scm-manager/pull/1166))
 
 ### Fixed
@@ -374,7 +399,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Build on windows ([#1048](https://github.com/scm-manager/scm-manager/issues/1048), [#1049](https://github.com/scm-manager/scm-manager/issues/1049), [#1056](https://github.com/scm-manager/scm-manager/pull/1056))
 - Show specific notification for plugin actions on plugin administration ([#1057](https://github.com/scm-manager/scm-manager/pull/1057))
-- Invalid markdown could make parts of the page inaccessible ([#1077](https://github.com/scm-manager/scm-manager/pull/1077)) 
+- Invalid markdown could make parts of the page inaccessible ([#1077](https://github.com/scm-manager/scm-manager/pull/1077))
 
 ## [2.0.0-rc5] - 2020-03-12
 ### Added
@@ -429,8 +454,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - A new repository can be initialized with a branch (for git and mercurial) and custom files (README.md on default)
 - Plugins are validated directly after download
 - Code highlighting in diffs
-- Switch between rendered version and source view for Markdown files 
-
+- Switch between rendered version and source view for Markdown files
 
 ### Changed
 - Stop fetching commits when it takes too long
@@ -495,3 +519,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.11.1]: https://www.scm-manager.org/download/2.11.1
 [2.12.0]: https://www.scm-manager.org/download/2.12.0
 [2.13.0]: https://www.scm-manager.org/download/2.13.0
+[2.14.0]: https://www.scm-manager.org/download/2.14.0
