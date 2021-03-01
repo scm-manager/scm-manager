@@ -43,6 +43,7 @@ class RepositoryUpdateAfterCreationHookTest {
   private static final Repository REPOSITORY = new Repository("1", "git", "space", "X");
 
   @Test
+  @SuppressWarnings("java:S6073") // this is a false positive (sonar seems not to detect the 'argThat' in the method)
   void shouldSetHighestVersion() {
     UpdateStepStore updateStepStore = mock(UpdateStepStore.class);
 
