@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.client.spi;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -29,22 +29,10 @@ package sonia.scm.repository.client.spi;
 import java.io.IOException;
 
 /**
- *
  * @author Sebastian Sdorra
  * @since 1.18
  */
-public interface RemoveCommand
-{
+public interface RemoveCommand {
 
-  /**
-   * Method description
-   *
-   *
-   * @param file
-   *
-   * @param path
-   *
-   * @throws IOException
-   */
-  public void remove(String path) throws IOException;
+  void remove(String path) throws IOException;
 }

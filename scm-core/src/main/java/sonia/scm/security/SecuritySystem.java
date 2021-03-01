@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import java.util.Collection;
@@ -33,32 +33,24 @@ import java.util.function.Predicate;
  * @author Sebastian Sdorra
  * @since 1.31
  */
-public interface SecuritySystem
-{
+public interface SecuritySystem {
 
   /**
    * Store a new permission.
    *
-   *
    * @param permission permission to be stored
-   *
-   * @return stored permission
    */
   void addPermission(AssignedPermission permission);
 
   /**
    * Delete stored permission.
    *
-   *
    * @param permission permission to be deleted
    */
   void deletePermission(AssignedPermission permission);
 
-  //~--- get methods ----------------------------------------------------------
-
   /**
    * Return all available permissions.
-   *
    *
    * @return available permissions
    */
@@ -68,9 +60,7 @@ public interface SecuritySystem
    * Returns all stored permissions which are matched by the given
    * {@link Predicate}.
    *
-   *
    * @param predicate predicate to filter
-   *
    * @return filtered permissions
    */
   Collection<AssignedPermission> getPermissions(Predicate<AssignedPermission> predicate);

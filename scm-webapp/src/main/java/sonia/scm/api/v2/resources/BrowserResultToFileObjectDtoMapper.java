@@ -55,6 +55,7 @@ public abstract class BrowserResultToFileObjectDtoMapper extends BaseFileObjectD
 
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   @Mapping(target = "children", qualifiedBy = Children.class)
+  @Mapping(target = "revision", ignore = true)
   @Children
   protected abstract FileObjectDto fileObjectToDto(FileObject fileObject, @Context NamespaceAndName namespaceAndName, @Context BrowserResult browserResult, @Context Integer offset);
 

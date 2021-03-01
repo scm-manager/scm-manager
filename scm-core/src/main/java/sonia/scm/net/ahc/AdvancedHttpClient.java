@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.net.ahc;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -29,9 +29,8 @@ package sonia.scm.net.ahc;
 import java.io.IOException;
 
 /**
- * Advanced client for http operations. The {@link AdvancedHttpClient} replaces
- * the much more simpler implementation {@link sonia.scm.net.HttpClient}. The
- * {@link AdvancedHttpClient} offers a fluid interface for handling most common
+ * Advanced client for http operations.The {@link AdvancedHttpClient} offers
+ * a fluid interface for handling most common
  * http operations. The {@link AdvancedHttpClient} can be injected by the
  * default injection mechanism of SCM-Manager.
  * <p>&nbsp;</p>
@@ -62,36 +61,30 @@ import java.io.IOException;
  * </code></pre>
  *
  * @author Sebastian Sdorra
- * @since 1.46
- *
  * @apiviz.landmark
+ * @since 1.46
  */
-public abstract class AdvancedHttpClient
-{
+public abstract class AdvancedHttpClient {
 
   /**
    * Creates a {@link ContentTransformer} for the given Content-Type.
    *
-   * @param type object type
+   * @param type        object type
    * @param contentType content-type
-   * @throws ContentTransformerNotFoundException if no
-   *   {@link ContentTransformer} could be found for the content-type
-   *
    * @return {@link ContentTransformer}
+   * @throws ContentTransformerNotFoundException if no
+   *                                             {@link ContentTransformer} could be found for the content-type
    */
   protected abstract ContentTransformer createTransformer(Class<?> type,
-    String contentType);
+                                                          String contentType);
 
   /**
    * Executes the given request and returns the http response. Implementation
    * have to check, if the instance if from type
    * {@link AdvancedHttpRequestWithBody} in order to handle request contents.
    *
-   *
    * @param request request to execute
-   *
    * @return http response
-   *
    * @throws IOException
    */
   protected abstract AdvancedHttpResponse request(BaseHttpRequest<?> request)
@@ -100,26 +93,20 @@ public abstract class AdvancedHttpClient
   /**
    * Returns a builder for a DELETE request.
    *
-   *
    * @param url request url
-   *
    * @return request builder
    */
-  public AdvancedHttpRequestWithBody delete(String url)
-  {
+  public AdvancedHttpRequestWithBody delete(String url) {
     return new AdvancedHttpRequestWithBody(this, HttpMethod.DELETE, url);
   }
 
   /**
    * Returns a builder for a HEAD request.
    *
-   *
    * @param url request url
-   *
    * @return request builder
    */
-  public AdvancedHttpRequest head(String url)
-  {
+  public AdvancedHttpRequest head(String url) {
     return new AdvancedHttpRequest(this, HttpMethod.HEAD, url);
   }
 
@@ -128,53 +115,41 @@ public abstract class AdvancedHttpClient
    * every method is supported by the underlying implementation of the http
    * client.
    *
-   *
    * @param method http method
-   * @param url request url
-   *
+   * @param url    request url
    * @return request builder
    */
-  public AdvancedHttpRequestWithBody method(String method, String url)
-  {
+  public AdvancedHttpRequestWithBody method(String method, String url) {
     return new AdvancedHttpRequestWithBody(this, method, url);
   }
 
   /**
    * Returns a builder for a OPTIONS request.
    *
-   *
    * @param url request url
-   *
    * @return request builder
    */
-  public AdvancedHttpRequestWithBody options(String url)
-  {
+  public AdvancedHttpRequestWithBody options(String url) {
     return new AdvancedHttpRequestWithBody(this, HttpMethod.OPTIONS, url);
   }
 
   /**
    * Returns a builder for a POST request.
    *
-   *
    * @param url request url
-   *
    * @return request builder
    */
-  public AdvancedHttpRequestWithBody post(String url)
-  {
+  public AdvancedHttpRequestWithBody post(String url) {
     return new AdvancedHttpRequestWithBody(this, HttpMethod.POST, url);
   }
 
   /**
    * Returns a builder for a PUT request.
    *
-   *
    * @param url request url
-   *
    * @return request builder
    */
-  public AdvancedHttpRequestWithBody put(String url)
-  {
+  public AdvancedHttpRequestWithBody put(String url) {
     return new AdvancedHttpRequestWithBody(this, HttpMethod.PUT, url);
   }
 
@@ -183,13 +158,10 @@ public abstract class AdvancedHttpClient
   /**
    * Returns a builder for a GET request.
    *
-   *
    * @param url request url
-   *
    * @return request builder
    */
-  public AdvancedHttpRequest get(String url)
-  {
+  public AdvancedHttpRequest get(String url) {
     return new AdvancedHttpRequest(this, HttpMethod.GET, url);
   }
 }

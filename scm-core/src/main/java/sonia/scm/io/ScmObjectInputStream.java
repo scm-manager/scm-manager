@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.io;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -37,14 +37,13 @@ import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 
 /**
- * {@link ObjectInputStream} implementation which uses the context class loader 
+ * {@link ObjectInputStream} implementation which uses the context class loader
  * to resolve classes.
  *
  * @author Sebastian Sdorra
  * @since 1.36
  */
-public class ScmObjectInputStream extends ObjectInputStream
-{
+public class ScmObjectInputStream extends ObjectInputStream {
 
   /**
    * the logger for ScmObjectInputStream
@@ -54,11 +53,7 @@ public class ScmObjectInputStream extends ObjectInputStream
 
   //~--- constructors ---------------------------------------------------------
 
-  /**
-   * {@inheritDoc}
-   */
-  public ScmObjectInputStream(InputStream stream) throws IOException
-  {
+  public ScmObjectInputStream(InputStream stream) throws IOException {
     super(stream);
   }
 
@@ -69,23 +64,18 @@ public class ScmObjectInputStream extends ObjectInputStream
    */
   @Override
   protected Class<?> resolveClass(ObjectStreamClass desc)
-    throws IOException, ClassNotFoundException
-  {
+    throws IOException, ClassNotFoundException {
     Class<?> clazz = null;
     ClassLoader classLoader = getClassLoader();
 
-    try
-    {
+    try {
       clazz = classLoader.loadClass(desc.getName());
-    }
-    catch (ClassNotFoundException ex)
-    {
+    } catch (ClassNotFoundException ex) {
       // do not log the exception, because the class 
       // is mostly found by the parent method.
     }
 
-    if (clazz == null)
-    {
+    if (clazz == null) {
       clazz = super.resolveClass(desc);
     }
 
@@ -99,15 +89,12 @@ public class ScmObjectInputStream extends ObjectInputStream
    * is not available the method will fall back to the class loader which has
    * load this class.
    *
-   *
    * @return context class loader or default class loader
    */
-  private ClassLoader getClassLoader()
-  {
+  private ClassLoader getClassLoader() {
     ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 
-    if (classLoader == null)
-    {
+    if (classLoader == null) {
       logger.debug("could not find context class loader, fall back to default");
       classLoader = ScmObjectInputStream.class.getClassLoader();
     }

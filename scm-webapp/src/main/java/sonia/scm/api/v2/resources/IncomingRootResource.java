@@ -90,12 +90,12 @@ public class IncomingRootResource {
    * -                            ° b2
    * -
    * <p>
-   * - /incoming/a/master/changesets  -> a1 , e1
-   * - /incoming/b/master/changesets  -> b1 , b2
-   * - /incoming/b/f/changesets       -> b1 , b2, m2
-   * - /incoming/f/b/changesets       -> f1 , e1
-   * - /incoming/a/b/changesets       -> a1 , e1
-   * - /incoming/a/b/changesets       -> a1 , e1
+   * - /incoming/a/master/changesets  -&gt; a1 , e1
+   * - /incoming/b/master/changesets  -&gt; b1 , b2
+   * - /incoming/b/f/changesets       -&gt; b1 , b2, m2
+   * - /incoming/f/b/changesets       -&gt; f1 , e1
+   * - /incoming/a/b/changesets       -&gt; a1 , e1
+   * - /incoming/a/b/changesets       -&gt; a1 , e1
    *
    * @param namespace
    * @param name

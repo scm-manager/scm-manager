@@ -29,6 +29,7 @@ import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.config.ScmConfiguration;
@@ -70,6 +71,8 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
 
   abstract HealthCheckFailureDto toDto(HealthCheckFailure failure);
 
+  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
+  @Mapping(target = "exporting", ignore = true)
   @Override
   public abstract RepositoryDto map(Repository modelObject);
 

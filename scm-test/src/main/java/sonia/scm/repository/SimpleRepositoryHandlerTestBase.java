@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -50,8 +50,6 @@ import static org.mockito.Mockito.when;
  */
 public abstract class SimpleRepositoryHandlerTestBase extends AbstractTestBase {
 
-
-  protected RepositoryDAO repoDao = mock(RepositoryDAO.class);
   protected Path repoPath;
   protected Repository repository;
 

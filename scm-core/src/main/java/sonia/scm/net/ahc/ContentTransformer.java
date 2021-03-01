@@ -31,7 +31,7 @@ import sonia.scm.plugin.ExtensionPoint;
  * Transforms {@link ByteSource} content to an object and vice versa. This class
  * is an extension point, this means that plugins can define their own
  * {@link ContentTransformer} implementations by implementing the interface and
- * annotate the implementation with the {@link sonia.scm.plugin.ext.Extension} 
+ * annotate the implementation with the {@link sonia.scm.plugin.Extension}
  * annotation.
  *
  * @author Sebastian Sdorra

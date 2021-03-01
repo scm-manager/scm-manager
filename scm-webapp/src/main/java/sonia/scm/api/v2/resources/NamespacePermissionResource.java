@@ -232,7 +232,6 @@ public class NamespacePermissionResource {
    *
    * @param permission     permission to modify
    * @param permissionName permission to modify
-   * @return a web response with the status code 204
    */
   @PUT
   @Path("{permission-name}")
@@ -264,8 +263,8 @@ public class NamespacePermissionResource {
     )
   )
   public void update(@PathParam("namespace") String namespaceName,
-                         @PathParam("permission-name") String permissionName,
-                         @Valid RepositoryPermissionDto permission) {
+                     @PathParam("permission-name") String permissionName,
+                     @Valid RepositoryPermissionDto permission) {
     Namespace namespace = load(namespaceName);
     String extractedPermissionName = getPermissionName(permissionName);
     if (!isPermissionExist(new RepositoryPermissionDto(extractedPermissionName, isGroupPermission(permissionName)), namespace)) {
@@ -294,7 +293,6 @@ public class NamespacePermissionResource {
    * Update a permission to the user or group managed by the repository
    *
    * @param permissionName permission to delete
-   * @return a web response with the status code 204
    */
   @DELETE
   @Path("{permission-name}")
@@ -311,7 +309,7 @@ public class NamespacePermissionResource {
     )
   )
   public void delete(@PathParam("namespace") String namespaceName,
-                         @PathParam("permission-name") String permissionName) {
+                     @PathParam("permission-name") String permissionName) {
     log.info("try to delete the permission with name: {}.", permissionName);
     Namespace namespace = load(namespaceName);
     namespace.getPermissions()

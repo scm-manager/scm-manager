@@ -28,6 +28,7 @@ import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Links;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.ExportStatus;
@@ -56,6 +57,7 @@ public abstract class RepositoryExportInformationToDtoMapper {
     this.exportService = exportService;
   }
 
+  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   abstract RepositoryExportInformationDto map(RepositoryExportInformation info, @Context Repository repository);
 
   @ObjectFactory

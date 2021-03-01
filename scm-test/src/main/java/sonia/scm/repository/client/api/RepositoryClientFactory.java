@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.client.api;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -39,141 +39,67 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- *
  * @author Sebastian Sdorra
  * @since 1.18
  */
-public final class RepositoryClientFactory
-{
+public final class RepositoryClientFactory {
 
-  /**
-   * Constructs ...
-   *
-   */
-  public RepositoryClientFactory()
-  {
+  private Iterable<RepositoryClientFactoryProvider> providers;
+
+  public RepositoryClientFactory() {
     this.providers =
       ServiceUtil.getServices(RepositoryClientFactoryProvider.class);
   }
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param provider
-   *
-   * @param providers
-   */
   public RepositoryClientFactory(
-    Iterable<RepositoryClientFactoryProvider> providers)
-  {
+    Iterable<RepositoryClientFactoryProvider> providers) {
     this.providers = providers;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param type
-   * @param main
-   * @param workingCopy
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   public RepositoryClient create(String type, File main, File workingCopy)
-    throws IOException
-  {
+    throws IOException {
 
     return new RepositoryClient(getProvider(type).create(main, workingCopy));
   }
 
-  /**
-   * Method description
-   *
-   *
-   *
-   * @param type
-   * @param url
-   * @param username
-   * @param password
-   * @param workingCopy
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   public RepositoryClient create(String type, String url, String username,
-    String password, File workingCopy)
-    throws IOException
-  {
+                                 String password, File workingCopy)
+    throws IOException {
     return new RepositoryClient(getProvider(type).create(url, username,
       password, workingCopy));
   }
 
   public RepositoryClient create(String type, String url, File workingCopy)
-    throws IOException
-  {
+    throws IOException {
     return new RepositoryClient(getProvider(type).create(url, null, null, workingCopy));
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public Iterable<String> getAvailableTypes()
-  {
+  public Iterable<String> getAvailableTypes() {
     List<String> types = Lists.newArrayList();
 
-    for (RepositoryClientFactoryProvider provider : providers)
-    {
+    for (RepositoryClientFactoryProvider provider : providers) {
       types.add(provider.getType());
     }
 
     return types;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param type
-   *
-   * @return
-   */
-  private RepositoryClientFactoryProvider getProvider(String type)
-  {
+  private RepositoryClientFactoryProvider getProvider(String type) {
     RepositoryClientFactoryProvider provider = null;
 
-    for (RepositoryClientFactoryProvider p : providers)
-    {
-      if (p.getType().equalsIgnoreCase(type))
-      {
+    for (RepositoryClientFactoryProvider p : providers) {
+      if (p.getType().equalsIgnoreCase(type)) {
         provider = p;
 
         break;
       }
     }
 
-    if (provider == null)
-    {
+    if (provider == null) {
       throw new RuntimeException(
         "could not find provider for type ".concat(type));
     }
 
     return provider;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private Iterable<RepositoryClientFactoryProvider> providers;
 }

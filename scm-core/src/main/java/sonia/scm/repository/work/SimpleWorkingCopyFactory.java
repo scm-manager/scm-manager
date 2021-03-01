@@ -41,18 +41,18 @@ import java.io.File;
  * implemented:
  *
  * <dl>
- *   <dt>{@link #initialize(C, File, String)}</dt>
+ *   <dt>{@link SimpleWorkingCopyFactory#initialize(C, File, String)}</dt>
  *   <dd>Creates a new clone of the repository for the given context in the given
  *     directory with the given branch checked out (if branches are supported).</dd>
- *   <dt>{@link #reclaim(C, File, String)}</dt>
+ *   <dt>{@link SimpleWorkingCopyFactory#reclaim(C, File, String)}</dt>
  *   <dd>Reclaim the working directory with a already checked out clone of the
  *     repository given in the context, so that the directory is not modified in
  *     respect to the repository and the given branch is checked out (if branches
  *     are supported).</dd>
- *   <dt>{@link #closeWorkingCopy(W)}</dt>
+ *   <dt>{@link SimpleWorkingCopyFactory#closeWorkingCopy(W)}</dt>
  *   <dd>Closes resources allocated for the working copy, so that the directory can
  *     be put to the cache. Will be called at the end of the operation.</dd>
- *   <dt>{@link #closeRepository(R)}</dt>
+ *   <dt>{@link SimpleWorkingCopyFactory#closeRepository(R)}</dt>
  *   <dd>Closes resources allocated for the central repository.</dd>
  * </dl>
  * <br>

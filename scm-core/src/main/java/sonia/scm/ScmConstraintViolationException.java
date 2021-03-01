@@ -39,10 +39,10 @@ import static java.util.Collections.unmodifiableCollection;
  *   .doThrow()
  *   .violation("name or alias must not be empty if not anonymous", "myParameter", "name")
  *   .violation("name or alias must not be empty if not anonymous", "myParameter", "alias")
- *   .when(myParameter.getName() == null && myParameter.getAlias() == null && !myParameter.isAnonymous())
+ *   .when(myParameter.getName() == null &amp;&amp; myParameter.getAlias() == null &amp;&amp; !myParameter.isAnonymous())
  *   .andThrow()
  *   .violation("name must be empty if anonymous", "myParameter", "name")
- *   .when(myParameter.getName() != null && myParameter.isAnonymous());
+ *   .when(myParameter.getName() != null &amp;&amp; myParameter.isAnonymous());
  * </pre>
  * Mind that using this way you do not have to use if-else constructs.
  */

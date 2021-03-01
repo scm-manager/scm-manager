@@ -28,6 +28,7 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.Branch;
 import sonia.scm.repository.Changeset;
@@ -80,6 +81,7 @@ public abstract class DefaultChangesetToChangesetDtoMapper extends HalAppenderMa
 
   abstract ContributorDto map(Contributor contributor);
 
+  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   abstract SignatureDto map(Signature signature);
 
   abstract PersonDto map(Person person);

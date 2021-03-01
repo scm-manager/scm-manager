@@ -38,7 +38,7 @@ public class RepositoryHookEvent
 {
 
   /**
-   * Constructs a new {@link ExtendedRepositoryHookEvent}.
+   * Constructs a new {@link RepositoryHookEvent}.
    *
    * @param context context of current hook
    * @param repository

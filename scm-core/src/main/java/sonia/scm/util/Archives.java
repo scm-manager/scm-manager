@@ -72,7 +72,7 @@ public final class Archives {
    * Example:
    * <pre>
    *   Archives.addPathToTar(Paths.get("some/dir"), Files.newOutputStream("my.tar"))
-   *     .filter(path -> !path.toString().endsWith("~"))
+   *     .filter(path -&gt; !path.toString().endsWith("~"))
    *     .run();
    * </pre>
    * @param path The path containing the files to be added to the tar.

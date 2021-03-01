@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import org.mapstruct.AfterMapping;
@@ -37,6 +37,7 @@ import sonia.scm.user.User;
 public abstract class UserDtoToUserMapper extends BaseDtoMapper {
 
   @Mapping(target = "creationDate", ignore = true)
+  @Mapping(target = "properties", ignore = true)
   public abstract User map(UserDto userDto, @Context String usedPassword);
 
 

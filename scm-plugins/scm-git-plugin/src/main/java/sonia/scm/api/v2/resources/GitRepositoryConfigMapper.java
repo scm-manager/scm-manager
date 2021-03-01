@@ -28,6 +28,7 @@ import de.otto.edison.hal.Links;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.Repository;
@@ -46,6 +47,7 @@ public abstract class GitRepositoryConfigMapper {
   @Inject
   private ScmPathInfoStore scmPathInfoStore;
 
+  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   public abstract GitRepositoryConfigDto map(GitRepositoryConfig config, @Context Repository repository);
   public abstract GitRepositoryConfig map(GitRepositoryConfigDto dto);
 

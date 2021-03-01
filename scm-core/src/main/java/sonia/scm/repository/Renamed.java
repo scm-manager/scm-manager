@@ -24,6 +24,7 @@
 
 package sonia.scm.repository;
 
+import lombok.EqualsAndHashCode;
 import lombok.Value;
 
 import java.util.stream.Stream;
@@ -31,9 +32,10 @@ import java.util.stream.Stream;
 import static java.util.stream.Stream.of;
 
 @Value
+@EqualsAndHashCode(callSuper=false)
 public class Renamed extends Modification {
-  private final String oldPath;
-  private final String newPath;
+  String oldPath;
+  String newPath;
 
   @Override
   Stream<String> getEffectedPaths() {

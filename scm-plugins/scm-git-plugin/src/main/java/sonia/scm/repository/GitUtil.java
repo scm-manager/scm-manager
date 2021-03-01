@@ -496,7 +496,7 @@ public final class GitUtil {
    * Returns the name of the tag or {@code null} if the the ref is not a tag.
    *
    * @param refName ref name
-   * @return name of tag or {@link null}
+   * @return name of tag or null
    * @since 1.50
    */
   public static String getTagName(String refName) {

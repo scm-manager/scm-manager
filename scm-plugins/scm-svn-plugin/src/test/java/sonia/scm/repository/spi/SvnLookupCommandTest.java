@@ -51,11 +51,11 @@ class SvnLookupCommandTest {
 
   @Test
   void shouldReturnEmptyOptional() {
-    LookupCommandRequest request = new LookupCommandRequest();
+    LookupCommandRequest<String> request = new LookupCommandRequest<>();
     request.setType(String.class);
     request.setArgs(new String[]{"propget"});
 
-    Optional<Object> result = command.lookup(request);
+    Optional<String> result = command.lookup(request);
 
     assertThat(result).isNotPresent();
   }
@@ -66,11 +66,11 @@ class SvnLookupCommandTest {
     when(context.open()).thenReturn(svnRepository);
     when(svnRepository.getRepositoryUUID(true)).thenReturn(uuid);
 
-    LookupCommandRequest request = new LookupCommandRequest();
+    LookupCommandRequest<String> request = new LookupCommandRequest<>();
     request.setType(String.class);
     request.setArgs(new String[]{"propget", "uuid", "/"});
 
-    Optional<Object> result = command.lookup(request);
+    Optional<String> result = command.lookup(request);
 
     assertThat(result).isPresent();
     assertThat(result.get())

@@ -53,12 +53,12 @@ import java.util.Set;
  *
  * If the merge is successful, the result will look like this:
  * <pre><code>
- *                            O    <- Merge result (new head of integration_branch)
- *                            |\
- *                            | \
- *  old integration_branch -> O  O <- feature_branch
- *                            |  |
- *                            O  O
+ *                           O    &lt;- Merge result (new head of integration_branch)
+ *                           |\
+ *                           | \
+ * old integration_branch -&gt; O  O &lt;- feature_branch
+ *                           |  |
+ *                           O  O
  * </code></pre>
  *
  * To check whether they can be merged without conflicts beforehand do this:
