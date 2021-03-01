@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -29,12 +29,10 @@ package sonia.scm.repository;
 import org.junit.Test;
 import org.mockito.stubbing.Answer;
 import sonia.scm.AbstractTestBase;
-import sonia.scm.repository.RepositoryLocationResolver.RepositoryLocationResolverInstance;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 import sonia.scm.util.IOUtil;
 
-import javax.xml.stream.Location;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
