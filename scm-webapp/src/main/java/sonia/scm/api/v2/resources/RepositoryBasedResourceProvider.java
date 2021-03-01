@@ -40,6 +40,7 @@ public class RepositoryBasedResourceProvider {
   private final Provider<IncomingRootResource> incomingRootResource;
   private final Provider<AnnotateResource> annotateResource;
   private final Provider<RepositoryExportResource> repositoryExportResource;
+  private final Provider<RepositoryPathsResource> repositoryPathResource;
 
   @Inject
   public RepositoryBasedResourceProvider(
@@ -54,7 +55,8 @@ public class RepositoryBasedResourceProvider {
     Provider<FileHistoryRootResource> fileHistoryRootResource,
     Provider<IncomingRootResource> incomingRootResource,
     Provider<AnnotateResource> annotateResource,
-    Provider<RepositoryExportResource> repositoryExportResource) {
+    Provider<RepositoryExportResource> repositoryExportResource,
+    Provider<RepositoryPathsResource> repositoryPathResource) {
     this.tagRootResource = tagRootResource;
     this.branchRootResource = branchRootResource;
     this.changesetRootResource = changesetRootResource;
@@ -67,6 +69,7 @@ public class RepositoryBasedResourceProvider {
     this.incomingRootResource = incomingRootResource;
     this.annotateResource = annotateResource;
     this.repositoryExportResource = repositoryExportResource;
+    this.repositoryPathResource = repositoryPathResource;
   }
 
   public TagRootResource getTagRootResource() {
@@ -115,5 +118,9 @@ public class RepositoryBasedResourceProvider {
 
   public RepositoryExportResource getRepositoryExportResource() {
     return repositoryExportResource.get();
+  }
+
+  public RepositoryPathsResource getRepositoryPathResource() {
+    return repositoryPathResource.get();
   }
 }

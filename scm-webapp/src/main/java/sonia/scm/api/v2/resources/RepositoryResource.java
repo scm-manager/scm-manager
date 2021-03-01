@@ -337,6 +337,11 @@ public class RepositoryResource {
     return resourceProvider.getRepositoryExportResource();
   }
 
+  @Path("paths/")
+  public RepositoryPathsResource paths() {
+    return resourceProvider.getRepositoryPathResource();
+  }
+
   private Supplier<Repository> loadBy(String namespace, String name) {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     return () -> Optional.ofNullable(manager.get(namespaceAndName)).orElseThrow(() -> notFound(entity(namespaceAndName)));
