@@ -1,2 +1,0 @@
-- type: fixed
-  description: Fix broken mercurial http post args configuration ([#1532](https://github.com/scm-manager/scm-manager/issues/1532))
