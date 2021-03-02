@@ -206,7 +206,7 @@ describe("Test login hooks", () => {
       const queryClient = createInfiniteCachingClient();
       setIndexLink(queryClient, "logout", "/logout");
 
-      fetchMock.deleteOnce("/api/v2/logout", "");
+      fetchMock.deleteOnce("/api/v2/logout", {});
 
       const { result, waitForNextUpdate } = renderHook(() => useLogout(), {
         wrapper: createWrapper(undefined, queryClient)

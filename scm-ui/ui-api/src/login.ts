@@ -23,6 +23,7 @@
  */
 
 import { Me } from "@scm-manager/ui-types";
+import { useEffect } from "react";
 import { useMutation, useQuery } from "react-query";
 import { apiClient } from "./apiclient";
 import { ApiResult, useIndexLink } from "./base";
@@ -95,20 +96,30 @@ export const useLogin = () => {
   };
 };
 
+type LogoutResponse = {
+  logoutRedirect?: string;
+};
+
 export const useLogout = () => {
   const link = useIndexLink("logout");
   const reset = useReset();
 
-  const { mutate, isLoading, error, data } = useMutation<boolean, Error, unknown>(
-    () => apiClient.delete(link!).then(() => true),
-    {
-      onSuccess: reset
-    }
+  const { mutate, isLoading, error, data } = useMutation<LogoutResponse, Error, unknown>(() =>
+    apiClient.delete(link!).then(r => (r.status === 200 ? r.json() : {}))
   );
 
   const logout = () => {
     mutate({});
   };
+
+  useEffect(() => {
+    if (data?.logoutRedirect) {
+      window.location.assign(data.logoutRedirect);
+    }
+    if (data) {
+      reset();
+    }
+  }, [data, reset]);
 
   return {
     logout: link && !data ? logout : undefined,
