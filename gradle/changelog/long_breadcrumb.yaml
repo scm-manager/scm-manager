@@ -1,0 +1,2 @@
+- type: fixed
+  description: Prevent breadcrumb overflow and shrink large elements ([#1563](https://github.com/scm-manager/scm-manager/pull/1563))
