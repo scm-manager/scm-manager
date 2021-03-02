@@ -141,6 +141,8 @@ public class RepositoryImportExportEncryption {
     return cipher;
   }
 
+  @SuppressWarnings("java:S5542")
+  // We decided to use this padding theme because it still seems to be the default standard for open ssl
   private Cipher getCipher() {
     try {
       return Cipher.getInstance("AES/CBC/PKCS5Padding");
