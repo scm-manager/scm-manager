@@ -20,47 +20,31 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
-export { Action } from "./Action";
-export * from "./hal";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { Link } from "react-router-dom";
+import { Icon } from "@scm-manager/ui-components";
+import styled from "styled-components";
 
-export { Me } from "./Me";
-export * from "./User";
-export * from "./Group";
+type Props = {
+  revision: string;
+  baseUrl: string;
+};
 
-export * from "./Repositories";
-export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
+const SearchIcon = styled(Icon)`
+  line-height: 1.5rem;
+`;
 
-export * from "./Branches";
+const FileSearchButton: FC<Props> = ({ baseUrl, revision }) => {
+  const [t] = useTranslation("repos");
+  return (
+    <Link to={`${baseUrl}/search/${revision}`}>
+      <SearchIcon title={t("filesearch.button.title")} name="search" color="inherit" />
+    </Link>
+  );
+};
 
-export { Person } from "./Person";
-
-export * from "./Changesets";
-
-export { Signature } from "./Signature";
-
-export { AnnotatedSource, AnnotatedLine } from "./Annotate";
-
-export * from "./Tags";
-
-export { Config, AnonymousMode } from "./Config";
-
-export { IndexResources } from "./IndexResources";
-
-export { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
-
-export * from "./Sources";
-
-export { SelectValue, AutocompleteObject } from "./Autocomplete";
-
-export * from "./Plugin";
-
-export * from "./RepositoryRole";
-export * from "./RepositoryVerbs";
-
-export * from "./NamespaceStrategies";
-
-export * from "./LoginInfo";
-
-export * from "./Admin";
+export default FileSearchButton;

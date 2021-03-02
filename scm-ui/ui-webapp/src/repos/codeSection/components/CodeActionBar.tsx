@@ -25,7 +25,7 @@ import React, { FC } from "react";
 import styled from "styled-components";
 import { useLocation } from "react-router-dom";
 import { Level, BranchSelector } from "@scm-manager/ui-components";
-import CodeViewSwitcher from "./CodeViewSwitcher";
+import CodeViewSwitcher, { SwitchViewLink } from "./CodeViewSwitcher";
 import { useTranslation } from "react-i18next";
 import { Branch } from "@scm-manager/ui-types";
 
@@ -52,7 +52,7 @@ type Props = {
   selectedBranch?: string;
   branches?: Branch[];
   onSelectBranch: () => void;
-  switchViewLink: string;
+  switchViewLink: SwitchViewLink;
 };
 
 const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, switchViewLink }) => {
@@ -63,7 +63,8 @@ const CodeActionBar: FC<Props> = ({ selectedBranch, branches, onSelectBranch, sw
     <ActionBar>
       <FlexShrinkLevel
         left={
-          branches && branches?.length > 0 && (
+          branches &&
+          branches?.length > 0 && (
             <BranchSelector
               label={t("code.branchSelector")}
               branches={branches}

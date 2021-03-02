@@ -29,6 +29,7 @@ import { Branch, Repository } from "@scm-manager/ui-types";
 import { ErrorPage, Loading, Notification } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useBranches } from "@scm-manager/ui-api";
+import FileSearch from "./FileSearch";
 
 type Props = {
   repository: Repository;
@@ -96,6 +97,9 @@ const CodeRouting: FC<RoutingProps> = ({ repository, baseUrl, branches, selected
     </Route>
     <Route path={`${baseUrl}/branch/:branch/changesets/`}>
       <ChangesetsRoot repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
+    </Route>
+    <Route path={`${baseUrl}/search/:revision/`}>
+      <FileSearch repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />
     </Route>
   </>
 );

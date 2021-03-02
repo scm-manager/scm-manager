@@ -25,19 +25,22 @@ import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { createAttributesForTesting } from "../devBuild";
+import classNames from "classnames";
 
 type Props = {
   filter: (p: string) => void;
   value?: string;
   testId?: string;
   placeholder?: string;
+  autoFocus?: boolean;
+  className?: string;
 };
 
 const FixedHeightInput = styled.input`
   height: 2.5rem;
 `;
 
-const FilterInput: FC<Props> = ({ filter, value, testId, placeholder }) => {
+const FilterInput: FC<Props> = ({ filter, value, testId, placeholder, autoFocus, className }) => {
   const [stateValue, setStateValue] = useState(value || "");
   const [timeoutId, setTimeoutId] = useState(0);
   const [t] = useTranslation("commons");
@@ -60,7 +63,11 @@ const FilterInput: FC<Props> = ({ filter, value, testId, placeholder }) => {
   };
 
   return (
-    <form className="input-field" onSubmit={handleSubmit} {...createAttributesForTesting(testId)}>
+    <form
+      className={classNames("input-field", className)}
+      onSubmit={handleSubmit}
+      {...createAttributesForTesting(testId)}
+    >
       <div className="control has-icons-left">
         <FixedHeightInput
           className="input"
@@ -68,6 +75,7 @@ const FilterInput: FC<Props> = ({ filter, value, testId, placeholder }) => {
           placeholder={placeholder || t("filterEntries")}
           value={stateValue}
           onChange={event => setStateValue(event.target.value)}
+          autoFocus={autoFocus || false}
         />
         <span className="icon is-small is-left">
           <i className="fas fa-search" />
