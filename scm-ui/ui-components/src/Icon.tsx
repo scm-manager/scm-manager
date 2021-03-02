@@ -31,7 +31,7 @@ type Props = {
   name: string;
   color: string;
   className?: string;
-  onClick?: () => void;
+  onClick?: (event: React.MouseEvent) => void;
   testId?: string;
 };
 

@@ -27,8 +27,8 @@ import { RouteComponentProps, withRouter } from "react-router-dom";
 import Markdown from "react-markdown/with-html";
 import { binder } from "@scm-manager/ui-extensions";
 import ErrorBoundary from "./ErrorBoundary";
-import MarkdownHeadingRenderer from "./MarkdownHeadingRenderer";
-import { create } from "./MarkdownLinkRenderer";
+import { create as createMarkdownHeadingRenderer } from "./MarkdownHeadingRenderer";
+import { create as createMarkdownLinkRenderer } from "./MarkdownLinkRenderer";
 import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
 import Notification from "./Notification";
 import { createTransformer } from "./remarkChangesetShortLinkParser";
@@ -43,6 +43,7 @@ type Props = RouteComponentProps &
     enableAnchorHeadings?: boolean;
     // basePath for markdown links
     basePath?: string;
+    permalink?: string;
   };
 
 type State = {
@@ -115,7 +116,7 @@ class MarkdownView extends React.Component<Props, State> {
   }
 
   render() {
-    const { content, renderers, renderContext, enableAnchorHeadings, skipHtml, basePath, t } = this.props;
+    const { content, renderers, renderContext, enableAnchorHeadings, skipHtml, basePath, permalink, t } = this.props;
 
     const rendererFactory = binder.getExtension("markdown-renderer-factory");
     let rendererList = renderers;
@@ -128,12 +129,12 @@ class MarkdownView extends React.Component<Props, State> {
       rendererList = {};
     }
 
-    if (enableAnchorHeadings) {
-      rendererList.heading = MarkdownHeadingRenderer;
+    if (enableAnchorHeadings && permalink && !rendererList.heading) {
+      rendererList.heading = createMarkdownHeadingRenderer(permalink);
     }
 
     if (basePath && !rendererList.link) {
-      rendererList.link = create(basePath);
+      rendererList.link = createMarkdownLinkRenderer(basePath);
     }
 
     if (!rendererList.code) {
