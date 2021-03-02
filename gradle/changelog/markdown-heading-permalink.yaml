@@ -1,0 +1,2 @@
+- type: added
+  description: Add permalink button to markdown headings ([#1564](https://github.com/scm-manager/scm-manager/pull/1564))
