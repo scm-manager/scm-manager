@@ -51,7 +51,7 @@ const FileUpload: FC<Props> = ({ handleFile }) => {
         />
         <span className="file-cta">
           <span className="file-icon">
-            <i className="fas fa-upload" />
+            <i className="fas fa-arrow-circle-up" />
           </span>
           <span className="file-label">{t("fileUpload.label")}</span>
         </span>
