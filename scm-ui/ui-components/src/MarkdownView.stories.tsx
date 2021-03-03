@@ -43,8 +43,8 @@ const Spacing = styled.div`
 `;
 
 storiesOf("MarkdownView", module)
-  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator((story) => <Spacing>{story()}</Spacing>)
+  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator(story => <Spacing>{story()}</Spacing>)
   .add("Default", () => <MarkdownView content={TestPage} skipHtml={false} />)
   .add("Code without Lang", () => <MarkdownView content={MarkdownWithoutLang} skipHtml={false} />)
   .add("Xml Code Block", () => <MarkdownView content={MarkdownXmlCodeBlock} />)
@@ -56,6 +56,14 @@ storiesOf("MarkdownView", module)
     </>
   ))
   .add("Links", () => <MarkdownView content={MarkdownLinks} basePath="/" />)
+  .add("Header Anchor Links", () => (
+    <MarkdownView
+      content={TestPage}
+      basePath={"/"}
+      permalink={"/?path=/story/markdownview--header-anchor-links"}
+      enableAnchorHeadings={true}
+    />
+  ))
   .add("Commit Links", () => <MarkdownView content={MarkdownCommitLinks} />)
   .add("Custom code renderer", () => {
     const binder = new Binder("custom code renderer");

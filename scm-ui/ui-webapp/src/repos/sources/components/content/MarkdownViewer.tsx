@@ -23,9 +23,11 @@
  */
 import React, { FC, useEffect, useState } from "react";
 import { getContent } from "./SourcecodeViewer";
-import { Link, File } from "@scm-manager/ui-types";
-import { Loading, ErrorNotification, MarkdownView } from "@scm-manager/ui-components";
+import { File, Link } from "@scm-manager/ui-types";
+import { ErrorNotification, Loading, MarkdownView } from "@scm-manager/ui-components";
 import styled from "styled-components";
+import replaceBranchWithRevision from "../../ReplaceBranchWithRevision";
+import { useLocation } from "react-router-dom";
 
 type Props = {
   file: File;
@@ -40,6 +42,7 @@ const MarkdownViewer: FC<Props> = ({ file, basePath }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | undefined>(undefined);
   const [content, setContent] = useState("");
+  const location = useLocation();
 
   useEffect(() => {
     getContent((file._links.self as Link).href)
@@ -61,9 +64,11 @@ const MarkdownViewer: FC<Props> = ({ file, basePath }) => {
     return <ErrorNotification error={error} />;
   }
 
+  const permalink = replaceBranchWithRevision(location.pathname, file.revision);
+
   return (
     <MarkdownContent>
-      <MarkdownView content={content} basePath={basePath} />
+      <MarkdownView content={content} basePath={basePath} permalink={permalink} enableAnchorHeadings={true} />
     </MarkdownContent>
   );
 };

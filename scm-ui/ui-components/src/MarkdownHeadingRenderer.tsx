@@ -21,9 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import React, { FC, ReactNode, useState } from "react";
+import { useHistory, useLocation } from "react-router-dom";
 import { urls } from "@scm-manager/ui-api";
+import styled from "styled-components";
+import Icon from "./Icon";
+import Tooltip from "./Tooltip";
+import { useTranslation } from "react-i18next";
+import copyToClipboard from "./CopyToClipboard";
 
 /**
  * Adds anchor links to markdown headings.
@@ -31,9 +36,26 @@ import { urls } from "@scm-manager/ui-api";
  * @see <a href="https://github.com/rexxars/react-markdown/issues/69">Headings are missing anchors / ids</a>
  */
 
-type Props = RouteComponentProps & {
+const Link = styled.a`
+  i {
+    font-size: 1rem;
+    visibility: hidden;
+    margin-left: 10px;
+  }
+
+  i:hover {
+    cursor: pointer;
+  }
+
+  &:hover i {
+    visibility: visible;
+  }
+`;
+
+type Props = {
   children: ReactNode;
   level: number;
+  permalink: string;
 };
 
 function flatten(text: string, child: any): any {
@@ -49,18 +71,45 @@ export function headingToAnchorId(heading: string) {
   return heading.toLowerCase().replace(/\W/g, "-");
 }
 
-function MarkdownHeadingRenderer(props: Props) {
-  const children = React.Children.toArray(props.children);
-  const heading = children.reduce(flatten, "");
+const MarkdownHeadingRenderer: FC<Props> = ({ children, level, permalink }) => {
+  const [copying, setCopying] = useState(false);
+  const [t] = useTranslation("repos");
+  const location = useLocation();
+  const history = useHistory();
+  const reactChildren = React.Children.toArray(children);
+  const heading = reactChildren.reduce(flatten, "");
   const anchorId = headingToAnchorId(heading);
-  const headingElement = React.createElement("h" + props.level, {}, props.children);
-  const href = urls.withContextPath(props.location.pathname + "#" + anchorId);
+  const copyPermalink = (event: React.MouseEvent) => {
+    event.preventDefault();
+    setCopying(true);
+    copyToClipboard(permalinkHref)
+      .then(() => history.replace("#" + anchorId))
+      .finally(() => setCopying(false));
+  };
+  const CopyButton = copying ? (
+    <Icon name="spinner fa-spin" />
+  ) : (
+    <Tooltip message={t("sources.content.copyPermalink")}>
+      <Icon name="link" onClick={copyPermalink} />
+    </Tooltip>
+  );
+  const headingElement = React.createElement("h" + level, {}, [...reactChildren, CopyButton]);
+  const href = urls.withContextPath(location.pathname + "#" + anchorId);
+  const permalinkHref =
+    window.location.protocol +
+    "//" +
+    window.location.host +
+    urls.withContextPath((permalink || location.pathname) + "#" + anchorId);
 
   return (
-    <a id={`${anchorId}`} className="anchor" href={href}>
+    <Link id={`${anchorId}`} className="anchor" href={href}>
       {headingElement}
-    </a>
+    </Link>
   );
-}
+};
 
-export default withRouter(MarkdownHeadingRenderer);
+export const create = (permalink: string): FC<Props> => {
+  return props => <MarkdownHeadingRenderer {...props} permalink={permalink} />;
+};
+
+export default MarkdownHeadingRenderer;
