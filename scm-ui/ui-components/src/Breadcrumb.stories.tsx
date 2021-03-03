@@ -38,6 +38,8 @@ const Wrapper = styled.div`
 
 const master = { name: "master", revision: "1", defaultBranch: true, _links: {} };
 const path = "src/main/java/com/cloudogu";
+const longPath =
+  "dream-path/src/main/scm-plugins/javaUtilityHomeHousingLinkReferrer/sonia/scm/repositoryUndergroundSupportManager/spi/SvnRepositoryServiceResolver.java";
 const baseUrl = "scm-manager.org/scm/repo/hitchhiker/heartOfGold/sources";
 const sources = Git;
 
@@ -54,5 +56,17 @@ storiesOf("BreadCrumb", module)
       sources={sources}
       revision={"1"}
       permalink={"/" + path}
+    />
+  ))
+  .add("Long path", () => (
+    <Breadcrumb
+      repository={repository}
+      defaultBranch={master}
+      branch={master}
+      path={longPath}
+      baseUrl={baseUrl}
+      sources={sources}
+      revision={"1"}
+      permalink={"/" + longPath}
     />
   ));

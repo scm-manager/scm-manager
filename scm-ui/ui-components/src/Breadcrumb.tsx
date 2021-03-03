@@ -62,7 +62,27 @@ const PermaLinkWrapper = styled.div`
 
 const BreadcrumbNav = styled.nav`
   flex: 1;
-  margin: 1rem 0.5rem !important;
+  width: 100%;
+
+  /* move slash to end */
+  li + li::before {
+    content: none;
+  }
+  li:not(:last-child)::after {
+    color: #b5b5b5; //$breadcrumb-item-separator-color
+    content: "\\0002f";
+  }
+  li:first-child {
+    margin-left: 0.75rem;
+  }
+
+  /* sizing of each item */
+  li {
+    max-width: 375px;
+    a {
+      display: initial;
+    }
+  }
 `;
 
 const HomeIcon = styled(Icon)`
@@ -101,7 +121,7 @@ const Breadcrumb: FC<Props> = ({ repository, branch, defaultBranch, revision, pa
         if (paths.length - 1 === index) {
           return (
             <li className="is-active" key={index}>
-              <Link to="#" aria-current="page">
+              <Link className="is-ellipsis-overflow" to="#" aria-current="page">
                 {pathFragment}
               </Link>
             </li>
@@ -109,7 +129,13 @@ const Breadcrumb: FC<Props> = ({ repository, branch, defaultBranch, revision, pa
         }
         return (
           <li key={index}>
-            <Link to={baseUrl + "/" + encodeURIComponent(revision) + "/" + currPath}>{pathFragment}</Link>
+            <Link
+              className="is-ellipsis-overflow"
+              title={pathFragment}
+              to={baseUrl + "/" + encodeURIComponent(revision) + "/" + currPath}
+            >
+              {pathFragment}
+            </Link>
           </li>
         );
       });
@@ -132,8 +158,8 @@ const Breadcrumb: FC<Props> = ({ repository, branch, defaultBranch, revision, pa
 
   return (
     <>
-      <div className="is-flex is-align-items-center">
-        <PermaLinkWrapper>
+      <div className="is-flex is-align-items-center ml-5 my-4 mr-3">
+        <PermaLinkWrapper className="ml-1">
           {copying ? (
             <Icon name="spinner fa-spin" />
           ) : (
@@ -142,7 +168,10 @@ const Breadcrumb: FC<Props> = ({ repository, branch, defaultBranch, revision, pa
             </Tooltip>
           )}
         </PermaLinkWrapper>
-        <BreadcrumbNav className={classNames("breadcrumb", "sources-breadcrumb")} aria-label="breadcrumbs">
+        <BreadcrumbNav
+          className={classNames("breadcrumb", "sources-breadcrumb", "ml-1", "mb-0")}
+          aria-label="breadcrumbs"
+        >
           <ul>
             <li>
               <Link to={homeUrl}>
