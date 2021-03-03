@@ -32,7 +32,8 @@ import CodeActionBar from "../components/CodeActionBar";
 import styled from "styled-components";
 import FileSearchResults from "../components/FileSearchResults";
 import { Link } from "react-router-dom";
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
+import { filepathSearch } from "../utils/filepathSearch";
 
 type Props = {
   repository: Repository;
@@ -43,10 +44,6 @@ type Props = {
 
 type Params = {
   revision: string;
-};
-
-export const queryPaths = (paths: string[], query: string) => {
-  return paths.filter((path: string) => path.includes(query)).slice(0, 50);
 };
 
 const InputContainer = styled.div`
@@ -85,7 +82,7 @@ const FileSearch: FC<Props> = ({ repository, baseUrl, branches, selectedBranch }
   const [t] = useTranslation("repos");
   useEffect(() => {
     if (query.length > 1 && data) {
-      setResult(queryPaths(data.paths, query));
+      setResult(filepathSearch(data.paths, query));
     } else {
       setResult([]);
     }

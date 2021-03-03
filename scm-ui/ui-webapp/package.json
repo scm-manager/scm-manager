@@ -23,6 +23,7 @@
     "redux-devtools-extension": "^2.13.5",
     "redux-logger": "^3.0.6",
     "redux-thunk": "^2.3.0",
+    "string_score": "^0.1.22",
     "styled-components": "^5.1.0",
     "systemjs": "0.21.6"
   },
