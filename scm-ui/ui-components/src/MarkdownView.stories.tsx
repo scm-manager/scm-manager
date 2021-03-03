@@ -33,6 +33,7 @@ import MarkdownUmlCodeBlock from "./__resources__/markdown-uml-codeblock.md";
 import MarkdownInlineXml from "./__resources__/markdown-inline-xml.md";
 import MarkdownLinks from "./__resources__/markdown-links.md";
 import MarkdownCommitLinks from "./__resources__/markdown-commit-link.md";
+import MarkdownXss from "./__resources__/markdown-xss.md";
 import Title from "./layout/Title";
 import { Subtitle } from "./layout";
 import { MemoryRouter } from "react-router-dom";
@@ -43,9 +44,10 @@ const Spacing = styled.div`
 `;
 
 storiesOf("MarkdownView", module)
-  .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
-  .addDecorator((story) => <Spacing>{story()}</Spacing>)
+  .addDecorator(story => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
+  .addDecorator(story => <Spacing>{story()}</Spacing>)
   .add("Default", () => <MarkdownView content={TestPage} skipHtml={false} />)
+  .add("Skip Html", () => <MarkdownView content={TestPage} skipHtml={true} />)
   .add("Code without Lang", () => <MarkdownView content={MarkdownWithoutLang} skipHtml={false} />)
   .add("Xml Code Block", () => <MarkdownView content={MarkdownXmlCodeBlock} />)
   .add("Inline Xml", () => (
@@ -75,4 +77,5 @@ storiesOf("MarkdownView", module)
         <MarkdownView content={MarkdownUmlCodeBlock} />
       </BinderContext.Provider>
     );
-  });
+  })
+  .add("XSS Prevention", () => <MarkdownView content={MarkdownXss} skipHtml={false} />);

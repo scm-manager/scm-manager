@@ -23,8 +23,9 @@
  */
 import React, { FC } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-// @ts-ignore
-import Markdown from "react-markdown/with-html";
+import Markdown from "react-markdown";
+import MarkdownWithHtml from "react-markdown/with-html";
+import gfm from "remark-gfm";
 import { binder } from "@scm-manager/ui-extensions";
 import ErrorBoundary from "./ErrorBoundary";
 import MarkdownHeadingRenderer from "./MarkdownHeadingRenderer";
@@ -81,13 +82,13 @@ const MarkdownErrorNotification: FC = () => {
 class MarkdownView extends React.Component<Props, State> {
   static defaultProps: Partial<Props> = {
     enableAnchorHeadings: false,
-    skipHtml: false,
+    skipHtml: false
   };
 
   constructor(props: Props) {
     super(props);
     this.state = {
-      contentRef: null,
+      contentRef: null
     };
   }
 
@@ -140,17 +141,18 @@ class MarkdownView extends React.Component<Props, State> {
       rendererList.code = MarkdownCodeRenderer;
     }
 
+    const baseProps = {
+      className: "content is-word-break",
+      renderers: rendererList,
+      plugins: [gfm],
+      astPlugins: [createTransformer(t)],
+      children: content
+    };
+
     return (
       <ErrorBoundary fallback={MarkdownErrorNotification}>
-        <div ref={(el) => this.setState({ contentRef: el })}>
-          <Markdown
-            className="content is-word-break"
-            skipHtml={skipHtml}
-            escapeHtml={skipHtml}
-            source={content}
-            renderers={rendererList}
-            astPlugins={[createTransformer(t)]}
-          />
+        <div ref={el => this.setState({ contentRef: el })}>
+          {skipHtml ? <Markdown {...baseProps} /> : <MarkdownWithHtml {...baseProps} allowDangerousHtml={true} />}
         </div>
       </ErrorBoundary>
     );
