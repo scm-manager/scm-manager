@@ -30,6 +30,7 @@ import { File } from "@scm-manager/ui-types";
 import { Notification } from "@scm-manager/ui-components";
 import FileTreeLeaf from "./FileTreeLeaf";
 import TruncatedNotification from "./TruncatedNotification";
+import {isRootPath} from "../utils/files";
 
 type Props = {
   directory: File;
@@ -60,7 +61,7 @@ const FileTree: FC<Props> = ({ directory, baseUrl, revision, fetchNextPage, isFe
   const { path } = directory;
   const files: File[] = [];
 
-  if (path) {
+  if (!isRootPath(path)) {
     files.push({
       name: "..",
       path: findParent(path),
@@ -73,13 +74,9 @@ const FileTree: FC<Props> = ({ directory, baseUrl, revision, fetchNextPage, isFe
     });
   }
 
-  files.push(...(directory._embedded.children || []));
+  files.push(...(directory._embedded?.children || []));
 
   const baseUrlWithRevision = baseUrl + "/" + encodeURIComponent(revision);
-
-  if (!files || files.length === 0) {
-    return <Notification type="info">{t("sources.noSources")}</Notification>;
-  }
 
   return (
     <div className="panel-block">

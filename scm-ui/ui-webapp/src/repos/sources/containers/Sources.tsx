@@ -23,13 +23,15 @@
  */
 import React, { FC, useEffect } from "react";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { Breadcrumb, ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { Breadcrumb, ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
 import FileTree from "../components/FileTree";
 import Content from "./Content";
 import CodeActionBar from "../../codeSection/components/CodeActionBar";
 import replaceBranchWithRevision from "../ReplaceBranchWithRevision";
 import { useSources } from "@scm-manager/ui-api";
 import { useHistory, useLocation, useParams } from "react-router-dom";
+import { isEmptyDirectory, isRootFile } from "../utils/files";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   repository: Repository;
@@ -55,6 +57,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   const { revision, path } = useUrlParams();
   const history = useHistory();
   const location = useLocation();
+  const [t] = useTranslation("repos");
   // redirect to default branch is non branch selected
   useEffect(() => {
     if (branches && branches.length > 0 && !selectedBranch) {
@@ -118,15 +121,16 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   };
 
   if (file.directory) {
-    return (
-      <>
-        <CodeActionBar
-          selectedBranch={selectedBranch}
-          branches={branches}
-          onSelectBranch={onSelectBranch}
-          switchViewLink={evaluateSwitchViewLink()}
-        />
-        <div className="panel">
+    let body;
+    if (isRootFile(file) && isEmptyDirectory(file)) {
+      body = (
+        <div className="panel-block">
+          <Notification type="info">{t("sources.noSources")}</Notification>
+        </div>
+      );
+    } else {
+      body = (
+        <>
           {renderBreadcrumb()}
           <FileTree
             directory={file}
@@ -135,7 +139,19 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
             isFetchingNextPage={isFetchingNextPage}
             fetchNextPage={fetchNextPage}
           />
-        </div>
+        </>
+      );
+    }
+
+    return (
+      <>
+        <CodeActionBar
+          selectedBranch={selectedBranch}
+          branches={branches}
+          onSelectBranch={onSelectBranch}
+          switchViewLink={evaluateSwitchViewLink()}
+        />
+        <div className="panel">{body}</div>
       </>
     );
   } else {

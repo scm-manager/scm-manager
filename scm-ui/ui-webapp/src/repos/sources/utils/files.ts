@@ -20,30 +20,25 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
-import { Links } from "./hal";
+import { File } from "@scm-manager/ui-types";
 
-export type SubRepository = {
-  repositoryUrl: string;
-  browserUrl: string;
-  revision: string;
+export const isRootPath = (path: string) => {
+  return path === "" || path === "/";
 };
 
-export type File = {
-  name: string;
-  path: string;
-  directory: boolean;
-  description?: string;
-  revision: string;
-  length?: number;
-  commitDate?: string;
-  subRepository?: SubRepository;
-  partialResult?: boolean;
-  computationAborted?: boolean;
-  truncated?: boolean;
-  _links: Links;
-  _embedded?: {
-    children?: File[] | null;
-  };
+export const isRootFile = (file: File) => {
+  if (!file.directory) {
+    return false;
+  }
+  return isRootPath(file.path);
+};
+
+export const isEmptyDirectory = (file: File) => {
+  if (!file.directory) {
+    return false;
+  }
+  return (file._embedded?.children?.length || 0) === 0;
 };

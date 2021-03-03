@@ -195,7 +195,8 @@
   "code": {
     "sources": "Sources",
     "commits": "Commits",
-    "branchSelector": "Branches"
+    "branchSelector": "Branches",
+    "noBranches": "No sources found for this repository."
   },
   "changesets": {
     "errorTitle": "Error",
