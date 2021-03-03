@@ -78,7 +78,7 @@ const BreadcrumbNav = styled.nav`
 
   /* sizing of each item */
   li {
-    max-width: calc(33.333% - 0.5rem);
+    max-width: 375px;
     a {
       display: initial;
     }

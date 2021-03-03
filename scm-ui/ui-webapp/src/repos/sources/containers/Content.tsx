@@ -122,9 +122,11 @@ class Content extends React.Component<Props, State> {
     return (
       <span className="has-cursor-pointer">
         <div className={classNames("media", "is-flex", "is-align-items-center")}>
-          <div className="media-content" onClick={this.toggleCollapse}>
-            <RightMarginIcon name={icon} color="inherit" />
-            <span className="is-word-break">{file.name}</span>
+          <div className={classNames("media-content", "mr-3")} onClick={this.toggleCollapse}>
+            <div className="is-word-break">
+              <RightMarginIcon className="is-inline" name={`${icon} fa-fw`} color="inherit" />
+              {file.name}
+            </div>
           </div>
           <div className="buttons is-grouped">
             {selector}
