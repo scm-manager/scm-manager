@@ -26,7 +26,7 @@ import { Route, useLocation } from "react-router-dom";
 import Sources from "../../sources/containers/Sources";
 import ChangesetsRoot from "../../containers/ChangesetsRoot";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { ErrorPage, Loading } from "@scm-manager/ui-components";
+import { ErrorPage, Loading, Notification } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useBranches } from "@scm-manager/ui-api";
 
@@ -57,7 +57,7 @@ const CodeOverviewWithBranches: FC<Props> = ({ repository, baseUrl }) => {
   const { isLoading, error, data } = useBranches(repository);
   const selectedBranch = useSelectedBranch();
   const [t] = useTranslation("repos");
-  const branches = data?._embedded.branches;
+  const branches = data?._embedded.branches || [];
 
   if (isLoading) {
     return <Loading />;
@@ -67,6 +67,10 @@ const CodeOverviewWithBranches: FC<Props> = ({ repository, baseUrl }) => {
     return (
       <ErrorPage title={t("repositoryRoot.errorTitle")} subtitle={t("repositoryRoot.errorSubtitle")} error={error} />
     );
+  }
+
+  if (branches.length === 0) {
+    return <Notification type="info">{t("code.noBranches")}</Notification>;
   }
 
   return <CodeRouting repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />;

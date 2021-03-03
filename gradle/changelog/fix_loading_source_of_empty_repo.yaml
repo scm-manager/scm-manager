@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fix endless loading spinner for sources of empty repositories ([#1565](https://github.com/scm-manager/scm-manager/issues/1565))
