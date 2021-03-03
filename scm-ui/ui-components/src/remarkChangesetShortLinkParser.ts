@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 
-import { MarkdownAbstractSyntaxTree, MdastPlugin } from "react-markdown";
 import { nameRegex } from "./validation";
 // @ts-ignore No types available
 import visit from "unist-util-visit";
@@ -43,9 +42,9 @@ function match(value: string): RegExpMatchArray[] {
   return matches;
 }
 
-export const createTransformer = (t: TFunction): MdastPlugin => {
-  return (tree: MarkdownAbstractSyntaxTree) => {
-    visit(tree, "text", (node: MarkdownAbstractSyntaxTree, index: number, parent: MarkdownAbstractSyntaxTree) => {
+export const createTransformer = (t: TFunction) => {
+  return (tree: any) => {
+    visit(tree, "text", (node: any, index: number, parent: any) => {
       if (parent.type === "link" || !node.value) {
         return;
       }
