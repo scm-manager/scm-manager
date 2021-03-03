@@ -1,6 +1,6 @@
 {
   "name": "@scm-manager/ui-api",
-  "version": "2.14.1-SNAPSHOT",
+  "version": "2.14.1",
   "description": "React hook api for the SCM-Manager backend",
   "main": "src/index.ts",
   "files": [
@@ -24,7 +24,7 @@
     "react-test-renderer": "^17.0.1"
   },
   "dependencies": {
-    "@scm-manager/ui-types": "^2.14.1-SNAPSHOT",
+    "@scm-manager/ui-types": "^2.14.1",
     "fetch-mock-jest": "^1.5.1",
     "query-string": "5",
     "react": "^16.8.6",
