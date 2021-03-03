@@ -1,2 +1,0 @@
-- type: fixed
-  description: Prevent xss from stored markdown ([#1566](https://github.com/scm-manager/scm-manager/pull/1566))

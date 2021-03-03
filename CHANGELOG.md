@@ -5,8 +5,13 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [2.14.1] - 2021-03-03
 ### Fixed
+- Prevent breadcrumb overflow and shrink large elements ([#1563](https://github.com/scm-manager/scm-manager/pull/1563))
+- Clarify that FileUpload component does not upload directly ([#1566](https://github.com/scm-manager/scm-manager/pull/1566))
+- Prevent xss from stored markdown ([#1566](https://github.com/scm-manager/scm-manager/pull/1566))
+- Fix endless loading spinner for sources of empty repositories ([#1565](https://github.com/scm-manager/scm-manager/issues/1565))
+- Fix missing permalink button to markdown headings ([#1564](https://github.com/scm-manager/scm-manager/pull/1564))
 - Fix redirect after logout if is set
 
 ## [2.14.0] - 2021-03-01
@@ -524,3 +529,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.12.0]: https://www.scm-manager.org/download/2.12.0
 [2.13.0]: https://www.scm-manager.org/download/2.13.0
 [2.14.0]: https://www.scm-manager.org/download/2.14.0
+[2.14.1]: https://www.scm-manager.org/download/2.14.1
