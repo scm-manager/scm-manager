@@ -121,7 +121,7 @@
     "lastDivider": "and"
   },
   "fileUpload": {
-    "label": "Upload File"
+    "label": "Select File"
   },
   "importLog": {
     "title": "Import Log"
