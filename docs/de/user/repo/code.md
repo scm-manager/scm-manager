@@ -17,6 +17,17 @@ Es gibt unter dem Aktionsbalken eine Breadcrumbs Navigation, die den Pfad der an
 Über den Button auf der linken Seite der Breadcrumbs Navigation kann ein permanenter Link 
 zum aktuellen Pfad in die Zwischenablage kopiert werden.
 
+#### Suche
+
+Um eine Datei zu suchen kann man auf das Such Icon neben dem Dateipfad klicken.
+Auf der Seite für die Dateisuche kann man den gesuchten Text eingeben.
+Die Suche bezieht sich ausschließlich auf den Dateipfad und
+Treffer im Dateinamen werden höher gewertet als Treffer im Pfad.
+Die Suche startet automatisch sobald mehr als ein Zeichen eingegeben wurde.
+Die Ergebnisse werden unterhalb des Textfeldes angezeigt.
+
+![Suche nach Dateien](assets/repository-code-filepathsearch.png)
+
 ### Changesets
 Die Übersicht der Changesets/Commits zeigt die Änderungshistorie je Branch an. Jeder Listeneintrag stellt einen Commit dar. 
 
