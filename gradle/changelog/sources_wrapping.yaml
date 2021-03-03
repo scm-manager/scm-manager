@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fix wrapping of title and actions in source view ([#1569](https://github.com/scm-manager/scm-manager/issues/1569))
