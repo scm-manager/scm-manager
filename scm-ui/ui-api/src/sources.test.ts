@@ -120,7 +120,7 @@ describe("Test sources hooks", () => {
   });
 
   const firstChild = (directory?: File) => {
-    if (directory?._embedded.children && directory._embedded.children.length > 0) {
+    if (directory?._embedded?.children && directory._embedded.children.length > 0) {
       return directory._embedded.children[0];
     }
   };
