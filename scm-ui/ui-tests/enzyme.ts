@@ -24,7 +24,7 @@
 
 import "raf/polyfill";
 import Enzyme from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
+import Adapter from "@wojtekmaj/enzyme-adapter-react-17";
 
 // Temporary hack to suppress error
 // https://github.com/facebook/create-react-app/issues/3199#issuecomment-345024029

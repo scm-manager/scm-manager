@@ -9,9 +9,9 @@
     "typecheck": "tsc"
   },
   "dependencies": {
+    "@wojtekmaj/enzyme-adapter-react-17": "^0.4.1",
     "babel-plugin-istanbul": "^5.2.0",
     "enzyme": "^3.10.0",
-    "enzyme-adapter-react-16": "^1.15.0",
     "enzyme-context": "^1.1.2",
     "enzyme-context-react-router-4": "^2.0.0",
     "jest": "^26.0.0",
@@ -25,7 +25,6 @@
   "devDependencies": {
     "@scm-manager/tsconfig": "^2.11.2",
     "@types/enzyme": "^3.10.3",
-    "@types/enzyme-adapter-react-16": "^1.0.5",
     "@types/jest": "^24.0.19"
   }
 }
