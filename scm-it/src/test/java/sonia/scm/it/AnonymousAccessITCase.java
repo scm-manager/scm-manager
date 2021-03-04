@@ -26,7 +26,6 @@ package sonia.scm.it;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -79,14 +78,11 @@ class AnonymousAccessITCase {
   @Nested
   @TestInstance(TestInstance.Lifecycle.PER_CLASS)
   class WithProtocolOnlyAnonymousAccess {
-    @BeforeAll
-    void enableAnonymousAccess() {
-      setAnonymousAccess(AnonymousMode.PROTOCOL_ONLY);
-    }
 
     @BeforeEach
-    void createRepository() {
+    void createRepositoryAndSetAnonymous() {
       TestData.createDefault();
+      setAnonymousAccess(AnonymousMode.PROTOCOL_ONLY);
     }
 
     @Test
@@ -150,14 +146,11 @@ class AnonymousAccessITCase {
   @Nested
   @TestInstance(TestInstance.Lifecycle.PER_CLASS)
   class WithFullAnonymousAccess {
-    @BeforeAll
-    void enableAnonymousAccess() {
-      setAnonymousAccess(AnonymousMode.FULL);
-    }
 
     @BeforeEach
-    void createRepository() {
+    void createRepositoryAndSetAnonymous() {
       TestData.createDefault();
+      setAnonymousAccess(AnonymousMode.FULL);
     }
 
     @Test
