@@ -36,9 +36,13 @@ const ButtonAddonsMarginRight = styled(ButtonAddons)`
   margin-right: -0.2em;
 `;
 
+type Type = "sources" | "changesets";
+
+export type SwitchViewLink = string | ((type: Type) => string)
+
 type Props = {
   currentUrl: string;
-  switchViewLink: string;
+  switchViewLink: SwitchViewLink;
 };
 
 const CodeViewSwitcher: FC<Props> = ({ currentUrl, switchViewLink }) => {
@@ -49,7 +53,16 @@ const CodeViewSwitcher: FC<Props> = ({ currentUrl, switchViewLink }) => {
     location = "changesets";
   } else if (currentUrl.includes("/code/sources")) {
     location = "sources";
+  } else if (currentUrl.includes("/code/search")) {
+    location = "search";
   }
+
+  const createLink = (type: Type) => {
+    if (typeof switchViewLink === "string") {
+      return switchViewLink;
+    }
+    return switchViewLink(type);
+  };
 
   return (
     <ButtonAddonsMarginRight>
@@ -57,13 +70,13 @@ const CodeViewSwitcher: FC<Props> = ({ currentUrl, switchViewLink }) => {
         label={t("code.commits")}
         icon="fa fa-exchange-alt"
         color={location === "changesets" ? "link is-selected" : undefined}
-        link={location === "sources" ? switchViewLink : undefined}
+        link={location !== "changesets" ? createLink("changesets") : undefined}
       />
       <SmallButton
         label={t("code.sources")}
         icon="fa fa-code"
-        color={location === "sources" ? "link is-selected" : undefined}
-        link={location === "changesets" ? switchViewLink : undefined}
+        color={location === "sources" || location === "search" ? "link is-selected" : undefined}
+        link={location !== "sources" ? createLink("sources") : undefined}
       />
     </ButtonAddonsMarginRight>
   );

@@ -41,10 +41,11 @@ type Props = {
   path: string;
   baseUrl: string;
   sources: File;
+  preButtons?: React.ReactNode;
   permalink: string | null;
 };
 
-const PermaLinkWrapper = styled.div`
+const PermaLinkWrapper = styled.span`
   width: 16px;
   height: 16px;
   font-size: 13px;
@@ -62,6 +63,10 @@ const PermaLinkWrapper = styled.div`
 
 const BreadcrumbNav = styled.nav`
   flex: 1;
+  display: flex;
+  align-items: center;
+  margin: 1rem 1rem !important;
+  
   width: 100%;
 
   /* move slash to end */
@@ -97,6 +102,7 @@ const ActionBar = styled.div`
   justify-content: flex-start;
 
   /* ensure space between action bar items */
+
   & > * {
     /* 
      * We have to use important, because plugins could use field or control classes like the editor-plugin does.
@@ -107,7 +113,22 @@ const ActionBar = styled.div`
   }
 `;
 
-const Breadcrumb: FC<Props> = ({ repository, branch, defaultBranch, revision, path, baseUrl, sources, permalink }) => {
+const PrefixButton = styled.div`
+  border-right: 1px solid lightgray;
+  margin-right: 0.5rem;
+`;
+
+const Breadcrumb: FC<Props> = ({
+  repository,
+  branch,
+  defaultBranch,
+  revision,
+  path,
+  baseUrl,
+  sources,
+  permalink,
+  preButtons
+}) => {
   const location = useLocation();
   const history = useHistory();
   const [copying, setCopying] = useState(false);
@@ -156,22 +177,16 @@ const Breadcrumb: FC<Props> = ({ repository, branch, defaultBranch, revision, pa
     homeUrl += encodeURIComponent(revision) + "/";
   }
 
+  let prefixButtons = null;
+  if (preButtons) {
+    prefixButtons = <PrefixButton>{preButtons}</PrefixButton>;
+  }
+
   return (
     <>
-      <div className="is-flex is-align-items-center ml-5 my-4 mr-3">
-        <PermaLinkWrapper className="ml-1">
-          {copying ? (
-            <Icon name="spinner fa-spin" />
-          ) : (
-            <Tooltip message={t("breadcrumb.copyPermalink")}>
-              <Icon name="link" color="inherit" onClick={() => copySource()} />
-            </Tooltip>
-          )}
-        </PermaLinkWrapper>
-        <BreadcrumbNav
-          className={classNames("breadcrumb", "sources-breadcrumb", "ml-1", "mb-0")}
-          aria-label="breadcrumbs"
-        >
+      <div className="is-flex is-align-items-center">
+        <BreadcrumbNav className={classNames("breadcrumb", "sources-breadcrumb", "ml-1", "mb-0")} aria-label="breadcrumbs">
+          {prefixButtons}
           <ul>
             <li>
               <Link to={homeUrl}>
@@ -180,6 +195,15 @@ const Breadcrumb: FC<Props> = ({ repository, branch, defaultBranch, revision, pa
             </li>
             {pathSection()}
           </ul>
+          <PermaLinkWrapper className="ml-1">
+            {copying ? (
+              <Icon name="spinner fa-spin" />
+            ) : (
+              <Tooltip message={t("breadcrumb.copyPermalink")}>
+                <Icon name="link" color="inherit" onClick={() => copySource()} />
+              </Tooltip>
+            )}
+          </PermaLinkWrapper>
         </BreadcrumbNav>
         {binder.hasExtension("repos.sources.actionbar") && (
           <ActionBar>

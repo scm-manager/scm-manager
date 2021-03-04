@@ -22,45 +22,27 @@
  * SOFTWARE.
  */
 
-export { Action } from "./Action";
-export * from "./hal";
+package sonia.scm.api.v2.resources;
 
-export { Me } from "./Me";
-export * from "./User";
-export * from "./Group";
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-export * from "./Repositories";
-export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
+import java.util.Collection;
 
-export * from "./Branches";
+@Getter
+@Setter
+@NoArgsConstructor
+@SuppressWarnings("java:S2160") // we don't need equals
+public class RepositoryPathsDto extends HalRepresentation {
 
-export { Person } from "./Person";
+  private String revision;
+  private Collection<String> paths;
 
-export * from "./Changesets";
+  public RepositoryPathsDto(Links links) {
+    super(links);
+  }
 
-export { Signature } from "./Signature";
-
-export { AnnotatedSource, AnnotatedLine } from "./Annotate";
-
-export * from "./Tags";
-
-export { Config, AnonymousMode } from "./Config";
-
-export { IndexResources } from "./IndexResources";
-
-export { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
-
-export * from "./Sources";
-
-export { SelectValue, AutocompleteObject } from "./Autocomplete";
-
-export * from "./Plugin";
-
-export * from "./RepositoryRole";
-export * from "./RepositoryVerbs";
-
-export * from "./NamespaceStrategies";
-
-export * from "./LoginInfo";
-
-export * from "./Admin";
+}

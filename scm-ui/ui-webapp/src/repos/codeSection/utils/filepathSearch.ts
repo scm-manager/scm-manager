@@ -20,47 +20,47 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
-export { Action } from "./Action";
-export * from "./hal";
+import "string_score";
 
-export { Me } from "./Me";
-export * from "./User";
-export * from "./Group";
+// typing for string_score
+declare global {
+  interface String {
+    score(query: string): number;
+  }
+}
 
-export * from "./Repositories";
-export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
+export const filepathSearch = (paths: string[], query: string): string[] => {
+  return paths
+    .map(createMatcher(query))
+    .filter(m => m.matches)
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 50)
+    .map(m => m.path);
+};
 
-export * from "./Branches";
+const includes = (value: string, query: string) => {
+  return value.toLocaleLowerCase("en").includes(query.toLocaleLowerCase("en"));
+};
 
-export { Person } from "./Person";
+export const createMatcher = (query: string) => {
+  return (path: string) => {
+    const parts = path.split("/");
+    const filename = parts[parts.length - 1];
 
-export * from "./Changesets";
+    let score = filename.score(query);
+    if (score > 0 && includes(filename, query)) {
+      score += 0.5;
+    } else if (score <= 0) {
+      score = path.score(query) * 0.25;
+    }
 
-export { Signature } from "./Signature";
-
-export { AnnotatedSource, AnnotatedLine } from "./Annotate";
-
-export * from "./Tags";
-
-export { Config, AnonymousMode } from "./Config";
-
-export { IndexResources } from "./IndexResources";
-
-export { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
-
-export * from "./Sources";
-
-export { SelectValue, AutocompleteObject } from "./Autocomplete";
-
-export * from "./Plugin";
-
-export * from "./RepositoryRole";
-export * from "./RepositoryVerbs";
-
-export * from "./NamespaceStrategies";
-
-export * from "./LoginInfo";
-
-export * from "./Admin";
+    return {
+      matches: score > 0,
+      score,
+      path
+    };
+  };
+};

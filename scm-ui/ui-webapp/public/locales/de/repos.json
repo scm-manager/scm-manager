@@ -453,5 +453,19 @@
   "fileUpload": {
     "clickHere": "Klicken Sie hier um Ihre Datei hochzuladen.",
     "dragAndDrop": "Sie können Ihre Datei auch direkt in die Dropzone ziehen."
+  },
+  "filesearch": {
+    "button": {
+      "title": "Dateipfad Suche"
+    },
+    "home": "Zurück zu Sources",
+    "input": {
+      "placeholder": "Dateipfad Suche",
+      "help": "Tippe 2 or mehr Zeichen ein, um die Suche zu starten"
+    },
+    "notifications": {
+      "queryToShort": "Tippe mindestens 2 Zeichen ein, um die Suche zu starten",
+      "emptyResult": "Es wurden keine Ergebnisse für <0>{{query}}</0> gefunden"
+    }
   }
 }

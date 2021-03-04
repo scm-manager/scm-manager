@@ -22,45 +22,14 @@
  * SOFTWARE.
  */
 
-export { Action } from "./Action";
-export * from "./hal";
+package sonia.scm.repository;
 
-export { Me } from "./Me";
-export * from "./User";
-export * from "./Group";
+import lombok.Value;
 
-export * from "./Repositories";
-export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
+import java.util.Collection;
 
-export * from "./Branches";
-
-export { Person } from "./Person";
-
-export * from "./Changesets";
-
-export { Signature } from "./Signature";
-
-export { AnnotatedSource, AnnotatedLine } from "./Annotate";
-
-export * from "./Tags";
-
-export { Config, AnonymousMode } from "./Config";
-
-export { IndexResources } from "./IndexResources";
-
-export { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
-
-export * from "./Sources";
-
-export { SelectValue, AutocompleteObject } from "./Autocomplete";
-
-export * from "./Plugin";
-
-export * from "./RepositoryRole";
-export * from "./RepositoryVerbs";
-
-export * from "./NamespaceStrategies";
-
-export * from "./LoginInfo";
-
-export * from "./Admin";
+@Value
+public class RepositoryPaths {
+  String revision;
+  Collection<String> paths;
+}

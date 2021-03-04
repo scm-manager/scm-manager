@@ -26,6 +26,7 @@ import {
   ExportInfo,
   Link,
   Namespace,
+  Paths,
   Repository,
   RepositoryCollection,
   RepositoryCreation,
@@ -315,4 +316,11 @@ export const useExportRepository = () => {
     error,
     data
   };
+};
+
+export const usePaths = (repository: Repository, revision: string): ApiResult<Paths> => {
+  const link = requiredLink(repository, "paths").replace("{revision}", revision);
+  return useQuery<Paths, Error>(repoQueryKey(repository, "paths", revision), () =>
+    apiClient.get(link).then(response => response.json())
+  );
 };

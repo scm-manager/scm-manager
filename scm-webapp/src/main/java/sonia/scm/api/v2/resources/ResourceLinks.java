@@ -342,11 +342,13 @@ class ResourceLinks {
     private final LinkBuilder repositoryLinkBuilder;
     private final LinkBuilder repositoryImportLinkBuilder;
     private final LinkBuilder repositoryExportLinkBuilder;
+    private final LinkBuilder repositoryPathsLinkBuilder;
 
     RepositoryLinks(ScmPathInfo pathInfo) {
       repositoryLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class);
       repositoryImportLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryImportResource.class);
       repositoryExportLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, RepositoryExportResource.class);
+      repositoryPathsLinkBuilder = new LinkBuilder(pathInfo, RepositoryRootResource.class, RepositoryResource.class, RepositoryPathsResource.class);
     }
 
     String self(String namespace, String name) {
@@ -403,6 +405,10 @@ class ResourceLinks {
 
     String exportInfo(String namespace, String name) {
       return repositoryExportLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("export").parameters().method("getExportInformation").parameters().href();
+    }
+
+    String paths(String namespace, String name) {
+      return repositoryPathsLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("paths").parameters().method("collect").parameters("_REVISION_").href().replace("_REVISION_", "{revision}");
     }
   }
 

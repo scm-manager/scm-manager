@@ -17,6 +17,17 @@ Below the action bar is a breadcrumb navigation that shows the path of the files
 By clicking the Button on the left-hand side of the breadcrumbs navigation, a permalink to the active path is
 automatically copied to the user's clipboard.
 
+#### Search
+
+To search for a file you can click on the search icon next to the file path.
+On the file search page you can enter the text you are looking for.
+The search refers exclusively to the file path and
+hits in the filename are evaluated higher than hits in the path.
+The search starts automatically as soon as more than one character have been entered.
+The results are displayed below the text field.
+
+![Filepath search](assets/repository-code-filepathsearch.png)
+
 ### Changesets
 The changesets/commits overview shows the change history of the branch. Each entry represents a commit. 
 

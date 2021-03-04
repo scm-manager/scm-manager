@@ -47,9 +47,9 @@ import sonia.scm.repository.api.ScmProtocol;
 import java.net.URI;
 import java.util.Set;
 
-import static java.util.Collections.singleton;
 import static java.util.Collections.singletonList;
 import static java.util.stream.Stream.of;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -298,6 +298,17 @@ public class RepositoryToRepositoryDtoMapperTest {
     assertEquals(
       "http://example.com/base/v2/repositories/testspace/test/export/info",
       dto.getLinks().getLinkBy("exportInfo").get().getHref());
+  }
+
+  @Test
+  public void shouldCreatePathsLink() {
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertThat(dto.getLinks().getLinkBy("paths"))
+                  .isPresent()
+                  .hasValueSatisfying(link -> {
+                    assertThat(link.getHref()).isEqualTo("http://example.com/base/v2/repositories/testspace/test/paths/{revision}");
+                    assertThat(link.isTemplated()).isTrue();
+                  });
   }
 
   private ScmProtocol mockProtocol(String type, String protocol) {

@@ -30,6 +30,7 @@ import CodeActionBar from "../../codeSection/components/CodeActionBar";
 import replaceBranchWithRevision from "../ReplaceBranchWithRevision";
 import { useSources } from "@scm-manager/ui-api";
 import { useHistory, useLocation, useParams } from "react-router-dom";
+import FileSearchButton from "../../codeSection/components/FileSearchButton";
 import { isEmptyDirectory, isRootFile } from "../utils/files";
 import { useTranslation } from "react-i18next";
 
@@ -106,8 +107,14 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   const renderBreadcrumb = () => {
     const permalink = file?.revision ? replaceBranchWithRevision(location.pathname, file.revision) : null;
 
+    const buttons = [];
+    if (repository._links.paths) {
+      buttons.push(<FileSearchButton baseUrl={baseUrl} revision={revision || file.revision} />);
+    }
+
     return (
       <Breadcrumb
+        preButtons={buttons}
         repository={repository}
         revision={revision || file.revision}
         path={path || ""}
