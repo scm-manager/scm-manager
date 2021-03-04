@@ -17,14 +17,12 @@ Es gibt unter dem Aktionsbalken eine Breadcrumbs Navigation, die den Pfad der an
 Über den Button auf der linken Seite der Breadcrumbs Navigation kann ein permanenter Link 
 zum aktuellen Pfad in die Zwischenablage kopiert werden.
 
-#### Suche
+#### Dateinamen Suche
 
-Um eine Datei zu suchen kann man auf das Such Icon neben dem Dateipfad klicken.
-Auf der Seite für die Dateisuche kann man den gesuchten Text eingeben.
-Die Suche bezieht sich ausschließlich auf den Dateipfad und
-Treffer im Dateinamen werden höher gewertet als Treffer im Pfad.
-Die Suche startet automatisch sobald mehr als ein Zeichen eingegeben wurde.
-Die Ergebnisse werden unterhalb des Textfeldes angezeigt.
+Die Dateinamen Suche kann über das Such Icon neben dem Dateipfad geöffnet werden.
+Die Suche bezieht sich ausschließlich auf den Dateipfad und nicht auf Dateiinhalte.
+Bei der Suche werden Treffer im Dateinamen höher gewertet als Suchtreffer im Dateipfad.
+Sobald mehr als ein Zeichen eingegeben wurde, startet die Suche automatisch und zeigt die Ergebnisse unterhalb des Textfeldes an.
 
 ![Suche nach Dateien](assets/repository-code-filepathsearch.png)
 
