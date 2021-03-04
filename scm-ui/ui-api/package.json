@@ -21,13 +21,14 @@
     "@scm-manager/prettier-config": "^2.10.1",
     "@scm-manager/tsconfig": "^2.11.2",
     "@testing-library/react-hooks": "^5.0.3",
+    "@types/react": "^17.0.1",
     "react-test-renderer": "^17.0.1"
   },
   "dependencies": {
     "@scm-manager/ui-types": "^2.14.2-SNAPSHOT",
     "fetch-mock-jest": "^1.5.1",
     "query-string": "5",
-    "react": "^16.8.6",
+    "react": "^17.0.1",
     "react-query": "^3.5.16"
   },
   "babel": {
