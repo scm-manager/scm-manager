@@ -62,4 +62,11 @@ describe("filepathSearch tests", () => {
     const match = matcher("src/main/ac/to/re/Main.java");
     expect(match.score).toBeGreaterThan(0);
   });
+
+  it("should score higher if the name includes the query", () => {
+    const matcher = createMatcher("Test");
+    const one = matcher("src/main/js/types.ts");
+    const two = matcher("src/test/java/com/cloudogu/scm/landingpage/myevents/PluginTestHelper.java");
+    expect(two.score).toBeGreaterThan(one.score);
+  });
 });

@@ -41,13 +41,19 @@ export const filepathSearch = (paths: string[], query: string): string[] => {
     .map(m => m.path);
 };
 
+const includes = (value: string, query: string) => {
+  return value.toLocaleLowerCase("en").includes(query.toLocaleLowerCase("en"));
+};
+
 export const createMatcher = (query: string) => {
   return (path: string) => {
     const parts = path.split("/");
     const filename = parts[parts.length - 1];
 
     let score = filename.score(query);
-    if (score <= 0) {
+    if (score > 0 && includes(filename, query)) {
+      score += 0.5;
+    } else if (score <= 0) {
       score = path.score(query) * 0.25;
     }
 
