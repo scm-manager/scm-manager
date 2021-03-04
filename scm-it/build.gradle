@@ -80,6 +80,7 @@ task javaIntegrationTests(type: Test) {
   ignoreFailures = project.isCI
   outputs.upToDateWhen { !project.hasProperty('rerunIntegrationTests') }
   finalizedBy = ['stopScmServer']
+  useJUnitPlatform()
 
   dependsOn 'test', 'startScmServer'
   mustRunAfter 'startScmServer'
