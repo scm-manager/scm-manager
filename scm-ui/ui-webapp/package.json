@@ -41,7 +41,7 @@
     "@types/styled-components": "^5.1.0",
     "@types/systemjs": "^0.20.6",
     "fetch-mock": "^7.5.1",
-    "react-test-renderer": "^16.10.2"
+    "react-test-renderer": "^17.0.1"
   },
   "babel": {
     "presets": [

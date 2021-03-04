@@ -16,7 +16,7 @@
     "enzyme-context-react-router-4": "^2.0.0",
     "jest": "^26.0.0",
     "raf": "^3.4.1",
-    "react-test-renderer": "^16.10.2"
+    "react-test-renderer": "^17.0.1"
   },
   "prettier": "@scm-manager/prettier-config",
   "publishConfig": {
