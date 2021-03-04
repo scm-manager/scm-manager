@@ -55,24 +55,24 @@ const Header = styled.div`
   padding: 0.5em 0.75em;
 `;
 
-const RightMarginIcon = styled(Icon)`
-  margin-right: 0.5em;
-`;
-
-const RightMarginFileButtonAddons = styled(FileButtonAddons)`
-  margin-right: 0.5em;
-`;
-
-const BorderBottom = styled.div`
-  border-bottom: solid 1px #dbdbdb;
-`;
-
 const LighterGreyBackgroundPanelBlock = styled.div`
   background-color: #fbfbfb;
 `;
 
 const LighterGreyBackgroundTable = styled.table`
   background-color: #fbfbfb;
+`;
+
+const BorderBottom = styled.div`
+  border-bottom: solid 1px #dbdbdb;
+`;
+
+const FullWidthTitleHeader = styled.div`
+  max-width: 100%;
+`;
+
+const AlignRight = styled.div`
+  margin-left: auto;
 `;
 
 const BorderLessDiv = styled.div`
@@ -111,7 +111,8 @@ class Content extends React.Component<Props, State> {
     const icon = collapsed ? "angle-right" : "angle-down";
 
     const selector = file._links.history ? (
-      <RightMarginFileButtonAddons
+      <FileButtonAddons
+        className="mr-2"
         selected={selected}
         showSources={() => this.setState({ selected: "source" })}
         showHistory={() => this.setState({ selected: "history" })}
@@ -120,34 +121,33 @@ class Content extends React.Component<Props, State> {
     ) : null;
 
     return (
-      <span className="has-cursor-pointer">
-        <div className={classNames("media", "is-flex", "is-align-items-center")}>
-          <div className={classNames("media-content", "mr-3")} onClick={this.toggleCollapse}>
-            <div className="is-word-break">
-              <RightMarginIcon className="is-inline" name={`${icon} fa-fw`} color="inherit" />
-              {file.name}
-            </div>
-          </div>
-          <div className="buttons is-grouped">
-            {selector}
-            <OpenInFullscreenButton
-              modalTitle={file?.name}
-              modalBody={<BorderLessDiv className="panel">{content}</BorderLessDiv>}
-              tooltipStyle="htmlTitle"
-            />
-            <ExtensionPoint
-              name="repos.sources.content.actionbar"
-              props={{
-                repository,
-                file,
-                revision,
-                handleExtensionError: this.handleExtensionError
-              }}
-              renderAll={true}
-            />
-          </div>
-        </div>
-      </span>
+      <div className={classNames("level", "is-flex-wrap-wrap")}>
+        <FullWidthTitleHeader
+          className={classNames("level-left", "is-flex", "has-cursor-pointer", "is-word-break", "mr-2")}
+          onClick={this.toggleCollapse}
+        >
+          <Icon className={classNames("is-inline", "mr-2")} name={`${icon} fa-fw`} color="inherit" />
+          {file.name}
+        </FullWidthTitleHeader>
+        <AlignRight className={classNames("level-right", "buttons")}>
+          {selector}
+          <OpenInFullscreenButton
+            modalTitle={file?.name}
+            modalBody={<BorderLessDiv className="panel">{content}</BorderLessDiv>}
+            tooltipStyle="htmlTitle"
+          />
+          <ExtensionPoint
+            name="repos.sources.content.actionbar"
+            props={{
+              repository,
+              file,
+              revision,
+              handleExtensionError: this.handleExtensionError
+            }}
+            renderAll={true}
+          />
+        </AlignRight>
+      </div>
     );
   }
 

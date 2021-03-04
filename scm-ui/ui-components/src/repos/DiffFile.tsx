@@ -64,12 +64,6 @@ const DiffFilePanel = styled.div`
   ${(props: Collapsible) => (props.collapsed ? "border-bottom: none;" : "")};
 `;
 
-const FlexWrapLevel = styled.div`
-  /* breaks into a second row
-     when buttons and title become too long */
-  flex-wrap: wrap;
-`;
-
 const FullWidthTitleHeader = styled.div`
   max-width: 100%;
 `;
@@ -78,8 +72,7 @@ const TitleWrapper = styled.span`
   margin-left: 0.25rem;
 `;
 
-const ButtonWrapper = styled.div`
-  /* align child to right */
+const AlignRight = styled.div`
   margin-left: auto;
 `;
 
@@ -460,13 +453,13 @@ class DiffFile extends React.Component<Props, State> {
       </MenuContext.Consumer>
     );
     const headerButtons = (
-      <ButtonWrapper className={classNames("level-right", "is-flex")}>
+      <AlignRight className={classNames("level-right", "is-flex")}>
         <ButtonGroup>
           {sideBySideToggle}
           {openInFullscreen}
           {fileControls}
         </ButtonGroup>
-      </ButtonWrapper>
+      </AlignRight>
     );
 
     let errorModal;
@@ -489,7 +482,7 @@ class DiffFile extends React.Component<Props, State> {
       >
         {errorModal}
         <div className="panel-heading">
-          <FlexWrapLevel className="level">
+          <div className={classNames("level", "is-flex-wrap-wrap")}>
             <FullWidthTitleHeader
               className={classNames("level-left", "is-flex", "has-cursor-pointer")}
               onClick={this.toggleCollapse}
@@ -502,7 +495,7 @@ class DiffFile extends React.Component<Props, State> {
               {this.renderChangeTag(file)}
             </FullWidthTitleHeader>
             {headerButtons}
-          </FlexWrapLevel>
+          </div>
         </div>
         {body}
       </DiffFilePanel>
