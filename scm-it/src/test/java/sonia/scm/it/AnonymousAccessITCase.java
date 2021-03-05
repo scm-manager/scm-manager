@@ -26,7 +26,6 @@ package sonia.scm.it;
 
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -61,6 +60,11 @@ import static sonia.scm.it.utils.TestData.getDefaultRepositoryUrl;
 
 class AnonymousAccessITCase {
 
+  @BeforeEach
+  void createRepositoryAndSetAnonymous() {
+    TestData.createDefault();
+  }
+
   @Test
   void shouldAccessIndexResourceWithoutAuthentication() {
     ScmRequests.start()
@@ -79,14 +83,10 @@ class AnonymousAccessITCase {
   @Nested
   @TestInstance(TestInstance.Lifecycle.PER_CLASS)
   class WithProtocolOnlyAnonymousAccess {
-    @BeforeAll
-    void enableAnonymousAccess() {
-      setAnonymousAccess(AnonymousMode.PROTOCOL_ONLY);
-    }
 
     @BeforeEach
-    void createRepository() {
-      TestData.createDefault();
+    void createRepositoryAndSetAnonymous() {
+      setAnonymousAccess(AnonymousMode.PROTOCOL_ONLY);
     }
 
     @Test
@@ -150,14 +150,10 @@ class AnonymousAccessITCase {
   @Nested
   @TestInstance(TestInstance.Lifecycle.PER_CLASS)
   class WithFullAnonymousAccess {
-    @BeforeAll
-    void enableAnonymousAccess() {
-      setAnonymousAccess(AnonymousMode.FULL);
-    }
 
     @BeforeEach
-    void createRepository() {
-      TestData.createDefault();
+    void createRepositoryAndSetAnonymous() {
+      setAnonymousAccess(AnonymousMode.FULL);
     }
 
     @Test
