@@ -230,6 +230,18 @@ public class TestData {
       .body().jsonPath().getList("_embedded.users._links.self.href");
     LOG.info("about to delete {} users", users.size());
     users.stream().filter(url -> PROTECTED_USERS.stream().noneMatch(url::contains)).forEach(TestData::delete);
+
+    clearAnonymousUserPermissions();
+  }
+
+  private static void clearAnonymousUserPermissions() {
+    given(VndMediaType.PERMISSION_COLLECTION).accept("application/json")
+      .when()
+      .body("{\"permissions\":[]}")
+      .put(createResourceUrl("users/_anonymous/permissions"))
+      .then()
+      .statusCode(HttpStatus.SC_NO_CONTENT);
+    LOG.info("deleted permissions for user _anonymous");
   }
 
   private static void cleanupConfig() {
