@@ -24,32 +24,34 @@
 
 package sonia.scm.lifecycle;
 
+import sonia.scm.SCMContext;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
-import sonia.scm.web.security.AdministrationContext;
+import sonia.scm.security.AnonymousMode;
+import sonia.scm.user.UserManager;
 
 import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import java.util.Set;
 
 @Extension
-public class SetupContextListener implements ServletContextListener {
+public class AnonymousUserStartupAction implements PrivilegedStartupAction {
 
-  private final Set<PrivilegedStartupAction> startupActions;
-  private final AdministrationContext administrationContext;
+  private final ScmConfiguration scmConfiguration;
+  private final UserManager userManager;
 
   @Inject
-  public SetupContextListener(Set<PrivilegedStartupAction> startupActions, AdministrationContext administrationContext) {
-    this.startupActions = startupActions;
-    this.administrationContext = administrationContext;
+  public AnonymousUserStartupAction(ScmConfiguration scmConfiguration, UserManager userManager) {
+    this.scmConfiguration = scmConfiguration;
+    this.userManager = userManager;
   }
 
   @Override
-  public void contextInitialized(ServletContextEvent sce) {
-    startupActions.forEach(administrationContext::runAsAdmin);
+  public void run() {
+    if (anonymousUserRequiredButNotExists()) {
+      userManager.create(SCMContext.ANONYMOUS);
+    }
   }
 
-  @Override
-  public void contextDestroyed(ServletContextEvent sce) {
+  private boolean anonymousUserRequiredButNotExists() {
+    return scmConfiguration.getAnonymousMode() != AnonymousMode.OFF && !userManager.contains(SCMContext.USER_ANONYMOUS);
   }
 }

@@ -24,32 +24,23 @@
 
 package sonia.scm.lifecycle;
 
+import sonia.scm.importexport.ExportService;
 import sonia.scm.plugin.Extension;
-import sonia.scm.web.security.AdministrationContext;
 
 import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import java.util.Set;
 
 @Extension
-public class SetupContextListener implements ServletContextListener {
+public class RepositoryExportCleanupStartupAction implements PrivilegedStartupAction {
 
-  private final Set<PrivilegedStartupAction> startupActions;
-  private final AdministrationContext administrationContext;
+  private final ExportService exportService;
 
   @Inject
-  public SetupContextListener(Set<PrivilegedStartupAction> startupActions, AdministrationContext administrationContext) {
-    this.startupActions = startupActions;
-    this.administrationContext = administrationContext;
+  public RepositoryExportCleanupStartupAction(ExportService exportService) {
+    this.exportService = exportService;
   }
 
   @Override
-  public void contextInitialized(ServletContextEvent sce) {
-    startupActions.forEach(administrationContext::runAsAdmin);
-  }
-
-  @Override
-  public void contextDestroyed(ServletContextEvent sce) {
+  public void run() {
+    exportService.cleanupUnfinishedExports();
   }
 }

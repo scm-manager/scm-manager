@@ -24,42 +24,54 @@
 
 package sonia.scm.lifecycle;
 
-import com.google.common.collect.ImmutableSet;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.web.security.AdministrationContext;
-
-import javax.servlet.ServletContextEvent;
-import java.util.Set;
+import sonia.scm.group.Group;
+import sonia.scm.group.GroupManager;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static sonia.scm.group.GroupCollector.AUTHENTICATED;
+import static sonia.scm.lifecycle.AuthenticatedGroupStartupAction.AUTHENTICATED_GROUP_DESCRIPTION;
 
 @ExtendWith(MockitoExtension.class)
-class SetupContextListenerTest {
+class AuthenticatedGroupStartupActionTest {
 
   @Mock
-  private AdministrationContext administrationContext;
+  private GroupManager groupManager;
 
-  private SetupContextListener setupContextListener;
+  @InjectMocks
+  private AuthenticatedGroupStartupAction startupAction;
 
-  @BeforeEach
-  void initSetupContextListener() {
-    Set<PrivilegedStartupAction> startupActions = ImmutableSet.of(() -> {}, () -> {});
-    setupContextListener = new SetupContextListener(startupActions, administrationContext);
+  @Test
+  void shouldCreateAuthenticatedGroupIfMissing() {
+    when(groupManager.get(AUTHENTICATED)).thenReturn(null);
+
+    startupAction.run();
+
+    Group authenticated = createAuthenticatedGroup();
+    authenticated.setDescription(AUTHENTICATED_GROUP_DESCRIPTION);
+    authenticated.setExternal(true);
+
+    verify(groupManager, times(1)).create(authenticated);
   }
 
   @Test
-  void shouldRunStartupActionsWithAdministrationContext() {
-    ServletContextEvent contextEvent = mock(ServletContextEvent.class);
+  void shouldNotCreateAuthenticatedGroupIfAlreadyExists() {
+    when(groupManager.get(AUTHENTICATED)).thenReturn(createAuthenticatedGroup());
 
-    setupContextListener.contextInitialized(contextEvent);
+    startupAction.run();
 
-    verify(administrationContext, times(2)).runAsAdmin(any(PrivilegedStartupAction.class));
+    verify(groupManager, never()).create(any());
+  }
+
+  private Group createAuthenticatedGroup() {
+    return new Group("xml", AUTHENTICATED);
   }
 }
