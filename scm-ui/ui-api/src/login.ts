@@ -104,22 +104,21 @@ export const useLogout = () => {
   const link = useIndexLink("logout");
   const reset = useReset();
 
-  const { mutate, isLoading, error, data } = useMutation<LogoutResponse, Error, unknown>(() =>
-    apiClient.delete(link!).then(r => (r.status === 200 ? r.json() : {}))
+  const { mutate, isLoading, error, data } = useMutation<LogoutResponse, Error, unknown>(
+    () => apiClient.delete(link!).then(r => (r.status === 200 ? r.json() : {})),
+    {
+      onSuccess: response => {
+        if (response?.logoutRedirect) {
+          window.location.assign(response.logoutRedirect);
+        }
+        reset();
+      }
+    }
   );
 
   const logout = () => {
     mutate({});
   };
-
-  useEffect(() => {
-    if (data?.logoutRedirect) {
-      window.location.assign(data.logoutRedirect);
-    }
-    if (data) {
-      reset();
-    }
-  }, [data, reset]);
 
   return {
     logout: link && !data ? logout : undefined,
