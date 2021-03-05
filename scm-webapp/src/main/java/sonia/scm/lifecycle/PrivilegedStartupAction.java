@@ -24,32 +24,8 @@
 
 package sonia.scm.lifecycle;
 
-import sonia.scm.plugin.Extension;
-import sonia.scm.web.security.AdministrationContext;
+import sonia.scm.plugin.ExtensionPoint;
+import sonia.scm.web.security.PrivilegedAction;
 
-import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import java.util.Set;
-
-@Extension
-public class SetupContextListener implements ServletContextListener {
-
-  private final Set<PrivilegedStartupAction> startupActions;
-  private final AdministrationContext administrationContext;
-
-  @Inject
-  public SetupContextListener(Set<PrivilegedStartupAction> startupActions, AdministrationContext administrationContext) {
-    this.startupActions = startupActions;
-    this.administrationContext = administrationContext;
-  }
-
-  @Override
-  public void contextInitialized(ServletContextEvent sce) {
-    startupActions.forEach(administrationContext::runAsAdmin);
-  }
-
-  @Override
-  public void contextDestroyed(ServletContextEvent sce) {
-  }
-}
+@ExtensionPoint
+interface PrivilegedStartupAction extends PrivilegedAction {}

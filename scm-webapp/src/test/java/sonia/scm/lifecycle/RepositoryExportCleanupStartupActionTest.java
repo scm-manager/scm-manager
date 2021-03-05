@@ -24,32 +24,28 @@
 
 package sonia.scm.lifecycle;
 
-import sonia.scm.plugin.Extension;
-import sonia.scm.web.security.AdministrationContext;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.importexport.ExportService;
 
-import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import java.util.Set;
+import static org.mockito.Mockito.verify;
 
-@Extension
-public class SetupContextListener implements ServletContextListener {
+@ExtendWith(MockitoExtension.class)
+class RepositoryExportCleanupStartupActionTest {
 
-  private final Set<PrivilegedStartupAction> startupActions;
-  private final AdministrationContext administrationContext;
+  @Mock
+  private ExportService exportService;
 
-  @Inject
-  public SetupContextListener(Set<PrivilegedStartupAction> startupActions, AdministrationContext administrationContext) {
-    this.startupActions = startupActions;
-    this.administrationContext = administrationContext;
-  }
+  @InjectMocks
+  private RepositoryExportCleanupStartupAction startupAction;
 
-  @Override
-  public void contextInitialized(ServletContextEvent sce) {
-    startupActions.forEach(administrationContext::runAsAdmin);
-  }
+  @Test
+  void shouldCleanupUnfinishedRepositoryExports() {
+    startupAction.run();
 
-  @Override
-  public void contextDestroyed(ServletContextEvent sce) {
+    verify(exportService).cleanupUnfinishedExports();
   }
 }

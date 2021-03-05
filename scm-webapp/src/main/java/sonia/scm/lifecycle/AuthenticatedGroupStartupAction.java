@@ -24,32 +24,43 @@
 
 package sonia.scm.lifecycle;
 
+import com.google.common.annotations.VisibleForTesting;
+import sonia.scm.group.Group;
+import sonia.scm.group.GroupManager;
 import sonia.scm.plugin.Extension;
-import sonia.scm.web.security.AdministrationContext;
 
 import javax.inject.Inject;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import java.util.Set;
+
+import static sonia.scm.group.GroupCollector.AUTHENTICATED;
 
 @Extension
-public class SetupContextListener implements ServletContextListener {
+public class AuthenticatedGroupStartupAction implements PrivilegedStartupAction {
 
-  private final Set<PrivilegedStartupAction> startupActions;
-  private final AdministrationContext administrationContext;
+  @VisibleForTesting
+  static final String AUTHENTICATED_GROUP_DESCRIPTION = "Includes all authenticated users";
+
+  private final GroupManager groupManager;
 
   @Inject
-  public SetupContextListener(Set<PrivilegedStartupAction> startupActions, AdministrationContext administrationContext) {
-    this.startupActions = startupActions;
-    this.administrationContext = administrationContext;
+  public AuthenticatedGroupStartupAction(GroupManager groupManager) {
+    this.groupManager = groupManager;
   }
 
   @Override
-  public void contextInitialized(ServletContextEvent sce) {
-    startupActions.forEach(administrationContext::runAsAdmin);
+  public void run() {
+    if (authenticatedGroupDoesNotExists()) {
+      createAuthenticatedGroup();
+    }
   }
 
-  @Override
-  public void contextDestroyed(ServletContextEvent sce) {
+  private boolean authenticatedGroupDoesNotExists() {
+    return groupManager.get(AUTHENTICATED) == null;
+  }
+
+  private void createAuthenticatedGroup() {
+    Group authenticated = new Group("xml", AUTHENTICATED);
+    authenticated.setDescription(AUTHENTICATED_GROUP_DESCRIPTION);
+    authenticated.setExternal(true);
+    groupManager.create(authenticated);
   }
 }
