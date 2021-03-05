@@ -60,6 +60,11 @@ import static sonia.scm.it.utils.TestData.getDefaultRepositoryUrl;
 
 class AnonymousAccessITCase {
 
+  @BeforeEach
+  void createRepositoryAndSetAnonymous() {
+    TestData.createDefault();
+  }
+
   @Test
   void shouldAccessIndexResourceWithoutAuthentication() {
     ScmRequests.start()
@@ -81,7 +86,6 @@ class AnonymousAccessITCase {
 
     @BeforeEach
     void createRepositoryAndSetAnonymous() {
-      TestData.createDefault();
       setAnonymousAccess(AnonymousMode.PROTOCOL_ONLY);
     }
 
@@ -149,7 +153,6 @@ class AnonymousAccessITCase {
 
     @BeforeEach
     void createRepositoryAndSetAnonymous() {
-      TestData.createDefault();
       setAnonymousAccess(AnonymousMode.FULL);
     }
 
