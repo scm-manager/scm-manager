@@ -461,7 +461,7 @@
     "home": "Zurück zu Sources",
     "input": {
       "placeholder": "Dateipfad Suche",
-      "help": "Tippe 2 or mehr Zeichen ein, um die Suche zu starten"
+      "help": "Tippe 2 oder mehr Zeichen ein, um die Suche zu starten"
     },
     "notifications": {
       "queryToShort": "Tippe mindestens 2 Zeichen ein, um die Suche zu starten",
