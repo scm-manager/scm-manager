@@ -23,7 +23,7 @@
  */
 import React, { FC } from "react";
 import { Link, useLocation } from "react-router-dom";
-import ExternalLink from "./navigation/ExternalLink";
+import ExternalLink from "../navigation/ExternalLink";
 import { urls } from "@scm-manager/ui-api";
 
 const externalLinkRegex = new RegExp("^http(s)?://");
