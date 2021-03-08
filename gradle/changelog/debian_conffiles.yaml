@@ -1,0 +1,2 @@
+- type: fixed
+  description: Mark configuration files in debian package ([#1574](https://github.com/scm-manager/scm-manager/issues/1574))
