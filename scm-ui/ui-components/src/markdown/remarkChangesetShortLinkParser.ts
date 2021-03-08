@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { nameRegex } from "./validation";
+import { nameRegex } from "../validation";
 // @ts-ignore No types available
 import visit from "unist-util-visit";
 import { TFunction } from "i18next";
