@@ -46,7 +46,7 @@ buildscript {
 }
 
 plugins {
-  id 'nebula.ospackage' version '8.4.1'
+  id 'nebula.ospackage' version '8.5.6'
   id 'org.scm-manager.packaging'
   id 'com.github.hierynomus.license-base' version '0.15.0'
 }
