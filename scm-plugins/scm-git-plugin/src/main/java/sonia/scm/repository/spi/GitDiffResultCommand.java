@@ -36,7 +36,6 @@ import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
-import java.util.stream.Collectors;
 
 public class GitDiffResultCommand extends AbstractGitCommand implements DiffResultCommand {
 
@@ -75,7 +74,7 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
       return diff.getEntries()
         .stream()
         .map(diffEntry -> new GitDiffFile(repository, diffEntry))
-        .collect(Collectors.<DiffFile>toList())
+        .map(gitDiffFile -> (DiffFile) gitDiffFile)
         .iterator();
     }
   }
