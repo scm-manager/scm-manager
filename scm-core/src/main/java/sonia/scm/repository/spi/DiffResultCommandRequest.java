@@ -24,14 +24,15 @@
 
 package sonia.scm.repository.spi;
 
-import sonia.scm.repository.api.DiffResult;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.io.IOException;
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+public class DiffResultCommandRequest extends DiffCommandRequest {
 
-public interface DiffResultCommand {
-  DiffResult getDiffResult(DiffCommandRequest request) throws IOException;
-
-  default DiffResult getDiffResult(DiffResultCommandRequest request) throws IOException {
-    return getDiffResult((DiffCommandRequest) request);
-  }
+  private Integer offset;
+  private Integer limit;
 }

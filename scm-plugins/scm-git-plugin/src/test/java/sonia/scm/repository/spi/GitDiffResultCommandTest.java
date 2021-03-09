@@ -119,10 +119,40 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
     assertThat(renameB.iterator().hasNext()).isFalse();
   }
 
+  @Test
+  public void shouldLimitResult() throws IOException {
+    DiffResult diffResult = createDiffResult("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", null, 1);
+    Iterator<DiffFile> iterator = diffResult.iterator();
+
+    DiffFile a = iterator.next();
+    assertThat(a.getNewPath()).isEqualTo("a.txt");
+    assertThat(a.getOldPath()).isEqualTo("a.txt");
+
+    assertThat(iterator.hasNext()).isFalse();
+  }
+
+  @Test
+  public void shouldSetOffsetForResult() throws IOException {
+    DiffResult diffResult = createDiffResult("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", 1, null);
+    Iterator<DiffFile> iterator = diffResult.iterator();
+
+    DiffFile b = iterator.next();
+    assertThat(b.getOldPath()).isEqualTo("b.txt");
+    assertThat(b.getNewPath()).isEqualTo("/dev/null");
+
+    assertThat(iterator.hasNext()).isFalse();
+  }
+
   private DiffResult createDiffResult(String s) throws IOException {
+    return createDiffResult(s, null, null);
+  }
+
+  private DiffResult createDiffResult(String s, Integer offset, Integer limit) throws IOException {
     GitDiffResultCommand gitDiffResultCommand = new GitDiffResultCommand(createContext());
-    DiffCommandRequest diffCommandRequest = new DiffCommandRequest();
+    DiffResultCommandRequest diffCommandRequest = new DiffResultCommandRequest();
     diffCommandRequest.setRevision(s);
+    diffCommandRequest.setOffset(offset);
+    diffCommandRequest.setLimit(limit);
 
     return gitDiffResultCommand.getDiffResult(diffCommandRequest);
   }

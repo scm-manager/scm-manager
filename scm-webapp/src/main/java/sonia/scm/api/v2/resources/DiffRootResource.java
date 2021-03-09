@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -39,6 +39,7 @@ import sonia.scm.util.HttpUtil;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -142,10 +143,18 @@ public class DiffRootResource {
       schema = @Schema(implementation = ErrorDto.class)
     )
   )
-  public DiffResultDto getParsed(@PathParam("namespace") String namespace, @PathParam("name") String name, @PathParam("revision") String revision) throws IOException {
+  public DiffResultDto getParsed(@PathParam("namespace") String namespace,
+                                 @PathParam("name") String name,
+                                 @PathParam("revision") String revision,
+                                 @QueryParam("limit") @Min(1) Integer limit,
+                                 @QueryParam("offset") @Min(0) Integer offset) throws IOException {
     HttpUtil.checkForCRLFInjection(revision);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
-      DiffResult diffResult = repositoryService.getDiffResultCommand().setRevision(revision).getDiffResult();
+      DiffResult diffResult = repositoryService.getDiffResultCommand()
+        .setRevision(revision)
+        .setLimit(limit)
+        .setOffset(offset)
+        .getDiffResult();
       return parsedDiffMapper.mapForRevision(repositoryService.getRepository(), diffResult, revision);
     }
   }

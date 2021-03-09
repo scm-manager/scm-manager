@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 import sonia.scm.FeatureNotSupportedException;
@@ -30,11 +30,11 @@ import sonia.scm.repository.spi.DiffCommandRequest;
 
 import java.util.Set;
 
-abstract class AbstractDiffCommandBuilder <T extends AbstractDiffCommandBuilder> {
+abstract class AbstractDiffCommandBuilder <T extends AbstractDiffCommandBuilder, R extends DiffCommandRequest> {
 
 
   /** request for the diff command implementation */
-  final DiffCommandRequest request = new DiffCommandRequest();
+  final R request = createRequest();
 
   private final Set<Feature> supportedFeatures;
 
@@ -89,4 +89,6 @@ abstract class AbstractDiffCommandBuilder <T extends AbstractDiffCommandBuilder>
   }
 
   abstract T self();
+
+  abstract R createRequest();
 }

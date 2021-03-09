@@ -46,7 +46,15 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
 
   public DiffResult getDiffResult(DiffCommandRequest diffCommandRequest) throws IOException {
     org.eclipse.jgit.lib.Repository repository = open();
-    return new GitDiffResult(repository, Differ.diff(repository, diffCommandRequest));
+    return new GitDiffResult(repository, Differ.diff(repository, diffCommandRequest), 0, Integer.MAX_VALUE);
+  }
+
+  @Override
+  public DiffResult getDiffResult(DiffResultCommandRequest request) throws IOException {
+    org.eclipse.jgit.lib.Repository repository = open();
+    int offset = request.getOffset() == null ? 0 : request.getOffset();
+    int limit = request.getLimit() == null ? Integer.MAX_VALUE : request.getLimit();
+    return new GitDiffResult(repository, Differ.diff(repository, request), offset, limit);
   }
 
   private class GitDiffResult implements DiffResult {
@@ -54,9 +62,14 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
     private final org.eclipse.jgit.lib.Repository repository;
     private final Differ.Diff diff;
 
-    private GitDiffResult(org.eclipse.jgit.lib.Repository repository, Differ.Diff diff) {
+    private final int offset;
+    private final int limit;
+
+    private GitDiffResult(org.eclipse.jgit.lib.Repository repository, Differ.Diff diff, int offset, int limit) {
       this.repository = repository;
       this.diff = diff;
+      this.offset = offset;
+      this.limit = limit;
     }
 
     @Override
@@ -73,6 +86,8 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
     public Iterator<DiffFile> iterator() {
       return diff.getEntries()
         .stream()
+        .skip(offset)
+        .limit(limit)
         .map(diffEntry -> new GitDiffFile(repository, diffEntry))
         .map(gitDiffFile -> (DiffFile) gitDiffFile)
         .iterator();
