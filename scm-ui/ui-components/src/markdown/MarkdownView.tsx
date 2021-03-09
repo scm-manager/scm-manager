@@ -161,7 +161,7 @@ class MarkdownView extends React.Component<Props, State> {
       className: "content is-word-break",
       renderers: rendererList,
       plugins: [gfm],
-      astPlugins: [plugins],
+      astPlugins: plugins,
       children: content
     };
 
