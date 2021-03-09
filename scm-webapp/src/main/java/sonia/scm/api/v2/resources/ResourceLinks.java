@@ -1085,4 +1085,21 @@ class ResourceLinks {
       return permissionLinkBuilder.method("getNamespaceResource").parameters(namespace).method("permissions").parameters().method(methodName).parameters(permissionName).href();
     }
   }
+
+  public MetricsLinks metrics() {
+    return new MetricsLinks(new LinkBuilder(scmPathInfoStore.get(), MetricsResource.class));
+  }
+
+  public static class MetricsLinks {
+
+    private final LinkBuilder metricsLinkBuilder;
+
+    private MetricsLinks(LinkBuilder metricsLinkBuilder) {
+      this.metricsLinkBuilder = metricsLinkBuilder;
+    }
+
+    public String forType(String type) {
+      return metricsLinkBuilder.method("metrics").parameters(type).href();
+    }
+  }
 }

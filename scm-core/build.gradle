@@ -101,6 +101,9 @@ dependencies {
   // compression
   implementation libraries.commonsCompress
 
+  // metrics
+  api libraries.micrometerCore
+
   // tests
   testImplementation libraries.junitJupiterApi
   testImplementation libraries.junitJupiterParams
