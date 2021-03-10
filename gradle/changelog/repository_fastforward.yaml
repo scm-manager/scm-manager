@@ -1,0 +1,2 @@
+- type: added
+  description: Add repository-specific nonFastForwardDisallowed option ([#1579](https://github.com/scm-manager/scm-manager/issues/1579))
