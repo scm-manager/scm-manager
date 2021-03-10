@@ -35,7 +35,7 @@ import Notification from "../Notification";
 import { createTransformer } from "./remarkChangesetShortLinkParser";
 import MarkdownCodeRenderer from "./MarkdownCodeRenderer";
 import { AstPlugin } from "./PluginApi";
-import createMdastPlugin from "./MdastPluginFactory";
+import createMdastPlugin from "./createMdastPlugin";
 
 type Props = RouteComponentProps &
   WithTranslation & {

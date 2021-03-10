@@ -23,8 +23,6 @@
  */
 
 import { nameRegex } from "../validation";
-// @ts-ignore No types available
-import visit from "unist-util-visit";
 import { TFunction } from "i18next";
 import { AstPlugin } from "./PluginApi";
 import { Node, Parent } from "unist";
