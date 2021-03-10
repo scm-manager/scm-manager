@@ -37,7 +37,6 @@ import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.protocolcommand.git.BaseReceivePackFactory;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.store.ConfigurationStoreFactory;
 
 import javax.servlet.http.HttpServletRequest;
 
