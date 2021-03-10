@@ -39,9 +39,10 @@ const queryClient = new QueryClient({
 type Props = LegacyContext & {
   index?: IndexResources;
   me?: Me;
+  devtools?: boolean;
 };
 
-const ApiProvider: FC<Props> = ({ children, index, me, onMeFetched, onIndexFetched }) => {
+const ApiProvider: FC<Props> = ({ children, index, me, onMeFetched, onIndexFetched, devtools = true }) => {
   useEffect(() => {
     if (index) {
       queryClient.setQueryData("index", index);
@@ -63,7 +64,7 @@ const ApiProvider: FC<Props> = ({ children, index, me, onMeFetched, onIndexFetch
       <LegacyContextProvider onIndexFetched={onIndexFetched} onMeFetched={onMeFetched}>
         {children}
       </LegacyContextProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {devtools ? <ReactQueryDevtools initialIsOpen={false} /> : null}
     </QueryClientProvider>
   );
 };

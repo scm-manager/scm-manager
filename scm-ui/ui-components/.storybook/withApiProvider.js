@@ -39,6 +39,7 @@ const withApiProvider = (storyFn) => {
       groups: [],
       _links: {}
     },
+    devtools: false,
     children: storyFn()
   });
 }
