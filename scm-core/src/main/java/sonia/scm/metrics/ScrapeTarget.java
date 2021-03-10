@@ -45,7 +45,7 @@ public interface ScrapeTarget {
   /**
    * Writes received metrics to given output stream.
    *
-   * @param outputStream output stream
+   * @param outputStream Output stream the metrics will be written to.
    * @throws IOException if an IO error is encountered
    */
   void write(OutputStream outputStream) throws IOException;
