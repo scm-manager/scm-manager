@@ -24,7 +24,9 @@
 
 package sonia.scm.metrics;
 
+import com.google.common.collect.ImmutableSet;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.Test;
 
@@ -62,6 +64,20 @@ class MeterRegistryProviderTest {
     MeterRegistryProvider provider = new MeterRegistryProvider(Collections.singleton(new SimpleMonitoringSystem()));
     MeterRegistry registry = provider.get();
     assertThat(registry.getMeters()).isNotEmpty();
+  }
+
+  @Test
+  void shouldCreateCompositeMeterRegistry() {
+    MeterRegistryProvider provider = new MeterRegistryProvider(
+      ImmutableSet.of(new SimpleMonitoringSystem(), new SimpleMonitoringSystem())
+    );
+    assertThat(provider.get()).isInstanceOf(CompositeMeterRegistry.class);
+  }
+
+  @Test
+  void shouldReturnSingleRegistryUnwrapped() {
+    MeterRegistryProvider provider = new MeterRegistryProvider(Collections.singleton(new SimpleMonitoringSystem()));
+    assertThat(provider.get()).isInstanceOf(SimpleMeterRegistry.class);
   }
 
   private static class SimpleMonitoringSystem implements MonitoringSystem {

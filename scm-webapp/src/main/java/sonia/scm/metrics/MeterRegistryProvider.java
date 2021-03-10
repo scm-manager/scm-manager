@@ -49,14 +49,21 @@ public class MeterRegistryProvider implements Provider<MeterRegistry> {
 
   @Override
   public MeterRegistry get() {
-    CompositeMeterRegistry registry = createRegistry();
+    MeterRegistry registry = createRegistry();
     if (!providerSet.isEmpty()) {
       bindCommonMetrics(registry);
     }
     return registry;
   }
 
-  private CompositeMeterRegistry createRegistry() {
+  private MeterRegistry createRegistry() {
+    if (providerSet.size() == 1) {
+      return providerSet.iterator().next().getRegistry();
+    }
+    return createCompositeRegistry();
+  }
+
+  private CompositeMeterRegistry createCompositeRegistry() {
     CompositeMeterRegistry registry = new CompositeMeterRegistry();
     for (MonitoringSystem provider : providerSet) {
       registry.add(provider.getRegistry());
