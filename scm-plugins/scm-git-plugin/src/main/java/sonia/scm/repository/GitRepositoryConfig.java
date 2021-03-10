@@ -40,6 +40,7 @@ public class GitRepositoryConfig {
   }
 
   private String defaultBranch;
+  private boolean nonFastForwardDisallowed;
 
   public String getDefaultBranch() {
     return defaultBranch;
@@ -47,5 +48,11 @@ public class GitRepositoryConfig {
 
   public void setDefaultBranch(String defaultBranch) {
     this.defaultBranch = defaultBranch;
+  }
+
+  public boolean isNonFastForwardDisallowed() { return nonFastForwardDisallowed; }
+
+  public void setNonFastForwardDisallowed(boolean nonFastForwardDisallowed) {
+    this.nonFastForwardDisallowed = nonFastForwardDisallowed;
   }
 }

@@ -30,13 +30,14 @@ import org.eclipse.jgit.transport.ReceivePack;
 import sonia.scm.protocolcommand.RepositoryContext;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.web.GitHookEventFacade;
 
 public class ScmReceivePackFactory extends BaseReceivePackFactory<RepositoryContext> {
 
   @Inject
-  public ScmReceivePackFactory(GitChangesetConverterFactory converterFactory, GitRepositoryHandler handler, GitHookEventFacade hookEventFacade) {
-    super(converterFactory, handler, hookEventFacade);
+  public ScmReceivePackFactory(GitChangesetConverterFactory converterFactory, GitRepositoryHandler handler, GitHookEventFacade hookEventFacade, ConfigurationStoreFactory configurationStoreFactory) {
+    super(converterFactory, handler, hookEventFacade, configurationStoreFactory);
   }
 
   @Override

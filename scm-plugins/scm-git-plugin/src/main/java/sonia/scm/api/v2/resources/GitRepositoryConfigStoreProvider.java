@@ -57,11 +57,7 @@ public class GitRepositoryConfigStoreProvider {
 
     @Override
     public GitRepositoryConfig get() {
-      GitRepositoryConfig config = delegate.get();
-      if (config == null) {
-        return new GitRepositoryConfig();
-      }
-      return config;
+      return delegate.getOptional().orElse(new GitRepositoryConfig());
     }
 
     @Override
