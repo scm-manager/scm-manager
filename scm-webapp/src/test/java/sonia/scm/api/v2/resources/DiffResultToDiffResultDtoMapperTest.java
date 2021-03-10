@@ -35,7 +35,6 @@ import sonia.scm.repository.api.DiffResult;
 import sonia.scm.repository.api.Hunk;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
@@ -87,6 +86,21 @@ class DiffResultToDiffResultDtoMapperTest {
   }
 
   @Test
+  void shouldCreateNextLinkForRevision() {
+    DiffResult result = createResult();
+    mockPartialResult(result);
+
+    DiffResultDto dto = mapper.mapForRevision(REPOSITORY, result, "123");
+
+    Optional<Link> nextLink = dto.getLinks().getLinkBy("next");
+    assertThat(nextLink)
+      .isPresent()
+      .get()
+      .extracting("href")
+      .isEqualTo("/scm/api/v2/repositories/space/X/diff/123/parsed?offset=30&limit=10");
+  }
+
+  @Test
   void shouldCreateLinkToLoadMoreLinesForFilesWithHunks() {
     DiffResultDto dto = mapper.mapForRevision(REPOSITORY, createResult(), "123");
 
@@ -109,6 +123,27 @@ class DiffResultToDiffResultDtoMapperTest {
       .get()
       .extracting("href")
       .isEqualTo("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed");
+  }
+
+  @Test
+  void shouldCreateNextLinkForIncoming() {
+    DiffResult result = createResult();
+    mockPartialResult(result);
+
+    DiffResultDto dto = mapper.mapForIncoming(REPOSITORY, result, "feature/some", "master");
+
+    Optional<Link> nextLink = dto.getLinks().getLinkBy("next");
+    assertThat(nextLink)
+      .isPresent()
+      .get()
+      .extracting("href")
+      .isEqualTo("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed?offset=30&limit=10");
+  }
+
+  private void mockPartialResult(DiffResult result) {
+    when(result.getLimit()).thenReturn(10);
+    when(result.getOffset()).thenReturn(20);
+    when(result.isPartial()).thenReturn(true);
   }
 
   private DiffResult createResult() {

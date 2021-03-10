@@ -55,6 +55,8 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
     DiffFile b = iterator.next();
     assertThat(b.getOldPath()).isEqualTo("b.txt");
     assertThat(b.getNewPath()).isEqualTo("/dev/null");
+
+    assertThat(diffResult.isPartial()).isFalse();
   }
 
   @Test
@@ -69,6 +71,8 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
     DiffFile b = iterator.next();
     assertThat(b.getOldRevision()).isEqualTo("61780798228d17af2d34fce4cfbdf35556832472");
     assertThat(b.getNewRevision()).isEqualTo("0000000000000000000000000000000000000000");
+
+    assertThat(iterator.hasNext()).isFalse();
   }
 
   @Test
@@ -129,6 +133,10 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
     assertThat(a.getOldPath()).isEqualTo("a.txt");
 
     assertThat(iterator.hasNext()).isFalse();
+
+    assertThat(diffResult.isPartial()).isTrue();
+    assertThat(diffResult.getLimit()).isEqualTo(1);
+    assertThat(diffResult.getOffset()).isZero();
   }
 
   @Test
@@ -141,6 +149,17 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
     assertThat(b.getNewPath()).isEqualTo("/dev/null");
 
     assertThat(iterator.hasNext()).isFalse();
+
+    assertThat(diffResult.isPartial()).isFalse();
+  }
+
+  @Test
+  public void shouldNotBePartialWhenResultCountMatchesLimit() throws IOException {
+    DiffResult diffResult = createDiffResult("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", 0, 2);
+
+    assertThat(diffResult.isPartial()).isFalse();
+    assertThat(diffResult.getLimit()).isEqualTo(2);
+    assertThat(diffResult.getOffset()).isZero();
   }
 
   private DiffResult createDiffResult(String s) throws IOException {

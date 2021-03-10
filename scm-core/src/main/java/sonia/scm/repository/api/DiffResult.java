@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 public interface DiffResult extends Iterable<DiffFile> {
@@ -29,4 +29,16 @@ public interface DiffResult extends Iterable<DiffFile> {
   String getOldRevision();
 
   String getNewRevision();
+
+  default boolean isPartial() {
+    return false;
+  }
+
+  default int getOffset() {
+    return 0;
+  }
+
+  default int getLimit() {
+    return Integer.MAX_VALUE;
+  }
 }

@@ -36,6 +36,7 @@ import javax.inject.Inject;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 
 public class GitDiffResultCommand extends AbstractGitCommand implements DiffResultCommand {
 
@@ -61,6 +62,7 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
 
     private final org.eclipse.jgit.lib.Repository repository;
     private final Differ.Diff diff;
+    private final List<DiffEntry> diffEntries;
 
     private final int offset;
     private final int limit;
@@ -70,6 +72,7 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
       this.diff = diff;
       this.offset = offset;
       this.limit = limit;
+      this.diffEntries = diff.getEntries();
     }
 
     @Override
@@ -83,8 +86,23 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
     }
 
     @Override
+    public boolean isPartial() {
+      return limit != Integer.MAX_VALUE && limit + offset < diffEntries.size();
+    }
+
+    @Override
+    public int getOffset() {
+      return offset;
+    }
+
+    @Override
+    public int getLimit() {
+      return limit;
+    }
+
+    @Override
     public Iterator<DiffFile> iterator() {
-      return diff.getEntries()
+      return diffEntries
         .stream()
         .skip(offset)
         .limit(limit)
