@@ -50,7 +50,7 @@ public class MetricsIndexEnricher implements HalEnricher {
   private List<String> scrapeTargets(Set<MonitoringSystem> monitoringSystems) {
     return monitoringSystems.stream()
       .filter(sys -> sys.getScrapeTarget().isPresent())
-      .map(MonitoringSystem::getType)
+      .map(MonitoringSystem::getName)
       .collect(Collectors.toList());
   }
 

@@ -118,7 +118,7 @@ class MetricsResourceTest {
   private static class NoScrapeMonitoringSystem implements MonitoringSystem {
 
     @Override
-    public String getType() {
+    public String getName() {
       return "noscrape";
     }
 
@@ -131,7 +131,7 @@ class MetricsResourceTest {
   private static class ScrapeMonitoringSystem implements MonitoringSystem {
 
     @Override
-    public String getType() {
+    public String getName() {
       return "scrape";
     }
 

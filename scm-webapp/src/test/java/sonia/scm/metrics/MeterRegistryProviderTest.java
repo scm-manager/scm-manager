@@ -67,7 +67,7 @@ class MeterRegistryProviderTest {
   private static class SimpleMonitoringSystem implements MonitoringSystem {
 
     @Override
-    public String getType() {
+    public String getName() {
       return "simple";
     }
 

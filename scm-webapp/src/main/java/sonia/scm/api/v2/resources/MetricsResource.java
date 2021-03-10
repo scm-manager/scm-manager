@@ -63,12 +63,12 @@ public class MetricsResource {
   @Inject
   public MetricsResource(Set<MonitoringSystem> monitoringSystems) {
     for (MonitoringSystem system : monitoringSystems) {
-      providers.put(system.getType(), system);
+      providers.put(system.getName(), system);
     }
   }
 
   @GET
-  @Path("{type}")
+  @Path("{name}")
   @Operation(summary = "Scrape target", description = "Scrape target for a monitoring system", tags = "Metrics")
   @ApiResponse(
     responseCode = "200",
@@ -83,15 +83,17 @@ public class MetricsResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response metrics(@PathParam("type") String type) {
+  public Response metrics(@PathParam("name") String name) {
     SecurityUtils.getSubject().checkPermission("metrics:read");
 
-    MonitoringSystem system = providers.get(type);
+    MonitoringSystem system = providers.get(name);
     if (system == null) {
-      throw new NotFoundException(MonitoringSystem.class, type);
+      throw new NotFoundException(MonitoringSystem.class, name);
     }
+
     ScrapeTarget scrapeTarget = system.getScrapeTarget()
-      .orElseThrow(() -> NotFoundException.notFound(entity(ScrapeTarget.class, type).in(MonitoringSystem.class, type)));
+      .orElseThrow(() -> NotFoundException.notFound(entity(ScrapeTarget.class, name).in(MonitoringSystem.class, name)));
+
     StreamingOutput output = scrapeTarget::write;
     return Response.ok(output, scrapeTarget.getContentType()).build();
   }

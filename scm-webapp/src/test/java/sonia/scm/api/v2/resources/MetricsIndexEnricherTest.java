@@ -160,7 +160,7 @@ class MetricsIndexEnricherTest {
   private static class NoScrapeMonitoringSystem implements MonitoringSystem {
 
     @Override
-    public String getType() {
+    public String getName() {
       return "noscrap";
     }
 
@@ -179,7 +179,7 @@ class MetricsIndexEnricherTest {
     }
 
     @Override
-    public String getType() {
+    public String getName() {
       return type;
     }
 

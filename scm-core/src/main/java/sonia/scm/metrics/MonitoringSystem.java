@@ -38,11 +38,11 @@ import java.util.Optional;
 public interface MonitoringSystem {
 
   /**
-   * Returns type of provider.
+   * Returns name of monitoring system.
    *
-   * @return type
+   * @return name of monitoring system
    */
-  String getType();
+  String getName();
 
   /**
    * Returns registry of metrics provider.
