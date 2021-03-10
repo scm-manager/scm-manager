@@ -303,7 +303,7 @@ public class DefaultPluginManager implements PluginManager {
     }
 
     Set<String> optionalDependencies = plugin.getDescriptor().getOptionalDependencies();
-    if (dependencies != null) {
+    if (optionalDependencies != null) {
       for (String optionalDependency : optionalDependencies) {
         collectOptionalPluginToInstallOrUpdate(plugins, optionalDependency);
       }
