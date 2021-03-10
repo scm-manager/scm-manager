@@ -30,6 +30,7 @@ import com.google.inject.multibindings.Multibinder;
 import com.google.inject.servlet.RequestScoped;
 import com.google.inject.servlet.ServletModule;
 import com.google.inject.throwingproviders.ThrowingProviderBinder;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.Default;
@@ -54,6 +55,7 @@ import sonia.scm.group.GroupDisplayManager;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupManagerProvider;
 import sonia.scm.group.xml.XmlGroupDAO;
+import sonia.scm.metrics.MeterRegistryProvider;
 import sonia.scm.migration.MigrationDAO;
 import sonia.scm.net.SSLContextProvider;
 import sonia.scm.net.ahc.AdvancedHttpClient;
@@ -169,6 +171,9 @@ class ScmServletModule extends ServletModule {
 
     // bind extensions
     pluginLoader.getExtensionProcessor().processAutoBindExtensions(binder());
+
+    // bind metrics
+    bind(MeterRegistry.class).toProvider(MeterRegistryProvider.class).asEagerSingleton();
 
     // bind security stuff
     bind(LoginAttemptHandler.class).to(ConfigurableLoginAttemptHandler.class);

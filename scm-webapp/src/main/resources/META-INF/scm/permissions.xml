@@ -83,5 +83,8 @@
   <permission>
     <value>plugin:read,write</value>
   </permission>
+  <permission>
+    <value>metrics:read</value>
+  </permission>
 </permissions>
 

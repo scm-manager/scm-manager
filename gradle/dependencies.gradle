@@ -18,6 +18,7 @@ ext {
   hamcrestVersion = '2.1'
   mockitoVersion = '3.6.28'
   jerseyClientVersion = '1.19.4'
+  micrometerVersion = '1.6.4'
 
   nodeVersion = '14.15.1'
   yarnVersion = '1.22.5'
@@ -165,6 +166,9 @@ ext {
 
     // rest api client for testing
     jerseyClientApi: "com.sun.jersey:jersey-client:${jerseyClientVersion}",
-    jerseyClientRuntime: "com.sun.jersey.contribs:jersey-apache-client:${jerseyClientVersion}"
+    jerseyClientRuntime: "com.sun.jersey.contribs:jersey-apache-client:${jerseyClientVersion}",
+
+    // metrics
+    micrometerCore: "io.micrometer:micrometer-core:${micrometerVersion}"
   ]
 }
