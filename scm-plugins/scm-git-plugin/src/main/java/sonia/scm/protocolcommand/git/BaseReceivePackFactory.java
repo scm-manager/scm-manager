@@ -29,10 +29,10 @@ import org.eclipse.jgit.transport.ReceivePack;
 import org.eclipse.jgit.transport.resolver.ReceivePackFactory;
 import org.eclipse.jgit.transport.resolver.ServiceNotAuthorizedException;
 import org.eclipse.jgit.transport.resolver.ServiceNotEnabledException;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitRepositoryHandler;
-import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.web.CollectingPackParserListener;
 import sonia.scm.web.GitHookEventFacade;
 import sonia.scm.web.GitReceiveHook;
@@ -41,14 +41,14 @@ public abstract class BaseReceivePackFactory<T> implements ReceivePackFactory<T>
 
   private final GitRepositoryHandler handler;
   private final GitReceiveHook hook;
-  private final ConfigurationStoreFactory storeFactory;
+  private final GitRepositoryConfigStoreProvider storeProvider;
 
   protected BaseReceivePackFactory(GitChangesetConverterFactory converterFactory,
                                    GitRepositoryHandler handler,
                                    GitHookEventFacade hookEventFacade,
-                                   ConfigurationStoreFactory storeFactory) {
+                                   GitRepositoryConfigStoreProvider storeProvider) {
     this.handler = handler;
-    this.storeFactory = storeFactory;
+    this.storeProvider = storeProvider;
     this.hook = new GitReceiveHook(converterFactory, hookEventFacade, handler);
   }
 
@@ -70,8 +70,7 @@ public abstract class BaseReceivePackFactory<T> implements ReceivePackFactory<T>
 
   private boolean isNonFastForwardAllowed(Repository repository) {
     String repositoryId = handler.getRepositoryId(repository.getConfig());
-    GitRepositoryConfig gitRepositoryConfig = storeFactory.withType(GitRepositoryConfig.class).withName("gitConfig").forRepository(repositoryId).build().getOptional().orElse(new GitRepositoryConfig());
-
+    GitRepositoryConfig gitRepositoryConfig = storeProvider.getGitRepositoryConfig(repositoryId);
     return !(handler.getConfig().isNonFastForwardDisallowed() || gitRepositoryConfig.isNonFastForwardDisallowed());
   }
 }

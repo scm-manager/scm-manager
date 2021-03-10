@@ -42,7 +42,18 @@ public class GitRepositoryConfigStoreProvider {
   }
 
   public ConfigurationStore<GitRepositoryConfig> get(Repository repository) {
-    return new StoreWrapper(configurationStoreFactory.withType(GitRepositoryConfig.class).withName("gitConfig").forRepository(repository).build(), repository);
+    return new StoreWrapper(createStore(repository.getId()), repository);
+  }
+
+  public GitRepositoryConfig getGitRepositoryConfig(String repositoryId) {
+    return createStore(repositoryId)
+      .getOptional()
+      .orElse(new GitRepositoryConfig());
+  }
+
+  private ConfigurationStore<GitRepositoryConfig> createStore(String id) {
+    return configurationStoreFactory.withType(GitRepositoryConfig.class).withName("gitConfig")
+      .forRepository(id).build();
   }
 
   private static class StoreWrapper implements ConfigurationStore<GitRepositoryConfig> {
