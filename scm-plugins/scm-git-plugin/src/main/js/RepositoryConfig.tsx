@@ -27,6 +27,7 @@ import { Branch, Repository, Link } from "@scm-manager/ui-types";
 import {
   apiClient,
   BranchSelector,
+  Checkbox,
   ErrorPage,
   Loading,
   Subtitle,
@@ -45,6 +46,7 @@ type State = {
   error?: Error;
   branches: Branch[];
   selectedBranchName: string;
+  nonFastForwardDisallowed: boolean;
   defaultBranchChanged: boolean;
   disabled: boolean;
 };
@@ -61,6 +63,7 @@ class RepositoryConfig extends React.Component<Props, State> {
       submitPending: false,
       branches: [],
       selectedBranchName: "",
+      nonFastForwardDisallowed: false,
       defaultBranchChanged: false,
       disabled: true
     };
@@ -103,6 +106,7 @@ class RepositoryConfig extends React.Component<Props, State> {
         this.setState({
           ...this.state,
           selectedBranchName: payload.defaultBranch,
+          nonFastForwardDisallowed: payload.nonFastForwardDisallowed,
           disabled: !payload._links.update,
           loadingDefaultBranch: false
         })
@@ -131,12 +135,20 @@ class RepositoryConfig extends React.Component<Props, State> {
     }
   };
 
+  onNonFastForwardDisallowed = (value: boolean) => {
+    this.setState({
+        nonFastForwardDisallowed: value
+      });
+  };
+
   submit = (event: FormEvent) => {
     event.preventDefault();
 
     const { repository } = this.props;
+    const { selectedBranchName, nonFastForwardDisallowed } = this.state;
     const newConfig = {
-      defaultBranch: this.state.selectedBranchName
+      defaultBranch: selectedBranchName,
+      nonFastForwardDisallowed
     };
     this.setState({
       ...this.state,
@@ -167,8 +179,8 @@ class RepositoryConfig extends React.Component<Props, State> {
     if (error) {
       return (
         <ErrorPage
-          title={t("scm-git-plugin.repo-config.error.title")}
-          subtitle={t("scm-git-plugin.repo-config.error.subtitle")}
+          title={t("scm-git-plugin.repoConfig.error.title")}
+          subtitle={t("scm-git-plugin.repoConfig.error.subtitle")}
           error={error}
         />
       );
@@ -178,7 +190,7 @@ class RepositoryConfig extends React.Component<Props, State> {
       <Level
         right={
           <SubmitButton
-            label={t("scm-git-plugin.repo-config.submit")}
+            label={t("scm-git-plugin.repoConfig.submit")}
             loading={submitPending}
             disabled={!this.state.selectedBranchName}
           />
@@ -187,17 +199,26 @@ class RepositoryConfig extends React.Component<Props, State> {
     );
 
     if (!(loadingBranches || loadingDefaultBranch)) {
+      const { branches, selectedBranchName, nonFastForwardDisallowed } = this.state;
       return (
         <>
           <hr />
-          <Subtitle subtitle={t("scm-git-plugin.repo-config.title")} />
+          <Subtitle subtitle={t("scm-git-plugin.repoConfig.title")} />
           {this.renderBranchChangedNotification()}
           <form onSubmit={this.submit}>
             <BranchSelector
-              label={t("scm-git-plugin.repo-config.default-branch")}
-              branches={this.state.branches}
+              label={t("scm-git-plugin.repoConfig.defaultBranch")}
+              branches={branches}
               onSelectBranch={this.branchSelected}
-              selectedBranch={this.state.selectedBranchName}
+              selectedBranch={selectedBranchName}
+              disabled={disabled}
+            />
+            <Checkbox
+              name="nonFastForwardDisallowed"
+              label={t("scm-git-plugin.repoConfig.nonFastForwardDisallowed")}
+              helpText={t("scm-git-plugin.repoConfig.nonFastForwardDisallowedHelpText")}
+              checked={nonFastForwardDisallowed}
+              onChange={this.onNonFastForwardDisallowed}
               disabled={disabled}
             />
             {submitButton}
@@ -222,7 +243,7 @@ class RepositoryConfig extends React.Component<Props, State> {
               })
             }
           />
-          {this.props.t("scm-git-plugin.repo-config.success")}
+          {this.props.t("scm-git-plugin.repoConfig.success")}
         </div>
       );
     }

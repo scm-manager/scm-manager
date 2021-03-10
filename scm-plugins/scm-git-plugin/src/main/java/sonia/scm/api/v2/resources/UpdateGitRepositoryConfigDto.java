@@ -26,4 +26,5 @@ package sonia.scm.api.v2.resources;
 
 interface UpdateGitRepositoryConfigDto {
   String getDefaultBranch();
+  boolean isNonFastForwardDisallowed();
 }
