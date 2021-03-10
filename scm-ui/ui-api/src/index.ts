@@ -44,6 +44,7 @@ export * from "./repository-roles";
 export * from "./permissions";
 export * from "./sources";
 export * from "./import";
+export * from "./diff";
 
 export { default as ApiProvider } from "./ApiProvider";
 export * from "./ApiProvider";
