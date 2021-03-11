@@ -36,7 +36,10 @@ import sonia.scm.web.GitHookEventFacade;
 public class ScmReceivePackFactory extends BaseReceivePackFactory<RepositoryContext> {
 
   @Inject
-  public ScmReceivePackFactory(GitChangesetConverterFactory converterFactory, GitRepositoryHandler handler, GitHookEventFacade hookEventFacade, GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider) {
+  public ScmReceivePackFactory(GitChangesetConverterFactory converterFactory,
+                               GitRepositoryHandler handler,
+                               GitHookEventFacade hookEventFacade,
+                               GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider) {
     super(converterFactory, handler, hookEventFacade, gitRepositoryConfigStoreProvider);
   }
 

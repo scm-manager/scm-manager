@@ -54,7 +54,10 @@ public class GitReceivePackFactory extends BaseReceivePackFactory<HttpServletReq
   private ReceivePackFactory<HttpServletRequest> wrapped;
 
   @Inject
-  public GitReceivePackFactory(GitChangesetConverterFactory converterFactory, GitRepositoryHandler handler, GitHookEventFacade hookEventFacade, GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider) {
+  public GitReceivePackFactory(GitChangesetConverterFactory converterFactory,
+                               GitRepositoryHandler handler,
+                               GitHookEventFacade hookEventFacade,
+                               GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider) {
     super(converterFactory, handler, hookEventFacade, gitRepositoryConfigStoreProvider);
     this.wrapped = new DefaultReceivePackFactory();
   }
