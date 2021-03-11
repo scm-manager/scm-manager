@@ -26,15 +26,10 @@ import parser from "gitdiff-parser";
 
 import { useInfiniteQuery } from "react-query";
 import { apiClient } from "./apiclient";
-import { FileDiff, HalRepresentation, Link } from "@scm-manager/ui-types";
+import { Diff, Link } from "@scm-manager/ui-types";
 
 type UseDiffOptions = {
   limit?: number;
-};
-
-type Diff = HalRepresentation & {
-  files: FileDiff[];
-  partial: boolean;
 };
 
 export const useDiff = (link: string, options: UseDiffOptions = {}) => {

@@ -26,6 +26,11 @@ import { HalRepresentation } from "./hal";
 
 export type FileChangeType = "add" | "modify" | "delete" | "copy" | "rename";
 
+export type Diff = HalRepresentation & {
+  files: FileDiff[];
+  partial: boolean;
+};
+
 export type FileDiff = HalRepresentation & {
   hunks?: Hunk[];
   newEndingNewLine: boolean;
