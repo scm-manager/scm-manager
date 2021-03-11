@@ -24,11 +24,11 @@
 import React, { FC } from "react";
 import { NotFoundError } from "@scm-manager/ui-api";
 import ErrorNotification from "../ErrorNotification";
+import Notification from "../Notification";
 
 import Loading from "../Loading";
 import Diff from "./Diff";
 import { DiffObjectProps } from "./DiffTypes";
-import { Notification } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import Button from "../buttons/Button";
 import { useDiff } from "@scm-manager/ui-api";
