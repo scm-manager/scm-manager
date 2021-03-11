@@ -135,7 +135,7 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
     assertThat(iterator.hasNext()).isFalse();
 
     assertThat(diffResult.isPartial()).isTrue();
-    assertThat(diffResult.getLimit()).isEqualTo(1);
+    assertThat(diffResult.getLimit()).get().isEqualTo(1);
     assertThat(diffResult.getOffset()).isZero();
   }
 
@@ -158,7 +158,7 @@ public class GitDiffResultCommandTest extends AbstractGitCommandTestBase {
     DiffResult diffResult = createDiffResult("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4", 0, 2);
 
     assertThat(diffResult.isPartial()).isFalse();
-    assertThat(diffResult.getLimit()).isEqualTo(2);
+    assertThat(diffResult.getLimit()).get().isEqualTo(2);
     assertThat(diffResult.getOffset()).isZero();
   }
 

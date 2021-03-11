@@ -41,6 +41,7 @@ import java.util.OptionalInt;
 
 import static java.net.URI.create;
 import static java.util.Collections.emptyIterator;
+import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -126,6 +127,34 @@ class DiffResultToDiffResultDtoMapperTest {
   }
 
   @Test
+  void shouldCreateSelfLinkForIncomingWithOffset() {
+    DiffResult result = createResult();
+    when(result.getOffset()).thenReturn(25);
+    DiffResultDto dto = mapper.mapForIncoming(REPOSITORY, result, "feature/some", "master");
+
+    Optional<Link> selfLink = dto.getLinks().getLinkBy("self");
+    assertThat(selfLink)
+      .isPresent()
+      .get()
+      .extracting("href")
+      .isEqualTo("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed?offset=25");
+  }
+
+  @Test
+  void shouldCreateSelfLinkForIncomingWithLimit() {
+    DiffResult result = createResult();
+    when(result.getLimit()).thenReturn(of(25));
+    DiffResultDto dto = mapper.mapForIncoming(REPOSITORY, result, "feature/some", "master");
+
+    Optional<Link> selfLink = dto.getLinks().getLinkBy("self");
+    assertThat(selfLink)
+      .isPresent()
+      .get()
+      .extracting("href")
+      .isEqualTo("/scm/api/v2/repositories/space/X/incoming/feature%2Fsome/master/diff/parsed?offset=0&limit=25");
+  }
+
+  @Test
   void shouldCreateNextLinkForIncoming() {
     DiffResult result = createResult();
     mockPartialResult(result);
@@ -141,7 +170,7 @@ class DiffResultToDiffResultDtoMapperTest {
   }
 
   private void mockPartialResult(DiffResult result) {
-    when(result.getLimit()).thenReturn(10);
+    when(result.getLimit()).thenReturn(of(10));
     when(result.getOffset()).thenReturn(20);
     when(result.isPartial()).thenReturn(true);
   }

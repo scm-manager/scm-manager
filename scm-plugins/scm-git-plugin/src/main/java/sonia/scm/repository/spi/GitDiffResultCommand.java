@@ -37,6 +37,10 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
+
+import static java.util.Optional.ofNullable;
 
 public class GitDiffResultCommand extends AbstractGitCommand implements DiffResultCommand {
 
@@ -47,14 +51,14 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
 
   public DiffResult getDiffResult(DiffCommandRequest diffCommandRequest) throws IOException {
     org.eclipse.jgit.lib.Repository repository = open();
-    return new GitDiffResult(repository, Differ.diff(repository, diffCommandRequest), 0, Integer.MAX_VALUE);
+    return new GitDiffResult(repository, Differ.diff(repository, diffCommandRequest), 0, null);
   }
 
   @Override
   public DiffResult getDiffResult(DiffResultCommandRequest request) throws IOException {
     org.eclipse.jgit.lib.Repository repository = open();
     int offset = request.getOffset() == null ? 0 : request.getOffset();
-    int limit = request.getLimit() == null ? Integer.MAX_VALUE : request.getLimit();
+    Integer limit = request.getLimit() == null ? null : request.getLimit();
     return new GitDiffResult(repository, Differ.diff(repository, request), offset, limit);
   }
 
@@ -65,9 +69,9 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
     private final List<DiffEntry> diffEntries;
 
     private final int offset;
-    private final int limit;
+    private final Integer limit;
 
-    private GitDiffResult(org.eclipse.jgit.lib.Repository repository, Differ.Diff diff, int offset, int limit) {
+    private GitDiffResult(org.eclipse.jgit.lib.Repository repository, Differ.Diff diff, int offset, Integer limit) {
       this.repository = repository;
       this.diff = diff;
       this.offset = offset;
@@ -87,7 +91,7 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
 
     @Override
     public boolean isPartial() {
-      return limit != Integer.MAX_VALUE && limit + offset < diffEntries.size();
+      return limit != null && limit + offset < diffEntries.size();
     }
 
     @Override
@@ -96,16 +100,19 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
     }
 
     @Override
-    public int getLimit() {
-      return limit;
+    public Optional<Integer> getLimit() {
+      return ofNullable(limit);
     }
 
     @Override
     public Iterator<DiffFile> iterator() {
-      return diffEntries
+      Stream<DiffEntry> diffEntryStream = diffEntries
         .stream()
-        .skip(offset)
-        .limit(limit)
+        .skip(offset);
+      if (limit != null) {
+        diffEntryStream = diffEntryStream.limit(limit);
+      }
+      return diffEntryStream
         .map(diffEntry -> new GitDiffFile(repository, diffEntry))
         .map(gitDiffFile -> (DiffFile) gitDiffFile)
         .iterator();

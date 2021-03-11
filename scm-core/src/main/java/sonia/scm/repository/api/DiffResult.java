@@ -24,6 +24,10 @@
 
 package sonia.scm.repository.api;
 
+import java.util.Optional;
+
+import static java.util.Optional.empty;
+
 public interface DiffResult extends Iterable<DiffFile> {
 
   String getOldRevision();
@@ -38,7 +42,7 @@ public interface DiffResult extends Iterable<DiffFile> {
     return 0;
   }
 
-  default int getLimit() {
-    return Integer.MAX_VALUE;
+  default Optional<Integer> getLimit() {
+    return empty();
   }
 }

@@ -56,26 +56,42 @@ class DiffResultToDiffResultDtoMapper {
   }
 
   public DiffResultDto mapForIncoming(Repository repository, DiffResult result, String source, String target) {
-    String selfLink = resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName(), source, target);
-    Links.Builder links = linkingTo().self(selfLink);
-    appendNextChunkLinkIfNeeded(links, result, selfLink);
+    String baseLink = resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName(), source, target);
+    Links.Builder links = linkingTo().self(createSelfLink(result, baseLink));
+    appendNextChunkLinkIfNeeded(links, result, baseLink);
     DiffResultDto dto = new DiffResultDto(links.build());
     setFiles(result, dto, repository, source);
     return dto;
   }
 
   public DiffResultDto mapForRevision(Repository repository, DiffResult result, String revision) {
-    String selfLink = resourceLinks.diff().parsed(repository.getNamespace(), repository.getName(), revision);
-    Links.Builder links = linkingTo().self(selfLink);
-    appendNextChunkLinkIfNeeded(links, result, selfLink);
+    String baseLink = resourceLinks.diff().parsed(repository.getNamespace(), repository.getName(), revision);
+    Links.Builder links = linkingTo().self(createSelfLink(result, baseLink));
+    appendNextChunkLinkIfNeeded(links, result, baseLink);
     DiffResultDto dto = new DiffResultDto(links.build());
     setFiles(result, dto, repository, revision);
     return dto;
   }
 
-  private void appendNextChunkLinkIfNeeded(Links.Builder links, DiffResult result, String selfLink) {
+  private String createSelfLink(DiffResult result, String baseLink) {
+    if (result.getOffset() > 0 || result.getLimit().isPresent()) {
+      return createLinkWithLimitAndOffset(baseLink, result.getOffset(), result.getLimit().orElse(null));
+    } else {
+      return baseLink;
+    }
+  }
+
+  private void appendNextChunkLinkIfNeeded(Links.Builder links, DiffResult result, String baseLink) {
     if (result.isPartial()) {
-      links.single(link("next", String.format("%s?offset=%s&limit=%s", selfLink, result.getOffset() + result.getLimit(), result.getLimit())));
+      links.single(link("next", createLinkWithLimitAndOffset(baseLink, result.getOffset() + result.getLimit().get(), result.getLimit().get())));
+    }
+  }
+
+  private String createLinkWithLimitAndOffset(String baseLink, int offset, Integer limit) {
+    if (limit == null) {
+      return String.format("%s?offset=%s", baseLink, offset);
+    } else {
+      return String.format("%s?offset=%s&limit=%s", baseLink, offset, limit);
     }
   }
 
