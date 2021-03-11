@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import sonia.scm.event.ScmEventBus;
@@ -42,7 +42,22 @@ public class GitRepositoryConfigStoreProvider {
   }
 
   public ConfigurationStore<GitRepositoryConfig> get(Repository repository) {
-    return new StoreWrapper(configurationStoreFactory.withType(GitRepositoryConfig.class).withName("gitConfig").forRepository(repository).build(), repository);
+    return new StoreWrapper(createStore(repository.getId()), repository);
+  }
+
+  public GitRepositoryConfig getGitRepositoryConfig(String repositoryId) {
+    return getFronStore(createStore(repositoryId));
+  }
+
+  private static GitRepositoryConfig getFronStore(ConfigurationStore<GitRepositoryConfig> store) {
+    return store.getOptional().orElse(new GitRepositoryConfig());
+  }
+
+  private ConfigurationStore<GitRepositoryConfig> createStore(String id) {
+    return configurationStoreFactory
+      .withType(GitRepositoryConfig.class)
+      .withName("gitConfig")
+      .forRepository(id).build();
   }
 
   private static class StoreWrapper implements ConfigurationStore<GitRepositoryConfig> {
@@ -57,11 +72,7 @@ public class GitRepositoryConfigStoreProvider {
 
     @Override
     public GitRepositoryConfig get() {
-      GitRepositoryConfig config = delegate.get();
-      if (config == null) {
-        return new GitRepositoryConfig();
-      }
-      return config;
+      return getFronStore(delegate);
     }
 
     @Override

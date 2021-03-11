@@ -29,7 +29,9 @@ import org.eclipse.jgit.transport.ReceivePack;
 import org.eclipse.jgit.transport.resolver.ReceivePackFactory;
 import org.eclipse.jgit.transport.resolver.ServiceNotAuthorizedException;
 import org.eclipse.jgit.transport.resolver.ServiceNotEnabledException;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitChangesetConverterFactory;
+import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.web.CollectingPackParserListener;
 import sonia.scm.web.GitHookEventFacade;
@@ -39,16 +41,21 @@ public abstract class BaseReceivePackFactory<T> implements ReceivePackFactory<T>
 
   private final GitRepositoryHandler handler;
   private final GitReceiveHook hook;
+  private final GitRepositoryConfigStoreProvider storeProvider;
 
-  protected BaseReceivePackFactory(GitChangesetConverterFactory converterFactory, GitRepositoryHandler handler, GitHookEventFacade hookEventFacade) {
+  protected BaseReceivePackFactory(GitChangesetConverterFactory converterFactory,
+                                   GitRepositoryHandler handler,
+                                   GitHookEventFacade hookEventFacade,
+                                   GitRepositoryConfigStoreProvider storeProvider) {
     this.handler = handler;
+    this.storeProvider = storeProvider;
     this.hook = new GitReceiveHook(converterFactory, hookEventFacade, handler);
   }
 
   @Override
   public final ReceivePack create(T connection, Repository repository) throws ServiceNotAuthorizedException, ServiceNotEnabledException {
     ReceivePack receivePack = createBasicReceivePack(connection, repository);
-    receivePack.setAllowNonFastForwards(isNonFastForwardAllowed());
+    receivePack.setAllowNonFastForwards(isNonFastForwardAllowed(repository));
 
     receivePack.setPreReceiveHook(hook);
     receivePack.setPostReceiveHook(hook);
@@ -61,7 +68,9 @@ public abstract class BaseReceivePackFactory<T> implements ReceivePackFactory<T>
   protected abstract ReceivePack createBasicReceivePack(T request, Repository repository)
     throws ServiceNotEnabledException, ServiceNotAuthorizedException;
 
-  private boolean isNonFastForwardAllowed() {
-    return ! handler.getConfig().isNonFastForwardDisallowed();
+  private boolean isNonFastForwardAllowed(Repository repository) {
+    String repositoryId = handler.getRepositoryId(repository.getConfig());
+    GitRepositoryConfig gitRepositoryConfig = storeProvider.getGitRepositoryConfig(repositoryId);
+    return !(handler.getConfig().isNonFastForwardDisallowed() || gitRepositoryConfig.isNonFastForwardDisallowed());
   }
 }

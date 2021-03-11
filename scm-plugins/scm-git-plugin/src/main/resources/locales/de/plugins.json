@@ -31,16 +31,17 @@
       "disabledHelpText": "Aktiviere oder deaktiviere das Git Plugin",
       "submit": "Speichern"
     },
-    "repo-config": {
-      "link": "Konfiguration",
+    "repoConfig": {
       "title": "Git Einstellungen",
-      "default-branch": "Standard Branch",
+      "defaultBranch": "Default Branch",
+      "nonFastForwardDisallowed": "Deaktiviere \"Non Fast-Forward\"",
+      "nonFastForwardDisallowedHelpText": "Git Pushes ablehnen, die nicht \"fast-forward\" sind, wie \"--force\".",
       "submit": "Speichern",
       "error": {
         "title": "Fehler",
         "subtitle": "Ein Fehler ist aufgetreten."
       },
-      "success": "Der standard Branch wurde geändert!"
+      "success": "Einstellungen wurden erfolgreich geändert!"
     }
   },
   "permissions": {

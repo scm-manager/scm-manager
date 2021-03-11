@@ -119,7 +119,7 @@ public class GitRepositoryConfigResource {
         schema = @Schema(implementation = UpdateGitRepositoryConfigDto.class),
         examples = @ExampleObject(
           name = "Overwrites current configuration with this one.",
-          value = "{\n  \"defaultBranch\":\"main\"\n}",
+          value = "{\n  \"defaultBranch\":\"main\"\n  \"nonFastForwardDisallowed\":false,\n}",
           summary = "Simple update configuration"
         )
       )

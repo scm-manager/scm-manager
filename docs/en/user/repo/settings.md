@@ -10,6 +10,9 @@ can be considerably more items.
 The "General" item allows you to edit the additional information of the repository. Git repositories for example also
 have the option to change the default branch here. The default branch is the one that is used when working with the
 repository if no specific branch is selected.
+In addition, Git pushes which are non fast-forward can be rejected at the repository level.
+
+![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
 
 In the danger zone at the bottom you may rename the repository, delete it or mark it as archived. If the namespace
 strategy in the global SCM-Manager config is set to `custom` you may even rename the repository namespace. If a

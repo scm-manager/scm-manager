@@ -31,16 +31,17 @@
       "disabledHelpText": "Enable or disable the Git plugin",
       "submit": "Submit"
     },
-    "repo-config": {
-      "link": "Configuration",
+    "repoConfig": {
       "title": "Git Settings",
-      "default-branch": "Default Branch",
+      "defaultBranch": "Default Branch",
+      "nonFastForwardDisallowed": "Disallow Non Fast-Forward",
+      "nonFastForwardDisallowedHelpText": "Reject git pushes which are non fast-forward such as --force.",
       "submit": "Submit",
       "error": {
         "title": "Error",
         "subtitle": "Something went wrong"
       },
-      "success": "Default branch changed!"
+      "success": "Configuration changed successfully!"
     }
   },
   "permissions" : {

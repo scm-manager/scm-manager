@@ -33,6 +33,7 @@ import org.eclipse.jgit.transport.ReceivePack;
 import org.eclipse.jgit.transport.resolver.ReceivePackFactory;
 import org.eclipse.jgit.transport.resolver.ServiceNotAuthorizedException;
 import org.eclipse.jgit.transport.resolver.ServiceNotEnabledException;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.protocolcommand.git.BaseReceivePackFactory;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
@@ -53,8 +54,11 @@ public class GitReceivePackFactory extends BaseReceivePackFactory<HttpServletReq
   private ReceivePackFactory<HttpServletRequest> wrapped;
 
   @Inject
-  public GitReceivePackFactory(GitChangesetConverterFactory converterFactory, GitRepositoryHandler handler, GitHookEventFacade hookEventFacade) {
-    super(converterFactory, handler, hookEventFacade);
+  public GitReceivePackFactory(GitChangesetConverterFactory converterFactory,
+                               GitRepositoryHandler handler,
+                               GitHookEventFacade hookEventFacade,
+                               GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider) {
+    super(converterFactory, handler, hookEventFacade, gitRepositoryConfigStoreProvider);
     this.wrapped = new DefaultReceivePackFactory();
   }
 

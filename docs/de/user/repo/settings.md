@@ -11,6 +11,9 @@ Unter dem Eintrag "Generell" kann man die Zusatzinformationen zum Repository edi
 Git Repository handelt, kann ebenfalls der Standard-Branch für dieses Repository gesetzt werden. Der Standard-Branch
 sorgt dafür, dass beim Arbeiten mit diesem Repository dieser Branch vorrangig geöffnet wird, falls kein expliziter
 Branch ausgewählt wurde.
+Außerdem können Git Pushes auf Repository-Ebene abgelehnt werden, die nicht "fast-forward" sind.
+
+![Repository-Settings-General-Git](assets/repository-settings-general-git.png)
 
 Innerhalb der Gefahrenzone unten auf der Seite gibt es mit entsprechenden Rechten die Möglichkeit das Repository
 umzubenennen, zu löschen oder als archiviert zu markieren. Wenn in der globalen SCM-Manager Konfiguration die Namespace

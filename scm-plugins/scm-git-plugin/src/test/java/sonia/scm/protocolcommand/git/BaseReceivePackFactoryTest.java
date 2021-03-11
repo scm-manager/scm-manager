@@ -38,7 +38,9 @@ import org.junit.rules.TemporaryFolder;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
+import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitConfig;
+import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.web.CollectingPackParserListener;
@@ -59,16 +61,21 @@ public class BaseReceivePackFactoryTest {
   @Mock
   private GitRepositoryHandler handler;
 
-  private GitConfig config;
+  private GitConfig gitConfig;
 
   @Mock
   private ReceivePackFactory<Object> wrappedReceivePackFactory;
+
+  @Mock
+  private GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider;
 
   private BaseReceivePackFactory<Object> factory;
 
   private Object request = new Object();
 
   private Repository repository;
+
+  private GitRepositoryConfig gitRepositoryConfig = new GitRepositoryConfig();
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
@@ -77,13 +84,16 @@ public class BaseReceivePackFactoryTest {
   public void setUpObjectUnderTest() throws Exception {
     this.repository = createRepositoryForTesting();
 
-    config = new GitConfig();
-    when(handler.getConfig()).thenReturn(config);
+    gitConfig = new GitConfig();
+    when(handler.getConfig()).thenReturn(gitConfig);
+    when(handler.getRepositoryId(repository.getConfig())).thenReturn("heart-of-gold");
 
     ReceivePack receivePack = new ReceivePack(repository);
     when(wrappedReceivePackFactory.create(request, repository)).thenReturn(receivePack);
 
-    factory = new BaseReceivePackFactory<Object>(GitTestHelper.createConverterFactory(), handler, null) {
+    when(gitRepositoryConfigStoreProvider.getGitRepositoryConfig("heart-of-gold")).thenReturn(gitRepositoryConfig);
+
+    factory = new BaseReceivePackFactory<Object>(GitTestHelper.createConverterFactory(), handler, null, gitRepositoryConfigStoreProvider) {
       @Override
       protected ReceivePack createBasicReceivePack(Object request, Repository repository) throws ServiceNotEnabledException, ServiceNotAuthorizedException {
         return wrappedReceivePackFactory.create(request, repository);
@@ -108,7 +118,14 @@ public class BaseReceivePackFactoryTest {
 
   @Test
   public void testCreateWithDisabledNonFastForward() throws Exception {
-    config.setNonFastForwardDisallowed(true);
+    gitConfig.setNonFastForwardDisallowed(true);
+    ReceivePack receivePack = factory.create(request, repository);
+    assertFalse(receivePack.isAllowNonFastForwards());
+  }
+
+  @Test
+  public void testCreateWithLocalDisabledNonFastForward() throws Exception {
+    gitRepositoryConfig.setNonFastForwardDisallowed(true);
     ReceivePack receivePack = factory.create(request, repository);
     assertFalse(receivePack.isAllowNonFastForwards());
   }
