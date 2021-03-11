@@ -23,7 +23,7 @@
  */
 
 import React, { FC } from "react";
-import SyntaxHighlighter from "./SyntaxHighlighter";
+import SyntaxHighlighter from "../SyntaxHighlighter";
 import { ExtensionPoint, useBinder } from "@scm-manager/ui-extensions";
 import { useIndexLinks } from "@scm-manager/ui-api";
 

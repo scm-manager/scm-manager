@@ -22,10 +22,10 @@
  * SOFTWARE.
  */
 
-import { nameRegex } from "./validation";
-// @ts-ignore No types available
-import visit from "unist-util-visit";
+import { nameRegex } from "../validation";
 import { TFunction } from "i18next";
+import { AstPlugin } from "./PluginApi";
+import { Node, Parent } from "unist";
 
 const namePartRegex = nameRegex.source.substring(1, nameRegex.source.length - 1);
 
@@ -42,14 +42,14 @@ function match(value: string): RegExpMatchArray[] {
   return matches;
 }
 
-export const createTransformer = (t: TFunction) => {
-  return (tree: any) => {
-    visit(tree, "text", (node: any, index: number, parent: any) => {
-      if (parent.type === "link" || !node.value) {
+export const createTransformer = (t: TFunction): AstPlugin => {
+  return ({ visit }) => {
+    visit("text", (node: Node, index: number, parent?: Parent) => {
+      if (!parent || parent.type === "link" || !node.value) {
         return;
       }
 
-      let nodeText = node.value;
+      let nodeText = node.value as string;
       const matches = match(nodeText);
 
       if (matches.length > 0) {
@@ -89,12 +89,11 @@ export const createTransformer = (t: TFunction) => {
           });
         }
 
-        parent.children![index] = {
+        parent.children[index] = {
           type: "text",
           children
         };
       }
     });
-    return tree;
   };
 };

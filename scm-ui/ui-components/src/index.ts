@@ -67,7 +67,7 @@ export { default as GroupAutocomplete } from "./GroupAutocomplete";
 export { default as UserAutocomplete } from "./UserAutocomplete";
 export { default as BranchSelector } from "./BranchSelector";
 export { default as Breadcrumb } from "./Breadcrumb";
-export { default as MarkdownView } from "./MarkdownView";
+export { default as MarkdownView } from "./markdown/MarkdownView";
 export { default as SyntaxHighlighter } from "./SyntaxHighlighter";
 export { default as ErrorBoundary } from "./ErrorBoundary";
 export { default as OverviewPageActions } from "./OverviewPageActions";
@@ -77,7 +77,8 @@ export { default as CardColumn } from "./CardColumn";
 export { default as CardColumnSmall } from "./CardColumnSmall";
 export { default as CommaSeparatedList } from "./CommaSeparatedList";
 export { default as SplitAndReplace, Replacement } from "./SplitAndReplace";
-export { regExpPattern as changesetShortLinkRegex } from "./remarkChangesetShortLinkParser";
+export { regExpPattern as changesetShortLinkRegex } from "./markdown/remarkChangesetShortLinkParser";
+export * from "./markdown/PluginApi";
 
 export { default as comparators } from "./comparators";
 

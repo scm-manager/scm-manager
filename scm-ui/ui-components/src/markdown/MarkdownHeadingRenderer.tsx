@@ -25,10 +25,10 @@ import React, { FC, ReactNode, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { urls } from "@scm-manager/ui-api";
 import styled from "styled-components";
-import Icon from "./Icon";
-import Tooltip from "./Tooltip";
+import Icon from "../Icon";
+import Tooltip from "../Tooltip";
 import { useTranslation } from "react-i18next";
-import copyToClipboard from "./CopyToClipboard";
+import copyToClipboard from "../CopyToClipboard";
 
 /**
  * Adds anchor links to markdown headings.

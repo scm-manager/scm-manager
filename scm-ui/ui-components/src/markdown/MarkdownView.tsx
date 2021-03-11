@@ -27,13 +27,15 @@ import Markdown from "react-markdown";
 import MarkdownWithHtml from "react-markdown/with-html";
 import gfm from "remark-gfm";
 import { binder } from "@scm-manager/ui-extensions";
-import ErrorBoundary from "./ErrorBoundary";
+import ErrorBoundary from "../ErrorBoundary";
 import { create as createMarkdownHeadingRenderer } from "./MarkdownHeadingRenderer";
 import { create as createMarkdownLinkRenderer } from "./MarkdownLinkRenderer";
 import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
-import Notification from "./Notification";
+import Notification from "../Notification";
 import { createTransformer } from "./remarkChangesetShortLinkParser";
 import MarkdownCodeRenderer from "./MarkdownCodeRenderer";
+import { AstPlugin } from "./PluginApi";
+import createMdastPlugin from "./createMdastPlugin";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -45,6 +47,7 @@ type Props = RouteComponentProps &
     // basePath for markdown links
     basePath?: string;
     permalink?: string;
+    mdastPlugins?: AstPlugin[];
   };
 
 type State = {
@@ -117,7 +120,17 @@ class MarkdownView extends React.Component<Props, State> {
   }
 
   render() {
-    const { content, renderers, renderContext, enableAnchorHeadings, skipHtml, basePath, permalink, t } = this.props;
+    const {
+      content,
+      renderers,
+      renderContext,
+      enableAnchorHeadings,
+      skipHtml,
+      basePath,
+      permalink,
+      t,
+      mdastPlugins = []
+    } = this.props;
 
     const rendererFactory = binder.getExtension("markdown-renderer-factory");
     let rendererList = renderers;
@@ -142,11 +155,13 @@ class MarkdownView extends React.Component<Props, State> {
       rendererList.code = MarkdownCodeRenderer;
     }
 
+    const plugins = [...mdastPlugins, createTransformer(t)].map(createMdastPlugin);
+
     const baseProps = {
       className: "content is-word-break",
       renderers: rendererList,
       plugins: [gfm],
-      astPlugins: [createTransformer(t)],
+      astPlugins: plugins,
       children: content
     };
 
