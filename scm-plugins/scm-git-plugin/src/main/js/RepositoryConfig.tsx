@@ -47,8 +47,9 @@ type State = {
   branches: Branch[];
   selectedBranchName: string;
   nonFastForwardDisallowed: boolean;
-  defaultBranchChanged: boolean;
+  changesSubmitted: boolean;
   disabled: boolean;
+  changed: boolean;
 };
 
 const GIT_CONFIG_CONTENT_TYPE = "application/vnd.scmm-gitConfig+json";
@@ -64,15 +65,15 @@ class RepositoryConfig extends React.Component<Props, State> {
       branches: [],
       selectedBranchName: "",
       nonFastForwardDisallowed: false,
-      defaultBranchChanged: false,
-      disabled: true
+      changesSubmitted: false,
+      disabled: true,
+      changed: false
     };
   }
 
   componentDidMount() {
     const { repository } = this.props;
     this.setState({
-      ...this.state,
       loadingBranches: true
     });
     const branchesLink = repository._links.branches as Link;
@@ -82,21 +83,18 @@ class RepositoryConfig extends React.Component<Props, State> {
       .then(payload => payload._embedded.branches)
       .then(branches =>
         this.setState({
-          ...this.state,
           branches,
           loadingBranches: false
         })
       )
       .catch(error =>
         this.setState({
-          ...this.state,
           error
         })
       );
 
     const configurationLink = repository._links.configuration as Link;
     this.setState({
-      ...this.state,
       loadingDefaultBranch: true
     });
     apiClient
@@ -104,16 +102,15 @@ class RepositoryConfig extends React.Component<Props, State> {
       .then(response => response.json())
       .then(payload =>
         this.setState({
-          ...this.state,
           selectedBranchName: payload.defaultBranch,
           nonFastForwardDisallowed: payload.nonFastForwardDisallowed,
           disabled: !payload._links.update,
-          loadingDefaultBranch: false
+          loadingDefaultBranch: false,
+          changed: false
         })
       )
       .catch(error =>
         this.setState({
-          ...this.state,
           error
         })
       );
@@ -122,23 +119,24 @@ class RepositoryConfig extends React.Component<Props, State> {
   branchSelected = (branch?: Branch) => {
     if (!branch) {
       this.setState({
-        ...this.state,
         selectedBranchName: "",
-        defaultBranchChanged: false
+        changesSubmitted: false,
+        changed: true
       });
     } else {
       this.setState({
-        ...this.state,
         selectedBranchName: branch.name,
-        defaultBranchChanged: false
+        changesSubmitted: false,
+        changed: true
       });
     }
   };
 
   onNonFastForwardDisallowed = (value: boolean) => {
     this.setState({
-        nonFastForwardDisallowed: value
-      });
+      nonFastForwardDisallowed: value,
+      changed: true
+    });
   };
 
   submit = (event: FormEvent) => {
@@ -151,7 +149,6 @@ class RepositoryConfig extends React.Component<Props, State> {
       nonFastForwardDisallowed
     };
     this.setState({
-      ...this.state,
       submitPending: true
     });
     const configurationLink = repository._links.configuration as Link;
@@ -159,14 +156,13 @@ class RepositoryConfig extends React.Component<Props, State> {
       .put(configurationLink.href, newConfig, GIT_CONFIG_CONTENT_TYPE)
       .then(() =>
         this.setState({
-          ...this.state,
           submitPending: false,
-          defaultBranchChanged: true
+          changesSubmitted: true,
+          changed: false
         })
       )
       .catch(error =>
         this.setState({
-          ...this.state,
           error
         })
       );
@@ -174,7 +170,7 @@ class RepositoryConfig extends React.Component<Props, State> {
 
   render() {
     const { t } = this.props;
-    const { loadingBranches, loadingDefaultBranch, submitPending, error, disabled } = this.state;
+    const { loadingBranches, loadingDefaultBranch, submitPending, error, disabled, changed } = this.state;
 
     if (error) {
       return (
@@ -189,11 +185,7 @@ class RepositoryConfig extends React.Component<Props, State> {
     const submitButton = disabled ? null : (
       <Level
         right={
-          <SubmitButton
-            label={t("scm-git-plugin.repoConfig.submit")}
-            loading={submitPending}
-            disabled={!this.state.selectedBranchName}
-          />
+          <SubmitButton label={t("scm-git-plugin.repoConfig.submit")} loading={submitPending} disabled={!changed} />
         }
       />
     );
@@ -231,15 +223,15 @@ class RepositoryConfig extends React.Component<Props, State> {
   }
 
   renderBranchChangedNotification = () => {
-    if (this.state.defaultBranchChanged) {
+    if (this.state.changesSubmitted) {
       return (
         <div className="notification is-primary">
           <button
             className="delete"
             onClick={() =>
               this.setState({
-                ...this.state,
-                defaultBranchChanged: false
+                changesSubmitted: false,
+                changed: false
               })
             }
           />
