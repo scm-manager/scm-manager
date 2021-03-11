@@ -26,11 +26,6 @@ import { ReactNode } from "react";
 import { DefaultCollapsed } from "./defaultCollapsed";
 import { Change, Hunk, FileDiff as File } from "@scm-manager/ui-types";
 
-// We place the types here and not in @scm-manager/ui-types,
-// because they represent not a real scm-manager related type.
-// This types represents only the required types for the Diff related components,
-// such as every other component does with its Props.
-
 export type ChangeEvent = {
   change: Change;
 };
