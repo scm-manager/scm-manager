@@ -30,7 +30,8 @@ import { Decoration, getChangeKey, Hunk } from "react-diff-view";
 import { ButtonGroup } from "../buttons";
 import Tag from "../Tag";
 import Icon from "../Icon";
-import { Change, ChangeEvent, DiffObjectProps, File, Hunk as HunkType } from "./DiffTypes";
+import { Change, FileDiff, Hunk as HunkType } from "@scm-manager/ui-types";
+import { ChangeEvent, DiffObjectProps } from "./DiffTypes";
 import TokenizedDiffView from "./TokenizedDiffView";
 import DiffButton from "./DiffButton";
 import { MenuContext, OpenInFullscreenButton } from "@scm-manager/ui-components";
@@ -45,7 +46,7 @@ const EMPTY_ANNOTATION_FACTORY = {};
 
 type Props = DiffObjectProps &
   WithTranslation & {
-    file: File;
+    file: FileDiff;
   };
 
 type Collapsible = {
@@ -53,7 +54,7 @@ type Collapsible = {
 };
 
 type State = Collapsible & {
-  file: File;
+  file: FileDiff;
   sideBySide?: boolean;
   diffExpander: DiffExpander;
   expansionError?: any;
@@ -257,7 +258,7 @@ class DiffFile extends React.Component<Props, State> {
     };
   };
 
-  diffExpanded = (newFile: File) => {
+  diffExpanded = (newFile: FileDiff) => {
     this.setState({ file: newFile, diffExpander: new DiffExpander(newFile) });
   };
 
@@ -303,7 +304,7 @@ class DiffFile extends React.Component<Props, State> {
     }
   };
 
-  renderHunk = (file: File, expandableHunk: ExpandableHunk, i: number) => {
+  renderHunk = (file: FileDiff, expandableHunk: ExpandableHunk, i: number) => {
     const hunk = expandableHunk.hunk;
     if (this.props.markConflicts && hunk.changes) {
       this.markConflicts(hunk);
@@ -353,7 +354,7 @@ class DiffFile extends React.Component<Props, State> {
     }
   };
 
-  getAnchorId(file: File) {
+  getAnchorId(file: FileDiff) {
     let path: string;
     if (file.type === "delete") {
       path = file.oldPath;
@@ -363,7 +364,7 @@ class DiffFile extends React.Component<Props, State> {
     return escapeWhitespace(path);
   }
 
-  renderFileTitle = (file: File) => {
+  renderFileTitle = (file: FileDiff) => {
     if (file.oldPath !== file.newPath && (file.type === "copy" || file.type === "rename")) {
       return (
         <>
@@ -376,7 +377,7 @@ class DiffFile extends React.Component<Props, State> {
     return file.newPath;
   };
 
-  hoverFileTitle = (file: File): string => {
+  hoverFileTitle = (file: FileDiff): string => {
     if (file.oldPath !== file.newPath && (file.type === "copy" || file.type === "rename")) {
       return `${file.oldPath} > ${file.newPath}`;
     } else if (file.type === "delete") {
@@ -385,7 +386,7 @@ class DiffFile extends React.Component<Props, State> {
     return file.newPath;
   };
 
-  renderChangeTag = (file: File) => {
+  renderChangeTag = (file: FileDiff) => {
     const { t } = this.props;
     if (!file.type) {
       return;
@@ -401,7 +402,7 @@ class DiffFile extends React.Component<Props, State> {
     return <ChangeTypeTag className={classNames("is-rounded", "has-text-weight-normal")} color={color} label={value} />;
   };
 
-  hasContent = (file: File) => file && !file.isBinary && file.hunks && file.hunks.length > 0;
+  hasContent = (file: FileDiff) => file && !file.isBinary && file.hunks && file.hunks.length > 0;
 
   render() {
     const { fileControlFactory, fileAnnotationFactory, t } = this.props;
