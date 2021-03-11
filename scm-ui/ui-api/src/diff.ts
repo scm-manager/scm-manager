@@ -26,14 +26,14 @@ import parser from "gitdiff-parser";
 
 import { useInfiniteQuery } from "react-query";
 import { apiClient } from "./apiclient";
-import { HalRepresentation, Link } from "@scm-manager/ui-types";
+import { FileDiff, HalRepresentation, Link } from "@scm-manager/ui-types";
 
 type UseDiffOptions = {
   limit?: number;
 };
 
 type Diff = HalRepresentation & {
-  files: any[];
+  files: FileDiff[];
   partial: boolean;
 };
 

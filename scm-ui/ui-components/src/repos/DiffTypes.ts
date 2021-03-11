@@ -24,55 +24,12 @@
 
 import { ReactNode } from "react";
 import { DefaultCollapsed } from "./defaultCollapsed";
-import { Links } from "@scm-manager/ui-types";
+import { Change, Hunk, FileDiff as File } from "@scm-manager/ui-types";
 
 // We place the types here and not in @scm-manager/ui-types,
 // because they represent not a real scm-manager related type.
 // This types represents only the required types for the Diff related components,
 // such as every other component does with its Props.
-
-export type FileChangeType = "add" | "modify" | "delete" | "copy" | "rename";
-
-export type File = {
-  hunks?: Hunk[];
-  newEndingNewLine: boolean;
-  newMode?: string;
-  newPath: string;
-  newRevision?: string;
-  oldEndingNewLine: boolean;
-  oldMode?: string;
-  oldPath: string;
-  oldRevision?: string;
-  type: FileChangeType;
-  language?: string;
-  // TODO does this property exists?
-  isBinary?: boolean;
-  _links?: Links;
-};
-
-export type Hunk = {
-  changes: Change[];
-  content: string;
-  oldStart?: number;
-  newStart?: number;
-  oldLines?: number;
-  newLines?: number;
-  fullyExpanded?: boolean;
-  expansion?: boolean;
-};
-
-export type ChangeType = "insert" | "delete" | "normal" | "conflict";
-
-export type Change = {
-  content: string;
-  isNormal?: boolean;
-  isInsert?: boolean;
-  isDelete?: boolean;
-  lineNumber?: number;
-  newLineNumber?: number;
-  oldLineNumber?: number;
-  type: ChangeType;
-};
 
 export type ChangeEvent = {
   change: Change;

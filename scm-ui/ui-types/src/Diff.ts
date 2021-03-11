@@ -22,47 +22,46 @@
  * SOFTWARE.
  */
 
-export { Action } from "./Action";
-export * from "./hal";
+import { HalRepresentation } from "./hal";
 
-export { Me } from "./Me";
-export * from "./User";
-export * from "./Group";
+export type FileChangeType = "add" | "modify" | "delete" | "copy" | "rename";
 
-export * from "./Repositories";
-export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
+export type FileDiff = HalRepresentation & {
+  hunks?: Hunk[];
+  newEndingNewLine: boolean;
+  newMode?: string;
+  newPath: string;
+  newRevision?: string;
+  oldEndingNewLine: boolean;
+  oldMode?: string;
+  oldPath: string;
+  oldRevision?: string;
+  type: FileChangeType;
+  language?: string;
+  // TODO does this property exists?
+  isBinary?: boolean;
+};
 
-export * from "./Branches";
+export type Hunk = {
+  changes: Change[];
+  content: string;
+  oldStart?: number;
+  newStart?: number;
+  oldLines?: number;
+  newLines?: number;
+  fullyExpanded?: boolean;
+  expansion?: boolean;
+};
 
-export { Person } from "./Person";
+export type ChangeType = "insert" | "delete" | "normal" | "conflict";
 
-export * from "./Changesets";
-
-export { Signature } from "./Signature";
-
-export { AnnotatedSource, AnnotatedLine } from "./Annotate";
-
-export * from "./Tags";
-
-export { Config, AnonymousMode } from "./Config";
-
-export { IndexResources } from "./IndexResources";
-
-export { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
-
-export * from "./Sources";
-
-export { SelectValue, AutocompleteObject } from "./Autocomplete";
-
-export * from "./Plugin";
-
-export * from "./RepositoryRole";
-export * from "./RepositoryVerbs";
-
-export * from "./NamespaceStrategies";
-
-export * from "./LoginInfo";
-
-export * from "./Admin";
-
-export * from "./Diff";
+export type Change = {
+  content: string;
+  isNormal?: boolean;
+  isInsert?: boolean;
+  isDelete?: boolean;
+  lineNumber?: number;
+  newLineNumber?: number;
+  oldLineNumber?: number;
+  type: ChangeType;
+};
