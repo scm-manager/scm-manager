@@ -30,14 +30,14 @@ import simpleDiff from "../__resources__/Diff.simple";
 import hunksDiff from "../__resources__/Diff.hunks";
 import binaryDiff from "../__resources__/Diff.binary";
 import markdownDiff from "../__resources__/Diff.markdown";
-import { DiffEventContext, File, FileControlFactory } from "./DiffTypes";
+import { DiffEventContext, FileControlFactory } from "./DiffTypes";
 import Toast from "../toast/Toast";
 import { getPath } from "./diffs";
 import DiffButton from "./DiffButton";
 import styled from "styled-components";
 import { MemoryRouter } from "react-router-dom";
 import { one, two } from "../__resources__/changesets";
-import { Changeset } from "@scm-manager/ui-types";
+import { Changeset, FileDiff } from "@scm-manager/ui-types";
 import JumpToFileButton from "./JumpToFileButton";
 
 const diffFiles = parser.parse(simpleDiff);
@@ -141,7 +141,7 @@ storiesOf("Diff", module)
     return <Diff diff={binaryDiffFiles} />;
   })
   .add("SyntaxHighlighting", () => {
-    const filesWithLanguage = diffFiles.map((file: File) => {
+    const filesWithLanguage = diffFiles.map((file: FileDiff) => {
       const ext = getPath(file).split(".")[1];
       if (ext === "tsx") {
         file.language = "typescript";
@@ -160,7 +160,7 @@ storiesOf("Diff", module)
     <Diff diff={diffFiles} defaultCollapse={(oldPath, newPath) => oldPath.endsWith(".java")} />
   ))
   .add("Expandable", () => {
-    const filesWithLanguage = diffFiles.map((file: File) => {
+    const filesWithLanguage = diffFiles.map((file: FileDiff) => {
       file._links = { lines: { href: "http://example.com/" } };
       return file;
     });

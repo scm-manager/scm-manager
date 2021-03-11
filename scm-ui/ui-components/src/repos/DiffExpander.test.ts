@@ -23,7 +23,7 @@
  */
 import fetchMock from "fetch-mock";
 import DiffExpander from "./DiffExpander";
-import { File, Hunk } from "./DiffTypes";
+import { FileDiff, Hunk } from "@scm-manager/ui-types";
 
 const HUNK_0: Hunk = {
   content: "@@ -1,8 +1,8 @@",
@@ -94,7 +94,7 @@ const HUNK_3: Hunk = {
     { content: "line", type: "normal", oldLineNumber: 38, newLineNumber: 40, isNormal: true }
   ]
 };
-const TEST_CONTENT_WITH_HUNKS: File = {
+const TEST_CONTENT_WITH_HUNKS: FileDiff = {
   hunks: [HUNK_0, HUNK_1, HUNK_2, HUNK_3],
   newEndingNewLine: true,
   newPath: "src/main/js/CommitMessage.js",
@@ -112,7 +112,7 @@ const TEST_CONTENT_WITH_HUNKS: File = {
   }
 };
 
-const TEST_CONTENT_WITH_NEW_BINARY_FILE: File = {
+const TEST_CONTENT_WITH_NEW_BINARY_FILE: FileDiff = {
   oldPath: "/dev/null",
   newPath: "src/main/fileUploadV2.png",
   oldEndingNewLine: true,
@@ -122,7 +122,7 @@ const TEST_CONTENT_WITH_NEW_BINARY_FILE: File = {
   type: "add"
 };
 
-const TEST_CONTENT_WITH_NEW_TEXT_FILE: File = {
+const TEST_CONTENT_WITH_NEW_TEXT_FILE: FileDiff = {
   oldPath: "/dev/null",
   newPath: "src/main/markdown/README.md",
   oldEndingNewLine: true,
@@ -151,7 +151,7 @@ const TEST_CONTENT_WITH_NEW_TEXT_FILE: File = {
   }
 };
 
-const TEST_CONTENT_WITH_DELETED_TEXT_FILE: File = {
+const TEST_CONTENT_WITH_DELETED_TEXT_FILE: FileDiff = {
   oldPath: "README.md",
   newPath: "/dev/null",
   oldEndingNewLine: true,
@@ -171,7 +171,7 @@ const TEST_CONTENT_WITH_DELETED_TEXT_FILE: File = {
   _links: { lines: { href: "http://localhost:8081/dev/null?start={start}&end={end}", templated: true } }
 };
 
-const TEST_CONTENT_WITH_DELETED_LINES_AT_END: File = {
+const TEST_CONTENT_WITH_DELETED_LINES_AT_END: FileDiff = {
   oldPath: "pom.xml",
   newPath: "pom.xml",
   oldEndingNewLine: true,
@@ -214,7 +214,7 @@ const TEST_CONTENT_WITH_DELETED_LINES_AT_END: File = {
   }
 };
 
-const TEST_CONTENT_WITH_ALL_LINES_REMOVED_FROM_FILE: File = {
+const TEST_CONTENT_WITH_ALL_LINES_REMOVED_FROM_FILE: FileDiff = {
   oldPath: "pom.xml",
   newPath: "pom.xml",
   oldEndingNewLine: true,
@@ -281,7 +281,7 @@ describe("with hunks the diff expander", () => {
     const expandedHunk = diffExpander.getHunk(1).hunk;
     const subsequentHunk = diffExpander.getHunk(2).hunk;
     fetchMock.get("http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=20&end=21", "new line 1");
-    let newFile: File;
+    let newFile: FileDiff;
     await diffExpander
       .getHunk(1)
       .expandBottom(1)
@@ -306,7 +306,7 @@ describe("with hunks the diff expander", () => {
       "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=8&end=13",
       "new line 9\nnew line 10\nnew line 11\nnew line 12\nnew line 13"
     );
-    let newFile: File;
+    let newFile: FileDiff;
     await diffExpander
       .getHunk(1)
       .expandHead(5)
@@ -335,7 +335,7 @@ describe("with hunks the diff expander", () => {
       "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=40&end=50",
       "new line 40\nnew line 41\nnew line 42"
     );
-    let newFile: File;
+    let newFile: FileDiff;
     await diffExpander
       .getHunk(3)
       .expandBottom(10)
@@ -348,7 +348,7 @@ describe("with hunks the diff expander", () => {
       "http://localhost:8081/scm/api/v2/content/abc/CommitMessage.js?start=40&end=-1",
       "new line 40\nnew line 41\nnew line 42"
     );
-    let newFile: File;
+    let newFile: FileDiff;
     await diffExpander
       .getHunk(3)
       .expandBottom(-1)
