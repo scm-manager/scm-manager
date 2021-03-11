@@ -244,7 +244,7 @@ public class IncomingRootResource {
                                      @PathParam("name") String name,
                                      @PathParam("source") String source,
                                      @PathParam("target") String target,
-                                     @QueryParam("limit") @Min(0) Integer limit,
+                                     @QueryParam("limit") @Min(1) Integer limit,
                                      @QueryParam("offset") @Min(0) Integer offset) throws IOException {
     HttpUtil.checkForCRLFInjection(source);
     HttpUtil.checkForCRLFInjection(target);
