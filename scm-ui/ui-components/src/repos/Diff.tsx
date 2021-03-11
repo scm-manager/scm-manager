@@ -23,7 +23,8 @@
  */
 import React from "react";
 import DiffFile from "./DiffFile";
-import { DiffObjectProps, File, FileControlFactory } from "./DiffTypes";
+import { DiffObjectProps, FileControlFactory } from "./DiffTypes";
+import { FileDiff } from "@scm-manager/ui-types";
 import { escapeWhitespace } from "./diffs";
 import Notification from "../Notification";
 import { WithTranslation, withTranslation } from "react-i18next";
@@ -32,7 +33,7 @@ import { RouteComponentProps, withRouter } from "react-router-dom";
 type Props = RouteComponentProps &
   WithTranslation &
   DiffObjectProps & {
-    diff: File[];
+    diff: FileDiff[];
     fileControlFactory?: FileControlFactory;
   };
 

@@ -22,16 +22,17 @@
  * SOFTWARE.
  */
 
-import { BaseContext, File, Hunk } from "./DiffTypes";
+import { BaseContext } from "./DiffTypes";
+import { FileDiff, Hunk } from "@scm-manager/ui-types";
 
-export function getPath(file: File) {
+export function getPath(file: FileDiff) {
   if (file.type === "delete") {
     return file.oldPath;
   }
   return file.newPath;
 }
 
-export function createHunkIdentifier(file: File, hunk: Hunk) {
+export function createHunkIdentifier(file: FileDiff, hunk: Hunk) {
   const path = getPath(file);
   return `${file.type}_${path}_${hunk.content}`;
 }
