@@ -23,8 +23,7 @@
  */
 
 import { apiClient } from "@scm-manager/ui-components";
-import { Change, FileDiff, Hunk } from "@scm-manager/ui-types";
-import { Link } from "@scm-manager/ui-types";
+import { Change, FileDiff, Hunk, Link } from "@scm-manager/ui-types";
 
 class DiffExpander {
   file: FileDiff;

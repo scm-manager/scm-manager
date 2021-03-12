@@ -113,7 +113,7 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
       }
       return diffEntryStream
         .map(diffEntry -> new GitDiffFile(repository, diffEntry))
-        .map(gitDiffFile -> (DiffFile) gitDiffFile)
+        .map(DiffFile.class::cast)
         .iterator();
     }
   }
