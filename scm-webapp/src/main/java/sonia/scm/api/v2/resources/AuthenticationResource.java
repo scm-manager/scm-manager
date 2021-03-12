@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
@@ -66,13 +66,13 @@ import java.util.Optional;
 
 @SecuritySchemes({
   @SecurityScheme(
-    name = "Basic Authentication",
+    name = "Basic_Authentication",
     description = "HTTP Basic authentication with username and password",
     scheme = "basic",
     type = SecuritySchemeType.HTTP
   ),
   @SecurityScheme(
-    name = "Bearer Token Authentication",
+    name = "Bearer_Token_Authentication",
     description = "Authentication with a jwt bearer token",
     scheme = "bearer",
     bearerFormat = "JWT",
