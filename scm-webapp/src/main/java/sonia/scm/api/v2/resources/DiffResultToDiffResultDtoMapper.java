@@ -83,7 +83,12 @@ class DiffResultToDiffResultDtoMapper {
 
   private void appendNextChunkLinkIfNeeded(Links.Builder links, DiffResult result, String baseLink) {
     if (result.isPartial()) {
-      links.single(link("next", createLinkWithLimitAndOffset(baseLink, result.getOffset() + result.getLimit().get(), result.getLimit().get())));
+      Optional<Integer> limit = result.getLimit();
+      if (limit.isPresent()) {
+        links.single(link("next", createLinkWithLimitAndOffset(baseLink, result.getOffset() + limit.get(), limit.get())));
+      } else {
+        throw new IllegalStateException("a result cannot be partial without a limit");
+      }
     }
   }
 
