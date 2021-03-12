@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.api;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -31,6 +31,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.spi.DiffCommand;
+import sonia.scm.repository.spi.DiffCommandRequest;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -54,13 +55,10 @@ import java.util.Set;
  * System.out.println(content);
  * </code></pre>
  *
- *
- * TODO check current behavior.
- *
  * @author Sebastian Sdorra
  * @since 1.17
  */
-public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCommandBuilder>
+public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCommandBuilder, DiffCommandRequest>
 {
 
   /**
@@ -159,6 +157,11 @@ public final class DiffCommandBuilder extends AbstractDiffCommandBuilder<DiffCom
   @Override
   DiffCommandBuilder self() {
     return this;
+  }
+
+  @Override
+  DiffCommandRequest createRequest() {
+    return new DiffCommandRequest();
   }
 
   @FunctionalInterface

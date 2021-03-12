@@ -39,6 +39,7 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
@@ -71,6 +72,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static sonia.scm.repository.api.DiffFormat.NATIVE;
 
@@ -97,9 +99,9 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
   @Mock
   private LogCommandBuilder logCommandBuilder;
 
-  @Mock
+  @Mock(answer = Answers.RETURNS_SELF)
   private DiffCommandBuilder diffCommandBuilder;
-  @Mock
+  @Mock(answer = Answers.RETURNS_SELF)
   private DiffResultCommandBuilder diffResultCommandBuilder;
 
   @Mock
@@ -199,9 +201,6 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldGetDiffs() throws Exception {
-    when(diffCommandBuilder.setRevision("src_changeset_id")).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.setAncestorChangeset("target_changeset_id")).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.setFormat(NATIVE)).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.retrieveContent()).thenReturn(output -> {});
     MockHttpRequest request = MockHttpRequest
       .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff")
@@ -217,12 +216,13 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
     assertThat(response.getOutputHeaders().containsKey(expectedHeader)).isTrue();
     assertThat((String) response.getOutputHeaders().get("Content-Disposition").get(0))
       .contains(expectedValue);
+    verify(diffCommandBuilder).setRevision("src_changeset_id");
+    verify(diffCommandBuilder).setAncestorChangeset("target_changeset_id");
+    verify(diffCommandBuilder).setFormat(NATIVE);
   }
 
   @Test
   public void shouldGetParsedDiffs() throws Exception {
-    when(diffResultCommandBuilder.setRevision("src_changeset_id")).thenReturn(diffResultCommandBuilder);
-    when(diffResultCommandBuilder.setAncestorChangeset("target_changeset_id")).thenReturn(diffResultCommandBuilder);
     DiffResult diffResult = mock(DiffResult.class);
     when(diffResultCommandBuilder.getDiffResult()).thenReturn(diffResult);
     when(diffResultToDiffResultDtoMapper.mapForIncoming(REPOSITORY, diffResult, "src_changeset_id", "target_changeset_id"))
@@ -239,6 +239,42 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
       .isEqualTo(200);
     assertThat(response.getContentAsString())
       .contains("\"self\":{\"href\":\"http://self\"}");
+    verify(diffResultCommandBuilder).setRevision("src_changeset_id");
+    verify(diffResultCommandBuilder).setAncestorChangeset("target_changeset_id");
+  }
+
+  @Test
+  public void shouldGetParsedDiffsWithLimit() throws Exception {
+    DiffResult diffResult = mock(DiffResult.class);
+    when(diffResultCommandBuilder.getDiffResult()).thenReturn(diffResult);
+    when(diffResultToDiffResultDtoMapper.mapForIncoming(REPOSITORY, diffResult, "src_changeset_id", "target_changeset_id"))
+    .thenReturn(new DiffResultDto(Links.linkingTo().self("http://self").build()));
+
+    MockHttpRequest request = MockHttpRequest
+      .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff/parsed?limit=42")
+      .accept(VndMediaType.DIFF_PARSED);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    verify(diffResultCommandBuilder).setLimit(42);
+  }
+
+  @Test
+  public void shouldGetParsedDiffsWithOffset() throws Exception {
+    DiffResult diffResult = mock(DiffResult.class);
+    when(diffResultCommandBuilder.getDiffResult()).thenReturn(diffResult);
+    when(diffResultToDiffResultDtoMapper.mapForIncoming(REPOSITORY, diffResult, "src_changeset_id", "target_changeset_id"))
+    .thenReturn(new DiffResultDto(Links.linkingTo().self("http://self").build()));
+
+    MockHttpRequest request = MockHttpRequest
+      .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff/parsed?offset=42")
+      .accept(VndMediaType.DIFF_PARSED);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    verify(diffResultCommandBuilder).setOffset(42);
   }
 
   @Test
@@ -256,9 +292,6 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldGet404OnMissingRevision() throws Exception {
-    when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.setAncestorChangeset(anyString())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.retrieveContent()).thenThrow(new NotFoundException("Text", "x"));
 
     MockHttpRequest request = MockHttpRequest
@@ -273,9 +306,6 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldGet400OnCrlfInjection() throws Exception {
-    when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.setAncestorChangeset(anyString())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.retrieveContent()).thenThrow(new NotFoundException("Text", "x"));
     MockHttpRequest request = MockHttpRequest
       .get(INCOMING_DIFF_URL + "ny%0D%0ASet-cookie:%20Tamper=3079675143472450634/ny%0D%0ASet-cookie:%20Tamper=3079675143472450634/diff")
@@ -290,9 +320,6 @@ public class IncomingRootResourceTest extends RepositoryTestBase {
 
   @Test
   public void shouldGet400OnUnknownFormat() throws Exception {
-    when(diffCommandBuilder.setRevision(anyString())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.setAncestorChangeset(anyString())).thenReturn(diffCommandBuilder);
-    when(diffCommandBuilder.setFormat(any())).thenReturn(diffCommandBuilder);
     when(diffCommandBuilder.retrieveContent()).thenThrow(new NotFoundException("Test", "test"));
     MockHttpRequest request = MockHttpRequest
       .get(INCOMING_DIFF_URL + "src_changeset_id/target_changeset_id/diff?format=Unknown")

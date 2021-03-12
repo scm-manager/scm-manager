@@ -42,6 +42,7 @@ public class DiffResultDto extends HalRepresentation {
   }
 
   private List<FileDto> files;
+  private boolean partial;
 
   @Data
   @EqualsAndHashCode(callSuper = false)

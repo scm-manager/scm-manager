@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.OptionalInt;
 
+import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Link.linkBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
 
@@ -55,15 +56,48 @@ class DiffResultToDiffResultDtoMapper {
   }
 
   public DiffResultDto mapForIncoming(Repository repository, DiffResult result, String source, String target) {
-    DiffResultDto dto = new DiffResultDto(linkingTo().self(resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName(), source, target)).build());
+    String baseLink = resourceLinks.incoming().diffParsed(repository.getNamespace(), repository.getName(), source, target);
+    Links.Builder links = linkingTo().self(createSelfLink(result, baseLink));
+    appendNextChunkLinkIfNeeded(links, result, baseLink);
+    DiffResultDto dto = new DiffResultDto(links.build());
     setFiles(result, dto, repository, source);
     return dto;
   }
 
   public DiffResultDto mapForRevision(Repository repository, DiffResult result, String revision) {
-    DiffResultDto dto = new DiffResultDto(linkingTo().self(resourceLinks.diff().parsed(repository.getNamespace(), repository.getName(), revision)).build());
+    String baseLink = resourceLinks.diff().parsed(repository.getNamespace(), repository.getName(), revision);
+    Links.Builder links = linkingTo().self(createSelfLink(result, baseLink));
+    appendNextChunkLinkIfNeeded(links, result, baseLink);
+    DiffResultDto dto = new DiffResultDto(links.build());
     setFiles(result, dto, repository, revision);
     return dto;
+  }
+
+  private String createSelfLink(DiffResult result, String baseLink) {
+    if (result.getOffset() > 0 || result.getLimit().isPresent()) {
+      return createLinkWithLimitAndOffset(baseLink, result.getOffset(), result.getLimit().orElse(null));
+    } else {
+      return baseLink;
+    }
+  }
+
+  private void appendNextChunkLinkIfNeeded(Links.Builder links, DiffResult result, String baseLink) {
+    if (result.isPartial()) {
+      Optional<Integer> limit = result.getLimit();
+      if (limit.isPresent()) {
+        links.single(link("next", createLinkWithLimitAndOffset(baseLink, result.getOffset() + limit.get(), limit.get())));
+      } else {
+        throw new IllegalStateException("a result cannot be partial without a limit");
+      }
+    }
+  }
+
+  private String createLinkWithLimitAndOffset(String baseLink, int offset, Integer limit) {
+    if (limit == null) {
+      return String.format("%s?offset=%s", baseLink, offset);
+    } else {
+      return String.format("%s?offset=%s&limit=%s", baseLink, offset, limit);
+    }
   }
 
   private void setFiles(DiffResult result, DiffResultDto dto, Repository repository, String revision) {
@@ -72,6 +106,7 @@ class DiffResultToDiffResultDtoMapper {
       files.add(mapFile(file, repository, revision));
     }
     dto.setFiles(files);
+    dto.setPartial(result.isPartial());
   }
 
   private DiffResultDto.FileDto mapFile(DiffFile file, Repository repository, String revision) {
@@ -118,7 +153,6 @@ class DiffResultToDiffResultDtoMapper {
 
     dto.setOldPath(oldPath);
     dto.setOldRevision(file.getOldRevision());
-
 
     Optional<Language> language = ContentTypeResolver.resolve(path).getLanguage();
     language.ifPresent(value -> dto.setLanguage(ProgrammingLanguages.getValue(value)));

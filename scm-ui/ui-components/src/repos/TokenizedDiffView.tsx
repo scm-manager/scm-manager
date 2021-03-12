@@ -25,7 +25,7 @@ import React, { FC } from "react";
 import styled from "styled-components";
 // @ts-ignore we have no typings for react-diff-view
 import { Diff, useTokenizeWorker } from "react-diff-view";
-import { File } from "./DiffTypes";
+import { FileDiff } from "@scm-manager/ui-types";
 import { determineLanguage } from "../languages";
 
 // @ts-ignore no types for css modules
@@ -65,7 +65,7 @@ const tokenize = new Worker("./Tokenize.worker.ts", { name: "tokenizer", type: "
 tokenize.postMessage({ theme });
 
 type Props = {
-  file: File;
+  file: FileDiff;
   viewType: "split" | "unified";
   className?: string;
 };

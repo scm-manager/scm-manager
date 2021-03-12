@@ -37,7 +37,7 @@ import sonia.scm.repository.api.DiffFormat;
  * @since 1.17
  */
 @EqualsAndHashCode(callSuper = true)
-public final class DiffCommandRequest extends FileBaseCommandRequest
+public class DiffCommandRequest extends FileBaseCommandRequest
   implements Validateable {
 
   private static final long serialVersionUID = 4026911212676859626L;

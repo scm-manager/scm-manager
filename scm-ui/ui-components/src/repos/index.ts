@@ -25,11 +25,6 @@
 import * as diffs from "./diffs";
 
 import {
-  File,
-  FileChangeType,
-  Hunk,
-  Change,
-  ChangeType,
   BaseContext,
   AnnotationFactory,
   AnnotationFactoryContext,
@@ -37,6 +32,7 @@ import {
   DiffEventContext
 } from "./DiffTypes";
 
+import { FileDiff as File, FileChangeType, Hunk, Change, ChangeType } from "@scm-manager/ui-types";
 export { diffs };
 
 export * from "./annotate";

@@ -23,13 +23,12 @@
  */
 
 import { apiClient } from "@scm-manager/ui-components";
-import { Change, File, Hunk } from "./DiffTypes";
-import { Link } from "@scm-manager/ui-types";
+import { Change, FileDiff, Hunk, Link } from "@scm-manager/ui-types";
 
 class DiffExpander {
-  file: File;
+  file: FileDiff;
 
-  constructor(file: File) {
+  constructor(file: FileDiff) {
     this.file = file;
   }
 
@@ -73,7 +72,7 @@ class DiffExpander {
     }
   };
 
-  expandHead: (n: number, count: number) => Promise<File> = (n, count) => {
+  expandHead: (n: number, count: number) => Promise<FileDiff> = (n, count) => {
     const start = this.minLineNumber(n) - Math.min(count, this.computeMaxExpandHeadRange(n)) - 1;
     const end = this.minLineNumber(n) - 1;
     return this.loadLines(start, end).then(lines => {
@@ -90,7 +89,7 @@ class DiffExpander {
     });
   };
 
-  expandBottom: (n: number, count: number) => Promise<File> = (n, count) => {
+  expandBottom: (n: number, count: number) => Promise<FileDiff> = (n, count) => {
     const maxExpandBottomRange = this.computeMaxExpandBottomRange(n);
     const start = this.maxLineNumber(n);
     const end =
@@ -191,8 +190,8 @@ export type ExpandableHunk = {
   hunk: Hunk;
   maxExpandHeadRange: number;
   maxExpandBottomRange: number;
-  expandHead: (count: number) => Promise<File>;
-  expandBottom: (count: number) => Promise<File>;
+  expandHead: (count: number) => Promise<FileDiff>;
+  expandBottom: (count: number) => Promise<FileDiff>;
 };
 
 export default DiffExpander;

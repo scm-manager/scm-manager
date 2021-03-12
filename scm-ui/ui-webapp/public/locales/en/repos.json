@@ -203,7 +203,9 @@
     "errorSubtitle": "Could not fetch changesets",
     "noChangesets": "No changesets found for this branch. The commits could have been removed.",
     "branchSelectorLabel": "Branches",
-    "collapseDiffs": "Collapse"
+    "collapseDiffs": "Collapse",
+    "moreDiffsAvailable": "There are more diffs available",
+    "loadMore": "Load more"
   },
   "changeset": {
     "label": "Changeset",

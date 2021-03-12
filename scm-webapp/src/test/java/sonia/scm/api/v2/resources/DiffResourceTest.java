@@ -63,6 +63,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.Silent.class)
@@ -151,6 +152,38 @@ public class DiffResourceTest extends RepositoryTestBase {
       .isEqualTo(200);
     assertThat(response.getContentAsString())
       .contains("\"self\":{\"href\":\"http://self\"}");
+  }
+
+  @Test
+  public void shouldGetParsedDiffsWithOffset() throws Exception {
+    DiffResult diffResult = mock(DiffResult.class);
+    when(diffResultCommandBuilder.getDiffResult()).thenReturn(diffResult);
+    when(diffResultToDiffResultDtoMapper.mapForRevision(REPOSITORY, diffResult, "revision"))
+      .thenReturn(new DiffResultDto(Links.linkingTo().self("http://self").build()));
+    MockHttpRequest request = MockHttpRequest
+      .get(DIFF_URL + "revision/parsed?offset=42")
+      .accept(VndMediaType.DIFF_PARSED);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    verify(diffResultCommandBuilder).setOffset(42);
+  }
+
+  @Test
+  public void shouldGetParsedDiffsWithLimit() throws Exception {
+    DiffResult diffResult = mock(DiffResult.class);
+    when(diffResultCommandBuilder.getDiffResult()).thenReturn(diffResult);
+    when(diffResultToDiffResultDtoMapper.mapForRevision(REPOSITORY, diffResult, "revision"))
+      .thenReturn(new DiffResultDto(Links.linkingTo().self("http://self").build()));
+    MockHttpRequest request = MockHttpRequest
+      .get(DIFF_URL + "revision/parsed?limit=42")
+      .accept(VndMediaType.DIFF_PARSED);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    verify(diffResultCommandBuilder).setLimit(42);
   }
 
   @Test

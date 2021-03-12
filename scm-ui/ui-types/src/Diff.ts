@@ -22,27 +22,52 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+import { HalRepresentation, Links } from "./hal";
 
-import java.util.Optional;
+export type FileChangeType = "add" | "modify" | "delete" | "copy" | "rename";
 
-import static java.util.Optional.empty;
+export type Diff = HalRepresentation & {
+  files: FileDiff[];
+  partial: boolean;
+};
 
-public interface DiffResult extends Iterable<DiffFile> {
+export type FileDiff = {
+  hunks?: Hunk[];
+  newEndingNewLine: boolean;
+  newMode?: string;
+  newPath: string;
+  newRevision?: string;
+  oldEndingNewLine: boolean;
+  oldMode?: string;
+  oldPath: string;
+  oldRevision?: string;
+  type: FileChangeType;
+  language?: string;
+  // TODO does this property exists?
+  isBinary?: boolean;
+  _links?: Links;
+};
 
-  String getOldRevision();
+export type Hunk = {
+  changes: Change[];
+  content: string;
+  oldStart?: number;
+  newStart?: number;
+  oldLines?: number;
+  newLines?: number;
+  fullyExpanded?: boolean;
+  expansion?: boolean;
+};
 
-  String getNewRevision();
+export type ChangeType = "insert" | "delete" | "normal" | "conflict";
 
-  default boolean isPartial() {
-    return false;
-  }
-
-  default int getOffset() {
-    return 0;
-  }
-
-  default Optional<Integer> getLimit() {
-    return empty();
-  }
-}
+export type Change = {
+  content: string;
+  isNormal?: boolean;
+  isInsert?: boolean;
+  isDelete?: boolean;
+  lineNumber?: number;
+  newLineNumber?: number;
+  oldLineNumber?: number;
+  type: ChangeType;
+};

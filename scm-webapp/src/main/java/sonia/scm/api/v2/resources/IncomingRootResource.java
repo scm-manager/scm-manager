@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
@@ -43,6 +43,7 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.web.VndMediaType;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.Pattern;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
@@ -240,15 +241,19 @@ public class IncomingRootResource {
       schema = @Schema(implementation = ErrorDto.class)
     ))
   public Response incomingDiffParsed(@PathParam("namespace") String namespace,
-                            @PathParam("name") String name,
-                            @PathParam("source") String source,
-                            @PathParam("target") String target) throws IOException {
+                                     @PathParam("name") String name,
+                                     @PathParam("source") String source,
+                                     @PathParam("target") String target,
+                                     @QueryParam("limit") @Min(1) Integer limit,
+                                     @QueryParam("offset") @Min(0) Integer offset) throws IOException {
     HttpUtil.checkForCRLFInjection(source);
     HttpUtil.checkForCRLFInjection(target);
     try (RepositoryService repositoryService = serviceFactory.create(new NamespaceAndName(namespace, name))) {
       DiffResult diffResult = repositoryService.getDiffResultCommand()
         .setRevision(source)
         .setAncestorChangeset(target)
+        .setLimit(limit)
+        .setOffset(offset)
         .getDiffResult();
       return Response.ok(parsedDiffMapper.mapForIncoming(repositoryService.getRepository(), diffResult, source, target)).build();
     }

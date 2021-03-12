@@ -22,27 +22,17 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
 
-import java.util.Optional;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
-import static java.util.Optional.empty;
+@Getter
+@Setter
+@EqualsAndHashCode(callSuper = true)
+public class DiffResultCommandRequest extends DiffCommandRequest {
 
-public interface DiffResult extends Iterable<DiffFile> {
-
-  String getOldRevision();
-
-  String getNewRevision();
-
-  default boolean isPartial() {
-    return false;
-  }
-
-  default int getOffset() {
-    return 0;
-  }
-
-  default Optional<Integer> getLimit() {
-    return empty();
-  }
+  private Integer offset;
+  private Integer limit;
 }

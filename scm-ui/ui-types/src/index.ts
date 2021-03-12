@@ -64,3 +64,5 @@ export * from "./NamespaceStrategies";
 export * from "./LoginInfo";
 
 export * from "./Admin";
+
+export * from "./Diff";

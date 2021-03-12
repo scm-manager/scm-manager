@@ -21,93 +21,72 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { apiClient, NotFoundError } from "@scm-manager/ui-api";
+import React, { FC } from "react";
+import { NotFoundError, useDiff } from "@scm-manager/ui-api";
 import ErrorNotification from "../ErrorNotification";
-// @ts-ignore
-import parser from "gitdiff-parser";
+import Notification from "../Notification";
 
 import Loading from "../Loading";
 import Diff from "./Diff";
-import { DiffObjectProps, File } from "./DiffTypes";
-import { Notification } from "../index";
-import { withTranslation, WithTranslation } from "react-i18next";
+import { DiffObjectProps } from "./DiffTypes";
+import { useTranslation } from "react-i18next";
+import Button from "../buttons/Button";
+import styled from "styled-components";
 
-type Props = WithTranslation &
-  DiffObjectProps & {
-    url: string;
-  };
-
-type State = {
-  diff?: File[];
-  loading: boolean;
-  error?: Error;
+type Props = DiffObjectProps & {
+  url: string;
+  limit?: number;
 };
 
-class LoadingDiff extends React.Component<Props, State> {
-  static defaultProps = {
-    sideBySide: false
-  };
+type NotificationProps = {
+  fetchNextPage: () => void;
+  isFetchingNextPage: boolean;
+};
 
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      loading: true
-    };
-  }
+const StyledNotification = styled(Notification)`
+  margin-top: 1.5rem;
+`;
 
-  componentDidMount() {
-    this.fetchDiff();
-  }
+const PartialNotification: FC<NotificationProps> = ({ fetchNextPage, isFetchingNextPage }) => {
+  const [t] = useTranslation("repos");
+  return (
+    <StyledNotification type="info">
+      <div className="columns is-centered">
+        <div className="column">{t("changesets.moreDiffsAvailable")}</div>
+        <Button label={t("changesets.loadMore")} action={fetchNextPage} loading={isFetchingNextPage} />
+      </div>
+    </StyledNotification>
+  );
+};
 
-  componentDidUpdate(prevProps: Props) {
-    if (prevProps.url !== this.props.url) {
-      this.fetchDiff();
+const LoadingDiff: FC<Props> = ({ url, limit, ...props }) => {
+  const { error, isLoading, data, fetchNextPage, isFetchingNextPage } = useDiff(url, { limit });
+  const [t] = useTranslation("repos");
+
+  if (error) {
+    if (error instanceof NotFoundError) {
+      return <Notification type="info">{t("changesets.noChangesets")}</Notification>;
     }
+    return <ErrorNotification error={error} />;
+  } else if (isLoading) {
+    return <Loading />;
+  } else if (!data?.files) {
+    return null;
+  } else {
+    return (
+      <>
+        <Diff diff={data.files} {...props} />
+        {data.partial ? (
+          <PartialNotification fetchNextPage={fetchNextPage} isFetchingNextPage={isFetchingNextPage} />
+        ) : null}
+      </>
+    );
   }
+};
 
-  fetchDiff = () => {
-    const { url } = this.props;
-    this.setState({ loading: true });
-    apiClient
-      .get(url)
-      .then(response => {
-        const contentType = response.headers.get("Content-Type");
-        if (contentType && contentType.toLowerCase() === "application/vnd.scmm-diffparsed+json;v=2") {
-          return response.json().then(data => data.files);
-        } else {
-          return response.text().then(parser.parse);
-        }
-      })
-      .then((diff: File[]) => {
-        this.setState({
-          loading: false,
-          diff: diff
-        });
-      })
-      .catch((error: Error) => {
-        this.setState({
-          loading: false,
-          error
-        });
-      });
-  };
+LoadingDiff.defaultProps = {
+  limit: 25,
+  sideBySide: false
+};
 
-  render() {
-    const { diff, loading, error } = this.state;
-    if (error) {
-      if (error instanceof NotFoundError) {
-        return <Notification type="info">{this.props.t("changesets.noChangesets")}</Notification>;
-      }
-      return <ErrorNotification error={error} />;
-    } else if (loading) {
-      return <Loading />;
-    } else if (!diff) {
-      return null;
-    } else {
-      return <Diff diff={diff} {...this.props} />;
-    }
-  }
-}
-
-export default withTranslation("repos")(LoadingDiff);
+export default LoadingDiff;

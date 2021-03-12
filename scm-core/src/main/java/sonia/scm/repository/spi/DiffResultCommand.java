@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import sonia.scm.repository.api.DiffResult;
@@ -30,4 +30,8 @@ import java.io.IOException;
 
 public interface DiffResultCommand {
   DiffResult getDiffResult(DiffCommandRequest request) throws IOException;
+
+  default DiffResult getDiffResult(DiffResultCommandRequest request) throws IOException {
+    return getDiffResult((DiffCommandRequest) request);
+  }
 }

@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-import { File, FileChangeType, Hunk } from "./DiffTypes";
+import { FileChangeType, Hunk, FileDiff } from "@scm-manager/ui-types";
 import { getPath, createHunkIdentifier, createHunkIdentifierFromContext, escapeWhitespace } from "./diffs";
 
 describe("tests for diff util functions", () => {
-  const file = (type: FileChangeType, oldPath: string, newPath: string): File => {
+  const file = (type: FileChangeType, oldPath: string, newPath: string): FileDiff => {
     return {
       hunks: [],
       type: type,
