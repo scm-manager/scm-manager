@@ -1,2 +1,0 @@
-- type: added
-  description: Add repository-specific non-fast-forward disallowed option ([#1579](https://github.com/scm-manager/scm-manager/issues/1579))

@@ -5,6 +5,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.15.0] - 2021-03-12
+### Added
+- Create api for markdown ast plugins ([#1578](https://github.com/scm-manager/scm-manager/pull/1578))
+- Partial diff ([#1581](https://github.com/scm-manager/scm-manager/issues/1581))
+- Added filepath search ([#1568](https://github.com/scm-manager/scm-manager/issues/1568))
+- API for metrics ([#1576](https://github.com/scm-manager/scm-manager/issues/1576))
+- Add repository-specific non-fast-forward disallowed option ([#1579](https://github.com/scm-manager/scm-manager/issues/1579))
+
+### Fixed
+- Fix wrapping of title and actions in source view ([#1569](https://github.com/scm-manager/scm-manager/issues/1569))
+- Split SetupContextListener logic into new Privileged Startup API ([#1573](https://github.com/scm-manager/scm-manager/pull/1573))
+- Mark configuration files in debian package ([#1574](https://github.com/scm-manager/scm-manager/issues/1574))
+
 ## [2.14.1] - 2021-03-03
 ### Fixed
 - Prevent breadcrumb overflow and shrink large elements ([#1563](https://github.com/scm-manager/scm-manager/pull/1563))
@@ -530,3 +543,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.13.0]: https://www.scm-manager.org/download/2.13.0
 [2.14.0]: https://www.scm-manager.org/download/2.14.0
 [2.14.1]: https://www.scm-manager.org/download/2.14.1
+[2.15.0]: https://www.scm-manager.org/download/2.15.0
