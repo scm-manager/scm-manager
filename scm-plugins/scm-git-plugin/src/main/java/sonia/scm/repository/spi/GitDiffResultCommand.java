@@ -58,8 +58,7 @@ public class GitDiffResultCommand extends AbstractGitCommand implements DiffResu
   public DiffResult getDiffResult(DiffResultCommandRequest request) throws IOException {
     org.eclipse.jgit.lib.Repository repository = open();
     int offset = request.getOffset() == null ? 0 : request.getOffset();
-    Integer limit = request.getLimit() == null ? null : request.getLimit();
-    return new GitDiffResult(repository, Differ.diff(repository, request), offset, limit);
+    return new GitDiffResult(repository, Differ.diff(repository, request), offset, request.getLimit());
   }
 
   private class GitDiffResult implements DiffResult {
