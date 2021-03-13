@@ -27,7 +27,7 @@ package sonia.scm.repository.spi.javahg;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.aragost.javahg.Repository;
-import sonia.scm.repository.HgRepositoryConfig;
+import sonia.scm.repository.HgConfig;
 
 /**
  *
@@ -44,7 +44,7 @@ public class HgOutgoingChangesetCommand
    * @param repository
    * @param config
    */
-  public HgOutgoingChangesetCommand(Repository repository, HgRepositoryConfig config)
+  public HgOutgoingChangesetCommand(Repository repository, HgConfig config)
   {
     super(repository, config);
   }
@@ -61,7 +61,7 @@ public class HgOutgoingChangesetCommand
    * @return
    */
   public static HgOutgoingChangesetCommand on(Repository repository,
-    HgRepositoryConfig config)
+    HgConfig config)
   {
     return new HgOutgoingChangesetCommand(repository, config);
   }

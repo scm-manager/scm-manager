@@ -35,7 +35,7 @@ import com.aragost.javahg.internals.Utils;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Lists;
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.HgRepositoryConfig;
+import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.Modification;
 import sonia.scm.repository.Person;
 
@@ -98,7 +98,7 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
    * @param repository
    * @param config
    */
-  AbstractChangesetCommand(Repository repository, HgRepositoryConfig config)
+  AbstractChangesetCommand(Repository repository, HgConfig config)
   {
     super(repository);
     this.config = config;
@@ -326,5 +326,5 @@ public abstract class AbstractChangesetCommand extends AbstractCommand
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private HgRepositoryConfig config;
+  private HgConfig config;
 }

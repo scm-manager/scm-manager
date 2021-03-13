@@ -27,7 +27,7 @@ package sonia.scm.repository.spi;
 import com.google.inject.Inject;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.plugin.Extension;
-import sonia.scm.repository.HgRepositoryConfigResolver;
+import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
@@ -39,14 +39,14 @@ import sonia.scm.repository.Repository;
 public class HgRepositoryServiceResolver implements RepositoryServiceResolver {
 
   private final HgRepositoryHandler handler;
-  private final HgRepositoryConfigResolver configResolver;
+  private final HgConfigResolver configResolver;
   private final HgRepositoryFactory factory;
   private final ScmEventBus eventBus;
   private final HgRepositoryHookEventFactory eventFactory;
 
   @Inject
   public HgRepositoryServiceResolver(HgRepositoryHandler handler,
-                                     HgRepositoryConfigResolver configResolver,
+                                     HgConfigResolver configResolver,
                                      HgRepositoryFactory factory,
                                      ScmEventBus eventBus,
                                      HgRepositoryHookEventFactory eventFactory

@@ -42,7 +42,6 @@ import sonia.scm.security.CipherUtil;
 import sonia.scm.security.Xsrf;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
@@ -60,7 +59,7 @@ class DefaultHgEnvironmentBuilderTest {
   private AccessTokenBuilderFactory accessTokenBuilderFactory;
 
   @Mock
-  private HgRepositoryConfigResolver repositoryConfigResolver;
+  private HgConfigResolver repositoryConfigResolver;
 
   @Mock
   private HookEnvironment hookEnvironment;
@@ -72,7 +71,7 @@ class DefaultHgEnvironmentBuilderTest {
   private DefaultHgEnvironmentBuilder builder;
 
   @Mock
-  private HgRepositoryConfig config;
+  private HgConfig config;
 
   private Path directory;
 

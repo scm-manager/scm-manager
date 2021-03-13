@@ -60,7 +60,7 @@ public class DefaultHgEnvironmentBuilder implements HgEnvironmentBuilder {
   static final String ENV_TRANSACTION_ID = "SCM_TRANSACTION_ID";
 
   private final AccessTokenBuilderFactory accessTokenBuilderFactory;
-  private final HgRepositoryConfigResolver configResolver;
+  private final HgConfigResolver configResolver;
   private final HookEnvironment hookEnvironment;
   private final HookServer server;
 
@@ -68,7 +68,7 @@ public class DefaultHgEnvironmentBuilder implements HgEnvironmentBuilder {
 
   @Inject
   public DefaultHgEnvironmentBuilder(
-    AccessTokenBuilderFactory accessTokenBuilderFactory, HgRepositoryConfigResolver configResolver,
+    AccessTokenBuilderFactory accessTokenBuilderFactory, HgConfigResolver configResolver,
     HookEnvironment hookEnvironment, HookServer server
   ) {
     this.accessTokenBuilderFactory = accessTokenBuilderFactory;
@@ -94,7 +94,7 @@ public class DefaultHgEnvironmentBuilder implements HgEnvironmentBuilder {
   }
 
   private void read(ImmutableMap.Builder<String, String> env, Repository repository) {
-    HgRepositoryConfig config = configResolver.resolve(repository);
+    HgConfig config = configResolver.resolve(repository);
     File directory = config.getDirectory();
 
     env.put(ENV_REPOSITORY_NAME, repository.getNamespace() + "/" + repository.getName());

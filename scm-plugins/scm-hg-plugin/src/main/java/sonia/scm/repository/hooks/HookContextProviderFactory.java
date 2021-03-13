@@ -25,7 +25,7 @@
 package sonia.scm.repository.hooks;
 
 import sonia.scm.NotFoundException;
-import sonia.scm.repository.HgRepositoryConfigResolver;
+import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
@@ -36,11 +36,11 @@ import javax.inject.Inject;
 public class HookContextProviderFactory {
 
   private final RepositoryManager repositoryManager;
-  private final HgRepositoryConfigResolver configResolver;
+  private final HgConfigResolver configResolver;
   private final HgRepositoryFactory repositoryFactory;
 
   @Inject
-  public HookContextProviderFactory(RepositoryManager repositoryManager, HgRepositoryConfigResolver configResolver, HgRepositoryFactory repositoryFactory) {
+  public HookContextProviderFactory(RepositoryManager repositoryManager, HgConfigResolver configResolver, HgRepositoryFactory repositoryFactory) {
     this.repositoryManager = repositoryManager;
     this.configResolver = configResolver;
     this.repositoryFactory = repositoryFactory;

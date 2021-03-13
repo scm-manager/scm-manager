@@ -30,7 +30,7 @@ import com.aragost.javahg.internals.Utils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.HgRepositoryConfig;
+import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.Modification;
 
 import java.io.IOException;
@@ -44,12 +44,12 @@ public class HgLogChangesetCommand extends AbstractChangesetCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgLogChangesetCommand.class);
 
-  private HgLogChangesetCommand(Repository repository, HgRepositoryConfig config) {
+  private HgLogChangesetCommand(Repository repository, HgConfig config) {
     super(repository, config);
   }
 
 
-  public static HgLogChangesetCommand on(Repository repository, HgRepositoryConfig config) {
+  public static HgLogChangesetCommand on(Repository repository, HgConfig config) {
     return new HgLogChangesetCommand(repository, config);
   }
 

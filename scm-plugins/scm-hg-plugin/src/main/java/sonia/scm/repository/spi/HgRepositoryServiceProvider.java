@@ -27,7 +27,7 @@ package sonia.scm.repository.spi;
 import com.google.common.io.Closeables;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Feature;
-import sonia.scm.repository.HgRepositoryConfigResolver;
+import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
@@ -71,7 +71,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
   private final ScmEventBus eventBus;
 
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
-                              HgRepositoryConfigResolver configResolver,
+                              HgConfigResolver configResolver,
                               HgRepositoryFactory factory,
                               HgRepositoryHookEventFactory eventFactory,
                               ScmEventBus eventBus,

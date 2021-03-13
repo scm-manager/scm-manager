@@ -30,7 +30,7 @@ import com.aragost.javahg.commands.RemoveCommand;
 import com.aragost.javahg.commands.RenameCommand;
 import org.junit.Before;
 import org.junit.Test;
-import sonia.scm.repository.HgRepositoryConfigResolver;
+import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.Modifications;
 
@@ -45,7 +45,7 @@ public class HgModificationsCommandTest extends IncomingOutgoingTestBase {
 
   @Before
   public void init() {
-    HgRepositoryConfigResolver configResolver = new HgRepositoryConfigResolver(handler);
+    HgConfigResolver configResolver = new HgConfigResolver(handler);
     HgCommandContext outgoingContext = new HgCommandContext(configResolver, HgTestUtil.createFactory(handler, outgoingDirectory), outgoingRepository);
     outgoingModificationsCommand = new HgModificationsCommand(outgoingContext);
   }

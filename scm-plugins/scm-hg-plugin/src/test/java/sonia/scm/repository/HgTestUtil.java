@@ -91,7 +91,7 @@ public final class HgTestUtil {
   }
 
   public static HgRepositoryFactory createFactory(HgRepositoryHandler handler, File directory) {
-    HgRepositoryConfigResolver resolver = new HgRepositoryConfigResolver(handler, repository -> directory);
+    HgConfigResolver resolver = new HgConfigResolver(handler, repository -> directory);
     return new HgRepositoryFactory(
       resolver, new HookEnvironment(), new EmptyHgEnvironmentBuilder()
     );

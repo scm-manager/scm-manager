@@ -31,13 +31,13 @@ import javax.inject.Inject;
 import java.io.File;
 import java.util.function.Function;
 
-public class HgRepositoryConfigResolver {
+public class HgConfigResolver {
 
   private final HgRepositoryHandler repositoryHandler;
   private final Function<Repository, File> directoryResolver;
 
   @Inject
-  public HgRepositoryConfigResolver(HgRepositoryHandler repositoryHandler) {
+  public HgConfigResolver(HgRepositoryHandler repositoryHandler) {
     this(
       repositoryHandler,
       (Repository repository) -> repositoryHandler.getDirectory(repository.getId())
@@ -45,7 +45,7 @@ public class HgRepositoryConfigResolver {
   }
 
   @VisibleForTesting
-  public HgRepositoryConfigResolver(HgRepositoryHandler repositoryHandler, Function<Repository, File> directoryResolver) {
+  public HgConfigResolver(HgRepositoryHandler repositoryHandler, Function<Repository, File> directoryResolver) {
     this.repositoryHandler = repositoryHandler;
     this.directoryResolver = directoryResolver;
   }
@@ -54,9 +54,9 @@ public class HgRepositoryConfigResolver {
     return repositoryHandler.isConfigured();
   }
 
-  public HgRepositoryConfig resolve(Repository repository) {
+  public HgConfig resolve(Repository repository) {
     HgGlobalConfig config = repositoryHandler.getConfig();
-    return new HgRepositoryConfig(
+    return new HgConfig(
       config.getHgBinary(),
       config.getEncoding(),
       config.isShowRevisionInId(),

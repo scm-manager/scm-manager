@@ -30,7 +30,7 @@ import com.aragost.javahg.Repository;
 import com.aragost.javahg.internals.HgInputStream;
 
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.HgRepositoryConfig;
+import sonia.scm.repository.HgConfig;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -52,7 +52,7 @@ public abstract class HgIncomingOutgoingChangesetCommand
    * @param repository
    * @param config
    */
-  public HgIncomingOutgoingChangesetCommand(Repository repository, HgRepositoryConfig config) {
+  public HgIncomingOutgoingChangesetCommand(Repository repository, HgConfig config) {
     super(repository, config);
   }
 

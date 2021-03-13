@@ -29,7 +29,7 @@ package sonia.scm.repository.spi;
 import com.aragost.javahg.Changeset;
 import org.junit.Test;
 import sonia.scm.repository.ChangesetPagingResult;
-import sonia.scm.repository.HgRepositoryConfigResolver;
+import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.InternalRepositoryException;
 
@@ -112,7 +112,7 @@ public class HgIncomingCommandTest extends IncomingOutgoingTestBase
   }
 
   private HgIncomingCommand createIncomingCommand() {
-    HgRepositoryConfigResolver resolver = new HgRepositoryConfigResolver(handler);
+    HgConfigResolver resolver = new HgConfigResolver(handler);
     return new HgIncomingCommand(
       new HgCommandContext(resolver, HgTestUtil.createFactory(handler, incomingDirectory), incomingRepository),
       handler

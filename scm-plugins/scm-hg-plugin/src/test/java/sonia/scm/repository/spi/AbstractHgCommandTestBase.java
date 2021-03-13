@@ -29,17 +29,15 @@ package sonia.scm.repository.spi;
 import org.junit.After;
 import org.junit.Before;
 
-import sonia.scm.repository.HgRepositoryConfigResolver;
+import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.repository.RepositoryTestData;
-import sonia.scm.repository.hooks.HookEnvironment;
 import sonia.scm.util.MockUtil;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -67,7 +65,7 @@ public class AbstractHgCommandTestBase extends ZippedRepositoryTestBase
     this.handler = HgTestUtil.createHandler(tempFolder.newFolder());
     HgTestUtil.checkForSkip(handler);
 
-    HgRepositoryConfigResolver resolver = new HgRepositoryConfigResolver(handler);
+    HgConfigResolver resolver = new HgConfigResolver(handler);
 
     HgRepositoryFactory factory = HgTestUtil.createFactory(handler, repositoryDirectory);
     cmdContext = new HgCommandContext(resolver, factory, RepositoryTestData.createHeartOfGold());

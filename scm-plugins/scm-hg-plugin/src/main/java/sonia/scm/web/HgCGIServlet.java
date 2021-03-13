@@ -33,8 +33,8 @@ import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.HgEnvironmentBuilder;
 import sonia.scm.repository.HgExtensions;
-import sonia.scm.repository.HgRepositoryConfig;
-import sonia.scm.repository.HgRepositoryConfigResolver;
+import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
@@ -67,7 +67,7 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
     LoggerFactory.getLogger(HgCGIServlet.class);
 
   private final CGIExecutorFactory cgiExecutorFactory;
-  private final HgRepositoryConfigResolver configResolver;
+  private final HgConfigResolver configResolver;
   private final File extension;
   private final ScmConfiguration configuration;
   private final HgCGIExceptionHandler exceptionHandler;
@@ -76,7 +76,7 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
 
   @Inject
   public HgCGIServlet(CGIExecutorFactory cgiExecutorFactory,
-                      HgRepositoryConfigResolver configResolver,
+                      HgConfigResolver configResolver,
                       ScmConfiguration configuration,
                       RepositoryRequestListenerUtil requestListenerUtil,
                       HgEnvironmentBuilder environmentBuilder)
@@ -144,7 +144,7 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
     EnvList env = executor.getEnvironment();
     environmentBuilder.write(repository).forEach(env::set);
 
-    HgRepositoryConfig config = configResolver.resolve(repository);
+    HgConfig config = configResolver.resolve(repository);
     executor.setWorkDirectory(config.getDirectory());
 
     executor.setArgs(createArgs(config));
@@ -152,7 +152,7 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
   }
 
   @Nonnull
-  private List<String> createArgs(HgRepositoryConfig config) {
+  private List<String> createArgs(HgConfig config) {
     List<String> args = new ArrayList<>();
     config(args, "extensions.cgiserve", extension.getAbsolutePath());
 

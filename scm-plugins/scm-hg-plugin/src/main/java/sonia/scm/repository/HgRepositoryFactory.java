@@ -43,12 +43,12 @@ public class HgRepositoryFactory {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgRepositoryFactory.class);
 
-  private final HgRepositoryConfigResolver configResolver;
+  private final HgConfigResolver configResolver;
   private final HookEnvironment hookEnvironment;
   private final HgEnvironmentBuilder environmentBuilder;
 
   @Inject
-  public HgRepositoryFactory(HgRepositoryConfigResolver configResolver, HookEnvironment hookEnvironment, HgEnvironmentBuilder environmentBuilder) {
+  public HgRepositoryFactory(HgConfigResolver configResolver, HookEnvironment hookEnvironment, HgEnvironmentBuilder environmentBuilder) {
     this.configResolver = configResolver;
     this.hookEnvironment = hookEnvironment;
     this.environmentBuilder = environmentBuilder;
@@ -63,7 +63,7 @@ public class HgRepositoryFactory {
   }
 
   private com.aragost.javahg.Repository open(Repository repository, Map<String, String> environment) {
-    HgRepositoryConfig config = configResolver.resolve(repository);
+    HgConfig config = configResolver.resolve(repository);
     File directory = config.getDirectory();
 
     RepositoryConfiguration repoConfiguration = RepositoryConfiguration.DEFAULT;
@@ -83,7 +83,7 @@ public class HgRepositoryFactory {
     return com.aragost.javahg.Repository.open(repoConfiguration, directory);
   }
 
-  private Charset encoding(HgRepositoryConfig config) {
+  private Charset encoding(HgConfig config) {
     String charset = config.getEncoding();
     try {
       return Charset.forName(charset);

@@ -27,8 +27,8 @@ package sonia.scm.repository.spi;
 import com.aragost.javahg.Repository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.HgRepositoryConfig;
-import sonia.scm.repository.HgRepositoryConfigResolver;
+import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.spi.javahg.HgLogChangesetCommand;
 import sonia.scm.web.HgUtil;
@@ -41,14 +41,14 @@ public class HgHookChangesetProvider implements HookChangesetProvider {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgHookChangesetProvider.class);
 
-  private final HgRepositoryConfigResolver configResolver;
+  private final HgConfigResolver configResolver;
   private final HgRepositoryFactory factory;
   private final sonia.scm.repository.Repository scmRepository;
   private final String startRev;
 
   private HookChangesetResponse response;
 
-  public HgHookChangesetProvider(HgRepositoryConfigResolver configResolver, HgRepositoryFactory factory, sonia.scm.repository.Repository scmRepository, String startRev) {
+  public HgHookChangesetProvider(HgConfigResolver configResolver, HgRepositoryFactory factory, sonia.scm.repository.Repository scmRepository, String startRev) {
     this.configResolver = configResolver;
     this.factory = factory;
     this.scmRepository = scmRepository;
@@ -63,7 +63,7 @@ public class HgHookChangesetProvider implements HookChangesetProvider {
       try {
         repository = factory.openForRead(scmRepository);
 
-        HgRepositoryConfig config = configResolver.resolve(scmRepository);
+        HgConfig config = configResolver.resolve(scmRepository);
         HgLogChangesetCommand cmd = HgLogChangesetCommand.on(repository, config);
 
         response = new HookChangesetResponse(

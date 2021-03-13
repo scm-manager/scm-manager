@@ -30,7 +30,7 @@ import lombok.Value;
 import java.io.File;
 
 @Value
-public class HgRepositoryConfig {
+public class HgConfig {
 
   String hgBinary;
   String encoding;
