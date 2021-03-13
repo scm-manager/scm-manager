@@ -24,29 +24,14 @@
 
 package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+interface UpdateHgGlobalConfigDto {
+  boolean isDisabled();
 
-@Getter
-@Setter
-@NoArgsConstructor
-@SuppressWarnings("java:S2160") // we don't need equals for dto
-public class HgConfigDto extends HalRepresentation implements UpdateHgConfigDto {
+  String getHgBinary();
 
+  String getEncoding();
 
-  private boolean disabled;
+  boolean isShowRevisionInId();
 
-  private String encoding;
-  private String hgBinary;
-  private boolean showRevisionInId;
-  private boolean enableHttpPostArgs;
-
-  @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
-  }
+  boolean isEnableHttpPostArgs();
 }

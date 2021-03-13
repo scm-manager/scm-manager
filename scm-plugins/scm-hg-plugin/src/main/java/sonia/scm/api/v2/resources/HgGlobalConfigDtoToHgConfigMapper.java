@@ -24,42 +24,12 @@
 
 package sonia.scm.api.v2.resources;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mapstruct.Mapper;
 import sonia.scm.repository.HgGlobalConfig;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-
-@RunWith(MockitoJUnitRunner.class)
-public class HgConfigDtoToHgGlobalConfigMapperTest {
-
-  @InjectMocks
-  private HgConfigDtoToHgConfigMapperImpl mapper;
-
-  @Test
-  public void shouldMapFields() {
-    HgConfigDto dto = createDefaultDto();
-    HgGlobalConfig config = mapper.map(dto);
-
-    assertTrue(config.isDisabled());
-
-    assertEquals("ABC", config.getEncoding());
-    assertEquals("/etc/hg", config.getHgBinary());
-    assertTrue(config.isShowRevisionInId());
-    assertTrue(config.isEnableHttpPostArgs());
-  }
-
-  private HgConfigDto createDefaultDto() {
-    HgConfigDto configDto = new HgConfigDto();
-    configDto.setDisabled(true);
-    configDto.setEncoding("ABC");
-    configDto.setHgBinary("/etc/hg");
-    configDto.setShowRevisionInId(true);
-    configDto.setEnableHttpPostArgs(true);
-
-    return configDto;
-  }
+// Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
+@SuppressWarnings("squid:S3306")
+@Mapper
+public abstract class HgGlobalConfigDtoToHgConfigMapper {
+  public abstract HgGlobalConfig map(HgGlobalGlobalConfigDto dto);
 }

@@ -24,33 +24,29 @@
 
 package sonia.scm.api.v2.resources;
 
-import sonia.scm.repository.HgGlobalConfig;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+@Getter
+@Setter
+@NoArgsConstructor
+@SuppressWarnings("java:S2160") // we don't need equals for dto
+public class HgGlobalGlobalConfigDto extends HalRepresentation implements UpdateHgGlobalConfigDto {
 
-class HgConfigTests {
 
-  private HgConfigTests() {
+  private boolean disabled;
+
+  private String encoding;
+  private String hgBinary;
+  private boolean showRevisionInId;
+  private boolean enableHttpPostArgs;
+
+  @Override
+  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
+  protected HalRepresentation add(Links links) {
+    return super.add(links);
   }
-
-  static HgGlobalConfig createConfiguration() {
-    HgGlobalConfig config = new HgGlobalConfig();
-    config.setDisabled(true);
-
-    config.setEncoding("ABC");
-    config.setHgBinary("/etc/hg");
-    config.setShowRevisionInId(true);
-
-    return config;
-  }
-
-  static void assertEqualsConfiguration(HgConfigDto dto) {
-    assertTrue(dto.isDisabled());
-
-    assertEquals("ABC", dto.getEncoding());
-    assertEquals("/etc/hg", dto.getHgBinary());
-    assertTrue(dto.isShowRevisionInId());
-  }
-
 }

@@ -28,8 +28,8 @@ package sonia.scm.web;
 
 import com.google.inject.servlet.ServletModule;
 import org.mapstruct.factory.Mappers;
-import sonia.scm.api.v2.resources.HgConfigDtoToHgConfigMapper;
-import sonia.scm.api.v2.resources.HgConfigToHgConfigDtoMapper;
+import sonia.scm.api.v2.resources.HgGlobalConfigDtoToHgConfigMapper;
+import sonia.scm.api.v2.resources.HgGlobalConfigToHgGlobalConfigDtoMapper;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.spi.HgWorkingCopyFactory;
 import sonia.scm.repository.spi.SimpleHgWorkingCopyFactory;
@@ -43,8 +43,8 @@ public class HgServletModule extends ServletModule {
 
   @Override
   protected void configureServlets() {
-    bind(HgConfigDtoToHgConfigMapper.class).to(Mappers.getMapper(HgConfigDtoToHgConfigMapper.class).getClass());
-    bind(HgConfigToHgConfigDtoMapper.class).to(Mappers.getMapper(HgConfigToHgConfigDtoMapper.class).getClass());
+    bind(HgGlobalConfigDtoToHgConfigMapper.class).to(Mappers.getMapper(HgGlobalConfigDtoToHgConfigMapper.class).getClass());
+    bind(HgGlobalConfigToHgGlobalConfigDtoMapper.class).to(Mappers.getMapper(HgGlobalConfigToHgGlobalConfigDtoMapper.class).getClass());
 
     bind(HgWorkingCopyFactory.class).to(SimpleHgWorkingCopyFactory.class);
   }

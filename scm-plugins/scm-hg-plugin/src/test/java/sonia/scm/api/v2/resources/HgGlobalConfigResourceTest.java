@@ -70,26 +70,26 @@ public class HgGlobalConfigResourceTest {
   private final URI baseUri = URI.create("/");
 
   @InjectMocks
-  private HgConfigDtoToHgConfigMapperImpl dtoToConfigMapper;
+  private HgGlobalConfigDtoToHgConfigMapperImpl dtoToConfigMapper;
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private ScmPathInfoStore scmPathInfoStore;
 
   @InjectMocks
-  private HgConfigToHgConfigDtoMapperImpl configToDtoMapper;
+  private HgGlobalConfigToHgGlobalConfigDtoMapperImpl configToDtoMapper;
 
   @Mock
   private HgRepositoryHandler repositoryHandler;
 
   @Mock
-  private Provider<HgConfigAutoConfigurationResource> autoconfigResource;
+  private Provider<HgGlobalConfigAutoConfigurationResource> autoconfigResource;
 
   @Before
   public void prepareEnvironment() {
     HgGlobalConfig gitConfig = createConfiguration();
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
-    HgConfigResource gitConfigResource =
-      new HgConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler, autoconfigResource);
+    HgGlobalConfigResource gitConfigResource =
+      new HgGlobalConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler, autoconfigResource);
     dispatcher.addSingletonResource(gitConfigResource);
     when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
   }
@@ -156,14 +156,14 @@ public class HgGlobalConfigResourceTest {
   }
 
   private MockHttpResponse get() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + HgConfigResource.HG_CONFIG_PATH_V2);
+    MockHttpRequest request = MockHttpRequest.get("/" + HgGlobalConfigResource.HG_CONFIG_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
     return response;
   }
 
   private MockHttpResponse put() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.put("/" + HgConfigResource.HG_CONFIG_PATH_V2)
+    MockHttpRequest request = MockHttpRequest.put("/" + HgGlobalConfigResource.HG_CONFIG_PATH_V2)
                                              .contentType(HgVndMediaType.CONFIG)
                                              .content("{\"disabled\":true}".getBytes());
 

@@ -24,14 +24,33 @@
 
 package sonia.scm.api.v2.resources;
 
-interface UpdateHgConfigDto {
-  boolean isDisabled();
+import sonia.scm.repository.HgGlobalConfig;
 
-  String getHgBinary();
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-  String getEncoding();
+class HgGlobalConfigTestUtil {
 
-  boolean isShowRevisionInId();
+  private HgGlobalConfigTestUtil() {
+  }
 
-  boolean isEnableHttpPostArgs();
+  static HgGlobalConfig createConfiguration() {
+    HgGlobalConfig config = new HgGlobalConfig();
+    config.setDisabled(true);
+
+    config.setEncoding("ABC");
+    config.setHgBinary("/etc/hg");
+    config.setShowRevisionInId(true);
+
+    return config;
+  }
+
+  static void assertEqualsConfiguration(HgGlobalGlobalConfigDto dto) {
+    assertTrue(dto.isDisabled());
+
+    assertEquals("ABC", dto.getEncoding());
+    assertEquals("/etc/hg", dto.getHgBinary());
+    assertTrue(dto.isShowRevisionInId());
+  }
+
 }

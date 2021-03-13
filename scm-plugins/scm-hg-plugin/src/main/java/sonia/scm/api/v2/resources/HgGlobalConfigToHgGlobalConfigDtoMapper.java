@@ -39,13 +39,13 @@ import static de.otto.edison.hal.Links.linkingTo;
 // Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
 @SuppressWarnings("squid:S3306")
 @Mapper
-public abstract class HgConfigToHgConfigDtoMapper extends BaseMapper<HgGlobalConfig, HgConfigDto> {
+public abstract class HgGlobalConfigToHgGlobalConfigDtoMapper extends BaseMapper<HgGlobalConfig, HgGlobalGlobalConfigDto> {
 
   @Inject
   private ScmPathInfoStore scmPathInfoStore;
 
   @AfterMapping
-  void appendLinks(HgGlobalConfig config, @MappingTarget HgConfigDto target) {
+  void appendLinks(HgGlobalConfig config, @MappingTarget HgGlobalGlobalConfigDto target) {
     Links.Builder linksBuilder = linkingTo().self(self());
     if (ConfigurationPermissions.write(config).isPermitted()) {
       linksBuilder.single(link("update", update()));
@@ -54,12 +54,12 @@ public abstract class HgConfigToHgConfigDtoMapper extends BaseMapper<HgGlobalCon
   }
 
   private String self() {
-    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), HgConfigResource.class);
+    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), HgGlobalConfigResource.class);
     return linkBuilder.method("get").parameters().href();
   }
 
   private String update() {
-    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), HgConfigResource.class);
+    LinkBuilder linkBuilder = new LinkBuilder(scmPathInfoStore.get(), HgGlobalConfigResource.class);
     return linkBuilder.method("update").parameters().href();
   }
 }

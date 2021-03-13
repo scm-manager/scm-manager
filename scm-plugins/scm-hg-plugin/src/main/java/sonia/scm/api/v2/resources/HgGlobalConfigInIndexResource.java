@@ -39,12 +39,12 @@ import static java.util.Collections.singletonMap;
 import static sonia.scm.web.VndMediaType.INDEX;
 
 @Extension
-public class HgConfigInIndexResource extends JsonEnricherBase {
+public class HgGlobalConfigInIndexResource extends JsonEnricherBase {
 
   private final Provider<ScmPathInfoStore> scmPathInfoStore;
 
   @Inject
-  public HgConfigInIndexResource(Provider<ScmPathInfoStore> scmPathInfoStore, ObjectMapper objectMapper) {
+  public HgGlobalConfigInIndexResource(Provider<ScmPathInfoStore> scmPathInfoStore, ObjectMapper objectMapper) {
     super(objectMapper);
     this.scmPathInfoStore = scmPathInfoStore;
   }
@@ -52,7 +52,7 @@ public class HgConfigInIndexResource extends JsonEnricherBase {
   @Override
   public void enrich(JsonEnricherContext context) {
     if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.read(HgGlobalConfig.PERMISSION).isPermitted()) {
-      String hgConfigUrl = new LinkBuilder(scmPathInfoStore.get().get(), HgConfigResource.class)
+      String hgConfigUrl = new LinkBuilder(scmPathInfoStore.get().get(), HgGlobalConfigResource.class)
         .method("get")
         .parameters()
         .href();
