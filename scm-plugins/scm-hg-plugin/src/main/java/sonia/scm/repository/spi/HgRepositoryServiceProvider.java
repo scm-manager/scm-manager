@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import com.google.common.io.Closeables;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.Feature;
+import sonia.scm.repository.HgRepositoryConfigResolver;
 import sonia.scm.repository.HgRepositoryFactory;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
@@ -70,6 +71,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
   private final ScmEventBus eventBus;
 
   HgRepositoryServiceProvider(HgRepositoryHandler handler,
+                              HgRepositoryConfigResolver configResolver,
                               HgRepositoryFactory factory,
                               HgRepositoryHookEventFactory eventFactory,
                               ScmEventBus eventBus,
@@ -77,7 +79,7 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
     this.handler = handler;
     this.eventBus = eventBus;
     this.eventFactory = eventFactory;
-    this.context = new HgCommandContext(handler, factory, repository);
+    this.context = new HgCommandContext(configResolver, factory, repository);
     this.lazyChangesetResolver = new HgLazyChangesetResolver(factory, repository);
   }
 

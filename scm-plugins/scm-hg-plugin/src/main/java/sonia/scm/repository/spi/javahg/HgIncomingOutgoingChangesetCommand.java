@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -30,7 +30,7 @@ import com.aragost.javahg.Repository;
 import com.aragost.javahg.internals.HgInputStream;
 
 import sonia.scm.repository.Changeset;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgRepositoryConfig;
 import sonia.scm.util.IOUtil;
 
 //~--- JDK imports ------------------------------------------------------------
@@ -52,9 +52,7 @@ public abstract class HgIncomingOutgoingChangesetCommand
    * @param repository
    * @param config
    */
-  public HgIncomingOutgoingChangesetCommand(Repository repository,
-    HgConfig config)
-  {
+  public HgIncomingOutgoingChangesetCommand(Repository repository, HgRepositoryConfig config) {
     super(repository, config);
   }
 

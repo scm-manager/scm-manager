@@ -26,8 +26,8 @@ package sonia.scm.repository.spi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
+import sonia.scm.repository.HgRepositoryConfigResolver;
 import sonia.scm.repository.HgRepositoryFactory;
-import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.HgHookBranchProvider;
 import sonia.scm.repository.api.HgHookMessageProvider;
@@ -61,8 +61,8 @@ public class HgHookContextProvider extends HookContextProvider {
   private HgHookBranchProvider hookBranchProvider;
   private HgHookTagProvider hookTagProvider;
 
-  public HgHookContextProvider(HgRepositoryHandler handler, HgRepositoryFactory factory, Repository repository, String startRev) {
-    this.hookChangesetProvider = new HgHookChangesetProvider(handler, factory, repository, startRev);
+  public HgHookContextProvider(HgRepositoryConfigResolver configResolver, HgRepositoryFactory factory, Repository repository, String startRev) {
+    this.hookChangesetProvider = new HgHookChangesetProvider(configResolver, factory, repository, startRev);
   }
 
   @Override

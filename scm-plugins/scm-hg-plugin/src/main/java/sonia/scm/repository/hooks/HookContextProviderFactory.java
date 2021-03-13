@@ -25,8 +25,8 @@
 package sonia.scm.repository.hooks;
 
 import sonia.scm.NotFoundException;
+import sonia.scm.repository.HgRepositoryConfigResolver;
 import sonia.scm.repository.HgRepositoryFactory;
-import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.spi.HgHookContextProvider;
@@ -36,13 +36,13 @@ import javax.inject.Inject;
 public class HookContextProviderFactory {
 
   private final RepositoryManager repositoryManager;
-  private final HgRepositoryHandler repositoryHandler;
+  private final HgRepositoryConfigResolver configResolver;
   private final HgRepositoryFactory repositoryFactory;
 
   @Inject
-  public HookContextProviderFactory(RepositoryManager repositoryManager, HgRepositoryHandler repositoryHandler, HgRepositoryFactory repositoryFactory) {
+  public HookContextProviderFactory(RepositoryManager repositoryManager, HgRepositoryConfigResolver configResolver, HgRepositoryFactory repositoryFactory) {
     this.repositoryManager = repositoryManager;
-    this.repositoryHandler = repositoryHandler;
+    this.configResolver = configResolver;
     this.repositoryFactory = repositoryFactory;
   }
 
@@ -51,7 +51,7 @@ public class HookContextProviderFactory {
     if (repository == null) {
       throw new NotFoundException(Repository.class, repositoryId);
     }
-    return new HgHookContextProvider(repositoryHandler, repositoryFactory, repository, node);
+    return new HgHookContextProvider(configResolver, repositoryFactory, repository, node);
   }
 
 }
