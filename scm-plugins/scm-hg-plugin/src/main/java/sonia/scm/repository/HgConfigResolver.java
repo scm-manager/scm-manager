@@ -26,6 +26,7 @@
 package sonia.scm.repository;
 
 import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.MoreObjects;
 
 import javax.inject.Inject;
 import java.io.File;
@@ -34,19 +35,37 @@ import java.util.function.Function;
 public class HgConfigResolver {
 
   private final HgRepositoryHandler repositoryHandler;
+  private final Function<Repository, HgRepositoryConfig> repositoryConfigResolver;
   private final Function<Repository, File> directoryResolver;
 
   @Inject
+  public HgConfigResolver(HgRepositoryHandler repositoryHandler, HgRepositoryConfigStore repositoryConfigStore) {
+    this(
+      repositoryHandler,
+      repositoryConfigStore::of,
+      repository -> repositoryHandler.getDirectory(repository.getId())
+    );
+  }
+
+  @VisibleForTesting
   public HgConfigResolver(HgRepositoryHandler repositoryHandler) {
     this(
       repositoryHandler,
-      (Repository repository) -> repositoryHandler.getDirectory(repository.getId())
+      repository -> repositoryHandler.getDirectory(repository.getId())
     );
   }
 
   @VisibleForTesting
   public HgConfigResolver(HgRepositoryHandler repositoryHandler, Function<Repository, File> directoryResolver) {
     this.repositoryHandler = repositoryHandler;
+    this.repositoryConfigResolver = (repository -> new HgRepositoryConfig());
+    this.directoryResolver = directoryResolver;
+  }
+
+  @VisibleForTesting
+  public HgConfigResolver(HgRepositoryHandler repositoryHandler, Function<Repository, HgRepositoryConfig> repositoryConfigResolver, Function<Repository, File> directoryResolver) {
+    this.repositoryHandler = repositoryHandler;
+    this.repositoryConfigResolver = repositoryConfigResolver;
     this.directoryResolver = directoryResolver;
   }
 
@@ -55,12 +74,13 @@ public class HgConfigResolver {
   }
 
   public HgConfig resolve(Repository repository) {
-    HgGlobalConfig config = repositoryHandler.getConfig();
+    HgGlobalConfig globalConfig = repositoryHandler.getConfig();
+    HgRepositoryConfig repositoryConfig = repositoryConfigResolver.apply(repository);
     return new HgConfig(
-      config.getHgBinary(),
-      config.getEncoding(),
-      config.isShowRevisionInId(),
-      config.isEnableHttpPostArgs(),
+      globalConfig.getHgBinary(),
+      MoreObjects.firstNonNull(repositoryConfig.getEncoding(), globalConfig.getEncoding()),
+      globalConfig.isShowRevisionInId(),
+      globalConfig.isEnableHttpPostArgs(),
       directoryResolver.apply(repository)
     );
   }
