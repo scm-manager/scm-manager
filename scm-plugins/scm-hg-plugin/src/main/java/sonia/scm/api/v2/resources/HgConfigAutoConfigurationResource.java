@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
@@ -32,7 +32,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.config.ConfigurationPermissions;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgVndMediaType;
 import sonia.scm.web.VndMediaType;
@@ -116,12 +116,12 @@ public class HgConfigAutoConfigurationResource {
     ))
   public Response autoConfiguration(HgConfigDto configDto) {
 
-    HgConfig config;
+    HgGlobalConfig config;
 
     if (configDto != null) {
       config = dtoToConfigMapper.map(configDto);
     } else {
-      config = new HgConfig();
+      config = new HgGlobalConfig();
     }
 
     ConfigurationPermissions.write(config).check();

@@ -28,7 +28,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Splitter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgVerifier;
 
 import java.io.File;
@@ -72,7 +72,7 @@ public class WindowsAutoConfigurator implements AutoConfigurator {
   }
 
   @Override
-  public void configure(HgConfig config) {
+  public void configure(HgGlobalConfig config) {
     Set<String> fsPaths = new LinkedHashSet<>(pathFromEnv());
     resolveRegistryKeys(fsPaths);
 

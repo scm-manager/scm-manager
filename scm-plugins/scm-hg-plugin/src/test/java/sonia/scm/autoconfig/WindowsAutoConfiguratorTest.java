@@ -31,7 +31,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgVerifier;
 
 import java.io.File;
@@ -129,7 +129,7 @@ class WindowsAutoConfiguratorTest {
   }
 
   private String configure(String path) {
-    HgConfig config = new HgConfig();
+    HgGlobalConfig config = new HgGlobalConfig();
     configurator(path).configure(config);
     return config.getHgBinary();
   }

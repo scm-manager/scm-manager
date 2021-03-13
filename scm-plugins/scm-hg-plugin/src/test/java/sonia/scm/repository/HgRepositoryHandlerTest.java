@@ -85,9 +85,9 @@ public class HgRepositoryHandlerTest extends SimpleRepositoryHandlerTestBase {
   public void getDirectory() {
     HgRepositoryHandler repositoryHandler = createHandler(factory, locationResolver);
 
-    HgConfig hgConfig = new HgConfig();
-    hgConfig.setHgBinary("hg");
-    repositoryHandler.setConfig(hgConfig);
+    HgGlobalConfig hgGlobalConfig = new HgGlobalConfig();
+    hgGlobalConfig.setHgBinary("hg");
+    repositoryHandler.setConfig(hgGlobalConfig);
 
     initRepository();
     File path = repositoryHandler.getDirectory(repository.getId());

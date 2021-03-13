@@ -24,7 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -34,8 +34,8 @@ class HgConfigTests {
   private HgConfigTests() {
   }
 
-  static HgConfig createConfiguration() {
-    HgConfig config = new HgConfig();
+  static HgGlobalConfig createConfiguration() {
+    HgGlobalConfig config = new HgGlobalConfig();
     config.setDisabled(true);
 
     config.setEncoding("ABC");

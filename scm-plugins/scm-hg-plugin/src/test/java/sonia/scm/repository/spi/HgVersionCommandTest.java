@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgTestUtil;
 
@@ -54,7 +54,7 @@ class HgVersionCommandTest {
 
   @Test
   void shouldReturnUnknownForIOException() {
-    HgVersionCommand command = new HgVersionCommand(new HgConfig(), "/i/dont/know", cmd -> {
+    HgVersionCommand command = new HgVersionCommand(new HgGlobalConfig(), "/i/dont/know", cmd -> {
       throw new IOException("failed");
     });
 

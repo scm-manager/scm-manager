@@ -47,7 +47,7 @@ public class HgVerifier {
     this.versionResolver = versionResolver;
   }
 
-  public boolean isValid(HgConfig config) {
+  public boolean isValid(HgGlobalConfig config) {
     return isValid(config.getHgBinary());
   }
 

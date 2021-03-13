@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.plugin.Extension;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.web.JsonEnricherBase;
 import sonia.scm.web.JsonEnricherContext;
 
@@ -51,7 +51,7 @@ public class HgConfigInIndexResource extends JsonEnricherBase {
 
   @Override
   public void enrich(JsonEnricherContext context) {
-    if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.read(HgConfig.PERMISSION).isPermitted()) {
+    if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.read(HgGlobalConfig.PERMISSION).isPermitted()) {
       String hgConfigUrl = new LinkBuilder(scmPathInfoStore.get().get(), HgConfigResource.class)
         .method("get")
         .parameters()

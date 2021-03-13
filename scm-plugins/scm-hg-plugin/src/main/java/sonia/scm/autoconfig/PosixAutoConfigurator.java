@@ -29,7 +29,7 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgVerifier;
 
 import java.io.File;
@@ -68,7 +68,7 @@ public class PosixAutoConfigurator implements AutoConfigurator {
   }
 
   @Override
-  public void configure(HgConfig config) {
+  public void configure(HgGlobalConfig config) {
     Optional<Path> hg = findInPath();
     if (hg.isPresent()) {
       config.setHgBinary(hg.get().toAbsolutePath().toString());

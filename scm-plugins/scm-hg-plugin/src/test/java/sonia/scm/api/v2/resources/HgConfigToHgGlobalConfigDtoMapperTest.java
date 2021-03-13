@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import org.apache.shiro.subject.Subject;
@@ -36,7 +36,7 @@ import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 
 import java.net.URI;
 
@@ -48,7 +48,7 @@ import static sonia.scm.api.v2.resources.HgConfigTests.assertEqualsConfiguration
 import static sonia.scm.api.v2.resources.HgConfigTests.createConfiguration;
 
 @RunWith(MockitoJUnitRunner.class)
-public class HgConfigToHgConfigDtoMapperTest {
+public class HgConfigToHgGlobalConfigDtoMapperTest {
 
   private URI baseUri = URI.create("http://example.com/base/");
 
@@ -78,7 +78,7 @@ public class HgConfigToHgConfigDtoMapperTest {
 
   @Test
   public void shouldMapFields() {
-    HgConfig config = createConfiguration();
+    HgGlobalConfig config = createConfiguration();
 
     when(subject.isPermitted("configuration:write:hg")).thenReturn(true);
     HgConfigDto dto = mapper.map(config);
@@ -91,7 +91,7 @@ public class HgConfigToHgConfigDtoMapperTest {
 
   @Test
   public void shouldMapFieldsWithoutUpdate() {
-    HgConfig config = createConfiguration();
+    HgGlobalConfig config = createConfiguration();
 
     when(subject.isPermitted("configuration:write:hg")).thenReturn(false);
     HgConfigDto dto = mapper.map(config);

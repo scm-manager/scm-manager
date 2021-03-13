@@ -36,7 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author Sebastian Sdorra
  */
 @XmlRootElement(name = "config")
-public class HgConfig extends RepositoryConfig {
+public class HgGlobalConfig extends RepositoryConfig {
 
   public static final String PERMISSION = "hg";
 

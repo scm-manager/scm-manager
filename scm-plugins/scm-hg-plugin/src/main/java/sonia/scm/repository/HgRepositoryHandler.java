@@ -55,7 +55,7 @@ import java.io.OutputStream;
 @Singleton
 @Extension
 public class HgRepositoryHandler
-  extends AbstractSimpleRepositoryHandler<HgConfig> {
+  extends AbstractSimpleRepositoryHandler<HgGlobalConfig> {
 
   public static final String TYPE_DISPLAYNAME = "Mercurial";
   public static final String TYPE_NAME = "hg";
@@ -84,7 +84,7 @@ public class HgRepositoryHandler
     this.configurator = configurator;
   }
 
-  public void doAutoConfiguration(HgConfig autoConfig) {
+  public void doAutoConfiguration(HgGlobalConfig autoConfig) {
     configurator.configure(autoConfig);
   }
 
@@ -99,7 +99,7 @@ public class HgRepositoryHandler
     super.loadConfig();
 
     if (config == null) {
-      config = new HgConfig();
+      config = new HgGlobalConfig();
       storeConfig();
     }
 
@@ -109,7 +109,7 @@ public class HgRepositoryHandler
     }
   }
 
-  private boolean isConfigValid(HgConfig config) {
+  private boolean isConfigValid(HgGlobalConfig config) {
     return config.isValid() && new HgVerifier().isValid(config);
   }
 
@@ -175,8 +175,8 @@ public class HgRepositoryHandler
   }
 
   @Override
-  protected Class<HgConfig> getConfigClass() {
-    return HgConfig.class;
+  protected Class<HgGlobalConfig> getConfigClass() {
+    return HgGlobalConfig.class;
   }
 
   private void writeHgExtensions(SCMContextProvider context) {

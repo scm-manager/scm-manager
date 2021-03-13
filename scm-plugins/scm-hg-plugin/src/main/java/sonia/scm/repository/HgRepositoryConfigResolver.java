@@ -55,7 +55,7 @@ public class HgRepositoryConfigResolver {
   }
 
   public HgRepositoryConfig resolve(Repository repository) {
-    HgConfig config = repositoryHandler.getConfig();
+    HgGlobalConfig config = repositoryHandler.getConfig();
     return new HgRepositoryConfig(
       config.getHgBinary(),
       config.getEncoding(),

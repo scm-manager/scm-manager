@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,7 +42,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini")
-public class HgConfigInIndexResourceTest {
+public class HgGlobalConfigInIndexResourceTest {
 
   @Rule
   public final ShiroRule shiroRule = new ShiroRule();
@@ -51,7 +51,7 @@ public class HgConfigInIndexResourceTest {
   private final ObjectNode root = objectMapper.createObjectNode();
   private final HgConfigInIndexResource hgConfigInIndexResource;
 
-  public HgConfigInIndexResourceTest() {
+  public HgGlobalConfigInIndexResourceTest() {
     root.put("_links", objectMapper.createObjectNode());
     ScmPathInfoStore pathInfoStore = new ScmPathInfoStore();
     pathInfoStore.set(() -> URI.create("/"));

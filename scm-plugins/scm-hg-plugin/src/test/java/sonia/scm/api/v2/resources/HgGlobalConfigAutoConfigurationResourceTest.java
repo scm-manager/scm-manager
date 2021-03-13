@@ -36,7 +36,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgVndMediaType;
 import sonia.scm.web.RestDispatcher;
@@ -56,7 +56,7 @@ import static org.mockito.Mockito.when;
   password = "secret"
 )
 @RunWith(MockitoJUnitRunner.class)
-public class HgConfigAutoConfigurationResourceTest {
+public class HgGlobalConfigAutoConfigurationResourceTest {
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
@@ -90,7 +90,7 @@ public class HgConfigAutoConfigurationResourceTest {
 
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
 
-    HgConfig actualConfig = captureConfig();
+    HgGlobalConfig actualConfig = captureConfig();
     assertFalse(actualConfig.isDisabled());
   }
 
@@ -110,7 +110,7 @@ public class HgConfigAutoConfigurationResourceTest {
 
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
 
-    HgConfig actualConfig = captureConfig();
+    HgGlobalConfig actualConfig = captureConfig();
     assertTrue(actualConfig.isDisabled());
   }
 
@@ -137,8 +137,8 @@ public class HgConfigAutoConfigurationResourceTest {
     return response;
   }
 
-  private HgConfig captureConfig() {
-    ArgumentCaptor<HgConfig> configCaptor = ArgumentCaptor.forClass(HgConfig.class);
+  private HgGlobalConfig captureConfig() {
+    ArgumentCaptor<HgGlobalConfig> configCaptor = ArgumentCaptor.forClass(HgGlobalConfig.class);
     verify(repositoryHandler).doAutoConfiguration(configCaptor.capture());
     return configCaptor.getValue();
   }

@@ -33,7 +33,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.config.ConfigurationPermissions;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgVndMediaType;
 import sonia.scm.web.VndMediaType;
@@ -99,12 +99,12 @@ public class HgConfigResource {
     ))
   public Response get() {
 
-    ConfigurationPermissions.read(HgConfig.PERMISSION).check();
+    ConfigurationPermissions.read(HgGlobalConfig.PERMISSION).check();
 
-    HgConfig config = repositoryHandler.getConfig();
+    HgGlobalConfig config = repositoryHandler.getConfig();
 
     if (config == null) {
-      config = new HgConfig();
+      config = new HgGlobalConfig();
       repositoryHandler.setConfig(config);
     }
 
@@ -151,7 +151,7 @@ public class HgConfigResource {
     ))
   public Response update(HgConfigDto configDto) {
 
-    HgConfig config = dtoToConfigMapper.map(configDto);
+    HgGlobalConfig config = dtoToConfigMapper.map(configDto);
 
     ConfigurationPermissions.write(config).check();
 

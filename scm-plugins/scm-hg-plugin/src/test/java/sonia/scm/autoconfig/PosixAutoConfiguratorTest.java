@@ -32,7 +32,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgVerifier;
 
 import java.io.File;
@@ -57,7 +57,7 @@ class PosixAutoConfiguratorTest {
 
     PosixAutoConfigurator configurator = create(directory);
 
-    HgConfig config = new HgConfig();
+    HgGlobalConfig config = new HgGlobalConfig();
     configurator.configure(config);
 
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
@@ -84,7 +84,7 @@ class PosixAutoConfiguratorTest {
       verifier, createEnv(def), ImmutableList.of(additional.toAbsolutePath().toString())
     );
 
-    HgConfig config = new HgConfig();
+    HgGlobalConfig config = new HgGlobalConfig();
     configurator.configure(config);
 
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
@@ -109,7 +109,7 @@ class PosixAutoConfiguratorTest {
       )
     );
 
-    HgConfig config = new HgConfig();
+    HgGlobalConfig config = new HgGlobalConfig();
     configurator.configure(config);
 
     assertThat(config.getHgBinary()).isEqualTo(hg.toString());
@@ -119,7 +119,7 @@ class PosixAutoConfiguratorTest {
   void shouldNotConfigureMercurial(@TempDir Path directory) {
     PosixAutoConfigurator configurator = create(directory);
 
-    HgConfig config = new HgConfig();
+    HgGlobalConfig config = new HgGlobalConfig();
     configurator.configure(config);
 
     assertThat(config.getHgBinary()).isNull();

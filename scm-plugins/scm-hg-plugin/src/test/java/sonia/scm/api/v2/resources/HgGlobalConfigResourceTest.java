@@ -38,7 +38,7 @@ import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgVndMediaType;
 import sonia.scm.web.RestDispatcher;
@@ -60,7 +60,7 @@ import static org.mockito.Mockito.when;
   password = "secret"
 )
 @RunWith(MockitoJUnitRunner.class)
-public class HgConfigResourceTest {
+public class HgGlobalConfigResourceTest {
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
@@ -86,7 +86,7 @@ public class HgConfigResourceTest {
 
   @Before
   public void prepareEnvironment() {
-    HgConfig gitConfig = createConfiguration();
+    HgGlobalConfig gitConfig = createConfiguration();
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
     HgConfigResource gitConfigResource =
       new HgConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler, autoconfigResource);
@@ -172,8 +172,8 @@ public class HgConfigResourceTest {
     return response;
   }
 
-  private HgConfig createConfiguration() {
-    HgConfig config = new HgConfig();
+  private HgGlobalConfig createConfiguration() {
+    HgGlobalConfig config = new HgGlobalConfig();
     config.setDisabled(false);
     return config;
   }
