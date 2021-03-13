@@ -60,7 +60,7 @@ class DefaultHgEnvironmentBuilderTest {
   private AccessTokenBuilderFactory accessTokenBuilderFactory;
 
   @Mock
-  private HgRepositoryHandler repositoryHandler;
+  private HgRepositoryConfigResolver repositoryConfigResolver;
 
   @Mock
   private HookEnvironment hookEnvironment;
@@ -70,6 +70,9 @@ class DefaultHgEnvironmentBuilderTest {
 
   @InjectMocks
   private DefaultHgEnvironmentBuilder builder;
+
+  @Mock
+  private HgRepositoryConfig config;
 
   private Path directory;
 
@@ -141,13 +144,11 @@ class DefaultHgEnvironmentBuilderTest {
 
   @Nonnull
   private Repository prepareForRead(String id) {
-    when(repositoryHandler.getDirectory(id)).thenReturn(directory.resolve("repo").toFile());
-
-    HgConfig config = new HgConfig();
-    when(repositoryHandler.getConfig()).thenReturn(config);
-
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     heartOfGold.setId(id);
+
+    when(repositoryConfigResolver.resolve(heartOfGold)).thenReturn(config);
+    when(config.getDirectory()).thenReturn(directory.resolve("repo").toFile());
 
     return heartOfGold;
   }

@@ -31,10 +31,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.HgConfig;
 import sonia.scm.repository.HgEnvironmentBuilder;
 import sonia.scm.repository.HgExtensions;
-import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.HgRepositoryConfig;
+import sonia.scm.repository.HgRepositoryConfigResolver;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
@@ -60,38 +60,41 @@ import java.util.List;
 @Singleton
 public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet {
 
-  /** Field description */
   private static final long serialVersionUID = -3492811300905099810L;
 
   /** the logger for HgCGIServlet */
   private static final Logger logger =
     LoggerFactory.getLogger(HgCGIServlet.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final CGIExecutorFactory cgiExecutorFactory;
+  private final HgRepositoryConfigResolver configResolver;
+  private final File extension;
+  private final ScmConfiguration configuration;
+  private final HgCGIExceptionHandler exceptionHandler;
+  private final RepositoryRequestListenerUtil requestListenerUtil;
+  private final HgEnvironmentBuilder environmentBuilder;
 
   @Inject
   public HgCGIServlet(CGIExecutorFactory cgiExecutorFactory,
+                      HgRepositoryConfigResolver configResolver,
                       ScmConfiguration configuration,
-                      HgRepositoryHandler handler,
                       RepositoryRequestListenerUtil requestListenerUtil,
                       HgEnvironmentBuilder environmentBuilder)
   {
     this.cgiExecutorFactory = cgiExecutorFactory;
+    this.configResolver = configResolver;
     this.configuration = configuration;
-    this.handler = handler;
     this.requestListenerUtil = requestListenerUtil;
     this.environmentBuilder = environmentBuilder;
     this.exceptionHandler = new HgCGIExceptionHandler();
     this.extension = HgExtensions.CGISERVE.getFile(SCMContext.getContext());
   }
 
-  //~--- methods --------------------------------------------------------------
-
   @Override
   public void service(HttpServletRequest request,
     HttpServletResponse response, Repository repository)
   {
-    if (!handler.isConfigured())
+    if (!configResolver.isConfigured())
     {
       exceptionHandler.sendFormattedError(request, response,
         HgCGIExceptionHandler.ERROR_NOT_CONFIGURED);
@@ -141,16 +144,15 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
     EnvList env = executor.getEnvironment();
     environmentBuilder.write(repository).forEach(env::set);
 
-    File directory = handler.getDirectory(repository.getId());
-    executor.setWorkDirectory(directory);
+    HgRepositoryConfig config = configResolver.resolve(repository);
+    executor.setWorkDirectory(config.getDirectory());
 
-    HgConfig config = handler.getConfig();
     executor.setArgs(createArgs(config));
     executor.execute(config.getHgBinary());
   }
 
   @Nonnull
-  private List<String> createArgs(HgConfig config) {
+  private List<String> createArgs(HgRepositoryConfig config) {
     List<String> args = new ArrayList<>();
     config(args, "extensions.cgiserve", extension.getAbsolutePath());
 
@@ -174,26 +176,4 @@ public class HgCGIServlet extends HttpServlet implements ScmProviderHttpServlet 
     args.add("--config");
     args.add(key + "=" + value);
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final CGIExecutorFactory cgiExecutorFactory;
-
-  /** Field description */
-  private final File extension;
-
-  /** Field description */
-  private final ScmConfiguration configuration;
-
-  /** Field description */
-  private final HgCGIExceptionHandler exceptionHandler;
-
-  /** Field description */
-  private final HgRepositoryHandler handler;
-
-  /** Field description */
-  private final RepositoryRequestListenerUtil requestListenerUtil;
-
-  private final HgEnvironmentBuilder environmentBuilder;
 }
