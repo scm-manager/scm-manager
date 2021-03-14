@@ -20,34 +20,26 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- */
-
-package sonia.scm.web;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.servlet.ServletModule;
-import org.mapstruct.factory.Mappers;
-import sonia.scm.api.v2.resources.HgGlobalConfigDtoToHgConfigMapper;
-import sonia.scm.api.v2.resources.HgGlobalConfigToHgGlobalConfigDtoMapper;
-import sonia.scm.api.v2.resources.HgRepositoryConfigMapper;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.spi.HgWorkingCopyFactory;
-import sonia.scm.repository.spi.SimpleHgWorkingCopyFactory;
-
-/**
  *
- * @author Sebastian Sdorra
  */
-@Extension
-public class HgServletModule extends ServletModule {
 
-  @Override
-  protected void configureServlets() {
-    bind(HgGlobalConfigDtoToHgConfigMapper.class).to(Mappers.getMapperClass(HgGlobalConfigDtoToHgConfigMapper.class));
-    bind(HgGlobalConfigToHgGlobalConfigDtoMapper.class).to(Mappers.getMapperClass(HgGlobalConfigToHgGlobalConfigDtoMapper.class));
-    bind(HgRepositoryConfigMapper.class).to(Mappers.getMapperClass(HgRepositoryConfigMapper.class));
+package sonia.scm.api.v2.resources;
 
-    bind(HgWorkingCopyFactory.class).to(SimpleHgWorkingCopyFactory.class);
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@SuppressWarnings("java:S2160") // we don't need equals for a dto
+public class HgRepositoryConfigDto extends HalRepresentation {
+
+  private String encoding;
+
+  public HgRepositoryConfigDto(Links links) {
+    super(links);
   }
 }

@@ -20,27 +20,28 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package sonia.scm.api.v2.resources;
 
 import com.google.common.annotations.VisibleForTesting;
 import de.otto.edison.hal.Links;
-import org.mapstruct.AfterMapping;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
-import sonia.scm.config.ConfigurationPermissions;
-import sonia.scm.repository.HgGlobalConfig;
+import org.mapstruct.Mapping;
+import org.mapstruct.ObjectFactory;
+import sonia.scm.repository.HgRepositoryConfig;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryPermissions;
 
 import javax.inject.Inject;
 
 import static de.otto.edison.hal.Link.link;
 import static de.otto.edison.hal.Links.linkingTo;
 
-// Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
-@SuppressWarnings("squid:S3306")
 @Mapper
-public abstract class HgGlobalConfigToHgGlobalConfigDtoMapper extends BaseMapper<HgGlobalConfig, HgGlobalGlobalConfigDto> {
+public abstract class HgRepositoryConfigMapper {
 
   @Inject
   private HgConfigLinks links;
@@ -50,13 +51,17 @@ public abstract class HgGlobalConfigToHgGlobalConfigDtoMapper extends BaseMapper
     this.links = links;
   }
 
-  @AfterMapping
-  void appendLinks(HgGlobalConfig config, @MappingTarget HgGlobalGlobalConfigDto target) {
-    HgConfigLinks.ConfigLinks configLinks = links.global();
+  @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
+  abstract HgRepositoryConfigDto map(@Context Repository repository, HgRepositoryConfig config);
+  abstract HgRepositoryConfig map(HgRepositoryConfigDto dto);
+
+  @ObjectFactory
+  HgRepositoryConfigDto createDto(@Context Repository repository) {
+    HgConfigLinks.ConfigLinks configLinks = this.links.repository(repository);
     Links.Builder linksBuilder = linkingTo().self(configLinks.get());
-    if (ConfigurationPermissions.write(config).isPermitted()) {
+    if (RepositoryPermissions.custom("hg", repository).isPermitted()) {
       linksBuilder.single(link("update", configLinks.update()));
     }
-    target.add(linksBuilder.build());
+    return new HgRepositoryConfigDto(linksBuilder.build());
   }
 }

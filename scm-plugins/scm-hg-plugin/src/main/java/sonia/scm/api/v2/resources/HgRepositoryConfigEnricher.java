@@ -20,34 +20,37 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- */
-
-package sonia.scm.web;
-
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.inject.servlet.ServletModule;
-import org.mapstruct.factory.Mappers;
-import sonia.scm.api.v2.resources.HgGlobalConfigDtoToHgConfigMapper;
-import sonia.scm.api.v2.resources.HgGlobalConfigToHgGlobalConfigDtoMapper;
-import sonia.scm.api.v2.resources.HgRepositoryConfigMapper;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.spi.HgWorkingCopyFactory;
-import sonia.scm.repository.spi.SimpleHgWorkingCopyFactory;
-
-/**
  *
- * @author Sebastian Sdorra
  */
+
+package sonia.scm.api.v2.resources;
+
+import sonia.scm.plugin.Extension;
+import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.Repository;
+
+import javax.inject.Inject;
+
 @Extension
-public class HgServletModule extends ServletModule {
+@Enrich(Repository.class)
+public class HgRepositoryConfigEnricher implements HalEnricher {
+
+  private final HgConfigLinks links;
+
+  @Inject
+  public HgRepositoryConfigEnricher(HgConfigLinks links) {
+    this.links = links;
+  }
 
   @Override
-  protected void configureServlets() {
-    bind(HgGlobalConfigDtoToHgConfigMapper.class).to(Mappers.getMapperClass(HgGlobalConfigDtoToHgConfigMapper.class));
-    bind(HgGlobalConfigToHgGlobalConfigDtoMapper.class).to(Mappers.getMapperClass(HgGlobalConfigToHgGlobalConfigDtoMapper.class));
-    bind(HgRepositoryConfigMapper.class).to(Mappers.getMapperClass(HgRepositoryConfigMapper.class));
+  public void enrich(HalEnricherContext context, HalAppender appender) {
+    Repository repository = context.oneRequireByType(Repository.class);
+    if (isHgRepository(repository)) {
+      appender.appendLink("configuration", links.repository(repository).get());
+    }
+  }
 
-    bind(HgWorkingCopyFactory.class).to(SimpleHgWorkingCopyFactory.class);
+  private boolean isHgRepository(Repository repository) {
+    return HgRepositoryHandler.TYPE_NAME.equals(repository.getType());
   }
 }

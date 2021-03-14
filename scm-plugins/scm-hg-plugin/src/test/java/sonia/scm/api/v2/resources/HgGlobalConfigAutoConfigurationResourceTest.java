@@ -61,7 +61,7 @@ public class HgGlobalConfigAutoConfigurationResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private RestDispatcher dispatcher = new RestDispatcher();
+  private final RestDispatcher dispatcher = new RestDispatcher();
 
   @InjectMocks
   private HgGlobalConfigDtoToHgConfigMapperImpl dtoToConfigMapper;
@@ -72,15 +72,18 @@ public class HgGlobalConfigAutoConfigurationResourceTest {
   @Mock
   private Provider<HgGlobalConfigAutoConfigurationResource> resourceProvider;
 
+  @Mock
+  private Provider<HgRepositoryConfigResource> repositoryConfigResource;
+
   @Before
   public void prepareEnvironment() {
-    HgGlobalConfigAutoConfigurationResource resource =
-      new HgGlobalConfigAutoConfigurationResource(dtoToConfigMapper, repositoryHandler);
+    HgGlobalConfigAutoConfigurationResource resource = new HgGlobalConfigAutoConfigurationResource(dtoToConfigMapper, repositoryHandler);
 
     when(resourceProvider.get()).thenReturn(resource);
-    dispatcher.addSingletonResource(
-      new HgGlobalConfigResource(null, null, null,
-        resourceProvider));
+    dispatcher.addSingletonResource(new HgConfigResource(
+      null, null, null,
+      resourceProvider, repositoryConfigResource
+    ));
   }
 
   @Test
@@ -124,7 +127,7 @@ public class HgGlobalConfigAutoConfigurationResourceTest {
   }
 
   private MockHttpResponse put(String content) throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.put("/" + HgGlobalConfigResource.HG_CONFIG_PATH_V2 + "/auto-configuration");
+    MockHttpRequest request = MockHttpRequest.put("/" + HgConfigResource.HG_CONFIG_PATH_V2 + "/auto-configuration");
 
     if (content != null) {
       request

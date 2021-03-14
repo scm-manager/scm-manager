@@ -52,7 +52,7 @@ public class HgGlobalConfigInIndexResource extends JsonEnricherBase {
   @Override
   public void enrich(JsonEnricherContext context) {
     if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.read(HgGlobalConfig.PERMISSION).isPermitted()) {
-      String hgConfigUrl = new LinkBuilder(scmPathInfoStore.get().get(), HgGlobalConfigResource.class)
+      String hgConfigUrl = new LinkBuilder(scmPathInfoStore.get().get(), HgConfigResource.class)
         .method("get")
         .parameters()
         .href();

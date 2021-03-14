@@ -66,7 +66,7 @@ public class HgGlobalConfigToHgGlobalConfigDtoMapperTest {
   @Before
   public void init() {
     when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
-    expectedBaseUri = baseUri.resolve(HgGlobalConfigResource.HG_CONFIG_PATH_V2);
+    expectedBaseUri = baseUri.resolve(HgConfigResource.HG_CONFIG_PATH_V2);
     subjectThreadState.bind();
     ThreadContext.bind(subject);
   }

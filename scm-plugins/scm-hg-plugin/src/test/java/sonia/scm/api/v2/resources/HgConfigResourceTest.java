@@ -34,6 +34,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -60,23 +61,15 @@ import static org.mockito.Mockito.when;
   password = "secret"
 )
 @RunWith(MockitoJUnitRunner.class)
-public class HgGlobalConfigResourceTest {
+public class HgConfigResourceTest {
 
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private RestDispatcher dispatcher = new RestDispatcher();
-
-  private final URI baseUri = URI.create("/");
+  private final RestDispatcher dispatcher = new RestDispatcher();
 
   @InjectMocks
   private HgGlobalConfigDtoToHgConfigMapperImpl dtoToConfigMapper;
-
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private ScmPathInfoStore scmPathInfoStore;
-
-  @InjectMocks
-  private HgGlobalConfigToHgGlobalConfigDtoMapperImpl configToDtoMapper;
 
   @Mock
   private HgRepositoryHandler repositoryHandler;
@@ -84,14 +77,30 @@ public class HgGlobalConfigResourceTest {
   @Mock
   private Provider<HgGlobalConfigAutoConfigurationResource> autoconfigResource;
 
+  @Mock
+  private Provider<HgRepositoryConfigResource> repositoryConfigResource;
+
   @Before
   public void prepareEnvironment() {
     HgGlobalConfig gitConfig = createConfiguration();
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
-    HgGlobalConfigResource gitConfigResource =
-      new HgGlobalConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler, autoconfigResource);
+
+    HgConfigResource gitConfigResource = new HgConfigResource(
+      dtoToConfigMapper, createConfigToDtoMapper(), repositoryHandler,
+      autoconfigResource, repositoryConfigResource
+    );
     dispatcher.addSingletonResource(gitConfigResource);
-    when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
+  }
+
+  private HgGlobalConfigToHgGlobalConfigDtoMapper createConfigToDtoMapper() {
+    ScmPathInfoStore store = new ScmPathInfoStore();
+    store.set(() -> URI.create("/"));
+    HgConfigLinks links = new HgConfigLinks(store);
+    HgGlobalConfigToHgGlobalConfigDtoMapper mapper = Mappers.getMapper(
+      HgGlobalConfigToHgGlobalConfigDtoMapper.class
+    );
+    mapper.setLinks(links);
+    return mapper;
   }
 
   @Test
@@ -156,14 +165,14 @@ public class HgGlobalConfigResourceTest {
   }
 
   private MockHttpResponse get() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.get("/" + HgGlobalConfigResource.HG_CONFIG_PATH_V2);
+    MockHttpRequest request = MockHttpRequest.get("/" + HgConfigResource.HG_CONFIG_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
     return response;
   }
 
   private MockHttpResponse put() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.put("/" + HgGlobalConfigResource.HG_CONFIG_PATH_V2)
+    MockHttpRequest request = MockHttpRequest.put("/" + HgConfigResource.HG_CONFIG_PATH_V2)
                                              .contentType(HgVndMediaType.CONFIG)
                                              .content("{\"disabled\":true}".getBytes());
 
