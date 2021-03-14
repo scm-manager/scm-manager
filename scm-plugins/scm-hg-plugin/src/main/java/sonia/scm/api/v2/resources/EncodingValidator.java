@@ -41,7 +41,7 @@ public class EncodingValidator implements ConstraintValidator<Encoding, String> 
   @Override
   public boolean isValid(String value, ConstraintValidatorContext context) {
     if (Strings.isNullOrEmpty(value)) {
-      return false;
+      return true;
     }
     try {
       Charset.forName(value);

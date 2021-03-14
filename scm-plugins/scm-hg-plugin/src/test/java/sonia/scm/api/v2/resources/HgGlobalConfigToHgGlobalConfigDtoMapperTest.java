@@ -25,59 +25,52 @@
 package sonia.scm.api.v2.resources;
 
 import org.apache.shiro.subject.Subject;
-import org.apache.shiro.subject.support.SubjectThreadState;
 import org.apache.shiro.util.ThreadContext;
-import org.apache.shiro.util.ThreadState;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.Answers;
-import org.mockito.InjectMocks;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.HgGlobalConfig;
 
 import java.net.URI;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.mockito.Mockito.mock;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 import static sonia.scm.api.v2.resources.HgGlobalConfigTestUtil.assertEqualsConfiguration;
 import static sonia.scm.api.v2.resources.HgGlobalConfigTestUtil.createConfiguration;
 
-@RunWith(MockitoJUnitRunner.class)
-public class HgGlobalConfigToHgGlobalConfigDtoMapperTest {
+@ExtendWith(MockitoExtension.class)
+class HgGlobalConfigToHgGlobalConfigDtoMapperTest {
 
-  private URI baseUri = URI.create("http://example.com/base/");
+  private final URI baseUri = URI.create("http://example.com/base/");
+  private final URI expectedBaseUri = baseUri.resolve(HgConfigResource.HG_CONFIG_PATH_V2);
 
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private ScmPathInfoStore scmPathInfoStore;
+  @Mock
+  private Subject subject;
 
-  @InjectMocks
-  private HgGlobalConfigToHgGlobalConfigDtoMapperImpl mapper;
+  private HgGlobalConfigToHgGlobalConfigDtoMapper mapper;
 
-  private final Subject subject = mock(Subject.class);
-  private final ThreadState subjectThreadState = new SubjectThreadState(subject);
-
-  private URI expectedBaseUri;
-
-  @Before
-  public void init() {
-    when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
-    expectedBaseUri = baseUri.resolve(HgConfigResource.HG_CONFIG_PATH_V2);
-    subjectThreadState.bind();
+  @BeforeEach
+  void init() {
     ThreadContext.bind(subject);
+
+    ScmPathInfoStore store = new ScmPathInfoStore();
+    store.set(() -> baseUri);
+
+    mapper = Mappers.getMapper(HgGlobalConfigToHgGlobalConfigDtoMapper.class);
+    mapper.setLinks(new HgConfigLinks(store));
   }
 
-  @After
-  public void unbindSubject() {
+  @AfterEach
+  void unbindSubject() {
     ThreadContext.unbindSubject();
   }
 
   @Test
-  public void shouldMapFields() {
+  void shouldMapFields() {
     HgGlobalConfig config = createConfiguration();
 
     when(subject.isPermitted("configuration:write:hg")).thenReturn(true);
@@ -85,18 +78,24 @@ public class HgGlobalConfigToHgGlobalConfigDtoMapperTest {
 
     assertEqualsConfiguration(dto);
 
-    assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
-    assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
+    assertThat(dto.getLinks().getLinkBy("self")).hasValueSatisfying(
+      link -> assertThat(link.getHref()).isEqualTo(expectedBaseUri.toString())
+    );
+    assertThat(dto.getLinks().getLinkBy("update")).hasValueSatisfying(
+      link -> assertThat(link.getHref()).isEqualTo(expectedBaseUri.toString())
+    );
   }
 
   @Test
-  public void shouldMapFieldsWithoutUpdate() {
+  void shouldMapFieldsWithoutUpdate() {
     HgGlobalConfig config = createConfiguration();
 
     when(subject.isPermitted("configuration:write:hg")).thenReturn(false);
     HgGlobalGlobalConfigDto dto = mapper.map(config);
 
-    assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
-    assertFalse(dto.getLinks().hasLink("update"));
+    assertThat(dto.getLinks().getLinkBy("self")).hasValueSatisfying(
+      link -> assertThat(link.getHref()).isEqualTo(expectedBaseUri.toString())
+    );
+    assertThat(dto.getLinks().hasLink("update")).isFalse();
   }
 }
