@@ -27,7 +27,10 @@ package sonia.scm.repository;
 
 import lombok.Data;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 @Data
+@XmlRootElement
 public class HgRepositoryConfig {
   String encoding;
 }
