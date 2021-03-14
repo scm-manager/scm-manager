@@ -20,34 +20,35 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.google.common.base.Strings;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@SuppressWarnings("java:S2160") // we don't need equals for dto
-public class HgGlobalGlobalConfigDto extends HalRepresentation implements UpdateHgGlobalConfigDto {
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 
-  private boolean disabled;
-
-  @Encoding
-  private String encoding;
-
-  private String hgBinary;
-  private boolean showRevisionInId;
-  private boolean enableHttpPostArgs;
+public class EncodingValidator implements ConstraintValidator<Encoding, String> {
 
   @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
+  public void initialize(Encoding constraintAnnotation) {
+    // do nothing
+  }
+
+  @Override
+  public boolean isValid(String value, ConstraintValidatorContext context) {
+    if (Strings.isNullOrEmpty(value)) {
+      return false;
+    }
+    try {
+      Charset.forName(value);
+      return true;
+    } catch (UnsupportedCharsetException ex) {
+      return false;
+    }
   }
 }

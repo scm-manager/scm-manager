@@ -20,34 +20,28 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
+ *
  */
 
 package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import javax.validation.Constraint;
+import javax.validation.Payload;
+import java.lang.annotation.Documented;
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@SuppressWarnings("java:S2160") // we don't need equals for dto
-public class HgGlobalGlobalConfigDto extends HalRepresentation implements UpdateHgGlobalConfigDto {
+import static java.lang.annotation.ElementType.*;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-  private boolean disabled;
-
-  @Encoding
-  private String encoding;
-
-  private String hgBinary;
-  private boolean showRevisionInId;
-  private boolean enableHttpPostArgs;
-
-  @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
-  }
+@Documented
+@Retention(RUNTIME)
+@Target({ FIELD, METHOD, CONSTRUCTOR, ANNOTATION_TYPE })
+@Constraint(validatedBy = EncodingValidator.class)
+public @interface Encoding {
+  String message() default "Invalid encoding";
+  Class<?>[] groups() default { };
+  Class<? extends Payload>[] payload() default { };
 }
+
+

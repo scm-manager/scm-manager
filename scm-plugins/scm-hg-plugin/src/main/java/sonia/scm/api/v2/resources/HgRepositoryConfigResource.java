@@ -39,6 +39,7 @@ import sonia.scm.web.HgVndMediaType;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -127,7 +128,11 @@ public class HgRepositoryConfigResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response updateHgRepositoryConfig(@PathParam("namespace") String namespace, @PathParam("name") String name, HgRepositoryConfigDto dto) {
+  public Response updateHgRepositoryConfig(
+    @PathParam("namespace") String namespace,
+    @PathParam("name") String name,
+    @Valid HgRepositoryConfigDto dto
+  ) {
     Repository repository = getRepository(namespace, name);
     store.store(repository, mapper.map(dto));
     return Response.noContent().build();

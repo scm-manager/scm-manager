@@ -37,6 +37,7 @@ export const useHgRepositoryConfiguration = (repository: Repository) => {
   const [error, setError] = useState<Error | null>(null);
   const link = (repository._links.configuration as Link)?.href;
   useEffect(() => {
+    setError(null);
     if (link) {
       setLoading(true);
       apiClient
@@ -69,6 +70,7 @@ export const useUpdateHgRepositoryConfiguration = () => {
     const link = (configuration._links.update as Link).href;
     setLoading(true);
     setUpdated(false);
+    setError(null);
     apiClient
       .put(link, configuration, "application/vnd.scmm-hgConfig-repo+json;v=2")
       .then(() => setUpdated(true))

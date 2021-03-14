@@ -40,6 +40,7 @@ import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -152,7 +153,7 @@ public class HgConfigResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response update(HgGlobalGlobalConfigDto configDto) {
+  public Response update(@Valid HgGlobalGlobalConfigDto configDto) {
 
     HgGlobalConfig config = dtoToConfigMapper.map(configDto);
 

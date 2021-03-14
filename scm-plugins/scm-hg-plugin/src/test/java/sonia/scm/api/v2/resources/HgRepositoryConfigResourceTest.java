@@ -150,4 +150,17 @@ class HgRepositoryConfigResourceTest {
     assertThat(captor.getValue().getEncoding()).isEqualTo("UTF-8");
   }
 
+  @Test
+  void shouldFailWithInvalidEncoding() throws IOException, URISyntaxException {
+    HgRepositoryConfigDto dto = new HgRepositoryConfigDto(Links.emptyLinks());
+    dto.setEncoding("XA");
+
+    MockHttpRequest request = MockHttpRequest.put("/v2/config/hg/hitchhiker/hog")
+      .contentType(HgVndMediaType.REPO_CONFIG).content(objectMapper.writeValueAsBytes(dto));
+    MockHttpResponse response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_BAD_REQUEST);
+  }
+
 }

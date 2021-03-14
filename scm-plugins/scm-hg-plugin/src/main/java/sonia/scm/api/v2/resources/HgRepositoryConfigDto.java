@@ -37,6 +37,7 @@ import lombok.Setter;
 @SuppressWarnings("java:S2160") // we don't need equals for a dto
 public class HgRepositoryConfigDto extends HalRepresentation {
 
+  @Encoding
   private String encoding;
 
   public HgRepositoryConfigDto(Links links) {
