@@ -20,7 +20,6 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
 import { Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, InputField, Level, Loading, SubmitButton, Notification } from "@scm-manager/ui-components";
