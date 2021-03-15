@@ -48,7 +48,6 @@ import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
 import sonia.scm.SCMContext;
 import sonia.scm.ScmConstraintViolationException;
-import sonia.scm.config.ScmConfiguration;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.api.HookContext;
 import sonia.scm.repository.api.HookContextFactory;
