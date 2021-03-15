@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -42,20 +42,20 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @SubjectAware(configuration = "classpath:sonia/scm/configuration/shiro.ini")
-public class HgConfigInIndexResourceTest {
+public class HgGlobalConfigInIndexResourceTest {
 
   @Rule
   public final ShiroRule shiroRule = new ShiroRule();
 
   private final ObjectMapper objectMapper = new ObjectMapper();
   private final ObjectNode root = objectMapper.createObjectNode();
-  private final HgConfigInIndexResource hgConfigInIndexResource;
+  private final HgGlobalConfigInIndexResource hgGlobalConfigInIndexResource;
 
-  public HgConfigInIndexResourceTest() {
+  public HgGlobalConfigInIndexResourceTest() {
     root.put("_links", objectMapper.createObjectNode());
     ScmPathInfoStore pathInfoStore = new ScmPathInfoStore();
     pathInfoStore.set(() -> URI.create("/"));
-    hgConfigInIndexResource = new HgConfigInIndexResource(Providers.of(pathInfoStore), objectMapper);
+    hgGlobalConfigInIndexResource = new HgGlobalConfigInIndexResource(Providers.of(pathInfoStore), objectMapper);
   }
 
   @Test
@@ -63,7 +63,7 @@ public class HgConfigInIndexResourceTest {
   public void admin() {
     JsonEnricherContext context = new JsonEnricherContext(URI.create("/index"), MediaType.valueOf(VndMediaType.INDEX), root);
 
-    hgConfigInIndexResource.enrich(context);
+    hgGlobalConfigInIndexResource.enrich(context);
 
     assertEquals("/v2/config/hg", root.get("_links").get("hgConfig").get("href").asText());
   }
@@ -73,7 +73,7 @@ public class HgConfigInIndexResourceTest {
   public void user() {
     JsonEnricherContext context = new JsonEnricherContext(URI.create("/index"), MediaType.valueOf(VndMediaType.INDEX), root);
 
-    hgConfigInIndexResource.enrich(context);
+    hgGlobalConfigInIndexResource.enrich(context);
 
     assertTrue(root.get("_links").iterator().hasNext());
   }
@@ -82,7 +82,7 @@ public class HgConfigInIndexResourceTest {
   public void anonymous() {
     JsonEnricherContext context = new JsonEnricherContext(URI.create("/index"), MediaType.valueOf(VndMediaType.INDEX), root);
 
-    hgConfigInIndexResource.enrich(context);
+    hgGlobalConfigInIndexResource.enrich(context);
 
     assertFalse(root.get("_links").iterator().hasNext());
   }

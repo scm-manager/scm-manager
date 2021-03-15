@@ -22,31 +22,14 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.repository;
 
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
-@NoArgsConstructor
-@SuppressWarnings("java:S2160") // we don't need equals for dto
-public class HgConfigDto extends HalRepresentation implements UpdateHgConfigDto {
+import javax.xml.bind.annotation.XmlRootElement;
 
-
-  private boolean disabled;
-
-  private String encoding;
-  private String hgBinary;
-  private boolean showRevisionInId;
-  private boolean enableHttpPostArgs;
-
-  @Override
-  @SuppressWarnings("squid:S1185") // We want to have this method available in this package
-  protected HalRepresentation add(Links links) {
-    return super.add(links);
-  }
+@Data
+@XmlRootElement
+public class HgRepositoryConfig {
+  String encoding;
 }

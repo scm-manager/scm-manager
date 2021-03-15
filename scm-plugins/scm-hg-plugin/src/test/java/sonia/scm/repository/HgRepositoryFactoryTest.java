@@ -63,7 +63,8 @@ class HgRepositoryFactoryTest {
     handler = HgTestUtil.createHandler(directory.toFile());
     assumeTrue(handler.isConfigured());
 
-    factory = new HgRepositoryFactory(handler, hookEnvironment, environmentBuilder);
+    HgConfigResolver resolver = new HgConfigResolver(handler);
+    factory = new HgRepositoryFactory(resolver, hookEnvironment, environmentBuilder);
     heartOfGold = createRepository();
   }
 

@@ -26,7 +26,7 @@ package sonia.scm.autoconfig;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 
 public class NoOpAutoConfigurator implements AutoConfigurator {
 
@@ -36,7 +36,7 @@ public class NoOpAutoConfigurator implements AutoConfigurator {
   }
 
   @Override
-  public void configure(HgConfig config) {
+  public void configure(HgGlobalConfig config) {
     // if we do not know the environment, we could not configure mercurial
     LOG.debug("no mercurial autoconfiguration available on this platform");
   }

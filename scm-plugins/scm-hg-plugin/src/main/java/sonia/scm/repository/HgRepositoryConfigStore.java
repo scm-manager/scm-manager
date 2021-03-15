@@ -22,44 +22,38 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.repository;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
-import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.store.ConfigurationStore;
+import sonia.scm.store.ConfigurationStoreFactory;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import javax.inject.Inject;
 
-@RunWith(MockitoJUnitRunner.class)
-public class HgConfigDtoToHgConfigMapperTest {
+public class HgRepositoryConfigStore {
 
-  @InjectMocks
-  private HgConfigDtoToHgConfigMapperImpl mapper;
+  private static final String STORE_NAME = "hgConfig";
+  private final ConfigurationStoreFactory factory;
 
-  @Test
-  public void shouldMapFields() {
-    HgConfigDto dto = createDefaultDto();
-    HgConfig config = mapper.map(dto);
-
-    assertTrue(config.isDisabled());
-
-    assertEquals("ABC", config.getEncoding());
-    assertEquals("/etc/hg", config.getHgBinary());
-    assertTrue(config.isShowRevisionInId());
-    assertTrue(config.isEnableHttpPostArgs());
+  @Inject
+  public HgRepositoryConfigStore(ConfigurationStoreFactory factory) {
+    this.factory = factory;
   }
 
-  private HgConfigDto createDefaultDto() {
-    HgConfigDto configDto = new HgConfigDto();
-    configDto.setDisabled(true);
-    configDto.setEncoding("ABC");
-    configDto.setHgBinary("/etc/hg");
-    configDto.setShowRevisionInId(true);
-    configDto.setEnableHttpPostArgs(true);
-
-    return configDto;
+  public HgRepositoryConfig of(Repository repository) {
+    ConfigurationStore<HgRepositoryConfig> store = store(repository);
+    return store.getOptional().orElse(new HgRepositoryConfig());
   }
+
+  public void store(Repository repository, HgRepositoryConfig config) {
+    RepositoryPermissions.custom("hg", repository).check();
+    store(repository).set(config);
+  }
+
+  private ConfigurationStore<HgRepositoryConfig> store(Repository repository) {
+    return factory.withType(HgRepositoryConfig.class)
+      .withName(STORE_NAME)
+      .forRepository(repository)
+      .build();
+  }
+
 }

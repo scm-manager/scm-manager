@@ -22,32 +22,24 @@
  * SOFTWARE.
  */
 
-package sonia.scm.web;
+package sonia.scm.api.v2.resources;
 
-//~--- non-JDK imports --------------------------------------------------------
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import com.google.inject.servlet.ServletModule;
-import org.mapstruct.factory.Mappers;
-import sonia.scm.api.v2.resources.HgGlobalConfigDtoToHgConfigMapper;
-import sonia.scm.api.v2.resources.HgGlobalConfigToHgGlobalConfigDtoMapper;
-import sonia.scm.api.v2.resources.HgRepositoryConfigMapper;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.spi.HgWorkingCopyFactory;
-import sonia.scm.repository.spi.SimpleHgWorkingCopyFactory;
+@Getter
+@Setter
+@NoArgsConstructor
+@SuppressWarnings("java:S2160") // we don't need equals for a dto
+public class HgRepositoryConfigDto extends HalRepresentation {
 
-/**
- *
- * @author Sebastian Sdorra
- */
-@Extension
-public class HgServletModule extends ServletModule {
+  @Encoding
+  private String encoding;
 
-  @Override
-  protected void configureServlets() {
-    bind(HgGlobalConfigDtoToHgConfigMapper.class).to(Mappers.getMapperClass(HgGlobalConfigDtoToHgConfigMapper.class));
-    bind(HgGlobalConfigToHgGlobalConfigDtoMapper.class).to(Mappers.getMapperClass(HgGlobalConfigToHgGlobalConfigDtoMapper.class));
-    bind(HgRepositoryConfigMapper.class).to(Mappers.getMapperClass(HgRepositoryConfigMapper.class));
-
-    bind(HgWorkingCopyFactory.class).to(SimpleHgWorkingCopyFactory.class);
+  public HgRepositoryConfigDto(Links links) {
+    super(links);
   }
 }

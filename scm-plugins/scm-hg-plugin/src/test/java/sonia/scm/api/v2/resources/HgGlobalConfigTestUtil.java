@@ -24,18 +24,18 @@
 
 package sonia.scm.api.v2.resources;
 
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-class HgConfigTests {
+class HgGlobalConfigTestUtil {
 
-  private HgConfigTests() {
+  private HgGlobalConfigTestUtil() {
   }
 
-  static HgConfig createConfiguration() {
-    HgConfig config = new HgConfig();
+  static HgGlobalConfig createConfiguration() {
+    HgGlobalConfig config = new HgGlobalConfig();
     config.setDisabled(true);
 
     config.setEncoding("ABC");
@@ -45,7 +45,7 @@ class HgConfigTests {
     return config;
   }
 
-  static void assertEqualsConfiguration(HgConfigDto dto) {
+  static void assertEqualsConfiguration(HgGlobalGlobalConfigDto dto) {
     assertTrue(dto.isDisabled());
 
     assertEquals("ABC", dto.getEncoding());

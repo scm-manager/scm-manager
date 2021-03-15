@@ -28,7 +28,7 @@ import com.google.common.io.ByteStreams;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgExtensions;
 
 import java.io.IOException;
@@ -41,15 +41,15 @@ public class HgVersionCommand {
   private static final Logger LOG = LoggerFactory.getLogger(HgVersionCommand.class);
   public static final String UNKNOWN = "python/x.y.z mercurial/x.y.z";
 
-  private final HgConfig config;
+  private final HgGlobalConfig config;
   private final String extension;
   private final ProcessExecutor executor;
 
-  public HgVersionCommand(HgConfig config) {
+  public HgVersionCommand(HgGlobalConfig config) {
     this(config, extension(), command -> new ProcessBuilder(command).start());
   }
 
-  HgVersionCommand(HgConfig config, String extension, ProcessExecutor executor) {
+  HgVersionCommand(HgGlobalConfig config, String extension, ProcessExecutor executor) {
     this.config = config;
     this.extension = extension;
     this.executor = executor;

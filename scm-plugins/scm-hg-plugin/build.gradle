@@ -35,6 +35,12 @@ dependencies {
   implementation libraries.commonsCompress
   testImplementation libraries.shiroUnit
   testImplementation libraries.logback
+
+  // validation api
+  testImplementation libraries.validator
+  testImplementation libraries.elApi
+  testImplementation libraries.elRuntime
+  testImplementation libraries.resteasyValidatorProvider
 }
 
 scmPlugin {

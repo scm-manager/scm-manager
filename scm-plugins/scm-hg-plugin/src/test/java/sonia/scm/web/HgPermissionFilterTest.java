@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 import org.junit.Before;
@@ -32,7 +32,7 @@ import org.mockito.Mock;
 import static org.mockito.Mockito.*;
 import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.config.ScmConfiguration;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.RepositoryProvider;
 
@@ -72,7 +72,7 @@ public class HgPermissionFilterTest {
 
   @Before
   public void setUp() {
-    when(hgRepositoryHandler.getConfig()).thenReturn(new HgConfig());
+    when(hgRepositoryHandler.getConfig()).thenReturn(new HgGlobalConfig());
   }
 
   /**
@@ -82,9 +82,9 @@ public class HgPermissionFilterTest {
   public void testWrapRequestIfRequired() {
     assertSame(request, filter.wrapRequestIfRequired(request));
 
-    HgConfig hgConfig = new HgConfig();
-    hgConfig.setEnableHttpPostArgs(true);
-    when(hgRepositoryHandler.getConfig()).thenReturn(hgConfig);
+    HgGlobalConfig hgGlobalConfig = new HgGlobalConfig();
+    hgGlobalConfig.setEnableHttpPostArgs(true);
+    when(hgRepositoryHandler.getConfig()).thenReturn(hgGlobalConfig);
 
     assertThat(filter.wrapRequestIfRequired(request), is(instanceOf(HgServletRequest.class)));
   }
@@ -112,7 +112,7 @@ public class HgPermissionFilterTest {
    */
   @Test
   public void testIsWriteRequestWithEnabledHttpPostArgs() {
-    HgConfig config = new HgConfig();
+    HgGlobalConfig config = new HgGlobalConfig();
     config.setEnableHttpPostArgs(true);
     when(hgRepositoryHandler.getConfig()).thenReturn(config);
 

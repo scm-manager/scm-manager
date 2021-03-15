@@ -22,43 +22,44 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.api.v2.resources;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.io.TempDir;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.repository.HgGlobalConfig;
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.HgTestUtil;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
-import static org.assertj.core.api.Assertions.assertThat;
+@RunWith(MockitoJUnitRunner.class)
+public class HgGlobalConfigDtoToHgGlobalConfigMapperTest {
 
-@ExtendWith(MockitoExtension.class)
-class HgVersionCommandTest {
-
-  @Test
-  void shouldReturnVersion(@TempDir Path temp) {
-    HgRepositoryHandler handler = HgTestUtil.createHandler(temp.toFile());
-    HgTestUtil.checkForSkip(handler);
-
-    HgVersionCommand command = new HgVersionCommand(handler.getConfig());
-    assertThat(command.get())
-      .contains("python/")
-      .contains("mercurial/")
-      .isNotEqualTo(HgVersionCommand.UNKNOWN);
-  }
+  @InjectMocks
+  private HgGlobalConfigDtoToHgConfigMapperImpl mapper;
 
   @Test
-  void shouldReturnUnknownForIOException() {
-    HgVersionCommand command = new HgVersionCommand(new HgGlobalConfig(), "/i/dont/know", cmd -> {
-      throw new IOException("failed");
-    });
+  public void shouldMapFields() {
+    HgGlobalGlobalConfigDto dto = createDefaultDto();
+    HgGlobalConfig config = mapper.map(dto);
 
-    assertThat(command.get()).isEqualTo(HgVersionCommand.UNKNOWN);
+    assertTrue(config.isDisabled());
+
+    assertEquals("ABC", config.getEncoding());
+    assertEquals("/etc/hg", config.getHgBinary());
+    assertTrue(config.isShowRevisionInId());
+    assertTrue(config.isEnableHttpPostArgs());
   }
 
+  private HgGlobalGlobalConfigDto createDefaultDto() {
+    HgGlobalGlobalConfigDto configDto = new HgGlobalGlobalConfigDto();
+    configDto.setDisabled(true);
+    configDto.setEncoding("ABC");
+    configDto.setHgBinary("/etc/hg");
+    configDto.setShowRevisionInId(true);
+    configDto.setEnableHttpPostArgs(true);
+
+    return configDto;
+  }
 }

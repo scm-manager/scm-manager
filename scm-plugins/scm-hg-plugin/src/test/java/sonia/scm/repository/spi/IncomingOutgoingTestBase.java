@@ -38,7 +38,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TemporaryFolder;
 import sonia.scm.AbstractTestBase;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.HgTestUtil;
 import sonia.scm.user.User;
@@ -182,7 +182,7 @@ public abstract class IncomingOutgoingTestBase extends AbstractTestBase
    */
   private RepositoryConfiguration createConfig(HgRepositoryHandler handler)
   {
-    HgConfig cfg = handler.getConfig();
+    HgGlobalConfig cfg = handler.getConfig();
     RepositoryConfiguration configuration = RepositoryConfiguration.DEFAULT;
 
     configuration.setHgBin(cfg.getHgBinary());

@@ -28,8 +28,8 @@ package sonia.scm.repository.spi;
 
 import com.aragost.javahg.Repository;
 import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgConfigResolver;
 import sonia.scm.repository.HgRepositoryFactory;
-import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.RepositoryProvider;
 
 import java.io.Closeable;
@@ -43,14 +43,14 @@ import java.io.File;
  */
 public class HgCommandContext implements Closeable, RepositoryProvider {
 
-  private final HgRepositoryHandler handler;
+  private final HgConfigResolver configResolver;
   private final HgRepositoryFactory factory;
   private final sonia.scm.repository.Repository scmRepository;
 
   private Repository repository;
 
-  public HgCommandContext(HgRepositoryHandler handler, HgRepositoryFactory factory, sonia.scm.repository.Repository scmRepository) {
-    this.handler = handler;
+  public HgCommandContext(HgConfigResolver configResolver, HgRepositoryFactory factory, sonia.scm.repository.Repository scmRepository) {
+    this.configResolver = configResolver;
     this.factory = factory;
     this.scmRepository = scmRepository;
   }
@@ -66,14 +66,17 @@ public class HgCommandContext implements Closeable, RepositoryProvider {
     return factory.openForWrite(scmRepository);
   }
 
+  private HgConfig config;
 
-  public HgConfig getConfig()
-  {
-    return handler.getConfig();
+  public HgConfig getConfig() {
+    if (config == null) {
+      config = configResolver.resolve(scmRepository);
+    }
+    return config;
   }
 
   public File getDirectory() {
-    return handler.getDirectory(scmRepository.getId());
+    return getConfig().getDirectory();
   }
 
   public sonia.scm.repository.Repository getScmRepository() {
@@ -84,7 +87,6 @@ public class HgCommandContext implements Closeable, RepositoryProvider {
   public sonia.scm.repository.Repository get() {
     return getScmRepository();
   }
-
 
   @Override
   public void close() {

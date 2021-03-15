@@ -34,11 +34,12 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.Answers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgVndMediaType;
 import sonia.scm.web.RestDispatcher;
@@ -65,33 +66,41 @@ public class HgConfigResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private RestDispatcher dispatcher = new RestDispatcher();
-
-  private final URI baseUri = URI.create("/");
+  private final RestDispatcher dispatcher = new RestDispatcher();
 
   @InjectMocks
-  private HgConfigDtoToHgConfigMapperImpl dtoToConfigMapper;
-
-  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
-  private ScmPathInfoStore scmPathInfoStore;
-
-  @InjectMocks
-  private HgConfigToHgConfigDtoMapperImpl configToDtoMapper;
+  private HgGlobalConfigDtoToHgConfigMapperImpl dtoToConfigMapper;
 
   @Mock
   private HgRepositoryHandler repositoryHandler;
 
   @Mock
-  private Provider<HgConfigAutoConfigurationResource> autoconfigResource;
+  private Provider<HgGlobalConfigAutoConfigurationResource> autoconfigResource;
+
+  @Mock
+  private Provider<HgRepositoryConfigResource> repositoryConfigResource;
 
   @Before
   public void prepareEnvironment() {
-    HgConfig gitConfig = createConfiguration();
+    HgGlobalConfig gitConfig = createConfiguration();
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
-    HgConfigResource gitConfigResource =
-      new HgConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler, autoconfigResource);
+
+    HgConfigResource gitConfigResource = new HgConfigResource(
+      dtoToConfigMapper, createConfigToDtoMapper(), repositoryHandler,
+      autoconfigResource, repositoryConfigResource
+    );
     dispatcher.addSingletonResource(gitConfigResource);
-    when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);
+  }
+
+  private HgGlobalConfigToHgGlobalConfigDtoMapper createConfigToDtoMapper() {
+    ScmPathInfoStore store = new ScmPathInfoStore();
+    store.set(() -> URI.create("/"));
+    HgConfigLinks links = new HgConfigLinks(store);
+    HgGlobalConfigToHgGlobalConfigDtoMapper mapper = Mappers.getMapper(
+      HgGlobalConfigToHgGlobalConfigDtoMapper.class
+    );
+    mapper.setLinks(links);
+    return mapper;
   }
 
   @Test
@@ -172,8 +181,8 @@ public class HgConfigResourceTest {
     return response;
   }
 
-  private HgConfig createConfiguration() {
-    HgConfig config = new HgConfig();
+  private HgGlobalConfig createConfiguration() {
+    HgGlobalConfig config = new HgGlobalConfig();
     config.setDisabled(false);
     return config;
   }

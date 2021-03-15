@@ -24,14 +24,30 @@
 
 package sonia.scm.api.v2.resources;
 
-interface UpdateHgConfigDto {
-  boolean isDisabled();
+import com.google.common.base.Strings;
 
-  String getHgBinary();
+import javax.validation.ConstraintValidator;
+import javax.validation.ConstraintValidatorContext;
+import java.nio.charset.Charset;
+import java.nio.charset.UnsupportedCharsetException;
 
-  String getEncoding();
+public class EncodingValidator implements ConstraintValidator<Encoding, String> {
 
-  boolean isShowRevisionInId();
+  @Override
+  public void initialize(Encoding constraintAnnotation) {
+    // do nothing
+  }
 
-  boolean isEnableHttpPostArgs();
+  @Override
+  public boolean isValid(String value, ConstraintValidatorContext context) {
+    if (Strings.isNullOrEmpty(value)) {
+      return true;
+    }
+    try {
+      Charset.forName(value);
+      return true;
+    } catch (UnsupportedCharsetException ex) {
+      return false;
+    }
+  }
 }

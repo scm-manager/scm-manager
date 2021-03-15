@@ -25,7 +25,6 @@
 package sonia.scm.repository;
 
 import com.aragost.javahg.RepositoryConfiguration;
-import com.google.common.annotations.VisibleForTesting;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.hooks.HookEnvironment;
@@ -38,32 +37,21 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.charset.UnsupportedCharsetException;
 import java.util.Map;
-import java.util.function.Function;
 
 @Singleton
 public class HgRepositoryFactory {
 
   private static final Logger LOG = LoggerFactory.getLogger(HgRepositoryFactory.class);
 
-  private final HgRepositoryHandler handler;
+  private final HgConfigResolver configResolver;
   private final HookEnvironment hookEnvironment;
   private final HgEnvironmentBuilder environmentBuilder;
-  private final Function<Repository, File> directoryResolver;
 
   @Inject
-  public HgRepositoryFactory(HgRepositoryHandler handler, HookEnvironment hookEnvironment, HgEnvironmentBuilder environmentBuilder) {
-    this(
-      handler, hookEnvironment, environmentBuilder,
-      repository -> handler.getDirectory(repository.getId())
-    );
-  }
-
-  @VisibleForTesting
-  public HgRepositoryFactory(HgRepositoryHandler handler, HookEnvironment hookEnvironment, HgEnvironmentBuilder environmentBuilder, Function<Repository, File> directoryResolver) {
-    this.handler = handler;
+  public HgRepositoryFactory(HgConfigResolver configResolver, HookEnvironment hookEnvironment, HgEnvironmentBuilder environmentBuilder) {
+    this.configResolver = configResolver;
     this.hookEnvironment = hookEnvironment;
     this.environmentBuilder = environmentBuilder;
-    this.directoryResolver = directoryResolver;
   }
 
   public com.aragost.javahg.Repository openForRead(Repository repository) {
@@ -75,7 +63,8 @@ public class HgRepositoryFactory {
   }
 
   private com.aragost.javahg.Repository open(Repository repository, Map<String, String> environment) {
-    File directory = directoryResolver.apply(repository);
+    HgConfig config = configResolver.resolve(repository);
+    File directory = config.getDirectory();
 
     RepositoryConfiguration repoConfiguration = RepositoryConfiguration.DEFAULT;
     repoConfiguration.getEnvironment().putAll(environment);
@@ -84,18 +73,18 @@ public class HgRepositoryFactory {
     boolean pending = hookEnvironment.isPending();
     repoConfiguration.setEnablePendingChangesets(pending);
 
-    Charset encoding = encoding();
+    Charset encoding = encoding(config);
     repoConfiguration.setEncoding(encoding);
 
-    repoConfiguration.setHgBin(handler.getConfig().getHgBinary());
+    repoConfiguration.setHgBin(config.getHgBinary());
 
     LOG.trace("open hg repository {}: encoding: {}, pending: {}", directory, encoding, pending);
 
     return com.aragost.javahg.Repository.open(repoConfiguration, directory);
   }
 
-  private Charset encoding() {
-    String charset = handler.getConfig().getEncoding();
+  private Charset encoding(HgConfig config) {
+    String charset = config.getEncoding();
     try {
       return Charset.forName(charset);
     } catch (UnsupportedCharsetException ex) {

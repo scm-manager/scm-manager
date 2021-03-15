@@ -33,13 +33,14 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.config.ConfigurationPermissions;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgVndMediaType;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
+import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
@@ -57,20 +58,23 @@ import javax.ws.rs.core.Response;
 public class HgConfigResource {
 
   static final String HG_CONFIG_PATH_V2 = "v2/config/hg";
-  private final HgConfigDtoToHgConfigMapper dtoToConfigMapper;
-  private final HgConfigToHgConfigDtoMapper configToDtoMapper;
+  private final HgGlobalConfigDtoToHgConfigMapper dtoToConfigMapper;
+  private final HgGlobalConfigToHgGlobalConfigDtoMapper configToDtoMapper;
   private final HgRepositoryHandler repositoryHandler;
-  private final Provider<HgConfigAutoConfigurationResource> autoconfigResource;
+  private final Provider<HgGlobalConfigAutoConfigurationResource> autoconfigResource;
+  private final Provider<HgRepositoryConfigResource> repositoryConfigResource;
 
   @Inject
-  public HgConfigResource(HgConfigDtoToHgConfigMapper dtoToConfigMapper,
-                          HgConfigToHgConfigDtoMapper configToDtoMapper,
+  public HgConfigResource(HgGlobalConfigDtoToHgConfigMapper dtoToConfigMapper,
+                          HgGlobalConfigToHgGlobalConfigDtoMapper configToDtoMapper,
                           HgRepositoryHandler repositoryHandler,
-                          Provider<HgConfigAutoConfigurationResource> autoconfigResource) {
+                          Provider<HgGlobalConfigAutoConfigurationResource> autoconfigResource,
+                          Provider<HgRepositoryConfigResource> repositoryConfigResource) {
     this.dtoToConfigMapper = dtoToConfigMapper;
     this.configToDtoMapper = configToDtoMapper;
     this.repositoryHandler = repositoryHandler;
     this.autoconfigResource = autoconfigResource;
+    this.repositoryConfigResource = repositoryConfigResource;
   }
 
   /**
@@ -85,7 +89,7 @@ public class HgConfigResource {
     description = "success",
     content = @Content(
       mediaType = HgVndMediaType.CONFIG,
-      schema = @Schema(implementation = HgConfigDto.class)
+      schema = @Schema(implementation = HgGlobalGlobalConfigDto.class)
     )
   )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
@@ -99,12 +103,12 @@ public class HgConfigResource {
     ))
   public Response get() {
 
-    ConfigurationPermissions.read(HgConfig.PERMISSION).check();
+    ConfigurationPermissions.read(HgGlobalConfig.PERMISSION).check();
 
-    HgConfig config = repositoryHandler.getConfig();
+    HgGlobalConfig config = repositoryHandler.getConfig();
 
     if (config == null) {
-      config = new HgConfig();
+      config = new HgGlobalConfig();
       repositoryHandler.setConfig(config);
     }
 
@@ -127,7 +131,7 @@ public class HgConfigResource {
     requestBody = @RequestBody(
       content = @Content(
         mediaType = HgVndMediaType.CONFIG,
-        schema = @Schema(implementation = UpdateHgConfigDto.class),
+        schema = @Schema(implementation = UpdateHgGlobalConfigDto.class),
         examples = @ExampleObject(
           name = "Overwrites current configuration with this one.",
           value = "{\n  \"disabled\":false,\n  \"hgBinary\":\"hg\",\n  \"encoding\":\"UTF-8\",\n  \"showRevisionInId\":false,\n  \"enableHttpPostArgs\":false\n}",
@@ -149,9 +153,9 @@ public class HgConfigResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response update(HgConfigDto configDto) {
+  public Response update(@Valid HgGlobalGlobalConfigDto configDto) {
 
-    HgConfig config = dtoToConfigMapper.map(configDto);
+    HgGlobalConfig config = dtoToConfigMapper.map(configDto);
 
     ConfigurationPermissions.write(config).check();
 
@@ -162,7 +166,13 @@ public class HgConfigResource {
   }
 
   @Path("auto-configuration")
-  public HgConfigAutoConfigurationResource getAutoConfigurationResource() {
+  public HgGlobalConfigAutoConfigurationResource getAutoConfigurationResource() {
     return autoconfigResource.get();
+  }
+
+
+  @Path("{namespace}/{name}")
+  public HgRepositoryConfigResource getRepositoryConfigResource() {
+    return repositoryConfigResource.get();
   }
 }

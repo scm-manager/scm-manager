@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
@@ -32,7 +32,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import sonia.scm.config.ConfigurationPermissions;
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgVndMediaType;
 import sonia.scm.web.VndMediaType;
@@ -42,14 +42,14 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
-public class HgConfigAutoConfigurationResource {
+public class HgGlobalConfigAutoConfigurationResource {
 
   private final HgRepositoryHandler repositoryHandler;
-  private final HgConfigDtoToHgConfigMapper dtoToConfigMapper;
+  private final HgGlobalConfigDtoToHgConfigMapper dtoToConfigMapper;
 
   @Inject
-  public HgConfigAutoConfigurationResource(HgConfigDtoToHgConfigMapper dtoToConfigMapper,
-                                           HgRepositoryHandler repositoryHandler) {
+  public HgGlobalConfigAutoConfigurationResource(HgGlobalConfigDtoToHgConfigMapper dtoToConfigMapper,
+                                                 HgRepositoryHandler repositoryHandler) {
     this.dtoToConfigMapper = dtoToConfigMapper;
     this.repositoryHandler = repositoryHandler;
   }
@@ -92,7 +92,7 @@ public class HgConfigAutoConfigurationResource {
     requestBody = @RequestBody(
       content = @Content(
         mediaType = HgVndMediaType.CONFIG,
-        schema = @Schema(implementation = UpdateHgConfigDto.class),
+        schema = @Schema(implementation = UpdateHgGlobalConfigDto.class),
         examples = @ExampleObject(
           name = "Overwrites current configuration with this one and installs the mercurial binary.",
           value = "{\n  \"disabled\":false,\n  \"hgBinary\":\"hg\",\n  \"pythonBinary\":\"python\",\n  \"pythonPath\":\"\",\n  \"encoding\":\"UTF-8\",\n  \"useOptimizedBytecode\":false,\n  \"showRevisionInId\":false,\n  \"disableHookSSLValidation\":false,\n  \"enableHttpPostArgs\":false\n}",
@@ -114,14 +114,14 @@ public class HgConfigAutoConfigurationResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response autoConfiguration(HgConfigDto configDto) {
+  public Response autoConfiguration(HgGlobalGlobalConfigDto configDto) {
 
-    HgConfig config;
+    HgGlobalConfig config;
 
     if (configDto != null) {
       config = dtoToConfigMapper.map(configDto);
     } else {
-      config = new HgConfig();
+      config = new HgGlobalConfig();
     }
 
     ConfigurationPermissions.write(config).check();

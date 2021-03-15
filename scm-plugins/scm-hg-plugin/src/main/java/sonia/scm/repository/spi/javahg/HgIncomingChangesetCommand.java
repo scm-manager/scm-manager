@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi.javahg;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -61,9 +61,7 @@ public class HgIncomingChangesetCommand
    *
    * @return
    */
-  public static HgIncomingChangesetCommand on(Repository repository,
-    HgConfig config)
-  {
+  public static HgIncomingChangesetCommand on(Repository repository, HgConfig config) {
     return new HgIncomingChangesetCommand(repository, config);
   }
 

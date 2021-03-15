@@ -41,38 +41,32 @@ import static org.mockito.Mockito.mock;
 //~--- JDK imports ------------------------------------------------------------
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public final class HgTestUtil
-{
+public final class HgTestUtil {
 
   /**
    * Constructs ...
-   *
    */
-  private HgTestUtil() {}
+  private HgTestUtil() {
+  }
 
   //~--- methods --------------------------------------------------------------
 
   /**
    * Method description
    *
-   *
    * @param handler
    */
-  public static void checkForSkip(HgRepositoryHandler handler)
-  {
+  public static void checkForSkip(HgRepositoryHandler handler) {
 
     // skip tests if hg not in path
-    if (!handler.isConfigured())
-    {
+    if (!handler.isConfigured()) {
       System.out.println("WARNING could not find hg, skipping test");
       Assume.assumeTrue(false);
     }
 
-    if (Boolean.getBoolean("sonia.scm.test.skip.hg"))
-    {
+    if (Boolean.getBoolean("sonia.scm.test.skip.hg")) {
       System.out.println("WARNING mercurial test are disabled");
       Assume.assumeTrue(false);
     }
@@ -97,8 +91,9 @@ public final class HgTestUtil
   }
 
   public static HgRepositoryFactory createFactory(HgRepositoryHandler handler, File directory) {
+    HgConfigResolver resolver = new HgConfigResolver(handler, repository -> directory);
     return new HgRepositoryFactory(
-      handler, new HookEnvironment(), new EmptyHgEnvironmentBuilder(), repository -> directory
+      resolver, new HookEnvironment(), new EmptyHgEnvironmentBuilder()
     );
   }
 }

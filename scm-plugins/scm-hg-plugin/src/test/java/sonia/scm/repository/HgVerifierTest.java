@@ -107,7 +107,7 @@ class HgVerifierTest {
     }
 
     private boolean verify(Path hg) {
-      HgConfig config = new HgConfig();
+      HgGlobalConfig config = new HgGlobalConfig();
       config.setHgBinary(hg.toString());
       return verifier.isValid(config);
     }

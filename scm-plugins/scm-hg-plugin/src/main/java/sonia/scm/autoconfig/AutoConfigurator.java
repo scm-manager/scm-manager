@@ -24,10 +24,10 @@
 
 package sonia.scm.autoconfig;
 
-import sonia.scm.repository.HgConfig;
+import sonia.scm.repository.HgGlobalConfig;
 
 public interface AutoConfigurator {
 
-  void configure(HgConfig config);
+  void configure(HgGlobalConfig config);
 
 }

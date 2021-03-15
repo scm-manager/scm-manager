@@ -21,45 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
+import de.otto.edison.hal.Links;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 import sonia.scm.config.ConfigurationPermissions;
-import sonia.scm.plugin.Extension;
-import sonia.scm.repository.HgConfig;
-import sonia.scm.web.JsonEnricherBase;
-import sonia.scm.web.JsonEnricherContext;
+import sonia.scm.repository.HgGlobalConfig;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 
-import static java.util.Collections.singletonMap;
-import static sonia.scm.web.VndMediaType.INDEX;
+import static de.otto.edison.hal.Link.link;
+import static de.otto.edison.hal.Links.linkingTo;
 
-@Extension
-public class HgConfigInIndexResource extends JsonEnricherBase {
-
-  private final Provider<ScmPathInfoStore> scmPathInfoStore;
+// Mapstruct does not support parameterized (i.e. non-default) constructors. Thus, we need to use field injection.
+@SuppressWarnings("squid:S3306")
+@Mapper
+public abstract class HgGlobalConfigToHgGlobalConfigDtoMapper extends BaseMapper<HgGlobalConfig, HgGlobalGlobalConfigDto> {
 
   @Inject
-  public HgConfigInIndexResource(Provider<ScmPathInfoStore> scmPathInfoStore, ObjectMapper objectMapper) {
-    super(objectMapper);
-    this.scmPathInfoStore = scmPathInfoStore;
+  private HgConfigLinks links;
+
+  @VisibleForTesting
+  void setLinks(HgConfigLinks links) {
+    this.links = links;
   }
 
-  @Override
-  public void enrich(JsonEnricherContext context) {
-    if (resultHasMediaType(INDEX, context) && ConfigurationPermissions.read(HgConfig.PERMISSION).isPermitted()) {
-      String hgConfigUrl = new LinkBuilder(scmPathInfoStore.get().get(), HgConfigResource.class)
-        .method("get")
-        .parameters()
-        .href();
-
-      JsonNode hgConfigRefNode = createObject(singletonMap("href", value(hgConfigUrl)));
-
-      addPropertyNode(context.getResponseEntity().get("_links"), "hgConfig", hgConfigRefNode);
+  @AfterMapping
+  void appendLinks(HgGlobalConfig config, @MappingTarget HgGlobalGlobalConfigDto target) {
+    HgConfigLinks.ConfigLinks configLinks = links.global();
+    Links.Builder linksBuilder = linkingTo().self(configLinks.get());
+    if (ConfigurationPermissions.write(config).isPermitted()) {
+      linksBuilder.single(link("update", configLinks.update()));
     }
+    target.add(linksBuilder.build());
   }
 }

@@ -22,43 +22,56 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.api.v2.resources;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.io.TempDir;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.repository.HgGlobalConfig;
-import sonia.scm.repository.HgRepositoryHandler;
-import sonia.scm.repository.HgTestUtil;
+import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryTestData;
 
-import java.io.IOException;
-import java.nio.file.Path;
+import java.net.URI;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class HgVersionCommandTest {
+class HgRepositoryConfigEnricherTest {
 
-  @Test
-  void shouldReturnVersion(@TempDir Path temp) {
-    HgRepositoryHandler handler = HgTestUtil.createHandler(temp.toFile());
-    HgTestUtil.checkForSkip(handler);
+  private HgRepositoryConfigEnricher enricher;
 
-    HgVersionCommand command = new HgVersionCommand(handler.getConfig());
-    assertThat(command.get())
-      .contains("python/")
-      .contains("mercurial/")
-      .isNotEqualTo(HgVersionCommand.UNKNOWN);
+  @Mock
+  private HalEnricherContext context;
+
+  @Mock
+  private HalAppender appender;
+
+  @BeforeEach
+  void setUp() {
+    ScmPathInfoStore store = new ScmPathInfoStore();
+    store.set(() -> URI.create("/"));
+    HgConfigLinks links = new HgConfigLinks(store);
+    enricher = new HgRepositoryConfigEnricher(links);
   }
 
   @Test
-  void shouldReturnUnknownForIOException() {
-    HgVersionCommand command = new HgVersionCommand(new HgGlobalConfig(), "/i/dont/know", cmd -> {
-      throw new IOException("failed");
-    });
+  void shouldEnrichHgRepository() {
+    addRepositoryToContext("hg");
+    enricher.enrich(context, appender);
+    verify(appender).appendLink("configuration", "/v2/config/hg/hitchhiker/HeartOfGold");
+  }
 
-    assertThat(command.get()).isEqualTo(HgVersionCommand.UNKNOWN);
+  @Test
+  void shouldNotEnrichNonHgRepository() {
+    addRepositoryToContext("git");
+    enricher.enrich(context, appender);
+    verify(appender, never()).appendLink(anyString(), anyString());
+  }
+
+  private void addRepositoryToContext(String type) {
+    Repository repository = RepositoryTestData.createHeartOfGold(type);
+    when(context.oneRequireByType(Repository.class)).thenReturn(repository);
   }
 
 }

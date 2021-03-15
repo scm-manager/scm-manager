@@ -42,7 +42,6 @@ import sonia.scm.security.CipherUtil;
 import sonia.scm.security.Xsrf;
 
 import javax.annotation.Nonnull;
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Map;
@@ -60,7 +59,7 @@ class DefaultHgEnvironmentBuilderTest {
   private AccessTokenBuilderFactory accessTokenBuilderFactory;
 
   @Mock
-  private HgRepositoryHandler repositoryHandler;
+  private HgConfigResolver repositoryConfigResolver;
 
   @Mock
   private HookEnvironment hookEnvironment;
@@ -70,6 +69,9 @@ class DefaultHgEnvironmentBuilderTest {
 
   @InjectMocks
   private DefaultHgEnvironmentBuilder builder;
+
+  @Mock
+  private HgConfig config;
 
   private Path directory;
 
@@ -141,13 +143,11 @@ class DefaultHgEnvironmentBuilderTest {
 
   @Nonnull
   private Repository prepareForRead(String id) {
-    when(repositoryHandler.getDirectory(id)).thenReturn(directory.resolve("repo").toFile());
-
-    HgConfig config = new HgConfig();
-    when(repositoryHandler.getConfig()).thenReturn(config);
-
     Repository heartOfGold = RepositoryTestData.createHeartOfGold();
     heartOfGold.setId(id);
+
+    when(repositoryConfigResolver.resolve(heartOfGold)).thenReturn(config);
+    when(config.getDirectory()).thenReturn(directory.resolve("repo").toFile());
 
     return heartOfGold;
   }
