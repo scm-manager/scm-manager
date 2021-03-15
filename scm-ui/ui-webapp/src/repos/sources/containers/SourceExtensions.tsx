@@ -64,7 +64,15 @@ const SourceExtensions: FC<Props> = ({ repository, baseUrl }) => {
     return <Loading />;
   }
 
-  const extprops = { extension, repository, revision, path, sources, baseUrl };
+  const extprops = {
+    extension,
+    repository,
+    revision: revision ? encodeURIComponent(revision) : "",
+    path,
+    sources,
+    baseUrl
+  };
+
   if (!binder.hasExtension(extensionPointName, extprops)) {
     return <Notification type="warning">{t("sources.extension.notBound")}</Notification>;
   }
