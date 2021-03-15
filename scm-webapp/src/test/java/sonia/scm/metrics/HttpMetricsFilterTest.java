@@ -25,7 +25,11 @@
 
 package sonia.scm.metrics;
 
+import com.google.inject.util.Providers;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
+import io.micrometer.core.instrument.binder.http.Outcome;
+import io.micrometer.core.instrument.search.RequiredSearch;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,7 +40,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -47,55 +50,38 @@ class HttpMetricsFilterTest {
   private MeterRegistry registry;
 
   @BeforeEach
-  void prepare() {
+  void setUpRegistry() {
     registry = new SimpleMeterRegistry();
   }
 
   @Test
-  void shouldIncrementCounter() throws IOException, ServletException {
-    filter("GET", 200);
-    assertThat(count()).isEqualTo(1.0);
+  void shouldCollectMetrics() throws IOException, ServletException {
+    filter("GET", HttpServletResponse.SC_OK);
+    filter("GET", HttpServletResponse.SC_OK);
+
+    Timer timer = timer("GET", HttpServletResponse.SC_OK, Outcome.SUCCESS);
+    assertThat(timer.count()).isEqualTo(2);
   }
 
   @Test
-  void shouldCollectRequestDuration() throws IOException, ServletException {
-    filter("GET", 200);
-    filter("GET", 200);
-    filter("GET", 200);
-    assertThat(duration()).isGreaterThan(0.0);
+  void shouldCollectDifferentMetrics() throws IOException, ServletException {
+    filter("GET", HttpServletResponse.SC_OK);
+    filter("POST", HttpServletResponse.SC_CREATED);
+    filter("DELETE", HttpServletResponse.SC_NOT_FOUND);
+
+    Timer ok = timer("GET", HttpServletResponse.SC_OK, Outcome.SUCCESS);
+    Timer created = timer("POST", HttpServletResponse.SC_CREATED, Outcome.SUCCESS);
+    Timer notFound = timer("DELETE", HttpServletResponse.SC_NOT_FOUND, Outcome.CLIENT_ERROR);
+
+    assertThat(ok.count()).isEqualTo(1);
+    assertThat(created.count()).isEqualTo(1);
+    assertThat(notFound.count()).isEqualTo(1);
   }
 
-  private double duration() {
+  private Timer timer(String method, int status, Outcome outcome) {
     return registry.get(HttpMetricsFilter.METRIC_DURATION)
-      .tags("method", "GET", "outcome", "SUCCESS", "status", "200", "category", "unknown")
-      .timer()
-      .max(TimeUnit.NANOSECONDS);
-  }
-
-  @Test
-  void shouldCreateDifferentCounters() throws IOException, ServletException {
-    filter("GET", 200);
-    filter("GET", 200);
-    filter("POST", 200);
-    filter("POST", 404);
-
-    assertThat(counter("GET", 200)).isEqualTo(2.0);
-    assertThat(counter("POST", 200)).isEqualTo(1.0);
-    assertThat(counter("POST", 404)).isEqualTo(1.0);
-  }
-
-  private double count() {
-    return registry.get(HttpMetricsFilter.METRIC_COUNT)
-      .tags("method", "GET", "outcome", "SUCCESS", "status", "200", "category", "unknown")
-      .counter()
-      .count();
-  }
-
-  private double counter(String method, int statusCode) {
-    return registry.get(HttpMetricsFilter.METRIC_COUNT)
-      .tags("method", method, "status", String.valueOf(statusCode))
-      .counter()
-      .count();
+      .tags("category", "UNKNOWN", "method", method, "outcome", outcome.name(), "status", String.valueOf(status))
+      .timer();
   }
 
   private void filter(String requestMethod, int responseStatus) throws IOException, ServletException {
@@ -105,10 +91,10 @@ class HttpMetricsFilterTest {
     filter(request, response, chain);
   }
 
-  private void filter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+  private void filter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException, IOException, ServletException {
     RequestCategoryDetector detector = mock(RequestCategoryDetector.class);
     when(detector.detect(request)).thenReturn(RequestCategory.UNKNOWN);
-    HttpMetricsFilter filter = new HttpMetricsFilter(registry, detector);
+    HttpMetricsFilter filter = new HttpMetricsFilter(Providers.of(registry), detector);
     filter.doFilter(request, response, chain);
   }
 

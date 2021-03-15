@@ -25,7 +25,6 @@
 
 package sonia.scm.metrics;
 
-import io.micrometer.core.instrument.Counter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.Tags;
@@ -38,6 +37,7 @@ import sonia.scm.filter.WebElement;
 import sonia.scm.web.filter.HttpFilter;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -48,40 +48,40 @@ import java.io.IOException;
 @Priority(Filters.PRIORITY_PRE_BASEURL)
 public class HttpMetricsFilter extends HttpFilter {
 
-  static final String METRIC_DURATION = "scm.http.request.duration";
-  static final String METRIC_COUNT = "scm.http.request.count";
+  static final String METRIC_DURATION = "scm.http.requests";
 
   private final HttpServletRequestTagsProvider tagsProvider = new DefaultHttpServletRequestTagsProvider();
 
-  private final MeterRegistry registry;
+  private final Provider<MeterRegistry> registryProvider;
   private final RequestCategoryDetector detector;
 
   @Inject
-  public HttpMetricsFilter(MeterRegistry registry, RequestCategoryDetector detector) {
-    this.registry = registry;
+  public HttpMetricsFilter(Provider<MeterRegistry> registryProvider, RequestCategoryDetector detector) {
+    this.registryProvider = registryProvider;
     this.detector = detector;
-    Timer.builder(METRIC_DURATION)
-      .description("Duration of an http request")
-      .register(registry);
-    Counter.builder(METRIC_COUNT)
-      .description("Count of http requests")
-      .register(registry);
   }
 
   @Override
   protected void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+    MeterRegistry registry = registryProvider.get();
     Timer.Sample sample = Timer.start(registry);
     try {
       chain.doFilter(request, response);
     } finally {
       Tags tags = tags(request, response);
-      sample.stop(registry.timer(METRIC_DURATION, tags));
-      registry.counter(METRIC_COUNT, tags).increment();
+      sample.stop(timer(registry, tags));
     }
+  }
+
+  private Timer timer(MeterRegistry registry, Tags tags) {
+    return Timer.builder(METRIC_DURATION)
+      .description("Duration of an http request")
+      .tags(tags)
+      .register(registry);
   }
 
   private Tags tags(HttpServletRequest request, HttpServletResponse response) {
     Iterable<Tag> tags = tagsProvider.getTags(request, response);
-    return Tags.concat(tags, "category", detector.detect(request).asValue());
+    return Tags.concat(tags, "category", detector.detect(request).name());
   }
 }

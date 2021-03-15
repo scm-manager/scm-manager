@@ -31,6 +31,8 @@ import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics;
 import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics;
 import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
@@ -39,6 +41,8 @@ import java.util.Set;
 
 @Singleton
 public class MeterRegistryProvider implements Provider<MeterRegistry> {
+
+  private static final Logger LOG = LoggerFactory.getLogger(MeterRegistryProvider.class);
 
   private final Set<MonitoringSystem> providerSet;
 
@@ -58,15 +62,20 @@ public class MeterRegistryProvider implements Provider<MeterRegistry> {
 
   private MeterRegistry createRegistry() {
     if (providerSet.size() == 1) {
-      return providerSet.iterator().next().getRegistry();
+      MeterRegistry registry = providerSet.iterator().next().getRegistry();
+      LOG.debug("create meter registry from single registration: {}", registry.getClass());
+      return registry;
     }
     return createCompositeRegistry();
   }
 
   private CompositeMeterRegistry createCompositeRegistry() {
+    LOG.debug("create composite meter registry");
     CompositeMeterRegistry registry = new CompositeMeterRegistry();
     for (MonitoringSystem provider : providerSet) {
-      registry.add(provider.getRegistry());
+      MeterRegistry subRegistry = provider.getRegistry();
+      LOG.debug("register {} as part of composite meter registry", subRegistry.getClass());
+      registry.add(subRegistry);
     }
     return registry;
   }

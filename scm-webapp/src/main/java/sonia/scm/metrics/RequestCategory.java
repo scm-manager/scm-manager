@@ -25,13 +25,9 @@
 
 package sonia.scm.metrics;
 
-import java.util.Locale;
 
 public enum RequestCategory {
 
-  UI, API, PROTOCOL, STATIC, UNKNOWN;
+  UI, API, PROTOCOL, STATIC, UNKNOWN
 
-  public String asValue() {
-    return name().toLowerCase(Locale.ENGLISH);
-  }
 }
