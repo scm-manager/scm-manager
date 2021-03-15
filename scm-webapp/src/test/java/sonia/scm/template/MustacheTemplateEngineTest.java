@@ -21,12 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.collect.ImmutableMap;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 import sonia.scm.plugin.PluginLoader;
@@ -67,7 +68,7 @@ public class MustacheTemplateEngineTest extends TemplateEngineTestBase
     MustacheTemplateEngine.PluginLoaderHolder holder = new MustacheTemplateEngine.PluginLoaderHolder();
     holder.pluginLoader = loader;
 
-    return new MustacheTemplateEngine(context, holder);
+    return new MustacheTemplateEngine(context, holder, new SimpleMeterRegistry());
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -120,7 +121,7 @@ public class MustacheTemplateEngineTest extends TemplateEngineTestBase
   public void testCreateEngineWithoutPluginLoader() throws IOException {
     ServletContext context = mock(ServletContext.class);
     MustacheTemplateEngine.PluginLoaderHolder holder = new MustacheTemplateEngine.PluginLoaderHolder();
-    MustacheTemplateEngine engine = new MustacheTemplateEngine(context, holder);
+    MustacheTemplateEngine engine = new MustacheTemplateEngine(context, holder, new SimpleMeterRegistry());
 
     Template template = engine.getTemplate(getTemplateResource());
 

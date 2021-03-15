@@ -24,9 +24,37 @@
 
 package sonia.scm.metrics;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tag;
+import io.micrometer.core.instrument.binder.jvm.ExecutorServiceMetrics;
 
-public enum RequestCategory {
+import java.util.Collections;
+import java.util.concurrent.ExecutorService;
 
-  UI, API, PROTOCOL, STATIC, UNKNOWN
+/**
+ * Util methods to collect metrics from known apis.
+ *
+ * @since 2.16.0
+ */
+public final class Metrics {
+
+  private Metrics() {
+  }
+
+  /**
+   * Collect metrics from an {@link ExecutorService}.
+   *
+   * @param registry meter registry
+   * @param executorService executor service to monitor
+   * @param name name of executor service
+   * @param type type of executor service e.g.: cached, fixed, etc.
+   */
+  public static void executor(MeterRegistry registry, ExecutorService executorService, String name, String type) {
+    new ExecutorServiceMetrics(
+      executorService,
+      name,
+      Collections.singleton(Tag.of("type", type))
+    ).bindTo(registry);
+  }
 
 }

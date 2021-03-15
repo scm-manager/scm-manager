@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
 import org.eclipse.jgit.transport.Transport;
 import org.junit.rules.ExternalResource;
@@ -49,7 +50,7 @@ class BindTransportProtocolRule extends ExternalResource {
   @Override
   protected void before() {
     HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
-    hookEventFacade = new GitHookEventFacade(new HookEventFacade(of(repositoryManager), hookContextFactory));
+    hookEventFacade = new GitHookEventFacade(new HookEventFacade(of(repositoryManager), hookContextFactory), new SimpleMeterRegistry());
     GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
     scmTransportProtocol = new ScmTransportProtocol(of(GitTestHelper.createConverterFactory()), of(hookEventFacade), of(gitRepositoryHandler));
 

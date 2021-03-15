@@ -27,6 +27,7 @@ package sonia.scm.api.v2.resources;
 import com.google.common.base.Strings;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -43,6 +44,7 @@ import sonia.scm.importexport.ExportFileExtensionResolver;
 import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.FullScmRepositoryExporter;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
+import sonia.scm.metrics.Metrics;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
@@ -104,7 +106,10 @@ public class RepositoryExportResource {
                                   RepositoryImportExportEncryption repositoryImportExportEncryption,
                                   ExportService exportService,
                                   RepositoryExportInformationToDtoMapper informationToDtoMapper,
-                                  ExportFileExtensionResolver fileExtensionResolver, ResourceLinks resourceLinks) {
+                                  ExportFileExtensionResolver fileExtensionResolver,
+                                  ResourceLinks resourceLinks,
+                                  MeterRegistry registry
+  ) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.fullScmRepositoryExporter = fullScmRepositoryExporter;
@@ -113,7 +118,7 @@ public class RepositoryExportResource {
     this.informationToDtoMapper = informationToDtoMapper;
     this.fileExtensionResolver = fileExtensionResolver;
     this.resourceLinks = resourceLinks;
-    this.repositoryExportHandler = this.createExportHandlerPool();
+    this.repositoryExportHandler = this.createExportHandlerPool(registry);
   }
 
   /**
@@ -518,12 +523,14 @@ public class RepositoryExportResource {
     return Instant.now().toString().replace(":", "-").split("\\.")[0];
   }
 
-  private ExecutorService createExportHandlerPool() {
-    return Executors.newCachedThreadPool(
+  private ExecutorService createExportHandlerPool(MeterRegistry registry) {
+    ExecutorService executorService = Executors.newCachedThreadPool(
       new ThreadFactoryBuilder()
         .setNameFormat("RepositoryExportHandler-%d")
         .build()
     );
+    Metrics.executor(registry, executorService, "RepositoryExport", "cached");
+    return executorService;
   }
 
 

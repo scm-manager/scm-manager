@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.schedule;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -32,7 +33,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.concurrent.Future;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
@@ -56,7 +56,7 @@ class CronSchedulerTest {
   @Test
   void shouldScheduleWithClass() {
     when(task.hasNextRun()).thenReturn(true);
-    try (CronScheduler scheduler = new CronScheduler(taskFactory)) {
+    try (CronScheduler scheduler = new CronScheduler(taskFactory, new SimpleMeterRegistry())) {
       scheduler.schedule("vep", TestingRunnable.class);
       verify(task).setFuture(any(Future.class));
     }
@@ -65,7 +65,7 @@ class CronSchedulerTest {
   @Test
   void shouldScheduleWithRunnable() {
     when(task.hasNextRun()).thenReturn(true);
-    try (CronScheduler scheduler = new CronScheduler(taskFactory)) {
+    try (CronScheduler scheduler = new CronScheduler(taskFactory, new SimpleMeterRegistry())) {
       scheduler.schedule("vep", new TestingRunnable());
       verify(task).setFuture(any(Future.class));
     }
@@ -73,7 +73,7 @@ class CronSchedulerTest {
 
   @Test
   void shouldSkipSchedulingWithoutNextRun(){
-    try (CronScheduler scheduler = new CronScheduler(taskFactory)) {
+    try (CronScheduler scheduler = new CronScheduler(taskFactory, new SimpleMeterRegistry())) {
       scheduler.schedule("vep", new TestingRunnable());
       verify(task, never()).setFuture(any(Future.class));
     }

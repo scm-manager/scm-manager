@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.hooks;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.apache.shiro.SecurityUtils;
@@ -74,7 +75,7 @@ class HookServerTest {
   }
 
   private Response send(Request request) throws IOException {
-    try (HookServer server = new HookServer(HelloHandler::new)) {
+    try (HookServer server = new HookServer(HelloHandler::new, new SimpleMeterRegistry())) {
       int port = server.start();
       try (
         Socket socket = new Socket(InetAddress.getLoopbackAddress(), port);

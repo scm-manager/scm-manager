@@ -25,6 +25,7 @@
 package sonia.scm.admin;
 
 import com.google.common.collect.ImmutableList;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,7 +58,7 @@ class ReleaseFeedParserTest {
 
   @BeforeEach
   void createSut() {
-    releaseFeedParser = new ReleaseFeedParser(client, 500);
+    releaseFeedParser = new ReleaseFeedParser(client, new SimpleMeterRegistry(), 500);
   }
 
   @Test

@@ -21,23 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.cgi;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-
+import io.micrometer.core.instrument.MeterRegistry;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.metrics.Metrics;
 
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
+import javax.inject.Inject;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -50,13 +51,19 @@ public class DefaultCGIExecutorFactory implements CGIExecutorFactory, AutoClosea
    * Constructs ...
    *
    */
-  public DefaultCGIExecutorFactory()
-  {
-    //J-
-    this.executor = Executors.newCachedThreadPool(
-      new ThreadFactoryBuilder().setNameFormat("cgi-pool-%d").build()
+  @Inject
+  public DefaultCGIExecutorFactory(MeterRegistry registry) {
+    this.executor = createExecutor(registry);
+  }
+
+  private ExecutorService createExecutor(MeterRegistry registry) {
+    ExecutorService executorService = Executors.newCachedThreadPool(
+      new ThreadFactoryBuilder()
+        .setNameFormat("cgi-pool-%d")
+        .build()
     );
-    //J+
+    Metrics.executor(registry, executorService, "CGI", "cached");
+    return executorService;
   }
 
   //~--- methods --------------------------------------------------------------
