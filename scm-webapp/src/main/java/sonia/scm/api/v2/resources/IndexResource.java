@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -41,8 +41,8 @@ import javax.ws.rs.Produces;
 
 @OpenAPIDefinition(
   security = {
-    @SecurityRequirement(name = "Basic Authentication"),
-    @SecurityRequirement(name = "Bearer Token Authentication")
+    @SecurityRequirement(name = "Basic_Authentication"),
+    @SecurityRequirement(name = "Bearer_Token_Authentication")
   },
   tags = {
     @Tag(name = "Index", description = "SCM-Manager Index")
