@@ -51,7 +51,7 @@ const OverviewPageActions: FC<Props> = ({
   const history = useHistory();
   const location = useLocation();
   const [filterValue, setFilterValue] = useState(urls.getQueryStringFromLocation(location));
-  
+
   const groupSelector = groups && (
     <div className={"column is-flex"}>
       <DropDown
@@ -74,13 +74,11 @@ const OverviewPageActions: FC<Props> = ({
     return null;
   };
 
-  const filter = (filter: string) => {
-    if ((filter && filter !== filterValue) || (!filter && filterValue)) {
-      history.push(`/${link}/?q=${filter}`);
-    } else {
-      history.push(`${location.pathname}?q=${filter}`);
+  const filter = (q: string) => {
+    if (q !== filterValue) {
+      setFilterValue(q);
+      history.push(`${location.pathname}?q=${q}`);
     }
-    setFilterValue(filter);
   };
 
   return (
