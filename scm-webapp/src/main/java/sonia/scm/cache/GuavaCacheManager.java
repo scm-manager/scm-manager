@@ -24,8 +24,6 @@
 
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
@@ -34,8 +32,6 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.util.concurrent.ConcurrentHashMap;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Guava based implementation of {@link CacheManager} and {@link org.apache.shiro.cache.CacheManager}.
@@ -49,22 +45,23 @@ public class GuavaCacheManager implements CacheManager, org.apache.shiro.cache.C
 
   @SuppressWarnings({"java:S3740", "rawtypes"})
   private final ConcurrentHashMap<String, GuavaCache> caches = new ConcurrentHashMap<>();
-
   private final GuavaCacheConfiguration defaultConfiguration;
+  private final GuavaCacheFactory cacheFactory;
 
 
   @Inject
-  public GuavaCacheManager(GuavaCacheConfigurationReader configurationReader) {
-    this(configurationReader.read());
+  public GuavaCacheManager(GuavaCacheConfigurationReader configurationReader, GuavaCacheFactory cacheFactory) {
+    this(configurationReader.read(), cacheFactory);
   }
 
   @VisibleForTesting
-  protected GuavaCacheManager(GuavaCacheManagerConfiguration config) {
+  protected GuavaCacheManager(GuavaCacheManagerConfiguration config, GuavaCacheFactory cacheFactory) {
     defaultConfiguration = config.getDefaultCache();
+    this.cacheFactory = cacheFactory;
 
     for (GuavaNamedCacheConfiguration ncc : config.getCaches()) {
       LOG.debug("create cache {} from configured configuration {}", ncc.getName(), ncc);
-      caches.put(ncc.getName(), new GuavaCache<>(ncc));
+      caches.put(ncc.getName(), cacheFactory.create(ncc, ncc.getName()));
     }
   }
 
@@ -78,7 +75,7 @@ public class GuavaCacheManager implements CacheManager, org.apache.shiro.cache.C
         "cache {} does not exists, creating a new instance from default configuration: {}",
         cacheName, defaultConfiguration
       );
-      return new GuavaCache<>(defaultConfiguration, cacheName);
+      return cacheFactory.create(defaultConfiguration, cacheName);
     });
   }
 

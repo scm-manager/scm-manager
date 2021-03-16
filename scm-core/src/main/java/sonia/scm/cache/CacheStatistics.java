@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.cache;
 
 import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
@@ -36,19 +34,16 @@ import com.google.common.base.Objects;
  * @author Sebastian Sdorra
  * @since 2.0.0
  */
-public final class CacheStatistics
-{
+public final class CacheStatistics {
 
   /**
    * Constructs a new performance statistic for a {@link Cache}.
    *
-   *
-   * @param name name of the cache
-   * @param hitCount hit count
+   * @param name      name of the cache
+   * @param hitCount  hit count
    * @param missCount miss count
    */
-  public CacheStatistics(String name, long hitCount, long missCount)
-  {
+  public CacheStatistics(String name, long hitCount, long missCount) {
     this.name = name;
     this.hitCount = hitCount;
     this.missCount = missCount;
@@ -60,15 +55,12 @@ public final class CacheStatistics
    * {@inheritDoc}
    */
   @Override
-  public boolean equals(Object obj)
-  {
-    if (obj == null)
-    {
+  public boolean equals(Object obj) {
+    if (obj == null) {
       return false;
     }
 
-    if (getClass() != obj.getClass())
-    {
+    if (getClass() != obj.getClass()) {
       return false;
     }
 
@@ -83,8 +75,7 @@ public final class CacheStatistics
    * {@inheritDoc}
    */
   @Override
-  public int hashCode()
-  {
+  public int hashCode() {
     return Objects.hashCode(name, hitCount, missCount);
   }
 
@@ -92,14 +83,13 @@ public final class CacheStatistics
    * {@inheritDoc}
    */
   @Override
-  public String toString()
-  {
+  public String toString() {
     //J-
     return MoreObjects.toStringHelper(this)
-                  .add("name", name)
-                  .add("hitCount", hitCount)
-                  .add("missCount", missCount)
-                  .toString();
+      .add("name", name)
+      .add("hitCount", hitCount)
+      .add("missCount", missCount)
+      .toString();
     //J+
   }
 
@@ -108,81 +98,64 @@ public final class CacheStatistics
   /**
    * Returns number of times requested elements were found in the cache.
    *
-   *
    * @return number of cache hits
    */
-  public long getHitCount()
-  {
+  public long getHitCount() {
     return hitCount;
   }
 
   /**
    * Returns the ratio of cache requests which were hits.
    *
-   *
    * @return ratio of cache hits
    */
-  public double getHitRate()
-  {
+  public double getHitRate() {
     return ratio(hitCount);
   }
 
   /**
    * Returns number of times a requested element was not found in the cache.
    *
-   *
    * @return number of cache misses
    */
-  public long getMissCount()
-  {
+  public long getMissCount() {
     return missCount;
   }
 
   /**
    * Returns the ratio of cache requests which were misses.
    *
-   *
    * @return ratio of cache misses
    */
-  public double getMissRate()
-  {
+  public double getMissRate() {
     return ratio(missCount);
   }
 
   /**
    * Returns name of the cache.
    *
-   *
    * @return name of the cache
    */
-  public String getName()
-  {
+  public String getName() {
     return name;
   }
 
   /**
    * Returns the total number of requests, this includes hits and misses.
    *
-   *
    * @return numer of requests
    */
-  public long getRequestCount()
-  {
+  public long getRequestCount() {
     return hitCount + missCount;
   }
-
-  //~--- methods --------------------------------------------------------------
 
   /**
    * Calculates the ratio of a counter.
    *
-   *
    * @param counter counter
-   *
    * @return rate of counter
    */
-  private double ratio(long counter)
-  {
+  private double ratio(long counter) {
     long requestCount = getRequestCount();
 
     return (requestCount == 0)
@@ -190,14 +163,18 @@ public final class CacheStatistics
       : (double) counter / requestCount;
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** hit count */
+  /**
+   * hit count
+   */
   private final long hitCount;
 
-  /** miss count */
+  /**
+   * miss count
+   */
   private final long missCount;
 
-  /** name of cache */
+  /**
+   * name of cache
+   */
   private final String name;
 }
