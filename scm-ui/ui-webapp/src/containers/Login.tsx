@@ -44,10 +44,17 @@ export const from = (queryString?: string, stateParams?: FromObject | null): str
   return queryParams?.from || stateParams?.from || "/";
 };
 
-const Login: FC = ({}) => {
+const Login: FC = () => {
   const location = useLocation<FromObject>();
   const { login, isLoading, error } = useLogin();
   const loginInfoLink = useIndexLink("loginInfo");
+
+  // sometimes after logout the url is still /logout
+  // but it does not make sense to redirect to /logout
+  // directly after login
+  if (location.pathname === "/logout") {
+    return <Redirect to="/" />;
+  }
 
   if (!login) {
     const to = from(window.location.search, location.state);
