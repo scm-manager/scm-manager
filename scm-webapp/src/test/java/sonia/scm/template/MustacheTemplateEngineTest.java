@@ -65,10 +65,13 @@ public class MustacheTemplateEngineTest extends TemplateEngineTestBase
     when(loader.getUberClassLoader()).thenReturn(
       Thread.currentThread().getContextClassLoader());
 
-    MustacheTemplateEngine.PluginLoaderHolder holder = new MustacheTemplateEngine.PluginLoaderHolder();
-    holder.pluginLoader = loader;
+    MustacheTemplateEngine.PluginLoaderHolder pluginLoaderHolder = new MustacheTemplateEngine.PluginLoaderHolder();
+    pluginLoaderHolder.pluginLoader = loader;
 
-    return new MustacheTemplateEngine(context, holder, new SimpleMeterRegistry());
+    MustacheTemplateEngine.MeterRegistryHolder meterRegistryHolder = new MustacheTemplateEngine.MeterRegistryHolder();
+    meterRegistryHolder.registry = new SimpleMeterRegistry();
+
+    return new MustacheTemplateEngine(context, pluginLoaderHolder, meterRegistryHolder);
   }
 
   //~--- get methods ----------------------------------------------------------
@@ -120,14 +123,15 @@ public class MustacheTemplateEngineTest extends TemplateEngineTestBase
   @Test
   public void testCreateEngineWithoutPluginLoader() throws IOException {
     ServletContext context = mock(ServletContext.class);
-    MustacheTemplateEngine.PluginLoaderHolder holder = new MustacheTemplateEngine.PluginLoaderHolder();
-    MustacheTemplateEngine engine = new MustacheTemplateEngine(context, holder, new SimpleMeterRegistry());
+    MustacheTemplateEngine.PluginLoaderHolder pluginLoaderHolder = new MustacheTemplateEngine.PluginLoaderHolder();
+    MustacheTemplateEngine.MeterRegistryHolder meterRegistryHolder = new MustacheTemplateEngine.MeterRegistryHolder();
+    MustacheTemplateEngine engine = new MustacheTemplateEngine(context, pluginLoaderHolder, meterRegistryHolder);
 
     Template template = engine.getTemplate(getTemplateResource());
 
     StringWriter writer = new StringWriter();
     template.execute(writer, ImmutableMap.of("name", "World"));
 
-    Assertions.assertThat(writer.toString()).isEqualTo("Hello World!");
+    Assertions.assertThat(writer).hasToString("Hello World!");
   }
 }

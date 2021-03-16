@@ -64,6 +64,14 @@ public class MustacheTemplateEngine implements TemplateEngine
     @Inject(optional = true) PluginLoader pluginLoader;
   }
 
+  /**
+   * Used to implement optional injection for the MeterRegistry.
+   * @see <a href="https://github.com/google/guice/wiki/FrequentlyAskedQuestions#how-can-i-inject-optional-parameters-into-a-constructor">Optional Injection</a>
+   */
+  static class MeterRegistryHolder {
+    @Inject(optional = true) MeterRegistry registry;
+  }
+
   /** Field description */
   public static final TemplateType TYPE = new TemplateType("mustache",
                                             "Mustache", "mustache");
@@ -74,22 +82,11 @@ public class MustacheTemplateEngine implements TemplateEngine
   private static final Logger logger =
     LoggerFactory.getLogger(MustacheTemplateEngine.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param context
-   * @param pluginLoaderHolder
-   * @param registry meter registry or null if the engine is used before the registry is available
-   */
   @Inject
-  public MustacheTemplateEngine(@Default ServletContext context, PluginLoaderHolder pluginLoaderHolder, @Nullable MeterRegistry registry)
+  public MustacheTemplateEngine(@Default ServletContext context, PluginLoaderHolder pluginLoaderHolder, MeterRegistryHolder registryHolder)
   {
     factory = new ServletMustacheFactory(context, createClassLoader(pluginLoaderHolder.pluginLoader));
-    factory.setExecutorService(createExecutorService(registry));
+    factory.setExecutorService(createExecutorService(registryHolder.registry));
   }
 
   private static ExecutorService createExecutorService(@Nullable MeterRegistry registry) {
