@@ -77,7 +77,7 @@ const OverviewPageActions: FC<Props> = ({
   const filter = (q: string) => {
     if (q !== filterValue) {
       setFilterValue(q);
-      history.push(`${location.pathname}?q=${q}`);
+      history.push(`${link}?q=${q}`);
     }
   };
 
