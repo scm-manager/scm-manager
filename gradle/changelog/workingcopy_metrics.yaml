@@ -1,0 +1,2 @@
+- type: added
+  description: Adds metrics over lifetime duration of working copies ([#1591](https://github.com/scm-manager/scm-manager/pull/1591))

@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -54,7 +55,7 @@ public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase 
 
   @Test
   public void shouldCheckoutLatestRevision() throws SVNException, IOException {
-    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
 
     try (WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null)) {
       assertThat(new File(workingCopy.getWorkingRepository(), "a.txt"))
@@ -66,7 +67,7 @@ public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase 
 
   @Test
   public void cloneFromPoolShouldNotBeReused() {
-    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
 
     File firstDirectory;
     try (WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null)) {
@@ -80,7 +81,7 @@ public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase 
 
   @Test
   public void shouldDeleteCloneOnClose() {
-    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider));
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
 
     File directory;
     File workingRepository;
@@ -95,7 +96,7 @@ public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase 
 
   @Test
   public void shouldDeleteUntrackedFileOnReclaim() throws IOException {
-    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider));
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
 
     WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null);
     File directory = workingCopy.getWorkingRepository();
@@ -113,7 +114,7 @@ public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase 
 
   @Test
   public void shouldRestoreDeletedFileOnReclaim() throws IOException {
-    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider));
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
 
     WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null);
     File directory = workingCopy.getWorkingRepository();

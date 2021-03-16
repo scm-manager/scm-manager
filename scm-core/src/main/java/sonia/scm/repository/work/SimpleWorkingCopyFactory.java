@@ -24,8 +24,11 @@
 
 package sonia.scm.repository.work;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.metrics.Metrics;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryProvider;
 
@@ -100,9 +103,11 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvide
   private static final Logger LOG = LoggerFactory.getLogger(SimpleWorkingCopyFactory.class);
 
   private final WorkingCopyPool workingCopyPool;
+  private final MeterRegistry meterRegistry;
 
-  public SimpleWorkingCopyFactory(WorkingCopyPool workingCopyPool) {
+  public SimpleWorkingCopyFactory(WorkingCopyPool workingCopyPool, MeterRegistry meterRegistry) {
     this.workingCopyPool = workingCopyPool;
+    this.meterRegistry = meterRegistry;
   }
 
   @Override
@@ -181,10 +186,12 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvide
   public class WorkingCopyContext {
     private final String requestedBranch;
     private final C repositoryContext;
+    private final Timer.Sample sample;
 
     public WorkingCopyContext(String requestedBranch, C repositoryContext) {
       this.requestedBranch = requestedBranch;
       this.repositoryContext = repositoryContext;
+      sample = Timer.start(meterRegistry);
     }
 
     public Repository getScmRepository() {
@@ -205,19 +212,23 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvide
 
     private void close(ParentAndClone<R, W> parentAndClone) {
       try {
-        closeWorkingCopy(parentAndClone.getClone());
-      } catch (Exception e) {
-        LOG.warn("could not close clone for {} in directory {}", getScmRepository(), parentAndClone.getDirectory(), e);
-      }
-      try {
-        closeRepository(parentAndClone.getParent());
-      } catch (Exception e) {
-        LOG.warn("could not close central repository for {}", getScmRepository(), e);
-      }
-      try {
-        workingCopyPool.contextClosed(this, parentAndClone.getDirectory());
-      } catch (Exception e) {
-        LOG.warn("could not close context for {} with directory {}", getScmRepository(), parentAndClone.getDirectory(), e);
+        try {
+          closeWorkingCopy(parentAndClone.getClone());
+        } catch (Exception e) {
+          LOG.warn("could not close clone for {} in directory {}", getScmRepository(), parentAndClone.getDirectory(), e);
+        }
+        try {
+          closeRepository(parentAndClone.getParent());
+        } catch (Exception e) {
+          LOG.warn("could not close central repository for {}", getScmRepository(), e);
+        }
+        try {
+          workingCopyPool.contextClosed(this, parentAndClone.getDirectory());
+        } catch (Exception e) {
+          LOG.warn("could not close context for {} with directory {}", getScmRepository(), parentAndClone.getDirectory(), e);
+        }
+      } finally {
+        sample.stop(Metrics.workingCopyTimer(meterRegistry));
       }
     }
   }

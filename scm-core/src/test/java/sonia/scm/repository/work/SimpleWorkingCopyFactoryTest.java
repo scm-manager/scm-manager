@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.work;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -83,7 +84,7 @@ public class SimpleWorkingCopyFactoryTest {
       public void shutdown() {
       }
     };
-    simpleWorkingCopyFactory = new SimpleWorkingCopyFactory<Closeable, Closeable, Context>(configurableTestWorkingCopyPool) {
+    simpleWorkingCopyFactory = new SimpleWorkingCopyFactory<Closeable, Closeable, Context>(configurableTestWorkingCopyPool, new SimpleMeterRegistry()) {
       @Override
       protected void closeRepository(Closeable repository) throws IOException {
         repository.close();

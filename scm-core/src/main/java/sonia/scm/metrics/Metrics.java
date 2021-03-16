@@ -26,6 +26,7 @@ package sonia.scm.metrics;
 
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.Tag;
+import io.micrometer.core.instrument.Timer;
 import io.micrometer.core.instrument.binder.jvm.ExecutorServiceMetrics;
 
 import java.util.Collections;
@@ -57,4 +58,15 @@ public final class Metrics {
     ).bindTo(registry);
   }
 
+
+  /**
+   * Collect metrics from an {@link sonia.scm.repository.work.WorkingCopy}.
+   *
+   * @param registry meter registry
+   */
+  public static Timer workingCopyTimer(MeterRegistry registry) {
+    return Timer.builder("scm.workingCopy.duration")
+      .description("Duration of temporary working copy lifetime")
+      .register(registry);
+  }
 }
