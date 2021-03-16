@@ -1,2 +1,2 @@
-- type: added
+- type: fixed
   description: Mercurial encoding configuration per repository ([#1577](https://github.com/scm-manager/scm-manager/issues/1577), [#1583](https://github.com/scm-manager/scm-manager/issues/1583))
