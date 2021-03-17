@@ -47287,6 +47287,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
         >
           <li>
             <a
+              className=""
               href="https://www.scm-manager.org/"
               rel="noopener noreferrer"
               target="_blank"
@@ -47314,6 +47315,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
         >
           <li>
             <a
+              className=""
               href="https://www.scm-manager.org/support/"
               rel="noopener noreferrer"
               target="_blank"
@@ -47323,6 +47325,7 @@ exports[`Storyshots Layout|Footer Default 1`] = `
           </li>
           <li>
             <a
+              className=""
               href="https://cloudogu.com/en/scm-manager-enterprise/"
               rel="noopener noreferrer"
               target="_blank"
@@ -47410,6 +47413,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
         >
           <li>
             <a
+              className=""
               href="https://www.scm-manager.org/"
               rel="noopener noreferrer"
               target="_blank"
@@ -47419,6 +47423,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           </li>
           <li>
             <a
+              className=""
               href="#"
               rel="noopener noreferrer"
               target="_blank"
@@ -47428,6 +47433,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           </li>
           <li>
             <a
+              className=""
               href="#"
               rel="noopener noreferrer"
               target="_blank"
@@ -47455,6 +47461,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
         >
           <li>
             <a
+              className=""
               href="https://www.scm-manager.org/support/"
               rel="noopener noreferrer"
               target="_blank"
@@ -47464,6 +47471,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           </li>
           <li>
             <a
+              className=""
               href="https://cloudogu.com/en/scm-manager-enterprise/"
               rel="noopener noreferrer"
               target="_blank"
@@ -47473,6 +47481,7 @@ exports[`Storyshots Layout|Footer Full 1`] = `
           </li>
           <li>
             <a
+              className=""
               href="#"
               rel="noopener noreferrer"
               target="_blank"
@@ -47551,6 +47560,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
         >
           <li>
             <a
+              className=""
               href="https://www.scm-manager.org/"
               rel="noopener noreferrer"
               target="_blank"
@@ -47578,6 +47588,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
         >
           <li>
             <a
+              className=""
               href="https://www.scm-manager.org/support/"
               rel="noopener noreferrer"
               target="_blank"
@@ -47587,6 +47598,7 @@ exports[`Storyshots Layout|Footer With Avatar 1`] = `
           </li>
           <li>
             <a
+              className=""
               href="https://cloudogu.com/en/scm-manager-enterprise/"
               rel="noopener noreferrer"
               target="_blank"
@@ -47666,6 +47678,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
         >
           <li>
             <a
+              className=""
               href="https://www.scm-manager.org/"
               rel="noopener noreferrer"
               target="_blank"
@@ -47675,6 +47688,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           </li>
           <li>
             <a
+              className=""
               href="#"
               rel="noopener noreferrer"
               target="_blank"
@@ -47684,6 +47698,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           </li>
           <li>
             <a
+              className=""
               href="#"
               rel="noopener noreferrer"
               target="_blank"
@@ -47711,6 +47726,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
         >
           <li>
             <a
+              className=""
               href="https://www.scm-manager.org/support/"
               rel="noopener noreferrer"
               target="_blank"
@@ -47720,6 +47736,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           </li>
           <li>
             <a
+              className=""
               href="https://cloudogu.com/en/scm-manager-enterprise/"
               rel="noopener noreferrer"
               target="_blank"
@@ -47729,6 +47746,7 @@ exports[`Storyshots Layout|Footer With Plugin Links 1`] = `
           </li>
           <li>
             <a
+              className=""
               href="#"
               rel="noopener noreferrer"
               target="_blank"
