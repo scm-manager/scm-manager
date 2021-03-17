@@ -24,6 +24,8 @@
 
 package sonia.scm.web.security;
 
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,6 +49,7 @@ import java.util.Set;
 
 import static java.util.Collections.singleton;
 import static java.util.Optional.of;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
@@ -77,10 +80,13 @@ class TokenRefreshFilterTest {
   @Mock
   private FilterChain filterChain;
 
+  private MeterRegistry meterRegistry;
+
   @BeforeEach
   void init() {
     when(tokenGenerators.iterator()).thenReturn(singleton(tokenGenerator).iterator());
-    filter = new TokenRefreshFilter(tokenGenerators, refresher, resolver, issuer, new SimpleMeterRegistry());
+    meterRegistry = new SimpleMeterRegistry();
+    filter = new TokenRefreshFilter(tokenGenerators, refresher, resolver, issuer, meterRegistry);
   }
 
   @Test
@@ -128,6 +134,23 @@ class TokenRefreshFilterTest {
 
     verify(issuer).authenticate(request, response, newJwtToken);
     verify(filterChain).doFilter(request, response);
+  }
+
+  @Test
+  void shouldTrackMetricIfTokenWasRefreshed() throws IOException, ServletException {
+    BearerToken token = createValidToken();
+    JwtAccessToken jwtToken = mock(JwtAccessToken.class);
+    JwtAccessToken newJwtToken = mock(JwtAccessToken.class);
+    when(tokenGenerator.createToken(request)).thenReturn(token);
+    when(resolver.resolve(token)).thenReturn(jwtToken);
+    when(refresher.refresh(jwtToken)).thenReturn(of(newJwtToken));
+
+    filter.doFilter(request, response, filterChain);
+
+    assertThat(meterRegistry.getMeters()).hasSize(1);
+    Meter.Id meterId = meterRegistry.getMeters().get(0).getId();
+    assertThat(meterId.getName()).isEqualTo("scm.auth.token.refresh");
+    assertThat(meterId.getTag("type")).isEqualTo("JWT");
   }
 
   BearerToken createValidToken() {
