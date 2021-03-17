@@ -222,4 +222,16 @@ describe("Test diff", () => {
 
     expect(result.current.data).toEqual({ ...partialDiff2, files: [partialDiff1.files[0], partialDiff2.files[0]] });
   });
+
+  it("should append query parameters to url which has already query params", async () => {
+    fetchMock.getOnce("/api/v2/diff?format=GIT&limit=25", {
+      body: simpleDiff,
+      headers: { "Content-Type": "application/vnd.scmm-diffparsed+json;v=2" }
+    });
+    const { result, waitFor } = renderHook(() => useDiff("/diff?format=GIT", { limit: 25 }), {
+      wrapper: createWrapper()
+    });
+    await waitFor(() => !!result.current.data);
+    expect(result.current.data).toEqual(simpleDiff);
+  });
 });

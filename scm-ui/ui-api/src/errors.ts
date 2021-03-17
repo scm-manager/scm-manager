@@ -72,14 +72,18 @@ export class BackendError extends Error {
 
 export class UnauthorizedError extends Error {
   statusCode: number;
+
   constructor(message: string, statusCode: number) {
     super(message);
     this.statusCode = statusCode;
   }
 }
 
+export class TokenExpiredError extends UnauthorizedError {}
+
 export class ForbiddenError extends Error {
   statusCode: number;
+
   constructor(message: string, statusCode: number) {
     super(message);
     this.statusCode = statusCode;

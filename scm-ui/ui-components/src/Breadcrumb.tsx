@@ -66,7 +66,7 @@ const BreadcrumbNav = styled.nav`
   display: flex;
   align-items: center;
   margin: 1rem 1rem !important;
-  
+
   width: 100%;
 
   /* move slash to end */
@@ -182,10 +182,22 @@ const Breadcrumb: FC<Props> = ({
     prefixButtons = <PrefixButton>{preButtons}</PrefixButton>;
   }
 
+  const extProps = {
+    baseUrl,
+    revision: revision ? encodeURIComponent(revision) : "",
+    branch: branch ? branch : defaultBranch,
+    path,
+    sources,
+    repository
+  };
+
   return (
     <>
       <div className="is-flex is-align-items-center">
-        <BreadcrumbNav className={classNames("breadcrumb", "sources-breadcrumb", "ml-1", "mb-0")} aria-label="breadcrumbs">
+        <BreadcrumbNav
+          className={classNames("breadcrumb", "sources-breadcrumb", "ml-1", "mb-0")}
+          aria-label="breadcrumbs"
+        >
           {prefixButtons}
           <ul>
             <li>
@@ -207,18 +219,7 @@ const Breadcrumb: FC<Props> = ({
         </BreadcrumbNav>
         {binder.hasExtension("repos.sources.actionbar") && (
           <ActionBar>
-            <ExtensionPoint
-              name="repos.sources.actionbar"
-              props={{
-                baseUrl,
-                revision,
-                branch: branch ? branch : defaultBranch,
-                path,
-                sources,
-                repository
-              }}
-              renderAll={true}
-            />
+            <ExtensionPoint name="repos.sources.actionbar" props={extProps} renderAll={true} />
           </ActionBar>
         )}
       </div>

@@ -7,6 +7,7 @@ displayToc: true
 SCM-Manager can run behind any reverse proxy, but a few rules must be respected.
 The reverse proxy should not encode slashes and the `X-Forwarded-For` and `X-Forwarded-Host` headers must be send to SCM-Manager.
 If the proxy uses a different protocol as the SCM-Manager e.g. https on proxy and http on scm-manager, the `X-Forwarded-Proto` header must be send too.
+If `XSRF protection` is enabled on the SCM-Manager server, the cookie has to be `HttpOnly=false` and must not be modified.
 
 ## nginx
 

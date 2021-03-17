@@ -23,7 +23,6 @@
  */
 
 import { Me } from "@scm-manager/ui-types";
-import { useEffect } from "react";
 import { useMutation, useQuery } from "react-query";
 import { apiClient } from "./apiclient";
 import { ApiResult, useIndexLink } from "./base";
@@ -111,7 +110,7 @@ export const useLogout = () => {
         if (response?.logoutRedirect) {
           window.location.assign(response.logoutRedirect);
         }
-        reset();
+        return reset();
       }
     }
   );

@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.work;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.Before;
 import org.junit.Rule;
@@ -63,8 +64,11 @@ public class SimpleWorkingCopyFactoryTest {
   private boolean workdirIsCached = false;
   private File workdir;
 
+  private MeterRegistry meterRegistry;
+
   @Before
   public void initFactory() throws IOException {
+    meterRegistry = new SimpleMeterRegistry();
     WorkdirProvider workdirProvider = new WorkdirProvider(temporaryFolder.newFolder(), repositoryLocationResolver, false);
     WorkingCopyPool configurableTestWorkingCopyPool = new WorkingCopyPool() {
       @Override
@@ -84,7 +88,7 @@ public class SimpleWorkingCopyFactoryTest {
       public void shutdown() {
       }
     };
-    simpleWorkingCopyFactory = new SimpleWorkingCopyFactory<Closeable, Closeable, Context>(configurableTestWorkingCopyPool, new SimpleMeterRegistry()) {
+    simpleWorkingCopyFactory = new SimpleWorkingCopyFactory<Closeable, Closeable, Context>(configurableTestWorkingCopyPool, meterRegistry) {
       @Override
       protected void closeRepository(Closeable repository) throws IOException {
         repository.close();
@@ -127,6 +131,8 @@ public class SimpleWorkingCopyFactoryTest {
     try (WorkingCopy<Closeable, Closeable> workingCopy = simpleWorkingCopyFactory.createWorkingCopy(context, null)) {}
 
     verify(parent).close();
+    assertThat(meterRegistry.getMeters()).hasSize(1);
+    assertThat(meterRegistry.getMeters().get(0).getId().getName()).isEqualTo("scm.workingCopy.duration");
   }
 
   @Test
@@ -135,6 +141,8 @@ public class SimpleWorkingCopyFactoryTest {
     try (WorkingCopy<Closeable, Closeable> workingCopy = simpleWorkingCopyFactory.createWorkingCopy(context, null)) {}
 
     verify(clone).close();
+    assertThat(meterRegistry.getMeters()).hasSize(1);
+    assertThat(meterRegistry.getMeters().get(0).getId().getName()).isEqualTo("scm.workingCopy.duration");
   }
 
   @Test
