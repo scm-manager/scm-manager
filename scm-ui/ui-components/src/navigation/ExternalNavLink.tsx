@@ -24,6 +24,7 @@
 import React, { FC } from "react";
 import classNames from "classnames";
 import ExternalLink from "./ExternalLink";
+import useMenuContext from "./MenuContext";
 
 type Props = {
   to: string;
@@ -31,9 +32,10 @@ type Props = {
   label: string;
 };
 
-// TODO is it used in the menu? should it use MenuContext for collapse state?
-
 const ExternalNavLink: FC<Props> = ({ to, icon, label }) => {
+  const context = useMenuContext();
+  const collapsed = context.isCollapsed();
+
   let showIcon;
   if (icon) {
     showIcon = (
@@ -44,10 +46,10 @@ const ExternalNavLink: FC<Props> = ({ to, icon, label }) => {
   }
 
   return (
-    <li>
-      <ExternalLink to={to}>
+    <li title={collapsed ? label : undefined}>
+      <ExternalLink to={to} className={collapsed ? "has-text-centered" : ""}>
         {showIcon}
-        {label}
+        {collapsed ? null : label}
       </ExternalLink>
     </li>
   );
