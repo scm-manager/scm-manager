@@ -38,11 +38,15 @@ type Props = {
   searchPlaceholder?: string;
 };
 
+const createAbsoluteLink = (url: string) => {
+  return urls.withStartingSlash(urls.withEndingSlash(url));
+};
+
 const OverviewPageActions: FC<Props> = ({
   groups,
   currentGroup,
   showCreateButton,
-  link,
+  link: inputLink,
   groupSelected,
   label,
   testId,
@@ -50,8 +54,9 @@ const OverviewPageActions: FC<Props> = ({
 }) => {
   const history = useHistory();
   const location = useLocation();
-  const [filterValue, setFilterValue] = useState(urls.getQueryStringFromLocation(location));
-  
+  const [filterValue, setFilterValue] = useState(urls.getQueryStringFromLocation(location) || "");
+  const link = createAbsoluteLink(inputLink);
+
   const groupSelector = groups && (
     <div className={"column is-flex"}>
       <DropDown
@@ -67,20 +72,18 @@ const OverviewPageActions: FC<Props> = ({
     if (showCreateButton) {
       return (
         <div className={classNames("input-button", "control", "column")}>
-          <Button label={label} link={`/${link}/create`} color="primary" />
+          <Button label={label} link={`${link}create`} color="primary" />
         </div>
       );
     }
     return null;
   };
 
-  const filter = (filter: string) => {
-    if ((filter && filter !== filterValue) || (!filter && filterValue)) {
-      history.push(`/${link}/?q=${filter}`);
-    } else {
-      history.push(`${location.pathname}?q=${filter}`);
+  const filter = (q: string) => {
+    if (q !== filterValue) {
+      setFilterValue(q);
+      history.push(`${link}?q=${q}`);
     }
-    setFilterValue(filter);
   };
 
   return (

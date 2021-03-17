@@ -23,17 +23,16 @@
  *
  */
 
-import { apiClient, clearCache, UnauthorizedError } from "@scm-manager/ui-api";
+import { apiClient, clearCache, TokenExpiredError } from "@scm-manager/ui-api";
 
 let tokenExpired = false;
 
-// We assume that an UnauthorizedError means that the access token is expired.
 // If the token is expired we want to show an error with the login link.
 // This error should be displayed with the state (e.g. navigation) of the previous logged in user.
 // But if the user navigates away, we want to reset the state to an anonymous one.
 
 apiClient.onError(error => {
-  if (error instanceof UnauthorizedError) {
+  if (error instanceof TokenExpiredError) {
     tokenExpired = true;
   }
 });

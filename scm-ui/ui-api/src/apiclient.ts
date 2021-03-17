@@ -23,7 +23,15 @@
  */
 
 import { contextPath } from "./urls";
-import { BackendErrorContent, createBackendError, ForbiddenError, isBackendError, UnauthorizedError } from "./errors";
+import {
+  BackendErrorContent,
+  createBackendError,
+  ForbiddenError,
+  isBackendError,
+  TOKEN_EXPIRED_ERROR_CODE,
+  TokenExpiredError,
+  UnauthorizedError
+} from "./errors";
 
 type SubscriptionEvent = {
   type: string;
@@ -119,6 +127,15 @@ const applyFetchOptions: (p: RequestInit) => RequestInit = o => {
 function handleFailure(response: Response) {
   if (!response.ok) {
     if (response.status === 401) {
+      if (isBackendError(response)) {
+        return response.json().then((content: BackendErrorContent) => {
+          if (content.errorCode === TOKEN_EXPIRED_ERROR_CODE) {
+            throw new TokenExpiredError("Token expired", 401);
+          } else {
+            throw new UnauthorizedError("Unauthorized", 401);
+          }
+        });
+      }
       throw new UnauthorizedError("Unauthorized", 401);
     } else if (response.status === 403) {
       throw new ForbiddenError("Forbidden", 403);

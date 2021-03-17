@@ -141,7 +141,7 @@ class Content extends React.Component<Props, State> {
             props={{
               repository,
               file,
-              revision,
+              revision: revision ? encodeURIComponent(revision) : "",
               handleExtensionError: this.handleExtensionError
             }}
             renderAll={true}

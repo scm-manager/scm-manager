@@ -187,7 +187,9 @@ describe("Test plugin hooks", () => {
         return waitForNextUpdate();
       });
       await waitFor(() => result.current.isInstalled);
-      expect(queryClient.getQueryState("plugins")!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "available"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "installed"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "pending"])!.isInvalidated).toBe(true);
     });
 
     it("should invalidate query keys", async () => {
@@ -204,7 +206,9 @@ describe("Test plugin hooks", () => {
         install(availablePlugin);
         return waitForNextUpdate();
       });
-      expect(queryClient.getQueryState("plugins")!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "available"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "installed"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "pending"])!.isInvalidated).toBe(true);
     });
   });
 
@@ -225,7 +229,9 @@ describe("Test plugin hooks", () => {
         return waitForNextUpdate();
       });
       await waitFor(() => result.current.isUninstalled);
-      expect(queryClient.getQueryState("plugins")!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "available"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "installed"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "pending"])!.isInvalidated).toBe(true);
     });
 
     it("should invalidate query keys", async () => {
@@ -242,7 +248,9 @@ describe("Test plugin hooks", () => {
         uninstall(installedPlugin);
         return waitForNextUpdate();
       });
-      expect(queryClient.getQueryState("plugins")!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "available"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "installed"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "pending"])!.isInvalidated).toBe(true);
     });
   });
 
@@ -263,7 +271,9 @@ describe("Test plugin hooks", () => {
         return waitForNextUpdate();
       });
       await waitFor(() => result.current.isUpdated);
-      expect(queryClient.getQueryState("plugins")!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "available"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "installed"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "pending"])!.isInvalidated).toBe(true);
     });
     it("should update collection", async () => {
       const queryClient = createInfiniteCachingClient();
@@ -279,7 +289,9 @@ describe("Test plugin hooks", () => {
         update(createPluginCollection([installedPlugin, installedCorePlugin]));
         return waitForNextUpdate();
       });
-      expect(queryClient.getQueryState("plugins")!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "available"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "installed"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "pending"])!.isInvalidated).toBe(true);
     });
     it("should ignore restart parameter collection", async () => {
       const queryClient = createInfiniteCachingClient();
@@ -295,7 +307,9 @@ describe("Test plugin hooks", () => {
         update(createPluginCollection([installedPlugin, installedCorePlugin]), { restart: true });
         return waitForNextUpdate();
       });
-      expect(queryClient.getQueryState("plugins")!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "available"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "installed"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "pending"])!.isInvalidated).toBe(true);
     });
     it("should invalidate query keys", async () => {
       const queryClient = createInfiniteCachingClient();
@@ -311,7 +325,9 @@ describe("Test plugin hooks", () => {
         update(installedPlugin);
         return waitForNextUpdate();
       });
-      expect(queryClient.getQueryState("plugins")!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "available"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "installed"])!.isInvalidated).toBe(true);
+      expect(queryClient.getQueryState(["plugins", "pending"])!.isInvalidated).toBe(true);
     });
   });
 });

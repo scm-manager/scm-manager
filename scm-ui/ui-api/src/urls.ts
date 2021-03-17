@@ -38,6 +38,13 @@ export function withEndingSlash(url: string) {
   return url + "/";
 }
 
+export function withStartingSlash(url: string) {
+  if (url.startsWith("/")) {
+    return url;
+  }
+  return "/" + url;
+}
+
 export function concat(base: string, ...parts: string[]) {
   let url = base;
   for (const p of parts) {

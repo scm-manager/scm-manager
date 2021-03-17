@@ -35,7 +35,8 @@ type UseDiffOptions = {
 export const useDiff = (link: string, options: UseDiffOptions = {}) => {
   let initialLink = link;
   if (options.limit) {
-    initialLink = `${initialLink}?limit=${options.limit}`;
+    const separator = initialLink.includes("?") ? "&" : "?";
+    initialLink = `${initialLink}${separator}limit=${options.limit}`;
   }
   const { isLoading, error, data, isFetchingNextPage, fetchNextPage } = useInfiniteQuery<Diff, Error, Diff>(
     ["link", link],
@@ -48,9 +49,9 @@ export const useDiff = (link: string, options: UseDiffOptions = {}) => {
           return response
             .text()
             .then(parser.parse)
-            .then(data => {
+            .then(parsedGit => {
               return {
-                files: data,
+                files: parsedGit,
                 partial: false,
                 _links: {}
               };
