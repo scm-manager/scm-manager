@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.template;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -32,16 +32,19 @@ import com.google.common.base.Throwables;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.common.util.concurrent.UncheckedExecutionException;
 import com.google.inject.Inject;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.Default;
+import sonia.scm.metrics.Metrics;
 import sonia.scm.plugin.PluginLoader;
 
+import javax.annotation.Nullable;
 import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.Reader;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -61,12 +64,17 @@ public class MustacheTemplateEngine implements TemplateEngine
     @Inject(optional = true) PluginLoader pluginLoader;
   }
 
+  /**
+   * Used to implement optional injection for the MeterRegistry.
+   * @see <a href="https://github.com/google/guice/wiki/FrequentlyAskedQuestions#how-can-i-inject-optional-parameters-into-a-constructor">Optional Injection</a>
+   */
+  static class MeterRegistryHolder {
+    @Inject(optional = true) MeterRegistry registry;
+  }
+
   /** Field description */
   public static final TemplateType TYPE = new TemplateType("mustache",
                                             "Mustache", "mustache");
-
-  /** Field description */
-  private static final String THREAD_NAME = "Mustache-%s";
 
   /**
    * the logger for MustacheTemplateEngine
@@ -74,24 +82,25 @@ public class MustacheTemplateEngine implements TemplateEngine
   private static final Logger logger =
     LoggerFactory.getLogger(MustacheTemplateEngine.class);
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param context
-   * @param pluginLoaderHolder
-   */
   @Inject
-  public MustacheTemplateEngine(@Default ServletContext context, PluginLoaderHolder pluginLoaderHolder)
+  public MustacheTemplateEngine(@Default ServletContext context, PluginLoaderHolder pluginLoaderHolder, MeterRegistryHolder registryHolder)
   {
     factory = new ServletMustacheFactory(context, createClassLoader(pluginLoaderHolder.pluginLoader));
+    factory.setExecutorService(createExecutorService(registryHolder.registry));
+  }
 
-    ThreadFactory threadFactory =
-      new ThreadFactoryBuilder().setNameFormat(THREAD_NAME).build();
+  private static ExecutorService createExecutorService(@Nullable MeterRegistry registry) {
+    ExecutorService executorService = Executors.newCachedThreadPool(
+      new ThreadFactoryBuilder()
+        .setNameFormat("MustacheTemplateEngine-%d")
+        .build()
+    );
 
-    factory.setExecutorService(Executors.newCachedThreadPool(threadFactory));
+    if (registry != null) {
+      Metrics.executor(registry, executorService,"MustacheTemplateEngine", "cached" );
+    }
+
+    return executorService;
   }
 
   private ClassLoader createClassLoader(PluginLoader pluginLoader) {

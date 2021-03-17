@@ -26,10 +26,8 @@ package sonia.scm.repository;
 
 import com.google.common.base.Strings;
 import com.google.common.collect.Lists;
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
-import org.apache.shiro.concurrent.SubjectAwareExecutorService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ConfigurationException;
@@ -56,9 +54,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadFactory;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
@@ -75,10 +70,7 @@ import static sonia.scm.NotFoundException.notFound;
 @Singleton
 public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
-  private static final String THREAD_NAME = "Hook-%s";
-  private static final Logger logger =
-    LoggerFactory.getLogger(DefaultRepositoryManager.class);
-  private final ExecutorService executorService;
+  private static final Logger logger = LoggerFactory.getLogger(DefaultRepositoryManager.class);
   private final Map<String, RepositoryHandler> handlerMap;
   private final KeyGenerator keyGenerator;
   private final RepositoryDAO repositoryDAO;
@@ -94,12 +86,6 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     this.repositoryDAO = repositoryDAO;
     this.namespaceStrategyProvider = namespaceStrategyProvider;
 
-    ThreadFactory factory = new ThreadFactoryBuilder()
-      .setNameFormat(THREAD_NAME).build();
-    this.executorService = new SubjectAwareExecutorService(
-      Executors.newCachedThreadPool(factory)
-    );
-
     handlerMap = new HashMap<>();
     types = new HashSet<>();
 
@@ -109,11 +95,8 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     managerDaoAdapter = new ManagerDaoAdapter<>(repositoryDAO);
   }
 
-
   @Override
   public void close() {
-    executorService.shutdown();
-
     for (RepositoryHandler handler : handlerMap.values()) {
       IOUtil.close(handler);
     }

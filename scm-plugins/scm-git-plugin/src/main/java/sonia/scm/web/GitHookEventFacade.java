@@ -25,8 +25,10 @@
 package sonia.scm.web;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.metrics.Metrics;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.spi.GitHookContextProvider;
 import sonia.scm.repository.spi.HookEventFacade;
@@ -59,9 +61,9 @@ public class GitHookEventFacade implements Closeable {
   private final ExecutorService internalThreadHookHandler;
 
   @Inject
-  public GitHookEventFacade(HookEventFacade hookEventFacade) {
+  public GitHookEventFacade(HookEventFacade hookEventFacade, MeterRegistry registry) {
     this.hookEventFacade = hookEventFacade;
-    this.internalThreadHookHandler = createInternalThreadHookHandlerPool();
+    this.internalThreadHookHandler = createInternalThreadHookHandlerPool(registry);
   }
 
   public void fire(RepositoryHookType type, GitHookContextProvider context) {
@@ -122,12 +124,14 @@ public class GitHookEventFacade implements Closeable {
   }
 
   @Nonnull
-  private ExecutorService createInternalThreadHookHandlerPool() {
-    return Executors.newCachedThreadPool(
+  private ExecutorService createInternalThreadHookHandlerPool(MeterRegistry registry) {
+    ExecutorService executorService = Executors.newCachedThreadPool(
       new ThreadFactoryBuilder()
         .setNameFormat("GitInternalThreadHookHandler-%d")
         .build()
     );
+    Metrics.executor(registry, executorService, "GitInternalHookHandler", "cached");
+    return executorService;
   }
 
   @Override

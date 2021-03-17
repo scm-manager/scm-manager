@@ -21,11 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.schedule;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.metrics.Metrics;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,14 +46,16 @@ public class CronScheduler implements Scheduler {
   private final CronThreadFactory threadFactory;
 
   @Inject
-  public CronScheduler(CronTaskFactory taskFactory) {
+  public CronScheduler(CronTaskFactory taskFactory, MeterRegistry registry) {
     this.taskFactory = taskFactory;
     this.threadFactory = new CronThreadFactory();
-    this.executorService = createExecutor();
+    this.executorService = createExecutor(registry);
   }
 
-  private ScheduledExecutorService createExecutor() {
-    return Executors.newScheduledThreadPool(2, threadFactory);
+  private ScheduledExecutorService createExecutor(MeterRegistry registry) {
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(2, threadFactory);
+    Metrics.executor(registry, executor, "Cron", "scheduled");
+    return executor;
   }
 
   @Override

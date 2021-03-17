@@ -1,0 +1,4 @@
+- type: added
+  description: Metrics for http requests ([#1586](https://github.com/scm-manager/scm-manager/issues/1586))
+- type: added
+  description: Metrics for executor services ([#1586](https://github.com/scm-manager/scm-manager/issues/1586))

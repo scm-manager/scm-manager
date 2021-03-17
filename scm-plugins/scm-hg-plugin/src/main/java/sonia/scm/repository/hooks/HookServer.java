@@ -25,11 +25,13 @@
 package sonia.scm.repository.hooks;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.util.ThreadContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.metrics.Metrics;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
@@ -48,6 +50,7 @@ public class HookServer implements AutoCloseable {
   private static final Logger LOG = LoggerFactory.getLogger(HookServer.class);
 
   private final HookHandlerFactory handlerFactory;
+  private final MeterRegistry registry;
 
   private ExecutorService acceptor;
   private ExecutorService workerPool;
@@ -55,8 +58,9 @@ public class HookServer implements AutoCloseable {
   private SecurityManager securityManager;
 
   @Inject
-  public HookServer(HookHandlerFactory handlerFactory) {
+  public HookServer(HookHandlerFactory handlerFactory, MeterRegistry registry) {
     this.handlerFactory = handlerFactory;
+    this.registry = registry;
   }
 
   public int start() throws IOException {
@@ -110,15 +114,19 @@ public class HookServer implements AutoCloseable {
   }
 
   private ExecutorService createAcceptor() {
-    return Executors.newSingleThreadExecutor(
+    ExecutorService executorService = Executors.newSingleThreadExecutor(
       createThreadFactory("HgHookAcceptor")
     );
+    Metrics.executor(registry, executorService, "HgHookServerAcceptor", "single");
+    return executorService;
   }
 
   private ExecutorService createWorkerPool() {
-    return Executors.newCachedThreadPool(
+    ExecutorService executorService =  Executors.newCachedThreadPool(
       createThreadFactory("HgHookWorker-%d")
     );
+    Metrics.executor(registry, executorService, "HgHookServerWorker", "cached");
+    return executorService;
   }
 
   @Nonnull

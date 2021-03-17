@@ -21,9 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import io.micrometer.core.instrument.MeterRegistry;
+import sonia.scm.metrics.Metrics;
 import sonia.scm.repository.spi.SyncAsyncExecutor;
 import sonia.scm.repository.spi.SyncAsyncExecutorProvider;
 
@@ -48,8 +51,19 @@ public class DefaultSyncAsyncExecutorProvider implements SyncAsyncExecutorProvid
   private final int defaultMaxAsyncAbortSeconds;
 
   @Inject
-  public DefaultSyncAsyncExecutorProvider() {
-    this(Executors.newFixedThreadPool(getProperty(NUMBER_OF_THREADS_PROPERTY, DEFAULT_NUMBER_OF_THREADS)));
+  public DefaultSyncAsyncExecutorProvider(MeterRegistry registry) {
+    this(createExecutorService(registry, getProperty(NUMBER_OF_THREADS_PROPERTY, DEFAULT_NUMBER_OF_THREADS)));
+  }
+
+  private static ExecutorService createExecutorService(MeterRegistry registry, int fixed) {
+    ExecutorService executorService = Executors.newFixedThreadPool(
+      fixed,
+      new ThreadFactoryBuilder()
+        .setNameFormat("SyncAsyncExecutorProvider-%d")
+        .build()
+    );
+    Metrics.executor(registry, executorService, "SyncAsyncExecutorProvider", "fixed");
+    return executorService;
   }
 
   public DefaultSyncAsyncExecutorProvider(ExecutorService executor) {

@@ -28,6 +28,7 @@ import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.io.Resources;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.shiro.subject.SimplePrincipalCollection;
 import org.apache.shiro.subject.Subject;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -178,7 +179,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
     super.repositoryImportResource = new RepositoryImportResource(dtoToRepositoryMapper, resourceLinks, fullScmRepositoryImporter, new RepositoryImportDtoToRepositoryImportParametersMapperImpl(), repositoryImportExportEncryption, fromUrlImporter, fromBundleImporter, importLoggerFactory);
-    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryImportExportEncryption, exportService, exportInformationToDtoMapper, fileExtensionResolver, resourceLinks);
+    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryImportExportEncryption, exportService, exportInformationToDtoMapper, fileExtensionResolver, resourceLinks, new SimpleMeterRegistry());
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     doReturn(ImmutableSet.of(new CustomNamespaceStrategy()).iterator()).when(strategies).iterator();

@@ -26,8 +26,11 @@ package sonia.scm.admin;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Strings;
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.metrics.Metrics;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.version.Version;
 
@@ -46,7 +49,7 @@ public class ReleaseFeedParser {
   public static final int DEFAULT_TIMEOUT_IN_MILLIS = 5000;
 
   private static final Logger LOG = LoggerFactory.getLogger(ReleaseFeedParser.class);
-  
+
   @VisibleForTesting
   static final String SPAN_KIND = "Release Feed";
 
@@ -56,14 +59,24 @@ public class ReleaseFeedParser {
   private Future<Optional<UpdateInfo>> updateInfoFuture;
 
   @Inject
-  public ReleaseFeedParser(AdvancedHttpClient client) {
-    this(client, DEFAULT_TIMEOUT_IN_MILLIS);
+  public ReleaseFeedParser(AdvancedHttpClient client, MeterRegistry registry) {
+    this(client, registry, DEFAULT_TIMEOUT_IN_MILLIS);
   }
 
-  public ReleaseFeedParser(AdvancedHttpClient client, long timeoutInMillis) {
+  public ReleaseFeedParser(AdvancedHttpClient client, MeterRegistry registry, long timeoutInMillis) {
     this.client = client;
     this.timeoutInMillis = timeoutInMillis;
-    this.executorService = Executors.newSingleThreadExecutor();
+    this.executorService = createExecutorService(registry);
+  }
+
+  private ExecutorService createExecutorService(MeterRegistry registry) {
+    ExecutorService executor = Executors.newSingleThreadExecutor(
+      new ThreadFactoryBuilder()
+        .setNameFormat("ReleaseFeedParser")
+        .build()
+    );
+    Metrics.executor(registry, executor, "ReleaseFeedParser", "single");
+    return executor;
   }
 
   Optional<UpdateInfo> findLatestRelease(String url) {

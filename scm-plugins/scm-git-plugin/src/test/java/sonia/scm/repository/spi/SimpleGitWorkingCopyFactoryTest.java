@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.Status;
 import org.eclipse.jgit.lib.Repository;
@@ -67,7 +68,7 @@ public class SimpleGitWorkingCopyFactoryTest extends AbstractGitCommandTestBase 
   @Before
   public void bindScmProtocol() throws IOException {
     HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
-    hookEventFacade = new GitHookEventFacade(new HookEventFacade(of(mock(RepositoryManager.class)), hookContextFactory));
+    hookEventFacade = new GitHookEventFacade(new HookEventFacade(of(mock(RepositoryManager.class)), hookContextFactory), new SimpleMeterRegistry());
     GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
     proto = new ScmTransportProtocol(of(GitTestHelper.createConverterFactory()), of(hookEventFacade), of(gitRepositoryHandler));
     Transport.register(proto);
