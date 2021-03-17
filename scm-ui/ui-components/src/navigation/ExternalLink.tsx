@@ -25,10 +25,11 @@ import React, { FC } from "react";
 
 type Props = {
   to: string;
+  className?: string;
 };
 
-const ExternalLink: FC<Props> = ({ to, children }) => (
-  <a href={to} target="_blank" rel="noopener noreferrer">
+const ExternalLink: FC<Props> = ({ to, children, className }) => (
+  <a href={to} target="_blank" rel="noopener noreferrer" className={className}>
     {children}
   </a>
 );
