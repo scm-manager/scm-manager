@@ -23,7 +23,7 @@
  */
 import * as React from "react";
 import { Binder } from "./binder";
-import { FC, ReactNode } from "react";
+import { Component, FC, ReactNode } from "react";
 import useBinder from "./useBinder";
 
 type PropTransformer = (props: object) => object;
@@ -48,28 +48,15 @@ const createInstance = (Component: any, props: object, key?: number) => {
 
 const renderAllExtensions = (binder: Binder, name: string, props: object) => {
   const extensions = binder.getExtensions(name, props);
-  return <>{extensions.map((cmp, index) => createInstance(cmp, fixLinksInProps(props), index))}</>;
+  return <>{extensions.map((cmp, index) => createInstance(cmp, props, index))}</>;
 };
 
 const renderSingleExtension = (binder: Binder, name: string, props: object) => {
-  const cmp = binder.getExtension(name, fixLinksInProps(props));
+  const cmp = binder.getExtension(name, props);
   if (!cmp) {
     return null;
   }
   return createInstance(cmp, props, undefined);
-};
-
-// In release 2.14.0, the link collection in the index resource is no longer available under 'links', but
-// only under '_links". Therefore plugins expecting the collection in the property without the underscore
-// did no longer work properly. This copies the link collection from '_links' to 'links' to fix this issue.
-const fixLinksInProps = (props: object) => {
-  // @ts-ignore
-  if (props?.indexResources?._links) {
-    // @ts-ignore
-    return { ...props, indexResources: { ...props.indexResources, links: props.indexResources._links } };
-  } else {
-    return props;
-  }
 };
 
 const renderDefault = (children: ReactNode) => {

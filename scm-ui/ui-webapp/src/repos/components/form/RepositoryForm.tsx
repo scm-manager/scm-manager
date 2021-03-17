@@ -124,10 +124,11 @@ const RepositoryForm: FC<Props> = ({
     if (isEditMode()) {
       return null;
     }
+    const indexResourcesWithLinks = { ...indexResources, links: indexResources?._links };
     const extensionProps = {
       repository: repo,
       setCreationContextEntry: setCreationContextEntry,
-      indexResources
+      indexResources: indexResourcesWithLinks
     };
     return (
       <>
