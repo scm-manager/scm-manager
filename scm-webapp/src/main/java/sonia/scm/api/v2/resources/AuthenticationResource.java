@@ -181,10 +181,10 @@ public class AuthenticationResource {
     HttpServletResponse response,
     AuthenticationRequestDto authentication
   ) {
-    incrementCounter("scm.auth.login", "Counter of SCM-Manager logins");
+    incrementCounter("scm.auth.login", "The sum of all SCM-Manager logins");
 
     if (!authentication.isValid()) {
-      incrementCounter("scm.auth.login.failed", "Counter of failed SCM-Manager logins");
+      incrementCounter("scm.auth.login.failed", "The amount of failed SCM-Manager logins");
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
@@ -208,7 +208,7 @@ public class AuthenticationResource {
         res = Response.ok(token.compact()).build();
       }
     } catch (AuthenticationException ex) {
-      incrementCounter("scm.auth.login.failed", "Counter of failed SCM-Manager logins");
+      incrementCounter("scm.auth.login.failed", "The amount of failed SCM-Manager logins");
       if (LOG.isTraceEnabled()) {
         LOG.trace("authentication failed for user ".concat(authentication.getUsername()), ex);
       } else {
@@ -230,7 +230,7 @@ public class AuthenticationResource {
   @ApiResponse(responseCode = "204", description = "success")
   @ApiResponse(responseCode = "500", description = "internal server error")
   public Response logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-    incrementCounter("scm.auth.logout", "Counter of SCM-Manager logouts");
+    incrementCounter("scm.auth.logout", "The amount of SCM-Manager logouts");
 
     SecurityUtils.getSubject().logout();
     // remove authentication cookie

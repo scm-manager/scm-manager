@@ -24,6 +24,8 @@
 
 package sonia.scm.web.security;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.slf4j.Logger;
@@ -54,7 +56,7 @@ import static java.util.Optional.of;
 
 @Priority(Filters.PRIORITY_POST_AUTHENTICATION)
 @WebElement(value = Filters.PATTERN_RESTAPI,
-  morePatterns = { Filters.PATTERN_DEBUG })
+  morePatterns = {Filters.PATTERN_DEBUG})
 public class TokenRefreshFilter extends HttpFilter {
 
   private static final Logger LOG = LoggerFactory.getLogger(TokenRefreshFilter.class);
@@ -63,13 +65,15 @@ public class TokenRefreshFilter extends HttpFilter {
   private final JwtAccessTokenRefresher refresher;
   private final AccessTokenResolver resolver;
   private final AccessTokenCookieIssuer issuer;
+  private final MeterRegistry meterRegistry;
 
   @Inject
-  public TokenRefreshFilter(Set<WebTokenGenerator> tokenGenerators, JwtAccessTokenRefresher refresher, AccessTokenResolver resolver, AccessTokenCookieIssuer issuer) {
+  public TokenRefreshFilter(Set<WebTokenGenerator> tokenGenerators, JwtAccessTokenRefresher refresher, AccessTokenResolver resolver, AccessTokenCookieIssuer issuer, MeterRegistry meterRegistry) {
     this.tokenGenerators = tokenGenerators;
     this.refresher = refresher;
     this.resolver = resolver;
     this.issuer = issuer;
+    this.meterRegistry = meterRegistry;
   }
 
   @Override
@@ -107,7 +111,16 @@ public class TokenRefreshFilter extends HttpFilter {
   }
 
   private void refreshToken(HttpServletRequest request, HttpServletResponse response, JwtAccessToken jwtAccessToken) {
+    incrementTokenRefreshCounter();
     LOG.debug("refreshing authentication token");
     issuer.authenticate(request, response, jwtAccessToken);
+  }
+
+  private void incrementTokenRefreshCounter() {
+    Counter
+      .builder("scm.auth.token.refresh")
+      .description("The amount of JWT Token refreshes")
+      .register(meterRegistry)
+      .increment();
   }
 }
