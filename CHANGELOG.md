@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.15.1] - 2021-03-17
+### Fixed
+- Encode revision on extension points to fix breaking change ([#1585](https://github.com/scm-manager/scm-manager/pull/1585))
+- Index link collection in repository initialize extensions ([#1594](https://github.com/scm-manager/scm-manager/issues/1588) and [#1587](https://github.com/scm-manager/scm-manager/issues/1594))
+- Mercurial encoding configuration per repository ([#1577](https://github.com/scm-manager/scm-manager/issues/1577), [#1583](https://github.com/scm-manager/scm-manager/issues/1583))
+- Authentication names in open api spec ([#1582](https://github.com/scm-manager/scm-manager/issues/1582))
+- Sometimes no redirect after login ([#1592](https://github.com/scm-manager/scm-manager/pull/1592))
+- Navigate after search ([#1589](https://github.com/scm-manager/scm-manager/pull/1589))
+- Diff for mercurial and subversion ([#1588](https://github.com/scm-manager/scm-manager/issues/1588) and [#1587](https://github.com/scm-manager/scm-manager/issues/1587))
+
 ## [2.15.0] - 2021-03-12
 ### Added
 - Create api for markdown ast plugins ([#1578](https://github.com/scm-manager/scm-manager/pull/1578))
@@ -544,3 +554,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.14.0]: https://www.scm-manager.org/download/2.14.0
 [2.14.1]: https://www.scm-manager.org/download/2.14.1
 [2.15.0]: https://www.scm-manager.org/download/2.15.0
+[2.15.1]: https://www.scm-manager.org/download/2.15.1
