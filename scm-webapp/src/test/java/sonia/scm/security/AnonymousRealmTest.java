@@ -24,6 +24,9 @@
     
 package sonia.scm.security;
 
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +59,8 @@ class AnonymousRealmTest {
   @Mock
   private UserDAO userDAO;
 
-  @InjectMocks
+  private MeterRegistry meterRegistry;
+
   private AnonymousRealm realm;
 
   @Mock
@@ -65,7 +69,8 @@ class AnonymousRealmTest {
   @BeforeEach
   void prepareObjectUnderTest() {
     when(realmHelperFactory.create(AnonymousRealm.REALM)).thenReturn(realmHelper);
-    realm = new AnonymousRealm(realmHelperFactory, userDAO);
+    meterRegistry = new SimpleMeterRegistry();
+    realm = new AnonymousRealm(realmHelperFactory, userDAO, meterRegistry);
   }
 
   @Test
@@ -76,6 +81,20 @@ class AnonymousRealmTest {
 
     AuthenticationInfo result = realm.doGetAuthenticationInfo(new AnonymousToken());
     assertThat(result).isSameAs(authenticationInfo);
+  }
+
+  @Test
+  void shouldTrackMetricsForSuccessfulAccessAsAnonymous() {
+    when(realmHelper.authenticationInfoBuilder(SCMContext.USER_ANONYMOUS)).thenReturn(builder);
+    when(builder.build()).thenReturn(authenticationInfo);
+    when(userDAO.contains(SCMContext.USER_ANONYMOUS)).thenReturn(true);
+
+    realm.doGetAuthenticationInfo(new AnonymousToken());
+
+    assertThat(meterRegistry.getMeters()).hasSize(1);
+    Meter.Id meter = meterRegistry.getMeters().get(0).getId();
+    assertThat(meter.getName()).isEqualTo("scm.auth.access.successful");
+    assertThat(meter.getTag("type")).isEqualTo("_anonymous");
   }
 
   @Test

@@ -24,6 +24,7 @@
 
 package sonia.scm.security;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -71,7 +72,7 @@ public class ScmAtLeastOneSuccessfulStrategyTest {
 
   @Test
   public void shouldAddNonNullThrowableToList() {
-    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy();
+    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy(new SimpleMeterRegistry());
     strategy.threadLocal.set(new ArrayList<>());
 
     strategy.afterAttempt(realm, token, singleRealmInfo, aggregateInfo, tokenExpiredException);
@@ -82,7 +83,7 @@ public class ScmAtLeastOneSuccessfulStrategyTest {
 
   @Test(expected = TokenExpiredException.class)
   public void shouldRethrowTokenExpiredException() {
-    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy();
+    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy(new SimpleMeterRegistry());
     strategy.threadLocal.set(singletonList(tokenExpiredException));
 
     strategy.afterAllAttempts(token, aggregateInfo);
@@ -90,7 +91,7 @@ public class ScmAtLeastOneSuccessfulStrategyTest {
 
   @Test(expected = TokenValidationFailedException.class)
   public void shouldRethrowTokenValidationFailedException() {
-    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy();
+    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy(new SimpleMeterRegistry());
     strategy.threadLocal.set(singletonList(tokenValidationFailedException));
 
     strategy.afterAllAttempts(token, aggregateInfo);
@@ -98,7 +99,7 @@ public class ScmAtLeastOneSuccessfulStrategyTest {
 
   @Test(expected = TokenExpiredException.class)
   public void shouldPrioritizeRethrowingTokenExpiredExceptionOverTokenValidationFailedException() {
-    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy();
+    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy(new SimpleMeterRegistry());
     strategy.threadLocal.set(Arrays.asList(tokenValidationFailedException, tokenExpiredException));
 
     strategy.afterAllAttempts(token, aggregateInfo);
@@ -106,7 +107,7 @@ public class ScmAtLeastOneSuccessfulStrategyTest {
 
   @Test(expected = AuthenticationException.class)
   public void shouldThrowGenericErrorIfNonTokenExpiredExceptionWasCaught() {
-    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy();
+    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy(new SimpleMeterRegistry());
     strategy.threadLocal.set(singletonList(authenticationException));
 
     strategy.afterAllAttempts(token, aggregateInfo);
@@ -114,7 +115,7 @@ public class ScmAtLeastOneSuccessfulStrategyTest {
 
   @Test()
   public void shouldNotRethrowExceptionIfAuthenticationSuccessful() {
-    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy();
+    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy(new SimpleMeterRegistry());
     strategy.threadLocal.set(singletonList(tokenExpiredException));
     when(aggregateInfo.getPrincipals()).thenReturn(principalCollection);
     when(principalCollection.isEmpty()).thenReturn(false);

@@ -21,65 +21,67 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.legacy;
 
-//~--- non-JDK imports --------------------------------------------------------
 
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.crypto.hash.Sha1Hash;
-
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
-
 import sonia.scm.group.GroupDAO;
 import sonia.scm.security.BearerToken;
+import sonia.scm.security.DAORealmHelperFactory;
+import sonia.scm.security.LoginAttemptHandler;
 import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserTestData;
 
-import static org.junit.Assert.*;
-import org.junit.Before;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.mockito.Mockito.when;
 
-import static org.mockito.Mockito.*;
-import sonia.scm.security.DAORealmHelperFactory;
-import sonia.scm.security.LoginAttemptHandler;
-
-/**
- *
- * @author Sebastian Sdorra
- */
 @RunWith(MockitoJUnitRunner.class)
-public class LegacyRealmTest
-{
+public class LegacyRealmTest {
 
-  /** Field description */
   private static final String NEW_PASSWORD =
     "$shiro1$SHA-512$8192$$yrNahBVDa4Gz+y5gat4msdjyvjtHlVE+N5nTl4WIDhtBFwhSIib13mKJt1sWmVqgHDWi3VwX7fkdkJ2+WToTbw==";
 
-  //~--- methods --------------------------------------------------------------
+  @Mock
+  private LoginAttemptHandler loginAttemptHandler;
 
-  /**
-   * Prepare object under test.
-   */
+  @Mock
+  private UserDAO userDAO;
+
+  @Mock
+  private GroupDAO groupDAO;
+
+  @InjectMocks
+  private DAORealmHelperFactory helperFactory;
+
+  private MeterRegistry meterRegistry;
+
+  private LegacyRealm realm;
+
   @Before
   public void prepareObjectUnderTest() {
-    this.realm = new LegacyRealm(helperFactory);
+    meterRegistry = new SimpleMeterRegistry();
+    realm = new LegacyRealm(helperFactory, meterRegistry);
   }
-  
-  /**
-   * Method description
-   *
-   */
+
   @Test
-  public void testDoGetAuthenticationInfo()
-  {
+  public void testDoGetAuthenticationInfo() {
     User user = UserTestData.createTrillian();
 
     user.setPassword(new Sha1Hash("secret").toHex());
@@ -92,31 +94,21 @@ public class LegacyRealmTest
     assertEquals("tricia", authInfo.getPrincipals().getPrimaryPrincipal());
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testDoGetAuthenticationInfoWithNewPasswords()
-  {
+  public void testDoGetAuthenticationInfoWithNewPasswords() {
     User user = UserTestData.createTrillian();
 
     user.setPassword(NEW_PASSWORD);
     when(userDAO.get("tricia")).thenReturn(user);
 
     AuthenticationToken token = new UsernamePasswordToken("tricia",
-                                  NEW_PASSWORD);
+      NEW_PASSWORD);
 
     assertNull(realm.doGetAuthenticationInfo(token));
   }
 
-  /**
-   *   Method description
-   *  
-   */
   @Test
-  public void testDoGetAuthenticationInfoWithNullPassword()
-  {
+  public void testDoGetAuthenticationInfoWithNullPassword() {
     when(userDAO.get("tricia")).thenReturn(UserTestData.createTrillian());
 
     AuthenticationToken token = new UsernamePasswordToken("tricia", "secret");
@@ -124,30 +116,24 @@ public class LegacyRealmTest
     assertNull(realm.doGetAuthenticationInfo(token));
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test(expected = IllegalArgumentException.class)
-  public void testDoGetAuthenticationInfoWrongToken()
-  {
+  public void testDoGetAuthenticationInfoWrongToken() {
     realm.doGetAuthenticationInfo(BearerToken.valueOf("test"));
   }
 
-  //~--- fields ---------------------------------------------------------------
+  @Test
+  public void shouldTrackMetricsForSuccessfulAccessViaLegacyBasicAuthentication() {
+    User user = UserTestData.createTrillian();
 
-  @Mock
-  private LoginAttemptHandler loginAttemptHandler;
-  
-  @Mock
-  private UserDAO userDAO;
-  
-  @Mock
-  private GroupDAO groupDAO;
+    user.setPassword(new Sha1Hash("secret").toHex());
+    when(userDAO.get("tricia")).thenReturn(user);
 
-  @InjectMocks
-  private DAORealmHelperFactory helperFactory;
-  
-  private LegacyRealm realm;
+    AuthenticationToken token = new UsernamePasswordToken("tricia", "secret");
+    realm.doGetAuthenticationInfo(token);
 
+    assertThat(meterRegistry.getMeters()).hasSize(1);
+    Meter.Id meterId = meterRegistry.getMeters().get(0).getId();
+    assertThat(meterId.getName()).isEqualTo("scm.auth.access.successful");
+    assertThat(meterId.getTag("type")).isEqualTo("legacy_basic_auth");
+  }
 }

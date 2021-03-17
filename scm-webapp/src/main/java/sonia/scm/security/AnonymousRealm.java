@@ -26,11 +26,13 @@ package sonia.scm.security;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import sonia.scm.SCMContext;
+import sonia.scm.metrics.Metrics;
 import sonia.scm.plugin.Extension;
 import sonia.scm.user.UserDAO;
 
@@ -43,22 +45,18 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Extension
 public class AnonymousRealm extends AuthenticatingRealm {
 
-  /**
-   * realm name
-   */
   @VisibleForTesting
   static final String REALM = "AnonymousRealm";
 
-  /**
-   * dao realm helper
-   */
   private final DAORealmHelper helper;
   private final UserDAO userDAO;
+  private final MeterRegistry meterRegistry;
 
   @Inject
-  public AnonymousRealm(DAORealmHelperFactory helperFactory, UserDAO userDAO) {
+  public AnonymousRealm(DAORealmHelperFactory helperFactory, UserDAO userDAO, MeterRegistry meterRegistry) {
     this.helper = helperFactory.create(REALM);
     this.userDAO = userDAO;
+    this.meterRegistry = meterRegistry;
 
     setAuthenticationTokenClass(AnonymousToken.class);
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
@@ -70,6 +68,7 @@ public class AnonymousRealm extends AuthenticatingRealm {
      throw new NotAuthorizedException("trying to access anonymous but _anonymous user does not exist");
     }
     checkArgument(authenticationToken instanceof AnonymousToken, "%s is required", AnonymousToken.class);
+    Metrics.accessSuccessful(meterRegistry, "_anonymous").increment();
     return helper.authenticationInfoBuilder(SCMContext.USER_ANONYMOUS).build();
   }
 }

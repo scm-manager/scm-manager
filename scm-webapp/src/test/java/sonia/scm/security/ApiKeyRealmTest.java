@@ -24,6 +24,9 @@
 
 package sonia.scm.security;
 
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authz.AuthorizationException;
@@ -61,13 +64,16 @@ class ApiKeyRealmTest {
   @Mock
   RepositoryRoleManager repositoryRoleManager;
 
+  MeterRegistry meterRegistry;
+
   ApiKeyRealm realm;
 
   @BeforeEach
   void initRealmHelper() {
     lenient().when(helperFactory.create("ApiTokenRealm")).thenReturn(helper);
     lenient().when(helper.authenticationInfoBuilder(any())).thenReturn(authenticationInfoBuilder);
-    realm = new ApiKeyRealm(apiKeyService, helperFactory, repositoryRoleManager);
+    meterRegistry = new SimpleMeterRegistry();
+    realm = new ApiKeyRealm(apiKeyService, helperFactory, repositoryRoleManager, meterRegistry);
   }
 
   @Test
@@ -80,6 +86,19 @@ class ApiKeyRealmTest {
     verify(helper).authenticationInfoBuilder("ford");
     verifyScopeSet("repository:read:*");
     verify(authenticationInfoBuilder).withSessionId(null);
+  }
+
+  @Test
+  void shouldTrackMetricForSuccessfulAccessViaApiKey() {
+    when(apiKeyService.check("towel")).thenReturn(new ApiKeyService.CheckResult("ford", "READ"));
+    when(repositoryRoleManager.get("READ")).thenReturn(new RepositoryRole("guide", singleton("read"), "system"));
+
+    realm.doGetAuthenticationInfo(valueOf("towel"));
+
+    assertThat(meterRegistry.getMeters()).hasSize(1);
+    Meter.Id meterId = meterRegistry.getMeters().get(0).getId();
+    assertThat(meterId.getName()).isEqualTo("scm.auth.access.successful");
+    assertThat(meterId.getTag("type")).isEqualTo("api_key");
   }
 
   @Test

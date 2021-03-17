@@ -27,6 +27,7 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -39,13 +40,12 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.metrics.Metrics;
 import sonia.scm.plugin.Extension;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Set;
-
-//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Default authorizing realm.
@@ -55,34 +55,24 @@ import java.util.Set;
  */
 @Extension
 @Singleton
-public class DefaultRealm extends AuthorizingRealm
-{
+public class DefaultRealm extends AuthorizingRealm {
 
   private static final String SEPARATOR = System.getProperty("line.separator", "\n");
-
-  /**
-   * the logger for DefaultRealm
-   */
   private static final Logger LOG = LoggerFactory.getLogger(DefaultRealm.class);
 
-  /** Field description */
   @VisibleForTesting
   static final String REALM = "DefaultRealm";
   private final ScmPermissionResolver permissionResolver;
+  private final MeterRegistry meterRegistry;
+  private final Set<AuthorizationCollector> authorizationCollectors;
+  private final DAORealmHelper helper;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param service
-   * @param authorizationCollectors
-   * @param helperFactory
-   */
   @Inject
-  public DefaultRealm(PasswordService service, Set<AuthorizationCollector> authorizationCollectors, DAORealmHelperFactory helperFactory)
-  {
+  public DefaultRealm(PasswordService service,
+                      MeterRegistry meterRegistry,
+                      Set<AuthorizationCollector> authorizationCollectors,
+                      DAORealmHelperFactory helperFactory) {
+    this.meterRegistry = meterRegistry;
     this.authorizationCollectors = authorizationCollectors;
     this.helper = helperFactory.create(REALM);
 
@@ -103,40 +93,17 @@ public class DefaultRealm extends AuthorizingRealm
     return permissionResolver;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param token
-   *
-   * @return
-   *
-   * @throws AuthenticationException
-   */
   @Override
-  protected AuthenticationInfo doGetAuthenticationInfo(
-    AuthenticationToken token)
-    throws AuthenticationException
-  {
+  protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
+    Metrics.accessSuccessful(meterRegistry, "basic_auth").increment();
     return helper.getAuthenticationInfo(token);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param principals
-   *
-   * @return
-   */
   @Override
-  protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals)
-  {
+  protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
     AuthorizationInfo info = collectors(principals);
     Scope scope = principals.oneByType(Scope.class);
-    if (scope != null && ! scope.isEmpty()) {
+    if (scope != null && !scope.isEmpty()) {
       LOG.trace("filter permissions by scope {}", scope);
       AuthorizationInfo filtered = Scopes.filter(getPermissionResolver(), info, scope);
       if (LOG.isTraceEnabled()) {
@@ -174,7 +141,7 @@ public class DefaultRealm extends AuthorizingRealm
     }
   }
 
-  private void log( PrincipalCollection collection, AuthorizationInfo original, AuthorizationInfo filtered ) {
+  private void log(PrincipalCollection collection, AuthorizationInfo original, AuthorizationInfo filtered) {
     StringBuilder buffer = new StringBuilder("authorization summary: ");
 
     buffer.append(SEPARATOR).append("username   : ").append(collection.getPrimaryPrincipal());
@@ -183,7 +150,7 @@ public class DefaultRealm extends AuthorizingRealm
     buffer.append(SEPARATOR).append("scope      : ");
     append(buffer, collection.oneByType(Scope.class));
 
-    if ( filtered != null ) {
+    if (filtered != null) {
       buffer.append(SEPARATOR).append("permissions (filtered by scope): ");
       append(buffer, filtered);
       buffer.append(SEPARATOR).append("permissions (unfiltered): ");
@@ -200,20 +167,11 @@ public class DefaultRealm extends AuthorizingRealm
     append(buffer, authz.getObjectPermissions());
   }
 
-  private void append(StringBuilder buffer, Iterable<?> iterable){
-    if (iterable != null){
-      for ( Object item : iterable )
-      {
+  private void append(StringBuilder buffer, Iterable<?> iterable) {
+    if (iterable != null) {
+      for (Object item : iterable) {
         buffer.append(SEPARATOR).append(" - ").append(item);
       }
     }
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** set of authorization collector */
-  private final Set<AuthorizationCollector> authorizationCollectors;
-
-  /** realm helper */
-  private final DAORealmHelper helper;
 }

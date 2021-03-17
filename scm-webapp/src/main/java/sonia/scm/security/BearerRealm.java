@@ -25,6 +25,7 @@
 package sonia.scm.security;
 
 import com.google.common.annotations.VisibleForTesting;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
@@ -32,6 +33,7 @@ import org.apache.shiro.realm.AuthenticatingRealm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.group.GroupDAO;
+import sonia.scm.metrics.Metrics;
 import sonia.scm.plugin.Extension;
 import sonia.scm.user.UserDAO;
 
@@ -64,16 +66,19 @@ public class BearerRealm extends AuthenticatingRealm
   /** access token resolver **/
   private final AccessTokenResolver tokenResolver;
 
+  private final MeterRegistry meterRegistry;
+
   /**
    * Constructs ...
-   *
-   * @param helperFactory dao realm helper factory
+   *  @param helperFactory dao realm helper factory
    * @param tokenResolver resolve access token from bearer
+   * @param meterRegistry
    */
   @Inject
-  public BearerRealm(DAORealmHelperFactory helperFactory, AccessTokenResolver tokenResolver) {
+  public BearerRealm(DAORealmHelperFactory helperFactory, AccessTokenResolver tokenResolver, MeterRegistry meterRegistry) {
     this.helper = helperFactory.create(REALM);
     this.tokenResolver = tokenResolver;
+    this.meterRegistry = meterRegistry;
 
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
     setAuthenticationTokenClass(BearerToken.class);
@@ -107,6 +112,7 @@ public class BearerRealm extends AuthenticatingRealm
     BearerToken bt = (BearerToken) token;
 
     AccessToken accessToken = tokenResolver.resolve(bt);
+    Metrics.accessSuccessful(meterRegistry, "bearer_token").increment();
 
     return helper.authenticationInfoBuilder(accessToken.getSubject())
       .withCredentials(bt.getCredentials())

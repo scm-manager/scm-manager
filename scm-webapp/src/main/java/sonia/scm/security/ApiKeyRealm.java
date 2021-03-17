@@ -25,6 +25,7 @@
 package sonia.scm.security;
 
 import com.google.common.io.BaseEncoding;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -33,6 +34,7 @@ import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.metrics.Metrics;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;
@@ -53,12 +55,14 @@ public class ApiKeyRealm extends AuthenticatingRealm {
   private final ApiKeyService apiKeyService;
   private final DAORealmHelper helper;
   private final RepositoryRoleManager repositoryRoleManager;
+  private final MeterRegistry meterRegistry;
 
   @Inject
-  public ApiKeyRealm(ApiKeyService apiKeyService, DAORealmHelperFactory helperFactory, RepositoryRoleManager repositoryRoleManager) {
+  public ApiKeyRealm(ApiKeyService apiKeyService, DAORealmHelperFactory helperFactory, RepositoryRoleManager repositoryRoleManager, MeterRegistry meterRegistry) {
     this.apiKeyService = apiKeyService;
     this.helper = helperFactory.create(NAME);
     this.repositoryRoleManager = repositoryRoleManager;
+    this.meterRegistry = meterRegistry;
     setAuthenticationTokenClass(BearerToken.class);
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
   }
@@ -83,6 +87,7 @@ public class ApiKeyRealm extends AuthenticatingRealm {
       "%s is required", BearerToken.class);
     String password = getPassword(token);
     ApiKeyService.CheckResult check = apiKeyService.check(password);
+    Metrics.accessSuccessful(meterRegistry, "api_key").increment();
     return buildAuthenticationInfo(token, check);
   }
 

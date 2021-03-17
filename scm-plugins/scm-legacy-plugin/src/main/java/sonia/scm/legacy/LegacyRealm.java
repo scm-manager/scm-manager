@@ -21,15 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.legacy;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.legacy;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.CharMatcher;
 import com.google.common.base.Preconditions;
-
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -37,16 +35,12 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.crypto.hash.Sha1Hash;
 import org.apache.shiro.realm.AuthenticatingRealm;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import sonia.scm.metrics.Metrics;
 import sonia.scm.plugin.Extension;
-
 import sonia.scm.security.DAORealmHelper;
 import sonia.scm.security.DAORealmHelperFactory;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -59,10 +53,8 @@ import javax.inject.Singleton;
  */
 @Extension
 @Singleton
-public class LegacyRealm extends AuthenticatingRealm
-{
+public class LegacyRealm extends AuthenticatingRealm {
 
-  /** Field description */
   @VisibleForTesting
   static final String REALM = "LegacyRealm";
 
@@ -70,7 +62,7 @@ public class LegacyRealm extends AuthenticatingRealm
     .inRange('0', '9')
     .or(CharMatcher.inRange('a', 'f'))
     .or(CharMatcher.inRange('A', 'F')
-  );
+    );
 
   /**
    * the logger for LegacyRealm
@@ -78,17 +70,18 @@ public class LegacyRealm extends AuthenticatingRealm
   private static final Logger LOG = LoggerFactory.getLogger(LegacyRealm.class);
 
   private final DAORealmHelper helper;
-  
-  //~--- constructors ---------------------------------------------------------
-  
+  private final MeterRegistry meterRegistry;
+
   /**
    * Constructs a new instance.
    *
    * @param helperFactory dao realm helper factory
+   * @param meterRegistry
    */
   @Inject
-  public LegacyRealm(DAORealmHelperFactory helperFactory) {
+  public LegacyRealm(DAORealmHelperFactory helperFactory, MeterRegistry meterRegistry) {
     this.helper = helperFactory.create(REALM);
+    this.meterRegistry = meterRegistry;
     setAuthenticationTokenClass(UsernamePasswordToken.class);
 
     HashedCredentialsMatcher matcher = new HashedCredentialsMatcher();
@@ -99,11 +92,10 @@ public class LegacyRealm extends AuthenticatingRealm
     setCredentialsMatcher(helper.wrapCredentialsMatcher(matcher));
   }
 
-  //~--- methods --------------------------------------------------------------
-
   @Override
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
     Preconditions.checkArgument(token instanceof UsernamePasswordToken, "unsupported token");
+    Metrics.accessSuccessful(meterRegistry, "legacy_basic_auth").increment();
     return returnOnHexCredentials(helper.getAuthenticationInfo(token));
   }
 

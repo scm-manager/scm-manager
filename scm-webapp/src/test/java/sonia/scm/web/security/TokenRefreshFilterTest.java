@@ -24,11 +24,11 @@
 
 package sonia.scm.web.security;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.security.AccessTokenCookieIssuer;
@@ -68,7 +68,6 @@ class TokenRefreshFilterTest {
   @Mock
   private AccessTokenCookieIssuer issuer;
 
-  @InjectMocks
   private TokenRefreshFilter filter;
 
   @Mock
@@ -79,8 +78,9 @@ class TokenRefreshFilterTest {
   private FilterChain filterChain;
 
   @BeforeEach
-  void initGenerators() {
+  void init() {
     when(tokenGenerators.iterator()).thenReturn(singleton(tokenGenerator).iterator());
+    filter = new TokenRefreshFilter(tokenGenerators, refresher, resolver, issuer, new SimpleMeterRegistry());
   }
 
   @Test

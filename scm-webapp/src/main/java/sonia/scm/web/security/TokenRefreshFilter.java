@@ -106,20 +106,21 @@ public class TokenRefreshFilter extends HttpFilter {
     }
     if (accessToken instanceof JwtAccessToken) {
       refresher.refresh((JwtAccessToken) accessToken)
-        .ifPresent(jwtAccessToken -> refreshToken(request, response, jwtAccessToken));
+        .ifPresent(jwtAccessToken -> refreshJwtToken(request, response, jwtAccessToken));
     }
   }
 
-  private void refreshToken(HttpServletRequest request, HttpServletResponse response, JwtAccessToken jwtAccessToken) {
+  private void refreshJwtToken(HttpServletRequest request, HttpServletResponse response, JwtAccessToken jwtAccessToken) {
     incrementTokenRefreshCounter();
-    LOG.debug("refreshing authentication token");
+    LOG.debug("refreshing JWT authentication token");
     issuer.authenticate(request, response, jwtAccessToken);
   }
 
   private void incrementTokenRefreshCounter() {
     Counter
       .builder("scm.auth.token.refresh")
-      .description("The amount of JWT Token refreshes")
+      .description("The amount of authentication token refreshes")
+      .tags("type", "JWT")
       .register(meterRegistry)
       .increment();
   }

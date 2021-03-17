@@ -164,7 +164,7 @@ public class AuthenticationResourceTest {
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
     List<Meter> meters = meterRegistry.getMeters();
     assertEquals(1, meters.size());
-    assertEquals("scm.auth.login", meters.get(0).getId().getName());
+    assertEquals("scm.auth.login.attempts", meters.get(0).getId().getName());
   }
 
   @Test
@@ -178,7 +178,7 @@ public class AuthenticationResourceTest {
 
     List<Meter> meters = meterRegistry.getMeters();
     assertEquals(1, meters.size());
-    assertEquals("scm.auth.login", meters.get(0).getId().getName());
+    assertEquals("scm.auth.login.attempts", meters.get(0).getId().getName());
   }
 
 
@@ -193,7 +193,7 @@ public class AuthenticationResourceTest {
 
     List<Meter> meters = meterRegistry.getMeters();
     assertEquals(2, meters.size());
-    assertThat(meters.stream().map(m -> m.getId().getName())).contains("scm.auth.login.failed", "scm.auth.login");
+    assertThat(meters.stream().map(m -> m.getId().getName())).contains("scm.auth.login.failed", "scm.auth.login.attempts");
   }
 
   @Test
@@ -206,7 +206,7 @@ public class AuthenticationResourceTest {
 
     List<Meter> meters = meterRegistry.getMeters();
     assertEquals(2, meters.size());
-    assertThat(meters.stream().map(m -> m.getId().getName())).contains("scm.auth.login.failed", "scm.auth.login");
+    assertThat(meters.stream().map(m -> m.getId().getName())).contains("scm.auth.login.failed", "scm.auth.login.attempts");
   }
 
   @Test
