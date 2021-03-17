@@ -26,6 +26,9 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -47,14 +50,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static java.net.URI.create;
 import static java.util.Optional.of;
-import static org.hamcrest.Matchers.containsString;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -74,6 +76,8 @@ public class AuthenticationResourceTest {
 
   @Mock
   private AccessTokenBuilder accessTokenBuilder;
+
+  private MeterRegistry meterRegistry;
 
   private final AccessTokenCookieIssuer cookieIssuer = new DefaultAccessTokenCookieIssuer(mock(ScmConfiguration.class));
 
@@ -135,7 +139,8 @@ public class AuthenticationResourceTest {
 
   @Before
   public void prepareEnvironment() {
-    authenticationResource = new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer);
+    meterRegistry = new SimpleMeterRegistry();
+    authenticationResource = new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer, meterRegistry);
     dispatcher.addSingletonResource(authenticationResource);
 
     AccessToken accessToken = mock(AccessToken.class);
@@ -157,6 +162,9 @@ public class AuthenticationResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+    List<Meter> meters = meterRegistry.getMeters();
+    assertEquals(1, meters.size());
+    assertEquals("scm.auth.login", meters.get(0).getId().getName());
   }
 
   @Test
@@ -167,6 +175,10 @@ public class AuthenticationResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+
+    List<Meter> meters = meterRegistry.getMeters();
+    assertEquals(1, meters.size());
+    assertEquals("scm.auth.login", meters.get(0).getId().getName());
   }
 
 
@@ -178,6 +190,10 @@ public class AuthenticationResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
+
+    List<Meter> meters = meterRegistry.getMeters();
+    assertEquals(2, meters.size());
+    assertThat(meters.stream().map(m -> m.getId().getName())).contains("scm.auth.login.failed", "scm.auth.login");
   }
 
   @Test
@@ -187,6 +203,10 @@ public class AuthenticationResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
+
+    List<Meter> meters = meterRegistry.getMeters();
+    assertEquals(2, meters.size());
+    assertThat(meters.stream().map(m -> m.getId().getName())).contains("scm.auth.login.failed", "scm.auth.login");
   }
 
   @Test
@@ -216,6 +236,10 @@ public class AuthenticationResourceTest {
 
     dispatcher.invoke(request, response);
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+
+    List<Meter> meters = meterRegistry.getMeters();
+    assertEquals(1, meters.size());
+    assertEquals("scm.auth.logout", meters.get(0).getId().getName());
   }
 
   @Test
@@ -227,7 +251,7 @@ public class AuthenticationResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-    assertThat(response.getContentAsString(), containsString("http://example.com/cas/logout"));
+    assertThat(response.getContentAsString()).contains("http://example.com/cas/logout");
   }
 
   @Test

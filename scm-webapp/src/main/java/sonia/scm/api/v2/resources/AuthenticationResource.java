@@ -25,6 +25,8 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -92,14 +94,16 @@ public class AuthenticationResource {
 
   private final AccessTokenBuilderFactory tokenBuilderFactory;
   private final AccessTokenCookieIssuer cookieIssuer;
+  private final MeterRegistry meterRegistry;
 
   @Inject(optional = true)
   private LogoutRedirection logoutRedirection;
 
   @Inject
-  public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer) {
+  public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer, MeterRegistry meterRegistry) {
     this.tokenBuilderFactory = tokenBuilderFactory;
     this.cookieIssuer = cookieIssuer;
+    this.meterRegistry = meterRegistry;
   }
 
   @POST
@@ -177,7 +181,10 @@ public class AuthenticationResource {
     HttpServletResponse response,
     AuthenticationRequestDto authentication
   ) {
+    incrementCounter("scm.auth.login", "Counter of SCM-Manager logins");
+
     if (!authentication.isValid()) {
+      incrementCounter("scm.auth.login.failed", "Counter of failed SCM-Manager logins");
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
@@ -201,6 +208,7 @@ public class AuthenticationResource {
         res = Response.ok(token.compact()).build();
       }
     } catch (AuthenticationException ex) {
+      incrementCounter("scm.auth.login.failed", "Counter of failed SCM-Manager logins");
       if (LOG.isTraceEnabled()) {
         LOG.trace("authentication failed for user ".concat(authentication.getUsername()), ex);
       } else {
@@ -222,10 +230,9 @@ public class AuthenticationResource {
   @ApiResponse(responseCode = "204", description = "success")
   @ApiResponse(responseCode = "500", description = "internal server error")
   public Response logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-    Subject subject = SecurityUtils.getSubject();
+    incrementCounter("scm.auth.logout", "Counter of SCM-Manager logouts");
 
-    subject.logout();
-
+    SecurityUtils.getSubject().logout();
     // remove authentication cookie
     cookieIssuer.invalidate(request, response);
 
@@ -239,6 +246,14 @@ public class AuthenticationResource {
         return Response.noContent().build();
       }
     }
+  }
+
+  private void incrementCounter(String name, String description) {
+    Counter
+      .builder(name)
+      .description(description)
+      .register(meterRegistry)
+      .increment();
   }
 
   void setLogoutRedirection(LogoutRedirection logoutRedirection) {
