@@ -164,6 +164,7 @@ const CreatePermissionForm: FC<Props> = ({
           selectedVerbs={selectedVerbs || []}
           onClose={() => setShowAdvancedDialog(false)}
           onSubmit={submitAdvancedPermissionsDialog}
+          readOnly={!create}
         />
       ) : null}
       <ErrorNotification error={error} />
@@ -212,6 +213,7 @@ const CreatePermissionForm: FC<Props> = ({
                   helpText={t("permission.help.roleHelpText")}
                   handleRoleChange={handleRoleChange}
                   role={permission.role || ""}
+                  emptyLabel={t("permission.custom")}
                 />
               </div>
               <div className="column">

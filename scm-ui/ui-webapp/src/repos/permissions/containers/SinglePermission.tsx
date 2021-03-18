@@ -111,6 +111,7 @@ const SinglePermission: FC<Props> = ({
             availableRoles={availableRoleNames}
             role={permission.role || ""}
             loading={isLoading}
+            emptyLabel={t("permission.custom")}
           />
         </td>
       )}
