@@ -35,6 +35,7 @@ dependencies {
   api libraries.junitJupiterApi
   api libraries.junitJupiterParams
   api libraries.junitJupiterEngine
+  api libraries.shiroUnit
 
   // junit 4 support
   api libraries.junitVintageEngine
@@ -51,7 +52,13 @@ dependencies {
 
   // test rest api's
   api libraries.resteasyCore
+  api libraries.resteasyValidatorProvider
 
   // test servlet api
   api libraries.servletApi
+
+  //validator
+  api libraries.validator
+  api libraries.elApi
+  api libraries.elRuntime
 }
