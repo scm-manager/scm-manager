@@ -44,8 +44,7 @@ public final class ValidationUtil
     "^[A-Za-z0-9][\\w.-]*@[A-Za-z0-9][\\w\\-\\.]*\\.[A-Za-z0-9][A-Za-z0-9-]+$";
 
   /** Field description */
-  public static final String REGEX_NAME =
-    "^[A-Za-z0-9\\.\\-_][A-Za-z0-9\\.\\-_@]*$";
+  public static final String REGEX_NAME = "^[\\p{L}0-9\\.\\-_+<>!$*|][\\p{L}0-9\\.\\-_@+<>!$*|]*$";
 
   public static final String REGEX_REPOSITORYNAME = "(?!^\\.\\.$)(?!^\\.$)(?!.*[\\\\\\[\\]])(?!.*[.]git$)^[A-Za-z0-9\\.][A-Za-z0-9\\.\\-_]*$";
 
