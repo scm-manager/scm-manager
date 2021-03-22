@@ -55,14 +55,12 @@ public class ApiKeyRealm extends AuthenticatingRealm {
   private final ApiKeyService apiKeyService;
   private final DAORealmHelper helper;
   private final RepositoryRoleManager repositoryRoleManager;
-  private final MeterRegistry meterRegistry;
 
   @Inject
-  public ApiKeyRealm(ApiKeyService apiKeyService, DAORealmHelperFactory helperFactory, RepositoryRoleManager repositoryRoleManager, MeterRegistry meterRegistry) {
+  public ApiKeyRealm(ApiKeyService apiKeyService, DAORealmHelperFactory helperFactory, RepositoryRoleManager repositoryRoleManager) {
     this.apiKeyService = apiKeyService;
     this.helper = helperFactory.create(NAME);
     this.repositoryRoleManager = repositoryRoleManager;
-    this.meterRegistry = meterRegistry;
     setAuthenticationTokenClass(BearerToken.class);
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
   }
@@ -87,7 +85,6 @@ public class ApiKeyRealm extends AuthenticatingRealm {
       "%s is required", BearerToken.class);
     String password = getPassword(token);
     ApiKeyService.CheckResult check = apiKeyService.check(password);
-    Metrics.accessSuccessful(meterRegistry, "api_key").increment();
     return buildAuthenticationInfo(token, check);
   }
 

@@ -65,8 +65,6 @@ class BearerRealmTest {
   @Mock
   private AccessTokenResolver accessTokenResolver;
 
-  private MeterRegistry meterRegistry;
-
   private BearerRealm realm;
 
   @Mock
@@ -75,8 +73,7 @@ class BearerRealmTest {
   @BeforeEach
   void prepareObjectUnderTest() {
     when(realmHelperFactory.create(BearerRealm.REALM)).thenReturn(realmHelper);
-    meterRegistry = new SimpleMeterRegistry();
-    realm = new BearerRealm(realmHelperFactory, accessTokenResolver, meterRegistry);
+    realm = new BearerRealm(realmHelperFactory, accessTokenResolver);
   }
 
   @Test
@@ -96,29 +93,6 @@ class BearerRealmTest {
 
     AuthenticationInfo result = realm.doGetAuthenticationInfo(bearerToken);
     assertThat(result).isSameAs(authenticationInfo);
-  }
-
-  @Test
-  void shouldTrackMetricsForSuccessfulAccessViaBearerToken() {
-    BearerToken bearerToken = BearerToken.create(SessionId.valueOf("__session__"), "__bearer__");
-    AccessToken accessToken = mock(AccessToken.class);
-
-    when(accessToken.getSubject()).thenReturn("trillian");
-    when(accessToken.getClaims()).thenReturn(new HashMap<>());
-    when(accessTokenResolver.resolve(bearerToken)).thenReturn(accessToken);
-
-    when(realmHelper.authenticationInfoBuilder("trillian")).thenReturn(builder);
-    when(builder.withCredentials("__bearer__")).thenReturn(builder);
-    when(builder.withScope(any(Scope.class))).thenReturn(builder);
-    when(builder.withSessionId(any(SessionId.class))).thenReturn(builder);
-    when(builder.build()).thenReturn(authenticationInfo);
-
-    realm.doGetAuthenticationInfo(bearerToken);
-
-    assertThat(meterRegistry.getMeters()).hasSize(1);
-    Meter.Id meterId = meterRegistry.getMeters().get(0).getId();
-    assertThat(meterId.getName()).isEqualTo("scm.auth.access.successful");
-    assertThat(meterId.getTag("type")).isEqualTo("bearer_token");
   }
 
   @Test

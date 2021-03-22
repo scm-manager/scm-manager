@@ -70,18 +70,15 @@ public class LegacyRealm extends AuthenticatingRealm {
   private static final Logger LOG = LoggerFactory.getLogger(LegacyRealm.class);
 
   private final DAORealmHelper helper;
-  private final MeterRegistry meterRegistry;
 
   /**
    * Constructs a new instance.
    *
    * @param helperFactory dao realm helper factory
-   * @param meterRegistry
    */
   @Inject
-  public LegacyRealm(DAORealmHelperFactory helperFactory, MeterRegistry meterRegistry) {
+  public LegacyRealm(DAORealmHelperFactory helperFactory) {
     this.helper = helperFactory.create(REALM);
-    this.meterRegistry = meterRegistry;
     setAuthenticationTokenClass(UsernamePasswordToken.class);
 
     HashedCredentialsMatcher matcher = new HashedCredentialsMatcher();
@@ -95,7 +92,6 @@ public class LegacyRealm extends AuthenticatingRealm {
   @Override
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
     Preconditions.checkArgument(token instanceof UsernamePasswordToken, "unsupported token");
-    Metrics.accessSuccessful(meterRegistry, "legacy_basic_auth").increment();
     return returnOnHexCredentials(helper.getAuthenticationInfo(token));
   }
 

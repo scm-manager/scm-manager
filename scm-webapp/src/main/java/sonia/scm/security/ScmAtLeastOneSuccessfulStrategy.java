@@ -31,6 +31,7 @@ import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.pam.AbstractAuthenticationStrategy;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.PrincipalCollection;
+import sonia.scm.metrics.AuthenticationMetrics;
 import sonia.scm.metrics.Metrics;
 
 import javax.inject.Inject;
@@ -61,6 +62,11 @@ public class ScmAtLeastOneSuccessfulStrategy extends AbstractAuthenticationStrat
     if (t != null) {
       this.threadLocal.get().add(t);
     }
+
+    if (isAuthenticationSuccessful(singleRealmInfo)) {
+      AuthenticationMetrics.accessSuccessful(meterRegistry, realm.getClass().getName()).increment();
+    }
+
     return super.afterAttempt(realm, token, singleRealmInfo, aggregateInfo, t);
   }
 
@@ -71,7 +77,7 @@ public class ScmAtLeastOneSuccessfulStrategy extends AbstractAuthenticationStrat
     if (isAuthenticationSuccessful(aggregate)) {
       return aggregate;
     }
-    Metrics.accessFailed(meterRegistry).increment();
+    AuthenticationMetrics.accessFailed(meterRegistry).increment();
 
     Optional<? extends AuthenticationException> specializedException = findSpecializedException(throwables);
 

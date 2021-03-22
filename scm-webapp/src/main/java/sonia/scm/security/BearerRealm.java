@@ -25,7 +25,6 @@
 package sonia.scm.security;
 
 import com.google.common.annotations.VisibleForTesting;
-import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
@@ -33,7 +32,6 @@ import org.apache.shiro.realm.AuthenticatingRealm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.group.GroupDAO;
-import sonia.scm.metrics.Metrics;
 import sonia.scm.plugin.Extension;
 import sonia.scm.user.UserDAO;
 
@@ -51,34 +49,26 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 @Singleton
 @Extension
-public class BearerRealm extends AuthenticatingRealm
-{
+public class BearerRealm extends AuthenticatingRealm {
 
-  /** realm name */
   @VisibleForTesting
   static final String REALM = "BearerRealm";
 
   private static final Logger LOG = LoggerFactory.getLogger(BearerRealm.class);
 
-  /** dao realm helper */
   private final DAORealmHelper helper;
-
-  /** access token resolver **/
   private final AccessTokenResolver tokenResolver;
-
-  private final MeterRegistry meterRegistry;
 
   /**
    * Constructs ...
-   *  @param helperFactory dao realm helper factory
+   *
+   * @param helperFactory dao realm helper factory
    * @param tokenResolver resolve access token from bearer
-   * @param meterRegistry
    */
   @Inject
-  public BearerRealm(DAORealmHelperFactory helperFactory, AccessTokenResolver tokenResolver, MeterRegistry meterRegistry) {
+  public BearerRealm(DAORealmHelperFactory helperFactory, AccessTokenResolver tokenResolver) {
     this.helper = helperFactory.create(REALM);
     this.tokenResolver = tokenResolver;
-    this.meterRegistry = meterRegistry;
 
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
     setAuthenticationTokenClass(BearerToken.class);
@@ -100,9 +90,7 @@ public class BearerRealm extends AuthenticatingRealm
    * Validates the given bearer token and retrieves authentication data from
    * {@link UserDAO} and {@link GroupDAO}.
    *
-   *
    * @param token bearer token
-   *
    * @return authentication data from user and group dao
    */
   @Override
@@ -112,7 +100,6 @@ public class BearerRealm extends AuthenticatingRealm
     BearerToken bt = (BearerToken) token;
 
     AccessToken accessToken = tokenResolver.resolve(bt);
-    Metrics.accessSuccessful(meterRegistry, "bearer_token").increment();
 
     return helper.authenticationInfoBuilder(accessToken.getSubject())
       .withCredentials(bt.getCredentials())
@@ -120,5 +107,4 @@ public class BearerRealm extends AuthenticatingRealm
       .withSessionId(bt.getPrincipal())
       .build();
   }
-
 }

@@ -25,9 +25,6 @@
 package sonia.scm.legacy;
 
 
-import io.micrometer.core.instrument.Meter;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -46,7 +43,6 @@ import sonia.scm.user.User;
 import sonia.scm.user.UserDAO;
 import sonia.scm.user.UserTestData;
 
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -70,14 +66,11 @@ public class LegacyRealmTest {
   @InjectMocks
   private DAORealmHelperFactory helperFactory;
 
-  private MeterRegistry meterRegistry;
-
   private LegacyRealm realm;
 
   @Before
   public void prepareObjectUnderTest() {
-    meterRegistry = new SimpleMeterRegistry();
-    realm = new LegacyRealm(helperFactory, meterRegistry);
+    realm = new LegacyRealm(helperFactory);
   }
 
   @Test
@@ -119,21 +112,5 @@ public class LegacyRealmTest {
   @Test(expected = IllegalArgumentException.class)
   public void testDoGetAuthenticationInfoWrongToken() {
     realm.doGetAuthenticationInfo(BearerToken.valueOf("test"));
-  }
-
-  @Test
-  public void shouldTrackMetricsForSuccessfulAccessViaLegacyBasicAuthentication() {
-    User user = UserTestData.createTrillian();
-
-    user.setPassword(new Sha1Hash("secret").toHex());
-    when(userDAO.get("tricia")).thenReturn(user);
-
-    AuthenticationToken token = new UsernamePasswordToken("tricia", "secret");
-    realm.doGetAuthenticationInfo(token);
-
-    assertThat(meterRegistry.getMeters()).hasSize(1);
-    Meter.Id meterId = meterRegistry.getMeters().get(0).getId();
-    assertThat(meterId.getName()).isEqualTo("scm.auth.access.successful");
-    assertThat(meterId.getTag("type")).isEqualTo("legacy_basic_auth");
   }
 }

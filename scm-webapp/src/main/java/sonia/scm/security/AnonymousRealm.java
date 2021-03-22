@@ -50,13 +50,11 @@ public class AnonymousRealm extends AuthenticatingRealm {
 
   private final DAORealmHelper helper;
   private final UserDAO userDAO;
-  private final MeterRegistry meterRegistry;
 
   @Inject
-  public AnonymousRealm(DAORealmHelperFactory helperFactory, UserDAO userDAO, MeterRegistry meterRegistry) {
+  public AnonymousRealm(DAORealmHelperFactory helperFactory, UserDAO userDAO) {
     this.helper = helperFactory.create(REALM);
     this.userDAO = userDAO;
-    this.meterRegistry = meterRegistry;
 
     setAuthenticationTokenClass(AnonymousToken.class);
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
@@ -68,7 +66,6 @@ public class AnonymousRealm extends AuthenticatingRealm {
      throw new NotAuthorizedException("trying to access anonymous but _anonymous user does not exist");
     }
     checkArgument(authenticationToken instanceof AnonymousToken, "%s is required", AnonymousToken.class);
-    Metrics.accessSuccessful(meterRegistry, "_anonymous").increment();
     return helper.authenticationInfoBuilder(SCMContext.USER_ANONYMOUS).build();
   }
 }

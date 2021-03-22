@@ -24,6 +24,7 @@
 
 package sonia.scm.security;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -41,6 +42,7 @@ import java.util.Arrays;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -123,6 +125,22 @@ public class ScmAtLeastOneSuccessfulStrategyTest {
     final AuthenticationInfo authenticationInfo = strategy.afterAllAttempts(token, aggregateInfo);
 
     assertThat(authenticationInfo).isNotNull();
+  }
+
+  @Test()
+  public void shouldTrackSuccessfulAuthenticationMetrics() {
+    MeterRegistry meterRegistry = new SimpleMeterRegistry();
+    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy(meterRegistry);
+    strategy.threadLocal.set(singletonList(tokenExpiredException));
+    when(aggregateInfo.getPrincipals()).thenReturn(principalCollection);
+    when(principalCollection.isEmpty()).thenReturn(false);
+
+    DefaultRealm realm = mock(DefaultRealm.class);
+    when(realm.getName()).thenReturn("DEFAULT_REALM");
+
+    strategy.afterAttempt(realm, token, null, aggregateInfo, null);
+
+    assertThat(meterRegistry.getMeters()).hasSize(1);
   }
 
 }

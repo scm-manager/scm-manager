@@ -43,6 +43,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.metrics.AuthenticationMetrics;
 import sonia.scm.metrics.Metrics;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilder;
@@ -182,10 +183,10 @@ public class AuthenticationResource {
     HttpServletResponse response,
     AuthenticationRequestDto authentication
   ) {
-    Metrics.loginAttempts(meterRegistry, "UI/REST").increment();
+    AuthenticationMetrics.loginAttempts(meterRegistry, "UI/REST").increment();
 
     if (!authentication.isValid()) {
-      Metrics.loginFailed(meterRegistry, "UI/REST").increment();
+      AuthenticationMetrics.loginFailed(meterRegistry, "UI/REST").increment();
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
@@ -209,7 +210,7 @@ public class AuthenticationResource {
         res = Response.ok(token.compact()).build();
       }
     } catch (AuthenticationException ex) {
-      Metrics.loginFailed(meterRegistry, "UI/REST").increment();
+      AuthenticationMetrics.loginFailed(meterRegistry, "UI/REST").increment();
       if (LOG.isTraceEnabled()) {
         LOG.trace("authentication failed for user ".concat(authentication.getUsername()), ex);
       } else {

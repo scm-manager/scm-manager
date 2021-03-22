@@ -95,7 +95,6 @@ public class DefaultRealm extends AuthorizingRealm {
 
   @Override
   protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-    Metrics.accessSuccessful(meterRegistry, "basic_auth").increment();
     return helper.getAuthenticationInfo(token);
   }
 
