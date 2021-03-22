@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-export const nameRegex = /^[\\p{L}0-9\.\-_+<>!$*|`][\\p{L}0-9\.\-_@+<>!$*|`]*$/;
+export const nameRegex = /^[^:/?#;&=\s@][^:/?#;&=\s]*$/;
 
 export const isNameValid = (name: string) => {
   return nameRegex.test(name);

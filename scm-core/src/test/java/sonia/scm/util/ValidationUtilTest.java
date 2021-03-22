@@ -21,29 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.util;
 
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class ValidationUtilTest
-{
+public class ValidationUtilTest {
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testIsFilenameValid()
-  {
+  public void testIsFilenameValid() {
 
     // true
     assertTrue(ValidationUtil.isFilenameValid("test"));
@@ -56,13 +47,8 @@ public class ValidationUtilTest
     assertFalse(ValidationUtil.isFilenameValid("ka:on"));
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testIsMailAddressValid()
-  {
+  public void testIsMailAddressValid() {
 
     // true
     assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@ostfalia.de"));
@@ -70,11 +56,11 @@ public class ValidationUtilTest
     assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@hbk-bs.de"));
     assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@gmail.com"));
     assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@t.co"));
-    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@ucla.college")); 
+    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@ucla.college"));
     assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@example.xn--p1ai"));
-    
+
     // issue 909
-    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@scm.solutions")); 
+    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@scm.solutions"));
 
     // false
     assertFalse(ValidationUtil.isMailAddressValid("ostfalia.de"));
@@ -86,13 +72,8 @@ public class ValidationUtilTest
     assertFalse(ValidationUtil.isMailAddressValid("s.sdorra @ostfalia.de"));
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testIsNameValid()
-  {
+  public void testIsNameValid() {
 
     // true
     assertTrue(ValidationUtil.isNameValid("test"));
@@ -102,6 +83,18 @@ public class ValidationUtilTest
     assertTrue(ValidationUtil.isNameValid("Test_user-123.git"));
     assertTrue(ValidationUtil.isNameValid("test@scm-manager.de"));
     assertTrue(ValidationUtil.isNameValid("t"));
+    assertTrue(ValidationUtil.isNameValid("test%123"));
+    assertTrue(ValidationUtil.isNameValid("Лорем-ипсум"));
+    assertTrue(ValidationUtil.isNameValid("Λορεμ.ιπσθμ"));
+    assertTrue(ValidationUtil.isNameValid("լոռեմիպսում"));
+    assertTrue(ValidationUtil.isNameValid("ლორემიფსუმ"));
+    assertTrue(ValidationUtil.isNameValid("प्रमान"));
+    assertTrue(ValidationUtil.isNameValid("詳性約"));
+    assertTrue(ValidationUtil.isNameValid("隠サレニ"));
+    assertTrue(ValidationUtil.isNameValid("법률"));
+    assertTrue(ValidationUtil.isNameValid("المدن"));
+    assertTrue(ValidationUtil.isNameValid("אחד"));
+    assertTrue(ValidationUtil.isNameValid("Hu-rëm"));
 
     // false
     assertFalse(ValidationUtil.isNameValid("test 123"));
@@ -109,20 +102,20 @@ public class ValidationUtilTest
     assertFalse(ValidationUtil.isNameValid(" test 123 "));
     assertFalse(ValidationUtil.isNameValid("test 123 "));
     assertFalse(ValidationUtil.isNameValid("test/123"));
-    assertFalse(ValidationUtil.isNameValid("test%123"));
     assertFalse(ValidationUtil.isNameValid("test:123"));
+    assertFalse(ValidationUtil.isNameValid("test#123"));
+    assertFalse(ValidationUtil.isNameValid("test&123"));
+    assertFalse(ValidationUtil.isNameValid("test?123"));
+    assertFalse(ValidationUtil.isNameValid("test=123"));
+    assertFalse(ValidationUtil.isNameValid("test;123"));
+    assertFalse(ValidationUtil.isNameValid("@test123"));
     assertFalse(ValidationUtil.isNameValid("t "));
     assertFalse(ValidationUtil.isNameValid(" t"));
     assertFalse(ValidationUtil.isNameValid(" t "));
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testIsNotContaining()
-  {
+  public void testIsNotContaining() {
 
     // true
     assertTrue(ValidationUtil.isNotContaining("test", "abc"));
