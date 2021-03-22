@@ -25,9 +25,6 @@
 package sonia.scm.security;
 
 import com.google.common.collect.Collections2;
-import io.micrometer.core.instrument.Meter;
-import io.micrometer.core.instrument.MeterRegistry;
-import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.DisabledAccountException;
@@ -80,8 +77,6 @@ public class DefaultRealmTest {
 
   @InjectMocks
   private DAORealmHelperFactory helperFactory;
-
-  private MeterRegistry meterRegistry;
 
   private DefaultRealm realm;
 
@@ -195,18 +190,6 @@ public class DefaultRealmTest {
     assertThat(user).isEqualTo(collection.oneByType(User.class));
   }
 
-  @Test
-  public void shouldTrackMetricsForSuccessfulAccessViaBasicAuthentication() {
-    User user = UserTestData.createTrillian();
-    UsernamePasswordToken token = daoUser(user, "secret");
-    realm.getAuthenticationInfo(token);
-
-    assertThat(meterRegistry.getMeters()).hasSize(1);
-    Meter.Id meterId = meterRegistry.getMeters().get(0).getId();
-    assertThat(meterId.getName()).isEqualTo("scm.auth.access.successful");
-    assertThat(meterId.getTag("type")).isEqualTo("basic_auth");
-  }
-
   @Test(expected = UnknownAccountException.class)
   public void testUnknownAccount() {
     realm.getAuthenticationInfo(new UsernamePasswordToken("tricia", "secret"));
@@ -243,8 +226,7 @@ public class DefaultRealmTest {
     authorizationCollectors = new HashSet<>();
     authorizationCollectors.add(collector);
 
-    meterRegistry = new SimpleMeterRegistry();
-    realm = new DefaultRealm(service, meterRegistry, authorizationCollectors, helperFactory);
+    realm = new DefaultRealm(service, authorizationCollectors, helperFactory);
 
     // set permission resolver
     realm.setPermissionResolver(new WildcardPermissionResolver());

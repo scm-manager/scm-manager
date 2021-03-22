@@ -26,13 +26,11 @@ package sonia.scm.security;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
-import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.credential.AllowAllCredentialsMatcher;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import sonia.scm.SCMContext;
-import sonia.scm.metrics.Metrics;
 import sonia.scm.plugin.Extension;
 import sonia.scm.user.UserDAO;
 

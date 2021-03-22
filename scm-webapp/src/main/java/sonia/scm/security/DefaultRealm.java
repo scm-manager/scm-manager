@@ -27,7 +27,6 @@ package sonia.scm.security;
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.google.common.annotations.VisibleForTesting;
-import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
@@ -40,7 +39,6 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.metrics.Metrics;
 import sonia.scm.plugin.Extension;
 
 import javax.inject.Inject;
@@ -63,16 +61,13 @@ public class DefaultRealm extends AuthorizingRealm {
   @VisibleForTesting
   static final String REALM = "DefaultRealm";
   private final ScmPermissionResolver permissionResolver;
-  private final MeterRegistry meterRegistry;
   private final Set<AuthorizationCollector> authorizationCollectors;
   private final DAORealmHelper helper;
 
   @Inject
   public DefaultRealm(PasswordService service,
-                      MeterRegistry meterRegistry,
                       Set<AuthorizationCollector> authorizationCollectors,
                       DAORealmHelperFactory helperFactory) {
-    this.meterRegistry = meterRegistry;
     this.authorizationCollectors = authorizationCollectors;
     this.helper = helperFactory.create(REALM);
 

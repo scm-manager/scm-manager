@@ -25,7 +25,6 @@
 package sonia.scm.security;
 
 import com.google.common.io.BaseEncoding;
-import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -34,7 +33,6 @@ import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.metrics.Metrics;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;

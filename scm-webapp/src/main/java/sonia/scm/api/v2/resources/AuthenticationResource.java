@@ -44,7 +44,6 @@ import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.metrics.AuthenticationMetrics;
-import sonia.scm.metrics.Metrics;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilder;
 import sonia.scm.security.AccessTokenBuilderFactory;
@@ -93,6 +92,7 @@ public class AuthenticationResource {
   private static final Logger LOG = LoggerFactory.getLogger(AuthenticationResource.class);
 
   static final String PATH = "v2/auth";
+  private static final String AUTH_METRIC_TYPE = "UI/REST";
 
   private final AccessTokenBuilderFactory tokenBuilderFactory;
   private final AccessTokenCookieIssuer cookieIssuer;
@@ -183,10 +183,10 @@ public class AuthenticationResource {
     HttpServletResponse response,
     AuthenticationRequestDto authentication
   ) {
-    AuthenticationMetrics.loginAttempts(meterRegistry, "UI/REST").increment();
+    AuthenticationMetrics.loginAttempts(meterRegistry, AUTH_METRIC_TYPE).increment();
 
     if (!authentication.isValid()) {
-      AuthenticationMetrics.loginFailed(meterRegistry, "UI/REST").increment();
+      AuthenticationMetrics.loginFailed(meterRegistry, AUTH_METRIC_TYPE).increment();
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
@@ -210,7 +210,7 @@ public class AuthenticationResource {
         res = Response.ok(token.compact()).build();
       }
     } catch (AuthenticationException ex) {
-      AuthenticationMetrics.loginFailed(meterRegistry, "UI/REST").increment();
+      AuthenticationMetrics.loginFailed(meterRegistry, AUTH_METRIC_TYPE).increment();
       if (LOG.isTraceEnabled()) {
         LOG.trace("authentication failed for user ".concat(authentication.getUsername()), ex);
       } else {
@@ -254,7 +254,7 @@ public class AuthenticationResource {
     Counter
       .builder("scm.auth.logout")
       .description("The amount of logouts from SCM-Manager")
-      .tags("type", "UI/REST")
+      .tags("type", AUTH_METRIC_TYPE)
       .register(meterRegistry)
       .increment();
   }

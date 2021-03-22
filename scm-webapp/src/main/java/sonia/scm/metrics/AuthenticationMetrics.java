@@ -29,6 +29,7 @@ import io.micrometer.core.instrument.MeterRegistry;
 
 public class AuthenticationMetrics {
 
+  private AuthenticationMetrics() {}
 
   /**
    * Creates counter to track amount of login attempts to SCM-Manager.

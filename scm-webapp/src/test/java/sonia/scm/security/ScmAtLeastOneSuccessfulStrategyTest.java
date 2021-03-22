@@ -138,7 +138,7 @@ public class ScmAtLeastOneSuccessfulStrategyTest {
     DefaultRealm realm = mock(DefaultRealm.class);
     when(realm.getName()).thenReturn("DEFAULT_REALM");
 
-    strategy.afterAttempt(realm, token, null, aggregateInfo, null);
+    strategy.afterAttempt(realm, token, aggregateInfo, null, null);
 
     assertThat(meterRegistry.getMeters()).hasSize(1);
   }
