@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.work;
 
+import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.Before;
@@ -132,7 +133,9 @@ public class SimpleWorkingCopyFactoryTest {
 
     verify(parent).close();
     assertThat(meterRegistry.getMeters()).hasSize(1);
-    assertThat(meterRegistry.getMeters().get(0).getId().getName()).isEqualTo("scm.workingCopy.duration");
+    Meter.Id meterId = meterRegistry.getMeters().get(0).getId();
+    assertThat(meterId.getName()).isEqualTo("scm.workingCopy.duration");
+    assertThat(meterId.getTag("type")).isEqualTo("git");
   }
 
   @Test
@@ -142,7 +145,9 @@ public class SimpleWorkingCopyFactoryTest {
 
     verify(clone).close();
     assertThat(meterRegistry.getMeters()).hasSize(1);
-    assertThat(meterRegistry.getMeters().get(0).getId().getName()).isEqualTo("scm.workingCopy.duration");
+    Meter.Id meterId = meterRegistry.getMeters().get(0).getId();
+    assertThat(meterId.getName()).isEqualTo("scm.workingCopy.duration");
+    assertThat(meterId.getTag("type")).isEqualTo("git");
   }
 
   @Test

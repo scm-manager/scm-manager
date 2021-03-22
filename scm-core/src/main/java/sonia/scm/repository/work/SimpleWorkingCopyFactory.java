@@ -110,8 +110,8 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvide
     this.workingCopyPool = workingCopyPool;
   }
 
-  public SimpleWorkingCopyFactory(WorkingCopyPool workingCopyPool, MeterRegistry meterRegistry) {
-    this(workingCopyPool);
+  protected SimpleWorkingCopyFactory(WorkingCopyPool workingCopyPool, MeterRegistry meterRegistry) {
+    this.workingCopyPool = workingCopyPool;
     this.meterRegistry = meterRegistry;
   }
 
@@ -233,7 +233,7 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvide
           LOG.warn("could not close context for {} with directory {}", getScmRepository(), parentAndClone.getDirectory(), e);
         }
       } finally {
-        sample.stop(Metrics.workingCopyTimer(meterRegistry));
+        sample.stop(Metrics.workingCopyTimer(meterRegistry, repositoryContext.get().getType()));
       }
     }
   }
