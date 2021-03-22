@@ -21,40 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.cache;
 
-//~--- JDK imports ------------------------------------------------------------
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 
 import java.util.Collections;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public final class CacheTestUtil
-{
+public final class CacheTestUtil {
 
-  /**
-   * Constructs ...
-   *
-   */
-  private CacheTestUtil() {}
+  private CacheTestUtil() {
+  }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @SuppressWarnings("unchecked")
-  public static GuavaCacheManager createDefaultGuavaCacheManager()
-  {
+  public static GuavaCacheManager createDefaultGuavaCacheManager() {
     GuavaCacheConfiguration config = new GuavaCacheConfiguration();
 
-    return new GuavaCacheManager(new GuavaCacheManagerConfiguration(config,
-      Collections.EMPTY_LIST));
+    return new GuavaCacheManager(
+      new GuavaCacheManagerConfiguration(config, Collections.EMPTY_LIST),
+      new GuavaCacheFactory(new SimpleMeterRegistry())
+    );
   }
 }

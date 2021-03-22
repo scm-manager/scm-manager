@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.cache;
 
 import org.junit.After;
 import org.junit.Assume;
@@ -33,51 +31,32 @@ import org.junit.Test;
 import sonia.scm.util.IOUtil;
 
 import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public abstract class CacheTestBase
-{
+public abstract class CacheTestBase {
+  private Cache<String, String> cache;
+  private CacheManager cm;
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   protected abstract CacheManager createCacheManager();
 
-  /**
-   * Method description
-   *
-   */
-  @After
-  public void after()
-  {
-    IOUtil.close(cm);
-  }
-
-  /**
-   * Method description
-   *
-   */
   @Before
-  public void before()
-  {
+  public void before() {
     cm = createCacheManager();
     cache = cm.getCache("test");
   }
 
-  /**
-   * Method description
-   *
-   */
+  @After
+  public void after() {
+    IOUtil.close(cm);
+  }
+
   @Test
-  public void testClear()
-  {
+  public void testClear() {
     cache.put("test", "test123");
     cache.put("test-1", "test123");
     cache.clear();
@@ -85,13 +64,8 @@ public abstract class CacheTestBase
     assertNull(cache.get("test-1"));
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testContains()
-  {
+  public void testContains() {
     cache.put("test", "test123");
     cache.put("test-1", "test123");
     assertTrue(cache.contains("test"));
@@ -99,13 +73,8 @@ public abstract class CacheTestBase
     assertFalse(cache.contains("test-2"));
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testOverride()
-  {
+  public void testOverride() {
     cache.put("test", "test123");
 
     String previous = cache.put("test", "test456");
@@ -114,24 +83,14 @@ public abstract class CacheTestBase
     assertEquals("test456", cache.get("test"));
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testPutAndGet()
-  {
+  public void testPutAndGet() {
     cache.put("test", "test123");
     assertEquals("test123", cache.get("test"));
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testRemove()
-  {
+  public void testRemove() {
     cache.put("test", "test123");
     assertEquals("test123", cache.get("test"));
 
@@ -141,13 +100,8 @@ public abstract class CacheTestBase
     assertNull(cache.get("test"));
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testRemoveAll()
-  {
+  public void testRemoveAll() {
     cache.put("test-1", "test123");
     cache.put("test-2", "test456");
     cache.put("a-1", "test123");
@@ -161,12 +115,12 @@ public abstract class CacheTestBase
     assertNotNull(cache.get("a-1"));
     assertNotNull(cache.get("a-2"));
   }
-  
+
   @Test
-  public void testCacheStatistics(){
+  public void testCacheStatistics() {
     CacheStatistics stats = cache.getStatistics();
     // skip test if implementation does not support stats
-    Assume.assumeTrue( stats != null );
+    Assume.assumeTrue(stats != null);
     assertEquals("test", stats.getName());
     assertEquals(0L, stats.getHitCount());
     assertEquals(0L, stats.getMissCount());
@@ -176,23 +130,21 @@ public abstract class CacheTestBase
     cache.get("test-1");
     cache.get("test-1");
     cache.get("test-3");
+    cache.get("test-4");
+    cache.get("test-5");
     // check that stats have not changed
     assertEquals(0L, stats.getHitCount());
     assertEquals(0L, stats.getMissCount());
     stats = cache.getStatistics();
     assertEquals(3L, stats.getHitCount());
-    assertEquals(1L, stats.getMissCount());
-    assertEquals(0.75d, stats.getHitRate(), 0.0d);
-    assertEquals(0.25d, stats.getMissRate(), 0.0d);
+    // We get 2 misses on inserting new cache keys and 3 misses on the actual "cache.get" for non-existent cache keys
+    assertEquals(5L, stats.getMissCount());
+    assertEquals(0.375d, stats.getHitRate(), 0.0d);
+    assertEquals(0.625d, stats.getMissRate(), 0.0d);
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testSize()
-  {
+  public void testSize() {
     assertEquals(0, cache.size());
     cache.put("test", "test123");
     assertEquals(1, cache.size());
@@ -204,11 +156,5 @@ public abstract class CacheTestBase
     assertEquals(0, cache.size());
   }
 
-  //~--- fields ---------------------------------------------------------------
 
-  /** Field description */
-  private Cache<String, String> cache;
-
-  /** Field description */
-  private CacheManager cm;
 }

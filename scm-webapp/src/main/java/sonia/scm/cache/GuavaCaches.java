@@ -24,126 +24,76 @@
 
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.common.cache.CacheBuilder;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import java.util.concurrent.TimeUnit;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public final class GuavaCaches
-{
+public final class GuavaCaches {
 
-  /**
-   * the logger for GuavaCaches
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GuavaCaches.class);
+  private static final Logger LOG = LoggerFactory.getLogger(GuavaCaches.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private GuavaCaches() {
+  }
 
-  /**
-   * Constructs ...
-   *
-   */
-  private GuavaCaches() {}
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param configuration
-   * @param name
-   *
-   * @return
-   */
-  public static <K,V> com.google.common.cache.Cache<K, V> create(
-    GuavaCacheConfiguration configuration, String name)
-  {
+  public static <K, V> com.google.common.cache.Cache<K, V> create(
+    GuavaCacheConfiguration configuration, String name) {
     CacheBuilder<Object, Object> builder = CacheBuilder.newBuilder();
 
-    if (configuration.getConcurrencyLevel() != null)
-    {
+    // Collect guava cache statistics
+    builder.recordStats();
+
+    if (configuration.getConcurrencyLevel() != null) {
       builder.concurrencyLevel(configuration.getConcurrencyLevel());
     }
 
-    if (configuration.getExpireAfterAccess() != null)
-    {
+    if (configuration.getExpireAfterAccess() != null) {
       builder.expireAfterAccess(configuration.getExpireAfterAccess(),
         TimeUnit.SECONDS);
     }
 
-    if (configuration.getExpireAfterWrite() != null)
-    {
+    if (configuration.getExpireAfterWrite() != null) {
       builder.expireAfterWrite(configuration.getExpireAfterWrite(),
         TimeUnit.SECONDS);
     }
 
-    if (configuration.getInitialCapacity() != null)
-    {
+    if (configuration.getInitialCapacity() != null) {
       builder.initialCapacity(configuration.getInitialCapacity());
     }
 
-    if (configuration.getMaximumSize() != null)
-    {
+    if (configuration.getMaximumSize() != null) {
       builder.maximumSize(configuration.getMaximumSize());
     }
 
-    if (configuration.getMaximumWeight() != null)
-    {
+    if (configuration.getMaximumWeight() != null) {
       builder.maximumWeight(configuration.getMaximumWeight());
     }
 
-    if (isEnabled(configuration.getRecordStats()))
-    {
+    if (isEnabled(configuration.getRecordStats())) {
       builder.recordStats();
     }
 
-    if (isEnabled(configuration.getSoftValues()))
-    {
+    if (isEnabled(configuration.getSoftValues())) {
       builder.softValues();
     }
 
-    if (isEnabled(configuration.getWeakKeys()))
-    {
+    if (isEnabled(configuration.getWeakKeys())) {
       builder.weakKeys();
     }
 
-    if (isEnabled(configuration.getWeakValues()))
-    {
+    if (isEnabled(configuration.getWeakValues())) {
       builder.weakKeys();
     }
 
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("create new cache {} from builder: {}", name, builder);
+    if (LOG.isTraceEnabled()) {
+      LOG.trace("create new cache {} from builder: {}", name, builder);
     }
 
     return builder.build();
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param v
-   *
-   * @return
-   */
-  private static boolean isEnabled(Boolean v)
-  {
+  private static boolean isEnabled(Boolean v) {
     return (v != null) && v;
   }
 }

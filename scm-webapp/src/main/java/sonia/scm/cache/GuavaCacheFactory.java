@@ -24,10 +24,26 @@
 
 package sonia.scm.cache;
 
-public class GuavaCacheTest extends CacheTestBase {
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.binder.cache.GuavaCacheMetrics;
 
-  @Override
-  protected CacheManager createCacheManager() {
-    return CacheTestUtil.createDefaultGuavaCacheManager();
+import javax.inject.Inject;
+import java.util.Collections;
+
+public class GuavaCacheFactory {
+
+  private final MeterRegistry meterRegistry;
+
+  @Inject
+  public GuavaCacheFactory(MeterRegistry meterRegistry) {
+    this.meterRegistry = meterRegistry;
+  }
+
+  <K, V> GuavaCache<K, V> create(GuavaCacheConfiguration configuration, String name) {
+    com.google.common.cache.Cache<K, V> cache = GuavaCaches.create(configuration, name);
+
+    new GuavaCacheMetrics(cache, name, Collections.emptySet()).bindTo(meterRegistry);
+
+    return new GuavaCache<>(cache, configuration.getCopyStrategy(), name);
   }
 }
