@@ -103,10 +103,15 @@ public abstract class SimpleWorkingCopyFactory<R, W, C extends RepositoryProvide
   private static final Logger LOG = LoggerFactory.getLogger(SimpleWorkingCopyFactory.class);
 
   private final WorkingCopyPool workingCopyPool;
-  private final MeterRegistry meterRegistry;
+  private MeterRegistry meterRegistry;
+
+  @Deprecated
+  public SimpleWorkingCopyFactory(WorkingCopyPool workingCopyPool) {
+    this.workingCopyPool = workingCopyPool;
+  }
 
   public SimpleWorkingCopyFactory(WorkingCopyPool workingCopyPool, MeterRegistry meterRegistry) {
-    this.workingCopyPool = workingCopyPool;
+    this(workingCopyPool);
     this.meterRegistry = meterRegistry;
   }
 
