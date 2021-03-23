@@ -96,7 +96,9 @@ public class AuthenticationResource {
 
   private final AccessTokenBuilderFactory tokenBuilderFactory;
   private final AccessTokenCookieIssuer cookieIssuer;
-  private final MeterRegistry meterRegistry;
+  private final Counter loginAttemptsCounter;
+  private final Counter loginFailedCounter;
+  private final Counter logoutCounter;
 
   @Inject(optional = true)
   private LogoutRedirection logoutRedirection;
@@ -105,7 +107,9 @@ public class AuthenticationResource {
   public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer, MeterRegistry meterRegistry) {
     this.tokenBuilderFactory = tokenBuilderFactory;
     this.cookieIssuer = cookieIssuer;
-    this.meterRegistry = meterRegistry;
+    this.loginAttemptsCounter = AuthenticationMetrics.loginAttempts(meterRegistry, AUTH_METRIC_TYPE);
+    this.loginFailedCounter = AuthenticationMetrics.loginFailed(meterRegistry, AUTH_METRIC_TYPE);
+    this.logoutCounter = AuthenticationMetrics.logout(meterRegistry, AUTH_METRIC_TYPE);
   }
 
   @POST
@@ -183,10 +187,10 @@ public class AuthenticationResource {
     HttpServletResponse response,
     AuthenticationRequestDto authentication
   ) {
-    AuthenticationMetrics.loginAttempts(meterRegistry, AUTH_METRIC_TYPE).increment();
+    loginAttemptsCounter.increment();
 
     if (!authentication.isValid()) {
-      AuthenticationMetrics.loginFailed(meterRegistry, AUTH_METRIC_TYPE).increment();
+      loginFailedCounter.increment();
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
@@ -210,7 +214,7 @@ public class AuthenticationResource {
         res = Response.ok(token.compact()).build();
       }
     } catch (AuthenticationException ex) {
-      AuthenticationMetrics.loginFailed(meterRegistry, AUTH_METRIC_TYPE).increment();
+      loginFailedCounter.increment();
       if (LOG.isTraceEnabled()) {
         LOG.trace("authentication failed for user ".concat(authentication.getUsername()), ex);
       } else {
@@ -232,7 +236,7 @@ public class AuthenticationResource {
   @ApiResponse(responseCode = "204", description = "success")
   @ApiResponse(responseCode = "500", description = "internal server error")
   public Response logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-    incrementLogoutCounter();
+    logoutCounter.increment();
 
     SecurityUtils.getSubject().logout();
     // remove authentication cookie
@@ -248,15 +252,6 @@ public class AuthenticationResource {
         return Response.noContent().build();
       }
     }
-  }
-
-  private void incrementLogoutCounter() {
-    Counter
-      .builder("scm.auth.logout")
-      .description("The amount of logouts from SCM-Manager")
-      .tags("type", AUTH_METRIC_TYPE)
-      .register(meterRegistry)
-      .increment();
   }
 
   void setLogoutRedirection(LogoutRedirection logoutRedirection) {

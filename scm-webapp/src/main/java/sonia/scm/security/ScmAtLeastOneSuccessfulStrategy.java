@@ -63,7 +63,7 @@ public class ScmAtLeastOneSuccessfulStrategy extends AbstractAuthenticationStrat
     }
 
     if (isAuthenticationSuccessful(singleRealmInfo)) {
-      AuthenticationMetrics.accessSuccessful(meterRegistry, realm.getName()).increment();
+      AuthenticationMetrics.accessRealmSuccessful(meterRegistry, realm.getClass().getName(), token.getClass().getName()).increment();
     }
 
     return super.afterAttempt(realm, token, singleRealmInfo, aggregateInfo, t);
@@ -73,10 +73,14 @@ public class ScmAtLeastOneSuccessfulStrategy extends AbstractAuthenticationStrat
   public AuthenticationInfo afterAllAttempts(AuthenticationToken token, AuthenticationInfo aggregate) {
     final List<Throwable> throwables = threadLocal.get();
     threadLocal.remove();
+
+    String tokenType = token.getClass().getName();
+
     if (isAuthenticationSuccessful(aggregate)) {
+      AuthenticationMetrics.accessSuccessful(meterRegistry, tokenType).increment();
       return aggregate;
     }
-    AuthenticationMetrics.accessFailed(meterRegistry).increment();
+    AuthenticationMetrics.accessFailed(meterRegistry, tokenType).increment();
 
     Optional<? extends AuthenticationException> specializedException = findSpecializedException(throwables);
 

@@ -33,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.Priority;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
+import sonia.scm.metrics.AuthenticationMetrics;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.AccessTokenResolver;
@@ -65,7 +66,7 @@ public class TokenRefreshFilter extends HttpFilter {
   private final JwtAccessTokenRefresher refresher;
   private final AccessTokenResolver resolver;
   private final AccessTokenCookieIssuer issuer;
-  private final MeterRegistry meterRegistry;
+  private final Counter tokenRefreshCounter;
 
   @Inject
   public TokenRefreshFilter(Set<WebTokenGenerator> tokenGenerators, JwtAccessTokenRefresher refresher, AccessTokenResolver resolver, AccessTokenCookieIssuer issuer, MeterRegistry meterRegistry) {
@@ -73,7 +74,7 @@ public class TokenRefreshFilter extends HttpFilter {
     this.refresher = refresher;
     this.resolver = resolver;
     this.issuer = issuer;
-    this.meterRegistry = meterRegistry;
+    this.tokenRefreshCounter = AuthenticationMetrics.tokenRefresh(meterRegistry, "JWT");
   }
 
   @Override
@@ -111,17 +112,8 @@ public class TokenRefreshFilter extends HttpFilter {
   }
 
   private void refreshJwtToken(HttpServletRequest request, HttpServletResponse response, JwtAccessToken jwtAccessToken) {
-    incrementTokenRefreshCounter();
+    tokenRefreshCounter.increment();
     LOG.debug("refreshing JWT authentication token");
     issuer.authenticate(request, response, jwtAccessToken);
-  }
-
-  private void incrementTokenRefreshCounter() {
-    Counter
-      .builder("scm.auth.token.refresh")
-      .description("The amount of authentication token refreshes")
-      .tags("type", "JWT")
-      .register(meterRegistry)
-      .increment();
   }
 }

@@ -52,11 +52,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.net.URI.create;
 import static java.util.Optional.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -163,8 +165,10 @@ public class AuthenticationResourceTest {
 
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
     List<Meter> meters = meterRegistry.getMeters();
-    assertEquals(1, meters.size());
-    assertEquals("scm.auth.login.attempts", meters.get(0).getId().getName());
+    assertThat(meters).hasSize(3);
+    Optional<Meter> loginAttemptMeter = meters.stream().filter(m -> m.getId().getName().equals("scm.auth.login.attempts")).findFirst();
+    assertThat(loginAttemptMeter).isPresent();
+    assertThat(loginAttemptMeter.get().measure().iterator().next().getValue()).isEqualTo(1);
   }
 
   @Test
@@ -177,8 +181,10 @@ public class AuthenticationResourceTest {
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
 
     List<Meter> meters = meterRegistry.getMeters();
-    assertEquals(1, meters.size());
-    assertEquals("scm.auth.login.attempts", meters.get(0).getId().getName());
+    assertThat(meters).hasSize(3);
+    Optional<Meter> loginAttemptMeter = meters.stream().filter(m -> m.getId().getName().equals("scm.auth.login.attempts")).findFirst();
+    assertThat(loginAttemptMeter).isPresent();
+    assertThat(loginAttemptMeter.get().measure().iterator().next().getValue()).isEqualTo(1);
   }
 
 
@@ -192,8 +198,8 @@ public class AuthenticationResourceTest {
     assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
 
     List<Meter> meters = meterRegistry.getMeters();
-    assertEquals(2, meters.size());
-    assertThat(meters.stream().map(m -> m.getId().getName())).contains("scm.auth.login.failed", "scm.auth.login.attempts");
+    assertThat(meters).hasSize(3);
+    assertThat(meters.stream().map(m -> m.getId().getName())).contains("scm.auth.login.failed", "scm.auth.login.attempts", "scm.auth.logout");
   }
 
   @Test
@@ -205,8 +211,8 @@ public class AuthenticationResourceTest {
     assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
 
     List<Meter> meters = meterRegistry.getMeters();
-    assertEquals(2, meters.size());
-    assertThat(meters.stream().map(m -> m.getId().getName())).contains("scm.auth.login.failed", "scm.auth.login.attempts");
+    assertThat(meters).hasSize(3);
+    assertThat(meters.stream().map(m -> m.getId().getName())).contains("scm.auth.login.failed", "scm.auth.login.attempts", "scm.auth.logout");
   }
 
   @Test
@@ -238,8 +244,10 @@ public class AuthenticationResourceTest {
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
 
     List<Meter> meters = meterRegistry.getMeters();
-    assertEquals(1, meters.size());
-    assertEquals("scm.auth.logout", meters.get(0).getId().getName());
+    assertThat( meters).hasSize(3);
+    Optional<Meter> logoutMeter = meters.stream().filter(m -> m.getId().getName().equals("scm.auth.logout")).findFirst();
+    assertThat(logoutMeter).isPresent();
+    assertThat(logoutMeter.get().measure().iterator().next().getValue()).isEqualTo(1);
   }
 
   @Test

@@ -24,12 +24,14 @@
 
 package sonia.scm.security;
 
+import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Tag;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
-import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.MergableAuthenticationInfo;
+import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.junit.Test;
@@ -39,6 +41,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Optional;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -52,7 +55,7 @@ public class ScmAtLeastOneSuccessfulStrategyTest {
   private Realm realm;
 
   @Mock
-  private AuthenticationToken token;
+  private UsernamePasswordToken token;
 
   @Mock
   MergableAuthenticationInfo singleRealmInfo;
@@ -128,7 +131,7 @@ public class ScmAtLeastOneSuccessfulStrategyTest {
   }
 
   @Test()
-  public void shouldTrackSuccessfulAuthenticationMetrics() {
+  public void shouldTrackSuccessfulRealmAuthenticationMetrics() {
     MeterRegistry meterRegistry = new SimpleMeterRegistry();
     final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy(meterRegistry);
     strategy.threadLocal.set(singletonList(tokenExpiredException));
@@ -136,11 +139,41 @@ public class ScmAtLeastOneSuccessfulStrategyTest {
     when(principalCollection.isEmpty()).thenReturn(false);
 
     DefaultRealm realm = mock(DefaultRealm.class);
-    when(realm.getName()).thenReturn("DEFAULT_REALM");
 
     strategy.afterAttempt(realm, token, aggregateInfo, null, null);
 
     assertThat(meterRegistry.getMeters()).hasSize(1);
+    Optional<Meter> realmAccessMeter = meterRegistry.getMeters()
+      .stream()
+      .filter(m -> m.getId().getName().equals("scm.auth.realm.successful"))
+      .findFirst();
+    assertThat(realmAccessMeter).isPresent();
+    assertThat(realmAccessMeter.get().measure().iterator().next().getValue()).isEqualTo(1);
+    assertThat(realmAccessMeter.get().getId().getTags()).contains(
+      Tag.of("realm", "sonia.scm.security.DefaultRealm"),
+      Tag.of("token", "org.apache.shiro.authc.UsernamePasswordToken")
+    );
   }
 
+  @Test()
+  public void shouldTrackGeneralSuccessfulAuthenticationMetrics() {
+    MeterRegistry meterRegistry = new SimpleMeterRegistry();
+    final ScmAtLeastOneSuccessfulStrategy strategy = new ScmAtLeastOneSuccessfulStrategy(meterRegistry);
+    strategy.threadLocal.set(singletonList(tokenExpiredException));
+    when(aggregateInfo.getPrincipals()).thenReturn(principalCollection);
+    when(principalCollection.isEmpty()).thenReturn(false);
+
+    strategy.afterAllAttempts(token, aggregateInfo);
+
+    assertThat(meterRegistry.getMeters()).hasSize(1);
+    Optional<Meter> accessMeter = meterRegistry.getMeters()
+      .stream()
+      .filter(m -> m.getId().getName().equals("scm.auth.access.successful"))
+      .findFirst();
+    assertThat(accessMeter).isPresent();
+    assertThat(accessMeter.get().measure().iterator().next().getValue()).isEqualTo(1);
+    assertThat(accessMeter.get().getId().getTags()).contains(
+      Tag.of("token", "org.apache.shiro.authc.UsernamePasswordToken")
+    );
+  }
 }
