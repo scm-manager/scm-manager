@@ -30,45 +30,42 @@ import com.github.legman.EventBus;
 import com.github.legman.Subscribe;
 import com.github.legman.micrometer.MicrometerPlugin;
 import com.github.legman.shiro.ShiroPlugin;
+import com.google.common.annotations.VisibleForTesting;
 import io.micrometer.core.instrument.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.metrics.MeterRegistryProvider;
 
+import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  *
  * @author Sebastian Sdorra
  */
-public class LegmanScmEventBus extends ScmEventBus
-{
+public class LegmanScmEventBus extends ScmEventBus {
 
   private static final AtomicLong INSTANCE_COUNTER = new AtomicLong();
-
-
-  /** Field description */
   private static final String FORMAT_NAME = "ScmEventBus-%s";
 
   /**
    * the logger for LegmanScmEventBus
    */
-  private static final Logger logger =
-    LoggerFactory.getLogger(LegmanScmEventBus.class);
-
-  //~--- constructors ---------------------------------------------------------
+  private static final Logger logger = LoggerFactory.getLogger(LegmanScmEventBus.class);
 
   private String name;
+  private EventBus eventBus;
 
-  /**
-   * Constructs ...
-   *
-   */
   public LegmanScmEventBus() {
-    eventBus = create();
+    eventBus = create(null);
   }
 
-  private EventBus create() {
+  @VisibleForTesting
+  LegmanScmEventBus(Executor executor) {
+    eventBus = create(executor);
+  }
+
+  private EventBus create(Executor executor) {
     name = String.format(FORMAT_NAME, INSTANCE_COUNTER.incrementAndGet());
     logger.info("create new event bus {}", name);
 
@@ -77,23 +74,19 @@ public class LegmanScmEventBus extends ScmEventBus
 
     ShiroPlugin shiroPlugin = new ShiroPlugin();
 
-    return EventBus.builder()
+    EventBus.Builder builder = EventBus.builder()
       .withIdentifier(name)
-      .withPlugins(micrometerPlugin, shiroPlugin)
-      .build();
+      .withPlugins(shiroPlugin, micrometerPlugin);
+
+    if (executor != null) {
+      builder.withExecutor(executor);
+    }
+
+    return builder.build();
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param event
-   */
   @Override
-  public void post(Object event)
-  {
+  public void post(Object event) {
     if (eventBus != null) {
       logger.debug("post {} to event bus {}", event, name);
       eventBus.post(event);
@@ -106,12 +99,9 @@ public class LegmanScmEventBus extends ScmEventBus
    * Registers a object to the eventbus.
    *
    * @param object object to register
-   *
-   * @see {@link #register(java.lang.Object)}
    */
   @Override
-  public void register(Object object)
-  {
+  public void register(Object object) {
     if (eventBus != null) {
       logger.trace("register {} to event bus {}", object, name);
       eventBus.register(object);
@@ -120,15 +110,8 @@ public class LegmanScmEventBus extends ScmEventBus
     }
   }
 
-  /**
-   * {@inheritDoc}
-   *
-   *
-   * @param object
-   */
   @Override
-  public void unregister(Object object)
-  {
+  public void unregister(Object object) {
     if (eventBus != null) {
       logger.trace("unregister {} from event bus {}", object, name);
 
@@ -160,11 +143,7 @@ public class LegmanScmEventBus extends ScmEventBus
       eventBus.shutdown();
     }
     logger.info("recreate event bus because of received RecreateEventBusEvent");
-    eventBus = create();
+    eventBus = create(null);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** event bus */
-  private EventBus eventBus;
 }
