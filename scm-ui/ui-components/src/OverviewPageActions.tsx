@@ -32,6 +32,7 @@ type Props = {
   currentGroup: string;
   groups?: string[];
   link: string;
+  createLink?: string;
   groupSelected: (namespace: string) => void;
   label?: string;
   testId?: string;
@@ -47,6 +48,7 @@ const OverviewPageActions: FC<Props> = ({
   currentGroup,
   showCreateButton,
   link: inputLink,
+  createLink,
   groupSelected,
   label,
   testId,
@@ -72,7 +74,7 @@ const OverviewPageActions: FC<Props> = ({
     if (showCreateButton) {
       return (
         <div className={classNames("input-button", "control", "column")}>
-          <Button label={label} link={`${link}create`} color="primary" />
+          <Button label={label} link={createLink || `${link}create`} color="primary" />
         </div>
       );
     }
