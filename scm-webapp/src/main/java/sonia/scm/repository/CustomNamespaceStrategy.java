@@ -45,7 +45,8 @@ public class CustomNamespaceStrategy implements NamespaceStrategy {
       .when(
         !ValidationUtil.isNameValid(namespace)
           || ONE_TO_THREE_DIGITS.matcher(namespace).matches()
-          || namespace.equals("create"));
+          || namespace.equals("create")
+          || namespace.equals("import"));
 
     return namespace;
   }
