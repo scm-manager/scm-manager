@@ -48,6 +48,7 @@ class MeterRegistryProviderTest {
   @Test
   void shouldNotRegisterCommonMetricsForDefaultRegistry() {
     MeterRegistryProvider provider = new MeterRegistryProvider(Collections.emptySet());
+    provider.get().getMeters().forEach( m -> System.out.println(m.getId().getName()) );
     assertThat(provider.get().getMeters()).withFailMessage("no common metrics should be registered").isEmpty();
   }
 

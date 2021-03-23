@@ -6,6 +6,8 @@ ext {
   // TODO upgrade to 2.12.0, but this breaks openapi spec generation
   jacksonVersion = '2.11.3'
 
+  legmanVersion = '2.0.0-SNAPSHOT'
+
   mapstructVersion = '1.3.1.Final'
   jaxbVersion = '2.3.3'
   shiroVersion = '1.7.1'
@@ -73,7 +75,9 @@ ext {
     mapstructProcessor: "org.mapstruct:mapstruct-processor:${mapstructVersion}",
 
     // events
-    legman: 'com.github.legman:core:1.6.2',
+    legman: "com.github.legman:core:${legmanVersion}",
+    legmanShiro: "com.github.legman.support:shiro:${legmanVersion}",
+    legmanMicrometer: "com.github.legman.support:micrometer:${legmanVersion}",
 
     // xml binding
     jaxbApi: "jakarta.xml.bind:jakarta.xml.bind-api:${jaxbVersion}",

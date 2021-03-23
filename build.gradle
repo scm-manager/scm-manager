@@ -35,6 +35,7 @@ changelog {
 
 subprojects { s ->
   repositories {
+    mavenLocal()
     maven {
       url 'https://packages.scm-manager.org/repository/public/'
     }

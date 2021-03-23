@@ -21,15 +21,19 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.event;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.EventBus;
 import com.github.legman.Subscribe;
+import com.github.legman.micrometer.MicrometerPlugin;
+import com.github.legman.shiro.ShiroPlugin;
+import io.micrometer.core.instrument.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.metrics.MeterRegistryProvider;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -44,7 +48,7 @@ public class LegmanScmEventBus extends ScmEventBus
 
 
   /** Field description */
-  private static final String NAME = "ScmEventBus-%s";
+  private static final String FORMAT_NAME = "ScmEventBus-%s";
 
   /**
    * the logger for LegmanScmEventBus
@@ -65,9 +69,18 @@ public class LegmanScmEventBus extends ScmEventBus
   }
 
   private EventBus create() {
-    name = String.format(NAME, INSTANCE_COUNTER.incrementAndGet());
+    name = String.format(FORMAT_NAME, INSTANCE_COUNTER.incrementAndGet());
     logger.info("create new event bus {}", name);
-    return new EventBus(name);
+
+    MicrometerPlugin micrometerPlugin = new MicrometerPlugin(MeterRegistryProvider.getStaticRegistry())
+      .withExecutorTags(Tag.of("type", "fixed"));
+
+    ShiroPlugin shiroPlugin = new ShiroPlugin();
+
+    return EventBus.builder()
+      .withIdentifier(name)
+      .withPlugins(micrometerPlugin, shiroPlugin)
+      .build();
   }
 
   //~--- methods --------------------------------------------------------------
