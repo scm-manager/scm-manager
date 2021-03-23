@@ -243,7 +243,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
    */
   @Override
   public boolean isValid() {
-    return ValidationUtil.isRepositoryNameValid(namespace)
+    return ValidationUtil.isNameValid(namespace)
       && ValidationUtil.isRepositoryNameValid(name)
       && Util.isNotEmpty(type)
       && ((Util.isEmpty(contact)) || ValidationUtil.isMailAddressValid(contact));
