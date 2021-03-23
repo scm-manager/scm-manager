@@ -66,7 +66,7 @@ public final class Metrics {
    * @param type type of repository
    */
   public static Timer workingCopyTimer(MeterRegistry registry, String type) {
-    return Timer.builder("scm.workingCopy.duration")
+    return Timer.builder("scm.workingcopy.duration")
       .description("Duration of temporary working copy lifetime")
       .tags("type", type)
       .register(registry);

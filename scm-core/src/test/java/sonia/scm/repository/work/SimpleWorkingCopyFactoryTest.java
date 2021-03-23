@@ -134,7 +134,7 @@ public class SimpleWorkingCopyFactoryTest {
     verify(parent).close();
     assertThat(meterRegistry.getMeters()).hasSize(1);
     Meter.Id meterId = meterRegistry.getMeters().get(0).getId();
-    assertThat(meterId.getName()).isEqualTo("scm.workingCopy.duration");
+    assertThat(meterId.getName()).isEqualTo("scm.workingcopy.duration");
     assertThat(meterId.getTag("type")).isEqualTo("git");
   }
 
@@ -146,7 +146,7 @@ public class SimpleWorkingCopyFactoryTest {
     verify(clone).close();
     assertThat(meterRegistry.getMeters()).hasSize(1);
     Meter.Id meterId = meterRegistry.getMeters().get(0).getId();
-    assertThat(meterId.getName()).isEqualTo("scm.workingCopy.duration");
+    assertThat(meterId.getName()).isEqualTo("scm.workingcopy.duration");
     assertThat(meterId.getTag("type")).isEqualTo("git");
   }
 
