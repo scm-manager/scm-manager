@@ -97,10 +97,9 @@ public class ValidationUtilTest {
     assertTrue(ValidationUtil.isNameValid("Hu-rëm"));
 
     // false
-    assertFalse(ValidationUtil.isNameValid("test 123"));
-    assertFalse(ValidationUtil.isNameValid(" test 123"));
-    assertFalse(ValidationUtil.isNameValid(" test 123 "));
-    assertFalse(ValidationUtil.isNameValid("test 123 "));
+    assertFalse(ValidationUtil.isNameValid("@"));
+    assertFalse(ValidationUtil.isNameValid("@test"));
+    assertFalse(ValidationUtil.isNameValid(" test123"));
     assertFalse(ValidationUtil.isNameValid("test/123"));
     assertFalse(ValidationUtil.isNameValid("test:123"));
     assertFalse(ValidationUtil.isNameValid("test#123"));

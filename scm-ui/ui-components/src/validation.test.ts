@@ -48,6 +48,7 @@ describe("test name validation", () => {
   // valid names taken from ValidationUtilTest.java
   const validNames = [
     "test",
+    "test git",
     "test.git",
     "Test123.git",
     "Test123-git",
