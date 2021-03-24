@@ -1,2 +1,2 @@
 - type: changed
-  description: Allow all UTF-8 characters as names except URL identifiers. ([#1600](https://github.com/scm-manager/scm-manager/pull/1600))
+  description: Allow all UTF-8 characters except URL identifiers as user and group names and for namespaces. ([#1600](https://github.com/scm-manager/scm-manager/pull/1600))
