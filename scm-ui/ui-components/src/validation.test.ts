@@ -37,7 +37,10 @@ describe("test name validation", () => {
     " t",
     " t ",
     "",
-    " invalid_name"
+    " invalid_name",
+    "%",
+    "test%name",
+    "test\\name"
   ];
   for (const name of invalidNames) {
     it(`should return false for '${name}'`, () => {
