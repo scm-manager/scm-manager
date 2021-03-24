@@ -43,15 +43,9 @@ import static com.google.common.base.Preconditions.checkArgument;
 @Extension
 public class AnonymousRealm extends AuthenticatingRealm {
 
-  /**
-   * realm name
-   */
   @VisibleForTesting
   static final String REALM = "AnonymousRealm";
 
-  /**
-   * dao realm helper
-   */
   private final DAORealmHelper helper;
   private final UserDAO userDAO;
 

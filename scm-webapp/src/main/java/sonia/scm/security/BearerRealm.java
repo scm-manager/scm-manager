@@ -49,19 +49,14 @@ import static com.google.common.base.Preconditions.checkArgument;
  */
 @Singleton
 @Extension
-public class BearerRealm extends AuthenticatingRealm
-{
+public class BearerRealm extends AuthenticatingRealm {
 
-  /** realm name */
   @VisibleForTesting
   static final String REALM = "BearerRealm";
 
   private static final Logger LOG = LoggerFactory.getLogger(BearerRealm.class);
 
-  /** dao realm helper */
   private final DAORealmHelper helper;
-
-  /** access token resolver **/
   private final AccessTokenResolver tokenResolver;
 
   /**
@@ -95,9 +90,7 @@ public class BearerRealm extends AuthenticatingRealm
    * Validates the given bearer token and retrieves authentication data from
    * {@link UserDAO} and {@link GroupDAO}.
    *
-   *
    * @param token bearer token
-   *
    * @return authentication data from user and group dao
    */
   @Override
@@ -114,5 +107,4 @@ public class BearerRealm extends AuthenticatingRealm
       .withSessionId(bt.getPrincipal())
       .build();
   }
-
 }

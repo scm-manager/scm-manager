@@ -25,6 +25,8 @@
 package sonia.scm.api.v2.resources;
 
 import com.google.inject.Inject;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
@@ -41,6 +43,7 @@ import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.metrics.AuthenticationMetrics;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenBuilder;
 import sonia.scm.security.AccessTokenBuilderFactory;
@@ -89,17 +92,24 @@ public class AuthenticationResource {
   private static final Logger LOG = LoggerFactory.getLogger(AuthenticationResource.class);
 
   static final String PATH = "v2/auth";
+  private static final String AUTH_METRIC_TYPE = "UI/REST";
 
   private final AccessTokenBuilderFactory tokenBuilderFactory;
   private final AccessTokenCookieIssuer cookieIssuer;
+  private final Counter loginAttemptsCounter;
+  private final Counter loginFailedCounter;
+  private final Counter logoutCounter;
 
   @Inject(optional = true)
   private LogoutRedirection logoutRedirection;
 
   @Inject
-  public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer) {
+  public AuthenticationResource(AccessTokenBuilderFactory tokenBuilderFactory, AccessTokenCookieIssuer cookieIssuer, MeterRegistry meterRegistry) {
     this.tokenBuilderFactory = tokenBuilderFactory;
     this.cookieIssuer = cookieIssuer;
+    this.loginAttemptsCounter = AuthenticationMetrics.loginAttempts(meterRegistry, AUTH_METRIC_TYPE);
+    this.loginFailedCounter = AuthenticationMetrics.loginFailed(meterRegistry, AUTH_METRIC_TYPE);
+    this.logoutCounter = AuthenticationMetrics.logout(meterRegistry, AUTH_METRIC_TYPE);
   }
 
   @POST
@@ -177,7 +187,10 @@ public class AuthenticationResource {
     HttpServletResponse response,
     AuthenticationRequestDto authentication
   ) {
+    loginAttemptsCounter.increment();
+
     if (!authentication.isValid()) {
+      loginFailedCounter.increment();
       return Response.status(Response.Status.BAD_REQUEST).build();
     }
 
@@ -201,6 +214,7 @@ public class AuthenticationResource {
         res = Response.ok(token.compact()).build();
       }
     } catch (AuthenticationException ex) {
+      loginFailedCounter.increment();
       if (LOG.isTraceEnabled()) {
         LOG.trace("authentication failed for user ".concat(authentication.getUsername()), ex);
       } else {
@@ -222,10 +236,9 @@ public class AuthenticationResource {
   @ApiResponse(responseCode = "204", description = "success")
   @ApiResponse(responseCode = "500", description = "internal server error")
   public Response logout(@Context HttpServletRequest request, @Context HttpServletResponse response) {
-    Subject subject = SecurityUtils.getSubject();
+    logoutCounter.increment();
 
-    subject.logout();
-
+    SecurityUtils.getSubject().logout();
     // remove authentication cookie
     cookieIssuer.invalidate(request, response);
 

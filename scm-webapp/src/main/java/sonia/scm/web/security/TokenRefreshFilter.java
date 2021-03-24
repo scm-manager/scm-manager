@@ -24,6 +24,8 @@
 
 package sonia.scm.web.security;
 
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.slf4j.Logger;
@@ -31,6 +33,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.Priority;
 import sonia.scm.filter.Filters;
 import sonia.scm.filter.WebElement;
+import sonia.scm.metrics.AuthenticationMetrics;
 import sonia.scm.security.AccessToken;
 import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.AccessTokenResolver;
@@ -54,7 +57,7 @@ import static java.util.Optional.of;
 
 @Priority(Filters.PRIORITY_POST_AUTHENTICATION)
 @WebElement(value = Filters.PATTERN_RESTAPI,
-  morePatterns = { Filters.PATTERN_DEBUG })
+  morePatterns = {Filters.PATTERN_DEBUG})
 public class TokenRefreshFilter extends HttpFilter {
 
   private static final Logger LOG = LoggerFactory.getLogger(TokenRefreshFilter.class);
@@ -63,13 +66,15 @@ public class TokenRefreshFilter extends HttpFilter {
   private final JwtAccessTokenRefresher refresher;
   private final AccessTokenResolver resolver;
   private final AccessTokenCookieIssuer issuer;
+  private final Counter tokenRefreshCounter;
 
   @Inject
-  public TokenRefreshFilter(Set<WebTokenGenerator> tokenGenerators, JwtAccessTokenRefresher refresher, AccessTokenResolver resolver, AccessTokenCookieIssuer issuer) {
+  public TokenRefreshFilter(Set<WebTokenGenerator> tokenGenerators, JwtAccessTokenRefresher refresher, AccessTokenResolver resolver, AccessTokenCookieIssuer issuer, MeterRegistry meterRegistry) {
     this.tokenGenerators = tokenGenerators;
     this.refresher = refresher;
     this.resolver = resolver;
     this.issuer = issuer;
+    this.tokenRefreshCounter = AuthenticationMetrics.tokenRefresh(meterRegistry, "JWT");
   }
 
   @Override
@@ -102,12 +107,13 @@ public class TokenRefreshFilter extends HttpFilter {
     }
     if (accessToken instanceof JwtAccessToken) {
       refresher.refresh((JwtAccessToken) accessToken)
-        .ifPresent(jwtAccessToken -> refreshToken(request, response, jwtAccessToken));
+        .ifPresent(jwtAccessToken -> refreshJwtToken(request, response, jwtAccessToken));
     }
   }
 
-  private void refreshToken(HttpServletRequest request, HttpServletResponse response, JwtAccessToken jwtAccessToken) {
-    LOG.debug("refreshing authentication token");
+  private void refreshJwtToken(HttpServletRequest request, HttpServletResponse response, JwtAccessToken jwtAccessToken) {
+    tokenRefreshCounter.increment();
+    LOG.debug("refreshing JWT authentication token");
     issuer.authenticate(request, response, jwtAccessToken);
   }
 }

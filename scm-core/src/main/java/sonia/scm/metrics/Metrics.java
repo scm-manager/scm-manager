@@ -56,5 +56,4 @@ public final class Metrics {
       Collections.singleton(Tag.of("type", type))
     ).bindTo(registry);
   }
-
 }
