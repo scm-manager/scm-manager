@@ -113,6 +113,10 @@ dependencies {
   // util
   implementation libraries.commonsCompress
 
+  // events
+  implementation libraries.legmanShiro
+  implementation libraries.legmanMicrometer
+
   // lombok
   compileOnly libraries.lombok
   testCompileOnly libraries.lombok

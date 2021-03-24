@@ -27,6 +27,7 @@ import com.hierynomus.gradle.license.tasks.LicenseCheck
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.tasks.compile.JavaCompile
 import org.gradle.api.tasks.javadoc.Javadoc
 import org.gradle.jvm.toolchain.JavaLanguageVersion
 
@@ -45,12 +46,9 @@ class JavaModulePlugin implements Plugin<Project> {
       withSourcesJar()
     }
 
-    project.compileJava {
+    project.tasks.withType(JavaCompile) {
       options.release = 8
-    }
-
-    project.compileTestJava {
-      options.release = 8
+      options.encoding = 'UTF-8'
     }
 
     project.tasks.withType(Javadoc) {

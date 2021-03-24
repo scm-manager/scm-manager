@@ -24,6 +24,9 @@
 
 package sonia.scm.metrics;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics;
 import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics;
@@ -37,10 +40,17 @@ import org.slf4j.LoggerFactory;
 import javax.inject.Inject;
 import javax.inject.Provider;
 import javax.inject.Singleton;
+import java.util.List;
 import java.util.Set;
 
 @Singleton
 public class MeterRegistryProvider implements Provider<MeterRegistry> {
+
+  private static final CompositeMeterRegistry staticRegistry = new CompositeMeterRegistry();
+
+  public static MeterRegistry getStaticRegistry() {
+    return staticRegistry;
+  }
 
   private static final Logger LOG = LoggerFactory.getLogger(MeterRegistryProvider.class);
 
@@ -49,6 +59,19 @@ public class MeterRegistryProvider implements Provider<MeterRegistry> {
   @Inject
   public MeterRegistryProvider(Set<MonitoringSystem> providerSet) {
     this.providerSet = providerSet;
+    resetStaticRegistry();
+  }
+
+  private void resetStaticRegistry() {
+    Set<MeterRegistry> registries = ImmutableSet.copyOf(staticRegistry.getRegistries());
+    for (MeterRegistry registry : registries) {
+      staticRegistry.remove(registry);
+    }
+
+    List<Meter> meters = ImmutableList.copyOf(staticRegistry.getMeters());
+    for (Meter meter : meters) {
+      staticRegistry.remove(meter);
+    }
   }
 
   @Override
@@ -64,6 +87,7 @@ public class MeterRegistryProvider implements Provider<MeterRegistry> {
     if (providerSet.size() == 1) {
       MeterRegistry registry = providerSet.iterator().next().getRegistry();
       LOG.debug("create meter registry from single registration: {}", registry.getClass());
+      staticRegistry.add(registry);
       return registry;
     }
     return createCompositeRegistry();
@@ -71,13 +95,12 @@ public class MeterRegistryProvider implements Provider<MeterRegistry> {
 
   private CompositeMeterRegistry createCompositeRegistry() {
     LOG.debug("create composite meter registry");
-    CompositeMeterRegistry registry = new CompositeMeterRegistry();
     for (MonitoringSystem provider : providerSet) {
       MeterRegistry subRegistry = provider.getRegistry();
       LOG.debug("register {} as part of composite meter registry", subRegistry.getClass());
-      registry.add(subRegistry);
+      staticRegistry.add(subRegistry);
     }
-    return registry;
+    return staticRegistry;
   }
 
   @SuppressWarnings("java:S2095") // we can't close JvmGcMetrics, but it should be ok

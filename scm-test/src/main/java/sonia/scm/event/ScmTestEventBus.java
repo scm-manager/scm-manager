@@ -21,13 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.event;
 
 //~--- non-JDK imports --------------------------------------------------------
 
 import com.github.legman.EventBus;
-import com.github.legman.EventBusRegistry;
 
 /**
  *
@@ -76,5 +75,5 @@ public class ScmTestEventBus extends ScmEventBus
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
-  private final EventBus eventBus = EventBusRegistry.getEventBus();
+  private final EventBus eventBus = new EventBus("testing");
 }

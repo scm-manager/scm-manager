@@ -1,0 +1,4 @@
+- type: added
+  description: Metrics for events ([#1601](https://github.com/scm-manager/scm-manager/pull/1601))
+- type: fixed
+  description: Wrong subject context for asynchronous subscriber ([#1601](https://github.com/scm-manager/scm-manager/pull/1601))
