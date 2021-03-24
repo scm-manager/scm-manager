@@ -57,6 +57,29 @@ class ValidationUtilTest {
 
   @ParameterizedTest
   @ValueSource(strings = {
+    "test",
+    "test 123"
+  })
+  void shouldAcceptPath(String value) {
+    // true
+    assertTrue(ValidationUtil.isPathValid(value));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "./",
+    "..",
+    "../",
+    "../../",
+    "../ka",
+    "test/../.."
+  })
+  void shouldRejectPath(String value) {
+    assertFalse(ValidationUtil.isPathValid(value));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
     "s.sdorra@ostfalia.de",
     "sdorra@ostfalia.de",
     "s.sdorra@hbk-bs.de",

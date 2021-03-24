@@ -136,7 +136,7 @@ describe("test number validation", () => {
 });
 
 describe("test path validation", () => {
-  const invalid = ["//", "some//path", "end//"];
+  const invalid = ["//", "some//path", "end//", ".", "..", "./", "../"];
   for (const path of invalid) {
     it(`should return false for '${path}'`, () => {
       expect(validator.isPathValid(path)).toBe(false);
@@ -230,6 +230,21 @@ describe("test url validation", () => {
   for (const url of valid) {
     it(`should return true for '${url}'`, () => {
       expect(validator.isUrlValid(url)).toBe(true);
+    });
+  }
+});
+
+describe("test filename validation", () => {
+  const invalid = ["", "/", "some/file", ".", "..", "../", "\\", "\\name", "file:some"];
+  for (const filename of invalid) {
+    it(`should return false for '${filename}'`, () => {
+      expect(validator.isFilenameValid(filename)).toBe(false);
+    });
+  }
+  const valid = ["a", "test", "some_file", "end.txt", ".gitignore"];
+  for (const filename of valid) {
+    it(`should return true for '${filename}'`, () => {
+      expect(validator.isFilenameValid(filename)).toBe(true);
     });
   }
 });

@@ -52,6 +52,21 @@ public final class ValidationUtil {
   }
 
   /**
+   *  Checks if the path is a valid path and does not enable path traversal
+   *
+   *  @param path path to be validated
+   *
+   *  @return {@code true} if path is valid else false
+   */
+  public static boolean isPathValid(String path)
+  {
+    return path.matches("^((?!/{2,}).)*$")
+      && !path.equals(".")
+      && !path.contains("./")
+      && !path.equals("..");
+  }
+
+  /**
    * Returns {@code true} if the mail is valid.
    *
    * @param mail email-address to be validated

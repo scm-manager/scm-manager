@@ -1,0 +1,2 @@
+- type: fixed
+  description: Adjust path and filename validation to prevent path traversal ([#1604](https://github.com/scm-manager/scm-manager/pull/1604))
