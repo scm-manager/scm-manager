@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import sonia.scm.repository.SvnWorkingCopyFactory;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
 import sonia.scm.repository.work.WorkingCopyPool;
@@ -34,8 +35,8 @@ import java.io.File;
 public class SimpleSvnWorkingCopyFactory extends SimpleWorkingCopyFactory<File, File, SvnContext> implements SvnWorkingCopyFactory {
 
   @Inject
-  public SimpleSvnWorkingCopyFactory(WorkingCopyPool workingCopyPool) {
-    super(workingCopyPool);
+  public SimpleSvnWorkingCopyFactory(WorkingCopyPool workingCopyPool, MeterRegistry meterRegistry) {
+    super(workingCopyPool, meterRegistry);
   }
 
   @Override

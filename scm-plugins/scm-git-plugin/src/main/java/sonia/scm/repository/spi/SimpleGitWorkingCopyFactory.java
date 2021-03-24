@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
 import sonia.scm.repository.GitWorkingCopyFactory;
@@ -37,8 +38,8 @@ import java.io.File;
 public class SimpleGitWorkingCopyFactory extends SimpleWorkingCopyFactory<Repository, Repository, GitContext> implements GitWorkingCopyFactory {
 
   @Inject
-  public SimpleGitWorkingCopyFactory(WorkingCopyPool workdirProvider) {
-    super(workdirProvider);
+  public SimpleGitWorkingCopyFactory(WorkingCopyPool workdirProvider, MeterRegistry meterRegistry) {
+    super(workdirProvider, meterRegistry);
   }
 
   @Override

@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.errors.CorruptObjectException;
@@ -72,7 +73,7 @@ class GitModifyCommandTestBase extends AbstractGitCommandTestBase {
   GitModifyCommand createCommand() {
     return new GitModifyCommand(
       createContext(),
-      new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver))),
+      new SimpleGitWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver)), new SimpleMeterRegistry()),
       lfsBlobStoreFactory,
       createGitRepositoryConfigStoreProvider());
   }

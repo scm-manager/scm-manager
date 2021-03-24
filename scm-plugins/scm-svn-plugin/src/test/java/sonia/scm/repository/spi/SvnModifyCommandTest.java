@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.After;
@@ -57,7 +58,7 @@ public class SvnModifyCommandTest extends AbstractSvnCommandTestBase {
   @Before
   public void initSvnModifyCommand() {
     context = createContext();
-    workingCopyFactory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(context.getDirectory(), repositoryLocationResolver, false)));
+    workingCopyFactory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(new WorkdirProvider(context.getDirectory(), repositoryLocationResolver, false)), new SimpleMeterRegistry());
     svnModifyCommand = new SvnModifyCommand(context, workingCopyFactory);
   }
 

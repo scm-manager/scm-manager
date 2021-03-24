@@ -32,6 +32,7 @@ import com.aragost.javahg.commands.PullCommand;
 import com.aragost.javahg.commands.StatusCommand;
 import com.aragost.javahg.commands.UpdateCommand;
 import com.aragost.javahg.commands.flags.CloneCommandFlags;
+import io.micrometer.core.instrument.MeterRegistry;
 import sonia.scm.repository.HgExtensions;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.work.SimpleWorkingCopyFactory;
@@ -45,8 +46,8 @@ import java.io.IOException;
 public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Repository, Repository, HgCommandContext> implements HgWorkingCopyFactory {
 
   @Inject
-  public SimpleHgWorkingCopyFactory(WorkingCopyPool workdirProvider) {
-    super(workdirProvider);
+  public SimpleHgWorkingCopyFactory(WorkingCopyPool workdirProvider, MeterRegistry meterRegistry) {
+    super(workdirProvider, meterRegistry);
   }
 
   @Override
