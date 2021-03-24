@@ -12,6 +12,7 @@
   },
   "validation": {
     "namespace-invalid": "Der Namespace des Repository ist ungültig",
+    "namespaceSpaceWarningText": "Achtung: Leerzeichen in Namespaces funktionieren prinzipiell, können jedoch bei einigen Funktionen zu Problemen führen",
     "name-invalid": "Der Name des Repository ist ungültig",
     "contact-invalid": "Der Kontakt muss eine gültige E-Mail Adresse sein",
     "url-invalid": "Die URL ist ungültig",

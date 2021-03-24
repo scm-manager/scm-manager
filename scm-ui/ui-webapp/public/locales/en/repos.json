@@ -12,6 +12,7 @@
   },
   "validation": {
     "namespace-invalid": "The repository namespace is invalid",
+    "namespaceSpaceWarningText": "Warning: Spaces in namespaces will work in principle, but can lead to problems in some features",
     "name-invalid": "The repository name is invalid",
     "contact-invalid": "Contact must be a valid mail address",
     "url-invalid": "The URL is invalid",

@@ -46426,7 +46426,6 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
           value=""
         />
       </div>
-      
     </div>
     <div
       className="field AddKeyValueEntryToTableField__StyledInputField-kiarql-1 hwPPZB"
@@ -46450,7 +46449,6 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
           value=""
         />
       </div>
-      
     </div>
     <button
       className="button is-default AddKeyValueEntryToTableField__MarginTopButton-kiarql-2 hyqVki"
@@ -46504,7 +46502,6 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Disabled 1`] = `
           value=""
         />
       </div>
-      
     </div>
     <div
       className="field AddKeyValueEntryToTableField__StyledInputField-kiarql-1 hwPPZB"
@@ -46529,7 +46526,6 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Disabled 1`] = `
           value=""
         />
       </div>
-      
     </div>
     <button
       className="button is-default AddKeyValueEntryToTableField__MarginTopButton-kiarql-2 hyqVki"
