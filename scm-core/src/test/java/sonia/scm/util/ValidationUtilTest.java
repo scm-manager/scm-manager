@@ -111,6 +111,7 @@ public class ValidationUtilTest {
     assertFalse(ValidationUtil.isNameValid("t "));
     assertFalse(ValidationUtil.isNameValid(" t"));
     assertFalse(ValidationUtil.isNameValid(" t "));
+    assertFalse(ValidationUtil.isNameValid(".."));
   }
 
   @Test

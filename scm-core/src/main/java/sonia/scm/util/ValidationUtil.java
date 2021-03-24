@@ -68,7 +68,7 @@ public final class ValidationUtil {
    * @return {@code true} if name is valid
    */
   public static boolean isNameValid(String name) {
-    return Util.isNotEmpty(name) && name.matches(REGEX_NAME);
+    return Util.isNotEmpty(name) && name.matches(REGEX_NAME) && !name.equals("..");
   }
 
   /**
