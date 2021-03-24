@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -59,9 +59,15 @@ public class JsonMarshallingResponseFilter implements ContainerResponseFilter {
   public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
     if (hasVndEntity(responseContext)) {
       JsonNode node = getJsonEntity(responseContext);
-      callEnrichers(requestContext, responseContext, node);
+      if (!isErrorNode(node)) {
+        callEnrichers(requestContext, responseContext, node);
+      }
       responseContext.setEntity(node);
     }
+  }
+
+  private boolean isErrorNode(JsonNode node) {
+    return node.has("transactionId") && node.has("errorCode") && node.has("message");
   }
 
   private void callEnrichers(ContainerRequestContext requestContext, ContainerResponseContext responseContext, JsonNode node) {
