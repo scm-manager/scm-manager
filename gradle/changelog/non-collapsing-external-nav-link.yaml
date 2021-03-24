@@ -1,0 +1,2 @@
+- type: fixed
+  description: external nav links now correctly collapse when used in a menu ([#1596](https://github.com/scm-manager/scm-manager/pull/1596))

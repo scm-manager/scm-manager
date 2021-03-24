@@ -31,11 +31,7 @@ type Props = {
   label?: string;
   helpText?: string;
   loading?: boolean;
-};
-
-const emptyOption = {
-  label: "",
-  value: ""
+  emptyLabel?: string;
 };
 
 const createSelectOptions = (roles: string[]) => {
@@ -47,11 +43,13 @@ const createSelectOptions = (roles: string[]) => {
   });
 };
 
-const RoleSelector: FC<Props> = ({ availableRoles, role, handleRoleChange, loading, label, helpText }) => {
+const RoleSelector: FC<Props> = ({ availableRoles, role, handleRoleChange, loading, label, helpText, emptyLabel }) => {
   if (!availableRoles) {
     return null;
   }
-  const options = role ? createSelectOptions(availableRoles) : [emptyOption, ...createSelectOptions(availableRoles)];
+  const options = role
+    ? createSelectOptions(availableRoles)
+    : [{ label: emptyLabel || "", value: "" }, ...createSelectOptions(availableRoles)];
 
   return (
     <Select

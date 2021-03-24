@@ -29,7 +29,6 @@ import org.apache.shiro.authc.UsernamePasswordToken;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContext;
@@ -56,7 +55,6 @@ class AnonymousRealmTest {
   @Mock
   private UserDAO userDAO;
 
-  @InjectMocks
   private AnonymousRealm realm;
 
   @Mock

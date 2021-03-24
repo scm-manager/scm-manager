@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fix repository creation route from repository namespace overview page ([#1602](https://github.com/scm-manager/scm-manager/pull/1602))

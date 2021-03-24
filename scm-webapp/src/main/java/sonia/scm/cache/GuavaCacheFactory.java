@@ -22,27 +22,28 @@
  * SOFTWARE.
  */
 
+package sonia.scm.cache;
 
-plugins {
-  id 'org.scm-manager.smp' version '0.7.5'
-}
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.binder.cache.GuavaCacheMetrics;
 
-dependencies {
-}
+import javax.inject.Inject;
+import java.util.Collections;
 
-scmPlugin {
-  scmVersion = project.version
-  core = true
-  name = 'scm-legacy-plugin'
-  displayName = 'Legacy'
-  description = 'Support migrated repository urls and v1 passwords'
-  author = 'Cloudogu GmbH'
-  category = 'Legacy Support'
+public class GuavaCacheFactory {
 
-  openapi {
-    packages = [
-      'sonia.scm.legacy'
-    ]
+  private final MeterRegistry meterRegistry;
+
+  @Inject
+  public GuavaCacheFactory(MeterRegistry meterRegistry) {
+    this.meterRegistry = meterRegistry;
   }
 
+  <K, V> GuavaCache<K, V> create(GuavaCacheConfiguration configuration, String name) {
+    com.google.common.cache.Cache<K, V> cache = GuavaCaches.create(configuration, name);
+
+    new GuavaCacheMetrics(cache, name, Collections.emptySet()).bindTo(meterRegistry);
+
+    return new GuavaCache<>(cache, configuration.getCopyStrategy(), name);
+  }
 }

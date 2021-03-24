@@ -58,7 +58,6 @@ public final class Metrics {
     ).bindTo(registry);
   }
 
-
   /**
    * Collect metrics from an {@link sonia.scm.repository.work.WorkingCopy}.
    *

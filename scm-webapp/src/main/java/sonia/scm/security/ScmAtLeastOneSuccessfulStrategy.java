@@ -24,13 +24,16 @@
 
 package sonia.scm.security;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.pam.AbstractAuthenticationStrategy;
 import org.apache.shiro.realm.Realm;
 import org.apache.shiro.subject.PrincipalCollection;
+import sonia.scm.metrics.AuthenticationMetrics;
 
+import javax.inject.Inject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,6 +42,13 @@ import java.util.Optional;
 public class ScmAtLeastOneSuccessfulStrategy extends AbstractAuthenticationStrategy {
 
   final ThreadLocal<List<Throwable>> threadLocal = new ThreadLocal<>();
+
+  private final MeterRegistry meterRegistry;
+
+  @Inject
+  public ScmAtLeastOneSuccessfulStrategy(MeterRegistry meterRegistry) {
+    this.meterRegistry = meterRegistry;
+  }
 
   @Override
   public AuthenticationInfo beforeAllAttempts(Collection<? extends Realm> realms, AuthenticationToken token) throws AuthenticationException {
@@ -51,6 +61,11 @@ public class ScmAtLeastOneSuccessfulStrategy extends AbstractAuthenticationStrat
     if (t != null) {
       this.threadLocal.get().add(t);
     }
+
+    if (isAuthenticationSuccessful(singleRealmInfo)) {
+      AuthenticationMetrics.accessRealmSuccessful(meterRegistry, realm.getClass().getName(), token.getClass().getName()).increment();
+    }
+
     return super.afterAttempt(realm, token, singleRealmInfo, aggregateInfo, t);
   }
 
@@ -58,9 +73,15 @@ public class ScmAtLeastOneSuccessfulStrategy extends AbstractAuthenticationStrat
   public AuthenticationInfo afterAllAttempts(AuthenticationToken token, AuthenticationInfo aggregate) {
     final List<Throwable> throwables = threadLocal.get();
     threadLocal.remove();
+
+    String tokenType = token.getClass().getName();
+
     if (isAuthenticationSuccessful(aggregate)) {
+      AuthenticationMetrics.accessSuccessful(meterRegistry, tokenType).increment();
       return aggregate;
     }
+    AuthenticationMetrics.accessFailed(meterRegistry, tokenType).increment();
+
     Optional<? extends AuthenticationException> specializedException = findSpecializedException(throwables);
 
     if (specializedException.isPresent()) {

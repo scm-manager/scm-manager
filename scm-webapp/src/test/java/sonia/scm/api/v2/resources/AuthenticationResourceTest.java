@@ -26,6 +26,9 @@ package sonia.scm.api.v2.resources;
 
 import com.github.sdorra.shiro.ShiroRule;
 import com.github.sdorra.shiro.SubjectAware;
+import io.micrometer.core.instrument.Meter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.Before;
@@ -47,14 +50,15 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.core.MediaType;
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.util.Date;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static java.net.URI.create;
 import static java.util.Optional.of;
-import static org.hamcrest.Matchers.containsString;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -74,6 +78,8 @@ public class AuthenticationResourceTest {
 
   @Mock
   private AccessTokenBuilder accessTokenBuilder;
+
+  private MeterRegistry meterRegistry;
 
   private final AccessTokenCookieIssuer cookieIssuer = new DefaultAccessTokenCookieIssuer(mock(ScmConfiguration.class));
 
@@ -135,7 +141,8 @@ public class AuthenticationResourceTest {
 
   @Before
   public void prepareEnvironment() {
-    authenticationResource = new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer);
+    meterRegistry = new SimpleMeterRegistry();
+    authenticationResource = new AuthenticationResource(accessTokenBuilderFactory, cookieIssuer, meterRegistry);
     dispatcher.addSingletonResource(authenticationResource);
 
     AccessToken accessToken = mock(AccessToken.class);
@@ -157,6 +164,11 @@ public class AuthenticationResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+    List<Meter> meters = meterRegistry.getMeters();
+    assertThat(meters).hasSize(3);
+    Optional<Meter> loginAttemptMeter = meters.stream().filter(m -> m.getId().getName().equals("scm.auth.login.attempts")).findFirst();
+    assertThat(loginAttemptMeter).isPresent();
+    assertThat(loginAttemptMeter.get().measure().iterator().next().getValue()).isEqualTo(1);
   }
 
   @Test
@@ -167,6 +179,12 @@ public class AuthenticationResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+
+    List<Meter> meters = meterRegistry.getMeters();
+    assertThat(meters).hasSize(3);
+    Optional<Meter> loginAttemptMeter = meters.stream().filter(m -> m.getId().getName().equals("scm.auth.login.attempts")).findFirst();
+    assertThat(loginAttemptMeter).isPresent();
+    assertThat(loginAttemptMeter.get().measure().iterator().next().getValue()).isEqualTo(1);
   }
 
 
@@ -178,6 +196,10 @@ public class AuthenticationResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
+
+    List<Meter> meters = meterRegistry.getMeters();
+    assertThat(meters).hasSize(3);
+    assertThat(meters.stream().map(m -> m.getId().getName())).contains("scm.auth.login.failed", "scm.auth.login.attempts", "scm.auth.logout");
   }
 
   @Test
@@ -187,6 +209,10 @@ public class AuthenticationResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_UNAUTHORIZED, response.getStatus());
+
+    List<Meter> meters = meterRegistry.getMeters();
+    assertThat(meters).hasSize(3);
+    assertThat(meters.stream().map(m -> m.getId().getName())).contains("scm.auth.login.failed", "scm.auth.login.attempts", "scm.auth.logout");
   }
 
   @Test
@@ -216,6 +242,12 @@ public class AuthenticationResourceTest {
 
     dispatcher.invoke(request, response);
     assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+
+    List<Meter> meters = meterRegistry.getMeters();
+    assertThat( meters).hasSize(3);
+    Optional<Meter> logoutMeter = meters.stream().filter(m -> m.getId().getName().equals("scm.auth.logout")).findFirst();
+    assertThat(logoutMeter).isPresent();
+    assertThat(logoutMeter.get().measure().iterator().next().getValue()).isEqualTo(1);
   }
 
   @Test
@@ -227,7 +259,7 @@ public class AuthenticationResourceTest {
     dispatcher.invoke(request, response);
 
     assertEquals(HttpServletResponse.SC_OK, response.getStatus());
-    assertThat(response.getContentAsString(), containsString("http://example.com/cas/logout"));
+    assertThat(response.getContentAsString()).contains("http://example.com/cas/logout");
   }
 
   @Test

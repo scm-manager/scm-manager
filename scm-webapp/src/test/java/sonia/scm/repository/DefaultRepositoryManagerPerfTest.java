@@ -29,6 +29,7 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 import com.google.inject.Provider;
 import com.google.inject.util.Providers;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationInfo;
@@ -51,6 +52,7 @@ import org.mockito.junit.MockitoJUnitRunner;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.cache.DefaultCacheConfigurationLoader;
 import sonia.scm.cache.GuavaCacheConfigurationReader;
+import sonia.scm.cache.GuavaCacheFactory;
 import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.security.AuthorizationCollector;
@@ -124,8 +126,8 @@ public class DefaultRepositoryManagerPerfTest {
         new DefaultCacheConfigurationLoader(
           DefaultRepositoryManagerPerfTest.class.getClassLoader()
         )
-      )
-    );
+      ),
+            new GuavaCacheFactory(new SimpleMeterRegistry()));
     DefaultSecurityManager securityManager = new DefaultSecurityManager(new DummyRealm(authzCollector, cacheManager));
 
     ThreadContext.bind(securityManager);

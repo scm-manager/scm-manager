@@ -21,27 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.cache;
 
-//~--- JDK imports ------------------------------------------------------------
+public class GuavaCacheTest extends CacheTestBase {
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class GuavaCacheTest extends CacheTestBase
-{
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  protected CacheManager createCacheManager()
-  {
+  protected CacheManager createCacheManager() {
     return CacheTestUtil.createDefaultGuavaCacheManager();
   }
 }

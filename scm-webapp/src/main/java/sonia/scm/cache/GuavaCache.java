@@ -24,143 +24,56 @@
 
 package sonia.scm.cache;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Predicate;
+import com.google.common.cache.CacheStats;
 import com.google.common.collect.Sets;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.Collection;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.concurrent.atomic.AtomicLong;
 
-/**
- *
- * @author Sebastian Sdorra
- *
- * @param <K>
- * @param <V>
- */
-public class GuavaCache<K, V> implements Cache<K, V>
-{
+public class GuavaCache<K, V> implements Cache<K, V> {
 
-  /**
-   * the logger for GuavaCache
-   */
   private static final Logger logger = LoggerFactory.getLogger(GuavaCache.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final com.google.common.cache.Cache<K, V> cache;
+  private final CopyStrategy copyStrategy;
+  private final String name;
 
-  /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   */
-  public GuavaCache(GuavaNamedCacheConfiguration configuration)
-  {
-    this(configuration, configuration.getName());
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param configuration
-   * @param name
-   */
-  @SuppressWarnings("unchecked")
-  public GuavaCache(GuavaCacheConfiguration configuration, String name)
-  {
-    this(GuavaCaches.create(configuration, name), configuration.getCopyStrategy(), name);
-  }
-
-  /**
-   * Constructs ...
-   *
-   *
-   * @param cache
-   * @param copyStrategy
-   * @param name
-   */
-  @VisibleForTesting
-  protected GuavaCache(com.google.common.cache.Cache<K, V> cache,
-    CopyStrategy copyStrategy, String name)
-  {
+  GuavaCache(com.google.common.cache.Cache<K, V> cache, CopyStrategy copyStrategy, String name) {
     this.cache = cache;
     this.name = name;
 
-    if (copyStrategy != null)
-    {
+    if (copyStrategy != null) {
       this.copyStrategy = copyStrategy;
-    }
-    else
-    {
+    } else {
       this.copyStrategy = CopyStrategy.NONE;
     }
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   */
   @Override
-  public void clear()
-  {
-    if (logger.isDebugEnabled())
-    {
+  public void clear() {
+    if (logger.isDebugEnabled()) {
       logger.debug("clear cache {}", name);
     }
 
     cache.invalidateAll();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
   @Override
-  public boolean contains(K key)
-  {
+  public boolean contains(K key) {
     return cache.getIfPresent(key) != null;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Set<K> keys()
-  {
+  public Set<K> keys() {
     return cache.asMap().keySet();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   * @param value
-   *
-   * @return
-   */
   @Override
-  public V put(K key, V value)
-  {
+  public V put(K key, V value) {
     V previous = cache.getIfPresent(key);
 
     cache.put(key, copyStrategy.copyOnWrite(value));
@@ -168,17 +81,8 @@ public class GuavaCache<K, V> implements Cache<K, V>
     return previous;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
   @Override
-  public V remove(K key)
-  {
+  public V remove(K key) {
     V value = cache.getIfPresent(key);
 
     cache.invalidate(key);
@@ -186,116 +90,50 @@ public class GuavaCache<K, V> implements Cache<K, V>
     return value;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param filter
-   *
-   * @return
-   */
   @Override
   @SuppressWarnings("java:S4738") // we have to use guava predicate for compatibility
-  public Iterable<V> removeAll(Predicate<K> filter)
-  {
+  public Iterable<V> removeAll(Predicate<K> filter) {
     Set<V> removedValues = Sets.newHashSet();
     Set<K> keysToRemove = Sets.newHashSet();
 
-    for (Entry<K, V> e : cache.asMap().entrySet())
-    {
-      if (filter.apply(e.getKey()))
-      {
+    for (Entry<K, V> e : cache.asMap().entrySet()) {
+      if (filter.apply(e.getKey())) {
         keysToRemove.add(e.getKey());
         removedValues.add(e.getValue());
       }
     }
 
-    if (!keysToRemove.isEmpty())
-    {
+    if (!keysToRemove.isEmpty()) {
       cache.invalidateAll(keysToRemove);
     }
 
     return removedValues;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public int size()
-  {
+  public int size() {
     return (int) cache.size();
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public Collection<V> values()
-  {
+  public Collection<V> values() {
     return cache.asMap().values();
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param key
-   *
-   * @return
-   */
   @Override
-  public V get(K key)
-  {
+  public V get(K key) {
     V value = cache.getIfPresent(key);
 
-    if (value != null)
-    {
+    if (value != null) {
       value = copyStrategy.copyOnRead(value);
-      hitCount.incrementAndGet();
-    }
-    else
-    {
-      missCount.incrementAndGet();
     }
 
     return value;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  public CacheStatistics getStatistics()
-  {
-    return new CacheStatistics(name, hitCount.get(), missCount.get());
+  public CacheStatistics getStatistics() {
+    CacheStats cacheStats = cache.stats();
+    return new CacheStatistics(name, cacheStats.hitCount(), cacheStats.missCount());
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private final com.google.common.cache.Cache<K, V> cache;
-
-  /** Field description */
-  private final CopyStrategy copyStrategy;
-
-  /** Field description */
-  private final AtomicLong hitCount = new AtomicLong();
-
-  /** Field description */
-  private final AtomicLong missCount = new AtomicLong();
-
-  /** Field description */
-  private final String name;
 }
