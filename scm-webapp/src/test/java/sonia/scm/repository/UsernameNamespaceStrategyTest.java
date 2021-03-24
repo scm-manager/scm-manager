@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 
@@ -63,4 +63,11 @@ class UsernameNamespaceStrategyTest {
     assertThat(namespace).isEqualTo("trillian");
   }
 
+  @Test
+  void shouldReplaceSpacesInPrincipalName() {
+    when(subject.getPrincipal()).thenReturn("arthur dent");
+
+    String namespace = usernameNamespaceStrategy.createNamespace(RepositoryTestData.createHeartOfGold());
+    assertThat(namespace).isEqualTo("arthur_dent");
+  }
 }
