@@ -56,6 +56,7 @@
     "title": "Repositories",
     "subtitle": "Übersicht aller verfügbaren Repositories",
     "noRepositories": "Keine Repositories gefunden.",
+    "invalidNamespace": "Keine Repositories gefunden. Möglicherweise existiert der ausgewählte Namespace nicht.",
     "createButton": "Repository hinzufügen",
     "searchRepository": "Repository suchen",
     "allNamespaces": "Alle Namespaces"
