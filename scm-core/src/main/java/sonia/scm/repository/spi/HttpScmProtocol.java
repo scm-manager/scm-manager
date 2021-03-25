@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.ScmProtocol;
+import sonia.scm.util.HttpUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -51,7 +52,7 @@ public abstract class HttpScmProtocol implements ScmProtocol {
 
   @Override
   public String getUrl() {
-      return URI.create(basePath + "/").resolve(String.format("repo/%s/%s", repository.getNamespace(), repository.getName())).toASCIIString();
+    return URI.create(basePath + "/").resolve(String.format("repo/%s/%s", HttpUtil.encode(repository.getNamespace()), HttpUtil.encode(repository.getName()))).toASCIIString();
   }
 
   public final void serve(HttpServletRequest request, HttpServletResponse response, ServletConfig config) throws ServletException, IOException {

@@ -83,6 +83,11 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
   };
 
   const renderNamespaceField = () => {
+      let informationMessage = undefined;
+      if (repository?.namespace?.indexOf(" ") > 0) {
+        informationMessage =  t("validation.namespaceSpaceWarningText");
+      }
+
     const props = {
       label: t("repository.namespace"),
       helpText: t("help.namespaceHelpText"),
@@ -90,7 +95,8 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
       onChange: handleNamespaceChange,
       errorMessage: t("validation.namespace-invalid"),
       validationError: namespaceValidationError,
-      disabled: disabled
+      disabled: disabled,
+      informationMessage
     };
 
     if (namespaceStrategy === CUSTOM_NAMESPACE_STRATEGY) {

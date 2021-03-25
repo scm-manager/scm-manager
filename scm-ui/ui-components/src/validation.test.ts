@@ -32,16 +32,15 @@ describe("test name validation", () => {
     " test 123 ",
     "test 123 ",
     "test/123",
-    "test%123",
     "test:123",
     "t ",
     " t",
     " t ",
     "",
     " invalid_name",
-    "another%one",
-    "!!!",
-    "!_!"
+    "%",
+    "test%name",
+    "test\\name"
   ];
   for (const name of invalidNames) {
     it(`should return false for '${name}'`, () => {
@@ -52,6 +51,7 @@ describe("test name validation", () => {
   // valid names taken from ValidationUtilTest.java
   const validNames = [
     "test",
+    "test git",
     "test.git",
     "Test123.git",
     "Test123-git",
@@ -64,7 +64,18 @@ describe("test name validation", () => {
     "another1",
     "stillValid",
     "this.one_as-well",
-    "and@this"
+    "and@this",
+    "Лорем-ипсум",
+    "Λορεμ.ιπσθμ",
+    "լոռեմիպսում",
+    "ლორემიფსუმ",
+    "प्रमान",
+    "詳性約",
+    "隠サレニ",
+    "법률",
+    "المدن",
+    "אחד",
+    "Hu-rëm"
   ];
   for (const name of validNames) {
     it(`should return true for '${name}'`, () => {

@@ -37,6 +37,7 @@ type Props = {
   onReturnPressed?: () => void;
   validationError?: boolean;
   errorMessage?: string;
+  informationMessage?: string;
   disabled?: boolean;
   helpText?: string;
   className?: string;
@@ -86,6 +87,7 @@ class InputField extends React.Component<Props> {
       value,
       validationError,
       errorMessage,
+      informationMessage,
       disabled,
       label,
       helpText,
@@ -93,7 +95,12 @@ class InputField extends React.Component<Props> {
       testId
     } = this.props;
     const errorView = validationError ? "is-danger" : "";
-    const helper = validationError ? <p className="help is-danger">{errorMessage}</p> : "";
+    let helper;
+    if (validationError) {
+      helper = <p className="help is-danger">{errorMessage}</p>;
+    } else if (informationMessage) {
+      helper = <p className="help is-info">{informationMessage}</p>;
+    }
     return (
       <div className={classNames("field", className)}>
         <LabelWithHelpIcon label={label} helpText={helpText} />

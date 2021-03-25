@@ -21,108 +21,119 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.util;
 
-//~--- non-JDK imports --------------------------------------------------------
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- *
  * @author Sebastian Sdorra
  */
-public class ValidationUtilTest
-{
+class ValidationUtilTest {
 
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testIsFilenameValid()
-  {
-
-    // true
-    assertTrue(ValidationUtil.isFilenameValid("test"));
-    assertTrue(ValidationUtil.isFilenameValid("test 123"));
-
-    // false
-    assertFalse(ValidationUtil.isFilenameValid("../../"));
-    assertFalse(ValidationUtil.isFilenameValid("test/../.."));
-    assertFalse(ValidationUtil.isFilenameValid("\\ka"));
-    assertFalse(ValidationUtil.isFilenameValid("ka:on"));
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "test",
+    "test 123"
+  })
+  void shouldAcceptFilename(String value) {
+    assertTrue(ValidationUtil.isFilenameValid(value));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testIsMailAddressValid()
-  {
-
-    // true
-    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@ostfalia.de"));
-    assertTrue(ValidationUtil.isMailAddressValid("sdorra@ostfalia.de"));
-    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@hbk-bs.de"));
-    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@gmail.com"));
-    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@t.co"));
-    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@ucla.college")); 
-    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@example.xn--p1ai"));
-    
-    // issue 909
-    assertTrue(ValidationUtil.isMailAddressValid("s.sdorra@scm.solutions")); 
-
-    // false
-    assertFalse(ValidationUtil.isMailAddressValid("ostfalia.de"));
-    assertFalse(ValidationUtil.isMailAddressValid("@ostfalia.de"));
-    assertFalse(ValidationUtil.isMailAddressValid("s.sdorra@"));
-    assertFalse(ValidationUtil.isMailAddressValid("s.sdorra@ostfalia"));
-    assertFalse(ValidationUtil.isMailAddressValid("s.sdorra@@ostfalia.de"));
-    assertFalse(ValidationUtil.isMailAddressValid("s.sdorra@ ostfalia.de"));
-    assertFalse(ValidationUtil.isMailAddressValid("s.sdorra @ostfalia.de"));
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "../../",
+    "test/../..",
+    "\\ka, \"ka:on\""
+  })
+  void shouldRejectFilename(String value) {
+    assertFalse(ValidationUtil.isFilenameValid(value));
   }
 
-  /**
-   * Method description
-   *
-   */
-  @Test
-  public void testIsNameValid()
-  {
-
-    // true
-    assertTrue(ValidationUtil.isNameValid("test"));
-    assertTrue(ValidationUtil.isNameValid("test.git"));
-    assertTrue(ValidationUtil.isNameValid("Test123.git"));
-    assertTrue(ValidationUtil.isNameValid("Test123-git"));
-    assertTrue(ValidationUtil.isNameValid("Test_user-123.git"));
-    assertTrue(ValidationUtil.isNameValid("test@scm-manager.de"));
-    assertTrue(ValidationUtil.isNameValid("t"));
-
-    // false
-    assertFalse(ValidationUtil.isNameValid("test 123"));
-    assertFalse(ValidationUtil.isNameValid(" test 123"));
-    assertFalse(ValidationUtil.isNameValid(" test 123 "));
-    assertFalse(ValidationUtil.isNameValid("test 123 "));
-    assertFalse(ValidationUtil.isNameValid("test/123"));
-    assertFalse(ValidationUtil.isNameValid("test%123"));
-    assertFalse(ValidationUtil.isNameValid("test:123"));
-    assertFalse(ValidationUtil.isNameValid("t "));
-    assertFalse(ValidationUtil.isNameValid(" t"));
-    assertFalse(ValidationUtil.isNameValid(" t "));
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "s.sdorra@ostfalia.de",
+    "sdorra@ostfalia.de",
+    "s.sdorra@hbk-bs.de",
+    "s.sdorra@gmail.com",
+    "s.sdorra@t.co",
+    "s.sdorra@ucla.college",
+    "s.sdorra@example.xn--p1ai",
+    "s.sdorra@scm.solutions" // issue 909
+  })
+  void shouldAcceptMailAddress(String value) {
+    assertTrue(ValidationUtil.isMailAddressValid(value));
   }
 
-  /**
-   * Method description
-   *
-   */
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "ostfalia.de",
+    "@ostfalia.de",
+    "s.sdorra@",
+    "s.sdorra@ostfalia",
+    "s.sdorra@@ostfalia.de",
+    "s.sdorra@ ostfalia.de",
+    "s.sdorra @ostfalia.de"
+  })
+  void shouldRejectMailAddress(String value) {
+    assertFalse(ValidationUtil.isMailAddressValid(value));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "test",
+    "test.git",
+    "Test123.git",
+    "Test123-git",
+    "Test_user-123.git",
+    "test@scm-manager.de",
+    "t",
+    "Лорем-ипсум",
+    "Λορεμ.ιπσθμ",
+    "լոռեմիպսում",
+    "ლორემიფსუმ",
+    "प्रमान",
+    "詳性約",
+    "隠サレニ",
+    "법률",
+    "المدن",
+    "אחד",
+    "Hu-rëm"
+  })
+  void shouldAcceptName(String value) {
+    assertTrue(ValidationUtil.isNameValid(value));
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = {
+    "@",
+    "@test",
+    " test123",
+    "test/123",
+    "test:123",
+    "test#123",
+    "test%123",
+    "test&123",
+    "test?123",
+    "test=123",
+    "test;123",
+    "@test123",
+    "t ",
+    " t",
+    " t ",
+    ".."
+  })
+  void shouldRejectName(String value) {
+    assertFalse(ValidationUtil.isNameValid(value));
+  }
+
   @Test
-  public void testIsNotContaining()
-  {
+  void testIsNotContaining() {
 
     // true
     assertTrue(ValidationUtil.isNotContaining("test", "abc"));
@@ -134,9 +145,8 @@ public class ValidationUtilTest
     assertFalse(ValidationUtil.isNotContaining("test", "t"));
   }
 
-  @Test
-  public void testIsRepositoryNameValid() {
-    String[] validPaths = {
+  @ParameterizedTest
+  @ValueSource(strings = {
       "scm",
       "scm-",
       "scm_",
@@ -150,69 +160,66 @@ public class ValidationUtilTest
       "..c",
       "d..",
       "a..c"
-    };
+  })
+  void shouldAcceptRepositoryName(String path) {
+    assertTrue(ValidationUtil.isRepositoryNameValid(path));
+  }
 
-    // issue 142, 144 and 148
-    String[] invalidPaths = {
-      ".",
-      "/",
-      "//",
-      "..",
-      "/.",
-      "/..",
-      "./",
-      "../",
-      "/../",
-      "/./",
-      "/...",
-      "/abc",
-      ".../",
-      "/sdf/",
-      "asdf/",
-      "./b",
-      "scm/plugins/.",
-      "scm/../plugins",
-      "scm/main/",
-      "/scm/main/",
-      "scm/./main",
-      "scm//main",
-      "scm\\main",
-      "scm/main-$HOME",
-      "scm/main-${HOME}-home",
-      "scm/main-%HOME-home",
-      "scm/main-%HOME%-home",
-      "abc$abc",
-      "abc%abc",
-      "abc<abc",
-      "abc>abc",
-      "abc#abc",
-      "abc+abc",
-      "abc{abc",
-      "abc}abc",
-      "abc(abc",
-      "abc)abc",
-      "abc[abc",
-      "abc]abc",
-      "abc|abc",
-      "scm/main",
-      "scm/plugins/git-plugin",
-      ".scm/plugins",
-      "a/b..",
-      "a/..b",
-      "scm/main",
-      "scm/plugins/git-plugin",
-      "_scm",
-      "-scm",
-      "scm.git",
-      "scm.git.git"
-    };
-
-    for (String path : validPaths) {
-      assertTrue(ValidationUtil.isRepositoryNameValid(path));
-    }
-
-    for (String path : invalidPaths) {
-      assertFalse(ValidationUtil.isRepositoryNameValid(path));
-    }
+  @ParameterizedTest
+  @ValueSource(strings = {
+    ".",
+    "/",
+    "//",
+    "..",
+    "/.",
+    "/..",
+    "./",
+    "../",
+    "/../",
+    "/./",
+    "/...",
+    "/abc",
+    ".../",
+    "/sdf/",
+    "asdf/",
+    "./b",
+    "scm/plugins/.",
+    "scm/../plugins",
+    "scm/main/",
+    "/scm/main/",
+    "scm/./main",
+    "scm//main",
+    "scm\\main",
+    "scm/main-$HOME",
+    "scm/main-${HOME}-home",
+    "scm/main-%HOME-home",
+    "scm/main-%HOME%-home",
+    "abc$abc",
+    "abc%abc",
+    "abc<abc",
+    "abc>abc",
+    "abc#abc",
+    "abc+abc",
+    "abc{abc",
+    "abc}abc",
+    "abc(abc",
+    "abc)abc",
+    "abc[abc",
+    "abc]abc",
+    "abc|abc",
+    "scm/main",
+    "scm/plugins/git-plugin",
+    ".scm/plugins",
+    "a/b..",
+    "a/..b",
+    "scm/main",
+    "scm/plugins/git-plugin",
+    "_scm",
+    "-scm",
+    "scm.git",
+    "scm.git.git"
+  })
+  void shouldRejectRepositoryName(String path) {
+    assertFalse(ValidationUtil.isRepositoryNameValid(path));
   }
 }

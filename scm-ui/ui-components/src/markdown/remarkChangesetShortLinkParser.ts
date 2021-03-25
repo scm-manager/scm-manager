@@ -27,7 +27,7 @@ import { TFunction } from "i18next";
 import { AstPlugin } from "./PluginApi";
 import { Node, Parent } from "unist";
 
-const namePartRegex = nameRegex.source.substring(1, nameRegex.source.length - 1);
+const namePartRegex = nameRegex.source.substring(1, nameRegex.source.length - 1).replace(/\[\^([^\]s]+)\]/, "[^$1\\s]");
 
 export const regExpPattern = `(${namePartRegex})\\/(${namePartRegex})@([\\w\\d]+)`;
 
