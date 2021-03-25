@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import org.apache.commons.lang.StringUtils;
@@ -41,6 +41,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static sonia.scm.AlreadyExistsException.alreadyExists;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
+import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 /**
  * This "interface" is not really intended to be used as an interface but rather as
@@ -52,7 +53,7 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
 
   @Override
   default void delete(String toBeDeleted) throws IOException {
-    Path fileToBeDeleted = new File(getWorkDir(), toBeDeleted).toPath();
+    Path fileToBeDeleted = getTargetFile(toBeDeleted);
     try {
       Files.delete(fileToBeDeleted);
     } catch (NoSuchFileException e) {
@@ -65,7 +66,7 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
 
   @Override
   default void create(String toBeCreated, File file, boolean overwrite) throws IOException {
-    Path targetFile = new File(getWorkDir(), toBeCreated).toPath();
+    Path targetFile = getTargetFile(toBeCreated);
     createDirectories(targetFile);
     if (overwrite) {
       Files.move(file.toPath(), targetFile, REPLACE_EXISTING);
@@ -80,7 +81,7 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
   }
 
   default void modify(String path, File file) throws IOException {
-    Path targetFile = new File(getWorkDir(), path).toPath();
+    Path targetFile = getTargetFile(path);
     createDirectories(targetFile);
     if (!targetFile.toFile().exists()) {
       throw notFound(createFileContext(path));
@@ -112,9 +113,32 @@ public interface ModifyWorkerHelper extends ModifyCommand.Worker {
     }
   }
 
+  default Path getTargetFile(String path) {
+    File workDir = getWorkDir();
+    // WARNING: 'new File(workDir, path)' is not the same as
+    // 'workDir.toPath().resolve(path)'! The first one does not
+    // mind whether 'path' starts with a '/', the nio api does.
+    // So using the file api the two paths '/file' and 'file'
+    // lead to the same result, whereas the nio api would
+    // lead to an absolute path starting at the ssytem root in the
+    // first example starting with a '/'.
+    Path targetFile = new File(workDir, path).toPath().normalize();
+    doThrow()
+      .violation("illegal path traversal: " + path)
+      .when(!targetFile.startsWith(workDir.toPath().normalize()));
+    doThrow()
+      .violation("protected path: " + path)
+      .when(isProtectedPath(targetFile));
+    return targetFile;
+  }
+
   File getWorkDir();
 
   Repository getRepository();
 
   String getBranch();
+
+  default boolean isProtectedPath(Path path) {
+    return false;
+  }
 }

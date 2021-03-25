@@ -31,8 +31,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
-
 public class ManagerDaoAdapter<T extends ModelObject> {
 
   private final GenericDAO<T> dao;

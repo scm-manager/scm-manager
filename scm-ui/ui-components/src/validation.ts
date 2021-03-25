@@ -44,14 +44,21 @@ export const isNumberValid = (number: any) => {
   return !isNaN(number);
 };
 
-const pathRegex = /^((?!\/{2,}).)*$/;
-
 export const isPathValid = (path: string) => {
-  return pathRegex.test(path);
+  return path !== "."
+    && !path.includes("../")
+    && !path.includes("//")
+    && path !== "..";
 };
 
 const urlRegex = /^[A-Za-z0-9]+:\/\/[^\s$.?#].[^\s]*$/;
 
 export const isUrlValid = (url: string) => {
   return urlRegex.test(url);
+};
+
+const filenameRegex = /^[^/\\:]+$/;
+
+export const isFilenameValid = (filename: string) => {
+  return filenameRegex.test(filename) && filename !== "." && filename !== ".." && !filename.includes("./");
 };

@@ -26,6 +26,7 @@ package sonia.scm.repository.spi;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.repository.Repository;
 
 import java.io.File;
@@ -34,8 +35,11 @@ import java.io.IOException;
 import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class ModifyWorkerHelperTest {
+
+  private boolean pathProtected = false;
 
   @Test
   void shouldKeepExecutableFlag(@TempDir Path temp) throws IOException {
@@ -52,6 +56,33 @@ class ModifyWorkerHelperTest {
     assertThat(target.canExecute()).isTrue();
   }
 
+  @Test
+  void shouldNotWriteInProtectedPath(@TempDir Path temp) throws IOException {
+
+    pathProtected = true;
+    File target = createFile(temp, "some.txt");
+
+    ModifyWorkerHelper helper = new MinimalModifyWorkerHelper(temp);
+
+    assertThrows(
+      ScmConstraintViolationException.class,
+      () -> helper.create("some.txt", target, true)
+    );
+  }
+
+  @Test
+  void shouldNotWritePathWithPathTraversal(@TempDir Path temp) throws IOException {
+
+    File target = createFile(temp, "some.txt");
+
+    ModifyWorkerHelper helper = new MinimalModifyWorkerHelper(temp);
+
+    assertThrows(
+      ScmConstraintViolationException.class,
+      () -> helper.create("../some.txt", target, true)
+    );
+  }
+
   private File createFile(Path temp, String fileName) throws IOException {
     File file = new File(temp.toFile(), fileName);
     FileWriter source = new FileWriter(file);
@@ -60,7 +91,7 @@ class ModifyWorkerHelperTest {
     return file;
   }
 
-  private static class MinimalModifyWorkerHelper implements ModifyWorkerHelper {
+  private class MinimalModifyWorkerHelper implements ModifyWorkerHelper {
 
     private final Path temp;
 
@@ -91,6 +122,11 @@ class ModifyWorkerHelperTest {
     @Override
     public String getBranch() {
       return null;
+    }
+
+    @Override
+    public boolean isProtectedPath(Path path) {
+      return pathProtected;
     }
   }
 }

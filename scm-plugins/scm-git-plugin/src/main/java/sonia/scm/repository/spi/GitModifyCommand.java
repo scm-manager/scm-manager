@@ -177,6 +177,11 @@ public class GitModifyCommand extends AbstractGitCommand implements ModifyComman
     }
 
     @Override
+    public boolean isProtectedPath(Path path) {
+      return path.startsWith(getClone().getRepository().getDirectory().toPath().normalize());
+    }
+
+    @Override
     public File getWorkDir() {
       return workDir;
     }
