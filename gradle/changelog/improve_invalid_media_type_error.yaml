@@ -1,0 +1,2 @@
+- type: changed
+  description: Improve error messages for invalid media types ([#1607](https://github.com/scm-manager/scm-manager/pull/1607))

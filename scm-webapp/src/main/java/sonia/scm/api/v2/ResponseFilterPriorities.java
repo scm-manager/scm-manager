@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2;
 
 
@@ -39,6 +39,8 @@ final class ResponseFilterPriorities {
    */
   static final int JSON_MARSHALLING = Priorities.USER + 1000;
   static final int FIELD_FILTER = Priorities.USER;
+
+  static final int INVALID_ACCEPT_HEADER = JSON_MARSHALLING + 1000;
 
   private ResponseFilterPriorities() {
   }
