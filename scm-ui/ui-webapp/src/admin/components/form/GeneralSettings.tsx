@@ -39,6 +39,7 @@ type Props = WithTranslation & {
   mailDomainName: string;
   enabledXsrfProtection: boolean;
   enabledUserConverter: boolean;
+  enabledApiKeys: boolean;
   namespaceStrategy: string;
   namespaceStrategies?: NamespaceStrategies;
   onChange: (p1: boolean, p2: any, p3: string) => void;
@@ -56,6 +57,7 @@ class GeneralSettings extends React.Component<Props> {
       mailDomainName,
       enabledXsrfProtection,
       enabledUserConverter,
+      enabledApiKeys,
       anonymousMode,
       namespaceStrategy,
       hasUpdatePermission,
@@ -163,6 +165,16 @@ class GeneralSettings extends React.Component<Props> {
               helpText={t("help.mailDomainNameHelpText")}
             />
           </div>
+          <div className="column is-half">
+            <Checkbox
+              label={t("general-settings.enabled-api-keys")}
+              onChange={this.handleEnabledApiKeysChange}
+              checked={enabledApiKeys}
+              title={t("general-settings.enabled-api-keys")}
+              disabled={!hasUpdatePermission}
+              helpText={t("help.enabledApiKeysHelpText")}
+            />
+          </div>
         </div>
       </div>
     );
@@ -194,6 +206,9 @@ class GeneralSettings extends React.Component<Props> {
   };
   handleMailDomainNameChange = (value: string) => {
     this.props.onChange(true, value, "mailDomainName");
+  };
+  handleEnabledApiKeysChange = (value: boolean) => {
+    this.props.onChange(true, value, "enabledApiKeys");
   };
 }
 

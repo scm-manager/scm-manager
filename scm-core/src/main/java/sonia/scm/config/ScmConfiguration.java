@@ -197,6 +197,14 @@ public class ScmConfiguration implements Configuration {
   @XmlElement(name = "user-converter")
   private boolean enabledUserConverter = false;
 
+  /**
+   * Enables api keys for all users.
+   *
+   * @since 2.16.0
+   */
+  @XmlElement(name = "api-keys")
+  private boolean enabledApiKeys = true;
+
   @XmlElement(name = "namespace-strategy")
   private String namespaceStrategy = "UsernameNamespaceStrategy";
 
@@ -246,6 +254,7 @@ public class ScmConfiguration implements Configuration {
     this.releaseFeedUrl = other.releaseFeedUrl;
     this.mailDomainName = other.mailDomainName;
     this.enabledUserConverter = other.enabledUserConverter;
+    this.enabledApiKeys = other.enabledApiKeys;
   }
 
   /**
@@ -405,6 +414,16 @@ public class ScmConfiguration implements Configuration {
    */
   public boolean isEnabledUserConverter() {
     return enabledUserConverter;
+  }
+
+  /**
+   * Returns {@code true} if the api keys are enabled.
+   *
+   * @return {@code true} if the api keys is enabled
+   * @since 2.16.0
+   */
+  public boolean isEnabledApiKeys() {
+    return enabledApiKeys;
   }
 
   public boolean isEnableProxy() {
@@ -582,6 +601,16 @@ public class ScmConfiguration implements Configuration {
    */
   public void setEnabledUserConverter(boolean enabledUserConverter) {
     this.enabledUserConverter = enabledUserConverter;
+  }
+
+  /**
+   * Set {@code true} to enable api keys.
+   *
+   * @param enabledApiKeys {@code true} to enable api keys
+   * @since 2.16.0
+   */
+  public void setEnabledApiKeys(boolean enabledApiKeys) {
+    this.enabledApiKeys = enabledApiKeys;
   }
 
   public void setNamespaceStrategy(String namespaceStrategy) {

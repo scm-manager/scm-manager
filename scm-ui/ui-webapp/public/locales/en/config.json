@@ -59,6 +59,7 @@
     "mail-domain-name": "Fallback Mail Domain Name",
     "enabled-xsrf-protection": "Enabled XSRF Protection",
     "enabled-user-converter": "Enabled User Converter",
+    "enabled-api-keys": "Enabled API Keys",
     "namespace-strategy": "Namespace Strategy",
     "login-info-url": "Login Info URL"
   },
@@ -86,6 +87,7 @@
     "loginAttemptLimitTimeoutHelpText": "Timeout in seconds for users which are temporary disabled, because of too many failed login attempts.",
     "enableXsrfProtectionHelpText": "Enable XSRF Cookie Protection. Note: This feature is still experimental.",
     "enabledUserConverterHelpText": "Enable User Converter. Internal users will automatically be converted to external on their first login using an external system.",
+    "enabledApiKeysHelpText": "Enable API Keys. API Keys can be used as additional authentication method by every user.",
     "nameSpaceStrategyHelpText": "The namespace strategy.",
     "loginInfoUrlHelpText": "URL to login information (plugin and feature tips at login page). If this is omitted, no login information will be displayed."
   }

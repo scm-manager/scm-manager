@@ -33,6 +33,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;
 
@@ -60,6 +61,8 @@ class ApiKeyRealmTest {
   DAORealmHelper.AuthenticationInfoBuilder authenticationInfoBuilder;
   @Mock
   RepositoryRoleManager repositoryRoleManager;
+  @Mock
+  ScmConfiguration scmConfiguration;
 
   ApiKeyRealm realm;
 
@@ -67,7 +70,7 @@ class ApiKeyRealmTest {
   void initRealmHelper() {
     lenient().when(helperFactory.create("ApiTokenRealm")).thenReturn(helper);
     lenient().when(helper.authenticationInfoBuilder(any())).thenReturn(authenticationInfoBuilder);
-    realm = new ApiKeyRealm(apiKeyService, helperFactory, repositoryRoleManager);
+    realm = new ApiKeyRealm(apiKeyService, helperFactory, repositoryRoleManager, scmConfiguration);
   }
 
   @Test
@@ -100,6 +103,16 @@ class ApiKeyRealmTest {
   @Test
   void shouldIgnoreTokensWithDots() {
     BearerToken token = valueOf("this.is.no.api.token");
+
+    boolean supports = realm.supports(token);
+
+    assertThat(supports).isFalse();
+  }
+
+  @Test
+  void shouldIgnoreIfConfigIsDisabled() {
+    when(scmConfiguration.isEnabledApiKeys()).thenReturn(false);
+    AuthenticationToken token = mock(AuthenticationToken.class);
 
     boolean supports = realm.supports(token);
 

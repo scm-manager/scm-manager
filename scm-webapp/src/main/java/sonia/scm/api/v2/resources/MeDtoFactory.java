@@ -28,10 +28,10 @@ import com.google.common.base.Strings;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import org.apache.shiro.SecurityUtils;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupCollector;
 import sonia.scm.user.EMail;
 import sonia.scm.user.User;
-import sonia.scm.user.UserManager;
 import sonia.scm.user.UserPermissions;
 import sonia.scm.web.EdisonHalAppender;
 
@@ -44,15 +44,15 @@ import static de.otto.edison.hal.Links.linkingTo;
 public class MeDtoFactory extends HalAppenderMapper {
 
   private final ResourceLinks resourceLinks;
-  private final UserManager userManager;
   private final GroupCollector groupCollector;
+  private final ScmConfiguration scmConfiguration;
   private final EMail eMail;
 
   @Inject
-  public MeDtoFactory(ResourceLinks resourceLinks, UserManager userManager, GroupCollector groupCollector, EMail eMail) {
+  public MeDtoFactory(ResourceLinks resourceLinks, GroupCollector groupCollector, ScmConfiguration scmConfiguration, EMail eMail) {
     this.resourceLinks = resourceLinks;
-    this.userManager = userManager;
     this.groupCollector = groupCollector;
+    this.scmConfiguration = scmConfiguration;
     this.eMail = eMail;
   }
 
@@ -96,7 +96,7 @@ public class MeDtoFactory extends HalAppenderMapper {
     if (!user.isExternal() && UserPermissions.changePassword(user).isPermitted()) {
       linksBuilder.single(link("password", resourceLinks.me().passwordChange()));
     }
-    if (UserPermissions.changeApiKeys(user).isPermitted()) {
+    if (scmConfiguration.isEnabledApiKeys() && UserPermissions.changeApiKeys(user).isPermitted()) {
       linksBuilder.single(link("apiKeys", resourceLinks.apiKeyCollection().self(user.getName())));
     }
 

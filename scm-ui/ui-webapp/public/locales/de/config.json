@@ -59,6 +59,7 @@
     "mail-domain-name": "Fallback E-Mail Domain Name",
     "enabled-xsrf-protection": "XSRF Protection aktivieren",
     "enabled-user-converter": "Benutzer Konverter aktivieren",
+    "enabled-api-keys": "API Schlüssel aktivieren",
     "namespace-strategy": "Namespace Strategie",
     "login-info-url": "Login Info URL"
   },
@@ -86,6 +87,7 @@
     "loginAttemptLimitTimeoutHelpText": "Timeout in Sekunden für Benutzer, die vorübergehend wegen zu vieler fehlgeschlagener Anmeldeversuche, deaktiviert wurden.",
     "enableXsrfProtectionHelpText": "Xsrf Cookie Protection aktivieren. Hinweis: Dieses Feature befindet sich noch im Experimentalstatus.",
     "enabledUserConverterHelpText": "Benutzer Konverter aktivieren. Interne Benutzer werden beim Einloggen über ein Fremdsystem zu externen Benutzern konvertiert.",
+    "enabledApiKeysHelpText": "API Schlüssel aktivieren. Alle Benutzer dürfen API Schlüssel als zusätzliche Methode zur Authentifizierung nutzen.",
     "nameSpaceStrategyHelpText": "Strategie für Namespaces.",
     "loginInfoUrlHelpText": "URL zu der Login Information (Plugin und Feature Tipps auf der Login Seite). Um die Login Information zu deaktivieren, kann das Feld leer gelassen werden."
   }

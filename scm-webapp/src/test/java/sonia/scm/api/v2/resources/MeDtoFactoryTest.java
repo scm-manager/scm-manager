@@ -37,10 +37,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
 import org.mockito.quality.Strictness;
 import sonia.scm.SCMContext;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupCollector;
 import sonia.scm.user.EMail;
 import sonia.scm.user.User;
-import sonia.scm.user.UserManager;
 import sonia.scm.user.UserTestData;
 
 import java.net.URI;
@@ -57,13 +57,13 @@ class MeDtoFactoryTest {
   private final URI baseUri = URI.create("https://scm.hitchhiker.com/scm/");
 
   @Mock
-  private UserManager userManager;
-
-  @Mock
   private GroupCollector groupCollector;
 
   @Mock
   private Subject subject;
+
+  @Mock
+  private ScmConfiguration scmConfiguration;
 
   @Mock
   private EMail eMail;
@@ -74,7 +74,7 @@ class MeDtoFactoryTest {
   void setUpContext() {
     ThreadContext.bind(subject);
     ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
-    meDtoFactory = new MeDtoFactory(resourceLinks, userManager, groupCollector, eMail);
+    meDtoFactory = new MeDtoFactory(resourceLinks, groupCollector, scmConfiguration, eMail);
   }
 
   @AfterEach
@@ -160,8 +160,6 @@ class MeDtoFactoryTest {
     User user = UserTestData.createTrillian();
     prepareSubject(user);
 
-    when(userManager.isTypeDefault(user)).thenReturn(true);
-
     MeDto dto = meDtoFactory.create();
     assertThat(dto.getLinks().getLinkBy("password")).isNotPresent();
   }
@@ -227,5 +225,39 @@ class MeDtoFactoryTest {
 
     assertThat(dto.getMail()).isNull();
     assertThat(dto.getFallbackMail()).isEqualTo("trillian@hitchhiker.local");
+  }
+
+  @Test
+  void shouldAppendApiKeysLink() {
+    User user = UserTestData.createTrillian();
+    prepareSubject(user);
+
+    when(scmConfiguration.isEnabledApiKeys()).thenReturn(true);
+    when(subject.isPermitted("user:changeApiKeys:trillian")).thenReturn(true);
+
+    MeDto dto = meDtoFactory.create();
+    assertThat(dto.getLinks().getLinkBy("apiKeys").get().getHref()).isEqualTo("https://scm.hitchhiker.com/scm/v2/users/trillian/api_keys");
+  }
+
+  @Test
+  void shouldNotAppendApiKeysLinkIfMissingPermission() {
+    User user = UserTestData.createTrillian();
+    prepareSubject(user);
+
+    when(subject.isPermitted("user:changeApiKeys:trillian")).thenReturn(false);
+
+    MeDto dto = meDtoFactory.create();
+    assertThat(dto.getLinks().getLinkBy("apiKeys")).isNotPresent();
+  }
+
+  @Test
+  void shouldNotAppendApiKeysLinkIfConfigDisabled() {
+    User user = UserTestData.createTrillian();
+    prepareSubject(user);
+    when(scmConfiguration.isEnabledApiKeys()).thenReturn(false);
+    when(subject.isPermitted("user:changeApiKeys:trillian")).thenReturn(true);
+
+    MeDto dto = meDtoFactory.create();
+    assertThat(dto.getLinks().getLinkBy("apiKeys")).isNotPresent();
   }
 }

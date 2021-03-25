@@ -40,6 +40,7 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import sonia.scm.ContextEntry;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupCollector;
 import sonia.scm.security.ApiKey;
 import sonia.scm.security.ApiKeyService;
@@ -99,6 +100,9 @@ public class MeResourceTest {
   private ApiKeyService apiKeyService;
 
   @Mock
+  private ScmConfiguration scmConfiguration;
+
+  @Mock
   private EMail eMail;
 
   @InjectMocks
@@ -132,6 +136,7 @@ public class MeResourceTest {
   @Test
   public void shouldReturnCurrentlyAuthenticatedUser() throws URISyntaxException, UnsupportedEncodingException {
     applyUserToSubject(originalUser);
+    when(scmConfiguration.isEnabledApiKeys()).thenReturn(true);
 
     MockHttpRequest request = MockHttpRequest.get("/" + MeResource.ME_PATH_V2);
     request.accept(VndMediaType.ME);
@@ -283,14 +288,14 @@ public class MeResourceTest {
   }
 
   @Test
-  public void shouldIgnoreInvalidNewApiKey() throws URISyntaxException, UnsupportedEncodingException {
+  public void shouldIgnoreInvalidNewApiKey() throws URISyntaxException {
     when(apiKeyService.createNewKey("trillian","guide", "READ"))
       .thenReturn(new ApiKeyService.CreationResult("abc", "1"));
 
     final MockHttpRequest request = MockHttpRequest
       .post("/" + MeResource.ME_PATH_V2 + "api_keys/")
       .contentType(VndMediaType.API_KEY)
-      .content("{\"displayName\":\"guide\",\"pemissionRole\":\"\"}".getBytes());
+      .content("{\"displayName\":\"guide\",\"permissionRole\":\"\"}".getBytes());
 
     dispatcher.invoke(request, response);
 

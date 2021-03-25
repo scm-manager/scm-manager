@@ -1,0 +1,2 @@
+- type: Added
+  description: Add global flag to enable/disable api keys ([#1606](https://github.com/scm-manager/scm-manager/pull/1606))
