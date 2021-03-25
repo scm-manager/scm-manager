@@ -32,7 +32,7 @@ public final class ValidationUtil {
 
   private static final String REGEX_MAIL = "^[A-Za-z0-9][\\w.-]*@[A-Za-z0-9][\\w\\-\\.]*\\.[A-Za-z0-9][A-Za-z0-9-]+$";
 
-  public static final String REGEX_NAME = "^([^:/?#;&=\\s@%\\\\][^:/?#;&=%\\\\]*[^:/?#;&=\\s%\\\\])|([^:/?#;&=\\s@%\\\\])$";
+  public static final String REGEX_NAME = "^(?:(?:[^:/?#;&=\\s@%\\\\][^:/?#;&=%\\\\]*[^:/?#;&=\\s%\\\\])|(?:[^:/?#;&=\\s@%\\\\]))$";
 
   public static final String REGEX_REPOSITORYNAME = "(?!^\\.\\.$)(?!^\\.$)(?!.*[\\\\\\[\\]])(?!.*[.]git$)^[A-Za-z0-9\\.][A-Za-z0-9\\.\\-_]*$";
 
