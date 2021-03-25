@@ -34,6 +34,7 @@ import sonia.scm.AlreadyExistsException;
 import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.RepositoryHookType;
@@ -354,5 +355,19 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
       verify(transportProtocolRule.repositoryManager, description("post receive hook event expected"))
         .fireHookEvent(argThat(argument -> argument.getType() == RepositoryHookType.POST_RECEIVE))
     );
+  }
+
+  @Test(expected = ScmConstraintViolationException.class)
+  public void shouldFailIfPathInGitMetadata() throws IOException {
+    File newFile = Files.write(temporaryFolder.newFile().toPath(), "other".getBytes()).toFile();
+
+    GitModifyCommand command = createCommand();
+
+    ModifyCommandRequest request = new ModifyCommandRequest();
+    request.setCommitMessage("test commit");
+    request.addRequest(new ModifyCommandRequest.CreateFileRequest(".git/ome.txt", newFile, true));
+    request.setAuthor(new Person("Dirk Gently", "dirk@holistic.det"));
+
+    command.execute(request);
   }
 }

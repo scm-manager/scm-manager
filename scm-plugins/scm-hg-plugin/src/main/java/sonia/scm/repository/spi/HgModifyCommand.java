@@ -93,6 +93,11 @@ public class HgModifyCommand extends AbstractWorkingCopyCommand implements Modif
               private void addFileToHg(File file) {
                 workingRepository.workingCopy().add(file.getAbsolutePath());
               }
+
+              @Override
+              public boolean isProtectedPath(Path path) {
+                return path.startsWith(workingRepository.getDirectory().toPath().normalize().resolve(".hg"));
+              }
             });
           } catch (IOException e) {
             throwInternalRepositoryException("could not execute command on repository", e);

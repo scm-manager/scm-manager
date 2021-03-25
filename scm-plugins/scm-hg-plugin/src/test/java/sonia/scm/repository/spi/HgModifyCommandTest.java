@@ -32,6 +32,7 @@ import org.junit.rules.TemporaryFolder;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.NoChangesMadeException;
 import sonia.scm.NotFoundException;
+import sonia.scm.ScmConstraintViolationException;
 import sonia.scm.repository.Person;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
@@ -195,5 +196,18 @@ public class HgModifyCommandTest extends AbstractHgCommandTestBase {
     Matcher matcher = AbstractWorkingCopyCommand.HG_MESSAGE_PATTERN.matcher("[SCM] Error: This is an error message");
     matcher.matches();
     assertThat(matcher.group(1)).isEqualTo("This is an error message");
+  }
+
+  @Test(expected = ScmConstraintViolationException.class)
+  public void shouldFailIfPathInHgMetadata() throws IOException {
+    File testFile = temporaryFolder.newFile("a.txt");
+
+    new FileOutputStream(testFile).write(42);
+    ModifyCommandRequest request2 = new ModifyCommandRequest();
+    request2.addRequest(new ModifyCommandRequest.CreateFileRequest(".hg/some.txt", testFile, true));
+    request2.setCommitMessage("Now i really found the answer");
+    request2.setAuthor(new Person("Trillian Astra", "trillian@hitchhiker.com"));
+
+    hgModifyCommand.execute(request2);
   }
 }
