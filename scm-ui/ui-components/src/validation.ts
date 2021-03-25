@@ -44,10 +44,11 @@ export const isNumberValid = (number: any) => {
   return !isNaN(number);
 };
 
-const pathRegex = /^((?!\/{2,}).)*$/;
-
 export const isPathValid = (path: string) => {
-  return pathRegex.test(path) && path !== "." && path !== ".." && !path.includes("./");
+  return path !== "."
+    && !path.includes("../")
+    && !path.includes("//")
+    && path !== "..";
 };
 
 const urlRegex = /^[A-Za-z0-9]+:\/\/[^\s$.?#].[^\s]*$/;

@@ -136,7 +136,7 @@ describe("test number validation", () => {
 });
 
 describe("test path validation", () => {
-  const invalid = ["//", "some//path", "end//", ".", "..", "./", "../"];
+  const invalid = ["//", "some//path", "end//", ".", "..", "../"];
   for (const path of invalid) {
     it(`should return false for '${path}'`, () => {
       expect(validator.isPathValid(path)).toBe(false);

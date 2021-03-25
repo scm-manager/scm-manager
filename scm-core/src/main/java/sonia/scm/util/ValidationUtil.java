@@ -60,9 +60,9 @@ public final class ValidationUtil {
    */
   public static boolean isPathValid(String path)
   {
-    return path.matches("^((?!/{2,}).)*$")
-      && !path.equals(".")
-      && !path.contains("./")
+    return !path.equals(".")
+      && !path.contains("../")
+      && !path.contains("//")
       && !path.equals("..");
   }
 

@@ -67,7 +67,6 @@ class ValidationUtilTest {
 
   @ParameterizedTest
   @ValueSource(strings = {
-    "./",
     "..",
     "../",
     "../../",
