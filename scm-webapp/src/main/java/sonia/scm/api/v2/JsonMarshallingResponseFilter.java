@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -35,6 +35,7 @@ import javax.inject.Inject;
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
 import javax.ws.rs.container.ContainerResponseFilter;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.ext.Provider;
 import java.util.Set;
 
@@ -45,6 +46,8 @@ import java.util.Set;
 @Provider
 @Priority(ResponseFilterPriorities.JSON_MARSHALLING)
 public class JsonMarshallingResponseFilter implements ContainerResponseFilter {
+
+  private static final MediaType ERROR_MEDIA_TYPE = MediaType.valueOf(VndMediaType.ERROR_TYPE);
 
   private final ObjectMapper objectMapper;
   private final Set<JsonEnricher> enrichers;
@@ -57,11 +60,18 @@ public class JsonMarshallingResponseFilter implements ContainerResponseFilter {
 
   @Override
   public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
+    if (isError(responseContext)) {
+      return;
+    }
     if (hasVndEntity(responseContext)) {
       JsonNode node = getJsonEntity(responseContext);
       callEnrichers(requestContext, responseContext, node);
       responseContext.setEntity(node);
     }
+  }
+
+  private boolean isError(ContainerResponseContext responseContext) {
+    return ERROR_MEDIA_TYPE.equals(responseContext.getMediaType());
   }
 
   private void callEnrichers(ContainerRequestContext requestContext, ContainerResponseContext responseContext, JsonNode node) {
