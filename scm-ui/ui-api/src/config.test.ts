@@ -41,6 +41,7 @@ describe("Test config hooks", () => {
     enableProxy: false,
     enabledUserConverter: false,
     enabledXsrfProtection: false,
+    enabledApiKeys: false,
     forceBaseUrl: false,
     loginAttemptLimit: 0,
     loginAttemptLimitTimeout: 0,

@@ -50,4 +50,5 @@ export type Config = HalRepresentation & {
   loginInfoUrl: string;
   releaseFeedUrl: string;
   mailDomainName: string;
+  enabledApiKeys: boolean;
 };

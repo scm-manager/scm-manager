@@ -57,6 +57,7 @@ public class ConfigDto extends HalRepresentation implements UpdateConfigDto {
   private long loginAttemptLimitTimeout;
   private boolean enabledXsrfProtection;
   private boolean enabledUserConverter;
+  private boolean enabledApiKeys;
   private String namespaceStrategy;
   private String loginInfoUrl;
   private String releaseFeedUrl;

@@ -149,6 +149,7 @@ class ConfigForm extends React.Component<Props, State> {
           mailDomainName={config.mailDomainName}
           enabledXsrfProtection={config.enabledXsrfProtection}
           enabledUserConverter={config.enabledUserConverter}
+          enabledApiKeys={config.enabledApiKeys}
           namespaceStrategy={config.namespaceStrategy}
           onChange={(isValid, changedValue, name) => this.onChange(isValid, changedValue, name)}
           hasUpdatePermission={configUpdatePermission}

@@ -33,6 +33,7 @@ import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.realm.AuthenticatingRealm;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.config.ScmConfiguration;
 import sonia.scm.plugin.Extension;
 import sonia.scm.repository.RepositoryRole;
 import sonia.scm.repository.RepositoryRoleManager;
@@ -53,12 +54,14 @@ public class ApiKeyRealm extends AuthenticatingRealm {
   private final ApiKeyService apiKeyService;
   private final DAORealmHelper helper;
   private final RepositoryRoleManager repositoryRoleManager;
+  private final ScmConfiguration scmConfiguration;
 
   @Inject
-  public ApiKeyRealm(ApiKeyService apiKeyService, DAORealmHelperFactory helperFactory, RepositoryRoleManager repositoryRoleManager) {
+  public ApiKeyRealm(ApiKeyService apiKeyService, DAORealmHelperFactory helperFactory, RepositoryRoleManager repositoryRoleManager, ScmConfiguration scmConfiguration) {
     this.apiKeyService = apiKeyService;
     this.helper = helperFactory.create(NAME);
     this.repositoryRoleManager = repositoryRoleManager;
+    this.scmConfiguration = scmConfiguration;
     setAuthenticationTokenClass(BearerToken.class);
     setCredentialsMatcher(new AllowAllCredentialsMatcher());
   }
@@ -66,7 +69,7 @@ public class ApiKeyRealm extends AuthenticatingRealm {
   @Override
   @SuppressWarnings("java:S4738") // java.util.Base64 has no canDecode method
   public boolean supports(AuthenticationToken token) {
-    if (token instanceof UsernamePasswordToken || token instanceof BearerToken) {
+    if (scmConfiguration.isEnabledApiKeys() && (token instanceof UsernamePasswordToken || token instanceof BearerToken)) {
       boolean isBase64 = BaseEncoding.base64().canDecode(getPassword(token));
       if (!isBase64) {
         LOG.debug("Ignoring non base 64 token; this is probably a JWT token or a normal password");
