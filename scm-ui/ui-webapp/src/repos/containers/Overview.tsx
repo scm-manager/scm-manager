@@ -56,7 +56,10 @@ const useOverviewData = () => {
     search,
     // if a namespaces is selected we have to wait
     // until the list of namespaces are loaded from the server
-    disabled: !!namespace && !namespaces
+    // also do not fetch repositories if an invalid namespace is selected
+    disabled:
+      (!!namespace && !namespaces) ||
+      (!!namespace && !namespaces?._embedded.namespaces.some(n => n.namespace === namespace))
   };
   const { isLoading: isLoadingRepositories, error: errorRepositories, data: repositories } = useRepositories(request);
 
@@ -92,7 +95,7 @@ const Repositories: FC<RepositoriesProps> = ({ namespaces, repositories, search,
       return <Notification type="info">{t("overview.noRepositories")}</Notification>;
     }
   } else {
-    return null;
+    return <Notification type="info">{t("overview.invalidNamespace")}</Notification>;
   }
 };
 
@@ -141,7 +144,9 @@ const Overview: FC = () => {
         {showActions ? (
           <OverviewPageActions
             showCreateButton={showCreateButton}
-            currentGroup={namespace || ""}
+            currentGroup={
+              namespace && namespaces?._embedded.namespaces.some(n => n.namespace === namespace) ? namespace : ""
+            }
             groups={namespacesToRender}
             groupSelected={namespaceSelected}
             link={namespace ? `repos/${namespace}` : "repos"}
