@@ -117,6 +117,9 @@ dependencies {
   implementation libraries.legmanShiro
   implementation libraries.legmanMicrometer
 
+  // metrics
+  implementation libraries.micrometerExtra
+
   // lombok
   compileOnly libraries.lombok
   testCompileOnly libraries.lombok

@@ -173,6 +173,7 @@ ext {
     jerseyClientRuntime: "com.sun.jersey.contribs:jersey-apache-client:${jerseyClientVersion}",
 
     // metrics
-    micrometerCore: "io.micrometer:micrometer-core:${micrometerVersion}"
+    micrometerCore: "io.micrometer:micrometer-core:${micrometerVersion}",
+    micrometerExtra: "io.github.mweirauch:micrometer-jvm-extras:0.2.2"
   ]
 }

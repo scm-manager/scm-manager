@@ -26,13 +26,18 @@ package sonia.scm.metrics;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
+import io.github.mweirauch.micrometer.jvm.extras.ProcessMemoryMetrics;
+import io.github.mweirauch.micrometer.jvm.extras.ProcessThreadMetrics;
 import io.micrometer.core.instrument.Meter;
 import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.binder.jvm.ClassLoaderMetrics;
 import io.micrometer.core.instrument.binder.jvm.JvmGcMetrics;
 import io.micrometer.core.instrument.binder.jvm.JvmMemoryMetrics;
 import io.micrometer.core.instrument.binder.jvm.JvmThreadMetrics;
+import io.micrometer.core.instrument.binder.logging.LogbackMetrics;
+import io.micrometer.core.instrument.binder.system.FileDescriptorMetrics;
 import io.micrometer.core.instrument.binder.system.ProcessorMetrics;
+import io.micrometer.core.instrument.binder.system.UptimeMetrics;
 import io.micrometer.core.instrument.composite.CompositeMeterRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -103,12 +108,19 @@ public class MeterRegistryProvider implements Provider<MeterRegistry> {
     return staticRegistry;
   }
 
-  @SuppressWarnings("java:S2095") // we can't close JvmGcMetrics, but it should be ok
+  @SuppressWarnings("java:S2095") // we can't close, but it should be ok
   private void bindCommonMetrics(MeterRegistry registry) {
+    // bind all metrics for https://grafana.com/grafana/dashboards/4701
+    // expect those for tomcat
     new ClassLoaderMetrics().bindTo(registry);
     new JvmMemoryMetrics().bindTo(registry);
     new JvmGcMetrics().bindTo(registry);
     new ProcessorMetrics().bindTo(registry);
     new JvmThreadMetrics().bindTo(registry);
+    new UptimeMetrics().bindTo(registry);
+    new FileDescriptorMetrics().bindTo(registry);
+    new ProcessMemoryMetrics().bindTo(registry);
+    new ProcessThreadMetrics().bindTo(registry);
+    new LogbackMetrics().bindTo(registry);
   }
 }
