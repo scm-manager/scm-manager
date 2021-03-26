@@ -1,2 +1,0 @@
-- type: fixed
-  description: Do not show repositories on overview for not existing namespace ([#1608](https://github.com/scm-manager/scm-manager/pull/1608))

@@ -1,2 +1,0 @@
-- type: changed
-  description: Show "CUSTOM" name instead empty entry for permission roles ([#1597](https://github.com/scm-manager/scm-manager/pull/1597))

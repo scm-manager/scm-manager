@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.16.0] - 2021-03-26
+### Added
+- Metrics for http requests ([#1586](https://github.com/scm-manager/scm-manager/issues/1586))
+- Metrics for executor services ([#1586](https://github.com/scm-manager/scm-manager/issues/1586))
+- Metrics about logging, file descriptors, process threads and process memory ([#1609](https://github.com/scm-manager/scm-manager/pull/1609))
+- Metrics for events ([#1601](https://github.com/scm-manager/scm-manager/pull/1601))
+- Authentication and access metrics ([#1595](https://github.com/scm-manager/scm-manager/pull/1595))
+- Adds metrics over lifetime duration of working copies ([#1591](https://github.com/scm-manager/scm-manager/pull/1591))
+- Collect guava caching statistics as metrics ([#1590](https://github.com/scm-manager/scm-manager/pull/1590))
+- Add global flag to enable/disable api keys ([#1606](https://github.com/scm-manager/scm-manager/pull/1606))
+
+### Fixed
+- Adjust path and filename validation to prevent path traversal ([#1604](https://github.com/scm-manager/scm-manager/pull/1604))
+- Wrong subject context for asynchronous subscriber ([#1601](https://github.com/scm-manager/scm-manager/pull/1601))
+- Fix repository creation route from repository namespace overview page ([#1602](https://github.com/scm-manager/scm-manager/pull/1602))
+- external nav links now correctly collapse when used in a menu ([#1596](https://github.com/scm-manager/scm-manager/pull/1596))
+- Response with exception stack trace for invalid urls ([#1605](https://github.com/scm-manager/scm-manager/pull/1605))
+- Do not show repositories on overview for not existing namespace ([#1608](https://github.com/scm-manager/scm-manager/pull/1608))
+
+### Changed
+- Show "CUSTOM" name instead empty entry for permission roles ([#1597](https://github.com/scm-manager/scm-manager/pull/1597))
+- Improve error messages for invalid media types ([#1607](https://github.com/scm-manager/scm-manager/pull/1607))
+- Allow all UTF-8 characters except URL identifiers as user and group names and for namespaces. ([#1600](https://github.com/scm-manager/scm-manager/pull/1600))
+
 ## [2.15.1] - 2021-03-17
 ### Fixed
 - Encode revision on extension points to fix breaking change ([#1585](https://github.com/scm-manager/scm-manager/pull/1585))
@@ -555,3 +579,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.14.1]: https://www.scm-manager.org/download/2.14.1
 [2.15.0]: https://www.scm-manager.org/download/2.15.0
 [2.15.1]: https://www.scm-manager.org/download/2.15.1
+[2.16.0]: https://www.scm-manager.org/download/2.16.0
