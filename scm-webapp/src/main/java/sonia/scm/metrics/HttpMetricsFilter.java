@@ -47,7 +47,7 @@ import java.io.IOException;
 @Priority(Filters.PRIORITY_PRE_BASEURL)
 public class HttpMetricsFilter extends HttpFilter {
 
-  static final String METRIC_DURATION = "scm.http.requests";
+  static final String METRIC_DURATION = "http.server.requests";
 
   private final HttpServletRequestTagsProvider tagsProvider = new DefaultHttpServletRequestTagsProvider();
 

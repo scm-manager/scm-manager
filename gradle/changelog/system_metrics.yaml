@@ -1,0 +1,2 @@
+- type: added
+  description: Metrics about logging, file descriptors, process threads and process memory ([#1609](https://github.com/scm-manager/scm-manager/pull/1609))
