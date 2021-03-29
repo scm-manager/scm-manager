@@ -55824,7 +55824,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
       className="CardColumn__AvatarWrapper-sc-1w6lsih-1 lhzEPm media-left"
     >
       <p
-        className="image is-64x64"
+        className="RepositoryAvatar__Avatar-uh53vb-0 igMDhE image is-64x64"
       >
         <img
           alt="Logo"
@@ -55975,7 +55975,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
       className="CardColumn__AvatarWrapper-sc-1w6lsih-1 lhzEPm media-left"
     >
       <p
-        className="image is-64x64"
+        className="RepositoryAvatar__Avatar-uh53vb-0 igMDhE image is-64x64"
       >
         <img
           alt="Logo"
@@ -56120,7 +56120,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
       className="CardColumn__AvatarWrapper-sc-1w6lsih-1 lhzEPm media-left"
     >
       <p
-        className="image is-64x64"
+        className="RepositoryAvatar__Avatar-uh53vb-0 igMDhE image is-64x64"
       >
         <img
           alt="Logo"
@@ -56268,7 +56268,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
       className="CardColumn__AvatarWrapper-sc-1w6lsih-1 lhzEPm media-left"
     >
       <p
-        className="image is-64x64"
+        className="RepositoryAvatar__Avatar-uh53vb-0 igMDhE image is-64x64"
       >
         <img
           alt="Logo"
@@ -56413,7 +56413,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
       className="CardColumn__AvatarWrapper-sc-1w6lsih-1 lhzEPm media-left"
     >
       <p
-        className="image is-64x64"
+        className="RepositoryAvatar__Avatar-uh53vb-0 igMDhE image is-64x64"
       >
         <img
           alt="Logo"
@@ -56564,7 +56564,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
       className="CardColumn__AvatarWrapper-sc-1w6lsih-1 lhzEPm media-left"
     >
       <p
-        className="image is-64x64"
+        className="RepositoryAvatar__Avatar-uh53vb-0 igMDhE image is-64x64"
       >
         <img
           alt="Logo"
@@ -56721,7 +56721,7 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
       className="CardColumn__AvatarWrapper-sc-1w6lsih-1 lhzEPm media-left"
     >
       <p
-        className="image is-64x64"
+        className="RepositoryAvatar__Avatar-uh53vb-0 igMDhE image is-64x64"
       >
         <img
           alt="Logo"

@@ -33,6 +33,7 @@ The following extension points are provided for the frontend:
 ### profile.route
 ### profile.setting
 ### repo-config.route
+### repo-config.details
 ### repos.branch-details.information
 ### repos.content.metadata
 - Location: At meta data view for file
@@ -52,7 +53,6 @@ The following extension points are provided for the frontend:
 ### repos.repository-details.information
 - Location: At bottom of a single repository view
 - can be used to show detailed information about the repository (how to clone, e.g.)
-
 ### repos.sources.view
 ### roles.route
 ### user.route
