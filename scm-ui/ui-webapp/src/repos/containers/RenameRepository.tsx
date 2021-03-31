@@ -72,7 +72,7 @@ const RenameRepository: FC<Props> = ({ repository, indexLinks }) => {
     (repository.name !== name || repository.namespace !== namespace);
 
   const handleNamespaceChange = (namespace: string) => {
-    setNamespaceValidationError(!validator.isNameValid(namespace));
+    setNamespaceValidationError(!validator.isNamespaceValid(namespace));
     setNamespace(namespace);
   };
 
