@@ -25,13 +25,14 @@ import React, { FC } from "react";
 import Main from "./Main";
 import { useTranslation } from "react-i18next";
 import { ErrorPage, Footer, Header, Loading, PrimaryNavigation } from "@scm-manager/ui-components";
+import { binder } from "@scm-manager/ui-extensions";
 import Login from "./Login";
-import { useSubject, useIndex } from "@scm-manager/ui-api";
+import { useIndex, useSubject } from "@scm-manager/ui-api";
 import Notifications from "./Notifications";
 
 const App: FC = () => {
-  const { data: index } = useIndex();
-  const { isLoading, error, isAuthenticated, isAnonymous, me } = useSubject();
+  const {data: index} = useIndex();
+  const {isLoading, error, isAuthenticated, isAnonymous, me} = useSubject();
   const [t] = useTranslation("commons");
 
   if (!index) {
@@ -43,7 +44,11 @@ const App: FC = () => {
   // authenticated means authorized, we stick on authenticated for compatibility reasons
   const authenticated = isAuthenticated || isAnonymous;
 
-  if (!authenticated && !isLoading) {
+  if (index?.initialization) {
+    const Extension = binder.getExtension(`initialization.step.${index.initialization}`);
+    content = <Extension data={index._embedded[index.initialization]} />;
+    // content = <div>{index.initialization}</div>;
+  } else if (!authenticated && !isLoading) {
     content = <Login />;
   } else if (isLoading) {
     content = <Loading />;

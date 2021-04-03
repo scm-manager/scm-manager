@@ -34,6 +34,8 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupPermissions;
+import sonia.scm.initialization.InitializationFinisher;
+import sonia.scm.initialization.InitializationStep;
 import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.Authentications;
@@ -52,79 +54,90 @@ public class IndexDtoGenerator extends HalAppenderMapper {
   private final ResourceLinks resourceLinks;
   private final SCMContextProvider scmContextProvider;
   private final ScmConfiguration configuration;
+  private final InitializationFinisher initializationFinisher;
 
   @Inject
-  public IndexDtoGenerator(ResourceLinks resourceLinks, SCMContextProvider scmContextProvider, ScmConfiguration configuration) {
+  public IndexDtoGenerator(ResourceLinks resourceLinks, SCMContextProvider scmContextProvider, ScmConfiguration configuration, InitializationFinisher initializationFinisher) {
     this.resourceLinks = resourceLinks;
     this.scmContextProvider = scmContextProvider;
     this.configuration = configuration;
+    this.initializationFinisher = initializationFinisher;
   }
 
   public IndexDto generate() {
     Links.Builder builder = Links.linkingTo();
+    Embedded.Builder embeddedBuilder = embeddedBuilder();
+
     List<Link> autoCompleteLinks = Lists.newArrayList();
     builder.self(resourceLinks.index().self());
     builder.single(link("uiPlugins", resourceLinks.uiPluginCollection().self()));
 
-    String loginInfoUrl = configuration.getLoginInfoUrl();
-    if (!Strings.isNullOrEmpty(loginInfoUrl)) {
-      builder.single(link("loginInfo", loginInfoUrl));
-    }
-
-    if (shouldAppendSubjectRelatedLinks()) {
-      builder.single(link("me", resourceLinks.me().self()));
-
-      if (Authentications.isAuthenticatedSubjectAnonymous()) {
-        builder.single(link("login", resourceLinks.authentication().jsonLogin()));
-      } else {
-        builder.single(link("logout", resourceLinks.authentication().logout()));
+    if (initializationFinisher.isFullyInitialized()) {
+      String loginInfoUrl = configuration.getLoginInfoUrl();
+      if (!Strings.isNullOrEmpty(loginInfoUrl)) {
+        builder.single(link("loginInfo", loginInfoUrl));
       }
 
-      if (PluginPermissions.read().isPermitted()) {
-        builder.single(link("installedPlugins", resourceLinks.installedPluginCollection().self()));
-        builder.single(link("availablePlugins", resourceLinks.availablePluginCollection().self()));
-      }
-      if (PluginPermissions.write().isPermitted()) {
-        builder.single(link("pendingPlugins", resourceLinks.pendingPluginCollection().self()));
-      }
-      if (UserPermissions.list().isPermitted()) {
-        builder.single(link("users", resourceLinks.userCollection().self()));
-      }
-      if (UserPermissions.autocomplete().isPermitted()) {
-        autoCompleteLinks.add(Link.linkBuilder("autocomplete", resourceLinks.autoComplete().users()).withName("users").build());
-      }
-      if (GroupPermissions.autocomplete().isPermitted()) {
-        autoCompleteLinks.add(Link.linkBuilder("autocomplete", resourceLinks.autoComplete().groups()).withName("groups").build());
-      }
-      builder.array(autoCompleteLinks);
-      if (GroupPermissions.list().isPermitted()) {
-        builder.single(link("groups", resourceLinks.groupCollection().self()));
-      }
-      if (ConfigurationPermissions.list().isPermitted()) {
-        builder.single(link("config", resourceLinks.config().self()));
-        if (!Strings.isNullOrEmpty(configuration.getReleaseFeedUrl())) {
-          builder.single(link("updateInfo", resourceLinks.adminInfo().updateInfo()));
+      if (shouldAppendSubjectRelatedLinks()) {
+        builder.single(link("me", resourceLinks.me().self()));
+
+        if (Authentications.isAuthenticatedSubjectAnonymous()) {
+          builder.single(link("login", resourceLinks.authentication().jsonLogin()));
+        } else {
+          builder.single(link("logout", resourceLinks.authentication().logout()));
         }
-      }
-      builder.single(link("repositories", resourceLinks.repositoryCollection().self()));
-      builder.single(link("namespaces", resourceLinks.namespaceCollection().self()));
-      if (PermissionPermissions.list().isPermitted()) {
-        builder.single(link("permissions", resourceLinks.permissions().self()));
-      }
-      builder.single(link("repositoryVerbs", resourceLinks.repositoryVerbs().self()));
 
-      builder.single(link("repositoryTypes", resourceLinks.repositoryTypeCollection().self()));
-      builder.single(link("namespaceStrategies", resourceLinks.namespaceStrategies().self()));
-      builder.single(link("repositoryRoles", resourceLinks.repositoryRoleCollection().self()));
-      builder.single(link("importLog", resourceLinks.repository().importLog("IMPORT_LOG_ID").replace("IMPORT_LOG_ID", "{logId}")));
+        if (PluginPermissions.read().isPermitted()) {
+          builder.single(link("installedPlugins", resourceLinks.installedPluginCollection().self()));
+          builder.single(link("availablePlugins", resourceLinks.availablePluginCollection().self()));
+        }
+        if (PluginPermissions.write().isPermitted()) {
+          builder.single(link("pendingPlugins", resourceLinks.pendingPluginCollection().self()));
+        }
+        if (UserPermissions.list().isPermitted()) {
+          builder.single(link("users", resourceLinks.userCollection().self()));
+        }
+        if (UserPermissions.autocomplete().isPermitted()) {
+          autoCompleteLinks.add(Link.linkBuilder("autocomplete", resourceLinks.autoComplete().users()).withName("users").build());
+        }
+        if (GroupPermissions.autocomplete().isPermitted()) {
+          autoCompleteLinks.add(Link.linkBuilder("autocomplete", resourceLinks.autoComplete().groups()).withName("groups").build());
+        }
+        builder.array(autoCompleteLinks);
+        if (GroupPermissions.list().isPermitted()) {
+          builder.single(link("groups", resourceLinks.groupCollection().self()));
+        }
+        if (ConfigurationPermissions.list().isPermitted()) {
+          builder.single(link("config", resourceLinks.config().self()));
+          if (!Strings.isNullOrEmpty(configuration.getReleaseFeedUrl())) {
+            builder.single(link("updateInfo", resourceLinks.adminInfo().updateInfo()));
+          }
+        }
+        builder.single(link("repositories", resourceLinks.repositoryCollection().self()));
+        builder.single(link("namespaces", resourceLinks.namespaceCollection().self()));
+        if (PermissionPermissions.list().isPermitted()) {
+          builder.single(link("permissions", resourceLinks.permissions().self()));
+        }
+        builder.single(link("repositoryVerbs", resourceLinks.repositoryVerbs().self()));
+
+        builder.single(link("repositoryTypes", resourceLinks.repositoryTypeCollection().self()));
+        builder.single(link("namespaceStrategies", resourceLinks.namespaceStrategies().self()));
+        builder.single(link("repositoryRoles", resourceLinks.repositoryRoleCollection().self()));
+        builder.single(link("importLog", resourceLinks.repository().importLog("IMPORT_LOG_ID").replace("IMPORT_LOG_ID", "{logId}")));
+      } else {
+        builder.single(link("login", resourceLinks.authentication().jsonLogin()));
+      }
+
+      applyEnrichers(new EdisonHalAppender(builder, embeddedBuilder), new Index());
+      return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion());
     } else {
-      builder.single(link("login", resourceLinks.authentication().jsonLogin()));
+      Links.Builder initializationLinkBuilder = Links.linkingTo();
+      Embedded.Builder initializationEmbeddedBuilder = embeddedBuilder();
+      InitializationStep initializationStep = initializationFinisher.missingInitialization();
+      initializationStep.setupIndex(initializationLinkBuilder, initializationEmbeddedBuilder);
+      embeddedBuilder.with(initializationStep.name(), new InitializationDto(initializationLinkBuilder.build(), initializationEmbeddedBuilder.build()));
+      return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion(), initializationStep.name());
     }
-
-    Embedded.Builder embeddedBuilder = embeddedBuilder();
-    applyEnrichers(new EdisonHalAppender(builder, embeddedBuilder), new Index());
-
-    return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion());
   }
 
   private boolean shouldAppendSubjectRelatedLinks() {

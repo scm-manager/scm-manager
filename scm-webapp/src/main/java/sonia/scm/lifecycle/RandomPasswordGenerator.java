@@ -22,10 +22,12 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+package sonia.scm.lifecycle;
 
-export type IndexResources = {
-  version: string;
-  initialization?: string;
-  _links: Links;
-};
+import org.apache.commons.lang3.RandomStringUtils;
+
+final class RandomPasswordGenerator {
+  String createRandomPassword() {
+    return RandomStringUtils.random(20, true, true);
+  }
+}

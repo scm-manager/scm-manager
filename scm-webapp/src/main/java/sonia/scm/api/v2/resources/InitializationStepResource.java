@@ -22,10 +22,11 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+package sonia.scm.api.v2.resources;
 
-export type IndexResources = {
-  version: string;
-  initialization?: string;
-  _links: Links;
-};
+import sonia.scm.plugin.ExtensionPoint;
+
+@ExtensionPoint
+public interface InitializationStepResource {
+  String name();
+}

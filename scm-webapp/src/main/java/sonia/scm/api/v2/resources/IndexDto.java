@@ -21,9 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreType;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Links;
@@ -34,8 +37,16 @@ public class IndexDto extends HalRepresentation {
 
   private final String version;
 
+  @JsonInclude(JsonInclude.Include.NON_EMPTY)
+  private final String initialization;
+
   IndexDto(Links links, Embedded embedded, String version) {
+    this(links, embedded, version, null);
+  }
+
+  IndexDto(Links links, Embedded embedded, String version, String initialization) {
     super(links, embedded);
     this.version = version;
+    this.initialization = initialization;
   }
 }

@@ -22,10 +22,37 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+package sonia.scm.initialization;
 
-export type IndexResources = {
-  version: string;
-  initialization?: string;
-  _links: Links;
-};
+import sonia.scm.EagerSingleton;
+
+import javax.inject.Inject;
+import java.util.List;
+import java.util.Set;
+
+import static java.util.Comparator.comparing;
+import static java.util.stream.Collectors.toList;
+
+@EagerSingleton
+public class DefaultInitializationFinisher implements InitializationFinisher {
+
+  private final List<InitializationStep> steps;
+
+  @Inject
+  public DefaultInitializationFinisher(Set<InitializationStep> steps) {
+    this.steps = steps.stream().sorted(comparing(InitializationStep::sequence)).collect(toList());
+  }
+
+  @Override
+  public boolean isFullyInitialized() {
+    return steps.stream().allMatch(InitializationStep::done);
+  }
+
+  @Override
+  public InitializationStep missingInitialization() {
+    return steps
+      .stream()
+      .filter(step -> !step.done()).findFirst()
+      .orElseThrow(() -> new IllegalStateException("all steps initialized"));
+  }
+}

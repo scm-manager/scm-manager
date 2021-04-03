@@ -1,0 +1,12 @@
+{
+  "title": "Finish Initialization",
+  "adminStep": {
+    "title": "Administration Account",
+    "description": "Get the initial token from the log to create your new administration user account.",
+    "startupKey-placeholder": "startup key",
+    "username-placeholder": "admin username",
+    "password-placeholder": "admin password",
+    "password-confirmation-placeholder": "password confirmation",
+    "submit": "Submit"
+  }
+}
