@@ -23,7 +23,7 @@
  */
 import React, { FC, useState } from "react";
 import App from "./App";
-import { ErrorBoundary, Loading } from "@scm-manager/ui-components";
+import { ErrorBoundary, Loading, Header } from "@scm-manager/ui-components";
 import PluginLoader from "./PluginLoader";
 import ScrollToTop from "./ScrollToTop";
 import IndexErrorPage from "./IndexErrorPage";
@@ -37,7 +37,12 @@ const Index: FC = () => {
   // TODO check componentDidUpdate method for anonymous user stuff
 
   if (error) {
-    return <IndexErrorPage error={error} />;
+    return (
+      <>
+        <Header />
+        <IndexErrorPage error={error} />
+      </>
+    );
   }
   if (isLoading || !data) {
     return <Loading />;
