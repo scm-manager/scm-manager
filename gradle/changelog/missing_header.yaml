@@ -1,0 +1,2 @@
+- type: fixed
+  description: Add header to toplevel error boundary ([#1613](https://github.com/scm-manager/scm-manager/pull/1613))
