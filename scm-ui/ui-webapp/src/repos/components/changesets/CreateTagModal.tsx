@@ -79,7 +79,7 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
           validationError={!!validationError}
           errorMessage={t(validationError)}
         />
-        <div className="mt-6">{t("tags.create.hint")}</div>
+        <div className="mt-5">{t("tags.create.hint")}</div>
       </>
     );
   }
@@ -91,15 +91,15 @@ const CreateTagModal: FC<Props> = ({ repository, changeset, onClose }) => {
       body={body}
       footer={
         <>
-          <Button action={onClose}>{t("tags.create.cancel")}</Button>
           <Button
-            color="success"
+            color="primary"
             action={() => create(newTagName)}
             loading={isLoadingCreate}
             disabled={isLoading || isLoadingCreate || !!validationError || newTagName.length === 0}
           >
             {t("tags.create.confirm")}
           </Button>
+          <Button action={onClose}>{t("tags.create.cancel")}</Button>
         </>
       }
       closeFunction={onClose}

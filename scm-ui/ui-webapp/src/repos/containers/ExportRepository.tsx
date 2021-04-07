@@ -158,7 +158,7 @@ const ExportRepository: FC<Props> = ({ repository }) => {
       <Level
         right={
           <ButtonGroup>
-            <a color="info" href={(exportInfo?._links.download as Link)?.href}>
+            <a href={(exportInfo?._links.download as Link)?.href}>
               <Button
                 color="info"
                 disabled={isLoadingInfo || isLoadingExport || !exportInfo?._links.download}

@@ -1238,8 +1238,36 @@
       <br>
       <h4 class="subtitle is-5">Button Group</h4>
       <div class="field is-grouped">
-        <p class="control"><a class="button is-default">Cancel</a></p>
-        <p class="control"><a class="button is-primary">Submit</a></p>
+        <div class="control">
+          <button type="button" disabled="" class="button is-info">
+            <span class="icon is-medium"><i class="fas fa-download has-text-inherit"></i></span>
+            <span>Download Export </span>
+          </button>
+        </div>
+        <div class="control">
+          <button type="button" class="button is-primary">
+            <span class="icon is-medium"><i class="fas fa-file-export has-text-inherit"></i></span>
+            <span>Create new Export </span>
+          </button>
+        </div>
+      </div>
+
+      <div class="field is-grouped">
+        <div class="control">
+          <span class="tooltip has-tooltip-top" data-tooltip="Switch to side-by-side view">
+            <a aria-label="Switch to side-by-side view" class="button" style="width: 50px; cursor: pointer;"><i class="fas fa-columns"></i></a>
+          </span>
+        </div>
+        <div class="control">
+          <span class="tooltip has-tooltip-top" data-tooltip="Open in Fullscreen">
+            <a class="button" style="width: 50px; cursor: pointer;"><i class="fas fa-search-plus"></i></a>
+          </span>
+        </div>
+        <div class="control">
+          <span class="tooltip has-tooltip-top" data-tooltip="Jump to source file">
+            <a aria-label="Jump to source file" class="button" style="width: 50px; cursor: pointer;"><i class="fas fa-file-code has-text-inherit"></i></a>
+          </span>
+        </div>
       </div>
     </div>
     <div class="sg-sub-section">
@@ -1694,7 +1722,7 @@
           <label class="checkbox">
             <span tabindex="0" class="gwt-Anchor"><i class="is-outlined fa-minus-square has-text-link far"></i> </span>
             Indeterminate
-            </label>
+          </label>
         </div>
       </div>
     </div>
@@ -2160,8 +2188,9 @@
             class <code>.modal-card</code> to ensure a constant layout.
           </li>
           <li>Buttons inside the modals should use the standard button formats.</li>
-          <li>Normal modals have a gray header. Otherwise the main colors with 25-75% opacity should be used.</li>
+          <li>If a modal footer contains two action buttons, the critical one should be on the left. In addition, they should differ in color.</li>
           <li>Modals without actions do not require a footer.</li>
+          <li>Normal modals have a gray header. Otherwise the main colors with 25-75% opacity should be used.</li>
         </ul>
       </div>
       <div class="modal-card"
@@ -2174,7 +2203,7 @@
         <footer class="modal-card-foot">
           <div class="field is-grouped">
             <p class="control">
-              <button class="button is-info">Yes</button>
+              <button class="button is-info is-outlined">Yes</button>
             </p>
             <p class="control">
               <button class="button is-info">No</button>

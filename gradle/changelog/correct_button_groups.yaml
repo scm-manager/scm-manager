@@ -1,0 +1,2 @@
+- type: fixed
+  description: Correct positioning and coloring of button groups in modals ([#1612](https://github.com/scm-manager/scm-manager/pull/1612))
