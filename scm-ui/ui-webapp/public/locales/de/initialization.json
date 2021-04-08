@@ -1,12 +1,14 @@
 {
-  "title": "Abschluss der Initializierung",
+  "title": "Abschluss der Initialisierung",
   "adminStep": {
     "title": "Administrations Zugang",
-    "description": "Der initiale Token findet sich im Log.",
-    "startupKey-placeholder": "Zugangsschlüssel",
-    "username-placeholder": "Administrator Benutzer",
-    "password-placeholder": "Administrator Passwort",
-    "password-confirmation-placeholder": "Passwort Bestätigung",
+    "description": "Der Token zur Erstellung des Administrationszugangs findet sich im Log.",
+    "startupToken": "Start-Token",
+    "username": "Administrator Benutzername",
+    "displayname": "Administrator Anzeigename",
+    "email": "E-Mail",
+    "password": "Administrator Passwort",
+    "password-confirmation": "Passwort Bestätigung",
     "submit": "Absenden"
   }
 }

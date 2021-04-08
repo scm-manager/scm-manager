@@ -70,6 +70,8 @@ public class AdminAccountStartupResource implements InitializationStepResource {
     }
 
     String userName = data.get("userName").asText();
+    String displayName = data.get("displayName").asText();
+    String email = data.get("email").asText();
     String password = data.get("password").asText();
     String passwordConfirmation = data.get("passwordConfirmation").asText();
 
@@ -77,7 +79,7 @@ public class AdminAccountStartupResource implements InitializationStepResource {
       .violation("password and confirmation differ", "password")
       .when(!password.equals(passwordConfirmation));
 
-    adminAccountStartupAction.createAdminUser(userName, password);
+    adminAccountStartupAction.createAdminUser(userName, displayName, email, password);
   }
 
   @Override

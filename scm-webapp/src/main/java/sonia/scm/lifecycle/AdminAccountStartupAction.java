@@ -80,7 +80,7 @@ public class AdminAccountStartupAction implements InitializationStep {
   private boolean adminUserCreatedWithGivenPassword() {
     String initialPasswordByProperty = System.getProperty(INITIAL_PASSWORD_PROPERTY);
     if (initialPasswordByProperty != null) {
-      createAdminUser("scmadmin", initialPasswordByProperty);
+      createAdminUser("scmadmin", "SCM Administrator", "scm-admin@scm-manager.org", initialPasswordByProperty);
       LOG.info("=================================================");
       LOG.info("==                                             ==");
       LOG.info("== Created user 'scmadmin' with given password ==");
@@ -107,8 +107,8 @@ public class AdminAccountStartupAction implements InitializationStep {
     return initialToken == null;
   }
 
-  public void createAdminUser(String userName, String password) {
-    User admin = new User(userName, "SCM Administrator", "scm-admin@scm-manager.org");
+  public void createAdminUser(String userName, String displayName, String email, String password) {
+    User admin = new User(userName, displayName, email);
     String encryptedPassword = passwordService.encryptPassword(password);
     admin.setPassword(encryptedPassword);
     doThrow().violation("invalid user name").when(!admin.isValid());
@@ -124,7 +124,7 @@ public class AdminAccountStartupAction implements InitializationStep {
     initialToken = randomPasswordGenerator.createRandomPassword();
     LOG.warn("====================================================");
     LOG.warn("==                                                ==");
-    LOG.warn("==     Random token for initial user creation     ==");
+    LOG.warn("==    Startup token for initial user creation     ==");
     LOG.warn("==                                                ==");
     LOG.warn("==              {}              ==", initialToken);
     LOG.warn("==                                                ==");
