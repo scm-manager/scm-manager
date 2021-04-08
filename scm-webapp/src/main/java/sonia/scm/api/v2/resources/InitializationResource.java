@@ -25,6 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import sonia.scm.initialization.InitializationStep;
+import sonia.scm.initialization.InitializationStepResource;
 
 import javax.inject.Inject;
 import javax.ws.rs.Path;

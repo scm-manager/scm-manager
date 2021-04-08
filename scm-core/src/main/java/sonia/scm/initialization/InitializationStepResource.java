@@ -22,11 +22,15 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.initialization;
 
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.Links;
 import sonia.scm.plugin.ExtensionPoint;
 
 @ExtensionPoint
 public interface InitializationStepResource {
   String name();
+
+  void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder);
 }

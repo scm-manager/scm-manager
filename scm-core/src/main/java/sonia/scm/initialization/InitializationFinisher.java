@@ -24,12 +24,11 @@
 
 package sonia.scm.initialization;
 
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.Links;
-
 public interface InitializationFinisher {
 
   boolean isFullyInitialized();
 
   InitializationStep missingInitialization();
+
+  InitializationStepResource getResource(String name);
 }

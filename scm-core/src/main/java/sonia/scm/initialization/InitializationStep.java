@@ -24,8 +24,6 @@
 
 package sonia.scm.initialization;
 
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.Links;
 import sonia.scm.plugin.ExtensionPoint;
 
 @ExtensionPoint
@@ -36,6 +34,4 @@ public interface InitializationStep {
   int sequence();
 
   boolean done();
-
-  void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder);
 }

@@ -25,16 +25,21 @@
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.Links;
 import org.apache.shiro.authz.AuthorizationException;
+import sonia.scm.initialization.InitializationStepResource;
 import sonia.scm.lifecycle.AdminAccountStartupAction;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.AllowAnonymousAccess;
 
 import javax.inject.Inject;
+import javax.inject.Provider;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 
+import static de.otto.edison.hal.Link.link;
 import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 @AllowAnonymousAccess
@@ -42,10 +47,12 @@ import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 public class AdminAccountStartupResource implements InitializationStepResource {
 
   private final AdminAccountStartupAction adminAccountStartupAction;
+  private final Provider<ScmPathInfoStore> scmPathInfoStore;
 
   @Inject
-  public AdminAccountStartupResource(AdminAccountStartupAction adminAccountStartupAction) {
+  public AdminAccountStartupResource(AdminAccountStartupAction adminAccountStartupAction, Provider<ScmPathInfoStore> scmPathInfoStore) {
     this.adminAccountStartupAction = adminAccountStartupAction;
+    this.scmPathInfoStore = scmPathInfoStore;
   }
 
   @POST
@@ -73,6 +80,17 @@ public class AdminAccountStartupResource implements InitializationStepResource {
     adminAccountStartupAction.createAdminUser(userName, password);
   }
 
+  @Override
+  public void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder) {
+    String link =
+      new LinkBuilder(scmPathInfoStore.get().get(), InitializationResource.class, AdminAccountStartupResource.class)
+        .method("step").parameters(name())
+        .method("post").parameters()
+        .href();
+    builder.single(link("initialAdminUser", link));
+  }
+
+  @Override
   public String name() {
     return adminAccountStartupAction.name();
   }

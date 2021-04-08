@@ -28,19 +28,23 @@ import sonia.scm.EagerSingleton;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import static java.util.Comparator.comparing;
 import static java.util.stream.Collectors.toList;
+import static java.util.stream.Collectors.toMap;
 
 @EagerSingleton
 public class DefaultInitializationFinisher implements InitializationFinisher {
 
   private final List<InitializationStep> steps;
+  private final Map<String, InitializationStepResource> resources;
 
   @Inject
-  public DefaultInitializationFinisher(Set<InitializationStep> steps) {
+  public DefaultInitializationFinisher(Set<InitializationStep> steps, Set<InitializationStepResource> resources) {
     this.steps = steps.stream().sorted(comparing(InitializationStep::sequence)).collect(toList());
+    this.resources = resources.stream().collect(toMap(InitializationStepResource::name, step -> step));
   }
 
   @Override
@@ -54,5 +58,10 @@ public class DefaultInitializationFinisher implements InitializationFinisher {
       .stream()
       .filter(step -> !step.done()).findFirst()
       .orElseThrow(() -> new IllegalStateException("all steps initialized"));
+  }
+
+  @Override
+  public InitializationStepResource getResource(String name) {
+    return resources.get(name);
   }
 }

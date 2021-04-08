@@ -134,7 +134,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       Links.Builder initializationLinkBuilder = Links.linkingTo();
       Embedded.Builder initializationEmbeddedBuilder = embeddedBuilder();
       InitializationStep initializationStep = initializationFinisher.missingInitialization();
-      initializationStep.setupIndex(initializationLinkBuilder, initializationEmbeddedBuilder);
+      initializationFinisher.getResource(initializationStep.name()).setupIndex(initializationLinkBuilder, initializationEmbeddedBuilder);
       embeddedBuilder.with(initializationStep.name(), new InitializationDto(initializationLinkBuilder.build(), initializationEmbeddedBuilder.build()));
       return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion(), initializationStep.name());
     }

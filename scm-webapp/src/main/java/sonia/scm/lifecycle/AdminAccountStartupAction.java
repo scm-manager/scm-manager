@@ -24,19 +24,10 @@
 
 package sonia.scm.lifecycle;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.Links;
 import org.apache.shiro.authc.credential.PasswordService;
-import org.apache.shiro.authz.AuthorizationException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
-import sonia.scm.api.v2.resources.AdminAccountStartupResource;
-import sonia.scm.api.v2.resources.InitializationResource;
-import sonia.scm.api.v2.resources.InitializationStepResource;
-import sonia.scm.api.v2.resources.LinkBuilder;
-import sonia.scm.api.v2.resources.ScmPathInfoStore;
 import sonia.scm.initialization.InitializationStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.PermissionAssigner;
@@ -46,11 +37,9 @@ import sonia.scm.user.UserManager;
 import sonia.scm.web.security.AdministrationContext;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
 import javax.inject.Singleton;
 import java.util.Collections;
 
-import static de.otto.edison.hal.Link.link;
 import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 @Extension
@@ -66,18 +55,16 @@ public class AdminAccountStartupAction implements InitializationStep {
   private final PermissionAssigner permissionAssigner;
   private final RandomPasswordGenerator randomPasswordGenerator;
   private final AdministrationContext context;
-  private final Provider<ScmPathInfoStore> scmPathInfoStore;
 
   private String initialToken;
 
   @Inject
-  public AdminAccountStartupAction(PasswordService passwordService, UserManager userManager, PermissionAssigner permissionAssigner, RandomPasswordGenerator randomPasswordGenerator, AdministrationContext context, Provider<ScmPathInfoStore> scmPathInfoStore) {
+  public AdminAccountStartupAction(PasswordService passwordService, UserManager userManager, PermissionAssigner permissionAssigner, RandomPasswordGenerator randomPasswordGenerator, AdministrationContext context) {
     this.passwordService = passwordService;
     this.userManager = userManager;
     this.permissionAssigner = permissionAssigner;
     this.randomPasswordGenerator = randomPasswordGenerator;
     this.context = context;
-    this.scmPathInfoStore = scmPathInfoStore;
 
     initialize(context);
   }
@@ -118,16 +105,6 @@ public class AdminAccountStartupAction implements InitializationStep {
   @Override
   public boolean done() {
     return initialToken == null;
-  }
-
-  @Override
-  public void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder) {
-    String link =
-      new LinkBuilder(scmPathInfoStore.get().get(), InitializationResource.class, AdminAccountStartupResource.class)
-        .method("step").parameters(name())
-        .method("post").parameters()
-        .href();
-    builder.single(link("initialAdminUser", link));
   }
 
   public void createAdminUser(String userName, String password) {
