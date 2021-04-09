@@ -24,17 +24,21 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
-import org.apache.shiro.authz.AuthorizationException;
+import lombok.Data;
+import org.apache.shiro.authz.UnauthenticatedException;
 import sonia.scm.initialization.InitializationStepResource;
 import sonia.scm.lifecycle.AdminAccountStartupAction;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.AllowAnonymousAccess;
+import sonia.scm.util.ValidationUtil;
 
 import javax.inject.Inject;
-import javax.inject.Provider;
+import javax.validation.Valid;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -47,33 +51,33 @@ import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 public class AdminAccountStartupResource implements InitializationStepResource {
 
   private final AdminAccountStartupAction adminAccountStartupAction;
-  private final Provider<ScmPathInfoStore> scmPathInfoStore;
+  private final ResourceLinks resourceLinks;
 
   @Inject
-  public AdminAccountStartupResource(AdminAccountStartupAction adminAccountStartupAction, Provider<ScmPathInfoStore> scmPathInfoStore) {
+  public AdminAccountStartupResource(AdminAccountStartupAction adminAccountStartupAction, ResourceLinks resourceLinks) {
     this.adminAccountStartupAction = adminAccountStartupAction;
-    this.scmPathInfoStore = scmPathInfoStore;
+    this.resourceLinks = resourceLinks;
   }
 
   @POST
   @Path("")
   @Consumes("application/json")
-  public void post(JsonNode data) {
+  public void post(@Valid AdminInitializationData data) {
     doThrow()
       .violation("initialization not necessary")
       .when(adminAccountStartupAction.done());
 
-    String givenInitialPassword = data.get("initialPassword").asText();
+    String givenStartupToken = data.getStartupToken();
 
-    if (!adminAccountStartupAction.isCorrectToken(givenInitialPassword)) {
-      throw new AuthorizationException("wrong password");
+    if (!adminAccountStartupAction.isCorrectToken(givenStartupToken)) {
+      throw new UnauthenticatedException("wrong password");
     }
 
-    String userName = data.get("userName").asText();
-    String displayName = data.get("displayName").asText();
-    String email = data.get("email").asText();
-    String password = data.get("password").asText();
-    String passwordConfirmation = data.get("passwordConfirmation").asText();
+    String userName = data.getUserName();
+    String displayName = data.getDisplayName();
+    String email = data.getEmail();
+    String password = data.getPassword();
+    String passwordConfirmation = data.getPasswordConfirmation();
 
     doThrow()
       .violation("password and confirmation differ", "password")
@@ -84,16 +88,28 @@ public class AdminAccountStartupResource implements InitializationStepResource {
 
   @Override
   public void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder) {
-    String link =
-      new LinkBuilder(scmPathInfoStore.get().get(), InitializationResource.class, AdminAccountStartupResource.class)
-        .method("step").parameters(name())
-        .method("post").parameters()
-        .href();
+    String link = resourceLinks.initialAdminAccount().indexLink(name());
     builder.single(link("initialAdminUser", link));
   }
 
   @Override
   public String name() {
     return adminAccountStartupAction.name();
+  }
+
+  @Data
+  static class AdminInitializationData {
+    @NotEmpty
+    private String startupToken;
+    @Pattern(regexp = ValidationUtil.REGEX_NAME)
+    private String userName;
+    @NotEmpty
+    private String displayName;
+    @Email
+    private String email;
+    @NotEmpty
+    private String password;
+    @NotEmpty
+    private String passwordConfirmation;
   }
 }

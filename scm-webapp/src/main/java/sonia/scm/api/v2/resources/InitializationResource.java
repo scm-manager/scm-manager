@@ -48,7 +48,7 @@ public class InitializationResource {
   @Path("{stepName}")
   public InitializationStepResource step(@PathParam("stepName") String stepName) {
     return steps.stream()
-      .filter(step -> step.name().equals(stepName))
+      .filter(step -> stepName.equals(step.name()))
       .findFirst()
       .orElseThrow(() -> notFound(entity(InitializationStep.class, stepName)));
   }

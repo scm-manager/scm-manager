@@ -26,20 +26,20 @@ import React, { FC, useState } from "react";
 import { apiClient, validation, ErrorNotification, InputField, SubmitButton } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
-import * as userValidator from "../users/components/userValidation";
-import { useMutation, useQueryClient } from "react-query";
+import { useMutation } from "react-query";
 import { isDisplayNameValid, isPasswordValid } from "../users/components/userValidation";
+import { Links } from "@scm-manager/ui-types";
 
 const HeroSection = styled.section`
   padding-top: 2em;
 `;
 
 type Props = {
-  data: any;
+  data: { _links: Links };
 };
 
 type AdminAccountCreation = {
-  initialPassword: string;
+  startupToken: string;
   userName: string;
   displayName: string;
   email: string;
@@ -122,7 +122,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
 
   const handleSubmit = () => {
     create({
-      initialPassword: startupKey,
+      startupToken: startupKey,
       userName,
       displayName,
       email,

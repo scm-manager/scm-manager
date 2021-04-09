@@ -48,7 +48,7 @@ public class AdminAccountStartupAction implements InitializationStep {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdminAccountStartupAction.class);
 
-  private static final String INITIAL_PASSWORD_PROPERTY = "scm.initialPassword";
+  private static final String INITIAL_PASSWORD_PROPERTY = "scm.startupToken";
 
   private final PasswordService passwordService;
   private final UserManager userManager;
@@ -72,15 +72,15 @@ public class AdminAccountStartupAction implements InitializationStep {
   private void initialize(AdministrationContext context) {
     context.runAsAdmin(() -> {
       if (shouldCreateAdminAccount() && !adminUserCreatedWithGivenPassword()) {
-        createInitialPassword();
+        createStartupToken();
       }
     });
   }
 
   private boolean adminUserCreatedWithGivenPassword() {
-    String initialPasswordByProperty = System.getProperty(INITIAL_PASSWORD_PROPERTY);
-    if (initialPasswordByProperty != null) {
-      createAdminUser("scmadmin", "SCM Administrator", "scm-admin@scm-manager.org", initialPasswordByProperty);
+    String startupTokenByProperty = System.getProperty(INITIAL_PASSWORD_PROPERTY);
+    if (startupTokenByProperty != null) {
+      createAdminUser("scmadmin", "SCM Administrator", "scm-admin@scm-manager.org", startupTokenByProperty);
       LOG.info("=================================================");
       LOG.info("==                                             ==");
       LOG.info("== Created user 'scmadmin' with given password ==");
@@ -120,7 +120,7 @@ public class AdminAccountStartupAction implements InitializationStep {
     });
   }
 
-  private void createInitialPassword() {
+  private void createStartupToken() {
     initialToken = randomPasswordGenerator.createRandomPassword();
     LOG.warn("====================================================");
     LOG.warn("==                                                ==");
@@ -139,7 +139,7 @@ public class AdminAccountStartupAction implements InitializationStep {
     return userManager.getAll().size() == 1 && userManager.contains(SCMContext.USER_ANONYMOUS);
   }
 
-  public boolean isCorrectToken(String givenInitialPassword) {
-    return initialToken.equals(givenInitialPassword);
+  public boolean isCorrectToken(String givenStartupToken) {
+    return initialToken.equals(givenStartupToken);
   }
 }
