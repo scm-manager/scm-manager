@@ -48,7 +48,7 @@ public class AdminAccountStartupAction implements InitializationStep {
 
   private static final Logger LOG = LoggerFactory.getLogger(AdminAccountStartupAction.class);
 
-  private static final String INITIAL_PASSWORD_PROPERTY = "scm.startupToken";
+  private static final String INITIAL_PASSWORD_PROPERTY = "scm.initialPassword";
 
   private final PasswordService passwordService;
   private final UserManager userManager;
@@ -66,11 +66,11 @@ public class AdminAccountStartupAction implements InitializationStep {
     this.randomPasswordGenerator = randomPasswordGenerator;
     this.context = context;
 
-    initialize(context);
+    initialize();
   }
 
-  private void initialize(AdministrationContext context) {
-    context.runAsAdmin(() -> {
+  private void initialize() {
+    context.runAsAdmin((PrivilegedStartupAction)() -> {
       if (shouldCreateAdminAccount() && !adminUserCreatedWithGivenPassword()) {
         createStartupToken();
       }
@@ -80,7 +80,8 @@ public class AdminAccountStartupAction implements InitializationStep {
   private boolean adminUserCreatedWithGivenPassword() {
     String startupTokenByProperty = System.getProperty(INITIAL_PASSWORD_PROPERTY);
     if (startupTokenByProperty != null) {
-      createAdminUser("scmadmin", "SCM Administrator", "scm-admin@scm-manager.org", startupTokenByProperty);
+      context.runAsAdmin((PrivilegedStartupAction) () ->
+        createAdminUser("scmadmin", "SCM Administrator", "scm-admin@scm-manager.org", startupTokenByProperty));
       LOG.info("=================================================");
       LOG.info("==                                             ==");
       LOG.info("== Created user 'scmadmin' with given password ==");
@@ -113,11 +114,9 @@ public class AdminAccountStartupAction implements InitializationStep {
     admin.setPassword(encryptedPassword);
     doThrow().violation("invalid user name").when(!admin.isValid());
     PermissionDescriptor descriptor = new PermissionDescriptor("*");
-    context.runAsAdmin(() -> {
-      userManager.create(admin);
-      permissionAssigner.setPermissionsForUser(userName, Collections.singleton(descriptor));
-      initialToken = null;
-    });
+    userManager.create(admin);
+    permissionAssigner.setPermissionsForUser(userName, Collections.singleton(descriptor));
+    initialToken = null;
   }
 
   private void createStartupToken() {

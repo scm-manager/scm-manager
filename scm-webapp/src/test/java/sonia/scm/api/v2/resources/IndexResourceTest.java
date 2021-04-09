@@ -34,6 +34,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.initialization.InitializationFinisher;
 import sonia.scm.initialization.InitializationStep;
+import sonia.scm.initialization.InitializationStepResource;
 
 import java.net.URI;
 import java.util.Optional;
@@ -64,6 +65,11 @@ public class IndexResourceTest {
 
       @Override
       public InitializationStep missingInitialization() {
+        return null;
+      }
+
+      @Override
+      public InitializationStepResource getResource(String name) {
         return null;
       }
     };
