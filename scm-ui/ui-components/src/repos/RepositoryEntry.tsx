@@ -177,7 +177,7 @@ class RepositoryEntry extends React.Component<Props, State> {
       repositoryFlags.push(<RepositoryTag title={t("exporting.tooltip")}>{t("repository.exporting")}</RepositoryTag>);
     }
 
-    if (repository.healthCheckFailures.length > 0) {
+    if (repository.healthCheckFailures && repository.healthCheckFailures.length > 0) {
       repositoryFlags.push(
         <RepositoryWarnTag
           title={t("healthCheckFailure.tooltip")}
@@ -204,12 +204,10 @@ class RepositoryEntry extends React.Component<Props, State> {
     const footerLeft = this.createFooterLeft(repository, repositoryLink);
     const footerRight = this.createFooterRight(repository, baseDate);
     const title = this.createTitle();
-    const { showHealthCheck } = this.state;
-
     const modal = (
       <HealthCheckFailureDetail
         closeFunction={() => this.setState({ showHealthCheck: false })}
-        active={showHealthCheck}
+        active={this.state.showHealthCheck}
         failures={repository.healthCheckFailures}
       />
     );

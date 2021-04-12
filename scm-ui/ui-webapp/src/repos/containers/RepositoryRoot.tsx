@@ -185,7 +185,7 @@ const RepositoryRoot = () => {
     );
   }
 
-  if (repository.healthCheckFailures.length > 0) {
+  if (repository.healthCheckFailures && repository.healthCheckFailures.length > 0) {
     repositoryFlags.push(
       <Tooltip message={t("healthCheckFailure.tooltip")}>
         <RepositoryWarnTag className="is-size-6" onClick={() => setShowHealthCheck(true)}>

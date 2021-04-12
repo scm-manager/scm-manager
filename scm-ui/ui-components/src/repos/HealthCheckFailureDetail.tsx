@@ -30,7 +30,7 @@ import { useTranslation } from "react-i18next";
 type Props = {
   active: boolean;
   closeFunction: () => void;
-  failures: HealthCheckFailure[];
+  failures?: HealthCheckFailure[];
 };
 
 const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }) => {
@@ -57,7 +57,7 @@ const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }
     );
   };
 
-  const failureComponents = failures.map(createFailureComponent);
+  const failureComponents = failures ? failures.map(createFailureComponent) : [];
 
   return (
     <Modal
