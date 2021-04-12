@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { useState } from "react";
 import { Redirect, Route, Link as RouteLink, Switch, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -30,6 +30,7 @@ import {
   CustomQueryFlexWrappedColumns,
   ErrorPage,
   FileControlFactory,
+  HealthCheckFailureDetail,
   JumpToFileButton,
   Loading,
   NavLink,
@@ -68,6 +69,15 @@ const RepositoryTag = styled.span`
   font-weight: bold;
 `;
 
+const RepositoryWarnTag = styled.span`
+  margin-left: 0.2rem;
+  background-color: red;
+  padding: 0.4rem;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+`;
+
 type UrlParams = {
   namespace: string;
   name: string;
@@ -86,6 +96,7 @@ const RepositoryRoot = () => {
   const match = useRouteMatch<UrlParams>();
   const { isLoading, error, repository } = useRepositoryFromUrl(match);
   const indexLinks = useIndexLinks();
+  const [showHealthCheck, setShowHealthCheck] = useState(false);
 
   const [t] = useTranslation("repos");
 
@@ -174,6 +185,16 @@ const RepositoryRoot = () => {
     );
   }
 
+  if (repository.healthCheckFailures.length > 0) {
+    repositoryFlags.push(
+      <Tooltip message={t("healthCheckFailure.tooltip")}>
+        <RepositoryWarnTag className="is-size-6" onClick={() => setShowHealthCheck(true)}>
+          {t("repository.healthCheckFailure")}
+        </RepositoryWarnTag>
+      </Tooltip>
+    );
+  }
+
   const titleComponent = (
     <>
       <RouteLink to={`/repos/${repository.namespace}/`} className={"has-text-dark"}>
@@ -221,6 +242,14 @@ const RepositoryRoot = () => {
     return `${url}/code/changesets`;
   };
 
+  const modal = (
+    <HealthCheckFailureDetail
+      closeFunction={() => setShowHealthCheck(false)}
+      active={showHealthCheck}
+      failures={repository.healthCheckFailures}
+    />
+  );
+
   return (
     <StateMenuContextProvider>
       <Page
@@ -233,6 +262,7 @@ const RepositoryRoot = () => {
           </>
         }
       >
+        {modal}
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
             <Switch>

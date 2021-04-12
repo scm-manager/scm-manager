@@ -8,7 +8,8 @@
     "creationDate": "Creation Date",
     "lastModified": "Last Modified",
     "archived": "archived",
-    "exporting": "exporting"
+    "exporting": "exporting",
+    "healthCheckFailure": "erroneous"
   },
   "validation": {
     "namespace-invalid": "The repository namespace is invalid",
@@ -434,6 +435,10 @@
   },
   "exporting": {
     "tooltip": "Read only. The repository is currently being exported."
+  },
+  "healthCheckFailure": {
+    "tooltip": "This repository has health check failures. Click to get details.",
+    "title": "Health Check Failures"
   },
   "diff": {
     "changes": {

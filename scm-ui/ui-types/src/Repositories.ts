@@ -29,10 +29,18 @@ export type NamespaceAndName = {
   name: string;
 };
 
+export type HealthCheckFailure = {
+  id: string;
+  description: string;
+  summary: string;
+  url: string;
+};
+
 export type RepositoryBase = NamespaceAndName & {
   type: string;
   contact?: string;
   description?: string;
+  healthCheckFailures: HealthCheckFailure[];
 };
 
 export type Repository = HalRepresentation &

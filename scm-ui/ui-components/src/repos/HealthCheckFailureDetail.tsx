@@ -22,15 +22,40 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+import React, { FC } from "react";
+import { Modal } from "../modals";
+import { HealthCheckFailure } from "@scm-manager/ui-types";
+import { useTranslation } from "react-i18next";
 
-import lombok.Getter;
-import lombok.Setter;
+type Props = {
+  active: boolean;
+  closeFunction: () => void;
+  failures: HealthCheckFailure[];
+};
 
-@Getter @Setter
-public class HealthCheckFailureDto {
-  private String id;
-  private String description;
-  private String summary;
-  private String url;
-}
+const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }) => {
+  const [t] = useTranslation("repos");
+
+  const failureComponents = failures.map(failure => (
+    <li>
+      <em>{failure.summary}</em>
+      <br />
+      {failure.description}
+    </li>
+  ));
+
+  return (
+    <Modal
+      body={
+        <div className={"content"}>
+          <ul>{failureComponents}</ul>
+        </div>
+      }
+      title={t("healthCheckFailure.title")}
+      closeFunction={closeFunction}
+      active={active}
+    />
+  );
+};
+
+export default HealthCheckFailureDetail;

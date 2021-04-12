@@ -8,7 +8,8 @@
     "creationDate": "Erstellt",
     "lastModified": "Zuletzt bearbeitet",
     "archived": "archiviert",
-    "exporting": "Wird exportiert"
+    "exporting": "Wird exportiert",
+    "healthCheckFailure": "fehlerhaft"
   },
   "validation": {
     "namespace-invalid": "Der Namespace des Repository ist ungültig",
@@ -434,6 +435,10 @@
   },
   "exporting": {
     "tooltip": "Nur lesender Zugriff möglich. Das Repository wird derzeit exportiert."
+  },
+  "healthCheckFailure": {
+    "tooltip": "Dieses Repository ist fehlerhaft. Für weitere Details bitte klicken.",
+    "title": "Fehler im Repository"
   },
   "diff": {
     "jumpToSource": "Zur Quelldatei springen",
