@@ -36,13 +36,28 @@ type Props = {
 const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }) => {
   const [t] = useTranslation("repos");
 
-  const failureComponents = failures.map(failure => (
-    <li>
-      <em>{failure.summary}</em>
-      <br />
-      {failure.description}
-    </li>
-  ));
+  const translationOrDefault = (translationKey: string, defaultValue: string) => {
+    const translation = t(translationKey);
+    if (translation === translationKey) {
+      return defaultValue;
+    } else {
+      return translation;
+    }
+  };
+
+  const createFailureComponent = (failure: HealthCheckFailure) => {
+    const summary = translationOrDefault(`healthCheckFailure.${failure.id}.summary`, failure.summary);
+    const description = translationOrDefault(`healthCheckFailure.${failure.id}.description`, failure.description);
+    return (
+      <li>
+        <em>{summary}</em>
+        <br />
+        {description}
+      </li>
+    );
+  };
+
+  const failureComponents = failures.map(createFailureComponent);
 
   return (
     <Modal

@@ -438,7 +438,11 @@
   },
   "healthCheckFailure": {
     "tooltip": "Dieses Repository ist fehlerhaft. Für weitere Details bitte klicken.",
-    "title": "Fehler im Repository"
+    "title": "Fehler im Repository",
+    "AKOdhQ0pw1": {
+      "summary": "Kein .git oder refs Verzeichnis gefunden",
+      "description": "Das Git-Repository enthält weder ein '.git' noch ein 'refs' Verzeichnis"
+    }
   },
   "diff": {
     "jumpToSource": "Zur Quelldatei springen",
