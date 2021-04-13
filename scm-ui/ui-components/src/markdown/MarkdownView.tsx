@@ -23,8 +23,11 @@
  */
 import React, { FC } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import Markdown from "react-markdown";
-import MarkdownWithHtml from "react-markdown/with-html";
+import unified from 'unified'
+import markdown from 'remark-parse'
+import sanitize from "rehype-sanitize";
+import remark2rehype from 'remark-rehype'
+import rehype2react from 'rehype-react'
 import gfm from "remark-gfm";
 import { binder } from "@scm-manager/ui-extensions";
 import ErrorBoundary from "../ErrorBoundary";
@@ -36,6 +39,8 @@ import { createTransformer } from "./remarkChangesetShortLinkParser";
 import MarkdownCodeRenderer from "./MarkdownCodeRenderer";
 import { AstPlugin } from "./PluginApi";
 import createMdastPlugin from "./createMdastPlugin";
+import gh from "hast-util-sanitize/lib/github";
+import slug from "rehype-slug";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -165,10 +170,22 @@ class MarkdownView extends React.Component<Props, State> {
       children: content
     };
 
+    // NEW IMPL
+
+    const processor = unified()
+      .use(markdown)
+      .use(remark2rehype)
+      .use(slug)
+      .use(sanitize, gh)
+      .use(rehype2react, {createElement: React.createElement})
+
+    // END NEW IMPL
+
     return (
       <ErrorBoundary fallback={MarkdownErrorNotification}>
         <div ref={el => this.setState({ contentRef: el })}>
-          {skipHtml ? <Markdown {...baseProps} /> : <MarkdownWithHtml {...baseProps} allowDangerousHtml={true} />}
+          // @ts-ignore
+          {processor.processSync(content).result}
         </div>
       </ErrorBoundary>
     );
