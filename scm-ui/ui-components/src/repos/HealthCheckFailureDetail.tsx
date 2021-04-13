@@ -26,6 +26,7 @@ import React, { FC } from "react";
 import { Modal } from "../modals";
 import { HealthCheckFailure } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
+import { Button } from "../buttons";
 
 type Props = {
   active: boolean;
@@ -59,6 +60,8 @@ const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }
 
   const failureComponents = failures ? failures.map(createFailureComponent) : [];
 
+  const footer = <Button label={t("healthCheckFailure.close")} action={closeFunction} color="grey" />;
+
   return (
     <Modal
       body={
@@ -69,6 +72,8 @@ const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }
       title={t("healthCheckFailure.title")}
       closeFunction={closeFunction}
       active={active}
+      footer={footer}
+      headColor={"danger"}
     />
   );
 };
