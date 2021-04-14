@@ -467,6 +467,21 @@ public final class RepositoryService implements Closeable {
   }
 
   /**
+   * The full health check command inspects a repository in a way, that might take a while in contrast to the
+   * light checks executed at startup.
+   *
+   * @return instance of {@link FullHealthCheckCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @since 2.17.0
+   */
+  public FullHealthCheckCommandBuilder getFullCheckCommand() {
+    LOG.debug("create lookup command for repository {}",
+      repository.getNamespaceAndName());
+    return new FullHealthCheckCommandBuilder(provider.getFullHealthCheckCommand());
+  }
+
+  /**
    * Returns true if the command is supported by the repository service.
    *
    * @param command command

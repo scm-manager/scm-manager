@@ -24,15 +24,17 @@
 
 package sonia.scm.repository;
 
-import com.github.sdorra.ssp.PermissionActionCheck;
 import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
+import sonia.scm.repository.api.Command;
+import sonia.scm.repository.api.RepositoryService;
+import sonia.scm.repository.api.RepositoryServiceFactory;
 
+import java.io.IOException;
 import java.util.Set;
-
 
 public final class HealthChecker {
 
@@ -42,40 +44,60 @@ public final class HealthChecker {
   private final Set<HealthCheck> checks;
 
   private final RepositoryManager repositoryManager;
+  private final RepositoryServiceFactory repositoryServiceFactory;
 
   @Inject
   public HealthChecker(Set<HealthCheck> checks,
-                       RepositoryManager repositoryManager) {
+                       RepositoryManager repositoryManager, RepositoryServiceFactory repositoryServiceFactory) {
     this.checks = checks;
     this.repositoryManager = repositoryManager;
+    this.repositoryServiceFactory = repositoryServiceFactory;
   }
 
-  public void check(String id){
+  public void lightCheck(String id) {
     RepositoryPermissions.healthCheck(id).check();
 
+    Repository repository = loadRepository(id);
+
+    doLightCheck(repository);
+  }
+
+  public void fullCheck(String id) {
+    RepositoryPermissions.healthCheck(id).check();
+
+    Repository repository = loadRepository(id);
+
+    doFullCheck(repository);
+  }
+
+  private Repository loadRepository(String id) {
     Repository repository = repositoryManager.get(id);
 
     if (repository == null) {
       throw new NotFoundException(Repository.class, id);
     }
-
-    doCheck(repository);
+    return repository;
   }
 
-  public void check(Repository repository)
-  {
+  public void lightCheck(Repository repository) {
     RepositoryPermissions.healthCheck(repository).check();
 
-    doCheck(repository);
+    doLightCheck(repository);
   }
 
-  public void checkAll() {
+  public void fullCheck(Repository repository) {
+    RepositoryPermissions.healthCheck(repository).check();
+
+    doFullCheck(repository);
+  }
+
+  public void lightCheckAll() {
     logger.debug("check health of all repositories");
 
     for (Repository repository : repositoryManager.getAll()) {
       if (RepositoryPermissions.healthCheck().isPermitted(repository)) {
         try {
-          check(repository);
+          lightCheck(repository);
         } catch (NotFoundException ex) {
           logger.error("health check ends with exception", ex);
         }
@@ -87,16 +109,8 @@ public final class HealthChecker {
     }
   }
 
-  private void doCheck(Repository repository){
-    logger.info("start health check for repository {}", repository);
-
-    HealthCheckResult result = HealthCheckResult.healthy();
-
-    for (HealthCheck check : checks) {
-      logger.trace("execute health check {} for repository {}",
-        check.getClass(), repository);
-      result = result.merge(check.check(repository));
-    }
+  private void doLightCheck(Repository repository) {
+    HealthCheckResult result = gatherLightChecks(repository);
 
     if (result.isUnhealthy()) {
       logger.warn("repository {} is unhealthy: {}", repository,
@@ -105,6 +119,43 @@ public final class HealthChecker {
       logger.info("repository {} is healthy", repository);
     }
 
+    storeResult(repository, result);
+  }
+
+  private HealthCheckResult gatherLightChecks(Repository repository) {
+    logger.info("start light health check for repository {}", repository);
+
+    HealthCheckResult result = HealthCheckResult.healthy();
+
+    for (HealthCheck check : checks) {
+      logger.trace("execute light health check {} for repository {}",
+        check.getClass(), repository);
+      result = result.merge(check.check(repository));
+    }
+    return result;
+  }
+
+  private void doFullCheck(Repository repository) {
+    HealthCheckResult lightCheckResult = gatherLightChecks(repository);
+    HealthCheckResult fullCheckResult = gatherFullChecks(repository);
+    HealthCheckResult result = lightCheckResult.merge(fullCheckResult);
+
+    storeResult(repository, result);
+  }
+
+  private HealthCheckResult gatherFullChecks(Repository repository) {
+    try (RepositoryService service = repositoryServiceFactory.create(repository)) {
+      if (service.isSupported(Command.FULL_HEALTH_CHECK)) {
+        return service.getFullCheckCommand().check();
+      } else {
+        return HealthCheckResult.healthy();
+      }
+    } catch (IOException e) {
+      throw new InternalRepositoryException(repository, "error during full health check", e);
+    }
+  }
+
+  private void storeResult(Repository repository, HealthCheckResult result) {
     if (!(repository.isHealthy() && result.isHealthy())) {
       logger.trace("store health check results for repository {}",
         repository);
@@ -113,6 +164,4 @@ public final class HealthChecker {
       repositoryManager.modify(repository);
     }
   }
-
-
 }

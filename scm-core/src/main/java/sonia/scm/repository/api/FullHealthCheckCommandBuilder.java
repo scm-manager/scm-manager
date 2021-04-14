@@ -24,53 +24,20 @@
 
 package sonia.scm.repository.api;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+import sonia.scm.repository.HealthCheckResult;
+import sonia.scm.repository.spi.FullHealthCheckCommand;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+import java.io.IOException;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+public class FullHealthCheckCommandBuilder {
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+  private final FullHealthCheckCommand command;
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+  public FullHealthCheckCommandBuilder(FullHealthCheckCommand command) {
+    this.command = command;
+  }
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
-
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
-
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK;
+  public HealthCheckResult check() throws IOException {
+    return command.check();
+  }
 }
