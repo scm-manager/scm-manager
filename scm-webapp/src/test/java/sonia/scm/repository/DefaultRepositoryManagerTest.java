@@ -106,6 +106,7 @@ import sonia.scm.TempSCMContextProvider;
 public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
 
   private RepositoryDAO repositoryDAO;
+  private RepositoryPostProcessor postProcessor = mock(RepositoryPostProcessor.class);
 
   static {
     ThreadContext.unbindSubject();
@@ -181,6 +182,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     heartOfGold = manager.get(id);
     assertNotNull(heartOfGold);
     assertEquals(description, heartOfGold.getDescription());
+    verify(postProcessor).postProcess(argThat(repository -> repository.getId().equals(id)));
   }
 
   @Test
@@ -227,6 +229,8 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     assertNotSame(heartOfGold, heartReference);
     heartReference.setDescription("prototype ship");
     assertNotEquals(heartOfGold.getDescription(), heartReference.getDescription());
+    verify(postProcessor).postProcess(argThat(repository -> repository.getId().equals(heartOfGold.getId())));
+    verify(postProcessor).postProcess(argThat(repository -> repository.getId().equals(happyVerticalPeopleTransporter.getId())));
   }
 
   @Test
@@ -551,7 +555,7 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
     when(namespaceStrategy.createNamespace(Mockito.any(Repository.class))).thenAnswer(invocation -> mockedNamespace);
 
     return new DefaultRepositoryManager(contextProvider,
-      keyGenerator, repositoryDAO, handlerSet, Providers.of(namespaceStrategy));
+      keyGenerator, repositoryDAO, handlerSet, Providers.of(namespaceStrategy), postProcessor);
   }
 
   private RepositoryDAO createRepositoryDaoMock() {
@@ -618,9 +622,6 @@ public class DefaultRepositoryManagerTest extends ManagerTestBase<Repository> {
   private Repository createRepository(Repository repository) {
     manager.create(repository);
     assertNotNull(repository.getId());
-    assertNotNull(manager.get(repository.getId()));
-    assertTrue(repository.getCreationDate() > 0);
-
     return repository;
   }
 

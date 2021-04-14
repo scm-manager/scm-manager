@@ -102,6 +102,8 @@ public class DefaultRepositoryManagerPerfTest {
 
   @Mock
   private AuthorizationCollector authzCollector;
+  @Mock
+  private RepositoryPostProcessor repositoryPostProcessor;
 
   /**
    * Setup object under test.
@@ -116,8 +118,8 @@ public class DefaultRepositoryManagerPerfTest {
       keyGenerator,
       repositoryDAO,
       handlerSet,
-      Providers.of(namespaceStrategy)
-    );
+      Providers.of(namespaceStrategy),
+      repositoryPostProcessor);
 
     setUpTestRepositories();
 

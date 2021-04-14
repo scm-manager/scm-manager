@@ -39,16 +39,18 @@ import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.FullHealthCheckCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
-import sonia.scm.repository.spi.FullHealthCheckCommand;
 
 import java.io.IOException;
 
 import static com.google.common.collect.ImmutableSet.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -68,6 +70,8 @@ class HealthCheckerTest {
   private RepositoryServiceFactory repositoryServiceFactory;
   @Mock
   private RepositoryService repositoryService;
+  @Mock
+  private RepositoryPostProcessor postProcessor;
 
   @Mock
   private Subject subject;
@@ -76,7 +80,7 @@ class HealthCheckerTest {
 
   @BeforeEach
   void initializeChecker() {
-    this.checker = new HealthChecker(of(healthCheck1, healthCheck2), repositoryManager, repositoryServiceFactory);
+    this.checker = new HealthChecker(of(healthCheck1, healthCheck2), repositoryManager, repositoryServiceFactory, postProcessor);
   }
 
   @BeforeEach
@@ -98,7 +102,7 @@ class HealthCheckerTest {
   class WithRepository {
     @BeforeEach
     void setUpRepository() {
-      doReturn(repository).when(repositoryManager).get(repository.getId());
+      doReturn(repository).when(repositoryManager).get(repositoryId);
     }
 
     @Test
@@ -108,9 +112,12 @@ class HealthCheckerTest {
 
       checker.lightCheck(repositoryId);
 
-      assertThat(repository.getHealthCheckFailures())
-        .hasSize(2)
-        .extracting("id").containsExactly("error1", "error2");
+      verify(postProcessor).setCheckResults(eq(repositoryId), argThat(failures -> {
+        assertThat(failures)
+          .hasSize(2)
+          .extracting("id").containsExactly("error1", "error2");
+        return true;
+      }));
     }
 
     @Nested
@@ -132,9 +139,12 @@ class HealthCheckerTest {
 
         checker.fullCheck(repositoryId);
 
-        assertThat(repository.getHealthCheckFailures())
-          .hasSize(1)
-          .extracting("id").containsExactly("error");
+        verify(postProcessor).setCheckResults(eq(repositoryId), argThat(failures -> {
+          assertThat(failures)
+            .hasSize(1)
+            .extracting("id").containsExactly("error");
+          return true;
+        }));
       }
 
       @Test
@@ -146,9 +156,12 @@ class HealthCheckerTest {
 
         checker.fullCheck(repositoryId);
 
-        assertThat(repository.getHealthCheckFailures())
-          .hasSize(1)
-          .extracting("id").containsExactly("error");
+        verify(postProcessor).setCheckResults(eq(repositoryId), argThat(failures -> {
+          assertThat(failures)
+            .hasSize(1)
+            .extracting("id").containsExactly("error");
+          return true;
+        }));
       }
     }
   }

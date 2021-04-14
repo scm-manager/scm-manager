@@ -24,7 +24,6 @@
 
 package sonia.scm.repository;
 
-import com.google.common.collect.ImmutableList;
 import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -33,10 +32,14 @@ import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 
+import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Set;
 
-public final class HealthChecker {
+import static com.google.common.collect.ImmutableList.copyOf;
+
+@Singleton
+final class HealthChecker {
 
   private static final Logger logger =
     LoggerFactory.getLogger(HealthChecker.class);
@@ -45,16 +48,18 @@ public final class HealthChecker {
 
   private final RepositoryManager repositoryManager;
   private final RepositoryServiceFactory repositoryServiceFactory;
+  private final RepositoryPostProcessor repositoryPostProcessor;
 
   @Inject
-  public HealthChecker(Set<HealthCheck> checks,
-                       RepositoryManager repositoryManager, RepositoryServiceFactory repositoryServiceFactory) {
+  HealthChecker(Set<HealthCheck> checks,
+                RepositoryManager repositoryManager, RepositoryServiceFactory repositoryServiceFactory, RepositoryPostProcessor repositoryPostProcessor) {
     this.checks = checks;
     this.repositoryManager = repositoryManager;
     this.repositoryServiceFactory = repositoryServiceFactory;
+    this.repositoryPostProcessor = repositoryPostProcessor;
   }
 
-  public void lightCheck(String id) {
+  void lightCheck(String id) {
     RepositoryPermissions.healthCheck(id).check();
 
     Repository repository = loadRepository(id);
@@ -62,10 +67,22 @@ public final class HealthChecker {
     doLightCheck(repository);
   }
 
-  public void fullCheck(String id) {
+  void fullCheck(String id) {
     RepositoryPermissions.healthCheck(id).check();
 
     Repository repository = loadRepository(id);
+
+    doFullCheck(repository);
+  }
+
+  void lightCheck(Repository repository) {
+    RepositoryPermissions.healthCheck(repository).check();
+
+    doLightCheck(repository);
+  }
+
+  void fullCheck(Repository repository) {
+    RepositoryPermissions.healthCheck(repository).check();
 
     doFullCheck(repository);
   }
@@ -79,19 +96,7 @@ public final class HealthChecker {
     return repository;
   }
 
-  public void lightCheck(Repository repository) {
-    RepositoryPermissions.healthCheck(repository).check();
-
-    doLightCheck(repository);
-  }
-
-  public void fullCheck(Repository repository) {
-    RepositoryPermissions.healthCheck(repository).check();
-
-    doFullCheck(repository);
-  }
-
-  public void lightCheckAll() {
+  void lightCheckAll() {
     logger.debug("check health of all repositories");
 
     for (Repository repository : repositoryManager.getAll()) {
@@ -159,9 +164,7 @@ public final class HealthChecker {
     if (!(repository.isHealthy() && result.isHealthy())) {
       logger.trace("store health check results for repository {}",
         repository);
-      repository.setHealthCheckFailures(
-        ImmutableList.copyOf(result.getFailures()));
-      repositoryManager.modify(repository);
+      repositoryPostProcessor.setCheckResults(repository.getId(), copyOf(result.getFailures()));
     }
   }
 }

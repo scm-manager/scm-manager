@@ -77,14 +77,16 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
   private final Set<Type> types;
   private final Provider<NamespaceStrategy> namespaceStrategyProvider;
   private final ManagerDaoAdapter<Repository> managerDaoAdapter;
+  private final RepositoryPostProcessor repositoryPostProcessor;
 
   @Inject
   public DefaultRepositoryManager(SCMContextProvider contextProvider, KeyGenerator keyGenerator,
                                   RepositoryDAO repositoryDAO, Set<RepositoryHandler> handlerSet,
-                                  Provider<NamespaceStrategy> namespaceStrategyProvider) {
+                                  Provider<NamespaceStrategy> namespaceStrategyProvider, RepositoryPostProcessor repositoryPostProcessor) {
     this.keyGenerator = keyGenerator;
     this.repositoryDAO = repositoryDAO;
     this.namespaceStrategyProvider = namespaceStrategyProvider;
+    this.repositoryPostProcessor = repositoryPostProcessor;
 
     handlerMap = new HashMap<>();
     types = new HashSet<>();
@@ -220,7 +222,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     Repository repository = repositoryDAO.get(id);
 
     if (repository != null) {
-      repository = repository.clone();
+      repository = postProcess(repository);
     }
 
     return repository;
@@ -236,7 +238,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
 
     if (repository != null) {
       RepositoryPermissions.read(repository).check();
-      repository = repository.clone();
+      repository = postProcess(repository);
     }
 
     return repository;
@@ -289,7 +291,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
       throw new NoChangesMadeException(repository);
     }
 
-    Repository changedRepository = originalRepository.clone();
+    Repository changedRepository = postProcess(originalRepository);
 
     changedRepository.setArchived(archived);
 
@@ -314,7 +316,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
       if (handlerMap.containsKey(repository.getType())
         && filter.test(repository)
         && RepositoryPermissions.read().isPermitted(repository)) {
-        Repository r = repository.clone();
+        Repository r = postProcess(repository);
 
         repositories.add(r);
       }
@@ -342,7 +344,7 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
         @Override
         public void append(Collection<Repository> collection, Repository item) {
           if (RepositoryPermissions.read().isPermitted(item)) {
-            collection.add(item.clone());
+            collection.add(postProcess(item));
           }
         }
       }, start, limit);
@@ -426,5 +428,11 @@ public class DefaultRepositoryManager extends AbstractRepositoryManager {
     }
 
     return handler;
+  }
+
+  private Repository postProcess(Repository repository) {
+    Repository clone = repository.clone();
+    repositoryPostProcessor.postProcess(repository);
+    return clone;
   }
 }

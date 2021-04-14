@@ -69,8 +69,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   private String contact;
   private Long creationDate;
   private String description;
-  @XmlElement(name = "healthCheckFailure")
-  @XmlElementWrapper(name = "healthCheckFailures")
+  @XmlTransient
   private List<HealthCheckFailure> healthCheckFailures;
   private String id;
   private Long lastModified;
