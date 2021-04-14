@@ -42,8 +42,16 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
 
   //J-
   public static final Set<Command> COMMANDS = ImmutableSet.of(
-    Command.BLAME, Command.BROWSE, Command.CAT, Command.DIFF,
-    Command.LOG, Command.BUNDLE, Command.UNBUNDLE, Command.MODIFY, Command.LOOKUP
+    Command.BLAME,
+    Command.BROWSE,
+    Command.CAT,
+    Command.DIFF,
+    Command.LOG,
+    Command.BUNDLE,
+    Command.UNBUNDLE,
+    Command.MODIFY,
+    Command.LOOKUP,
+    Command.FULL_HEALTH_CHECK
   );
   //J+
 
@@ -119,5 +127,10 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
   @Override
   public UnbundleCommand getUnbundleCommand() {
     return new SvnUnbundleCommand(context, hookContextFactory, new SvnLogCommand(context));
+  }
+
+  @Override
+  public FullHealthCheckCommand getFullHealthCheckCommand() {
+    return new SvnFullHealthCheckCommand(context);
   }
 }
