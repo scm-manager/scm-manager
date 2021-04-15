@@ -41,9 +41,11 @@ import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
 
 import java.io.IOException;
+import java.util.concurrent.CountDownLatch;
 
 import static com.google.common.collect.ImmutableSet.of;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
@@ -120,6 +122,56 @@ class HealthCheckerTest {
       }));
     }
 
+    @Test
+    void shouldLockWhileLightCheckIsRunning() throws InterruptedException {
+      CountDownLatch waitUntilSecondCheckHasRun = new CountDownLatch(1);
+      CountDownLatch waitForFirstCheckStarted = new CountDownLatch(1);
+
+      when(healthCheck1.check(repository)).thenReturn(HealthCheckResult.healthy());
+      when(healthCheck2.check(repository)).thenAnswer(invocation -> {
+        waitForFirstCheckStarted.countDown();
+        waitUntilSecondCheckHasRun.await();
+        return HealthCheckResult.healthy();
+      });
+
+      new Thread(() -> checker.lightCheck(repositoryId)).start();
+
+      waitForFirstCheckStarted.await();
+      await().until(() -> {
+        checker.lightCheck(repositoryId);
+        return true;
+      });
+
+      waitUntilSecondCheckHasRun.countDown();
+
+      verify(healthCheck1).check(repository);
+    }
+
+    @Test
+    void shouldShowRunningCheck() throws InterruptedException {
+      CountDownLatch waitUntilVerification = new CountDownLatch(1);
+      CountDownLatch waitForFirstCheckStarted = new CountDownLatch(1);
+
+      assertThat(checker.checkRunning(repositoryId)).isFalse();
+
+      when(healthCheck1.check(repository)).thenReturn(HealthCheckResult.healthy());
+      when(healthCheck2.check(repository)).thenAnswer(invocation -> {
+        waitForFirstCheckStarted.countDown();
+        waitUntilVerification.await();
+        return HealthCheckResult.healthy();
+      });
+
+      new Thread(() -> checker.lightCheck(repositoryId)).start();
+
+      waitForFirstCheckStarted.await();
+
+      assertThat(checker.checkRunning(repositoryId)).isTrue();
+
+      waitUntilVerification.countDown();
+
+      await().until(() -> !checker.checkRunning(repositoryId));
+    }
+
     @Nested
     class ForFullChecks {
 
@@ -145,6 +197,31 @@ class HealthCheckerTest {
             .extracting("id").containsExactly("error");
           return true;
         }));
+      }
+
+      @Test
+      void shouldLockWhileFullCheckIsRunning() throws InterruptedException {
+        CountDownLatch waitUntilSecondCheckHasRun = new CountDownLatch(1);
+        CountDownLatch waitForFirstCheckStarted = new CountDownLatch(1);
+
+        when(healthCheck1.check(repository)).thenReturn(HealthCheckResult.healthy());
+        when(healthCheck2.check(repository)).thenAnswer(invocation -> {
+          waitForFirstCheckStarted.countDown();
+          waitUntilSecondCheckHasRun.await();
+          return HealthCheckResult.healthy();
+        });
+
+        new Thread(() -> checker.fullCheck(repositoryId)).start();
+
+        waitForFirstCheckStarted.await();
+        await().until(() -> {
+          checker.fullCheck(repositoryId);
+          return true;
+        });
+
+        waitUntilSecondCheckHasRun.countDown();
+
+        verify(healthCheck1).check(repository);
       }
 
       @Test

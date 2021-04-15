@@ -34,9 +34,13 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 import static com.google.common.collect.ImmutableList.copyOf;
+import static java.util.Collections.synchronizedCollection;
 
 @Singleton
 final class HealthChecker {
@@ -49,6 +53,8 @@ final class HealthChecker {
   private final RepositoryManager repositoryManager;
   private final RepositoryServiceFactory repositoryServiceFactory;
   private final RepositoryPostProcessor repositoryPostProcessor;
+
+  private final Collection<String> checksRunning = synchronizedCollection(new HashSet<>());
 
   @Inject
   HealthChecker(Set<HealthCheck> checks,
@@ -115,16 +121,18 @@ final class HealthChecker {
   }
 
   private void doLightCheck(Repository repository) {
-    HealthCheckResult result = gatherLightChecks(repository);
+    withLockedRepository(repository, () -> {
+      HealthCheckResult result = gatherLightChecks(repository);
 
-    if (result.isUnhealthy()) {
-      logger.warn("repository {} is unhealthy: {}", repository,
-        result);
-    } else {
-      logger.info("repository {} is healthy", repository);
-    }
+      if (result.isUnhealthy()) {
+        logger.warn("repository {} is unhealthy: {}", repository,
+          result);
+      } else {
+        logger.info("repository {} is healthy", repository);
+      }
 
-    storeResult(repository, result);
+      storeResult(repository, result);
+    });
   }
 
   private HealthCheckResult gatherLightChecks(Repository repository) {
@@ -141,11 +149,25 @@ final class HealthChecker {
   }
 
   private void doFullCheck(Repository repository) {
-    HealthCheckResult lightCheckResult = gatherLightChecks(repository);
-    HealthCheckResult fullCheckResult = gatherFullChecks(repository);
-    HealthCheckResult result = lightCheckResult.merge(fullCheckResult);
+    withLockedRepository(repository, () -> {
+      HealthCheckResult lightCheckResult = gatherLightChecks(repository);
+      HealthCheckResult fullCheckResult = gatherFullChecks(repository);
+      HealthCheckResult result = lightCheckResult.merge(fullCheckResult);
 
-    storeResult(repository, result);
+      storeResult(repository, result);
+    });
+  }
+
+  private void withLockedRepository(Repository repository, Runnable runnable) {
+    if (!checksRunning.add(repository.getId())) {
+      logger.debug("check for repository {} is already running", repository);
+      return;
+    }
+    try {
+      runnable.run();
+    } finally {
+      checksRunning.remove(repository.getId());
+    }
   }
 
   private HealthCheckResult gatherFullChecks(Repository repository) {
@@ -166,5 +188,9 @@ final class HealthChecker {
         repository);
       repositoryPostProcessor.setCheckResults(repository.getId(), copyOf(result.getFailures()));
     }
+  }
+
+  public boolean checkRunning(String repositoryId) {
+    return checksRunning.contains(repositoryId);
   }
 }
