@@ -36,6 +36,7 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.Feature;
 import sonia.scm.repository.HealthCheckFailure;
+import sonia.scm.repository.HealthCheckService;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
@@ -68,6 +69,8 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
   private RepositoryServiceFactory serviceFactory;
   @Inject
   private Set<NamespaceStrategy> strategies;
+  @Inject
+  private HealthCheckService healthCheckService;
 
   abstract HealthCheckFailureDto toDto(HealthCheckFailure failure);
 
@@ -138,6 +141,9 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     linksBuilder.single(link("changesets", resourceLinks.changeset().all(repository.getNamespace(), repository.getName())));
     linksBuilder.single(link("sources", resourceLinks.source().selfWithoutRevision(repository.getNamespace(), repository.getName())));
     linksBuilder.single(link("paths", resourceLinks.repository().paths(repository.getNamespace(), repository.getName())));
+    if (RepositoryPermissions.healthCheck(repository).isPermitted() && !healthCheckService.checkRunning(repository)) {
+      linksBuilder.single(link("runHealthCheck", resourceLinks.repository().runHealthCheck(repository.getNamespace(), repository.getName())));
+    }
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), repository);

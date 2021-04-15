@@ -410,6 +410,10 @@ class ResourceLinks {
     String paths(String namespace, String name) {
       return repositoryPathsLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("paths").parameters().method("collect").parameters("_REVISION_").href().replace("_REVISION_", "{revision}");
     }
+
+    String runHealthCheck(String namespace, String name) {
+      return repositoryLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("runHealthCheck").parameters().href();
+    }
   }
 
   RepositoryCollectionLinks repositoryCollection() {

@@ -37,6 +37,7 @@ import org.mockito.Mock;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.CustomNamespaceStrategy;
 import sonia.scm.repository.HealthCheckFailure;
+import sonia.scm.repository.HealthCheckService;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
@@ -83,6 +84,8 @@ public class RepositoryToRepositoryDtoMapperTest {
   private ScmConfiguration configuration;
   @Mock
   private Set<NamespaceStrategy> strategies;
+  @Mock
+  private HealthCheckService healthCheckService;
 
   @InjectMocks
   private RepositoryToRepositoryDtoMapperImpl mapper;
@@ -309,6 +312,22 @@ public class RepositoryToRepositoryDtoMapperTest {
                     assertThat(link.getHref()).isEqualTo("http://example.com/base/v2/repositories/testspace/test/paths/{revision}");
                     assertThat(link.isTemplated()).isTrue();
                   });
+  }
+
+  @Test
+  public void shouldCreateHealthCheckLink() {
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals(
+      "http://example.com/base/v2/repositories/testspace/test/runHealthCheck",
+      dto.getLinks().getLinkBy("runHealthCheck").get().getHref());
+  }
+
+  @Test
+  public void shouldNotCreateHealthCheckLinkIfCheckIsRunning() {
+    Repository testRepository = createTestRepository();
+    when(healthCheckService.checkRunning(testRepository)).thenReturn(true);
+    RepositoryDto dto = mapper.map(testRepository);
+    assertFalse(dto.getLinks().getLinkBy("runHealthCheck").isPresent());
   }
 
   private ScmProtocol mockProtocol(String type, String protocol) {
