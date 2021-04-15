@@ -47,6 +47,7 @@ The following extension points are provided for the frontend:
 ### repositoryRole.role-details.information
 ### repository.setting
 ### repos.repository-avatar
+### repos.repository-avatar.primary
 - Location: At each repository in repository overview
 - can be used to add avatar for each repository (e.g., to mark repository type)
 
