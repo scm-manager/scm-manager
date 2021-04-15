@@ -430,6 +430,12 @@
       "cancel": "No"
     }
   },
+  "runHealthCheck": {
+    "button": "Run Health Checks",
+    "subtitle": "Health Checks",
+    "descriptionNotRunning": "Run the health checks for this repository. This may take a while.",
+    "descriptionRunning": "Health checks for this repository are currently running and cannot be started again in parallel."
+  },
   "archive": {
     "tooltip": "Read only. The archive cannot be changed."
   },

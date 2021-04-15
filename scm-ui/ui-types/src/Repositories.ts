@@ -49,6 +49,7 @@ export type Repository = HalRepresentation &
     archived?: boolean;
     exporting?: boolean;
     healthCheckFailures?: HealthCheckFailure[];
+    healthCheckRunning?: boolean;
   };
 
 export type RepositoryCreation = RepositoryBase & {

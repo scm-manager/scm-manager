@@ -49,13 +49,11 @@ public class DefaultHealthCheckService implements HealthCheckService {
 
   @Override
   public boolean checkRunning(String repositoryId) {
-    RepositoryPermissions.healthCheck(repositoryId).check();
     return healthChecker.checkRunning(repositoryId);
   }
 
   @Override
   public boolean checkRunning(Repository repository) {
-    RepositoryPermissions.healthCheck(repository).check();
     return healthChecker.checkRunning(repository.getId());
   }
 }

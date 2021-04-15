@@ -31,6 +31,7 @@ import { Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import ArchiveRepo from "./ArchiveRepo";
 import UnarchiveRepo from "./UnarchiveRepo";
+import RunHealthCheck from "./RunHealthCheck";
 
 type Props = {
   repository: Repository;
@@ -75,6 +76,9 @@ const RepositoryDangerZone: FC<Props> = ({ repository, indexLinks }) => {
   }
   if (repository?._links?.unarchive) {
     dangerZone.push(<UnarchiveRepo repository={repository} />);
+  }
+  if (repository?._links?.runHealthCheck || repository.healthCheckRunning) {
+    dangerZone.push(<RunHealthCheck repository={repository} />);
   }
 
   if (dangerZone.length === 0) {
