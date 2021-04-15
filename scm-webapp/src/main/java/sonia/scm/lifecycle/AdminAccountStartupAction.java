@@ -114,9 +114,11 @@ public class AdminAccountStartupAction implements InitializationStep {
     admin.setPassword(encryptedPassword);
     doThrow().violation("invalid user name").when(!admin.isValid());
     PermissionDescriptor descriptor = new PermissionDescriptor("*");
-    userManager.create(admin);
-    permissionAssigner.setPermissionsForUser(userName, Collections.singleton(descriptor));
-    initialToken = null;
+    context.runAsAdmin((PrivilegedStartupAction) () -> {
+      userManager.create(admin);
+      permissionAssigner.setPermissionsForUser(userName, Collections.singleton(descriptor));
+      initialToken = null;
+    });
   }
 
   private void createStartupToken() {
