@@ -320,6 +320,7 @@ public class RepositoryToRepositoryDtoMapperTest {
     assertEquals(
       "http://example.com/base/v2/repositories/testspace/test/runHealthCheck",
       dto.getLinks().getLinkBy("runHealthCheck").get().getHref());
+    assertFalse(dto.isHealthCheckRunning());
   }
 
   @Test
@@ -328,6 +329,7 @@ public class RepositoryToRepositoryDtoMapperTest {
     when(healthCheckService.checkRunning(testRepository)).thenReturn(true);
     RepositoryDto dto = mapper.map(testRepository);
     assertFalse(dto.getLinks().getLinkBy("runHealthCheck").isPresent());
+    assertTrue(dto.isHealthCheckRunning());
   }
 
   private ScmProtocol mockProtocol(String type, String protocol) {

@@ -59,6 +59,7 @@ public class RepositoryDto extends HalRepresentation implements CreateRepository
   private String type;
   private boolean archived;
   private boolean exporting;
+  private boolean healthCheckRunning;
 
   RepositoryDto(Links links, Embedded embedded) {
     super(links, embedded);

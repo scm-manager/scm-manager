@@ -148,7 +148,9 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
     Embedded.Builder embeddedBuilder = embeddedBuilder();
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), repository);
 
-    return new RepositoryDto(linksBuilder.build(), embeddedBuilder.build());
+    RepositoryDto repositoryDto = new RepositoryDto(linksBuilder.build(), embeddedBuilder.build());
+    repositoryDto.setHealthCheckRunning(healthCheckService.checkRunning(repository));
+    return repositoryDto;
   }
 
   private boolean isRenameNamespacePossible() {
