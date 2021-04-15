@@ -35,9 +35,11 @@ import sonia.scm.repository.api.RepositoryServiceFactory;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static com.google.common.collect.ImmutableList.copyOf;
 import static java.util.Collections.synchronizedCollection;
@@ -55,6 +57,8 @@ final class HealthChecker {
   private final RepositoryPostProcessor repositoryPostProcessor;
 
   private final Collection<String> checksRunning = synchronizedCollection(new HashSet<>());
+
+  private final ExecutorService healthCheckExecutor = Executors.newSingleThreadExecutor();
 
   @Inject
   HealthChecker(Set<HealthCheck> checks,
@@ -149,13 +153,15 @@ final class HealthChecker {
   }
 
   private void doFullCheck(Repository repository) {
-    withLockedRepository(repository, () -> {
-      HealthCheckResult lightCheckResult = gatherLightChecks(repository);
-      HealthCheckResult fullCheckResult = gatherFullChecks(repository);
-      HealthCheckResult result = lightCheckResult.merge(fullCheckResult);
+    withLockedRepository(repository, () ->
+        runInExecutorAndWait(repository, () -> {
+            HealthCheckResult lightCheckResult = gatherLightChecks(repository);
+            HealthCheckResult fullCheckResult = gatherFullChecks(repository);
+            HealthCheckResult result = lightCheckResult.merge(fullCheckResult);
 
-      storeResult(repository, result);
-    });
+            storeResult(repository, result);
+          })
+    );
   }
 
   private void withLockedRepository(Repository repository, Runnable runnable) {
@@ -167,6 +173,14 @@ final class HealthChecker {
       runnable.run();
     } finally {
       checksRunning.remove(repository.getId());
+    }
+  }
+
+  private void runInExecutorAndWait(Repository repository, Runnable runnable) {
+    try {
+      healthCheckExecutor.submit(runnable).get();
+    } catch (InterruptedException | ExecutionException e) {
+      logger.warn("could not submit task for health check for repository {}", repository, e);
     }
   }
 
