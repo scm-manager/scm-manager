@@ -1,2 +1,2 @@
 - type: added
-  description: Add new extension point for custom repository avatars ([#1614](https://github.com/scm-manager/scm-manager/pull/1614))
+  description: New extension points for custom repository avatars ([#1614](https://github.com/scm-manager/scm-manager/pull/1614))
