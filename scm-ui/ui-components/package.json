@@ -77,6 +77,7 @@
     "remark-rehype": "^8.0.0",
     "remark-parse": "^9.0.0",
     "rehype-sanitize": "^4.0.0",
+    "rehype-raw": "^5.1.0",
     "unified": "^9.2.1",
     "hast-util-sanitize": "^3.0.2",
     "rehype-slug": "^4.0.1"

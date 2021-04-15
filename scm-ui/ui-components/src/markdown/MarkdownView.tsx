@@ -23,11 +23,11 @@
  */
 import React, { FC } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import unified from 'unified'
-import markdown from 'remark-parse'
+import unified from "unified";
+import parseMarkdown from "remark-parse";
 import sanitize from "rehype-sanitize";
-import remark2rehype from 'remark-rehype'
-import rehype2react from 'rehype-react'
+import remark2rehype from "remark-rehype";
+import rehype2react from "rehype-react";
 import gfm from "remark-gfm";
 import { binder } from "@scm-manager/ui-extensions";
 import ErrorBoundary from "../ErrorBoundary";
@@ -40,7 +40,9 @@ import MarkdownCodeRenderer from "./MarkdownCodeRenderer";
 import { AstPlugin } from "./PluginApi";
 import createMdastPlugin from "./createMdastPlugin";
 import gh from "hast-util-sanitize/lib/github";
+import raw from "rehype-raw";
 import slug from "rehype-slug";
+import {Node, Parent} from "unist";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -160,32 +162,56 @@ class MarkdownView extends React.Component<Props, State> {
       rendererList.code = MarkdownCodeRenderer;
     }
 
-    const plugins = [...mdastPlugins, createTransformer(t)].map(createMdastPlugin);
+    const components: {[key: string]: any} = {};
 
-    const baseProps = {
-      className: "content is-word-break",
-      renderers: rendererList,
-      plugins: [gfm],
-      astPlugins: plugins,
-      children: content
+    if (rendererList.code) {
+      const codeRenderer = function(args: any, props: any) {
+        const {node,children} = args;
+        console.log("renderer:code/pre", arguments);
+        return React.createElement(rendererList.code, props, ...children);
+      };
+      components.code = codeRenderer;
+      components.pre = codeRenderer;
+    }
+
+    const codeLanguageAttacherPlugin: AstPlugin = ({ visit }) => {
+      visit("code", (node: Node, index: number, parent?: Parent) => {
+        if (node.data) {
+          node.data.lang = node.lang;
+        } else {
+          node.data = {
+            lang: node.lang
+          }
+        }
+        console.log("remark:code", node, index, parent);
+      });
     };
 
-    // NEW IMPL
+    const plugins = [...mdastPlugins, createTransformer(t), codeLanguageAttacherPlugin].map(createMdastPlugin);
 
-    const processor = unified()
-      .use(markdown)
-      .use(remark2rehype)
-      .use(slug)
-      .use(sanitize, gh)
-      .use(rehype2react, {createElement: React.createElement})
+    let processor = unified()
+      .use(parseMarkdown)
+      .use(gfm)
+      .use(plugins)
+      .use(remark2rehype, { allowDangerousHtml: true });
 
-    // END NEW IMPL
+    if (!skipHtml) {
+      processor = processor.use(raw);
+    }
+
+    processor = processor.use(slug).use(sanitize, gh);
+
+    const toReactProcessor = processor.use(rehype2react, {
+      createElement: React.createElement,
+      passNode: true,
+      components
+    });
 
     return (
       <ErrorBoundary fallback={MarkdownErrorNotification}>
-        <div ref={el => this.setState({ contentRef: el })}>
+        <div ref={el => this.setState({ contentRef: el })} className="content is-word-break">
           // @ts-ignore
-          {processor.processSync(content).result}
+          {toReactProcessor.processSync(content).result}
         </div>
       </ErrorBoundary>
     );
