@@ -22,22 +22,46 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm;
 
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import org.junit.jupiter.api.Test;
 
-@Getter @Setter @NoArgsConstructor
-public class HealthCheckFailureDto extends HalRepresentation {
-  public HealthCheckFailureDto(Links links) {
-    super(links);
+import java.io.File;
+import java.nio.file.Path;
+
+import static org.assertj.core.api.Assertions.assertThat;
+
+public class SCMContextProviderTest {
+
+  @Test
+  void shouldCreateCorrectDocumentationVersion() {
+    SCMContextProvider scmContextProvider = new SCMContextProvider() {
+      @Override
+      public File getBaseDirectory() {
+        return null;
+      }
+
+      @Override
+      public Path resolve(Path path) {
+        return null;
+      }
+
+      @Override
+      public Stage getStage() {
+        return null;
+      }
+
+      @Override
+      public Throwable getStartupError() {
+        return null;
+      }
+
+      @Override
+      public String getVersion() {
+        return "1.17.2";
+      }
+    };
+
+    assertThat(scmContextProvider.getDocumentationVersion()).isEqualTo("1.17.x");
   }
-
-  private String id;
-  private String description;
-  private String summary;
-  private String url;
 }

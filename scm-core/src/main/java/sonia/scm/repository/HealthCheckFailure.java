@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -32,6 +32,7 @@ import com.google.common.base.Objects;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.text.MessageFormat;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -46,15 +47,18 @@ import javax.xml.bind.annotation.XmlRootElement;
 public final class HealthCheckFailure
 {
 
+  private static final String URL_TEMPLATE = "https://www.scm-manager.org/docs/{0}/en/user/repo/health-checks/%s";
+  private static final String LATEST_VERSION = "latest";
+
   /**
-   * Constructs a new {@link HealthCheckFailure}. 
+   * Constructs a new {@link HealthCheckFailure}.
    * This constructor is only for JAXB.
    *
    */
   HealthCheckFailure() {}
 
   /**
-   * Constructs a new {@link HealthCheckFailure}. 
+   * Constructs a new {@link HealthCheckFailure}.
    *
    * @param id id of the failure
    * @param summary summary of the failure
@@ -62,7 +66,7 @@ public final class HealthCheckFailure
    */
   public HealthCheckFailure(String id, String summary, String description)
   {
-    this(id, summary, null, description);
+    this(id, summary, (String) null, description);
   }
 
   /**
@@ -79,14 +83,49 @@ public final class HealthCheckFailure
     this.id = id;
     this.summary = summary;
     this.url = url;
+    this.urlTemplated = false;
     this.description = description;
   }
 
-  //~--- methods --------------------------------------------------------------
+  /**
+   * Constructs ...
+   *
+   * @param id id of the failure
+   * @param summary summary of the failure
+   * @param urlTemplate template for the url of the failure (use {@link #urlForTitle(String)} to create this)
+   * @param description description of the failure
+   * @since 2.17.0
+   */
+  public HealthCheckFailure(String id, String summary, UrlTemplate urlTemplate,
+    String description)
+  {
+    this.id = id;
+    this.summary = summary;
+    this.url = urlTemplate.get();
+    this.urlTemplated = true;
+    this.description = description;
+  }
 
   /**
-   * {@inheritDoc}
+   * Use this to create {@link HealthCheckFailure} instances with an url for core health check failures.
+   * @param title The title of the failure matching a health check documentation page.
+   * @since 2.17.0
    */
+  public static UrlTemplate urlForTitle(String title) {
+    return new UrlTemplate(String.format(URL_TEMPLATE, title));
+  }
+
+  /**
+   * Use this to create {@link HealthCheckFailure} instances with a custom url for core health check
+   * failures. If this url can be customized with a concrete version of SCM-Manager, you can use <code>{0}</code>
+   * as a placeholder for the version. This will be replaces later on.
+   * @param urlTemplate The url for this failure.
+   * @since 2.17.0
+   */
+  public static UrlTemplate templated(String urlTemplate) {
+    return new UrlTemplate(urlTemplate);
+  }
+
   @Override
   public boolean equals(Object obj)
   {
@@ -103,25 +142,19 @@ public final class HealthCheckFailure
     final HealthCheckFailure other = (HealthCheckFailure) obj;
 
     //J-
-    return Objects.equal(id, other.id) 
+    return Objects.equal(id, other.id)
       && Objects.equal(summary, other.summary)
       && Objects.equal(url, other.url)
       && Objects.equal(description, other.description);
     //J+
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public int hashCode()
   {
     return Objects.hashCode(id, summary, url, description);
   }
 
-  /**
-   * {@inheritDoc}
-   */
   @Override
   public String toString()
   {
@@ -134,8 +167,6 @@ public final class HealthCheckFailure
                   .toString();
     //J+
   }
-
-  //~--- get methods ----------------------------------------------------------
 
   /**
    * Returns the description of this failure.
@@ -168,16 +199,31 @@ public final class HealthCheckFailure
   }
 
   /**
-   * Return the url of the failure.
+   * Return the url of the failure. The url may potentially be templated. In the case you can get a
+   * special url for an explicit version of SCM-Manager using {@link #getUrl(String)} whereas this
+   * function will return a generic url for the {@value LATEST_VERSION} version.
    *
    * @return url of the failure
    */
   public String getUrl()
   {
-    return url;
+    return getUrl(LATEST_VERSION);
   }
 
-  //~--- fields ---------------------------------------------------------------
+  /**
+   * Return the url of the failure for a concrete version of SCM-Manager (given the url is templated).
+   *
+   * @param version The version of SCM-Manager to create the url for.
+   * @return url of the failure
+   * @since 2.17.0
+   */
+  public String getUrl(String version) {
+    if (urlTemplated) {
+      return MessageFormat.format(url, version);
+    } else {
+      return url;
+    }
+  }
 
   /** description of failure */
   private String description;
@@ -190,4 +236,19 @@ public final class HealthCheckFailure
 
   /** url of failure */
   private String url;
+
+  /** Flag whether the url is a template or not */
+  private boolean urlTemplated = false;
+
+  public final static class UrlTemplate {
+    private final String url;
+
+    private UrlTemplate(String url) {
+      this.url = url;
+    }
+
+    private String get() {
+      return url;
+    }
+  }
 }

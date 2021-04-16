@@ -21,14 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import java.io.Closeable;
+import sonia.scm.version.Version;
+
 import java.io.File;
 import java.nio.file.Path;
+
+import static java.lang.String.format;
 
 /**
  * The main class for retrieving the home and the version of the SCM-Manager.
@@ -83,4 +86,17 @@ public interface SCMContextProvider {
    * @return version of the SCM-Manager
    */
   String getVersion();
+
+  /**
+   * Returns the version of the SCM-Manager used in documentation urls (eg. version 2.17.0 and 2.17.1 will all result
+   * in 2.17.x). The default implementation works for versions with three parts (major version, minor version,
+   * and patch version, where the patch version will be replaces with an 'x').
+   *
+   * @return version of the SCM-Manager used in documentation urls
+   * @since 2.17.0
+   */
+  default String getDocumentationVersion() {
+    Version parsedVersion = Version.parse(getVersion());
+    return format("%s.%s.x", parsedVersion.getMajor(), parsedVersion.getMinor());
+  }
 }

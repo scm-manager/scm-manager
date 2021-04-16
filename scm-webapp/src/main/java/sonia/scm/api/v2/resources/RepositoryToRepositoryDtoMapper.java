@@ -32,6 +32,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.ObjectFactory;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.DefaultRepositoryExportingCheck;
 import sonia.scm.repository.Feature;
@@ -71,8 +72,25 @@ public abstract class RepositoryToRepositoryDtoMapper extends BaseMapper<Reposit
   private Set<NamespaceStrategy> strategies;
   @Inject
   private HealthCheckService healthCheckService;
+  @Inject
+  private SCMContextProvider contextProvider;
 
   abstract HealthCheckFailureDto toDto(HealthCheckFailure failure);
+
+  @ObjectFactory
+  HealthCheckFailureDto createHealthCheckFailureDto(HealthCheckFailure failure) {
+    String url = failure.getUrl(contextProvider.getDocumentationVersion());
+    if (url == null) {
+      return new HealthCheckFailureDto();
+    } else {
+      return new HealthCheckFailureDto(Links.linkingTo().single(link("documentation", url)).build());
+    }
+  }
+
+  @AfterMapping
+  void updateHealthCheckUrlForCurrentVersion(HealthCheckFailure failure, @MappingTarget HealthCheckFailureDto dto) {
+    dto.setUrl(failure.getUrl(contextProvider.getDocumentationVersion()));
+  }
 
   @Mapping(target = "attributes", ignore = true) // We do not map HAL attributes
   @Mapping(target = "exporting", ignore = true)
