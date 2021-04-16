@@ -24,18 +24,19 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.github.sdorra.shiro.ShiroRule;
-import com.github.sdorra.shiro.SubjectAware;
+import org.apache.shiro.authz.AuthorizationException;
+import org.apache.shiro.subject.Subject;
+import org.apache.shiro.util.ThreadContext;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
-import org.junit.Before;
-import org.junit.Rule;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.web.HgVndMediaType;
@@ -45,21 +46,15 @@ import javax.inject.Provider;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URISyntaxException;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.argThat;
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-@SubjectAware(
-  configuration = "classpath:sonia/scm/configuration/shiro.ini",
-  password = "secret"
-)
-@RunWith(MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class HgGlobalConfigAutoConfigurationResourceTest {
-
-  @Rule
-  public ShiroRule shiro = new ShiroRule();
 
   private final RestDispatcher dispatcher = new RestDispatcher();
 
@@ -75,8 +70,11 @@ public class HgGlobalConfigAutoConfigurationResourceTest {
   @Mock
   private Provider<HgRepositoryConfigResource> repositoryConfigResource;
 
-  @Before
-  public void prepareEnvironment() {
+  @Mock
+  private Subject subject;
+
+  @BeforeEach
+  void prepareEnvironment() {
     HgGlobalConfigAutoConfigurationResource resource = new HgGlobalConfigAutoConfigurationResource(dtoToConfigMapper, repositoryHandler);
 
     when(resourceProvider.get()).thenReturn(resource);
@@ -84,46 +82,64 @@ public class HgGlobalConfigAutoConfigurationResourceTest {
       null, null, null,
       resourceProvider, repositoryConfigResource
     ));
+
+    ThreadContext.bind(subject);
+  }
+
+  @AfterEach
+  void tearDown() {
+    ThreadContext.unbindSubject();
   }
 
   @Test
-  @SubjectAware(username = "writeOnly")
-  public void shouldSetDefaultConfigAndInstallHg() throws Exception {
+  void shouldNotChangeConfigButOnlyInstallHg() throws Exception {
+    HgGlobalConfig oldConfig = new HgGlobalConfig();
+    oldConfig.setEncoding("UTF-16");
+    oldConfig.setEnableHttpPostArgs(true);
+    oldConfig.setShowRevisionInId(true);
+    when(repositoryHandler.getConfig()).thenReturn(oldConfig);
     MockHttpResponse response = put(null);
 
-    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NO_CONTENT);
 
-    HgGlobalConfig actualConfig = captureConfig();
-    assertFalse(actualConfig.isDisabled());
+    verify(repositoryHandler).doAutoConfiguration(any(HgGlobalConfig.class));
+    verify(repositoryHandler).setConfig(argThat(config -> {
+      assertThat(config.isDisabled()).isFalse();
+      assertThat(config.getEncoding()).isEqualTo(oldConfig.getEncoding());
+      assertThat(config.isEnableHttpPostArgs()).isEqualTo(oldConfig.isEnableHttpPostArgs());
+      assertThat(config.isShowRevisionInId()).isEqualTo(oldConfig.isShowRevisionInId());
+      return true;
+    }));
   }
 
   @Test
-  @SubjectAware(username = "readOnly")
-  public void shouldNotSetDefaultConfigAndInstallHgWhenNotAuthorized() throws Exception {
+  void shouldNotSetDefaultConfigAndInstallHgWhenNotAuthorized() throws Exception {
+    doThrow(AuthorizationException.class).when(subject).checkPermission("configuration:write:hg");
     MockHttpResponse response = put(null);
 
-    assertEquals("Subject does not have permission [configuration:write:hg]", response.getContentAsString());
-    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_FORBIDDEN);
   }
 
   @Test
-  @SubjectAware(username = "writeOnly")
-  public void shouldUpdateConfigAndInstallHg() throws Exception {
+  void shouldNotUpdateConfigButOnlyInstallHg() throws Exception {
+    when(repositoryHandler.getConfig()).thenReturn(new HgGlobalConfig());
     MockHttpResponse response = put("{\"disabled\":true}");
 
-    assertEquals(HttpServletResponse.SC_NO_CONTENT, response.getStatus());
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NO_CONTENT);
 
-    HgGlobalConfig actualConfig = captureConfig();
-    assertTrue(actualConfig.isDisabled());
+    verify(repositoryHandler).doAutoConfiguration(any(HgGlobalConfig.class));
+    verify(repositoryHandler).setConfig(argThat(config -> {
+      assertThat(config.isDisabled()).isFalse();
+      return true;
+    }));
   }
 
   @Test
-  @SubjectAware(username = "readOnly")
-  public void shouldNotUpdateConfigAndInstallHgWhenNotAuthorized() throws Exception {
+  void shouldNotUpdateConfigAndInstallHgWhenNotAuthorized() throws Exception {
+    doThrow(AuthorizationException.class).when(subject).checkPermission("configuration:write:hg");
     MockHttpResponse response = put("{\"disabled\":true}");
 
-    assertEquals("Subject does not have permission [configuration:write:hg]", response.getContentAsString());
-    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_FORBIDDEN);
   }
 
   private MockHttpResponse put(String content) throws URISyntaxException {
@@ -139,11 +155,4 @@ public class HgGlobalConfigAutoConfigurationResourceTest {
     dispatcher.invoke(request, response);
     return response;
   }
-
-  private HgGlobalConfig captureConfig() {
-    ArgumentCaptor<HgGlobalConfig> configCaptor = ArgumentCaptor.forClass(HgGlobalConfig.class);
-    verify(repositoryHandler).doAutoConfiguration(configCaptor.capture());
-    return configCaptor.getValue();
-  }
-
 }

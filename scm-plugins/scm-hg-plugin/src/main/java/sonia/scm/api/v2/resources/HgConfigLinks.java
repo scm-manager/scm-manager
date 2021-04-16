@@ -46,9 +46,9 @@ public class HgConfigLinks {
   }
 
 
-  public ConfigLinks global() {
+  public GlobalConfigLinks global() {
     LinkBuilder linkBuilder = new LinkBuilder(pathInfoStore.get().get(), HgConfigResource.class);
-    return new ConfigLinks() {
+    return new GlobalConfigLinks() {
       @Override
       public String get() {
         return linkBuilder.method("get").parameters().href();
@@ -57,6 +57,12 @@ public class HgConfigLinks {
       @Override
       public String update() {
         return linkBuilder.method("update").parameters().href();
+      }
+
+      @Override
+      public String autoConfigure() {
+        LinkBuilder linkBuilder = new LinkBuilder(pathInfoStore.get().get(), HgGlobalConfigAutoConfigurationResource.class);
+        return linkBuilder.method("autoConfiguration").parameters().href();
       }
     };
   }
@@ -86,5 +92,9 @@ public class HgConfigLinks {
   public interface ConfigLinks  {
     String get();
     String update();
+  }
+
+  public interface GlobalConfigLinks extends ConfigLinks  {
+    String autoConfigure();
   }
 }

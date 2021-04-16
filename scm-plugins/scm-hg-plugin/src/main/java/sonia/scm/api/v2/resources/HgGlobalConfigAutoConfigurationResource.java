@@ -42,6 +42,9 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.core.Response;
 
+import static sonia.scm.api.v2.resources.HgConfigResource.HG_CONFIG_PATH_V2;
+
+@Path(HG_CONFIG_PATH_V2 + "/auto-configuration")
 public class HgGlobalConfigAutoConfigurationResource {
 
   private final HgRepositoryHandler repositoryHandler;
@@ -73,7 +76,7 @@ public class HgGlobalConfigAutoConfigurationResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public Response autoConfiguration() {
+  public Response autoConfigurationWithoutDto() {
     return autoConfiguration(null);
   }
 
@@ -127,6 +130,10 @@ public class HgGlobalConfigAutoConfigurationResource {
     ConfigurationPermissions.write(config).check();
 
     repositoryHandler.doAutoConfiguration(config);
+    HgGlobalConfig oldConfig = repositoryHandler.getConfig();
+    oldConfig.setHgBinary(config.getHgBinary());
+    repositoryHandler.setConfig(oldConfig);
+    repositoryHandler.storeConfig();
 
     return Response.noContent().build();
   }
