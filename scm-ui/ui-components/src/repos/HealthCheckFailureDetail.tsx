@@ -54,6 +54,8 @@ const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }
         <em>{summary}</em>
         <br />
         {description}
+        <br />
+        {failure.url && <a href={failure.url} target="_blank" rel="noreferrer">{t("healthCheckFailure.detailUrl")}</a>}
       </li>
     );
   };

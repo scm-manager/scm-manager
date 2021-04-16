@@ -444,6 +444,7 @@
     "tooltip": "Dieses Repository ist fehlerhaft. Für weitere Details bitte klicken.",
     "title": "Fehler im Repository",
     "close": "Schließen",
+    "detailUrl": "Hier finden sich weitere Informationen.",
     "AKOdhQ0pw1": {
       "summary": "Kein .git oder refs Verzeichnis gefunden",
       "description": "Das Git-Repository enthält weder ein '.git' noch ein 'refs' Verzeichnis"
