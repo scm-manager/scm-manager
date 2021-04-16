@@ -42,7 +42,7 @@ import createMdastPlugin from "./createMdastPlugin";
 import gh from "hast-util-sanitize/lib/github";
 import raw from "rehype-raw";
 import slug from "rehype-slug";
-import {Node, Parent} from "unist";
+import merge from "deepmerge";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -119,7 +119,7 @@ class MarkdownView extends React.Component<Props, State> {
     if (contentRef && hash) {
       // we query only child elements, to avoid strange scrolling with multiple
       // markdown elements on one page.
-      const element = contentRef.querySelector(hash);
+      const element = contentRef.querySelector(`[id="${hash.substring(1)}"]`);
       if (element && element.scrollIntoView) {
         element.scrollIntoView();
       }
@@ -162,31 +162,114 @@ class MarkdownView extends React.Component<Props, State> {
       rendererList.code = MarkdownCodeRenderer;
     }
 
-    const components: {[key: string]: any} = {};
+    // NEW IMPL START
+
+    const components: { [key: string]: any } = {};
 
     if (rendererList.code) {
-      const codeRenderer = function({ node, children }: any, props: any) {
-        console.log("renderer:code/pre", arguments);
-        return React.createElement(rendererList.code, props, ...children);
+      const codeRendererAdapter = function({ node, children }: any) {
+        children = children || [];
+        const renderProps = {
+          value: children[0],
+          language: Array.isArray(node.properties.className) ? node.properties.className[0].split("language-")[1] : ""
+        };
+        return React.createElement(rendererList.code, renderProps, ...children);
       };
-      components.code = codeRenderer;
-      components.pre = codeRenderer;
+      components.code = codeRendererAdapter;
     }
 
-    const codeLanguageAttacherPlugin: AstPlugin = ({ visit }) => {
-      visit("code", (node: Node, index: number, parent?: Parent) => {
-        if (node.data) {
-          node.data.lang = node.lang;
-        } else {
-          node.data = {
-            lang: node.lang
-          }
-        }
-        console.log("remark:code", node, index, parent);
-      });
-    };
+    if (rendererList.link) {
+      const linkRendererAdapter = function({ node, children }: any) {
+        const renderProps = {
+          href: node.properties.href || ""
+        };
+        children = children || [];
+        return React.createElement(rendererList.link, renderProps, ...children);
+      };
+      components.a = linkRendererAdapter;
+    }
 
-    const plugins = [...mdastPlugins, createTransformer(t), codeLanguageAttacherPlugin].map(createMdastPlugin);
+    if (rendererList.heading) {
+      const createHeadingRendererAdapter = (level: number) => ({ node, children }: any) => {
+        const renderProps = {
+          id: node.properties.id,
+          level,
+          permalink
+        };
+        children = children || [];
+        return React.createElement(rendererList.heading, renderProps, ...children);
+      };
+      components.h1 = createHeadingRendererAdapter(1);
+      components.h2 = createHeadingRendererAdapter(2);
+      components.h3 = createHeadingRendererAdapter(3);
+      components.h4 = createHeadingRendererAdapter(4);
+      components.h5 = createHeadingRendererAdapter(5);
+      components.h6 = createHeadingRendererAdapter(6);
+    }
+
+    if (rendererList.break) {
+      components.br = rendererList.break;
+    }
+
+    if (rendererList.delete) {
+      components.del = rendererList.delete;
+    }
+
+    if (rendererList.emphasis) {
+      components.em = rendererList.emphasis;
+    }
+
+    if (rendererList.blockquote) {
+      components.blockquote = rendererList.blockquote;
+    }
+
+    if (rendererList.image) {
+      components.img = rendererList.image;
+    }
+
+    if (rendererList.list) {
+      components.ol = rendererList.list;
+      components.ul = rendererList.list;
+    }
+
+    if (rendererList.listItem) {
+      components.li = rendererList.listItem;
+    }
+
+    if (rendererList.paragraph) {
+      components.p = rendererList.paragraph;
+    }
+
+    if (rendererList.strong) {
+      components.strong = rendererList.strong;
+    }
+
+    if (rendererList.table) {
+      components.table = rendererList.table;
+    }
+
+    if (rendererList.tableHead) {
+      components.thead = rendererList.tableHead;
+    }
+
+    if (rendererList.tableBody) {
+      components.tbody = rendererList.tableBody;
+    }
+
+    if (rendererList.tableRow) {
+      components.tr = rendererList.tableRow;
+    }
+
+    if (rendererList.tableCell) {
+      components.td = rendererList.tableCell;
+      components.th = rendererList.tableCell;
+    }
+
+    if (rendererList.thematicBreak) {
+      components.hr = rendererList.thematicBreak;
+    }
+
+    const plugins = [...mdastPlugins, createTransformer(t)].map(createMdastPlugin);
 
     let processor = unified()
       .use(parseMarkdown)
@@ -198,12 +281,19 @@ class MarkdownView extends React.Component<Props, State> {
       processor = processor.use(raw);
     }
 
-    processor = processor.use(slug).use(sanitize, gh);
+    const schema: any = merge(gh, {
+      attributes: {
+        code: ["className"]
+      },
+      clobberPrefix: ""
+    });
+
+    processor = processor.use(slug).use(sanitize, schema);
 
     const toReactProcessor = processor.use(rehype2react, {
       createElement: React.createElement,
       passNode: true,
-      components
+      components: components
     });
 
     return (

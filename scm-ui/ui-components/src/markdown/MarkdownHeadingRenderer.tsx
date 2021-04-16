@@ -56,6 +56,7 @@ type Props = {
   children: ReactNode;
   level: number;
   permalink: string;
+  id?: string;
 };
 
 function flatten(text: string, child: any): any {
@@ -71,14 +72,14 @@ export function headingToAnchorId(heading: string) {
   return heading.toLowerCase().replace(/\W/g, "-");
 }
 
-const MarkdownHeadingRenderer: FC<Props> = ({ children, level, permalink }) => {
+const MarkdownHeadingRenderer: FC<Props> = ({ children, level, permalink, id }) => {
   const [copying, setCopying] = useState(false);
   const [t] = useTranslation("repos");
   const location = useLocation();
   const history = useHistory();
   const reactChildren = React.Children.toArray(children);
   const heading = reactChildren.reduce(flatten, "");
-  const anchorId = headingToAnchorId(heading);
+  const anchorId = id || headingToAnchorId(heading);
   const copyPermalink = (event: React.MouseEvent) => {
     event.preventDefault();
     setCopying(true);
@@ -93,7 +94,7 @@ const MarkdownHeadingRenderer: FC<Props> = ({ children, level, permalink }) => {
       <Icon name="link" onClick={copyPermalink} />
     </Tooltip>
   );
-  const headingElement = React.createElement("h" + level, {}, [...reactChildren, CopyButton]);
+  const headingElement = React.createElement("h" + level, {id: anchorId}, [...reactChildren, CopyButton]);
   const href = urls.withContextPath(location.pathname + "#" + anchorId);
   const permalinkHref =
     window.location.protocol +
@@ -102,7 +103,7 @@ const MarkdownHeadingRenderer: FC<Props> = ({ children, level, permalink }) => {
     urls.withContextPath((permalink || location.pathname) + "#" + anchorId);
 
   return (
-    <Link id={`${anchorId}`} className="anchor" href={href}>
+    <Link className="anchor" href={href}>
       {headingElement}
     </Link>
   );
