@@ -264,7 +264,11 @@
     "initializeRepository": "Repository initiieren",
     "dangerZone": "Umbenennen, Archivieren und Löschen",
     "createButton": "Neues Repository erstellen",
-    "importButton": "Repository importieren"
+    "importButton": "Repository importieren",
+    "healthCheckWarning": {
+      "title": "Die letzte Überprüfung dieses Repositories hat Fehler festgestellt. Für weitere Details hier klicken.",
+      "subtitle": "Um die Überprüfung erneut auszuführen, klicken Sie den Schalter unter \"Überprüfung starten\" weiter unten."
+    }
   },
   "export": {
     "subtitle": "Repository exportieren",
@@ -448,7 +452,7 @@
   "runHealthCheck": {
     "button": "Überprüfung",
     "subtitle": "Überprüfung starten",
-    "descriptionNotRunning": "Starten die Überprüfung dieses Repositories. Dieser Vorgang kann einige Zeit in Anspruch nehmen.",
+    "descriptionNotRunning": "Starten der Überprüfung dieses Repositories. Dieser Vorgang kann einige Zeit in Anspruch nehmen.",
     "descriptionRunning": "Die Überprüfung für dieses Repository läuft bereits und kann nicht parallel erneut gestartet werden."
   },
   "diff": {

@@ -264,7 +264,11 @@
     "initializeRepository": "Initialize Repository",
     "dangerZone": "Rename, Archive and Delete",
     "createButton": "Create Repository",
-    "importButton": "Import Repository"
+    "importButton": "Import Repository",
+    "healthCheckWarning": {
+      "title": "The latest health check for this repository reported failures. Click here for more details.",
+      "subtitle": "To rerun the health check, click the button in the \"Health Check\" part blow."
+    }
   },
   "export": {
     "subtitle": "Repository Export",
