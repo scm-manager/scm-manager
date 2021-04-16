@@ -41,7 +41,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.google.common.collect.ImmutableList.copyOf;
 import static java.util.Collections.synchronizedCollection;
 
 @Singleton
@@ -62,7 +61,9 @@ final class HealthChecker {
 
   @Inject
   HealthChecker(Set<HealthCheck> checks,
-                RepositoryManager repositoryManager, RepositoryServiceFactory repositoryServiceFactory, RepositoryPostProcessor repositoryPostProcessor) {
+                RepositoryManager repositoryManager,
+                RepositoryServiceFactory repositoryServiceFactory,
+                RepositoryPostProcessor repositoryPostProcessor) {
     this.checks = checks;
     this.repositoryManager = repositoryManager;
     this.repositoryServiceFactory = repositoryServiceFactory;
@@ -202,7 +203,7 @@ final class HealthChecker {
     if (!(repository.isHealthy() && result.isHealthy())) {
       logger.trace("store health check results for repository {}",
         repository);
-      repositoryPostProcessor.setCheckResults(repository.getId(), copyOf(result.getFailures()));
+      repositoryPostProcessor.setCheckResults(repository, result.getFailures());
     }
   }
 

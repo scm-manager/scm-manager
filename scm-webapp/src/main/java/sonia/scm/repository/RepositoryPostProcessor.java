@@ -24,27 +24,45 @@
 
 package sonia.scm.repository;
 
+import com.github.legman.EventBus;
+import com.google.common.collect.ImmutableList;
+import sonia.scm.event.ScmEventBus;
+
+import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.google.common.collect.ImmutableList.copyOf;
 import static java.util.Collections.emptyList;
 
 @Singleton
 class RepositoryPostProcessor {
 
+  private final ScmEventBus eventBus;
+
   private final Map<String, List<HealthCheckFailure>> checkResults = new HashMap<>();
 
-  void setCheckResults(String repositoryId, List<HealthCheckFailure> failures) {
-    checkResults.put(repositoryId, failures);
+  @Inject
+  RepositoryPostProcessor(ScmEventBus eventBus) {
+    this.eventBus = eventBus;
   }
 
-  List<HealthCheckFailure> getCheckResults(String repositoryId) {
-    return checkResults.getOrDefault(repositoryId, emptyList());
+  void setCheckResults(Repository repository, Collection<HealthCheckFailure> failures) {
+    List<HealthCheckFailure> oldFailures = getCheckResults(repository.getId());
+    ImmutableList<HealthCheckFailure> copyOfFailures = copyOf(failures);
+    checkResults.put(repository.getId(), copyOfFailures);
+    repository.setHealthCheckFailures(copyOfFailures);
+    eventBus.post(new HealthCheckEvent(repository, oldFailures, copyOfFailures));
   }
 
   void postProcess(Repository repository) {
     repository.setHealthCheckFailures(getCheckResults(repository.getId()));
+  }
+
+  private List<HealthCheckFailure> getCheckResults(String repositoryId) {
+    return checkResults.getOrDefault(repositoryId, emptyList());
   }
 }

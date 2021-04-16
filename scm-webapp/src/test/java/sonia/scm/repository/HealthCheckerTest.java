@@ -114,7 +114,7 @@ class HealthCheckerTest {
 
       checker.lightCheck(repositoryId);
 
-      verify(postProcessor).setCheckResults(eq(repositoryId), argThat(failures -> {
+      verify(postProcessor).setCheckResults(eq(repository), argThat(failures -> {
         assertThat(failures)
           .hasSize(2)
           .extracting("id").containsExactly("error1", "error2");
@@ -191,7 +191,7 @@ class HealthCheckerTest {
 
         checker.fullCheck(repositoryId);
 
-        verify(postProcessor).setCheckResults(eq(repositoryId), argThat(failures -> {
+        verify(postProcessor).setCheckResults(eq(repository), argThat(failures -> {
           assertThat(failures)
             .hasSize(1)
             .extracting("id").containsExactly("error");
@@ -233,7 +233,7 @@ class HealthCheckerTest {
 
         checker.fullCheck(repositoryId);
 
-        verify(postProcessor).setCheckResults(eq(repositoryId), argThat(failures -> {
+        verify(postProcessor).setCheckResults(eq(repository), argThat(failures -> {
           assertThat(failures)
             .hasSize(1)
             .extracting("id").containsExactly("error");
