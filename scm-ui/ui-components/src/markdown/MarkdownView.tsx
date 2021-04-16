@@ -165,8 +165,7 @@ class MarkdownView extends React.Component<Props, State> {
     const components: {[key: string]: any} = {};
 
     if (rendererList.code) {
-      const codeRenderer = function(args: any, props: any) {
-        const {node,children} = args;
+      const codeRenderer = function({ node, children }: any, props: any) {
         console.log("renderer:code/pre", arguments);
         return React.createElement(rendererList.code, props, ...children);
       };
