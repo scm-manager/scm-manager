@@ -179,8 +179,10 @@ final class HealthChecker {
   private void runInExecutorAndWait(Repository repository, Runnable runnable) {
     try {
       healthCheckExecutor.submit(runnable).get();
-    } catch (InterruptedException | ExecutionException e) {
+    } catch (ExecutionException e) {
       logger.warn("could not submit task for health check for repository {}", repository, e);
+    } catch (InterruptedException e) {
+      Thread.currentThread().interrupt();
     }
   }
 
