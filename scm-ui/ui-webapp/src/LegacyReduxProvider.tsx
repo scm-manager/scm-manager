@@ -53,7 +53,9 @@ type State = {
     version: string;
     links: Links;
   };
-  me?: Me;
+  auth?: {
+    me?: Me;
+  };
 };
 
 const initialState: State = {};
@@ -72,7 +74,9 @@ const reducer = (state: State = initialState, action: ActionTypes = { type: ACTI
     case "scm/me_success": {
       return {
         ...state,
-        me: action.payload
+        auth: {
+          me: action.payload
+        }
       };
     }
     default: {
