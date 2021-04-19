@@ -33,6 +33,10 @@ import java.nio.file.Path;
 @Extension
 public final class MetadataHealthCheck implements HealthCheck {
 
+  public static final HealthCheckFailure REPOSITORY_Directory_NOT_WRITABLE =
+    new HealthCheckFailure("9cSV1eaVF1",
+      "repository directory not writable",
+      "The system user has no permissions to create or delete files in the repository directory.");
   public static final HealthCheckFailure METADATA_NOT_WRITABLE =
     new HealthCheckFailure("6bSUg4dZ41",
       "metadata file not writable",
@@ -47,6 +51,9 @@ public final class MetadataHealthCheck implements HealthCheck {
   @Override
   public HealthCheckResult check(Repository repository) {
     Path repositoryLocation = locationResolver.forClass(Path.class).getLocation(repository.getId());
+    if (!Files.isWritable(repositoryLocation)) {
+      return HealthCheckResult.unhealthy(REPOSITORY_Directory_NOT_WRITABLE);
+    }
     Path metadata = repositoryLocation.resolve("metadata.xml");
     if (!Files.isWritable(metadata)) {
       return HealthCheckResult.unhealthy(METADATA_NOT_WRITABLE);
