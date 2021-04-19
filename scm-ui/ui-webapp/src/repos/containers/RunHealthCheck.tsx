@@ -24,7 +24,7 @@
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
-import { Button, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { Button, ErrorNotification, Level, Subtitle } from "@scm-manager/ui-components";
 import { useRunHealthCheck } from "@scm-manager/ui-api";
 
 type Props = {
@@ -41,17 +41,15 @@ const RunHealthCheck: FC<Props> = ({ repository }) => {
 
   return (
     <>
+      <hr />
       <ErrorNotification error={error} />
+      <Subtitle>{t("runHealthCheck.subtitle")}</Subtitle>
+      <p>
+        {repository.healthCheckRunning
+          ? t("runHealthCheck.descriptionRunning")
+          : t("runHealthCheck.descriptionNotRunning")}
+      </p>
       <Level
-        left={
-          <p>
-            <strong>{t("runHealthCheck.subtitle")}</strong>
-            <br />
-            {repository.healthCheckRunning
-              ? t("runHealthCheck.descriptionRunning")
-              : t("runHealthCheck.descriptionNotRunning")}
-          </p>
-        }
         right={
           <Button
             color="warning"

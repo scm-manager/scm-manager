@@ -77,10 +77,6 @@ const RepositoryDangerZone: FC<Props> = ({ repository, indexLinks }) => {
   if (repository?._links?.unarchive) {
     dangerZone.push(<UnarchiveRepo repository={repository} />);
   }
-  if (repository?._links?.runHealthCheck || repository.healthCheckRunning) {
-    dangerZone.push(<RunHealthCheck repository={repository} />);
-  }
-
   if (dangerZone.length === 0) {
     return null;
   }
