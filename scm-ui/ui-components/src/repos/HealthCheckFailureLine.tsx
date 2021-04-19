@@ -22,40 +22,38 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { Modal } from "../modals";
 import { HealthCheckFailure } from "@scm-manager/ui-types";
+import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { Button } from "../buttons";
-import HealthCheckFailureLine from "./HealthCheckFailureLine";
 
 type Props = {
-  active: boolean;
-  closeFunction: () => void;
-  failures?: HealthCheckFailure[];
+  failure: HealthCheckFailure;
 };
 
-const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }) => {
-  const [t] = useTranslation("repos");
+const HealthCheckFailureLine: FC<Props> = ({ failure }) => {
+  const [t] = useTranslation("plugins");
 
-  const failureComponents = failures ? failures.map(failure => <HealthCheckFailureLine failure={failure} />) : [];
+  const translationOrDefault = (translationKey: string, defaultValue: string) => {
+    const translation = t(translationKey);
+    return translation === translationKey ? defaultValue : translation;
+  };
 
-  const footer = <Button label={t("healthCheckFailure.close")} action={closeFunction} color="grey" />;
+  const summary = translationOrDefault(`healthCheckFailures.${failure.id}.summary`, failure.summary);
+  const description = translationOrDefault(`healthCheckFailures.${failure.id}.description`, failure.description);
 
   return (
-    <Modal
-      body={
-        <div className={"content"}>
-          <ul>{failureComponents}</ul>
-        </div>
-      }
-      title={t("healthCheckFailure.title")}
-      closeFunction={closeFunction}
-      active={active}
-      footer={footer}
-      headColor={"danger"}
-    />
+    <li>
+      <em>{summary}</em>
+      <br />
+      {description}
+      <br />
+      {failure.url && (
+        <a href={failure.url} target="_blank" rel="noreferrer">
+          {t("healthCheckFailures.detailUrl")}
+        </a>
+      )}
+    </li>
   );
 };
 
-export default HealthCheckFailureDetail;
+export default HealthCheckFailureLine;

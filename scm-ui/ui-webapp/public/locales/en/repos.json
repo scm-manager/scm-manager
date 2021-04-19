@@ -449,8 +449,7 @@
   "healthCheckFailure": {
     "tooltip": "This repository has health check failures. Click to get details.",
     "title": "Health Check Failures",
-    "close": "Close",
-    "detailUrl": "Find more details here."
+    "close": "Close"
   },
   "diff": {
     "changes": {

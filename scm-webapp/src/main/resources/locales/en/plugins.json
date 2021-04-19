@@ -360,6 +360,9 @@
       "description": "The import is not possible for the given repository type."
     }
   },
+  "healthChecksFailures": {
+    "detailUrl": "Find more details here."
+  },
   "namespaceStrategies": {
     "UsernameNamespaceStrategy": "Username",
     "CustomNamespaceStrategy": "Custom",
