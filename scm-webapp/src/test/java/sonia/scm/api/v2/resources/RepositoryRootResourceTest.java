@@ -55,6 +55,7 @@ import sonia.scm.importexport.FullScmRepositoryImporter;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
 import sonia.scm.importexport.RepositoryImportLoggerFactory;
 import sonia.scm.repository.CustomNamespaceStrategy;
+import sonia.scm.repository.HealthCheckService;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
@@ -157,6 +158,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private RepositoryImportLoggerFactory importLoggerFactory;
   @Mock
   private ExportService exportService;
+  @Mock
+  private HealthCheckService healthCheckService;
 
   @Captor
   private ArgumentCaptor<Predicate<Repository>> filterCaptor;
