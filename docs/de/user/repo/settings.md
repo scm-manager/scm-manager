@@ -39,6 +39,20 @@ Das Ausgabeformat des Repository kann über die angebotenen Optionen verändert 
 
 ![Repository-Settings-General-Export](assets/repository-settings-general-export.png)
 
+Der Bereich "Überprüfung" bietet die Möglichkeit, eine Überprüfung des Repositories zu starten. Hier werden (zum Teil
+ausführliche) Checks ausgeführt, die z. B. sicherstellen, dass die Verzeichnisse korrekt eingebunden sind. Wenn bei
+dem Zugriff auf ein Repository Fehler auftreten, sollte zunächst eine solche Überprüfung gestartet werden. Ein Teil
+dieser Prüfungen wird bei jedem Start des SCM-Managers ausgeführt.
+
+Werden bei einer dieser Überprüfungen Fehler gefunden, wird auf der Repository-Übersicht sowie auf den Detailseiten
+zum Repository neben dem Namen ein Tag "fehlerhaft" angezeigt. In den Einstellungen wird zudem eine Meldung
+eingeblendet. Durch Klick auf diese Meldung oder die Tags wird ein Popup mit weiteren Details angezeigt.
+
+Der Server führt immer nur eine Prüfung zur Zeit durch. Es können jedoch für mehrere Repositories Prüfungen in die
+Warteschlange gestellt werden, die dann nacheinander durchgeführt werden.
+
+![Repository-Settings-General-Health-Check](assets/repository-settings-general-health-check.png)
+
 ### Berechtigungen
 
 Dank des fein granularen Berechtigungskonzepts des SCM-Managers können Nutzern und Gruppen, basierend auf definierbaren
