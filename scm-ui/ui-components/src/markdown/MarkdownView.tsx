@@ -35,10 +35,12 @@ import { create as createMarkdownHeadingRenderer } from "./MarkdownHeadingRender
 import { create as createMarkdownLinkRenderer } from "./MarkdownLinkRenderer";
 import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
 import Notification from "../Notification";
-import { createTransformer } from "./remarkChangesetShortLinkParser";
+import { createTransformer as createChangesetShortlinkParser } from "./remarkChangesetShortLinkParser";
+import { createTransformer as createValuelessTextAdapter } from "./remarkValuelessTextAdapter";
 import MarkdownCodeRenderer from "./MarkdownCodeRenderer";
 import { AstPlugin } from "./PluginApi";
 import createMdastPlugin from "./createMdastPlugin";
+// @ts-ignore
 import gh from "hast-util-sanitize/lib/github";
 import raw from "rehype-raw";
 import slug from "rehype-slug";
@@ -269,7 +271,9 @@ class MarkdownView extends React.Component<Props, State> {
       components.hr = rendererList.thematicBreak;
     }
 
-    const plugins = [...mdastPlugins, createTransformer(t)].map(createMdastPlugin);
+    const plugins = [...mdastPlugins, createChangesetShortlinkParser(t), createValuelessTextAdapter()].map(
+      createMdastPlugin
+    );
 
     let processor = unified()
       .use(parseMarkdown)
@@ -296,11 +300,12 @@ class MarkdownView extends React.Component<Props, State> {
       components: components
     });
 
+    const renderedMarkdown: any = toReactProcessor.processSync(content).result;
+
     return (
       <ErrorBoundary fallback={MarkdownErrorNotification}>
         <div ref={el => this.setState({ contentRef: el })} className="content is-word-break">
-          // @ts-ignore
-          {toReactProcessor.processSync(content).result}
+          {renderedMarkdown}
         </div>
       </ErrorBoundary>
     );

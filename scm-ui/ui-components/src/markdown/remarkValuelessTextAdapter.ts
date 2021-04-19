@@ -22,21 +22,20 @@
  * SOFTWARE.
  */
 
-export default `# XSS should prevented
+import { AstPlugin } from "./PluginApi";
+import { Node, Parent } from "unist";
 
-You should not see an alert onload.
-<div onload=alert("onload alert")></div>
-<script>
-  alert("Hello alter from script tag");
-</script>
-
-If you hover over <b onmouseover=alert("onmouseover alert")>me</b> nothing should happen.
-
-Not every html <strong>html</strong> <i>should</i> be removed.
-
-<IFRAME SRC="javascript:alert('iframe');"></IFRAME>
-
-<FRAMESET><FRAME SRC="javascript:alert('frameset');"></FRAMESET>
-
-<OBJECT TYPE="text/x-scriptlet" DATA="http://xss.rocks/scriptlet.html"></OBJECT>
-`;
+/**
+ * Some existing remark plugins (e.g. changesetShortLinkParser or the plugin for issue tracker links) create
+ * text nodes without values but with children. This does not get parsed properly by remark2rehype.
+ * This remark-plugin transforms all of these invalid text nodes to valid paragraphs.
+ */
+export const createTransformer = (): AstPlugin => {
+  return ({ visit }) => {
+    visit("text", (node: Node, index: number, parent?: Parent) => {
+      if (node.value === undefined && Array.isArray(node.children) && node.children.length > 0) {
+        node.type = "paragraph";
+      }
+    });
+  };
+};
