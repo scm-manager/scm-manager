@@ -27,10 +27,10 @@ import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 
 type Props = {
-  failure: HealthCheckFailure;
+  failures?: HealthCheckFailure[];
 };
 
-const HealthCheckFailureLine: FC<Props> = ({ failure }) => {
+const HealthCheckFailureList: FC<Props> = ({ failures }) => {
   const [t] = useTranslation("plugins");
 
   const translationOrDefault = (translationKey: string, defaultValue: string) => {
@@ -38,22 +38,32 @@ const HealthCheckFailureLine: FC<Props> = ({ failure }) => {
     return translation === translationKey ? defaultValue : translation;
   };
 
-  const summary = translationOrDefault(`healthCheckFailures.${failure.id}.summary`, failure.summary);
-  const description = translationOrDefault(`healthCheckFailures.${failure.id}.description`, failure.description);
+  if (!failures) {
+    return null;
+  }
 
-  return (
-    <li>
-      <em>{summary}</em>
-      <br />
-      {description}
-      <br />
-      {failure.url && (
-        <a href={failure.url} target="_blank" rel="noreferrer">
-          {t("healthCheckFailures.detailUrl")}
-        </a>
-      )}
-    </li>
-  );
+  const failureLine = (failure: HealthCheckFailure) => {
+    const summary = translationOrDefault(`healthCheckFailures.${failure.id}.summary`, failure.summary);
+    const description = translationOrDefault(`healthCheckFailures.${failure.id}.description`, failure.description);
+
+    return (
+      <li>
+        <em>{summary}</em>
+        <br />
+        {description}
+        <br />
+        {failure.url && (
+          <a href={failure.url} target="_blank" rel="noreferrer">
+            {t("healthCheckFailures.detailUrl")}
+          </a>
+        )}
+      </li>
+    );
+  };
+
+  const failureComponents = failures.map(failureLine);
+
+  return <ul>{failureComponents}</ul>;
 };
 
-export default HealthCheckFailureLine;
+export default HealthCheckFailureList;

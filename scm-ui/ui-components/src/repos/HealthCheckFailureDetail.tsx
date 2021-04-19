@@ -27,7 +27,7 @@ import { Modal } from "../modals";
 import { HealthCheckFailure } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { Button } from "../buttons";
-import HealthCheckFailureLine from "./HealthCheckFailureLine";
+import HealthCheckFailureList from "./HealthCheckFailureList";
 
 type Props = {
   active: boolean;
@@ -38,15 +38,13 @@ type Props = {
 const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }) => {
   const [t] = useTranslation("repos");
 
-  const failureComponents = failures ? failures.map(failure => <HealthCheckFailureLine failure={failure} />) : [];
-
   const footer = <Button label={t("healthCheckFailure.close")} action={closeFunction} color="grey" />;
 
   return (
     <Modal
       body={
         <div className={"content"}>
-          <ul>{failureComponents}</ul>
+          <HealthCheckFailureList failures={failures} />
         </div>
       }
       title={t("healthCheckFailure.title")}
