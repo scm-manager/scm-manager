@@ -24,8 +24,6 @@
 
 package sonia.scm.repository;
 
-import com.github.legman.EventBus;
-import com.google.common.collect.ImmutableList;
 import sonia.scm.event.ScmEventBus;
 
 import javax.inject.Inject;
@@ -52,7 +50,7 @@ class RepositoryPostProcessor {
 
   void setCheckResults(Repository repository, Collection<HealthCheckFailure> failures) {
     List<HealthCheckFailure> oldFailures = getCheckResults(repository.getId());
-    ImmutableList<HealthCheckFailure> copyOfFailures = copyOf(failures);
+    List<HealthCheckFailure> copyOfFailures = copyOf(failures);
     checkResults.put(repository.getId(), copyOfFailures);
     repository.setHealthCheckFailures(copyOfFailures);
     eventBus.post(new HealthCheckEvent(repository, oldFailures, copyOfFailures));
