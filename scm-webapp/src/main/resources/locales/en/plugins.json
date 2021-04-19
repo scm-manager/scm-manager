@@ -53,6 +53,12 @@
           "displayName": "Export repositories",
           "description": "Attention: May export all repositories including all metadata"
         }
+      },
+      "read,healthCheck": {
+        "*": {
+          "displayName": "Run repository health checks",
+          "description": "May see all repositories and run health checks for them"
+        }
       }
     },
     "user": {
@@ -164,6 +170,10 @@
       "export": {
         "displayName": "export repository",
         "description": "Attention: May export the repository including all metadata"
+      },
+      "healthCheck": {
+        "displayName": "run health checks",
+        "description": "May run health checks for this repository"
       },
       "*": {
         "displayName": "own repository",

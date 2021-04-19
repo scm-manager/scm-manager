@@ -53,6 +53,12 @@
           "displayName": "Repositories exportieren",
           "description": "Achtung: Darf alle Repositories inkl. aller Metadaten exportieren."
         }
+      },
+      "read,healthCheck": {
+        "*": {
+          "displayName": "Repositories überprüfen",
+          "description": "Darf alle Repositories sehen und Überprüfungen starten."
+        }
       }
     },
     "user": {
@@ -164,6 +170,10 @@
       "export": {
         "displayName": "Repository exportieren",
         "description": "Achtung: Darf das Repository inkl. aller Metadaten exportieren."
+      },
+      "healthCheck": {
+        "displayName": "überprüfen",
+        "description": "Darf das Repository überprüfen."
       },
       "*": {
         "displayName": "Alle Repository Rechte",
