@@ -48,7 +48,8 @@ public class HgFullHealthCheckCommand extends AbstractCommand implements FullHea
       return HealthCheckResult.healthy();
     } catch (ExecutionException e) {
       LOG.warn("hg verify failed for repository {}", getRepository(), e);
-      return HealthCheckResult.unhealthy(new HealthCheckFailure("FaSUYbZUR1", "hg verify failed", "The check 'hg verify' failed for the repository."));
+      return HealthCheckResult.unhealthy(new HealthCheckFailure("FaSUYbZUR1",
+        "hg verify failed", "The check 'hg verify' failed for the repository."));
     }
   }
 }

@@ -48,7 +48,8 @@ public class SvnFullHealthCheckCommand extends AbstractSvnCommand implements Ful
       adminClient.doVerify(context.getDirectory());
     } catch (SVNException e) {
       LOG.warn("svn verify failed for repository {}", context.get(), e);
-      return HealthCheckResult.unhealthy(new HealthCheckFailure("FaSUYbZUR1", "hg verify failed", "The check 'hg verify' failed for the repository."));
+      return HealthCheckResult.unhealthy(new HealthCheckFailure("5FSV2kreE1",
+        "svn verify failed", "The check 'svn verify' failed for the repository."));
     }
 
     return HealthCheckResult.healthy();
