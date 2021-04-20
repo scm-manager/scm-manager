@@ -21,16 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { MouseEvent } from "react";
+import React, { FC, useState, MouseEvent } from "react";
 import styled from "styled-components";
 import { SelectValue } from "@scm-manager/ui-types";
 import Level from "../layout/Level";
-import Autocomplete from "../Autocomplete";
 import AddButton from "../buttons/AddButton";
+import Autocomplete from "../Autocomplete";
 
 type Props = {
   addEntry: (p: SelectValue) => void;
-  disabled: boolean;
+  disabled?: boolean;
   buttonLabel: string;
   fieldLabel: string;
   helpText?: string;
@@ -40,86 +40,63 @@ type Props = {
   noOptionsMessage?: string;
 };
 
-type State = {
-  selectedValue?: SelectValue;
-};
-
-const StyledAutocomplete = styled(Autocomplete)`
+const FullWidthAutocomplete = styled(Autocomplete)`
   width: 100%;
   margin-right: 1.5rem;
 `;
 
-class AutocompleteAddEntryToTableField extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      selectedValue: undefined
-    };
-  }
-  render() {
-    const {
-      disabled,
-      buttonLabel,
-      fieldLabel,
-      helpText,
-      loadSuggestions,
-      placeholder,
-      loadingMessage,
-      noOptionsMessage
-    } = this.props;
+const AutocompleteAddEntryToTableField: FC<Props> = ({
+  addEntry,
+  disabled,
+  buttonLabel,
+  fieldLabel,
+  helpText,
+  loadSuggestions,
+  placeholder,
+  loadingMessage,
+  noOptionsMessage
+}) => {
+  const [selectedValue, setSelectedValue] = useState<SelectValue | null>(null);
 
-    const { selectedValue } = this.state;
-    return (
-      <Level
-        children={
-          <StyledAutocomplete
-            label={fieldLabel}
-            loadSuggestions={loadSuggestions}
-            valueSelected={this.handleAddEntryChange}
-            helpText={helpText}
-            value={selectedValue}
-            placeholder={placeholder}
-            loadingMessage={loadingMessage}
-            noOptionsMessage={noOptionsMessage}
-            creatable={true}
-          />
-        }
-        right={
-          <div className="field">
-            <AddButton label={buttonLabel} action={this.addButtonClicked} disabled={disabled} />
-          </div>
-        }
-      />
-    );
-  }
-
-  addButtonClicked = (event: MouseEvent) => {
-    event.preventDefault();
-    this.appendEntry();
+  const handleAddEntryChange = (selection: SelectValue) => {
+    setSelectedValue(selection);
   };
 
-  appendEntry = () => {
-    const { selectedValue } = this.state;
-    if (!selectedValue) {
+  const addButtonClicked = (event: MouseEvent) => {
+    event.preventDefault();
+    appendEntry();
+  };
+
+  const appendEntry = () => {
+    if (disabled || !selectedValue) {
       return;
     }
-    this.setState(
-      // @ts-ignore
-      {
-        ...this.state,
-        // @ts-ignore null is needed to clear the selection; undefined does not work
-        selectedValue: null
-      },
-      () => this.props.addEntry(selectedValue)
-    );
+    addEntry(selectedValue);
+    setSelectedValue(null);
   };
 
-  handleAddEntryChange = (selection: SelectValue) => {
-    this.setState({
-      ...this.state,
-      selectedValue: selection
-    });
-  };
-}
+  return (
+    <Level
+      children={
+        <FullWidthAutocomplete
+          label={fieldLabel}
+          loadSuggestions={loadSuggestions}
+          valueSelected={handleAddEntryChange}
+          helpText={helpText}
+          value={selectedValue}
+          placeholder={placeholder}
+          loadingMessage={loadingMessage}
+          noOptionsMessage={noOptionsMessage}
+          creatable={true}
+        />
+      }
+      right={
+        <div className="field">
+          <AddButton label={buttonLabel} action={addButtonClicked} disabled={disabled} />
+        </div>
+      }
+    />
+  );
+};
 
 export default AutocompleteAddEntryToTableField;
