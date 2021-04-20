@@ -266,8 +266,8 @@
     "createButton": "Neues Repository erstellen",
     "importButton": "Repository importieren",
     "healthCheckWarning": {
-      "title": "Die letzte Überprüfung dieses Repositories hat Fehler festgestellt. Für weitere Details hier klicken.",
-      "subtitle": "Um die Überprüfung erneut auszuführen, klicken Sie den Schalter unter \"Überprüfung starten\" weiter unten."
+      "title": "Die letzte Integritätsprüfung dieses Repositories hat Fehler festgestellt. Für weitere Details hier klicken.",
+      "subtitle": "Um die Integritätsprüfung erneut auszuführen, klicken Sie den Schalter unter \"Integritätsprüfung starten\" weiter unten."
     }
   },
   "export": {
@@ -446,10 +446,10 @@
     "close": "Schließen"
   },
   "runHealthCheck": {
-    "button": "Überprüfung starten",
-    "subtitle": "Überprüfung",
-    "descriptionNotRunning": "Starten der Überprüfung dieses Repositories. Dieser Vorgang kann einige Zeit in Anspruch nehmen.",
-    "descriptionRunning": "Die Überprüfung für dieses Repository läuft bereits und kann nicht parallel erneut gestartet werden."
+    "button": "Integritätsprüfung starten",
+    "subtitle": "Integritätsprüfung",
+    "descriptionNotRunning": "Starten der Integritätsprüfung dieses Repositories. Dieser Vorgang kann einige Zeit in Anspruch nehmen.",
+    "descriptionRunning": "Die Integritätsprüfung für dieses Repository läuft bereits und kann nicht parallel erneut gestartet werden."
   },
   "diff": {
     "jumpToSource": "Zur Quelldatei springen",

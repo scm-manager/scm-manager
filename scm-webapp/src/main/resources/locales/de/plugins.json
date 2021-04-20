@@ -56,8 +56,8 @@
       },
       "read,healthCheck": {
         "*": {
-          "displayName": "Repositories überprüfen",
-          "description": "Darf alle Repositories sehen und Überprüfungen starten."
+          "displayName": "Integritätsprüfungen ausführen",
+          "description": "Darf alle Repositories sehen und Integritätsprüfungen starten."
         }
       }
     },
