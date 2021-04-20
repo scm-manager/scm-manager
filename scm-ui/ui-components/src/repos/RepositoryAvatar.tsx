@@ -21,31 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Repository } from "@scm-manager/ui-types";
 import { Image } from "@scm-manager/ui-components";
+import styled from "styled-components";
+
+const Avatar = styled.p`
+  border-radius: 5px;
+`;
 
 type Props = {
   repository: Repository;
 };
 
-class RepositoryAvatar extends React.Component<Props> {
-  render() {
-    const { repository } = this.props;
-    return (
-      <p className="image is-64x64">
-        <ExtensionPoint
-          name="repos.repository-avatar"
-          props={{
-            repository
-          }}
-        >
-          <Image src="/images/blib.jpg" alt="Logo" />
-        </ExtensionPoint>
-      </p>
-    );
-  }
-}
+const renderExtensionPoint = (repository: Repository) => {
+  return (
+    <ExtensionPoint
+      name="repos.repository-avatar.primary"
+      props={{
+        repository
+      }}
+    >
+      <ExtensionPoint
+        name="repos.repository-avatar"
+        props={{
+          repository
+        }}
+      >
+        <Image src="/images/blib.jpg" alt="Logo" />
+      </ExtensionPoint>
+    </ExtensionPoint>
+  );
+};
+
+const RepositoryAvatar: FC<Props> = ({ repository }) => {
+  return <Avatar className="image is-64x64">{renderExtensionPoint(repository)}</Avatar>;
+};
 
 export default RepositoryAvatar;
