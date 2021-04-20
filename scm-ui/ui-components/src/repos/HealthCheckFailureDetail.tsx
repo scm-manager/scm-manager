@@ -52,6 +52,7 @@ const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }
       active={active}
       footer={footer}
       headColor={"danger"}
+      headTextColor={"white"}
     />
   );
 };
