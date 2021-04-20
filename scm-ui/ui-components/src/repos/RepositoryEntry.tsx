@@ -57,7 +57,7 @@ const RepositoryTag = styled.span`
 `;
 const RepositoryWarnTag = styled.span`
   margin-left: 0.2rem;
-  background-color: red;
+  background-color: #f14668;
   padding: 0.25rem;
   border-radius: 5px;
   color: white;

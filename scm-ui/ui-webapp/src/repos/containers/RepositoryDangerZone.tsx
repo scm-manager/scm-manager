@@ -31,7 +31,6 @@ import { Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import ArchiveRepo from "./ArchiveRepo";
 import UnarchiveRepo from "./UnarchiveRepo";
-import RunHealthCheck from "./RunHealthCheck";
 
 type Props = {
   repository: Repository;

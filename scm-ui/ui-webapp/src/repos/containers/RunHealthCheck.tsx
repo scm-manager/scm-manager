@@ -53,7 +53,7 @@ const RunHealthCheck: FC<Props> = ({ repository }) => {
         right={
           <Button
             color="warning"
-            icon="eye"
+            icon="heartbeat"
             label={t("runHealthCheck.button")}
             action={runHealthCheckCallback}
             loading={isLoading || repository.healthCheckRunning}
