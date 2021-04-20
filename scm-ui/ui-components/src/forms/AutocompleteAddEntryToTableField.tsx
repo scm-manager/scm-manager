@@ -56,7 +56,7 @@ const AutocompleteAddEntryToTableField: FC<Props> = ({
   loadingMessage,
   noOptionsMessage
 }) => {
-  const [selectedValue, setSelectedValue] = useState<SelectValue | null>(null);
+  const [selectedValue, setSelectedValue] = useState<SelectValue | undefined>(undefined);
 
   const handleAddEntryChange = (selection: SelectValue) => {
     setSelectedValue(selection);
@@ -72,7 +72,7 @@ const AutocompleteAddEntryToTableField: FC<Props> = ({
       return;
     }
     addEntry(selectedValue);
-    setSelectedValue(null);
+    setSelectedValue(undefined);
   };
 
   return (
