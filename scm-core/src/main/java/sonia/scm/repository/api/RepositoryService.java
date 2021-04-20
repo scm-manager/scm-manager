@@ -476,7 +476,7 @@ public final class RepositoryService implements Closeable {
    * @since 2.17.0
    */
   public FullHealthCheckCommandBuilder getFullCheckCommand() {
-    LOG.debug("create lookup command for repository {}",
+    LOG.debug("create full check command for repository {}",
       repository.getNamespaceAndName());
     return new FullHealthCheckCommandBuilder(provider.getFullHealthCheckCommand());
   }
