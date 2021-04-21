@@ -29,6 +29,7 @@ import { createAttributesForTesting } from "../devBuild";
 
 export type ButtonProps = {
   label?: string;
+  title?: string;
   loading?: boolean;
   disabled?: boolean;
   action?: (event: MouseEvent) => void;
@@ -43,7 +44,6 @@ export type ButtonProps = {
 
 type Props = ButtonProps &
   RouteComponentProps & {
-    title?: string;
     type?: "button" | "submit" | "reset";
     color?: string;
   };
