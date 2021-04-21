@@ -52,10 +52,11 @@ public abstract class HgGlobalConfigToHgGlobalConfigDtoMapper extends BaseMapper
 
   @AfterMapping
   void appendLinks(HgGlobalConfig config, @MappingTarget HgGlobalGlobalConfigDto target) {
-    HgConfigLinks.ConfigLinks configLinks = links.global();
+    HgConfigLinks.GlobalConfigLinks configLinks = links.global();
     Links.Builder linksBuilder = linkingTo().self(configLinks.get());
     if (ConfigurationPermissions.write(config).isPermitted()) {
       linksBuilder.single(link("update", configLinks.update()));
+      linksBuilder.single(link("autoConfiguration", configLinks.autoConfigure()));
     }
     target.add(linksBuilder.build());
   }

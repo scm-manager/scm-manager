@@ -23,7 +23,8 @@
       "disabledHelpText": "Aktiviert oder deaktiviert das Mercurial Plugin.",
       "required": "Dieser Konfigurationswert wird benötigt",
       "submit": "Speichern",
-      "success": "Einstellungen wurden erfolgreich geändert"
+      "success": "Einstellungen wurden erfolgreich geändert",
+      "autoConfigure": "Mercurial automatisch konfigurieren"
     }
   },
   "permissions" : {

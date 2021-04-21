@@ -23,8 +23,8 @@
  */
 import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
-import { Links } from "@scm-manager/ui-types";
-import { InputField, Checkbox } from "@scm-manager/ui-components";
+import { Link, Links } from "@scm-manager/ui-types";
+import { InputField, Checkbox, Button, apiClient } from "@scm-manager/ui-components";
 
 type Configuration = {
   hgBinary: string;
@@ -89,6 +89,22 @@ class HgConfigurationForm extends React.Component<Props, State> {
     );
   };
 
+  triggerAutoConfigure = () => {
+    apiClient
+      .put(
+        (this.props.initialConfiguration._links.autoConfiguration as Link).href,
+        { ...this.props.initialConfiguration, hgBinary: this.state.hgBinary },
+        "application/vnd.scmm-hgConfig+json;v=2"
+      )
+      .then(() =>
+        apiClient
+          .get((this.props.initialConfiguration._links.self as Link).href)
+          .then(r => r.json())
+          .then((config: Configuration) => this.setState({ hgBinary: config.hgBinary }))
+      )
+      .then(() => this.updateValidationStatus());
+  };
+
   inputField = (name: string) => {
     const { readOnly, t } = this.props;
     return (
@@ -124,15 +140,20 @@ class HgConfigurationForm extends React.Component<Props, State> {
   };
 
   render() {
+    const { t } = this.props;
     return (
       <div className="columns is-multiline">
         {this.inputField("hgBinary")}
         {this.inputField("encoding")}
-        <div className="column is-half">
-          {this.checkbox("showRevisionInId")}
-        </div>
-        <div className="column is-half">
-          {this.checkbox("enableHttpPostArgs")}
+        <div className="column is-half">{this.checkbox("showRevisionInId")}</div>
+        <div className="column is-half">{this.checkbox("enableHttpPostArgs")}</div>
+        <div className="column is-full">
+          <Button
+            disabled={!this.props.initialConfiguration?._links?.autoConfiguration}
+            action={() => this.triggerAutoConfigure()}
+          >
+            {t("scm-hg-plugin.config.autoConfigure")}
+          </Button>
         </div>
       </div>
     );

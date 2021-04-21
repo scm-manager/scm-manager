@@ -23,7 +23,8 @@
       "disabledHelpText": "Enable or disable the Mercurial plugin.",
       "required": "This configuration value is required",
       "submit": "Submit",
-      "success": "Configuration changed successfully"
+      "success": "Configuration changed successfully",
+      "autoConfigure": "Configure Mercurial Automatically"
     }
   },
   "permissions" : {

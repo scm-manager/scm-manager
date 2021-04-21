@@ -84,6 +84,9 @@ class HgGlobalConfigToHgGlobalConfigDtoMapperTest {
     assertThat(dto.getLinks().getLinkBy("update")).hasValueSatisfying(
       link -> assertThat(link.getHref()).isEqualTo(expectedBaseUri.toString())
     );
+    assertThat(dto.getLinks().getLinkBy("autoConfiguration")).hasValueSatisfying(
+      link -> assertThat(link.getHref()).isEqualTo(expectedBaseUri.toString() + "/auto-configuration")
+    );
   }
 
   @Test
@@ -97,5 +100,6 @@ class HgGlobalConfigToHgGlobalConfigDtoMapperTest {
       link -> assertThat(link.getHref()).isEqualTo(expectedBaseUri.toString())
     );
     assertThat(dto.getLinks().hasLink("update")).isFalse();
+    assertThat(dto.getLinks().hasLink("autoConfiguration")).isFalse();
   }
 }
