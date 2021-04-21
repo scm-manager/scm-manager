@@ -26,14 +26,10 @@ package sonia.scm.search;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.TransformFilter;
-
-//~--- JDK imports ------------------------------------------------------------
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,42 +42,35 @@ public final class SearchUtil {
 
   public static boolean matchesAll(SearchRequest request, String value,
                                    String... other) {
-    boolean result = false;
     String query = createStringQuery(request);
 
     if (value.matches(query)) {
-      result = true;
-
       for (String o : other) {
         if ((o == null) || !o.matches(query)) {
-          result = false;
-
-          break;
+          return false;
         }
       }
+      return true;
     }
 
-    return result;
+    return false;
   }
 
   public static boolean matchesOne(SearchRequest request, String value,
                                    String... other) {
-    boolean result = false;
     String query = createStringQuery(request);
 
     if (!value.matches(query)) {
       for (String o : other) {
         if ((o != null) && o.matches(query)) {
-          result = true;
-
-          break;
+          return true;
         }
       }
     } else {
-      result = true;
+      return true;
     }
 
-    return result;
+    return false;
   }
 
   public static <T, R> Collection<R> search(SearchRequest searchRequest,
