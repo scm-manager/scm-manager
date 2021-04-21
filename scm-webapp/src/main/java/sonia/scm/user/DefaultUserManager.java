@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.user;
 
 import com.github.sdorra.ssp.PermissionActionCheck;
@@ -217,16 +217,11 @@ public class DefaultUserManager extends AbstractUserManager
     }
 
     final PermissionActionCheck<User> check = UserPermissions.read();
-    return SearchUtil.search(searchRequest, userDAO.getAll(), new TransformFilter<User, User>() {
-      @Override
-      public User accept(User user)
-      {
-        User result = null;
-        if (check.isPermitted(user) && matches(searchRequest, user)) {
-          result = user.clone();
-        }
-        return result;
+    return SearchUtil.search(searchRequest, userDAO.getAll(), user -> {
+      if (check.isPermitted(user) && matches(searchRequest, user)) {
+        return user.clone();
       }
+      return null;
     });
   }
 
@@ -313,16 +308,11 @@ public class DefaultUserManager extends AbstractUserManager
   public Collection<User> getAll(Comparator<User> comaparator, int start, int limit) {
     final PermissionActionCheck<User> check = UserPermissions.read();
     return Util.createSubCollection(userDAO.getAll(), comaparator,
-      new CollectionAppender<User>()
-    {
-      @Override
-      public void append(Collection<User> collection, User item)
-      {
+      (collection, item) -> {
         if (check.isPermitted(item)) {
           collection.add(item.clone());
         }
-      }
-    }, start, limit);
+      }, start, limit);
   }
 
   /**

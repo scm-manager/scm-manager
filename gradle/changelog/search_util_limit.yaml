@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fix limit with negativ integer for searchUtil ([#1627](https://github.com/scm-manager/scm-manager/pull/1627))

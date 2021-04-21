@@ -21,171 +21,135 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.search;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.junit.Test;
+import sonia.scm.TransformFilter;
+import sonia.scm.user.User;
 
-import static org.junit.Assert.*;
+import java.util.Arrays;
+import java.util.Collection;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class SearchUtilTest
-{
+import static java.util.stream.Collectors.toList;
+import static org.assertj.core.api.Assertions.assertThat;
 
-  /**
-   * Method description
-   *
-   */
+public class SearchUtilTest {
+
   @Test
-  public void testMultiMatchesAll()
-  {
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("test"), "test",
-      "test hello", "hello test", "hello test hello"));
-    assertFalse(SearchUtil.matchesAll(new SearchRequest("test"), "test",
-      "test hello", "hello test", "hello test hello", "ka"));
+  public void testMultiMatchesAll() {
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test"), "test", "test hello", "hello test", "hello test hello")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test"), "test", "test hello", "hello test", "hello test hello", "ka")).isFalse();
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testMultiMatchesOne()
-  {
-    assertTrue(SearchUtil.matchesOne(new SearchRequest("test"), "test",
-      "test hello", "hello test", "hello test hello"));
-    assertTrue(SearchUtil.matchesOne(new SearchRequest("test"), "test",
-      "test hello", "hello test", "hello test hello", "ka"));
-    assertTrue(SearchUtil.matchesOne(new SearchRequest("test"), "hans", "uew",
-      "klaus", "hello test hello", "ka"));
+  public void testMultiMatchesOne() {
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test"), "test", "test hello", "hello test", "hello test hello")).isTrue();
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test"), "test", "test hello", "hello test", "hello test hello", "ka")).isTrue();
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test"), "hans", "uew", "klaus", "hello test hello", "ka")).isTrue();
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testSingleMatchesAll()
-  {
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("test"), "test"));
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("test"), "hello test"));
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("test"), "test hello"));
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("test"),
-      "hello test hello"));
-    assertFalse(SearchUtil.matchesAll(new SearchRequest("test"),
-      "hello hello"));
-    assertFalse(SearchUtil.matchesAll(new SearchRequest("test"),
-      "hello te hello"));
-    assertFalse(SearchUtil.matchesAll(new SearchRequest("test"),
-      "hello TEST hello"));
-    assertFalse(SearchUtil.matchesAll(new SearchRequest("test"),
-      "hello TesT hello"));
+  public void testSingleMatchesAll() {
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test"), "test")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test"), "hello test")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test"), "test hello")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test"), "hello test hello")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test"), "hello hello")).isFalse();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test"), "hello te hello")).isFalse();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test"), "hello TEST hello")).isFalse();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test"), "hello TesT hello")).isFalse();
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testSingleMatchesAllIgnoreCase()
-  {
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("test", true), "tEsT"));
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("test", true),
-      "heLLo teSt"));
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("test", true),
-      "TEST hellO"));
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("test", true),
-      "hEllO tEsT hEllO"));
-    assertFalse(SearchUtil.matchesAll(new SearchRequest("test", true),
-      "heLLo heLLo"));
-    assertFalse(SearchUtil.matchesAll(new SearchRequest("test", true),
-      "heLLo te heLLo"));
+  public void testSingleMatchesAllIgnoreCase() {
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test", true), "tEsT")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test", true), "heLLo teSt")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test", true), "TEST hellO")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test", true), "hEllO tEsT hEllO")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test", true), "heLLo heLLo")).isFalse();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test", true), "heLLo te heLLo")).isFalse();
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testSingleMatchesOne()
-  {
-    assertTrue(SearchUtil.matchesOne(new SearchRequest("test"), "test"));
-    assertTrue(SearchUtil.matchesOne(new SearchRequest("test"), "hello test"));
-    assertTrue(SearchUtil.matchesOne(new SearchRequest("test"), "test hello"));
-    assertTrue(SearchUtil.matchesOne(new SearchRequest("test"),
-      "hello test hello"));
-    assertFalse(SearchUtil.matchesOne(new SearchRequest("test"),
-      "hello hello"));
-    assertFalse(SearchUtil.matchesOne(new SearchRequest("test"),
-      "hello te hello"));
-    assertFalse(SearchUtil.matchesOne(new SearchRequest("test"),
-      "hello TEST hello"));
-    assertFalse(SearchUtil.matchesOne(new SearchRequest("test"),
-      "hello TesT hello"));
+  public void testSingleMatchesOne() {
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test"), "test")).isTrue();
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test"), "hello test")).isTrue();
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test"), "test hello")).isTrue();
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test"), "hello test hello")).isTrue();
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test"), "hello hello")).isFalse();
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test"), "hello te hello")).isFalse();
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test"), "hello TEST hello")).isFalse();
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test"), "hello TesT hello")).isFalse();
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testSingleMatchesOneIgnoreCase()
-  {
-    assertTrue(SearchUtil.matchesOne(new SearchRequest("test", true), "tEsT"));
-    assertTrue(SearchUtil.matchesOne(new SearchRequest("test", true),
-      "heLLo teSt"));
-    assertTrue(SearchUtil.matchesOne(new SearchRequest("test", true),
-      "TEST hellO"));
-    assertTrue(SearchUtil.matchesOne(new SearchRequest("test", true),
-      "hEllO tEsT hEllO"));
-    assertFalse(SearchUtil.matchesOne(new SearchRequest("test", true),
-      "heLLo heLLo"));
-    assertFalse(SearchUtil.matchesOne(new SearchRequest("test", true),
-      "heLLo te heLLo"));
+  public void testSingleMatchesOneIgnoreCase() {
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test", true), "tEsT")).isTrue();
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test", true), "heLLo teSt")).isTrue();
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test", true), "TEST hellO")).isTrue();
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test", true), "hEllO tEsT hEllO")).isTrue();
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test", true), "heLLo heLLo")).isFalse();
+    assertThat(SearchUtil.matchesOne(new SearchRequest("test", true), "heLLo te heLLo")).isFalse();
   }
 
   /**
    * Test for issue 441
-   *
    */
   @Test
-  public void testSpecialCharacter()
-  {
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("test\\hansolo"),
-      "test\\hansolo"));
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("*\\hansolo"),
-      "test\\hansolo"));
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("test\\*"),
-      "test\\hansolo"));
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("test\\hansolo"),
-      "abc test\\hansolo abc"));
-    assertFalse(SearchUtil.matchesAll(new SearchRequest("test\\hansolo"),
-      "testhansolo"));
-    assertFalse(SearchUtil.matchesAll(new SearchRequest("test\\hansolo"),
-      "test\\hnsolo"));
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("{test,hansolo} tst"),
-      "{test,hansolo} tst"));
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("(test,hansolo) tst"),
-      "(test,hansolo) tst"));
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("[test,hansolo] tst"),
-      "[test,hansolo] tst"));
+  public void testSpecialCharacter() {
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test\\hansolo"), "test\\hansolo")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("*\\hansolo"), "test\\hansolo")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test\\*"), "test\\hansolo")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test\\hansolo"), "abc test\\hansolo abc")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test\\hansolo"), "testhansolo")).isFalse();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("test\\hansolo"), "test\\hnsolo")).isFalse();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("{test,hansolo} tst"), "{test,hansolo} tst")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("(test,hansolo) tst"), "(test,hansolo) tst")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("[test,hansolo] tst"), "[test,hansolo] tst")).isTrue();
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testWildcardMatches()
-  {
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("*test*"),
-      "hello test hello"));
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("?es?"), "test"));
-    assertTrue(SearchUtil.matchesAll(new SearchRequest("t*t"), "test"));
+  public void testWildcardMatches() {
+    assertThat(SearchUtil.matchesAll(new SearchRequest("*test*"), "hello test hello")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("?es?"), "test")).isTrue();
+    assertThat(SearchUtil.matchesAll(new SearchRequest("t*t"), "test")).isTrue();
+  }
+
+  @Test
+  public void shouldReturnLimitedResults() {
+    SearchRequest searchRequest = new SearchRequest("*test*", true, 2);
+    Collection<User> search = SearchUtil.search(
+      searchRequest,
+      userList("sometester", "maintester", "anotherTester"),
+      applySearchFilter(searchRequest)
+    );
+
+    assertThat(search).hasSize(2);
+  }
+
+  @Test
+  public void shouldReturnAllResultsIfLimitIsNegativInt() {
+    SearchRequest searchRequest = new SearchRequest("*test*", true, -1);
+    Collection<User> search = SearchUtil.search(
+      searchRequest,
+      userList("sometester", "maintester", "anotherOne"),
+      applySearchFilter(searchRequest)
+    );
+
+    assertThat(search).hasSize(2);
+  }
+
+  private Collection<User> userList(String... userNames) {
+    return Arrays.stream(userNames).map(User::new).collect(toList());
+  }
+
+  private TransformFilter<User, User> applySearchFilter(SearchRequest searchRequest) {
+    return item -> {
+      if (SearchUtil.matchesOne(searchRequest, item.getName())) {
+        return item;
+      }
+      return null;
+    };
   }
 }
