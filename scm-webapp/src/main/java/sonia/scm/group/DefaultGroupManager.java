@@ -187,11 +187,7 @@ public class DefaultGroupManager extends AbstractGroupManager
 
     final PermissionActionCheck<Group> check = GroupPermissions.read();
     return SearchUtil.search(searchRequest, groupDAO.getAll(),
-      new TransformFilter<Group, Group>()
-    {
-      @Override
-      public Group accept(Group group)
-      {
+      group -> {
         Group result = null;
 
         if (check.isPermitted(group) && matches(searchRequest, group))
@@ -200,8 +196,7 @@ public class DefaultGroupManager extends AbstractGroupManager
         }
 
         return result;
-      }
-    });
+      });
   }
   
   private boolean matches(SearchRequest searchRequest, Group group) {

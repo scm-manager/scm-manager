@@ -21,16 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.search;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.search;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import sonia.scm.TransformFilter;
-import sonia.scm.util.Util;
 
 //~--- JDK imports ------------------------------------------------------------
 
@@ -40,53 +37,23 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public final class SearchUtil
-{
+public final class SearchUtil {
 
-  /**
-   * the logger for SearchUtil
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(SearchUtil.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SearchUtil.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private SearchUtil() {
+  }
 
-  /**
-   * Constructs ...
-   *
-   */
-  private SearchUtil() {}
-
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param value
-   * @param other
-   *
-   * @return
-   */
   public static boolean matchesAll(SearchRequest request, String value,
-    String... other)
-  {
+                                   String... other) {
     boolean result = false;
     String query = createStringQuery(request);
 
-    if (value.matches(query))
-    {
+    if (value.matches(query)) {
       result = true;
 
-      for (String o : other)
-      {
-        if ((o == null) ||!o.matches(query))
-        {
+      for (String o : other) {
+        if ((o == null) || !o.matches(query)) {
           result = false;
 
           break;
@@ -97,76 +64,43 @@ public final class SearchUtil
     return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   * @param value
-   * @param other
-   *
-   * @return
-   */
   public static boolean matchesOne(SearchRequest request, String value,
-    String... other)
-  {
+                                   String... other) {
     boolean result = false;
     String query = createStringQuery(request);
 
-    if (!value.matches(query))
-    {
-      for (String o : other)
-      {
-        if ((o != null) && o.matches(query))
-        {
+    if (!value.matches(query)) {
+      for (String o : other) {
+        if ((o != null) && o.matches(query)) {
           result = true;
 
           break;
         }
       }
-    }
-    else
-    {
+    } else {
       result = true;
     }
 
     return result;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param searchRequest
-   * @param collection
-   * @param filter
-   * @param <T>
-   *
-   * @return
-   */
   public static <T, R> Collection<R> search(SearchRequest searchRequest,
-    Collection<T> collection, TransformFilter<T, R> filter)
-  {
+                                            Collection<T> collection, TransformFilter<T, R> filter) {
     List<R> items = new ArrayList<>();
     int index = 0;
     int counter = 0;
-    Iterator<T> it = collection.iterator();
 
-    while (it.hasNext())
-    {
-      R item = filter.accept(it.next());
+    for (T t : collection) {
+      R item = filter.accept(t);
 
-      if (item != null)
-      {
+      if (item != null) {
         index++;
 
-        if (searchRequest.getStartWith() <= index)
-        {
+        if (searchRequest.getStartWith() <= index) {
           items.add(item);
           counter++;
 
-          if (searchRequest.getMaxResults() <= counter)
-          {
+          if (searchRequest.getMaxResults() > 0 && searchRequest.getMaxResults() <= counter) {
             break;
           }
         }
@@ -176,107 +110,87 @@ public final class SearchUtil
     return items;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param pattern
-   * @param c
-   */
-  private static void appendChar(StringBuilder pattern, char c)
-  {
-    switch (c)
-    {
-      case '*' :
+  private static void appendChar(StringBuilder pattern, char c) {
+    switch (c) {
+      case '*':
         pattern.append(".*");
 
         break;
 
-      case '?' :
+      case '?':
         pattern.append(".");
 
         break;
 
-      case '(' :
+      case '(':
         pattern.append("\\(");
 
         break;
 
-      case ')' :
+      case ')':
         pattern.append("\\)");
 
         break;
 
-      case '{' :
+      case '{':
         pattern.append("\\{");
 
         break;
 
-      case '}' :
+      case '}':
         pattern.append("\\}");
 
         break;
 
-      case '[' :
+      case '[':
         pattern.append("\\[");
 
         break;
 
-      case ']' :
+      case ']':
         pattern.append("\\]");
 
         break;
 
-      case '|' :
+      case '|':
         pattern.append("\\|");
 
         break;
 
-      case '.' :
+      case '.':
         pattern.append("\\.");
 
         break;
 
-      case '\\' :
+      case '\\':
         pattern.append("\\\\");
 
         break;
 
-      default :
+      default:
         pattern.append(c);
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  private static String createStringQuery(SearchRequest request)
-  {
+  private static String createStringQuery(SearchRequest request) {
     String query = request.getQuery().trim();
 
     StringBuilder pattern = new StringBuilder();
 
-    if (request.isIgnoreCase())
-    {
+    if (request.isIgnoreCase()) {
       pattern.append("(?i)");
       query = query.toLowerCase(Locale.ENGLISH);
     }
 
     pattern.append(".*");
 
-    for (char c : query.toCharArray())
-    {
+    for (char c : query.toCharArray()) {
       appendChar(pattern, c);
     }
 
     pattern.append(".*");
 
-    logger.trace("converted query \"{}\" to regex pattern \"{}\"",
+    LOG.trace("converted query \"{}\" to regex pattern \"{}\"",
       request.getQuery(), pattern);
 
     return pattern.toString();
