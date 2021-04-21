@@ -1,0 +1,2 @@
+- type: changed
+  description: Make remark compatible with rehype plugins to sanitize html content ([#1622](https://github.com/scm-manager/scm-manager/pull/1622))
