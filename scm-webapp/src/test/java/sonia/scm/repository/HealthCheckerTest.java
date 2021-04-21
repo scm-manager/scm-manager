@@ -180,7 +180,7 @@ class HealthCheckerTest {
 
       @BeforeEach
       void setUpRepository() {
-        when(repositoryServiceFactory.create(repository)).thenReturn(repositoryService);
+        lenient().when(repositoryServiceFactory.create(repository)).thenReturn(repositoryService);
         lenient().when(repositoryService.getFullCheckCommand()).thenReturn(fullHealthCheckCommand);
       }
 
