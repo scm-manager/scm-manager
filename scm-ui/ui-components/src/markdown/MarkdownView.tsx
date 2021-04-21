@@ -45,6 +45,7 @@ import gh from "hast-util-sanitize/lib/github";
 import raw from "rehype-raw";
 import slug from "rehype-slug";
 import merge from "deepmerge";
+import { createComponentList } from "./createComponentList";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -121,7 +122,8 @@ class MarkdownView extends React.Component<Props, State> {
     if (contentRef && hash) {
       // we query only child elements, to avoid strange scrolling with multiple
       // markdown elements on one page.
-      const element = contentRef.querySelector(`[id="${hash.substring(1)}"]`);
+      const elementId = decodeURIComponent(hash.substring(1) /* remove # */);
+      const element = contentRef.querySelector(`[id="${elementId}"]`);
       if (element && element.scrollIntoView) {
         element.scrollIntoView();
       }
@@ -142,165 +144,60 @@ class MarkdownView extends React.Component<Props, State> {
     } = this.props;
 
     const rendererFactory = binder.getExtension("markdown-renderer-factory");
-    let rendererList = renderers;
+    let remarkRendererList = renderers;
 
     if (rendererFactory) {
-      rendererList = rendererFactory(renderContext);
+      remarkRendererList = rendererFactory(renderContext);
     }
 
-    if (!rendererList) {
-      rendererList = {};
+    if (!remarkRendererList) {
+      remarkRendererList = {};
     }
 
-    if (enableAnchorHeadings && permalink && !rendererList.heading) {
-      rendererList.heading = createMarkdownHeadingRenderer(permalink);
+    if (enableAnchorHeadings && permalink && !remarkRendererList.heading) {
+      remarkRendererList.heading = createMarkdownHeadingRenderer(permalink);
     }
 
-    if (basePath && !rendererList.link) {
-      rendererList.link = createMarkdownLinkRenderer(basePath);
+    if (basePath && !remarkRendererList.link) {
+      remarkRendererList.link = createMarkdownLinkRenderer(basePath);
     }
 
-    if (!rendererList.code) {
-      rendererList.code = MarkdownCodeRenderer;
+    if (!remarkRendererList.code) {
+      remarkRendererList.code = MarkdownCodeRenderer;
     }
 
-    // NEW IMPL START
-
-    const components: { [key: string]: any } = {};
-
-    if (rendererList.code) {
-      const codeRendererAdapter = function({ node, children }: any) {
-        children = children || [];
-        const renderProps = {
-          value: children[0],
-          language: Array.isArray(node.properties.className) ? node.properties.className[0].split("language-")[1] : ""
-        };
-        return React.createElement(rendererList.code, renderProps, ...children);
-      };
-      components.code = codeRendererAdapter;
-    }
-
-    if (rendererList.link) {
-      const linkRendererAdapter = function({ node, children }: any) {
-        const renderProps = {
-          href: node.properties.href || ""
-        };
-        children = children || [];
-        return React.createElement(rendererList.link, renderProps, ...children);
-      };
-      components.a = linkRendererAdapter;
-    }
-
-    if (rendererList.heading) {
-      const createHeadingRendererAdapter = (level: number) => ({ node, children }: any) => {
-        const renderProps = {
-          id: node.properties.id,
-          level,
-          permalink
-        };
-        children = children || [];
-        return React.createElement(rendererList.heading, renderProps, ...children);
-      };
-      components.h1 = createHeadingRendererAdapter(1);
-      components.h2 = createHeadingRendererAdapter(2);
-      components.h3 = createHeadingRendererAdapter(3);
-      components.h4 = createHeadingRendererAdapter(4);
-      components.h5 = createHeadingRendererAdapter(5);
-      components.h6 = createHeadingRendererAdapter(6);
-    }
-
-    if (rendererList.break) {
-      components.br = rendererList.break;
-    }
-
-    if (rendererList.delete) {
-      components.del = rendererList.delete;
-    }
-
-    if (rendererList.emphasis) {
-      components.em = rendererList.emphasis;
-    }
-
-    if (rendererList.blockquote) {
-      components.blockquote = rendererList.blockquote;
-    }
-
-    if (rendererList.image) {
-      components.img = rendererList.image;
-    }
-
-    if (rendererList.list) {
-      components.ol = rendererList.list;
-      components.ul = rendererList.list;
-    }
-
-    if (rendererList.listItem) {
-      components.li = rendererList.listItem;
-    }
-
-    if (rendererList.paragraph) {
-      components.p = rendererList.paragraph;
-    }
-
-    if (rendererList.strong) {
-      components.strong = rendererList.strong;
-    }
-
-    if (rendererList.table) {
-      components.table = rendererList.table;
-    }
-
-    if (rendererList.tableHead) {
-      components.thead = rendererList.tableHead;
-    }
-
-    if (rendererList.tableBody) {
-      components.tbody = rendererList.tableBody;
-    }
-
-    if (rendererList.tableRow) {
-      components.tr = rendererList.tableRow;
-    }
-
-    if (rendererList.tableCell) {
-      components.td = rendererList.tableCell;
-      components.th = rendererList.tableCell;
-    }
-
-    if (rendererList.thematicBreak) {
-      components.hr = rendererList.thematicBreak;
-    }
-
-    const plugins = [...mdastPlugins, createChangesetShortlinkParser(t), createValuelessTextAdapter()].map(
+    const remarkPlugins = [...mdastPlugins, createChangesetShortlinkParser(t), createValuelessTextAdapter()].map(
       createMdastPlugin
     );
 
     let processor = unified()
       .use(parseMarkdown)
       .use(gfm)
-      .use(plugins)
+      .use(remarkPlugins)
       .use(remark2rehype, { allowDangerousHtml: true });
 
     if (!skipHtml) {
       processor = processor.use(raw);
     }
 
-    const schema: any = merge(gh, {
-      attributes: {
-        code: ["className"]
-      },
-      clobberPrefix: ""
-    });
+    processor = processor
+      .use(slug)
+      .use(
+        sanitize,
+        merge(gh, {
+          attributes: {
+            code: ["className"] // Allow className for code elements, this is necessary to extract the code language
+          },
+          clobberPrefix: "" // Do not prefix user-provided ids and class names
+        })
+      )
+      .use(rehype2react, {
+        createElement: React.createElement,
+        passNode: true,
+        components: createComponentList(remarkRendererList, { permalink })
+      });
 
-    processor = processor.use(slug).use(sanitize, schema);
-
-    const toReactProcessor = processor.use(rehype2react, {
-      createElement: React.createElement,
-      passNode: true,
-      components: components
-    });
-
-    const renderedMarkdown: any = toReactProcessor.processSync(content).result;
+    const renderedMarkdown: any = processor.processSync(content).result;
 
     return (
       <ErrorBoundary fallback={MarkdownErrorNotification}>
