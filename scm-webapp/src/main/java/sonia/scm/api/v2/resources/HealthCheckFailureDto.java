@@ -30,7 +30,10 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Getter @Setter @NoArgsConstructor
+@Getter
+@Setter
+@NoArgsConstructor
+@SuppressWarnings("java:S2160") // we do not need this for dto
 public class HealthCheckFailureDto extends HalRepresentation {
   public HealthCheckFailureDto(Links links) {
     super(links);

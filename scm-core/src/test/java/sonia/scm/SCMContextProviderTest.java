@@ -31,7 +31,7 @@ import java.nio.file.Path;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class SCMContextProviderTest {
+class SCMContextProviderTest {
 
   @Test
   void shouldCreateCorrectDocumentationVersion() {

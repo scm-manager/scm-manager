@@ -240,7 +240,7 @@ public final class HealthCheckFailure
   /** Flag whether the url is a template or not */
   private boolean urlTemplated = false;
 
-  public final static class UrlTemplate {
+  public static final class UrlTemplate {
     private final String url;
 
     private UrlTemplate(String url) {
