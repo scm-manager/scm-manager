@@ -15,7 +15,7 @@ export const createComponentList = (
   const components: Record<string, any> = {};
 
   if (remarkRendererList.code) {
-    components.code = createRemark2RehypeCodeRendererAdapter(remarkRendererList.code);
+    components.pre = createRemark2RehypeCodeRendererAdapter(remarkRendererList.code);
   }
 
   if (remarkRendererList.link) {

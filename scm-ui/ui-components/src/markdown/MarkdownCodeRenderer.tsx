@@ -36,6 +36,8 @@ const MarkdownCodeRenderer: FC<Props> = props => {
   const binder = useBinder();
   const indexLinks = useIndexLinks();
   const { language } = props;
+  console.log("renderer", props);
+
   const extensionKey = `markdown-renderer.code.${language}`;
   if (binder.hasExtension(extensionKey, props)) {
     return <ExtensionPoint name={extensionKey} props={{ ...props, indexLinks }} />;
