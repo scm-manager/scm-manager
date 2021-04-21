@@ -34,6 +34,7 @@ import MarkdownInlineXml from "../__resources__/markdown-inline-xml.md";
 import MarkdownLinks from "../__resources__/markdown-links.md";
 import MarkdownCommitLinks from "../__resources__/markdown-commit-link.md";
 import MarkdownXss from "../__resources__/markdown-xss.md";
+import MarkdownChangelog from "../__resources__/markdown-changelog.md";
 import Title from "../layout/Title";
 import { Subtitle } from "../layout";
 import { MemoryRouter } from "react-router-dom";
@@ -60,7 +61,7 @@ storiesOf("MarkdownView", module)
   .add("Links", () => <MarkdownView content={MarkdownLinks} basePath="/" />)
   .add("Header Anchor Links", () => (
     <MarkdownView
-      content={TestPage}
+      content={MarkdownChangelog}
       basePath={"/"}
       permalink={"/?path=/story/markdownview--header-anchor-links"}
       enableAnchorHeadings={true}

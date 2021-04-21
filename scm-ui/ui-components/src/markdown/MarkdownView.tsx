@@ -23,8 +23,11 @@
  */
 import React, { FC } from "react";
 import { RouteComponentProps, withRouter } from "react-router-dom";
-import Markdown from "react-markdown";
-import MarkdownWithHtml from "react-markdown/with-html";
+import unified from "unified";
+import parseMarkdown from "remark-parse";
+import sanitize from "rehype-sanitize";
+import remark2rehype from "remark-rehype";
+import rehype2react from "rehype-react";
 import gfm from "remark-gfm";
 import { binder } from "@scm-manager/ui-extensions";
 import ErrorBoundary from "../ErrorBoundary";
@@ -32,10 +35,17 @@ import { create as createMarkdownHeadingRenderer } from "./MarkdownHeadingRender
 import { create as createMarkdownLinkRenderer } from "./MarkdownLinkRenderer";
 import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
 import Notification from "../Notification";
-import { createTransformer } from "./remarkChangesetShortLinkParser";
+import { createTransformer as createChangesetShortlinkParser } from "./remarkChangesetShortLinkParser";
+import { createTransformer as createValuelessTextAdapter } from "./remarkValuelessTextAdapter";
 import MarkdownCodeRenderer from "./MarkdownCodeRenderer";
 import { AstPlugin } from "./PluginApi";
 import createMdastPlugin from "./createMdastPlugin";
+// @ts-ignore
+import gh from "hast-util-sanitize/lib/github";
+import raw from "rehype-raw";
+import slug from "rehype-slug";
+import merge from "deepmerge";
+import { createComponentList } from "./createComponentList";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -112,7 +122,8 @@ class MarkdownView extends React.Component<Props, State> {
     if (contentRef && hash) {
       // we query only child elements, to avoid strange scrolling with multiple
       // markdown elements on one page.
-      const element = contentRef.querySelector(hash);
+      const elementId = decodeURIComponent(hash.substring(1) /* remove # */);
+      const element = contentRef.querySelector(`[id="${elementId}"]`);
       if (element && element.scrollIntoView) {
         element.scrollIntoView();
       }
@@ -133,42 +144,65 @@ class MarkdownView extends React.Component<Props, State> {
     } = this.props;
 
     const rendererFactory = binder.getExtension("markdown-renderer-factory");
-    let rendererList = renderers;
+    let remarkRendererList = renderers;
 
     if (rendererFactory) {
-      rendererList = rendererFactory(renderContext);
+      remarkRendererList = rendererFactory(renderContext);
     }
 
-    if (!rendererList) {
-      rendererList = {};
+    if (!remarkRendererList) {
+      remarkRendererList = {};
     }
 
-    if (enableAnchorHeadings && permalink && !rendererList.heading) {
-      rendererList.heading = createMarkdownHeadingRenderer(permalink);
+    if (enableAnchorHeadings && permalink && !remarkRendererList.heading) {
+      remarkRendererList.heading = createMarkdownHeadingRenderer(permalink);
     }
 
-    if (basePath && !rendererList.link) {
-      rendererList.link = createMarkdownLinkRenderer(basePath);
+    if (basePath && !remarkRendererList.link) {
+      remarkRendererList.link = createMarkdownLinkRenderer(basePath);
     }
 
-    if (!rendererList.code) {
-      rendererList.code = MarkdownCodeRenderer;
+    if (!remarkRendererList.code) {
+      remarkRendererList.code = MarkdownCodeRenderer;
     }
 
-    const plugins = [...mdastPlugins, createTransformer(t)].map(createMdastPlugin);
+    const remarkPlugins = [...mdastPlugins, createChangesetShortlinkParser(t), createValuelessTextAdapter()].map(
+      createMdastPlugin
+    );
 
-    const baseProps = {
-      className: "content is-word-break",
-      renderers: rendererList,
-      plugins: [gfm],
-      astPlugins: plugins,
-      children: content
-    };
+    let processor = unified()
+      .use(parseMarkdown)
+      .use(gfm)
+      .use(remarkPlugins)
+      .use(remark2rehype, { allowDangerousHtml: true });
+
+    if (!skipHtml) {
+      processor = processor.use(raw);
+    }
+
+    processor = processor
+      .use(slug)
+      .use(
+        sanitize,
+        merge(gh, {
+          attributes: {
+            code: ["className"] // Allow className for code elements, this is necessary to extract the code language
+          },
+          clobberPrefix: "" // Do not prefix user-provided ids and class names
+        })
+      )
+      .use(rehype2react, {
+        createElement: React.createElement,
+        passNode: true,
+        components: createComponentList(remarkRendererList, { permalink })
+      });
+
+    const renderedMarkdown: any = processor.processSync(content).result;
 
     return (
       <ErrorBoundary fallback={MarkdownErrorNotification}>
-        <div ref={el => this.setState({ contentRef: el })}>
-          {skipHtml ? <Markdown {...baseProps} /> : <MarkdownWithHtml {...baseProps} allowDangerousHtml={true} />}
+        <div ref={el => this.setState({ contentRef: el })} className="content is-word-break">
+          {renderedMarkdown}
         </div>
       </ErrorBoundary>
     );
