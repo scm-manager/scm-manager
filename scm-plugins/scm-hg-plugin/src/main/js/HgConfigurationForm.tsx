@@ -147,12 +147,14 @@ class HgConfigurationForm extends React.Component<Props, State> {
         {this.inputField("encoding")}
         <div className="column is-half">{this.checkbox("showRevisionInId")}</div>
         <div className="column is-half">{this.checkbox("enableHttpPostArgs")}</div>
-        <Button
-          disabled={!this.props.initialConfiguration?._links?.autoConfiguration}
-          action={() => this.triggerAutoConfigure()}
-        >
-          {t("scm-hg-plugin.config.autoConfigure")}
-        </Button>
+        <div className="column is-full">
+          <Button
+            disabled={!this.props.initialConfiguration?._links?.autoConfiguration}
+            action={() => this.triggerAutoConfigure()}
+          >
+            {t("scm-hg-plugin.config.autoConfigure")}
+          </Button>
+        </div>
       </div>
     );
   }

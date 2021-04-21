@@ -24,7 +24,7 @@
       "required": "This configuration value is required",
       "submit": "Submit",
       "success": "Configuration changed successfully",
-      "autoConfigure": "Configure mercurial automatically"
+      "autoConfigure": "Configure Mercurial Automatically"
     }
   },
   "permissions" : {
