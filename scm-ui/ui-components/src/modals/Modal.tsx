@@ -35,9 +35,19 @@ type Props = {
   active: boolean;
   className?: string;
   headColor?: string;
+  headTextColor?: string;
 };
 
-export const Modal: FC<Props> = ({ title, closeFunction, body, footer, active, className, headColor = "light" }) => {
+export const Modal: FC<Props> = ({
+  title,
+  closeFunction,
+  body,
+  footer,
+  active,
+  className,
+  headColor = "light",
+  headTextColor = "black"
+}) => {
   const portalRootElement = usePortalRootElement("modalsRoot");
 
   if (!portalRootElement) {
@@ -56,7 +66,7 @@ export const Modal: FC<Props> = ({ title, closeFunction, body, footer, active, c
       <div className="modal-background" onClick={closeFunction} />
       <div className="modal-card">
         <header className={classNames("modal-card-head", `has-background-${headColor}`)}>
-          <p className="modal-card-title is-marginless">{title}</p>
+          <p className={`modal-card-title is-marginless has-text-${headTextColor}`}>{title}</p>
           <button className="delete" aria-label="close" onClick={closeFunction} />
         </header>
         <section className="modal-card-body">{body}</section>

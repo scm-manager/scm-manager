@@ -22,55 +22,31 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+import org.junit.Test;
+import sonia.scm.repository.HealthCheckResult;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+import java.io.File;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+import static org.assertj.core.api.Assertions.assertThat;
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+public class SvnFullHealthCheckCommandTest extends AbstractSvnCommandTestBase {
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+  @Test
+  public void shouldBeOkForValidRepository() {
+    HealthCheckResult check = new SvnFullHealthCheckCommand(createContext()).check();
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
+    assertThat(check.isHealthy()).isTrue();
+  }
 
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
+  @Test
+  public void shouldDetectMissingFile() {
+    File revision4 = new File(createContext().getDirectory(), "db/revs/0/4");
+    revision4.delete();
 
-  /**
-   * @since 2.11.0
-   */
-  TAG,
+    HealthCheckResult check = new SvnFullHealthCheckCommand(createContext()).check();
 
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK;
+    assertThat(check.isHealthy()).isFalse();
+  }
 }

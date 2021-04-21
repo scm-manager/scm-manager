@@ -59,7 +59,8 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.PULL,
     Command.MODIFY,
     Command.BUNDLE,
-    Command.UNBUNDLE
+    Command.UNBUNDLE,
+    Command.FULL_HEALTH_CHECK
   );
 
   public static final Set<Feature> FEATURES = EnumSet.of(Feature.COMBINED_DEFAULT_BRANCH);
@@ -187,5 +188,10 @@ public class HgRepositoryServiceProvider extends RepositoryServiceProvider {
   @Override
   public UnbundleCommand getUnbundleCommand() {
     return new HgUnbundleCommand(context, lazyChangesetResolver, eventFactory);
+  }
+
+  @Override
+  public FullHealthCheckCommand getFullHealthCheckCommand() {
+    return new HgFullHealthCheckCommand(context);
   }
 }

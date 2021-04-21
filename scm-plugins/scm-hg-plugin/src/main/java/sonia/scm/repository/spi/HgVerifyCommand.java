@@ -22,55 +22,29 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+import com.aragost.javahg.Repository;
+import com.aragost.javahg.internals.AbstractCommand;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+public class HgVerifyCommand extends AbstractCommand {
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+  public static final String COMMAND_NAME = "verify";
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+  protected HgVerifyCommand(Repository repository) {
+    super(repository, COMMAND_NAME);
+  }
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+  public static HgVerifyCommand on(Repository repository) {
+    return new HgVerifyCommand(repository);
+  }
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
+  public String execute() {
+    return launchString();
+  }
 
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
-
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK;
+  @Override
+  public String getCommandName() {
+    return COMMAND_NAME;
+  }
 }

@@ -22,55 +22,36 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+import com.aragost.javahg.commands.ExecutionException;
+import org.junit.Test;
+import sonia.scm.repository.HealthCheckResult;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+import java.io.File;
+import java.io.IOException;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+import static org.assertj.core.api.Assertions.assertThat;
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+public class HgFullHealthCheckCommandTest extends AbstractHgCommandTestBase {
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+  @Test
+  public void shouldDetectMissingFile() throws IOException {
+    HgFullHealthCheckCommand checkCommand = new HgFullHealthCheckCommand(cmdContext);
+    File d = new File(cmdContext.open().getDirectory(), ".hg/store/data/c/d.txt.i");
+    d.delete();
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
+    HealthCheckResult check = checkCommand.check();
 
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
+    assertThat(check.isHealthy()).isFalse();
+  }
 
-  /**
-   * @since 2.11.0
-   */
-  TAG,
+  @Test
+  public void shouldBeOkForValidRepository() throws IOException {
+    HgFullHealthCheckCommand checkCommand = new HgFullHealthCheckCommand(cmdContext);
 
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK;
+    HealthCheckResult check = checkCommand.check();
+
+    assertThat(check.isHealthy()).isTrue();
+  }
 }

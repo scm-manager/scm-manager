@@ -29,6 +29,13 @@ export type NamespaceAndName = {
   name: string;
 };
 
+export type HealthCheckFailure = {
+  id: string;
+  description: string;
+  summary: string;
+  url: string;
+};
+
 export type RepositoryBase = NamespaceAndName & {
   type: string;
   contact?: string;
@@ -41,6 +48,8 @@ export type Repository = HalRepresentation &
     lastModified?: string;
     archived?: boolean;
     exporting?: boolean;
+    healthCheckFailures?: HealthCheckFailure[];
+    healthCheckRunning?: boolean;
   };
 
 export type RepositoryCreation = RepositoryBase & {

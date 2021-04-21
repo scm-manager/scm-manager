@@ -22,55 +22,38 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+import javax.inject.Inject;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+public class DefaultHealthCheckService implements HealthCheckService {
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+  private final HealthChecker healthChecker;
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+  @Inject
+  public DefaultHealthCheckService(HealthChecker healthChecker) {
+    this.healthChecker = healthChecker;
+  }
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+  @Override
+  public void fullCheck(String id) {
+    RepositoryPermissions.healthCheck(id).check();
+    healthChecker.fullCheck(id);
+  }
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
+  @Override
+  public void fullCheck(Repository repository) {
+    RepositoryPermissions.healthCheck(repository).check();
+    healthChecker.fullCheck(repository);
+  }
 
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
+  @Override
+  public boolean checkRunning(String repositoryId) {
+    return healthChecker.checkRunning(repositoryId);
+  }
 
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK;
+  @Override
+  public boolean checkRunning(Repository repository) {
+    return healthChecker.checkRunning(repository.getId());
+  }
 }

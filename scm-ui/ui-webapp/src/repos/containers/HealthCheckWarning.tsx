@@ -22,55 +22,41 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+import React, { FC, useState } from "react";
+import { Notification } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
+import { Repository } from "@scm-manager/ui-types";
+import { HealthCheckFailureDetail } from "@scm-manager/ui-components";
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+type Props = {
+  repository: Repository;
+};
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+const HealthCheckWarning: FC<Props> = ({ repository }) => {
+  const [t] = useTranslation("repos");
+  const [showHealthCheck, setShowHealthCheck] = useState(false);
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+  if (repository.healthCheckFailures?.length === 0) {
+    return null;
+  }
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+  const modal = (
+    <HealthCheckFailureDetail
+      closeFunction={() => setShowHealthCheck(false)}
+      active={showHealthCheck}
+      failures={repository.healthCheckFailures}
+    />
+  );
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+  return (
+    <Notification type="danger">
+      {modal}
+      <div className={"has-cursor-pointer"} onClick={() => setShowHealthCheck(true)}>
+        <div>{t("repositoryForm.healthCheckWarning.title")}</div>
+        <div className={"is-small"}>{t("repositoryForm.healthCheckWarning.subtitle")}</div>
+      </div>
+    </Notification>
+  );
+};
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
-
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
-
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK;
-}
+export default HealthCheckWarning;

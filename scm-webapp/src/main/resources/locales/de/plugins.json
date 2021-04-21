@@ -53,6 +53,12 @@
           "displayName": "Repositories exportieren",
           "description": "Achtung: Darf alle Repositories inkl. aller Metadaten exportieren."
         }
+      },
+      "read,healthCheck": {
+        "*": {
+          "displayName": "Integritätsprüfungen ausführen",
+          "description": "Darf alle Repositories sehen und Integritätsprüfungen starten."
+        }
       }
     },
     "user": {
@@ -164,6 +170,10 @@
       "export": {
         "displayName": "Repository exportieren",
         "description": "Achtung: Darf das Repository inkl. aller Metadaten exportieren."
+      },
+      "healthCheck": {
+        "displayName": "überprüfen",
+        "description": "Darf das Repository überprüfen."
       },
       "*": {
         "displayName": "Alle Repository Rechte",
@@ -348,6 +358,65 @@
     "CISPvega31": {
       "displayName": "Ungültiger Repository-Typ für Import",
       "description": "Der Import ist für den gegebenen Repository-Typen nicht möglich."
+    }
+  },
+  "healthCheckFailures": {
+    "detailUrl": "Hier finden sich weitere Informationen.",
+    "AnOTx99ex1": {
+      "summary": "Inkompatibles DB Format",
+      "description": "Das Subversion DB Format ist inkompatibel mit der SVN Version, die im SCM-Manager genutzt wird."
+    },
+    "4IOTx8pvv1": {
+      "summary": "DB/Format Datei kann nicht gelesen werden",
+      "description": "Die DB/Format Datei des Repositories konnte nicht gelesen werden."
+    },
+    "6TOTx9RLD1": {
+      "summary": "Das Repository lässt sich nicht öffnen",
+      "description": "Das SVN Repository kann nicht geöffnet werden."
+    },
+    "A9OTx8leC1": {
+      "summary": "DB/Format Datei kann nicht gefunden werden",
+      "description": "Das Subversion Repository enthält keine DB/Format Datei."
+    },
+    "2OOTx6ta71": {
+      "summary": "Repository hat keinen Typen",
+      "description": "Das Repository hat keinen konfigurierten Typ."
+    },
+    "CqOTx7Jkq1": {
+      "summary": "Kein Handler für Repository Typ",
+      "description": "Es ist kein Handler für den Typen des Repositories registriert."
+    },
+    "AcOTx7fD51": {
+      "summary": "Handler kann Verzeichnis nicht zurückgeben",
+      "description": "Der Handler war nicht in der Lage, ein Verzeichnis für das Repository zurückzugeben."
+    },
+    "1oOTx803F1": {
+      "summary": "Repository Verzeichnis existiert nicht",
+      "description": "Das Repository existiert nicht. Eventuell wurde es außerhalb des SCM-Managers gelöscht."
+    },
+    "AKOdhQ0pw1": {
+      "summary": "Kein .git oder refs Verzeichnis gefunden",
+      "description": "Das Git-Repository enthält weder ein '.git' noch ein 'refs' Verzeichnis"
+    },
+    "FaSUYbZUR1": {
+      "summary": "'hg verify' fehlgeschlagen",
+      "description": "Die Prüfung 'hg verify' ist für das Repository fehlgeschlagen."
+    },
+    "6bOdhOXpB1": {
+      "summary": "Verzeichnis .hg nicht gefunden",
+      "description": "Das Mercurial Repository enthält kein .hg Verzeichnis."
+    },
+    "9cSV1eaVF1": {
+      "summary": "Repository Verzeichnis nicht schreibbar",
+      "description": "Der Systemuser hat keine Berechtigung, Dateien im Verzeichnis für das Repository zu erstellen oder zu löschen."
+    },
+    "6bSUg4dZ41": {
+      "summary": "Metadaten Datei nicht schreibbar",
+      "description": "Die Datei für die Metadaten des Repositories kann vom Systemuser nicht geschrieben werden."
+    },
+    "5FSV2kreE1": {
+      "summary": "'svn verify' fehlgeschlagen",
+      "description": "Die Prüfung 'svn verify' ist für das Repository fehlgeschlagen."
     }
   },
   "namespaceStrategies": {

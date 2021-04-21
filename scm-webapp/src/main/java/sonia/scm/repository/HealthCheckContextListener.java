@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -121,7 +121,7 @@ public class HealthCheckContextListener implements ServletContextListener
     {
 
       // excute health checks for all repsitories asynchronous
-      SecurityUtils.getSubject().execute(healthChecker::checkAll);
+      SecurityUtils.getSubject().execute(healthChecker::lightCheckAll);
     }
 
     //~--- fields -------------------------------------------------------------

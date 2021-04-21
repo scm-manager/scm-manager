@@ -37,6 +37,19 @@ The output format of the repository can be changed via the offered options:
 
 ![Repository-Settings-General-Export](assets/repository-settings-general-export.png)
 
+The section "Health Checks" provides the option to run health checks for the repository. These are (propably
+extensive) checks, ensuring that for example the paths are mounted correctly. If errors occur while accessing
+repositories, this should be your first place to look. A part of the checks are run every time SCM-Manager starts.
+
+If errors are detected during these checks, a tag is shown near the name of the repository in the overview
+and on the header for the repository. Additionally there is a notification in the settings dialog for this
+repository. By clicking this message or the tags, a popup is shown with more information regarding the failures.
+
+The server will run only one check at a time. Nonetheless you can enqueue multiple checks for different
+repositories, which will be executed after one another.
+
+![Repository-Settings-General-Health-Check](assets/repository-settings-general-health-check.png)
+
 ### Permissions
 
 Thanks to the finely granular permission concept of SCM-Manager, users and groups can be authorized based on definable

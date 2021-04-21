@@ -25,12 +25,14 @@ import React, { FC } from "react";
 import { Redirect, useRouteMatch } from "react-router-dom";
 import RepositoryForm from "../components/form";
 import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Subtitle, urls } from "@scm-manager/ui-components";
+import { ErrorNotification, Notification, Subtitle, urls } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import RepositoryDangerZone from "./RepositoryDangerZone";
 import { useTranslation } from "react-i18next";
 import ExportRepository from "./ExportRepository";
 import { useIndexLinks, useUpdateRepository } from "@scm-manager/ui-api";
+import HealthCheckWarning from "./HealthCheckWarning";
+import RunHealthCheck from "./RunHealthCheck";
 
 type Props = {
   repository: Repository;
@@ -54,12 +56,16 @@ const EditRepo: FC<Props> = ({ repository }) => {
 
   return (
     <>
+      <HealthCheckWarning repository={repository} />
       <Subtitle subtitle={t("repositoryForm.subtitle")} />
       <ErrorNotification error={error} />
       <RepositoryForm repository={repository} loading={isLoading} modifyRepository={update} />
-      <ExtensionPoint name="repo-config.details" props={extensionProps} renderAll={true}/>
+      <ExtensionPoint name="repo-config.details" props={extensionProps} renderAll={true} />
       {repository._links.exportInfo && <ExportRepository repository={repository} />}
       <ExtensionPoint name="repo-config.route" props={extensionProps} renderAll={true} />
+      {(repository._links.runHealthCheck || repository.healthCheckRunning) && (
+        <RunHealthCheck repository={repository} />
+      )}
       <RepositoryDangerZone repository={repository} indexLinks={indexLinks} />
     </>
   );

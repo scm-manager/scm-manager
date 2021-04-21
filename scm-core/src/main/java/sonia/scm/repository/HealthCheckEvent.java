@@ -22,55 +22,38 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository;
+
+import lombok.AllArgsConstructor;
+import sonia.scm.event.Event;
+
+import java.util.Collection;
+
+import static java.util.Collections.unmodifiableCollection;
 
 /**
- * Enumeration of available commands.
+ * This event is triggered whenever a health check was run and either found issues
+ * or issues reported earlier are fixed (that is, health has changed).
  *
- * @author Sebastian Sdorra
- * @since 1.17
+ * @since 2.17.0
  */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+@Event
+@AllArgsConstructor
+public class HealthCheckEvent {
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+  private final Repository repository;
+  private final Collection<HealthCheckFailure> previousFailures;
+  private final Collection<HealthCheckFailure> currentFailures;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+  public Repository getRepository() {
+    return repository;
+  }
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+  public Collection<HealthCheckFailure> getPreviousFailures() {
+    return unmodifiableCollection(previousFailures);
+  }
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
-
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
-
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
-
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK;
+  public Collection<HealthCheckFailure> getCurrentFailures() {
+    return unmodifiableCollection(currentFailures);
+  }
 }

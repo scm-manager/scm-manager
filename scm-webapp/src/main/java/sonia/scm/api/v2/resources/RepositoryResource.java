@@ -30,6 +30,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import sonia.scm.repository.HealthCheckService;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
@@ -61,17 +62,19 @@ public class RepositoryResource {
   private final RepositoryManager manager;
   private final SingleResourceManagerAdapter<Repository, RepositoryDto> adapter;
   private final RepositoryBasedResourceProvider resourceProvider;
+  private final HealthCheckService healthCheckService;
 
   @Inject
   public RepositoryResource(
     RepositoryToRepositoryDtoMapper repositoryToDtoMapper,
     RepositoryDtoToRepositoryMapper dtoToRepositoryMapper, RepositoryManager manager,
-    RepositoryBasedResourceProvider resourceProvider) {
+    RepositoryBasedResourceProvider resourceProvider, HealthCheckService healthCheckService) {
     this.dtoToRepositoryMapper = dtoToRepositoryMapper;
     this.manager = manager;
     this.repositoryToDtoMapper = repositoryToDtoMapper;
     this.adapter = new SingleResourceManagerAdapter<>(manager, Repository.class);
     this.resourceProvider = resourceProvider;
+    this.healthCheckService = healthCheckService;
   }
 
   /**
@@ -269,6 +272,25 @@ public class RepositoryResource {
   public void unarchive(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     Repository repository = loadBy(namespace, name).get();
     manager.unarchive(repository);
+  }
+
+  @POST
+  @Path("runHealthCheck")
+  @Operation(summary = "Check health of repository", description = "Starts a full health check for the repository.", tags = "Repository")
+  @ApiResponse(responseCode = "204", description = "check started")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"repository:healthCheck\" privilege")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no repository with the specified namespace and name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(responseCode = "500", description = "internal server error")
+  public void runHealthCheck(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+    Repository repository = loadBy(namespace, name).get();
+    healthCheckService.fullCheck(repository);
   }
 
   private Repository processUpdate(RepositoryDto repositoryDto, Repository existing) {

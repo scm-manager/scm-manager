@@ -34,9 +34,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.CustomNamespaceStrategy;
 import sonia.scm.repository.HealthCheckFailure;
+import sonia.scm.repository.HealthCheckService;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.api.Command;
@@ -57,6 +59,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import static sonia.scm.repository.HealthCheckFailure.templated;
 
 @SubjectAware(
   username = "trillian",
@@ -83,6 +86,10 @@ public class RepositoryToRepositoryDtoMapperTest {
   private ScmConfiguration configuration;
   @Mock
   private Set<NamespaceStrategy> strategies;
+  @Mock
+  private HealthCheckService healthCheckService;
+  @Mock
+  private SCMContextProvider scmContextProvider;
 
   @InjectMocks
   private RepositoryToRepositoryDtoMapperImpl mapper;
@@ -309,6 +316,62 @@ public class RepositoryToRepositoryDtoMapperTest {
                     assertThat(link.getHref()).isEqualTo("http://example.com/base/v2/repositories/testspace/test/paths/{revision}");
                     assertThat(link.isTemplated()).isTrue();
                   });
+  }
+
+  @Test
+  public void shouldCreateRunHealthCheckLink() {
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals(
+      "http://example.com/base/v2/repositories/testspace/test/runHealthCheck",
+      dto.getLinks().getLinkBy("runHealthCheck").get().getHref());
+    assertFalse(dto.isHealthCheckRunning());
+  }
+
+  @Test
+  public void shouldNotCreateHealthCheckLinkIfCheckIsRunning() {
+    Repository testRepository = createTestRepository();
+    when(healthCheckService.checkRunning(testRepository)).thenReturn(true);
+    RepositoryDto dto = mapper.map(testRepository);
+    assertFalse(dto.getLinks().getLinkBy("runHealthCheck").isPresent());
+    assertTrue(dto.isHealthCheckRunning());
+  }
+
+  @Test
+  public void shouldCreateCorrectLinksForHealthChecks() {
+    when(scmContextProvider.getDocumentationVersion()).thenReturn("2.17.x");
+
+    Repository testRepository = createTestRepository();
+    HealthCheckFailure failure = new HealthCheckFailure("1", "vogons", templated("http://hog/{0}/vogons"), "met vogons");
+    testRepository.setHealthCheckFailures(singletonList(failure));
+
+    RepositoryDto dto = mapper.map(testRepository);
+
+    assertThat(dto.getHealthCheckFailures())
+    .extracting("url")
+    .containsExactly("http://hog/2.17.x/vogons");
+
+    assertThat(dto.getHealthCheckFailures().get(0).getLinks().getLinkBy("documentation"))
+      .get()
+      .extracting("href")
+      .isEqualTo("http://hog/2.17.x/vogons");
+  }
+
+  @Test
+  public void shouldCreateNoLinksForHealthChecksWithoutUrl() {
+    when(scmContextProvider.getDocumentationVersion()).thenReturn("2.17.x");
+
+    Repository testRepository = createTestRepository();
+    HealthCheckFailure failure = new HealthCheckFailure("1", "vogons", "met vogons");
+    testRepository.setHealthCheckFailures(singletonList(failure));
+
+    RepositoryDto dto = mapper.map(testRepository);
+
+    assertThat(dto.getHealthCheckFailures())
+    .extracting("url")
+    .containsExactly(new Object[] {null});
+
+    assertThat(dto.getHealthCheckFailures().get(0).getLinks().getLinkBy("documentation"))
+      .isNotPresent();
   }
 
   private ScmProtocol mockProtocol(String type, String protocol) {

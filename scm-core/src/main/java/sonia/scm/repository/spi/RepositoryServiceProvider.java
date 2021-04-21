@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository.spi;
 
 import sonia.scm.repository.Feature;
@@ -119,7 +119,7 @@ public abstract class RepositoryServiceProvider implements Closeable
    *
    *
    * @return
-   * 
+   *
    * @since 1.43
    */
   public BundleCommand getBundleCommand()
@@ -260,7 +260,7 @@ public abstract class RepositoryServiceProvider implements Closeable
    *
    *
    * @return
-   * 
+   *
    * @since 1.43
    */
   public UnbundleCommand getUnbundleCommand()
@@ -290,5 +290,12 @@ public abstract class RepositoryServiceProvider implements Closeable
   public LookupCommand getLookupCommand()
   {
     throw new CommandNotSupportedException(Command.LOOKUP);
+  }
+
+  /**
+   * @since 2.17.0
+   */
+  public FullHealthCheckCommand getFullHealthCheckCommand() {
+    throw new CommandNotSupportedException(Command.FULL_HEALTH_CHECK);
   }
 }

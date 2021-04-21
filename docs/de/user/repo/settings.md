@@ -21,9 +21,9 @@ Strategie `benutzerdefiniert` ausgewählt ist, kann zusätzlich zum Repository N
 Ein archiviertes Repository kann nicht mehr verändert werden.
 
 In dem Bereich "Repository exportieren" kann das Repository in unterschiedlichen Formaten exportiert werden.
-Während eines laufenden Exports, kann auf das Repository nur lesend zugriffen werden. 
+Während eines laufenden Exports kann auf das Repository nur lesend zugriffen werden.
 Der Repository Export wird asynchron erstellt und auf dem Server gespeichert.
-Existiert bereits ein Export für dieses Repository auf dem Server, wird dieser vorher gelöscht, da es immer nur einen Export pro Repository geben kann. 
+Existiert bereits ein Export für dieses Repository auf dem Server, wird dieser vorher gelöscht, da es immer nur einen Export pro Repository geben kann.
 Exporte werden 10 Tage nach deren Erstellung automatisch vom SCM-Server gelöscht.
 Falls ein Export existiert, wird über die blaue Info-Box angezeigt von wem, wann und wie dieser Export erzeugt wurde.
 
@@ -38,6 +38,20 @@ Das Ausgabeformat des Repository kann über die angebotenen Optionen verändert 
 * `Verschlüsseln`: Die Export-Datei wird mit dem gesetzten Passwort verschlüsselt. Zum Entschlüsseln muss das exakt gleiche Passwort verwendet werden.
 
 ![Repository-Settings-General-Export](assets/repository-settings-general-export.png)
+
+Der Bereich „Integritätsprüfung“ bietet die Möglichkeit, eine Integritätsprüfung des Repositories zu starten. Hier
+werden (zum Teil ausführliche) Prüfungen ausgeführt, die z. B. sicherstellen, dass die Verzeichnisse korrekt
+eingebunden sind. Wenn bei dem Zugriff auf ein Repository Fehler auftreten, sollte zunächst eine solche
+Integritätsprüfung gestartet werden. Ein Teil dieser Prüfungen wird bei jedem Start des SCM-Managers ausgeführt.
+
+Werden bei einer dieser Integritätsprüfungen Fehler gefunden, wird auf der Repository-Übersicht sowie auf den
+Detailseiten zum Repository neben dem Namen ein Tag „fehlerhaft" angezeigt. In den Einstellungen wird zudem eine Meldung
+eingeblendet. Durch Klick auf diese Meldung oder die Tags wird ein Popup mit weiteren Details angezeigt.
+
+Der Server führt immer nur eine Prüfung zur Zeit durch. Es können jedoch für mehrere Repositories Prüfungen in die
+Warteschlange gestellt werden, die dann nacheinander durchgeführt werden.
+
+![Repository-Settings-General-Health-Check](assets/repository-settings-general-health-check.png)
 
 ### Berechtigungen
 

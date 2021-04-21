@@ -22,55 +22,46 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+import org.junit.jupiter.api.Test;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+import java.io.File;
+import java.nio.file.Path;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+import static org.assertj.core.api.Assertions.assertThat;
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+class SCMContextProviderTest {
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+  @Test
+  void shouldCreateCorrectDocumentationVersion() {
+    SCMContextProvider scmContextProvider = new SCMContextProvider() {
+      @Override
+      public File getBaseDirectory() {
+        return null;
+      }
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
+      @Override
+      public Path resolve(Path path) {
+        return null;
+      }
 
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
+      @Override
+      public Stage getStage() {
+        return null;
+      }
 
-  /**
-   * @since 2.11.0
-   */
-  TAG,
+      @Override
+      public Throwable getStartupError() {
+        return null;
+      }
 
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK;
+      @Override
+      public String getVersion() {
+        return "1.17.2";
+      }
+    };
+
+    assertThat(scmContextProvider.getDocumentationVersion()).isEqualTo("1.17.x");
+  }
 }

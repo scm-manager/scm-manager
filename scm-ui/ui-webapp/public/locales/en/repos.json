@@ -8,7 +8,8 @@
     "creationDate": "Creation Date",
     "lastModified": "Last Modified",
     "archived": "archived",
-    "exporting": "exporting"
+    "exporting": "exporting",
+    "healthCheckFailure": "erroneous"
   },
   "validation": {
     "namespace-invalid": "The repository namespace is invalid",
@@ -263,7 +264,11 @@
     "initializeRepository": "Initialize Repository",
     "dangerZone": "Rename, Archive and Delete",
     "createButton": "Create Repository",
-    "importButton": "Import Repository"
+    "importButton": "Import Repository",
+    "healthCheckWarning": {
+      "title": "The latest health check for this repository reported failures. Click here for more details.",
+      "subtitle": "To rerun the health check, click the button in the \"Health Check\" part blow."
+    }
   },
   "export": {
     "subtitle": "Repository Export",
@@ -429,11 +434,22 @@
       "cancel": "No"
     }
   },
+  "runHealthCheck": {
+    "button": "Run Health Checks",
+    "subtitle": "Health Checks",
+    "descriptionNotRunning": "Run the health checks for this repository. This may take a while.",
+    "descriptionRunning": "Health checks for this repository are currently running and cannot be started again in parallel."
+  },
   "archive": {
     "tooltip": "Read only. The archive cannot be changed."
   },
   "exporting": {
     "tooltip": "Read only. The repository is currently being exported."
+  },
+  "healthCheckFailure": {
+    "tooltip": "This repository has health check failures. Click to get details.",
+    "title": "Health Check Failures",
+    "close": "Close"
   },
   "diff": {
     "changes": {

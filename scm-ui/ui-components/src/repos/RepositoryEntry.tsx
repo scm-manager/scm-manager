@@ -29,6 +29,7 @@ import RepositoryAvatar from "./RepositoryAvatar";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled from "styled-components";
+import HealthCheckFailureDetail from "./HealthCheckFailureDetail";
 
 type DateProp = Date | string;
 
@@ -37,6 +38,10 @@ type Props = WithTranslation & {
   // @VisibleForTesting
   // the baseDate is only to avoid failing snapshot tests
   baseDate?: DateProp;
+};
+
+type State = {
+  showHealthCheck: boolean;
 };
 
 const RepositoryTag = styled.span`
@@ -50,8 +55,26 @@ const RepositoryTag = styled.span`
   font-weight: bold;
   font-size: 0.7rem;
 `;
+const RepositoryWarnTag = styled.span`
+  margin-left: 0.2rem;
+  background-color: #f14668;
+  padding: 0.25rem;
+  border-radius: 5px;
+  color: white;
+  overflow: visible;
+  pointer-events: all;
+  font-weight: bold;
+  font-size: 0.7rem;
+  cursor: help;
+`;
 
-class RepositoryEntry extends React.Component<Props> {
+class RepositoryEntry extends React.Component<Props, State> {
+  constructor(props: Props) {
+    super(props);
+    this.state = {
+      showHealthCheck: false
+    };
+  }
   createLink = (repository: Repository) => {
     return `/repo/${repository.namespace}/${repository.name}`;
   };
@@ -154,6 +177,19 @@ class RepositoryEntry extends React.Component<Props> {
       repositoryFlags.push(<RepositoryTag title={t("exporting.tooltip")}>{t("repository.exporting")}</RepositoryTag>);
     }
 
+    if (repository.healthCheckFailures && repository.healthCheckFailures.length > 0) {
+      repositoryFlags.push(
+        <RepositoryWarnTag
+          title={t("healthCheckFailure.tooltip")}
+          onClick={() => {
+            this.setState({ showHealthCheck: true });
+          }}
+        >
+          {t("repository.healthCheckFailure")}
+        </RepositoryWarnTag>
+      );
+    }
+
     return (
       <>
         <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} />
@@ -168,15 +204,26 @@ class RepositoryEntry extends React.Component<Props> {
     const footerLeft = this.createFooterLeft(repository, repositoryLink);
     const footerRight = this.createFooterRight(repository, baseDate);
     const title = this.createTitle();
-    return (
-      <CardColumn
-        avatar={<RepositoryAvatar repository={repository} />}
-        title={title}
-        description={repository.description}
-        link={repositoryLink}
-        footerLeft={footerLeft}
-        footerRight={footerRight}
+    const modal = (
+      <HealthCheckFailureDetail
+        closeFunction={() => this.setState({ showHealthCheck: false })}
+        active={this.state.showHealthCheck}
+        failures={repository.healthCheckFailures}
       />
+    );
+
+    return (
+      <>
+        {modal}
+        <CardColumn
+          avatar={<RepositoryAvatar repository={repository} />}
+          title={title}
+          description={repository.description}
+          link={repositoryLink}
+          footerLeft={footerLeft}
+          footerRight={footerRight}
+        />
+      </>
     );
   }
 }

@@ -39,6 +39,9 @@
     <value>repository:read,rename:*</value>
   </permission>
   <permission>
+    <value>repository:read,healthCheck:*</value>
+  </permission>
+  <permission>
     <value>repository:*</value>
   </permission>
   <permission>

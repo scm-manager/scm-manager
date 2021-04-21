@@ -232,6 +232,27 @@ export const useUnarchiveRepository = () => {
   };
 };
 
+export const useRunHealthCheck = () => {
+  const queryClient = useQueryClient();
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
+    repository => {
+      const link = requiredLink(repository, "runHealthCheck");
+      return apiClient.post(link);
+    },
+    {
+      onSuccess: async (_, repository) => {
+        await queryClient.invalidateQueries(repoQueryKey(repository));
+      }
+    }
+  );
+  return {
+    runHealthCheck: (repository: Repository) => mutate(repository),
+    isLoading,
+    error,
+    isRunning: !!data
+  };
+};
+
 export const useExportInfo = (repository: Repository): ApiResult<ExportInfo> => {
   const link = requiredLink(repository, "exportInfo");
   //TODO Refetch while exporting to update the page

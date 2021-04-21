@@ -22,55 +22,39 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+import React, { FC } from "react";
+import { Modal } from "../modals";
+import { HealthCheckFailure } from "@scm-manager/ui-types";
+import { useTranslation } from "react-i18next";
+import { Button } from "../buttons";
+import HealthCheckFailureList from "./HealthCheckFailureList";
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+type Props = {
+  active: boolean;
+  closeFunction: () => void;
+  failures?: HealthCheckFailure[];
+};
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+const HealthCheckFailureDetail: FC<Props> = ({ active, closeFunction, failures }) => {
+  const [t] = useTranslation("repos");
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+  const footer = <Button label={t("healthCheckFailure.close")} action={closeFunction} color="grey" />;
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+  return (
+    <Modal
+      body={
+        <div className={"content"}>
+          <HealthCheckFailureList failures={failures} />
+        </div>
+      }
+      title={t("healthCheckFailure.title")}
+      closeFunction={closeFunction}
+      active={active}
+      footer={footer}
+      headColor={"danger"}
+      headTextColor={"white"}
+    />
+  );
+};
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
-
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
-
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
-
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK;
-}
+export default HealthCheckFailureDetail;

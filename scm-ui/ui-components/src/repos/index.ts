@@ -49,6 +49,7 @@ export { default as RepositoryEntry } from "./RepositoryEntry";
 export { default as RepositoryEntryLink } from "./RepositoryEntryLink";
 export { default as JumpToFileButton } from "./JumpToFileButton";
 export { default as CommitAuthor } from "./CommitAuthor";
+export { default as HealthCheckFailureDetail } from "./HealthCheckFailureDetail";
 
 export {
   File,

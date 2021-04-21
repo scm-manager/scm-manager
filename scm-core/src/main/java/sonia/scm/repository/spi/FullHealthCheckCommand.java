@@ -22,55 +22,12 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+import sonia.scm.repository.HealthCheckResult;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+import java.io.IOException;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
-
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
-
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
-
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
-
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
-
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK;
+public interface FullHealthCheckCommand {
+  HealthCheckResult check() throws IOException;
 }

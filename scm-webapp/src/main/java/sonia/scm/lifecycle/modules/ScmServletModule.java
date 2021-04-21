@@ -66,11 +66,13 @@ import sonia.scm.net.ahc.XmlContentTransformer;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
+import sonia.scm.repository.DefaultHealthCheckService;
 import sonia.scm.repository.DefaultNamespaceManager;
 import sonia.scm.repository.DefaultRepositoryManager;
 import sonia.scm.repository.DefaultRepositoryProvider;
 import sonia.scm.repository.DefaultRepositoryRoleManager;
 import sonia.scm.repository.HealthCheckContextListener;
+import sonia.scm.repository.HealthCheckService;
 import sonia.scm.repository.NamespaceManager;
 import sonia.scm.repository.NamespaceStrategy;
 import sonia.scm.repository.NamespaceStrategyProvider;
@@ -259,6 +261,8 @@ class ScmServletModule extends ServletModule {
     bind(RootURL.class).to(DefaultRootURL.class);
 
     bind(PermissionProvider.class).to(RepositoryPermissionProvider.class);
+
+    bind(HealthCheckService.class).to(DefaultHealthCheckService.class);
   }
 
   private <T> void bind(Class<T> clazz, Class<? extends T> defaultImplementation) {

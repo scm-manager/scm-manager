@@ -35,6 +35,7 @@
     <verb>permissionWrite</verb>
     <verb read-only="true">archive</verb>
     <verb read-only="true">export</verb>
+    <verb>healthCheck</verb>
     <verb>*</verb>
   </verbs>
   <roles>

@@ -22,55 +22,34 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.api;
+package sonia.scm.repository.spi;
 
-/**
- * Enumeration of available commands.
- *
- * @author Sebastian Sdorra
- * @since 1.17
- */
-public enum Command
-{
-  LOG, BROWSE, CAT, DIFF, BLAME,
+import com.aragost.javahg.commands.ExecutionException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.repository.HealthCheckFailure;
+import sonia.scm.repository.HealthCheckResult;
 
-  /**
-   * @since 1.18
-   */
-  TAGS,
+import java.io.IOException;
 
-  /**
-   * @since 1.18
-   */
-  BRANCHES,
+public class HgFullHealthCheckCommand extends AbstractCommand implements FullHealthCheckCommand {
 
-  /**
-   * @since 1.31
-   */
-  INCOMING, OUTGOING, PUSH, PULL,
+  private static final Logger LOG = LoggerFactory.getLogger(HgFullHealthCheckCommand.class);
 
-  /**
-   * @since 1.43
-   */
-  BUNDLE, UNBUNDLE,
+  public HgFullHealthCheckCommand(HgCommandContext context) {
+    super(context);
+  }
 
-  /**
-   * @since 2.0
-   */
-  MODIFICATIONS, MERGE, DIFF_RESULT, BRANCH, MODIFY,
-
-  /**
-   * @since 2.10.0
-   */
-  LOOKUP,
-
-  /**
-   * @since 2.11.0
-   */
-  TAG,
-
-  /**
-   * @since 2.17.0
-   */
-  FULL_HEALTH_CHECK;
+  @Override
+  public HealthCheckResult check() throws IOException {
+    HgVerifyCommand cmd = HgVerifyCommand.on(open());
+    try {
+      cmd.execute();
+      return HealthCheckResult.healthy();
+    } catch (ExecutionException e) {
+      LOG.warn("hg verify failed for repository {}", getRepository(), e);
+      return HealthCheckResult.unhealthy(new HealthCheckFailure("FaSUYbZUR1",
+        "hg verify failed", "The check 'hg verify' failed for the repository."));
+    }
+  }
 }
