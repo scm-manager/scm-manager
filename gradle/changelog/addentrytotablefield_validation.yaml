@@ -1,2 +1,2 @@
 - type: fixed
-  description: Evaluate form only if it is also valid ([#1625](https://github.com/scm-manager/scm-manager/pull/1625))
+  description: Validation in "Add Entry" components for configuration tables ([#1625](https://github.com/scm-manager/scm-manager/pull/1625))
