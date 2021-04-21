@@ -1,7 +1,7 @@
 import React from "react";
 
 export const createRemark2RehypeCodeRendererAdapter = (remarkRenderer: any) => {
-  const codeRendererAdapter = function({ node, children }: any) {
+  return ({ node, children }: any) => {
     children = children || [];
     const renderProps = {
       value: children[0],
@@ -9,22 +9,20 @@ export const createRemark2RehypeCodeRendererAdapter = (remarkRenderer: any) => {
     };
     return React.createElement(remarkRenderer, renderProps, ...children);
   };
-  return codeRendererAdapter;
 };
 
 export const createRemark2RehypeLinkRendererAdapter = (remarkRenderer: any) => {
-  const linkRendererAdapter = function({ node, children }: any) {
+  return ({ node, children }: any) => {
     const renderProps = {
       href: node.properties.href || ""
     };
     children = children || [];
     return React.createElement(remarkRenderer, renderProps, ...children);
   };
-  return linkRendererAdapter;
 };
 
 export const createRemark2RehypeHeadingRendererAdapterFactory = (remarkRenderer: any, permalink?: string) => {
-  const createHeadingRendererAdapter = (level: number) => ({ node, children }: any) => {
+  return (level: number) => ({ node, children }: any) => {
     const renderProps = {
       id: node.properties.id,
       level,
@@ -33,5 +31,4 @@ export const createRemark2RehypeHeadingRendererAdapterFactory = (remarkRenderer:
     children = children || [];
     return React.createElement(remarkRenderer, renderProps, ...children);
   };
-  return createHeadingRendererAdapter;
 };
