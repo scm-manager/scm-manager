@@ -24,12 +24,14 @@
 
 package sonia.scm.search;
 
-import com.google.common.collect.ImmutableList;
 import org.junit.Test;
+import sonia.scm.TransformFilter;
 import sonia.scm.user.User;
 
+import java.util.Arrays;
 import java.util.Collection;
 
+import static java.util.stream.Collectors.toList;
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class SearchUtilTest {
@@ -119,18 +121,8 @@ public class SearchUtilTest {
     SearchRequest searchRequest = new SearchRequest("*test*", true, 2);
     Collection<User> search = SearchUtil.search(
       searchRequest,
-      ImmutableList.of(
-        new User("sometester"),
-        new User("maintester"),
-        new User("anothertester")
-      ),
-      item -> {
-        User user = null;
-        if (SearchUtil.matchesOne(searchRequest, item.getName())) {
-          user = item;
-        }
-        return user;
-      }
+      userList("sometester", "maintester", "anotherTester"),
+      applySearchFilter(searchRequest)
     );
 
     assertThat(search).hasSize(2);
@@ -141,20 +133,23 @@ public class SearchUtilTest {
     SearchRequest searchRequest = new SearchRequest("*test*", true, -1);
     Collection<User> search = SearchUtil.search(
       searchRequest,
-      ImmutableList.of(
-        new User("sometester"),
-        new User("maintester"),
-        new User("anotherOne")
-      ),
-      item -> {
-        User user = null;
-        if (SearchUtil.matchesOne(searchRequest, item.getName())) {
-          user = item;
-        }
-        return user;
-      }
+      userList("sometester", "maintester", "anotherOne"),
+      applySearchFilter(searchRequest)
     );
 
     assertThat(search).hasSize(2);
+  }
+
+  private Collection<User> userList(String... userNames) {
+    return Arrays.stream(userNames).map(User::new).collect(toList());
+  }
+
+  private TransformFilter<User, User> applySearchFilter(SearchRequest searchRequest) {
+    return item -> {
+      if (SearchUtil.matchesOne(searchRequest, item.getName())) {
+        return item;
+      }
+      return null;
+    };
   }
 }
