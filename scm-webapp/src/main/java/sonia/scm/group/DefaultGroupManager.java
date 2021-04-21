@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.group;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -188,17 +188,13 @@ public class DefaultGroupManager extends AbstractGroupManager
     final PermissionActionCheck<Group> check = GroupPermissions.read();
     return SearchUtil.search(searchRequest, groupDAO.getAll(),
       group -> {
-        Group result = null;
-
-        if (check.isPermitted(group) && matches(searchRequest, group))
-        {
-          result = group.clone();
+        if (check.isPermitted(group) && matches(searchRequest, group)) {
+          return group.clone();
         }
-
-        return result;
+        return null;
       });
   }
-  
+
   private boolean matches(SearchRequest searchRequest, Group group) {
     return SearchUtil.matchesOne(searchRequest, group.getName(), group.getDescription());
   }
@@ -217,7 +213,7 @@ public class DefaultGroupManager extends AbstractGroupManager
   public Group get(String id)
   {
     GroupPermissions.read(id).check();
-    
+
     Group group = groupDAO.get(id);
 
     if (group != null)

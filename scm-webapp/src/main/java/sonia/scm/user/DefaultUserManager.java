@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.user;
 
 import com.github.sdorra.ssp.PermissionActionCheck;
@@ -218,11 +218,10 @@ public class DefaultUserManager extends AbstractUserManager
 
     final PermissionActionCheck<User> check = UserPermissions.read();
     return SearchUtil.search(searchRequest, userDAO.getAll(), user -> {
-      User result = null;
       if (check.isPermitted(user) && matches(searchRequest, user)) {
-        result = user.clone();
+        return user.clone();
       }
-      return result;
+      return null;
     });
   }
 
