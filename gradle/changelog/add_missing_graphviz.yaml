@@ -1,2 +1,0 @@
-- type: fixed
-  description: Missing graphviz in docker image ([#1623](https://github.com/scm-manager/scm-manager/pull/1623))

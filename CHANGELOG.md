@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.17.0] - 2021-04-22
+### Added
+- Frontend for, and enhancement of health checks ([#1621](https://github.com/scm-manager/scm-manager/pull/1621))
+- New extension points for custom repository avatars ([#1614](https://github.com/scm-manager/scm-manager/pull/1614))
+- Trigger mercurial auto config via ui ([#1620](https://github.com/scm-manager/scm-manager/pull/1620))
+
+### Changed
+- Make remark compatible with rehype plugins to sanitize html content ([#1622](https://github.com/scm-manager/scm-manager/pull/1622))
+
+### Fixed
+- Validation in "Add Entry" components for configuration table ([#1625](https://github.com/scm-manager/scm-manager/pull/1625))
+- Add header to toplevel error boundary ([#1613](https://github.com/scm-manager/scm-manager/pull/1613))
+- Correct positioning and coloring of button groups in modals ([#1612](https://github.com/scm-manager/scm-manager/pull/1612))
+- Fix limit with negativ integer for searchUtil ([#1627](https://github.com/scm-manager/scm-manager/pull/1627))
+- Fix compatibility with old redux api ([#1618](https://github.com/scm-manager/scm-manager/pull/1618))
+- Missing graphviz in docker image ([#1623](https://github.com/scm-manager/scm-manager/pull/1623))
+- Validation for namespaces on rename with UTF-8 characters ([#1611](https://github.com/scm-manager/scm-manager/pull/1611))
+
 ## [2.16.0] - 2021-03-26
 ### Added
 - Metrics for http requests ([#1586](https://github.com/scm-manager/scm-manager/issues/1586))
@@ -580,3 +598,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.15.0]: https://www.scm-manager.org/download/2.15.0
 [2.15.1]: https://www.scm-manager.org/download/2.15.1
 [2.16.0]: https://www.scm-manager.org/download/2.16.0
+[2.17.0]: https://www.scm-manager.org/download/2.17.0

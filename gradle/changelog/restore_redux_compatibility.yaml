@@ -1,2 +1,0 @@
-- type: fixed
-  description: Fix compatibility with old redux api ([#1618](https://github.com/scm-manager/scm-manager/pull/1618))
