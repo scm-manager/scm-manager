@@ -1,7 +1,7 @@
 {
   "name": "@scm-manager/scm-legacy-plugin",
   "private": true,
-  "version": "2.16.1-SNAPSHOT",
+  "version": "2.17.0",
   "license": "MIT",
   "main": "./src/main/js/index.tsx",
   "scripts": {
@@ -10,7 +10,7 @@
     "typecheck": "tsc"
   },
   "dependencies": {
-    "@scm-manager/ui-plugins": "^2.16.1-SNAPSHOT"
+    "@scm-manager/ui-plugins": "^2.17.0"
   },
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.11.1",
