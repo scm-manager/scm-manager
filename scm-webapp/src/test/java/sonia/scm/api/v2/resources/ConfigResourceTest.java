@@ -26,12 +26,10 @@ package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
-import org.apache.shiro.authz.AuthorizationException;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.ThreadContext;
+import org.github.sdorra.jse.ShiroExtension;
+import org.github.sdorra.jse.SubjectAware;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -53,11 +51,13 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
+@ExtendWith(ShiroExtension.class)
 @ExtendWith(MockitoExtension.class)
+@SubjectAware(
+  value = "trillian"
+)
 class ConfigResourceTest {
 
   private final RestDispatcher dispatcher = new RestDispatcher();
@@ -65,9 +65,6 @@ class ConfigResourceTest {
   private final URI baseUri = URI.create("/");
   @SuppressWarnings("unused") // Is injected
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
-
-  @Mock
-  private Subject subject;
 
   @Mock
   private NamespaceStrategyValidator namespaceStrategyValidator;
@@ -86,19 +83,13 @@ class ConfigResourceTest {
     });
 
     dispatcher.addSingletonResource(configResource);
-
-    ThreadContext.bind(subject);
-  }
-
-  @AfterEach
-  void tearDown() {
-    ThreadContext.unbindSubject();
   }
 
   @Test
+  @SubjectAware(
+    permissions = "configuration:read:global"
+  )
   void shouldGetGlobalConfig() throws URISyntaxException, UnsupportedEncodingException {
-    doNothing().when(subject).checkPermission("configuration:read:global");
-
     MockHttpRequest request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
@@ -111,8 +102,6 @@ class ConfigResourceTest {
 
   @Test
   void shouldNotGetConfigWhenNotAuthorized() throws URISyntaxException {
-    doThrow(AuthorizationException.class).when(subject).checkPermission("configuration:read:global");
-
     MockHttpRequest request = MockHttpRequest.get("/" + ConfigResource.CONFIG_PATH_V2);
     MockHttpResponse response = new MockHttpResponse();
 
@@ -122,9 +111,10 @@ class ConfigResourceTest {
   }
 
   @Test
+  @SubjectAware(
+    permissions = "configuration:read,write:global"
+  )
   void shouldUpdateConfig() throws URISyntaxException, IOException {
-    doNothing().when(subject).checkPermission("configuration:write:global");
-
     MockHttpRequest request = put("sonia/scm/api/v2/config-test-update.json");
 
     MockHttpResponse response = new MockHttpResponse();
@@ -140,13 +130,11 @@ class ConfigResourceTest {
     assertThat(response.getContentAsString()).contains("\"realmDescription\":null");
     assertThat(response.getContentAsString()).contains("\"proxyPassword\":\"newPassword\"");
     assertThat(response.getContentAsString()).contains("\"self\":{\"href\":\"/v2/config");
-    assertThat(response.getContentAsString()).doesNotContain("\"update\":{\"href\":\"/v2/config");
+    assertThat(response.getContentAsString()).contains("\"update\":{\"href\":\"/v2/config");
   }
 
   @Test
   void shouldNotUpdateConfigWhenNotAuthorized() throws URISyntaxException, IOException {
-    doThrow(AuthorizationException.class).when(subject).checkPermission("configuration:write:global");
-
     MockHttpRequest request = put("sonia/scm/api/v2/config-test-update.json");
     MockHttpResponse response = new MockHttpResponse();
 
@@ -156,6 +144,9 @@ class ConfigResourceTest {
   }
 
   @Test
+  @SubjectAware(
+    permissions = "configuration:write:global"
+  )
   void shouldValidateNamespaceStrategy() throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.put("/" + ConfigResource.CONFIG_PATH_V2)
       .contentType(VndMediaType.CONFIG)
@@ -169,6 +160,9 @@ class ConfigResourceTest {
   }
 
   @Test
+  @SubjectAware(
+    permissions = "configuration:read,write:global"
+  )
   void shouldUpdateConfigPartially() throws URISyntaxException, IOException {
     MockHttpRequest request = patch("{ \"proxyPort\":\"1337\", \"proxyPassword\":null }");
 
@@ -186,13 +180,11 @@ class ConfigResourceTest {
     assertThat(response.getContentAsString()).contains("\"proxyPassword\":null");
     assertThat(response.getContentAsString()).contains("\"proxyPort\":1337");
     assertThat(response.getContentAsString()).contains("\"self\":{\"href\":\"/v2/config");
-    assertThat(response.getContentAsString()).doesNotContain("\"update\":{\"href\":\"/v2/config");
+    assertThat(response.getContentAsString()).contains("\"update\":{\"href\":\"/v2/config");
   }
 
   @Test
   void shouldNotUpdateConfigPartiallyIfNotAuthorized() throws URISyntaxException {
-    doThrow(AuthorizationException.class).when(subject).checkPermission("configuration:write:global");
-
     MockHttpRequest request = patch("{ \"proxyPort\":\"1337\", \"proxyPassword\":\"hitchhiker\" }");
 
     MockHttpResponse response = new MockHttpResponse();
