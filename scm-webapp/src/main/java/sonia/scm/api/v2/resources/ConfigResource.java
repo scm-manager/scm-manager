@@ -37,6 +37,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
+import sonia.scm.util.JsonMerger;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.VndMediaType;
 
@@ -65,17 +66,19 @@ public class ConfigResource {
   private final ScmConfigurationToConfigDtoMapper configToDtoMapper;
   private final ScmConfiguration configuration;
   private final NamespaceStrategyValidator namespaceStrategyValidator;
+  private final JsonMerger jsonMerger;
 
   private Consumer<ScmConfiguration> store = (config) -> ScmConfigurationUtil.getInstance().store(config);
 
   @Inject
   public ConfigResource(ConfigDtoToScmConfigurationMapper dtoToConfigMapper,
                         ScmConfigurationToConfigDtoMapper configToDtoMapper,
-                        ScmConfiguration configuration, NamespaceStrategyValidator namespaceStrategyValidator) {
+                        ScmConfiguration configuration, NamespaceStrategyValidator namespaceStrategyValidator, JsonMerger jsonMerger) {
     this.dtoToConfigMapper = dtoToConfigMapper;
     this.configToDtoMapper = configToDtoMapper;
     this.configuration = configuration;
     this.namespaceStrategyValidator = namespaceStrategyValidator;
+    this.jsonMerger = jsonMerger;
   }
 
   @VisibleForTesting
@@ -157,15 +160,7 @@ public class ConfigResource {
     // This *could* be moved to ScmConfiguration or ScmConfigurationUtil classes.
     // But to where to check? load() or store()? Leave it for now, SCMv1 legacy that can be cleaned up later.
     ConfigurationPermissions.write(configuration).check();
-
-    // ensure the namespace strategy is valid
-    namespaceStrategyValidator.check(configDto.getNamespaceStrategy());
-
-    ScmConfiguration config = dtoToConfigMapper.map(configDto);
-    synchronized (ScmConfiguration.class) {
-      configuration.load(config);
-      store.accept(configuration);
-    }
+    updateConfig(configDto);
 
     return Response.noContent().build();
   }
@@ -211,8 +206,13 @@ public class ConfigResource {
     // But to where to check? load() or store()? Leave it for now, SCMv1 legacy that can be cleaned up later.
     ConfigurationPermissions.write(configuration).check();
 
-    ConfigDto updatedConfigDto = new JsonMerger().mergeWithDto(configToDtoMapper.map(configuration), updateNode);
+    ConfigDto updatedConfigDto = jsonMerger.mergeWithDto(configToDtoMapper.map(configuration), updateNode);
+    updateConfig(updatedConfigDto);
 
+    return Response.noContent().build();
+  }
+
+  private void updateConfig(ConfigDto updatedConfigDto) {
     // ensure the namespace strategy is valid
     namespaceStrategyValidator.check(updatedConfigDto.getNamespaceStrategy());
 
@@ -221,8 +221,6 @@ public class ConfigResource {
       configuration.load(config);
       store.accept(configuration);
     }
-
-    return Response.noContent().build();
   }
 
 }

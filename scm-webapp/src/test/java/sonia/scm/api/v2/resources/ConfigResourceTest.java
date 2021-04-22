@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.io.Resources;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
@@ -39,6 +40,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
+import sonia.scm.util.JsonMerger;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
@@ -70,6 +72,8 @@ class ConfigResourceTest {
   @Mock
   private NamespaceStrategyValidator namespaceStrategyValidator;
 
+  private final JsonMerger jsonMerger = new JsonMerger(new ObjectMapper());
+
   @InjectMocks
   private ConfigDtoToScmConfigurationMapperImpl dtoToConfigMapper;
   @InjectMocks
@@ -77,7 +81,7 @@ class ConfigResourceTest {
 
   @BeforeEach
   void prepareEnvironment() {
-    ConfigResource configResource = new ConfigResource(dtoToConfigMapper, configToDtoMapper, createConfiguration(), namespaceStrategyValidator);
+    ConfigResource configResource = new ConfigResource(dtoToConfigMapper, configToDtoMapper, createConfiguration(), namespaceStrategyValidator, jsonMerger);
     configResource.setStore(config -> {
     });
 
