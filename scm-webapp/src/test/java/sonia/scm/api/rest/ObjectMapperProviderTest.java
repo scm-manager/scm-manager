@@ -21,10 +21,11 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.rest;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import de.otto.edison.hal.HalRepresentation;
 import org.junit.jupiter.api.Test;
 
 import java.time.ZoneId;
@@ -45,4 +46,10 @@ class ObjectMapperProviderTest {
     assertThat(value).isEqualTo("\"2020-02-04T14:21:42Z\"");
   }
 
+  @Test
+  void shouldDeserializeEmbeddedObjects() throws JsonProcessingException {
+    HalRepresentation halRepresentation = provider.get().readValue("{\"_embedded\": {\"avatar\": {\"type\": \"AUTO_GENERATED\"}}}", HalRepresentation.class);
+
+    assertThat(halRepresentation.getEmbedded().getItemsBy("avatar")).hasSize(1);
+  }
 }
