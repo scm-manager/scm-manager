@@ -21,9 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,7 +81,8 @@ public class JwtAccessTokenRefresher {
   }
 
   private boolean canBeRefreshed(JwtAccessToken oldToken) {
-    return tokenIsValid(oldToken) && tokenCanBeRefreshed(oldToken);
+    return tokenIsValid(oldToken) && tokenCanBeRefreshed(oldToken)
+      && SecurityUtils.getSubject().getPrincipals() != null;
   }
 
   private boolean shouldBeRefreshed(JwtAccessToken oldToken) {
