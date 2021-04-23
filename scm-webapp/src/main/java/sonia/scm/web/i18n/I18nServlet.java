@@ -147,7 +147,7 @@ public class I18nServlet extends HttpServlet {
       URL url = resources.nextElement();
       JsonNode jsonNode = objectMapper.readTree(url);
       if (mergedJsonNode != null) {
-        jsonMerger.merge(mergedJsonNode, jsonNode);
+        mergedJsonNode = jsonMerger.fromJson(mergedJsonNode).mergeWithJson(jsonNode).toJsonNode();
       } else {
         mergedJsonNode = jsonNode;
       }

@@ -34,7 +34,8 @@ import javax.inject.Inject;
 import java.util.Iterator;
 
 /**
- * This json merger can be used to apply various new fields to an existing dto without overwriting the whole data.
+ * This json merger can be used to apply various new fields to an existing object without overwriting
+ * the whole data or simply merge some json nodes into one.
  *
  * @since 2.18.0
  */
@@ -47,73 +48,167 @@ public class JsonMerger {
     this.objectMapper = objectMapper;
   }
 
-
   /**
-   * Updates the provided dto with the data from the json node
+   * Creates a MergerBuilder for the object.
    *
-   * @param dto        dto which should be updated
-   * @param updateNode jsonNode {@link JsonNode} which holds the field changes that should be applied
-   * @return updated dto
+   * @param object object which should be updated
+   * @return merger builder
    */
-  public <T> T mergeWithDto(T dto, JsonNode updateNode) {
-    return mergeWithDto(dto, updateNode, true);
+  public MergeStage fromObject(Object object) {
+    JsonNode mainNode = objectMapper.valueToTree(object);
+    return new MergeStage(objectMapper, mainNode);
   }
 
   /**
-   * Updates the provided dto with the data from the json node
+   * Creates a MergerBuilder for the json node.
    *
-   * @param dto            dto which should be updated
-   * @param updateNode     jsonNode {@link JsonNode} which holds the field changes that should be applied
-   * @param shouldValidate validates the dto if {@code true}
-   * @return updated dto
+   * @param mainNode json node which should be updated
+   * @return merger builder
    */
-  public <T> T mergeWithDto(T dto, JsonNode updateNode, boolean shouldValidate) {
-    JsonNode mainNode = objectMapper.valueToTree(dto);
-    JsonNode mergedNode = merge(mainNode, updateNode);
+  public MergeStage fromJson(JsonNode mainNode) {
+    return new MergeStage(objectMapper, mainNode);
+  }
 
-    T updatedDto = (T) objectMapper.convertValue(mergedNode, dto.getClass());
-    if (shouldValidate) {
-      DtoValidator.validate(updatedDto);
+  public static class MergeStage {
+    private final ObjectMapper objectMapper;
+    private final JsonNode mainNode;
+
+    private MergeStage(ObjectMapper objectMapper, JsonNode node) {
+      this.objectMapper = objectMapper;
+      this.mainNode = node;
     }
-    return updatedDto;
-  }
 
-  /**
-   * Updates the {@param mainNode} with the provided fields from the {@param updateNode}.
-   *
-   * @param mainNode base nodes which will be updated
-   * @param updateNode
-   * @return updated json node
-   */
-  public JsonNode merge(JsonNode mainNode, JsonNode updateNode) {
-    Iterator<String> fieldNames = updateNode.fieldNames();
-    while (fieldNames.hasNext()) {
-      String fieldName = fieldNames.next();
-      if (mainNode.has(fieldName)) {
-        mergeNodes(mainNode, updateNode, fieldName);
-      } else {
-        ((ObjectNode) mainNode).set(fieldName, updateNode);
+    /**
+     * Merge object with main node
+     *
+     * @param object object which will be transformed to a json node in order to be merged with the main node
+     * @return this merge builder
+     */
+    public MergeStage mergeWithObject(Object object) {
+      JsonNode updateNode = objectMapper.valueToTree(object);
+      merge(mainNode, updateNode);
+      return this;
+    }
+
+    /**
+     * Merge json node with main node
+     *
+     * @param updateNode json node with data which should be applied to main node
+     * @return this merge builder
+     */
+    public MergeStage mergeWithJson(JsonNode updateNode) {
+      merge(mainNode, updateNode);
+      return this;
+    }
+
+    /**
+     * Returns the merged json node
+     *
+     * @return merged json node
+     */
+    public JsonNode toJsonNode() {
+      return mainNode;
+    }
+
+    /**
+     * Creates a specific object merger which can apply logic like validation after the actual merge.
+     *
+     * @param clazz class to which the output should be transformed
+     * @return object merger
+     */
+    public <T> ToObjectStage<T> toObject(Class<T> clazz) {
+      return new ToObjectStage<>(objectMapper, mainNode, clazz);
+    }
+
+    /**
+     * Updates the {@param mainNode} with the provided fields from the {@param updateNode}.
+     *
+     * @param mainNode   base nodes which will be updated
+     * @param updateNode updateNode that contains the new data
+     * @return updated json node
+     */
+    private JsonNode merge(JsonNode mainNode, JsonNode updateNode) {
+      Iterator<String> fieldNames = updateNode.fieldNames();
+      while (fieldNames.hasNext()) {
+        String fieldName = fieldNames.next();
+        if (mainNode.has(fieldName)) {
+          mergeNodes(mainNode, updateNode, fieldName);
+        } else {
+          mergeField(mainNode, updateNode, fieldName);
+        }
+      }
+      return mainNode;
+    }
+
+    private void mergeField(JsonNode mainNode, JsonNode updateNode, String fieldName) {
+      if (mainNode instanceof ObjectNode) {
+        JsonNode value = updateNode.get(fieldName);
+        if (value.isNull()) {
+          return;
+        }
+        if (value.isIntegralNumber() && value.toString().equals("0")) {
+          return;
+        }
+        if (value.isFloatingPointNumber() && value.toString().equals("0.0")) {
+          return;
+        }
+        ((ObjectNode) mainNode).set(fieldName, value);
       }
     }
-    return mainNode;
-  }
 
-  private void mergeNodes(JsonNode mainNode, JsonNode updateNode, String fieldName) {
-    JsonNode jsonNode = updateNode.get(fieldName);
-    if (jsonNode.isObject()) {
-      ((ObjectNode) mainNode).set(fieldName, merge(mainNode.get(fieldName), updateNode.get(fieldName)));
-    } else if (jsonNode.isArray()) {
-      mergeArray((ObjectNode) mainNode, updateNode, fieldName, jsonNode);
-    } else {
-      ((ObjectNode) mainNode).set(fieldName, jsonNode);
+    private void mergeNodes(JsonNode mainNode, JsonNode updateNode, String fieldName) {
+      JsonNode jsonNode = updateNode.get(fieldName);
+      if (jsonNode.isObject()) {
+        ((ObjectNode) mainNode).set(fieldName, merge(mainNode.get(fieldName), updateNode.get(fieldName)));
+      } else if (jsonNode.isArray()) {
+        mergeArray((ObjectNode) mainNode, updateNode, fieldName, jsonNode);
+      } else {
+        ((ObjectNode) mainNode).set(fieldName, jsonNode);
+      }
+    }
+
+    private void mergeArray(ObjectNode mainNode, JsonNode updateNode, String fieldName, JsonNode jsonNode) {
+      ArrayNode arrayNode = objectMapper.createArrayNode();
+      for (int i = 0; i < jsonNode.size(); i++) {
+        arrayNode.add(merge(jsonNode.get(i), updateNode.get(fieldName).get(i)));
+      }
+      mainNode.set(fieldName, arrayNode);
     }
   }
 
-  private void mergeArray(ObjectNode mainNode, JsonNode updateNode, String fieldName, JsonNode jsonNode) {
-    ArrayNode arrayNode = objectMapper.createArrayNode();
-    for (int i = 0; i < jsonNode.size(); i++) {
-      arrayNode.add(merge(jsonNode.get(i), updateNode.get(fieldName).get(i)));
+  public static class ToObjectStage<T> {
+    private final ObjectMapper objectMapper;
+    private final JsonNode node;
+    private final Class<T> clazz;
+    private boolean shouldValidate = false;
+
+    private ToObjectStage(ObjectMapper objectMapper, JsonNode node, Class<T> clazz) {
+      this.objectMapper = objectMapper;
+      this.node = node;
+      this.clazz = clazz;
     }
-    mainNode.set(fieldName, arrayNode);
+
+    /**
+     * Enables validation for dto object
+     *
+     * @return this builder instance
+     */
+    public ToObjectStage<T> withValidation() {
+      this.shouldValidate = true;
+      return this;
+    }
+
+    /**
+     * Returns the merged object as the provided class
+     *
+     * @return merged object
+     */
+    public T build() {
+      T updatedObject = objectMapper.convertValue(node, clazz);
+      if (shouldValidate) {
+        DtoValidator.validate(updatedObject);
+      }
+      return updatedObject;
+    }
   }
 }

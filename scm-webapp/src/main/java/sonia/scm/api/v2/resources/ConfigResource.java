@@ -73,7 +73,9 @@ public class ConfigResource {
   @Inject
   public ConfigResource(ConfigDtoToScmConfigurationMapper dtoToConfigMapper,
                         ScmConfigurationToConfigDtoMapper configToDtoMapper,
-                        ScmConfiguration configuration, NamespaceStrategyValidator namespaceStrategyValidator, JsonMerger jsonMerger) {
+                        ScmConfiguration configuration,
+                        NamespaceStrategyValidator namespaceStrategyValidator,
+                        JsonMerger jsonMerger) {
     this.dtoToConfigMapper = dtoToConfigMapper;
     this.configToDtoMapper = configToDtoMapper;
     this.configuration = configuration;
@@ -112,7 +114,6 @@ public class ConfigResource {
     )
   )
   public Response get() {
-
     // We do this permission check in Resource and not in ScmConfiguration, because it must be available for reading
     // from within the code (plugins, etc.), but not for the whole anonymous world outside.
     ConfigurationPermissions.read(configuration).check();
@@ -156,9 +157,6 @@ public class ConfigResource {
     )
   )
   public Response update(@Valid ConfigDto configDto) {
-
-    // This *could* be moved to ScmConfiguration or ScmConfigurationUtil classes.
-    // But to where to check? load() or store()? Leave it for now, SCMv1 legacy that can be cleaned up later.
     ConfigurationPermissions.write(configuration).check();
     updateConfig(configDto);
 
@@ -201,18 +199,23 @@ public class ConfigResource {
     )
   )
   public Response updatePartially(JsonNode updateNode) {
-
-    // This *could* be moved to ScmConfiguration or ScmConfigurationUtil classes.
-    // But to where to check? load() or store()? Leave it for now, SCMv1 legacy that can be cleaned up later.
     ConfigurationPermissions.write(configuration).check();
 
-    ConfigDto updatedConfigDto = jsonMerger.mergeWithDto(configToDtoMapper.map(configuration), updateNode);
+    ConfigDto updatedConfigDto = jsonMerger
+      .fromObject(configToDtoMapper.map(configuration))
+      .mergeWithJson(updateNode)
+      .toObject(ConfigDto.class)
+      .withValidation()
+      .build();
     updateConfig(updatedConfigDto);
 
     return Response.noContent().build();
   }
 
   private void updateConfig(ConfigDto updatedConfigDto) {
+    // This *could* be moved to ScmConfiguration or ScmConfigurationUtil classes.
+    // But to where to check? load() or store()? Leave it for now, SCMv1 legacy that can be cleaned up later.
+
     // ensure the namespace strategy is valid
     namespaceStrategyValidator.check(updatedConfigDto.getNamespaceStrategy());
 
