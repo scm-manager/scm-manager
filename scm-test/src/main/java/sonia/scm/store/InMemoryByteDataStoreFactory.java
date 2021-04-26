@@ -24,30 +24,24 @@
 
 package sonia.scm.store;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * In memory configuration store factory for testing purposes.
+ * Stores data in memory but in contrast to {@link InMemoryDataStoreFactory}
+ * it uses jaxb to marshal and unmarshall the objects.
  *
- * @author Sebastian Sdorra
- * @deprecated use {@link InMemoryByteDataStoreFactory} instead.
+ * @since 2.18.0
  */
-@Deprecated
-@SuppressWarnings("java:S3740")
-public class InMemoryDataStoreFactory implements DataStoreFactory {
+public class InMemoryByteDataStoreFactory implements DataStoreFactory {
 
-  private InMemoryDataStore store;
-
-  public InMemoryDataStoreFactory() {
-  }
-
-  public InMemoryDataStoreFactory(InMemoryDataStore store) {
-    this.store = store;
-  }
+  @SuppressWarnings("rawtypes")
+  private final Map<String, InMemoryByteDataStore> stores = new HashMap<>();
 
   @Override
+  @SuppressWarnings("unchecked")
   public <T> DataStore<T> getStore(TypedStoreParameters<T> storeParameters) {
-    if (store != null) {
-      return store;
-    }
-    return new InMemoryDataStore<>();
+    String name = storeParameters.getName();
+    return stores.computeIfAbsent(name, n -> new InMemoryByteDataStore<T>(storeParameters.getType()));
   }
 }

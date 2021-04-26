@@ -27,39 +27,44 @@ package sonia.scm.store;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.UUIDKeyGenerator;
 
+import javax.xml.bind.JAXB;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * In memory store implementation of {@link DataStore}.
- *
- * @author Sebastian Sdorra
- *
- * @param <T> type of stored object
- * @deprecated use {@link InMemoryByteDataStore} instead.
- */
-@Deprecated
-public class InMemoryDataStore<T> implements DataStore<T> {
+public class InMemoryByteDataStore<T> implements DataStore<T> {
 
-  private final Map<String, T> store = new HashMap<>();
-  private KeyGenerator generator = new UUIDKeyGenerator();
+  private final Class<T> type;
+  private final KeyGenerator generator = new UUIDKeyGenerator();
+  private final Map<String, byte[]> store = new HashMap<>();
+
+  InMemoryByteDataStore(Class<T> type) {
+    this.type = type;
+  }
 
   @Override
   public String put(T item) {
-    String key = generator.createKey();
-    store.put(key, item);
-    return key;
+    String id = generator.createKey();
+    put(id, item);
+    return id;
   }
 
   @Override
   public void put(String id, T item) {
-    store.put(id, item);
+    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    JAXB.marshal(item, baos);
+    store.put(id, baos.toByteArray());
   }
 
   @Override
   public Map<String, T> getAll() {
-    return Collections.unmodifiableMap(store);
+    Map<String, T> all = new HashMap<>();
+    for (String id : store.keySet()) {
+      all.put(id, get(id));
+    }
+    return Collections.unmodifiableMap(all);
   }
 
   @Override
@@ -74,6 +79,10 @@ public class InMemoryDataStore<T> implements DataStore<T> {
 
   @Override
   public T get(String id) {
-    return store.get(id);
+    byte[] bytes = store.get(id);
+    if (bytes != null) {
+      return JAXB.unmarshal(new ByteArrayInputStream(bytes), type);
+    }
+    return null;
   }
 }
