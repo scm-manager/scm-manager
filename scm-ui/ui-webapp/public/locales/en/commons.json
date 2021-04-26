@@ -152,6 +152,9 @@
   "importLog": {
     "title": "Import Log"
   },
+  "syntaxHighlighting": {
+    "copyButton": "Copy to clipboard"
+  },
   "notifications": {
     "toastTitle": "Notification",
     "xMore": "+{{ count }} Notification",

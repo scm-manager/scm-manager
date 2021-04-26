@@ -31,8 +31,20 @@ import { useLocation } from "react-router-dom";
 import { urls } from "@scm-manager/ui-api";
 import createSyntaxHighlighterRenderer from "./SyntaxHighlighterRenderer";
 import useScrollToElement from "./useScrollToElement";
+import styled from "styled-components";
+import { useTranslation } from "react-i18next";
+import copyToClipboard from "./CopyToClipboard";
 
 const LINE_NUMBER_URL_HASH_REGEX = /^#line-(.*)$/;
+
+const Container = styled.div`
+  position: relative;
+`;
+const TopRightButton = styled.button`
+  position: absolute;
+  top: 0;
+  right: 0;
+`;
 
 type Props = {
   language?: string;
@@ -44,6 +56,8 @@ type Props = {
 const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumbers = true, value, permalink }) => {
   const location = useLocation();
   const [contentRef, setContentRef] = useState<HTMLElement | null>();
+  const [copied, setCopied] = useState(false);
+  const [t] = useTranslation("commons");
 
   useScrollToElement(
     contentRef,
@@ -56,6 +70,10 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
     value
   );
 
+  const copy = () => {
+    copyToClipboard(value).then(() => setCopied(true));
+  };
+
   const createLinePermaLink = (lineNumber: number) =>
     window.location.protocol +
     "//" +
@@ -65,7 +83,7 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
   const defaultRenderer = createSyntaxHighlighterRenderer(createLinePermaLink, showLineNumbers);
 
   return (
-    <div ref={setContentRef}>
+    <Container ref={setContentRef}>
       <ReactSyntaxHighlighter
         showLineNumbers={false}
         language={determineLanguage(language)}
@@ -74,7 +92,10 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
       >
         {value}
       </ReactSyntaxHighlighter>
-    </div>
+      <TopRightButton title={t("syntaxHighlighting.copyButton")} onClick={copy}>
+        <i className={copied ? "fa fa-clipboard-check" : "fa fa-clipboard"} />
+      </TopRightButton>
+    </Container>
   );
 };
 
