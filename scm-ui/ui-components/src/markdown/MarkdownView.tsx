@@ -29,7 +29,7 @@ import sanitize from "rehype-sanitize";
 import remark2rehype from "remark-rehype";
 import rehype2react from "rehype-react";
 import gfm from "remark-gfm";
-import { binder } from "@scm-manager/ui-extensions";
+import { BinderContext } from "@scm-manager/ui-extensions";
 import ErrorBoundary from "../ErrorBoundary";
 import { create as createMarkdownHeadingRenderer } from "./MarkdownHeadingRenderer";
 import { create as createMarkdownLinkRenderer } from "./MarkdownLinkRenderer";
@@ -46,6 +46,7 @@ import raw from "rehype-raw";
 import slug from "rehype-slug";
 import merge from "deepmerge";
 import { createComponentList } from "./createComponentList";
+import { ProtocolLinkRendererExtension, ProtocolLinkRendererExtensionMap } from "./markdownExtensions";
 
 type Props = RouteComponentProps &
   WithTranslation & {
@@ -94,6 +95,8 @@ const MarkdownErrorNotification: FC = () => {
 };
 
 class MarkdownView extends React.Component<Props, State> {
+  static contextType = BinderContext;
+
   static defaultProps: Partial<Props> = {
     enableAnchorHeadings: false,
     skipHtml: false
@@ -143,7 +146,7 @@ class MarkdownView extends React.Component<Props, State> {
       mdastPlugins = []
     } = this.props;
 
-    const rendererFactory = binder.getExtension("markdown-renderer-factory");
+    const rendererFactory = this.context.getExtension("markdown-renderer-factory");
     let remarkRendererList = renderers;
 
     if (rendererFactory) {
@@ -158,8 +161,16 @@ class MarkdownView extends React.Component<Props, State> {
       remarkRendererList.heading = createMarkdownHeadingRenderer(permalink);
     }
 
+    let protocolLinkRendererExtensions: ProtocolLinkRendererExtensionMap = {};
     if (basePath && !remarkRendererList.link) {
-      remarkRendererList.link = createMarkdownLinkRenderer(basePath);
+      const extensionPoints = this.context.getExtensions(
+        "markdown-renderer.link.protocol"
+      ) as ProtocolLinkRendererExtension[];
+      protocolLinkRendererExtensions = extensionPoints.reduce((prev, { protocol, renderer }) => {
+        prev[protocol] = renderer;
+        return prev;
+      }, {} as ProtocolLinkRendererExtensionMap);
+      remarkRendererList.link = createMarkdownLinkRenderer(basePath, protocolLinkRendererExtensions);
     }
 
     if (!remarkRendererList.code) {
@@ -188,7 +199,10 @@ class MarkdownView extends React.Component<Props, State> {
           attributes: {
             code: ["className"] // Allow className for code elements, this is necessary to extract the code language
           },
-          clobberPrefix: "" // Do not prefix user-provided ids and class names
+          clobberPrefix: "", // Do not prefix user-provided ids and class names,
+          protocols: {
+            href: Object.keys(protocolLinkRendererExtensions)
+          }
         })
       )
       .use(rehype2react, {

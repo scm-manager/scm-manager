@@ -25,6 +25,7 @@ import React, { FC } from "react";
 import { Link, useLocation } from "react-router-dom";
 import ExternalLink from "../navigation/ExternalLink";
 import { urls } from "@scm-manager/ui-api";
+import { ProtocolLinkRendererExtensionMap } from "./markdownExtensions";
 
 const externalLinkRegex = new RegExp("^http(s)?://");
 export const isExternalLink = (link: string) => {
@@ -39,9 +40,10 @@ export const isInternalScmRepoLink = (link: string) => {
   return link.startsWith("/repo/");
 };
 
-const linkWithProtcolRegex = new RegExp("^[a-z]+:");
+const linkWithProtcolRegex = new RegExp("^([a-z]+):(.+)");
 export const isLinkWithProtocol = (link: string) => {
-  return linkWithProtcolRegex.test(link);
+  const match = link.match(linkWithProtcolRegex);
+  return match && { protocol: match[1], link: match[2] };
 };
 
 const join = (left: string, right: string) => {
@@ -107,13 +109,25 @@ type LinkProps = {
 
 type Props = LinkProps & {
   base: string;
+  protocolExtensions: ProtocolLinkRendererExtensionMap;
 };
 
-const MarkdownLinkRenderer: FC<Props> = ({ href, base, children }) => {
+const MarkdownLinkRenderer: FC<Props> = ({ href, base, protocolExtensions, children }) => {
   const location = useLocation();
   if (isExternalLink(href)) {
     return <ExternalLink to={href}>{children}</ExternalLink>;
-  } else if (isLinkWithProtocol(href)) {
+  }
+  const protocolLinkContext = isLinkWithProtocol(href);
+  if (protocolLinkContext) {
+    const { link, protocol } = protocolLinkContext;
+    const ProtocolRenderer = protocolExtensions[protocol];
+    if (ProtocolRenderer) {
+      return (
+        <ProtocolRenderer protocol={protocol} href={link}>
+          {children}
+        </ProtocolRenderer>
+      );
+    }
     return <a href={href}>{children}</a>;
   } else if (isAnchorLink(href)) {
     return <a href={urls.withContextPath(location.pathname) + href}>{children}</a>;
@@ -125,8 +139,8 @@ const MarkdownLinkRenderer: FC<Props> = ({ href, base, children }) => {
 
 // we use a factory method, because react-markdown does not pass
 // base as prop down to our link component.
-export const create = (base: string): FC<LinkProps> => {
-  return props => <MarkdownLinkRenderer base={base} {...props} />;
+export const create = (base: string, protocolExtensions: ProtocolLinkRendererExtensionMap): FC<LinkProps> => {
+  return props => <MarkdownLinkRenderer base={base} protocolExtensions={protocolExtensions} {...props} />;
 };
 
 export default MarkdownLinkRenderer;
