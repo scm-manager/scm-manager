@@ -1,3 +1,0 @@
-- type: fixed
-  description: Deserialization of embedded values in HAL objects ([#1630](https://github.com/scm-manager/scm-manager/pull/1630))
-

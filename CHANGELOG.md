@@ -5,6 +5,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.17.1] - 2021-04-26
+### Fixed
+- Deserialization of embedded values in HAL objects ([#1630](https://github.com/scm-manager/scm-manager/pull/1630))
+- Increase Code font size ([#1631](https://github.com/scm-manager/scm-manager/pull/1631))
+
 ## [2.17.0] - 2021-04-22
 ### Added
 - Frontend for, and enhancement of health checks ([#1621](https://github.com/scm-manager/scm-manager/pull/1621))
@@ -599,3 +604,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.15.1]: https://www.scm-manager.org/download/2.15.1
 [2.16.0]: https://www.scm-manager.org/download/2.16.0
 [2.17.0]: https://www.scm-manager.org/download/2.17.0
+[2.17.1]: https://www.scm-manager.org/download/2.17.1
