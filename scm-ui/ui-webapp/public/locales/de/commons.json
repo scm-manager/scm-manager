@@ -124,5 +124,8 @@
   },
   "importLog": {
     "title": "Importprotokoll"
+  },
+  "syntaxHighlighting": {
+    "copyButton": "In die Zwischenablage kopieren"
   }
 }
