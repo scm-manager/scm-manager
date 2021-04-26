@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.rest;
 
 import com.fasterxml.jackson.databind.AnnotationIntrospector;
@@ -50,6 +50,7 @@ public class ObjectMapperProvider implements Provider<ObjectMapper> {
     mapper.setAnnotationIntrospector(createAnnotationIntrospector());
     mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
     mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
     mapper.configure(SerializationFeature.WRITE_DATES_WITH_ZONE_ID, true);
     mapper.setDateFormat(new StdDateFormat());
     return mapper;
