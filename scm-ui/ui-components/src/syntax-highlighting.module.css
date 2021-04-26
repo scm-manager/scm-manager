@@ -44,7 +44,7 @@
 pre[class*="language-"],
 code[class*="language-"] {
   color: #363636;
-  font-size: 13px;
+  font-size: 1rem;
   text-shadow: none;
   font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
   direction: ltr;
