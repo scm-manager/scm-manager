@@ -28,7 +28,7 @@
 export default {
   'pre[class*="language-"]': {
     color: "#363636",
-    fontSize: "13px",
+    fontSize: "1rem",
     textShadow: "none",
     fontFamily: "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
     direction: "ltr",
@@ -51,7 +51,7 @@ export default {
   },
   'code[class*="language-"]': {
     color: "#363636",
-    fontSize: "13px",
+    fontSize: "1rem",
     textShadow: "none",
     fontFamily: "Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace",
     direction: "ltr",
