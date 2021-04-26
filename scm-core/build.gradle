@@ -109,6 +109,9 @@ dependencies {
   testImplementation libraries.junitJupiterParams
   testRuntimeOnly libraries.junitJupiterEngine
 
+  // shiro
+  testImplementation libraries.shiroExtension
+
   // junit 4 support
   testRuntimeOnly libraries.junitVintageEngine
   testImplementation libraries.junit

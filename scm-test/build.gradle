@@ -35,8 +35,6 @@ dependencies {
   api libraries.junitJupiterApi
   api libraries.junitJupiterParams
   api libraries.junitJupiterEngine
-  api libraries.shiroUnit
-  api libraries.shiroExtension
 
   // junit 4 support
   api libraries.junitVintageEngine
@@ -50,6 +48,10 @@ dependencies {
   // mocking
   api libraries.mockitoCore
   api libraries.mockitoJunitJupiter
+
+  // shiro
+  api libraries.shiroExtension
+  api libraries.shiroUnit
 
   // test rest api's
   api libraries.resteasyCore
