@@ -108,7 +108,7 @@ type LinkProps = {
 };
 
 type Props = LinkProps & {
-  base: string;
+  base?: string;
   protocolExtensions: ProtocolLinkRendererExtensionMap;
 };
 
@@ -128,18 +128,18 @@ const MarkdownLinkRenderer: FC<Props> = ({ href, base, protocolExtensions, child
         </ProtocolRenderer>
       );
     }
-    return <a href={href}>{children}</a>;
   } else if (isAnchorLink(href)) {
     return <a href={urls.withContextPath(location.pathname) + href}>{children}</a>;
-  } else {
+  } else if (base) {
     const localLink = createLocalLink(base, location.pathname, href);
     return <Link to={localLink}>{children}</Link>;
   }
+  return <a href={href}>{children}</a>;
 };
 
 // we use a factory method, because react-markdown does not pass
 // base as prop down to our link component.
-export const create = (base: string, protocolExtensions: ProtocolLinkRendererExtensionMap): FC<LinkProps> => {
+export const create = (base?: string, protocolExtensions: ProtocolLinkRendererExtensionMap = {}): FC<LinkProps> => {
   return props => <MarkdownLinkRenderer base={base} protocolExtensions={protocolExtensions} {...props} />;
 };
 

@@ -162,14 +162,17 @@ class MarkdownView extends React.Component<Props, State> {
     }
 
     let protocolLinkRendererExtensions: ProtocolLinkRendererExtensionMap = {};
-    if (basePath && !remarkRendererList.link) {
+    if (!remarkRendererList.link) {
       const extensionPoints = this.context.getExtensions(
         "markdown-renderer.link.protocol"
       ) as ProtocolLinkRendererExtension[];
-      protocolLinkRendererExtensions = extensionPoints.reduce((prev, { protocol, renderer }) => {
-        prev[protocol] = renderer;
-        return prev;
-      }, {} as ProtocolLinkRendererExtensionMap);
+      protocolLinkRendererExtensions = extensionPoints.reduce<ProtocolLinkRendererExtensionMap>(
+        (prev, { protocol, renderer }) => {
+          prev[protocol] = renderer;
+          return prev;
+        },
+        {}
+      );
       remarkRendererList.link = createMarkdownLinkRenderer(basePath, protocolLinkRendererExtensions);
     }
 

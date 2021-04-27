@@ -77,7 +77,29 @@ storiesOf("MarkdownView", module)
     } as ProtocolLinkRendererExtension);
     return (
       <BinderContext.Provider value={binder}>
-        <MarkdownView content={MarkdownLinks} basePath="/" />
+        <MarkdownView content={MarkdownLinks} basePath="/scm/" />
+      </BinderContext.Provider>
+    );
+  })
+  .add("Links without Base Path", () => {
+    const binder = new Binder("custom protocol link renderer");
+    const Container: FC<ProtocolLinkRendererProps> = ({ protocol, href, children }) => {
+      return (
+        <div style={{ border: "1px dashed lightgray", padding: "2px" }}>
+          <h4>
+            Link: {href} [Protocol: {protocol}]
+          </h4>
+          <div>children: {children}</div>
+        </div>
+      );
+    };
+    binder.bind("markdown-renderer.link.protocol", {
+      protocol: "scw",
+      renderer: Container
+    } as ProtocolLinkRendererExtension);
+    return (
+      <BinderContext.Provider value={binder}>
+        <MarkdownView content={MarkdownLinks} />
       </BinderContext.Provider>
     );
   })
