@@ -1,0 +1,139 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package sonia.scm.api.v2.resources;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jboss.resteasy.mock.MockHttpRequest;
+import org.jboss.resteasy.mock.MockHttpResponse;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.notifications.Notification;
+import sonia.scm.notifications.NotificationStore;
+import sonia.scm.web.RestDispatcher;
+
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Path;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class NotificationResourceTest {
+
+  private final ObjectMapper mapper = new ObjectMapper();
+
+  @Mock
+  private NotificationStore store;
+
+  private RestDispatcher dispatcher;
+
+  @BeforeEach
+  void setUp() {
+    dispatcher = new RestDispatcher();
+    dispatcher.addSingletonResource(
+      new TestingRootResource(
+        new NotificationResource(store)
+      )
+    );
+  }
+
+  @Test
+  void shouldReturnAllNotifications() throws IOException, URISyntaxException {
+    notifications("One", "Two", "Three");
+
+    MockHttpRequest request = MockHttpRequest.get("/api/v2/notifications");
+    MockHttpResponse response = invoke(request);
+
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+    JsonNode node = mapper.readTree(response.getContentAsString());
+    JsonNode notificationNodes = node.get("_embedded").get("notifications");
+    assertThat(notificationNodes.get(0).get("message").asText()).isEqualTo("One");
+    assertThat(notificationNodes.get(1).get("message").asText()).isEqualTo("Two");
+    assertThat(notificationNodes.get(2).get("message").asText()).isEqualTo("Three");
+  }
+
+  @Test
+  void shouldReturnLinks() throws IOException, URISyntaxException {
+    notifications();
+
+    MockHttpRequest request = MockHttpRequest.get("/api/v2/notifications");
+    MockHttpResponse response = invoke(request);
+
+    JsonNode node = mapper.readTree(response.getContentAsString());
+    JsonNode links = node.get("_links");
+
+    assertThat(links.get("self").get("href").asText()).isEqualTo("/api/v2/notifications");
+    assertThat(links.get("clear").get("href").asText()).isEqualTo("/api/v2/notifications");
+  }
+
+  @Test
+  void shouldClear() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.delete("/api/v2/notifications");
+    MockHttpResponse response = invoke(request);
+
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NO_CONTENT);
+    verify(store).clear();
+  }
+
+  private MockHttpResponse invoke(MockHttpRequest request) {
+    MockHttpResponse response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+    return response;
+  }
+
+  private void notifications(String... messages) {
+    List<Notification> notifications = Arrays.stream(messages)
+      .map(m -> new Notification(Notification.Type.INFO, m))
+      .collect(Collectors.toList());
+
+    when(store.getAll()).thenReturn(notifications);
+  }
+
+  @Path("/api/v2")
+  public static class TestingRootResource {
+
+    private final NotificationResource resource;
+
+    public TestingRootResource(NotificationResource resource) {
+      this.resource = resource;
+    }
+
+    @Path("notifications")
+    public NotificationResource notifications() {
+      return resource;
+    }
+  }
+
+}
