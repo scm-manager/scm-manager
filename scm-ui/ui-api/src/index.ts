@@ -45,6 +45,7 @@ export * from "./permissions";
 export * from "./sources";
 export * from "./import";
 export * from "./diff";
+export * from "./notifications";
 
 export { default as ApiProvider } from "./ApiProvider";
 export * from "./ApiProvider";

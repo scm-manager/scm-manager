@@ -22,48 +22,29 @@
  * SOFTWARE.
  */
 
-export { Action } from "./Action";
-export * from "./hal";
+import { useMe } from "./login";
+import { useQuery } from "react-query";
+import { Link, NotificationCollection } from "@scm-manager/ui-types";
+import { apiClient } from "./apiclient";
 
-export { Me } from "./Me";
-export * from "./User";
-export * from "./Group";
+export const useNotifications = () => {
+  const { data: me } = useMe();
+  const link = (me?._links["notifications"] as Link)?.href;
+  const { data, error, isLoading, refetch } = useQuery<NotificationCollection, Error>(
+    "notifications",
+    () => apiClient.get(link).then(response => response.json()),
+    {
+      enabled: !!link
+    }
+  );
 
-export * from "./Repositories";
-export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
-
-export * from "./Branches";
-
-export { Person } from "./Person";
-
-export * from "./Changesets";
-
-export { Signature } from "./Signature";
-
-export { AnnotatedSource, AnnotatedLine } from "./Annotate";
-
-export * from "./Tags";
-
-export { Config, AnonymousMode } from "./Config";
-
-export { IndexResources } from "./IndexResources";
-
-export { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
-
-export * from "./Sources";
-
-export { SelectValue, AutocompleteObject } from "./Autocomplete";
-
-export * from "./Plugin";
-
-export * from "./RepositoryRole";
-export * from "./RepositoryVerbs";
-
-export * from "./NamespaceStrategies";
-
-export * from "./LoginInfo";
-
-export * from "./Admin";
-
-export * from "./Diff";
-export * from "./Notifications";
+  return {
+    data,
+    error,
+    isLoading,
+    refetch: () => {
+      refetch();
+      return;
+    }
+  };
+};

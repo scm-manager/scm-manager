@@ -27,6 +27,7 @@ import { useTranslation } from "react-i18next";
 import { ErrorPage, Footer, Header, Loading, PrimaryNavigation } from "@scm-manager/ui-components";
 import Login from "./Login";
 import { useSubject, useIndex } from "@scm-manager/ui-api";
+import Notifications from "./Notifications";
 
 const App: FC = () => {
   const { data: index } = useIndex();
@@ -41,7 +42,6 @@ const App: FC = () => {
 
   // authenticated means authorized, we stick on authenticated for compatibility reasons
   const authenticated = isAuthenticated || isAnonymous;
-  const navigation = authenticated ? <PrimaryNavigation links={index._links} /> : "";
 
   if (!authenticated && !isLoading) {
     content = <Login />;
@@ -55,7 +55,18 @@ const App: FC = () => {
 
   return (
     <div className="App">
-      <Header>{navigation}</Header>
+      <Header>
+        {authenticated ? (
+          <div className="level">
+            <div className="level-left">
+              <PrimaryNavigation links={index._links} />
+            </div>
+            <div className="level-right">
+              <Notifications />
+            </div>
+          </div>
+        ) : null}
+      </Header>
       {content}
       {authenticated ? <Footer me={me} version={index.version} links={index._links} /> : null}
     </div>
