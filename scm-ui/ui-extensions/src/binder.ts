@@ -22,12 +22,18 @@
  * SOFTWARE.
  */
 
-type Predicate = (props: any) => boolean;
+type Predicate<P extends Record<any, any> = Record<any, any>> = (props: P) => boolean;
 
-type ExtensionRegistration = {
-  predicate: Predicate;
-  extension: any;
+type ExtensionRegistration<P, T> = {
+  predicate: Predicate<P>;
+  extension: T;
   extensionName: string;
+};
+
+type ExtensionPoint<N extends string, T, P> = {
+  name: N;
+  type: T;
+  props: P;
 };
 
 /**
@@ -37,7 +43,7 @@ type ExtensionRegistration = {
 export class Binder {
   name: string;
   extensionPoints: {
-    [key: string]: Array<ExtensionRegistration>;
+    [key: string]: Array<ExtensionRegistration<unknown, unknown>>;
   };
 
   constructor(name: string) {
@@ -52,7 +58,22 @@ export class Binder {
    * @param extension provided extension
    * @param predicate to decide if the extension gets rendered for the given props
    */
-  bind(extensionPoint: string, extension: any, predicate?: Predicate, extensionName?: string) {
+  bind<E extends ExtensionPoint<string, unknown, undefined>>(
+    extensionPoint: E["name"],
+    extension: E["type"]
+  ): void;
+  bind<E extends ExtensionPoint<string, unknown, any>>(
+    extensionPoint: E["name"],
+    extension: E["type"],
+    predicate?: Predicate<E["props"]>,
+    extensionName?: string
+  ): void;
+  bind<E extends ExtensionPoint<string, unknown, any>>(
+    extensionPoint: E["name"],
+    extension: E["type"],
+    predicate?: Predicate<E["props"]>,
+    extensionName?: string
+  ) {
     if (!this.extensionPoints[extensionPoint]) {
       this.extensionPoints[extensionPoint] = [];
     }
@@ -70,7 +91,15 @@ export class Binder {
    * @param extensionPoint name of extension point
    * @param props of the extension point
    */
-  getExtension(extensionPoint: string, props?: object) {
+  getExtension<E extends ExtensionPoint<string, unknown, undefined>>(extensionPoint: E["name"]): E["type"] | null;
+  getExtension<E extends ExtensionPoint<string, unknown, any>>(
+    extensionPoint: E["name"],
+    props: E["props"]
+  ): E["type"] | null;
+  getExtension<E extends ExtensionPoint<any, unknown, any>>(
+    extensionPoint: E["name"],
+    props?: E["props"]
+  ): E["type"] | null {
     const extensions = this.getExtensions(extensionPoint, props);
     if (extensions.length > 0) {
       return extensions[0];
@@ -84,7 +113,10 @@ export class Binder {
    * @param extensionPoint name of extension point
    * @param props of the extension point
    */
-  getExtensions(extensionPoint: string, props?: object): Array<any> {
+  getExtensions<E extends ExtensionPoint<string, unknown, any>>(
+    extensionPoint: E["name"],
+    props: E["props"]
+  ): Array<E["type"]> {
     let registrations = this.extensionPoints[extensionPoint] || [];
     if (props) {
       registrations = registrations.filter(reg => reg.predicate(props || {}));
@@ -96,14 +128,14 @@ export class Binder {
   /**
    * Returns true if at least one extension is bound to the extension point and its props.
    */
-  hasExtension(extensionPoint: string, props?: object): boolean {
-    return this.getExtensions(extensionPoint, props).length > 0;
+  hasExtension<E extends ExtensionPoint<any, unknown, any>>(extensionPoint: E["name"], props?: E["props"]): boolean {
+    return this.getExtensions<E>(extensionPoint, props).length > 0;
   }
 
   /**
    * Sort extensions in ascending order, starting with entries with specified extensionName.
    */
-  sortExtensions = (a: ExtensionRegistration, b: ExtensionRegistration) => {
+  sortExtensions = (a: ExtensionRegistration<unknown, unknown>, b: ExtensionRegistration<unknown, unknown>) => {
     const regA = a.extensionName ? a.extensionName.toUpperCase() : "";
     const regB = b.extensionName ? b.extensionName.toUpperCase() : "";
 
@@ -124,3 +156,13 @@ export class Binder {
 const binder = new Binder("default");
 
 export default binder;
+
+type TestExtensionPointA = ExtensionPoint<"test.extension.a", number, undefined>;
+type TestExtensionPointB = ExtensionPoint<"test.extension.b", number, { testProp: boolean[] }>;
+
+binder.bind<TestExtensionPointA>("test.extension.a", 2, () => false);
+const binderExtensionA = binder.getExtension<TestExtensionPointA>("test.extension.a");
+binder.bind<TestExtensionPointB>("test.extension.b", 2);
+const binderExtensionB = binder.getExtension<TestExtensionPointB>("test.extension.b", { testProp: [true, false] });
+binder.bind("test.extension.c", 2, () => false);
+const binderExtensionC = binder.getExtension("test.extension.c");
