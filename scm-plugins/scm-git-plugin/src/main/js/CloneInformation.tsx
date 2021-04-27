@@ -21,57 +21,81 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Repository } from "@scm-manager/ui-types";
+import React, { FC, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Branch, Link, Repository } from "@scm-manager/ui-types";
+import { apiClient } from "@scm-manager/ui-components";
 
-type Props = WithTranslation & {
+type Props = {
   url: string;
   repository: Repository;
 };
 
-class CloneInformation extends React.Component<Props> {
-  render() {
-    const { url, repository, t } = this.props;
+const CloneInformation: FC<Props> = ({ url, repository }) => {
+  const [t] = useTranslation("plugins");
+  const [defaultBranch, setDefaultBranch] = useState<Branch>({ name: "", revision: "", _links: {} });
+  const [emptyRepository, setEmptyRepository] = useState<boolean>();
 
-    return (
-      <div>
-        <h4>{t("scm-git-plugin.information.clone")}</h4>
-        <pre>
-          <code>git clone {url}</code>
-        </pre>
-        <h4>{t("scm-git-plugin.information.create")}</h4>
-        <pre>
-          <code>
-            git init {repository.name}
-            <br />
-            cd {repository.name}
-            <br />
-            echo "# {repository.name}
-            " &gt; README.md
-            <br />
-            git add README.md
-            <br />
-            git commit -m "Add readme"
-            <br />
-            git remote add origin {url}
-            <br />
-            git push -u origin master
-            <br />
-          </code>
-        </pre>
-        <h4>{t("scm-git-plugin.information.replace")}</h4>
-        <pre>
-          <code>
-            git remote add origin {url}
-            <br />
-            git push -u origin master
-            <br />
-          </code>
-        </pre>
-      </div>
-    );
-  }
-}
+  useEffect(() => {
+    if (repository) {
+      apiClient
+        .get((repository._links.changesets as Link).href)
+        .then(r => r.json())
+        .then(result => {
+          const empty = result._embedded.changesets.length === 0;
+          setEmptyRepository(empty);
 
-export default withTranslation("plugins")(CloneInformation);
+          if (!empty) {
+            apiClient
+              .get((repository._links.defaultBranch as Link).href)
+              .then(r => r.json())
+              .then(setDefaultBranch);
+          }
+        });
+    }
+  }, [repository]);
+
+  return (
+    <div>
+      <h4>{t("scm-git-plugin.information.clone")}</h4>
+      <pre>
+        <code>git clone {url}</code>
+      </pre>
+      {emptyRepository && (
+        <>
+          <h4>{t("scm-git-plugin.information.create")}</h4>
+          <pre>
+            <code>
+              git init {repository.name}
+              <br />
+              cd {repository.name}
+              <br />
+              echo "# {repository.name}
+              " &gt; README.md
+              <br />
+              git add README.md
+              <br />
+              git commit -m "Add readme"
+              <br />
+              git remote add origin {url}
+              <br />
+              git push -u origin {defaultBranch?.name || "master"}
+              <br />
+            </code>
+          </pre>
+        </>
+      )}
+      <h4>{t("scm-git-plugin.information.replace")}</h4>
+      <pre>
+        <code>
+          git remote add origin {url}
+          <br />
+          git push -u origin {defaultBranch?.name || "master"}
+          <br />
+        </code>
+      </pre>
+    </div>
+  );
+};
+
+export default CloneInformation;

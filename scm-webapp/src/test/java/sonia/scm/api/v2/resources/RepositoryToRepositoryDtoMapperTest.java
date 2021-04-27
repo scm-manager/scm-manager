@@ -190,6 +190,14 @@ public class RepositoryToRepositoryDtoMapperTest {
   }
 
   @Test
+  public void shouldCreateDefaultBranchLink_ifSupported() {
+    RepositoryDto dto = mapper.map(createTestRepository());
+    assertEquals(
+      "http://example.com/base/v2/repositories/testspace/test/branches/default-branch",
+      dto.getLinks().getLinkBy("defaultBranch").get().getHref());
+  }
+
+  @Test
   public void shouldNotCreateTagsLink_ifNotSupported() {
     when(repositoryService.isSupported(Command.TAGS)).thenReturn(false);
     RepositoryDto dto = mapper.map(createTestRepository());

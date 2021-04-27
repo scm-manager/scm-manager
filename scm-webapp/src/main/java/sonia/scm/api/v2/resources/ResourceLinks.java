@@ -557,6 +557,10 @@ class ResourceLinks {
       return branchLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branches").parameters().method("get").parameters(branch).href();
     }
 
+    public String defaultBranch(String namespace, String name) {
+      return branchLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branches").parameters().method("getDefaultBranch").parameters().href();
+    }
+
     public String history(String namespace, String name, String branch) {
       return branchLinkBuilder.method("getRepositoryResource").parameters(namespace, name).method("branches").parameters().method("history").parameters(branch).href();
     }

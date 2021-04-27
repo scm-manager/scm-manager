@@ -80,10 +80,11 @@ import static org.mockito.Mockito.when;
 public class BranchRootResourceTest extends RepositoryTestBase {
 
   public static final String BRANCH_PATH = "space/repo/branches/master";
+  public static final String DEFAULT_BRANCH_PATH = "space/repo/branches/default-branch";
   public static final String BRANCH_URL = "/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + BRANCH_PATH;
   public static final String REVISION = "revision";
 
-  private RestDispatcher dispatcher = new RestDispatcher();
+  private final RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -154,7 +155,6 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     dispatcher.invoke(request, response);
 
     assertEquals(404, response.getStatus());
-    MediaType contentType = (MediaType) response.getOutputHeaders().getFirst("Content-Type");
     assertThat(response.getContentAsString()).contains("branch", "master", "space/repo");
   }
 
@@ -170,6 +170,21 @@ public class BranchRootResourceTest extends RepositoryTestBase {
     assertEquals(200, response.getStatus());
     log.info("Response :{}", response.getContentAsString());
     assertTrue(response.getContentAsString().contains("\"revision\":\"revision\""));
+  }
+
+  @Test
+  public void shouldFindDefaultBranch() throws Exception {
+    when(branchesCommandBuilder.getBranches())
+      .thenReturn(new Branches(createBranch("master"), Branch.defaultBranch("main", "rev1", 0L)));
+
+    MockHttpRequest request = MockHttpRequest.get("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + DEFAULT_BRANCH_PATH);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(200, response.getStatus());
+    log.info("Response :{}", response.getContentAsString());
+    assertTrue(response.getContentAsString().contains("\"revision\":\"rev1\""));
   }
 
   @Test
@@ -330,6 +345,6 @@ public class BranchRootResourceTest extends RepositoryTestBase {
   }
 
   private Branch createBranch(String existing_branch) {
-    return Branch.normalBranch(existing_branch, REVISION);
+    return Branch.normalBranch(existing_branch, REVISION, 0L);
   }
 }
