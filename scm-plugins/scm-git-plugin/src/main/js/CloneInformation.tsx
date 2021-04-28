@@ -51,7 +51,7 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
   useEffect(() => {
     if (repository) {
       apiClient
-        .get((repository._links.configuration as Link).href + "?fields=defaultBranch")
+        .get((repository._links.defaultBranch as Link).href)
         .then(r => r.json())
         .then(r => r.defaultBranch && setDefaultBranch(r.defaultBranch));
     }
@@ -61,7 +61,13 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
     <div>
       <h4>{t("scm-git-plugin.information.clone")}</h4>
       <pre>
-        <code>git clone {url}</code>
+        <code>
+          git clone {url}
+          <br />
+          cd {repository.name}
+          <br />
+          git checkout -b {defaultBranch}
+        </code>
       </pre>
       {emptyRepository && (
         <>
@@ -72,14 +78,14 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
               <br />
               cd {repository.name}
               <br />
+              git checkout -b {defaultBranch}
+              <br />
               echo "# {repository.name}
               " &gt; README.md
               <br />
               git add README.md
               <br />
               git commit -m "Add readme"
-              <br />
-              git branch -m master {defaultBranch}
               <br />
               git remote add origin {url}
               <br />
@@ -93,8 +99,6 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
       <pre>
         <code>
           git remote add origin {url}
-          <br />
-          git push -u origin {defaultBranch}
           <br />
         </code>
       </pre>

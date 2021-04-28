@@ -106,7 +106,7 @@ public class GitConfigResourceTest {
   public void prepareEnvironment() {
     GitConfig gitConfig = createConfiguration();
     when(repositoryHandler.getConfig()).thenReturn(gitConfig);
-    GitRepositoryConfigResource gitRepositoryConfigResource = new GitRepositoryConfigResource(repositoryConfigMapper, repositoryManager, new GitRepositoryConfigStoreProvider(configurationStoreFactory));
+    GitRepositoryConfigResource gitRepositoryConfigResource = new GitRepositoryConfigResource(repositoryConfigMapper, repositoryManager, new GitRepositoryConfigStoreProvider(configurationStoreFactory), repositoryHandler);
     GitConfigResource gitConfigResource = new GitConfigResource(dtoToConfigMapper, configToDtoMapper, repositoryHandler, of(gitRepositoryConfigResource));
     dispatcher.addSingletonResource(gitConfigResource);
     when(scmPathInfoStore.get().getApiRestUri()).thenReturn(baseUri);

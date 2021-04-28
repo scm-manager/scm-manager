@@ -3,7 +3,7 @@
     "information": {
       "clone": "Clone the Repository",
       "create": "Create a New Repository",
-      "replace": "Push an Existing Repository",
+      "replace": "Add Remote Origin to an Existing Repository",
       "fetch": "Get Remote Changes",
       "checkout": "Switch Branch",
       "checkoutTag": "Checkout Tag as New Branch",

@@ -24,18 +24,22 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.common.base.Strings;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitRepositoryConfig;
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.store.ConfigurationStore;
@@ -49,6 +53,7 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
+import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -61,12 +66,14 @@ public class GitRepositoryConfigResource {
   private final GitRepositoryConfigMapper repositoryConfigMapper;
   private final RepositoryManager repositoryManager;
   private final GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider;
+  private final GitRepositoryHandler repositoryHandler;
 
   @Inject
-  public GitRepositoryConfigResource(GitRepositoryConfigMapper repositoryConfigMapper, RepositoryManager repositoryManager, GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider) {
+  public GitRepositoryConfigResource(GitRepositoryConfigMapper repositoryConfigMapper, RepositoryManager repositoryManager, GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider, GitRepositoryHandler repositoryHandler) {
     this.repositoryConfigMapper = repositoryConfigMapper;
     this.repositoryManager = repositoryManager;
     this.gitRepositoryConfigStoreProvider = gitRepositoryConfigStoreProvider;
+    this.repositoryHandler = repositoryHandler;
   }
 
   @GET
@@ -100,10 +107,53 @@ public class GitRepositoryConfigResource {
   public Response getRepositoryConfig(@PathParam("namespace") String namespace, @PathParam("name") String name) {
     Repository repository = getRepository(namespace, name);
     RepositoryPermissions.read(repository).check();
-    ConfigurationStore<GitRepositoryConfig> repositoryConfigStore = getStore(repository);
-    GitRepositoryConfig config = repositoryConfigStore.get();
+    GitRepositoryConfig config = getStore(repository).get();
     GitRepositoryConfigDto dto = repositoryConfigMapper.map(config, repository);
     return Response.ok(dto).build();
+  }
+
+  @GET
+  @Path("/default-branch")
+  @Produces(MediaType.TEXT_PLAIN)
+  @Operation(summary = "Git repository default branch", description = "Returns the default branch for the repository.", tags = "Git")
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = GitVndMediaType.GIT_REPOSITORY_CONFIG,
+      schema = @Schema(implementation = GitRepositoryConfigDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the repository config")
+  @ApiResponse(
+    responseCode = "404",
+    description = "not found, no repository with the specified namespace and name available",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  public Response getDefaultBranch(@PathParam("namespace") String namespace, @PathParam("name") String name) {
+    Repository repository = getRepository(namespace, name);
+    RepositoryPermissions.read(repository).check();
+    GitRepositoryConfig config = getStore(repository).get();
+
+    String defaultBranch = "main";
+
+    if (Strings.isNullOrEmpty(config.getDefaultBranch())) {
+      defaultBranch = config.getDefaultBranch();
+    } else if (Strings.isNullOrEmpty(repositoryHandler.getConfig().getDefaultBranch())) {
+      defaultBranch = repositoryHandler.getConfig().getDefaultBranch();
+    }
+
+    return Response.ok(new DefaultBranchDto(defaultBranch)).build();
   }
 
   @PUT
@@ -166,5 +216,11 @@ public class GitRepositoryConfigResource {
 
   private ConfigurationStore<GitRepositoryConfig> getStore(Repository repository) {
     return gitRepositoryConfigStoreProvider.get(repository);
+  }
+
+  @Getter
+  @AllArgsConstructor
+  public static class DefaultBranchDto {
+    private final String defaultBranch;
   }
 }
