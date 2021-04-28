@@ -137,12 +137,12 @@ class JsonMergerTest {
     TestDto mainDto = new TestDto("main", null, 0, new TestUser("trillian", ""), emptyList());
     TestDto firstUpdate = new TestDto(null, "blue", 42, new TestUser("trillian", "trillian@hitchhiker.org"), emptyList());
 
-    assertThrows(ConstraintViolationException.class,
-      () -> jsonMerger.fromObject(mainDto)
-        .mergeWithObject(firstUpdate)
-        .toObject(TestDto.class)
-        .withValidation()
-        .build());
+    JsonMerger.ToObjectStage<TestDto> objectStage = jsonMerger.fromObject(mainDto)
+      .mergeWithObject(firstUpdate)
+      .toObject(TestDto.class)
+      .withValidation();
+
+    assertThrows(ConstraintViolationException.class, objectStage::build);
   }
 
   private static class TestDto {
