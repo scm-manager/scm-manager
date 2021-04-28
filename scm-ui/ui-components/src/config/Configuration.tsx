@@ -135,7 +135,8 @@ class Configuration extends React.Component<Props, State> {
     event.preventDefault();
 
     this.setState({
-      modifying: true
+      modifying: true,
+      error: undefined
     });
 
     const { modifiedConfiguration } = this.state;
@@ -182,9 +183,7 @@ class Configuration extends React.Component<Props, State> {
     const { t } = this.props;
     const { fetching, error, configuration, modifying, valid } = this.state;
 
-    if (error) {
-      return <ErrorNotification error={error} />;
-    } else if (fetching || !configuration) {
+    if (fetching || !configuration) {
       return <Loading />;
     } else {
       const readOnly = this.isReadOnly();
@@ -200,6 +199,12 @@ class Configuration extends React.Component<Props, State> {
           {this.renderConfigChangedNotification()}
           <form onSubmit={this.modifyConfiguration}>
             {this.props.render(renderProps)}
+            {error && (
+              <>
+                <hr />
+                <ErrorNotification error={error} />
+              </>
+            )}
             <hr />
             <Level
               right={<SubmitButton label={t("config.form.submit")} disabled={!valid || readOnly} loading={modifying} />}

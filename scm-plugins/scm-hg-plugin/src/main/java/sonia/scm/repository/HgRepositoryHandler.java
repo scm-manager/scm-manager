@@ -108,7 +108,7 @@ public class HgRepositoryHandler
   }
 
   private boolean isConfigValid(HgGlobalConfig config) {
-    return config.isValid() && new HgVerifier().verify(config) == HgVerifier.HgVerifyStatus.VALID;
+    return config.isValid() && new HgVerifier().isValid(config);
   }
 
   @Override

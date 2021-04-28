@@ -50,6 +50,14 @@ public class HgVerifier {
     this.versionResolver = versionResolver;
   }
 
+  public boolean isValid(HgGlobalConfig config) {
+    return verify(config) == HgVerifyStatus.VALID;
+  }
+
+  public boolean isValid(Path path) {
+    return verify(path) == HgVerifyStatus.VALID;
+  }
+
   public HgVerifyStatus verify(HgGlobalConfig config) {
     return verify(config.getHgBinary());
   }
@@ -119,11 +127,21 @@ public class HgVerifier {
   }
 
   public enum HgVerifyStatus {
-    VALID,
-    NOT_REGULAR_FILE,
-    NOT_EXECUTABLE,
-    INVALID_VERSION,
-    VERSION_TOO_OLD,
-    COULD_NOT_RESOLVE_VERSION
+    VALID("hg binary is valid"),
+    NOT_REGULAR_FILE("hg binary is not a regular file"),
+    NOT_EXECUTABLE("hg binary is not executable"),
+    INVALID_VERSION("hg binary returned invalid version"),
+    VERSION_TOO_OLD("hg binary version is too old, we need at least 4.x"),
+    COULD_NOT_RESOLVE_VERSION("failed to resolve version of hg binary");
+
+    private final String description;
+
+    HgVerifyStatus(String description) {
+      this.description = description;
+    }
+
+    public String getDescription() {
+      return description;
+    }
   }
 }

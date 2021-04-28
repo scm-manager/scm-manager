@@ -157,10 +157,9 @@ public class HgConfigResourceTest {
 
   @Test
   @SubjectAware(username = "writeOnly")
-  public void shouldNotUpdateConfigForInvalidBinary() throws URISyntaxException, UnsupportedEncodingException {
+  public void shouldNotUpdateConfigForInvalidBinary() throws URISyntaxException {
     MockHttpResponse response = put("{\"hgBinary\":\"3.2.1\"}");
-    assertEquals(422, response.getStatus());
-    assertEquals("{\"verifyStatus\":\"NOT_REGULAR_FILE\"}", response.getContentAsString());
+    assertEquals(400, response.getStatus());
   }
 
   @Test

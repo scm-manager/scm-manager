@@ -53,7 +53,7 @@ class PosixAutoConfiguratorTest {
   @Test
   void shouldConfigureMercurial(@TempDir Path directory) {
     Path hg = directory.resolve("hg");
-    when(verifier.verify(hg)).thenReturn(HgVerifier.HgVerifyStatus.VALID);
+    when(verifier.isValid(hg)).thenReturn(true);
 
     PosixAutoConfigurator configurator = create(directory);
 
@@ -78,7 +78,7 @@ class PosixAutoConfiguratorTest {
     Path additional = directory.resolve("additional");
     Path hg = def.resolve("hg");
 
-    when(verifier.verify(hg)).thenReturn(HgVerifier.HgVerifyStatus.VALID);
+    when(verifier.isValid(hg)).thenReturn(true);
 
     PosixAutoConfigurator configurator = new PosixAutoConfigurator(
       verifier, createEnv(def), ImmutableList.of(additional.toAbsolutePath().toString())
@@ -97,19 +97,16 @@ class PosixAutoConfiguratorTest {
     Path three = directory.resolve("three");
     Path hg = three.resolve("hg");
 
-    when(verifier.verify(any(Path.class))).then(ic -> {
+    when(verifier.isValid(any(Path.class))).then(ic -> {
       Path path = ic.getArgument(0, Path.class);
-      if (path.equals(hg)) {
-        return HgVerifier.HgVerifyStatus.VALID;
-      }
-      return HgVerifier.HgVerifyStatus.INVALID_VERSION;
+      return path.equals(hg);
     });
 
     PosixAutoConfigurator configurator = new PosixAutoConfigurator(
       verifier, createEnv(one), ImmutableList.of(
-        two.toAbsolutePath().toString(),
-        three.toAbsolutePath().toString()
-      )
+      two.toAbsolutePath().toString(),
+      three.toAbsolutePath().toString()
+    )
     );
 
     HgGlobalConfig config = new HgGlobalConfig();
