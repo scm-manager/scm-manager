@@ -35,6 +35,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.notifications.Notification;
 import sonia.scm.notifications.NotificationStore;
+import sonia.scm.sse.ChannelRegistry;
 import sonia.scm.web.RestDispatcher;
 
 import javax.servlet.http.HttpServletResponse;
@@ -57,6 +58,9 @@ class NotificationResourceTest {
   @Mock
   private NotificationStore store;
 
+  @Mock
+  private ChannelRegistry channelRegistry;
+
   private RestDispatcher dispatcher;
 
   @BeforeEach
@@ -64,7 +68,7 @@ class NotificationResourceTest {
     dispatcher = new RestDispatcher();
     dispatcher.addSingletonResource(
       new TestingRootResource(
-        new NotificationResource(store)
+        new NotificationResource(store, channelRegistry)
       )
     );
   }

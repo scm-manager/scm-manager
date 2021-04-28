@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-import React, { FC} from "react";
-import { Icon } from "@scm-manager/ui-components";
+import React, { FC, useEffect, useState } from "react";
+import { apiClient, Icon, Toast } from "@scm-manager/ui-components";
 import styled from "styled-components";
 import { useNotifications } from "@scm-manager/ui-api";
-import { Notification, NotificationCollection } from "@scm-manager/ui-types";
+import { Notification, NotificationCollection, Link as LinkType } from "@scm-manager/ui-types";
 import { Link } from "react-router-dom";
 
 const Bell = styled(Icon)`
@@ -43,7 +43,7 @@ const Count = styled.span`
 `;
 
 const DropDownItem = styled(Link)`
-  word-wrap: inherit;
+  word-wrap: normal;
 `;
 
 const DropDownMenu = styled.div`
@@ -59,11 +59,7 @@ type EntryProps = {
 };
 
 const NotificationIcon: FC<EntryProps> = ({ notification }) => {
-  let color: string = notification.type.toLowerCase();
-  if (color === "error") {
-    color = "danger";
-  }
-  return <Icon name="bell" color={color} />;
+  return <Icon name="bell" color={color(notification)} />;
 };
 
 const NotificationEntry: FC<EntryProps> = ({ notification }) => (
@@ -80,21 +76,63 @@ const NotificationList: FC<Props> = ({ data }) => (
   </div>
 );
 
-const Notifications: FC = ({}) => {
-  const { data } = useNotifications();
+type SubscriptionProps = {
+  link?: string;
+  refetch: () => void;
+};
+
+const color = (notification: Notification) => {
+  let c: string = notification.type.toLowerCase();
+  if (c === "error") {
+    c = "danger";
+  }
+  return c;
+};
+
+const NotificationSubscription: FC<SubscriptionProps> = ({ link, refetch }) => {
+  const [notification, setNotification] = useState<Notification>();
+  useEffect(() => {
+    if (link) {
+      return apiClient.subscribe(link, {
+        // @ts-ignore i don't know how to type this
+        notification: (messageEvent: MessageEvent<string>) => {
+          setNotification(JSON.parse(messageEvent.data));
+          refetch();
+        }
+      });
+    }
+  }, [link]);
+
+  if (!notification) {
+    return null;
+  }
+
+  console.log(notification);
 
   return (
-    <div className="dropdown is-right is-hoverable">
-      <Container className="dropdown-trigger">
-        <Bell name="bell" color="white" />
-        <Count>
-          <span className="tag is-rounded">{data?._embedded.notifications.length || 0}</span>
-        </Count>
-      </Container>
-      <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">
-        {data ? <NotificationList data={data} /> : null}
-      </DropDownMenu>
-    </div>
+    <Toast type={color(notification)} title="Notification">
+      <p>{notification.message}</p>
+    </Toast>
+  );
+};
+
+const Notifications: FC = ({}) => {
+  const { data, refetch } = useNotifications();
+  return (
+    <>
+      <NotificationSubscription link={(data?._links["subscribe"] as LinkType)?.href} refetch={refetch} />
+      <div className="dropdown is-right is-hoverable">
+        <Container className="dropdown-trigger">
+          <Bell name="bell" color="white" />
+          <Count>
+            <span className="tag is-rounded">{data?._embedded.notifications.length || 0}</span>
+          </Count>
+        </Container>
+        <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">
+          {data ? <NotificationList data={data} /> : null}
+        </DropDownMenu>
+      </div>
+    </>
   );
 };
 

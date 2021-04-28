@@ -22,43 +22,22 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security;
+package sonia.scm.sse;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import lombok.EqualsAndHashCode;
-import sonia.scm.util.HttpUtil;
+import javax.inject.Inject;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
-import java.util.Optional;
+public class ChannelCleanupTask implements Runnable {
 
-/**
- * Client side session id.
- */
-@EqualsAndHashCode
-public final class SessionId implements Serializable {
+  private final ChannelRegistry registry;
 
-  public static final String PARAMETER = "X-SCM-Session-ID";
-
-  private final String value;
-
-  private SessionId(String value) {
-    this.value = value;
+  @Inject
+  public ChannelCleanupTask(ChannelRegistry registry) {
+    this.registry = registry;
   }
 
   @Override
-  public String toString() {
-    return value;
+  public void run() {
+    registry.removeClosedClients();
   }
 
-  public static Optional<SessionId> from(HttpServletRequest request) {
-    return HttpUtil.getHeaderOrGetParameter(request, PARAMETER).map(SessionId::valueOf);
-  }
-
-  public static SessionId valueOf(String value) {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(value), "session id could not be empty or null");
-    return new SessionId(value);
-  }
 }

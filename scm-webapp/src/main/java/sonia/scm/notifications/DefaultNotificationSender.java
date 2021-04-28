@@ -24,19 +24,31 @@
 
 package sonia.scm.notifications;
 
+import sonia.scm.sse.Channel;
+import sonia.scm.sse.ChannelRegistry;
+import sonia.scm.sse.Message;
+
 import javax.inject.Inject;
 
 public class DefaultNotificationSender implements NotificationSender {
 
   private final NotificationStore store;
+  private final ChannelRegistry channelRegistry;
 
   @Inject
-  public DefaultNotificationSender(NotificationStore store) {
+  public DefaultNotificationSender(NotificationStore store, ChannelRegistry channelRegistry) {
     this.store = store;
+    this.channelRegistry = channelRegistry;
   }
 
   @Override
   public void send(Notification notification, String recipient) {
     store.add(notification, recipient);
+    Channel channel = channelRegistry.channel(new NotificationChannelId(recipient));
+    channel.broadcast(message(notification));
+  }
+
+  private Message message(Notification notification) {
+    return new Message("notification", Notification.class, notification);
   }
 }

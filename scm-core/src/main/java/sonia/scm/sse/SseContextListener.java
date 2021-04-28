@@ -22,43 +22,32 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security;
+package sonia.scm.sse;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import lombok.EqualsAndHashCode;
-import sonia.scm.util.HttpUtil;
+import sonia.scm.plugin.Extension;
+import sonia.scm.schedule.Scheduler;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
-import java.util.Optional;
+import javax.inject.Inject;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 
-/**
- * Client side session id.
- */
-@EqualsAndHashCode
-public final class SessionId implements Serializable {
+@Extension
+public class SseContextListener implements ServletContextListener {
 
-  public static final String PARAMETER = "X-SCM-Session-ID";
+  private final Scheduler scheduler;
 
-  private final String value;
-
-  private SessionId(String value) {
-    this.value = value;
+  @Inject
+  public SseContextListener(Scheduler scheduler) {
+    this.scheduler = scheduler;
   }
 
   @Override
-  public String toString() {
-    return value;
+  public void contextInitialized(ServletContextEvent servletContextEvent) {
+    this.scheduler.schedule("0/30 * * * * ?", ChannelCleanupTask.class);
   }
 
-  public static Optional<SessionId> from(HttpServletRequest request) {
-    return HttpUtil.getHeaderOrGetParameter(request, PARAMETER).map(SessionId::valueOf);
-  }
+  @Override
+  public void contextDestroyed(ServletContextEvent servletContextEvent) {
 
-  public static SessionId valueOf(String value) {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(value), "session id could not be empty or null");
-    return new SessionId(value);
   }
 }

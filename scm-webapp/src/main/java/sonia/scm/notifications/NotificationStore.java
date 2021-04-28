@@ -76,6 +76,15 @@ public class NotificationStore {
     }
   }
 
+  int size(String username) {
+    Lock lock = locks.get(username).readLock();
+    try {
+      return get(username).getEntries().size();
+    } finally {
+      lock.unlock();
+    }
+  }
+
   private Notifications get(String username) {
     return store.getOptional(username).orElse(new Notifications());
   }

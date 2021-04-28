@@ -28,14 +28,27 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import io.swagger.v3.oas.annotations.media.Content;
+import lombok.EqualsAndHashCode;
+import org.apache.shiro.SecurityUtils;
+import sonia.scm.notifications.NotificationChannelId;
 import sonia.scm.notifications.NotificationStore;
+import sonia.scm.security.SessionId;
+import sonia.scm.sse.Channel;
+import sonia.scm.sse.ChannelRegistry;
+import sonia.scm.sse.Registration;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
+import javax.servlet.AsyncContext;
+import javax.ws.rs.BeanParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.container.AsyncResponse;
+import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -48,10 +61,12 @@ import java.util.stream.Collectors;
 public class NotificationResource {
 
   private final NotificationStore store;
+  private final ChannelRegistry channelRegistry;
 
   @Inject
-  public NotificationResource(NotificationStore store) {
+  public NotificationResource(NotificationStore store, ChannelRegistry channelRegistry) {
     this.store = store;
+    this.channelRegistry = channelRegistry;
   }
 
   @GET
@@ -74,8 +89,9 @@ public class NotificationResource {
   @GET
   @Path("subscribe")
   @Produces(MediaType.SERVER_SENT_EVENTS)
-  public Response subscribe(@Context Sse sse, @Context SseEventSink eventSink) {
-    return Response.noContent().build();
+  public void subscribe(@Context Sse sse, @Context SseEventSink eventSink, @QueryParam(SessionId.PARAMETER) SessionId sessionId) {
+    Channel channel = channelRegistry.channel(NotificationChannelId.current());
+    channel.register(new Registration(sessionId, sse, eventSink));
   }
 
   private Embedded createEmbeddedNotifications() {

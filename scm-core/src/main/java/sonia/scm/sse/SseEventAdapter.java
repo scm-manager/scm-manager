@@ -22,43 +22,26 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security;
+package sonia.scm.sse;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import lombok.EqualsAndHashCode;
-import sonia.scm.util.HttpUtil;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.sse.OutboundSseEvent;
+import javax.ws.rs.sse.Sse;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
-import java.util.Optional;
+class SseEventAdapter {
 
-/**
- * Client side session id.
- */
-@EqualsAndHashCode
-public final class SessionId implements Serializable {
+  private final Sse sse;
 
-  public static final String PARAMETER = "X-SCM-Session-ID";
-
-  private final String value;
-
-  private SessionId(String value) {
-    this.value = value;
+  SseEventAdapter(Sse sse) {
+    this.sse = sse;
   }
 
-  @Override
-  public String toString() {
-    return value;
+  OutboundSseEvent create(Message message) {
+    return sse.newEventBuilder()
+      .name(message.getName())
+      .mediaType(MediaType.APPLICATION_JSON_TYPE)
+      .data(message.getType(), message.getData())
+      .build();
   }
 
-  public static Optional<SessionId> from(HttpServletRequest request) {
-    return HttpUtil.getHeaderOrGetParameter(request, PARAMETER).map(SessionId::valueOf);
-  }
-
-  public static SessionId valueOf(String value) {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(value), "session id could not be empty or null");
-    return new SessionId(value);
-  }
 }

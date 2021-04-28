@@ -22,43 +22,33 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security;
+package sonia.scm.sse;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Preconditions;
-import com.google.common.base.Strings;
-import lombok.EqualsAndHashCode;
-import sonia.scm.util.HttpUtil;
+import lombok.Getter;
+import sonia.scm.security.SessionId;
 
-import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
 import java.util.Optional;
 
-/**
- * Client side session id.
- */
-@EqualsAndHashCode
-public final class SessionId implements Serializable {
+@Getter
+public class Message {
 
-  public static final String PARAMETER = "X-SCM-Session-ID";
+  private final String name;
+  private final Class<?> type;
+  private final Object data;
+  private final SessionId sender;
 
-  private final String value;
-
-  private SessionId(String value) {
-    this.value = value;
+  public Message(String name, Class<?> type, Object data) {
+    this(name, type, data, null);
   }
 
-  @Override
-  public String toString() {
-    return value;
+  public Message(String name, Class<?> type, Object data, SessionId sender) {
+    this.name = name;
+    this.type = type;
+    this.data = data;
+    this.sender = sender;
   }
 
-  public static Optional<SessionId> from(HttpServletRequest request) {
-    return HttpUtil.getHeaderOrGetParameter(request, PARAMETER).map(SessionId::valueOf);
-  }
-
-  public static SessionId valueOf(String value) {
-    Preconditions.checkArgument(!Strings.isNullOrEmpty(value), "session id could not be empty or null");
-    return new SessionId(value);
+  public Optional<SessionId> getSender() {
+    return Optional.ofNullable(sender);
   }
 }

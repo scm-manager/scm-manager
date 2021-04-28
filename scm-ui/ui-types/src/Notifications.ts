@@ -26,7 +26,7 @@ import { Embedded, HalRepresentationWithEmbedded } from "./hal";
 
 export type Notification = {
   createdAt: Date;
-  type: "info" | "success" | "warning" | "error";
+  type: "INFO" | "SUCCESS" | "WARNING" | "ERROR";
   message: string;
 };
 
