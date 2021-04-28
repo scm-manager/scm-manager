@@ -23,7 +23,7 @@
  */
 import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Branch, Link, Repository } from "@scm-manager/ui-types";
+import { Link, Repository } from "@scm-manager/ui-types";
 import { apiClient } from "@scm-manager/ui-components";
 
 type Props = {
@@ -33,25 +33,27 @@ type Props = {
 
 const CloneInformation: FC<Props> = ({ url, repository }) => {
   const [t] = useTranslation("plugins");
-  const [defaultBranch, setDefaultBranch] = useState<Branch>({ name: "", revision: "", _links: {} });
+  const [defaultBranch, setDefaultBranch] = useState<string>("main");
   const [emptyRepository, setEmptyRepository] = useState<boolean>();
 
   useEffect(() => {
     if (repository) {
       apiClient
-        .get((repository._links.changesets as Link).href)
+        .get((repository._links.changesets as Link).href + "?limit=1")
         .then(r => r.json())
         .then(result => {
           const empty = result._embedded.changesets.length === 0;
           setEmptyRepository(empty);
-
-          if (!empty) {
-            apiClient
-              .get((repository._links.defaultBranch as Link).href)
-              .then(r => r.json())
-              .then(setDefaultBranch);
-          }
         });
+    }
+  }, [repository]);
+
+  useEffect(() => {
+    if (repository) {
+      apiClient
+        .get((repository._links.configuration as Link).href + "?fields=defaultBranch")
+        .then(r => r.json())
+        .then(r => r.defaultBranch && setDefaultBranch(r.defaultBranch));
     }
   }, [repository]);
 
@@ -77,9 +79,11 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
               <br />
               git commit -m "Add readme"
               <br />
+              git branch -m master {defaultBranch}
+              <br />
               git remote add origin {url}
               <br />
-              git push -u origin {defaultBranch?.name || "master"}
+              git push -u origin {defaultBranch}
               <br />
             </code>
           </pre>
@@ -90,7 +94,7 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
         <code>
           git remote add origin {url}
           <br />
-          git push -u origin {defaultBranch?.name || "master"}
+          git push -u origin {defaultBranch}
           <br />
         </code>
       </pre>
