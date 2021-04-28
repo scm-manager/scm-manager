@@ -80,7 +80,7 @@ public class PosixAutoConfigurator implements AutoConfigurator {
   private Optional<Path> findInPath() {
     for (String directory : fsPaths) {
       Path binaryPath = Paths.get(directory, "hg");
-      if (verifier.isValid(binaryPath)) {
+      if (verifier.verify(binaryPath) == HgVerifier.HgVerifyStatus.VALID) {
         return Optional.of(binaryPath);
       }
     }

@@ -109,21 +109,32 @@ class HgVerifierTest {
     private boolean verify(Path hg) {
       HgGlobalConfig config = new HgGlobalConfig();
       config.setHgBinary(hg.toString());
-      return verifier.isValid(config);
+      return verifier.verify(config) == HgVerifier.HgVerifyStatus.VALID;
     }
 
   }
 
   @ParameterizedTest
-  @ValueSource(strings = { "3-2-1", "x.y.z", "3.2.0" })
-  void shouldReturnFalseForInvalidVersions(String version, @TempDir Path directory) throws IOException {
+  @ValueSource(strings = { "3-2-1", "x.y.z" })
+  void shouldReturnInvalidVersions(String version, @TempDir Path directory) throws IOException {
     HgVerifier verifier = new HgVerifier(hg -> version);
 
     Path hg = createHg(directory);
 
-    boolean isValid = verifier.isValid(hg);
+    HgVerifier.HgVerifyStatus verifyStatus = verifier.verify(hg);
 
-    assertThat(isValid).isFalse();
+    assertThat(verifyStatus).isEqualTo(HgVerifier.HgVerifyStatus.INVALID_VERSION);
+  }
+
+  @Test
+  void shouldReturnTooOldVersion(@TempDir Path directory) throws IOException {
+    HgVerifier verifier = new HgVerifier(hg -> "3.2.1");
+
+    Path hg = createHg(directory);
+
+    HgVerifier.HgVerifyStatus verifyStatus = verifier.verify(hg);
+
+    assertThat(verifyStatus).isEqualTo(HgVerifier.HgVerifyStatus.VERSION_TOO_OLD);
   }
 
   @Test
@@ -134,9 +145,9 @@ class HgVerifierTest {
 
     Path hg = createHg(directory);
 
-    boolean isValid = verifier.isValid(hg);
+    HgVerifier.HgVerifyStatus verifyStatus = verifier.verify(hg);
 
-    assertThat(isValid).isFalse();
+    assertThat(verifyStatus).isEqualTo(HgVerifier.HgVerifyStatus.COULD_NOT_RESOLVE_VERSION);
   }
 
   @Test
@@ -145,9 +156,9 @@ class HgVerifierTest {
 
     Path hg = createHg(directory);
 
-    boolean isValid = verifier.isValid(hg);
+    HgVerifier.HgVerifyStatus verifyStatus = verifier.verify(hg);
 
-    assertThat(isValid).isTrue();
+    assertThat(verifyStatus).isEqualTo(HgVerifier.HgVerifyStatus.VALID);
   }
 
   @Nonnull

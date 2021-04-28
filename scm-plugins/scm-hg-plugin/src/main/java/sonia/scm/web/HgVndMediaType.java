@@ -30,6 +30,7 @@ public class HgVndMediaType {
 
   public static final String REPO_CONFIG = PREFIX + "-repo" + VndMediaType.SUFFIX;
   public static final String CONFIG = PREFIX + VndMediaType.SUFFIX;
+  public static final String VERIFY_STATUS = PREFIX + "-verify" + VndMediaType.SUFFIX;
   public static final String PACKAGES = PREFIX + "-packages" + VndMediaType.SUFFIX;
   public static final String INSTALLATIONS = PREFIX + "-installation" + VndMediaType.SUFFIX;
 

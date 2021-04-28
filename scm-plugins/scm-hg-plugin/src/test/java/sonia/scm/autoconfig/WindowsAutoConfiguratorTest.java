@@ -110,9 +110,12 @@ class WindowsAutoConfiguratorTest {
   }
 
   private void mockIsValid(Path path) {
-    when(verifier.isValid(any(Path.class))).then(ic -> {
+    when(verifier.verify(any(Path.class))).then(ic -> {
       Path p = ic.getArgument(0, Path.class);
-      return path.equals(p);
+      if (path.equals(p)) {
+        return HgVerifier.HgVerifyStatus.VALID;
+      }
+      return HgVerifier.HgVerifyStatus.INVALID_VERSION;
     });
   }
 

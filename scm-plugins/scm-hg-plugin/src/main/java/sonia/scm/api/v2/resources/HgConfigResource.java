@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.HalRepresentation;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -32,9 +33,13 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.HgVerifier;
 import sonia.scm.web.HgVndMediaType;
 import sonia.scm.web.VndMediaType;
 
@@ -123,6 +128,7 @@ public class HgConfigResource {
   @PUT
   @Path("")
   @Consumes(HgVndMediaType.CONFIG)
+  @Produces(HgVndMediaType.VERIFY_STATUS)
   @Operation(
     summary = "Modify hg configuration",
     description = "Modifies the global mercurial configuration.",
@@ -146,6 +152,7 @@ public class HgConfigResource {
   )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"configuration:write:hg\" privilege")
+  @ApiResponse(responseCode = "422", description = "config invalid / config cannot be saved")
   @ApiResponse(
     responseCode = "500",
     description = "internal server error",
@@ -154,10 +161,13 @@ public class HgConfigResource {
       schema = @Schema(implementation = ErrorDto.class)
     ))
   public Response update(@Valid HgGlobalGlobalConfigDto configDto) {
-
     HgGlobalConfig config = dtoToConfigMapper.map(configDto);
-
     ConfigurationPermissions.write(config).check();
+
+    if (config.getHgBinary() != null) {
+      HgVerifier.HgVerifyStatus verifyStatus = new HgVerifier().verify(config.getHgBinary());
+      return Response.status(422).entity(new HgVerifyDto(verifyStatus)).build();
+    }
 
     repositoryHandler.setConfig(config);
     repositoryHandler.storeConfig();
@@ -174,5 +184,15 @@ public class HgConfigResource {
   @Path("{namespace}/{name}")
   public HgRepositoryConfigResource getRepositoryConfigResource() {
     return repositoryConfigResource.get();
+  }
+
+  @Getter
+  @Setter
+  public static class HgVerifyDto extends HalRepresentation {
+    private HgVerifier.HgVerifyStatus verifyStatus;
+
+    public HgVerifyDto(HgVerifier.HgVerifyStatus verifyStatus) {
+      this.verifyStatus = verifyStatus;
+    }
   }
 }

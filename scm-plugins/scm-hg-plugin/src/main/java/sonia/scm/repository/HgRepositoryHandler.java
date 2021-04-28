@@ -24,8 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
@@ -110,7 +108,7 @@ public class HgRepositoryHandler
   }
 
   private boolean isConfigValid(HgGlobalConfig config) {
-    return config.isValid() && new HgVerifier().isValid(config);
+    return config.isValid() && new HgVerifier().verify(config) == HgVerifier.HgVerifyStatus.VALID;
   }
 
   @Override

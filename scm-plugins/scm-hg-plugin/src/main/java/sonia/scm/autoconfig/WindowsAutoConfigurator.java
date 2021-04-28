@@ -119,7 +119,7 @@ public class WindowsAutoConfigurator implements AutoConfigurator {
     LOG.trace("check directory {} for mercurial installations", directory);
     for (String binary : BINARIES) {
       Path hg = Paths.get(directory, binary);
-      if (verifier.isValid(hg)) {
+      if (verifier.verify(hg) == HgVerifier.HgVerifyStatus.VALID) {
         return Optional.of(hg.toAbsolutePath().toString());
       }
     }

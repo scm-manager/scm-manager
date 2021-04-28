@@ -156,6 +156,14 @@ public class HgConfigResourceTest {
   }
 
   @Test
+  @SubjectAware(username = "writeOnly")
+  public void shouldNotUpdateConfigForInvalidBinary() throws URISyntaxException, UnsupportedEncodingException {
+    MockHttpResponse response = put("{\"hgBinary\":\"3.2.1\"}");
+    assertEquals(422, response.getStatus());
+    assertEquals("{\"verifyStatus\":\"NOT_REGULAR_FILE\"}", response.getContentAsString());
+  }
+
+  @Test
   @SubjectAware(username = "readOnly")
   public void shouldNotUpdateConfigWhenNotAuthorized() throws URISyntaxException, UnsupportedEncodingException {
     MockHttpResponse response = put();
@@ -172,9 +180,13 @@ public class HgConfigResourceTest {
   }
 
   private MockHttpResponse put() throws URISyntaxException {
+    return put("{\"disabled\":true}");
+  }
+
+  private MockHttpResponse put(String config) throws URISyntaxException {
     MockHttpRequest request = MockHttpRequest.put("/" + HgConfigResource.HG_CONFIG_PATH_V2)
                                              .contentType(HgVndMediaType.CONFIG)
-                                             .content("{\"disabled\":true}".getBytes());
+                                             .content(config.getBytes());
 
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);

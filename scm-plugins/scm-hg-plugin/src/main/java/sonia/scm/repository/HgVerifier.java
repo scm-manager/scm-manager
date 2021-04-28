@@ -29,6 +29,9 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.io.SimpleCommand;
 import sonia.scm.io.SimpleCommandResult;
 
+import javax.xml.bind.annotation.XmlEnum;
+import javax.xml.bind.annotation.XmlEnumValue;
+import javax.xml.bind.annotation.XmlType;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -47,24 +50,24 @@ public class HgVerifier {
     this.versionResolver = versionResolver;
   }
 
-  public boolean isValid(HgGlobalConfig config) {
-    return isValid(config.getHgBinary());
+  public HgVerifyStatus verify(HgGlobalConfig config) {
+    return verify(config.getHgBinary());
   }
 
-  public boolean isValid(String hg) {
-    return isValid(Paths.get(hg));
+  public HgVerifyStatus verify(String hg) {
+    return verify(Paths.get(hg));
   }
 
-  public boolean isValid(Path hg) {
+  public HgVerifyStatus verify(Path hg) {
     LOG.trace("check if hg binary {} is valid", hg);
     if (!Files.isRegularFile(hg)) {
       LOG.warn("{} is not a regular file", hg);
-      return false;
+      return HgVerifyStatus.NOT_REGULAR_FILE;
     }
 
     if (!Files.isExecutable(hg)) {
       LOG.warn("{} is not executable", hg);
-      return false;
+      return HgVerifyStatus.NOT_EXECUTABLE;
     }
 
     try {
@@ -72,31 +75,31 @@ public class HgVerifier {
       return isVersionValid(hg, version);
     } catch (IOException ex) {
       LOG.warn("failed to resolve version of {}: ", hg, ex);
-      return false;
+      return HgVerifyStatus.COULD_NOT_RESOLVE_VERSION;
     } catch (InterruptedException ex) {
       Thread.currentThread().interrupt();
       LOG.warn("failed to resolve version of {}: ", hg, ex);
-      return false;
+      return HgVerifyStatus.COULD_NOT_RESOLVE_VERSION;
     }
   }
 
-  private boolean isVersionValid(Path hg, String version) {
+  private HgVerifyStatus isVersionValid(Path hg, String version) {
     String[] parts = version.split("\\.");
     if (parts.length < 2) {
       LOG.warn("{} returned invalid version: {}", hg, version);
-      return false;
+      return HgVerifyStatus.INVALID_VERSION;
     }
     try {
       int major = Integer.parseInt(parts[0]);
       if (major < 4) {
         LOG.warn("{} is too old, we need at least mercurial 4.x", hg);
-        return false;
+        return HgVerifyStatus.VERSION_TOO_OLD;
       }
     } catch (NumberFormatException ex) {
       LOG.warn("{} returned invalid version {}", hg, version);
-      return false;
+      return HgVerifyStatus.INVALID_VERSION;
     }
-    return true;
+    return HgVerifyStatus.VALID;
   }
 
   private VersionResolver defaultVersionResolver() {
@@ -115,4 +118,12 @@ public class HgVerifier {
     String resolveVersion(Path hg) throws IOException, InterruptedException;
   }
 
+  public enum HgVerifyStatus {
+    VALID,
+    NOT_REGULAR_FILE,
+    NOT_EXECUTABLE,
+    INVALID_VERSION,
+    VERSION_TOO_OLD,
+    COULD_NOT_RESOLVE_VERSION
+  }
 }
