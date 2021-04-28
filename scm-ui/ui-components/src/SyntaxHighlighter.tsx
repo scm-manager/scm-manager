@@ -33,6 +33,7 @@ import createSyntaxHighlighterRenderer from "./SyntaxHighlighterRenderer";
 import useScrollToElement from "./useScrollToElement";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
+import copyToClipboard from "./CopyToClipboard";
 
 const LINE_NUMBER_URL_HASH_REGEX = /^#line-(.*)$/;
 
@@ -70,8 +71,7 @@ const SyntaxHighlighter: FC<Props> = ({ language = defaultLanguage, showLineNumb
   );
 
   const copy = () => {
-    navigator.clipboard.writeText(value);
-    setCopied(true);
+    copyToClipboard(value).then(() => setCopied(true));
   };
 
   const createLinePermaLink = (lineNumber: number) =>
