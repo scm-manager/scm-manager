@@ -109,38 +109,49 @@ type LinkProps = {
 
 type Props = LinkProps & {
   base?: string;
-  protocolExtensions: ProtocolLinkRendererExtensionMap;
 };
 
-const MarkdownLinkRenderer: FC<Props> = ({ href, base, protocolExtensions, children }) => {
+const MarkdownLinkRenderer: FC<Props> = ({ href = "", base, children, ...props }) => {
   const location = useLocation();
   if (isExternalLink(href)) {
     return <ExternalLink to={href}>{children}</ExternalLink>;
-  }
-  const protocolLinkContext = isLinkWithProtocol(href);
-  if (protocolLinkContext) {
-    const { link, protocol } = protocolLinkContext;
-    const ProtocolRenderer = protocolExtensions[protocol];
-    if (ProtocolRenderer) {
-      return (
-        <ProtocolRenderer protocol={protocol} href={link}>
-          {children}
-        </ProtocolRenderer>
-      );
-    }
+  } else if (isLinkWithProtocol(href)) {
+    return <a href={href}>{children}</a>;
   } else if (isAnchorLink(href)) {
     return <a href={urls.withContextPath(location.pathname) + href}>{children}</a>;
   } else if (base) {
     const localLink = createLocalLink(base, location.pathname, href);
     return <Link to={localLink}>{children}</Link>;
+  } else if (href) {
+    return (
+      <a href={href} {...props}>
+        {children}
+      </a>
+    );
+  } else {
+    return <a {...props}>{children}</a>;
   }
-  return <a href={href}>{children}</a>;
 };
 
 // we use a factory method, because react-markdown does not pass
 // base as prop down to our link component.
 export const create = (base?: string, protocolExtensions: ProtocolLinkRendererExtensionMap = {}): FC<LinkProps> => {
-  return props => <MarkdownLinkRenderer base={base} protocolExtensions={protocolExtensions} {...props} />;
+  return props => {
+    const protocolLinkContext = isLinkWithProtocol(props.href || "");
+    if (protocolLinkContext) {
+      const { link, protocol } = protocolLinkContext;
+      const ProtocolRenderer = protocolExtensions[protocol];
+      if (ProtocolRenderer) {
+        return (
+          <ProtocolRenderer protocol={protocol} href={link}>
+            {props.children}
+          </ProtocolRenderer>
+        );
+      }
+    }
+
+    return <MarkdownLinkRenderer base={base} {...props} />;
+  };
 };
 
 export default MarkdownLinkRenderer;

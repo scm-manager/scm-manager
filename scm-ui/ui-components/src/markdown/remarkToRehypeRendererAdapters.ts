@@ -48,11 +48,8 @@ export const createRemark2RehypeCodeRendererAdapter = (remarkRenderer: any) => {
 
 export const createRemark2RehypeLinkRendererAdapter = (remarkRenderer: any) => {
   return ({ node, children }: any) => {
-    const renderProps = {
-      href: node.properties.href || ""
-    };
     children = children || [];
-    return React.createElement(remarkRenderer, renderProps, ...children);
+    return React.createElement(remarkRenderer, node.properties, ...children);
   };
 };
 
