@@ -74,7 +74,7 @@ public class GitConfigResourceTest {
   @Rule
   public ShiroRule shiro = new ShiroRule();
 
-  private RestDispatcher dispatcher = new RestDispatcher();
+  private final RestDispatcher dispatcher = new RestDispatcher();
 
   private final URI baseUri = URI.create("/");
 
@@ -249,6 +249,71 @@ public class GitConfigResourceTest {
       .isInstanceOfSatisfying(GitRepositoryConfig.class, x -> { })
       .extracting("defaultBranch")
       .isEqualTo("new");
+  }
+
+  @Test
+  @SubjectAware(username = "readOnly")
+  public void shouldGetDefaultBranchFromRepoConfig() throws URISyntaxException, UnsupportedEncodingException {
+    when(repositoryManager.get(new NamespaceAndName("space", "X"))).thenReturn(new Repository("id", "git", "space", "X"));
+    when(configurationStore.get()).thenReturn(new GitRepositoryConfig("default"));
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + GitConfigResource.GIT_CONFIG_PATH_V2 + "/space/X/default-branch")
+      .contentType(GitVndMediaType.GIT_REPOSITORY_CONFIG);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertEquals("{\"defaultBranch\":\"default\"}", response.getContentAsString());
+  }
+
+  @Test
+  @SubjectAware(username = "readOnly")
+  public void shouldGetDefaultBranchFromGlobalConfig() throws URISyntaxException, UnsupportedEncodingException {
+    when(repositoryManager.get(new NamespaceAndName("space", "X"))).thenReturn(new Repository("id", "git", "space", "X"));
+    when(configurationStore.get()).thenReturn(new GitRepositoryConfig());
+    GitConfig globalGitConfig = createConfiguration();
+    globalGitConfig.setDefaultBranch("global-default");
+    when(repositoryHandler.getConfig()).thenReturn(globalGitConfig);
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + GitConfigResource.GIT_CONFIG_PATH_V2 + "/space/X/default-branch")
+      .contentType(GitVndMediaType.GIT_REPOSITORY_CONFIG);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertEquals("{\"defaultBranch\":\"global-default\"}", response.getContentAsString());
+  }
+
+  @Test
+  @SubjectAware(username = "readOnly")
+  public void shouldGetFallbackDefaultBranchIfBothConfigsEmpty() throws URISyntaxException, UnsupportedEncodingException {
+    when(repositoryManager.get(new NamespaceAndName("space", "X"))).thenReturn(new Repository("id", "git", "space", "X"));
+    when(configurationStore.get()).thenReturn(new GitRepositoryConfig());
+    when(repositoryHandler.getConfig()).thenReturn(createConfiguration());
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + GitConfigResource.GIT_CONFIG_PATH_V2 + "/space/X/default-branch")
+      .contentType(GitVndMediaType.GIT_REPOSITORY_CONFIG);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_OK, response.getStatus());
+    assertEquals("{\"defaultBranch\":\"main\"}", response.getContentAsString());
+  }
+
+  @Test
+  public void shouldThrowAuthorizationExceptionIfNotPermittedToGetDefaultBranch() throws URISyntaxException {
+    when(repositoryManager.get(new NamespaceAndName("space", "X"))).thenReturn(new Repository("id", "git", "space", "X"));
+    MockHttpRequest request = MockHttpRequest
+      .get("/" + GitConfigResource.GIT_CONFIG_PATH_V2 + "/space/X/default-branch")
+      .contentType(GitVndMediaType.GIT_REPOSITORY_CONFIG);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(HttpServletResponse.SC_FORBIDDEN, response.getStatus());
   }
 
   private MockHttpResponse get() throws URISyntaxException {

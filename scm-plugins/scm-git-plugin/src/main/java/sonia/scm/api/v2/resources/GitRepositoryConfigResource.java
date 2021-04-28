@@ -39,7 +39,6 @@ import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.RepositoryHandler;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.store.ConfigurationStore;
@@ -53,7 +52,6 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -113,8 +111,8 @@ public class GitRepositoryConfigResource {
   }
 
   @GET
-  @Path("/default-branch")
-  @Produces(MediaType.TEXT_PLAIN)
+  @Path("default-branch")
+  @Produces(GitVndMediaType.GIT_REPOSITORY_DEFAULT_BRANCH)
   @Operation(summary = "Git repository default branch", description = "Returns the default branch for the repository.", tags = "Git")
   @ApiResponse(
     responseCode = "200",
@@ -147,9 +145,9 @@ public class GitRepositoryConfigResource {
 
     String defaultBranch = "main";
 
-    if (Strings.isNullOrEmpty(config.getDefaultBranch())) {
+    if (!Strings.isNullOrEmpty(config.getDefaultBranch())) {
       defaultBranch = config.getDefaultBranch();
-    } else if (Strings.isNullOrEmpty(repositoryHandler.getConfig().getDefaultBranch())) {
+    } else if (!Strings.isNullOrEmpty(repositoryHandler.getConfig().getDefaultBranch())) {
       defaultBranch = repositoryHandler.getConfig().getDefaultBranch();
     }
 

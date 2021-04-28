@@ -65,8 +65,12 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
           git clone {url}
           <br />
           cd {repository.name}
-          <br />
-          git checkout -b {defaultBranch}
+          {emptyRepository && (
+            <>
+              <br />
+              git checkout -b {defaultBranch}
+            </>
+          )}
         </code>
       </pre>
       {emptyRepository && (
