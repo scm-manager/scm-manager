@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Binder } from "./binder";
+import binder, {Binder, ExtensionPointDefinition} from "./binder";
 
 describe("binder tests", () => {
   let binder: Binder;
@@ -98,5 +98,20 @@ describe("binder tests", () => {
     const extensions = binder.getExtensions("hitchhiker.trillian");
     expect(extensions[0]).toEqual("planetD");
     expect(extensions[1]).toEqual("planetB");
+  });
+
+  it("should allow typings for extension points but still be backwards-compatible", () => {
+    type TestExtensionPointA = ExtensionPointDefinition<"test.extension.a", number, undefined>;
+    type TestExtensionPointB = ExtensionPointDefinition<"test.extension.b", number, { testProp: boolean[] }>;
+
+    binder.bind<TestExtensionPointA>("test.extension.a", 2, () => false);
+    const binderExtensionA = binder.getExtension<TestExtensionPointA>("test.extension.a");
+    expect(binderExtensionA).not.toBeNull();
+    binder.bind<TestExtensionPointB>("test.extension.b", 2);
+    const binderExtensionsB = binder.getExtensions<TestExtensionPointB>("test.extension.b", { testProp: [true, false] });
+    expect(binderExtensionsB).toHaveLength(1);
+    binder.bind("test.extension.c", 2, () => false);
+    const binderExtensionC = binder.getExtension("test.extension.c");
+    expect(binderExtensionC).not.toBeNull();
   });
 });
