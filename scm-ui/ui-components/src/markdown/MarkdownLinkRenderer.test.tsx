@@ -57,19 +57,19 @@ describe("test isExternalLink", () => {
 
 describe("test isLinkWithProtocol", () => {
   it("should return true", () => {
-    expect(isLinkWithProtocol("ldap://[2001:db8::7]/c=GB?objectClass?one")).toBe(true);
-    expect(isLinkWithProtocol("mailto:trillian@hitchhiker.com")).toBe(true);
-    expect(isLinkWithProtocol("tel:+1-816-555-1212")).toBe(true);
-    expect(isLinkWithProtocol("urn:oasis:names:specification:docbook:dtd:xml:4.1.2")).toBe(true);
-    expect(isLinkWithProtocol("about:config")).toBe(true);
-    expect(isLinkWithProtocol("http://cloudogu.com")).toBe(true);
-    expect(isLinkWithProtocol("file:///srv/git/project.git")).toBe(true);
-    expect(isLinkWithProtocol("ssh://trillian@server/project.git")).toBe(true);
+    expect(isLinkWithProtocol("ldap://[2001:db8::7]/c=GB?objectClass?one")).toBeTruthy();
+    expect(isLinkWithProtocol("mailto:trillian@hitchhiker.com")).toBeTruthy();
+    expect(isLinkWithProtocol("tel:+1-816-555-1212")).toBeTruthy();
+    expect(isLinkWithProtocol("urn:oasis:names:specification:docbook:dtd:xml:4.1.2")).toBeTruthy();
+    expect(isLinkWithProtocol("about:config")).toBeTruthy();
+    expect(isLinkWithProtocol("http://cloudogu.com")).toBeTruthy();
+    expect(isLinkWithProtocol("file:///srv/git/project.git")).toBeTruthy();
+    expect(isLinkWithProtocol("ssh://trillian@server/project.git")).toBeTruthy();
   });
   it("should return false", () => {
-    expect(isLinkWithProtocol("some/path/link")).toBe(false);
-    expect(isLinkWithProtocol("/some/path/link")).toBe(false);
-    expect(isLinkWithProtocol("#some-anchor")).toBe(false);
+    expect(isLinkWithProtocol("some/path/link")).toBeFalsy();
+    expect(isLinkWithProtocol("/some/path/link")).toBeFalsy();
+    expect(isLinkWithProtocol("#some-anchor")).toBeFalsy();
   });
 });
 
