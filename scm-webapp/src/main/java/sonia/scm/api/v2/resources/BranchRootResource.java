@@ -48,7 +48,6 @@ import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.validation.constraints.Pattern;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.DefaultValue;
@@ -62,7 +61,6 @@ import javax.ws.rs.core.Response;
 import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 import static sonia.scm.AlreadyExistsException.alreadyExists;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
@@ -97,7 +95,7 @@ public class BranchRootResource {
    * @param branchName the name of the branch
    */
   @GET
-  @Path("{branch: ^(?!default-branch$)[^/]+$}")
+  @Path("{branch}")
   @Produces(VndMediaType.BRANCH)
   @Operation(summary = "Get single branch", description = "Returns a branch for a repository.", tags = "Repository")
   @ApiResponse(
@@ -129,63 +127,14 @@ public class BranchRootResource {
   public Response get(
     @PathParam("namespace") String namespace,
     @PathParam("name") String name,
-    @Pattern(regexp = "\\w{1,100}") @PathParam("branch") String branchName
+    @PathParam("branch") String branchName
   ) throws IOException {
-    return getSingleBranchResponse(namespace, name, branchName, branch -> branch.getName().equals(branchName));
-  }
-
-  /**
-   * Returns the default branch for the repository.
-   *
-   * <strong>Note:</strong> This method requires "repository" privilege.
-   *
-   * @param namespace the namespace of the repository
-   * @param name      the name of the repository
-   */
-  @GET
-  @Path("default-branch")
-  @Produces(VndMediaType.BRANCH)
-  @Operation(summary = "Get default branch", description = "Returns the default branch for the repository.", tags = "Repository")
-  @ApiResponse(
-    responseCode = "200",
-    description = "success",
-    content = @Content(
-      mediaType = VndMediaType.BRANCH,
-      schema = @Schema(implementation = BranchDto.class)
-    )
-  )
-  @ApiResponse(responseCode = "400", description = "branches not supported for given repository")
-  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
-  @ApiResponse(responseCode = "403", description = "not authorized, the current user has no privileges to read the branch")
-  @ApiResponse(
-    responseCode = "404",
-    description = "not found, no default branch for the repository available or repository found",
-    content = @Content(
-      mediaType = VndMediaType.ERROR_TYPE,
-      schema = @Schema(implementation = ErrorDto.class)
-    ))
-  @ApiResponse(
-    responseCode = "500",
-    description = "internal server error",
-    content = @Content(
-      mediaType = VndMediaType.ERROR_TYPE,
-      schema = @Schema(implementation = ErrorDto.class)
-    )
-  )
-  public Response getDefaultBranch(
-    @PathParam("namespace") String namespace,
-    @PathParam("name") String name
-  ) throws IOException {
-    return getSingleBranchResponse(namespace, name, "defaultBranch", Branch::isDefaultBranch);
-  }
-
-  private Response getSingleBranchResponse(String namespace, String name, String branchName, Predicate<Branch> predicate) throws IOException {
     NamespaceAndName namespaceAndName = new NamespaceAndName(namespace, name);
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       Branches branches = repositoryService.getBranchesCommand().getBranches();
       return branches.getBranches()
         .stream()
-        .filter(predicate)
+        .filter(branch -> branchName.equals(branch.getName()))
         .findFirst()
         .map(branch -> branchToDtoMapper.map(branch, repositoryService.getRepository()))
         .map(Response::ok)
