@@ -133,7 +133,7 @@ public class ScmTransportProtocol extends TransportProtocol {
         pack.setPreReceiveHook(hook);
         pack.setPostReceiveHook(hook);
 
-        CollectingPackParserListener.set(pack);
+        CollectingPackParserListener.set(pack, hook);
       }
 
       return pack;

@@ -82,6 +82,10 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
     onReceive(rpack, receiveCommands, RepositoryHookType.PRE_RECEIVE);
   }
 
+  public void afterReceive() {
+    hookEventFacade.firePending();
+  }
+
   private void handleReceiveCommands(ReceivePack rpack,
     List<ReceiveCommand> receiveCommands, RepositoryHookType type)
   {

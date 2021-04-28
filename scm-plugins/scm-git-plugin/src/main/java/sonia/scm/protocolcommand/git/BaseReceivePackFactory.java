@@ -60,7 +60,7 @@ public abstract class BaseReceivePackFactory<T> implements ReceivePackFactory<T>
     receivePack.setPreReceiveHook(hook);
     receivePack.setPostReceiveHook(hook);
     // apply collecting listener, to be able to check which commits are new
-    CollectingPackParserListener.set(receivePack);
+    CollectingPackParserListener.set(receivePack, hook);
 
     return receivePack;
   }

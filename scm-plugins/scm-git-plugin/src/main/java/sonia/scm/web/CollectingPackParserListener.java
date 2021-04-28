@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -58,6 +58,11 @@ public class CollectingPackParserListener implements PackParserListener
    */
   private static final Logger logger =
     LoggerFactory.getLogger(CollectingPackParserListener.class);
+  private final GitReceiveHook hook;
+
+  public CollectingPackParserListener(GitReceiveHook hook) {
+    this.hook = hook;
+  }
 
   //~--- get methods ----------------------------------------------------------
 
@@ -94,10 +99,10 @@ public class CollectingPackParserListener implements PackParserListener
    *
    * @param pack receive pack
    */
-  public static void set(ReceivePack pack)
+  public static void set(ReceivePack pack, GitReceiveHook hook)
   {
     logger.trace("apply collecting listener to receive pack");
-    pack.setPackParserListener(new CollectingPackParserListener());
+    pack.setPackParserListener(new CollectingPackParserListener(hook));
   }
 
   //~--- methods --------------------------------------------------------------
@@ -146,6 +151,11 @@ public class CollectingPackParserListener implements PackParserListener
   {
     logger.trace("prepare pack parser to collect new object ids");
     parser.setNeedNewObjectIds(true);
+  }
+
+  @Override
+  public void release() {
+    hook.afterReceive();
   }
 
   //~--- get methods ----------------------------------------------------------
