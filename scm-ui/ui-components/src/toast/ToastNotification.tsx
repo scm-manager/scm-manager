@@ -22,9 +22,44 @@
  * SOFTWARE.
  */
 
-export { default as Toast } from "./Toast";
-export { default as ToastArea } from "./ToastArea";
-export { default as ToastNotification } from "./ToastNotification";
-export { Type as ToastType } from "./themes";
-export { default as ToastButton } from "./ToastButton";
-export { default as ToastButtons } from "./ToastButtons";
+import { getTheme, Themeable, ToastThemeContext, Type } from "./themes";
+import styled from "styled-components";
+import React, { FC } from "react";
+
+type Props = {
+  type: Type;
+  title: string;
+  close?: () => void;
+};
+
+const Container = styled.div<Themeable>`
+  color: ${props => props.theme.primary};
+  background-color: ${props => props.theme.secondary};
+  max-width: 18rem;
+  font-size: 0.75rem;
+  border-radius: 5px;
+  padding: 1.5rem;
+  margin-top: 0.5rem;
+
+  & > p {
+    margin-bottom: 0.5rem;
+  }
+`;
+
+const Title = styled.h1<Themeable>`
+  margin-bottom: 0.25rem;
+  font-weight: bold;
+`;
+
+const ToastNotification: FC<Props> = ({ children, title, type, close }) => {
+  const theme = getTheme(type);
+  return (
+    <Container className="notification" theme={theme}>
+      { close ? <button className="delete" onClick={close} /> : null }
+      <Title theme={theme}>{title}</Title>
+      <ToastThemeContext.Provider value={theme}>{children}</ToastThemeContext.Provider>
+    </Container>
+  );
+};
+
+export default ToastNotification;

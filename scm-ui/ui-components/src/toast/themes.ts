@@ -34,9 +34,9 @@ export type Themeable = {
   theme: ToastTheme;
 };
 
-export type Type = "info" | "primary" | "success" | "warning" | "danger";
+export const types = ["info", "primary", "success", "warning", "danger"] as const;
 
-export const types: Type[] = ["info", "primary", "success", "warning", "danger"];
+export type Type = typeof types[number];
 
 const themes: { [name in Type]: ToastTheme } = {
   info: {

@@ -23,9 +23,9 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { apiClient, Icon, Toast } from "@scm-manager/ui-components";
+import { Icon, ToastArea, ToastNotification, ToastType } from "@scm-manager/ui-components";
 import styled from "styled-components";
-import { useNotifications } from "@scm-manager/ui-api";
+import { apiClient, useNotifications } from "@scm-manager/ui-api";
 import { Notification, NotificationCollection, Link as LinkType } from "@scm-manager/ui-types";
 import { Link } from "react-router-dom";
 
@@ -77,8 +77,8 @@ const NotificationList: FC<Props> = ({ data }) => (
 );
 
 type SubscriptionProps = {
-  link?: string;
-  refetch: () => void;
+  link: string;
+  refetch: () => Promise<NotificationCollection | undefined>;
 };
 
 const color = (notification: Notification) => {
@@ -89,38 +89,98 @@ const color = (notification: Notification) => {
   return c;
 };
 
-const NotificationSubscription: FC<SubscriptionProps> = ({ link, refetch }) => {
-  const [notification, setNotification] = useState<Notification>();
+const useSuspendingNotification = (link: string, refetch: () => Promise<NotificationCollection | undefined>) => {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [disconnectedAt, setDisconnectedAt] = useState<Date>();
+
   useEffect(() => {
     if (link) {
-      return apiClient.subscribe(link, {
-        // @ts-ignore i don't know how to type this
-        notification: (messageEvent: MessageEvent<string>) => {
-          setNotification(JSON.parse(messageEvent.data));
-          refetch();
+      let cancel: () => void;
+
+      const disconnect = () => {
+        if (cancel) {
+          console.log("close sse connection");
+          cancel();
         }
-      });
+      };
+
+      const connect = () => {
+        disconnect();
+        console.log("create sse connection");
+        cancel = apiClient.subscribe(link, {
+          notification: event => {
+            setNotifications(previous => [...previous, JSON.parse(event.data)]);
+            refetch();
+          }
+        });
+      };
+
+      const handleVisibilityChange = () => {
+        if (document.visibilityState === "visible") {
+          refetch().then(collection => {
+            if (collection) {
+              const received = collection._embedded.notifications.filter(
+                n => disconnectedAt && disconnectedAt < n.createdAt
+              );
+              if (received.length > 0) {
+                setNotifications(previous => [...previous, ...received]);
+              }
+              setDisconnectedAt(undefined);
+            }
+            connect();
+          });
+        } else {
+          setDisconnectedAt(new Date());
+          disconnect();
+        }
+      };
+
+      if (document.visibilityState === "visible") {
+        connect();
+      }
+
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+
+      return () => {
+        disconnect();
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+      };
     }
-  }, [link]);
+  }, [link, refetch, disconnectedAt, setNotifications]);
 
-  if (!notification) {
-    return null;
-  }
+  return {
+    notifications,
+    remove: (notification: Notification) => {
+      setNotifications([...notifications.filter(n => n !== notification)]);
+    },
+    clear: () => setNotifications([])
+  };
+};
 
-  console.log(notification);
-
+const NotificationSubscription: FC<SubscriptionProps> = ({ link, refetch }) => {
+  const { notifications, remove } = useSuspendingNotification(link, refetch);
   return (
-    <Toast type={color(notification)} title="Notification">
-      <p>{notification.message}</p>
-    </Toast>
+    <ToastArea>
+      {notifications.map((notification, i) => (
+        <ToastNotification
+          key={i}
+          type={color(notification) as ToastType}
+          title="Notification"
+          close={() => remove(notification)}
+        >
+          <p>{notification.message}</p>
+        </ToastNotification>
+      ))}
+    </ToastArea>
   );
 };
 
 const Notifications: FC = ({}) => {
   const { data, refetch } = useNotifications();
+  const subscribeLink = (data?._links["subscribe"] as LinkType)?.href;
   return (
     <>
-      <NotificationSubscription link={(data?._links["subscribe"] as LinkType)?.href} refetch={refetch} />
+      {subscribeLink ? <NotificationSubscription link={subscribeLink} refetch={refetch} /> : null}
       <div className="dropdown is-right is-hoverable">
         <Container className="dropdown-trigger">
           <Bell name="bell" color="white" />

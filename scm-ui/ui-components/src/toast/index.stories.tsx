@@ -27,6 +27,8 @@ import Toast from "./Toast";
 import ToastButtons from "./ToastButtons";
 import ToastButton from "./ToastButton";
 import { types } from "./themes";
+import ToastArea from "./ToastArea";
+import ToastNotification from "./ToastNotification";
 
 const toastStories = storiesOf("Toast", module);
 
@@ -87,3 +89,13 @@ types.forEach(type => {
     </Toast>
   ));
 });
+
+toastStories.add("Multiple", () => (
+  <ToastArea>
+    {types.map(type => (
+      <ToastNotification key={type} type={type} title="New notification">
+        <p>The notification received.</p>
+      </ToastNotification>
+    ))}
+  </ToastArea>
+));

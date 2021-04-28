@@ -43,8 +43,7 @@ export const useNotifications = () => {
     error,
     isLoading,
     refetch: () => {
-      refetch();
-      return;
+      return refetch().then(r => r.data);
     }
   };
 };

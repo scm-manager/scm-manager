@@ -42,6 +42,7 @@ class Client implements Closeable {
   private final SseEventSink eventSink;
 
   private Instant lastUsed;
+  private boolean exceptionallyClosed = false;
 
   Client(Registration registration) {
     sessionId = registration.getSessionId();
@@ -68,6 +69,7 @@ class Client implements Closeable {
         } else {
           LOG.debug("failed to send event to client with session id {}: {}", sessionId, e.getMessage());
         }
+        exceptionallyClosed = true;
         close();
         return null;
       });
@@ -77,7 +79,7 @@ class Client implements Closeable {
   }
 
   boolean isClosed() {
-    return eventSink.isClosed();
+    return exceptionallyClosed || eventSink.isClosed();
   }
 
   @Override
