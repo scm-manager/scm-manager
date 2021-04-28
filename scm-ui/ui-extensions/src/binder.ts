@@ -113,7 +113,9 @@ export class Binder {
    * @param extensionPoint name of extension point
    * @param props of the extension point
    */
-  getExtensions<E extends ExtensionPointDefinition<string, any, undefined>>(extensionPoint: E["name"]): Array<E["type"]>;
+  getExtensions<E extends ExtensionPointDefinition<string, any, undefined>>(
+    extensionPoint: E["name"]
+  ): Array<E["type"]>;
   getExtensions<E extends ExtensionPointDefinition<string, any, any>>(
     extensionPoint: E["name"],
     props: E["props"]
@@ -133,7 +135,10 @@ export class Binder {
   /**
    * Returns true if at least one extension is bound to the extension point and its props.
    */
-  hasExtension<E extends ExtensionPointDefinition<any, unknown, any>>(extensionPoint: E["name"], props?: E["props"]): boolean {
+  hasExtension<E extends ExtensionPointDefinition<any, unknown, any>>(
+    extensionPoint: E["name"],
+    props?: E["props"]
+  ): boolean {
     return this.getExtensions<E>(extensionPoint, props).length > 0;
   }
 

@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import binder, {Binder, ExtensionPointDefinition} from "./binder";
+import { Binder, ExtensionPointDefinition } from "./binder";
 
 describe("binder tests", () => {
   let binder: Binder;
@@ -108,7 +108,9 @@ describe("binder tests", () => {
     const binderExtensionA = binder.getExtension<TestExtensionPointA>("test.extension.a");
     expect(binderExtensionA).not.toBeNull();
     binder.bind<TestExtensionPointB>("test.extension.b", 2);
-    const binderExtensionsB = binder.getExtensions<TestExtensionPointB>("test.extension.b", { testProp: [true, false] });
+    const binderExtensionsB = binder.getExtensions<TestExtensionPointB>("test.extension.b", {
+      testProp: [true, false]
+    });
     expect(binderExtensionsB).toHaveLength(1);
     binder.bind("test.extension.c", 2, () => false);
     const binderExtensionC = binder.getExtension("test.extension.c");
