@@ -36,6 +36,7 @@ dependencies {
   api libraries.junitJupiterParams
   api libraries.junitJupiterEngine
   api libraries.shiroUnit
+  api libraries.shiroExtension
 
   // junit 4 support
   api libraries.junitVintageEngine

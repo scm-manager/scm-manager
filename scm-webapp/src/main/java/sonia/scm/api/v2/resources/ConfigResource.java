@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.annotations.VisibleForTesting;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
@@ -36,6 +37,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.NamespaceStrategyValidator;
+import sonia.scm.util.JsonMerger;
 import sonia.scm.util.ScmConfigurationUtil;
 import sonia.scm.web.VndMediaType;
 
@@ -43,6 +45,7 @@ import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
+import javax.ws.rs.PATCH;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -63,17 +66,21 @@ public class ConfigResource {
   private final ScmConfigurationToConfigDtoMapper configToDtoMapper;
   private final ScmConfiguration configuration;
   private final NamespaceStrategyValidator namespaceStrategyValidator;
+  private final JsonMerger jsonMerger;
 
-  private Consumer<ScmConfiguration> store = (config) -> ScmConfigurationUtil.getInstance().store(config);
+  private Consumer<ScmConfiguration> store = config -> ScmConfigurationUtil.getInstance().store(config);
 
   @Inject
   public ConfigResource(ConfigDtoToScmConfigurationMapper dtoToConfigMapper,
                         ScmConfigurationToConfigDtoMapper configToDtoMapper,
-                        ScmConfiguration configuration, NamespaceStrategyValidator namespaceStrategyValidator) {
+                        ScmConfiguration configuration,
+                        NamespaceStrategyValidator namespaceStrategyValidator,
+                        JsonMerger jsonMerger) {
     this.dtoToConfigMapper = dtoToConfigMapper;
     this.configToDtoMapper = configToDtoMapper;
     this.configuration = configuration;
     this.namespaceStrategyValidator = namespaceStrategyValidator;
+    this.jsonMerger = jsonMerger;
   }
 
   @VisibleForTesting
@@ -107,7 +114,6 @@ public class ConfigResource {
     )
   )
   public Response get() {
-
     // We do this permission check in Resource and not in ScmConfiguration, because it must be available for reading
     // from within the code (plugins, etc.), but not for the whole anonymous world outside.
     ConfigurationPermissions.read(configuration).check();
@@ -151,21 +157,73 @@ public class ConfigResource {
     )
   )
   public Response update(@Valid ConfigDto configDto) {
+    ConfigurationPermissions.write(configuration).check();
+    updateConfig(configDto);
 
-    // This *could* be moved to ScmConfiguration or ScmConfigurationUtil classes.
-    // But to where to check? load() or store()? Leave it for now, SCMv1 legacy that can be cleaned up later.
+    return Response.noContent().build();
+  }
+
+  /**
+   * Modifies the global scm config partially.
+   *
+   * @param updateNode json object which contains changed fields
+   */
+  @PATCH
+  @Path("")
+  @Consumes(VndMediaType.CONFIG)
+  @Operation(
+    summary = "Update instance configuration partially",
+    description = "Modifies the instance configuration partially.",
+    tags = "Instance configuration",
+    requestBody = @RequestBody(
+      content = @Content(
+        mediaType = VndMediaType.CONFIG,
+        schema = @Schema(implementation = UpdateConfigDto.class),
+        examples = @ExampleObject(
+          name = "Overwrites the provided fields of the current configuration.",
+          value = "{\n  \"realmDescription\":\"SCM-Manager Realm\" \n}",
+          summary = "Update configuration partially"
+        )
+      )
+    )
+  )
+  @ApiResponse(responseCode = "204", description = "update success")
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"configuration:write\" privilege")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    )
+  )
+  public Response updatePartially(JsonNode updateNode) {
     ConfigurationPermissions.write(configuration).check();
 
-    // ensure the namespace strategy is valid
-    namespaceStrategyValidator.check(configDto.getNamespaceStrategy());
+    ConfigDto updatedConfigDto = jsonMerger
+      .fromObject(configToDtoMapper.map(configuration))
+      .mergeWithJson(updateNode)
+      .toObject(ConfigDto.class)
+      .withValidation()
+      .build();
+    updateConfig(updatedConfigDto);
 
-    ScmConfiguration config = dtoToConfigMapper.map(configDto);
+    return Response.noContent().build();
+  }
+
+  private void updateConfig(ConfigDto updatedConfigDto) {
+    // This *could* be moved to ScmConfiguration or ScmConfigurationUtil classes.
+    // But to where to check? load() or store()? Leave it for now, SCMv1 legacy that can be cleaned up later.
+
+    // ensure the namespace strategy is valid
+    namespaceStrategyValidator.check(updatedConfigDto.getNamespaceStrategy());
+
+    ScmConfiguration config = dtoToConfigMapper.map(updatedConfigDto);
     synchronized (ScmConfiguration.class) {
       configuration.load(config);
       store.accept(configuration);
     }
-
-    return Response.noContent().build();
   }
 
 }

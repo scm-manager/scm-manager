@@ -1,7 +1,7 @@
 ext {
   slf4jVersion = '1.7.30'
   guiceVersion = '4.2.3'
-  resteasyVersion = '4.5.8.Final'
+  resteasyVersion = '4.6.0.Final'
 
   // TODO upgrade to 2.12.0, but this breaks openapi spec generation
   jacksonVersion = '2.11.3'
@@ -101,6 +101,7 @@ ext {
     ssp: "com.github.sdorra:ssp-lib:${sspVersion}",
     sspProcessor: "com.github.sdorra:ssp-processor:${sspVersion}",
     shiroUnit: 'com.github.sdorra:shiro-unit:1.0.1',
+    shiroExtension: 'com.github.sdorra:junit-shiro-extension:1.0.1',
 
     // jwt
     jjwtApi: "io.jsonwebtoken:jjwt-api:${jjwtVersion}",
