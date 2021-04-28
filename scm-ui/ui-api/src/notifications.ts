@@ -26,6 +26,7 @@ import { useMe } from "./login";
 import { useQuery } from "react-query";
 import { Link, NotificationCollection } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
+import { useCallback } from "react";
 
 export const useNotifications = () => {
   const { data: me } = useMe();
@@ -38,12 +39,14 @@ export const useNotifications = () => {
     }
   );
 
+  const memoizedRefetch = useCallback(() => {
+    return refetch().then(r => r.data);
+  }, [refetch]);
+
   return {
     data,
     error,
     isLoading,
-    refetch: () => {
-      return refetch().then(r => r.data);
-    }
+    refetch: memoizedRefetch
   };
 };

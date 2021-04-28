@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import { Icon, ToastArea, ToastNotification, ToastType } from "@scm-manager/ui-components";
 import styled from "styled-components";
 import { apiClient, useNotifications } from "@scm-manager/ui-api";
@@ -93,45 +93,57 @@ const useSuspendingNotification = (link: string, refetch: () => Promise<Notifica
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [disconnectedAt, setDisconnectedAt] = useState<Date>();
 
+  const onVisible = useCallback(() => {
+    return refetch().then(collection => {
+      if (collection) {
+        const received = collection._embedded.notifications.filter(n => {
+          return disconnectedAt && disconnectedAt < new Date(n.createdAt);
+        });
+        if (received.length > 0) {
+          setNotifications(previous => [...previous, ...received]);
+        }
+        setDisconnectedAt(undefined);
+      }
+    });
+  }, [disconnectedAt, refetch]);
+
+  const onHide = useCallback(() => {
+    setDisconnectedAt(new Date());
+    return Promise.resolve();
+  }, []);
+
+  const received = useCallback(
+    (notification: Notification) => {
+      setNotifications(previous => [...previous, notification]);
+      refetch();
+    },
+    [refetch]
+  );
+
   useEffect(() => {
     if (link) {
       let cancel: () => void;
 
       const disconnect = () => {
         if (cancel) {
-          console.log("close sse connection");
           cancel();
         }
       };
 
       const connect = () => {
         disconnect();
-        console.log("create sse connection");
         cancel = apiClient.subscribe(link, {
           notification: event => {
-            setNotifications(previous => [...previous, JSON.parse(event.data)]);
-            refetch();
+            received(JSON.parse(event.data));
           }
         });
       };
 
       const handleVisibilityChange = () => {
         if (document.visibilityState === "visible") {
-          refetch().then(collection => {
-            if (collection) {
-              const received = collection._embedded.notifications.filter(
-                n => disconnectedAt && disconnectedAt < n.createdAt
-              );
-              if (received.length > 0) {
-                setNotifications(previous => [...previous, ...received]);
-              }
-              setDisconnectedAt(undefined);
-            }
-            connect();
-          });
+          onVisible();
         } else {
-          setDisconnectedAt(new Date());
-          disconnect();
+          onHide();
         }
       };
 
@@ -146,7 +158,7 @@ const useSuspendingNotification = (link: string, refetch: () => Promise<Notifica
         document.removeEventListener("visibilitychange", handleVisibilityChange);
       };
     }
-  }, [link, refetch, disconnectedAt, setNotifications]);
+  }, [link, onVisible, onHide, received]);
 
   return {
     notifications,
