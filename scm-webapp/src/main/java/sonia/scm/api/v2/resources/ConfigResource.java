@@ -68,7 +68,7 @@ public class ConfigResource {
   private final NamespaceStrategyValidator namespaceStrategyValidator;
   private final JsonMerger jsonMerger;
 
-  private Consumer<ScmConfiguration> store = (config) -> ScmConfigurationUtil.getInstance().store(config);
+  private Consumer<ScmConfiguration> store = config -> ScmConfigurationUtil.getInstance().store(config);
 
   @Inject
   public ConfigResource(ConfigDtoToScmConfigurationMapper dtoToConfigMapper,
@@ -181,7 +181,7 @@ public class ConfigResource {
         schema = @Schema(implementation = UpdateConfigDto.class),
         examples = @ExampleObject(
           name = "Overwrites the provided fields of the current configuration.",
-          value = "{\n  \"realmDescription\":\"SONIA :: SCM-Manager\",\n  \"dateFormat\":\"YYYY-MM-DD HH:mm:ss\",\n  \"baseUrl\":\"http://localhost:8081/scm\",\n  \"loginAttemptLimit\":-1,\n  \"pluginUrl\":\"https://plugin-center-api.scm-manager.org/api/v1/plugins/{version}?os={os}&arch={arch}\",\n  \"loginAttemptLimitTimeout\":500,\n  \"namespaceStrategy\":\"CustomNamespaceStrategy\",\n  \"loginInfoUrl\":\"https://login-info.scm-manager.org/api/v1/login-info\",\n  \"releaseFeedUrl\":\"https://scm-manager.org/download/rss.xml\",\n  \"mailDomainName\":\"scm-manager.local\"\n}",
+          value = "{\n  \"realmDescription\":\"SCM-Manager Realm\" \n}",
           summary = "Update configuration partially"
         )
       )
