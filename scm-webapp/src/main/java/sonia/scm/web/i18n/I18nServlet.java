@@ -27,7 +27,6 @@ package sonia.scm.web.i18n;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.github.legman.Subscribe;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Singleton;
@@ -40,6 +39,7 @@ import sonia.scm.cache.CacheManager;
 import sonia.scm.filter.WebElement;
 import sonia.scm.lifecycle.RestartEvent;
 import sonia.scm.plugin.PluginLoader;
+import sonia.scm.util.JsonMerger;
 
 import javax.inject.Inject;
 import javax.servlet.http.HttpServlet;
@@ -49,7 +49,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.net.URL;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.Optional;
 
 
@@ -70,13 +69,15 @@ public class I18nServlet extends HttpServlet {
   private final ClassLoader classLoader;
   private final Cache<String, JsonNode> cache;
   private final ObjectMapper objectMapper = new ObjectMapper();
+  private final JsonMerger jsonMerger;
 
 
   @Inject
-  public I18nServlet(SCMContextProvider context, PluginLoader pluginLoader, CacheManager cacheManager) {
+  public I18nServlet(SCMContextProvider context, PluginLoader pluginLoader, CacheManager cacheManager, JsonMerger jsonMerger) {
     this.context = context;
     this.classLoader = pluginLoader.getUberClassLoader();
     this.cache = cacheManager.getCache(CACHE_NAME);
+    this.jsonMerger = jsonMerger;
   }
 
   @Subscribe(async = false)
@@ -146,53 +147,13 @@ public class I18nServlet extends HttpServlet {
       URL url = resources.nextElement();
       JsonNode jsonNode = objectMapper.readTree(url);
       if (mergedJsonNode != null) {
-        merge(mergedJsonNode, jsonNode);
+        mergedJsonNode = jsonMerger.fromJson(mergedJsonNode).mergeWithJson(jsonNode).toJsonNode();
       } else {
         mergedJsonNode = jsonNode;
       }
     }
 
     return Optional.ofNullable(mergedJsonNode);
-  }
-
-  private JsonNode merge(JsonNode mainNode, JsonNode updateNode) {
-    Iterator<String> fieldNames = updateNode.fieldNames();
-    while (fieldNames.hasNext()) {
-      String fieldName = fieldNames.next();
-      JsonNode jsonNode = mainNode.get(fieldName);
-      if (jsonNode != null) {
-        mergeNode(updateNode, fieldName, jsonNode);
-      } else {
-        mergeField(mainNode, updateNode, fieldName);
-      }
-    }
-    return mainNode;
-  }
-
-  private void mergeField(JsonNode mainNode, JsonNode updateNode, String fieldName) {
-    if (mainNode instanceof ObjectNode) {
-      JsonNode value = updateNode.get(fieldName);
-      if (value.isNull()) {
-        return;
-      }
-      if (value.isIntegralNumber() && value.toString().equals("0")) {
-        return;
-      }
-      if (value.isFloatingPointNumber() && value.toString().equals("0.0")) {
-        return;
-      }
-      ((ObjectNode) mainNode).set(fieldName, value);
-    }
-  }
-
-  private void mergeNode(JsonNode updateNode, String fieldName, JsonNode jsonNode) {
-    if (jsonNode.isObject()) {
-      merge(jsonNode, updateNode.get(fieldName));
-    } else if (jsonNode.isArray()) {
-      for (int i = 0; i < jsonNode.size(); i++) {
-        merge(jsonNode.get(i), updateNode.get(fieldName).get(i));
-      }
-    }
   }
 
 }

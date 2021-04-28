@@ -41,6 +41,7 @@ import sonia.scm.cache.Cache;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.lifecycle.RestartEventFactory;
 import sonia.scm.plugin.PluginLoader;
+import sonia.scm.util.JsonMerger;
 
 import javax.annotation.Nonnull;
 import javax.servlet.http.HttpServletRequest;
@@ -62,7 +63,11 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.fail;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class I18nServletTest {
@@ -223,7 +228,7 @@ class I18nServletTest {
 
     @Nonnull
     private I18nServlet createServlet() {
-      return new I18nServlet(context, pluginLoader, cacheManager);
+      return new I18nServlet(context, pluginLoader, cacheManager, new JsonMerger(new ObjectMapper()));
     }
 
     private String doGetString(I18nServlet servlet, HttpServletRequest request, HttpServletResponse response) throws IOException {
