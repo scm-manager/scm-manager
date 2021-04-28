@@ -91,8 +91,8 @@ export class Binder {
    * @param extensionPoint name of extension point
    * @param props of the extension point
    */
-  getExtension<E extends ExtensionPoint<string, unknown, undefined>>(extensionPoint: E["name"]): E["type"] | null;
-  getExtension<E extends ExtensionPoint<string, unknown, any>>(
+  getExtension<E extends ExtensionPoint<string, any, undefined>>(extensionPoint: E["name"]): E["type"] | null;
+  getExtension<E extends ExtensionPoint<string, any, any>>(
     extensionPoint: E["name"],
     props: E["props"]
   ): E["type"] | null;
@@ -113,9 +113,14 @@ export class Binder {
    * @param extensionPoint name of extension point
    * @param props of the extension point
    */
-  getExtensions<E extends ExtensionPoint<string, unknown, any>>(
+  getExtensions<E extends ExtensionPoint<string, any, undefined>>(extensionPoint: E["name"]): Array<E["type"]>;
+  getExtensions<E extends ExtensionPoint<string, any, any>>(
     extensionPoint: E["name"],
     props: E["props"]
+  ): Array<E["type"]>;
+  getExtensions<E extends ExtensionPoint<string, unknown, any>>(
+    extensionPoint: E["name"],
+    props?: E["props"]
   ): Array<E["type"]> {
     let registrations = this.extensionPoints[extensionPoint] || [];
     if (props) {
