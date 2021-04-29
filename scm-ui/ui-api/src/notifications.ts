@@ -24,9 +24,9 @@
 
 import { useMe } from "./login";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Link, NotificationCollection } from "@scm-manager/ui-types";
+import { Link, Notification, NotificationCollection } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { requiredLink } from "./links";
 
 export const useNotifications = () => {
@@ -65,5 +65,88 @@ export const useClearNotifications = (notificationCollection: NotificationCollec
     error,
     clear: () => mutate(),
     isCleared: !!data
+  };
+};
+
+export const useNotificationSubscription = (
+  link: string,
+  refetch: () => Promise<NotificationCollection | undefined>
+) => {
+  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [disconnectedAt, setDisconnectedAt] = useState<Date>();
+
+  const onVisible = useCallback(() => {
+    return refetch().then(collection => {
+      if (collection) {
+        const received = collection._embedded.notifications.filter(n => {
+          return disconnectedAt && disconnectedAt < new Date(n.createdAt);
+        });
+        if (received.length > 0) {
+          setNotifications(previous => [...previous, ...received]);
+        }
+        setDisconnectedAt(undefined);
+      }
+    });
+  }, [disconnectedAt, refetch]);
+
+  const onHide = useCallback(() => {
+    setDisconnectedAt(new Date());
+    return Promise.resolve();
+  }, []);
+
+  const received = useCallback(
+    (notification: Notification) => {
+      setNotifications(previous => [...previous, notification]);
+      refetch();
+    },
+    [refetch]
+  );
+
+  useEffect(() => {
+    if (link) {
+      let cancel: () => void;
+
+      const disconnect = () => {
+        if (cancel) {
+          cancel();
+        }
+      };
+
+      const connect = () => {
+        disconnect();
+        cancel = apiClient.subscribe(link, {
+          notification: event => {
+            received(JSON.parse(event.data));
+          }
+        });
+      };
+
+      const handleVisibilityChange = () => {
+        if (document.visibilityState === "visible") {
+          onVisible();
+        } else {
+          onHide();
+        }
+      };
+
+      if (document.visibilityState === "visible") {
+        connect();
+      }
+
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+
+      return () => {
+        disconnect();
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+      };
+    }
+  }, [link, onVisible, onHide, received]);
+
+  return {
+    notifications,
+    remove: (notification: Notification) => {
+      setNotifications([...notifications.filter(n => n !== notification)]);
+    },
+    clear: () => setNotifications([])
   };
 };
