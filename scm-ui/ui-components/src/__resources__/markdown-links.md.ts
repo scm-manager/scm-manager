@@ -40,6 +40,10 @@ Anchor Links should be rendered a simple a tag with an href: [anchor link](#samp
 
 Links with a protocol other than http should be rendered a simple a tag with an href e.g.: [mail link](mailto:marvin@hitchhiker.com)
 
+## Custom Protocol
+
+Renderers for custom protocols can be added via the "markdown-renderer.link.protocol" extension point: [description of scw link](scw:marvin@hitchhiker.com)
+
 ## Internal
 
 Internal links should be rendered by react-router: [internal link](/buttons)

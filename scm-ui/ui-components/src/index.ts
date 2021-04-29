@@ -95,6 +95,7 @@ export * from "./repos";
 export * from "./table";
 export * from "./toast";
 export * from "./popover";
+export * from "./markdown/markdownExtensions";
 
 export {
   File,

@@ -47993,6 +47993,8 @@ exports[`Storyshots MarkdownView Commit Links 1`] = `
       <p>
         <a
           href="https://scm-manager.org/"
+          rel="noopener noreferrer"
+          target="_blank"
         >
           hitchhiker/heart-of-gold@42
         </a>
@@ -48093,7 +48095,7 @@ exports[`Storyshots MarkdownView Default 1`] = `
 
         <li>
           <a
-            href="#Headings"
+            href="/#Headings"
           >
             Headings
           </a>
@@ -48102,7 +48104,7 @@ exports[`Storyshots MarkdownView Default 1`] = `
 
         <li>
           <a
-            href="#Paragraphs"
+            href="/#Paragraphs"
           >
             Paragraphs
           </a>
@@ -48111,7 +48113,7 @@ exports[`Storyshots MarkdownView Default 1`] = `
 
         <li>
           <a
-            href="#Blockquotes"
+            href="/#Blockquotes"
           >
             Blockquotes
           </a>
@@ -48120,7 +48122,7 @@ exports[`Storyshots MarkdownView Default 1`] = `
 
         <li>
           <a
-            href="#Lists"
+            href="/#Lists"
           >
             Lists
           </a>
@@ -48129,7 +48131,7 @@ exports[`Storyshots MarkdownView Default 1`] = `
 
         <li>
           <a
-            href="#Horizontal"
+            href="/#Horizontal"
           >
             Horizontal rule
           </a>
@@ -48138,7 +48140,7 @@ exports[`Storyshots MarkdownView Default 1`] = `
 
         <li>
           <a
-            href="#Table"
+            href="/#Table"
           >
             Table
           </a>
@@ -48147,7 +48149,7 @@ exports[`Storyshots MarkdownView Default 1`] = `
 
         <li>
           <a
-            href="#Code"
+            href="/#Code"
           >
             Code
           </a>
@@ -48156,7 +48158,7 @@ exports[`Storyshots MarkdownView Default 1`] = `
 
         <li>
           <a
-            href="#Inline"
+            href="/#Inline"
           >
             Inline elements
           </a>
@@ -48254,7 +48256,7 @@ exports[`Storyshots MarkdownView Default 1`] = `
 
       <p>
         <a
-          href="#top"
+          href="/#top"
         >
           [Top]
         </a>
@@ -48289,7 +48291,7 @@ exports[`Storyshots MarkdownView Default 1`] = `
 
       <p>
         <a
-          href="#top"
+          href="/#top"
         >
           [Top]
         </a>
@@ -48362,7 +48364,7 @@ exports[`Storyshots MarkdownView Default 1`] = `
 
       <p>
         <a
-          href="#top"
+          href="/#top"
         >
           [Top]
         </a>
@@ -48508,7 +48510,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
 
       <p>
         <a
-          href="#top"
+          href="/#top"
         >
           [Top]
         </a>
@@ -48541,7 +48543,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
 
       <p>
         <a
-          href="#top"
+          href="/#top"
         >
           [Top]
         </a>
@@ -48908,7 +48910,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
 
       <p>
         <a
-          href="#top"
+          href="/#top"
         >
           [Top]
         </a>
@@ -50106,7 +50108,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
 
       <p>
         <a
-          href="#top"
+          href="/#top"
         >
           [Top]
         </a>
@@ -50135,7 +50137,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
         </strong>
          reprehenderit duis 
         <a
-          href="#!"
+          href="/#!"
         >
           irure
         </a>
@@ -50165,7 +50167,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
         </code>
          anim aute reprehenderit id eu ea. Aute 
         <a
-          href="#!"
+          href="/#!"
         >
           excepteur proident
         </a>
@@ -50204,6 +50206,8 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
       <p>
         <a
           href="https://youtu.be/s6bCmZmy9aQ"
+          rel="noopener noreferrer"
+          target="_blank"
         >
           <img
             alt="Manny Pacquiao"
@@ -50216,7 +50220,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
       <p>
         Reprehenderit non eu quis in ad elit esse qui aute id 
         <a
-          href="#!"
+          href="/#!"
         >
           incididunt
         </a>
@@ -58106,6 +58110,166 @@ the story is mostly for checking if the links are rendered correct.
       
 
       <h2
+        id="custom-protocol"
+      >
+        Custom Protocol
+      </h2>
+      
+
+      <p>
+        Renderers for custom protocols can be added via the "markdown-renderer.link.protocol" extension point: 
+        <div
+          style={
+            Object {
+              "border": "1px dashed lightgray",
+              "padding": "2px",
+            }
+          }
+        >
+          <h4>
+            Link: 
+            marvin@hitchhiker.com
+             [Protocol: 
+            scw
+            ]
+          </h4>
+          <div>
+            children: 
+            description of scw link
+          </div>
+        </div>
+      </p>
+      
+
+      <h2
+        id="internal"
+      >
+        Internal
+      </h2>
+      
+
+      <p>
+        Internal links should be rendered by react-router: 
+        <a
+          href="/scm/buttons"
+          onClick={[Function]}
+        >
+          internal link
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots MarkdownView Links without Base Path 1`] = `
+<div
+  className="MarkdownViewstories__Spacing-sc-1lofakk-0 jNfUaE"
+>
+  <div
+    className="content is-word-break"
+  >
+    <div>
+      <h1
+        id="links"
+      >
+        Links
+      </h1>
+      
+
+      <p>
+        Show case for different style of markdown links.
+Please note that some of the links may not work in storybook,
+the story is mostly for checking if the links are rendered correct.
+      </p>
+      
+
+      <h2
+        id="external"
+      >
+        External
+      </h2>
+      
+
+      <p>
+        External Links should be opened in a new tab: 
+        <a
+          href="https://scm-manager.org"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          external link
+        </a>
+      </p>
+      
+
+      <h2
+        id="anchor"
+      >
+        Anchor
+      </h2>
+      
+
+      <p>
+        Anchor Links should be rendered a simple a tag with an href: 
+        <a
+          href="/#sample"
+        >
+          anchor link
+        </a>
+      </p>
+      
+
+      <h2
+        id="protocol"
+      >
+        Protocol
+      </h2>
+      
+
+      <p>
+        Links with a protocol other than http should be rendered a simple a tag with an href e.g.: 
+        <a
+          href="mailto:marvin@hitchhiker.com"
+        >
+          mail link
+        </a>
+      </p>
+      
+
+      <h2
+        id="custom-protocol"
+      >
+        Custom Protocol
+      </h2>
+      
+
+      <p>
+        Renderers for custom protocols can be added via the "markdown-renderer.link.protocol" extension point: 
+        <div
+          style={
+            Object {
+              "border": "1px dashed lightgray",
+              "padding": "2px",
+            }
+          }
+        >
+          <h4>
+            Link: 
+            marvin@hitchhiker.com
+             [Protocol: 
+            scw
+            ]
+          </h4>
+          <div>
+            children: 
+            description of scw link
+          </div>
+        </div>
+      </p>
+      
+
+      <h2
         id="internal"
       >
         Internal
@@ -58116,7 +58280,6 @@ the story is mostly for checking if the links are rendered correct.
         Internal links should be rendered by react-router: 
         <a
           href="/buttons"
-          onClick={[Function]}
         >
           internal link
         </a>
@@ -58146,7 +58309,7 @@ exports[`Storyshots MarkdownView Skip Html 1`] = `
 
         <li>
           <a
-            href="#Headings"
+            href="/#Headings"
           >
             Headings
           </a>
@@ -58155,7 +58318,7 @@ exports[`Storyshots MarkdownView Skip Html 1`] = `
 
         <li>
           <a
-            href="#Paragraphs"
+            href="/#Paragraphs"
           >
             Paragraphs
           </a>
@@ -58164,7 +58327,7 @@ exports[`Storyshots MarkdownView Skip Html 1`] = `
 
         <li>
           <a
-            href="#Blockquotes"
+            href="/#Blockquotes"
           >
             Blockquotes
           </a>
@@ -58173,7 +58336,7 @@ exports[`Storyshots MarkdownView Skip Html 1`] = `
 
         <li>
           <a
-            href="#Lists"
+            href="/#Lists"
           >
             Lists
           </a>
@@ -58182,7 +58345,7 @@ exports[`Storyshots MarkdownView Skip Html 1`] = `
 
         <li>
           <a
-            href="#Horizontal"
+            href="/#Horizontal"
           >
             Horizontal rule
           </a>
@@ -58191,7 +58354,7 @@ exports[`Storyshots MarkdownView Skip Html 1`] = `
 
         <li>
           <a
-            href="#Table"
+            href="/#Table"
           >
             Table
           </a>
@@ -58200,7 +58363,7 @@ exports[`Storyshots MarkdownView Skip Html 1`] = `
 
         <li>
           <a
-            href="#Code"
+            href="/#Code"
           >
             Code
           </a>
@@ -58209,7 +58372,7 @@ exports[`Storyshots MarkdownView Skip Html 1`] = `
 
         <li>
           <a
-            href="#Inline"
+            href="/#Inline"
           >
             Inline elements
           </a>
@@ -58303,7 +58466,7 @@ exports[`Storyshots MarkdownView Skip Html 1`] = `
 
       <p>
         <a
-          href="#top"
+          href="/#top"
         >
           [Top]
         </a>
@@ -58334,7 +58497,7 @@ exports[`Storyshots MarkdownView Skip Html 1`] = `
 
       <p>
         <a
-          href="#top"
+          href="/#top"
         >
           [Top]
         </a>
@@ -58403,7 +58566,7 @@ exports[`Storyshots MarkdownView Skip Html 1`] = `
 
       <p>
         <a
-          href="#top"
+          href="/#top"
         >
           [Top]
         </a>
@@ -58547,7 +58710,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
 
       <p>
         <a
-          href="#top"
+          href="/#top"
         >
           [Top]
         </a>
@@ -58576,7 +58739,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
 
       <p>
         <a
-          href="#top"
+          href="/#top"
         >
           [Top]
         </a>
@@ -58986,7 +59149,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
 
       <p>
         <a
-          href="#top"
+          href="/#top"
         >
           [Top]
         </a>
@@ -60180,7 +60343,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
 
       <p>
         <a
-          href="#top"
+          href="/#top"
         >
           [Top]
         </a>
@@ -60205,7 +60368,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
         </strong>
          reprehenderit duis 
         <a
-          href="#!"
+          href="/#!"
         >
           irure
         </a>
@@ -60235,7 +60398,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
         </code>
          anim aute reprehenderit id eu ea. Aute 
         <a
-          href="#!"
+          href="/#!"
         >
           excepteur proident
         </a>
@@ -60274,6 +60437,8 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
       <p>
         <a
           href="https://youtu.be/s6bCmZmy9aQ"
+          rel="noopener noreferrer"
+          target="_blank"
         >
           <img
             alt="Manny Pacquiao"
@@ -60286,7 +60451,7 @@ Deserunt officia esse aliquip consectetur duis ut labore laborum commodo aliquip
       <p>
         Reprehenderit non eu quis in ad elit esse qui aute id 
         <a
-          href="#!"
+          href="/#!"
         >
           incididunt
         </a>

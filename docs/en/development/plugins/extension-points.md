@@ -62,6 +62,17 @@ The following extension points are provided for the frontend:
 - Dynamic extension point for custom language-specific renderers
 - Overrides the default Syntax Highlighter
 - Used by the Markdown Plantuml Plugin
+### markdown-renderer.link.protocol
+- Define custom protocols and their renderers for links in markdown
+
+Example:
+```markdown
+[description](myprotocol:somelink)
+```
+
+```typescript
+binder.bind("markdown-renderer.link.protocol", { protocol: "myprotocol", renderer: MyProtocolRenderer })
+```
 
 # Deprecated
 
