@@ -572,6 +572,26 @@ ul.is-separated {
     &.border-is-yellow td:first-child {
       border-left-color: $yellow;
     }
+
+    &.is-primary td:first-child {
+      border-left-color: $primary;
+    }
+    &.is-success td:first-child {
+      border-left-color: $success;
+    }
+    &.is-warning td:first-child {
+      border-left-color: $warning;
+    }
+    &.is-danger td:first-child {
+      border-left-color: $danger;
+    }
+    &.is-info td:first-child {
+      border-left-color: $info;
+    }
+    &.is-link td:first-child {
+      border-left-color: $link;
+    }
+
     &:hover {
       td {
         background-color: whitesmoke;

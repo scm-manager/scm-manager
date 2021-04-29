@@ -37,7 +37,6 @@ import {
 import styled from "styled-components";
 import { useClearNotifications, useNotifications, useNotificationSubscription } from "@scm-manager/ui-api";
 import { Notification, NotificationCollection, Link as LinkType } from "@scm-manager/ui-types";
-import { Link } from "react-router-dom";
 
 const Bell = styled(Icon)`
   font-size: 1.5rem;
@@ -48,12 +47,8 @@ const Container = styled.div`
   cursor: pointer;
 `;
 
-const DropDownItem = styled(Link)`
-  word-wrap: break-word;
-`;
-
 const DropDownMenu = styled.div`
-  min-width: 20rem;
+  min-width: 50vh;
 
   &:before {
     position: absolute;
@@ -73,21 +68,6 @@ const DropDownMenu = styled.div`
   }
 `;
 
-const IconColumn = styled.span`
-  width: 1.5rem;
-  display: inline-block;
-`;
-
-const DateColumn = styled.span`
-  width: 8rem;
-  display: inline-block;
-`;
-
-const MessageColumn = styled.span`
-  display: inline-block;
-  overflow: auto;
-`;
-
 type Props = {
   data: NotificationCollection;
 };
@@ -96,34 +76,41 @@ type EntryProps = {
   notification: Notification;
 };
 
-const NotificationIcon: FC<EntryProps> = ({ notification }) => {
-  return <Icon name="bell" color={color(notification)} />;
-};
+const VerticalCenteredTd = styled.td`
+  vertical-align: middle !important;
+`;
+
+const DateColumn = styled(VerticalCenteredTd)`
+  white-space: nowrap;
+`;
 
 const NotificationEntry: FC<EntryProps> = ({ notification }) => (
-  <DropDownItem to="/" className="dropdown-item">
-    <IconColumn className="is-ellipsis-overflow">
-      <NotificationIcon notification={notification} />
-    </IconColumn>
-    <DateColumn className="is-ellipsis-overflow">
+  <tr className={`has-cursor-pointer is-${color(notification)}`}>
+    <VerticalCenteredTd className="">{notification.message}</VerticalCenteredTd>
+    <DateColumn className="has-text-right">
       <DateFromNow date={notification.createdAt} />
     </DateColumn>
-    <MessageColumn title={notification.message}>{notification.message}</MessageColumn>
-  </DropDownItem>
+  </tr>
 );
 
 type ClearEntryProps = {
   notifications: NotificationCollection;
 };
 
+const DismissAllButton = styled(Button)`
+  &:hover > * {
+    color: white !important;
+  }
+`;
+
 const ClearEntry: FC<ClearEntryProps> = ({ notifications }) => {
   const { isLoading, error, clear } = useClearNotifications(notifications);
   return (
-    <div className="dropdown-item">
+    <div className="dropdown-item has-text-centered	">
       <ErrorNotification error={error} />
-      <Button fullWidth={true} loading={isLoading} action={clear}>
-        Clear all
-      </Button>
+      <DismissAllButton className="is-outlined" color="link" loading={isLoading} action={clear}>
+        <Icon color="link" name="trash" className="mr-1" /> Dismiss all messages
+      </DismissAllButton>
     </div>
   );
 };
@@ -131,10 +118,15 @@ const ClearEntry: FC<ClearEntryProps> = ({ notifications }) => {
 const NotificationList: FC<Props> = ({ data }) => {
   const clearLink = data._links.clear;
   return (
-    <div className="dropdown-content">
-      {data._embedded.notifications.map((n, i) => (
-        <NotificationEntry key={i} notification={n} />
-      ))}
+    <div className="dropdown-content p-0">
+      <table className="table mb-0 card-table">
+        <tbody>
+          {data._embedded.notifications.map((n, i) => (
+            <NotificationEntry key={i} notification={n} />
+          ))}
+        </tbody>
+      </table>
+
       {clearLink ? <ClearEntry notifications={data} /> : null}
     </div>
   );
@@ -205,7 +197,7 @@ const BellNotificationIcon: FC<BellNotificationIconProps> = ({ data }) => {
   return (
     <BellNotificationContainer>
       <Bell iconStyle={counter === 0 ? "far" : "fas"} name="bell" color="white" />
-      <NotificationCounter>{counter}</NotificationCounter>
+      {counter > 0 ? <NotificationCounter>{counter}</NotificationCounter> : null}
     </BellNotificationContainer>
   );
 };

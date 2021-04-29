@@ -40,7 +40,7 @@ const Container = styled.div<Themeable>`
   border-radius: 5px;
   padding: 1.5rem;
   margin-top: 0.5rem;
-  margin-bottom: 0;
+  margin-bottom: 0 !important;
 
   & > p {
     margin-bottom: 0.5rem;
