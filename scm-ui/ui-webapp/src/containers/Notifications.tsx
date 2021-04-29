@@ -48,7 +48,7 @@ const Container = styled.div`
 `;
 
 const DropDownMenu = styled.div`
-  min-width: 50vh;
+  min-width: 50vw;
 
   &:before {
     position: absolute;
