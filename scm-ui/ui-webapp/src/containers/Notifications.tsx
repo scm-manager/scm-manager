@@ -131,25 +131,25 @@ const ClearEntry: FC<ClearEntryProps> = ({ notifications }) => {
 const NotificationList: FC<Props> = ({ data }) => {
   const clearLink = data._links.clear;
   return (
-    <>
+    <div className="dropdown-content">
       {data._embedded.notifications.map((n, i) => (
         <NotificationEntry key={i} notification={n} />
       ))}
       {clearLink ? <ClearEntry notifications={data} /> : null}
-    </>
+    </div>
   );
 };
 
+const DropdownMenuContainer: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
+
 const NoNotifications: FC = () => (
-  <div className="m-4">
+  <DropdownMenuContainer>
     <InfoNotification type="info">No notifications</InfoNotification>
-  </div>
+  </DropdownMenuContainer>
 );
 
 const NotificationDropDown: FC<Props> = ({ data }) => (
-  <div className="dropdown-content">
-    {data._embedded.notifications.length > 0 ? <NotificationList data={data} /> : <NoNotifications />}
-  </div>
+  <>{data._embedded.notifications.length > 0 ? <NotificationList data={data} /> : <NoNotifications />}</>
 );
 
 type SubscriptionProps = {
@@ -210,19 +210,36 @@ const BellNotificationIcon: FC<BellNotificationIconProps> = ({ data }) => {
   );
 };
 
+const LoadingBox: FC = () => (
+  <div className="box">
+    <Loading />
+  </div>
+);
+
+const ErrorBox: FC<{ error: Error | null }> = ({ error }) => {
+  if (!error) {
+    return null;
+  }
+  return (
+    <DropdownMenuContainer>
+      <ErrorNotification error={error} />
+    </DropdownMenuContainer>
+  );
+};
+
 const Notifications: FC = () => {
   const { data, isLoading, error, refetch } = useNotifications();
   const subscribeLink = (data?._links["subscribe"] as LinkType)?.href;
   return (
     <>
       {data && subscribeLink ? <NotificationSubscription data={data} refetch={refetch} /> : null}
-      <div className="dropdown is-right is-active">
+      <div className="dropdown is-right is-hoverable">
         <Container className="dropdown-trigger">
           <BellNotificationIcon data={data} />
         </Container>
         <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">
-          <ErrorNotification error={error} />
-          {isLoading ? <Loading /> : null}
+          <ErrorBox error={error} />
+          {isLoading ? <LoadingBox /> : null}
           {data ? <NotificationDropDown data={data} /> : null}
         </DropDownMenu>
       </div>
