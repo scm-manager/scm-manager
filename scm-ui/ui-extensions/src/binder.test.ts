@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { Binder, ExtensionPointDefinition } from "./binder";
+import { Binder, ExtensionPointDefinition, SimpleDynamicExtensionPointDefinition } from "./binder";
 
 describe("binder tests", () => {
   let binder: Binder;
@@ -115,5 +115,32 @@ describe("binder tests", () => {
     binder.bind("test.extension.c", 2, () => false);
     const binderExtensionC = binder.getExtension("test.extension.c");
     expect(binderExtensionC).not.toBeNull();
+  });
+
+  it("should allow typings for dynamic extension points", () => {
+    type MarkdownCodeLanguageRendererProps = {
+      language?: string;
+      value: string;
+    };
+
+    type MarkdownCodeLanguageRendererExtensionPoint<
+      S extends string | undefined = undefined
+    > = SimpleDynamicExtensionPointDefinition<
+      "markdown-renderer.code.",
+      (props: any) => any,
+      MarkdownCodeLanguageRendererProps,
+      S
+    >;
+    type UmlExtensionPoint = MarkdownCodeLanguageRendererExtensionPoint<"uml">;
+
+    binder.bind<UmlExtensionPoint>("markdown-renderer.code.uml", props => props.value);
+
+    const language = "uml";
+    const extensionPointName = `markdown-renderer.code.${language}` as const;
+    const dynamicExtension = binder.getExtension<MarkdownCodeLanguageRendererExtensionPoint>(extensionPointName, {
+      language: "uml",
+      value: "const a = 2;"
+    });
+    expect(dynamicExtension).not.toBeNull();
   });
 });

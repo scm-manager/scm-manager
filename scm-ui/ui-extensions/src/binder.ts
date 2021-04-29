@@ -36,6 +36,8 @@ export type ExtensionPointDefinition<N extends string, T, P> = {
   props: P;
 };
 
+export type SimpleDynamicExtensionPointDefinition<P extends string, T, Props, S extends string | undefined> = ExtensionPointDefinition<S extends string ? `${P}${S}` : `${P}${string}`, T, Props>;
+
 /**
  * Binder is responsible for binding plugin extensions to their corresponding extension points.
  * The Binder class is mainly exported for testing, plugins should only use the default export.
@@ -126,7 +128,7 @@ export class Binder {
   ): Array<E["type"]> {
     let registrations = this.extensionPoints[extensionPoint] || [];
     if (props) {
-      registrations = registrations.filter(reg => reg.predicate(props || {}));
+      registrations = registrations.filter(reg => reg.predicate(props));
     }
     registrations.sort(this.sortExtensions);
     return registrations.map(reg => reg.extension);
