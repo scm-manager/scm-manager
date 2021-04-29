@@ -61,19 +61,9 @@ storiesOf("MarkdownView", module)
   ))
   .add("Links", () => {
     const binder = new Binder("custom protocol link renderer");
-    const Container: FC<ProtocolLinkRendererProps> = ({ protocol, href, children }) => {
-      return (
-        <div style={{ border: "1px dashed lightgray", padding: "2px" }}>
-          <h4>
-            Link: {href} [Protocol: {protocol}]
-          </h4>
-          <div>children: {children}</div>
-        </div>
-      );
-    };
     binder.bind("markdown-renderer.link.protocol", {
       protocol: "scw",
-      renderer: Container
+      renderer: ProtocolLinkRenderer
     } as ProtocolLinkRendererExtension);
     return (
       <BinderContext.Provider value={binder}>
@@ -83,19 +73,9 @@ storiesOf("MarkdownView", module)
   })
   .add("Links without Base Path", () => {
     const binder = new Binder("custom protocol link renderer");
-    const Container: FC<ProtocolLinkRendererProps> = ({ protocol, href, children }) => {
-      return (
-        <div style={{ border: "1px dashed lightgray", padding: "2px" }}>
-          <h4>
-            Link: {href} [Protocol: {protocol}]
-          </h4>
-          <div>children: {children}</div>
-        </div>
-      );
-    };
     binder.bind("markdown-renderer.link.protocol", {
       protocol: "scw",
-      renderer: Container
+      renderer: ProtocolLinkRenderer
     } as ProtocolLinkRendererExtension);
     return (
       <BinderContext.Provider value={binder}>
@@ -132,3 +112,14 @@ storiesOf("MarkdownView", module)
     );
   })
   .add("XSS Prevention", () => <MarkdownView content={MarkdownXss} skipHtml={false} />);
+
+export const ProtocolLinkRenderer: FC<ProtocolLinkRendererProps> = ({ protocol, href, children }) => {
+  return (
+    <div style={{ border: "1px dashed lightgray", padding: "2px" }}>
+      <h4>
+        Link: {href} [Protocol: {protocol}]
+      </h4>
+      <div>children: {children}</div>
+    </div>
+  );
+};
