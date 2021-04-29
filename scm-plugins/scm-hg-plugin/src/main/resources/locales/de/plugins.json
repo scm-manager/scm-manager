@@ -3,7 +3,7 @@
     "information": {
       "clone" : "Repository klonen",
       "create" : "Neues Repository erstellen",
-      "replace" : "Ein bestehendes Repository aktualisieren",
+      "replace" : "Quelle zum bestehenden Repository hinzufügen",
       "fetch": "Remote-Änderungen herunterladen",
       "checkout": "Branch wechseln",
       "checkoutTag": "Tag auschecken"
