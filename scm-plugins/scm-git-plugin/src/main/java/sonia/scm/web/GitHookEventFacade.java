@@ -72,15 +72,8 @@ public class GitHookEventFacade implements Closeable {
         doFire(type, context);
         break;
       case POST_RECEIVE:
-        Thread thread = Thread.currentThread();
-        if ("JGit-Receive-Pack".equals(thread.getName())) {
-          // this thread name is used in the JGit class org.eclipse.jgit.transport.InternalPushConnection
-          LOG.debug("handling internal git thread for post receive hook");
-          handleGitInternalThread(context, thread);
-        } else {
-          LOG.debug("register post receive hook for repository id {} in thread {}", context.getRepositoryId(), thread);
-          PENDING_POST_HOOK.set(context);
-        }
+        LOG.debug("register post receive hook for repository id {}", context.getRepositoryId());
+        PENDING_POST_HOOK.set(context);
         break;
       default:
         throw new IllegalArgumentException("unknown hook type: " + type);
@@ -96,21 +89,7 @@ public class GitHookEventFacade implements Closeable {
     }
   }
 
-  private void handleGitInternalThread(GitHookContextProvider context, Thread internalJGitThread) {
-    internalThreadHookHandler.submit(() -> {
-      try {
-        internalJGitThread.join();
-      } catch (InterruptedException e) {
-        LOG.debug("got interrupted in internal git thread for repository id {}", context.getRepositoryId(), e);
-        Thread.currentThread().interrupt();
-      } finally {
-        LOG.debug("internal git thread ended for repository id {}", context.getRepositoryId());
-        doFire(RepositoryHookType.POST_RECEIVE, context);
-      }
-    });
-  }
-
-  public void clean() {
+  private void clean() {
     PENDING_POST_HOOK.remove();
   }
 
