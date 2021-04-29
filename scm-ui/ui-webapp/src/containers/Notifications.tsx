@@ -23,9 +23,19 @@
  */
 
 import React, { FC, useCallback, useEffect, useState } from "react";
-import { Icon, ToastArea, ToastNotification, ToastType } from "@scm-manager/ui-components";
+import {
+  Button,
+  Notification as InfoNotification,
+  ErrorNotification,
+  Icon,
+  ToastArea,
+  ToastNotification,
+  ToastType,
+  Loading,
+  DateFromNow
+} from "@scm-manager/ui-components";
 import styled from "styled-components";
-import { apiClient, useNotifications } from "@scm-manager/ui-api";
+import { apiClient, useClearNotifications, useNotifications } from "@scm-manager/ui-api";
 import { Notification, NotificationCollection, Link as LinkType } from "@scm-manager/ui-types";
 import { Link } from "react-router-dom";
 
@@ -43,7 +53,7 @@ const Count = styled.span`
 `;
 
 const DropDownItem = styled(Link)`
-  word-wrap: normal;
+  word-wrap: break-word;
 `;
 
 const DropDownMenu = styled.div`
@@ -62,17 +72,70 @@ const NotificationIcon: FC<EntryProps> = ({ notification }) => {
   return <Icon name="bell" color={color(notification)} />;
 };
 
+const IconColumn = styled.span`
+  width: 1.5rem;
+  display: inline-block;
+`;
+
+const DateColumn = styled.span`
+  width: 8rem;
+  display: inline-block;
+`;
+
+const MessageColumn = styled.span`
+  display: inline-block;
+  overflow: auto;
+`;
+
 const NotificationEntry: FC<EntryProps> = ({ notification }) => (
   <DropDownItem to="/" className="dropdown-item">
-    <NotificationIcon notification={notification} /> {notification.message}
+    <IconColumn className="is-ellipsis-overflow">
+      <NotificationIcon notification={notification} />
+    </IconColumn>
+    <DateColumn className="is-ellipsis-overflow">
+      <DateFromNow date={notification.createdAt} />
+    </DateColumn>
+    <MessageColumn title={notification.message}>{notification.message}</MessageColumn>
   </DropDownItem>
 );
 
-const NotificationList: FC<Props> = ({ data }) => (
+type ClearEntryProps = {
+  notifications: NotificationCollection;
+};
+
+const ClearEntry: FC<ClearEntryProps> = ({ notifications }) => {
+  const { isLoading, error, clear } = useClearNotifications(notifications);
+  return (
+    <div className="dropdown-item">
+      <ErrorNotification error={error} />
+      <Button fullWidth={true} loading={isLoading} action={clear}>
+        Clear all
+      </Button>
+    </div>
+  );
+};
+
+const NotificationList: FC<Props> = ({ data }) => {
+  const clearLink = data._links.clear;
+  return (
+    <>
+      {data._embedded.notifications.map((n, i) => (
+        <NotificationEntry key={i} notification={n} />
+      ))}
+      {clearLink ? <ClearEntry notifications={data} /> : null}
+    </>
+  );
+};
+
+const NoNotifications: FC = () => (
+  <div className="m-4">
+    <InfoNotification type="info">No notifications</InfoNotification>
+  </div>
+);
+
+const NotificationDropDown: FC<Props> = ({ data }) => (
   <div className="dropdown-content">
-    {data._embedded.notifications.map((n, i) => (
-      <NotificationEntry key={i} notification={n} />
-    ))}
+    {data._embedded.notifications.length > 0 ? <NotificationList data={data} /> : <NoNotifications />}
   </div>
 );
 
@@ -187,8 +250,8 @@ const NotificationSubscription: FC<SubscriptionProps> = ({ link, refetch }) => {
   );
 };
 
-const Notifications: FC = ({}) => {
-  const { data, refetch } = useNotifications();
+const Notifications: FC = () => {
+  const { data, isLoading, error, refetch } = useNotifications();
   const subscribeLink = (data?._links["subscribe"] as LinkType)?.href;
   return (
     <>
@@ -201,7 +264,9 @@ const Notifications: FC = ({}) => {
           </Count>
         </Container>
         <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">
-          {data ? <NotificationList data={data} /> : null}
+          <ErrorNotification error={error} />
+          {isLoading ? <Loading /> : null}
+          {data ? <NotificationDropDown data={data} /> : null}
         </DropDownMenu>
       </div>
     </>

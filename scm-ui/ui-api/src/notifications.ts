@@ -23,10 +23,11 @@
  */
 
 import { useMe } from "./login";
-import { useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { Link, NotificationCollection } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { useCallback } from "react";
+import { requiredLink } from "./links";
 
 export const useNotifications = () => {
   const { data: me } = useMe();
@@ -48,5 +49,21 @@ export const useNotifications = () => {
     error,
     isLoading,
     refetch: memoizedRefetch
+  };
+};
+
+export const useClearNotifications = (notificationCollection: NotificationCollection) => {
+  const queryClient = useQueryClient();
+  const link = requiredLink(notificationCollection, "clear");
+  const { data, isLoading, error, mutate } = useMutation<Response, Error>(() => apiClient.delete(link), {
+    onSuccess: () => {
+      queryClient.invalidateQueries("notifications");
+    }
+  });
+  return {
+    isLoading,
+    error,
+    clear: () => mutate(),
+    isCleared: !!data
   };
 };
