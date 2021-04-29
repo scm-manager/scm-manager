@@ -46,7 +46,7 @@ import java.util.concurrent.Executors;
  * errors (see https://github.com/scm-manager/scm-manager/pull/1518).
  * <br>
  * The delay is handled either by "caching" the hook data in a thread local, where it
- * is fetched from when {@link #firePending()} is called, or in case the trigger is fired
+ * is fetched from when {@link #firePending(GitHookContextProvider)} is called, or in case the trigger is fired
  * due to changes made with internal git file push (from a workdir to the central
  * repository) by detecting the internal thread used by JGit and joining another thread
  * where the pending push is triggered.
@@ -54,8 +54,6 @@ import java.util.concurrent.Executors;
 public class GitHookEventFacade implements Closeable {
 
   private static final Logger LOG = LoggerFactory.getLogger(GitHookEventFacade.class);
-
-  private static final ThreadLocal<GitHookContextProvider> PENDING_POST_HOOK = new ThreadLocal<>();
 
   private final HookEventFacade hookEventFacade;
   private final ExecutorService internalThreadHookHandler;
@@ -72,25 +70,15 @@ public class GitHookEventFacade implements Closeable {
         doFire(type, context);
         break;
       case POST_RECEIVE:
-        LOG.debug("register post receive hook for repository id {}", context.getRepositoryId());
-        PENDING_POST_HOOK.set(context);
         break;
       default:
         throw new IllegalArgumentException("unknown hook type: " + type);
     }
   }
 
-  public void firePending() {
-    try {
-      LOG.debug("fire pending post receive hooks in thread {}", Thread.currentThread());
-      doFire(RepositoryHookType.POST_RECEIVE, PENDING_POST_HOOK.get());
-    } finally {
-      clean();
-    }
-  }
-
-  private void clean() {
-    PENDING_POST_HOOK.remove();
+  public void firePending(GitHookContextProvider context) {
+    LOG.debug("fire pending post receive hooks in thread {}", Thread.currentThread());
+    doFire(RepositoryHookType.POST_RECEIVE, context);
   }
 
   private void doFire(RepositoryHookType type, GitHookContextProvider context) {

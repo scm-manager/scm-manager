@@ -60,6 +60,8 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   private final GitChangesetConverterFactory converterFactory;
   private final GitHookEventFacade hookEventFacade;
 
+  private GitHookContextProvider postReceiveContext;
+
   public GitReceiveHook(GitChangesetConverterFactory converterFactory, GitHookEventFacade hookEventFacade,
                         GitRepositoryHandler handler)
   {
@@ -83,7 +85,11 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   }
 
   public void afterReceive() {
-    hookEventFacade.firePending();
+    try {
+      hookEventFacade.firePending(postReceiveContext);
+    } finally {
+      postReceiveContext = null;
+    }
   }
 
   private void handleReceiveCommands(ReceivePack rpack,
@@ -99,6 +105,10 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
       GitHookContextProvider context = new GitHookContextProvider(converterFactory, rpack, receiveCommands, repository, repositoryId);
 
       hookEventFacade.fire(type, context);
+
+      if (type == RepositoryHookType.POST_RECEIVE) {
+        postReceiveContext = context;
+      }
     }
     catch (Exception ex)
     {
