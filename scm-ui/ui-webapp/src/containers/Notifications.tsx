@@ -48,29 +48,30 @@ const Container = styled.div`
   cursor: pointer;
 `;
 
-const Count = styled.span`
-  margin-left: 0.5rem;
-`;
-
 const DropDownItem = styled(Link)`
   word-wrap: break-word;
 `;
 
 const DropDownMenu = styled.div`
   min-width: 20rem;
+
+  &:before {
+    position: absolute;
+    content: "";
+    border-style: solid;
+    pointer-events: none;
+    height: 0;
+    width: 0;
+    top: 0;
+    right: 0.9rem;
+    border-color: transparent;
+    border-bottom-color: white;
+    border-left-color: white;
+    border-width: 0.4rem;
+    transform-origin: center;
+    transform: rotate(135deg);
+  }
 `;
-
-type Props = {
-  data: NotificationCollection;
-};
-
-type EntryProps = {
-  notification: Notification;
-};
-
-const NotificationIcon: FC<EntryProps> = ({ notification }) => {
-  return <Icon name="bell" color={color(notification)} />;
-};
 
 const IconColumn = styled.span`
   width: 1.5rem;
@@ -86,6 +87,18 @@ const MessageColumn = styled.span`
   display: inline-block;
   overflow: auto;
 `;
+
+type Props = {
+  data: NotificationCollection;
+};
+
+type EntryProps = {
+  notification: Notification;
+};
+
+const NotificationIcon: FC<EntryProps> = ({ notification }) => {
+  return <Icon name="bell" color={color(notification)} />;
+};
 
 const NotificationEntry: FC<EntryProps> = ({ notification }) => (
   <DropDownItem to="/" className="dropdown-item">
@@ -140,7 +153,7 @@ const NotificationDropDown: FC<Props> = ({ data }) => (
 );
 
 type SubscriptionProps = {
-  link: string;
+  data: NotificationCollection;
   refetch: () => Promise<NotificationCollection | undefined>;
 };
 
@@ -152,8 +165,8 @@ const color = (notification: Notification) => {
   return c;
 };
 
-const NotificationSubscription: FC<SubscriptionProps> = ({ link, refetch }) => {
-  const { notifications, remove } = useNotificationSubscription(link, refetch);
+const NotificationSubscription: FC<SubscriptionProps> = ({ data, refetch }) => {
+  const { notifications, remove } = useNotificationSubscription(data, refetch);
   return (
     <ToastArea>
       {notifications.map((notification, i) => (
@@ -170,18 +183,42 @@ const NotificationSubscription: FC<SubscriptionProps> = ({ link, refetch }) => {
   );
 };
 
+const BellNotificationContainer = styled.div`
+  position: relative;
+  width: 2rem;
+  height: 2rem;
+`;
+
+const NotificationCounter = styled.span`
+  position: absolute;
+  top: -0.5rem;
+  right: 0;
+`;
+
+type BellNotificationIconProps = {
+  data?: NotificationCollection;
+};
+
+const BellNotificationIcon: FC<BellNotificationIconProps> = ({ data }) => {
+  const counter = data?._embedded.notifications.length || 0;
+
+  return (
+    <BellNotificationContainer>
+      <Bell iconStyle={counter === 0 ? "far" : "fas"} name="bell" color="white" />
+      <NotificationCounter>{counter}</NotificationCounter>
+    </BellNotificationContainer>
+  );
+};
+
 const Notifications: FC = () => {
   const { data, isLoading, error, refetch } = useNotifications();
   const subscribeLink = (data?._links["subscribe"] as LinkType)?.href;
   return (
     <>
-      {subscribeLink ? <NotificationSubscription link={subscribeLink} refetch={refetch} /> : null}
-      <div className="dropdown is-right is-hoverable">
+      {data && subscribeLink ? <NotificationSubscription data={data} refetch={refetch} /> : null}
+      <div className="dropdown is-right is-active">
         <Container className="dropdown-trigger">
-          <Bell name="bell" color="white" />
-          <Count>
-            <span className="tag is-rounded">{data?._embedded.notifications.length || 0}</span>
-          </Count>
+          <BellNotificationIcon data={data} />
         </Container>
         <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">
           <ErrorNotification error={error} />

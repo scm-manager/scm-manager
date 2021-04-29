@@ -69,20 +69,23 @@ export const useClearNotifications = (notificationCollection: NotificationCollec
 };
 
 export const useNotificationSubscription = (
-  link: string,
+  notificationCollection: NotificationCollection,
   refetch: () => Promise<NotificationCollection | undefined>
 ) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [disconnectedAt, setDisconnectedAt] = useState<Date>();
+  const link = requiredLink(notificationCollection, "subscribe");
 
   const onVisible = useCallback(() => {
-    return refetch().then(collection => {
+    // we don't need to catch the error,
+    // because if the refetch throws an error the parent useNotifications should catch it
+    refetch().then(collection => {
       if (collection) {
-        const received = collection._embedded.notifications.filter(n => {
+        const newNotifications = collection._embedded.notifications.filter(n => {
           return disconnectedAt && disconnectedAt < new Date(n.createdAt);
         });
-        if (received.length > 0) {
-          setNotifications(previous => [...previous, ...received]);
+        if (newNotifications.length > 0) {
+          setNotifications(previous => [...previous, ...newNotifications]);
         }
         setDisconnectedAt(undefined);
       }
@@ -91,7 +94,6 @@ export const useNotificationSubscription = (
 
   const onHide = useCallback(() => {
     setDisconnectedAt(new Date());
-    return Promise.resolve();
   }, []);
 
   const received = useCallback(
@@ -142,11 +144,20 @@ export const useNotificationSubscription = (
     }
   }, [link, onVisible, onHide, received]);
 
+  const remove = useCallback(
+    (notification: Notification) => {
+      setNotifications(oldNotifications => [...oldNotifications.filter(n => n !== notification)]);
+    },
+    [setNotifications]
+  );
+
+  const clear = useCallback(() => {
+    setNotifications([]);
+  }, [setNotifications]);
+
   return {
     notifications,
-    remove: (notification: Notification) => {
-      setNotifications([...notifications.filter(n => n !== notification)]);
-    },
-    clear: () => setNotifications([])
+    remove,
+    clear
   };
 };
