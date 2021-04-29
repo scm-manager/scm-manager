@@ -40,9 +40,9 @@ export const isInternalScmRepoLink = (link: string) => {
   return link.startsWith("/repo/");
 };
 
-const linkWithProtcolRegex = new RegExp("^([a-z]+):(.+)");
+const linkWithProtocolRegex = new RegExp("^([a-z]+):(.+)");
 export const isLinkWithProtocol = (link: string) => {
-  const match = link.match(linkWithProtcolRegex);
+  const match = link.match(linkWithProtocolRegex);
   return match && { protocol: match[1], link: match[2] };
 };
 
