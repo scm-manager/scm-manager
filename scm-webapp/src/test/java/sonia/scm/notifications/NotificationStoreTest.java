@@ -29,9 +29,13 @@ import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import sonia.scm.security.KeyGenerator;
+import sonia.scm.security.UUIDKeyGenerator;
 import sonia.scm.store.InMemoryByteDataStoreFactory;
 
+import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -39,13 +43,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 class NotificationStoreTest {
 
   private NotificationStore store;
+  private final KeyGenerator keyGenerator = new UUIDKeyGenerator();
 
   private AtomicInteger counter;
 
   @BeforeEach
   void setUp() {
     counter = new AtomicInteger();
-    store = new NotificationStore(new InMemoryByteDataStoreFactory());
+    store = new NotificationStore(new InMemoryByteDataStoreFactory(), keyGenerator);
   }
 
   @Test
@@ -55,7 +60,38 @@ class NotificationStoreTest {
 
     store.add(notification, "trillian");
 
-    assertThat(store.getAll()).containsOnly(notification);
+    containsMessage(notification);
+  }
+
+  @Test
+  @SubjectAware("trillian")
+  void shouldAssignId() {
+    Notification notification = notification();
+
+    store.add(notification, "trillian");
+
+    StoredNotification storedNotification = store.getAll().get(0);
+    assertThat(storedNotification.getId()).isNotNull().isNotEmpty();
+  }
+
+  @Test
+  @SubjectAware("trillian")
+  void shouldCopyProperties() {
+    Notification notification = notification();
+
+    store.add(notification, "trillian");
+
+    StoredNotification storedNotification = store.getAll().get(0);
+    assertThat(storedNotification)
+      .usingRecursiveComparison()
+      .ignoringFields("id")
+      .isEqualTo(notification);
+  }
+
+  private void containsMessage(Notification... notifications) {
+    String[] messages = Arrays.stream(notifications).map(Notification::getMessage).toArray(String[]::new);
+    Stream<String> storedMessages = store.getAll().stream().map(StoredNotification::getMessage);
+    assertThat(storedMessages).containsOnly(messages);
   }
 
   @Test
@@ -69,7 +105,7 @@ class NotificationStoreTest {
     store.add(two, "dent");
     store.add(three, "trillian");
 
-    assertThat(store.getAll()).containsOnly(one, three);
+    containsMessage(one, three);
   }
 
   @Test

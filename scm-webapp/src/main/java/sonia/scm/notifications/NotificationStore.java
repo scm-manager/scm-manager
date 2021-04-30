@@ -25,13 +25,11 @@
 package sonia.scm.notifications;
 
 import com.google.common.util.concurrent.Striped;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.apache.shiro.SecurityUtils;
+import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
-import sonia.scm.xml.XmlInstantAdapter;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,9 +38,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlElementWrapper;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.adapters.XmlAdapter;
-import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
-import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -54,38 +49,40 @@ import java.util.concurrent.locks.ReadWriteLock;
 public class NotificationStore {
 
   private static final String NAME = "notifications";
-  private final DataStore<Notifications> store;
+  private final DataStore<StoredNotifications> store;
+  private final KeyGenerator keyGenerator;
   private final Striped<ReadWriteLock> locks = Striped.readWriteLock(10);
 
   @Inject
-  public NotificationStore(DataStoreFactory dataStoreFactory) {
-    this.store = dataStoreFactory.withType(Notifications.class)
+  public NotificationStore(DataStoreFactory dataStoreFactory, KeyGenerator keyGenerator) {
+    this.store = dataStoreFactory.withType(StoredNotifications.class)
       .withName(NAME)
       .build();
+    this.keyGenerator = keyGenerator;
   }
 
   public void add(Notification notification, String username) {
     Lock lock = locks.get(username).writeLock();
     try {
       lock.lock();
-      Notifications notifications = get(username);
-      notifications.getEntries().add(notification);
+      StoredNotifications notifications = get(username);
+      notifications.getEntries().add(new StoredNotification(keyGenerator.createKey(), notification));
       store.put(username, notifications);
     } finally {
       lock.unlock();
     }
   }
 
-  private Notifications get(String username) {
-    return store.getOptional(username).orElse(new Notifications());
+  private StoredNotifications get(String username) {
+    return store.getOptional(username).orElse(new StoredNotifications());
   }
 
-  public List<Notification> getAll() {
+  public List<StoredNotification> getAll() {
     String username = getCurrentUsername();
     Lock lock = locks.get(username).readLock();
     try {
       lock.lock();
-      Notifications notifications = get(username);
+      StoredNotifications notifications = get(username);
       return Collections.unmodifiableList(notifications.getEntries());
     } finally {
       lock.unlock();
@@ -97,7 +94,7 @@ public class NotificationStore {
     Lock lock = locks.get(username).writeLock();
     try {
       lock.lock();
-      Notifications notifications = get(username);
+      StoredNotifications notifications = get(username);
       notifications.getEntries().clear();
       store.put(username, notifications);
     } finally {
@@ -112,52 +109,16 @@ public class NotificationStore {
   @Data
   @XmlRootElement
   @XmlAccessorType(XmlAccessType.FIELD)
-  static class Notifications {
+  static class StoredNotifications {
     @XmlElement(name = "notification")
-    @XmlJavaTypeAdapter(NotificationAdapter.class)
     @XmlElementWrapper(name = "notifications")
-    private List<Notification> entries;
+    private List<StoredNotification> entries;
 
-    public List<Notification> getEntries() {
+    public List<StoredNotification> getEntries() {
       if (entries == null) {
         entries = new ArrayList<>();
       }
       return entries;
-    }
-  }
-
-  @Data
-  @NoArgsConstructor
-  @AllArgsConstructor
-  @XmlAccessorType(XmlAccessType.FIELD)
-  static class StoredNotification {
-    @XmlJavaTypeAdapter(XmlInstantAdapter.class)
-    Instant instant;
-    Type type;
-    String link;
-    String message;
-  }
-
-  static class NotificationAdapter extends XmlAdapter<StoredNotification, Notification> {
-
-    @Override
-    public StoredNotification marshal(Notification notification) {
-      return new StoredNotification(
-        notification.getCreatedAt(),
-        notification.getType(),
-        notification.getLink(),
-        notification.getMessage()
-      );
-    }
-
-    @Override
-    public Notification unmarshal(StoredNotification storedNotification) throws Exception {
-      return new Notification(
-        storedNotification.getInstant(),
-        storedNotification.getType(),
-        storedNotification.getLink(),
-        storedNotification.getMessage()
-      );
     }
   }
 

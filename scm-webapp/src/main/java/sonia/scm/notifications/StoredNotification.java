@@ -24,32 +24,34 @@
 
 package sonia.scm.notifications;
 
-import lombok.Value;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import sonia.scm.xml.XmlInstantAdapter;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.Instant;
 
-/**
- * Notifications can be used to send a message to specific user.
- *
- * @since 2.18.0
- */
-@Value
-public class Notification {
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@XmlAccessorType(XmlAccessType.FIELD)
+public class StoredNotification {
 
+  String id;
   Type type;
   String link;
   String message;
+  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
   Instant createdAt;
 
-  public Notification(Type type, String link, String message) {
-    this(type, link, message, Instant.now());
+  StoredNotification(String id, Notification notification) {
+    this.id = id;
+    this.createdAt = notification.getCreatedAt();
+    this.type = notification.getType();
+    this.link = notification.getLink();
+    this.message = notification.getMessage();
   }
-
-  Notification(Type type, String link, String message, Instant createdAt) {
-    this.type = type;
-    this.link = link;
-    this.message = message;
-    this.createdAt = createdAt;
-  }
-
 }

@@ -35,6 +35,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.notifications.Notification;
 import sonia.scm.notifications.NotificationStore;
+import sonia.scm.notifications.StoredNotification;
 import sonia.scm.notifications.Type;
 import sonia.scm.sse.ChannelRegistry;
 import sonia.scm.web.RestDispatcher;
@@ -43,8 +44,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Path;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -119,11 +122,15 @@ class NotificationResourceTest {
   }
 
   private void notifications(String... messages) {
-    List<Notification> notifications = Arrays.stream(messages)
-      .map(m -> new Notification(Type.INFO, "/notify", m))
+    List<StoredNotification> notifications = Arrays.stream(messages)
+      .map(this::notification)
       .collect(Collectors.toList());
 
     when(store.getAll()).thenReturn(notifications);
+  }
+
+  private StoredNotification notification(String m) {
+    return new StoredNotification(UUID.randomUUID().toString(), Type.INFO, "/notify", m, Instant.now());
   }
 
   @Path("/api/v2")
