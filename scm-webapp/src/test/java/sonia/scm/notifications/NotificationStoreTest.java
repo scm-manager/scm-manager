@@ -88,7 +88,7 @@ class NotificationStoreTest {
   }
 
   private Notification notification() {
-    return new Notification(Notification.Type.INFO, "/greeting", "Hello " + counter.incrementAndGet());
+    return new Notification(Type.INFO, "/greeting", "Hello " + counter.incrementAndGet());
   }
 
 }

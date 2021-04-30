@@ -24,32 +24,28 @@
 
 package sonia.scm.notifications;
 
-import lombok.Value;
-
-import java.time.Instant;
-
 /**
- * Notifications can be used to send a message to specific user.
- *
+ * Type of notification.
  * @since 2.18.0
  */
-@Value
-public class Notification {
+public enum Type {
+  /**
+   * Notifications with an informative character e.g.: update available
+   */
+  INFO,
 
-  Instant createdAt;
-  Type type;
-  String link;
-  String message;
+  /**
+   * Success should be used if a long running action is finished successfully e.g.: export is ready to download
+   */
+  SUCCESS,
 
-  public Notification(Type type, String link, String message) {
-    this(Instant.now(), type, link, message);
-  }
+  /**
+   * Notifications with a warning character e.g.: disk space is filled up to 80 percent.
+   */
+  WARNING,
 
-  Notification(Instant createdAt, Type type, String link, String message) {
-    this.createdAt = createdAt;
-    this.type = type;
-    this.link = link;
-    this.message = message;
-  }
-
+  /**
+   * Error should be used in the case of an failure e.g.: export failed
+   */
+  ERROR
 }

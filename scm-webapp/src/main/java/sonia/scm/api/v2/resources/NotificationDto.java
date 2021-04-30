@@ -27,6 +27,7 @@ package sonia.scm.api.v2.resources;
 import de.otto.edison.hal.HalRepresentation;
 import lombok.Data;
 import sonia.scm.notifications.Notification;
+import sonia.scm.notifications.Type;
 
 import java.time.Instant;
 
@@ -34,7 +35,7 @@ import java.time.Instant;
 public class NotificationDto extends HalRepresentation {
 
   private Instant createdAt;
-  private Notification.Type type;
+  private Type type;
   private String link;
   private String message;
 

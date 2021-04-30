@@ -43,7 +43,7 @@ class DefaultNotificationSenderTest {
 
   @Test
   void shouldDelegateToStore() {
-    Notification notification = new Notification(Notification.Type.ERROR, "/fail", "Everything has failed");
+    Notification notification = new Notification(Type.ERROR, "/fail", "Everything has failed");
 
     sender.send(notification, "trillian");
 

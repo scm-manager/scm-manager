@@ -39,7 +39,7 @@ class NotificationSenderTest {
   void shouldUsePrincipal() {
     CapturingNotificationSender sender = new CapturingNotificationSender();
 
-    Notification notification = new Notification(Notification.Type.INFO, "/tricia", "Hello trillian");
+    Notification notification = new Notification(Type.INFO, "/tricia", "Hello trillian");
     sender.send(notification);
 
     assertThat(sender.notification).isSameAs(notification);

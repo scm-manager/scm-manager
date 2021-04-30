@@ -133,7 +133,7 @@ public class NotificationStore {
   static class StoredNotification {
     @XmlJavaTypeAdapter(XmlInstantAdapter.class)
     Instant instant;
-    Notification.Type type;
+    Type type;
     String link;
     String message;
   }

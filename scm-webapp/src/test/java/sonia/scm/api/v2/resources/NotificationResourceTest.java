@@ -35,6 +35,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.notifications.Notification;
 import sonia.scm.notifications.NotificationStore;
+import sonia.scm.notifications.Type;
 import sonia.scm.sse.ChannelRegistry;
 import sonia.scm.web.RestDispatcher;
 
@@ -119,7 +120,7 @@ class NotificationResourceTest {
 
   private void notifications(String... messages) {
     List<Notification> notifications = Arrays.stream(messages)
-      .map(m -> new Notification(Notification.Type.INFO, "/notify", m))
+      .map(m -> new Notification(Type.INFO, "/notify", m))
       .collect(Collectors.toList());
 
     when(store.getAll()).thenReturn(notifications);
