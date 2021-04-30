@@ -20,9 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
-
 import { Branch, BranchCollection, Repository } from "@scm-manager/ui-types";
 import fetchMock from "fetch-mock-jest";
 import { renderHook } from "@testing-library/react-hooks";

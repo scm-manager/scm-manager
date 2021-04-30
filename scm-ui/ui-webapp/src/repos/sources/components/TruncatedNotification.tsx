@@ -20,9 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
- *
  */
-
 import React, { FC } from "react";
 import { File } from "@scm-manager/ui-types";
 import { Button, Notification } from "@scm-manager/ui-components";

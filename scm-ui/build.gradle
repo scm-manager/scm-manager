@@ -207,7 +207,7 @@ license {
     tsx = 'SLASHSTAR_STYLE'
     ts = 'SLASHSTAR_STYLE'
     gradle = 'SLASHSTAR_STYLE'
-    feature = 'SLASHSTAR_STYLE'
+    feature = 'SCRIPT_STYLE'
     scss = 'SLASHSTAR_STYLE'
   }
 
@@ -230,6 +230,10 @@ license {
 }
 
 task license(type: com.hierynomus.gradle.license.tasks.LicenseCheck) {
+  source = fileTree('.')
+}
+
+task licenseFormat(type: com.hierynomus.gradle.license.tasks.LicenseFormat) {
   source = fileTree('.')
 }
 
