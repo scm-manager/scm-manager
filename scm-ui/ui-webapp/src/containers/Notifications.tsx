@@ -37,6 +37,7 @@ import {
 import styled from "styled-components";
 import { useClearNotifications, useNotifications, useNotificationSubscription } from "@scm-manager/ui-api";
 import { Notification, NotificationCollection, Link as LinkType } from "@scm-manager/ui-types";
+import { useHistory, Link } from "react-router-dom";
 
 const Bell = styled(Icon)`
   font-size: 1.5rem;
@@ -84,14 +85,17 @@ const DateColumn = styled(VerticalCenteredTd)`
   white-space: nowrap;
 `;
 
-const NotificationEntry: FC<EntryProps> = ({ notification }) => (
-  <tr className={`has-cursor-pointer is-${color(notification)}`}>
-    <VerticalCenteredTd className="">{notification.message}</VerticalCenteredTd>
-    <DateColumn className="has-text-right">
-      <DateFromNow date={notification.createdAt} />
-    </DateColumn>
-  </tr>
-);
+const NotificationEntry: FC<EntryProps> = ({ notification }) => {
+  const history = useHistory();
+  return (
+    <tr onClick={() => history.push(notification.link)} className={`has-cursor-pointer is-${color(notification)}`}>
+      <VerticalCenteredTd className="">{notification.message}</VerticalCenteredTd>
+      <DateColumn className="has-text-right">
+        <DateFromNow date={notification.createdAt} />
+      </DateColumn>
+    </tr>
+  );
+};
 
 type ClearEntryProps = {
   notifications: NotificationCollection;
@@ -168,7 +172,9 @@ const NotificationSubscription: FC<SubscriptionProps> = ({ data, refetch }) => {
           title="Notification"
           close={() => remove(notification)}
         >
-          <p>{notification.message}</p>
+          <p>
+            <Link to={notification.link}>{notification.message}</Link>
+          </p>
         </ToastNotification>
       ))}
     </ToastArea>

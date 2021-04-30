@@ -38,8 +38,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @ExtendWith(ShiroExtension.class)
 class NotificationStoreTest {
 
-  private InMemoryByteDataStoreFactory dataStoreFactory;
-
   private NotificationStore store;
 
   private AtomicInteger counter;
@@ -47,8 +45,7 @@ class NotificationStoreTest {
   @BeforeEach
   void setUp() {
     counter = new AtomicInteger();
-    dataStoreFactory = new InMemoryByteDataStoreFactory();
-    store = new NotificationStore(dataStoreFactory);
+    store = new NotificationStore(new InMemoryByteDataStoreFactory());
   }
 
   @Test
@@ -91,7 +88,7 @@ class NotificationStoreTest {
   }
 
   private Notification notification() {
-    return new Notification(Notification.Type.INFO, "Hello " + counter.incrementAndGet());
+    return new Notification(Notification.Type.INFO, "/greeting", "Hello " + counter.incrementAndGet());
   }
 
 }

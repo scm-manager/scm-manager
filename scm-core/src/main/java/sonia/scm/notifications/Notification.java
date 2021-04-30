@@ -38,15 +38,17 @@ public class Notification {
 
   Instant createdAt;
   Type type;
+  String link;
   String message;
 
-  public Notification(Type type, String message) {
-    this(Instant.now(), type, message);
+  public Notification(Type type, String link, String message) {
+    this(Instant.now(), type, link, message);
   }
 
-  Notification(Instant createdAt, Type type, String message) {
+  Notification(Instant createdAt, Type type, String link, String message) {
     this.createdAt = createdAt;
     this.type = type;
+    this.link = link;
     this.message = message;
   }
 

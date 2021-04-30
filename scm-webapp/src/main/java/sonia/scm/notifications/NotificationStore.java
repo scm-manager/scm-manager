@@ -76,15 +76,6 @@ public class NotificationStore {
     }
   }
 
-  int size(String username) {
-    Lock lock = locks.get(username).readLock();
-    try {
-      return get(username).getEntries().size();
-    } finally {
-      lock.unlock();
-    }
-  }
-
   private Notifications get(String username) {
     return store.getOptional(username).orElse(new Notifications());
   }
@@ -143,6 +134,7 @@ public class NotificationStore {
     @XmlJavaTypeAdapter(XmlInstantAdapter.class)
     Instant instant;
     Notification.Type type;
+    String link;
     String message;
   }
 
@@ -153,6 +145,7 @@ public class NotificationStore {
       return new StoredNotification(
         notification.getCreatedAt(),
         notification.getType(),
+        notification.getLink(),
         notification.getMessage()
       );
     }
@@ -162,6 +155,7 @@ public class NotificationStore {
       return new Notification(
         storedNotification.getInstant(),
         storedNotification.getType(),
+        storedNotification.getLink(),
         storedNotification.getMessage()
       );
     }

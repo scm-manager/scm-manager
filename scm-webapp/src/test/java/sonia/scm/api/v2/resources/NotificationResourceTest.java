@@ -119,7 +119,7 @@ class NotificationResourceTest {
 
   private void notifications(String... messages) {
     List<Notification> notifications = Arrays.stream(messages)
-      .map(m -> new Notification(Notification.Type.INFO, m))
+      .map(m -> new Notification(Notification.Type.INFO, "/notify", m))
       .collect(Collectors.toList());
 
     when(store.getAll()).thenReturn(notifications);

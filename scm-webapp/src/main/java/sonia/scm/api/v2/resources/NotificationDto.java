@@ -35,11 +35,13 @@ public class NotificationDto extends HalRepresentation {
 
   private Instant createdAt;
   private Notification.Type type;
+  private String link;
   private String message;
 
   public NotificationDto(Notification notification) {
     this.createdAt = notification.getCreatedAt();
     this.type = notification.getType();
+    this.link = notification.getLink();
     this.message = notification.getMessage();
   }
 }
