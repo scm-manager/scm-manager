@@ -83,10 +83,10 @@ public class GitHookEventFacade implements Closeable {
 
   private void doFire(RepositoryHookType type, GitHookContextProvider context) {
     if (context != null) {
-      LOG.debug("firing {} hook for repository {} in Thread {}", type, context.getRepositoryId(), Thread.currentThread());
+      LOG.debug("firing {} hook for repository {}", type, context.getRepositoryId());
       hookEventFacade.handle(context.getRepositoryId()).fireHookEvent(type, context);
     } else {
-      LOG.debug("No context found for event type {} in Thread {}", type, Thread.currentThread());
+      LOG.debug("No context found for event type {}", type);
     }
   }
 
