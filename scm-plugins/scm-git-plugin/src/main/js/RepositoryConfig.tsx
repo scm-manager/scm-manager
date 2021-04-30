@@ -101,13 +101,22 @@ class RepositoryConfig extends React.Component<Props, State> {
       .get(configurationLink.href)
       .then(response => response.json())
       .then(payload =>
-        this.setState({
-          selectedBranchName: payload.defaultBranch,
-          nonFastForwardDisallowed: payload.nonFastForwardDisallowed,
-          disabled: !payload._links.update,
-          loadingDefaultBranch: false,
-          changed: false
-        })
+        this.setState(
+          {
+            selectedBranchName: payload.defaultBranch,
+            nonFastForwardDisallowed: payload.nonFastForwardDisallowed,
+            disabled: !payload._links.update,
+            loadingDefaultBranch: false,
+            changed: false
+          },
+          () => {
+            if (!this.state.selectedBranchName) {
+              this.setState({
+                selectedBranchName: this.state.branches?.filter((b: Branch) => b.defaultBranch)[0]?.name
+              });
+            }
+          }
+        )
       )
       .catch(error =>
         this.setState({
