@@ -153,7 +153,10 @@ artifacts {
 task 'dev-war' (type: War) {
   archiveName 'scm-webapp-dev.war'
   from 'build/war'
-  dependsOn 'copy-core-plugins'
+  into('WEB-INF/classes/META-INF/scm') {
+    from('build/openapi')
+  }
+  dependsOn 'copy-core-plugins', 'resolve'
 }
 
 scmServer {
