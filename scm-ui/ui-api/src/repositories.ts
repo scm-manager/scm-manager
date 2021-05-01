@@ -284,7 +284,7 @@ const EXPORT_MEDIA_TYPE = "application/vnd.scmm-repositoryExport+json;v=2";
 
 export const useExportRepository = () => {
   const queryClient = useQueryClient();
-  const [intervalId, setIntervalId] = useState<number | undefined>();
+  const [intervalId, setIntervalId] = useState<ReturnType<typeof setTimeout>>();
   useEffect(() => {
     return () => {
       if (intervalId) {
