@@ -886,4 +886,12 @@ form .field:not(.is-grouped) {
   background: $warning-25;
 }
 
+.small-loading-spinner {
+  position: relative;
+  pointer-events: none;
+  &:after {
+    @include loader;
+  }
+}
+
 @import "bulma-popover/css/bulma-popover";

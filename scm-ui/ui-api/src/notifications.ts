@@ -52,6 +52,22 @@ export const useNotifications = () => {
   };
 };
 
+export const useDismissNotification = (notification: Notification) => {
+  const queryClient = useQueryClient();
+  const link = requiredLink(notification, "dismiss");
+  const { data, isLoading, error, mutate } = useMutation<Response, Error>(() => apiClient.delete(link), {
+    onSuccess: () => {
+      queryClient.invalidateQueries("notifications");
+    }
+  });
+  return {
+    isLoading,
+    error,
+    dismiss: () => mutate(),
+    isCleared: !!data
+  };
+};
+
 export const useClearNotifications = (notificationCollection: NotificationCollection) => {
   const queryClient = useQueryClient();
   const link = requiredLink(notificationCollection, "clear");

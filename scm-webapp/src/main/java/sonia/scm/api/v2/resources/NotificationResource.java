@@ -28,11 +28,9 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
-import io.swagger.v3.oas.annotations.media.Content;
-import lombok.EqualsAndHashCode;
-import org.apache.shiro.SecurityUtils;
 import sonia.scm.notifications.NotificationChannelId;
 import sonia.scm.notifications.NotificationStore;
+import sonia.scm.notifications.StoredNotification;
 import sonia.scm.security.SessionId;
 import sonia.scm.sse.Channel;
 import sonia.scm.sse.ChannelRegistry;
@@ -40,15 +38,12 @@ import sonia.scm.sse.Registration;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
-import javax.servlet.AsyncContext;
-import javax.ws.rs.BeanParam;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
-import javax.ws.rs.container.AsyncResponse;
-import javax.ws.rs.container.Suspended;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -74,9 +69,16 @@ public class NotificationResource {
   @Produces(VndMediaType.NOTIFICATION)
   public HalRepresentation getAll(@Context UriInfo uriInfo) {
     return new HalRepresentation(
-      createNotificationLinks(uriInfo),
-      createEmbeddedNotifications()
+      createCollectionLinks(uriInfo),
+      createEmbeddedNotifications(uriInfo)
     );
+  }
+
+  @DELETE
+  @Path("{id}")
+  public Response remove(@PathParam("id") String id) {
+    store.remove(id);
+    return Response.noContent().build();
   }
 
   @DELETE
@@ -94,15 +96,21 @@ public class NotificationResource {
     channel.register(new Registration(sessionId, sse, eventSink));
   }
 
-  private Embedded createEmbeddedNotifications() {
+  private Embedded createEmbeddedNotifications(UriInfo uriInfo) {
     List<NotificationDto> notifications = store.getAll()
       .stream()
-      .map(NotificationDto::new)
+      .map(n -> map(uriInfo, n))
       .collect(Collectors.toList());
     return Embedded.embedded("notifications", notifications);
   }
 
-  private Links createNotificationLinks(UriInfo uriInfo) {
+  private NotificationDto map(UriInfo uriInfo, StoredNotification storedNotification) {
+    String href = uriInfo.getAbsolutePathBuilder().path(storedNotification.getId()).build().toASCIIString();
+    Links links = Links.linkingTo().single(Link.link("dismiss", href)).build();
+    return new NotificationDto(storedNotification, links);
+  }
+
+  private Links createCollectionLinks(UriInfo uriInfo) {
     String self = selfLink(uriInfo);
     return Links.linkingTo()
       .self(self)

@@ -22,9 +22,9 @@
  * SOFTWARE.
  */
 
-import { Embedded, HalRepresentationWithEmbedded } from "./hal";
+import { Embedded, HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
 
-export type Notification = {
+export type Notification = HalRepresentation & {
   createdAt: string;
   type: "INFO" | "SUCCESS" | "WARNING" | "ERROR";
   link: string;

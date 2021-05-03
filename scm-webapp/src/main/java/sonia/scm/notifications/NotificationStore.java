@@ -43,6 +43,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReadWriteLock;
+import java.util.stream.Collectors;
 
 @Singleton
 @SuppressWarnings("UnstableApiUsage") // striped is still marked as beta
@@ -61,13 +62,15 @@ public class NotificationStore {
     this.keyGenerator = keyGenerator;
   }
 
-  public void add(Notification notification, String username) {
+  public String add(Notification notification, String username) {
     Lock lock = locks.get(username).writeLock();
     try {
       lock.lock();
       StoredNotifications notifications = get(username);
-      notifications.getEntries().add(new StoredNotification(keyGenerator.createKey(), notification));
+      String id = keyGenerator.createKey();
+      notifications.getEntries().add(new StoredNotification(id, notification));
       store.put(username, notifications);
+      return id;
     } finally {
       lock.unlock();
     }
@@ -84,6 +87,23 @@ public class NotificationStore {
       lock.lock();
       StoredNotifications notifications = get(username);
       return Collections.unmodifiableList(notifications.getEntries());
+    } finally {
+      lock.unlock();
+    }
+  }
+
+  public void remove(String id) {
+    String username = getCurrentUsername();
+    Lock lock = locks.get(username).writeLock();
+    try {
+      lock.lock();
+      StoredNotifications notifications = get(username);
+      List<StoredNotification> entries = notifications.getEntries()
+        .stream()
+        .filter(n -> !id.equals(n.id))
+        .collect(Collectors.toList());
+      notifications.setEntries(entries);
+      store.put(username, notifications);
     } finally {
       lock.unlock();
     }

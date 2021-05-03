@@ -93,7 +93,28 @@ class NotificationResourceTest {
   }
 
   @Test
-  void shouldReturnLinks() throws IOException, URISyntaxException {
+  void shouldReturnDismissLink() throws IOException, URISyntaxException {
+    String id = notifications("One").get(0).getId();
+
+    MockHttpRequest request = MockHttpRequest.get("/api/v2/notifications");
+    MockHttpResponse response = invoke(request);
+
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+
+    JsonNode node = mapper.readTree(response.getContentAsString());
+    String dismissHref = node.get("_embedded")
+      .get("notifications")
+      .get(0)
+      .get("_links")
+      .get("dismiss")
+      .get("href")
+      .asText();
+
+    assertThat(dismissHref).isEqualTo("/api/v2/notifications/" + id);
+  }
+
+  @Test
+  void shouldReturnCollectionLinks() throws IOException, URISyntaxException {
     notifications();
 
     MockHttpRequest request = MockHttpRequest.get("/api/v2/notifications");
@@ -104,6 +125,16 @@ class NotificationResourceTest {
 
     assertThat(links.get("self").get("href").asText()).isEqualTo("/api/v2/notifications");
     assertThat(links.get("clear").get("href").asText()).isEqualTo("/api/v2/notifications");
+  }
+
+  @Test
+  void shouldRemoveNotification() throws URISyntaxException {
+    MockHttpRequest request = MockHttpRequest.delete("/api/v2/notifications/abc42");
+    MockHttpResponse response = invoke(request);
+
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_NO_CONTENT);
+
+    verify(store).remove("abc42");
   }
 
   @Test
@@ -121,12 +152,13 @@ class NotificationResourceTest {
     return response;
   }
 
-  private void notifications(String... messages) {
+  private List<StoredNotification> notifications(String... messages) {
     List<StoredNotification> notifications = Arrays.stream(messages)
       .map(this::notification)
       .collect(Collectors.toList());
 
     when(store.getAll()).thenReturn(notifications);
+    return notifications;
   }
 
   private StoredNotification notification(String m) {

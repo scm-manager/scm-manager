@@ -35,7 +35,12 @@ import {
   DateFromNow
 } from "@scm-manager/ui-components";
 import styled from "styled-components";
-import { useClearNotifications, useNotifications, useNotificationSubscription } from "@scm-manager/ui-api";
+import {
+  useClearNotifications,
+  useDismissNotification,
+  useNotifications,
+  useNotificationSubscription
+} from "@scm-manager/ui-api";
 import { Notification, NotificationCollection, Link as LinkType } from "@scm-manager/ui-types";
 import { useHistory, Link } from "react-router-dom";
 
@@ -85,14 +90,30 @@ const DateColumn = styled(VerticalCenteredTd)`
   white-space: nowrap;
 `;
 
+const DismissColumn = styled.td`
+  vertical-align: middle !important;
+  width: 2rem;
+`;
+
 const NotificationEntry: FC<EntryProps> = ({ notification }) => {
   const history = useHistory();
+  const { isLoading, error, dismiss } = useDismissNotification(notification);
+  if (error) {
+    return <ErrorNotification error={error} />;
+  }
   return (
     <tr onClick={() => history.push(notification.link)} className={`has-cursor-pointer is-${color(notification)}`}>
       <VerticalCenteredTd className="">{notification.message}</VerticalCenteredTd>
       <DateColumn className="has-text-right">
         <DateFromNow date={notification.createdAt} />
       </DateColumn>
+      <DismissColumn className="is-darker">
+        {isLoading ? (
+          <div className="small-loading-spinner" />
+        ) : (
+          <Icon name="trash" color="black" className="has-cursor-pointer" onClick={dismiss} />
+        )}
+      </DismissColumn>
     </tr>
   );
 };

@@ -65,6 +65,15 @@ class NotificationStoreTest {
 
   @Test
   @SubjectAware("trillian")
+  void shouldReturnId() {
+    Notification notification = notification();
+
+    String id = store.add(notification, "trillian");
+    assertThat(id).isNotNull().isNotEmpty();
+  }
+
+  @Test
+  @SubjectAware("trillian")
   void shouldAssignId() {
     Notification notification = notification();
 
@@ -121,6 +130,20 @@ class NotificationStoreTest {
 
     store.clear();
     assertThat(store.getAll()).isEmpty();
+  }
+
+  @Test
+  @SubjectAware("slarti")
+  void shouldRemoveNotificationWithId() {
+    Notification one = notification();
+    Notification two = notification();
+
+    String id = store.add(one, "slarti");
+    store.add(two, "slarti");
+
+    store.remove(id);
+
+    containsMessage(two);
   }
 
   private Notification notification() {
