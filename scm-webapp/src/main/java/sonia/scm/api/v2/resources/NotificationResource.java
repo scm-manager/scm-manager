@@ -28,6 +28,12 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.notifications.NotificationChannelId;
 import sonia.scm.notifications.NotificationStore;
 import sonia.scm.notifications.StoredNotification;
@@ -53,6 +59,9 @@ import javax.ws.rs.sse.SseEventSink;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@OpenAPIDefinition(tags = {
+  @Tag(name = "Notifications", description = "Notification related endpoints")
+})
 public class NotificationResource {
 
   private final NotificationStore store;
@@ -66,7 +75,29 @@ public class NotificationResource {
 
   @GET
   @Path("")
-  @Produces(VndMediaType.NOTIFICATION)
+  @Produces(VndMediaType.NOTIFICATION_COLLECTION)
+  @Operation(
+    summary = "Notifications",
+    description = "Returns all notifications for the current user",
+    tags = "Notifications",
+    operationId = "notifications_get_all"
+  )
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.NOTIFICATION_COLLECTION,
+      schema = @Schema(implementation = HalRepresentation.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public HalRepresentation getAll(@Context UriInfo uriInfo) {
     return new HalRepresentation(
       createCollectionLinks(uriInfo),
@@ -76,14 +107,50 @@ public class NotificationResource {
 
   @DELETE
   @Path("{id}")
-  public Response remove(@PathParam("id") String id) {
+  @Operation(
+    summary = "Dismiss",
+    description = "Dismiss the notification with the given id",
+    tags = "Notifications",
+    operationId = "notifications_dismiss"
+  )
+  @ApiResponse(
+    responseCode = "204",
+    description = "no content"
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  public Response dismiss(@PathParam("id") String id) {
     store.remove(id);
     return Response.noContent().build();
   }
 
   @DELETE
   @Path("")
-  public Response clear() {
+  @Operation(
+    summary = "Dismiss all",
+    description = "Dismiss all notifications for the current user",
+    tags = "Notifications",
+    operationId = "notifications_dismiss_all"
+  )
+  @ApiResponse(
+    responseCode = "204",
+    description = "no content"
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  public Response dismissAll() {
     store.clear();
     return Response.noContent().build();
   }
@@ -91,6 +158,23 @@ public class NotificationResource {
   @GET
   @Path("subscribe")
   @Produces(MediaType.SERVER_SENT_EVENTS)
+  @Operation(
+    summary = "Subscribe",
+    description = "Subscribe to the sse event stream of notification for the current user",
+    tags = "Notifications",
+    operationId = "notifications_subscribe"
+  )
+  @ApiResponse(
+    responseCode = "200"
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
   public void subscribe(@Context Sse sse, @Context SseEventSink eventSink, @QueryParam(SessionId.PARAMETER) SessionId sessionId) {
     Channel channel = channelRegistry.channel(NotificationChannelId.current());
     channel.register(new Registration(sessionId, sse, eventSink));
