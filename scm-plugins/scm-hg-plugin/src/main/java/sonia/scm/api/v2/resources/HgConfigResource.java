@@ -35,6 +35,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.repository.HgGlobalConfig;
 import sonia.scm.repository.HgRepositoryHandler;
+import sonia.scm.repository.HgVerifier;
 import sonia.scm.web.HgVndMediaType;
 import sonia.scm.web.VndMediaType;
 
@@ -47,6 +48,8 @@ import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
+
+import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
 
 /**
  * RESTful Web Service Resource to manage the configuration of the hg plugin.
@@ -144,6 +147,7 @@ public class HgConfigResource {
     responseCode = "204",
     description = "update success"
   )
+  @ApiResponse(responseCode = "400", description = "invalid configuration")
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
   @ApiResponse(responseCode = "403", description = "not authorized, the current user does not have the \"configuration:write:hg\" privilege")
   @ApiResponse(
@@ -154,10 +158,15 @@ public class HgConfigResource {
       schema = @Schema(implementation = ErrorDto.class)
     ))
   public Response update(@Valid HgGlobalGlobalConfigDto configDto) {
-
     HgGlobalConfig config = dtoToConfigMapper.map(configDto);
-
     ConfigurationPermissions.write(config).check();
+
+    if (config.getHgBinary() != null) {
+      HgVerifier.HgVerifyStatus verifyStatus = new HgVerifier().verify(config.getHgBinary());
+      doThrow()
+        .violation(verifyStatus.getDescription())
+        .when(verifyStatus != HgVerifier.HgVerifyStatus.VALID);
+    }
 
     repositoryHandler.setConfig(config);
     repositoryHandler.storeConfig();

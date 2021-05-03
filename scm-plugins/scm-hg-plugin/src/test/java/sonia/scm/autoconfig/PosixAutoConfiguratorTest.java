@@ -104,9 +104,9 @@ class PosixAutoConfiguratorTest {
 
     PosixAutoConfigurator configurator = new PosixAutoConfigurator(
       verifier, createEnv(one), ImmutableList.of(
-        two.toAbsolutePath().toString(),
-        three.toAbsolutePath().toString()
-      )
+      two.toAbsolutePath().toString(),
+      three.toAbsolutePath().toString()
+    )
     );
 
     HgGlobalConfig config = new HgGlobalConfig();

@@ -24,8 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;

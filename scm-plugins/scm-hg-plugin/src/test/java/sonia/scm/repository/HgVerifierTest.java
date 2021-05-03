@@ -51,22 +51,22 @@ class HgVerifierTest {
     private final HgVerifier verifier = new HgVerifier();
 
     @Test
-    void shouldReturnFalseIfFileDoesNotExists(@TempDir Path directory) {
+    void shouldReturnNotRegularFileIfFileDoesNotExists(@TempDir Path directory) {
       Path hg = directory.resolve("hg");
 
-      boolean isValid = verify(hg);
+      HgVerifier.HgVerifyStatus verifyStatus = verify(hg);
 
-      assertThat(isValid).isFalse();
+      assertThat(verifyStatus).isEqualTo(HgVerifier.HgVerifyStatus.NOT_REGULAR_FILE);
     }
 
     @Test
-    void shouldReturnFalseIfFileIsADirectory(@TempDir Path directory) throws IOException {
+    void shouldReturnNotRegularFileIfFileIsADirectory(@TempDir Path directory) throws IOException {
       Path hg = directory.resolve("hg");
       Files.createDirectories(hg);
 
-      boolean isValid = verify(hg);
+      HgVerifier.HgVerifyStatus verifyStatus = verify(hg);
 
-      assertThat(isValid).isFalse();
+      assertThat(verifyStatus).isEqualTo(HgVerifier.HgVerifyStatus.NOT_REGULAR_FILE);
     }
 
     @Test
@@ -74,21 +74,21 @@ class HgVerifierTest {
       Path hg = directory.resolve("hg");
       Files.createFile(hg);
 
-      boolean isValid = verify(hg);
+      HgVerifier.HgVerifyStatus verifyStatus = verify(hg);
 
-      assertThat(isValid).isFalse();
+      assertThat(verifyStatus).isEqualTo(HgVerifier.HgVerifyStatus.NOT_EXECUTABLE);
     }
 
     @Test
-    void shouldReturnTrueForIfMercurialIsAvailable() {
+    void shouldReturnValidIfMercurialIsAvailable() {
       Path hg = findHg();
 
       // skip test if we could not find mercurial
       Assumptions.assumeTrue(hg != null, "skip test, because we could not find mercurial on path");
 
-      boolean isValid = verify(hg);
+      HgVerifier.HgVerifyStatus verifyStatus = verify(hg);
 
-      assertThat(isValid).isTrue();
+      assertThat(verifyStatus).isEqualTo(HgVerifier.HgVerifyStatus.VALID);
     }
 
     private Path findHg() {
@@ -106,48 +106,59 @@ class HgVerifierTest {
       return null;
     }
 
-    private boolean verify(Path hg) {
+    private HgVerifier.HgVerifyStatus verify(Path hg) {
       HgGlobalConfig config = new HgGlobalConfig();
       config.setHgBinary(hg.toString());
-      return verifier.isValid(config);
+      return verifier.verify(config);
     }
 
   }
 
   @ParameterizedTest
-  @ValueSource(strings = { "3-2-1", "x.y.z", "3.2.0" })
-  void shouldReturnFalseForInvalidVersions(String version, @TempDir Path directory) throws IOException {
+  @ValueSource(strings = { "3-2-1", "x.y.z" })
+  void shouldReturnInvalidVersions(String version, @TempDir Path directory) throws IOException {
     HgVerifier verifier = new HgVerifier(hg -> version);
 
     Path hg = createHg(directory);
 
-    boolean isValid = verifier.isValid(hg);
+    HgVerifier.HgVerifyStatus verifyStatus = verifier.verify(hg);
 
-    assertThat(isValid).isFalse();
+    assertThat(verifyStatus).isEqualTo(HgVerifier.HgVerifyStatus.INVALID_VERSION);
   }
 
   @Test
-  void shouldReturnFalseOnIOException(@TempDir Path directory) throws IOException {
+  void shouldReturnTooOldVersion(@TempDir Path directory) throws IOException {
+    HgVerifier verifier = new HgVerifier(hg -> "3.2.1");
+
+    Path hg = createHg(directory);
+
+    HgVerifier.HgVerifyStatus verifyStatus = verifier.verify(hg);
+
+    assertThat(verifyStatus).isEqualTo(HgVerifier.HgVerifyStatus.VERSION_TOO_OLD);
+  }
+
+  @Test
+  void shouldReturnCouldNotResolveOnIOException(@TempDir Path directory) throws IOException {
     HgVerifier verifier = new HgVerifier(hg -> {
       throw new IOException("failed");
     });
 
     Path hg = createHg(directory);
 
-    boolean isValid = verifier.isValid(hg);
+    HgVerifier.HgVerifyStatus verifyStatus = verifier.verify(hg);
 
-    assertThat(isValid).isFalse();
+    assertThat(verifyStatus).isEqualTo(HgVerifier.HgVerifyStatus.COULD_NOT_RESOLVE_VERSION);
   }
 
   @Test
-  void shouldReturnTrue(@TempDir Path directory) throws IOException {
+  void shouldReturnValid(@TempDir Path directory) throws IOException {
     HgVerifier verifier = new HgVerifier(hg -> "4.2.0");
 
     Path hg = createHg(directory);
 
-    boolean isValid = verifier.isValid(hg);
+    HgVerifier.HgVerifyStatus verifyStatus = verifier.verify(hg);
 
-    assertThat(isValid).isTrue();
+    assertThat(verifyStatus).isEqualTo(HgVerifier.HgVerifyStatus.VALID);
   }
 
   @Nonnull
