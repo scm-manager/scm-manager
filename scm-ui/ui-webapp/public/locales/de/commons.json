@@ -124,5 +124,11 @@
   },
   "importLog": {
     "title": "Importprotokoll"
+  },
+  "notifications": {
+    "toastTitle": "Benachrichtigung",
+    "empty": "Keine Benachrichtigungen",
+    "dismiss": "Löschen",
+    "dismissAll": "Alle löschen"
   }
 }

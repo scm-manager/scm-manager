@@ -125,5 +125,11 @@
   },
   "importLog": {
     "title": "Import Log"
+  },
+  "notifications": {
+    "toastTitle": "Notification",
+    "empty": "No notifications",
+    "dismiss": "Dismiss",
+    "dismissAll": "Dismiss all"
   }
 }

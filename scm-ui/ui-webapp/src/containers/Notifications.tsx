@@ -45,6 +45,7 @@ import {
 import { Notification, NotificationCollection } from "@scm-manager/ui-types";
 import { useHistory, Link } from "react-router-dom";
 import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 
 const Bell = styled(Icon)`
   font-size: 1.5rem;
@@ -109,6 +110,7 @@ type EntryProps = {
 const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
   const history = useHistory();
   const { isLoading, error, dismiss } = useDismissNotification(notification);
+  const [t] = useTranslation("commons");
 
   const remove = () => {
     removeToast(notification);
@@ -121,7 +123,7 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
   return (
     <tr className={`is-${color(notification)}`}>
       <VerticalCenteredTd onClick={() => history.push(notification.link)} className="has-cursor-pointer">
-        {notification.message}
+        <NotificationMessage message={notification.message} />
       </VerticalCenteredTd>
       <DateColumn className="has-text-right">
         <DateFromNow date={notification.createdAt} />
@@ -130,7 +132,13 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
         {isLoading ? (
           <div className="small-loading-spinner" />
         ) : (
-          <Icon name="trash" color="black" className="has-cursor-pointer" onClick={remove} />
+          <Icon
+            name="trash"
+            color="black"
+            className="has-cursor-pointer"
+            title={t("notifications.dismiss")}
+            onClick={remove}
+          />
         )}
       </DismissColumn>
     </tr>
@@ -150,6 +158,7 @@ type ClearEntryProps = {
 
 const ClearEntry: FC<ClearEntryProps> = ({ notifications, clearToasts }) => {
   const { isLoading, error, clear: clearStore } = useClearNotifications(notifications);
+  const [t] = useTranslation("commons");
   const clear = () => {
     clearToasts();
     clearStore();
@@ -158,7 +167,7 @@ const ClearEntry: FC<ClearEntryProps> = ({ notifications, clearToasts }) => {
     <div className="dropdown-item has-text-centered">
       <ErrorNotification error={error} />
       <DismissAllButton className="is-outlined" color="link" loading={isLoading} action={clear}>
-        <Icon color="link" name="trash" className="mr-1" /> Dismiss all messages
+        <Icon color="link" name="trash" className="mr-1" /> {t("notifications.dismissAll")}
       </DismissAllButton>
     </div>
   );
@@ -182,11 +191,14 @@ const NotificationList: FC<Props> = ({ data, clear, remove }) => {
 
 const DropdownMenuContainer: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
 
-const NoNotifications: FC = () => (
-  <DropdownMenuContainer>
-    <InfoNotification type="info">No notifications</InfoNotification>
-  </DropdownMenuContainer>
-);
+const NoNotifications: FC = () => {
+  const [t] = useTranslation("commons");
+  return (
+    <DropdownMenuContainer>
+      <InfoNotification type="info">{t("notifications.empty")}</InfoNotification>
+    </DropdownMenuContainer>
+  );
+};
 
 type Props = {
   data: NotificationCollection;
@@ -212,27 +224,37 @@ const color = (notification: Notification) => {
   return c;
 };
 
+const NotificationMessage: FC<{ message: string }> = ({ message }) => {
+  const [t] = useTranslation("plugins");
+  return t("notifications." + message, message);
+};
+
 type SubscriptionProps = {
   notifications: Notification[];
   remove: (notification: Notification) => void;
 };
 
-const NotificationSubscription: FC<SubscriptionProps> = ({ notifications, remove }) => (
-  <ToastArea>
-    {notifications.map((notification, i) => (
-      <ToastNotification
-        key={i}
-        type={color(notification) as ToastType}
-        title="Notification"
-        close={() => remove(notification)}
-      >
-        <p>
-          <Link to={notification.link}>{notification.message}</Link>
-        </p>
-      </ToastNotification>
-    ))}
-  </ToastArea>
-);
+const NotificationSubscription: FC<SubscriptionProps> = ({ notifications, remove }) => {
+  const [t] = useTranslation("commons");
+  return (
+    <ToastArea>
+      {notifications.map((notification, i) => (
+        <ToastNotification
+          key={i}
+          type={color(notification) as ToastType}
+          title={t("notifications.toastTitle")}
+          close={() => remove(notification)}
+        >
+          <p>
+            <Link to={notification.link}>
+              <NotificationMessage message={notification.message} />
+            </Link>
+          </p>
+        </ToastNotification>
+      ))}
+    </ToastArea>
+  );
+};
 
 const BellNotificationContainer = styled.div`
   position: relative;
