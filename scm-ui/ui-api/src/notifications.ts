@@ -84,13 +84,17 @@ export const useClearNotifications = (notificationCollection: NotificationCollec
   };
 };
 
+const isEqual = (left: Notification, right: Notification) => {
+  return left === right || (left.message === right.message && left.createdAt === right.createdAt);
+};
+
 export const useNotificationSubscription = (
-  notificationCollection: NotificationCollection,
-  refetch: () => Promise<NotificationCollection | undefined>
+  refetch: () => Promise<NotificationCollection | undefined>,
+  notificationCollection?: NotificationCollection
 ) => {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [disconnectedAt, setDisconnectedAt] = useState<Date>();
-  const link = requiredLink(notificationCollection, "subscribe");
+  const link = (notificationCollection?._links.subscribe as Link)?.href;
 
   const onVisible = useCallback(() => {
     // we don't need to catch the error,
@@ -162,7 +166,7 @@ export const useNotificationSubscription = (
 
   const remove = useCallback(
     (notification: Notification) => {
-      setNotifications(oldNotifications => [...oldNotifications.filter(n => n !== notification)]);
+      setNotifications(oldNotifications => [...oldNotifications.filter(n => !isEqual(n, notification))]);
     },
     [setNotifications]
   );

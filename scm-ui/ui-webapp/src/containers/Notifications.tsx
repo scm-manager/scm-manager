@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
+import React, { FC, useEffect, useState } from "react";
 import {
   Button,
   Notification as InfoNotification,
@@ -42,8 +42,9 @@ import {
   useNotifications,
   useNotificationSubscription
 } from "@scm-manager/ui-api";
-import { Notification, NotificationCollection, Link as LinkType } from "@scm-manager/ui-types";
+import { Notification, NotificationCollection } from "@scm-manager/ui-types";
 import { useHistory, Link } from "react-router-dom";
+import classNames from "classnames";
 
 const Bell = styled(Icon)`
   font-size: 1.5rem;
@@ -89,10 +90,13 @@ const DropDownMenu = styled.div`
 
 type Props = {
   data: NotificationCollection;
+  remove: (notification: Notification) => void;
+  clear: () => void;
 };
 
 type EntryProps = {
   notification: Notification;
+  removeToast: (notification: Notification) => void;
 };
 
 const VerticalCenteredTd = styled.td`
@@ -108,9 +112,15 @@ const DismissColumn = styled.td`
   width: 2rem;
 `;
 
-const NotificationEntry: FC<EntryProps> = ({ notification }) => {
+const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
   const history = useHistory();
   const { isLoading, error, dismiss } = useDismissNotification(notification);
+
+  const remove = () => {
+    removeToast(notification);
+    dismiss();
+  };
+
   if (error) {
     return <ErrorNotification error={error} />;
   }
@@ -126,7 +136,7 @@ const NotificationEntry: FC<EntryProps> = ({ notification }) => {
         {isLoading ? (
           <div className="small-loading-spinner" />
         ) : (
-          <Icon name="trash" color="black" className="has-cursor-pointer" onClick={dismiss} />
+          <Icon name="trash" color="black" className="has-cursor-pointer" onClick={remove} />
         )}
       </DismissColumn>
     </tr>
@@ -135,6 +145,7 @@ const NotificationEntry: FC<EntryProps> = ({ notification }) => {
 
 type ClearEntryProps = {
   notifications: NotificationCollection;
+  clearToasts: () => void;
 };
 
 const DismissAllButton = styled(Button)`
@@ -143,8 +154,12 @@ const DismissAllButton = styled(Button)`
   }
 `;
 
-const ClearEntry: FC<ClearEntryProps> = ({ notifications }) => {
-  const { isLoading, error, clear } = useClearNotifications(notifications);
+const ClearEntry: FC<ClearEntryProps> = ({ notifications, clearToasts }) => {
+  const { isLoading, error, clear: clearStore } = useClearNotifications(notifications);
+  const clear = () => {
+    clearToasts();
+    clearStore();
+  };
   return (
     <div className="dropdown-item has-text-centered">
       <ErrorNotification error={error} />
@@ -155,19 +170,18 @@ const ClearEntry: FC<ClearEntryProps> = ({ notifications }) => {
   );
 };
 
-const NotificationList: FC<Props> = ({ data }) => {
+const NotificationList: FC<Props> = ({ data, clear, remove }) => {
   const clearLink = data._links.clear;
   return (
     <div className="dropdown-content p-0">
       <table className="table mb-0 card-table">
         <tbody>
           {data._embedded.notifications.map((n, i) => (
-            <NotificationEntry key={i} notification={n} />
+            <NotificationEntry key={i} notification={n} removeToast={remove} />
           ))}
         </tbody>
       </table>
-
-      {clearLink ? <ClearEntry notifications={data} /> : null}
+      {clearLink ? <ClearEntry notifications={data} clearToasts={clear} /> : null}
     </div>
   );
 };
@@ -180,13 +194,19 @@ const NoNotifications: FC = () => (
   </DropdownMenuContainer>
 );
 
-const NotificationDropDown: FC<Props> = ({ data }) => (
-  <>{data._embedded.notifications.length > 0 ? <NotificationList data={data} /> : <NoNotifications />}</>
+const NotificationDropDown: FC<Props> = ({ data, remove, clear }) => (
+  <>
+    {data._embedded.notifications.length > 0 ? (
+      <NotificationList data={data} remove={remove} clear={clear} />
+    ) : (
+      <NoNotifications />
+    )}
+  </>
 );
 
 type SubscriptionProps = {
-  data: NotificationCollection;
-  refetch: () => Promise<NotificationCollection | undefined>;
+  notifications: Notification[];
+  remove: (notification: Notification) => void;
 };
 
 const color = (notification: Notification) => {
@@ -197,25 +217,22 @@ const color = (notification: Notification) => {
   return c;
 };
 
-const NotificationSubscription: FC<SubscriptionProps> = ({ data, refetch }) => {
-  const { notifications, remove } = useNotificationSubscription(data, refetch);
-  return (
-    <ToastArea>
-      {notifications.map((notification, i) => (
-        <ToastNotification
-          key={i}
-          type={color(notification) as ToastType}
-          title="Notification"
-          close={() => remove(notification)}
-        >
-          <p>
-            <Link to={notification.link}>{notification.message}</Link>
-          </p>
-        </ToastNotification>
-      ))}
-    </ToastArea>
-  );
-};
+const NotificationSubscription: FC<SubscriptionProps> = ({ notifications, remove }) => (
+  <ToastArea>
+    {notifications.map((notification, i) => (
+      <ToastNotification
+        key={i}
+        type={color(notification) as ToastType}
+        title="Notification"
+        close={() => remove(notification)}
+      >
+        <p>
+          <Link to={notification.link}>{notification.message}</Link>
+        </p>
+      </ToastNotification>
+    ))}
+  </ToastArea>
+);
 
 const BellNotificationContainer = styled.div`
   position: relative;
@@ -231,13 +248,14 @@ const NotificationCounter = styled.span`
 
 type BellNotificationIconProps = {
   data?: NotificationCollection;
+  onClick: () => void;
 };
 
-const BellNotificationIcon: FC<BellNotificationIconProps> = ({ data }) => {
+const BellNotificationIcon: FC<BellNotificationIconProps> = ({ data, onClick }) => {
   const counter = data?._embedded.notifications.length || 0;
 
   return (
-    <BellNotificationContainer>
+    <BellNotificationContainer onClick={onClick}>
       <Bell iconStyle={counter === 0 ? "far" : "fas"} name="bell" color="white" />
       {counter > 0 ? <NotificationCounter>{counter}</NotificationCounter> : null}
     </BellNotificationContainer>
@@ -263,18 +281,31 @@ const ErrorBox: FC<{ error: Error | null }> = ({ error }) => {
 
 const Notifications: FC = () => {
   const { data, isLoading, error, refetch } = useNotifications();
-  const subscribeLink = (data?._links["subscribe"] as LinkType)?.href;
+  const { notifications, remove, clear } = useNotificationSubscription(refetch, data);
+
+  const [active, setActive] = useState(false);
+  useEffect(() => {
+    const inactive = () => setActive(false);
+    window.addEventListener("click", inactive);
+    return () => window.removeEventListener("click", inactive);
+  }, []);
+
   return (
     <>
-      {data && subscribeLink ? <NotificationSubscription data={data} refetch={refetch} /> : null}
-      <div className="is-align-self-flex-end dropdown is-right is-hoverable is-active">
+      <NotificationSubscription notifications={notifications} remove={remove} />
+      <div
+        className={classNames("is-align-self-flex-end", "dropdown", "is-right", "is-hoverable", {
+          "is-active": active
+        })}
+        onClick={e => e.stopPropagation()}
+      >
         <Container className="dropdown-trigger">
-          <BellNotificationIcon data={data} />
+          <BellNotificationIcon data={data} onClick={() => setActive(a => !a)} />
         </Container>
         <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">
           <ErrorBox error={error} />
           {isLoading ? <LoadingBox /> : null}
-          {data ? <NotificationDropDown data={data} /> : null}
+          {data ? <NotificationDropDown data={data} remove={remove} clear={clear} /> : null}
         </DropDownMenu>
       </div>
     </>
