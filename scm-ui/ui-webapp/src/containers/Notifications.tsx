@@ -88,17 +88,6 @@ const DropDownMenu = styled.div`
   }
 `;
 
-type Props = {
-  data: NotificationCollection;
-  remove: (notification: Notification) => void;
-  clear: () => void;
-};
-
-type EntryProps = {
-  notification: Notification;
-  removeToast: (notification: Notification) => void;
-};
-
 const VerticalCenteredTd = styled.td`
   vertical-align: middle !important;
 `;
@@ -111,6 +100,11 @@ const DismissColumn = styled.td`
   vertical-align: middle !important;
   width: 2rem;
 `;
+
+type EntryProps = {
+  notification: Notification;
+  removeToast: (notification: Notification) => void;
+};
 
 const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
   const history = useHistory();
@@ -143,16 +137,16 @@ const NotificationEntry: FC<EntryProps> = ({ notification, removeToast }) => {
   );
 };
 
-type ClearEntryProps = {
-  notifications: NotificationCollection;
-  clearToasts: () => void;
-};
-
 const DismissAllButton = styled(Button)`
   &:hover > * {
     color: white !important;
   }
 `;
+
+type ClearEntryProps = {
+  notifications: NotificationCollection;
+  clearToasts: () => void;
+};
 
 const ClearEntry: FC<ClearEntryProps> = ({ notifications, clearToasts }) => {
   const { isLoading, error, clear: clearStore } = useClearNotifications(notifications);
@@ -194,6 +188,12 @@ const NoNotifications: FC = () => (
   </DropdownMenuContainer>
 );
 
+type Props = {
+  data: NotificationCollection;
+  remove: (notification: Notification) => void;
+  clear: () => void;
+};
+
 const NotificationDropDown: FC<Props> = ({ data, remove, clear }) => (
   <>
     {data._embedded.notifications.length > 0 ? (
@@ -204,17 +204,17 @@ const NotificationDropDown: FC<Props> = ({ data, remove, clear }) => (
   </>
 );
 
-type SubscriptionProps = {
-  notifications: Notification[];
-  remove: (notification: Notification) => void;
-};
-
 const color = (notification: Notification) => {
   let c: string = notification.type.toLowerCase();
   if (c === "error") {
     c = "danger";
   }
   return c;
+};
+
+type SubscriptionProps = {
+  notifications: Notification[];
+  remove: (notification: Notification) => void;
 };
 
 const NotificationSubscription: FC<SubscriptionProps> = ({ notifications, remove }) => (
