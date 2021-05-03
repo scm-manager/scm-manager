@@ -29,9 +29,14 @@ import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
+import sonia.scm.HandlerEventType;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.security.UUIDKeyGenerator;
 import sonia.scm.store.InMemoryByteDataStoreFactory;
+import sonia.scm.user.UserEvent;
+import sonia.scm.user.UserTestData;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -144,6 +149,25 @@ class NotificationStoreTest {
     store.remove(id);
 
     containsMessage(two);
+  }
+
+  @Test
+  @SubjectAware("slarti")
+  void shouldRemoveEntryIfUserIsDeleted() {
+    store.add(notification(), "slarti");
+    store.handle(new UserEvent(HandlerEventType.DELETE, UserTestData.createSlarti()));
+
+    assertThat(store.getAll()).isEmpty();
+  }
+
+  @SubjectAware("slarti")
+  @ParameterizedTest(name = "shouldIgnoreEvent_{argumentsWithNames}")
+  @EnumSource(value = HandlerEventType.class, mode = EnumSource.Mode.EXCLUDE, names = "DELETE")
+  void shouldIgnoreNonDeleteEvents(HandlerEventType event) {
+    store.add(notification(), "slarti");
+    store.handle(new UserEvent(event, UserTestData.createSlarti()));
+
+    assertThat(store.getAll()).hasSize(1);
   }
 
   private Notification notification() {

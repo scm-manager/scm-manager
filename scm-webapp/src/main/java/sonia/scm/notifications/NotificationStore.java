@@ -24,12 +24,15 @@
 
 package sonia.scm.notifications;
 
+import com.github.legman.Subscribe;
 import com.google.common.util.concurrent.Striped;
 import lombok.Data;
 import org.apache.shiro.SecurityUtils;
+import sonia.scm.HandlerEventType;
 import sonia.scm.security.KeyGenerator;
 import sonia.scm.store.DataStore;
 import sonia.scm.store.DataStoreFactory;
+import sonia.scm.user.UserEvent;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -124,6 +127,20 @@ public class NotificationStore {
 
   private String getCurrentUsername() {
     return SecurityUtils.getSubject().getPrincipal().toString();
+  }
+
+  @Subscribe
+  public void handle(UserEvent event) {
+    if (event.getEventType() == HandlerEventType.DELETE) {
+      String username = event.getItem().getName();
+      Lock lock = locks.get(username).writeLock();
+      try {
+        lock.lock();
+        store.remove(username);
+      } finally {
+        lock.unlock();
+      }
+    }
   }
 
   @Data
