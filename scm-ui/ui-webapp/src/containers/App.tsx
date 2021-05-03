@@ -57,13 +57,9 @@ const App: FC = () => {
     <div className="App">
       <Header>
         {authenticated ? (
-          <div className="level">
-            <div className="level-left">
-              <PrimaryNavigation links={index._links} />
-            </div>
-            <div className="level-right">
-              <Notifications />
-            </div>
+          <div className="is-flex is-justify-content-space-between is-flex-wrap-nowrap	">
+            <PrimaryNavigation links={index._links} />
+            <Notifications />
           </div>
         ) : null}
       </Header>

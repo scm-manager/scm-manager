@@ -51,6 +51,10 @@ const Bell = styled(Icon)`
 const Container = styled.div`
   display: flex;
   cursor: pointer;
+
+  @media screen and (max-width: 1024px) {
+    padding-right: 1rem;
+  }
 `;
 
 const DropDownMenu = styled.div`
@@ -102,8 +106,10 @@ const NotificationEntry: FC<EntryProps> = ({ notification }) => {
     return <ErrorNotification error={error} />;
   }
   return (
-    <tr onClick={() => history.push(notification.link)} className={`has-cursor-pointer is-${color(notification)}`}>
-      <VerticalCenteredTd className="">{notification.message}</VerticalCenteredTd>
+    <tr className={`is-${color(notification)}`}>
+      <VerticalCenteredTd onClick={() => history.push(notification.link)} className="has-cursor-pointer">
+        {notification.message}
+      </VerticalCenteredTd>
       <DateColumn className="has-text-right">
         <DateFromNow date={notification.createdAt} />
       </DateColumn>
@@ -252,7 +258,7 @@ const Notifications: FC = () => {
   return (
     <>
       {data && subscribeLink ? <NotificationSubscription data={data} refetch={refetch} /> : null}
-      <div className="dropdown is-right is-hoverable">
+      <div className="is-align-self-flex-end dropdown is-right is-hoverable">
         <Container className="dropdown-trigger">
           <BellNotificationIcon data={data} />
         </Container>

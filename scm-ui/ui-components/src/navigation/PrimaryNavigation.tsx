@@ -129,7 +129,7 @@ class PrimaryNavigation extends React.Component<Props> {
     const navigationItems = this.createNavigationItems();
 
     return (
-      <nav className="tabs is-boxed">
+      <nav className="tabs is-boxed mb-0">
         <ul>{navigationItems}</ul>
       </nav>
     );
