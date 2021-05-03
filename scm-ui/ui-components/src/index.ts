@@ -79,11 +79,11 @@ export { default as CommaSeparatedList } from "./CommaSeparatedList";
 export { default as SplitAndReplace, Replacement } from "./SplitAndReplace";
 export { regExpPattern as changesetShortLinkRegex } from "./markdown/remarkChangesetShortLinkParser";
 export * from "./markdown/PluginApi";
+export * from "./devices";
 
 export { default as comparators } from "./comparators";
 
 export { isDevBuild, createAttributesForTesting } from "./devBuild";
-
 export * from "./avatar";
 export * from "./buttons";
 export * from "./config";

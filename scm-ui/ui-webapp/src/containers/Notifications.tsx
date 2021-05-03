@@ -32,7 +32,8 @@ import {
   ToastNotification,
   ToastType,
   Loading,
-  DateFromNow
+  DateFromNow,
+  devices
 } from "@scm-manager/ui-components";
 import styled from "styled-components";
 import {
@@ -52,13 +53,21 @@ const Container = styled.div`
   display: flex;
   cursor: pointer;
 
-  @media screen and (max-width: 1024px) {
+  @media screen and (max-width: ${devices.desktop.width}px) {
     padding-right: 1rem;
   }
 `;
 
 const DropDownMenu = styled.div`
-  min-width: 50vw;
+  min-width: 35rem;
+
+  @media screen and (max-width: ${devices.mobile.width}px) {
+    min-width: 25rem;
+  }
+
+  @media screen and (max-width: ${devices.desktop.width}px) {
+    margin-right: 1rem;
+  }
 
   &:before {
     position: absolute;
@@ -137,7 +146,7 @@ const DismissAllButton = styled(Button)`
 const ClearEntry: FC<ClearEntryProps> = ({ notifications }) => {
   const { isLoading, error, clear } = useClearNotifications(notifications);
   return (
-    <div className="dropdown-item has-text-centered	">
+    <div className="dropdown-item has-text-centered">
       <ErrorNotification error={error} />
       <DismissAllButton className="is-outlined" color="link" loading={isLoading} action={clear}>
         <Icon color="link" name="trash" className="mr-1" /> Dismiss all messages
@@ -258,7 +267,7 @@ const Notifications: FC = () => {
   return (
     <>
       {data && subscribeLink ? <NotificationSubscription data={data} refetch={refetch} /> : null}
-      <div className="is-align-self-flex-end dropdown is-right is-hoverable">
+      <div className="is-align-self-flex-end dropdown is-right is-hoverable is-active">
         <Container className="dropdown-trigger">
           <BellNotificationIcon data={data} />
         </Container>
