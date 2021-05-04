@@ -73,12 +73,11 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
                        GitReceivePackFactory receivePackFactory,
                        GitRepositoryViewer repositoryViewer,
                        RepositoryRequestListenerUtil repositoryRequestListenerUtil,
-                       LfsServletFactory lfsServletFactory, GitHookEventFacade gitHookEventFacade)
+                       LfsServletFactory lfsServletFactory)
   {
     this.repositoryViewer = repositoryViewer;
     this.repositoryRequestListenerUtil = repositoryRequestListenerUtil;
     this.lfsServletFactory = lfsServletFactory;
-    this.gitHookEventFacade = gitHookEventFacade;
 
     setRepositoryResolver(repositoryResolver);
     setReceivePackFactory(receivePackFactory);
@@ -113,12 +112,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
     } else if (isRegularGitAPIRequest(request)) {
       logger.trace("handle regular git request");
       // continue with the regular git Backend
-      try {
-        handleRegularGitRequest(request, response, repository);
-        gitHookEventFacade.firePending();
-      } finally {
-        gitHookEventFacade.clean();
-      }
+      handleRegularGitRequest(request, response, repository);
     } else {
       logger.trace("handle browser request");
       handleBrowserRequest(request, response, repository);
@@ -240,6 +234,4 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
   private final GitRepositoryViewer repositoryViewer;
 
   private final LfsServletFactory lfsServletFactory;
-
-  private final GitHookEventFacade gitHookEventFacade;
 }

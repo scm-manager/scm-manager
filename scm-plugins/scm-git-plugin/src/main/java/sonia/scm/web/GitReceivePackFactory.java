@@ -37,6 +37,7 @@ import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.protocolcommand.git.BaseReceivePackFactory;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.repository.spi.HookEventFacade;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -56,7 +57,7 @@ public class GitReceivePackFactory extends BaseReceivePackFactory<HttpServletReq
   @Inject
   public GitReceivePackFactory(GitChangesetConverterFactory converterFactory,
                                GitRepositoryHandler handler,
-                               GitHookEventFacade hookEventFacade,
+                               HookEventFacade hookEventFacade,
                                GitRepositoryConfigStoreProvider gitRepositoryConfigStoreProvider) {
     super(converterFactory, handler, hookEventFacade, gitRepositoryConfigStoreProvider);
     this.wrapped = new DefaultReceivePackFactory();

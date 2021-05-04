@@ -39,7 +39,6 @@ import sonia.scm.protocolcommand.CommandContext;
 import sonia.scm.protocolcommand.RepositoryContext;
 import sonia.scm.protocolcommand.ScmCommandProtocol;
 import sonia.scm.repository.RepositoryPermissions;
-import sonia.scm.web.GitHookEventFacade;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -51,13 +50,11 @@ public class GitCommandProtocol implements ScmCommandProtocol {
 
   private final ScmUploadPackFactory uploadPackFactory;
   private final ScmReceivePackFactory receivePackFactory;
-  private final GitHookEventFacade gitHookEventFacade;
 
   @Inject
-  public GitCommandProtocol(ScmUploadPackFactory uploadPackFactory, ScmReceivePackFactory receivePackFactory, GitHookEventFacade gitHookEventFacade) {
+  public GitCommandProtocol(ScmUploadPackFactory uploadPackFactory, ScmReceivePackFactory receivePackFactory) {
     this.uploadPackFactory = uploadPackFactory;
     this.receivePackFactory = receivePackFactory;
-    this.gitHookEventFacade = gitHookEventFacade;
   }
 
   @Override
@@ -81,8 +78,6 @@ public class GitCommandProtocol implements ScmCommandProtocol {
       receivePack.receive(commandContext.getInputStream(), commandContext.getOutputStream(), commandContext.getErrorStream());
     } catch (ServiceNotEnabledException | ServiceNotAuthorizedException e) {
       throw new IOException("error creating receive pack for ssh", e);
-    } finally {
-      gitHookEventFacade.firePending();
     }
   }
 
