@@ -55,6 +55,12 @@ class JavaModulePlugin implements Plugin<Project> {
       failOnError false
     }
 
+    project.sonarqube {
+      properties {
+        property "sonar.java.source", "8"
+      }
+    }
+
     project.afterEvaluate {
       if (project.isCI) {
         project.plugins.apply("jacoco")
