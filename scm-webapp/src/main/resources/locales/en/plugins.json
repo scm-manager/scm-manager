@@ -368,5 +368,9 @@
     "CustomNamespaceStrategy": "Custom",
     "CurrentYearNamespaceStrategy": "Current year",
     "RepositoryTypeNamespaceStrategy": "Repository type"
+  },
+  "notifications": {
+    "exportFinished": "The repository export has been finished.",
+    "exportFailed": "The repository export has failed. Try it again or contact your administrator."
   }
 }

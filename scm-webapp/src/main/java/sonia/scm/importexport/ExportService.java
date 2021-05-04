@@ -55,12 +55,14 @@ public class ExportService {
   private final BlobStoreFactory blobStoreFactory;
   private final DataStoreFactory dataStoreFactory;
   private final ExportFileExtensionResolver fileExtensionResolver;
+  private final ExportNotificationHandler notificationHandler;
 
   @Inject
-  public ExportService(BlobStoreFactory blobStoreFactory, DataStoreFactory dataStoreFactory, ExportFileExtensionResolver fileExtensionResolver) {
+  public ExportService(BlobStoreFactory blobStoreFactory, DataStoreFactory dataStoreFactory, ExportFileExtensionResolver fileExtensionResolver, ExportNotificationHandler notificationHandler) {
     this.blobStoreFactory = blobStoreFactory;
     this.dataStoreFactory = dataStoreFactory;
     this.fileExtensionResolver = fileExtensionResolver;
+    this.notificationHandler = notificationHandler;
   }
 
   public OutputStream store(Repository repository, boolean withMetadata, boolean compressed, boolean encrypted) {
@@ -69,6 +71,7 @@ public class ExportService {
     try {
       return storeNewBlob(repository.getId()).getOutputStream();
     } catch (IOException e) {
+      notificationHandler.handleFailedExport(repository);
       throw new ExportFailedException(
         entity(repository).build(),
         "Could not store repository export to blob file",
@@ -120,6 +123,7 @@ public class ExportService {
     RepositoryExportInformation info = dataStore.get(repository.getId());
     info.setStatus(ExportStatus.FINISHED);
     dataStore.put(repository.getId(), info);
+    notificationHandler.handleSuccessfulExport(repository);
   }
 
   public boolean isExporting(Repository repository) {

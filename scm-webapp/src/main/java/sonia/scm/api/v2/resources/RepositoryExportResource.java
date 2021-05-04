@@ -41,6 +41,7 @@ import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
 import sonia.scm.Type;
 import sonia.scm.importexport.ExportFileExtensionResolver;
+import sonia.scm.importexport.ExportNotificationHandler;
 import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.FullScmRepositoryExporter;
 import sonia.scm.importexport.RepositoryImportExportEncryption;
@@ -98,6 +99,7 @@ public class RepositoryExportResource {
   private final RepositoryExportInformationToDtoMapper informationToDtoMapper;
   private final ExportFileExtensionResolver fileExtensionResolver;
   private final ResourceLinks resourceLinks;
+  private final ExportNotificationHandler failedHandler;
 
   @Inject
   public RepositoryExportResource(RepositoryManager manager,
@@ -108,8 +110,8 @@ public class RepositoryExportResource {
                                   RepositoryExportInformationToDtoMapper informationToDtoMapper,
                                   ExportFileExtensionResolver fileExtensionResolver,
                                   ResourceLinks resourceLinks,
-                                  MeterRegistry registry
-  ) {
+                                  MeterRegistry registry,
+                                  ExportNotificationHandler notificationHandler) {
     this.manager = manager;
     this.serviceFactory = serviceFactory;
     this.fullScmRepositoryExporter = fullScmRepositoryExporter;
@@ -119,6 +121,7 @@ public class RepositoryExportResource {
     this.fileExtensionResolver = fileExtensionResolver;
     this.resourceLinks = resourceLinks;
     this.repositoryExportHandler = this.createExportHandlerPool(registry);
+    this.failedHandler = notificationHandler;
   }
 
   /**
@@ -312,11 +315,7 @@ public class RepositoryExportResource {
     Repository repository = getVerifiedRepository(namespace, name);
     RepositoryPermissions.export(repository).check();
     checkRepositoryIsAlreadyExporting(repository);
-    return exportAsync(repository, request.isAsync(), () -> {
-      Response response = exportFullRepository(repository, request.getPassword(), request.isAsync());
-      exportService.setExportFinished(repository);
-      return response;
-    });
+    return exportAsync(repository, request.isAsync(), () -> exportFullRepository(repository, request.getPassword(), request.isAsync()));
   }
 
   @DELETE
@@ -458,6 +457,7 @@ public class RepositoryExportResource {
       return Response.status(204).build();
     } else {
       StreamingOutput output = os -> fullScmRepositoryExporter.export(repository, os, password);
+      exportService.setExportFinished(repository);
 
       return Response
         .ok(output, "application/x-gzip")
@@ -485,6 +485,7 @@ public class RepositoryExportResource {
         return createResponse(repository, fileExtension, compressed, output);
       }
     } catch (IOException e) {
+      failedHandler.handleFailedExport(repository);
       throw new ExportFailedException(entity(repository).build(), "repository export failed", e);
     }
   }
