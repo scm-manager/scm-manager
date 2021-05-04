@@ -13,6 +13,7 @@
     - /user/group/
     - /user/admin/
     - /user/profile/
+    - /user/notification/
 
 - section: Administration
   entries:
