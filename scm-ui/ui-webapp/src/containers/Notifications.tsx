@@ -307,11 +307,11 @@ const Notifications: FC = () => {
   const { data, isLoading, error, refetch } = useNotifications();
   const { notifications, remove, clear } = useNotificationSubscription(refetch, data);
 
-  const [active, setActive] = useState(false);
+  const [open, setOpen] = useState(false);
   useEffect(() => {
-    const inactive = () => setActive(false);
-    window.addEventListener("click", inactive);
-    return () => window.removeEventListener("click", inactive);
+    const close = () => setOpen(false);
+    window.addEventListener("click", close);
+    return () => window.removeEventListener("click", close);
   }, []);
 
   return (
@@ -319,12 +319,12 @@ const Notifications: FC = () => {
       <NotificationSubscription notifications={notifications} remove={remove} />
       <div
         className={classNames("is-align-self-flex-end", "dropdown", "is-right", "is-hoverable", {
-          "is-active": active
+          "is-active": open
         })}
         onClick={e => e.stopPropagation()}
       >
         <Container className="dropdown-trigger">
-          <BellNotificationIcon data={data} onClick={() => setActive(a => !a)} />
+          <BellNotificationIcon data={data} onClick={() => setOpen(o => !o)} />
         </Container>
         <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">
           <ErrorBox error={error} />
