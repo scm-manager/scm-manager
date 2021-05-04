@@ -218,6 +218,8 @@ const NotificationDropDown: FC<Props> = ({ data, remove, clear }) => (
 
 const color = (notification: Notification) => {
   let c: string = notification.type.toLowerCase();
+  // We use the color danger for an error.
+  // All other notification types are matching a color, except error which must be mapped to danger.
   if (c === "error") {
     c = "danger";
   }
