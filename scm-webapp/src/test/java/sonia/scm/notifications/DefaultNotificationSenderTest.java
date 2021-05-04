@@ -77,7 +77,7 @@ class DefaultNotificationSenderTest {
     verify(channel).broadcast(messageCaptor.capture());
 
     Message message = messageCaptor.getValue();
-    assertThat(message.getName()).isEqualTo("notification");
+    assertThat(message.getName()).isEqualTo(DefaultNotificationSender.MESSAGE_NAME);
     assertThat(message.getType()).isEqualTo(Notification.class);
     assertThat(message.getData()).isEqualTo(notification);
   }

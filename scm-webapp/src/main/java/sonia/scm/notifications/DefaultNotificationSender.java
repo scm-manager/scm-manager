@@ -24,6 +24,7 @@
 
 package sonia.scm.notifications;
 
+import com.google.common.annotations.VisibleForTesting;
 import sonia.scm.sse.Channel;
 import sonia.scm.sse.ChannelRegistry;
 import sonia.scm.sse.Message;
@@ -31,6 +32,9 @@ import sonia.scm.sse.Message;
 import javax.inject.Inject;
 
 public class DefaultNotificationSender implements NotificationSender {
+
+  @VisibleForTesting
+  static final String MESSAGE_NAME = "notification";
 
   private final NotificationStore store;
   private final ChannelRegistry channelRegistry;
@@ -49,6 +53,6 @@ public class DefaultNotificationSender implements NotificationSender {
   }
 
   private Message message(Notification notification) {
-    return new Message("notification", Notification.class, notification);
+    return new Message(MESSAGE_NAME, Notification.class, notification);
   }
 }
