@@ -26,11 +26,18 @@ package sonia.scm.notifications;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.sse.Channel;
+import sonia.scm.sse.ChannelRegistry;
+import sonia.scm.sse.Message;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class DefaultNotificationSenderTest {
@@ -38,11 +45,19 @@ class DefaultNotificationSenderTest {
   @Mock
   private NotificationStore store;
 
+  @Mock
+  private ChannelRegistry channelRegistry;
+
   @InjectMocks
   private DefaultNotificationSender sender;
 
+  @Mock
+  private Channel channel;
+
   @Test
   void shouldDelegateToStore() {
+    when(channelRegistry.channel(any())).thenReturn(channel);
+
     Notification notification = new Notification(Type.ERROR, "/fail", "Everything has failed");
 
     sender.send(notification, "trillian");
@@ -50,4 +65,20 @@ class DefaultNotificationSenderTest {
     verify(store).add(notification, "trillian");
   }
 
+  @Test
+  void shouldSendToChannel() {
+    NotificationChannelId channelId = new NotificationChannelId("trillian");
+    when(channelRegistry.channel(channelId)).thenReturn(channel);
+
+    Notification notification = new Notification(Type.WARNING, "/warn", "Everything looks strange");
+
+    sender.send(notification, "trillian");
+    ArgumentCaptor<Message> messageCaptor = ArgumentCaptor.forClass(Message.class);
+    verify(channel).broadcast(messageCaptor.capture());
+
+    Message message = messageCaptor.getValue();
+    assertThat(message.getName()).isEqualTo("notification");
+    assertThat(message.getType()).isEqualTo(Notification.class);
+    assertThat(message.getData()).isEqualTo(notification);
+  }
 }
