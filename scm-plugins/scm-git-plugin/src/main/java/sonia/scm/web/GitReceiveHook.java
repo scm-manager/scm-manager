@@ -38,6 +38,7 @@ import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.RepositoryHookType;
 import sonia.scm.repository.spi.GitHookContextProvider;
+import sonia.scm.repository.spi.HookEventFacade;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -49,20 +50,18 @@ import java.util.List;
  *
  * @author Sebastian Sdorra
  */
-public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
-{
+public class GitReceiveHook implements PreReceiveHook, PostReceiveHook {
 
-  /** the logger for GitReceiveHook */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitReceiveHook.class);
+  private static final Logger LOG = LoggerFactory.getLogger(GitReceiveHook.class);
 
   private final GitRepositoryHandler handler;
   private final GitChangesetConverterFactory converterFactory;
-  private final GitHookEventFacade hookEventFacade;
+  private final HookEventFacade hookEventFacade;
 
   private GitHookContextProvider postReceiveContext;
 
-  public GitReceiveHook(GitChangesetConverterFactory converterFactory, GitHookEventFacade hookEventFacade,
+  public GitReceiveHook(GitChangesetConverterFactory converterFactory,
+                        HookEventFacade hookEventFacade,
                         GitRepositoryHandler handler)
   {
     this.converterFactory = converterFactory;
@@ -71,81 +70,60 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
   }
 
   @Override
-  public void onPostReceive(ReceivePack rpack,
-    Collection<ReceiveCommand> receiveCommands)
-  {
+  public void onPostReceive(ReceivePack rpack, Collection<ReceiveCommand> receiveCommands) {
     onReceive(rpack, receiveCommands, RepositoryHookType.POST_RECEIVE);
   }
 
   @Override
-  public void onPreReceive(ReceivePack rpack,
-    Collection<ReceiveCommand> receiveCommands)
-  {
+  public void onPreReceive(ReceivePack rpack, Collection<ReceiveCommand> receiveCommands) {
     onReceive(rpack, receiveCommands, RepositoryHookType.PRE_RECEIVE);
   }
 
   public void afterReceive() {
-    try {
-      hookEventFacade.firePending(postReceiveContext);
-    } finally {
-      postReceiveContext = null;
-    }
+      if (postReceiveContext != null) {
+        LOG.debug("firing {} hook for repository {}", RepositoryHookType.POST_RECEIVE, postReceiveContext.getRepositoryId());
+        try {
+          hookEventFacade.handle(postReceiveContext.getRepositoryId()).fireHookEvent(RepositoryHookType.POST_RECEIVE, postReceiveContext);
+        } finally {
+          postReceiveContext = null;
+        }
+      } else {
+        LOG.debug("No context found for event type {}", RepositoryHookType.POST_RECEIVE);
+      }
   }
 
-  private void handleReceiveCommands(ReceivePack rpack,
-    List<ReceiveCommand> receiveCommands, RepositoryHookType type)
-  {
-    try
-    {
+  private void handleReceiveCommands(ReceivePack rpack, List<ReceiveCommand> receiveCommands, RepositoryHookType type) {
+    try {
       Repository repository = rpack.getRepository();
       String repositoryId = resolveRepositoryId(repository);
 
-      logger.trace("resolved repository to {}", repositoryId);
+      LOG.trace("resolved repository to {}", repositoryId);
 
       GitHookContextProvider context = new GitHookContextProvider(converterFactory, rpack, receiveCommands, repository, repositoryId);
 
-      hookEventFacade.fire(type, context);
-
       if (type == RepositoryHookType.POST_RECEIVE) {
         postReceiveContext = context;
+      } else {
+        hookEventFacade.handle(repositoryId).fireHookEvent(type, context);
       }
-    }
-    catch (Exception ex)
-    {
-      logger.error("could not handle receive commands", ex);
+    } catch (Exception ex) {
+      LOG.error("could not handle receive commands", ex);
 
       GitHooks.abortIfPossible(type, rpack, receiveCommands, ex.getMessage());
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param rpack
-   * @param commands
-   * @param type
-   */
-  private void onReceive(ReceivePack rpack,
-    Collection<ReceiveCommand> commands, RepositoryHookType type)
-  {
-    if (logger.isTraceEnabled())
-    {
-      logger.trace("received git hook, type={}", type);
-    }
+  private void onReceive(ReceivePack rpack, Collection<ReceiveCommand> commands, RepositoryHookType type) {
+    LOG.trace("received git hook, type={}", type);
 
-    List<ReceiveCommand> receiveCommands = GitHooks.filterReceiveable(type,
-                                             commands);
+    List<ReceiveCommand> receiveCommands = GitHooks.filterReceiveable(type, commands);
 
     GitFileHook.execute(type, rpack, commands);
 
-    if (!receiveCommands.isEmpty())
-    {
+    if (!receiveCommands.isEmpty()) {
       handleReceiveCommands(rpack, receiveCommands, type);
-    }
-    else if (logger.isDebugEnabled())
-    {
-      logger.debug("no receive commands found to process");
+    } else {
+      LOG.debug("no receive commands found to process");
     }
   }
 
@@ -159,8 +137,7 @@ public class GitReceiveHook implements PreReceiveHook, PostReceiveHook
    *
    * @throws IOException
    */
-  private String resolveRepositoryId(Repository repository)
-  {
+  private String resolveRepositoryId(Repository repository) {
     StoredConfig gitConfig = repository.getConfig();
     return handler.getRepositoryId(gitConfig);
   }

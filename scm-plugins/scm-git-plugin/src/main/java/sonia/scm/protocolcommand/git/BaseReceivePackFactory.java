@@ -33,8 +33,8 @@ import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitRepositoryConfig;
 import sonia.scm.repository.GitRepositoryHandler;
+import sonia.scm.repository.spi.HookEventFacade;
 import sonia.scm.web.CollectingPackParserListener;
-import sonia.scm.web.GitHookEventFacade;
 import sonia.scm.web.GitReceiveHook;
 
 public abstract class BaseReceivePackFactory<T> implements ReceivePackFactory<T> {
@@ -45,7 +45,7 @@ public abstract class BaseReceivePackFactory<T> implements ReceivePackFactory<T>
 
   protected BaseReceivePackFactory(GitChangesetConverterFactory converterFactory,
                                    GitRepositoryHandler handler,
-                                   GitHookEventFacade hookEventFacade,
+                                   HookEventFacade hookEventFacade,
                                    GitRepositoryConfigStoreProvider storeProvider) {
     this.handler = handler;
     this.storeProvider = storeProvider;

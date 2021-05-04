@@ -31,7 +31,6 @@ import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
 import org.eclipse.jgit.transport.Transport;
 import org.eclipse.jgit.transport.URIish;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -44,7 +43,6 @@ import sonia.scm.repository.api.HookContextFactory;
 import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.repository.work.WorkingCopy;
-import sonia.scm.web.GitHookEventFacade;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,21 +61,15 @@ public class SimpleGitWorkingCopyFactoryTest extends AbstractGitCommandTestBase 
   // keep this so that it will not be garbage collected (Transport keeps this in a week reference)
   private ScmTransportProtocol proto;
   private WorkdirProvider workdirProvider;
-  GitHookEventFacade hookEventFacade;
 
   @Before
   public void bindScmProtocol() throws IOException {
     HookContextFactory hookContextFactory = new HookContextFactory(mock(PreProcessorUtil.class));
-    hookEventFacade = new GitHookEventFacade(new HookEventFacade(of(mock(RepositoryManager.class)), hookContextFactory), new SimpleMeterRegistry());
+    HookEventFacade hookEventFacade = new HookEventFacade(of(mock(RepositoryManager.class)), hookContextFactory);
     GitRepositoryHandler gitRepositoryHandler = mock(GitRepositoryHandler.class);
     proto = new ScmTransportProtocol(of(GitTestHelper.createConverterFactory()), of(hookEventFacade), of(gitRepositoryHandler));
     Transport.register(proto);
     workdirProvider = new WorkdirProvider(temporaryFolder.newFolder(), repositoryLocationResolver, false);
-  }
-
-  @After
-  public void close() {
-    hookEventFacade.close();
   }
 
   @Test
