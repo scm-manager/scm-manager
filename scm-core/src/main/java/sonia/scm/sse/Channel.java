@@ -36,6 +36,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class Channel {
@@ -46,14 +47,20 @@ public class Channel {
   private final ReadWriteLock lock = new ReentrantReadWriteLock();
 
   private final Object channelId;
+  private final Function<Registration, Client> clientFactory;
 
   Channel(Object channelId) {
+    this(channelId, Client::new);
+  }
+
+  Channel(Object channelId, Function<Registration, Client> clientFactory) {
     this.channelId = channelId;
+    this.clientFactory = clientFactory;
   }
 
   public void register(Registration registration) {
     registration.validate();
-    Client client = new Client(registration);
+    Client client = clientFactory.apply(registration);
 
     LOG.trace("registered new client {} to channel {}", client.getSessionId(), channelId);
     lock.writeLock().lock();

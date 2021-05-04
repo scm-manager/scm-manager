@@ -32,6 +32,7 @@ import javax.ws.rs.sse.OutboundSseEvent;
 import javax.ws.rs.sse.SseEventSink;
 import java.io.Closeable;
 import java.time.Instant;
+import java.util.function.Function;
 
 class Client implements Closeable {
 
@@ -45,9 +46,14 @@ class Client implements Closeable {
   private boolean exceptionallyClosed = false;
 
   Client(Registration registration) {
+    this(registration, reg -> new SseEventAdapter(reg.getSse()));
+  }
+
+  Client(Registration registration, Function<Registration, SseEventAdapter> adapterFactory) {
     sessionId = registration.getSessionId();
-    adapter = new SseEventAdapter(registration.getSse());
+    adapter = adapterFactory.apply(registration);
     eventSink = registration.getEventSink();
+    lastUsed = Instant.now();
   }
 
   Instant getLastUsed() {
@@ -58,9 +64,13 @@ class Client implements Closeable {
     return sessionId;
   }
 
+  boolean isExceptionallyClosed() {
+    return exceptionallyClosed;
+  }
+
   void send(Message message) {
-    OutboundSseEvent event = adapter.create(message);
     if (!isClosed()) {
+      OutboundSseEvent event = adapter.create(message);
       LOG.debug("send message to client with session id {}", sessionId);
       lastUsed = Instant.now();
       eventSink.send(event).exceptionally(e -> {

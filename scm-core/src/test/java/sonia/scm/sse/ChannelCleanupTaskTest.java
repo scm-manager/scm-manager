@@ -24,33 +24,28 @@
 
 package sonia.scm.sse;
 
-import com.google.common.annotations.VisibleForTesting;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
-import javax.inject.Singleton;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.Function;
+import static org.mockito.Mockito.verify;
 
-@Singleton
-public class ChannelRegistry {
+@ExtendWith(MockitoExtension.class)
+class ChannelCleanupTaskTest {
 
-  private final Map<Object, Channel> channels = new ConcurrentHashMap<>();
-  private final Function<Object, Channel> channelFactory;
+  @Mock
+  private ChannelRegistry registry;
 
-  public ChannelRegistry() {
-    this(Channel::new);
+  @InjectMocks
+  private ChannelCleanupTask task;
+
+  @Test
+  void shouldRunCleanupFromRegistry() {
+    task.run();
+
+    verify(registry).removeClosedClients();
   }
 
-  @VisibleForTesting
-  ChannelRegistry(Function<Object, Channel> channelFactory) {
-    this.channelFactory = channelFactory;
-  }
-
-  public Channel channel(Object channelId) {
-    return channels.computeIfAbsent(channelId, channelFactory);
-  }
-
-  void removeClosedClients() {
-    channels.values().forEach(Channel::removeClosedOrTimeoutClients);
-  }
 }
