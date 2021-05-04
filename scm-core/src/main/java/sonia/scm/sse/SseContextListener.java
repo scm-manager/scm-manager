@@ -48,6 +48,6 @@ public class SseContextListener implements ServletContextListener {
 
   @Override
   public void contextDestroyed(ServletContextEvent servletContextEvent) {
-
+    // we have nothing to destroy
   }
 }
