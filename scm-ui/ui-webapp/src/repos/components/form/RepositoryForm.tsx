@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -77,6 +77,15 @@ const RepositoryForm: FC<Props> = ({
   });
   const [initRepository, setInitRepository] = useState(false);
   const [contextEntries, setContextEntries] = useState({});
+  const setCreationContextEntry = useCallback(
+    (key: string, value: any) => {
+      setContextEntries(entries => ({
+        ...entries,
+        [key]: value
+      }));
+    },
+    [setContextEntries]
+  );
   const [valid, setValid] = useState({ namespaceAndName: true, contact: true });
   const [t] = useTranslation("repos");
 
@@ -170,20 +179,15 @@ const RepositoryForm: FC<Props> = ({
     setInitRepository(!initRepository);
   };
 
-  const setCreationContextEntry = (key: string, value: any) => {
-    setContextEntries({
-      ...contextEntries,
-      [key]: value
-    });
-  };
-
   const submitButton = () => {
     if (!isModifiable() && isEditMode()) {
       return null;
     }
     return (
       <Level
-        right={<SubmitButton disabled={!isValid() || loading} loading={loading} label={t("repositoryForm.submitCreate")} />}
+        right={
+          <SubmitButton disabled={!isValid() || loading} loading={loading} label={t("repositoryForm.submitCreate")} />
+        }
       />
     );
   };
