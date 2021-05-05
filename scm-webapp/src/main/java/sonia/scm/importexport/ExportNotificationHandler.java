@@ -53,7 +53,7 @@ public class ExportNotificationHandler {
   }
 
   private Notification getExportSuccessfulNotification(Repository repository) {
-    return new Notification(Type.INFO, "/repo/" + repository.getNamespaceAndName() + "/settings/general", "exportFinished");
+    return new Notification(Type.SUCCESS, "/repo/" + repository.getNamespaceAndName() + "/settings/general", "exportFinished");
   }
 
 }

@@ -63,7 +63,7 @@ class ExportNotificationHandlerTest {
     handler.handleSuccessfulExport(RepositoryTestData.create42Puzzle());
 
     verify(sender).send(argThat(notification -> {
-      assertThat(notification.getType()).isEqualTo(Type.INFO);
+      assertThat(notification.getType()).isEqualTo(Type.SUCCESS);
       assertThat(notification.getLink()).isEqualTo("/repo/hitchhiker/42Puzzle/settings/general");
       assertThat(notification.getMessage()).isEqualTo("exportFinished");
       return true;
