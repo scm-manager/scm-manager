@@ -534,7 +534,7 @@ public class RepositoryExportResource {
     return executorService;
   }
 
-
+  @SuppressWarnings("java:S110") // is ok for this type of exceptions
   private static class WrongTypeException extends BadRequestException {
 
     private static final String CODE = "4hSNNTBiu1";
