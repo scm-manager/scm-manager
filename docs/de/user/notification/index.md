@@ -12,21 +12,19 @@ Aktuelle Benachrichtigungen tauchen in Form einer Toast-Benachrichtigung am unte
 
 Die Farbe der Benachrichtigung gibt den Typ der Nachricht an:
 
-* Fehler (Rot): Ein Fehler is aufgetreten
+* Fehler (Rot): Ein Fehler ist aufgetreten
 * Warnung (Gelb): Es ist ein Problem aufgetreten
 * Erfolgreich (Grün): Eine Aktion wurde erfolgreich beendet
 * Information (Blau): Zur Information
 
 Die Nachrichten verweisen auf eine Unterseite des SCM-Managers, die sich mit einem Klick auf den Text aufrufen lässt.
-Wenn man die Nachricht gelesen hat, kann man sie mit einem Klick auf das X in der oberen Rechten Ecke schließen.
-Die Nachrichten können auch nach dem Schließen wieder über das Glockensymbol am oberen rechten Rand geöffnet werden.
+Nach dem Lesen der Nachricht, kann sie mit einem Klick auf das X in der oberen rechten Ecke geschlossen werden.
+Nach dem Schließen der Nachricht ist sie immer noch über die Glocke am oberen rechten Rand zu finden.
 
 ![Glockensymbol](assets/bell.png)
 
 Die Zahl neben der Glock gibt an wie viele Nachrichten eingegangen sind.
-Wenn man mit der Maus über das Symbol fährt, kann man die Nachrichten lesen.
-Der farbige Rand gibt den Typ der Nachricht an, das Datum zeigt an, wann die Nachricht eingegangen ist 
-und mit einem Klick auf den Text lässt sich die Seite der Nachricht aufrufen.
+Mit einem Klick öffnet sich die Liste der Nachrichten. Neben den Informationen wie Typ der Nachricht (farbiger Rand) und Eingangsdatum, kann über einen Klick auf den Text zu einer SCM-Manager Unterseite navigiert werden.
 
 ![Benachrichtigungen](assets/notifications.png)
 
