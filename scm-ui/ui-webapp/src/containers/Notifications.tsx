@@ -175,15 +175,20 @@ const ClearEntry: FC<ClearEntryProps> = ({ notifications, clearToasts }) => {
 
 const NotificationList: FC<Props> = ({ data, clear, remove }) => {
   const clearLink = data._links.clear;
+
+  const all = [...data._embedded.notifications].reverse();
+  const top = all.slice(0, 6);
+
   return (
     <div className="dropdown-content p-0">
       <table className="table mb-0 card-table">
         <tbody>
-          {data._embedded.notifications.map((n, i) => (
+          {top.map((n, i) => (
             <NotificationEntry key={i} notification={n} removeToast={remove} />
           ))}
         </tbody>
       </table>
+      {all.length > 6 ? <p className="has-text-centered has-text-grey">+{all.length - 6} notifications</p> : null}
       {clearLink ? <ClearEntry notifications={data} clearToasts={clear} /> : null}
     </div>
   );
@@ -238,9 +243,12 @@ type SubscriptionProps = {
 
 const NotificationSubscription: FC<SubscriptionProps> = ({ notifications, remove }) => {
   const [t] = useTranslation("commons");
+
+  const top = [...notifications].slice(-3);
+
   return (
     <ToastArea>
-      {notifications.map((notification, i) => (
+      {top.map((notification, i) => (
         <ToastNotification
           key={i}
           type={color(notification) as ToastType}
@@ -264,10 +272,14 @@ const BellNotificationContainer = styled.div`
   height: 2rem;
 `;
 
-const NotificationCounter = styled.span`
+type NotificationCounterProps = {
+  count: number;
+};
+
+const NotificationCounter = styled.span<NotificationCounterProps>`
   position: absolute;
   top: -0.5rem;
-  right: 0;
+  right: ${props => (props.count < 10 ? "0" : "-0.25")}rem;
 `;
 
 type BellNotificationIconProps = {
@@ -277,11 +289,10 @@ type BellNotificationIconProps = {
 
 const BellNotificationIcon: FC<BellNotificationIconProps> = ({ data, onClick }) => {
   const counter = data?._embedded.notifications.length || 0;
-
   return (
     <BellNotificationContainer onClick={onClick}>
       <Bell iconStyle={counter === 0 ? "far" : "fas"} name="bell" color="white" />
-      {counter > 0 ? <NotificationCounter>{counter}</NotificationCounter> : null}
+      {counter > 0 ? <NotificationCounter count={counter}>{counter < 100 ? counter : "∞"}</NotificationCounter> : null}
     </BellNotificationContainer>
   );
 };
