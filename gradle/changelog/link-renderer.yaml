@@ -1,4 +1,0 @@
-- type: added
-  description: Add extension point for custom link protocol renderers in markdown ([#1639](https://github.com/scm-manager/scm-manager/pull/1639))
-- type: fixed
-  description: External links and anchor links are now correctly rendered in markdown even if no base path is present ([#1639](https://github.com/scm-manager/scm-manager/pull/1639))

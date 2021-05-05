@@ -1,2 +1,0 @@
-- type: fixed
-  description: Flickering form elements on repository initialization ([#1644](https://github.com/scm-manager/scm-manager/issues/1644) and [#1645](https://github.com/scm-manager/scm-manager/issues/1645))

@@ -1,2 +1,0 @@
-- type: fixed
-  description: Show correct default branch for repository if not configured yet ([#1643](https://github.com/scm-manager/scm-manager/pull/1643))

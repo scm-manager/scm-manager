@@ -5,6 +5,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.18.0] - 2021-05-05
+### Added
+- Patch endpoint for global configuration ([#1629](https://github.com/scm-manager/scm-manager/pull/1629))
+- Show hg binary verification error messages ([#1637](https://github.com/scm-manager/scm-manager/pull/1637))
+- Add global notifications ([#1646](https://github.com/scm-manager/scm-manager/pull/1646))
+- Add extension point for custom link protocol renderers in markdown ([#1639](https://github.com/scm-manager/scm-manager/pull/1639))
+
+### Fixed
+- Show correct default branch for repository if not configured yet ([#1643](https://github.com/scm-manager/scm-manager/pull/1643))
+- Flickering form elements on repository initialization ([#1644](https://github.com/scm-manager/scm-manager/issues/1644) and [#1645](https://github.com/scm-manager/scm-manager/issues/1645))
+- Messages from post commit hooks for git ([#1647](https://github.com/scm-manager/scm-manager/pull/1647))
+- External links and anchor links are now correctly rendered in markdown even if no base path is present ([#1639](https://github.com/scm-manager/scm-manager/pull/1639))
+
+### Changed
+- Show only relevant information on repository information page ([#1636](https://github.com/scm-manager/scm-manager/pull/1636))
+
 ## [2.17.1] - 2021-04-26
 ### Fixed
 - Deserialization of embedded values in HAL objects ([#1630](https://github.com/scm-manager/scm-manager/pull/1630))
@@ -605,3 +621,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.16.0]: https://www.scm-manager.org/download/2.16.0
 [2.17.0]: https://www.scm-manager.org/download/2.17.0
 [2.17.1]: https://www.scm-manager.org/download/2.17.1
+[2.18.0]: https://www.scm-manager.org/download/2.18.0
