@@ -194,10 +194,12 @@ class ResourceLinks {
 
   static class MeLinks {
     private final LinkBuilder meLinkBuilder;
+    private final LinkBuilder notificationLinkBuilder;
     private UserLinks userLinks;
 
     MeLinks(ScmPathInfo pathInfo, UserLinks user) {
       meLinkBuilder = new LinkBuilder(pathInfo, MeResource.class);
+      notificationLinkBuilder = new LinkBuilder(pathInfo, MeResource.class, NotificationResource.class);
       userLinks = user;
     }
 
@@ -215,6 +217,10 @@ class ResourceLinks {
 
     public String passwordChange() {
       return meLinkBuilder.method("changePassword").parameters().href();
+    }
+
+    String notifications() {
+      return notificationLinkBuilder.method("notifications").parameters().method("getAll").parameters().href();
     }
   }
 

@@ -66,3 +66,4 @@ export * from "./LoginInfo";
 export * from "./Admin";
 
 export * from "./Diff";
+export * from "./Notifications";

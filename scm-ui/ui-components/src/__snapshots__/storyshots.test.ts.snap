@@ -77782,6 +77782,8 @@ exports[`Storyshots Toast Danger 1`] = `null`;
 
 exports[`Storyshots Toast Info 1`] = `null`;
 
+exports[`Storyshots Toast Multiple 1`] = `null`;
+
 exports[`Storyshots Toast Open/Close 1`] = `
 <div
   style={

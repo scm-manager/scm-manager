@@ -59,6 +59,7 @@ public class FullScmRepositoryExporter {
   private final WorkdirProvider workdirProvider;
   private final RepositoryExportingCheck repositoryExportingCheck;
   private final RepositoryImportExportEncryption repositoryImportExportEncryption;
+  private final ExportNotificationHandler notificationHandler;
 
   @Inject
   public FullScmRepositoryExporter(EnvironmentInformationXmlGenerator environmentGenerator,
@@ -67,7 +68,7 @@ public class FullScmRepositoryExporter {
                                    TarArchiveRepositoryStoreExporter storeExporter,
                                    WorkdirProvider workdirProvider,
                                    RepositoryExportingCheck repositoryExportingCheck,
-                                   RepositoryImportExportEncryption repositoryImportExportEncryption) {
+                                   RepositoryImportExportEncryption repositoryImportExportEncryption, ExportNotificationHandler notificationHandler) {
     this.environmentGenerator = environmentGenerator;
     this.metadataGenerator = metadataGenerator;
     this.serviceFactory = serviceFactory;
@@ -75,13 +76,19 @@ public class FullScmRepositoryExporter {
     this.workdirProvider = workdirProvider;
     this.repositoryExportingCheck = repositoryExportingCheck;
     this.repositoryImportExportEncryption = repositoryImportExportEncryption;
+    this.notificationHandler = notificationHandler;
   }
 
   public void export(Repository repository, OutputStream outputStream, String password) {
-    repositoryExportingCheck.withExportingLock(repository, () -> {
-      exportInLock(repository, outputStream, password);
-      return null;
-    });
+    try {
+      repositoryExportingCheck.withExportingLock(repository, () -> {
+        exportInLock(repository, outputStream, password);
+        return null;
+      });
+    } catch (ExportFailedException ex) {
+      notificationHandler.handleFailedExport(repository);
+      throw ex;
+    }
   }
 
   private void exportInLock(Repository repository, OutputStream outputStream, String password) {

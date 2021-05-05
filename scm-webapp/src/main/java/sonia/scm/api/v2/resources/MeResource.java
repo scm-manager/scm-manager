@@ -65,13 +65,15 @@ public class MeResource {
   private final PasswordService passwordService;
 
   private final Provider<ApiKeyResource> apiKeyResourceProvider;
+  private final Provider<NotificationResource> notificationResourceProvider;
 
   @Inject
-  public MeResource(MeDtoFactory meDtoFactory, UserManager userManager, PasswordService passwordService, Provider<ApiKeyResource> apiKeyResourceProvider) {
+  public MeResource(MeDtoFactory meDtoFactory, UserManager userManager, PasswordService passwordService, Provider<ApiKeyResource> apiKeyResourceProvider, Provider<NotificationResource> notificationResourceProvider) {
     this.meDtoFactory = meDtoFactory;
     this.userManager = userManager;
     this.passwordService = passwordService;
     this.apiKeyResourceProvider = apiKeyResourceProvider;
+    this.notificationResourceProvider = notificationResourceProvider;
   }
 
   /**
@@ -143,5 +145,10 @@ public class MeResource {
   @Path("api_keys")
   public ApiKeyResource apiKeys() {
     return apiKeyResourceProvider.get();
+  }
+
+  @Path("notifications")
+  public NotificationResource notifications() {
+    return notificationResourceProvider.get();
   }
 }

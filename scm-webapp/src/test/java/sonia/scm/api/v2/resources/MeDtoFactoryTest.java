@@ -260,4 +260,13 @@ class MeDtoFactoryTest {
     MeDto dto = meDtoFactory.create();
     assertThat(dto.getLinks().getLinkBy("apiKeys")).isNotPresent();
   }
+
+  @Test
+  void shouldAppendNotificationsLink() {
+    User user = UserTestData.createTrillian();
+    prepareSubject(user);
+
+    MeDto dto = meDtoFactory.create();
+    assertThat(dto.getLinks().getLinkBy("notifications").get().getHref()).isEqualTo("https://scm.hitchhiker.com/scm/v2/me/notifications");
+  }
 }

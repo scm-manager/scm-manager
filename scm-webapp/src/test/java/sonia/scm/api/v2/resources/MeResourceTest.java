@@ -114,6 +114,8 @@ public class MeResourceTest {
   private PasswordService passwordService;
   private User originalUser;
 
+  @Mock
+  private NotificationResource notificationResource;
 
   @Before
   public void prepareEnvironment() {
@@ -127,7 +129,7 @@ public class MeResourceTest {
     when(userManager.getDefaultType()).thenReturn("xml");
     ApiKeyCollectionToDtoMapper apiKeyCollectionMapper = new ApiKeyCollectionToDtoMapper(apiKeyMapper, resourceLinks);
     ApiKeyResource apiKeyResource = new ApiKeyResource(apiKeyService, apiKeyCollectionMapper, apiKeyMapper, resourceLinks);
-    MeResource meResource = new MeResource(meDtoFactory, userManager, passwordService, of(apiKeyResource));
+    MeResource meResource = new MeResource(meDtoFactory, userManager, passwordService, of(apiKeyResource), of(notificationResource));
     when(uriInfo.getApiRestUri()).thenReturn(URI.create("/"));
     when(scmPathInfoStore.get()).thenReturn(uriInfo);
     dispatcher.addSingletonResource(meResource);

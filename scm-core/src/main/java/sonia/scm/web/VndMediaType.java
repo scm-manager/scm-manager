@@ -93,6 +93,8 @@ public class VndMediaType {
   public static final String REPOSITORY_EXPORT = PREFIX + "repositoryExport" + SUFFIX;
   public static final String REPOSITORY_EXPORT_INFO = PREFIX + "repositoryExportInfo" + SUFFIX;
 
+  public static final String NOTIFICATION_COLLECTION = PREFIX + "notificationCollection" + SUFFIX;
+
   private VndMediaType() {
   }
 

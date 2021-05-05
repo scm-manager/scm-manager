@@ -84,6 +84,7 @@ public class MeDtoFactory extends HalAppenderMapper {
 
   private MeDto createDto(User user) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.me().self());
+
     if (UserPermissions.delete(user).isPermitted()) {
       linksBuilder.single(link("delete", resourceLinks.me().delete(user.getName())));
     }
@@ -99,6 +100,8 @@ public class MeDtoFactory extends HalAppenderMapper {
     if (scmConfiguration.isEnabledApiKeys() && UserPermissions.changeApiKeys(user).isPermitted()) {
       linksBuilder.single(link("apiKeys", resourceLinks.apiKeyCollection().self(user.getName())));
     }
+
+    linksBuilder.single(link("notifications", resourceLinks.me().notifications()));
 
     Embedded.Builder embeddedBuilder = embeddedBuilder();
     applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), new Me(), user);

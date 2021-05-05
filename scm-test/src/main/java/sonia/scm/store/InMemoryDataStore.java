@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 import sonia.scm.security.KeyGenerator;
@@ -37,7 +37,9 @@ import java.util.Map;
  * @author Sebastian Sdorra
  *
  * @param <T> type of stored object
+ * @deprecated use {@link InMemoryByteDataStore} instead.
  */
+@Deprecated
 public class InMemoryDataStore<T> implements DataStore<T> {
 
   private final Map<String, T> store = new HashMap<>();

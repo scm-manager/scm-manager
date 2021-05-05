@@ -21,10 +21,9 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
-import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
 import lombok.EqualsAndHashCode;
@@ -40,7 +39,6 @@ import java.util.Optional;
 @EqualsAndHashCode
 public final class SessionId implements Serializable {
 
-  @VisibleForTesting
   public static final String PARAMETER = "X-SCM-Session-ID";
 
   private final String value;

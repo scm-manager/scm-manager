@@ -21,14 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.store;
 
 /**
  * In memory configuration store factory for testing purposes.
  *
  * @author Sebastian Sdorra
+ * @deprecated use {@link InMemoryByteDataStoreFactory} instead.
  */
+@Deprecated
+@SuppressWarnings("java:S3740")
 public class InMemoryDataStoreFactory implements DataStoreFactory {
 
   private InMemoryDataStore store;

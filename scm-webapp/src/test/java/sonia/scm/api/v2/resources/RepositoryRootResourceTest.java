@@ -46,6 +46,7 @@ import sonia.scm.NotFoundException;
 import sonia.scm.PageResult;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.importexport.ExportFileExtensionResolver;
+import sonia.scm.importexport.ExportNotificationHandler;
 import sonia.scm.importexport.ExportService;
 import sonia.scm.importexport.ExportStatus;
 import sonia.scm.importexport.FromBundleImporter;
@@ -160,6 +161,8 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
   private ExportService exportService;
   @Mock
   private HealthCheckService healthCheckService;
+  @Mock
+  private ExportNotificationHandler notificationHandler;
 
   @Captor
   private ArgumentCaptor<Predicate<Repository>> filterCaptor;
@@ -182,7 +185,7 @@ public class RepositoryRootResourceTest extends RepositoryTestBase {
     RepositoryCollectionToDtoMapper repositoryCollectionToDtoMapper = new RepositoryCollectionToDtoMapper(repositoryToDtoMapper, resourceLinks);
     super.repositoryCollectionResource = new RepositoryCollectionResource(repositoryManager, repositoryCollectionToDtoMapper, dtoToRepositoryMapper, resourceLinks, repositoryInitializer);
     super.repositoryImportResource = new RepositoryImportResource(dtoToRepositoryMapper, resourceLinks, fullScmRepositoryImporter, new RepositoryImportDtoToRepositoryImportParametersMapperImpl(), repositoryImportExportEncryption, fromUrlImporter, fromBundleImporter, importLoggerFactory);
-    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryImportExportEncryption, exportService, exportInformationToDtoMapper, fileExtensionResolver, resourceLinks, new SimpleMeterRegistry());
+    super.repositoryExportResource = new RepositoryExportResource(repositoryManager, serviceFactory, fullScmRepositoryExporter, repositoryImportExportEncryption, exportService, exportInformationToDtoMapper, fileExtensionResolver, resourceLinks, new SimpleMeterRegistry(), notificationHandler);
     dispatcher.addSingletonResource(getRepositoryRootResource());
     when(serviceFactory.create(any(Repository.class))).thenReturn(service);
     doReturn(ImmutableSet.of(new CustomNamespaceStrategy()).iterator()).when(strategies).iterator();

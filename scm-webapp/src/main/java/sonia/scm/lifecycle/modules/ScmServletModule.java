@@ -63,6 +63,8 @@ import sonia.scm.net.ahc.ContentTransformer;
 import sonia.scm.net.ahc.DefaultAdvancedHttpClient;
 import sonia.scm.net.ahc.JsonContentTransformer;
 import sonia.scm.net.ahc.XmlContentTransformer;
+import sonia.scm.notifications.DefaultNotificationSender;
+import sonia.scm.notifications.NotificationSender;
 import sonia.scm.plugin.DefaultPluginManager;
 import sonia.scm.plugin.PluginLoader;
 import sonia.scm.plugin.PluginManager;
@@ -263,6 +265,8 @@ class ScmServletModule extends ServletModule {
     bind(PermissionProvider.class).to(RepositoryPermissionProvider.class);
 
     bind(HealthCheckService.class).to(DefaultHealthCheckService.class);
+
+    bind(NotificationSender.class).to(DefaultNotificationSender.class);
   }
 
   private <T> void bind(Class<T> clazz, Class<? extends T> defaultImplementation) {
