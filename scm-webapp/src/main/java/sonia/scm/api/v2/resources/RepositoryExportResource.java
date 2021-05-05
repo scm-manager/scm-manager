@@ -99,7 +99,7 @@ public class RepositoryExportResource {
   private final RepositoryExportInformationToDtoMapper informationToDtoMapper;
   private final ExportFileExtensionResolver fileExtensionResolver;
   private final ResourceLinks resourceLinks;
-  private final ExportNotificationHandler failedHandler;
+  private final ExportNotificationHandler notificationHandler;
 
   @Inject
   public RepositoryExportResource(RepositoryManager manager,
@@ -121,7 +121,7 @@ public class RepositoryExportResource {
     this.fileExtensionResolver = fileExtensionResolver;
     this.resourceLinks = resourceLinks;
     this.repositoryExportHandler = this.createExportHandlerPool(registry);
-    this.failedHandler = notificationHandler;
+    this.notificationHandler = notificationHandler;
   }
 
   /**
@@ -485,7 +485,7 @@ public class RepositoryExportResource {
         return createResponse(repository, fileExtension, compressed, output);
       }
     } catch (IOException e) {
-      failedHandler.handleFailedExport(repository);
+      notificationHandler.handleFailedExport(repository);
       throw new ExportFailedException(entity(repository).build(), "repository export failed", e);
     }
   }
