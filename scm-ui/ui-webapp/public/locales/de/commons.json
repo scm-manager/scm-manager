@@ -127,6 +127,8 @@
   },
   "notifications": {
     "toastTitle": "Benachrichtigung",
+    "xMore": "+{{ count }} Benachrichtigung",
+    "xMore_plural": "+{{ count }} Benachrichtigungen",
     "empty": "Keine Benachrichtigungen",
     "dismiss": "Löschen",
     "dismissAll": "Alle löschen"

@@ -174,6 +174,7 @@ const ClearEntry: FC<ClearEntryProps> = ({ notifications, clearToasts }) => {
 };
 
 const NotificationList: FC<Props> = ({ data, clear, remove }) => {
+  const [t] = useTranslation("commons");
   const clearLink = data._links.clear;
 
   const all = [...data._embedded.notifications].reverse();
@@ -188,7 +189,9 @@ const NotificationList: FC<Props> = ({ data, clear, remove }) => {
           ))}
         </tbody>
       </table>
-      {all.length > 6 ? <p className="has-text-centered has-text-grey">+{all.length - 6} notifications</p> : null}
+      {all.length > 6 ? (
+        <p className="has-text-centered has-text-grey">{t("notifications.xMore", { count: all.length - 6 })}</p>
+      ) : null}
       {clearLink ? <ClearEntry notifications={data} clearToasts={clear} /> : null}
     </div>
   );
