@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2;
 
 import org.slf4j.Logger;
@@ -43,10 +43,18 @@ public class CacheControlResponseFilter implements ContainerResponseFilter {
 
   @Override
   public void filter(ContainerRequestContext requestContext, ContainerResponseContext responseContext) {
-    if (!isCacheable(responseContext)) {
+    if (shouldAppendCachingHeader(responseContext)) {
       LOG.trace("add no-cache header to response");
       responseContext.getHeaders().add("Cache-Control", "no-cache");
     }
+  }
+
+  private boolean shouldAppendCachingHeader(ContainerResponseContext responseContext) {
+    return !hasAlreadyCacheControl(responseContext) && !isCacheable(responseContext);
+  }
+
+  private boolean hasAlreadyCacheControl(ContainerResponseContext responseContext) {
+    return responseContext.getHeaders().containsKey("Cache-Control");
   }
 
   private boolean isCacheable(ContainerResponseContext responseContext) {
