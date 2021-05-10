@@ -214,7 +214,7 @@ void isBuildSuccess() {
 
 void withCheckEnvironment(Closure<Void> closure) {
   withCredentials([
-    usernamePassword(credentialsId: 'chromatic-scm-manager', passwordVariable: 'CHROMATIC_PROJECT_TOKEN'),
+    usernamePassword(credentialsId: 'chromatic-scm-manager', usernameVariable: 'CHROMATIC_USERANAME', passwordVariable: 'CHROMATIC_PROJECT_TOKEN'),
   ]) {
     closure.call()
   }

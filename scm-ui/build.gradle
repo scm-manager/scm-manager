@@ -87,6 +87,7 @@ task chromatic(type: YarnTask) {
   outputs.file('build/tmp/chromatic/marker')
 
   enabled = System.getenv('CHROMATIC_PROJECT_TOKEN') != null
+  ignoreExitValue = project.isCI
   dependsOn('yarn_install')
 
   doLast {
