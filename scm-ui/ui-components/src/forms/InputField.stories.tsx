@@ -21,16 +21,93 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { ChangeEvent, FC, useRef, useState } from "react";
 import { storiesOf } from "@storybook/react";
 import styled from "styled-components";
-import InputField from "./InputField";
+import InputField, { InnerInputField } from "./InputField";
+import Button from "../buttons/Button";
+import { MemoryRouter } from "react-router-dom";
+import { useForm } from "react-hook-form";
+import { SubmitButton } from "../buttons";
+import { Person } from "@scm-manager/ui-types";
 
 const Decorator = styled.div`
   padding: 2rem;
   max-width: 30rem;
 `;
 
+const Ref: FC = () => {
+  const ref = useRef<HTMLInputElement>(null);
+  return (
+    <>
+      <InputField ref={ref} placeholder="Click the button to focus me" />
+      <Button action={() => ref.current?.focus()} color="primary">
+        Focus InputField
+      </Button>
+    </>
+  );
+};
+
+const AutoFocusAndRef: FC = () => {
+  const ref = useRef<HTMLInputElement>(null);
+  return (
+    <>
+      <InputField ref={ref} autofocus={true} placeholder="Click the button to focus me" />
+      <InputField placeholder="Click me to switch focus" />
+      <Button action={() => ref.current?.focus()} color="primary">
+        Focus First InputField
+      </Button>
+    </>
+  );
+};
+
+type Name = {
+  firstName: string;
+  lastName: string;
+};
+
+const ReactHookForm: FC = () => {
+  const { register, handleSubmit } = useForm<Name>();
+  const [stored, setStored] = useState<Person>();
+
+  const onSubmit = (person: Person) => {
+    setStored(person);
+  };
+
+  return (
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <InputField label="First Name" autofocus={true} {...register("firstName")} />
+        <InputField label="Last Name" {...register("lastName")} />
+        <SubmitButton>Submit</SubmitButton>
+      </form>
+      {stored ? (
+        <div className="mt-5">
+          <pre>
+            <code>{JSON.stringify(stored, null, 2)}</code>
+          </pre>
+        </div>
+      ) : null}
+    </>
+  );
+};
+
+const LegacyEvents: FC = () => {
+  const [value, setValue] = useState<string>("");
+  const ref = useRef<HTMLInputElement>(null);
+  return (
+    <>
+      <InputField placeholder="Legacy onChange handler" value={value} onChange={e => setValue(e)} />
+      <div className="mt-3">{value}</div>
+    </>
+  );
+};
+
 storiesOf("Forms|InputField", module)
   .addDecorator(storyFn => <Decorator>{storyFn()}</Decorator>)
-  .add("AutoFocus", () => <InputField label="Field with AutoFocus" autofocus={true} />);
+  .addDecorator(storyFn => <MemoryRouter>{storyFn()}</MemoryRouter>)
+  .add("AutoFocus", () => <InputField label="Field with AutoFocus" autofocus={true} />)
+  .add("Ref", () => <Ref />)
+  .add("Legacy Events", () => <LegacyEvents />)
+  .add("AutoFocusAndRef", () => <AutoFocusAndRef />)
+  .add("React Hook Form", () => <ReactHookForm />);

@@ -21,19 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, KeyboardEvent, FocusEvent, FC, useRef, useEffect } from "react";
+import React, {
+  ChangeEvent,
+  KeyboardEvent,
+  FocusEvent,
+  FC,
+  useRef,
+  useEffect, ForwardedRef,
+} from "react";
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import { createAttributesForTesting } from "../devBuild";
 
-type Props = {
+type BaseProps = {
   label?: string;
   name?: string;
   placeholder?: string;
   value?: string;
   type?: string;
   autofocus?: boolean;
-  onChange?: (value: string, name?: string) => void;
   onReturnPressed?: () => void;
   validationError?: boolean;
   errorMessage?: string;
@@ -42,13 +48,35 @@ type Props = {
   helpText?: string;
   className?: string;
   testId?: string;
-  onBlur?: (value: string, name?: string) => void;
 };
 
-const InputField: FC<Props> = ({
+type LegacyProps = BaseProps & {
+  onChange?: (value: string, name?: string) => void;
+  onBlur?: (value: string, name?: string) => void;
+  innerRef?: never;
+};
+
+type RefProps = BaseProps & {
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
+};
+
+type InnerRefProps = RefProps & {
+  innerRef: React.ForwardedRef<HTMLInputElement>;
+};
+
+type Props = LegacyProps | InnerRefProps;
+
+const isUsingRef = (props: Partial<Props>): props is InnerRefProps => {
+  return (props as Partial<InnerRefProps>).innerRef !== undefined;
+};
+
+const isLegacy = (props: Props): props is LegacyProps => {
+  return (props as Partial<InnerRefProps>).innerRef === undefined;
+};
+
+export const InnerInputField: FC<Props> = ({
   name,
-  onChange,
-  onBlur,
   onReturnPressed,
   type,
   placeholder,
@@ -60,24 +88,44 @@ const InputField: FC<Props> = ({
   label,
   helpText,
   className,
-  testId
+  testId,
+  autofocus,
+  ...props
 }) => {
   const field = useRef<HTMLInputElement>(null);
   useEffect(() => {
-    if (field.current) {
+    if (autofocus && field.current) {
       field.current.focus();
     }
-  }, [field]);
+  }, [autofocus, field]);
+
+  useEffect(() => {
+    if (isUsingRef(props) && props.innerRef) {
+      if (typeof props.innerRef === "function") {
+        props.innerRef(field.current);
+      } else {
+        props.innerRef.current = field.current;
+      }
+    }
+  }, [field, props]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (onChange) {
-      onChange(event.target.value, name);
+    if (props.onChange) {
+      if (isUsingRef(props)) {
+        props.onChange(event);
+      } else if (isLegacy(props)) {
+        props.onChange(event.target.value, name);
+      }
     }
   };
 
   const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
-    if (onBlur) {
-      onBlur(event.target.value, name);
+    if (props.onBlur) {
+      if (isUsingRef(props)) {
+        props.onBlur(event);
+      } else if (isLegacy(props)) {
+        props.onBlur(event.target.value, name);
+      }
     }
   };
 
@@ -101,6 +149,7 @@ const InputField: FC<Props> = ({
       <div className="control">
         <input
           ref={field}
+          name={name}
           className={classNames("input", errorView)}
           type={type}
           placeholder={placeholder}
@@ -117,4 +166,17 @@ const InputField: FC<Props> = ({
   );
 };
 
-export default InputField;
+type OuterProps = RefProps & {
+  ref: React.Ref<HTMLInputElement>;
+};
+
+function InputField(props: OuterProps, ref: ForwardedRef<HTMLInputElement>): React.ReactElement | null;
+function InputField(props: LegacyProps, ref: ForwardedRef<HTMLInputElement>): React.ReactElement | null;
+function InputField(props: LegacyProps | OuterProps, ref: ForwardedRef<HTMLInputElement>) {
+  if (ref) {
+    return <InnerInputField innerRef={ref} {...(props as RefProps)} />;
+  }
+  return <InnerInputField {...(props as LegacyProps)} />;
+}
+
+export default React.forwardRef(InputField);
