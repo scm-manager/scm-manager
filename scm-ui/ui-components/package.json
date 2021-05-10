@@ -17,9 +17,7 @@
     "chromatic": "chromatic --project-token=${CHROMATIC_PROJECT_TOKEN} --skip '@(snyk-**|dependabot/**)'",
     "storybook": "start-storybook -s ../ui-webapp/public",
     "storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false",
-    "update-storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false -u",
-    "build-storybook": "build-storybook",
-    "chromatic": "npx chromatic --project-token 34f9c6abf0de"
+    "update-storyshots": "jest --testPathPattern=\"storyshots.test.ts\" --collectCoverage=false -u"
   },
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.11.2",
