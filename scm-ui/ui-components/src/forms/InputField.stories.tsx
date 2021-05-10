@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, FC, useRef, useState } from "react";
+import React, { FC, useRef, useState } from "react";
 import { storiesOf } from "@storybook/react";
 import styled from "styled-components";
-import InputField, { InnerInputField } from "./InputField";
+import InputField from "./InputField";
 import Button from "../buttons/Button";
 import { MemoryRouter } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -94,7 +94,6 @@ const ReactHookForm: FC = () => {
 
 const LegacyEvents: FC = () => {
   const [value, setValue] = useState<string>("");
-  const ref = useRef<HTMLInputElement>(null);
   return (
     <>
       <InputField placeholder="Legacy onChange handler" value={value} onChange={e => setValue(e)} />

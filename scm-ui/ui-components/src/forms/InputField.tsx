@@ -21,14 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, {
-  ChangeEvent,
-  KeyboardEvent,
-  FocusEvent,
-  FC,
-  useRef,
-  useEffect, ForwardedRef,
-} from "react";
+import React, { ChangeEvent, KeyboardEvent, FocusEvent, FC, useRef, useEffect, ForwardedRef } from "react";
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import { createAttributesForTesting } from "../devBuild";
