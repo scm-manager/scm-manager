@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, KeyboardEvent, FocusEvent } from "react";
+import React, { ChangeEvent, KeyboardEvent, FocusEvent, FC, useRef, useEffect } from "react";
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import { createAttributesForTesting } from "../devBuild";
@@ -33,7 +33,7 @@ type Props = {
   value?: string;
   type?: string;
   autofocus?: boolean;
-  onChange: (value: string, name?: string) => void;
+  onChange?: (value: string, name?: string) => void;
   onReturnPressed?: () => void;
   validationError?: boolean;
   errorMessage?: string;
@@ -45,85 +45,76 @@ type Props = {
   onBlur?: (value: string, name?: string) => void;
 };
 
-class InputField extends React.Component<Props> {
-  static defaultProps = {
-    type: "text",
-    placeholder: ""
+const InputField: FC<Props> = ({
+  name,
+  onChange,
+  onBlur,
+  onReturnPressed,
+  type,
+  placeholder,
+  value,
+  validationError,
+  errorMessage,
+  informationMessage,
+  disabled,
+  label,
+  helpText,
+  className,
+  testId
+}) => {
+  const field = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    if (field.current) {
+      field.current.focus();
+    }
+  }, [field]);
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (onChange) {
+      onChange(event.target.value, name);
+    }
   };
 
-  field: HTMLInputElement | null | undefined;
-
-  componentDidMount() {
-    if (this.props.autofocus && this.field) {
-      this.field.focus();
-    }
-  }
-
-  handleInput = (event: ChangeEvent<HTMLInputElement>) => {
-    this.props.onChange(event.target.value, this.props.name);
-  };
-
-  handleBlur = (event: FocusEvent<HTMLInputElement>) => {
-    if (this.props.onBlur) {
-      this.props.onBlur(event.target.value, this.props.name);
+  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+    if (onBlur) {
+      onBlur(event.target.value, name);
     }
   };
 
-  handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
-    const onReturnPressed = this.props.onReturnPressed;
-    if (!onReturnPressed) {
-      return;
-    }
-    if (event.key === "Enter") {
+  const handleKeyPress = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (onReturnPressed && event.key === "Enter") {
       event.preventDefault();
       onReturnPressed();
     }
   };
 
-  render() {
-    const {
-      type,
-      placeholder,
-      value,
-      validationError,
-      errorMessage,
-      informationMessage,
-      disabled,
-      label,
-      helpText,
-      className,
-      testId
-    } = this.props;
-    const errorView = validationError ? "is-danger" : "";
-    let helper;
-    if (validationError) {
-      helper = <p className="help is-danger">{errorMessage}</p>;
-    } else if (informationMessage) {
-      helper = <p className="help is-info">{informationMessage}</p>;
-    }
-    return (
-      <div className={classNames("field", className)}>
-        <LabelWithHelpIcon label={label} helpText={helpText} />
-        <div className="control">
-          <input
-            ref={input => {
-              this.field = input;
-            }}
-            className={classNames("input", errorView)}
-            type={type}
-            placeholder={placeholder}
-            value={value}
-            onChange={this.handleInput}
-            onKeyPress={this.handleKeyPress}
-            disabled={disabled}
-            onBlur={this.handleBlur}
-            {...createAttributesForTesting(testId)}
-          />
-        </div>
-        {helper}
-      </div>
-    );
+  const errorView = validationError ? "is-danger" : "";
+  let helper;
+  if (validationError) {
+    helper = <p className="help is-danger">{errorMessage}</p>;
+  } else if (informationMessage) {
+    helper = <p className="help is-info">{informationMessage}</p>;
   }
-}
+  return (
+    <div className={classNames("field", className)}>
+      <LabelWithHelpIcon label={label} helpText={helpText} />
+      <div className="control">
+        <input
+          ref={field}
+          className={classNames("input", errorView)}
+          type={type}
+          placeholder={placeholder}
+          value={value}
+          disabled={disabled}
+          onChange={handleChange}
+          onKeyPress={handleKeyPress}
+          onBlur={handleBlur}
+          {...createAttributesForTesting(testId)}
+        />
+      </div>
+      {helper}
+    </div>
+  );
+};
 
 export default InputField;
