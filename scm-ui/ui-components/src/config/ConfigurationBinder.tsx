@@ -48,7 +48,11 @@ class ConfigurationBinder {
   }
 
   route(path: string, Component: any) {
-    return <Route path={path} render={() => Component} exact />;
+    return (
+      <Route path={path} exact>
+        {Component}
+      </Route>
+    );
   }
 
   bindGlobal(to: string, labelI18nKey: string, linkName: string, ConfigurationComponent: any) {
