@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,6 +31,7 @@ import org.jboss.resteasy.mock.MockDispatcherFactory;
 import org.jboss.resteasy.spi.Dispatcher;
 import org.jboss.resteasy.spi.HttpRequest;
 import org.jboss.resteasy.spi.HttpResponse;
+import org.jboss.resteasy.spi.ResteasyProviderFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.AlreadyExistsException;
@@ -72,6 +73,10 @@ public class RestDispatcher {
 
   public void registerException(Class<? extends RuntimeException> exceptionClass, Status status) {
     exceptionMapper.registerException(exceptionClass, status);
+  }
+
+  public ResteasyProviderFactory getProviderFactory() {
+    return dispatcher.getProviderFactory();
   }
 
   public <T> void putDefaultContextObject(Class<T> clazz, T object) {

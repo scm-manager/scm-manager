@@ -21,14 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import javax.ws.rs.container.ContainerRequestContext;
 import javax.ws.rs.container.ContainerResponseContext;
@@ -36,10 +36,12 @@ import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.MultivaluedMap;
 import java.util.Date;
 
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.class)
-public class CacheControlResponseFilterTest {
+@ExtendWith(MockitoExtension.class)
+class CacheControlResponseFilterTest {
 
   @Mock
   private ContainerRequestContext requestContext;
@@ -50,22 +52,22 @@ public class CacheControlResponseFilterTest {
   @Mock
   private MultivaluedMap<String, Object> headers;
 
-  private CacheControlResponseFilter filter = new CacheControlResponseFilter();
+  private final CacheControlResponseFilter filter = new CacheControlResponseFilter();
 
-  @Before
-  public void setUpMocks() {
+  @BeforeEach
+  void setUpMocks() {
     when(responseContext.getHeaders()).thenReturn(headers);
   }
 
   @Test
-  public void filterShouldAddCacheControlHeader() {
+  void shouldAddCacheControlHeader() {
     filter.filter(requestContext, responseContext);
 
     verify(headers).add("Cache-Control", "no-cache");
   }
 
   @Test
-  public void filterShouldNotSetHeaderIfLastModifiedIsNotNull() {
+  void shouldNotSetHeaderIfLastModifiedIsNotNull() {
     when(responseContext.getLastModified()).thenReturn(new Date());
 
     filter.filter(requestContext, responseContext);
@@ -74,8 +76,17 @@ public class CacheControlResponseFilterTest {
   }
 
   @Test
-  public void filterShouldNotSetHeaderIfEtagIsNotNull() {
+  void shouldNotSetHeaderIfEtagIsNotNull() {
     when(responseContext.getEntityTag()).thenReturn(new EntityTag("42"));
+
+    filter.filter(requestContext, responseContext);
+
+    verify(headers, never()).add("Cache-Control", "no-cache");
+  }
+
+  @Test
+  void shouldNotOverrideExistingCacheControl() {
+    when(headers.containsKey("Cache-Control")).thenReturn(true);
 
     filter.filter(requestContext, responseContext);
 

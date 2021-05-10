@@ -41,6 +41,7 @@ import sonia.scm.security.SessionId;
 import sonia.scm.sse.Channel;
 import sonia.scm.sse.ChannelRegistry;
 import sonia.scm.sse.Registration;
+import sonia.scm.sse.SseResponse;
 import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
@@ -175,6 +176,7 @@ public class NotificationResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
+  @SseResponse
   public void subscribe(@Context Sse sse, @Context SseEventSink eventSink, @QueryParam(SessionId.PARAMETER) SessionId sessionId) {
     Channel channel = channelRegistry.channel(NotificationChannelId.current());
     channel.register(new Registration(sessionId, sse, eventSink));
