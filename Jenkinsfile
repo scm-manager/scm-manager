@@ -54,7 +54,9 @@ pipeline {
 
     stage('Check') {
       steps {
-        gradle 'check'
+        withCheckEnvironment {
+          gradle 'check'
+        }
         junit allowEmptyResults: true, testResults: '**/build/test-results/test/TEST-*.xml,**/build/test-results/tests/test/TEST-*.xml,**/build/jest-reports/TEST-*.xml'
       }
     }
@@ -208,6 +210,14 @@ void tag(String version) {
 
 void isBuildSuccess() {
   return currentBuild.result == null || currentBuild.result == 'SUCCESS'
+}
+
+void withCheckEnvironment(Closure<Void> closure) {
+  withCredentials([
+    usernamePassword(credentialsId: 'chromatic-scm-manager', passwordVariable: 'CHROMATIC_PROJECT_TOKEN'),
+  ]) {
+    closure.call()
+  }
 }
 
 void withPublishEnivronment(Closure<Void> closure) {
