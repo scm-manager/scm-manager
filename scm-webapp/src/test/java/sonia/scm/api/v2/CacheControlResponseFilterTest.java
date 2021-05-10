@@ -85,7 +85,7 @@ class CacheControlResponseFilterTest {
   }
 
   @Test
-  void should() {
+  void shouldNotOverrideExistingCacheControl() {
     when(headers.containsKey("Cache-Control")).thenReturn(true);
 
     filter.filter(requestContext, responseContext);
