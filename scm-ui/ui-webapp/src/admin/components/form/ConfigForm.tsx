@@ -21,8 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC, useState, useEffect, FormEvent } from "react";
+import { useTranslation } from "react-i18next";
 import { Config, NamespaceStrategies } from "@scm-manager/ui-types";
 import { Level, Notification, SubmitButton } from "@scm-manager/ui-components";
 import ProxySettings from "./ProxySettings";
@@ -30,7 +30,7 @@ import GeneralSettings from "./GeneralSettings";
 import BaseUrlSettings from "./BaseUrlSettings";
 import LoginAttempt from "./LoginAttempt";
 
-type Props = WithTranslation & {
+type Props = {
   submitForm: (p: Config) => void;
   config?: Config;
   loading?: boolean;
@@ -39,185 +39,157 @@ type Props = WithTranslation & {
   namespaceStrategies?: NamespaceStrategies;
 };
 
-type State = {
-  config: Config;
-  showNotification: boolean;
-  error: {
+const ConfigForm: FC<Props> = ({
+  submitForm,
+  config,
+  loading,
+  configReadPermission,
+  configUpdatePermission,
+  namespaceStrategies
+}) => {
+  const [t] = useTranslation("config");
+  const [innerConfig, setInnerConfig] = useState<Config>({
+    proxyPassword: null,
+    proxyPort: 0,
+    proxyServer: "",
+    proxyUser: null,
+    enableProxy: false,
+    realmDescription: "",
+    disableGroupingGrid: false,
+    dateFormat: "",
+    anonymousAccessEnabled: false,
+    anonymousMode: "OFF",
+    baseUrl: "",
+    forceBaseUrl: false,
+    loginAttemptLimit: 0,
+    proxyExcludes: [],
+    skipFailedAuthenticators: false,
+    pluginUrl: "",
+    loginAttemptLimitTimeout: 0,
+    enabledXsrfProtection: true,
+    enabledUserConverter: false,
+    namespaceStrategy: "",
+    loginInfoUrl: "",
+    releaseFeedUrl: "",
+    mailDomainName: "",
+    notifiedUsers: [],
+    enabledApiKeys: true,
+    _links: {}
+  });
+  const [showNotification, setShowNotification] = useState(false);
+  const [changed, setChanged] = useState(false);
+  const [error, setError] = useState<{
     loginAttemptLimitTimeout: boolean;
     loginAttemptLimit: boolean;
-  };
-  changed: boolean;
-};
+  }>({
+    loginAttemptLimitTimeout: false,
+    loginAttemptLimit: false
+  });
 
-class ConfigForm extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      config: {
-        proxyPassword: null,
-        proxyPort: 0,
-        proxyServer: "",
-        proxyUser: null,
-        enableProxy: false,
-        realmDescription: "",
-        disableGroupingGrid: false,
-        dateFormat: "",
-        anonymousMode: "OFF",
-        baseUrl: "",
-        mailDomainName: "",
-        forceBaseUrl: false,
-        loginAttemptLimit: 0,
-        proxyExcludes: [],
-        skipFailedAuthenticators: false,
-        pluginUrl: "",
-        loginAttemptLimitTimeout: 0,
-        enabledXsrfProtection: true,
-        enabledUserConverter: false,
-        namespaceStrategy: "",
-        loginInfoUrl: "",
-        _links: {}
-      },
-      showNotification: false,
-      error: {
-        loginAttemptLimitTimeout: false,
-        loginAttemptLimit: false
-      },
-      changed: false
-    };
-  }
-
-  componentDidMount() {
-    const { config, configUpdatePermission } = this.props;
+  useEffect(() => {
     if (config) {
-      this.setState({
-        ...this.state,
-        config: {
-          ...config
-        }
-      });
+      setInnerConfig(config);
     }
     if (!configUpdatePermission) {
-      this.setState({
-        ...this.state,
-        showNotification: true
-      });
+      setShowNotification(true);
     }
-  }
+  }, [config, configUpdatePermission]);
 
-  submit = (event: Event) => {
+  const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    this.setState({
-      changed: false
-    });
-    this.props.submitForm(this.state.config);
+    setChanged(false);
+    submitForm(innerConfig);
   };
 
-  render() {
-    const { loading, t, namespaceStrategies, configReadPermission, configUpdatePermission } = this.props;
-    const config = this.state.config;
+  const onChange = (isValid: boolean, changedValue: any, name: string) => {
+    setInnerConfig({ ...innerConfig, [name]: changedValue });
+    setError({ ...error, [name]: !isValid });
+    setChanged(true);
+  };
 
-    let noPermissionNotification = null;
+  const hasError = () => {
+    return error.loginAttemptLimit || error.loginAttemptLimitTimeout;
+  };
 
-    if (!configReadPermission) {
-      return <Notification type={"danger"} children={t("config.form.no-read-permission-notification")} />;
-    }
+  const onClose = () => {
+    setShowNotification(false);
+  };
 
-    if (this.state.showNotification) {
-      noPermissionNotification = (
-        <Notification
-          type={"info"}
-          children={t("config.form.no-write-permission-notification")}
-          onClose={() => this.onClose()}
-        />
-      );
-    }
+  let noPermissionNotification = null;
 
-    return (
-      <form onSubmit={this.submit}>
-        {noPermissionNotification}
-        <GeneralSettings
-          namespaceStrategies={namespaceStrategies}
-          loginInfoUrl={config.loginInfoUrl}
-          realmDescription={config.realmDescription}
-          disableGroupingGrid={config.disableGroupingGrid}
-          dateFormat={config.dateFormat}
-          anonymousMode={config.anonymousMode}
-          skipFailedAuthenticators={config.skipFailedAuthenticators}
-          pluginUrl={config.pluginUrl}
-          releaseFeedUrl={config.releaseFeedUrl}
-          mailDomainName={config.mailDomainName}
-          enabledXsrfProtection={config.enabledXsrfProtection}
-          enabledUserConverter={config.enabledUserConverter}
-          enabledApiKeys={config.enabledApiKeys}
-          namespaceStrategy={config.namespaceStrategy}
-          onChange={(isValid, changedValue, name) => this.onChange(isValid, changedValue, name)}
-          hasUpdatePermission={configUpdatePermission}
-        />
-        <hr />
-        <LoginAttempt
-          loginAttemptLimit={config.loginAttemptLimit}
-          loginAttemptLimitTimeout={config.loginAttemptLimitTimeout}
-          onChange={(isValid, changedValue, name) => this.onChange(isValid, changedValue, name)}
-          hasUpdatePermission={configUpdatePermission}
-        />
-        <hr />
-        <BaseUrlSettings
-          baseUrl={config.baseUrl}
-          forceBaseUrl={config.forceBaseUrl}
-          onChange={(isValid, changedValue, name) => this.onChange(isValid, changedValue, name)}
-          hasUpdatePermission={configUpdatePermission}
-        />
-        <hr />
-        <ProxySettings
-          proxyPassword={config.proxyPassword ? config.proxyPassword : ""}
-          proxyPort={config.proxyPort}
-          proxyServer={config.proxyServer ? config.proxyServer : ""}
-          proxyUser={config.proxyUser ? config.proxyUser : ""}
-          enableProxy={config.enableProxy}
-          proxyExcludes={config.proxyExcludes}
-          onChange={(isValid, changedValue, name) => this.onChange(isValid, changedValue, name)}
-          hasUpdatePermission={configUpdatePermission}
-        />
-        <hr />
-        <Level
-          right={
-            <SubmitButton
-              loading={loading}
-              label={t("config.form.submit")}
-              disabled={!configUpdatePermission || this.hasError() || !this.state.changed}
-            />
-          }
-        />
-      </form>
+  if (!configReadPermission) {
+    return <Notification type={"danger"} children={t("config.form.no-read-permission-notification")} />;
+  }
+
+  if (showNotification) {
+    noPermissionNotification = (
+      <Notification
+        type={"info"}
+        children={t("config.form.no-write-permission-notification")}
+        onClose={() => onClose()}
+      />
     );
   }
 
-  onChange = (isValid: boolean, changedValue: any, name: string) => {
-    this.setState({
-      ...this.state,
-      config: {
-        ...this.state.config,
-        [name]: changedValue
-      },
-      error: {
-        ...this.state.error,
-        [name]: !isValid
-      },
-      changed: true
-    });
-  };
+  return (
+    <form onSubmit={submit}>
+      {noPermissionNotification}
+      <GeneralSettings
+        namespaceStrategies={namespaceStrategies}
+        loginInfoUrl={innerConfig.loginInfoUrl}
+        realmDescription={innerConfig.realmDescription}
+        disableGroupingGrid={innerConfig.disableGroupingGrid}
+        dateFormat={innerConfig.dateFormat}
+        anonymousMode={innerConfig.anonymousMode}
+        skipFailedAuthenticators={innerConfig.skipFailedAuthenticators}
+        pluginUrl={innerConfig.pluginUrl}
+        releaseFeedUrl={innerConfig.releaseFeedUrl}
+        mailDomainName={innerConfig.mailDomainName}
+        enabledXsrfProtection={innerConfig.enabledXsrfProtection}
+        enabledUserConverter={innerConfig.enabledUserConverter}
+        enabledApiKeys={innerConfig.enabledApiKeys}
+        notifiedUsers={innerConfig.notifiedUsers}
+        namespaceStrategy={innerConfig.namespaceStrategy}
+        onChange={(isValid, changedValue, name) => onChange(isValid, changedValue, name)}
+        hasUpdatePermission={configUpdatePermission}
+      />
+      <hr />
+      <LoginAttempt
+        loginAttemptLimit={innerConfig.loginAttemptLimit}
+        loginAttemptLimitTimeout={innerConfig.loginAttemptLimitTimeout}
+        onChange={(isValid, changedValue, name) => onChange(isValid, changedValue, name)}
+        hasUpdatePermission={configUpdatePermission}
+      />
+      <hr />
+      <BaseUrlSettings
+        baseUrl={innerConfig.baseUrl}
+        forceBaseUrl={innerConfig.forceBaseUrl}
+        onChange={(isValid, changedValue, name) => onChange(isValid, changedValue, name)}
+        hasUpdatePermission={configUpdatePermission}
+      />
+      <hr />
+      <ProxySettings
+        proxyPassword={innerConfig.proxyPassword ? innerConfig.proxyPassword : ""}
+        proxyPort={innerConfig.proxyPort ? innerConfig.proxyPort : 0}
+        proxyServer={innerConfig.proxyServer ? innerConfig.proxyServer : ""}
+        proxyUser={innerConfig.proxyUser ? innerConfig.proxyUser : ""}
+        enableProxy={innerConfig.enableProxy}
+        proxyExcludes={innerConfig.proxyExcludes}
+        onChange={(isValid, changedValue, name) => onChange(isValid, changedValue, name)}
+        hasUpdatePermission={configUpdatePermission}
+      />
+      <hr />
+      <Level
+        right={
+          <SubmitButton
+            loading={loading}
+            label={t("config.form.submit")}
+            disabled={!configUpdatePermission || hasError() || !changed}
+          />
+        }
+      />
+    </form>
+  );
+};
 
-  hasError = () => {
-    return this.state.error.loginAttemptLimit || this.state.error.loginAttemptLimitTimeout;
-  };
-
-  onClose = () => {
-    this.setState({
-      ...this.state,
-      showNotification: false
-    });
-  };
-}
-
-export default withTranslation("config")(ConfigForm);
+export default ConfigForm;

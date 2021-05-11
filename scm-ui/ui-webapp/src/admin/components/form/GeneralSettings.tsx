@@ -22,10 +22,18 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
-import { Checkbox, InputField, Select } from "@scm-manager/ui-components";
-import { NamespaceStrategies, AnonymousMode } from "@scm-manager/ui-types";
+import { useTranslation } from "react-i18next";
+import {
+  Checkbox,
+  InputField,
+  MemberNameTagGroup,
+  AutocompleteAddEntryToTableField,
+  Select,
+  apiClient
+} from "@scm-manager/ui-components";
+import { NamespaceStrategies, AnonymousMode, SelectValue, Link, DisplayedUser } from "@scm-manager/ui-types";
 import NamespaceStrategySelect from "./NamespaceStrategySelect";
+import { useIndexLinks } from "@scm-manager/ui-api";
 
 type Props = {
   realmDescription: string;
@@ -40,6 +48,7 @@ type Props = {
   enabledXsrfProtection: boolean;
   enabledUserConverter: boolean;
   enabledApiKeys: boolean;
+  notifiedUsers: string[];
   namespaceStrategy: string;
   namespaceStrategies?: NamespaceStrategies;
   onChange: (p1: boolean, p2: any, p3: string) => void;
@@ -56,11 +65,13 @@ const GeneralSettings: FC<Props> = ({
   enabledXsrfProtection,
   enabledUserConverter,
   enabledApiKeys,
+  notifiedUsers,
   namespaceStrategy,
   namespaceStrategies,
   onChange,
   hasUpdatePermission
 }) => {
+  const indexLinks = useIndexLinks();
   const { t } = useTranslation("config");
 
   const handleLoginInfoUrlChange = (value: string) => {
@@ -92,6 +103,40 @@ const GeneralSettings: FC<Props> = ({
   };
   const handleEnabledApiKeysChange = (value: boolean) => {
     onChange(true, value, "enabledApiKeys");
+  };
+  const handleNotifiedUsersChange = (p: string[]) => {
+    onChange(true, p, "notifiedUsers");
+  };
+
+  const isMember = (name: string) => {
+    return notifiedUsers.includes(name);
+  };
+
+  const addNotifiedUser = (value: SelectValue) => {
+    if (isMember(value.value.id)) {
+      return;
+    }
+    handleNotifiedUsersChange([...notifiedUsers, value.value.id]);
+  };
+
+  // TODO: Remove duplication
+  const loadUserSuggestions = (inputValue: string) => {
+    const autocompleteLink = (indexLinks.autocomplete as Link[]).find(i => i.name === "users");
+    if (!autocompleteLink) {
+      return [];
+    }
+    const url = autocompleteLink.href + "?q=";
+    return apiClient
+      .get(url + inputValue)
+      .then(response => response.json())
+      .then(json => {
+        return json.map((element: DisplayedUser) => {
+          return {
+            value: element,
+            label: `${element.displayName} (${element.id})`
+          };
+        });
+      });
   };
 
   return (
@@ -203,6 +248,22 @@ const GeneralSettings: FC<Props> = ({
             title={t("general-settings.enabled-api-keys")}
             disabled={!hasUpdatePermission}
             helpText={t("help.enabledApiKeysHelpText")}
+          />
+        </div>
+      </div>
+      <div className="columns">
+        <div className="column is-full">
+          <MemberNameTagGroup
+            members={notifiedUsers}
+            memberListChanged={handleNotifiedUsersChange}
+            label={t("general-settings.notifiedUsers.label")}
+            helpText={t("general-settings.notifiedUsers.helpText")}
+          />
+          <AutocompleteAddEntryToTableField
+            addEntry={addNotifiedUser}
+            buttonLabel={t("general-settings.notifiedUsers.addButton")}
+            loadSuggestions={loadUserSuggestions}
+            placeholder={t("general-settings.notifiedUsers.autocompletePlaceholder")}
           />
         </div>
       </div>

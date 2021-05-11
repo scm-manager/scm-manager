@@ -61,7 +61,13 @@
     "enabled-user-converter": "Benutzer Konverter aktivieren",
     "enabled-api-keys": "API Schlüssel aktivieren",
     "namespace-strategy": "Namespace Strategie",
-    "login-info-url": "Login Info URL"
+    "login-info-url": "Login Info URL",
+    "notifiedUsers": {
+      "label": "Benachrichtigte Nutzer",
+      "helpText": "Die folgenden Benutzer werden über administrative Vorfälle informiert.",
+      "addButton": "Benutzer hinzufügen",
+      "autocompletePlaceholder": "Nutzer zum Benachrichtigen hinzufügen"
+    }
   },
   "validation": {
     "date-format-invalid": "Das Datumsformat ist ungültig",

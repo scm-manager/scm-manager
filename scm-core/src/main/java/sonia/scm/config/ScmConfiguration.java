@@ -214,6 +214,9 @@ public class ScmConfiguration implements Configuration {
   @XmlElement(name = "mail-domain-name")
   private String mailDomainName = DEFAULT_MAIL_DOMAIN_NAME;
 
+  @XmlElement(name = "notified-users")
+  private Set<String> notifiedUsers;
+
   /**
    * Fires the {@link ScmConfigurationChangedEvent}.
    */
@@ -253,6 +256,7 @@ public class ScmConfiguration implements Configuration {
     this.loginInfoUrl = other.loginInfoUrl;
     this.releaseFeedUrl = other.releaseFeedUrl;
     this.mailDomainName = other.mailDomainName;
+    this.notifiedUsers = other.notifiedUsers;
     this.enabledUserConverter = other.enabledUserConverter;
     this.enabledApiKeys = other.enabledApiKeys;
   }
@@ -456,6 +460,14 @@ public class ScmConfiguration implements Configuration {
     return skipFailedAuthenticators;
   }
 
+  public Set<String> getNotifiedUsers() {
+    if (notifiedUsers == null) {
+      notifiedUsers = Sets.newHashSet();
+    }
+
+    return notifiedUsers;
+  }
+
   /**
    * Enables the anonymous access at protocol level.
    *
@@ -619,6 +631,10 @@ public class ScmConfiguration implements Configuration {
 
   public void setLoginInfoUrl(String loginInfoUrl) {
     this.loginInfoUrl = loginInfoUrl;
+  }
+
+  public void setNotifiedUsers(Set<String> notifiedUsers) {
+    this.notifiedUsers = notifiedUsers;
   }
 
   @Override

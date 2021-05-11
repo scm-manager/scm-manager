@@ -44,6 +44,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
   private ConfigDtoToScmConfigurationMapperImpl mapper;
 
   private final String[] expectedExcludes = {"ex", "clude"};
+  private final String[] expectedUsers = {"trillian", "arthur"};
 
   @Before
   public void init() {
@@ -76,6 +77,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
     assertEquals("username", config.getNamespaceStrategy());
     assertEquals("https://scm-manager.org/login-info", config.getLoginInfoUrl());
     assertEquals("hitchhiker.mail", config.getMailDomainName());
+    assertTrue("notifiedUsers", config.getNotifiedUsers().containsAll(Arrays.asList(expectedUsers)));
   }
 
   @Test
@@ -115,6 +117,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
     configDto.setNamespaceStrategy("username");
     configDto.setLoginInfoUrl("https://scm-manager.org/login-info");
     configDto.setMailDomainName("hitchhiker.mail");
+    configDto.setNotifiedUsers(Sets.newSet(expectedUsers));
     configDto.setEnabledUserConverter(false);
 
     return configDto;

@@ -74,4 +74,6 @@ interface UpdateConfigDto {
   String getReleaseFeedUrl();
 
   String getMailDomainName();
+
+  Set<String> getNotifiedUsers();
 }
