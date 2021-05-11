@@ -54,7 +54,9 @@ pipeline {
 
     stage('Check') {
       steps {
-        gradle 'check'
+        withCheckEnvironment {
+          gradle 'check'
+        }
         junit allowEmptyResults: true, testResults: '**/build/test-results/test/TEST-*.xml,**/build/test-results/tests/test/TEST-*.xml,**/build/jest-reports/TEST-*.xml'
       }
     }
@@ -208,6 +210,19 @@ void tag(String version) {
 
 void isBuildSuccess() {
   return currentBuild.result == null || currentBuild.result == 'SUCCESS'
+}
+
+void withCheckEnvironment(Closure<Void> closure) {
+  // apply chromatic environment only if we are on a pr build or on the develop branch
+  if (env.CHANGE_ID || env.BRANCH_NAME == 'develop') {
+    withCredentials([
+      usernamePassword(credentialsId: 'chromatic-scm-manager', usernameVariable: 'CHROMATIC_USERANAME', passwordVariable: 'CHROMATIC_PROJECT_TOKEN'),
+    ]) {
+      closure.call()
+    }
+  } else {
+    closure.call()
+  }
 }
 
 void withPublishEnivronment(Closure<Void> closure) {
