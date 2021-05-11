@@ -213,9 +213,14 @@ void isBuildSuccess() {
 }
 
 void withCheckEnvironment(Closure<Void> closure) {
-  withCredentials([
-    usernamePassword(credentialsId: 'chromatic-scm-manager', usernameVariable: 'CHROMATIC_USERANAME', passwordVariable: 'CHROMATIC_PROJECT_TOKEN'),
-  ]) {
+  // apply chromatic environment only if we are on a pr build or on the develop branch
+  if (env.CHANGE_ID || env.BRANCH_NAME == 'develop') {
+    withCredentials([
+      usernamePassword(credentialsId: 'chromatic-scm-manager', usernameVariable: 'CHROMATIC_USERANAME', passwordVariable: 'CHROMATIC_PROJECT_TOKEN'),
+    ]) {
+      closure.call()
+    }
+  } else {
     closure.call()
   }
 }
