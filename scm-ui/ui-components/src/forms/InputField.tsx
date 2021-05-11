@@ -35,7 +35,7 @@ type BaseProps = {
   autofocus?: boolean;
   onReturnPressed?: () => void;
   validationError?: boolean;
-  errorMessage?: string;
+  errorMessage?: string | string[];
   informationMessage?: string;
   disabled?: boolean;
   helpText?: string;

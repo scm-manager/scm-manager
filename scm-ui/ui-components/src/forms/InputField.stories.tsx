@@ -67,7 +67,11 @@ type Name = {
 };
 
 const ReactHookForm: FC = () => {
-  const { register, handleSubmit } = useForm<Name>();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<Name>();
   const [stored, setStored] = useState<Person>();
 
   const onSubmit = (person: Person) => {
@@ -78,8 +82,15 @@ const ReactHookForm: FC = () => {
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         <InputField label="First Name" autofocus={true} {...register("firstName")} />
-        <InputField label="Last Name" {...register("lastName")} />
-        <SubmitButton>Submit</SubmitButton>
+        <InputField
+          label="Last Name"
+          {...register("lastName", { required: true })}
+          validationError={!!errors.lastName}
+          errorMessage={"Last name is required"}
+        />
+        <div className="pt-2">
+          <SubmitButton>Submit</SubmitButton>
+        </div>
       </form>
       {stored ? (
         <div className="mt-5">
