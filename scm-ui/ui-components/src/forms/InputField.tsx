@@ -164,9 +164,9 @@ type OuterProps = RefProps & {
 };
 
 type InputFieldType = {
-  (props: OuterProps, ref: ForwardedRef<HTMLInputElement>): React.ReactElement | null;
-  (props: LegacyProps, ref: ForwardedRef<HTMLInputElement>): React.ReactElement | null;
-}
+  (props: OuterProps): React.ReactElement<OuterProps> | null;
+  (props: LegacyProps): React.ReactElement<LegacyProps> | null;
+};
 
 const InputField: InputFieldType = React.forwardRef<HTMLInputElement, LegacyProps | OuterProps>((props, ref) => {
   if (ref) {
