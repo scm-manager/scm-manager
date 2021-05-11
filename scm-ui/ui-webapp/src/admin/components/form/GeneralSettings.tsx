@@ -21,13 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation, WithTranslation, withTranslation } from "react-i18next";
 import { Checkbox, InputField, Select } from "@scm-manager/ui-components";
 import { NamespaceStrategies, AnonymousMode } from "@scm-manager/ui-types";
 import NamespaceStrategySelect from "./NamespaceStrategySelect";
 
-type Props = WithTranslation & {
+type Props = {
   realmDescription: string;
   loginInfoUrl: string;
   disableGroupingGrid: boolean;
@@ -46,170 +46,168 @@ type Props = WithTranslation & {
   hasUpdatePermission: boolean;
 };
 
-class GeneralSettings extends React.Component<Props> {
-  render() {
-    const {
-      t,
-      realmDescription,
-      loginInfoUrl,
-      pluginUrl,
-      releaseFeedUrl,
-      mailDomainName,
-      enabledXsrfProtection,
-      enabledUserConverter,
-      enabledApiKeys,
-      anonymousMode,
-      namespaceStrategy,
-      hasUpdatePermission,
-      namespaceStrategies
-    } = this.props;
+const GeneralSettings: FC<Props> = ({
+  realmDescription,
+  loginInfoUrl,
+  anonymousMode,
+  pluginUrl,
+  releaseFeedUrl,
+  mailDomainName,
+  enabledXsrfProtection,
+  enabledUserConverter,
+  enabledApiKeys,
+  namespaceStrategy,
+  namespaceStrategies,
+  onChange,
+  hasUpdatePermission
+}) => {
+  const { t } = useTranslation("config");
 
-    return (
-      <div>
-        <div className="columns">
-          <div className="column is-half">
-            <InputField
-              label={t("general-settings.realm-description")}
-              onChange={this.handleRealmDescriptionChange}
-              value={realmDescription}
-              disabled={!hasUpdatePermission}
-              helpText={t("help.realmDescriptionHelpText")}
-            />
-          </div>
-          <div className="column is-half">
-            <NamespaceStrategySelect
-              label={t("general-settings.namespace-strategy")}
-              onChange={this.handleNamespaceStrategyChange}
-              value={namespaceStrategy}
-              disabled={!hasUpdatePermission}
-              namespaceStrategies={namespaceStrategies}
-              helpText={t("help.nameSpaceStrategyHelpText")}
-            />
-          </div>
+  const handleLoginInfoUrlChange = (value: string) => {
+    onChange(true, value, "loginInfoUrl");
+  };
+  const handleRealmDescriptionChange = (value: string) => {
+    onChange(true, value, "realmDescription");
+  };
+  const handleEnabledXsrfProtectionChange = (value: boolean) => {
+    onChange(true, value, "enabledXsrfProtection");
+  };
+  const handleEnabledUserConverterChange = (value: boolean) => {
+    onChange(true, value, "enabledUserConverter");
+  };
+  const handleAnonymousMode = (value: string) => {
+    onChange(true, value, "anonymousMode");
+  };
+  const handleNamespaceStrategyChange = (value: string) => {
+    onChange(true, value, "namespaceStrategy");
+  };
+  const handlePluginCenterUrlChange = (value: string) => {
+    onChange(true, value, "pluginUrl");
+  };
+  const handleReleaseFeedUrlChange = (value: string) => {
+    onChange(true, value, "releaseFeedUrl");
+  };
+  const handleMailDomainNameChange = (value: string) => {
+    onChange(true, value, "mailDomainName");
+  };
+  const handleEnabledApiKeysChange = (value: boolean) => {
+    onChange(true, value, "enabledApiKeys");
+  };
+
+  return (
+    <div>
+      <div className="columns">
+        <div className="column is-half">
+          <InputField
+            label={t("general-settings.realm-description")}
+            onChange={handleRealmDescriptionChange}
+            value={realmDescription}
+            disabled={!hasUpdatePermission}
+            helpText={t("help.realmDescriptionHelpText")}
+          />
         </div>
-        <div className="columns">
-          <div className="column is-half">
-            <InputField
-              label={t("general-settings.login-info-url")}
-              onChange={this.handleLoginInfoUrlChange}
-              value={loginInfoUrl}
-              disabled={!hasUpdatePermission}
-              helpText={t("help.loginInfoUrlHelpText")}
-            />
-          </div>
-          <div className="column is-half">
-            <Checkbox
-              label={t("general-settings.enabled-xsrf-protection")}
-              onChange={this.handleEnabledXsrfProtectionChange}
-              checked={enabledXsrfProtection}
-              title={t("general-settings.enabled-xsrf-protection")}
-              disabled={!hasUpdatePermission}
-              helpText={t("help.enableXsrfProtectionHelpText")}
-            />
-          </div>
-        </div>
-        <div className="columns">
-          <div className="column is-half">
-            <InputField
-              label={t("general-settings.plugin-url")}
-              onChange={this.handlePluginCenterUrlChange}
-              value={pluginUrl}
-              disabled={!hasUpdatePermission}
-              helpText={t("help.pluginUrlHelpText")}
-            />
-          </div>
-          <div className="column is-half">
-            <Select
-              label={t("general-settings.anonymousMode.title")}
-              onChange={this.handleAnonymousMode}
-              value={anonymousMode}
-              disabled={!hasUpdatePermission}
-              options={[
-                { label: t("general-settings.anonymousMode.full"), value: "FULL" },
-                { label: t("general-settings.anonymousMode.protocolOnly"), value: "PROTOCOL_ONLY" },
-                { label: t("general-settings.anonymousMode.off"), value: "OFF" }
-              ]}
-              helpText={t("help.allowAnonymousAccessHelpText")}
-              testId={"anonymous-mode-select"}
-            />
-          </div>
-        </div>
-        <div className="columns">
-          <div className="column is-half">
-            <InputField
-              label={t("general-settings.release-feed-url")}
-              onChange={this.handleReleaseFeedUrlChange}
-              value={releaseFeedUrl}
-              disabled={!hasUpdatePermission}
-              helpText={t("help.releaseFeedUrlHelpText")}
-            />
-          </div>
-          <div className="column is-half">
-            <Checkbox
-              label={t("general-settings.enabled-user-converter")}
-              onChange={this.handleEnabledUserConverterChange}
-              checked={enabledUserConverter}
-              title={t("general-settings.enabled-user-converter")}
-              disabled={!hasUpdatePermission}
-              helpText={t("help.enabledUserConverterHelpText")}
-            />
-          </div>
-        </div>
-        <div className="columns">
-          <div className="column is-half">
-            <InputField
-              label={t("general-settings.mail-domain-name")}
-              onChange={this.handleMailDomainNameChange}
-              value={mailDomainName}
-              disabled={!hasUpdatePermission}
-              helpText={t("help.mailDomainNameHelpText")}
-            />
-          </div>
-          <div className="column is-half">
-            <Checkbox
-              label={t("general-settings.enabled-api-keys")}
-              onChange={this.handleEnabledApiKeysChange}
-              checked={enabledApiKeys}
-              title={t("general-settings.enabled-api-keys")}
-              disabled={!hasUpdatePermission}
-              helpText={t("help.enabledApiKeysHelpText")}
-            />
-          </div>
+        <div className="column is-half">
+          <NamespaceStrategySelect
+            label={t("general-settings.namespace-strategy")}
+            onChange={handleNamespaceStrategyChange}
+            value={namespaceStrategy}
+            disabled={!hasUpdatePermission}
+            namespaceStrategies={namespaceStrategies}
+            helpText={t("help.nameSpaceStrategyHelpText")}
+          />
         </div>
       </div>
-    );
-  }
+      <div className="columns">
+        <div className="column is-half">
+          <InputField
+            label={t("general-settings.login-info-url")}
+            onChange={handleLoginInfoUrlChange}
+            value={loginInfoUrl}
+            disabled={!hasUpdatePermission}
+            helpText={t("help.loginInfoUrlHelpText")}
+          />
+        </div>
+        <div className="column is-half">
+          <Checkbox
+            label={t("general-settings.enabled-xsrf-protection")}
+            onChange={handleEnabledXsrfProtectionChange}
+            checked={enabledXsrfProtection}
+            title={t("general-settings.enabled-xsrf-protection")}
+            disabled={!hasUpdatePermission}
+            helpText={t("help.enableXsrfProtectionHelpText")}
+          />
+        </div>
+      </div>
+      <div className="columns">
+        <div className="column is-half">
+          <InputField
+            label={t("general-settings.plugin-url")}
+            onChange={handlePluginCenterUrlChange}
+            value={pluginUrl}
+            disabled={!hasUpdatePermission}
+            helpText={t("help.pluginUrlHelpText")}
+          />
+        </div>
+        <div className="column is-half">
+          <Select
+            label={t("general-settings.anonymousMode.title")}
+            onChange={handleAnonymousMode}
+            value={anonymousMode}
+            disabled={!hasUpdatePermission}
+            options={[
+              { label: t("general-settings.anonymousMode.full"), value: "FULL" },
+              { label: t("general-settings.anonymousMode.protocolOnly"), value: "PROTOCOL_ONLY" },
+              { label: t("general-settings.anonymousMode.off"), value: "OFF" }
+            ]}
+            helpText={t("help.allowAnonymousAccessHelpText")}
+            testId={"anonymous-mode-select"}
+          />
+        </div>
+      </div>
+      <div className="columns">
+        <div className="column is-half">
+          <InputField
+            label={t("general-settings.release-feed-url")}
+            onChange={handleReleaseFeedUrlChange}
+            value={releaseFeedUrl}
+            disabled={!hasUpdatePermission}
+            helpText={t("help.releaseFeedUrlHelpText")}
+          />
+        </div>
+        <div className="column is-half">
+          <Checkbox
+            label={t("general-settings.enabled-user-converter")}
+            onChange={handleEnabledUserConverterChange}
+            checked={enabledUserConverter}
+            title={t("general-settings.enabled-user-converter")}
+            disabled={!hasUpdatePermission}
+            helpText={t("help.enabledUserConverterHelpText")}
+          />
+        </div>
+      </div>
+      <div className="columns">
+        <div className="column is-half">
+          <InputField
+            label={t("general-settings.mail-domain-name")}
+            onChange={handleMailDomainNameChange}
+            value={mailDomainName}
+            disabled={!hasUpdatePermission}
+            helpText={t("help.mailDomainNameHelpText")}
+          />
+        </div>
+        <div className="column is-half">
+          <Checkbox
+            label={t("general-settings.enabled-api-keys")}
+            onChange={handleEnabledApiKeysChange}
+            checked={enabledApiKeys}
+            title={t("general-settings.enabled-api-keys")}
+            disabled={!hasUpdatePermission}
+            helpText={t("help.enabledApiKeysHelpText")}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
-  handleLoginInfoUrlChange = (value: string) => {
-    this.props.onChange(true, value, "loginInfoUrl");
-  };
-  handleRealmDescriptionChange = (value: string) => {
-    this.props.onChange(true, value, "realmDescription");
-  };
-  handleEnabledXsrfProtectionChange = (value: boolean) => {
-    this.props.onChange(true, value, "enabledXsrfProtection");
-  };
-  handleEnabledUserConverterChange = (value: boolean) => {
-    this.props.onChange(true, value, "enabledUserConverter");
-  };
-  handleAnonymousMode = (value: string) => {
-    this.props.onChange(true, value, "anonymousMode");
-  };
-  handleNamespaceStrategyChange = (value: string) => {
-    this.props.onChange(true, value, "namespaceStrategy");
-  };
-  handlePluginCenterUrlChange = (value: string) => {
-    this.props.onChange(true, value, "pluginUrl");
-  };
-  handleReleaseFeedUrlChange = (value: string) => {
-    this.props.onChange(true, value, "releaseFeedUrl");
-  };
-  handleMailDomainNameChange = (value: string) => {
-    this.props.onChange(true, value, "mailDomainName");
-  };
-  handleEnabledApiKeysChange = (value: boolean) => {
-    this.props.onChange(true, value, "enabledApiKeys");
-  };
-}
-
-export default withTranslation("config")(GeneralSettings);
+export default GeneralSettings;
