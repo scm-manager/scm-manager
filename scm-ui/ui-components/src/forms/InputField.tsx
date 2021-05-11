@@ -25,6 +25,7 @@ import React, { ChangeEvent, KeyboardEvent, FocusEvent, FC, useRef, useEffect, F
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import { createAttributesForTesting } from "../devBuild";
+import useAutofocus from "./useAutofocus";
 
 type BaseProps = {
   label?: string;
@@ -85,22 +86,7 @@ export const InnerInputField: FC<Props> = ({
   autofocus,
   ...props
 }) => {
-  const field = useRef<HTMLInputElement>(null);
-  useEffect(() => {
-    if (autofocus && field.current) {
-      field.current.focus();
-    }
-  }, [autofocus, field]);
-
-  useEffect(() => {
-    if (isUsingRef(props) && props.innerRef) {
-      if (typeof props.innerRef === "function") {
-        props.innerRef(field.current);
-      } else {
-        props.innerRef.current = field.current;
-      }
-    }
-  }, [field, props]);
+  const field = useAutofocus<HTMLInputElement>(autofocus, props.innerRef);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (props.onChange) {
