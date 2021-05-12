@@ -32,6 +32,7 @@ import sonia.scm.repository.SvnWorkingCopyFactory;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.HookContextFactory;
 
+import javax.net.ssl.TrustManager;
 import java.io.IOException;
 import java.util.Set;
 
@@ -51,7 +52,8 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.UNBUNDLE,
     Command.MODIFY,
     Command.LOOKUP,
-    Command.FULL_HEALTH_CHECK
+    Command.FULL_HEALTH_CHECK,
+    Command.MIRROR
   );
   //J+
 
@@ -59,14 +61,19 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
   private final SvnContext context;
   private final SvnWorkingCopyFactory workingCopyFactory;
   private final HookContextFactory hookContextFactory;
+  private final SvnRepositoryHandler handler;
+  private final TrustManager trustManager;
 
   SvnRepositoryServiceProvider(SvnRepositoryHandler handler,
                                Repository repository,
                                SvnWorkingCopyFactory workingCopyFactory,
-                               HookContextFactory hookContextFactory) {
+                               HookContextFactory hookContextFactory,
+                               TrustManager trustManager) {
     this.context = new SvnContext(repository, handler.getDirectory(repository.getId()));
+    this.handler = handler;
     this.workingCopyFactory = workingCopyFactory;
     this.hookContextFactory = hookContextFactory;
+    this.trustManager = trustManager;
   }
 
   @Override
@@ -132,5 +139,10 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
   @Override
   public FullHealthCheckCommand getFullHealthCheckCommand() {
     return new SvnFullHealthCheckCommand(context);
+  }
+
+  @Override
+  public MirrorCommand getMirrorCommand() {
+    return new SvnMirrorCommand(context, trustManager, handler::createSvnUrl);
   }
 }
