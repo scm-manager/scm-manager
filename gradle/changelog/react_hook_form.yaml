@@ -1,0 +1,2 @@
+- type: added
+  description: refactor form fields to enable usage with react-hook-form ([#1656](https://github.com/scm-manager/scm-manager/pull/1656))
