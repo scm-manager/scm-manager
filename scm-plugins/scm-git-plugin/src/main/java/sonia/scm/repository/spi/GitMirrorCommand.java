@@ -38,7 +38,6 @@ import sonia.scm.repository.api.UsernamePasswordCredential;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -64,21 +63,21 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   @Override
   public MirrorCommandResult update(MirrorCommandRequest mirrorCommandRequest) {
     Stopwatch stopwatch = Stopwatch.createStarted();
-    boolean success;
-    List<String> log;
     try (Repository repository = context.open(); Git git = Git.wrap(repository)) {
-      FetchResult fetchResult = createFetchCommand(mirrorCommandRequest, repository).call();
-      postReceiveRepositoryHookEventFactory.fireForFetch(git, fetchResult);
-      log = createUpdateLog(fetchResult);
-      success = true;
+      return doUpdate(mirrorCommandRequest, stopwatch, repository, git);
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "error during git fetch", e);
     } catch (GitAPIException e) {
-      log = singletonList(e.getMessage());
-      success = false;
+      List<String> log = singletonList(e.getMessage());
+      return new MirrorCommandResult(false, log, stopwatch.stop().elapsed());
     }
-    Duration duration = stopwatch.stop().elapsed();
-    return new MirrorCommandResult(success, log, duration);
+  }
+
+  private MirrorCommandResult doUpdate(MirrorCommandRequest mirrorCommandRequest, Stopwatch stopwatch, Repository repository, Git git) throws GitAPIException {
+    FetchResult fetchResult = createFetchCommand(mirrorCommandRequest, repository).call();
+    postReceiveRepositoryHookEventFactory.fireForFetch(git, fetchResult);
+    List<String> log = createUpdateLog(fetchResult);
+    return new MirrorCommandResult(true, log, stopwatch.stop().elapsed());
   }
 
   private FetchCommand createFetchCommand(MirrorCommandRequest mirrorCommandRequest, Repository repository) {
