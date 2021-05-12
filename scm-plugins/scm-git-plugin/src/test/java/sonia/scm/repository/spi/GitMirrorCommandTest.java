@@ -41,6 +41,7 @@ import java.io.IOException;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
@@ -58,10 +59,10 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(result.isSuccess()).isTrue();
     assertThat(result.getLog()).contains("Branches:")
-      .contains("- 000000000...fcd0ef183 master")
-      .contains("- 000000000...3f76a12f0 test-branch")
+      .contains("- 000000000..fcd0ef183 master")
+      .contains("- 000000000..3f76a12f0 test-branch")
       .contains("Tags:")
-      .contains("- 000000000...86a6645ec test-tag");
+      .contains("- 000000000..86a6645ec test-tag");
 
     try (Git createdMirror = Git.open(clone)) {
       assertThat(createdMirror.branchList().call()).isNotEmpty();
@@ -104,14 +105,15 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(result.isSuccess()).isTrue();
     assertThat(result.getLog()).contains("Branches:")
-      .contains("- 000000000...fcd0ef183 addedBranch")
+      .contains("- 000000000..fcd0ef183 addedBranch")
       .contains("Tags:")
-      .contains("- 000000000...9e93d8631 addedTag");
+      .contains("- 000000000..9e93d8631 addedTag");
 
     try (Git updatedMirror = Git.open(clone)) {
       assertThat(updatedMirror.branchList().call()).anyMatch(ref -> ref.getName().equals("refs/heads/addedBranch"));
     }
 
-    verify(postReceiveRepositoryHookEventFactory).fireForFetch(any(), any());
+    // event should be thrown two times, once for the initial clone, and once for the update
+    verify(postReceiveRepositoryHookEventFactory, times(2)).fireForFetch(any(), any());
   }
 }
