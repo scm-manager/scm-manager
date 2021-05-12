@@ -21,32 +21,35 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { ErrorNotification } from "@scm-manager/ui-components";
-import RepositoryForm from "../components/form";
-import { Redirect } from "react-router-dom";
-import { useCreateRepository } from "@scm-manager/ui-api";
-import { CreatorComponentProps } from "../types";
 
-const CreateRepository: FC<CreatorComponentProps> = ({ repositoryTypes, namespaceStrategies, index }) => {
-  const { isLoading, error, repository, create } = useCreateRepository();
+import React from "react";
+import {
+  IndexResources,
+  NamespaceStrategies,
+  RepositoryCreation,
+  RepositoryTypeCollection
+} from "@scm-manager/ui-types";
 
-  if (repository) {
-    return <Redirect to={`/repo/${repository.namespace}/${repository.name}`} />;
-  }
-
-  return (
-    <>
-      <ErrorNotification error={error} />
-      <RepositoryForm
-        repositoryTypes={repositoryTypes._embedded.repositoryTypes}
-        loading={isLoading}
-        namespaceStrategy={namespaceStrategies.current}
-        createRepository={create}
-        indexResources={index}
-      />
-    </>
-  );
+export type SubFormProps = {
+  repository: RepositoryCreation;
+  onChange: (repository: RepositoryCreation) => void;
+  setValid: (valid: boolean) => void;
+  disabled?: boolean;
 };
 
-export default CreateRepository;
+export type CreatorComponentProps = {
+  namespaceStrategies: NamespaceStrategies;
+  repositoryTypes: RepositoryTypeCollection;
+  index: IndexResources;
+
+  nameForm: React.ComponentType<SubFormProps>;
+  informationForm: React.ComponentType<SubFormProps>;
+};
+
+export type Creator = {
+  subtitle: string;
+  path: string;
+  icon: string;
+  label: string;
+  component: React.ComponentType<CreatorComponentProps>;
+};

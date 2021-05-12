@@ -24,11 +24,8 @@
 
 import React, { FC } from "react";
 import styled from "styled-components";
-import { useTranslation } from "react-i18next";
-import { Button, ButtonAddons, Icon, Level } from "@scm-manager/ui-components";
+import { Button, ButtonAddons, Icon, Level, urls } from "@scm-manager/ui-components";
 import { useLocation } from "react-router-dom";
-import { useBinder } from "@scm-manager/ui-extensions";
-import { useRepositoryTypes } from "@scm-manager/ui-api";
 
 const MarginIcon = styled(Icon)`
   padding-right: 0.5rem;
@@ -52,13 +49,14 @@ const TopLevel = styled(Level)`
 `;
 
 type RepositoryForm = {
-  href: string;
+  path: string;
   icon: string;
   label: string;
 };
 
-const RepositoryFormButton: FC<RepositoryForm> = ({ href, icon, label }) => {
+const RepositoryFormButton: FC<RepositoryForm> = ({ path, icon, label }) => {
   const location = useLocation();
+  const href = urls.concat("/repos/create", path);
   const isSelected = href === location.pathname;
 
   return (
@@ -69,40 +67,20 @@ const RepositoryFormButton: FC<RepositoryForm> = ({ href, icon, label }) => {
   );
 };
 
-const RepositoryFormSwitcher: FC = () => {
-  const [t] = useTranslation("repos");
-  const { data } = useRepositoryTypes();
-  const binder = useBinder();
-
-  const forms = [
-    {
-      href: "/repos/create",
-      icon: "plus",
-      label: t("repositoryForm.createButton")
-    },
-    {
-      href: "/repos/import",
-      icon: "file-upload",
-      label: t("repositoryForm.importButton")
-    }
-  ];
-
-  if (data && binder.hasExtension("repo.add.form-switcher")) {
-    const extensionForms: RepositoryForm[] = binder.getExtensions("repo.add.form-switcher", { repositoryTypes: data });
-    forms.push(...extensionForms);
-  }
-
-  return (
-    <TopLevel
-      right={
-        <ButtonAddons>
-          {forms.map(form => (
-            <RepositoryFormButton key={form.href} {...form} />
-          ))}
-        </ButtonAddons>
-      }
-    />
-  );
+type Props = {
+  forms: RepositoryForm[];
 };
+
+const RepositoryFormSwitcher: FC<Props> = ({ forms }) => (
+  <TopLevel
+    right={
+      <ButtonAddons>
+        {(forms || []).map(form => (
+          <RepositoryFormButton key={form.path} {...form} />
+        ))}
+      </ButtonAddons>
+    }
+  />
+);
 
 export default RepositoryFormSwitcher;
