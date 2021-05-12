@@ -72,5 +72,10 @@ public enum Command
   /**
    * @since 2.17.0
    */
-  FULL_HEALTH_CHECK;
+  FULL_HEALTH_CHECK,
+
+  /**
+   * @since 2.19.0
+   */
+  MIRROR;
 }
