@@ -33,11 +33,11 @@ import RepositoryFormSwitcher from "../components/form/RepositoryFormSwitcher";
 import { useIndex, useNamespaceStrategies, useRepositoryTypes } from "@scm-manager/ui-api";
 import NamespaceAndNameFields from "../components/NamespaceAndNameFields";
 import RepositoryInformationForm from "../components/RepositoryInformationForm";
-import { Creator } from "../types";
+import { extensionPoints } from "@scm-manager/ui-extensions/";
 
 type CreatorRouteProps = {
-  creator: Creator;
-  creators: Creator[];
+  creator: extensionPoints.RepositoryCreatorExtension;
+  creators: extensionPoints.RepositoryCreatorExtension[];
 };
 
 const useCreateRepositoryData = () => {
@@ -84,7 +84,7 @@ const CreateRepositoryRoot: FC = () => {
   const [t] = useTranslation("repos");
   const binder = useBinder();
 
-  const creators: Creator[] = [
+  const creators: extensionPoints.RepositoryCreatorExtension[] = [
     {
       subtitle: t("create.subtitle"),
       path: "",
@@ -101,7 +101,7 @@ const CreateRepositoryRoot: FC = () => {
     }
   ];
 
-  const extCreators: Creator[] = binder.getExtensions("repos.creator");
+  const extCreators = binder.getExtensions<extensionPoints.RepositoryCreator>("repos.creator");
   if (extCreators) {
     creators.push(...extCreators);
   }

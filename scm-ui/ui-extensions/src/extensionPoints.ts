@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React from "react";
+import { ExtensionPointDefinition } from "./binder";
 import {
   IndexResources,
   NamespaceStrategies,
@@ -30,26 +30,28 @@ import {
   RepositoryTypeCollection
 } from "@scm-manager/ui-types";
 
-export type SubFormProps = {
+type RepositoryCreatorSubFormProps = {
   repository: RepositoryCreation;
   onChange: (repository: RepositoryCreation) => void;
   setValid: (valid: boolean) => void;
   disabled?: boolean;
 };
 
-export type CreatorComponentProps = {
+export type RepositoryCreatorComponentProps = {
   namespaceStrategies: NamespaceStrategies;
   repositoryTypes: RepositoryTypeCollection;
   index: IndexResources;
 
-  nameForm: React.ComponentType<SubFormProps>;
-  informationForm: React.ComponentType<SubFormProps>;
+  nameForm: React.ComponentType<RepositoryCreatorSubFormProps>;
+  informationForm: React.ComponentType<RepositoryCreatorSubFormProps>;
 };
 
-export type Creator = {
+export type RepositoryCreatorExtension = {
   subtitle: string;
   path: string;
   icon: string;
   label: string;
-  component: React.ComponentType<CreatorComponentProps>;
+  component: React.ComponentType<RepositoryCreatorComponentProps>;
 };
+
+export type RepositoryCreator = ExtensionPointDefinition<"repos.creator", RepositoryCreatorExtension>;
