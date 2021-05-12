@@ -55,7 +55,7 @@ const CreateRepository: FC = () => {
     <Page
       title={t("create.title")}
       subtitle={t("create.subtitle")}
-      afterTitle={<RepositoryFormSwitcher creationMode={"CREATE"} />}
+      afterTitle={<RepositoryFormSwitcher />}
       loading={isPageLoading}
       error={pageLoadingError || error || undefined}
       showContentOnError={true}

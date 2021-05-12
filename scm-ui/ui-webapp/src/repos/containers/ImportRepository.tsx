@@ -105,7 +105,7 @@ const ImportRepository: FC = () => {
     <Page
       title={t("create.title")}
       subtitle={t("import.subtitle")}
-      afterTitle={<RepositoryFormSwitcher creationMode={"IMPORT"} />}
+      afterTitle={<RepositoryFormSwitcher />}
       loading={isLoading}
       error={error || undefined}
       showContentOnError={true}

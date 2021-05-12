@@ -26,10 +26,9 @@ import React, { FC } from "react";
 import styled from "styled-components";
 import { useTranslation } from "react-i18next";
 import { Button, ButtonAddons, Icon, Level } from "@scm-manager/ui-components";
-
-type Props = {
-  creationMode: "CREATE" | "IMPORT";
-};
+import { useLocation } from "react-router-dom";
+import { useBinder } from "@scm-manager/ui-extensions";
+import { useRepositoryTypes } from "@scm-manager/ui-api";
 
 const MarginIcon = styled(Icon)`
   padding-right: 0.5rem;
@@ -52,36 +51,54 @@ const TopLevel = styled(Level)`
   }
 `;
 
-const RepositoryFormSwitcher: FC<Props> = ({ creationMode }) => {
+type RepositoryForm = {
+  href: string;
+  icon: string;
+  label: string;
+};
+
+const RepositoryFormButton: FC<RepositoryForm> = ({ href, icon, label }) => {
+  const location = useLocation();
+  const isSelected = href === location.pathname;
+
+  return (
+    <SmallButton color={isSelected ? "link is-selected" : undefined} link={!isSelected ? href : undefined}>
+      <MarginIcon name={icon} color={isSelected ? "white" : "default"} />
+      <p className="is-hidden-mobile is-hidden-tablet-only">{label}</p>
+    </SmallButton>
+  );
+};
+
+const RepositoryFormSwitcher: FC = () => {
   const [t] = useTranslation("repos");
+  const { data } = useRepositoryTypes();
+  const binder = useBinder();
 
-  const isImportMode = () => {
-    return creationMode === "IMPORT";
-  };
+  const forms = [
+    {
+      href: "/repos/create",
+      icon: "plus",
+      label: t("repositoryForm.createButton")
+    },
+    {
+      href: "/repos/import",
+      icon: "file-upload",
+      label: t("repositoryForm.importButton")
+    }
+  ];
 
-  const isCreateMode = () => {
-    return creationMode === "CREATE";
-  };
+  if (data && binder.hasExtension("repo.add.form-switcher")) {
+    const extensionForms: RepositoryForm[] = binder.getExtensions("repo.add.form-switcher", { repositoryTypes: data });
+    forms.push(...extensionForms);
+  }
 
   return (
     <TopLevel
       right={
         <ButtonAddons>
-          <SmallButton
-            color={isCreateMode() ? "link is-selected" : undefined}
-            link={isImportMode() ? "/repos/create" : undefined}
-          >
-            <MarginIcon name="fa fa-plus" color={isCreateMode() ? "white" : "default"} />
-            <p className="is-hidden-mobile is-hidden-tablet-only">{t("repositoryForm.createButton")}</p>
-          </SmallButton>
-          <SmallButton
-            color={isImportMode() ? "link is-selected" : undefined}
-            link={isCreateMode() ? "/repos/import" : undefined}
-            className="has-text-left-desktop"
-          >
-            <MarginIcon name="fa fa-file-upload" color={isImportMode() ? "white" : "default"} />
-            <p className="is-hidden-mobile is-hidden-tablet-only">{t("repositoryForm.importButton")}</p>
-          </SmallButton>
+          {forms.map(form => (
+            <RepositoryFormButton key={form.href} {...form} />
+          ))}
         </ButtonAddons>
       }
     />
