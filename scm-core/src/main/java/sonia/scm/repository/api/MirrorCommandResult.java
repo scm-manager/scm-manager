@@ -24,13 +24,17 @@
 
 package sonia.scm.repository.api;
 
+import java.time.Duration;
+
 public final class MirrorCommandResult {
 
   private final boolean success;
-  private final long duration;
+  private final String log;
+  private final Duration duration;
 
-  MirrorCommandResult(boolean success, long duration) {
+  public MirrorCommandResult(boolean success, String log, Duration duration) {
     this.success = success;
+    this.log = log;
     this.duration = duration;
   }
 
@@ -38,7 +42,11 @@ public final class MirrorCommandResult {
     return success;
   }
 
-  public long getDuration() {
+  public String getLog() {
+    return log;
+  }
+
+  public Duration getDuration() {
     return duration;
   }
 }

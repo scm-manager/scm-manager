@@ -298,4 +298,11 @@ public abstract class RepositoryServiceProvider implements Closeable
   public FullHealthCheckCommand getFullHealthCheckCommand() {
     throw new CommandNotSupportedException(Command.FULL_HEALTH_CHECK);
   }
+
+  /**
+   * @since 2.19.0
+   */
+  public MirrorCommand getMirrorCommand() {
+    throw new CommandNotSupportedException(Command.MIRROR);
+  }
 }
