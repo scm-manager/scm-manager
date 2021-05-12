@@ -25,6 +25,7 @@ import React, { ChangeEvent, FC, FocusEvent } from "react";
 import { Help } from "../index";
 import styled from "styled-components";
 import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
+import classNames from "classnames";
 
 const StyledRadio = styled.label`
   margin-right: 0.5em;
@@ -38,6 +39,7 @@ type BaseProps = {
   disabled?: boolean;
   helpText?: string;
   defaultChecked?: boolean;
+  className?: string;
 };
 
 const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({ name, defaultChecked, ...props }) => {
@@ -75,7 +77,7 @@ const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({ name
         because jsx label does not the custom disabled attribute
         but bulma does.
         // @ts-ignore */}
-      <StyledRadio className="radio" disabled={props.disabled}>
+      <StyledRadio className={classNames("radio", props.className)} disabled={props.disabled}>
         <input
           type="radio"
           name={name}

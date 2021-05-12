@@ -82,7 +82,7 @@ const ReactHookForm: FC = () => {
           <Radio defaultChecked={true} value={"true"} label="Remember Me" {...register("rememberMe")} />
           <Radio value={"false"} label="Dont Remember Me" {...register("rememberMe")} />
         </RadioList>
-        <Radio checked={false} value={"false"} label="Scramble Password" {...register("scramblePassword")} />
+        <Radio className="ml-2" value={"false"} label="Scramble Password" {...register("scramblePassword")} />
         <div className="pt-2">
           <SubmitButton>Submit</SubmitButton>
         </div>
