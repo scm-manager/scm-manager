@@ -28,14 +28,13 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.junit.Before;
 import org.junit.Test;
 import sonia.scm.repository.GitConfig;
-import sonia.scm.repository.GitTestHelper;
 import sonia.scm.repository.Modifications;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.function.Consumer;
 
-import static org.assertj.core.api.Java6Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
 
@@ -112,12 +111,12 @@ public class GitModificationsCommandTest extends AbstractRemoteCommandTestBase {
     PushCommandRequest request = new PushCommandRequest();
     request.setRemoteRepository(incomingRepository);
     cmd.push(request);
+    GitContext context = new GitContext(incomingDirectory, incomingRepository, null, new GitConfig());
+    PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory = new PostReceiveRepositoryHookEventFactory(eventBus, eventFactory, context);
     GitPullCommand pullCommand = new GitPullCommand(
       handler,
-      new GitContext(incomingDirectory, incomingRepository, null, new GitConfig()),
-      eventBus,
-      eventFactory
-    );
+      context,
+      postReceiveRepositoryHookEventFactory);
     PullCommandRequest pullRequest = new PullCommandRequest();
     pullRequest.setRemoteRepository(incomingRepository);
     pullCommand.pull(pullRequest);
