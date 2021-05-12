@@ -38,14 +38,16 @@ const Ref: FC = () => {
   const ref = useRef<HTMLInputElement>(null);
   return (
     <>
-      <Checkbox label={"Ref Radio Button"} checked={false} ref={ref} />
+      <Checkbox label={"Ref Checkbox"} checked={false} ref={ref} />
       <Button
         action={() => {
-          ref.current?.focus();
+          if (ref.current) {
+            ref.current.checked = !ref.current.checked;
+          }
         }}
         color="primary"
       >
-        Focus InputField
+        Toggle Checkbox
       </Button>
     </>
   );
@@ -67,8 +69,8 @@ const ReactHookForm: FC = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Checkbox checked={true} label="Remember Me" {...register("rememberMe")} />
-        <Checkbox checked={false} label="Scramble Password" {...register("scramblePassword")} />
+        <Checkbox label="Remember Me" {...register("rememberMe")} />
+        <Checkbox label="Scramble Password" {...register("scramblePassword")} />
         <div className="pt-2">
           <SubmitButton>Submit</SubmitButton>
         </div>

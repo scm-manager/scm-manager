@@ -50,11 +50,13 @@ const Ref: FC = () => {
       <Radio label={"Ref Radio Button"} checked={false} ref={ref} />
       <Button
         action={() => {
-          ref.current?.focus();
+          if (ref.current) {
+            ref.current.checked = true;
+          }
         }}
         color="primary"
       >
-        Focus InputField
+        Check InputField
       </Button>
     </>
   );

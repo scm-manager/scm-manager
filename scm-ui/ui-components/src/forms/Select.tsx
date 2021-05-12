@@ -81,18 +81,17 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   useEffect(() => {
     // trigger change after render, if value is null to set it to the first value
     // of the given options.
-    if (!value && field?.current?.value) {
+    if (!value && field.current?.value) {
       if (props.onChange) {
         if (isUsingRef<BaseProps, HTMLSelectElement, string>(props)) {
-          // TODO: Does this work ?
           const event = new Event("change");
-          field?.current?.dispatchEvent(event);
+          field.current?.dispatchEvent(event);
         } else if (isLegacy(props)) {
-          props.onChange(field?.current?.value, name);
+          props.onChange(field.current?.value, name);
         }
       }
     }
-  }, []);
+  }, [field, name, props, value]);
 
   const loadingClass = loading ? "is-loading" : "";
 
