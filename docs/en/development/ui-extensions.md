@@ -107,3 +107,37 @@ binder.bind("repo.avatar", GitAvatar, (props) => props.type === "git");
 ```javascript
 <ExtensionPoint name="repo.avatar" props={type: "git"} />
 ```
+
+### Typings
+
+Both extension points and extensions can share a common typescript type to define the contract between them.
+This includes the `name`, the type of `props` passed to the predicate and what `type` the extensions themselves can be.
+
+Example:
+```typescript
+    type CalculatorExtensionPoint = ExtensionPointDefinition<"extension.calculator", (input: number[]) => number, undefined>;
+    
+    const sum = (a: number, b: number) => a + b;
+    binder.bind<CalculatorExtensionPoint>("extension.calculator", (input: number[]) => input.reduce(sum, 0));
+    const calculator = binder.getExtension<CalculatorExtensionPoint>("extension.calculator");
+    const result = calculator([1, 2, 3]);
+```
+
+In this example, we use the base type `ExtensionPointDefinition<name, type, props>` to declare a new extension point.
+
+As we do not need a predicate, we can define the `props` type parameter as `undefined`. This allows us to skip the `props` parameter in the
+`getExtension` method and the `predicate` parameter in the `bind` method.
+
+When using `bind` to define an extension or `getExtension` to retrieve an extension, we can pass the new type as a type parameter.
+By doing this, we allow typescript to help us with type-checks and offer us type-completion.
+
+Negative Example:
+```typescript
+    type CalculatorExtensionPoint = ExtensionPointDefinition<"extension.calculator", (input: number[]) => number, undefined>;
+    
+    const sum = (a: number, b: number) => a + b;
+    binder.bind<CalculatorExtensionPoint>("extension.calculato", (input: number[]) => input.reduce(sum, 0));
+```
+
+This code for example, would lead to a compile time type error because we made a typo in the `name` of the extension when binding it.
+If we had used the `bind` method without the type parameter, we would not have gotten an error but run into problems at runtime.

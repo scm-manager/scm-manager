@@ -42,11 +42,14 @@ const FixedHeightInput = styled.input`
 
 const FilterInput: FC<Props> = ({ filter, value, testId, placeholder, autoFocus, className }) => {
   const [stateValue, setStateValue] = useState(value || "");
-  const [timeoutId, setTimeoutId] = useState(0);
+  const [timeoutId, setTimeoutId] = useState<ReturnType<typeof setTimeout>>();
   const [t] = useTranslation("commons");
 
+  // TODO check dependencies
   useEffect(() => {
-    clearTimeout(timeoutId);
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
     if (!stateValue) {
       // no delay if filter input was deleted
       filter(stateValue);
