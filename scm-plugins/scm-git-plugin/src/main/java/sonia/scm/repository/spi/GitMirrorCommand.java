@@ -26,101 +26,92 @@ package sonia.scm.repository.spi;
 
 import com.google.common.base.Stopwatch;
 import com.google.common.base.Strings;
-import org.eclipse.jgit.api.CloneCommand;
+import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.transport.TagOpt;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.UsernamePasswordCredential;
 
+import javax.inject.Inject;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.Duration;
 
 public class GitMirrorCommand extends AbstractGitCommand implements MirrorCommand {
 
-  GitMirrorCommand(GitContext context) {
+  private final PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory;
+
+  @Inject
+  GitMirrorCommand(GitContext context, PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory) {
     super(context);
+    this.postReceiveRepositoryHookEventFactory = postReceiveRepositoryHookEventFactory;
   }
 
   @Override
   public MirrorCommandResult mirror(MirrorCommandRequest mirrorCommandRequest) {
-    Path repositoryDir = context.getDirectory().toPath();
-    if (!Files.exists(repositoryDir)) {
-      createDirectories(repositoryDir);
-    }
-
-    Stopwatch stopwatch = Stopwatch.createStarted();
-
-    CloneCommand cloneCommand = createCloneCommand(mirrorCommandRequest, repositoryDir);
-
-    boolean success;
-    String log;
-    try (Git mirror = cloneCommand.call()) {
-      log = createMirrorLog(mirror);
-      success = true;
-    } catch (GitAPIException e) {
-      log = e.getMessage();
-      success = false;
-    }
-
-    Duration duration = stopwatch.stop().elapsed();
-
-    return new MirrorCommandResult(success, log, duration);
+    return update(mirrorCommandRequest);
   }
 
-  private String createMirrorLog(Git mirror) throws GitAPIException {
-    StringBuilder builder = new StringBuilder();
-    builder.append("Branches:\n");
-    mirror.branchList().call().stream().map(Ref::getName).forEach(s -> builder.append("- ").append(s).append('\n'));
-    builder.append("Tags:\n");
-    mirror.tagList().call().stream().map(Ref::getName).forEach(s -> builder.append("- ").append(s).append('\n'));
-    return builder.toString();
-  }
-
-  private CloneCommand createCloneCommand(MirrorCommandRequest mirrorCommandRequest, Path repositoryDir) {
-    CloneCommand cloneCommand = Git.cloneRepository().setMirror(true).setGitDir(repositoryDir.toFile()).setURI(mirrorCommandRequest.getSourceUrl());
+  private FetchCommand createFetchCommand(MirrorCommandRequest mirrorCommandRequest, Repository repository) {
+    FetchCommand fetchCommand = Git.wrap(repository)
+      .fetch()
+      .setRefSpecs(new RefSpec("refs/heads/*:refs/heads/*"))
+      .setTagOpt(TagOpt.FETCH_TAGS)
+      .setRemote(mirrorCommandRequest.getSourceUrl());
     mirrorCommandRequest.getCredentials()
       .stream()
       .filter(c -> c instanceof UsernamePasswordCredential)
       .map(c -> (UsernamePasswordCredential) c)
       .findFirst()
-      .ifPresent(c -> cloneCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(
+      .ifPresent(c -> fetchCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(
           Strings.nullToEmpty(c.username()),
           Strings.nullToEmpty(new String(c.password()))
         )
       ));
-    return cloneCommand;
+
+    return fetchCommand;
   }
 
   @Override
   public MirrorCommandResult update(MirrorCommandRequest mirrorCommandRequest) {
     Stopwatch stopwatch = Stopwatch.createStarted();
-    String log = updateMirror();
-    Duration duration = stopwatch.stop().elapsed();
-    return new MirrorCommandResult(true, log, duration);
-  }
-
-  private String updateMirror() {
-    try (Git git = new Git(context.open())) {
-      FetchResult fetchResult = git.fetch().call();
-      return fetchResult.toString();
+    boolean success;
+    String log;
+    try (Repository repository = context.open(); Git git = Git.wrap(repository)) {
+      FetchResult fetchResult = createFetchCommand(mirrorCommandRequest, repository).call();
+      postReceiveRepositoryHookEventFactory.fireForFetch(git, fetchResult);
+      log = createUpdateLog(fetchResult);
+      success = true;
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "error during git fetch", e);
     } catch (GitAPIException e) {
-      return e.getMessage();
+      log = e.getMessage();
+      success = false;
     }
+    Duration duration = stopwatch.stop().elapsed();
+    return new MirrorCommandResult(success, log, duration);
   }
 
-  private Path createDirectories(Path repositoryDir) {
-    try {
-      return Files.createDirectories(repositoryDir);
-    } catch (IOException e) {
-      throw new InternalRepositoryException(context.getRepository(), "Could not create directory for target repository", e);
-    }
+  private String createUpdateLog(FetchResult fetchResult) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("Branches:\n");
+    appendRefs(fetchResult, builder, "refs/heads/");
+    builder.append("Tags:\n");
+    appendRefs(fetchResult, builder, "refs/tags/");
+    return builder.toString();
+  }
+
+  private void appendRefs(FetchResult fetchResult, StringBuilder builder, String prefix) {
+    fetchResult.getTrackingRefUpdates()
+      .stream()
+      .filter(ref -> ref.getLocalName().startsWith(prefix))
+      .forEach(
+        trackingRefUpdate -> builder.append("- ").append(trackingRefUpdate.getOldObjectId().abbreviate(9).name()).append("...").append(trackingRefUpdate.getNewObjectId().abbreviate(9).name()).append(' ').append(trackingRefUpdate.getLocalName().substring(prefix.length())).append('\n')
+      );
   }
 }
