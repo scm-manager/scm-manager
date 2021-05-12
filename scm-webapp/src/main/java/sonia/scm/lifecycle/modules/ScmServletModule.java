@@ -58,6 +58,7 @@ import sonia.scm.group.xml.XmlGroupDAO;
 import sonia.scm.metrics.MeterRegistryProvider;
 import sonia.scm.migration.MigrationDAO;
 import sonia.scm.net.SSLContextProvider;
+import sonia.scm.net.TrustManagerProvider;
 import sonia.scm.net.ahc.AdvancedHttpClient;
 import sonia.scm.net.ahc.ContentTransformer;
 import sonia.scm.net.ahc.DefaultAdvancedHttpClient;
@@ -125,6 +126,7 @@ import sonia.scm.web.security.AdministrationContext;
 import sonia.scm.web.security.DefaultAdministrationContext;
 
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 
 /**
  * @author Sebastian Sdorra
@@ -211,8 +213,11 @@ class ScmServletModule extends ServletModule {
     bind(CGIExecutorFactory.class, DefaultCGIExecutorFactory.class);
     bind(StoreExporter.class, FileStoreExporter.class);
 
-    // bind sslcontext provider
+    // bind ssl context provider
     bind(SSLContext.class).toProvider(SSLContextProvider.class);
+
+    // bind trust manager provider
+    bind(TrustManager.class).toProvider(TrustManagerProvider.class);
 
     // bind ahc
     Multibinder<ContentTransformer> transformers =

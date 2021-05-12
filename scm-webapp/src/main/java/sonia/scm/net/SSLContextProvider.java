@@ -21,15 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.net;
 
 import com.google.common.base.Throwables;
 import com.google.inject.Inject;
+
 import java.security.NoSuchAlgorithmException;
 import javax.inject.Named;
 import javax.inject.Provider;
 import javax.net.ssl.SSLContext;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -40,8 +42,7 @@ import org.slf4j.LoggerFactory;
  * @author Sebastian Sdorra
  * @version 1.47
  */
-public final class SSLContextProvider implements Provider<SSLContext>
-{
+public final class SSLContextProvider implements Provider<SSLContext> {
 
   /**
    * the logger for SSLContextProvider
@@ -53,28 +54,20 @@ public final class SSLContextProvider implements Provider<SSLContext>
   private Provider<SSLContext> sslContextProvider;
 
   @Override
-  public SSLContext get()
-  {
+  public SSLContext get() {
     SSLContext context = null;
-    if (sslContextProvider != null)
-    {
+    if (sslContextProvider != null) {
       context = sslContextProvider.get();
     }
 
-    if (context == null)
-    {
-      try
-      {
+    if (context == null) {
+      try {
         logger.trace("could not find ssl context provider, use jvm default");
         context = SSLContext.getDefault();
-      }
-      catch (NoSuchAlgorithmException ex)
-      {
+      } catch (NoSuchAlgorithmException ex) {
         throw Throwables.propagate(ex);
       }
-    } 
-    else 
-    {
+    } else {
       logger.trace("use custom ssl context from provider");
     }
     return context;
