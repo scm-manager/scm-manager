@@ -83,16 +83,13 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   private FetchCommand createFetchCommand(MirrorCommandRequest mirrorCommandRequest, Repository repository) {
     FetchCommand fetchCommand = createFetchCommandWithBranchAndTagUpdate(Git.wrap(repository))
       .setRemote(mirrorCommandRequest.getSourceUrl());
-    mirrorCommandRequest.getCredentials()
-      .stream()
-      .filter(c -> c instanceof UsernamePasswordCredential)
-      .map(c -> (UsernamePasswordCredential) c)
-      .findFirst()
-      .ifPresent(c -> fetchCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(
+    mirrorCommandRequest.getCredential(UsernamePasswordCredential.class)
+      .ifPresent(c -> fetchCommand.setCredentialsProvider(
+        new UsernamePasswordCredentialsProvider(
           Strings.nullToEmpty(c.username()),
           Strings.nullToEmpty(new String(c.password()))
-        )
-      ));
+        ))
+      );
 
     return fetchCommand;
   }

@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import sonia.scm.repository.api.Credential;
 
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 import static java.util.Collections.unmodifiableList;
@@ -49,6 +50,14 @@ public final class MirrorCommandRequest {
 
   public List<Credential> getCredentials() {
     return unmodifiableList(credentials);
+  }
+
+  public <T extends Credential> Optional<T> getCredential(Class<T> credentialClass) {
+    return getCredentials()
+      .stream()
+      .filter(credentialClass::isInstance)
+      .map(credentialClass::cast)
+      .findFirst();
   }
 
   public void setCredentials(List<Credential> credentials) {
