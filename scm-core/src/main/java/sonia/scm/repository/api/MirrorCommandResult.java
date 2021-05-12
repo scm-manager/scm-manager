@@ -25,14 +25,15 @@
 package sonia.scm.repository.api;
 
 import java.time.Duration;
+import java.util.List;
 
 public final class MirrorCommandResult {
 
   private final boolean success;
-  private final String log;
+  private final List<String> log;
   private final Duration duration;
 
-  public MirrorCommandResult(boolean success, String log, Duration duration) {
+  public MirrorCommandResult(boolean success, List<String> log, Duration duration) {
     this.success = success;
     this.log = log;
     this.duration = duration;
@@ -42,7 +43,7 @@ public final class MirrorCommandResult {
     return success;
   }
 
-  public String getLog() {
+  public List<String> getLog() {
     return log;
   }
 

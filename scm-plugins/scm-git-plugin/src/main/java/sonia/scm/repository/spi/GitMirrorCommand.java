@@ -41,6 +41,11 @@ import sonia.scm.repository.api.UsernamePasswordCredential;
 import javax.inject.Inject;
 import java.io.IOException;
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+
+import static java.lang.String.format;
+import static java.util.Collections.singletonList;
 
 public class GitMirrorCommand extends AbstractGitCommand implements MirrorCommand {
 
@@ -55,6 +60,26 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   @Override
   public MirrorCommandResult mirror(MirrorCommandRequest mirrorCommandRequest) {
     return update(mirrorCommandRequest);
+  }
+
+  @Override
+  public MirrorCommandResult update(MirrorCommandRequest mirrorCommandRequest) {
+    Stopwatch stopwatch = Stopwatch.createStarted();
+    boolean success;
+    List<String> log;
+    try (Repository repository = context.open(); Git git = Git.wrap(repository)) {
+      FetchResult fetchResult = createFetchCommand(mirrorCommandRequest, repository).call();
+      postReceiveRepositoryHookEventFactory.fireForFetch(git, fetchResult);
+      log = createUpdateLog(fetchResult);
+      success = true;
+    } catch (IOException e) {
+      throw new InternalRepositoryException(context.getRepository(), "error during git fetch", e);
+    } catch (GitAPIException e) {
+      log = singletonList(e.getMessage());
+      success = false;
+    }
+    Duration duration = stopwatch.stop().elapsed();
+    return new MirrorCommandResult(success, log, duration);
   }
 
   private FetchCommand createFetchCommand(MirrorCommandRequest mirrorCommandRequest, Repository repository) {
@@ -77,41 +102,21 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     return fetchCommand;
   }
 
-  @Override
-  public MirrorCommandResult update(MirrorCommandRequest mirrorCommandRequest) {
-    Stopwatch stopwatch = Stopwatch.createStarted();
-    boolean success;
-    String log;
-    try (Repository repository = context.open(); Git git = Git.wrap(repository)) {
-      FetchResult fetchResult = createFetchCommand(mirrorCommandRequest, repository).call();
-      postReceiveRepositoryHookEventFactory.fireForFetch(git, fetchResult);
-      log = createUpdateLog(fetchResult);
-      success = true;
-    } catch (IOException e) {
-      throw new InternalRepositoryException(context.getRepository(), "error during git fetch", e);
-    } catch (GitAPIException e) {
-      log = e.getMessage();
-      success = false;
-    }
-    Duration duration = stopwatch.stop().elapsed();
-    return new MirrorCommandResult(success, log, duration);
+  private List<String> createUpdateLog(FetchResult fetchResult) {
+    List<String> log = new ArrayList<>();
+    log.add("Branches:");
+    appendRefs(fetchResult, log, "refs/heads/");
+    log.add("Tags:");
+    appendRefs(fetchResult, log, "refs/tags/");
+    return log;
   }
 
-  private String createUpdateLog(FetchResult fetchResult) {
-    StringBuilder builder = new StringBuilder();
-    builder.append("Branches:\n");
-    appendRefs(fetchResult, builder, "refs/heads/");
-    builder.append("Tags:\n");
-    appendRefs(fetchResult, builder, "refs/tags/");
-    return builder.toString();
-  }
-
-  private void appendRefs(FetchResult fetchResult, StringBuilder builder, String prefix) {
+  private void appendRefs(FetchResult fetchResult, List<String> log, String prefix) {
     fetchResult.getTrackingRefUpdates()
       .stream()
       .filter(ref -> ref.getLocalName().startsWith(prefix))
       .forEach(
-        trackingRefUpdate -> builder.append("- ").append(trackingRefUpdate.getOldObjectId().abbreviate(9).name()).append("...").append(trackingRefUpdate.getNewObjectId().abbreviate(9).name()).append(' ').append(trackingRefUpdate.getLocalName().substring(prefix.length())).append('\n')
+        trackingRefUpdate -> log.add(format("- %s..%s %s", trackingRefUpdate.getOldObjectId().abbreviate(9).name(), trackingRefUpdate.getNewObjectId().abbreviate(9).name(), trackingRefUpdate.getLocalName().substring(prefix.length())))
       );
   }
 }
