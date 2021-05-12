@@ -31,8 +31,6 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.FetchResult;
-import org.eclipse.jgit.transport.RefSpec;
-import org.eclipse.jgit.transport.TagOpt;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MirrorCommandResult;
@@ -46,6 +44,7 @@ import java.util.List;
 
 import static java.lang.String.format;
 import static java.util.Collections.singletonList;
+import static sonia.scm.repository.GitUtil.createFetchCommandWithBranchAndTagUpdate;
 
 public class GitMirrorCommand extends AbstractGitCommand implements MirrorCommand {
 
@@ -83,10 +82,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   }
 
   private FetchCommand createFetchCommand(MirrorCommandRequest mirrorCommandRequest, Repository repository) {
-    FetchCommand fetchCommand = Git.wrap(repository)
-      .fetch()
-      .setRefSpecs(new RefSpec("refs/heads/*:refs/heads/*"))
-      .setTagOpt(TagOpt.FETCH_TAGS)
+    FetchCommand fetchCommand = createFetchCommandWithBranchAndTagUpdate(Git.wrap(repository))
       .setRemote(mirrorCommandRequest.getSourceUrl());
     mirrorCommandRequest.getCredentials()
       .stream()

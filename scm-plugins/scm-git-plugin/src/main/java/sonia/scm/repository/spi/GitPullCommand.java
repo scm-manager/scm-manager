@@ -32,8 +32,6 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.FetchResult;
-import org.eclipse.jgit.transport.RefSpec;
-import org.eclipse.jgit.transport.TagOpt;
 import org.eclipse.jgit.transport.TrackingRefUpdate;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
@@ -55,7 +53,6 @@ import java.io.IOException;
 public class GitPullCommand extends AbstractGitPushOrPullCommand
   implements PullCommand {
 
-  private static final String REF_SPEC = "refs/heads/*:refs/heads/*";
   private static final Logger LOG = LoggerFactory.getLogger(GitPullCommand.class);
   private final PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory;
 
@@ -170,16 +167,14 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     FetchResult result;
     try {
       //J-
-      result = git.fetch()
+      result = GitUtil.createFetchCommandWithBranchAndTagUpdate(git)
         .setCredentialsProvider(
           new UsernamePasswordCredentialsProvider(
-            Strings.nullToEmpty(request.getUsername()),
+              Strings.nullToEmpty(request.getUsername()),
             Strings.nullToEmpty(request.getPassword())
           )
         )
-        .setRefSpecs(new RefSpec(REF_SPEC))
         .setRemote(request.getRemoteUrl().toExternalForm())
-        .setTagOpt(TagOpt.FETCH_TAGS)
         .call();
       //J+
 
