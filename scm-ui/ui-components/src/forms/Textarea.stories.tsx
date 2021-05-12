@@ -21,10 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { useState } from "react";
+import React, { FC, useRef, useState } from "react";
 import { storiesOf } from "@storybook/react";
 import styled from "styled-components";
 import Textarea from "./Textarea";
+import Button from "../buttons/Button";
+import { useForm } from "react-hook-form";
+import { SubmitButton } from "../buttons";
+import { MemoryRouter } from "react-router-dom";
 
 const Spacing = styled.div`
   padding: 2em;
@@ -59,7 +63,7 @@ const OnSubmitTextare = () => {
   );
 };
 
-const OnCancelTextare = () => {
+const OnCancelTextarea = () => {
   const [value, setValue] = useState("Use the escape key to clear the textarea");
 
   const cancel = () => {
@@ -73,7 +77,97 @@ const OnCancelTextare = () => {
   );
 };
 
+const Ref: FC = () => {
+  const ref = useRef<HTMLTextAreaElement>(null);
+  return (
+    <>
+      <Textarea ref={ref} />
+      <Button action={() => ref.current?.focus()} color="primary">
+        Focus InputField
+      </Button>
+    </>
+  );
+};
+
+const AutoFocusAndRef: FC = () => {
+  const ref = useRef<HTMLTextAreaElement>(null);
+  return (
+    <>
+      <Textarea ref={ref} autofocus={true} placeholder="Click the button to focus me" />
+      <Textarea placeholder="Click me to switch focus" />
+      <Button action={() => ref.current?.focus()} color="primary">
+        Focus First InputField
+      </Button>
+    </>
+  );
+};
+
+type Commit = {
+  message: string;
+  footer: string;
+};
+
+const ReactHookForm: FC = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors }
+  } = useForm<Commit>();
+  const [stored, setStored] = useState<Commit>();
+
+  const onSubmit = (commit: Commit) => {
+    setStored(commit);
+  };
+
+  return (
+    <>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <Textarea
+          autofocus={true}
+          label="Message"
+          {...register("message", { required: true })}
+          validationError={!!errors.message}
+          errorMessage={"Message is required"}
+        />
+        <Textarea label="Footer" {...register("footer")} />
+        <div className="pt-2">
+          <SubmitButton>Submit</SubmitButton>
+        </div>
+      </form>
+      {stored ? (
+        <div className="mt-5">
+          <pre>
+            <code>{JSON.stringify(stored, null, 2)}</code>
+          </pre>
+        </div>
+      ) : null}
+    </>
+  );
+};
+
+const LegacyEvents: FC = () => {
+  const [value, setValue] = useState<string>("");
+  return (
+    <>
+      <Textarea placeholder="Legacy onChange handler" value={value} onChange={e => setValue(e)} />
+      <div className="mt-3">{value}</div>
+    </>
+  );
+};
+
 storiesOf("Forms|Textarea", module)
+  .addDecorator(storyFn => <MemoryRouter>{storyFn()}</MemoryRouter>)
   .add("OnChange", () => <OnChangeTextarea />)
   .add("OnSubmit", () => <OnSubmitTextare />)
-  .add("OnCancel", () => <OnCancelTextare />);
+  .add("OnCancel", () => <OnCancelTextarea />)
+  .add("AutoFocus", () => <Textarea label="Field with AutoFocus" autofocus={true} />)
+  .add("Default Value", () => (
+    <Textarea
+      label="Field with Default Value"
+      defaultValue={"I am a text area with so much default value its crazy!"}
+    />
+  ))
+  .add("Ref", () => <Ref />)
+  .add("Legacy Events", () => <LegacyEvents />)
+  .add("AutoFocusAndRef", () => <AutoFocusAndRef />)
+  .add("ReactHookForm", () => <ReactHookForm />);

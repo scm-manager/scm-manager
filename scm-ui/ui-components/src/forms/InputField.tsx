@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, KeyboardEvent, FocusEvent, FC, useRef, useEffect, ForwardedRef } from "react";
+import React, { ChangeEvent, FC, FocusEvent, KeyboardEvent } from "react";
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import { createAttributesForTesting } from "../devBuild";
 import useAutofocus from "./useAutofocus";
+import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
 
 type BaseProps = {
   label?: string;
@@ -42,34 +43,10 @@ type BaseProps = {
   helpText?: string;
   className?: string;
   testId?: string;
+  defaultValue?: string;
 };
 
-type LegacyProps = BaseProps & {
-  onChange?: (value: string, name?: string) => void;
-  onBlur?: (value: string, name?: string) => void;
-  innerRef?: never;
-};
-
-type RefProps = BaseProps & {
-  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
-  onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
-};
-
-type InnerRefProps = RefProps & {
-  innerRef: React.ForwardedRef<HTMLInputElement>;
-};
-
-type Props = LegacyProps | InnerRefProps;
-
-const isUsingRef = (props: Partial<Props>): props is InnerRefProps => {
-  return (props as Partial<InnerRefProps>).innerRef !== undefined;
-};
-
-const isLegacy = (props: Props): props is LegacyProps => {
-  return (props as Partial<InnerRefProps>).innerRef === undefined;
-};
-
-export const InnerInputField: FC<Props> = ({
+export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>> = ({
   name,
   onReturnPressed,
   type,
@@ -84,13 +61,14 @@ export const InnerInputField: FC<Props> = ({
   className,
   testId,
   autofocus,
+  defaultValue,
   ...props
 }) => {
   const field = useAutofocus<HTMLInputElement>(autofocus, props.innerRef);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     if (props.onChange) {
-      if (isUsingRef(props)) {
+      if (isUsingRef<BaseProps, HTMLInputElement, string>(props)) {
         props.onChange(event);
       } else if (isLegacy(props)) {
         props.onChange(event.target.value, name);
@@ -100,7 +78,7 @@ export const InnerInputField: FC<Props> = ({
 
   const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
     if (props.onBlur) {
-      if (isUsingRef(props)) {
+      if (isUsingRef<BaseProps, HTMLInputElement, string>(props)) {
         props.onBlur(event);
       } else if (isLegacy(props)) {
         props.onBlur(event.target.value, name);
@@ -137,6 +115,7 @@ export const InnerInputField: FC<Props> = ({
           onChange={handleChange}
           onKeyPress={handleKeyPress}
           onBlur={handleBlur}
+          defaultValue={defaultValue}
           {...createAttributesForTesting(testId)}
         />
       </div>
@@ -145,20 +124,6 @@ export const InnerInputField: FC<Props> = ({
   );
 };
 
-type OuterProps = RefProps & {
-  ref: React.Ref<HTMLInputElement>;
-};
-
-type InputFieldType = {
-  (props: OuterProps): React.ReactElement<OuterProps> | null;
-  (props: LegacyProps): React.ReactElement<LegacyProps> | null;
-};
-
-const InputField: InputFieldType = React.forwardRef<HTMLInputElement, LegacyProps | OuterProps>((props, ref) => {
-  if (ref) {
-    return <InnerInputField innerRef={ref} {...(props as RefProps)} />;
-  }
-  return <InnerInputField {...(props as LegacyProps)} />;
-});
+const InputField: FieldType<BaseProps, HTMLInputElement, string> = createFormFieldWrapper(InnerInputField);
 
 export default InputField;
