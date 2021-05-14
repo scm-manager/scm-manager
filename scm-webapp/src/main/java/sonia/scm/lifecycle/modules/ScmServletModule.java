@@ -42,6 +42,8 @@ import sonia.scm.Undecorated;
 import sonia.scm.api.rest.ObjectMapperProvider;
 import sonia.scm.api.v2.resources.BranchLinkProvider;
 import sonia.scm.api.v2.resources.DefaultBranchLinkProvider;
+import sonia.scm.api.v2.resources.DefaultRepositoryLinkProvider;
+import sonia.scm.api.v2.resources.RepositoryLinkProvider;
 import sonia.scm.cache.CacheManager;
 import sonia.scm.cache.GuavaCacheManager;
 import sonia.scm.config.ScmConfiguration;
@@ -263,6 +265,7 @@ class ScmServletModule extends ServletModule {
 
     // bind api link provider
     bind(BranchLinkProvider.class).to(DefaultBranchLinkProvider.class);
+    bind(RepositoryLinkProvider.class).to(DefaultRepositoryLinkProvider.class);
 
     // bind url helper
     bind(RootURL.class).to(DefaultRootURL.class);
