@@ -25,3 +25,8 @@
 export { default as binder, Binder, ExtensionPointDefinition } from "./binder";
 export * from "./useBinder";
 export { default as ExtensionPoint } from "./ExtensionPoint";
+
+// suppress eslint prettier warning,
+// because prettier does not understand "* as"
+// eslint-disable-next-line prettier/prettier
+export * as extensionPoints from "./extensionPoints";

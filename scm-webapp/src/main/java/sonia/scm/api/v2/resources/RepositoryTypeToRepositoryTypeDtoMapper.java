@@ -24,40 +24,48 @@
 
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
-import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
-import org.mapstruct.MappingTarget;
+import org.mapstruct.ObjectFactory;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
+import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
 
+import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Links.linkingTo;
 
 @Mapper
 public abstract class RepositoryTypeToRepositoryTypeDtoMapper extends BaseMapper<RepositoryType, RepositoryTypeDto> {
 
+  private static final String REL_IMPORT = "import";
+
   @Inject
   private ResourceLinks resourceLinks;
 
-  @AfterMapping
-  void appendLinks(RepositoryType repositoryType, @MappingTarget RepositoryTypeDto target) {
+  @ObjectFactory
+  RepositoryTypeDto create(RepositoryType repositoryType) {
     Links.Builder linksBuilder = linkingTo().self(resourceLinks.repositoryType().self(repositoryType.getName()));
 
     if (RepositoryPermissions.create().isPermitted()) {
       if (repositoryType.getSupportedCommands().contains(Command.PULL)) {
-        linksBuilder.array(Link.linkBuilder("import", resourceLinks.repository().importFromUrl(repositoryType.getName())).withName("url").build());
+        linksBuilder.array(Link.linkBuilder(REL_IMPORT, resourceLinks.repository().importFromUrl(repositoryType.getName())).withName("url").build());
       }
       if (repositoryType.getSupportedCommands().contains(Command.UNBUNDLE)) {
-        linksBuilder.array(Link.linkBuilder("import", resourceLinks.repository().importFromBundle(repositoryType.getName())).withName("bundle").build());
-        linksBuilder.array(Link.linkBuilder("import", resourceLinks.repository().fullImport(repositoryType.getName())).withName("fullImport").build());
+        linksBuilder.array(Link.linkBuilder(REL_IMPORT, resourceLinks.repository().importFromBundle(repositoryType.getName())).withName("bundle").build());
+        linksBuilder.array(Link.linkBuilder(REL_IMPORT, resourceLinks.repository().fullImport(repositoryType.getName())).withName("fullImport").build());
       }
     }
 
-    target.add(linksBuilder.build());
+    Embedded.Builder embeddedBuilder = embeddedBuilder();
+
+    applyEnrichers(new EdisonHalAppender(linksBuilder, embeddedBuilder), repositoryType);
+
+    return new RepositoryTypeDto(linksBuilder.build(), embeddedBuilder.build());
   }
 
 }

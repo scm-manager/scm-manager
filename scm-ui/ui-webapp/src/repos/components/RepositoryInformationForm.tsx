@@ -23,15 +23,15 @@
  */
 import React, { FC, useState } from "react";
 import { InputField, Textarea } from "@scm-manager/ui-components";
-import { Repository } from "@scm-manager/ui-types";
+import { RepositoryCreation } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import * as validator from "./form/repositoryValidation";
 
 type Props = {
-  repository: Repository;
-  onChange: (repository: Repository) => void;
-  disabled: boolean;
+  repository: RepositoryCreation;
+  onChange: (repository: RepositoryCreation) => void;
   setValid: (valid: boolean) => void;
+  disabled?: boolean;
 };
 
 const RepositoryInformationForm: FC<Props> = ({ repository, onChange, disabled, setValid }) => {

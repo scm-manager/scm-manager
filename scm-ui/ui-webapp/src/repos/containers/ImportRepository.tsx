@@ -29,13 +29,12 @@ import { useTranslation } from "react-i18next";
 import ImportRepositoryTypeSelect from "../components/ImportRepositoryTypeSelect";
 import ImportTypeSelect from "../components/ImportTypeSelect";
 import ImportRepositoryFromUrl from "../components/ImportRepositoryFromUrl";
-import { Loading, Notification, Page, useNavigationLock } from "@scm-manager/ui-components";
-import RepositoryFormSwitcher from "../components/form/RepositoryFormSwitcher";
+import { Loading, Notification, useNavigationLock } from "@scm-manager/ui-components";
 
 import ImportRepositoryFromBundle from "../components/ImportRepositoryFromBundle";
 import ImportFullRepository from "../components/ImportFullRepository";
-import { useRepositoryTypes } from "@scm-manager/ui-api";
 import { Prompt } from "react-router-dom";
+import { CreatorComponentProps } from "../types";
 
 const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => {
   const [t] = useTranslation("repos");
@@ -51,8 +50,7 @@ const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => 
   );
 };
 
-const ImportRepository: FC = () => {
-  const { data: repositoryTypes, error, isLoading } = useRepositoryTypes();
+const ImportRepository: FC<CreatorComponentProps> = ({ repositoryTypes, nameForm, informationForm }) => {
   const [importPending, setImportPending] = useState(false);
   const [repositoryType, setRepositoryType] = useState<RepositoryType | undefined>();
   const [importType, setImportType] = useState("");
@@ -72,6 +70,8 @@ const ImportRepository: FC = () => {
           url={((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "url") as Link).href}
           repositoryType={repositoryType!.name}
           setImportPending={setImportPending}
+          nameForm={nameForm}
+          informationForm={informationForm}
         />
       );
     }
@@ -82,6 +82,8 @@ const ImportRepository: FC = () => {
           url={((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "bundle") as Link).href}
           repositoryType={repositoryType!.name}
           setImportPending={setImportPending}
+          nameForm={nameForm}
+          informationForm={informationForm}
         />
       );
     }
@@ -94,6 +96,8 @@ const ImportRepository: FC = () => {
           }
           repositoryType={repositoryType!.name}
           setImportPending={setImportPending}
+          nameForm={nameForm}
+          informationForm={informationForm}
         />
       );
     }
@@ -102,14 +106,7 @@ const ImportRepository: FC = () => {
   };
 
   return (
-    <Page
-      title={t("create.title")}
-      subtitle={t("import.subtitle")}
-      afterTitle={<RepositoryFormSwitcher creationMode={"IMPORT"} />}
-      loading={isLoading}
-      error={error || undefined}
-      showContentOnError={true}
-    >
+    <>
       <Prompt when={importPending} message={t("import.navigationWarning")} />
       <ImportPendingLoading importPending={importPending} />
       <ImportRepositoryTypeSelect
@@ -131,7 +128,7 @@ const ImportRepository: FC = () => {
         </>
       )}
       {importType && renderImportComponent()}
-    </Page>
+    </>
   );
 };
 

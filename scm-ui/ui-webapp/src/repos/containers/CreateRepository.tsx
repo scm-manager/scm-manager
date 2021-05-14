@@ -22,54 +22,30 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { useTranslation } from "react-i18next";
-import { Page } from "@scm-manager/ui-components";
+import { ErrorNotification } from "@scm-manager/ui-components";
 import RepositoryForm from "../components/form";
-import RepositoryFormSwitcher from "../components/form/RepositoryFormSwitcher";
 import { Redirect } from "react-router-dom";
-import { useCreateRepository, useIndex, useNamespaceStrategies, useRepositoryTypes } from "@scm-manager/ui-api";
+import { useCreateRepository } from "@scm-manager/ui-api";
+import { CreatorComponentProps } from "../types";
 
-const useCreateRepositoryData = () => {
-  const { isLoading: isLoadingNS, error: errorNS, data: namespaceStrategies } = useNamespaceStrategies();
-  const { isLoading: isLoadingRT, error: errorRT, data: repositoryTypes } = useRepositoryTypes();
-  const { isLoading: isLoadingIdx, error: errorIdx, data: index } = useIndex();
-  return {
-    isPageLoading: isLoadingNS || isLoadingRT || isLoadingIdx,
-    pageLoadingError: errorNS || errorRT || errorIdx || undefined,
-    namespaceStrategies,
-    repositoryTypes,
-    index
-  };
-};
-
-const CreateRepository: FC = () => {
-  const { isPageLoading, pageLoadingError, namespaceStrategies, repositoryTypes, index } = useCreateRepositoryData();
+const CreateRepository: FC<CreatorComponentProps> = ({ repositoryTypes, namespaceStrategies, index }) => {
   const { isLoading, error, repository, create } = useCreateRepository();
-  const [t] = useTranslation("repos");
 
   if (repository) {
     return <Redirect to={`/repo/${repository.namespace}/${repository.name}`} />;
   }
 
   return (
-    <Page
-      title={t("create.title")}
-      subtitle={t("create.subtitle")}
-      afterTitle={<RepositoryFormSwitcher creationMode={"CREATE"} />}
-      loading={isPageLoading}
-      error={pageLoadingError || error || undefined}
-      showContentOnError={true}
-    >
-      {namespaceStrategies && repositoryTypes ? (
-        <RepositoryForm
-          repositoryTypes={repositoryTypes._embedded.repositoryTypes}
-          loading={isLoading}
-          namespaceStrategy={namespaceStrategies!.current}
-          createRepository={create}
-          indexResources={index}
-        />
-      ) : null}
-    </Page>
+    <>
+      <ErrorNotification error={error} />
+      <RepositoryForm
+        repositoryTypes={repositoryTypes._embedded.repositoryTypes}
+        loading={isLoading}
+        namespaceStrategy={namespaceStrategies.current}
+        createRepository={create}
+        indexResources={index}
+      />
+    </>
   );
 };
 

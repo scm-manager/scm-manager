@@ -30,7 +30,7 @@ type ExtensionRegistration<P, T> = {
   extensionName: string;
 };
 
-export type ExtensionPointDefinition<N extends string, T, P> = {
+export type ExtensionPointDefinition<N extends string, T, P = undefined> = {
   name: N;
   type: T;
   props: P;

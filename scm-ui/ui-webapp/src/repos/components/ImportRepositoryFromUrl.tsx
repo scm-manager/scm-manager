@@ -22,21 +22,28 @@
  * SOFTWARE.
  */
 import React, { FC, FormEvent, useState } from "react";
-import NamespaceAndNameFields from "./NamespaceAndNameFields";
-import { Repository, RepositoryUrlImport } from "@scm-manager/ui-types";
+import { RepositoryCreation, RepositoryUrlImport } from "@scm-manager/ui-types";
 import ImportFromUrlForm from "./ImportFromUrlForm";
-import RepositoryInformationForm from "./RepositoryInformationForm";
 import { apiClient, ErrorNotification, Level, SubmitButton } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import { SubFormProps } from "../types";
 
 type Props = {
   url: string;
   repositoryType: string;
   setImportPending: (pending: boolean) => void;
+  nameForm: React.ComponentType<SubFormProps>;
+  informationForm: React.ComponentType<SubFormProps>;
 };
 
-const ImportRepositoryFromUrl: FC<Props> = ({ url, repositoryType, setImportPending }) => {
+const ImportRepositoryFromUrl: FC<Props> = ({
+  url,
+  repositoryType,
+  setImportPending,
+  nameForm: NameForm,
+  informationForm: InformationForm
+}) => {
   const [repo, setRepo] = useState<RepositoryUrlImport>({
     name: "",
     namespace: "",
@@ -46,7 +53,7 @@ const ImportRepositoryFromUrl: FC<Props> = ({ url, repositoryType, setImportPend
     importUrl: "",
     username: "",
     password: "",
-    _links: {}
+    contextEntries: []
   });
 
   const [valid, setValid] = useState({ namespaceAndName: false, contact: true, importUrl: false });
@@ -96,15 +103,15 @@ const ImportRepositoryFromUrl: FC<Props> = ({ url, repositoryType, setImportPend
         disabled={loading}
       />
       <hr />
-      <NamespaceAndNameFields
+      <NameForm
         repository={repo}
-        onChange={setRepo as React.Dispatch<React.SetStateAction<Repository>>}
+        onChange={setRepo as React.Dispatch<React.SetStateAction<RepositoryCreation>>}
         setValid={(namespaceAndName: boolean) => setValid({ ...valid, namespaceAndName })}
         disabled={loading}
       />
-      <RepositoryInformationForm
+      <InformationForm
         repository={repo}
-        onChange={setRepo as React.Dispatch<React.SetStateAction<Repository>>}
+        onChange={setRepo as React.Dispatch<React.SetStateAction<RepositoryCreation>>}
         disabled={loading}
         setValid={(contact: boolean) => setValid({ ...valid, contact })}
       />

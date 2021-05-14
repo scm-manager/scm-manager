@@ -23,7 +23,7 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { Repository, CUSTOM_NAMESPACE_STRATEGY } from "@scm-manager/ui-types";
+import { CUSTOM_NAMESPACE_STRATEGY, RepositoryCreation } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import { InputField } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
@@ -31,8 +31,8 @@ import * as validator from "./form/repositoryValidation";
 import { useNamespaceStrategies } from "@scm-manager/ui-api";
 
 type Props = {
-  repository: Repository;
-  onChange: (repository: Repository) => void;
+  repository: RepositoryCreation;
+  onChange: (repository: RepositoryCreation) => void;
   setValid: (valid: boolean) => void;
   disabled?: boolean;
 };
@@ -83,10 +83,10 @@ const NamespaceAndNameFields: FC<Props> = ({ repository, onChange, setValid, dis
   };
 
   const renderNamespaceField = () => {
-      let informationMessage = undefined;
-      if (repository?.namespace?.indexOf(" ") > 0) {
-        informationMessage =  t("validation.namespaceSpaceWarningText");
-      }
+    let informationMessage = undefined;
+    if (repository?.namespace?.indexOf(" ") > 0) {
+      informationMessage = t("validation.namespaceSpaceWarningText");
+    }
 
     const props = {
       label: t("repository.namespace"),

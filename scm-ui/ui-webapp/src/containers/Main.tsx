@@ -37,7 +37,6 @@ import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import CreateUser from "../users/containers/CreateUser";
 import SingleUser from "../users/containers/SingleUser";
 import RepositoryRoot from "../repos/containers/RepositoryRoot";
-import CreateRepository from "../repos/containers/CreateRepository";
 
 import Groups from "../groups/containers/Groups";
 import SingleGroup from "../groups/containers/SingleGroup";
@@ -47,8 +46,8 @@ import Admin from "../admin/containers/Admin";
 
 import Profile from "./Profile";
 import NamespaceRoot from "../repos/namespaces/containers/NamespaceRoot";
-import ImportRepository from "../repos/containers/ImportRepository";
 import ImportLog from "../repos/importlog/ImportLog";
+import CreateRepositoryRoot from "../repos/containers/CreateRepositoryRoot";
 
 type Props = {
   me: Me;
@@ -79,8 +78,8 @@ class Main extends React.Component<Props> {
             <Route path="/logout" component={Logout} />
             <Redirect exact strict from="/repos" to="/repos/" />
             <ProtectedRoute exact path="/repos/" component={Overview} authenticated={authenticated} />
-            <ProtectedRoute exact path="/repos/create" component={CreateRepository} authenticated={authenticated} />
-            <ProtectedRoute exact path="/repos/import" component={ImportRepository} authenticated={authenticated} />
+            <ProtectedRoute path="/repos/create" component={CreateRepositoryRoot} authenticated={authenticated} />
+            <Redirect exact strict from="/repos/import" to="/repos/create/import" />
             <ProtectedRoute exact path="/repos/:namespace" component={Overview} authenticated={authenticated} />
             <ProtectedRoute exact path="/repos/:namespace/:page" component={Overview} authenticated={authenticated} />
             <ProtectedRoute path="/repo/:namespace/:name" component={RepositoryRoot} authenticated={authenticated} />

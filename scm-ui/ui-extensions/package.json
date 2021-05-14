@@ -10,7 +10,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "react": "^17.0.1"
+    "react": "^17.0.1",
+    "@scm-manager/ui-types": "^2.18.1-SNAPSHOT"
   },
   "devDependencies": {
     "@scm-manager/babel-preset": "^2.12.0",

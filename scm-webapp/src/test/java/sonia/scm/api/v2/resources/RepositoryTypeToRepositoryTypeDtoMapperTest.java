@@ -26,28 +26,27 @@ package sonia.scm.api.v2.resources;
 
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
-import de.otto.edison.hal.Link;
-import org.apache.shiro.subject.Subject;
-import org.apache.shiro.util.ThreadContext;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import de.otto.edison.hal.HalRepresentation;
+import org.assertj.core.data.Index;
+import org.github.sdorra.jse.ShiroExtension;
+import org.github.sdorra.jse.SubjectAware;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
+import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
 
 import java.net.URI;
-import java.util.List;
+import java.util.Collections;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
 
-@RunWith(MockitoJUnitRunner.Silent.class)
-public class RepositoryTypeToRepositoryTypeDtoMapperTest {
+@SubjectAware("slarti")
+@ExtendWith({MockitoExtension.class, ShiroExtension.class})
+class RepositoryTypeToRepositoryTypeDtoMapperTest {
 
   private final URI baseUri = URI.create("https://scm-manager.org/scm/");
 
@@ -55,96 +54,119 @@ public class RepositoryTypeToRepositoryTypeDtoMapperTest {
   private final ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
 
   @Mock
-  private Subject subject;
+  private HalEnricherRegistry registry;
 
   @InjectMocks
   private RepositoryTypeToRepositoryTypeDtoMapperImpl mapper;
 
   private final RepositoryType type = new RepositoryType("hk", "Hitchhiker", Sets.newHashSet());
 
-  @Before
-  public void init() {
-    ThreadContext.bind(subject);
-  }
-
-  @After
-  public void tearDown() {
-    ThreadContext.unbindSubject();
+  @Test
+  void shouldMapSimpleProperties() {
+    RepositoryTypeDto dto = mapper.map(type);
+    assertThat(dto.getName()).isEqualTo("hk");
+    assertThat(dto.getDisplayName()).isEqualTo("Hitchhiker");
   }
 
   @Test
-  public void shouldMapSimpleProperties() {
+  void shouldAppendSelfLink() {
     RepositoryTypeDto dto = mapper.map(type);
-    assertEquals("hk", dto.getName());
-    assertEquals("Hitchhiker", dto.getDisplayName());
+    assertLink(dto, "self", "https://scm-manager.org/scm/v2/repositoryTypes/hk");
   }
 
-  @Test
-  public void shouldAppendSelfLink() {
-    RepositoryTypeDto dto = mapper.map(type);
-    assertEquals(
-      "https://scm-manager.org/scm/v2/repositoryTypes/hk",
-      dto.getLinks().getLinkBy("self").get().getHref()
+  private void assertLink(RepositoryTypeDto dto, String rel, String href) {
+    assertThat(dto.getLinks().getLinkBy(rel)).hasValueSatisfying(
+      link -> assertThat(link.getHref()).isEqualTo(href)
     );
   }
 
   @Test
-  public void shouldAppendImportFromUrlLink() {
-    RepositoryType type = new RepositoryType("hk", "Hitchhiker", ImmutableSet.of(Command.PULL));
-    when(subject.isPermitted("repository:create")).thenReturn(true);
-
-    RepositoryTypeDto dto = mapper.map(type);
-    assertEquals(
-      "https://scm-manager.org/scm/v2/repositories/import/hk/url",
-      dto.getLinks().getLinkBy("import").get().getHref()
-    );
-  }
-
-  @Test
-  public void shouldNotAppendImportFromUrlLinkIfCommandNotSupported() {
-    when(subject.isPermitted("repository:create")).thenReturn(true);
-    RepositoryTypeDto dto = mapper.map(type);
-    assertFalse(dto.getLinks().getLinkBy("import").isPresent());
-  }
-
-  @Test
-  public void shouldNotAppendImportFromUrlLinkIfNotPermitted() {
+  @SubjectAware(value = "trillian", permissions = "repository:create")
+  void shouldAppendImportFromUrlLink() {
     RepositoryType type = new RepositoryType("hk", "Hitchhiker", ImmutableSet.of(Command.PULL));
 
     RepositoryTypeDto dto = mapper.map(type);
-    assertFalse(dto.getLinks().getLinkBy("import").isPresent());
+    assertLink(dto, "import", "https://scm-manager.org/scm/v2/repositories/import/hk/url");
   }
 
   @Test
-  public void shouldAppendImportFromBundleLinkAndFullImportLink() {
-    RepositoryType type = new RepositoryType("hk", "Hitchhiker", ImmutableSet.of(Command.UNBUNDLE));
-    when(subject.isPermitted("repository:create")).thenReturn(true);
+  @SubjectAware(value = "trillian", permissions = "repository:create")
+  void shouldNotAppendImportFromUrlLinkIfCommandNotSupported() {
+    RepositoryTypeDto dto = mapper.map(type);
+    assertThat(dto.getLinks().getLinkBy("import")).isEmpty();
+  }
+
+  @Test
+  void shouldNotAppendImportFromUrlLinkIfNotPermitted() {
+    RepositoryType type = new RepositoryType("hk", "Hitchhiker", ImmutableSet.of(Command.PULL));
 
     RepositoryTypeDto dto = mapper.map(type);
-    List<Link> links = dto.getLinks().getLinksBy("import");
-    assertEquals(2, links.size());
-    assertEquals(
-      "https://scm-manager.org/scm/v2/repositories/import/hk/bundle",
-      links.get(0).getHref()
-    );
-    assertEquals(
-      "https://scm-manager.org/scm/v2/repositories/import/hk/full",
-      links.get(1).getHref()
-    );
+    assertThat(dto.getLinks().getLinkBy("import")).isEmpty();
   }
 
   @Test
-  public void shouldNotAppendImportFromBundleLinkOrFullImportLinkIfCommandNotSupported() {
-    when(subject.isPermitted("repository:create")).thenReturn(true);
-    RepositoryTypeDto dto = mapper.map(type);
-    assertFalse(dto.getLinks().getLinkBy("import").isPresent());
-  }
-
-  @Test
-  public void shouldNotAppendImportFromBundleLinkIfNotPermitted() {
+  @SubjectAware(value = "trillian", permissions = "repository:create")
+  void shouldAppendImportFromBundleLinkAndFullImportLink() {
     RepositoryType type = new RepositoryType("hk", "Hitchhiker", ImmutableSet.of(Command.UNBUNDLE));
 
     RepositoryTypeDto dto = mapper.map(type);
-    assertFalse(dto.getLinks().getLinkBy("import").isPresent());
+
+    assertThat(dto.getLinks().getLinksBy("import"))
+      .hasSize(2)
+      .satisfies(link -> {
+          assertThat(link.getHref()).isEqualTo("https://scm-manager.org/scm/v2/repositories/import/hk/bundle");
+        }, Index.atIndex(0)
+      )
+      .satisfies(link -> {
+          assertThat(link.getHref()).isEqualTo("https://scm-manager.org/scm/v2/repositories/import/hk/full");
+        }, Index.atIndex(1)
+      );
+  }
+
+  @Test
+  @SubjectAware(value = "trillian", permissions = "repository:create")
+  void shouldNotAppendImportFromBundleLinkOrFullImportLinkIfCommandNotSupported() {
+    RepositoryTypeDto dto = mapper.map(type);
+    assertThat(dto.getLinks().getLinkBy("import")).isEmpty();
+  }
+
+  @Test
+  void shouldNotAppendImportFromBundleLinkIfNotPermitted() {
+    RepositoryType type = new RepositoryType("hk", "Hitchhiker", ImmutableSet.of(Command.UNBUNDLE));
+
+    RepositoryTypeDto dto = mapper.map(type);
+    assertThat(dto.getLinks().getLinkBy("import")).isEmpty();
+  }
+
+  @Test
+  void shouldEnrichLinks() {
+    when(registry.allByType(RepositoryType.class)).thenReturn(Collections.singleton(new LinkEnricher()));
+
+    RepositoryTypeDto dto = mapper.map(type);
+    assertLink(dto, "spaceship", "/spaceships/heart-of-gold");
+  }
+
+  @Test
+  void shouldEnrichEmbedded() {
+    when(registry.allByType(RepositoryType.class)).thenReturn(Collections.singleton(new EmbeddedEnricher()));
+
+    RepositoryTypeDto dto = mapper.map(type);
+    assertThat(dto.getEmbedded().getItemsBy("spaceship")).hasSize(1);
+  }
+
+  private static class LinkEnricher implements HalEnricher {
+
+    @Override
+    public void enrich(HalEnricherContext context, HalAppender appender) {
+      appender.appendLink("spaceship", "/spaceships/heart-of-gold");
+    }
+  }
+
+  private static class EmbeddedEnricher implements HalEnricher {
+
+    @Override
+    public void enrich(HalEnricherContext context, HalAppender appender) {
+      appender.appendEmbedded("spaceship", new HalRepresentation());
+    }
   }
 }

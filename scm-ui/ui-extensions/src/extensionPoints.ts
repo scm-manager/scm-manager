@@ -22,27 +22,36 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+import { ExtensionPointDefinition } from "./binder";
+import {
+  IndexResources,
+  NamespaceStrategies,
+  RepositoryCreation,
+  RepositoryTypeCollection
+} from "@scm-manager/ui-types";
 
-import de.otto.edison.hal.Embedded;
-import de.otto.edison.hal.HalRepresentation;
-import de.otto.edison.hal.Links;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+type RepositoryCreatorSubFormProps = {
+  repository: RepositoryCreation;
+  onChange: (repository: RepositoryCreation) => void;
+  setValid: (valid: boolean) => void;
+  disabled?: boolean;
+};
 
-@Getter
-@Setter
-@NoArgsConstructor
-@SuppressWarnings("java:S2160") // we need no equals for dtos
-public class RepositoryTypeDto extends HalRepresentation {
+export type RepositoryCreatorComponentProps = {
+  namespaceStrategies: NamespaceStrategies;
+  repositoryTypes: RepositoryTypeCollection;
+  index: IndexResources;
 
-  private String name;
-  private String displayName;
+  nameForm: React.ComponentType<RepositoryCreatorSubFormProps>;
+  informationForm: React.ComponentType<RepositoryCreatorSubFormProps>;
+};
 
-  public RepositoryTypeDto(Links links, Embedded embedded) {
-    super(links, embedded);
-  }
-}
+export type RepositoryCreatorExtension = {
+  subtitle: string;
+  path: string;
+  icon: string;
+  label: string;
+  component: React.ComponentType<RepositoryCreatorComponentProps>;
+};
 
-
+export type RepositoryCreator = ExtensionPointDefinition<"repos.creator", RepositoryCreatorExtension>;

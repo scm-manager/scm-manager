@@ -24,12 +24,8 @@
 
 import React, { FC } from "react";
 import styled from "styled-components";
-import { useTranslation } from "react-i18next";
-import { Button, ButtonAddons, Icon, Level } from "@scm-manager/ui-components";
-
-type Props = {
-  creationMode: "CREATE" | "IMPORT";
-};
+import { Button, ButtonAddons, Icon, Level, urls } from "@scm-manager/ui-components";
+import { useLocation } from "react-router-dom";
 
 const MarginIcon = styled(Icon)`
   padding-right: 0.5rem;
@@ -52,40 +48,39 @@ const TopLevel = styled(Level)`
   }
 `;
 
-const RepositoryFormSwitcher: FC<Props> = ({ creationMode }) => {
-  const [t] = useTranslation("repos");
+type RepositoryForm = {
+  path: string;
+  icon: string;
+  label: string;
+};
 
-  const isImportMode = () => {
-    return creationMode === "IMPORT";
-  };
-
-  const isCreateMode = () => {
-    return creationMode === "CREATE";
-  };
+const RepositoryFormButton: FC<RepositoryForm> = ({ path, icon, label }) => {
+  const location = useLocation();
+  const href = urls.concat("/repos/create", path);
+  const isSelected = href === location.pathname;
 
   return (
-    <TopLevel
-      right={
-        <ButtonAddons>
-          <SmallButton
-            color={isCreateMode() ? "link is-selected" : undefined}
-            link={isImportMode() ? "/repos/create" : undefined}
-          >
-            <MarginIcon name="fa fa-plus" color={isCreateMode() ? "white" : "default"} />
-            <p className="is-hidden-mobile is-hidden-tablet-only">{t("repositoryForm.createButton")}</p>
-          </SmallButton>
-          <SmallButton
-            color={isImportMode() ? "link is-selected" : undefined}
-            link={isCreateMode() ? "/repos/import" : undefined}
-            className="has-text-left-desktop"
-          >
-            <MarginIcon name="fa fa-file-upload" color={isImportMode() ? "white" : "default"} />
-            <p className="is-hidden-mobile is-hidden-tablet-only">{t("repositoryForm.importButton")}</p>
-          </SmallButton>
-        </ButtonAddons>
-      }
-    />
+    <SmallButton color={isSelected ? "link is-selected" : undefined} link={!isSelected ? href : undefined}>
+      <MarginIcon name={icon} color={isSelected ? "white" : "default"} />
+      <p className="is-hidden-mobile is-hidden-tablet-only">{label}</p>
+    </SmallButton>
   );
 };
+
+type Props = {
+  forms: RepositoryForm[];
+};
+
+const RepositoryFormSwitcher: FC<Props> = ({ forms }) => (
+  <TopLevel
+    right={
+      <ButtonAddons>
+        {(forms || []).map(form => (
+          <RepositoryFormButton key={form.path} {...form} />
+        ))}
+      </ButtonAddons>
+    }
+  />
+);
 
 export default RepositoryFormSwitcher;
