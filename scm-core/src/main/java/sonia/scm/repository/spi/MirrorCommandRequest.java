@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import org.apache.commons.lang.StringUtils;
 import sonia.scm.repository.api.Credential;
 
 import java.util.List;
@@ -62,5 +63,9 @@ public final class MirrorCommandRequest {
 
   public void setCredentials(List<Credential> credentials) {
     this.credentials = credentials;
+  }
+
+  public boolean isValid() {
+    return StringUtils.isNotBlank(sourceUrl);
   }
 }
