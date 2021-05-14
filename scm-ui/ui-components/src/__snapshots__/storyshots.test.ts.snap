@@ -47274,10 +47274,9 @@ exports[`Storyshots Forms|Radio ReactHookForm 1`] = `
     </label>
   </div>
   <label
-    className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
+    className="Radio__StyledRadio-ays4vp-0 da-DBNS radio ml-2"
   >
     <input
-      checked={false}
       name="scramblePassword"
       onBlur={[Function]}
       onChange={[Function]}
