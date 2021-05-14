@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.api;
 
+import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Repository;
@@ -67,19 +68,21 @@ public final class MirrorCommandBuilder {
 
   public MirrorCommandResult initialCall() {
     LOG.info("Creating mirror for {} in repository {}", sourceUrl, targetRepository);
-
-    MirrorCommandRequest mirrorCommandRequest = new MirrorCommandRequest();
-    mirrorCommandRequest.setSourceUrl(sourceUrl);
-    mirrorCommandRequest.setCredentials(credentials);
+    MirrorCommandRequest mirrorCommandRequest = createRequest();
     return mirrorCommand.mirror(mirrorCommandRequest);
   }
 
   public MirrorCommandResult update() {
     LOG.debug("Updating mirror for {} in repository {}", sourceUrl, targetRepository);
+    MirrorCommandRequest mirrorCommandRequest = createRequest();
+    return mirrorCommand.update(mirrorCommandRequest);
+  }
 
+  private MirrorCommandRequest createRequest() {
     MirrorCommandRequest mirrorCommandRequest = new MirrorCommandRequest();
     mirrorCommandRequest.setSourceUrl(sourceUrl);
     mirrorCommandRequest.setCredentials(credentials);
-    return mirrorCommand.update(mirrorCommandRequest);
+    Preconditions.checkArgument(mirrorCommandRequest.isValid(), "source url has to be specified");
+    return mirrorCommandRequest;
   }
 }
