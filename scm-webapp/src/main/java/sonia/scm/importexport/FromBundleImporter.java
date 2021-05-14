@@ -28,7 +28,6 @@ import com.google.common.io.Files;
 import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.ImportRepositoryHookEvent;
 import sonia.scm.repository.InternalRepositoryException;
@@ -38,6 +37,7 @@ import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -78,7 +78,7 @@ public class FromBundleImporter {
   public Repository importFromBundle(boolean compressed, InputStream inputStream, Repository repository) {
     RepositoryPermissions.create().check();
 
-    Type t = type(manager, repository.getType());
+    RepositoryType t = type(manager, repository.getType());
     checkSupport(t, Command.UNBUNDLE);
 
     repository.setPermissions(singletonList(
