@@ -21,69 +21,108 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { Help } from "../index";
+import React, { ChangeEvent, FC, FocusEvent, useEffect } from "react";
+import { createAttributesForTesting, Help } from "../index";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
-import TriStateCheckbox from "./TriStateCheckbox";
+import useInnerRef from "./useInnerRef";
+import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
+import classNames from "classnames";
 
-type Props = {
+export interface CheckboxElement extends HTMLElement {
+  value: boolean;
+}
+
+type BaseProps = {
   label?: string;
-  onChange?: (value: boolean, name?: string) => void;
-  checked: boolean;
+  checked?: boolean;
   indeterminate?: boolean;
   name?: string;
   title?: string;
   disabled?: boolean;
   helpText?: string;
   testId?: string;
+  className?: string;
 };
 
-export default class Checkbox extends React.Component<Props> {
-  onCheckboxChange = () => {
-    if (this.props.onChange) {
-      this.props.onChange(!this.props.checked, this.props.name);
+const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
+  label,
+  name,
+  indeterminate,
+  disabled,
+  testId,
+  className,
+  ...props
+}) => {
+  const field = useInnerRef(props.innerRef);
+
+  useEffect(() => {
+    if (field.current) {
+      field.current.indeterminate = indeterminate || false;
+    }
+  }, [field, indeterminate]);
+
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (props.onChange) {
+      if (isUsingRef<BaseProps, HTMLInputElement, boolean>(props)) {
+        props.onChange(event);
+      } else if (isLegacy(props)) {
+        props.onChange(event.target.checked, name);
+      }
     }
   };
 
-  onKeyDown = (event: React.KeyboardEvent) => {
-    const SPACE = 32;
-    if (event.keyCode === SPACE) {
-      this.onCheckboxChange();
+  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+    if (props.onBlur) {
+      if (isUsingRef<BaseProps, HTMLInputElement, boolean>(props)) {
+        props.onBlur(event);
+      } else if (isLegacy(props)) {
+        props.onBlur(event.target.checked, name);
+      }
     }
   };
 
-  renderHelp = () => {
-    const { title, helpText } = this.props;
+  const renderHelp = () => {
+    const { title, helpText } = props;
     if (helpText && !title) {
       return <Help message={helpText} />;
     }
   };
 
-  renderLabelWithHelp = () => {
-    const { title, helpText } = this.props;
+  const renderLabelWithHelp = () => {
+    const { title, helpText } = props;
     if (title) {
       return <LabelWithHelpIcon label={title} helpText={helpText} />;
     }
   };
-
-  render() {
-    const { label, checked, indeterminate, disabled, testId } = this.props;
-    return (
-      <div className="field">
-        {this.renderLabelWithHelp()}
-        <div className="control" onClick={this.onCheckboxChange} onKeyDown={this.onKeyDown}>
-          {/*
+  return (
+    <div className="field">
+      {renderLabelWithHelp()}
+      <div className="control">
+        {/*
             we have to ignore the next line,
             because jsx label does not the custom disabled attribute
             but bulma does.
             // @ts-ignore */}
-          <label className="checkbox" disabled={disabled}>
-            <TriStateCheckbox checked={checked} indeterminate={indeterminate} disabled={disabled} testId={testId} />
-            {label}
-            {this.renderHelp()}
-          </label>
-        </div>
+        <label className="checkbox" disabled={disabled}>
+          <input
+            type="checkbox"
+            name={name}
+            className={classNames("checkbox", className)}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            ref={field}
+            checked={props.checked}
+            disabled={disabled}
+            {...createAttributesForTesting(testId)}
+          />{" "}
+          {label}
+          {renderHelp()}
+        </label>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+const Checkbox: FieldType<BaseProps, HTMLInputElement, boolean> = createFormFieldWrapper(InnerCheckbox);
+
+export default Checkbox;

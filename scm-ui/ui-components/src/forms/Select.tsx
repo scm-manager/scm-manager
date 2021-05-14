@@ -21,72 +21,107 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, FC, FocusEvent, useEffect } from "react";
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
-import {createAttributesForTesting} from "../devBuild";
+import { createAttributesForTesting } from "../devBuild";
+import useInnerRef from "./useInnerRef";
+import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
 
 export type SelectItem = {
   value: string;
   label: string;
 };
 
-type Props = {
+type BaseProps = {
   name?: string;
   label?: string;
   options: SelectItem[];
   value?: string;
-  onChange: (value: string, name?: string) => void;
   loading?: boolean;
   helpText?: string;
   disabled?: boolean;
   testId?: string;
+  defaultValue?: string;
 };
 
-class Select extends React.Component<Props> {
-  field: HTMLSelectElement | null | undefined;
+const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
+  value,
+  defaultValue,
+  name,
+  label,
+  helpText,
+  loading,
+  disabled,
+  testId,
+  ...props
+}) => {
+  const field = useInnerRef(props.innerRef);
 
-  componentDidMount() {
-    // trigger change after render, if value is null to set it to the first value
-    // of the given options.
-    if (!this.props.value && this.field && this.field.value) {
-      this.props.onChange(this.field.value);
+  const handleInput = (event: ChangeEvent<HTMLSelectElement>) => {
+    if (props.onChange) {
+      if (isUsingRef<BaseProps, HTMLSelectElement, string>(props)) {
+        props.onChange(event);
+      } else if (isLegacy(props)) {
+        props.onChange(event.target.value, name);
+      }
     }
-  }
-
-  handleInput = (event: ChangeEvent<HTMLSelectElement>) => {
-    this.props.onChange(event.target.value, this.props.name);
   };
 
-  render() {
-    const { options, value, label, helpText, loading, disabled, testId } = this.props;
-    const loadingClass = loading ? "is-loading" : "";
+  const handleBlur = (event: FocusEvent<HTMLSelectElement>) => {
+    if (props.onBlur) {
+      if (isUsingRef<BaseProps, HTMLSelectElement, string>(props)) {
+        props.onBlur(event);
+      } else if (isLegacy(props)) {
+        props.onBlur(event.target.value, name);
+      }
+    }
+  };
 
-    return (
-      <div className="field">
-        <LabelWithHelpIcon label={label} helpText={helpText} />
-        <div className={classNames("control select", loadingClass)}>
-          <select
-            ref={input => {
-              this.field = input;
-            }}
-            value={value}
-            onChange={this.handleInput}
-            disabled={disabled}
-            {...createAttributesForTesting(testId)}
-          >
-            {options.map(opt => {
-              return (
-                <option value={opt.value} key={"KEY_" + opt.value}>
-                  {opt.label}
-                </option>
-              );
-            })}
-          </select>
-        </div>
+  useEffect(() => {
+    // trigger change after render, if value is null to set it to the first value
+    // of the given options.
+    if (!value && field.current?.value) {
+      if (props.onChange) {
+        if (isUsingRef<BaseProps, HTMLSelectElement, string>(props)) {
+          const event = new Event("change");
+          field.current?.dispatchEvent(event);
+        } else if (isLegacy(props)) {
+          props.onChange(field.current?.value, name);
+        }
+      }
+    }
+  }, [field, name, props, value]);
+
+  const loadingClass = loading ? "is-loading" : "";
+
+  return (
+    <div className="field">
+      <LabelWithHelpIcon label={label} helpText={helpText} />
+      <div className={classNames("control select", loadingClass)}>
+        <select
+          name={name}
+          ref={field}
+          value={value}
+          defaultValue={defaultValue}
+          onChange={handleInput}
+          onBlur={handleBlur}
+          disabled={disabled}
+          {...createAttributesForTesting(testId)}
+        >
+          {props.options.map(opt => {
+            return (
+              <option value={opt.value} key={"KEY_" + opt.value}>
+                {opt.label}
+              </option>
+            );
+          })}
+        </select>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
+const Select: FieldType<BaseProps, HTMLSelectElement, string> = createFormFieldWrapper(InnerSelect);
 
 export default Select;

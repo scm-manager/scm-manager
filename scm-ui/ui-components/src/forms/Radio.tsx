@@ -21,61 +21,81 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent } from "react";
+import React, { ChangeEvent, FC, FocusEvent } from "react";
 import { Help } from "../index";
 import styled from "styled-components";
+import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
+import classNames from "classnames";
 
 const StyledRadio = styled.label`
   margin-right: 0.5em;
 `;
 
-type Props = {
+type BaseProps = {
   label?: string;
   name?: string;
   value?: string;
-  checked: boolean;
-  onChange?: (value: boolean, name?: string) => void;
+  checked?: boolean;
   disabled?: boolean;
   helpText?: string;
+  defaultChecked?: boolean;
+  className?: string;
 };
 
-class Radio extends React.Component<Props> {
-  renderHelp = () => {
-    const helpText = this.props.helpText;
+const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({ name, defaultChecked, ...props }) => {
+  const renderHelp = () => {
+    const helpText = props.helpText;
     if (helpText) {
       return <Help message={helpText} />;
     }
   };
 
-  onValueChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (this.props.onChange) {
-      this.props.onChange(event.target.checked, this.props.name);
+  const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    if (props.onChange) {
+      if (isUsingRef<BaseProps, HTMLInputElement, boolean>(props)) {
+        props.onChange(event);
+      } else if (isLegacy(props)) {
+        props.onChange(Boolean(event.target.checked), name);
+      }
     }
   };
 
-  render() {
-    return (
-      <>
-        {/*
-        we have to ignore the next line, 
+  const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+    if (props.onBlur) {
+      if (isUsingRef<BaseProps, HTMLInputElement, boolean>(props)) {
+        props.onBlur(event);
+      } else if (isLegacy(props)) {
+        props.onBlur(Boolean(event.target.checked), name);
+      }
+    }
+  };
+
+  return (
+    <>
+      {/*
+        we have to ignore the next line,
         because jsx label does not the custom disabled attribute
         but bulma does.
         // @ts-ignore */}
-        <StyledRadio className="radio" disabled={this.props.disabled}>
-          <input
-            type="radio"
-            name={this.props.name}
-            value={this.props.value}
-            checked={this.props.checked}
-            onChange={this.onValueChange}
-            disabled={this.props.disabled}
-          />{" "}
-          {this.props.label}
-          {this.renderHelp()}
-        </StyledRadio>
-      </>
-    );
-  }
-}
+      <StyledRadio className={classNames("radio", props.className)} disabled={props.disabled}>
+        <input
+          type="radio"
+          name={name}
+          value={props.value}
+          checked={props.checked}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          disabled={props.disabled}
+          ref={props.innerRef}
+          defaultChecked={defaultChecked}
+        />{" "}
+        {props.label}
+        {renderHelp()}
+      </StyledRadio>
+    </>
+  );
+};
+
+const Radio: FieldType<BaseProps, HTMLInputElement, boolean> = createFormFieldWrapper(InnerRadio);
 
 export default Radio;

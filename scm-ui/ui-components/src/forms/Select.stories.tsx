@@ -22,42 +22,39 @@
  * SOFTWARE.
  */
 import React, { FC, useRef, useState } from "react";
-import { storiesOf } from "@storybook/react";
-import Radio from "./Radio";
-import styled from "styled-components";
 import Button from "../buttons/Button";
 import { useForm } from "react-hook-form";
 import { SubmitButton } from "../buttons";
+import { storiesOf } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
-
-const Spacing = styled.div`
-  padding: 2em;
-`;
-
-const RadioList = styled.div`
-  display: flex;
-  flex-direction: column;
-  > label:not(:last-child) {
-    margin-bottom: 0.75rem;
-  }
-  padding: 2em;
-`;
+import Select from "./Select";
 
 const Ref: FC = () => {
-  const ref = useRef<HTMLInputElement>(null);
+  const ref = useRef<HTMLSelectElement>(null);
+  const [selected, setSelected] = useState("false");
   return (
     <>
-      <Radio label={"Ref Radio Button"} checked={false} ref={ref} />
+      <Select
+        options={[
+          { label: "foo", value: "true" },
+          { label: "bar", value: "false" }
+        ]}
+        value={selected}
+        label={"Ref Radio Button"}
+        onChange={e => setSelected(e.target.value)}
+        ref={ref}
+      />
       <Button
         action={() => {
           if (ref.current) {
-            ref.current.checked = true;
+            ref.current.focus();
           }
         }}
         color="primary"
       >
-        Check InputField
+        Focus Select Field
       </Button>
+      {selected}
     </>
   );
 };
@@ -78,11 +75,23 @@ const ReactHookForm: FC = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <RadioList>
-          <Radio defaultChecked={true} value={"true"} label="Remember Me" {...register("rememberMe")} />
-          <Radio value={"false"} label="Dont Remember Me" {...register("rememberMe")} />
-        </RadioList>
-        <Radio className="ml-2" value={"false"} label="Scramble Password" {...register("scramblePassword")} />
+        <Select
+          options={[
+            { label: "Yes", value: "true" },
+            { label: "No", value: "false" }
+          ]}
+          label="Remember Me"
+          {...register("rememberMe")}
+        />
+        <Select
+          options={[
+            { label: "Yes", value: "true" },
+            { label: "No", value: "false" }
+          ]}
+          label="Scramble Password"
+          {...register("scramblePassword")}
+        />
+
         <div className="pt-2">
           <SubmitButton>Submit</SubmitButton>
         </div>
@@ -99,38 +108,23 @@ const ReactHookForm: FC = () => {
 };
 
 const LegacyEvents: FC = () => {
-  const [value, setValue] = useState<boolean>(false);
+  const [value, setValue] = useState<string>();
   return (
     <>
-      <Radio checked={value} onChange={setValue} />
+      <Select
+        options={[
+          { label: "Yes", value: "true" },
+          { label: "No", value: "false" }
+        ]}
+        onChange={setValue}
+      />
       <div className="mt-3">{JSON.stringify(value)}</div>
     </>
   );
 };
 
-storiesOf("Forms|Radio", module)
+storiesOf("Forms|Select", module)
   .addDecorator(storyFn => <MemoryRouter>{storyFn()}</MemoryRouter>)
-  .add("Default", () => (
-    <Spacing>
-      <Radio label="Not checked" checked={false} />
-      <Radio label="Checked" checked={true} />
-    </Spacing>
-  ))
-  .add("Disabled", () => (
-    <Spacing>
-      <Radio label="Checked but disabled" checked={true} disabled={true} />
-    </Spacing>
-  ))
-  .add("With HelpText", () => (
-    <RadioList>
-      <Radio label="Classic helpText" checked={false} helpText="This is a classic help text." />
-      <Radio
-        label="Long helpText"
-        checked={true}
-        helpText="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
-      />
-    </RadioList>
-  ))
   .add("Ref", () => <Ref />)
   .add("Legacy Events", () => <LegacyEvents />)
   .add("ReactHookForm", () => <ReactHookForm />);

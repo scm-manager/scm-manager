@@ -21,70 +21,107 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, KeyboardEvent } from "react";
+import React, { ChangeEvent, FC, FocusEvent, KeyboardEvent } from "react";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
+import useAutofocus from "./useAutofocus";
+import classNames from "classnames";
+import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
 
-type Props = {
+type BaseProps = {
   name?: string;
   label?: string;
   placeholder?: string;
   value?: string;
   autofocus?: boolean;
-  onChange: (value: string, name?: string) => void;
   helpText?: string;
   disabled?: boolean;
   onSubmit?: () => void;
   onCancel?: () => void;
+  validationError?: boolean;
+  errorMessage?: string | string[];
+  informationMessage?: string;
+  defaultValue?: string;
 };
 
-class Textarea extends React.Component<Props> {
-  field: HTMLTextAreaElement | null | undefined;
+const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
+  placeholder,
+  value,
+  autofocus,
+  name,
+  label,
+  helpText,
+  disabled,
+  onSubmit,
+  onCancel,
+  errorMessage,
+  validationError,
+  informationMessage,
+  defaultValue,
+  ...props
+}) => {
+  const ref = useAutofocus<HTMLTextAreaElement>(autofocus, props.innerRef);
 
-  componentDidMount() {
-    if (this.props.autofocus && this.field) {
-      this.field.focus();
+  const handleChange = (event: ChangeEvent<HTMLTextAreaElement>) => {
+    if (props.onChange) {
+      if (isUsingRef<BaseProps, HTMLTextAreaElement, string>(props)) {
+        props.onChange(event);
+      } else if (isLegacy(props)) {
+        props.onChange(event.target.value, name);
+      }
     }
-  }
-
-  handleInput = (event: ChangeEvent<HTMLTextAreaElement>) => {
-    this.props.onChange(event.target.value, this.props.name);
   };
 
-  onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    const { onCancel } = this.props;
+  const handleBlur = (event: FocusEvent<HTMLTextAreaElement>) => {
+    if (props.onBlur) {
+      if (isUsingRef<BaseProps, HTMLTextAreaElement, string>(props)) {
+        props.onBlur(event);
+      } else if (isLegacy(props)) {
+        props.onBlur(event.target.value, name);
+      }
+    }
+  };
+
+  const onKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (onCancel && event.key === "Escape") {
       onCancel();
       return;
     }
 
-    const { onSubmit } = this.props;
     if (onSubmit && event.key === "Enter" && (event.ctrlKey || event.metaKey)) {
       onSubmit();
     }
   };
 
-  render() {
-    const { placeholder, value, label, helpText, disabled } = this.props;
-
-    return (
-      <div className="field">
-        <LabelWithHelpIcon label={label} helpText={helpText} />
-        <div className="control">
-          <textarea
-            className="textarea"
-            ref={input => {
-              this.field = input;
-            }}
-            placeholder={placeholder}
-            onChange={this.handleInput}
-            value={value}
-            disabled={!!disabled}
-            onKeyDown={this.onKeyDown}
-          />
-        </div>
-      </div>
-    );
+  const errorView = validationError ? "is-danger" : "";
+  let helper;
+  if (validationError) {
+    helper = <p className="help is-danger">{errorMessage}</p>;
+  } else if (informationMessage) {
+    helper = <p className="help is-info">{informationMessage}</p>;
   }
-}
+
+  return (
+    <div className="field">
+      <LabelWithHelpIcon label={label} helpText={helpText} />
+      <div className="control">
+        <textarea
+          className={classNames("textarea", errorView)}
+          ref={ref}
+          name={name}
+          placeholder={placeholder}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          value={value}
+          disabled={disabled}
+          onKeyDown={onKeyDown}
+          defaultValue={defaultValue}
+        />
+      </div>
+      {helper}
+    </div>
+  );
+};
+
+const Textarea: FieldType<BaseProps, HTMLTextAreaElement, string> = createFormFieldWrapper(InnerTextarea);
 
 export default Textarea;

@@ -24,64 +24,23 @@
 import React, { FC, useRef, useState } from "react";
 import { storiesOf } from "@storybook/react";
 import styled from "styled-components";
-import Textarea from "./Textarea";
+import InputField from "./InputField";
 import Button from "../buttons/Button";
+import { MemoryRouter } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { SubmitButton } from "../buttons";
-import { MemoryRouter } from "react-router-dom";
+import { Person } from "@scm-manager/ui-types";
 
-const Spacing = styled.div`
-  padding: 2em;
+const Decorator = styled.div`
+  padding: 2rem;
+  max-width: 30rem;
 `;
 
-const OnChangeTextarea = () => {
-  const [value, setValue] = useState("Start typing");
-  return (
-    <Spacing>
-      <Textarea value={value} onChange={v => setValue(v)} />
-      <hr />
-      <p>{value}</p>
-    </Spacing>
-  );
-};
-
-const OnSubmitTextare = () => {
-  const [value, setValue] = useState("Use the ctrl/command + Enter to submit the textarea");
-  const [submitted, setSubmitted] = useState("");
-
-  const submit = () => {
-    setSubmitted(value);
-    setValue("");
-  };
-
-  return (
-    <Spacing>
-      <Textarea value={value} onChange={v => setValue(v)} onSubmit={submit} />
-      <hr />
-      <p>{submitted}</p>
-    </Spacing>
-  );
-};
-
-const OnCancelTextarea = () => {
-  const [value, setValue] = useState("Use the escape key to clear the textarea");
-
-  const cancel = () => {
-    setValue("");
-  };
-
-  return (
-    <Spacing>
-      <Textarea value={value} onChange={v => setValue(v)} onCancel={cancel} />
-    </Spacing>
-  );
-};
-
 const Ref: FC = () => {
-  const ref = useRef<HTMLTextAreaElement>(null);
+  const ref = useRef<HTMLInputElement>(null);
   return (
     <>
-      <Textarea ref={ref} />
+      <InputField ref={ref} placeholder="Click the button to focus me" />
       <Button action={() => ref.current?.focus()} color="primary">
         Focus InputField
       </Button>
@@ -90,11 +49,11 @@ const Ref: FC = () => {
 };
 
 const AutoFocusAndRef: FC = () => {
-  const ref = useRef<HTMLTextAreaElement>(null);
+  const ref = useRef<HTMLInputElement>(null);
   return (
     <>
-      <Textarea ref={ref} autofocus={true} placeholder="Click the button to focus me" />
-      <Textarea placeholder="Click me to switch focus" />
+      <InputField ref={ref} autofocus={true} placeholder="Click the button to focus me" />
+      <InputField placeholder="Click me to switch focus" />
       <Button action={() => ref.current?.focus()} color="primary">
         Focus First InputField
       </Button>
@@ -102,9 +61,9 @@ const AutoFocusAndRef: FC = () => {
   );
 };
 
-type Commit = {
-  message: string;
-  footer: string;
+type Name = {
+  firstName: string;
+  lastName: string;
 };
 
 const ReactHookForm: FC = () => {
@@ -112,24 +71,23 @@ const ReactHookForm: FC = () => {
     register,
     handleSubmit,
     formState: { errors }
-  } = useForm<Commit>();
-  const [stored, setStored] = useState<Commit>();
+  } = useForm<Name>();
+  const [stored, setStored] = useState<Person>();
 
-  const onSubmit = (commit: Commit) => {
-    setStored(commit);
+  const onSubmit = (person: Person) => {
+    setStored(person);
   };
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Textarea
-          autofocus={true}
-          label="Message"
-          {...register("message", { required: true })}
-          validationError={!!errors.message}
-          errorMessage={"Message is required"}
+        <InputField label="First Name" autofocus={true} {...register("firstName")} />
+        <InputField
+          label="Last Name"
+          {...register("lastName", { required: true })}
+          validationError={!!errors.lastName}
+          errorMessage={"Last name is required"}
         />
-        <Textarea label="Footer" {...register("footer")} />
         <div className="pt-2">
           <SubmitButton>Submit</SubmitButton>
         </div>
@@ -149,25 +107,18 @@ const LegacyEvents: FC = () => {
   const [value, setValue] = useState<string>("");
   return (
     <>
-      <Textarea placeholder="Legacy onChange handler" value={value} onChange={e => setValue(e)} />
+      <InputField placeholder="Legacy onChange handler" value={value} onChange={e => setValue(e)} />
       <div className="mt-3">{value}</div>
     </>
   );
 };
 
-storiesOf("Forms|Textarea", module)
+storiesOf("Forms|InputField", module)
+  .addDecorator(storyFn => <Decorator>{storyFn()}</Decorator>)
   .addDecorator(storyFn => <MemoryRouter>{storyFn()}</MemoryRouter>)
-  .add("OnChange", () => <OnChangeTextarea />)
-  .add("OnSubmit", () => <OnSubmitTextare />)
-  .add("OnCancel", () => <OnCancelTextarea />)
-  .add("AutoFocus", () => <Textarea label="Field with AutoFocus" autofocus={true} />)
-  .add("Default Value", () => (
-    <Textarea
-      label="Field with Default Value"
-      defaultValue={"I am a text area with so much default value its crazy!"}
-    />
-  ))
+  .add("AutoFocus", () => <InputField label="Field with AutoFocus" autofocus={true} />)
+  .add("Default Value", () => <InputField label="Field with Default Value" defaultValue={"I am a default value"} />)
   .add("Ref", () => <Ref />)
   .add("Legacy Events", () => <LegacyEvents />)
   .add("AutoFocusAndRef", () => <AutoFocusAndRef />)
-  .add("ReactHookForm", () => <ReactHookForm />);
+  .add("React Hook Form", () => <ReactHookForm />);

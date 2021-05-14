@@ -46421,8 +46421,6 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onKeyPress={[Function]}
-          placeholder=""
-          type="text"
           value=""
         />
       </div>
@@ -46444,8 +46442,6 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onKeyPress={[Function]}
-          placeholder=""
-          type="text"
           value=""
         />
       </div>
@@ -46497,8 +46493,6 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Disabled 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onKeyPress={[Function]}
-          placeholder=""
-          type="text"
           value=""
         />
       </div>
@@ -46521,8 +46515,6 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Disabled 1`] = `
           onBlur={[Function]}
           onChange={[Function]}
           onKeyPress={[Function]}
-          placeholder=""
-          type="text"
           value=""
         />
       </div>
@@ -46558,21 +46550,18 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
   >
     <div
       className="control"
-      onClick={[Function]}
-      onKeyDown={[Function]}
     >
       <label
         className="checkbox"
       >
-        <span
-          className="gwt-Anchor"
-          tabIndex={0}
-        >
-          <i
-            className="is-outlined fa-square has-text-black far"
-          />
-           
-        </span>
+        <input
+          checked={false}
+          className="checkbox"
+          onBlur={[Function]}
+          onChange={[Function]}
+          type="checkbox"
+        />
+         
         Not checked
       </label>
     </div>
@@ -46582,21 +46571,18 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
   >
     <div
       className="control"
-      onClick={[Function]}
-      onKeyDown={[Function]}
     >
       <label
         className="checkbox"
       >
-        <span
-          className="gwt-Anchor"
-          tabIndex={0}
-        >
-          <i
-            className="is-outlined fa-check-square has-text-link fa"
-          />
-           
-        </span>
+        <input
+          checked={true}
+          className="checkbox"
+          onBlur={[Function]}
+          onChange={[Function]}
+          type="checkbox"
+        />
+         
         Checked
       </label>
     </div>
@@ -46606,21 +46592,18 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
   >
     <div
       className="control"
-      onClick={[Function]}
-      onKeyDown={[Function]}
     >
       <label
         className="checkbox"
       >
-        <span
-          className="gwt-Anchor"
-          tabIndex={0}
-        >
-          <i
-            className="is-outlined fa-minus-square has-text-link far"
-          />
-           
-        </span>
+        <input
+          checked={true}
+          className="checkbox"
+          onBlur={[Function]}
+          onChange={[Function]}
+          type="checkbox"
+        />
+         
         Indeterminate
       </label>
     </div>
@@ -46637,27 +46620,151 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
   >
     <div
       className="control"
-      onClick={[Function]}
-      onKeyDown={[Function]}
     >
       <label
         className="checkbox"
         disabled={true}
       >
-        <span
-          className="gwt-Anchor"
-          tabIndex={0}
-        >
-          <i
-            className="is-outlined fa-check-square has-text-grey-light fa"
-          />
-           
-        </span>
+        <input
+          checked={true}
+          className="checkbox"
+          disabled={true}
+          onBlur={[Function]}
+          onChange={[Function]}
+          type="checkbox"
+        />
+         
         Checked but disabled
       </label>
     </div>
   </div>
 </div>
+`;
+
+exports[`Storyshots Forms|Checkbox Legacy Events 1`] = `
+Array [
+  <div
+    className="field"
+  >
+    <div
+      className="control"
+    >
+      <label
+        className="checkbox"
+      >
+        <input
+          checked={false}
+          className="checkbox"
+          onBlur={[Function]}
+          onChange={[Function]}
+          type="checkbox"
+        />
+         
+      </label>
+    </div>
+  </div>,
+  <div
+    className="mt-3"
+  >
+    false
+  </div>,
+]
+`;
+
+exports[`Storyshots Forms|Checkbox ReactHookForm 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <div
+    className="field"
+  >
+    <div
+      className="control"
+    >
+      <label
+        className="checkbox"
+      >
+        <input
+          className="checkbox"
+          name="rememberMe"
+          onBlur={[Function]}
+          onChange={[Function]}
+          type="checkbox"
+        />
+         
+        Remember Me
+      </label>
+    </div>
+  </div>
+  <div
+    className="field"
+  >
+    <div
+      className="control"
+    >
+      <label
+        className="checkbox"
+      >
+        <input
+          className="checkbox"
+          name="scramblePassword"
+          onBlur={[Function]}
+          onChange={[Function]}
+          type="checkbox"
+        />
+         
+        Scramble Password
+      </label>
+    </div>
+  </div>
+  <div
+    className="pt-2"
+  >
+    <button
+      className="button is-primary"
+      data-testid="submit-button"
+      onClick={[Function]}
+      type="submit"
+    >
+       
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`Storyshots Forms|Checkbox Ref 1`] = `
+Array [
+  <div
+    className="field"
+  >
+    <div
+      className="control"
+    >
+      <label
+        className="checkbox"
+      >
+        <input
+          checked={false}
+          className="checkbox"
+          onBlur={[Function]}
+          onChange={[Function]}
+          type="checkbox"
+        />
+         
+        Ref Checkbox
+      </label>
+    </div>
+  </div>,
+  <button
+    className="button is-primary"
+    onClick={[Function]}
+    type="button"
+  >
+     
+    Toggle Checkbox
+  </button>,
+]
 `;
 
 exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
@@ -46669,21 +46776,18 @@ exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
   >
     <div
       className="control"
-      onClick={[Function]}
-      onKeyDown={[Function]}
     >
       <label
         className="checkbox"
       >
-        <span
-          className="gwt-Anchor"
-          tabIndex={0}
-        >
-          <i
-            className="is-outlined fa-square has-text-black far"
-          />
-           
-        </span>
+        <input
+          checked={false}
+          className="checkbox"
+          onBlur={[Function]}
+          onChange={[Function]}
+          type="checkbox"
+        />
+         
         Classic helpText
         <span
           className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 eRZLRi is-inline-block has-tooltip-multiline"
@@ -46701,21 +46805,18 @@ exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
   >
     <div
       className="control"
-      onClick={[Function]}
-      onKeyDown={[Function]}
     >
       <label
         className="checkbox"
       >
-        <span
-          className="gwt-Anchor"
-          tabIndex={0}
-        >
-          <i
-            className="is-outlined fa-check-square has-text-link fa"
-          />
-           
-        </span>
+        <input
+          checked={true}
+          className="checkbox"
+          onBlur={[Function]}
+          onChange={[Function]}
+          type="checkbox"
+        />
+         
         Long helpText
         <span
           className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 eRZLRi is-inline-block has-tooltip-multiline"
@@ -46836,6 +46937,234 @@ exports[`Storyshots Forms|DropDown With Translation 1`] = `
 </div>
 `;
 
+exports[`Storyshots Forms|InputField AutoFocus 1`] = `
+<div
+  className="InputFieldstories__Decorator-kq2lhz-0 cURTRq"
+>
+  <div
+    className="field"
+  >
+    <label
+      className="label"
+    >
+      Field with AutoFocus
+       
+    </label>
+    <div
+      className="control"
+    >
+      <input
+        className="input"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyPress={[Function]}
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Forms|InputField AutoFocusAndRef 1`] = `
+<div
+  className="InputFieldstories__Decorator-kq2lhz-0 cURTRq"
+>
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control"
+    >
+      <input
+        className="input"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyPress={[Function]}
+        placeholder="Click the button to focus me"
+      />
+    </div>
+  </div>
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control"
+    >
+      <input
+        className="input"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyPress={[Function]}
+        placeholder="Click me to switch focus"
+      />
+    </div>
+  </div>
+  <button
+    className="button is-primary"
+    onClick={[Function]}
+    type="button"
+  >
+     
+    Focus First InputField
+  </button>
+</div>
+`;
+
+exports[`Storyshots Forms|InputField Default Value 1`] = `
+<div
+  className="InputFieldstories__Decorator-kq2lhz-0 cURTRq"
+>
+  <div
+    className="field"
+  >
+    <label
+      className="label"
+    >
+      Field with Default Value
+       
+    </label>
+    <div
+      className="control"
+    >
+      <input
+        className="input"
+        defaultValue="I am a default value"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyPress={[Function]}
+      />
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Forms|InputField Legacy Events 1`] = `
+<div
+  className="InputFieldstories__Decorator-kq2lhz-0 cURTRq"
+>
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control"
+    >
+      <input
+        className="input"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyPress={[Function]}
+        placeholder="Legacy onChange handler"
+        value=""
+      />
+    </div>
+  </div>
+  <div
+    className="mt-3"
+  >
+    
+  </div>
+</div>
+`;
+
+exports[`Storyshots Forms|InputField React Hook Form 1`] = `
+<div
+  className="InputFieldstories__Decorator-kq2lhz-0 cURTRq"
+>
+  <form
+    onSubmit={[Function]}
+  >
+    <div
+      className="field"
+    >
+      <label
+        className="label"
+      >
+        First Name
+         
+      </label>
+      <div
+        className="control"
+      >
+        <input
+          className="input"
+          name="firstName"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onKeyPress={[Function]}
+        />
+      </div>
+    </div>
+    <div
+      className="field"
+    >
+      <label
+        className="label"
+      >
+        Last Name
+         
+      </label>
+      <div
+        className="control"
+      >
+        <input
+          className="input"
+          name="lastName"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onKeyPress={[Function]}
+        />
+      </div>
+    </div>
+    <div
+      className="pt-2"
+    >
+      <button
+        className="button is-primary"
+        data-testid="submit-button"
+        onClick={[Function]}
+        type="submit"
+      >
+         
+        Submit
+      </button>
+    </div>
+  </form>
+</div>
+`;
+
+exports[`Storyshots Forms|InputField Ref 1`] = `
+<div
+  className="InputFieldstories__Decorator-kq2lhz-0 cURTRq"
+>
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control"
+    >
+      <input
+        className="input"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyPress={[Function]}
+        placeholder="Click the button to focus me"
+      />
+    </div>
+  </div>
+  <button
+    className="button is-primary"
+    onClick={[Function]}
+    type="button"
+  >
+     
+    Focus InputField
+  </button>
+</div>
+`;
+
 exports[`Storyshots Forms|Radio Default 1`] = `
 <div
   className="Radiostories__Spacing-sc-18hvwhd-0 cAoTRX"
@@ -46845,6 +47174,7 @@ exports[`Storyshots Forms|Radio Default 1`] = `
   >
     <input
       checked={false}
+      onBlur={[Function]}
       onChange={[Function]}
       type="radio"
     />
@@ -46856,6 +47186,7 @@ exports[`Storyshots Forms|Radio Default 1`] = `
   >
     <input
       checked={true}
+      onBlur={[Function]}
       onChange={[Function]}
       type="radio"
     />
@@ -46876,6 +47207,7 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
     <input
       checked={true}
       disabled={true}
+      onBlur={[Function]}
       onChange={[Function]}
       type="radio"
     />
@@ -46883,6 +47215,116 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
     Checked but disabled
   </label>
 </div>
+`;
+
+exports[`Storyshots Forms|Radio Legacy Events 1`] = `
+Array [
+  <label
+    className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
+  >
+    <input
+      checked={false}
+      onBlur={[Function]}
+      onChange={[Function]}
+      type="radio"
+    />
+     
+  </label>,
+  <div
+    className="mt-3"
+  >
+    false
+  </div>,
+]
+`;
+
+exports[`Storyshots Forms|Radio ReactHookForm 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <div
+    className="Radiostories__RadioList-sc-18hvwhd-1 lcyKug"
+  >
+    <label
+      className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
+    >
+      <input
+        defaultChecked={true}
+        name="rememberMe"
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="radio"
+        value="true"
+      />
+       
+      Remember Me
+    </label>
+    <label
+      className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
+    >
+      <input
+        name="rememberMe"
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="radio"
+        value="false"
+      />
+       
+      Dont Remember Me
+    </label>
+  </div>
+  <label
+    className="Radio__StyledRadio-ays4vp-0 da-DBNS radio ml-2"
+  >
+    <input
+      name="scramblePassword"
+      onBlur={[Function]}
+      onChange={[Function]}
+      type="radio"
+      value="false"
+    />
+     
+    Scramble Password
+  </label>
+  <div
+    className="pt-2"
+  >
+    <button
+      className="button is-primary"
+      data-testid="submit-button"
+      onClick={[Function]}
+      type="submit"
+    >
+       
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`Storyshots Forms|Radio Ref 1`] = `
+Array [
+  <label
+    className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
+  >
+    <input
+      checked={false}
+      onBlur={[Function]}
+      onChange={[Function]}
+      type="radio"
+    />
+     
+    Ref Radio Button
+  </label>,
+  <button
+    className="button is-primary"
+    onClick={[Function]}
+    type="button"
+  >
+     
+    Check InputField
+  </button>,
+]
 `;
 
 exports[`Storyshots Forms|Radio With HelpText 1`] = `
@@ -46894,6 +47336,7 @@ exports[`Storyshots Forms|Radio With HelpText 1`] = `
   >
     <input
       checked={false}
+      onBlur={[Function]}
       onChange={[Function]}
       type="radio"
     />
@@ -46913,6 +47356,7 @@ exports[`Storyshots Forms|Radio With HelpText 1`] = `
   >
     <input
       checked={true}
+      onBlur={[Function]}
       onChange={[Function]}
       type="radio"
     />
@@ -46930,6 +47374,281 @@ exports[`Storyshots Forms|Radio With HelpText 1`] = `
 </div>
 `;
 
+exports[`Storyshots Forms|Select Legacy Events 1`] = `
+Array [
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control select"
+    >
+      <select
+        onBlur={[Function]}
+        onChange={[Function]}
+      >
+        <option
+          value="true"
+        >
+          Yes
+        </option>
+        <option
+          value="false"
+        >
+          No
+        </option>
+      </select>
+    </div>
+  </div>,
+  <div
+    className="mt-3"
+  />,
+]
+`;
+
+exports[`Storyshots Forms|Select ReactHookForm 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <div
+    className="field"
+  >
+    <label
+      className="label"
+    >
+      Remember Me
+       
+    </label>
+    <div
+      className="control select"
+    >
+      <select
+        name="rememberMe"
+        onBlur={[Function]}
+        onChange={[Function]}
+      >
+        <option
+          value="true"
+        >
+          Yes
+        </option>
+        <option
+          value="false"
+        >
+          No
+        </option>
+      </select>
+    </div>
+  </div>
+  <div
+    className="field"
+  >
+    <label
+      className="label"
+    >
+      Scramble Password
+       
+    </label>
+    <div
+      className="control select"
+    >
+      <select
+        name="scramblePassword"
+        onBlur={[Function]}
+        onChange={[Function]}
+      >
+        <option
+          value="true"
+        >
+          Yes
+        </option>
+        <option
+          value="false"
+        >
+          No
+        </option>
+      </select>
+    </div>
+  </div>
+  <div
+    className="pt-2"
+  >
+    <button
+      className="button is-primary"
+      data-testid="submit-button"
+      onClick={[Function]}
+      type="submit"
+    >
+       
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`Storyshots Forms|Select Ref 1`] = `
+Array [
+  <div
+    className="field"
+  >
+    <label
+      className="label"
+    >
+      Ref Radio Button
+       
+    </label>
+    <div
+      className="control select"
+    >
+      <select
+        onBlur={[Function]}
+        onChange={[Function]}
+        value="false"
+      >
+        <option
+          value="true"
+        >
+          foo
+        </option>
+        <option
+          value="false"
+        >
+          bar
+        </option>
+      </select>
+    </div>
+  </div>,
+  <button
+    className="button is-primary"
+    onClick={[Function]}
+    type="button"
+  >
+     
+    Focus Select Field
+  </button>,
+  "false",
+]
+`;
+
+exports[`Storyshots Forms|Textarea AutoFocus 1`] = `
+<div
+  className="field"
+>
+  <label
+    className="label"
+  >
+    Field with AutoFocus
+     
+  </label>
+  <div
+    className="control"
+  >
+    <textarea
+      className="textarea"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onKeyDown={[Function]}
+    />
+  </div>
+</div>
+`;
+
+exports[`Storyshots Forms|Textarea AutoFocusAndRef 1`] = `
+Array [
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control"
+    >
+      <textarea
+        className="textarea"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyDown={[Function]}
+        placeholder="Click the button to focus me"
+      />
+    </div>
+  </div>,
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control"
+    >
+      <textarea
+        className="textarea"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyDown={[Function]}
+        placeholder="Click me to switch focus"
+      />
+    </div>
+  </div>,
+  <button
+    className="button is-primary"
+    onClick={[Function]}
+    type="button"
+  >
+     
+    Focus First InputField
+  </button>,
+]
+`;
+
+exports[`Storyshots Forms|Textarea Default Value 1`] = `
+<div
+  className="field"
+>
+  <label
+    className="label"
+  >
+    Field with Default Value
+     
+  </label>
+  <div
+    className="control"
+  >
+    <textarea
+      className="textarea"
+      defaultValue="I am a text area with so much default value its crazy!"
+      onBlur={[Function]}
+      onChange={[Function]}
+      onKeyDown={[Function]}
+    />
+  </div>
+</div>
+`;
+
+exports[`Storyshots Forms|Textarea Legacy Events 1`] = `
+Array [
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control"
+    >
+      <textarea
+        className="textarea"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyDown={[Function]}
+        placeholder="Legacy onChange handler"
+        value=""
+      />
+    </div>
+  </div>,
+  <div
+    className="mt-3"
+  >
+    
+  </div>,
+]
+`;
+
 exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 <div
   className="Textareastories__Spacing-lk5v3m-0 kWEmCD"
@@ -46943,7 +47662,7 @@ exports[`Storyshots Forms|Textarea OnCancel 1`] = `
     >
       <textarea
         className="textarea"
-        disabled={false}
+        onBlur={[Function]}
         onChange={[Function]}
         onKeyDown={[Function]}
         value="Use the escape key to clear the textarea"
@@ -46966,7 +47685,7 @@ exports[`Storyshots Forms|Textarea OnChange 1`] = `
     >
       <textarea
         className="textarea"
-        disabled={false}
+        onBlur={[Function]}
         onChange={[Function]}
         onKeyDown={[Function]}
         value="Start typing"
@@ -46993,7 +47712,7 @@ exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
     >
       <textarea
         className="textarea"
-        disabled={false}
+        onBlur={[Function]}
         onChange={[Function]}
         onKeyDown={[Function]}
         value="Use the ctrl/command + Enter to submit the textarea"
@@ -47005,6 +47724,96 @@ exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
     
   </p>
 </div>
+`;
+
+exports[`Storyshots Forms|Textarea ReactHookForm 1`] = `
+<form
+  onSubmit={[Function]}
+>
+  <div
+    className="field"
+  >
+    <label
+      className="label"
+    >
+      Message
+       
+    </label>
+    <div
+      className="control"
+    >
+      <textarea
+        className="textarea"
+        name="message"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyDown={[Function]}
+      />
+    </div>
+  </div>
+  <div
+    className="field"
+  >
+    <label
+      className="label"
+    >
+      Footer
+       
+    </label>
+    <div
+      className="control"
+    >
+      <textarea
+        className="textarea"
+        name="footer"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyDown={[Function]}
+      />
+    </div>
+  </div>
+  <div
+    className="pt-2"
+  >
+    <button
+      className="button is-primary"
+      data-testid="submit-button"
+      onClick={[Function]}
+      type="submit"
+    >
+       
+      Submit
+    </button>
+  </div>
+</form>
+`;
+
+exports[`Storyshots Forms|Textarea Ref 1`] = `
+Array [
+  <div
+    className="field"
+  >
+    
+    <div
+      className="control"
+    >
+      <textarea
+        className="textarea"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyDown={[Function]}
+      />
+    </div>
+  </div>,
+  <button
+    className="button is-primary"
+    onClick={[Function]}
+    type="button"
+  >
+     
+    Focus InputField
+  </button>,
+]
 `;
 
 exports[`Storyshots Help Default 1`] = `
