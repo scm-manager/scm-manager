@@ -158,8 +158,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public BlameCommandBuilder getBlameCommand() {
-    LOG.debug("create blame command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create blame command for repository {}", repository);
 
     return new BlameCommandBuilder(cacheManager, provider.getBlameCommand(),
       repository, preProcessorUtil);
@@ -173,8 +172,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public BranchesCommandBuilder getBranchesCommand() {
-    LOG.debug("create branches command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create branches command for repository {}", repository);
 
     return new BranchesCommandBuilder(cacheManager,
       provider.getBranchesCommand(), repository);
@@ -190,8 +188,7 @@ public final class RepositoryService implements Closeable {
   public BranchCommandBuilder getBranchCommand() {
     RepositoryReadOnlyChecker.checkReadOnly(getRepository());
     RepositoryPermissions.push(getRepository()).check();
-    LOG.debug("create branch command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create branch command for repository {}", repository);
 
     return new BranchCommandBuilder(repository, provider.getBranchCommand());
   }
@@ -204,8 +201,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public BrowseCommandBuilder getBrowseCommand() {
-    LOG.debug("create browse command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create browse command for repository {}", repository);
 
     return new BrowseCommandBuilder(cacheManager, provider.getBrowseCommand(),
       repository, preProcessorUtil);
@@ -220,8 +216,7 @@ public final class RepositoryService implements Closeable {
    * @since 1.43
    */
   public BundleCommandBuilder getBundleCommand() {
-    LOG.debug("create bundle command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create bundle command for repository {}", repository);
 
     return new BundleCommandBuilder(provider.getBundleCommand(), repositoryExportingCheck, repository);
   }
@@ -234,8 +229,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public CatCommandBuilder getCatCommand() {
-    LOG.debug("create cat command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create cat command for repository {}", repository);
 
     return new CatCommandBuilder(provider.getCatCommand());
   }
@@ -249,8 +243,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public DiffCommandBuilder getDiffCommand() {
-    LOG.debug("create diff command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create diff command for repository {}", repository);
 
     return new DiffCommandBuilder(provider.getDiffCommand(), provider.getSupportedFeatures());
   }
@@ -264,8 +257,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public DiffResultCommandBuilder getDiffResultCommand() {
-    LOG.debug("create diff result command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create diff result command for repository {}", repository);
 
     return new DiffResultCommandBuilder(provider.getDiffResultCommand(), provider.getSupportedFeatures());
   }
@@ -280,8 +272,7 @@ public final class RepositoryService implements Closeable {
    * @since 1.31
    */
   public IncomingCommandBuilder getIncomingCommand() {
-    LOG.debug("create incoming command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create incoming command for repository {}", repository);
 
     return new IncomingCommandBuilder(cacheManager,
       provider.getIncomingCommand(), repository, preProcessorUtil);
@@ -295,8 +286,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public LogCommandBuilder getLogCommand() {
-    LOG.debug("create log command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create log command for repository {}", repository);
 
     return new LogCommandBuilder(cacheManager, provider.getLogCommand(),
       repository, preProcessorUtil, provider.getSupportedFeatures());
@@ -323,8 +313,7 @@ public final class RepositoryService implements Closeable {
    * @since 1.31
    */
   public OutgoingCommandBuilder getOutgoingCommand() {
-    LOG.debug("create outgoing command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create outgoing command for repository {}", repository);
 
     return new OutgoingCommandBuilder(cacheManager,
       provider.getOutgoingCommand(), repository, preProcessorUtil);
@@ -340,8 +329,7 @@ public final class RepositoryService implements Closeable {
    */
   public PullCommandBuilder getPullCommand() {
     RepositoryReadOnlyChecker.checkReadOnly(getRepository());
-    LOG.debug("create pull command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create pull command for repository {}", repository);
 
     return new PullCommandBuilder(provider.getPullCommand(), repository);
   }
@@ -355,8 +343,7 @@ public final class RepositoryService implements Closeable {
    * @since 1.31
    */
   public PushCommandBuilder getPushCommand() {
-    LOG.debug("create push command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create push command for repository {}", repository);
 
     return new PushCommandBuilder(provider.getPushCommand());
   }
@@ -378,8 +365,7 @@ public final class RepositoryService implements Closeable {
    *                                      by the implementation of the repository service provider.
    */
   public TagsCommandBuilder getTagsCommand() {
-    LOG.debug("create tags command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create tags command for repository {}", repository);
 
     return new TagsCommandBuilder(cacheManager, provider.getTagsCommand(),
       repository);
@@ -406,8 +392,7 @@ public final class RepositoryService implements Closeable {
    * @since 1.43
    */
   public UnbundleCommandBuilder getUnbundleCommand() {
-    LOG.debug("create unbundle command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create unbundle command for repository {}", repository);
 
     return new UnbundleCommandBuilder(provider.getUnbundleCommand(),
       repository);
@@ -424,8 +409,7 @@ public final class RepositoryService implements Closeable {
    */
   public MergeCommandBuilder getMergeCommand() {
     RepositoryReadOnlyChecker.checkReadOnly(getRepository());
-    LOG.debug("create merge command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create merge command for repository {}", repository);
 
     return new MergeCommandBuilder(provider.getMergeCommand(), eMail);
   }
@@ -446,8 +430,7 @@ public final class RepositoryService implements Closeable {
    */
   public ModifyCommandBuilder getModifyCommand() {
     RepositoryReadOnlyChecker.checkReadOnly(getRepository());
-    LOG.debug("create modify command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create modify command for repository {}", repository);
 
     return new ModifyCommandBuilder(provider.getModifyCommand(), workdirProvider, repository.getId(), eMail);
   }
@@ -461,8 +444,7 @@ public final class RepositoryService implements Closeable {
    * @since 2.10.0
    */
   public LookupCommandBuilder getLookupCommand() {
-    LOG.debug("create lookup command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create lookup command for repository {}", repository);
     return new LookupCommandBuilder(provider.getLookupCommand());
   }
 
@@ -476,9 +458,23 @@ public final class RepositoryService implements Closeable {
    * @since 2.17.0
    */
   public FullHealthCheckCommandBuilder getFullCheckCommand() {
-    LOG.debug("create full check command for repository {}",
-      repository.getNamespaceAndName());
+    LOG.debug("create full check command for repository {}", repository);
     return new FullHealthCheckCommandBuilder(provider.getFullHealthCheckCommand());
+  }
+
+  /**
+   * The mirror command creates a 'mirror' of an existing repository (specified by a URL) by copying all data
+   * to the repository of this service. Therefore this repository has to be empty (otherwise the behaviour is
+   * not specified).
+   *
+   * @return instance of {@link MirrorCommandBuilder}
+   * @throws CommandNotSupportedException if the command is not supported
+   *                                      by the implementation of the repository service provider.
+   * @since 2.19.0
+   */
+  public MirrorCommandBuilder getMirrorCommand() {
+    LOG.debug("create mirror command for repository {}", repository);
+    return new MirrorCommandBuilder(provider.getMirrorCommand(), repository);
   }
 
   /**
