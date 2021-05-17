@@ -54,12 +54,13 @@ public class RepositoryTypeSupportChecker {
     if (!cmds.contains(cmd)) {
       LOG.debug("type {} does not support this command {}",
         type.getName(),
-        cmd.name());
+        cmd);
       throw new IllegalTypeForImportException("type does not support command");
     }
   }
 
-  @SuppressWarnings("javasecurity:S5145") // the type parameter is validated in the resource to only contain valid characters (\w)
+  @SuppressWarnings("javasecurity:S5145")
+  // the type parameter is validated in the resource to only contain valid characters (\w)
   public static RepositoryType type(RepositoryManager manager, String type) {
     RepositoryHandler handler = manager.getHandler(type);
     if (handler == null) {
@@ -69,6 +70,7 @@ public class RepositoryTypeSupportChecker {
     return handler.getType();
   }
 
+  @SuppressWarnings("java:S110") // this is fine for exceptions
   private static class IllegalTypeForImportException extends BadRequestException {
     public IllegalTypeForImportException(String message) {
       super(noContext(), message);
