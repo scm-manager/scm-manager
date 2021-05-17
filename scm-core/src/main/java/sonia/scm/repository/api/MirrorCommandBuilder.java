@@ -35,6 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 
 /**
  * @since 2.19.0
@@ -47,7 +48,7 @@ public final class MirrorCommandBuilder {
   private final Repository targetRepository;
 
   private String sourceUrl;
-  private List<Credential> credentials;
+  private List<Credential> credentials = emptyList();
 
   MirrorCommandBuilder(MirrorCommand mirrorCommand, Repository targetRepository) {
     this.mirrorCommand = mirrorCommand;
