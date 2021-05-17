@@ -33,6 +33,7 @@ import org.tmatesoft.svn.core.auth.SVNPasswordAuthentication;
 import org.tmatesoft.svn.core.auth.SVNSSLAuthentication;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
@@ -42,6 +43,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Function;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
 public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorCommand {
 
@@ -66,7 +69,7 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
 
       admin.doCompleteSynchronize(next, url);
     } catch (SVNException e) {
-      e.printStackTrace();
+      throw new InternalRepositoryException(entity(String.class, mirrorCommandRequest.getSourceUrl()), "could not mirror svn repository", e);
     }
     return null;
   }

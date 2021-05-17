@@ -24,8 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
@@ -50,30 +48,21 @@ import java.io.IOException;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * @author Sebastian Sdorra
  */
 @Singleton
 @Extension
-public class SvnRepositoryHandler
-  extends AbstractSimpleRepositoryHandler<SvnConfig> {
+public class SvnRepositoryHandler extends AbstractSimpleRepositoryHandler<SvnConfig> {
 
   public static final String PROPERTY_UUID = "svn.uuid";
-
   public static final String RESOURCE_VERSION = "sonia/scm/version/scm-svn-plugin";
-
   public static final String TYPE_DISPLAYNAME = "Subversion";
-
   public static final String TYPE_NAME = "svn";
 
-  public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME,
-    TYPE_DISPLAYNAME,
-    SvnRepositoryServiceProvider.COMMANDS);
+  public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME, TYPE_DISPLAYNAME, SvnRepositoryServiceProvider.COMMANDS);
 
-  private static final Logger logger =
-    LoggerFactory.getLogger(SvnRepositoryHandler.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SvnRepositoryHandler.class);
   private SvnRepositoryHook hook;
 
   @Inject
@@ -93,8 +82,8 @@ public class SvnRepositoryHandler
     if (eventFacade != null) {
       hook = new SvnRepositoryHook(eventFacade, this);
       FSHooks.registerHook(hook);
-    } else if (logger.isWarnEnabled()) {
-      logger.warn(
+    } else if (LOG.isWarnEnabled()) {
+      LOG.warn(
         "unable to register hook, beacause of missing repositorymanager");
     }
   }
@@ -127,18 +116,17 @@ public class SvnRepositoryHandler
       String uuid = svnRepository.getRepositoryUUID(true);
 
       if (Util.isNotEmpty(uuid)) {
-        if (logger.isDebugEnabled()) {
-          logger.debug("store repository uuid {} for {}", uuid,
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("store repository uuid {} for {}", uuid,
             repository.getName());
         }
 
         repository.setProperty(PROPERTY_UUID, uuid);
-      } else if (logger.isWarnEnabled()) {
-        logger.warn("could not read repository uuid for {}",
+      } else if (LOG.isWarnEnabled()) {
+        LOG.warn("could not read repository uuid for {}",
           repository.getName());
       }
     } catch (SVNException ex) {
-      logger.error("could not create svn repository", ex);
       throw new InternalRepositoryException(repository, "could not create repository", ex);
     } finally {
       SvnUtil.closeSession(svnRepository);
@@ -148,9 +136,9 @@ public class SvnRepositoryHandler
   public SVNURL createSvnUrl(File directory) {
     Compatibility comp = config.getCompatibility();
 
-    if (logger.isDebugEnabled()) {
+    if (LOG.isDebugEnabled()) {
 
-      logger.debug("create svn repository \"{}\": " +
+      LOG.debug("create svn repository \"{}\": " +
           "pre14Compatible={}, " +
           "pre15Compatible={}, " +
           "pre16Compatible={}, " +
@@ -173,23 +161,11 @@ public class SvnRepositoryHandler
     }
   }
 
-  /**
-   * Method description
-   *
-   * @return
-   */
   @Override
   protected SvnConfig createInitialConfig() {
     return new SvnConfig();
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   * @return
-   */
   @Override
   protected Class<SvnConfig> getConfigClass() {
     return SvnConfig.class;

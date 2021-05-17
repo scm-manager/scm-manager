@@ -44,7 +44,8 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
   @Inject
   public SvnRepositoryServiceResolver(SvnRepositoryHandler handler,
                                       SvnWorkingCopyFactory workingCopyFactory,
-                                      HookContextFactory hookContextFactory, TrustManager trustManager) {
+                                      HookContextFactory hookContextFactory,
+                                      TrustManager trustManager) {
     this.handler = handler;
     this.workingCopyFactory = workingCopyFactory;
     this.hookContextFactory = hookContextFactory;
