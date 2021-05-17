@@ -60,14 +60,14 @@ public class GitModifyCommand_withEmptyRepositoryTest extends GitModifyCommandTe
   }
 
   @Test
-  public void shouldCreateCommitOnMasterByDefault() throws IOException, GitAPIException {
+  public void shouldCreateCommitOnMainByDefault() throws IOException, GitAPIException {
     createContext().getGlobalConfig().setDefaultBranch("");
 
     executeModifyCommand();
 
     try (Git git = new Git(createContext().open())) {
       List<Ref> branches = git.branchList().call();
-      assertThat(branches).extracting("name").containsExactly("refs/heads/master");
+      assertThat(branches).extracting("name").containsExactly("refs/heads/main");
     }
   }
 
