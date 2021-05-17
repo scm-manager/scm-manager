@@ -24,6 +24,10 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.common.base.Stopwatch;
+import com.google.common.collect.ImmutableList;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.tmatesoft.svn.core.SVNException;
 import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
@@ -33,7 +37,6 @@ import org.tmatesoft.svn.core.auth.SVNPasswordAuthentication;
 import org.tmatesoft.svn.core.auth.SVNSSLAuthentication;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
-import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
@@ -44,9 +47,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.function.Function;
 
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static java.util.Collections.emptyList;
 
 public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorCommand {
+
+  private static final Logger LOG = LoggerFactory.getLogger(SvnMirrorCommand.class);
 
   private final TrustManager trustManager;
   private final Function<File, SVNURL> urlFactory;
@@ -59,19 +64,31 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
 
   @Override
   public MirrorCommandResult mirror(MirrorCommandRequest mirrorCommandRequest) {
-
+    Stopwatch stopwatch = Stopwatch.createStarted();
+    long beforeUpdate;
+    long afterUpdate;
     try {
+      beforeUpdate = context.open().getLatestRevision();
       SVNURL url = urlFactory.apply(context.getDirectory());
-
       SVNURL next = SVNURL.parseURIEncoded(mirrorCommandRequest.getSourceUrl());
-
       SVNAdminClient admin = createAdminClient(url, mirrorCommandRequest);
 
       admin.doCompleteSynchronize(next, url);
+      afterUpdate = context.open().getLatestRevision();
     } catch (SVNException e) {
-      throw new InternalRepositoryException(entity(String.class, mirrorCommandRequest.getSourceUrl()), "could not mirror svn repository", e);
+      LOG.error("Could not mirror svn repository", e);
+      return new MirrorCommandResult(false, emptyList(), stopwatch.stop().elapsed());
     }
-    return null;
+    return new MirrorCommandResult(
+      true,
+      ImmutableList.of("Updated from revision " + beforeUpdate + " to revision " + afterUpdate),
+      stopwatch.stop().elapsed()
+    );
+  }
+
+  @Override
+  public MirrorCommandResult update(MirrorCommandRequest request) {
+    return mirror(request);
   }
 
   private SVNAdminClient createAdminClient(SVNURL url, MirrorCommandRequest mirrorCommandRequest) {
@@ -100,10 +117,5 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
       false,
       url,
       true);
-  }
-
-  @Override
-  public MirrorCommandResult update(MirrorCommandRequest mirrorCommandRequest) {
-    return null;
   }
 }
