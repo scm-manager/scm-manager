@@ -27,11 +27,11 @@ package sonia.scm.repository.spi;
 import org.apache.commons.lang.StringUtils;
 import sonia.scm.repository.api.Credential;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableList;
+import static java.util.Collections.unmodifiableCollection;
 
 /**
  * @since 2.19.0
@@ -39,7 +39,7 @@ import static java.util.Collections.unmodifiableList;
 public final class MirrorCommandRequest {
 
   private String sourceUrl;
-  private List<Credential> credentials = emptyList();
+  private Collection<Credential> credentials = emptyList();
 
   public String getSourceUrl() {
     return sourceUrl;
@@ -49,8 +49,8 @@ public final class MirrorCommandRequest {
     this.sourceUrl = sourceUrl;
   }
 
-  public List<Credential> getCredentials() {
-    return unmodifiableList(credentials);
+  public Collection<Credential> getCredentials() {
+    return unmodifiableCollection(credentials);
   }
 
   public <T extends Credential> Optional<T> getCredential(Class<T> credentialClass) {
@@ -61,7 +61,7 @@ public final class MirrorCommandRequest {
       .findFirst();
   }
 
-  public void setCredentials(List<Credential> credentials) {
+  public void setCredentials(Collection<Credential> credentials) {
     this.credentials = credentials;
   }
 
