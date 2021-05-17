@@ -95,7 +95,7 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
 
   private SVNSSLAuthentication createTlsAuth(SVNURL url, Pkcs12ClientCertificateCredential c) {
     return SVNSSLAuthentication.newInstance(
-      c.getCertificate().toFile(),
+      c.getCertificate(),
       c.getPassword(),
       false,
       url,
