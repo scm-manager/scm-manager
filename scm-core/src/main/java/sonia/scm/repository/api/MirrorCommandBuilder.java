@@ -32,7 +32,7 @@ import sonia.scm.repository.spi.MirrorCommand;
 import sonia.scm.repository.spi.MirrorCommandRequest;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -48,7 +48,7 @@ public final class MirrorCommandBuilder {
   private final Repository targetRepository;
 
   private String sourceUrl;
-  private List<Credential> credentials = emptyList();
+  private Collection<Credential> credentials = emptyList();
 
   MirrorCommandBuilder(MirrorCommand mirrorCommand, Repository targetRepository) {
     this.mirrorCommand = mirrorCommand;
@@ -62,7 +62,7 @@ public final class MirrorCommandBuilder {
     return this;
   }
 
-  public MirrorCommandBuilder setCredentials(List<Credential> credentials) {
+  public MirrorCommandBuilder setCredentials(Collection<Credential> credentials) {
     this.credentials = credentials;
     return this;
   }
