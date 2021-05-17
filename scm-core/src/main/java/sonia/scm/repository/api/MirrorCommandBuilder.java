@@ -62,6 +62,11 @@ public final class MirrorCommandBuilder {
     return this;
   }
 
+  public MirrorCommandBuilder setCredentials(List<Credential> credentials) {
+    this.credentials = credentials;
+    return this;
+  }
+
   public MirrorCommandBuilder setSourceUrl(String sourceUrl) {
     this.sourceUrl = sourceUrl;
     return this;
