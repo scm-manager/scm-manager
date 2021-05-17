@@ -27,12 +27,10 @@ package sonia.scm.repository.api;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.nio.file.Path;
-
 @AllArgsConstructor
 @Getter
 public class Pkcs12ClientCertificateCredential implements Credential {
 
-  private final Path certificate;
+  private final byte[] certificate;
   private final char[] password;
 }
