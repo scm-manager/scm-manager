@@ -39,7 +39,6 @@ import org.apache.commons.compress.compressors.gzip.GzipCompressorOutputStream;
 import sonia.scm.BadRequestException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
-import sonia.scm.Type;
 import sonia.scm.importexport.ExportFileExtensionResolver;
 import sonia.scm.importexport.ExportNotificationHandler;
 import sonia.scm.importexport.ExportService;
@@ -50,6 +49,7 @@ import sonia.scm.repository.NamespaceAndName;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.BundleCommandBuilder;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.ExportFailedException;
@@ -442,7 +442,7 @@ public class RepositoryExportResource {
     if (!type.equals(repository.getType())) {
       throw new WrongTypeException(repository);
     }
-    Type repositoryType = type(manager, type);
+    RepositoryType repositoryType = type(manager, type);
     checkSupport(repositoryType, Command.BUNDLE);
     return repository;
   }
