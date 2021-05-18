@@ -37,7 +37,7 @@ import java.util.function.BooleanSupplier;
 
 /**
  * This intercepts permission checks for repositories and blocks write permissions for archived repositories.
- * Read only permissions are set at startup by {@link RepositoryPermissionGuardInitializer}.
+ * Read only permissions are set at startup by {@link ReadOnlyCheckInitializer}.
  */
 public class RepositoryPermissionGuard implements PermissionGuard<Repository> {
 

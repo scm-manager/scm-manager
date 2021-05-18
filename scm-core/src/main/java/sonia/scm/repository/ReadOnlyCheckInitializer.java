@@ -33,17 +33,17 @@ import javax.inject.Inject;
 import java.util.Set;
 
 /**
- * Initializes read only permissions for {@link RepositoryPermissionGuard} at startup.
+ * Initializes read only permissions and their checks at startup.
  */
 @Extension
 @EagerSingleton
-final class RepositoryPermissionGuardInitializer implements Initable {
+final class ReadOnlyCheckInitializer implements Initable {
 
   private final PermissionProvider permissionProvider;
   private final Set<ReadOnlyCheck> readOnlyChecks;
 
   @Inject
-  RepositoryPermissionGuardInitializer(PermissionProvider permissionProvider, Set<ReadOnlyCheck> readOnlyChecks) {
+  ReadOnlyCheckInitializer(PermissionProvider permissionProvider, Set<ReadOnlyCheck> readOnlyChecks) {
     this.permissionProvider = permissionProvider;
     this.readOnlyChecks = readOnlyChecks;
   }
