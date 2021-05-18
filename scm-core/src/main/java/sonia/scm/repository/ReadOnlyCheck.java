@@ -24,51 +24,55 @@
 
 package sonia.scm.repository;
 
+import sonia.scm.plugin.ExtensionPoint;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+
 /**
- * Implementations of this class can be used to check whether a repository is archived.
- *
- * @since 2.12.0
+ * Read only check could be used to mark a repository as read only.
+ * @since 2.19.0
  */
-public interface RepositoryArchivedCheck extends ReadOnlyCheck {
+@ExtensionPoint
+public interface ReadOnlyCheck {
 
   /**
-   * Checks whether the repository with the given id is archived or not.
-   * @param repositoryId The id of the repository to check.
-   * @return <code>true</code> when the repository with the given id is archived, <code>false</code> otherwise.
+   * Returns the reason for the write protection.
+   * @return reason for write protection
    */
-  boolean isArchived(String repositoryId);
+  String getReason();
 
   /**
-   * Checks whether the given repository is archived or not. This checks the status on behalf of the id of the
-   * repository, not by the archive flag provided by the repository itself.
-   * @param repository The repository to check.
-   * @return <code>true</code> when the given repository is archived, <code>false</code> otherwise.
+   * Returns {@code true} if the repository with the given id is read only.
+   * @param repositoryId repository id
+   * @return {@code true} if repository is read only
    */
-  default boolean isArchived(Repository repository) {
-    return isArchived(repository.getId());
+  boolean isReadOnly(String repositoryId);
+
+  /**
+   * Returns {@code true} if the repository is read only.
+   * @param repository repository
+   * @return {@code true} if repository is read only
+   */
+  default boolean isReadOnly(Repository repository) {
+    return isReadOnly(repository.getId());
   }
 
-  @Override
-  default boolean isReadOnly(String repositoryId) {
-    return isArchived(repositoryId);
-  }
-
-  @Override
-  default String getReason() {
-    return "repository is archived";
-  }
-
-  @Override
+  /**
+   * Throws a {@link ReadOnlyException} if the repository is read only.
+   * @param repository repository
+   */
   default void check(Repository repository) {
-    if (repository.isArchived() || isArchived(repository)) {
-      throw new RepositoryArchivedException(repository);
+    check(repository.getId());
+  }
+
+  /**
+   * Throws a {@link ReadOnlyException} if the repository with th id is read only.
+   * @param repositoryId repository id
+   */
+  default void check(String repositoryId) {
+    if (isReadOnly(repositoryId)) {
+      throw new ReadOnlyException(entity(Repository.class, repositoryId).build(), getReason());
     }
   }
 
-  @Override
-  default void check(String repositoryId) {
-    if (isArchived(repositoryId)) {
-      throw new RepositoryArchivedException(repositoryId);
-    }
-  }
 }

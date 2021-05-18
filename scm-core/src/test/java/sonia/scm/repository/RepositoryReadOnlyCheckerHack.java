@@ -24,27 +24,23 @@
 
 package sonia.scm.repository;
 
-import static java.lang.String.format;
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import java.util.Collection;
 
-@SuppressWarnings("java:S110") // large history is ok for exceptions
-public class RepositoryArchivedException extends ReadOnlyException {
+/**
+ * This class exists to bypass the visibility of the {@link RepositoryReadOnlyChecker} methods.
+ * This is necessary to use those methods from test which are located in other packages.
+ */
+public class RepositoryReadOnlyCheckerHack {
 
-  public static final String CODE = "3hSIlptme1";
-
-  public RepositoryArchivedException(Repository repository) {
-    super(entity(repository).build(), format("Repository %s is marked as archived and must not be modified", repository));
+  private RepositoryReadOnlyCheckerHack() {
   }
 
-  public RepositoryArchivedException(String repositoryId) {
-    super(
-      entity(Repository.class, repositoryId).build(),
-      format("Repository with id %s is marked as archived and must not be modified", repositoryId)
-    );
-  }
-
-  @Override
-  public String getCode() {
-    return CODE;
+  /**
+   * Bypass the visibility of the {@link RepositoryReadOnlyChecker#setReadOnlyChecks(Collection)} method.
+   *
+   * @param readOnlyChecks checks to register
+   */
+  public static void setReadOnlyChecks(Collection<ReadOnlyCheck> readOnlyChecks) {
+    RepositoryReadOnlyChecker.setReadOnlyChecks(readOnlyChecks);
   }
 }

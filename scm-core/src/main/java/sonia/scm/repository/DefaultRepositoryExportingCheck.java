@@ -26,6 +26,7 @@ package sonia.scm.repository;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.plugin.Extension;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,6 +37,7 @@ import java.util.function.Supplier;
 /**
  * Default implementation of {@link RepositoryExportingCheck}. This tracks the exporting status of repositories.
  */
+@Extension
 public final class DefaultRepositoryExportingCheck implements RepositoryExportingCheck {
 
   private static final Logger LOG = LoggerFactory.getLogger(DefaultRepositoryExportingCheck.class);

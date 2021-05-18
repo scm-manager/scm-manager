@@ -31,7 +31,6 @@ import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.AlreadyExistsException;
-import sonia.scm.Type;
 import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Repository;
@@ -39,6 +38,7 @@ import sonia.scm.repository.RepositoryImportEvent;
 import sonia.scm.repository.RepositoryManager;
 import sonia.scm.repository.RepositoryPermission;
 import sonia.scm.repository.RepositoryPermissions;
+import sonia.scm.repository.RepositoryType;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullCommandBuilder;
@@ -73,7 +73,7 @@ public class FromUrlImporter {
   }
 
   public Repository importFromUrl(RepositoryImportParameters parameters, Repository repository) {
-    Type t = type(manager, repository.getType());
+    RepositoryType t = type(manager, repository.getType());
     RepositoryPermissions.create().check();
     checkSupport(t, Command.PULL);
 

@@ -24,27 +24,34 @@
 
 package sonia.scm.repository;
 
-import static java.lang.String.format;
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import sonia.scm.EagerSingleton;
+import sonia.scm.Initable;
+import sonia.scm.SCMContextProvider;
+import sonia.scm.plugin.Extension;
 
-@SuppressWarnings("java:S110") // large history is ok for exceptions
-public class RepositoryArchivedException extends ReadOnlyException {
+import javax.inject.Inject;
+import java.util.Set;
 
-  public static final String CODE = "3hSIlptme1";
+/**
+ * Initializes read only permissions and their checks at startup.
+ */
+@Extension
+@EagerSingleton
+final class ReadOnlyCheckInitializer implements Initable {
 
-  public RepositoryArchivedException(Repository repository) {
-    super(entity(repository).build(), format("Repository %s is marked as archived and must not be modified", repository));
-  }
+  private final PermissionProvider permissionProvider;
+  private final Set<ReadOnlyCheck> readOnlyChecks;
 
-  public RepositoryArchivedException(String repositoryId) {
-    super(
-      entity(Repository.class, repositoryId).build(),
-      format("Repository with id %s is marked as archived and must not be modified", repositoryId)
-    );
+  @Inject
+  ReadOnlyCheckInitializer(PermissionProvider permissionProvider, Set<ReadOnlyCheck> readOnlyChecks) {
+    this.permissionProvider = permissionProvider;
+    this.readOnlyChecks = readOnlyChecks;
   }
 
   @Override
-  public String getCode() {
-    return CODE;
+  public void init(SCMContextProvider context) {
+    RepositoryPermissionGuard.setReadOnlyVerbs(permissionProvider.readOnlyVerbs());
+    RepositoryPermissionGuard.setReadOnlyChecks(readOnlyChecks);
+    RepositoryReadOnlyChecker.setReadOnlyChecks(readOnlyChecks);
   }
 }

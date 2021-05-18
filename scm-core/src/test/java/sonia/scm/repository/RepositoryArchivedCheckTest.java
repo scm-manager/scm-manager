@@ -24,27 +24,39 @@
 
 package sonia.scm.repository;
 
-import static java.lang.String.format;
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("java:S110") // large history is ok for exceptions
-public class RepositoryArchivedException extends ReadOnlyException {
+import static org.junit.jupiter.api.Assertions.*;
 
-  public static final String CODE = "3hSIlptme1";
+class RepositoryArchivedCheckTest {
 
-  public RepositoryArchivedException(Repository repository) {
-    super(entity(repository).build(), format("Repository %s is marked as archived and must not be modified", repository));
+  private final RepositoryArchivedCheck check = new TestingRepositoryArchivedCheck();
+
+  private final Repository repository = new Repository("42", "git", "hitchhiker", "hog");
+
+  @Test
+  void shouldThrowForRepositoryMarkedAsArchived() {
+    assertThrows(RepositoryArchivedException.class, () -> check.check(repository));
   }
 
-  public RepositoryArchivedException(String repositoryId) {
-    super(
-      entity(Repository.class, repositoryId).build(),
-      format("Repository with id %s is marked as archived and must not be modified", repositoryId)
-    );
+  @Test
+  void shouldThrowForRepositoryMarkedAsArchivedWithId() {
+    assertThrows(RepositoryArchivedException.class, () -> check.check("42"));
   }
 
-  @Override
-  public String getCode() {
-    return CODE;
+  @Test
+  void shouldThrowForArchivedRepository() {
+    Repository repository = new Repository("21", "hg", "hitchhiker", "puzzle42");
+    repository.setArchived(true);
+    assertThrows(RepositoryArchivedException.class, () -> check.check(repository));
   }
+
+  private static class TestingRepositoryArchivedCheck implements RepositoryArchivedCheck {
+    @Override
+    public boolean isArchived(String repositoryId) {
+      return "42".equals(repositoryId);
+    }
+  }
+
 }
