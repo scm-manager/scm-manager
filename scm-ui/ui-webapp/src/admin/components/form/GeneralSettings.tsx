@@ -23,17 +23,16 @@
  */
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
+import { useUserSuggestions } from "@scm-manager/ui-api";
+import { NamespaceStrategies, AnonymousMode, SelectValue } from "@scm-manager/ui-types";
 import {
   Checkbox,
   InputField,
   MemberNameTagGroup,
   AutocompleteAddEntryToTableField,
-  Select,
-  apiClient
+  Select
 } from "@scm-manager/ui-components";
-import { NamespaceStrategies, AnonymousMode, SelectValue, Link, DisplayedUser } from "@scm-manager/ui-types";
 import NamespaceStrategySelect from "./NamespaceStrategySelect";
-import { useIndexLinks } from "@scm-manager/ui-api";
 
 type Props = {
   realmDescription: string;
@@ -71,8 +70,8 @@ const GeneralSettings: FC<Props> = ({
   onChange,
   hasUpdatePermission
 }) => {
-  const indexLinks = useIndexLinks();
   const { t } = useTranslation("config");
+  const userSuggestions = useUserSuggestions();
 
   const handleLoginInfoUrlChange = (value: string) => {
     onChange(true, value, "loginInfoUrl");
@@ -117,26 +116,6 @@ const GeneralSettings: FC<Props> = ({
       return;
     }
     handleNotifiedUsersChange([...notifiedUsers, value.value.id]);
-  };
-
-  // TODO: Remove duplication
-  const loadUserSuggestions = (inputValue: string) => {
-    const autocompleteLink = (indexLinks.autocomplete as Link[]).find(i => i.name === "users");
-    if (!autocompleteLink) {
-      return [];
-    }
-    const url = autocompleteLink.href + "?q=";
-    return apiClient
-      .get(url + inputValue)
-      .then(response => response.json())
-      .then(json => {
-        return json.map((element: DisplayedUser) => {
-          return {
-            value: element,
-            label: `${element.displayName} (${element.id})`
-          };
-        });
-      });
   };
 
   return (
@@ -262,7 +241,7 @@ const GeneralSettings: FC<Props> = ({
           <AutocompleteAddEntryToTableField
             addEntry={addNotifiedUser}
             buttonLabel={t("general-settings.notifiedUsers.addButton")}
-            loadSuggestions={loadUserSuggestions}
+            loadSuggestions={userSuggestions}
             placeholder={t("general-settings.notifiedUsers.autocompletePlaceholder")}
           />
         </div>

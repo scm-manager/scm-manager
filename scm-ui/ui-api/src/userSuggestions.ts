@@ -21,29 +21,28 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import { Redirect } from "react-router-dom";
-import { useTranslation } from "react-i18next";
-import { useCreateGroup, useUserSuggestions } from "@scm-manager/ui-api";
-import { Page } from "@scm-manager/ui-components";
-import GroupForm from "../components/GroupForm";
+import {DisplayedUser, Link, SelectValue} from "@scm-manager/ui-types";
+import { useIndexLinks } from "./base";
+import { apiClient } from "./apiclient";
 
-const CreateGroup: FC = () => {
-  const [t] = useTranslation("groups");
-  const { isLoading, create, error, group } = useCreateGroup();
-  const userSuggestions = useUserSuggestions();
-
-  if (group) {
-    return <Redirect to={`/group/${group.name}`} />;
+export const useUserSuggestions = () => {
+  const indexLinks = useIndexLinks();
+  const autocompleteLink = (indexLinks.autocomplete as Link[]).find(i => i.name === "users");
+  if (!autocompleteLink) {
+    return [];
   }
-
-  return (
-    <Page title={t("add-group.title")} subtitle={t("add-group.subtitle")} error={error || undefined}>
-      <div>
-        <GroupForm submitForm={create} loading={isLoading} loadUserSuggestions={userSuggestions} />
-      </div>
-    </Page>
-  );
+  const url = autocompleteLink.href + "?q=";
+  return (inputValue: string): Promise<SelectValue[]> => {
+    return apiClient
+      .get(url + inputValue)
+      .then(response => response.json())
+      .then(json => {
+        return json.map((element: DisplayedUser) => {
+          return {
+            value: element,
+            label: `${element.displayName} (${element.id})`
+          };
+        });
+      });
+  };
 };
-
-export default CreateGroup;
