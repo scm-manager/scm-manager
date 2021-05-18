@@ -28,6 +28,7 @@ import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -35,9 +36,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.SCMContext;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.repository.DefaultRepositoryExportingCheck;
+import sonia.scm.repository.EventDrivenRepositoryArchiveCheck;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryArchivedException;
 import sonia.scm.repository.RepositoryExportingException;
+import sonia.scm.repository.RepositoryReadOnlyCheckerHack;
 import sonia.scm.repository.spi.HttpScmProtocol;
 import sonia.scm.repository.spi.RepositoryServiceProvider;
 import sonia.scm.user.EMail;
@@ -59,7 +62,7 @@ import static org.mockito.Mockito.when;
 class RepositoryServiceTest {
 
   private final RepositoryServiceProvider provider = mock(RepositoryServiceProvider.class);
-  private final Repository repository = new Repository("", "git", "space", "repo");
+  private final Repository repository = new Repository("42", "git", "space", "repo");
 
   private final EMail eMail = new EMail(new ScmConfiguration());
 
@@ -112,33 +115,53 @@ class RepositoryServiceTest {
     assertThrows(IllegalArgumentException.class, () -> repositoryService.getProtocol(UnknownScmProtocol.class));
   }
 
-  @Test
-  void shouldFailForArchivedRepository() {
-    repository.setArchived(true);
-    RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail, null);
+  @Nested
+  class RepositoryReadOnlyCheckerTests {
 
-    assertThrows(RepositoryArchivedException.class, repositoryService::getModifyCommand);
-    assertThrows(RepositoryArchivedException.class, repositoryService::getBranchCommand);
-    assertThrows(RepositoryArchivedException.class, repositoryService::getPullCommand);
-    assertThrows(RepositoryArchivedException.class, repositoryService::getTagCommand);
-    assertThrows(RepositoryArchivedException.class, repositoryService::getMergeCommand);
-    assertThrows(RepositoryArchivedException.class, repositoryService::getModifyCommand);
-  }
+    @AfterEach
+    void clearChecks() {
+      RepositoryReadOnlyCheckerHack.setReadOnlyChecks(Collections.emptySet());
+      repository.setArchived(false);
+    }
 
-  @Test
-  void shouldFailForExportingRepository() {
-    new DefaultRepositoryExportingCheck().withExportingLock(repository, () -> {
+    @Test
+    void shouldFailForExportingRepository() {
+      DefaultRepositoryExportingCheck check = new DefaultRepositoryExportingCheck();
+
+      RepositoryReadOnlyCheckerHack.setReadOnlyChecks(Collections.singleton(check));
+
+      check.withExportingLock(repository, () -> {
+        RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail, null);
+
+        assertThrows(RepositoryExportingException.class, repositoryService::getModifyCommand);
+        assertThrows(RepositoryExportingException.class, repositoryService::getBranchCommand);
+        assertThrows(RepositoryExportingException.class, repositoryService::getPullCommand);
+        assertThrows(RepositoryExportingException.class, repositoryService::getTagCommand);
+        assertThrows(RepositoryExportingException.class, repositoryService::getMergeCommand);
+        assertThrows(RepositoryExportingException.class, repositoryService::getModifyCommand);
+        return null;
+      });
+    }
+
+    @Test
+    void shouldFailForArchivedRepository() {
+      EventDrivenRepositoryArchiveCheck check = new EventDrivenRepositoryArchiveCheck();
+      RepositoryReadOnlyCheckerHack.setReadOnlyChecks(Collections.singleton(check));
+
+      repository.setArchived(true);
+
       RepositoryService repositoryService = new RepositoryService(null, provider, repository, null, Collections.singleton(new DummyScmProtocolProvider()), null, eMail, null);
 
-      assertThrows(RepositoryExportingException.class, repositoryService::getModifyCommand);
-      assertThrows(RepositoryExportingException.class, repositoryService::getBranchCommand);
-      assertThrows(RepositoryExportingException.class, repositoryService::getPullCommand);
-      assertThrows(RepositoryExportingException.class, repositoryService::getTagCommand);
-      assertThrows(RepositoryExportingException.class, repositoryService::getMergeCommand);
-      assertThrows(RepositoryExportingException.class, repositoryService::getModifyCommand);
-      return null;
-    });
+      assertThrows(RepositoryArchivedException.class, repositoryService::getModifyCommand);
+      assertThrows(RepositoryArchivedException.class, repositoryService::getBranchCommand);
+      assertThrows(RepositoryArchivedException.class, repositoryService::getPullCommand);
+      assertThrows(RepositoryArchivedException.class, repositoryService::getTagCommand);
+      assertThrows(RepositoryArchivedException.class, repositoryService::getMergeCommand);
+      assertThrows(RepositoryArchivedException.class, repositoryService::getModifyCommand);
+    }
+
   }
+
 
   private static class DummyHttpProtocol extends HttpScmProtocol {
 

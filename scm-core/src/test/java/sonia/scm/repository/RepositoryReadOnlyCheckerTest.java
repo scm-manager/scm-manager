@@ -24,15 +24,21 @@
 
 package sonia.scm.repository;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.function.Supplier;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class RepositoryReadOnlyCheckerTest {
 
-  private final Repository repository = new Repository("1", "git","hitchhiker", "HeartOfGold");
+  private final Repository repository = new Repository("1", "git", "hitchhiker", "HeartOfGold");
 
   private boolean archived = false;
   private boolean exporting = false;
@@ -50,30 +56,126 @@ class RepositoryReadOnlyCheckerTest {
     }
   };
 
-  private final RepositoryReadOnlyChecker checker = new RepositoryReadOnlyChecker(archivedCheck, exportingCheck);
-
-  @Test
-  void shouldReturnFalseIfAllChecksFalse() {
-    boolean readOnly = checker.isReadOnly(repository);
-
-    assertThat(readOnly).isFalse();
+  @BeforeEach
+  void resetStates() {
+    archived = false;
+    exporting = false;
   }
 
-  @Test
-  void shouldReturnTrueIfArchivedIsTrue() {
-    archived = true;
-
-    boolean readOnly = checker.isReadOnly(repository);
-
-    assertThat(readOnly).isTrue();
+  @AfterEach
+  void unregisterStaticChecks() {
+    RepositoryReadOnlyChecker.setReadOnlyChecks(Collections.emptySet());
   }
 
-  @Test
-  void shouldReturnTrueIfExportingIsTrue() {
-    exporting = true;
+  @Nested
+  class LegacyChecks {
 
-    boolean readOnly = checker.isReadOnly(repository);
+    private final RepositoryReadOnlyChecker checker = new RepositoryReadOnlyChecker(archivedCheck, exportingCheck);
 
-    assertThat(readOnly).isTrue();
+    @Test
+    void shouldReturnFalseIfAllChecksFalse() {
+      boolean readOnly = checker.isReadOnly(repository);
+
+      assertThat(readOnly).isFalse();
+    }
+
+    @Test
+    void shouldReturnTrueIfArchivedIsTrue() {
+      archived = true;
+
+      boolean readOnly = checker.isReadOnly(repository);
+
+      assertThat(readOnly).isTrue();
+    }
+
+    @Test
+    void shouldReturnTrueIfExportingIsTrue() {
+      exporting = true;
+
+      boolean readOnly = checker.isReadOnly(repository);
+
+      assertThat(readOnly).isTrue();
+    }
+
+    @Test
+    void shouldHandleLegacyAndStatic() {
+      assertThat(checker.isReadOnly(repository)).isFalse();
+
+      RepositoryReadOnlyChecker.setReadOnlyChecks(Collections.singleton(new SampleReadOnlyCheck(true)));
+      assertThat(checker.isReadOnly(repository)).isTrue();
+
+      RepositoryReadOnlyChecker.setReadOnlyChecks(Collections.emptySet());
+      assertThat(checker.isReadOnly(repository)).isFalse();
+
+      exporting = true;
+      assertThat(checker.isReadOnly(repository)).isTrue();
+    }
+
   }
+
+  @Nested
+  class StaticChecks {
+
+    private final RepositoryReadOnlyChecker checker = new RepositoryReadOnlyChecker();
+
+    @BeforeEach
+    void registerStaticChecks() {
+      RepositoryReadOnlyChecker.setReadOnlyChecks(Arrays.asList(
+        archivedCheck, exportingCheck
+      ));
+    }
+
+    @Test
+    void shouldReturnFalseIfAllChecksFalse() {
+      boolean readOnly = checker.isReadOnly(repository);
+
+      assertThat(readOnly).isFalse();
+    }
+
+    @Test
+    void shouldReturnTrueIfArchivedIsTrue() {
+      archived = true;
+
+      boolean readOnly = checker.isReadOnly(repository);
+
+      assertThat(readOnly).isTrue();
+    }
+
+    @Test
+    void shouldReturnTrueIfExportingIsTrue() {
+      exporting = true;
+
+      boolean readOnly = checker.isReadOnly(repository);
+
+      assertThat(readOnly).isTrue();
+    }
+
+    @Test
+    void shouldThrowReadOnlyException() {
+      exporting = true;
+
+      assertThrows(ReadOnlyException.class, () -> RepositoryReadOnlyChecker.checkReadOnly(repository));
+    }
+
+  }
+
+  private static class SampleReadOnlyCheck implements ReadOnlyCheck {
+
+    private final boolean readOnly;
+
+    public SampleReadOnlyCheck(boolean readOnly) {
+      this.readOnly = readOnly;
+    }
+
+    @Override
+    public String getReason() {
+      return "testing purposes";
+    }
+
+    @Override
+    public boolean isReadOnly(String repositoryId) {
+      return readOnly;
+    }
+  }
+
 }

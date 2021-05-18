@@ -24,27 +24,48 @@
 
 package sonia.scm.repository;
 
-import static java.lang.String.format;
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import org.junit.jupiter.api.Test;
 
-@SuppressWarnings("java:S110") // large history is ok for exceptions
-public class RepositoryArchivedException extends ReadOnlyException {
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
-  public static final String CODE = "3hSIlptme1";
+class ReadOnlyCheckTest {
 
-  public RepositoryArchivedException(Repository repository) {
-    super(entity(repository).build(), format("Repository %s is marked as archived and must not be modified", repository));
+  private final ReadOnlyCheck check = new TesingReadOnlyCheck();
+
+  private final Repository repository = new Repository("42", "git", "hitchhiker", "hog");
+
+  @Test
+  void shouldDelegateToMethodWithRepositoryId() {
+    assertThat(check.isReadOnly(repository)).isTrue();
   }
 
-  public RepositoryArchivedException(String repositoryId) {
-    super(
-      entity(Repository.class, repositoryId).build(),
-      format("Repository with id %s is marked as archived and must not be modified", repositoryId)
-    );
+  @Test
+  void shouldThrowReadOnlyException() {
+    assertThrows(ReadOnlyException.class, () -> check.check(repository));
   }
 
-  @Override
-  public String getCode() {
-    return CODE;
+  @Test
+  void shouldThrowReadOnlyExceptionForId() {
+    assertThrows(ReadOnlyException.class, () -> check.check("42"));
   }
+
+  @Test
+  void shouldNotThrowException() {
+    assertDoesNotThrow(() -> check.check("21"));
+  }
+
+  private class TesingReadOnlyCheck implements ReadOnlyCheck {
+
+    @Override
+    public String getReason() {
+      return "Testing";
+    }
+
+    @Override
+    public boolean isReadOnly(String repositoryId) {
+      return repositoryId.equals("42");
+    }
+  }
+
 }

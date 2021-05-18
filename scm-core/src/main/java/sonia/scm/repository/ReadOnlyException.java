@@ -24,29 +24,25 @@
 
 package sonia.scm.repository;
 
-import sonia.scm.EagerSingleton;
-import sonia.scm.Initable;
-import sonia.scm.SCMContextProvider;
-import sonia.scm.plugin.Extension;
+import sonia.scm.ContextEntry;
+import sonia.scm.ExceptionWithContext;
 
-import javax.inject.Inject;
+import java.util.List;
 
 /**
- * Initializes read only permissions for {@link RepositoryPermissionGuard} at startup.
+ * Read only exception is thrown if someone tries to execute a write command on a read only repository.
+ *
+ * @since 2.19.0
  */
-@Extension
-@EagerSingleton
-final class RepositoryPermissionGuardInitializer implements Initable {
+public class ReadOnlyException extends ExceptionWithContext {
 
-  private final PermissionProvider permissionProvider;
-
-  @Inject
-  RepositoryPermissionGuardInitializer(PermissionProvider permissionProvider) {
-    this.permissionProvider = permissionProvider;
+  public ReadOnlyException(List<ContextEntry> context, String message) {
+    super(context, message);
   }
 
   @Override
-  public void init(SCMContextProvider context) {
-    RepositoryPermissionGuard.setReadOnlyVerbs(permissionProvider.readOnlyVerbs());
+  public String getCode() {
+    return "BaSXkAztI1";
   }
+
 }

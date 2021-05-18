@@ -24,17 +24,23 @@
 
 package sonia.scm.repository;
 
-import sonia.scm.ExceptionWithContext;
-
 import static java.lang.String.format;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-public class RepositoryExportingException extends ExceptionWithContext {
+@SuppressWarnings("java:S110") // large history is ok for exceptions
+public class RepositoryExportingException extends ReadOnlyException {
 
   public static final String CODE = "1mSNlpe1V1";
 
   public RepositoryExportingException(Repository repository) {
     super(entity(repository).build(), format("Repository %s is currently being exported and must not be modified", repository));
+  }
+
+  public RepositoryExportingException(String repositoryId) {
+    super(
+      entity(Repository.class, repositoryId).build(),
+      format("Repository with id %s is currently being exported and must not be modified", repositoryId)
+    );
   }
 
   @Override
