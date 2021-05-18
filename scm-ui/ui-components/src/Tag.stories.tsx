@@ -24,10 +24,10 @@
 
 import styled from "styled-components";
 import { storiesOf } from "@storybook/react";
-import * as React from "react";
+import React, { ReactNode } from "react";
 import Tag from "./Tag";
-import { ReactNode } from "react";
 import { MemoryRouter } from "react-router-dom";
+import { colors, sizes } from "./styleConstants";
 
 const Wrapper = styled.div`
   margin: 2rem;
@@ -38,23 +38,30 @@ const Spacing = styled.div`
   padding: 1em;
 `;
 
-const colors = ["primary", "link", "info", "success", "warning", "danger"];
-
 const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
 
 storiesOf("Tag", module)
   .addDecorator(RoutingDecorator)
-  .addDecorator(storyFn => <Wrapper>{storyFn()}</Wrapper>)
+  .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
   .add("Default", () => <Tag label="Default tag" />)
   .add("With Icon", () => <Tag label="System" icon="bolt" />)
   .add("Colors", () => (
     <div>
-      {colors.map(color => (
-        <Spacing>
+      {colors.map((color) => (
+        <Spacing key={color}>
           <Tag color={color} label={color} />
         </Spacing>
       ))}
     </div>
   ))
-  .add("With title", () => <Tag label="hover me" title="good job"/>)
-  .add("Clickable", () => <Tag label="Click here" onClick={() => alert("Not so fast")}/>);
+  .add("With title", () => <Tag label="hover me" title="good job" />)
+  .add("Clickable", () => <Tag label="Click here" onClick={() => alert("Not so fast")} />)
+  .add("Sizes", () => (
+    <div>
+      {sizes.map((size) => (
+        <Spacing key={size}>
+          <Tag size={size} label={size} />
+        </Spacing>
+      ))}
+    </div>
+  ));

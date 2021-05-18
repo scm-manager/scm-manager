@@ -21,50 +21,76 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import * as React from "react";
+import React, { FC, HTMLAttributes } from "react";
 import classNames from "classnames";
+import { Color, Size } from "./styleConstants";
+import styled, { css } from "styled-components";
 
 type Props = {
   className?: string;
-  color: string;
+  color?: Color;
   icon?: string;
-  label: string;
+  label?: string;
   title?: string;
+  size?: Size;
   onClick?: () => void;
   onRemove?: () => void;
 };
 
-class Tag extends React.Component<Props> {
-  static defaultProps = {
-    color: "light"
-  };
+type InnerTagProps = HTMLAttributes<HTMLSpanElement> & {
+  small: boolean;
+};
 
-  render() {
-    const { className, color, icon, label, title, onClick, onRemove } = this.props;
-    let showIcon = null;
-    if (icon) {
-      showIcon = (
-        <>
-          <i className={classNames("fas", `fa-${icon}`)} />
-          &nbsp;
-        </>
-      );
-    }
-    let showDelete = null;
-    if (onRemove) {
-      showDelete = <a className="tag is-delete" onClick={onRemove} />;
-    }
+const smallMixin = css`
+  font-size: 0.7rem !important;
+  padding: 0.25rem !important;
+  font-weight: bold;
+`;
 
-    return (
+const InnerTag = styled.span<InnerTagProps>`
+  ${(props) => props.small && smallMixin};
+`;
+
+const Tag: FC<Props> = ({
+  className,
+  color = "light",
+  size = "normal",
+  icon,
+  label,
+  title,
+  onClick,
+  onRemove,
+  children,
+}) => {
+  let showIcon = null;
+  if (icon) {
+    showIcon = (
       <>
-        <span className={classNames("tag", `is-${color}`, className)} title={title} onClick={onClick}>
-          {showIcon}
-          {label}
-        </span>
-        {showDelete}
+        <i className={classNames("fas", `fa-${icon}`)} />
+        &nbsp;
       </>
     );
   }
-}
+  let showDelete = null;
+  if (onRemove) {
+    showDelete = <a className="tag is-delete" onClick={onRemove} />;
+  }
+
+  return (
+    <>
+      <InnerTag
+        className={classNames("tag", `is-${color}`, `is-${size}`, className)}
+        title={title}
+        onClick={onClick}
+        small={size === "small"}
+      >
+        {showIcon}
+        {label}
+        {children}
+      </InnerTag>
+      {showDelete}
+    </>
+  );
+};
 
 export default Tag;

@@ -22,39 +22,19 @@
  * SOFTWARE.
  */
 
-import { ExtensionPointDefinition } from "./binder";
-import {
-  IndexResources,
-  NamespaceStrategies,
-  Repository,
-  RepositoryCreation,
-  RepositoryTypeCollection,
-} from "@scm-manager/ui-types";
+export const colors = [
+  "black",
+  "dark",
+  "light",
+  "white",
+  "primary",
+  "link",
+  "info",
+  "success",
+  "warning",
+  "danger",
+] as const;
+export type Color = typeof colors[number];
 
-type RepositoryCreatorSubFormProps = {
-  repository: RepositoryCreation;
-  onChange: (repository: RepositoryCreation) => void;
-  setValid: (valid: boolean) => void;
-  disabled?: boolean;
-};
-
-export type RepositoryCreatorComponentProps = {
-  namespaceStrategies: NamespaceStrategies;
-  repositoryTypes: RepositoryTypeCollection;
-  index: IndexResources;
-
-  nameForm: React.ComponentType<RepositoryCreatorSubFormProps>;
-  informationForm: React.ComponentType<RepositoryCreatorSubFormProps>;
-};
-
-export type RepositoryCreatorExtension = {
-  subtitle: string;
-  path: string;
-  icon: string;
-  label: string;
-  component: React.ComponentType<RepositoryCreatorComponentProps>;
-};
-
-export type RepositoryCreator = ExtensionPointDefinition<"repos.creator", RepositoryCreatorExtension>;
-
-export type RepositoryCardFlags = ExtensionPointDefinition<"repository.card.flags", { repository: Repository }>;
+export const sizes = ["small", "normal", "medium", "large"] as const;
+export type Size = typeof sizes[number];

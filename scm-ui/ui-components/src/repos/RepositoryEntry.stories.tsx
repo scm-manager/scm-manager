@@ -33,6 +33,8 @@ import { Repository } from "@scm-manager/ui-types";
 import Image from "../Image";
 import Icon from "../Icon";
 import { MemoryRouter } from "react-router-dom";
+import { Color } from "../styleConstants";
+import RepositoryFlag from "./RepositoryFlag";
 
 const baseDate = "2020-03-26T12:13:42+02:00";
 
@@ -46,6 +48,14 @@ const bindAvatar = (binder: Binder, avatar: string) => {
   binder.bind("repos.repository-avatar", () => {
     return <Image src={avatar} alt="Logo" />;
   });
+};
+
+const bindFlag = (binder: Binder, color: Color, label: string) => {
+  binder.bind("repository.card.flags", () => (
+    <RepositoryFlag title={label} color={color}>
+      {label}
+    </RepositoryFlag>
+  ));
 };
 
 const bindBeforeTitle = (binder: Binder, extension: ReactNode) => {
@@ -76,6 +86,17 @@ const QuickLink = (
 
 const archivedRepository = { ...repository, archived: true };
 const exportingRepository = { ...repository, exporting: true };
+const healthCheckFailedRepository = {
+  ...repository,
+  healthCheckFailures: [
+    {
+      id: "4211",
+      summary: "Something failed",
+      description: "Something realy bad happend",
+      url: "http://why.is-the-url.required",
+    },
+  ],
+};
 const archivedExportingRepository = { ...repository, archived: true, exporting: true };
 
 storiesOf("RepositoryEntry", module)
@@ -108,6 +129,18 @@ storiesOf("RepositoryEntry", module)
     const binder = new Binder("title");
     bindAvatar(binder, Git);
     return withBinder(binder, exportingRepository);
+  })
+  .add("HealthCheck Failure", () => {
+    const binder = new Binder("title");
+    bindAvatar(binder, Git);
+    return withBinder(binder, healthCheckFailedRepository);
+  })
+  .add("RepositoryFlag EP", () => {
+    const binder = new Binder("title");
+    bindAvatar(binder, Git);
+    bindFlag(binder, "success", "awesome");
+    bindFlag(binder, "warning", "ouhhh...");
+    return withBinder(binder, healthCheckFailedRepository);
   })
   .add("MultiRepositoryTags", () => {
     const binder = new Binder("title");
