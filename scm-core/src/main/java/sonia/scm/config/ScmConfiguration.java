@@ -214,6 +214,11 @@ public class ScmConfiguration implements Configuration {
   @XmlElement(name = "mail-domain-name")
   private String mailDomainName = DEFAULT_MAIL_DOMAIN_NAME;
 
+  /**
+   * List of users that will be notified of administrative incidents.
+   *
+   * @since 2.19.0
+   */
   @XmlElement(name = "notified-users")
   private Set<String> notifiedUsers;
 
