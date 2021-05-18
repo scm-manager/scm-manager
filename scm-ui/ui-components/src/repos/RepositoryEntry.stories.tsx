@@ -93,9 +93,9 @@ const healthCheckFailedRepository = {
       id: "4211",
       summary: "Something failed",
       description: "Something realy bad happend",
-      url: "http://why.is-the-url.required",
-    },
-  ],
+      url: "https://something-realy-bad.happend"
+    }
+  ]
 };
 const archivedExportingRepository = { ...repository, archived: true, exporting: true };
 

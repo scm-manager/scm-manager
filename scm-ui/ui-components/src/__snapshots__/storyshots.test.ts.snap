@@ -4821,7 +4821,7 @@ exports[`Storyshots Diff Binaries 1`] = `
               Main.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -5040,7 +5040,7 @@ exports[`Storyshots Diff Binaries 1`] = `
               conflict.png
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               add
             </span>
@@ -5106,7 +5106,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -5219,7 +5219,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
               src/main/js/ChangeNotification.tsx
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -5332,7 +5332,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
               src/main/resources/locales/de/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -5445,7 +5445,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
               src/main/resources/locales/en/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -5558,7 +5558,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -5671,7 +5671,7 @@ exports[`Storyshots Diff Collapsed 1`] = `
               Main.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -5793,7 +5793,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -5868,7 +5868,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               src/main/js/ChangeNotification.tsx
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -6726,7 +6726,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               src/main/resources/locales/de/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -7180,7 +7180,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               src/main/resources/locales/en/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -7634,7 +7634,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -7709,7 +7709,7 @@ exports[`Storyshots Diff CollapsingWithFunction 1`] = `
               Main.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -7793,7 +7793,7 @@ exports[`Storyshots Diff Default 1`] = `
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -8374,7 +8374,7 @@ exports[`Storyshots Diff Default 1`] = `
               src/main/js/ChangeNotification.tsx
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -9232,7 +9232,7 @@ exports[`Storyshots Diff Default 1`] = `
               src/main/resources/locales/de/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -9686,7 +9686,7 @@ exports[`Storyshots Diff Default 1`] = `
               src/main/resources/locales/en/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -10140,7 +10140,7 @@ exports[`Storyshots Diff Default 1`] = `
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -11201,7 +11201,7 @@ exports[`Storyshots Diff Default 1`] = `
               Main.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -11739,7 +11739,7 @@ exports[`Storyshots Diff Expandable 1`] = `
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -12357,7 +12357,7 @@ exports[`Storyshots Diff Expandable 1`] = `
               src/main/js/ChangeNotification.tsx
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -13312,7 +13312,7 @@ exports[`Storyshots Diff Expandable 1`] = `
               src/main/resources/locales/de/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -13838,7 +13838,7 @@ exports[`Storyshots Diff Expandable 1`] = `
               src/main/resources/locales/en/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -14364,7 +14364,7 @@ exports[`Storyshots Diff Expandable 1`] = `
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -15580,7 +15580,7 @@ exports[`Storyshots Diff Expandable 1`] = `
               Main.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -16155,7 +16155,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -16740,7 +16740,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               src/main/js/ChangeNotification.tsx
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -17602,7 +17602,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               src/main/resources/locales/de/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -18060,7 +18060,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               src/main/resources/locales/en/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -18518,7 +18518,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -19583,7 +19583,7 @@ exports[`Storyshots Diff File Annotation 1`] = `
               Main.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -20125,7 +20125,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -20724,7 +20724,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               src/main/js/ChangeNotification.tsx
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -21600,7 +21600,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               src/main/resources/locales/de/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -22072,7 +22072,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               src/main/resources/locales/en/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -22544,7 +22544,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -23623,7 +23623,7 @@ exports[`Storyshots Diff File Controls 1`] = `
               Main.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -24179,7 +24179,7 @@ exports[`Storyshots Diff Hunks 1`] = `
               src/main/java/com/cloudogu/scm/review/pullrequest/service/DefaultPullRequestService.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -25024,7 +25024,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -25617,7 +25617,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               src/main/js/ChangeNotification.tsx
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -26487,7 +26487,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               src/main/resources/locales/de/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -26941,7 +26941,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               src/main/resources/locales/en/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -27395,7 +27395,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -28456,7 +28456,7 @@ exports[`Storyshots Diff Line Annotation 1`] = `
               Main.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -29006,7 +29006,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -29627,7 +29627,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               src/main/js/ChangeNotification.tsx
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -30547,7 +30547,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               src/main/resources/locales/de/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -31031,7 +31031,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               src/main/resources/locales/en/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -31515,7 +31515,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -32652,7 +32652,7 @@ exports[`Storyshots Diff OnClick 1`] = `
               Main.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -33226,7 +33226,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -33900,7 +33900,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               src/main/js/ChangeNotification.tsx
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -34848,7 +34848,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               src/main/resources/locales/de/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -35354,7 +35354,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               src/main/resources/locales/en/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -35860,7 +35860,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -37090,7 +37090,7 @@ exports[`Storyshots Diff Side-By-Side 1`] = `
               Main.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -37701,7 +37701,7 @@ exports[`Storyshots Diff SyntaxHighlighting (Markdown) 1`] = `
               CHANGELOG.md
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -38064,7 +38064,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -38645,7 +38645,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               src/main/js/ChangeNotification.tsx
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -39503,7 +39503,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               src/main/resources/locales/de/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -39957,7 +39957,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               src/main/resources/locales/en/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -40411,7 +40411,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -41472,7 +41472,7 @@ exports[`Storyshots Diff SyntaxHighlighting 1`] = `
               Main.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -42010,7 +42010,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
               src/main/java/com/cloudogu/scm/review/events/EventListener.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -42628,7 +42628,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
               src/main/js/ChangeNotification.tsx
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -43583,7 +43583,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
               src/main/resources/locales/de/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -44109,7 +44109,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
               src/main/resources/locales/en/plugins.json
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -44635,7 +44635,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
               src/test/java/com/cloudogu/scm/review/events/ClientTest.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -45851,7 +45851,7 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
               Main.java
             </span>
             <span
-              className="tag is-info is-outlined DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR is-rounded has-text-weight-normal"
+              className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal DiffFile__ChangeTypeTag-sc-10deuqx-5 cXFjDR has-text-weight-normal is-outlined is-rounded"
             >
               modify
             </span>
@@ -63189,15 +63189,19 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
           <p
             className="shorten-text is-marginless"
           >
-            <strong>
-              heartOfGold
-            </strong>
-             
             <span
-              className="RepositoryEntry__RepositoryTag-sc-6jys82-0 jSnwjx"
-              title="archive.tooltip"
+              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
             >
-              repository.archived
+              <strong>
+                heartOfGold
+              </strong>
+               
+              <span
+                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                title="archive.tooltip"
+              >
+                repository.archived
+              </span>
             </span>
           </p>
           <p
@@ -63340,10 +63344,14 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
           <p
             className="shorten-text is-marginless"
           >
-            <strong>
-              heartOfGold
-            </strong>
-             
+            <span
+              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+            >
+              <strong>
+                heartOfGold
+              </strong>
+               
+            </span>
           </p>
           <p
             className="shorten-text"
@@ -63485,13 +63493,17 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
           <p
             className="shorten-text is-marginless"
           >
-            <i
-              className="far fa-star"
-            />
-            <strong>
-              heartOfGold
-            </strong>
-             
+            <span
+              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+            >
+              <i
+                className="far fa-star"
+              />
+              <strong>
+                heartOfGold
+              </strong>
+               
+            </span>
           </p>
           <p
             className="shorten-text"
@@ -63633,10 +63645,14 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
           <p
             className="shorten-text is-marginless"
           >
-            <strong>
-              heartOfGold
-            </strong>
-             
+            <span
+              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+            >
+              <strong>
+                heartOfGold
+              </strong>
+               
+            </span>
           </p>
           <p
             className="shorten-text"
@@ -63778,15 +63794,175 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
           <p
             className="shorten-text is-marginless"
           >
-            <strong>
-              heartOfGold
-            </strong>
-             
             <span
-              className="RepositoryEntry__RepositoryTag-sc-6jys82-0 jSnwjx"
-              title="exporting.tooltip"
+              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
             >
-              repository.exporting
+              <strong>
+                heartOfGold
+              </strong>
+               
+              <span
+                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                title="exporting.tooltip"
+              >
+                repository.exporting
+              </span>
+            </span>
+          </p>
+          <p
+            className="shorten-text"
+          >
+            The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
+          </p>
+        </div>
+      </div>
+      <div
+        className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
+      >
+        <div
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 hazmI level-left is-hidden-mobile"
+        >
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
+            href="/repo/hitchhiker/heartOfGold/branches/"
+            onClick={[Function]}
+          >
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.branches"
+            >
+              <i
+                className="fas fa-code-branch has-text-inherit fa-lg"
+              />
+            </span>
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
+            href="/repo/hitchhiker/heartOfGold/tags/"
+            onClick={[Function]}
+          >
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.tags"
+            >
+              <i
+                className="fas fa-tags has-text-inherit fa-lg"
+              />
+            </span>
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
+            href="/repo/hitchhiker/heartOfGold/code/changesets/"
+            onClick={[Function]}
+          >
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.commits"
+            >
+              <i
+                className="fas fa-exchange-alt has-text-inherit fa-lg"
+              />
+            </span>
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
+            href="/repo/hitchhiker/heartOfGold/code/sources/"
+            onClick={[Function]}
+          >
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.sources"
+            >
+              <i
+                className="fas fa-code has-text-inherit fa-lg"
+              />
+            </span>
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
+            href="/repo/hitchhiker/heartOfGold/settings/general"
+            onClick={[Function]}
+          >
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.settings"
+            >
+              <i
+                className="fas fa-cog has-text-inherit fa-lg"
+              />
+            </span>
+          </a>
+        </div>
+        <div
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 bmCbDN level-right is-block is-mobile is-marginless shorten-text"
+        >
+          <small
+            className="level-item"
+          >
+            <time
+              className="DateElement-sc-1schp8c-0 cinWxa"
+              title="2020-03-23 09:26:01"
+            >
+              3 days ago
+            </time>
+          </small>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+`;
+
+exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
+<div
+  className="RepositoryEntrystories__Spacing-toppdg-0 gZhLog box box-link-shadow"
+>
+  <a
+    className="overlay-column"
+    href="/repo/hitchhiker/heartOfGold"
+    onClick={[Function]}
+  />
+  <article
+    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 cvqkqR media"
+  >
+    <figure
+      className="CardColumn__AvatarWrapper-sc-1w6lsih-1 jBSrYP media-left"
+    >
+      <p
+        className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
+      >
+        <img
+          alt="Logo"
+          src="test-file-stub"
+        />
+      </p>
+    </figure>
+    <div
+      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 dvHFki media-content text-box is-flex"
+    >
+      <div
+        className="is-flex"
+      >
+        <div
+          className="CardColumn__ContentLeft-sc-1w6lsih-4 heSQMX content"
+        >
+          <p
+            className="shorten-text is-marginless"
+          >
+            <span
+              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+            >
+              <strong>
+                heartOfGold
+              </strong>
+               
+              <span
+                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-danger is-small"
+                onClick={[Function]}
+                title="healthCheckFailure.tooltip"
+              >
+                repository.healthCheckFailure
+              </span>
             </span>
           </p>
           <p
@@ -63929,21 +64105,25 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
           <p
             className="shorten-text is-marginless"
           >
-            <strong>
-              heartOfGold
-            </strong>
-             
             <span
-              className="RepositoryEntry__RepositoryTag-sc-6jys82-0 jSnwjx"
-              title="archive.tooltip"
+              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
             >
-              repository.archived
-            </span>
-            <span
-              className="RepositoryEntry__RepositoryTag-sc-6jys82-0 jSnwjx"
-              title="exporting.tooltip"
-            >
-              repository.exporting
+              <strong>
+                heartOfGold
+              </strong>
+               
+              <span
+                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                title="archive.tooltip"
+              >
+                repository.archived
+              </span>
+              <span
+                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                title="exporting.tooltip"
+              >
+                repository.exporting
+              </span>
             </span>
           </p>
           <p
@@ -64086,10 +64266,14 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
           <p
             className="shorten-text is-marginless"
           >
-            <strong>
-              heartOfGold
-            </strong>
-             
+            <span
+              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+            >
+              <strong>
+                heartOfGold
+              </strong>
+               
+            </span>
           </p>
           <p
             className="shorten-text"
@@ -64166,6 +64350,174 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
             <i
               className="fas fa-fas fa-code-branch fa-rotate-180 fa-fw has-text-inherit fa-lg"
             />
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
+            href="/repo/hitchhiker/heartOfGold/settings/general"
+            onClick={[Function]}
+          >
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.settings"
+            >
+              <i
+                className="fas fa-cog has-text-inherit fa-lg"
+              />
+            </span>
+          </a>
+        </div>
+        <div
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 bmCbDN level-right is-block is-mobile is-marginless shorten-text"
+        >
+          <small
+            className="level-item"
+          >
+            <time
+              className="DateElement-sc-1schp8c-0 cinWxa"
+              title="2020-03-23 09:26:01"
+            >
+              3 days ago
+            </time>
+          </small>
+        </div>
+      </div>
+    </div>
+  </article>
+</div>
+`;
+
+exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
+<div
+  className="RepositoryEntrystories__Spacing-toppdg-0 gZhLog box box-link-shadow"
+>
+  <a
+    className="overlay-column"
+    href="/repo/hitchhiker/heartOfGold"
+    onClick={[Function]}
+  />
+  <article
+    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 cvqkqR media"
+  >
+    <figure
+      className="CardColumn__AvatarWrapper-sc-1w6lsih-1 jBSrYP media-left"
+    >
+      <p
+        className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
+      >
+        <img
+          alt="Logo"
+          src="test-file-stub"
+        />
+      </p>
+    </figure>
+    <div
+      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 dvHFki media-content text-box is-flex"
+    >
+      <div
+        className="is-flex"
+      >
+        <div
+          className="CardColumn__ContentLeft-sc-1w6lsih-4 heSQMX content"
+        >
+          <p
+            className="shorten-text is-marginless"
+          >
+            <span
+              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+            >
+              <strong>
+                heartOfGold
+              </strong>
+               
+              <span
+                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-danger is-small"
+                onClick={[Function]}
+                title="healthCheckFailure.tooltip"
+              >
+                repository.healthCheckFailure
+              </span>
+              <span
+                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-success is-small"
+                title="awesome"
+              >
+                awesome
+              </span>
+              <span
+                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-warning is-small"
+                title="ouhhh..."
+              >
+                ouhhh...
+              </span>
+            </span>
+          </p>
+          <p
+            className="shorten-text"
+          >
+            The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
+          </p>
+        </div>
+      </div>
+      <div
+        className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
+      >
+        <div
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 hazmI level-left is-hidden-mobile"
+        >
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
+            href="/repo/hitchhiker/heartOfGold/branches/"
+            onClick={[Function]}
+          >
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.branches"
+            >
+              <i
+                className="fas fa-code-branch has-text-inherit fa-lg"
+              />
+            </span>
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
+            href="/repo/hitchhiker/heartOfGold/tags/"
+            onClick={[Function]}
+          >
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.tags"
+            >
+              <i
+                className="fas fa-tags has-text-inherit fa-lg"
+              />
+            </span>
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
+            href="/repo/hitchhiker/heartOfGold/code/changesets/"
+            onClick={[Function]}
+          >
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.commits"
+            >
+              <i
+                className="fas fa-exchange-alt has-text-inherit fa-lg"
+              />
+            </span>
+          </a>
+          <a
+            className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
+            href="/repo/hitchhiker/heartOfGold/code/sources/"
+            onClick={[Function]}
+          >
+            <span
+              className="tooltip has-tooltip-top"
+              data-tooltip="repositoryRoot.tooltip.sources"
+            >
+              <i
+                className="fas fa-code has-text-inherit fa-lg"
+              />
+            </span>
           </a>
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
@@ -78694,7 +79046,7 @@ exports[`Storyshots Tag Clickable 1`] = `
   className="Tagstories__Wrapper-wsn8kx-0 biUGWd"
 >
   <span
-    className="tag is-light"
+    className="Tag__InnerTag-ql67az-0 hGiieq tag is-light is-normal"
     onClick={[Function]}
   >
     Click here
@@ -78708,55 +79060,91 @@ exports[`Storyshots Tag Colors 1`] = `
 >
   <div>
     <div
-      className="Tagstories__Spacing-wsn8kx-1 foTIwu"
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
     >
       <span
-        className="tag is-primary"
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-black is-normal"
+      >
+        black
+      </span>
+    </div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
+    >
+      <span
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-dark is-normal"
+      >
+        dark
+      </span>
+    </div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
+    >
+      <span
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-light is-normal"
+      >
+        light
+      </span>
+    </div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
+    >
+      <span
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-white is-normal"
+      >
+        white
+      </span>
+    </div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
+    >
+      <span
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-primary is-normal"
       >
         primary
       </span>
     </div>
     <div
-      className="Tagstories__Spacing-wsn8kx-1 foTIwu"
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
     >
       <span
-        className="tag is-link"
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-link is-normal"
       >
         link
       </span>
     </div>
     <div
-      className="Tagstories__Spacing-wsn8kx-1 foTIwu"
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
     >
       <span
-        className="tag is-info"
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-info is-normal"
       >
         info
       </span>
     </div>
     <div
-      className="Tagstories__Spacing-wsn8kx-1 foTIwu"
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
     >
       <span
-        className="tag is-success"
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-success is-normal"
       >
         success
       </span>
     </div>
     <div
-      className="Tagstories__Spacing-wsn8kx-1 foTIwu"
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
     >
       <span
-        className="tag is-warning"
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-warning is-normal"
       >
         warning
       </span>
     </div>
     <div
-      className="Tagstories__Spacing-wsn8kx-1 foTIwu"
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
     >
       <span
-        className="tag is-danger"
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-danger is-normal"
       >
         danger
       </span>
@@ -78770,10 +79158,103 @@ exports[`Storyshots Tag Default 1`] = `
   className="Tagstories__Wrapper-wsn8kx-0 biUGWd"
 >
   <span
-    className="tag is-light"
+    className="Tag__InnerTag-ql67az-0 hGiieq tag is-light is-normal"
   >
     Default tag
   </span>
+</div>
+`;
+
+exports[`Storyshots Tag Outlined 1`] = `
+<div
+  className="Tagstories__Wrapper-wsn8kx-0 biUGWd"
+>
+  <div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
+    >
+      <span
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-success is-normal is-outlined"
+      >
+        success
+      </span>
+    </div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
+    >
+      <span
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-black is-normal is-outlined"
+      >
+        black
+      </span>
+    </div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
+    >
+      <span
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-danger is-normal is-outlined"
+      >
+        danger
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots Tag Rounded 1`] = `
+<div
+  className="Tagstories__Wrapper-wsn8kx-0 biUGWd"
+>
+  <span
+    className="Tag__InnerTag-ql67az-0 hGiieq tag is-dark is-normal is-rounded"
+  >
+    Rounded tag
+  </span>
+</div>
+`;
+
+exports[`Storyshots Tag Sizes 1`] = `
+<div
+  className="Tagstories__Wrapper-wsn8kx-0 biUGWd"
+>
+  <div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
+    >
+      <span
+        className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+      >
+        small
+      </span>
+    </div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
+    >
+      <span
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-light is-normal"
+      >
+        normal
+      </span>
+    </div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
+    >
+      <span
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-light is-medium"
+      >
+        medium
+      </span>
+    </div>
+    <div
+      className="Tagstories__Spacing-wsn8kx-1 eufxAm"
+    >
+      <span
+        className="Tag__InnerTag-ql67az-0 hGiieq tag is-light is-large"
+      >
+        large
+      </span>
+    </div>
+  </div>
 </div>
 `;
 
@@ -78782,7 +79263,7 @@ exports[`Storyshots Tag With Icon 1`] = `
   className="Tagstories__Wrapper-wsn8kx-0 biUGWd"
 >
   <span
-    className="tag is-light"
+    className="Tag__InnerTag-ql67az-0 hGiieq tag is-light is-normal"
   >
     <i
       className="fas fa-bolt"
@@ -78798,7 +79279,7 @@ exports[`Storyshots Tag With title 1`] = `
   className="Tagstories__Wrapper-wsn8kx-0 biUGWd"
 >
   <span
-    className="tag is-light"
+    className="Tag__InnerTag-ql67az-0 hGiieq tag is-light is-normal"
     title="good job"
   >
     hover me
