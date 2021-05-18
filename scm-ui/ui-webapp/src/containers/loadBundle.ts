@@ -31,6 +31,7 @@ import * as ReactDOM from "react-dom";
 import * as ReactRouterDom from "react-router-dom";
 import * as Redux from "redux";
 import * as ReactRedux from "react-redux";
+import ReactQueryDefault, * as ReactQuery from "react-query";
 import StyledComponentsDefault, * as StyledComponents from "styled-components";
 import ReactHookFormDefault, * as ReactHookForm from "react-hook-form";
 import * as ReactI18Next from "react-i18next";
@@ -39,6 +40,7 @@ import QueryStringDefault, * as QueryString from "query-string";
 import * as UIExtensions from "@scm-manager/ui-extensions";
 import * as UIComponents from "@scm-manager/ui-components";
 import { urls } from "@scm-manager/ui-components";
+import * as UIApi from "@scm-manager/ui-api";
 
 type PluginModule = {
   name: string;
@@ -53,12 +55,12 @@ const BundleLoader = {
       headers: {
         Cache: "no-cache",
         // identify the request as ajax request
-        "X-Requested-With": "XMLHttpRequest"
-      }
-    }).then(response => {
+        "X-Requested-With": "XMLHttpRequest",
+      },
+    }).then((response) => {
       return response.text();
     });
-  }
+  },
 };
 
 SystemJS.registry.set(BundleLoader.name, SystemJS.newModule(BundleLoader));
@@ -70,9 +72,9 @@ SystemJS.config({
       // @ts-ignore typing missing, but seems required
       esModule: true,
       authorization: true,
-      loader: BundleLoader.name
-    }
-  }
+      loader: BundleLoader.name,
+    },
+  },
 });
 
 // We have to patch the resolve methods of SystemJS
@@ -87,13 +89,13 @@ const resolveModuleUrl = (key: string) => {
 };
 
 const defaultResolve = SystemJS.resolve;
-SystemJS.resolve = function(key, parentName) {
+SystemJS.resolve = function (key, parentName) {
   const module = resolveModuleUrl(key);
   return defaultResolve.apply(this, [module, parentName]);
 };
 
 const defaultResolveSync = SystemJS.resolveSync;
-SystemJS.resolveSync = function(key, parentName) {
+SystemJS.resolveSync = function (key, parentName) {
   const module = resolveModuleUrl(key);
   return defaultResolveSync.apply(this, [module, parentName]);
 };
@@ -105,7 +107,7 @@ const expose = (name: string, cmp: any, defaultCmp?: any) => {
     // https://github.com/systemjs/systemjs/issues/1749
     mod = {
       ...cmp,
-      __useDefault: defaultCmp
+      __useDefault: defaultCmp,
     };
   }
   SystemJS.set(name, SystemJS.newModule(mod));
@@ -117,10 +119,12 @@ expose("react-router-dom", ReactRouterDom);
 expose("styled-components", StyledComponents, StyledComponentsDefault);
 expose("react-i18next", ReactI18Next);
 expose("react-hook-form", ReactHookForm, ReactHookFormDefault);
+expose("react-query", ReactQuery, ReactQueryDefault);
 expose("classnames", ClassNames, ClassNamesDefault);
 expose("query-string", QueryString, QueryStringDefault);
 expose("@scm-manager/ui-extensions", UIExtensions);
 expose("@scm-manager/ui-components", UIComponents);
+expose("@scm-manager/ui-api", UIApi);
 
 // redux is deprecated in favor of ui-api,
 // which will be exported soon
