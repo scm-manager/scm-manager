@@ -32,7 +32,11 @@ export const useUserSuggestions = () => {
     return [];
   }
   const url = autocompleteLink.href + "?q=";
-  return (inputValue: string): Promise<SelectValue[]> => {
+  return (inputValue: string): never[] | Promise<SelectValue[]> => {
+    // Prevent violate input condition of api call because parameter length is too short
+    if (inputValue.length < 2) {
+      return [];
+    }
     return apiClient
       .get(url + inputValue)
       .then(response => response.json())
