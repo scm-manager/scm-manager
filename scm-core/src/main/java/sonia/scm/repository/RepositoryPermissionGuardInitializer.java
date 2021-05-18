@@ -30,6 +30,7 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.plugin.Extension;
 
 import javax.inject.Inject;
+import java.util.Set;
 
 /**
  * Initializes read only permissions for {@link RepositoryPermissionGuard} at startup.
@@ -39,14 +40,18 @@ import javax.inject.Inject;
 final class RepositoryPermissionGuardInitializer implements Initable {
 
   private final PermissionProvider permissionProvider;
+  private final Set<ReadOnlyCheck> readOnlyChecks;
 
   @Inject
-  RepositoryPermissionGuardInitializer(PermissionProvider permissionProvider) {
+  RepositoryPermissionGuardInitializer(PermissionProvider permissionProvider, Set<ReadOnlyCheck> readOnlyChecks) {
     this.permissionProvider = permissionProvider;
+    this.readOnlyChecks = readOnlyChecks;
   }
 
   @Override
   public void init(SCMContextProvider context) {
     RepositoryPermissionGuard.setReadOnlyVerbs(permissionProvider.readOnlyVerbs());
+    RepositoryPermissionGuard.setReadOnlyChecks(readOnlyChecks);
+    RepositoryReadOnlyChecker.setReadOnlyChecks(readOnlyChecks);
   }
 }

@@ -24,7 +24,15 @@
 
 package sonia.scm.repository;
 
+import com.google.common.collect.ImmutableSet;
+
 import javax.inject.Inject;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Stream;
 
 /**
  * Checks, whether a repository has to be considered read only. Currently, this includes {@link RepositoryArchivedCheck}
@@ -34,13 +42,38 @@ import javax.inject.Inject;
  */
 public final class RepositoryReadOnlyChecker {
 
-  private final RepositoryArchivedCheck archivedCheck;
-  private final RepositoryExportingCheck exportingCheck;
+  private static Set<ReadOnlyCheck> staticChecks = Collections.emptySet();
 
+  /**
+   * Set static read only checks.
+   *
+   * @param readOnlyChecks static read only checks
+   */
+  static void setReadOnlyChecks(Collection<ReadOnlyCheck> readOnlyChecks) {
+    staticChecks = ImmutableSet.copyOf(readOnlyChecks);
+  }
+
+  /**
+   * We should use {@link #staticChecks} instead of checks.
+   * Checks exists only for backward compatibility.
+   */
+  private final Set<ReadOnlyCheck> checks = new HashSet<>();
+
+  /**
+   * Constructs a new read only checker, which uses only static checks.
+   */
   @Inject
+  public RepositoryReadOnlyChecker() {
+  }
+
+  /**
+   * Constructs a new read only checker.
+   *
+   * @deprecated use {@link RepositoryReadOnlyChecker#setReadOnlyChecks(Collection)} instead
+   */
+  @Deprecated
   public RepositoryReadOnlyChecker(RepositoryArchivedCheck archivedCheck, RepositoryExportingCheck exportingCheck) {
-    this.archivedCheck = archivedCheck;
-    this.exportingCheck = exportingCheck;
+    this.checks.addAll(Arrays.asList(archivedCheck, exportingCheck));
   }
 
   /**
@@ -58,29 +91,15 @@ public final class RepositoryReadOnlyChecker {
    * @return <code>true</code> if any check locks the repository to read only access.
    */
   public boolean isReadOnly(String repositoryId) {
-    return archivedCheck.isArchived(repositoryId) || exportingCheck.isExporting(repositoryId);
+    return Stream.concat(checks.stream(), staticChecks.stream()).anyMatch(check -> check.isReadOnly(repositoryId));
   }
 
   /**
    * Checks if the repository may be modified.
    *
-   * @throws RepositoryArchivedException  if the repository is archived
-   * @throws RepositoryExportingException if the repository is currently being exported
+   * @throws ReadOnlyException if the repository is marked as read only
    */
   public static void checkReadOnly(Repository repository) {
-    if (isArchived(repository)) {
-      throw new RepositoryArchivedException(repository);
-    }
-    if (isExporting(repository)) {
-      throw new RepositoryExportingException(repository);
-    }
-  }
-
-  private static boolean isExporting(Repository repository) {
-    return DefaultRepositoryExportingCheck.isRepositoryExporting(repository.getId());
-  }
-
-  private static boolean isArchived(Repository repository) {
-    return repository.isArchived() || EventDrivenRepositoryArchiveCheck.isRepositoryArchived(repository.getId());
+    staticChecks.forEach(check -> check.check(repository));
   }
 }

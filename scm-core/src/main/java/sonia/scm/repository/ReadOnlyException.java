@@ -24,27 +24,25 @@
 
 package sonia.scm.repository;
 
-import static java.lang.String.format;
-import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import sonia.scm.ContextEntry;
+import sonia.scm.ExceptionWithContext;
 
-@SuppressWarnings("java:S110") // large history is ok for exceptions
-public class RepositoryArchivedException extends ReadOnlyException {
+import java.util.List;
 
-  public static final String CODE = "3hSIlptme1";
+/**
+ * Read only exception is thrown if someone tries to execute a write command on a read only repository.
+ *
+ * @since 2.19.0
+ */
+public class ReadOnlyException extends ExceptionWithContext {
 
-  public RepositoryArchivedException(Repository repository) {
-    super(entity(repository).build(), format("Repository %s is marked as archived and must not be modified", repository));
-  }
-
-  public RepositoryArchivedException(String repositoryId) {
-    super(
-      entity(Repository.class, repositoryId).build(),
-      format("Repository with id %s is marked as archived and must not be modified", repositoryId)
-    );
+  public ReadOnlyException(List<ContextEntry> context, String message) {
+    super(context, message);
   }
 
   @Override
   public String getCode() {
-    return CODE;
+    return "BaSXkAztI1";
   }
+
 }
