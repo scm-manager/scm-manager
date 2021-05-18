@@ -27,7 +27,7 @@ import { storiesOf } from "@storybook/react";
 import React, { ReactNode } from "react";
 import Tag from "./Tag";
 import { MemoryRouter } from "react-router-dom";
-import { colors, sizes } from "./styleConstants";
+import { Color, colors, sizes } from "./styleConstants";
 
 const Wrapper = styled.div`
   margin: 2rem;
@@ -35,7 +35,7 @@ const Wrapper = styled.div`
 `;
 
 const Spacing = styled.div`
-  padding: 1em;
+  padding: 0.5rem;
 `;
 
 const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
@@ -44,12 +44,22 @@ storiesOf("Tag", module)
   .addDecorator(RoutingDecorator)
   .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
   .add("Default", () => <Tag label="Default tag" />)
+  .add("Rounded", () => <Tag label="Rounded tag" color="dark" rounded={true} />)
   .add("With Icon", () => <Tag label="System" icon="bolt" />)
   .add("Colors", () => (
     <div>
       {colors.map((color) => (
         <Spacing key={color}>
           <Tag color={color} label={color} />
+        </Spacing>
+      ))}
+    </div>
+  ))
+  .add("Outlined", () => (
+    <div>
+      {(["success", "black", "danger"] as Color[]).map((color) => (
+        <Spacing key={color}>
+          <Tag color={color} label={color} outlined={true} />
         </Spacing>
       ))}
     </div>

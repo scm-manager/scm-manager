@@ -29,6 +29,8 @@ import styled, { css } from "styled-components";
 type Props = {
   className?: string;
   color?: Color;
+  outlined?: boolean;
+  rounded?: boolean;
   icon?: string;
   label?: string;
   title?: string;
@@ -54,7 +56,9 @@ const InnerTag = styled.span<InnerTagProps>`
 const Tag: FC<Props> = ({
   className,
   color = "light",
+  outlined,
   size = "normal",
+  rounded,
   icon,
   label,
   title,
@@ -79,7 +83,10 @@ const Tag: FC<Props> = ({
   return (
     <>
       <InnerTag
-        className={classNames("tag", `is-${color}`, `is-${size}`, className)}
+        className={classNames("tag", `is-${color}`, `is-${size}`, className, {
+          "is-outlined": outlined,
+          "is-rounded": rounded,
+        })}
         title={title}
         onClick={onClick}
         small={size === "small"}
