@@ -50,6 +50,6 @@ export type Config = HalRepresentation & {
   loginInfoUrl: string;
   releaseFeedUrl: string;
   mailDomainName: string;
-  notifiedUsers: string[];
+  emergencyContacts: string[];
   enabledApiKeys: boolean;
 };

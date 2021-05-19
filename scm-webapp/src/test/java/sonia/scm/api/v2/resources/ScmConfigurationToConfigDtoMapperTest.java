@@ -106,7 +106,7 @@ public class ScmConfigurationToConfigDtoMapperTest {
     assertEquals("https://scm-manager.org/login-info", dto.getLoginInfoUrl());
     assertEquals("https://www.scm-manager.org/download/rss.xml", dto.getReleaseFeedUrl());
     assertEquals("scm-manager.local", dto.getMailDomainName());
-    assertTrue("notifiedUsers", dto.getNotifiedUsers().containsAll(Arrays.asList(expectedUsers)));
+    assertTrue("emergencyContacts", dto.getEmergencyContacts().containsAll(Arrays.asList(expectedUsers)));
 
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
@@ -161,7 +161,7 @@ public class ScmConfigurationToConfigDtoMapperTest {
     config.setNamespaceStrategy("username");
     config.setLoginInfoUrl("https://scm-manager.org/login-info");
     config.setReleaseFeedUrl("https://www.scm-manager.org/download/rss.xml");
-    config.setNotifiedUsers(Sets.newSet(expectedUsers));
+    config.setEmergencyContacts(Sets.newSet(expectedUsers));
     return config;
   }
 

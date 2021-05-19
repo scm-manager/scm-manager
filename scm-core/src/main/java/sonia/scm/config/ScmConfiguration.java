@@ -219,8 +219,8 @@ public class ScmConfiguration implements Configuration {
    *
    * @since 2.19.0
    */
-  @XmlElement(name = "notified-users")
-  private Set<String> notifiedUsers;
+  @XmlElement(name = "emergency-contacts")
+  private Set<String> emergencyContacts;
 
   /**
    * Fires the {@link ScmConfigurationChangedEvent}.
@@ -261,7 +261,7 @@ public class ScmConfiguration implements Configuration {
     this.loginInfoUrl = other.loginInfoUrl;
     this.releaseFeedUrl = other.releaseFeedUrl;
     this.mailDomainName = other.mailDomainName;
-    this.notifiedUsers = other.notifiedUsers;
+    this.emergencyContacts = other.emergencyContacts;
     this.enabledUserConverter = other.enabledUserConverter;
     this.enabledApiKeys = other.enabledApiKeys;
   }
@@ -465,12 +465,12 @@ public class ScmConfiguration implements Configuration {
     return skipFailedAuthenticators;
   }
 
-  public Set<String> getNotifiedUsers() {
-    if (notifiedUsers == null) {
-      notifiedUsers = Sets.newHashSet();
+  public Set<String> getEmergencyContacts() {
+    if (emergencyContacts == null) {
+      emergencyContacts = Sets.newHashSet();
     }
 
-    return notifiedUsers;
+    return emergencyContacts;
   }
 
   /**
@@ -638,8 +638,8 @@ public class ScmConfiguration implements Configuration {
     this.loginInfoUrl = loginInfoUrl;
   }
 
-  public void setNotifiedUsers(Set<String> notifiedUsers) {
-    this.notifiedUsers = notifiedUsers;
+  public void setEmergencyContacts(Set<String> emergencyContacts) {
+    this.emergencyContacts = emergencyContacts;
   }
 
   @Override

@@ -47,7 +47,7 @@ type Props = {
   enabledXsrfProtection: boolean;
   enabledUserConverter: boolean;
   enabledApiKeys: boolean;
-  notifiedUsers: string[];
+  emergencyContacts: string[];
   namespaceStrategy: string;
   namespaceStrategies?: NamespaceStrategies;
   onChange: (p1: boolean, p2: any, p3: string) => void;
@@ -64,7 +64,7 @@ const GeneralSettings: FC<Props> = ({
   enabledXsrfProtection,
   enabledUserConverter,
   enabledApiKeys,
-  notifiedUsers,
+  emergencyContacts,
   namespaceStrategy,
   namespaceStrategies,
   onChange,
@@ -103,19 +103,19 @@ const GeneralSettings: FC<Props> = ({
   const handleEnabledApiKeysChange = (value: boolean) => {
     onChange(true, value, "enabledApiKeys");
   };
-  const handleNotifiedUsersChange = (p: string[]) => {
-    onChange(true, p, "notifiedUsers");
+  const handleEmergencyContactsChange = (p: string[]) => {
+    onChange(true, p, "emergencyContacts");
   };
 
   const isMember = (name: string) => {
-    return notifiedUsers.includes(name);
+    return emergencyContacts.includes(name);
   };
 
-  const addNotifiedUser = (value: SelectValue) => {
+  const addEmergencyContact = (value: SelectValue) => {
     if (isMember(value.value.id)) {
       return;
     }
-    handleNotifiedUsersChange([...notifiedUsers, value.value.id]);
+    handleEmergencyContactsChange([...emergencyContacts, value.value.id]);
   };
 
   return (
@@ -233,16 +233,16 @@ const GeneralSettings: FC<Props> = ({
       <div className="columns">
         <div className="column is-full">
           <MemberNameTagGroup
-            members={notifiedUsers}
-            memberListChanged={handleNotifiedUsersChange}
-            label={t("general-settings.notifiedUsers.label")}
-            helpText={t("general-settings.notifiedUsers.helpText")}
+            members={emergencyContacts}
+            memberListChanged={handleEmergencyContactsChange}
+            label={t("general-settings.emergencyContacts.label")}
+            helpText={t("general-settings.emergencyContacts.helpText")}
           />
           <AutocompleteAddEntryToTableField
-            addEntry={addNotifiedUser}
-            buttonLabel={t("general-settings.notifiedUsers.addButton")}
+            addEntry={addEmergencyContact}
+            buttonLabel={t("general-settings.emergencyContacts.addButton")}
             loadSuggestions={userSuggestions}
-            placeholder={t("general-settings.notifiedUsers.autocompletePlaceholder")}
+            placeholder={t("general-settings.emergencyContacts.autocompletePlaceholder")}
           />
         </div>
       </div>

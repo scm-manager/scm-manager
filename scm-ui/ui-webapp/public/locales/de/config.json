@@ -62,10 +62,10 @@
     "enabled-api-keys": "API Schlüssel aktivieren",
     "namespace-strategy": "Namespace Strategie",
     "login-info-url": "Login Info URL",
-    "notifiedUsers": {
-      "label": "Benachrichtigte Nutzer",
-      "helpText": "Die folgenden Benutzer werden über administrative Vorfälle informiert.",
-      "addButton": "Benutzer hinzufügen",
+    "emergencyContacts": {
+      "label": "Notfallkontakte",
+      "helpText": "Liste der Benutzer, die über administrative Vorfälle informiert werden.",
+      "addButton": "Kontakt hinzufügen",
       "autocompletePlaceholder": "Nutzer zum Benachrichtigen hinzufügen"
     }
   },

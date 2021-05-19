@@ -70,7 +70,9 @@ final class HealthChecker {
   HealthChecker(Set<HealthCheck> checks,
                 RepositoryManager repositoryManager,
                 RepositoryServiceFactory repositoryServiceFactory,
-                RepositoryPostProcessor repositoryPostProcessor, ScmConfiguration scmConfiguration, NotificationSender notificationSender) {
+                RepositoryPostProcessor repositoryPostProcessor,
+                ScmConfiguration scmConfiguration,
+                NotificationSender notificationSender) {
     this.checks = checks;
     this.repositoryManager = repositoryManager;
     this.repositoryServiceFactory = repositoryServiceFactory;
@@ -214,7 +216,7 @@ final class HealthChecker {
         repository);
       repositoryPostProcessor.setCheckResults(repository, result.getFailures());
 
-      notifyNotifiedUsers(repository);
+      notifyEmergencyContacts(repository);
     }
   }
 
@@ -222,9 +224,9 @@ final class HealthChecker {
     return checksRunning.contains(repositoryId);
   }
 
-  private void notifyNotifiedUsers(Repository repository) {
-    Set<String> notifiedUsers = scmConfiguration.getNotifiedUsers();
-    for (String user : notifiedUsers) {
+  private void notifyEmergencyContacts(Repository repository) {
+    Set<String> emergencyContacts = scmConfiguration.getEmergencyContacts();
+    for (String user : emergencyContacts) {
       notificationSender.send(getHealthCheckFailedNotification(repository), user);
     }
   }

@@ -62,10 +62,10 @@
     "enabled-api-keys": "Enabled API Keys",
     "namespace-strategy": "Namespace Strategy",
     "login-info-url": "Login Info URL",
-    "notifiedUsers": {
-      "label": "Notified Users",
-      "helpText": "The following users will be notified of administrative incidents.",
-      "addButton": "Add User",
+    "emergencyContacts": {
+      "label": "Emergency Contacts",
+      "helpText": "List of users notified of administrative incidents.",
+      "addButton": "Add Contact",
       "autocompletePlaceholder": "Add User to Notify"
     }
   },

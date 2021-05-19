@@ -72,7 +72,7 @@ const ConfigForm: FC<Props> = ({
     loginInfoUrl: "",
     releaseFeedUrl: "",
     mailDomainName: "",
-    notifiedUsers: [],
+    emergencyContacts: [],
     enabledApiKeys: true,
     _links: {}
   });
@@ -148,7 +148,7 @@ const ConfigForm: FC<Props> = ({
         enabledXsrfProtection={innerConfig.enabledXsrfProtection}
         enabledUserConverter={innerConfig.enabledUserConverter}
         enabledApiKeys={innerConfig.enabledApiKeys}
-        notifiedUsers={innerConfig.notifiedUsers}
+        emergencyContacts={innerConfig.emergencyContacts}
         namespaceStrategy={innerConfig.namespaceStrategy}
         onChange={(isValid, changedValue, name) => onChange(isValid, changedValue, name)}
         hasUpdatePermission={configUpdatePermission}

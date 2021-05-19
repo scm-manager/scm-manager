@@ -77,7 +77,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
     assertEquals("username", config.getNamespaceStrategy());
     assertEquals("https://scm-manager.org/login-info", config.getLoginInfoUrl());
     assertEquals("hitchhiker.mail", config.getMailDomainName());
-    assertTrue("notifiedUsers", config.getNotifiedUsers().containsAll(Arrays.asList(expectedUsers)));
+    assertTrue("emergencyContacts", config.getEmergencyContacts().containsAll(Arrays.asList(expectedUsers)));
   }
 
   @Test
@@ -117,7 +117,7 @@ public class ConfigDtoToScmConfigurationMapperTest {
     configDto.setNamespaceStrategy("username");
     configDto.setLoginInfoUrl("https://scm-manager.org/login-info");
     configDto.setMailDomainName("hitchhiker.mail");
-    configDto.setNotifiedUsers(Sets.newSet(expectedUsers));
+    configDto.setEmergencyContacts(Sets.newSet(expectedUsers));
     configDto.setEnabledUserConverter(false);
 
     return configDto;

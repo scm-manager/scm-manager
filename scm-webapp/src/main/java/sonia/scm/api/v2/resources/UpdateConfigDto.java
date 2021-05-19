@@ -75,5 +75,5 @@ interface UpdateConfigDto {
 
   String getMailDomainName();
 
-  Set<String> getNotifiedUsers();
+  Set<String> getEmergencyContacts();
 }
