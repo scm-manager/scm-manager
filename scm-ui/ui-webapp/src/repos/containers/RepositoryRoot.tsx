@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { useState } from "react";
-import { Redirect, Route, Link as RouteLink, Switch, useRouteMatch } from "react-router-dom";
+import { Link as RouteLink, Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Changeset, Link } from "@scm-manager/ui-types";
@@ -36,12 +36,13 @@ import {
   NavLink,
   Page,
   PrimaryContentColumn,
+  RepositoryFlag,
   SecondaryNavigation,
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
   Tooltip,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import RepositoryDetails from "../components/RepositoryDetails";
 import EditRepo from "./EditRepo";
@@ -57,25 +58,14 @@ import ChangesetView from "./ChangesetView";
 import SourceExtensions from "../sources/containers/SourceExtensions";
 import TagsOverview from "../tags/container/TagsOverview";
 import TagRoot from "../tags/container/TagRoot";
-import styled from "styled-components";
 import { useIndexLinks, useRepository } from "@scm-manager/ui-api";
+import styled from "styled-components";
 
-const RepositoryTag = styled.span`
-  margin-left: 0.2rem;
-  background-color: #9a9a9a;
-  padding: 0.4rem;
-  border-radius: 5px;
-  color: white;
+const TagGroup = styled.div`
   font-weight: bold;
-`;
-
-const RepositoryWarnTag = styled.span`
-  margin-left: 0.2rem;
-  background-color: #f14668;
-  padding: 0.4rem;
-  border-radius: 5px;
-  color: white;
-  font-weight: bold;
+  & > * {
+    margin-right: 0.25rem;
+  }
 `;
 
 type UrlParams = {
@@ -88,7 +78,7 @@ const useRepositoryFromUrl = (match: match<UrlParams>) => {
   const { data: repository, ...rest } = useRepository(namespace, name);
   return {
     repository,
-    ...rest
+    ...rest,
   };
 };
 
@@ -122,7 +112,7 @@ const RepositoryRoot = () => {
     error,
     repoLink: (indexLinks.repositories as Link)?.href,
     indexLinks,
-    match
+    match,
   };
 
   const redirectUrlFactory = binder.getExtension("repository.redirect", props);
@@ -133,16 +123,16 @@ const RepositoryRoot = () => {
     redirectedUrl = url + "/info";
   }
 
-  const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = changeset => file => {
+  const fileControlFactoryFactory: (changeset: Changeset) => FileControlFactory = (changeset) => (file) => {
     const baseUrl = `${url}/code/sources`;
     const sourceLink = file.newPath && {
       url: `${baseUrl}/${changeset.id}/${file.newPath}/`,
-      label: t("diff.jumpToSource")
+      label: t("diff.jumpToSource"),
     };
     const targetLink = file.oldPath &&
       changeset._embedded?.parents?.length === 1 && {
         url: `${baseUrl}/${changeset._embedded.parents[0].id}/${file.oldPath}`,
-        label: t("diff.jumpToTarget")
+        label: t("diff.jumpToTarget"),
       };
 
     const links = [];
@@ -172,7 +162,7 @@ const RepositoryRoot = () => {
   if (repository.archived) {
     repositoryFlags.push(
       <Tooltip message={t("archive.tooltip")}>
-        <RepositoryTag className="is-size-6">{t("repository.archived")}</RepositoryTag>
+        <RepositoryFlag size="normal">{t("repository.archived")}</RepositoryFlag>
       </Tooltip>
     );
   }
@@ -180,7 +170,7 @@ const RepositoryRoot = () => {
   if (repository.exporting) {
     repositoryFlags.push(
       <Tooltip message={t("exporting.tooltip")}>
-        <RepositoryTag className="is-size-6">{t("repository.exporting")}</RepositoryTag>
+        <RepositoryFlag size="normal">{t("repository.exporting")}</RepositoryFlag>
       </Tooltip>
     );
   }
@@ -188,9 +178,9 @@ const RepositoryRoot = () => {
   if (repository.healthCheckFailures && repository.healthCheckFailures.length > 0) {
     repositoryFlags.push(
       <Tooltip message={t("healthCheckFailure.tooltip")}>
-        <RepositoryWarnTag className="is-size-6" onClick={() => setShowHealthCheck(true)}>
+        <RepositoryFlag size="normal" onClick={() => setShowHealthCheck(true)} color="danger">
           {t("repository.healthCheckFailure")}
-        </RepositoryWarnTag>
+        </RepositoryFlag>
       </Tooltip>
     );
   }
@@ -207,7 +197,7 @@ const RepositoryRoot = () => {
   const extensionProps = {
     repository,
     url,
-    indexLinks
+    indexLinks,
   };
 
   const matchesBranches = (route: any) => {
@@ -258,7 +248,7 @@ const RepositoryRoot = () => {
         afterTitle={
           <>
             <ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />
-            {repositoryFlags.map(flag => flag)}
+            <TagGroup>{repositoryFlags.map((flag) => flag)}</TagGroup>
           </>
         }
       >

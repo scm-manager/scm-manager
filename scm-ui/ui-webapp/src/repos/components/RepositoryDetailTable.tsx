@@ -25,7 +25,6 @@ import React from "react";
 import { WithTranslation, withTranslation } from "react-i18next";
 import { Repository } from "@scm-manager/ui-types";
 import { DateFromNow, MailLink } from "@scm-manager/ui-components";
-import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = WithTranslation & {
   repository: Repository;

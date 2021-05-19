@@ -22,39 +22,21 @@
  * SOFTWARE.
  */
 
-import { ExtensionPointDefinition } from "./binder";
-import {
-  IndexResources,
-  NamespaceStrategies,
-  Repository,
-  RepositoryCreation,
-  RepositoryTypeCollection,
-} from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import Tag from "../Tag";
+import { Color, Size } from "../styleConstants";
 
-type RepositoryCreatorSubFormProps = {
-  repository: RepositoryCreation;
-  onChange: (repository: RepositoryCreation) => void;
-  setValid: (valid: boolean) => void;
-  disabled?: boolean;
+type Props = {
+  color?: Color;
+  title?: string;
+  onClick?: () => void;
+  size?: Size;
 };
 
-export type RepositoryCreatorComponentProps = {
-  namespaceStrategies: NamespaceStrategies;
-  repositoryTypes: RepositoryTypeCollection;
-  index: IndexResources;
+const RepositoryFlag: FC<Props> = ({ children, size = "small", ...props }) => (
+  <Tag size={size} {...props}>
+    {children}
+  </Tag>
+);
 
-  nameForm: React.ComponentType<RepositoryCreatorSubFormProps>;
-  informationForm: React.ComponentType<RepositoryCreatorSubFormProps>;
-};
-
-export type RepositoryCreatorExtension = {
-  subtitle: string;
-  path: string;
-  icon: string;
-  label: string;
-  component: React.ComponentType<RepositoryCreatorComponentProps>;
-};
-
-export type RepositoryCreator = ExtensionPointDefinition<"repos.creator", RepositoryCreatorExtension>;
-
-export type RepositoryCardFlags = ExtensionPointDefinition<"repository.card.flags", { repository: Repository }>;
+export default RepositoryFlag;
