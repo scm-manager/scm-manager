@@ -25,6 +25,7 @@
 package sonia.scm.repository;
 
 import com.google.inject.Inject;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
@@ -171,6 +172,7 @@ final class HealthChecker {
         HealthCheckResult fullCheckResult = gatherFullChecks(repository);
         HealthCheckResult result = lightCheckResult.merge(fullCheckResult);
 
+        notifyCurrentUser(repository, result);
         storeResult(repository, result);
       })
     );
@@ -222,6 +224,15 @@ final class HealthChecker {
 
   public boolean checkRunning(String repositoryId) {
     return checksRunning.contains(repositoryId);
+  }
+
+  private void notifyCurrentUser(Repository repository, HealthCheckResult result) {
+    if (!(repository.isHealthy() && result.isHealthy())) {
+      String currentUser = SecurityUtils.getSubject().getPrincipal().toString();
+      if (!scmConfiguration.getEmergencyContacts().contains(currentUser)) {
+        notificationSender.send(getHealthCheckFailedNotification(repository));
+      }
+    }
   }
 
   private void notifyEmergencyContacts(Repository repository) {
