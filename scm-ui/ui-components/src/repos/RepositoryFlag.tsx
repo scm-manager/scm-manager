@@ -24,16 +24,17 @@
 
 import React, { FC } from "react";
 import Tag from "../Tag";
-import { Color } from "../styleConstants";
+import { Color, Size } from "../styleConstants";
 
 type Props = {
   color?: Color;
   title?: string;
   onClick?: () => void;
+  size?: Size;
 };
 
-const RepositoryFlag: FC<Props> = ({ children, ...props }) => (
-  <Tag size="small" {...props}>
+const RepositoryFlag: FC<Props> = ({ children, size = "small", ...props }) => (
+  <Tag size={size} {...props}>
     {children}
   </Tag>
 );
