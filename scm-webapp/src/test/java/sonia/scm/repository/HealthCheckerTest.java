@@ -35,6 +35,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.notifications.NotificationSender;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.FullHealthCheckCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
@@ -74,6 +76,10 @@ class HealthCheckerTest {
   private RepositoryService repositoryService;
   @Mock
   private RepositoryPostProcessor postProcessor;
+  @Mock
+  private ScmConfiguration scmConfiguration;
+  @Mock
+  private NotificationSender notificationSender;
 
   @Mock
   private Subject subject;
@@ -82,7 +88,7 @@ class HealthCheckerTest {
 
   @BeforeEach
   void initializeChecker() {
-    this.checker = new HealthChecker(of(healthCheck1, healthCheck2), repositoryManager, repositoryServiceFactory, postProcessor);
+    this.checker = new HealthChecker(of(healthCheck1, healthCheck2), repositoryManager, repositoryServiceFactory, postProcessor, scmConfiguration, notificationSender);
   }
 
   @BeforeEach

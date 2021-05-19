@@ -28,6 +28,10 @@ import com.google.inject.Inject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.NotFoundException;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.notifications.Notification;
+import sonia.scm.notifications.NotificationSender;
+import sonia.scm.notifications.Type;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.RepositoryService;
 import sonia.scm.repository.api.RepositoryServiceFactory;
@@ -59,15 +63,20 @@ final class HealthChecker {
 
   private final ExecutorService healthCheckExecutor = Executors.newSingleThreadExecutor();
 
+  private final ScmConfiguration scmConfiguration;
+  private final NotificationSender notificationSender;
+
   @Inject
   HealthChecker(Set<HealthCheck> checks,
                 RepositoryManager repositoryManager,
                 RepositoryServiceFactory repositoryServiceFactory,
-                RepositoryPostProcessor repositoryPostProcessor) {
+                RepositoryPostProcessor repositoryPostProcessor, ScmConfiguration scmConfiguration, NotificationSender notificationSender) {
     this.checks = checks;
     this.repositoryManager = repositoryManager;
     this.repositoryServiceFactory = repositoryServiceFactory;
     this.repositoryPostProcessor = repositoryPostProcessor;
+    this.scmConfiguration = scmConfiguration;
+    this.notificationSender = notificationSender;
   }
 
   void lightCheck(String id) {
@@ -155,13 +164,13 @@ final class HealthChecker {
 
   private void doFullCheck(Repository repository) {
     withLockedRepository(repository, () ->
-        runInExecutorAndWait(repository, () -> {
-            HealthCheckResult lightCheckResult = gatherLightChecks(repository);
-            HealthCheckResult fullCheckResult = gatherFullChecks(repository);
-            HealthCheckResult result = lightCheckResult.merge(fullCheckResult);
+      runInExecutorAndWait(repository, () -> {
+        HealthCheckResult lightCheckResult = gatherLightChecks(repository);
+        HealthCheckResult fullCheckResult = gatherFullChecks(repository);
+        HealthCheckResult result = lightCheckResult.merge(fullCheckResult);
 
-            storeResult(repository, result);
-          })
+        storeResult(repository, result);
+      })
     );
   }
 
@@ -204,10 +213,23 @@ final class HealthChecker {
       logger.trace("store health check results for repository {}",
         repository);
       repositoryPostProcessor.setCheckResults(repository, result.getFailures());
+
+      notifyNotifiedUsers(repository);
     }
   }
 
   public boolean checkRunning(String repositoryId) {
     return checksRunning.contains(repositoryId);
+  }
+
+  private void notifyNotifiedUsers(Repository repository) {
+    Set<String> notifiedUsers = scmConfiguration.getNotifiedUsers();
+    for (String user : notifiedUsers) {
+      notificationSender.send(getHealthCheckFailedNotification(repository), user);
+    }
+  }
+
+  private Notification getHealthCheckFailedNotification(Repository repository) {
+    return new Notification(Type.ERROR, "/repo/" + repository.getNamespaceAndName() + "/settings/general", "healthCheckFailed");
   }
 }
