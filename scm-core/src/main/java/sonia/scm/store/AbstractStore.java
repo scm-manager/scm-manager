@@ -24,6 +24,8 @@
 
 package sonia.scm.store;
 
+import java.util.function.BooleanSupplier;
+
 /**
  * Base class for {@link ConfigurationStore}.
  *
@@ -38,9 +40,9 @@ public abstract class AbstractStore<T> implements ConfigurationStore<T> {
    * stored object
    */
   protected T storeObject;
-  private final boolean readOnly;
+  private final BooleanSupplier readOnly;
 
-  protected AbstractStore(boolean readOnly) {
+  protected AbstractStore(BooleanSupplier readOnly) {
     this.readOnly = readOnly;
   }
 
@@ -55,7 +57,7 @@ public abstract class AbstractStore<T> implements ConfigurationStore<T> {
 
   @Override
   public void set(T object) {
-    if (readOnly) {
+    if (readOnly.getAsBoolean()) {
       throw new StoreReadOnlyException(object);
     }
     writeObject(object);
