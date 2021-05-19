@@ -30,6 +30,7 @@ import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { withTranslation, WithTranslation } from "react-i18next";
 import styled from "styled-components";
 import HealthCheckFailureDetail from "./HealthCheckFailureDetail";
+import RepositoryFlag from "./RepositoryFlag";
 
 type DateProp = Date | string;
 
@@ -44,37 +45,23 @@ type State = {
   showHealthCheck: boolean;
 };
 
-const RepositoryTag = styled.span`
-  margin-left: 0.2rem;
-  background-color: #9a9a9a;
-  padding: 0.25rem;
-  border-radius: 5px;
-  color: white;
-  overflow: visible;
-  pointer-events: all;
-  font-weight: bold;
-  font-size: 0.7rem;
-`;
-const RepositoryWarnTag = styled.span`
-  margin-left: 0.2rem;
-  background-color: #f14668;
-  padding: 0.25rem;
-  border-radius: 5px;
-  color: white;
-  overflow: visible;
-  pointer-events: all;
-  font-weight: bold;
-  font-size: 0.7rem;
-  cursor: help;
+const Title = styled.span`
+  display: flex;
+  align-items: center;
+
+  & > * {
+    margin-right: 0.25rem;
+  }
 `;
 
 class RepositoryEntry extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      showHealthCheck: false
+      showHealthCheck: false,
     };
   }
+
   createLink = (repository: Repository) => {
     return `/repo/${repository.namespace}/${repository.name}`;
   };
@@ -170,31 +157,33 @@ class RepositoryEntry extends React.Component<Props, State> {
     const { repository, t } = this.props;
     const repositoryFlags = [];
     if (repository.archived) {
-      repositoryFlags.push(<RepositoryTag title={t("archive.tooltip")}>{t("repository.archived")}</RepositoryTag>);
+      repositoryFlags.push(<RepositoryFlag title={t("archive.tooltip")}>{t("repository.archived")}</RepositoryFlag>);
     }
 
     if (repository.exporting) {
-      repositoryFlags.push(<RepositoryTag title={t("exporting.tooltip")}>{t("repository.exporting")}</RepositoryTag>);
+      repositoryFlags.push(<RepositoryFlag title={t("exporting.tooltip")}>{t("repository.exporting")}</RepositoryFlag>);
     }
 
     if (repository.healthCheckFailures && repository.healthCheckFailures.length > 0) {
       repositoryFlags.push(
-        <RepositoryWarnTag
+        <RepositoryFlag
+          color="danger"
           title={t("healthCheckFailure.tooltip")}
           onClick={() => {
             this.setState({ showHealthCheck: true });
           }}
         >
           {t("repository.healthCheckFailure")}
-        </RepositoryWarnTag>
+        </RepositoryFlag>
       );
     }
 
     return (
-      <>
+      <Title>
         <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} />
-        <strong>{repository.name}</strong> {repositoryFlags.map(flag => flag)}
-      </>
+        <strong>{repository.name}</strong> {repositoryFlags}
+        <ExtensionPoint name="repository.card.flags" props={{ repository }} renderAll={true} />
+      </Title>
     );
   };
 

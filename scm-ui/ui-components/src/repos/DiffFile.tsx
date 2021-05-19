@@ -396,10 +396,17 @@ class DiffFile extends React.Component<Props, State> {
     if (key === value) {
       value = file.type;
     }
-    const color =
-      value === "added" ? "success is-outlined" : value === "deleted" ? "danger is-outlined" : "info is-outlined";
 
-    return <ChangeTypeTag className={classNames("is-rounded", "has-text-weight-normal")} color={color} label={value} />;
+    const color = value === "added" ? "success" : value === "deleted" ? "danger" : "info";
+    return (
+      <ChangeTypeTag
+        className={classNames("has-text-weight-normal")}
+        rounded={true}
+        outlined={true}
+        color={color}
+        label={value}
+      />
+    );
   };
 
   hasContent = (file: FileDiff) => file && !file.isBinary && file.hunks && file.hunks.length > 0;
