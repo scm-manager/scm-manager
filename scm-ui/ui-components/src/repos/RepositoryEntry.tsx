@@ -182,7 +182,7 @@ class RepositoryEntry extends React.Component<Props, State> {
       <Title>
         <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} />
         <strong>{repository.name}</strong> {repositoryFlags}
-        <ExtensionPoint name="repository.card.flags" props={{ repository }} renderAll={true} />
+        <ExtensionPoint name="repository.flags" props={{ repository }} renderAll={true} />
       </Title>
     );
   };

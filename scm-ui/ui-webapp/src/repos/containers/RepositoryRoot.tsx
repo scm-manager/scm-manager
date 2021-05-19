@@ -248,7 +248,10 @@ const RepositoryRoot = () => {
         afterTitle={
           <>
             <ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />
-            <TagGroup>{repositoryFlags.map((flag) => flag)}</TagGroup>
+            <TagGroup>
+              {repositoryFlags}
+              <ExtensionPoint name="repository.flags" props={{ repository }} renderAll={true} />
+            </TagGroup>
           </>
         }
       >

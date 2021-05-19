@@ -57,4 +57,4 @@ export type RepositoryCreatorExtension = {
 
 export type RepositoryCreator = ExtensionPointDefinition<"repos.creator", RepositoryCreatorExtension>;
 
-export type RepositoryCardFlags = ExtensionPointDefinition<"repository.card.flags", { repository: Repository }>;
+export type RepositoryFlags = ExtensionPointDefinition<"repository.flags", { repository: Repository }>;
