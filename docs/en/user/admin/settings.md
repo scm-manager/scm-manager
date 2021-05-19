@@ -41,6 +41,9 @@ Internal users will automatically be converted to external on their first login 
 #### Fallback Mail Domain Name
 This domain name will be used to create email addresses for users without one when needed. It will not be used to send mails nor will be accessed otherwise.
 
+#### Notified Users
+The following users will be notified of administrative incidents (e.g. failed health checks).
+
 #### Login Attempt Limit
 It can be configured how many failed login attempts a user can have before the account gets disabled. The counter for failed login attempts is reset after a successful login. This feature can be deactivated by setting the value "-1".
 

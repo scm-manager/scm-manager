@@ -41,6 +41,9 @@ Ist der Benutzer Konverter aktiviert, werden alle internen Benutzer beim Einlogg
 #### Fallback E-Mail Domain Name
 Dieser Domain Name wird genutzt, wenn für einen User eine E-Mail-Adresse benötigt wird, für den keine hinterlegt ist. Diese Domain wird nicht zum Versenden von E-Mails genutzt und auch keine anderweitige Verbindung aufgebaut.
 
+#### Benachrichtigte Nutzer
+Die folgenden Benutzer werden über administrative Vorfälle informiert (z. B. fehlgeschlagene Integritätsprüfungen).
+
 #### Anmeldeversuche
 Es lässt sich konfigurieren wie häufig sich ein Benutzer falsch anmelden darf, bevor dessen Benutzerkonto gesperrt wird. Der Zähler für fehlerhafte Anmeldeversuche wird nach einem erfolgreichen Login zurückgesetzt. Man kann dieses Feature abschalten, indem man "-1" in die Konfiguration einträgt.
 
