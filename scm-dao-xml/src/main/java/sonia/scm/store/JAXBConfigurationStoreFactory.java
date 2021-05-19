@@ -57,7 +57,7 @@ public class JAXBConfigurationStoreFactory extends FileBasedStoreFactory impleme
       getStoreLocation(storeParameters.getName().concat(StoreConstants.FILE_EXTENSION),
         storeParameters.getType(),
         storeParameters.getRepositoryId()),
-      mustBeReadOnly(storeParameters)
+      () -> mustBeReadOnly(storeParameters)
     );
   }
 }

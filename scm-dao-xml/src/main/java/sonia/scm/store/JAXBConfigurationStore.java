@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.function.BooleanSupplier;
 
 /**
  * JAXB implementation of {@link ConfigurationStore}.
@@ -46,7 +47,7 @@ public class JAXBConfigurationStore<T> extends AbstractStore<T> {
   private final Class<T> type;
   private final File configFile;
 
-  public JAXBConfigurationStore(TypedStoreContext<T> context, Class<T> type, File configFile, boolean readOnly) {
+  public JAXBConfigurationStore(TypedStoreContext<T> context, Class<T> type, File configFile, BooleanSupplier readOnly) {
     super(readOnly);
     this.context = context;
     this.type = type;
