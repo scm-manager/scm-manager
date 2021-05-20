@@ -28,8 +28,10 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.transport.FetchResult;
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
+import sonia.scm.repository.PostReceiveRepositoryHookEvent;
 import sonia.scm.repository.RepositoryHookEvent;
 import sonia.scm.repository.Tag;
+import sonia.scm.repository.WrappedRepositoryHookEvent;
 import sonia.scm.repository.api.ImportFailedException;
 
 import javax.inject.Inject;
@@ -51,12 +53,12 @@ class PostReceiveRepositoryHookEventFactory {
   }
 
   void fireForFetch(Git git, FetchResult result) {
-    RepositoryHookEvent event;
+    PostReceiveRepositoryHookEvent event;
     try {
       List<String> branches = getBranchesFromFetchResult(result);
       List<Tag> tags = getTagsFromFetchResult(result);
       GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(context.getRepository(), git);
-      event = eventFactory.createEvent(context, branches, tags, changesetResolver);
+      event = new PostReceiveRepositoryHookEvent(WrappedRepositoryHookEvent.wrap(eventFactory.createEvent(context, branches, tags, changesetResolver)));
     } catch (IOException e) {
       throw new ImportFailedException(
         ContextEntry.ContextBuilder.entity(context.getRepository()).build(),
