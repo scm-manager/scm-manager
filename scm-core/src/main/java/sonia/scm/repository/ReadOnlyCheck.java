@@ -75,4 +75,7 @@ public interface ReadOnlyCheck {
     }
   }
 
+  default boolean isReadOnly(String permission, String repositoryId) {
+    return isReadOnly(repositoryId);
+  }
 }
