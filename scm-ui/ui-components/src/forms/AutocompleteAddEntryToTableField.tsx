@@ -32,7 +32,7 @@ type Props = {
   addEntry: (p: SelectValue) => void;
   disabled?: boolean;
   buttonLabel: string;
-  fieldLabel: string;
+  fieldLabel?: string;
   helpText?: string;
   loadSuggestions: (p: string) => Promise<SelectValue[]>;
   placeholder?: string;

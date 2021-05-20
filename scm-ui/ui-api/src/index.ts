@@ -32,6 +32,7 @@ export * from "./base";
 export * from "./login";
 export * from "./groups";
 export * from "./users";
+export * from "./userSuggestions";
 export * from "./repositories";
 export * from "./namespaces";
 export * from "./branches";

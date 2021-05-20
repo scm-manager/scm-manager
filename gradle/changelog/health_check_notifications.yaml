@@ -1,0 +1,2 @@
+- type: added
+  description: Notifications for health checks ([#1664](https://github.com/scm-manager/scm-manager/pull/1664))

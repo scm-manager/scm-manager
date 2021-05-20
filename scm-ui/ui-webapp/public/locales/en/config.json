@@ -61,7 +61,13 @@
     "enabled-user-converter": "Enabled User Converter",
     "enabled-api-keys": "Enabled API Keys",
     "namespace-strategy": "Namespace Strategy",
-    "login-info-url": "Login Info URL"
+    "login-info-url": "Login Info URL",
+    "emergencyContacts": {
+      "label": "Emergency Contacts",
+      "helpText": "List of users notified of administrative incidents.",
+      "addButton": "Add Contact",
+      "autocompletePlaceholder": "Add User to Notify"
+    }
   },
   "validation": {
     "date-format-invalid": "The date format is not valid",

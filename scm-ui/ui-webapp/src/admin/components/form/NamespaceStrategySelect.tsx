@@ -27,7 +27,7 @@ import { NamespaceStrategies } from "@scm-manager/ui-types";
 import { Select } from "@scm-manager/ui-components";
 
 type Props = WithTranslation & {
-  namespaceStrategies: NamespaceStrategies;
+  namespaceStrategies?: NamespaceStrategies;
   label: string;
   value?: string;
   disabled?: boolean;

@@ -61,7 +61,13 @@
     "enabled-user-converter": "Benutzer Konverter aktivieren",
     "enabled-api-keys": "API Schlüssel aktivieren",
     "namespace-strategy": "Namespace Strategie",
-    "login-info-url": "Login Info URL"
+    "login-info-url": "Login Info URL",
+    "emergencyContacts": {
+      "label": "Notfallkontakte",
+      "helpText": "Liste der Benutzer, die über administrative Vorfälle informiert werden.",
+      "addButton": "Kontakt hinzufügen",
+      "autocompletePlaceholder": "Nutzer zum Benachrichtigen hinzufügen"
+    }
   },
   "validation": {
     "date-format-invalid": "Das Datumsformat ist ungültig",

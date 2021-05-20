@@ -371,6 +371,7 @@
   },
   "notifications": {
     "exportFinished": "The repository export has been finished.",
-    "exportFailed": "The repository export has failed. Try it again or contact your administrator."
+    "exportFailed": "The repository export has failed. Try it again or contact your administrator.",
+    "healthCheckFailed": "The repository health check has failed."
   }
 }

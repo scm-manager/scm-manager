@@ -22,49 +22,29 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import GroupForm from "../components/GroupForm";
-import { DisplayedUser, Group, Link } from "@scm-manager/ui-types";
-import { apiClient, ErrorNotification } from "@scm-manager/ui-components";
-import DeleteGroup from "./DeleteGroup";
-import { useIndexLinks, useUpdateGroup } from "@scm-manager/ui-api";
 import { Redirect } from "react-router-dom";
+import { Group } from "@scm-manager/ui-types";
+import { useUpdateGroup, useUserSuggestions } from "@scm-manager/ui-api";
+import { ErrorNotification } from "@scm-manager/ui-components";
+import GroupForm from "../components/GroupForm";
+import DeleteGroup from "./DeleteGroup";
 
 type Props = {
   group: Group;
 };
 
 const EditGroup: FC<Props> = ({ group }) => {
-  const indexLinks = useIndexLinks();
   const { error, isLoading, update, isUpdated } = useUpdateGroup();
-  const autocompleteLink = (indexLinks.autocomplete as Link[]).find(i => i.name === "users");
+  const userSuggestions = useUserSuggestions();
 
   if (isUpdated) {
     return <Redirect to={`/group/${group.name}`} />;
   }
 
-  // TODO: Replace with react-query hook
-  const loadUserAutocompletion = (inputValue: string) => {
-    if (!autocompleteLink) {
-      return [];
-    }
-    const url = autocompleteLink.href + "?q=";
-    return apiClient
-      .get(url + inputValue)
-      .then(response => response.json())
-      .then(json => {
-        return json.map((element: DisplayedUser) => {
-          return {
-            value: element,
-            label: `${element.displayName} (${element.id})`
-          };
-        });
-      });
-  };
-
   return (
     <div>
       <ErrorNotification error={error || undefined} />
-      <GroupForm group={group} submitForm={update} loading={isLoading} loadUserSuggestions={loadUserAutocompletion} />
+      <GroupForm group={group} submitForm={update} loading={isLoading} loadUserSuggestions={userSuggestions} />
       <DeleteGroup group={group} />
     </div>
   );

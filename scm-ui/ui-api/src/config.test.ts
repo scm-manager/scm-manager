@@ -48,6 +48,7 @@ describe("Test config hooks", () => {
     loginInfoUrl: "",
     mailDomainName: "",
     namespaceStrategy: "",
+    emergencyContacts: [],
     pluginUrl: "",
     proxyExcludes: [],
     proxyPassword: null,
