@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.repository;
 
 /**
@@ -30,17 +30,14 @@ package sonia.scm.repository;
  * @author Sebastian Sdorra
  * @since 1.23
  */
-public class WrappedRepositoryHookEvent extends RepositoryHookEvent
-{
+public class WrappedRepositoryHookEvent extends RepositoryHookEvent {
 
   /**
    * Constructs a new WrappedRepositoryHookEvent.
    *
-   *
    * @param wrappedEvent event to wrap
    */
-  protected WrappedRepositoryHookEvent(RepositoryHookEvent wrappedEvent)
-  {
+  protected WrappedRepositoryHookEvent(RepositoryHookEvent wrappedEvent) {
     super(wrappedEvent.getContext(), wrappedEvent.getRepository(),
       wrappedEvent.getType());
   }
@@ -50,28 +47,24 @@ public class WrappedRepositoryHookEvent extends RepositoryHookEvent
   /**
    * Returns a wrapped instance of the {@link RepositoryHookEvent}-
    *
-   *
    * @param event event to wrap
-   *
    * @return wrapper
    */
-  public static WrappedRepositoryHookEvent wrap(RepositoryHookEvent event)
-  {
+  public static WrappedRepositoryHookEvent wrap(RepositoryHookEvent event) {
     WrappedRepositoryHookEvent wrappedEvent = null;
 
-    switch (event.getType())
-    {
-      case POST_RECEIVE :
+    switch (event.getType()) {
+      case POST_RECEIVE:
         wrappedEvent = new PostReceiveRepositoryHookEvent(event);
 
         break;
 
-      case PRE_RECEIVE :
+      case PRE_RECEIVE:
         wrappedEvent = new PreReceiveRepositoryHookEvent(event);
 
         break;
 
-      default :
+      default:
         throw new IllegalArgumentException("unsupported hook event type");
     }
 
