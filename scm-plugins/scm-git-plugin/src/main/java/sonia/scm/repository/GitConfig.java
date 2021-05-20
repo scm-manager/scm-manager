@@ -26,7 +26,7 @@ package sonia.scm.repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
-import org.assertj.core.util.Strings;
+import com.google.common.base.Strings;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
