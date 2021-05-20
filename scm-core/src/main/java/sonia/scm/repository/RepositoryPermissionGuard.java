@@ -62,16 +62,23 @@ public class RepositoryPermissionGuard implements PermissionGuard<Repository> {
     if (READ_ONLY_VERBS.contains(permission)) {
       return new PermissionActionCheckInterceptor<Repository>() {};
     } else {
-      return new WriteInterceptor();
+      return new WriteInterceptor(permission);
     }
   }
 
   private static class WriteInterceptor implements PermissionActionCheckInterceptor<Repository> {
+
+    private final String permission;
+
+    private WriteInterceptor(String permission) {
+      this.permission = permission;
+    }
+
     @Override
     public void check(Subject subject, String id, Runnable delegate) {
       delegate.run();
       for (ReadOnlyCheck check : readOnlyChecks) {
-        if (check.isReadOnly(id)) {
+        if (check.isReadOnly(permission, id)) {
           throw new AuthorizationException(check.getReason());
         }
       }
@@ -83,7 +90,7 @@ public class RepositoryPermissionGuard implements PermissionGuard<Repository> {
     }
 
     private boolean isWritable(String id) {
-      return readOnlyChecks.stream().noneMatch(c -> c.isReadOnly(id));
+      return readOnlyChecks.stream().noneMatch(c -> c.isReadOnly(permission, id));
     }
   }
 }

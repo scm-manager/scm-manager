@@ -31,7 +31,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ReadOnlyCheckTest {
 
-  private final ReadOnlyCheck check = new TesingReadOnlyCheck();
+  private final ReadOnlyCheck check = new TestingReadOnlyCheck();
 
   private final Repository repository = new Repository("42", "git", "hitchhiker", "hog");
 
@@ -55,7 +55,12 @@ class ReadOnlyCheckTest {
     assertDoesNotThrow(() -> check.check("21"));
   }
 
-  private class TesingReadOnlyCheck implements ReadOnlyCheck {
+  @Test
+  void shouldDelegateToNormalCheck() {
+    assertThat(check.isReadOnly("any", "42")).isTrue();
+  }
+
+  private class TestingReadOnlyCheck implements ReadOnlyCheck {
 
     @Override
     public String getReason() {
