@@ -49,11 +49,10 @@ import static org.mockito.MockitoAnnotations.initMocks;
 
 public class ScmConfigurationToConfigDtoMapperTest {
 
-  private URI baseUri = URI.create("http://example.com/base/");
+  private final URI baseUri = URI.create("http://example.com/base/");
 
-  private String[] expectedUsers = {"trillian", "arthur"};
-  private String[] expectedGroups = {"admin", "plebs"};
-  private String[] expectedExcludes = {"ex", "clude"};
+  private final String[] expectedExcludes = {"ex", "clude"};
+  private final String[] expectedUsers = {"trillian", "arthur"};
 
   @SuppressWarnings("unused") // Is injected
   private ResourceLinks resourceLinks = ResourceLinksMock.createMock(baseUri);
@@ -107,6 +106,7 @@ public class ScmConfigurationToConfigDtoMapperTest {
     assertEquals("https://scm-manager.org/login-info", dto.getLoginInfoUrl());
     assertEquals("https://www.scm-manager.org/download/rss.xml", dto.getReleaseFeedUrl());
     assertEquals("scm-manager.local", dto.getMailDomainName());
+    assertTrue("emergencyContacts", dto.getEmergencyContacts().containsAll(Arrays.asList(expectedUsers)));
 
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("self").get().getHref());
     assertEquals(expectedBaseUri.toString(), dto.getLinks().getLinkBy("update").get().getHref());
@@ -161,6 +161,7 @@ public class ScmConfigurationToConfigDtoMapperTest {
     config.setNamespaceStrategy("username");
     config.setLoginInfoUrl("https://scm-manager.org/login-info");
     config.setReleaseFeedUrl("https://www.scm-manager.org/download/rss.xml");
+    config.setEmergencyContacts(Sets.newSet(expectedUsers));
     return config;
   }
 

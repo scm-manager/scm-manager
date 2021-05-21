@@ -26,6 +26,8 @@ package sonia.scm.repository;
 
 //~--- JDK imports ------------------------------------------------------------
 
+import com.google.common.base.Strings;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
@@ -39,6 +41,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class GitConfig extends RepositoryConfig {
 
+  private static final String FALLBACK_BRANCH = "main";
+
   @SuppressWarnings("WeakerAccess") // This might be needed for permission checking
   public static final String PERMISSION = "git";
 
@@ -49,7 +53,7 @@ public class GitConfig extends RepositoryConfig {
   private boolean nonFastForwardDisallowed;
 
   @XmlElement(name = "default-branch")
-  private String defaultBranch = "main";
+  private String defaultBranch = FALLBACK_BRANCH;
 
   public String getGcExpression() {
     return gcExpression;
@@ -68,6 +72,9 @@ public class GitConfig extends RepositoryConfig {
   }
 
   public String getDefaultBranch() {
+    if (Strings.isNullOrEmpty(defaultBranch)) {
+      return FALLBACK_BRANCH;
+    }
     return defaultBranch;
   }
 

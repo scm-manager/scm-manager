@@ -62,6 +62,7 @@ public class ConfigDto extends HalRepresentation implements UpdateConfigDto {
   private String loginInfoUrl;
   private String releaseFeedUrl;
   private String mailDomainName;
+  private Set<String> emergencyContacts;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package

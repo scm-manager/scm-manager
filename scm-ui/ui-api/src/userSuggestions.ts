@@ -21,57 +21,32 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import {DisplayedUser, Link, SelectValue} from "@scm-manager/ui-types";
+import { useIndexLinks } from "./base";
+import { apiClient } from "./apiclient";
 
-
-plugins {
-  id 'org.scm-manager.smp' version '0.7.5'
-}
-
-def jgitVersion = '5.11.1.202105131744-r-scm1'
-
-dependencies {
-  // required by scm-it
-  api "sonia.jgit:org.eclipse.jgit:${jgitVersion}"
-  implementation "sonia.jgit:org.eclipse.jgit.http.server:${jgitVersion}"
-  implementation "sonia.jgit:org.eclipse.jgit.lfs.server:${jgitVersion}"
-  implementation "sonia.jgit:org.eclipse.jgit.gpg.bc:${jgitVersion}"
-  implementation libraries.commonsCompress
-
-  testImplementation "sonia.jgit:org.eclipse.jgit.junit.http:${jgitVersion}"
-  testImplementation libraries.shiroUnit
-  testImplementation libraries.awaitility
-}
-
-scmPlugin {
-  scmVersion = project.version
-  core = true
-  name = "scm-git-plugin"
-  displayName = 'Git'
-  description = 'Plugin for the version control system Git'
-  author = 'Cloudogu GmbH'
-  category = 'Source Code Management'
-  avatarUrl = '/images/git-logo.png'
-
-  openapi {
-    packages = [
-      'sonia.scm.api.v2.resources'
-    ]
+export const useUserSuggestions = () => {
+  const indexLinks = useIndexLinks();
+  const autocompleteLink = (indexLinks.autocomplete as Link[]).find(i => i.name === "users");
+  if (!autocompleteLink) {
+    return [];
   }
-
-}
-
-task testJar(type: Jar) {
- 	classifier = 'tests'
-	from sourceSets.test.output
-}
-
-configurations {
-  tests {
-    canBeConsumed = true
-    canBeResolved = false
-  }
-}
-
-artifacts {
-  tests(testJar)
-}
+  const url = autocompleteLink.href + "?q=";
+  return (inputValue: string): never[] | Promise<SelectValue[]> => {
+    // Prevent violate input condition of api call because parameter length is too short
+    if (inputValue.length < 2) {
+      return [];
+    }
+    return apiClient
+      .get(url + inputValue)
+      .then(response => response.json())
+      .then(json => {
+        return json.map((element: DisplayedUser) => {
+          return {
+            value: element,
+            label: `${element.displayName} (${element.id})`
+          };
+        });
+      });
+  };
+};

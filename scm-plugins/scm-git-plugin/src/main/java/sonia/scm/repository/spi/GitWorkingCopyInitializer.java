@@ -27,6 +27,7 @@ package sonia.scm.repository.spi;
 import com.google.common.base.Stopwatch;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
@@ -75,6 +76,13 @@ class GitWorkingCopyInitializer {
       }
 
       return new ParentAndClone<>(null, clone, target);
+    } catch (TransportException e) {
+      String message = e.getMessage();
+      if (initialBranch != null && message.contains(initialBranch) && message.contains("not found")) {
+        throw notFound(entity("Branch", initialBranch).in(context.getRepository()));
+      } else {
+        throw new InternalRepositoryException(context.getRepository(), "could not clone working copy of repository", e);
+      }
     } catch (GitAPIException | IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "could not clone working copy of repository", e);
     } finally {

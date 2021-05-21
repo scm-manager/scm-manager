@@ -215,6 +215,14 @@ public class ScmConfiguration implements Configuration {
   private String mailDomainName = DEFAULT_MAIL_DOMAIN_NAME;
 
   /**
+   * List of users that will be notified of administrative incidents.
+   *
+   * @since 2.19.0
+   */
+  @XmlElement(name = "emergency-contacts")
+  private Set<String> emergencyContacts;
+
+  /**
    * Fires the {@link ScmConfigurationChangedEvent}.
    */
   public void fireChangeEvent() {
@@ -253,6 +261,7 @@ public class ScmConfiguration implements Configuration {
     this.loginInfoUrl = other.loginInfoUrl;
     this.releaseFeedUrl = other.releaseFeedUrl;
     this.mailDomainName = other.mailDomainName;
+    this.emergencyContacts = other.emergencyContacts;
     this.enabledUserConverter = other.enabledUserConverter;
     this.enabledApiKeys = other.enabledApiKeys;
   }
@@ -456,6 +465,14 @@ public class ScmConfiguration implements Configuration {
     return skipFailedAuthenticators;
   }
 
+  public Set<String> getEmergencyContacts() {
+    if (emergencyContacts == null) {
+      emergencyContacts = Sets.newHashSet();
+    }
+
+    return emergencyContacts;
+  }
+
   /**
    * Enables the anonymous access at protocol level.
    *
@@ -619,6 +636,10 @@ public class ScmConfiguration implements Configuration {
 
   public void setLoginInfoUrl(String loginInfoUrl) {
     this.loginInfoUrl = loginInfoUrl;
+  }
+
+  public void setEmergencyContacts(Set<String> emergencyContacts) {
+    this.emergencyContacts = emergencyContacts;
   }
 
   @Override

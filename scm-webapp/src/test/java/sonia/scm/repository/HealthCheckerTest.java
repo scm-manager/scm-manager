@@ -24,6 +24,7 @@
 
 package sonia.scm.repository;
 
+import com.google.common.collect.ImmutableSet;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
@@ -35,6 +36,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.NotFoundException;
+import sonia.scm.config.ScmConfiguration;
+import sonia.scm.notifications.NotificationSender;
 import sonia.scm.repository.api.Command;
 import sonia.scm.repository.api.FullHealthCheckCommandBuilder;
 import sonia.scm.repository.api.RepositoryService;
@@ -47,11 +50,14 @@ import static com.google.common.collect.ImmutableSet.of;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.awaitility.Awaitility.await;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -74,6 +80,10 @@ class HealthCheckerTest {
   private RepositoryService repositoryService;
   @Mock
   private RepositoryPostProcessor postProcessor;
+  @Mock
+  private ScmConfiguration scmConfiguration;
+  @Mock
+  private NotificationSender notificationSender;
 
   @Mock
   private Subject subject;
@@ -82,7 +92,7 @@ class HealthCheckerTest {
 
   @BeforeEach
   void initializeChecker() {
-    this.checker = new HealthChecker(of(healthCheck1, healthCheck2), repositoryManager, repositoryServiceFactory, postProcessor);
+    this.checker = new HealthChecker(of(healthCheck1, healthCheck2), repositoryManager, repositoryServiceFactory, postProcessor, scmConfiguration, notificationSender);
   }
 
   @BeforeEach
@@ -182,6 +192,7 @@ class HealthCheckerTest {
       void setUpRepository() {
         lenient().when(repositoryServiceFactory.create(repository)).thenReturn(repositoryService);
         lenient().when(repositoryService.getFullCheckCommand()).thenReturn(fullHealthCheckCommand);
+        lenient().when(subject.getPrincipal()).thenReturn("trillian");
       }
 
       @Test
@@ -239,6 +250,32 @@ class HealthCheckerTest {
             .extracting("id").containsExactly("error");
           return true;
         }));
+      }
+
+      @Test
+      void shouldNotifyCurrentUserOnlyOnce() throws IOException {
+        when(scmConfiguration.getEmergencyContacts()).thenReturn(ImmutableSet.of("trillian"));
+        when(healthCheck1.check(repository)).thenReturn(HealthCheckResult.healthy());
+        when(repositoryService.isSupported(Command.FULL_HEALTH_CHECK)).thenReturn(true);
+        when(fullHealthCheckCommand.check()).thenReturn(HealthCheckResult.unhealthy(createFailure("error")));
+
+        checker.fullCheck(repositoryId);
+
+        verify(notificationSender, never()).send(any());
+        verify(notificationSender,times(1)).send(any(), eq("trillian"));
+      }
+
+      @Test
+      void shouldNotifyEmergencyContacts() throws IOException {
+        when(scmConfiguration.getEmergencyContacts()).thenReturn(ImmutableSet.of("trillian", "Arthur"));
+        when(healthCheck1.check(repository)).thenReturn(HealthCheckResult.healthy());
+        when(repositoryService.isSupported(Command.FULL_HEALTH_CHECK)).thenReturn(true);
+        when(fullHealthCheckCommand.check()).thenReturn(HealthCheckResult.unhealthy(createFailure("error")));
+
+        checker.fullCheck(repositoryId);
+
+        verify(notificationSender).send(any(), eq("trillian"));
+        verify(notificationSender).send(any(), eq("Arthur"));
       }
     }
   }
