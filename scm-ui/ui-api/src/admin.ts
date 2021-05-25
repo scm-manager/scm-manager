@@ -22,14 +22,17 @@
  * SOFTWARE.
  */
 
-import { ApiResult, useRequiredIndexLink } from "./base";
+import { ApiResult, useIndexLink } from "./base";
 import { UpdateInfo } from "@scm-manager/ui-types";
 import { useQuery } from "react-query";
 import { apiClient } from "@scm-manager/ui-components";
 
 export const useUpdateInfo = (): ApiResult<UpdateInfo | null> => {
-  const indexLink = useRequiredIndexLink("updateInfo");
-  return useQuery<UpdateInfo | null, Error>("updateInfo", () =>
-    apiClient.get(indexLink).then(response => (response.status === 204 ? null : response.json()))
-  );
+  const indexLink = useIndexLink("updateInfo");
+  return useQuery<UpdateInfo | null, Error>("updateInfo", () => {
+    if (!indexLink) {
+      return null;
+    }
+    return apiClient.get(indexLink).then((response) => (response.status === 204 ? null : response.json()));
+  });
 };
