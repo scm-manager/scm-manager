@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.security;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.security;
 
 import sonia.scm.SCMContext;
 import sonia.scm.util.ServiceUtil;
@@ -34,52 +32,31 @@ import sonia.scm.util.ServiceUtil;
  * @author Sebastian Sdorra
  * @since 1.7
  */
-public final class CipherUtil
-{
+public final class CipherUtil {
 
-  /** Field description */
   private static volatile CipherUtil instance;
 
-  //~--- constructors ---------------------------------------------------------
+  private CipherHandler cipherHandler;
+  private KeyGenerator keyGenerator;
 
-  /**
-   * Constructs ...
-   *
-   */
-  private CipherUtil()
-  {
+  private CipherUtil() {
     keyGenerator = ServiceUtil.getService(KeyGenerator.class);
 
-    if (keyGenerator == null)
-    {
+    if (keyGenerator == null) {
       keyGenerator = new UUIDKeyGenerator();
     }
 
     cipherHandler = ServiceUtil.getService(CipherHandler.class);
 
-    if (cipherHandler == null)
-    {
-      cipherHandler = new DefaultCipherHandler(SCMContext.getContext(),
-        keyGenerator);
+    if (cipherHandler == null) {
+      cipherHandler = new DefaultCipherHandler(SCMContext.getContext(), keyGenerator);
     }
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public static CipherUtil getInstance()
-  {
-    if (instance == null)
-    {
-      synchronized (CipherUtil.class)
-      {
-        if (instance == null)
-        {
+  public static CipherUtil getInstance() {
+    if (instance == null) {
+      synchronized (CipherUtil.class) {
+        if (instance == null) {
           instance = new CipherUtil();
         }
       }
@@ -88,63 +65,29 @@ public final class CipherUtil
     return instance;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   */
-  public String decode(String value)
-  {
+  public String decode(String value) {
     return cipherHandler.decode(value);
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param value
-   *
-   * @return
-   */
-  public String encode(String value)
-  {
+  public byte[] decode(byte[] value) {
+    return cipherHandler.decode(value);
+  }
+
+  public String encode(String value) {
     return cipherHandler.encode(value);
   }
 
-  //~--- get methods ----------------------------------------------------------
+  public byte[] encode(byte[] value) {
+    return cipherHandler.encode(value);
+  }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public CipherHandler getCipherHandler()
   {
     return cipherHandler;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   public KeyGenerator getKeyGenerator()
   {
     return keyGenerator;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  private CipherHandler cipherHandler;
-
-  /** Field description */
-  private KeyGenerator keyGenerator;
 }
