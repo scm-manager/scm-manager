@@ -29,8 +29,8 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class Pkcs12ClientCertificateCredential implements Credential {
+public class Pkcs12ClientKeyCredential implements Credential {
 
-  private final byte[] certificate;
+  private final byte[] key;
   private final char[] password;
 }
