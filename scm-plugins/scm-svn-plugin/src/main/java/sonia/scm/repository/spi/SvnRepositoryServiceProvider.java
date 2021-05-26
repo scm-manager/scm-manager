@@ -61,7 +61,6 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
   private final SvnContext context;
   private final SvnWorkingCopyFactory workingCopyFactory;
   private final HookContextFactory hookContextFactory;
-  private final SvnRepositoryHandler handler;
   private final TrustManager trustManager;
 
   SvnRepositoryServiceProvider(SvnRepositoryHandler handler,
@@ -70,7 +69,6 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
                                HookContextFactory hookContextFactory,
                                TrustManager trustManager) {
     this.context = new SvnContext(repository, handler.getDirectory(repository.getId()));
-    this.handler = handler;
     this.workingCopyFactory = workingCopyFactory;
     this.hookContextFactory = hookContextFactory;
     this.trustManager = trustManager;
@@ -143,6 +141,6 @@ public class SvnRepositoryServiceProvider extends RepositoryServiceProvider {
 
   @Override
   public MirrorCommand getMirrorCommand() {
-    return new SvnMirrorCommand(context, trustManager, handler::createSvnUrl);
+    return new SvnMirrorCommand(context, trustManager);
   }
 }
