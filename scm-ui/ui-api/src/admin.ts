@@ -31,8 +31,12 @@ export const useUpdateInfo = (): ApiResult<UpdateInfo | null> => {
   const indexLink = useIndexLink("updateInfo");
   return useQuery<UpdateInfo | null, Error>(
     "updateInfo",
-    () =>
-      apiClient.get(indexLink ? indexLink : "").then((response) => (response.status === 204 ? null : response.json())),
+    () => {
+      if (!indexLink) {
+        throw new Error("could not find index data");
+      }
+      return apiClient.get(indexLink).then((response) => (response.status === 204 ? null : response.json()));
+    },
     { enabled: !!indexLink }
   );
 };
