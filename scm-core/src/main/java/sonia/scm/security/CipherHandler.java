@@ -21,13 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
+import java.util.Base64;
+
+import static java.nio.charset.StandardCharsets.UTF_8;
 
 /**
  * Encrypts and decrypts string values.
- * 
+ *
  * @author Sebastian Sdorra
  * @since 1.7
  */
@@ -41,7 +44,23 @@ public interface CipherHandler
    *
    * @return decrypted value
    */
-  public String decode(String value);
+  String decode(String value);
+
+  /**
+   * Decrypts the given value. If not implemented explicitly, this creates a string
+   * from the byte array, decodes this with {@link #decode(String)}, and interprets
+   * this string as base 64 encoded byte array.
+   * <p>
+   * if {@link #encode(byte[])} is overridden by an implementation, this has to be
+   * implemented accordingly.
+   *
+   * @param value encrypted value
+   *
+   * @return decrypted value
+   */
+  default byte[] decode(byte[] value) {
+    return Base64.getDecoder().decode(decode(new String(value, UTF_8)));
+  }
 
   /**
    * Encrypts the given value.
@@ -50,5 +69,21 @@ public interface CipherHandler
    *
    * @return encrypted value
    */
-  public String encode(String value);
+  String encode(String value);
+
+  /**
+   * Encrypts the given value. If not implemented explicitly, this encoded the given
+   * byte array as a base 64 string, encodes this string with {@link #encode(String)},
+   * and returns the bytes of this resulting string.
+   * <p>
+   * if {@link #decode(byte[])} is overridden by an implementation, this has to be
+   * implemented accordingly.
+   *
+   * @param value plain byte array to encrypt.
+   *
+   * @return encrypted value
+   */
+  default byte[] encode(byte[] value) {
+    return encode(Base64.getEncoder().encodeToString(value)).getBytes(UTF_8);
+  }
 }
