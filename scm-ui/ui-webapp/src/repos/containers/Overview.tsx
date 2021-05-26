@@ -150,7 +150,7 @@ const Overview: FC = () => {
             groups={namespacesToRender}
             groupSelected={namespaceSelected}
             link={namespace ? `repos/${namespace}` : "repos"}
-            createLink="/repos/create"
+            createLink="/repos/create/"
             label={t("overview.createButton")}
             testId="repository-overview"
             searchPlaceholder={t("overview.searchRepository")}
