@@ -30,7 +30,6 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.tmatesoft.svn.core.SVNException;
-import org.tmatesoft.svn.core.SVNURL;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.MirrorCommandResult;
@@ -70,7 +69,7 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
     MirrorCommandResult result = callMirrorUpdate(emptyContext, repositoryDirectory);
 
     assertThat(result.isSuccess()).isTrue();
-    assertThat(result.getLog()).contains("Updated from revision 0 to revision 1");
+    assertThat(result.getLog()).contains("Updated from revision 0 to revision 5");
   }
 
   @Test
@@ -81,28 +80,24 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
   }
 
   private MirrorCommandResult callMirrorUpdate(SvnContext context, File source) {
-    MirrorCommandRequest request = new MirrorCommandRequest();
-    SvnMirrorCommand command = createMirrorCommand(context, source, request);
-    return command.update(request);
+    MirrorCommandRequest request = createRequest(source);
+    return createMirrorCommand(context).update(request);
   }
 
   private MirrorCommandResult callMirror(SvnContext context, File source, Consumer<MirrorCommandRequest> consumer) {
-    MirrorCommandRequest request = new MirrorCommandRequest();
-    SvnMirrorCommand command = createMirrorCommand(context, source, request);
+    MirrorCommandRequest request = createRequest(source);
     consumer.accept(request);
-    return command.mirror(request);
+    return createMirrorCommand(context).mirror(request);
   }
 
-  private SvnMirrorCommand createMirrorCommand(SvnContext context, File source, MirrorCommandRequest request) {
-    return new SvnMirrorCommand(context, trustManager, c ->
-    {
-      try {
-        request.setSourceUrl(SVNURL.fromFile(c).toString());
-        return SVNURL.fromFile(source);
-      } catch (SVNException e) {
-        throw new IllegalStateException(e);
-      }
-    });
+  private MirrorCommandRequest createRequest(File source) {
+    MirrorCommandRequest request = new MirrorCommandRequest();
+    request.setSourceUrl("file://" + source.getAbsolutePath());
+    return request;
+  }
+
+  private SvnMirrorCommand createMirrorCommand(SvnContext context) {
+    return new SvnMirrorCommand(context, trustManager);
   }
 
   private Consumer<MirrorCommandRequest> createCredential(String username, String password) {
@@ -114,5 +109,4 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
     SVNRepositoryFactory.createLocalRepository(dir, true, true);
     return new SvnContext(RepositoryTestData.createHappyVerticalPeopleTransporter(), dir);
   }
-
 }

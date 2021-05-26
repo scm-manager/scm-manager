@@ -42,10 +42,8 @@ import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
 
 import javax.net.ssl.TrustManager;
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.function.Function;
 
 import static java.util.Collections.emptyList;
 
@@ -54,12 +52,10 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
   private static final Logger LOG = LoggerFactory.getLogger(SvnMirrorCommand.class);
 
   private final TrustManager trustManager;
-  private final Function<File, SVNURL> urlFactory;
 
-  SvnMirrorCommand(SvnContext context, TrustManager trustManager, Function<File, SVNURL> urlFactory) {
+  SvnMirrorCommand(SvnContext context, TrustManager trustManager) {
     super(context);
     this.trustManager = trustManager;
-    this.urlFactory = urlFactory;
   }
 
   @Override
@@ -69,7 +65,7 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
     long afterUpdate;
     try {
       beforeUpdate = context.open().getLatestRevision();
-      SVNURL url = urlFactory.apply(context.getDirectory());
+      SVNURL url = SVNURL.fromFile(context.getDirectory());
       SVNURL next = SVNURL.parseURIEncoded(mirrorCommandRequest.getSourceUrl());
       SVNAdminClient admin = createAdminClient(url, mirrorCommandRequest);
 
