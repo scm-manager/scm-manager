@@ -1,5 +1,4 @@
 import React, { ChangeEvent, FC, FocusEvent } from "react";
-import { createFormFieldWrapper, FieldProps, FieldType, isLegacy, isUsingRef } from "./FormFieldTypes";
 import classNames from "classnames";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
 import { createAttributesForTesting } from "../devBuild";
@@ -12,9 +11,12 @@ type Props = {
   helpText?: string;
   disabled?: boolean;
   testId?: string;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
+  onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
+  ref?: React.Ref<HTMLInputElement>;
 };
 
-const InnerBlobFileInput: FC<FieldProps<Props, HTMLInputElement, FileList>> = ({
+const FileInput: FC<Props> = ({
   name,
   testId,
   helpText,
@@ -22,25 +24,19 @@ const InnerBlobFileInput: FC<FieldProps<Props, HTMLInputElement, FileList>> = ({
   disabled,
   label,
   className,
-  ...props
+  ref,
+  onBlur,
+  onChange
 }) => {
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    if (props.onChange && event.target.files) {
-      if (isUsingRef<Props, HTMLInputElement, FileList>(props)) {
-        props.onChange(event);
-      } else if (isLegacy(props)) {
-        props.onChange(event.target.files);
-      }
+    if (onChange && event.target.files) {
+      onChange(event);
     }
   };
 
   const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
-    if (props.onBlur && event.target.files) {
-      if (isUsingRef<Props, HTMLInputElement, FileList>(props)) {
-        props.onBlur(event);
-      } else if (isLegacy(props)) {
-        props.onBlur(event.target.files, name);
-      }
+    if (onBlur && event.target.files) {
+      onBlur(event);
     }
   };
 
@@ -49,7 +45,7 @@ const InnerBlobFileInput: FC<FieldProps<Props, HTMLInputElement, FileList>> = ({
       <LabelWithHelpIcon label={label} helpText={helpText} />
       <div className="control">
         <input
-          ref={props.innerRef}
+          ref={ref}
           name={name}
           className={classNames("input", "p-1", className)}
           type="file"
@@ -64,6 +60,4 @@ const InnerBlobFileInput: FC<FieldProps<Props, HTMLInputElement, FileList>> = ({
   );
 };
 
-const BlobFileInput: FieldType<Props, HTMLInputElement, FileList> = createFormFieldWrapper(InnerBlobFileInput);
-
-export default BlobFileInput;
+export default FileInput;
