@@ -61,7 +61,6 @@ dependencies {
 
     // injection
     api libraries.guice
-    api libraries.guiceMultibindings
     api libraries.guiceServlet
     api libraries.guiceThrowingproviders
     api libraries.guiceAssistedinject
