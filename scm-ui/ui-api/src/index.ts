@@ -47,6 +47,7 @@ export * from "./sources";
 export * from "./import";
 export * from "./diff";
 export * from "./notifications";
+export * from "./configLink";
 
 export { default as ApiProvider } from "./ApiProvider";
 export * from "./ApiProvider";
