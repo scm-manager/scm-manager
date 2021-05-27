@@ -38,7 +38,7 @@ import org.tmatesoft.svn.core.auth.SVNSSLAuthentication;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
 import sonia.scm.repository.api.MirrorCommandResult;
-import sonia.scm.repository.api.Pkcs12ClientKeyCredential;
+import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
 
 import javax.net.ssl.TrustManager;
@@ -89,7 +89,7 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
 
   private SVNAdminClient createAdminClient(SVNURL url, MirrorCommandRequest mirrorCommandRequest) {
     Collection<SVNAuthentication> authentications = new ArrayList<>();
-    mirrorCommandRequest.getCredential(Pkcs12ClientKeyCredential.class)
+    mirrorCommandRequest.getCredential(Pkcs12ClientCertificateCredential.class)
       .map(c -> createTlsAuth(url, c))
       .ifPresent(authentications::add);
     mirrorCommandRequest.getCredential(UsernamePasswordCredential.class)
@@ -106,9 +106,9 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
     return new SVNAdminClient(authManager, SVNWCUtil.createDefaultOptions(true));
   }
 
-  private SVNSSLAuthentication createTlsAuth(SVNURL url, Pkcs12ClientKeyCredential c) {
+  private SVNSSLAuthentication createTlsAuth(SVNURL url, Pkcs12ClientCertificateCredential c) {
     return SVNSSLAuthentication.newInstance(
-      c.getKey(),
+      c.getCertificate(),
       c.getPassword(),
       false,
       url,
