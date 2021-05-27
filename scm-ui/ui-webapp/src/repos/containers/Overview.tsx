@@ -139,7 +139,7 @@ const Overview: FC = () => {
   return (
     <Page title={t("overview.title")} subtitle={t("overview.subtitle")} loading={isLoading} error={error}>
       <Repositories namespaces={namespaces} repositories={repositories} search={search} page={page} />
-      {showCreateButton ? <CreateButton label={t("overview.createButton")} link="/repos/create" /> : null}
+      {showCreateButton ? <CreateButton label={t("overview.createButton")} link="/repos/create/" /> : null}
       <PageActions>
         {showActions ? (
           <OverviewPageActions
