@@ -31,12 +31,15 @@ import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.FetchResult;
+import org.eclipse.jgit.transport.TransportHttp;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MirrorCommandResult;
+import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
 
 import javax.inject.Inject;
+import javax.net.ssl.KeyManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -48,11 +51,14 @@ import static sonia.scm.repository.GitUtil.createFetchCommandWithBranchAndTagUpd
 public class GitMirrorCommand extends AbstractGitCommand implements MirrorCommand {
 
   private final PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory;
+  private final MirrorHttpConnectionProvider mirrorHttpConnectionProvider;
+
 
   @Inject
-  GitMirrorCommand(GitContext context, PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory) {
+  GitMirrorCommand(GitContext context, PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory, MirrorHttpConnectionProvider mirrorHttpConnectionProvider) {
     super(context);
     this.postReceiveRepositoryHookEventFactory = postReceiveRepositoryHookEventFactory;
+    this.mirrorHttpConnectionProvider = mirrorHttpConnectionProvider;
   }
 
   @Override
@@ -83,16 +89,28 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   private FetchCommand createFetchCommand(MirrorCommandRequest mirrorCommandRequest, Repository repository) {
     FetchCommand fetchCommand = createFetchCommandWithBranchAndTagUpdate(Git.wrap(repository))
       .setRemote(mirrorCommandRequest.getSourceUrl());
+
+    mirrorCommandRequest.getCredential(Pkcs12ClientCertificateCredential.class)
+      .ifPresent(c -> {
+        fetchCommand.setTransportConfigCallback(transport -> {
+          if (transport instanceof TransportHttp) {
+            TransportHttp transportHttp = (TransportHttp) transport;
+            transportHttp.setHttpConnectionFactory(mirrorHttpConnectionProvider.createHttpConnectionFactory(c));
+          }
+        });
+      });
     mirrorCommandRequest.getCredential(UsernamePasswordCredential.class)
-      .ifPresent(c -> fetchCommand.setCredentialsProvider(
-        new UsernamePasswordCredentialsProvider(
-          Strings.nullToEmpty(c.username()),
-          Strings.nullToEmpty(new String(c.password()))
-        ))
+      .ifPresent(c -> fetchCommand
+        .setCredentialsProvider(
+          new UsernamePasswordCredentialsProvider(
+            Strings.nullToEmpty(c.username()),
+            Strings.nullToEmpty(new String(c.password()))
+          ))
       );
 
     return fetchCommand;
   }
+
 
   private List<String> createUpdateLog(FetchResult fetchResult) {
     List<String> log = new ArrayList<>();

@@ -38,16 +38,13 @@ import sonia.scm.repository.spi.SimpleGitWorkingCopyFactory;
 import sonia.scm.web.lfs.LfsBlobStoreFactory;
 
 /**
- *
  * @author Sebastian Sdorra
  */
 @Extension
-public class GitServletModule extends ServletModule
-{
+public class GitServletModule extends ServletModule {
 
   @Override
-  protected void configureServlets()
-  {
+  protected void configureServlets() {
     bind(GitRepositoryViewer.class);
     bind(GitRepositoryResolver.class);
     bind(GitReceivePackFactory.class);
