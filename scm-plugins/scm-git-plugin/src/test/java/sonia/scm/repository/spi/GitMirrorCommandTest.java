@@ -97,7 +97,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       existingClone.tag().setName("addedTag").setAnnotated(false).setObjectId(revObject).call();
     }
 
-    GitMirrorCommand command = new GitMirrorCommand(emptyContext, postReceiveRepositoryHookEventFactory);
+    GitMirrorCommand command = new GitMirrorCommand(emptyContext, postReceiveRepositoryHookEventFactory, mirrorHttpConnectionProvider);
     MirrorCommandRequest request = new MirrorCommandRequest();
     request.setSourceUrl(repositoryDirectory.getAbsolutePath());
     MirrorCommandResult result = command.update(request);
@@ -164,7 +164,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   private MirrorCommandResult callMirrorCommand(GitContext context, String source, Consumer<MirrorCommandRequest> requestConsumer) {
-    GitMirrorCommand command = new GitMirrorCommand(context, postReceiveRepositoryHookEventFactory);
+    GitMirrorCommand command = new GitMirrorCommand(context, postReceiveRepositoryHookEventFactory, mirrorHttpConnectionProvider);
     MirrorCommandRequest request = new MirrorCommandRequest();
     request.setSourceUrl(source);
     requestConsumer.accept(request);
