@@ -1,6 +1,6 @@
 ext {
   slf4jVersion = '1.7.30'
-  guiceVersion = '4.2.3'
+  guiceVersion = '5.0.1'
   resteasyVersion = '4.6.0.Final'
 
   // TODO upgrade to 2.12.0, but this breaks openapi spec generation
@@ -39,7 +39,6 @@ ext {
 
     // injection
     guice: "com.google.inject:guice:${guiceVersion}",
-    guiceMultibindings: "com.google.inject.extensions:guice-multibindings:${guiceVersion}",
     guiceServlet: "com.google.inject.extensions:guice-servlet:${guiceVersion}",
     guiceThrowingproviders: "com.google.inject.extensions:guice-throwingproviders:${guiceVersion}",
     guiceAssistedinject: "com.google.inject.extensions:guice-assistedinject:${guiceVersion}",
