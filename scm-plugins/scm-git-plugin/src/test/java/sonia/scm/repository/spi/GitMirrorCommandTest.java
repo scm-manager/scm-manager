@@ -54,6 +54,7 @@ import static org.mockito.Mockito.verify;
 public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
   private final PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory = mock(PostReceiveRepositoryHookEventFactory.class);
+  private final MirrorHttpConnectionProvider mirrorHttpConnectionProvider = mock(MirrorHttpConnectionProvider.class);
 
   private File clone;
   private GitContext emptyContext;
