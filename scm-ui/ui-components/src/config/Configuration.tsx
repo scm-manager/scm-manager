@@ -217,3 +217,5 @@ class Configuration extends React.Component<Props, State> {
 }
 
 export default withTranslation("config")(Configuration);
+
+
