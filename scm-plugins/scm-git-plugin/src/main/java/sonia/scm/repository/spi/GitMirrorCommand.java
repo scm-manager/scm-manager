@@ -39,7 +39,6 @@ import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
 
 import javax.inject.Inject;
-import javax.net.ssl.KeyManager;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -91,14 +90,12 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       .setRemote(mirrorCommandRequest.getSourceUrl());
 
     mirrorCommandRequest.getCredential(Pkcs12ClientCertificateCredential.class)
-      .ifPresent(c -> {
-        fetchCommand.setTransportConfigCallback(transport -> {
-          if (transport instanceof TransportHttp) {
-            TransportHttp transportHttp = (TransportHttp) transport;
-            transportHttp.setHttpConnectionFactory(mirrorHttpConnectionProvider.createHttpConnectionFactory(c));
-          }
-        });
-      });
+      .ifPresent(c -> fetchCommand.setTransportConfigCallback(transport -> {
+        if (transport instanceof TransportHttp) {
+          TransportHttp transportHttp = (TransportHttp) transport;
+          transportHttp.setHttpConnectionFactory(mirrorHttpConnectionProvider.createHttpConnectionFactory(c));
+        }
+      }));
     mirrorCommandRequest.getCredential(UsernamePasswordCredential.class)
       .ifPresent(c -> fetchCommand
         .setCredentialsProvider(
