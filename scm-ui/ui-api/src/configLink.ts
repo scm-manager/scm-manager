@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient } from "./apiclient";
 import { useCallback } from "react";
 import { HalRepresentation, Link } from "@scm-manager/ui-types";
@@ -39,7 +39,9 @@ type MutationVariables<C extends HalRepresentation> = {
 };
 
 export const useConfigLink = <C extends HalRepresentation>(link: string) => {
-  const { isLoading, error, data } = useQuery<Result<C>, Error>(["configLink", link], () =>
+  const queryClient = useQueryClient();
+  const queryKey = ["configLink", link];
+  const { isLoading, error, data } = useQuery<Result<C>, Error>(queryKey, () =>
     apiClient.get(link).then((response) => {
       const contentType = response.headers.get("Content-Type") || "application/json";
       return response.json().then((configuration: C) => ({ configuration, contentType }));
@@ -51,8 +53,13 @@ export const useConfigLink = <C extends HalRepresentation>(link: string) => {
     error: mutationError,
     mutate,
     data: updateResponse,
-  } = useMutation<Response, Error, MutationVariables<C>>((vars: MutationVariables<C>) =>
-    apiClient.put(vars.link, vars.configuration, vars.contentType)
+  } = useMutation<Response, Error, MutationVariables<C>>(
+    (vars: MutationVariables<C>) => apiClient.put(vars.link, vars.configuration, vars.contentType),
+    {
+      onSuccess: async () => {
+        await queryClient.invalidateQueries(queryKey);
+      },
+    }
   );
 
   const isReadOnly = !data?.configuration._links.update;
