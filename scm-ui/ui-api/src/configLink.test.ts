@@ -83,7 +83,7 @@ describe("useConfigLink tests", () => {
   it("should call update url", async () => {
     const queryClient = createInfiniteCachingClient();
 
-    fetchMock.getOnce("/api/v2/my/config", myConfig);
+    fetchMock.get("/api/v2/my/config", myConfig);
 
     const { result, waitFor, waitForNextUpdate } = renderHook(() => useConfigLink<MyConfig>("/my/config"), {
       wrapper: createWrapper(undefined, queryClient),
@@ -124,7 +124,7 @@ describe("useConfigLink tests", () => {
   it("should capture content type update url", async () => {
     const queryClient = createInfiniteCachingClient();
 
-    fetchMock.getOnce("/api/v2/my/config", {
+    fetchMock.get("/api/v2/my/config", {
       headers: {
         "Content-Type": "application/myconfig+json",
       },
