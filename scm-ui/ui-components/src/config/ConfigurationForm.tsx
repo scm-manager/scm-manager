@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC, FormEvent, useState } from "react";
+import React, { FC, FormEvent, useEffect, useState } from "react";
 import { ErrorNotification, Level, SubmitButton } from "../index";
 import { useTranslation } from "react-i18next";
 import Loading from "../Loading";
@@ -37,16 +37,19 @@ type Props = {
   onSubmit: (e: FormEvent<HTMLFormElement>) => void;
 };
 
-const ConfigurationChangedNotification: FC<{ initialConfigChanged: boolean }> = ({ initialConfigChanged }) => {
-  const [configChanged, setConfigChanged] = useState(initialConfigChanged);
+const ConfigurationChangedNotification: FC<{ configChanged: boolean }> = ({ configChanged }) => {
   const [t] = useTranslation("config");
+  const [hide, setHide] = useState(false);
+  useEffect(() => {
+    setHide(false);
+  }, [configChanged]);
 
-  if (!configChanged) {
+  if (!configChanged || hide) {
     return null;
   }
   return (
     <div className="notification is-primary">
-      <button className="delete" onClick={() => setConfigChanged(false)} />
+      <button className="delete" onClick={() => setHide(true)} />
       {t("config.form.submit-success-notification")}
     </div>
   );
@@ -70,7 +73,7 @@ const ConfigurationForm: FC<Props> = ({
 
   return (
     <form onSubmit={onSubmit}>
-      <ConfigurationChangedNotification initialConfigChanged={isUpdated} />
+      <ConfigurationChangedNotification configChanged={isUpdated} />
       {children}
       {error && (
         <>
