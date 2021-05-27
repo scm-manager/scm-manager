@@ -21,199 +21,51 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FormEvent } from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Links, Link } from "@scm-manager/ui-types";
-import { apiClient, Level, SubmitButton, Loading, ErrorNotification } from "../";
+import React, { FC, FormEvent, useState } from "react";
+import { HalRepresentation } from "@scm-manager/ui-types";
+import { useConfigLink } from "@scm-manager/ui-api";
+import ConfigurationForm from "./ConfigurationForm";
 
 type RenderProps = {
   readOnly: boolean;
-  initialConfiguration: ConfigurationType;
-  onConfigurationChange: (p1: ConfigurationType, p2: boolean) => void;
+  initialConfiguration: HalRepresentation;
+  onConfigurationChange: (configuration: HalRepresentation, valid: boolean) => void;
 };
 
-type Props = WithTranslation & {
+type Props = {
   link: string;
   render: (props: RenderProps) => any; // ???
 };
 
-type ConfigurationType = {
-  _links: Links;
-} & object;
+const Configuration: FC<Props> = ({ link, render }) => {
+  const { initialConfiguration, update, ...formProps } = useConfigLink<HalRepresentation>(link);
+  const [configuration, setConfiguration] = useState<HalRepresentation>();
+  const [isValid, setIsValid] = useState(false);
 
-type State = {
-  error?: Error;
-  fetching: boolean;
-  modifying: boolean;
-  contentType?: string | null;
-  configChanged: boolean;
+  const onConfigurationChange = (config: HalRepresentation, valid: boolean) => {
+    setConfiguration(config);
+    setIsValid(valid);
+  };
 
-  configuration?: ConfigurationType;
-  modifiedConfiguration?: ConfigurationType;
-  valid: boolean;
+  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (configuration) {
+      update(configuration);
+    }
+  };
+
+  return (
+    <ConfigurationForm isValid={isValid} onSubmit={onSubmit} {...formProps}>
+      {initialConfiguration
+        ? render({
+            readOnly: formProps.isReadOnly,
+            initialConfiguration,
+            onConfigurationChange,
+          })
+        : null}
+    </ConfigurationForm>
+  );
 };
 
-/**
- * GlobalConfiguration uses the render prop pattern to encapsulate the logic for
- * synchronizing the configuration with the backend.
- */
-class Configuration extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      fetching: true,
-      modifying: false,
-      configChanged: false,
-      valid: false
-    };
-  }
-
-  componentDidMount() {
-    const { link } = this.props;
-
-    apiClient
-      .get(link)
-      .then(this.captureContentType)
-      .then(response => response.json())
-      .then(this.loadConfig)
-      .catch(this.handleError);
-  }
-
-  captureContentType = (response: Response) => {
-    const contentType = response.headers.get("Content-Type");
-    this.setState({
-      contentType
-    });
-    return response;
-  };
-
-  getContentType = (): string => {
-    const { contentType } = this.state;
-    return contentType ? contentType : "application/json";
-  };
-
-  handleError = (error: Error) => {
-    this.setState({
-      error,
-      fetching: false,
-      modifying: false
-    });
-  };
-
-  loadConfig = (configuration: ConfigurationType) => {
-    this.setState({
-      configuration,
-      fetching: false,
-      error: undefined
-    });
-  };
-
-  getModificationUrl = (): string | undefined => {
-    const { configuration } = this.state;
-    if (configuration) {
-      const links = configuration._links;
-      if (links && links.update) {
-        const link = links.update as Link;
-        return link.href;
-      }
-    }
-  };
-
-  isReadOnly = (): boolean => {
-    const modificationUrl = this.getModificationUrl();
-    return !modificationUrl;
-  };
-
-  configurationChanged = (configuration: ConfigurationType, valid: boolean) => {
-    this.setState({
-      modifiedConfiguration: configuration,
-      valid
-    });
-  };
-
-  modifyConfiguration = (event: FormEvent) => {
-    event.preventDefault();
-
-    this.setState({
-      modifying: true,
-      error: undefined
-    });
-
-    const { modifiedConfiguration } = this.state;
-
-    const modificationUrl = this.getModificationUrl();
-    if (modificationUrl) {
-      apiClient
-        .put(modificationUrl, modifiedConfiguration, this.getContentType())
-        .then(() =>
-          this.setState({
-            modifying: false,
-            configChanged: true,
-            valid: false
-          })
-        )
-        .catch(this.handleError);
-    } else {
-      this.setState({
-        error: new Error("no modification link available")
-      });
-    }
-  };
-
-  renderConfigChangedNotification = () => {
-    if (this.state.configChanged) {
-      return (
-        <div className="notification is-primary">
-          <button
-            className="delete"
-            onClick={() =>
-              this.setState({
-                configChanged: false
-              })
-            }
-          />
-          {this.props.t("config.form.submit-success-notification")}
-        </div>
-      );
-    }
-    return null;
-  };
-
-  render() {
-    const { t } = this.props;
-    const { fetching, error, configuration, modifying, valid } = this.state;
-
-    if (fetching || !configuration) {
-      return <Loading />;
-    } else {
-      const readOnly = this.isReadOnly();
-
-      const renderProps: RenderProps = {
-        readOnly,
-        initialConfiguration: configuration,
-        onConfigurationChange: this.configurationChanged
-      };
-
-      return (
-        <>
-          {this.renderConfigChangedNotification()}
-          <form onSubmit={this.modifyConfiguration}>
-            {this.props.render(renderProps)}
-            {error && (
-              <>
-                <hr />
-                <ErrorNotification error={error} />
-              </>
-            )}
-            <hr />
-            <Level
-              right={<SubmitButton label={t("config.form.submit")} disabled={!valid || readOnly} loading={modifying} />}
-            />
-          </form>
-        </>
-      );
-    }
-  }
-}
-
-export default withTranslation("config")(Configuration);
+export default Configuration;
