@@ -49,6 +49,7 @@ public final class MirrorCommandBuilder {
 
   private String sourceUrl;
   private Collection<Credential> credentials = emptyList();
+  private MirrorFilter filter = new MirrorFilter() {};
 
   MirrorCommandBuilder(MirrorCommand mirrorCommand, Repository targetRepository) {
     this.mirrorCommand = mirrorCommand;
@@ -72,6 +73,11 @@ public final class MirrorCommandBuilder {
     return this;
   }
 
+  public MirrorCommandBuilder setFilter(MirrorFilter filter) {
+    this.filter = filter;
+    return this;
+  }
+
   public MirrorCommandResult initialCall() {
     LOG.info("Creating mirror for {} in repository {}", sourceUrl, targetRepository);
     MirrorCommandRequest mirrorCommandRequest = createRequest();
@@ -88,6 +94,7 @@ public final class MirrorCommandBuilder {
     MirrorCommandRequest mirrorCommandRequest = new MirrorCommandRequest();
     mirrorCommandRequest.setSourceUrl(sourceUrl);
     mirrorCommandRequest.setCredentials(credentials);
+    mirrorCommandRequest.setFilter(filter);
     Preconditions.checkArgument(mirrorCommandRequest.isValid(), "source url has to be specified");
     return mirrorCommandRequest;
   }

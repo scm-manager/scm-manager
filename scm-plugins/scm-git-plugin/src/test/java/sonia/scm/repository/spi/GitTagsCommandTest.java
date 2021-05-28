@@ -55,7 +55,7 @@ public class GitTagsCommandTest extends AbstractGitCommandTestBase {
   @Test
   public void shouldGetDatesCorrectly() throws IOException {
     final GitContext gitContext = createContext();
-    final GitTagsCommand tagsCommand = new GitTagsCommand(gitContext, gpg);
+    final GitTagsCommand tagsCommand = new GitTagsCommand(gitContext, new GitTagConverter(gpg));
     final List<Tag> tags = tagsCommand.getTags();
     assertThat(tags).hasSize(3);
 
@@ -94,7 +94,7 @@ public class GitTagsCommandTest extends AbstractGitCommandTestBase {
     when(publicKey.verify(signedContent.getBytes(), signature.getBytes())).thenReturn(true);
 
     final GitContext gitContext = createContext();
-    final GitTagsCommand tagsCommand = new GitTagsCommand(gitContext, gpg);
+    final GitTagsCommand tagsCommand = new GitTagsCommand(gitContext, new GitTagConverter(gpg));
     final List<Tag> tags = tagsCommand.getTags();
 
     assertThat(tags).hasSize(3);
