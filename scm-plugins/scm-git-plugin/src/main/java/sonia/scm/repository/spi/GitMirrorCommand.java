@@ -52,6 +52,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   private final PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory;
   private final MirrorHttpConnectionProvider mirrorHttpConnectionProvider;
 
+  private final List<String> log = new ArrayList<>();
 
   @Inject
   GitMirrorCommand(GitContext context, PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory, MirrorHttpConnectionProvider mirrorHttpConnectionProvider) {
@@ -73,7 +74,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "error during git fetch", e);
     } catch (GitAPIException e) {
-      List<String> log = singletonList(e.getMessage());
+      log.add("failed to synchronize: " + e.getMessage());
       return new MirrorCommandResult(false, log, stopwatch.stop().elapsed());
     }
   }
@@ -81,7 +82,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   private MirrorCommandResult doUpdate(MirrorCommandRequest mirrorCommandRequest, Stopwatch stopwatch, Repository repository, Git git) throws GitAPIException {
     FetchResult fetchResult = createFetchCommand(mirrorCommandRequest, repository).call();
     postReceiveRepositoryHookEventFactory.fireForFetch(git, fetchResult);
-    List<String> log = createUpdateLog(fetchResult);
+    createUpdateLog(fetchResult);
     return new MirrorCommandResult(true, log, stopwatch.stop().elapsed());
   }
 
@@ -93,7 +94,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       .ifPresent(c -> fetchCommand.setTransportConfigCallback(transport -> {
         if (transport instanceof TransportHttp) {
           TransportHttp transportHttp = (TransportHttp) transport;
-          transportHttp.setHttpConnectionFactory(mirrorHttpConnectionProvider.createHttpConnectionFactory(c));
+          transportHttp.setHttpConnectionFactory(mirrorHttpConnectionProvider.createHttpConnectionFactory(c, log));
         }
       }));
     mirrorCommandRequest.getCredential(UsernamePasswordCredential.class)
@@ -109,13 +110,11 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   }
 
 
-  private List<String> createUpdateLog(FetchResult fetchResult) {
-    List<String> log = new ArrayList<>();
+  private void createUpdateLog(FetchResult fetchResult) {
     log.add("Branches:");
     appendRefs(fetchResult, log, "refs/heads/");
     log.add("Tags:");
     appendRefs(fetchResult, log, "refs/tags/");
-    return log;
   }
 
   private void appendRefs(FetchResult fetchResult, List<String> log, String prefix) {
