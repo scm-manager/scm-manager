@@ -37,6 +37,7 @@ import org.tmatesoft.svn.core.auth.SVNPasswordAuthentication;
 import org.tmatesoft.svn.core.auth.SVNSSLAuthentication;
 import org.tmatesoft.svn.core.wc.SVNWCUtil;
 import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
+import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
@@ -60,16 +61,29 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
 
   @Override
   public MirrorCommandResult mirror(MirrorCommandRequest mirrorCommandRequest) {
+    SVNURL url = createUrlForLocalRepository();
+    return withAdminClient(mirrorCommandRequest, admin -> {
+      SVNURL source = SVNURL.parseURIEncoded(mirrorCommandRequest.getSourceUrl());
+      admin.doCompleteSynchronize(source, url);
+    });
+  }
+
+  @Override
+  public MirrorCommandResult update(MirrorCommandRequest mirrorCommandRequest) {
+    SVNURL url = createUrlForLocalRepository();
+    return withAdminClient(mirrorCommandRequest, admin -> admin.doSynchronize(url));
+  }
+
+  private MirrorCommandResult withAdminClient(MirrorCommandRequest mirrorCommandRequest, AdminConsumer consumer) {
     Stopwatch stopwatch = Stopwatch.createStarted();
     long beforeUpdate;
     long afterUpdate;
     try {
       beforeUpdate = context.open().getLatestRevision();
-      SVNURL url = SVNURL.fromFile(context.getDirectory());
-      SVNURL next = SVNURL.parseURIEncoded(mirrorCommandRequest.getSourceUrl());
+      SVNURL url = createUrlForLocalRepository();
       SVNAdminClient admin = createAdminClient(url, mirrorCommandRequest);
 
-      admin.doCompleteSynchronize(next, url);
+      consumer.accept(admin);
       afterUpdate = context.open().getLatestRevision();
     } catch (SVNException e) {
       LOG.error("Could not mirror svn repository", e);
@@ -82,9 +96,12 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
     );
   }
 
-  @Override
-  public MirrorCommandResult update(MirrorCommandRequest request) {
-    return mirror(request);
+  private SVNURL createUrlForLocalRepository() {
+    try {
+      return SVNURL.fromFile(context.getDirectory());
+    } catch (SVNException e) {
+      throw new InternalRepositoryException(repository, "could not create svn url for local repository", e);
+    }
   }
 
   private SVNAdminClient createAdminClient(SVNURL url, MirrorCommandRequest mirrorCommandRequest) {
@@ -113,5 +130,9 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
       false,
       url,
       true);
+  }
+
+  private interface AdminConsumer {
+    void accept(SVNAdminClient adminClient) throws SVNException;
   }
 }
