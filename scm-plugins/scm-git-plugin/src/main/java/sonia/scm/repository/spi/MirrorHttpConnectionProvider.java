@@ -25,6 +25,8 @@
 package sonia.scm.repository.spi;
 
 import org.eclipse.jgit.transport.http.HttpConnectionFactory2;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.web.ScmHttpConnectionFactory;
 
@@ -37,8 +39,11 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.security.KeyStore;
+import java.util.List;
 
 class MirrorHttpConnectionProvider {
+
+  private static final Logger LOG = LoggerFactory.getLogger(MirrorHttpConnectionProvider.class);
 
   private final Provider<TrustManager> trustManagerProvider;
 
@@ -47,19 +52,21 @@ class MirrorHttpConnectionProvider {
     this.trustManagerProvider = trustManagerProvider;
   }
 
-  public HttpConnectionFactory2 createHttpConnectionFactory(Pkcs12ClientCertificateCredential credential) {
-    return new ScmHttpConnectionFactory(trustManagerProvider, createKeyManagers(credential));
+  public HttpConnectionFactory2 createHttpConnectionFactory(Pkcs12ClientCertificateCredential credential, List<String> log) {
+    return new ScmHttpConnectionFactory(trustManagerProvider, createKeyManagers(credential, log));
   }
 
-  private KeyManager[] createKeyManagers(Pkcs12ClientCertificateCredential credential) {
+  private KeyManager[] createKeyManagers(Pkcs12ClientCertificateCredential credential, List<String> log) {
     try {
       KeyStore pkcs12 = KeyStore.getInstance("PKCS12");
       pkcs12.load(new ByteArrayInputStream(credential.getCertificate()), credential.getPassword());
       KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
       keyManagerFactory.init(pkcs12, credential.getPassword());
+      log.add("added pkcs12 certificate");
       return keyManagerFactory.getKeyManagers();
     } catch (IOException | GeneralSecurityException e) {
-      e.printStackTrace();
+      LOG.info("could not create key store from pkcs12 credential", e);
+      log.add("failed to add pkcs12 certificate: " + e.getMessage());
     }
 
     return new KeyManager[0];
