@@ -91,7 +91,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
         }
       }
     }
-  }, [field, name, props, value]);
+  }, [field, value, name, props.onChange, props.innerRef]);
 
   const loadingClass = loading ? "is-loading" : "";
 
@@ -109,7 +109,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
           disabled={disabled}
           {...createAttributesForTesting(testId)}
         >
-          {props.options.map(opt => {
+          {props.options.map((opt) => {
             return (
               <option value={opt.value} key={"KEY_" + opt.value}>
                 {opt.label}
