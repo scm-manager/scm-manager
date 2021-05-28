@@ -22,60 +22,61 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository.spi;
+package sonia.scm.repository.api;
 
-import org.apache.commons.lang.StringUtils;
-import sonia.scm.repository.api.Credential;
-import sonia.scm.repository.api.MirrorFilter;
+import sonia.scm.repository.Changeset;
+import sonia.scm.repository.Tag;
 
 import java.util.Collection;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
-import static java.util.Collections.unmodifiableCollection;
 
-/**
- * @since 2.19.0
- */
-public final class MirrorCommandRequest {
+public interface MirrorFilter {
 
-  private String sourceUrl;
-  private Collection<Credential> credentials = emptyList();
-  private MirrorFilter filter = new MirrorFilter() {};
-
-  public String getSourceUrl() {
-    return sourceUrl;
+  default Filter getFilter(FilterContext context) {
+    return new Filter() {};
   }
 
-  public void setSourceUrl(String sourceUrl) {
-    this.sourceUrl = sourceUrl;
+  interface Filter {
+
+    default boolean acceptBranch(BranchUpdate branch) {
+      return true;
+    }
+
+    default boolean acceptTag(TagUpdate tag) {
+      return true;
+    }
   }
 
-  public Collection<Credential> getCredentials() {
-    return unmodifiableCollection(credentials);
+  interface FilterContext {
+
+    default Collection<BranchUpdate> getBranchUpdates() {
+      return emptyList();
+    }
+
+    default Collection<TagUpdate> getTagUpdates() {
+      return emptyList();
+    }
   }
 
-  public <T extends Credential> Optional<T> getCredential(Class<T> credentialClass) {
-    return getCredentials()
-      .stream()
-      .filter(credentialClass::isInstance)
-      .map(credentialClass::cast)
-      .findFirst();
+  interface BranchUpdate {
+    String getBranchName();
+
+    Changeset getChangeset();
+
+    String getNewRevision();
+
+    Optional<String> getOldRevision();
+
+    boolean isForcedUpdate();
   }
 
-  public void setCredentials(Collection<Credential> credentials) {
-    this.credentials = credentials;
-  }
+  interface TagUpdate {
+    String getTagName();
 
-  public MirrorFilter getFilter() {
-    return filter;
-  }
+    Tag getTag();
 
-  public void setFilter(MirrorFilter filter) {
-    this.filter = filter;
-  }
-
-  public boolean isValid() {
-    return StringUtils.isNotBlank(sourceUrl);
+    Optional<String> getOldRevision();
   }
 }

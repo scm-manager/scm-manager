@@ -30,6 +30,7 @@ import com.google.inject.Singleton;
 import org.eclipse.jgit.http.server.GitServlet;
 import org.eclipse.jgit.lfs.lib.Constants;
 import org.slf4j.Logger;
+import sonia.scm.protocolcommand.git.ScmUploadPackFactoryForHttpServletRequest;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryRequestListenerUtil;
 import sonia.scm.repository.spi.ScmProviderHttpServlet;
@@ -71,6 +72,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
   @Inject
   public ScmGitServlet(GitRepositoryResolver repositoryResolver,
                        GitReceivePackFactory receivePackFactory,
+                       ScmUploadPackFactoryForHttpServletRequest scmUploadPackFactory,
                        GitRepositoryViewer repositoryViewer,
                        RepositoryRequestListenerUtil repositoryRequestListenerUtil,
                        LfsServletFactory lfsServletFactory)
@@ -81,6 +83,7 @@ public class ScmGitServlet extends GitServlet implements ScmProviderHttpServlet
 
     setRepositoryResolver(repositoryResolver);
     setReceivePackFactory(receivePackFactory);
+    setUploadPackFactory(scmUploadPackFactory);
   }
 
   //~--- methods --------------------------------------------------------------

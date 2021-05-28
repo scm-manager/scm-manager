@@ -154,7 +154,7 @@ public class GitTagCommandTest extends AbstractGitCommandTestBase {
   }
 
   private List<Tag> readTags(GitContext context) throws IOException {
-    return new GitTagsCommand(context, gpg).getTags();
+    return new GitTagsCommand(context, new GitTagConverter(gpg)).getTags();
   }
 
   private Optional<Tag> findTag(GitContext context, String name) throws IOException {

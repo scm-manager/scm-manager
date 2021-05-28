@@ -24,53 +24,53 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevObject;
+import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
-import sonia.scm.repository.InternalRepositoryException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Tag;
+import sonia.scm.security.GPG;
 
 import javax.inject.Inject;
 import java.io.IOException;
-import java.util.List;
 
-import static java.util.stream.Collectors.toList;
+class GitTagConverter {
 
-//~--- JDK imports ------------------------------------------------------------
+  private static final Logger LOG = LoggerFactory.getLogger(GitTagConverter.class);
 
-/**
- * @author Sebastian Sdorra
- */
-public class GitTagsCommand extends AbstractGitCommand implements TagsCommand {
+  private final GPG gpg;
 
-  private final GitTagConverter gitTagConverter;
-
-  /**
-   * Constructs ...
-   *
-   * @param context
-   */
   @Inject
-  public GitTagsCommand(GitContext context, GitTagConverter gitTagConverter) {
-    super(context);
-    this.gitTagConverter = gitTagConverter;
+  GitTagConverter(GPG gpg) {
+    this.gpg = gpg;
   }
 
-  //~--- get methods ----------------------------------------------------------
+  public Tag buildTag(Repository repository, RevWalk revWalk,Ref ref) {
+    Tag tag = null;
 
-  @Override
-  public List<Tag> getTags() throws IOException {
-    try (Git git = new Git(open()); RevWalk revWalk = new RevWalk(git.getRepository())) {
-      List<Ref> tagList = git.tagList().call();
-
-      return tagList.stream()
-        .map(ref -> gitTagConverter.buildTag(git.getRepository(), revWalk, ref))
-        .collect(toList());
-    } catch (GitAPIException ex) {
-      throw new InternalRepositoryException(repository, "could not read tags from repository", ex);
+    try {
+      RevCommit revCommit = GitUtil.getCommit(repository, revWalk, ref);
+      if (revCommit != null) {
+        String name = GitUtil.getTagName(ref);
+        tag = new Tag(name, revCommit.getId().name(), GitUtil.getTagTime(revWalk, ref.getObjectId()));
+        RevObject revObject = revWalk.parseAny(ref.getObjectId());
+        if (revObject.getType() == Constants.OBJ_TAG) {
+          RevTag revTag = (RevTag) revObject;
+          GitUtil.getTagSignature(revTag, gpg, revWalk)
+            .ifPresent(tag::addSignature);
+        }
+      }
+    } catch (IOException ex) {
+      LOG.error("could not get commit for tag", ex);
     }
+
+    return tag;
   }
+
 }
