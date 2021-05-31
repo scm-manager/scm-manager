@@ -47,6 +47,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import static java.util.Collections.emptyList;
+import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
+import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
 
 public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorCommand {
 
@@ -87,10 +89,10 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
       afterUpdate = context.open().getLatestRevision();
     } catch (SVNException e) {
       LOG.error("Could not mirror svn repository", e);
-      return new MirrorCommandResult(false, emptyList(), stopwatch.stop().elapsed());
+      return new MirrorCommandResult(FAILED, emptyList(), stopwatch.stop().elapsed());
     }
     return new MirrorCommandResult(
-      true,
+      OK,
       ImmutableList.of("Updated from revision " + beforeUpdate + " to revision " + afterUpdate),
       stopwatch.stop().elapsed()
     );
