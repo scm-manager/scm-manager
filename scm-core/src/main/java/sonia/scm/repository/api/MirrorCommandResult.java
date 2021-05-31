@@ -29,18 +29,18 @@ import java.util.List;
 
 public final class MirrorCommandResult {
 
-  private final boolean success;
+  private final ResultType result;
   private final List<String> log;
   private final Duration duration;
 
-  public MirrorCommandResult(boolean success, List<String> log, Duration duration) {
-    this.success = success;
+  public MirrorCommandResult(ResultType result, List<String> log, Duration duration) {
+    this.result = result;
     this.log = log;
     this.duration = duration;
   }
 
-  public boolean isSuccess() {
-    return success;
+  public ResultType getResult() {
+    return result;
   }
 
   public List<String> getLog() {
@@ -49,5 +49,11 @@ public final class MirrorCommandResult {
 
   public Duration getDuration() {
     return duration;
+  }
+
+  public enum ResultType {
+    OK,
+    REJECTED_UPDATES,
+    FAILED
   }
 }

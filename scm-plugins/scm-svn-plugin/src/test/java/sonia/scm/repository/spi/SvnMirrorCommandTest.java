@@ -47,6 +47,7 @@ import java.util.function.Consumer;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
+import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
@@ -66,7 +67,7 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
     MirrorCommandResult result = callMirror(emptyContext, repositoryDirectory, c -> {
     });
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(OK);
   }
 
   @Test
@@ -77,7 +78,7 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
 
     MirrorCommandResult result = callMirrorUpdate(emptyContext, repositoryDirectory);
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).contains("Updated from revision 0 to revision 5");
   }
 
@@ -85,7 +86,7 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
   public void shouldUseCredentials() {
     MirrorCommandResult result = callMirror(emptyContext, repositoryDirectory, createCredential("svnadmin", "secret"));
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(OK);
   }
 
   private MirrorCommandResult callMirrorUpdate(SvnContext context, File source) {

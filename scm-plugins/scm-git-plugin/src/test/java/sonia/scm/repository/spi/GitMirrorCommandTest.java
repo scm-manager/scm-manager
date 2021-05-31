@@ -56,6 +56,9 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
+import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
+import static sonia.scm.repository.api.MirrorCommandResult.ResultType.REJECTED_UPDATES;
 
 public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
@@ -89,7 +92,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   public void shouldCreateInitialMirror() throws IOException, GitAPIException {
     MirrorCommandResult result = callMirrorCommand();
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).contains("Branches:")
       .contains("- 000000000..fcd0ef183 master (new)")
       .contains("- 000000000..3f76a12f0 test-branch (new)")
@@ -114,7 +117,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     MirrorCommandResult result = callUpdate(ACCEPT_ALL);
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "- 000000000..fcd0ef183 added-branch (new)",
@@ -140,7 +143,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     MirrorCommandResult result = callUpdate(ACCEPT_ALL);
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "- 3f76a12f0..9e93d8631 test-branch (forced)",
@@ -163,7 +166,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     MirrorCommandResult result = callUpdate(ACCEPT_ALL);
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "- 3f76a12f0..000000000 test-branch (deleted)",
@@ -187,7 +190,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     MirrorCommandResult result = callUpdate(ACCEPT_ALL);
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "Tags:",
@@ -214,7 +217,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     MirrorCommandResult result = callUpdate(ACCEPT_ALL);
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "Tags:",
@@ -237,7 +240,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     MirrorCommandResult result = callUpdate(ACCEPT_ALL);
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "Tags:",
@@ -260,7 +263,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     MirrorCommandResult result = callUpdate(REJECT_ALL);
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "- 000000000..fcd0ef183 added-branch (rejected due to filter)",
@@ -283,7 +286,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     MirrorCommandResult result = callUpdate(REJECT_ALL);
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "- 3f76a12f0..9e93d8631 test-branch (rejected due to filter)",
@@ -306,7 +309,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     MirrorCommandResult result = callUpdate(REJECT_ALL);
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "- 3f76a12f0..000000000 test-branch (rejected due to filter)",
@@ -330,7 +333,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     MirrorCommandResult result = callUpdate(REJECT_ALL);
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "Tags:",
@@ -354,7 +357,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     MirrorCommandResult result = callUpdate(REJECT_ALL);
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "Tags:",
@@ -377,7 +380,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     MirrorCommandResult result = callUpdate(r -> r.setFilter(new DenyAllMirrorFilter()));
 
-    assertThat(result.isSuccess()).isTrue();
+    assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
       "Tags:",
@@ -472,7 +475,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
           simpleHttpServer.getUri().toASCIIString(),
           createCredential(AppServer.username, AppServer.password));
 
-      assertThat(result.isSuccess()).isTrue();
+      assertThat(result.getResult()).isEqualTo(OK);
       assertThat(result.getLog()).contains("Branches:")
         .contains("- 000000000..fcd0ef183 master (new)")
         .contains("- 000000000..3f76a12f0 test-branch (new)")
@@ -494,7 +497,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
           simpleHttpServer.getUri().toASCIIString(),
           createCredential("wrong", "credentials"));
 
-      assertThat(result.isSuccess()).isFalse();
+      assertThat(result.getResult()).isEqualTo(FAILED);
 
       verify(postReceiveRepositoryHookEventFactory, never()).fireForFetch(any(), any());
     } finally {
