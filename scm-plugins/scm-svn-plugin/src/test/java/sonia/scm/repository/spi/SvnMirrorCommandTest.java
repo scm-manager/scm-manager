@@ -30,7 +30,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.tmatesoft.svn.core.SVNException;
+import org.tmatesoft.svn.core.SVNURL;
+import org.tmatesoft.svn.core.auth.BasicAuthenticationManager;
+import org.tmatesoft.svn.core.auth.SVNAuthentication;
 import org.tmatesoft.svn.core.io.SVNRepositoryFactory;
+import org.tmatesoft.svn.core.wc.SVNWCUtil;
+import org.tmatesoft.svn.core.wc.admin.SVNAdminClient;
 import sonia.scm.repository.RepositoryTestData;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.SimpleUsernamePasswordCredential;
@@ -65,7 +70,11 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test
-  public void shouldDoMirrorUpdate() {
+  public void shouldDoMirrorUpdate() throws SVNException {
+    // Initialize destination repo before update
+    SVNAdminClient svnAdminClient = new SVNAdminClient(new BasicAuthenticationManager(new SVNAuthentication[]{}), SVNWCUtil.createDefaultOptions(false));
+    svnAdminClient.doInitialize(SVNURL.fromFile(repositoryDirectory), emptyContext.createUrl());
+
     MirrorCommandResult result = callMirrorUpdate(emptyContext, repositoryDirectory);
 
     assertThat(result.isSuccess()).isTrue();

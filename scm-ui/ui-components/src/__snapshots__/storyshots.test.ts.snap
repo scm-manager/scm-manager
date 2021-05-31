@@ -64436,18 +64436,6 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
               >
                 repository.healthCheckFailure
               </span>
-              <span
-                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-success is-small"
-                title="awesome"
-              >
-                awesome
-              </span>
-              <span
-                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-warning is-small"
-                title="ouhhh..."
-              >
-                ouhhh...
-              </span>
             </span>
           </p>
           <p
