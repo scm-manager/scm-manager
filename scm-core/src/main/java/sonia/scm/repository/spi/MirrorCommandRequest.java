@@ -27,8 +27,11 @@ package sonia.scm.repository.spi;
 import org.apache.commons.lang.StringUtils;
 import sonia.scm.repository.api.Credential;
 import sonia.scm.repository.api.MirrorFilter;
+import sonia.scm.security.PublicKey;
 
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 import static java.util.Collections.emptyList;
@@ -41,6 +44,7 @@ public final class MirrorCommandRequest {
 
   private String sourceUrl;
   private Collection<Credential> credentials = emptyList();
+  private List<PublicKey> publicKeys = emptyList();
   private MirrorFilter filter = new MirrorFilter() {};
 
   public String getSourceUrl() {
@@ -77,5 +81,13 @@ public final class MirrorCommandRequest {
 
   public boolean isValid() {
     return StringUtils.isNotBlank(sourceUrl);
+  }
+
+  public void setPublicKeys(List<PublicKey> publicKeys) {
+    this.publicKeys = publicKeys;
+  }
+
+  public List<PublicKey> getPublicKeys() {
+    return Collections.unmodifiableList(publicKeys);
   }
 }

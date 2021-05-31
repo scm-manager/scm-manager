@@ -30,9 +30,12 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.spi.MirrorCommand;
 import sonia.scm.repository.spi.MirrorCommandRequest;
+import sonia.scm.security.PublicKey;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 import static java.util.Collections.emptyList;
@@ -49,6 +52,7 @@ public final class MirrorCommandBuilder {
 
   private String sourceUrl;
   private Collection<Credential> credentials = emptyList();
+  private List<PublicKey> publicKeys = emptyList();
   private MirrorFilter filter = new MirrorFilter() {};
 
   MirrorCommandBuilder(MirrorCommand mirrorCommand, Repository targetRepository) {
@@ -65,6 +69,16 @@ public final class MirrorCommandBuilder {
 
   public MirrorCommandBuilder setCredentials(Collection<Credential> credentials) {
     this.credentials = credentials;
+    return this;
+  }
+
+  public MirrorCommandBuilder setPublicKeys(PublicKey... publicKeys) {
+    this.publicKeys = Arrays.asList(publicKeys);
+    return this;
+  }
+
+  public MirrorCommandBuilder setPublicKeys(Collection<PublicKey> publicKeys) {
+    this.publicKeys = new ArrayList<>(publicKeys);
     return this;
   }
 
@@ -95,6 +109,7 @@ public final class MirrorCommandBuilder {
     mirrorCommandRequest.setSourceUrl(sourceUrl);
     mirrorCommandRequest.setCredentials(credentials);
     mirrorCommandRequest.setFilter(filter);
+    mirrorCommandRequest.setPublicKeys(publicKeys);
     Preconditions.checkArgument(mirrorCommandRequest.isValid(), "source url has to be specified");
     return mirrorCommandRequest;
   }

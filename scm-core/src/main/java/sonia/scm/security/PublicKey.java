@@ -46,7 +46,6 @@ public interface PublicKey {
    */
   String getId();
 
-
   /**
    * Returns ids from gpg sub keys.
    *
