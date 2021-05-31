@@ -124,13 +124,13 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     FetchResult fetchResult = createFetchCommand(mirrorCommandRequest, repository).call();
     GitFilterContext filterContext = new GitFilterContext(fetchResult, repository);
     MirrorFilter.Filter filter = mirrorCommandRequest.getFilter().getFilter(filterContext);
-    hanldeBranches(repository, fetchResult, filterContext, filter);
+    handleBranches(repository, fetchResult, filterContext, filter);
     handleTags(repository, fetchResult, filterContext, filter);
     postReceiveRepositoryHookEventFactory.fireForFetch(git, fetchResult);
     return new MirrorCommandResult(true, mirrorLog, stopwatch.stop().elapsed());
   }
 
-  private void hanldeBranches(Repository repository, FetchResult fetchResult, GitFilterContext filterContext, MirrorFilter.Filter filter) {
+  private void handleBranches(Repository repository, FetchResult fetchResult, GitFilterContext filterContext, MirrorFilter.Filter filter) {
     mirrorLog.add("Branches:");
     doForEachRefStartingWith(fetchResult, MIRROR_REF_PREFIX + "heads", ref -> {
       String branchName = ref.getLocalName().substring(MIRROR_REF_PREFIX.length() + "heads/".length());
@@ -149,6 +149,9 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       } else {
         LOG.trace("branch ref rejected in {}: {}", repository, ref.getLocalName());
         updateReference(repository, ref.getLocalName(), ref.getOldObjectId());
+        if (ref.asReceiveCommand().getType() == ReceiveCommand.Type.CREATE) {
+          repository.getRefDatabase().newUpdate(ref.getLocalName(), true).delete();
+        }
         logChange(ref, branchName, "rejected due to filter");
       }
     });
@@ -172,7 +175,9 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         }
       } else {
         LOG.trace("tag ref rejected in {}: {}", repository, ref.getLocalName());
-        if (ref.getResult() != NEW) {
+        if (ref.getResult() == NEW) {
+          repository.getRefDatabase().newUpdate(ref.getLocalName(), true).delete();
+        } else {
           updateReference(repository, ref.getLocalName(), ref.getOldObjectId());
         }
         logChange(ref, tagName, "rejected due to filter");

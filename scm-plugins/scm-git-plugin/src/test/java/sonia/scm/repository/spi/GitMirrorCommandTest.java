@@ -69,13 +69,11 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   private final GitTagConverter gitTagConverter = mock(GitTagConverter.class);
 
   private File clone;
-  private GitContext emptyContext;
   private GitMirrorCommand command;
 
   @Before
   public void initChangesetConverter() {
     when(gitChangesetConverterFactory.create(any(), any())).thenReturn(gitChangesetConverter);
-//    when(gitChangesetConverter.createChangeset(any())).thenAnswer(invocation -> new Changeset(invocation.getArgument(0, RevCommit.class).getName(), 0L, null));
   }
 
   @Before
@@ -83,7 +81,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     clone = tempFolder.newFolder();
     Git.init().setBare(true).setDirectory(clone).call();
 
-    emptyContext = createMirrorContext(clone);
+    GitContext emptyContext = createMirrorContext(clone);
     command = new GitMirrorCommand(emptyContext, postReceiveRepositoryHookEventFactory, mirrorHttpConnectionProvider, gitChangesetConverterFactory, gitTagConverter);
   }
 
@@ -151,7 +149,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     try (Git updatedMirror = Git.open(clone)) {
       Optional<Ref> updatedBranch = findBranch(updatedMirror, "test-branch");
-      assertThat(updatedBranch.get().getObjectId().getName()).isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0");
+      assertThat(updatedBranch).hasValueSatisfying(ref -> assertThat(ref.getObjectId().getName()).isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0"));
     }
   }
 
@@ -198,7 +196,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     try (Git updatedMirror = Git.open(clone)) {
       Optional<Ref> addedTag = findTag(updatedMirror, "added-tag");
-      assertThat(addedTag.get().getObjectId().getName()).isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0");
+      assertThat(addedTag).hasValueSatisfying(ref -> assertThat(ref.getObjectId().getName()).isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0"));
     }
 
     // event should be thrown two times, once for the initial clone, and once for the update
@@ -225,7 +223,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     try (Git updatedMirror = Git.open(clone)) {
       Optional<Ref> updatedTag = findTag(updatedMirror, "test-tag");
-      assertThat(updatedTag.get().getObjectId().getName()).isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0");
+      assertThat(updatedTag).hasValueSatisfying(ref -> assertThat(ref.getObjectId().getName()).isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0"));
     }
   }
 
@@ -365,7 +363,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     try (Git updatedMirror = Git.open(clone)) {
       Optional<Ref> rejectedTag = findTag(updatedMirror, "test-tag");
-      assertThat(rejectedTag.get().getObjectId().getName()).isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
+      assertThat(rejectedTag).hasValueSatisfying(ref -> assertThat(ref.getObjectId().getName()).isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1"));
     }
   }
 
@@ -388,7 +386,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     try (Git updatedMirror = Git.open(clone)) {
       Optional<Ref> rejectedTag = findTag(updatedMirror, "test-tag");
-      assertThat(rejectedTag.get().getObjectId().getName()).isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
+      assertThat(rejectedTag).hasValueSatisfying(ref -> assertThat(ref.getObjectId().getName()).isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1"));
     }
   }
 
@@ -471,7 +469,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     try {
       MirrorCommandResult result =
         callMirrorCommand(
-          emptyContext,
           simpleHttpServer.getUri().toASCIIString(),
           createCredential(AppServer.username, AppServer.password));
 
@@ -494,7 +491,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     try {
       MirrorCommandResult result =
         callMirrorCommand(
-          emptyContext,
           simpleHttpServer.getUri().toASCIIString(),
           createCredential("wrong", "credentials"));
 
@@ -507,12 +503,11 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   private MirrorCommandResult callMirrorCommand() {
-    return callMirrorCommand(emptyContext, repositoryDirectory.getAbsolutePath(), c -> {
+    return callMirrorCommand(repositoryDirectory.getAbsolutePath(), c -> {
     });
   }
 
-  private MirrorCommandResult callMirrorCommand(GitContext context, String source, Consumer<MirrorCommandRequest> requestConsumer) {
-//    GitMirrorCommand command = new GitMirrorCommand(context, postReceiveRepositoryHookEventFactory, mirrorHttpConnectionProvider, gitChangesetConverterFactory, gitTagConverter);
+  private MirrorCommandResult callMirrorCommand(String source, Consumer<MirrorCommandRequest> requestConsumer) {
     MirrorCommandRequest request = new MirrorCommandRequest();
     request.setSourceUrl(source);
     requestConsumer.accept(request);
