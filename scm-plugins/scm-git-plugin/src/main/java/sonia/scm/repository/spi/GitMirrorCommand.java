@@ -50,6 +50,7 @@ import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
+import sonia.scm.security.PublicKey;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -122,7 +123,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
   private MirrorCommandResult doUpdate(MirrorCommandRequest mirrorCommandRequest, Stopwatch stopwatch, Repository repository, Git git) throws GitAPIException {
     FetchResult fetchResult = createFetchCommand(mirrorCommandRequest, repository).call();
-    GitFilterContext filterContext = new GitFilterContext(fetchResult, repository);
+    GitFilterContext filterContext = new GitFilterContext(mirrorCommandRequest, fetchResult, repository);
     MirrorFilter.Filter filter = mirrorCommandRequest.getFilter().getFilter(filterContext);
     handleBranches(repository, fetchResult, filterContext, filter);
     handleTags(repository, fetchResult, filterContext, filter);
@@ -254,13 +255,13 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     private final Map<String, MirrorFilter.BranchUpdate> branchUpdates;
     private final Map<String, MirrorFilter.TagUpdate> tagUpdates;
 
-    public GitFilterContext(FetchResult fetchResult, Repository repository) {
+    public GitFilterContext(MirrorCommandRequest mirrorCommandRequest, FetchResult fetchResult, Repository repository) {
       Map<String, MirrorFilter.BranchUpdate> branchUpdates = new HashMap<>();
       Map<String, MirrorFilter.TagUpdate> tagUpdates = new HashMap<>();
 
       fetchResult.getTrackingRefUpdates().forEach(refUpdate -> {
         if (refUpdate.getLocalName().startsWith(MIRROR_REF_PREFIX + "heads")) {
-          branchUpdates.put(refUpdate.getLocalName(), new GitBranchUpdate(refUpdate, repository));
+          branchUpdates.put(refUpdate.getLocalName(), new GitBranchUpdate(refUpdate, repository, mirrorCommandRequest.getPublicKeys()));
         }
         if (refUpdate.getLocalName().startsWith(MIRROR_REF_PREFIX + "tags")) {
           tagUpdates.put(refUpdate.getLocalName(), new GitTagUpdate(refUpdate, repository));
@@ -296,13 +297,14 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     private final Repository repository;
 
     private final String branchName;
+    private final List<PublicKey> publicKeys;
 
     private Changeset changeset;
 
-    public GitBranchUpdate(TrackingRefUpdate refUpdate, Repository repository) {
+    public GitBranchUpdate(TrackingRefUpdate refUpdate, Repository repository, List<PublicKey> publicKeys) {
       this.refUpdate = refUpdate;
       this.repository = repository;
-
+      this.publicKeys = publicKeys;
       this.branchName = refUpdate.getLocalName().substring(MIRROR_REF_PREFIX.length() + "heads/".length());
     }
 
@@ -335,7 +337,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private Changeset computeChangeset() {
-      try (RevWalk revWalk = new RevWalk(repository); GitChangesetConverter gitChangesetConverter = converterFactory.create(repository, revWalk)) {
+      try (RevWalk revWalk = new RevWalk(repository); GitChangesetConverter gitChangesetConverter = converter(revWalk)) {
         try {
           RevCommit revCommit = revWalk.parseCommit(refUpdate.getNewObjectId());
           return gitChangesetConverter.createChangeset(revCommit, refUpdate.getLocalName());
@@ -343,6 +345,13 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
           throw new InternalRepositoryException(context.getRepository(), "got exception while validating branch", e);
         }
       }
+    }
+
+    private GitChangesetConverter converter(RevWalk revWalk) {
+      return converterFactory.builder(repository)
+        .withRevWalk(revWalk)
+        .withAdditionalPublicKeys(publicKeys)
+        .create();
     }
   }
 

@@ -27,8 +27,13 @@ package sonia.scm.repository;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevWalk;
 import sonia.scm.security.GPG;
+import sonia.scm.security.PublicKey;
 
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 
 public class GitChangesetConverterFactory {
 
@@ -40,11 +45,52 @@ public class GitChangesetConverterFactory {
   }
 
   public GitChangesetConverter create(Repository repository) {
-    return new GitChangesetConverter(gpg, repository, new RevWalk(repository));
+    return builder(repository).create();
   }
 
   public GitChangesetConverter create(Repository repository, RevWalk revWalk) {
-    return new GitChangesetConverter(gpg, repository, revWalk);
+    return builder(repository).withRevWalk(revWalk).create();
+  }
+
+  public Builder builder(Repository repository) {
+    return new Builder(gpg, repository);
+  }
+
+  public static class Builder {
+
+    private final GPG gpg;
+    private final Repository repository;
+    private RevWalk revWalk;
+    private final List<PublicKey> additionalPublicKeys = new ArrayList<>();
+
+    private Builder(GPG gpg, Repository repository) {
+      this.gpg = gpg;
+      this.repository = repository;
+    }
+
+    public Builder withRevWalk(RevWalk revWalk) {
+      this.revWalk = revWalk;
+      return this;
+    }
+
+    public Builder withAdditionalPublicKeys(PublicKey... publicKeys) {
+      additionalPublicKeys.addAll(Arrays.asList(publicKeys));
+      return this;
+    }
+
+    public Builder withAdditionalPublicKeys(Collection<PublicKey> publicKeys) {
+      additionalPublicKeys.addAll(publicKeys);
+      return this;
+    }
+
+    public GitChangesetConverter create() {
+      return new GitChangesetConverter(
+        new GPGSignatureResolver(gpg, additionalPublicKeys),
+        repository,
+        revWalk != null ? revWalk : new RevWalk(repository)
+      );
+    }
+
   }
 
 }
