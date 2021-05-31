@@ -24,16 +24,21 @@
 
 package sonia.scm.protocolcommand.git;
 
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.transport.UploadPack;
-import org.eclipse.jgit.transport.resolver.UploadPackFactory;
-import sonia.scm.protocolcommand.RepositoryContext;
+import org.eclipse.jgit.lib.Ref;
+import sonia.scm.repository.spi.GitMirrorCommand;
 
-public class ScmUploadPackFactory implements UploadPackFactory<RepositoryContext> {
-  @Override
-  public UploadPack create(RepositoryContext repositoryContext, Repository repository) {
-    UploadPack uploadPack = new UploadPack(repository);
-    uploadPack.setRefFilter(MirrorRefFilter::filterMirrors);
-    return uploadPack;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+final class MirrorRefFilter {
+
+  private MirrorRefFilter() {
+  }
+
+  static Map<String, Ref> filterMirrors(Map<String, Ref> refs) {
+    return refs.entrySet()
+      .stream()
+      .filter(entry -> !entry.getKey().startsWith(GitMirrorCommand.MIRROR_REF_PREFIX))
+      .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
   }
 }

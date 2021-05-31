@@ -27,11 +27,12 @@ package sonia.scm.protocolcommand.git;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.transport.UploadPack;
 import org.eclipse.jgit.transport.resolver.UploadPackFactory;
-import sonia.scm.protocolcommand.RepositoryContext;
 
-public class ScmUploadPackFactory implements UploadPackFactory<RepositoryContext> {
+import javax.servlet.http.HttpServletRequest;
+
+public class ScmUploadPackFactoryForHttpServletRequest implements UploadPackFactory<HttpServletRequest> {
   @Override
-  public UploadPack create(RepositoryContext repositoryContext, Repository repository) {
+  public UploadPack create(HttpServletRequest repositoryContext, Repository repository) {
     UploadPack uploadPack = new UploadPack(repository);
     uploadPack.setRefFilter(MirrorRefFilter::filterMirrors);
     return uploadPack;
