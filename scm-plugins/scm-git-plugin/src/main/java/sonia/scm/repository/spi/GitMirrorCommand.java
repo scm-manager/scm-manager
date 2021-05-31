@@ -90,7 +90,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
   private final GitChangesetConverterFactory converterFactory;
   private final GitTagConverter gitTagConverter;
 
-  private List<String> log;
+  private List<String> mirrorLog;
 
   @Inject
   GitMirrorCommand(GitContext context, PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory, MirrorHttpConnectionProvider mirrorHttpConnectionProvider, GitChangesetConverterFactory converterFactory, GitTagConverter gitTagConverter) {
@@ -108,96 +108,90 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
   @Override
   public MirrorCommandResult update(MirrorCommandRequest mirrorCommandRequest) {
-    log = new ArrayList<>();
+    mirrorLog = new ArrayList<>();
     Stopwatch stopwatch = Stopwatch.createStarted();
     try (Repository repository = context.open(); Git git = Git.wrap(repository)) {
       return doUpdate(mirrorCommandRequest, stopwatch, repository, git);
     } catch (IOException e) {
       throw new InternalRepositoryException(context.getRepository(), "error during git fetch", e);
     } catch (GitAPIException e) {
-      log.add("failed to synchronize: " + e.getMessage());
-      return new MirrorCommandResult(false, log, stopwatch.stop().elapsed());
+      mirrorLog.add("failed to synchronize: " + e.getMessage());
+      return new MirrorCommandResult(false, mirrorLog, stopwatch.stop().elapsed());
     }
   }
 
   private MirrorCommandResult doUpdate(MirrorCommandRequest mirrorCommandRequest, Stopwatch stopwatch, Repository repository, Git git) throws GitAPIException {
     FetchResult fetchResult = createFetchCommand(mirrorCommandRequest, repository).call();
     GitFilterContext filterContext = new GitFilterContext(fetchResult, repository);
-    log.add("Branches:");
     MirrorFilter.Filter filter = mirrorCommandRequest.getFilter().getFilter(filterContext);
+    hanldeBranches(repository, fetchResult, filterContext, filter);
+    handleTags(repository, fetchResult, filterContext, filter);
+    postReceiveRepositoryHookEventFactory.fireForFetch(git, fetchResult);
+    return new MirrorCommandResult(true, mirrorLog, stopwatch.stop().elapsed());
+  }
+
+  private void hanldeBranches(Repository repository, FetchResult fetchResult, GitFilterContext filterContext, MirrorFilter.Filter filter) {
+    mirrorLog.add("Branches:");
     doForEachRefStartingWith(fetchResult, MIRROR_REF_PREFIX + "heads", ref -> {
       String branchName = ref.getLocalName().substring(MIRROR_REF_PREFIX.length() + "heads/".length());
       if (filter.acceptBranch(filterContext.getBranchUpdate(ref.getLocalName()))) {
-        String targetRef = "refs/heads" + ref.getLocalName().substring(MIRROR_REF_PREFIX.length() + "heads".length());
-        if (ref.asReceiveCommand().getType() == ReceiveCommand.Type.DELETE) {
-          String reference = "refs/heads/" + branchName;
-          LOG.trace("deleting ref in {}: {}", repository, reference);
+        String targetRef = "refs/heads/" + branchName;
+        if (isDeletedReference(ref)) {
+          LOG.trace("deleting branch ref in {}: {}", repository, targetRef);
           updateReference(repository, targetRef, ref.getNewObjectId()); // without this, the following deletion might be rejected
           repository.getRefDatabase().newUpdate(targetRef, true).delete();
-          log.add(
-            format("- %s..%s %s (deleted)",
-              ref.getOldObjectId().abbreviate(9).name(),
-              ref.getNewObjectId().abbreviate(9).name(),
-              branchName
-            ));
+          logChange(ref, branchName, "deleted");
         } else {
+          LOG.trace("updating branch ref in {}: {}", repository, targetRef);
           updateReference(repository, targetRef, ref.getNewObjectId());
-          log.add(
-            format("- %s..%s %s (%s)",
-              ref.getOldObjectId().abbreviate(9).name(),
-              ref.getNewObjectId().abbreviate(9).name(),
-              branchName,
-              getUpdateType(ref)
-            ));
+          logChange(ref, branchName, getUpdateType(ref));
         }
       } else {
+        LOG.trace("branch ref rejected in {}: {}", repository, ref.getLocalName());
         updateReference(repository, ref.getLocalName(), ref.getOldObjectId());
-        log.add(
-          format("- %s..%s %s (rejected due to filter)",
-            ref.getOldObjectId().abbreviate(9).name(),
-            ref.getNewObjectId().abbreviate(9).name(),
-            branchName
-          ));
+        logChange(ref, branchName, "rejected due to filter");
       }
     });
-    log.add("Tags:");
+  }
+
+  private void handleTags(Repository repository, FetchResult fetchResult, GitFilterContext filterContext, MirrorFilter.Filter filter) {
+    mirrorLog.add("Tags:");
     doForEachRefStartingWith(fetchResult, MIRROR_REF_PREFIX + "tags", ref -> {
       String tagName = ref.getLocalName().substring(MIRROR_REF_PREFIX.length() + "tags/".length());
       if (filter.acceptTag(filterContext.getTagUpdate(ref.getLocalName()))) {
         String targetRef = "refs/tags/" + tagName;
-        if (ref.asReceiveCommand().getType() == ReceiveCommand.Type.DELETE) {
+        if (isDeletedReference(ref)) {
+          LOG.trace("deleting tag ref in {}: {}", repository, targetRef);
           updateReference(repository, targetRef, ref.getNewObjectId()); // without this, the following deletion might be rejected
           repository.getRefDatabase().newUpdate(targetRef, true).delete();
-          log.add(
-            format("- %s..%s %s (deleted)",
-              ref.getOldObjectId().abbreviate(9).name(),
-              ref.getNewObjectId().abbreviate(9).name(),
-              tagName
-            ));
-      } else {
+          logChange(ref, tagName, "deleted");
+        } else {
+          LOG.trace("updating tag ref in {}: {}", repository, targetRef);
           updateReference(repository, targetRef, ref.getNewObjectId());
-          log.add(
-            format("- %s..%s %s (%s)",
-              ref.getOldObjectId().abbreviate(9).name(),
-              ref.getNewObjectId().abbreviate(9).name(),
-              tagName,
-              getUpdateType(ref)
-            ));
+          logChange(ref, tagName, getUpdateType(ref));
         }
       } else {
+        LOG.trace("tag ref rejected in {}: {}", repository, ref.getLocalName());
         if (ref.getResult() != NEW) {
           updateReference(repository, ref.getLocalName(), ref.getOldObjectId());
         }
-        log.add(
-          format("- %s..%s %s (rejected due to filter)",
-            ref.getOldObjectId().abbreviate(9).name(),
-            ref.getNewObjectId().abbreviate(9).name(),
-            tagName
-          ));
+        logChange(ref, tagName, "rejected due to filter");
       }
     });
-    postReceiveRepositoryHookEventFactory.fireForFetch(git, fetchResult);
-    return new MirrorCommandResult(true, log, stopwatch.stop().elapsed());
+  }
+
+  private boolean isDeletedReference(TrackingRefUpdate ref) {
+    return ref.asReceiveCommand().getType() == ReceiveCommand.Type.DELETE;
+  }
+
+  private void logChange(TrackingRefUpdate ref, String branchName, String type) {
+    mirrorLog.add(
+      format("- %s..%s %s (%s)",
+        ref.getOldObjectId().abbreviate(9).name(),
+        ref.getNewObjectId().abbreviate(9).name(),
+        branchName,
+        type
+      ));
   }
 
   private void doForEachRefStartingWith(FetchResult fetchResult, String prefix, RefUpdateConsumer refUpdateConsumer) {
@@ -208,8 +202,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         try {
           refUpdateConsumer.accept(ref);
         } catch (IOException e) {
-          // TODO
-          e.printStackTrace();
+          throw new InternalRepositoryException(super.repository, "error updating mirror references", e);
         }
       });
   }
@@ -232,7 +225,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       .ifPresent(c -> fetchCommand.setTransportConfigCallback(transport -> {
         if (transport instanceof TransportHttp) {
           TransportHttp transportHttp = (TransportHttp) transport;
-          transportHttp.setHttpConnectionFactory(mirrorHttpConnectionProvider.createHttpConnectionFactory(c, log));
+          transportHttp.setHttpConnectionFactory(mirrorHttpConnectionProvider.createHttpConnectionFactory(c, mirrorLog));
         }
       }));
     mirrorCommandRequest.getCredential(UsernamePasswordCredential.class)
