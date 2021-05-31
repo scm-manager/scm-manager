@@ -28,6 +28,7 @@ import sonia.scm.repository.Person;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 
@@ -44,6 +45,17 @@ public interface PublicKey {
    * @return id of key
    */
   String getId();
+
+
+  /**
+   * Returns ids from gpg sub keys.
+   *
+   * @return sub key ids
+   * @since 2.19.0
+   */
+  default Set<String> getSubkeys() {
+    return Collections.emptySet();
+  }
 
   /**
    * Returns the username of the owner or an empty optional.

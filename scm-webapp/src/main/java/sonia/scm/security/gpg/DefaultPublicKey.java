@@ -39,6 +39,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Person;
 import sonia.scm.security.PublicKey;
 
+import javax.annotation.Nullable;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +56,7 @@ public class DefaultPublicKey implements PublicKey {
   private final String raw;
   private final Set<Person> contacts;
 
-  public DefaultPublicKey(String id, String owner, String raw, Set<Person> contacts) {
+  public DefaultPublicKey(String id, @Nullable String owner, String raw, Set<Person> contacts) {
     this.id = id;
     this.owner = owner;
     this.raw = raw;
@@ -65,6 +66,12 @@ public class DefaultPublicKey implements PublicKey {
   @Override
   public String getId() {
     return id;
+  }
+
+  @Override
+  public Set<String> getSubkeys() {
+    Keys keys = Keys.resolve(raw);
+    return keys.getSubs();
   }
 
   @Override
