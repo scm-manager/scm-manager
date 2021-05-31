@@ -22,18 +22,19 @@
  * SOFTWARE.
  */
 
-package sonia.scm.security.gpg;
+package sonia.scm.security;
 
-import com.google.inject.AbstractModule;
-import sonia.scm.plugin.Extension;
-import sonia.scm.security.GPG;
-import sonia.scm.security.PublicKeyParser;
+/**
+ * Public key parser.
+ *
+ * @since 2.19.0
+ */
+public interface PublicKeyParser {
 
-@Extension
-public class GPGModule extends AbstractModule {
-  @Override
-  protected void configure() {
-    bind(GPG.class).to(DefaultGPG.class);
-    bind(PublicKeyParser.class).to(DefaultPublicKeyParser.class);
-  }
+  /**
+   * Parses the given public key.
+   * @param raw raw representation of public key
+   * @return parsed public key
+   */
+  PublicKey parse(String raw);
 }

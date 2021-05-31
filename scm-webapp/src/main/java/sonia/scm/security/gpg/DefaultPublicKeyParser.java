@@ -24,16 +24,24 @@
 
 package sonia.scm.security.gpg;
 
-import com.google.inject.AbstractModule;
-import sonia.scm.plugin.Extension;
-import sonia.scm.security.GPG;
+import sonia.scm.security.NotPublicKeyException;
+import sonia.scm.security.PublicKey;
 import sonia.scm.security.PublicKeyParser;
 
-@Extension
-public class GPGModule extends AbstractModule {
+import java.util.Collections;
+
+import static sonia.scm.ContextEntry.ContextBuilder.noContext;
+
+public class DefaultPublicKeyParser implements PublicKeyParser {
   @Override
-  protected void configure() {
-    bind(GPG.class).to(DefaultGPG.class);
-    bind(PublicKeyParser.class).to(DefaultPublicKeyParser.class);
+  public PublicKey parse(String raw) {
+    if (!raw.contains("PUBLIC KEY")) {
+      throw new NotPublicKeyException(noContext(), "The provided key is not a public key");
+    }
+
+    Keys keys = Keys.resolve(raw);
+    String master = keys.getMaster();
+
+    return new DefaultPublicKey(master, null, raw, Collections.emptySet());
   }
 }
