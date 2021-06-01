@@ -133,5 +133,19 @@
     "empty": "No notifications",
     "dismiss": "Dismiss",
     "dismissAll": "Dismiss all"
+  },
+  "duration": {
+    "ms": "{{count}} millisecond",
+    "ms_plural": "{{count}} milliseconds",
+    "s": "{{count}} second",
+    "s_plural": "{{count}} seconds",
+    "m": "{{count}} minute",
+    "m_plural": "{{count}} minutes",
+    "h": "{{count}} hour",
+    "h_plural": "{{count}} hours",
+    "d": "{{count}} day",
+    "d_plural": "{{count}} days",
+    "w": "{{count}} week",
+    "w_plural": "{{count}} weeks"
   }
 }
