@@ -63948,7 +63948,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
               </strong>
                
               <span
-                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-danger is-small"
+                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-danger is-small has-cursor-pointer"
                 onClick={[Function]}
                 title="healthCheckFailure.tooltip"
               >
@@ -64421,7 +64421,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
               </strong>
                
               <span
-                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-danger is-small"
+                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-danger is-small has-cursor-pointer"
                 onClick={[Function]}
                 title="healthCheckFailure.tooltip"
               >
@@ -79025,7 +79025,7 @@ exports[`Storyshots Tag Clickable 1`] = `
   className="Tagstories__Wrapper-wsn8kx-0 biUGWd"
 >
   <span
-    className="Tag__InnerTag-ql67az-0 hGiieq tag is-light is-normal"
+    className="Tag__InnerTag-ql67az-0 hGiieq tag is-light is-normal has-cursor-pointer"
     onClick={[Function]}
   >
     Click here

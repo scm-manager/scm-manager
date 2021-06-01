@@ -86,6 +86,7 @@ const Tag: FC<Props> = ({
         className={classNames("tag", `is-${color}`, `is-${size}`, className, {
           "is-outlined": outlined,
           "is-rounded": rounded,
+          "has-cursor-pointer": onClick,
         })}
         title={title}
         onClick={onClick}
