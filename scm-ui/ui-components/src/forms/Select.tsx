@@ -91,7 +91,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
         }
       }
     }
-  }, [field, value, name, props.onChange, props.innerRef]);
+  }, [field, value, name]);
 
   const loadingClass = loading ? "is-loading" : "";
 
