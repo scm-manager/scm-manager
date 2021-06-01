@@ -1,0 +1,2 @@
+- type: fixed
+  description: Fix annotate overflow and doubled spacing in code views ([#1678](https://github.com/scm-manager/scm-manager/pull/1678))
