@@ -30,6 +30,14 @@ import { getContentType } from "./contentType";
 import { File, Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import SwitchableMarkdownViewer from "../components/content/SwitchableMarkdownViewer";
+import styled from "styled-components";
+
+const NoSpacingSyntaxHighlighterContainer = styled.div`
+  & pre {
+    margin: 0 !important;
+    padding: 0 0 0.5rem !important;
+  }
+`;
 
 type Props = {
   repository: Repository;
@@ -52,26 +60,26 @@ class SourcesView extends React.Component<Props, State> {
     this.state = {
       contentType: "",
       language: "",
-      loaded: false
+      loaded: false,
     };
   }
 
   componentDidMount() {
     const { file } = this.props;
     getContentType(file._links.self.href)
-      .then(result => {
+      .then((result) => {
         this.setState({
           ...this.state,
           contentType: result.type,
           language: result.language,
-          loaded: true
+          loaded: true,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({
           ...this.state,
           error,
-          loaded: true
+          loaded: true,
         });
       });
   }
@@ -101,7 +109,7 @@ class SourcesView extends React.Component<Props, State> {
             file,
             contentType,
             revision,
-            basePath
+            basePath,
           }}
         >
           <DownloadViewer file={file} />
@@ -123,7 +131,7 @@ class SourcesView extends React.Component<Props, State> {
 
     const sources = this.showSources();
 
-    return <div className="panel-block">{sources}</div>;
+    return <NoSpacingSyntaxHighlighterContainer className="panel-block">{sources}</NoSpacingSyntaxHighlighterContainer>;
   }
 }
 
