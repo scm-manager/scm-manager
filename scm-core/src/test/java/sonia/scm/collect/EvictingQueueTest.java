@@ -55,11 +55,6 @@ class EvictingQueueTest {
   }
 
   @Test
-  void shouldFailWithSizeZero() {
-    assertThrows(IllegalArgumentException.class, () -> EvictingQueue.create(0));
-  }
-
-  @Test
   void shouldFailWithNegativeSize() {
     assertThrows(IllegalArgumentException.class, () -> EvictingQueue.create(-1));
   }

@@ -48,7 +48,7 @@ public final class EvictingQueue<E> extends ForwardingQueue<E> {
   }
 
   private EvictingQueue(int maxSize) {
-    Preconditions.checkArgument(maxSize > 0, "maxSize (%s) must > 0", maxSize);
+    Preconditions.checkArgument(maxSize >= 0, "maxSize (%s) must >= 0", maxSize);
     this.delegate = new ArrayDeque<>(maxSize);
     this.maxSize = maxSize;
   }
