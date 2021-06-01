@@ -63,7 +63,9 @@ import java.util.stream.Collectors;
 @OpenAPIDefinition(tags = {
   @Tag(name = "Notifications", description = "Notification related endpoints")
 })
+@Path(NotificationResource.NOTIFICATION_PATH_V2)
 public class NotificationResource {
+  static final String NOTIFICATION_PATH_V2 = "v2/me/notifications/";
 
   private final NotificationStore store;
   private final ChannelRegistry channelRegistry;
