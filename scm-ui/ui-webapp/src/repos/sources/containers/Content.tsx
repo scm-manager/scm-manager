@@ -82,7 +82,7 @@ const Content: FC<Props> = ({ file, repository, revision, path, breadcrumb, erro
   const [t] = useTranslation("repos");
   const [collapsed, setCollapsed] = useState(true);
   const [selected, setSelected] = useState<SourceViewSelection>("source");
-  const [errorFromExtension, setErrorFromExtension] = useState<Error | null>(null);
+  const [errorFromExtension, setErrorFromExtension] = useState<Error>();
 
   const wrapContent = (content: ReactNode) => {
     return (
@@ -91,17 +91,13 @@ const Content: FC<Props> = ({ file, repository, revision, path, breadcrumb, erro
           {breadcrumb}
           {content}
         </div>
-        {errorFromExtension && <ErrorNotification error={errorFromExtension} />}
+        <ErrorNotification error={errorFromExtension} />
       </>
     );
   };
 
   const toggleCollapse = () => {
     setCollapsed(!collapsed);
-  };
-
-  const handleExtensionError = (error: Error) => {
-    setErrorFromExtension(error);
   };
 
   const showHeader = (content: ReactNode) => {
@@ -140,7 +136,7 @@ const Content: FC<Props> = ({ file, repository, revision, path, breadcrumb, erro
                 repository,
                 file,
                 revision: revision ? encodeURIComponent(revision) : "",
-                handleExtensionError: handleExtensionError,
+                handleExtensionError: setErrorFromExtension,
               }}
               renderAll={true}
             />
