@@ -258,6 +258,38 @@ public class BranchRootResourceTest extends RepositoryTestBase {
   }
 
   @Test
+  public void shouldNotCreateBranchIfDirectoryAsBranchAlreadyExists() throws Exception {
+    when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(createBranch("existing_branch")));
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/branches/")
+      .content("{\"name\": \"existing_branch/abc\"}".getBytes())
+      .contentType(VndMediaType.BRANCH_REQUEST);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(409, response.getStatus());
+    verify(branchCommandBuilder, never()).branch(anyString());
+  }
+
+  @Test
+  public void shouldNotCreateBranchIfBranchWithDirectoryAlreadyExists() throws Exception {
+    when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(createBranch("existing_branch/abc")));
+
+    MockHttpRequest request = MockHttpRequest
+      .post("/" + RepositoryRootResource.REPOSITORIES_PATH_V2 + "space/repo/branches/")
+      .content("{\"name\": \"existing_branch\"}".getBytes())
+      .contentType(VndMediaType.BRANCH_REQUEST);
+    MockHttpResponse response = new MockHttpResponse();
+
+    dispatcher.invoke(request, response);
+
+    assertEquals(409, response.getStatus());
+    verify(branchCommandBuilder, never()).branch(anyString());
+  }
+
+  @Test
   public void shouldFailForMissingParentBranch() throws Exception {
     when(branchesCommandBuilder.getBranches()).thenReturn(new Branches(createBranch("existing_branch")));
 

@@ -275,7 +275,16 @@ public class BranchRootResource {
       .getBranches()
       .getBranches()
       .stream()
-      .anyMatch(branch -> branchName.equals(branch.getName()));
+      .anyMatch(branch -> branchName.equals(branch.getName())
+        || branchNamespaceAlreadyExistsInGitRepo(branchName, branch.getName(), repositoryService));
+  }
+
+  private boolean branchNamespaceAlreadyExistsInGitRepo(String branchName, String branchName2, RepositoryService repositoryService) {
+    if (repositoryService.getRepository().getType().equals("hg")) {
+      return false;
+    }
+    return (branchName.contains("/") && branchName2.equals(branchName.substring(0, branchName.indexOf("/"))))
+      || (branchName2.contains("/") && branchName.equals(branchName2.substring(0, branchName2.indexOf("/"))));
   }
 
   /**
