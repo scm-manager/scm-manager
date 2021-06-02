@@ -23,7 +23,7 @@
  */
 import React, { FC, useEffect } from "react";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { Breadcrumb, ErrorNotification, Loading, Notification } from "@scm-manager/ui-components";
+import { Breadcrumb, Loading, Notification } from "@scm-manager/ui-components";
 import FileTree from "../components/FileTree";
 import Content from "./Content";
 import CodeActionBar from "../../codeSection/components/CodeActionBar";
@@ -50,7 +50,7 @@ const useUrlParams = () => {
   const { revision, path } = useParams<Params>();
   return {
     revision: revision ? decodeURIComponent(revision) : undefined,
-    path: path || ""
+    path: path || "",
   };
 };
 
@@ -62,23 +62,25 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   // redirect to default branch is non branch selected
   useEffect(() => {
     if (branches && branches.length > 0 && !selectedBranch) {
-      const defaultBranch = branches?.filter(b => b.defaultBranch === true)[0];
+      const defaultBranch = branches?.filter((b) => b.defaultBranch === true)[0];
       history.replace(`${baseUrl}/sources/${encodeURIComponent(defaultBranch.name)}/`);
     }
   }, [branches, selectedBranch]);
-  const { isLoading, error, data: file, isFetchingNextPage, fetchNextPage } = useSources(repository, {
+  const {
+    isLoading,
+    error,
+    data: file,
+    isFetchingNextPage,
+    fetchNextPage,
+  } = useSources(repository, {
     revision,
     path,
     // we have to wait until a branch is selected,
     // expect if we have no branches (svn)
-    enabled: !branches || !!selectedBranch
+    enabled: !branches || !!selectedBranch,
   });
 
-  if (error) {
-    return <ErrorNotification error={error} />;
-  }
-
-  if (isLoading || !file) {
+  if (isLoading || (!error && !file)) {
     return <Loading />;
   }
 
@@ -98,7 +100,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
   };
 
   const evaluateSwitchViewLink = () => {
-    if (branches && selectedBranch && branches?.filter(b => b.name === selectedBranch).length !== 0) {
+    if (branches && selectedBranch && branches?.filter((b) => b.name === selectedBranch).length !== 0) {
       return `${baseUrl}/branch/${encodeURIComponent(selectedBranch)}/changesets/`;
     }
     return `${baseUrl}/changesets/`;
@@ -119,15 +121,15 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
         revision={revision || file.revision}
         path={path || ""}
         baseUrl={baseUrl + "/sources"}
-        branch={branches?.filter(b => b.name === selectedBranch)[0]}
-        defaultBranch={branches?.filter(b => b.defaultBranch === true)[0]}
+        branch={branches?.filter((b) => b.name === selectedBranch)[0]}
+        defaultBranch={branches?.filter((b) => b.defaultBranch === true)[0]}
         sources={file}
         permalink={permalink}
       />
     );
   };
 
-  if (file.directory) {
+  if (file && file.directory) {
     let body;
     if (isRootFile(file) && isEmptyDirectory(file)) {
       body = (
@@ -176,6 +178,7 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
           revision={revision || file.revision}
           path={path}
           breadcrumb={renderBreadcrumb()}
+          error={error}
         />
       </>
     );
