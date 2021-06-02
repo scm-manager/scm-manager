@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import com.google.common.annotations.Beta;
 import org.apache.commons.lang.StringUtils;
 import sonia.scm.repository.api.Credential;
 import sonia.scm.repository.api.MirrorFilter;
@@ -40,6 +41,7 @@ import static java.util.Collections.unmodifiableCollection;
 /**
  * @since 2.19.0
  */
+@Beta
 public final class MirrorCommandRequest {
 
   private String sourceUrl;

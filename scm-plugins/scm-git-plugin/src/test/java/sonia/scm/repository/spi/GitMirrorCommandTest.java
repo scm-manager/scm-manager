@@ -367,7 +367,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       existingClone.tagDelete().setTags("test-tag").call();
     }
 
-    MirrorCommandResult result = callUpdate(r -> r.setFilter(new DenyAllMirrorFilter()));
+    MirrorCommandResult result = callUpdate(REJECT_ALL);
 
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
@@ -379,6 +379,23 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       Optional<Ref> rejectedTag = findTag(updatedMirror, "test-tag");
       assertThat(rejectedTag).hasValueSatisfying(ref -> assertThat(ref.getObjectId().getName()).isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1"));
     }
+  }
+
+  @Test
+  public void shouldRejectWithCustomMessage() throws IOException, GitAPIException {
+    callMirrorCommand();
+
+    try (Git existingClone = Git.open(repositoryDirectory)) {
+      existingClone.tagDelete().setTags("test-tag").call();
+    }
+
+    MirrorCommandResult result = callUpdate(r -> r.setFilter(new DenyAllWithReasonMirrorFilter("thou shalt not pass")));
+
+    assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
+    assertThat(result.getLog()).containsExactly(
+      "Tags:",
+      "- 86a6645ec..000000000 test-tag (thou shalt not pass)"
+    );
   }
 
   @Test
@@ -518,13 +535,37 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     public Filter getFilter(FilterContext context) {
       return new Filter() {
         @Override
-        public boolean acceptBranch(BranchUpdate branch) {
-          return false;
+        public Result acceptBranch(BranchUpdate branch) {
+          return Result.reject();
         }
 
         @Override
-        public boolean acceptTag(TagUpdate tag) {
-          return false;
+        public Result acceptTag(TagUpdate tag) {
+          return Result.reject();
+        }
+      };
+    }
+  }
+
+  private static class DenyAllWithReasonMirrorFilter implements MirrorFilter {
+
+    private final String reason;
+
+    private DenyAllWithReasonMirrorFilter(String reason) {
+      this.reason = reason;
+    }
+
+    @Override
+    public Filter getFilter(FilterContext context) {
+      return new Filter() {
+        @Override
+        public Result acceptBranch(BranchUpdate branch) {
+          return Result.reject(reason);
+        }
+
+        @Override
+        public Result acceptTag(TagUpdate tag) {
+          return Result.reject(reason);
         }
       };
     }

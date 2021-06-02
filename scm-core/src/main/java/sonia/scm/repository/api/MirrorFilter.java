@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.api;
 
+import com.google.common.annotations.Beta;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.Tag;
 
@@ -32,6 +33,7 @@ import java.util.Optional;
 
 import static java.util.Collections.emptyList;
 
+@Beta
 public interface MirrorFilter {
 
   default Filter getFilter(FilterContext context) {
@@ -40,12 +42,12 @@ public interface MirrorFilter {
 
   interface Filter {
 
-    default boolean acceptBranch(BranchUpdate branch) {
-      return true;
+    default Result acceptBranch(BranchUpdate branch) {
+      return Result.accept();
     }
 
-    default boolean acceptTag(TagUpdate tag) {
-      return true;
+    default Result acceptTag(TagUpdate tag) {
+      return Result.accept();
     }
   }
 
@@ -57,6 +59,36 @@ public interface MirrorFilter {
 
     default Collection<TagUpdate> getTagUpdates() {
       return emptyList();
+    }
+  }
+
+  class Result {
+    private final boolean accepted;
+    private final String rejectReason;
+
+    private Result(boolean accepted, String rejectReason) {
+      this.accepted = accepted;
+      this.rejectReason = rejectReason;
+    }
+
+    public static Result reject(String rejectReason) {
+      return new Result(false, rejectReason);
+    }
+
+    public static Result reject() {
+      return new Result(false, null);
+    }
+
+    public static Result accept() {
+      return new Result(true, null);
+    }
+
+    public boolean isAccepted() {
+      return accepted;
+    }
+
+    public Optional<String> getRejectReason() {
+      return Optional.ofNullable(rejectReason);
     }
   }
 

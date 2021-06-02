@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.api;
 
+import com.google.common.annotations.Beta;
 import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +44,7 @@ import static java.util.Collections.emptyList;
 /**
  * @since 2.19.0
  */
+@Beta
 public final class MirrorCommandBuilder {
 
   private static final Logger LOG = LoggerFactory.getLogger(MirrorCommandBuilder.class);

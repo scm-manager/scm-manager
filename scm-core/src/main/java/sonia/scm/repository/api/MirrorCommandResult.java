@@ -24,9 +24,12 @@
 
 package sonia.scm.repository.api;
 
+import com.google.common.annotations.Beta;
+
 import java.time.Duration;
 import java.util.List;
 
+@Beta
 public final class MirrorCommandResult {
 
   private final ResultType result;

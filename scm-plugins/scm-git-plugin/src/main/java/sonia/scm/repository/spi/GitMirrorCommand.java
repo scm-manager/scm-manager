@@ -49,6 +49,7 @@ import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.MirrorCommandResult.ResultType;
 import sonia.scm.repository.api.MirrorFilter;
+import sonia.scm.repository.api.MirrorFilter.Result;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
 
@@ -165,7 +166,8 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       LoggerWithHeader logger = new LoggerWithHeader("Branches:");
       doForEachRefStartingWith(MIRROR_REF_PREFIX + "heads", ref -> {
         String branchName = ref.getLocalName().substring(MIRROR_REF_PREFIX.length() + "heads/".length());
-        if (filter.acceptBranch(filterContext.getBranchUpdate(ref.getLocalName()))) {
+        MirrorFilter.Result filterResult = filter.acceptBranch(filterContext.getBranchUpdate(ref.getLocalName()));
+        if (filterResult.isAccepted()) {
           String targetRef = "refs/heads/" + branchName;
           if (isDeletedReference(ref)) {
             LOG.trace("deleting branch ref in {}: {}", repository, targetRef);
@@ -184,7 +186,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
           if (ref.asReceiveCommand().getType() == ReceiveCommand.Type.CREATE) {
             repository.getRefDatabase().newUpdate(ref.getLocalName(), true).delete();
           }
-          logger.logChange(ref, branchName, "rejected due to filter");
+          logger.logChange(ref, branchName, filterResult.getRejectReason().orElse("rejected due to filter"));
         }
       });
     }
@@ -193,7 +195,8 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       LoggerWithHeader logger = new LoggerWithHeader("Tags:");
       doForEachRefStartingWith(MIRROR_REF_PREFIX + "tags", ref -> {
         String tagName = ref.getLocalName().substring(MIRROR_REF_PREFIX.length() + "tags/".length());
-        if (filter.acceptTag(filterContext.getTagUpdate(ref.getLocalName()))) {
+        Result filterResult = filter.acceptTag(filterContext.getTagUpdate(ref.getLocalName()));
+        if (filterResult.isAccepted()) {
           String targetRef = "refs/tags/" + tagName;
           if (isDeletedReference(ref)) {
             LOG.trace("deleting tag ref in {}: {}", repository, targetRef);
@@ -213,7 +216,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
           } else {
             updateReference(ref.getLocalName(), ref.getOldObjectId());
           }
-          logger.logChange(ref, tagName, "rejected due to filter");
+          logger.logChange(ref, tagName, filterResult.getRejectReason().orElse("rejected due to filter"));
         }
       });
     }
