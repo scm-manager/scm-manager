@@ -120,8 +120,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 000000000..fcd0ef183 added-branch (new)",
-      "Tags:"
+      "- 000000000..fcd0ef183 added-branch (new)"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -146,8 +145,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 3f76a12f0..9e93d8631 test-branch (forced)",
-      "Tags:"
+      "- 3f76a12f0..9e93d8631 test-branch (forced)"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -169,8 +167,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 3f76a12f0..000000000 test-branch (deleted)",
-      "Tags:"
+      "- 3f76a12f0..000000000 test-branch (deleted)"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -192,7 +189,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
-      "Branches:",
       "Tags:",
       "- 000000000..9e93d8631 added-tag (new)"
     );
@@ -219,7 +215,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
-      "Branches:",
       "Tags:",
       "- 86a6645ec..9e93d8631 test-tag (forced)"
     );
@@ -242,7 +237,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(result.getResult()).isEqualTo(OK);
     assertThat(result.getLog()).containsExactly(
-      "Branches:",
       "Tags:",
       "- 86a6645ec..000000000 test-tag (deleted)"
     );
@@ -266,8 +260,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 000000000..fcd0ef183 added-branch (rejected due to filter)",
-      "Tags:"
+      "- 000000000..fcd0ef183 added-branch (rejected due to filter)"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -289,8 +282,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 3f76a12f0..9e93d8631 test-branch (rejected due to filter)",
-      "Tags:"
+      "- 3f76a12f0..9e93d8631 test-branch (rejected due to filter)"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -312,8 +304,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
       "Branches:",
-      "- 3f76a12f0..000000000 test-branch (rejected due to filter)",
-      "Tags:"
+      "- 3f76a12f0..000000000 test-branch (rejected due to filter)"
     );
 
     try (Git updatedMirror = Git.open(clone)) {
@@ -335,7 +326,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
-      "Branches:",
       "Tags:",
       "- 000000000..9e93d8631 added-tag (rejected due to filter)"
     );
@@ -359,7 +349,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
-      "Branches:",
       "Tags:",
       "- 86a6645ec..9e93d8631 test-tag (rejected due to filter)"
     );
@@ -382,7 +371,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
     assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
     assertThat(result.getLog()).containsExactly(
-      "Branches:",
       "Tags:",
       "- 86a6645ec..000000000 test-tag (rejected due to filter)"
     );

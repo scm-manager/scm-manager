@@ -51,7 +51,6 @@ import sonia.scm.repository.api.MirrorCommandResult.ResultType;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.Pkcs12ClientCertificateCredential;
 import sonia.scm.repository.api.UsernamePasswordCredential;
-import sonia.scm.security.PublicKey;
 
 import javax.inject.Inject;
 import java.io.IOException;
@@ -163,7 +162,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private void handleBranches() {
-      mirrorLog.add("Branches:");
+      LoggerWithHeader logger = new LoggerWithHeader("Branches:");
       doForEachRefStartingWith(MIRROR_REF_PREFIX + "heads", ref -> {
         String branchName = ref.getLocalName().substring(MIRROR_REF_PREFIX.length() + "heads/".length());
         if (filter.acceptBranch(filterContext.getBranchUpdate(ref.getLocalName()))) {
@@ -172,11 +171,11 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
             LOG.trace("deleting branch ref in {}: {}", repository, targetRef);
             updateReference(targetRef, ref.getNewObjectId()); // without this, the following deletion might be rejected
             repository.getRefDatabase().newUpdate(targetRef, true).delete();
-            logChange(ref, branchName, "deleted");
+            logger.logChange(ref, branchName, "deleted");
           } else {
             LOG.trace("updating branch ref in {}: {}", repository, targetRef);
             updateReference(targetRef, ref.getNewObjectId());
-            logChange(ref, branchName, getUpdateType(ref));
+            logger.logChange(ref, branchName, getUpdateType(ref));
           }
         } else {
           result = REJECTED_UPDATES;
@@ -185,13 +184,13 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
           if (ref.asReceiveCommand().getType() == ReceiveCommand.Type.CREATE) {
             repository.getRefDatabase().newUpdate(ref.getLocalName(), true).delete();
           }
-          logChange(ref, branchName, "rejected due to filter");
+          logger.logChange(ref, branchName, "rejected due to filter");
         }
       });
     }
 
     private void handleTags() {
-      mirrorLog.add("Tags:");
+      LoggerWithHeader logger = new LoggerWithHeader("Tags:");
       doForEachRefStartingWith(MIRROR_REF_PREFIX + "tags", ref -> {
         String tagName = ref.getLocalName().substring(MIRROR_REF_PREFIX.length() + "tags/".length());
         if (filter.acceptTag(filterContext.getTagUpdate(ref.getLocalName()))) {
@@ -200,11 +199,11 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
             LOG.trace("deleting tag ref in {}: {}", repository, targetRef);
             updateReference(targetRef, ref.getNewObjectId()); // without this, the following deletion might be rejected
             repository.getRefDatabase().newUpdate(targetRef, true).delete();
-            logChange(ref, tagName, "deleted");
+            logger.logChange(ref, tagName, "deleted");
           } else {
             LOG.trace("updating tag ref in {}: {}", repository, targetRef);
             updateReference(targetRef, ref.getNewObjectId());
-            logChange(ref, tagName, getUpdateType(ref));
+            logger.logChange(ref, tagName, getUpdateType(ref));
           }
         } else {
           result = REJECTED_UPDATES;
@@ -214,23 +213,40 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
           } else {
             updateReference(ref.getLocalName(), ref.getOldObjectId());
           }
-          logChange(ref, tagName, "rejected due to filter");
+          logger.logChange(ref, tagName, "rejected due to filter");
         }
       });
     }
 
-    private boolean isDeletedReference(TrackingRefUpdate ref) {
-      return ref.asReceiveCommand().getType() == ReceiveCommand.Type.DELETE;
+    private class LoggerWithHeader {
+      private final String header;
+      private boolean headerWritten = false;
+
+      private LoggerWithHeader(String header) {
+        this.header = header;
+      }
+
+      void logChange(TrackingRefUpdate ref, String branchName, String type) {
+        logLine(
+          format("- %s..%s %s (%s)",
+            ref.getOldObjectId().abbreviate(9).name(),
+            ref.getNewObjectId().abbreviate(9).name(),
+            branchName,
+            type
+          ));
+      }
+
+      void logLine(String line) {
+        if (!headerWritten) {
+          headerWritten = true;
+          mirrorLog.add(header);
+        }
+        mirrorLog.add(line);
+      }
     }
 
-    private void logChange(TrackingRefUpdate ref, String branchName, String type) {
-      mirrorLog.add(
-        format("- %s..%s %s (%s)",
-          ref.getOldObjectId().abbreviate(9).name(),
-          ref.getNewObjectId().abbreviate(9).name(),
-          branchName,
-          type
-        ));
+    private boolean isDeletedReference(TrackingRefUpdate ref) {
+      return ref.asReceiveCommand().getType() == ReceiveCommand.Type.DELETE;
     }
 
     private void doForEachRefStartingWith(String prefix, RefUpdateConsumer refUpdateConsumer) {
