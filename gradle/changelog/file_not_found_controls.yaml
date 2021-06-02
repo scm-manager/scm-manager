@@ -1,0 +1,2 @@
+- type: fixed
+  description: Show source code controls even if a file is not present ([#1680](https://github.com/scm-manager/scm-manager/pull/1680))
