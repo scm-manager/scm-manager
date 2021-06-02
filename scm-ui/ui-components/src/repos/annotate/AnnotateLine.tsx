@@ -77,11 +77,11 @@ const Line = styled.div`
 
 const Metadata = styled(LineElement)`
   cursor: help;
-  width: 217px;
+  width: 15.5em;
 `;
 
 const EmptyMetadata = styled(LineElement)`
-  width: 217px;
+  width: 15.5em; // width of author + when
 `;
 
 const dispatchDeferred = (dispatch: Dispatch<Action>, action: Action) => {
@@ -104,7 +104,7 @@ const AnnotateLine: FC<Props> = ({ annotation, showAnnotation, dispatch, nr, chi
         annotation,
         line: nr,
         offset: link.current!.offsetTop,
-        type: "enter-line"
+        type: "enter-line",
       });
     }
   };
@@ -113,7 +113,7 @@ const AnnotateLine: FC<Props> = ({ annotation, showAnnotation, dispatch, nr, chi
     if (showAnnotation) {
       dispatchDeferred(dispatch, {
         line: nr,
-        type: "leave-line"
+        type: "leave-line",
       });
     }
   };

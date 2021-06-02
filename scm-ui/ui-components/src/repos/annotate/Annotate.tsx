@@ -36,6 +36,7 @@ import Popover from "./Popover";
 import AnnotateLine from "./AnnotateLine";
 import { Action } from "./actions";
 import { determineLanguage } from "../../languages";
+import styled from "styled-components";
 
 type Props = {
   source: AnnotatedSource;
@@ -53,8 +54,13 @@ type State = {
 
 const initialState = {
   onPopover: false,
-  onLine: false
+  onLine: false,
 };
+
+const NoSpacingReactSyntaxHighlighter = styled(ReactSyntaxHighlighter)`
+  margin: 0 !important;
+  padding: 0 !important;
+`;
 
 const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -67,14 +73,14 @@ const reducer = (state: State, action: Action): State => {
         offset: action.offset,
         line: action.line,
         onLine: true,
-        onPopover: false
+        onPopover: false,
       };
     }
     case "leave-line": {
       if (state.onPopover) {
         return {
           ...state,
-          onLine: false
+          onLine: false,
         };
       }
       return initialState;
@@ -82,14 +88,14 @@ const reducer = (state: State, action: Action): State => {
     case "enter-popover": {
       return {
         ...state,
-        onPopover: true
+        onPopover: true,
       };
     }
     case "leave-popover": {
       if (state.onLine) {
         return {
           ...state,
-          onPopover: false
+          onPopover: false,
         };
       }
       return initialState;
@@ -107,7 +113,7 @@ const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
         node,
         stylesheet,
         useInlineStyles,
-        key: `code-segment${i}`
+        key: `code-segment${i}`,
       });
 
       if (i + 1 < rows.length) {
@@ -144,16 +150,16 @@ const Annotate: FC<Props> = ({ source, repository, baseDate }) => {
   }, "");
 
   return (
-    <div style={{ position: "relative" }}>
+    <div className="panel-block">
       {popover}
-      <ReactSyntaxHighlighter
+      <NoSpacingReactSyntaxHighlighter
         showLineNumbers={false}
         language={determineLanguage(source.language)}
         style={highlightingTheme}
         renderer={defaultRenderer}
       >
         {code}
-      </ReactSyntaxHighlighter>
+      </NoSpacingReactSyntaxHighlighter>
     </div>
   );
 };
