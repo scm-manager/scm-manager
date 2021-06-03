@@ -445,27 +445,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     verify(filterInvokedCheck).invoked();
   }
 
-  private RevObject getRevObject(Git existingClone, String revision) throws IOException {
-    RevWalk walk = new RevWalk(existingClone.getRepository());
-    ObjectId id = existingClone.getRepository().resolve(revision);
-    return walk.parseAny(id);
-  }
-
-  private MirrorCommandResult callUpdate(Consumer<MirrorCommandRequest> requestModifier) {
-    MirrorCommandRequest request = new MirrorCommandRequest();
-    request.setSourceUrl(repositoryDirectory.getAbsolutePath());
-    requestModifier.accept(request);
-    return command.update(request);
-  }
-
-  private Optional<Ref> findBranch(Git git, String branchName) throws GitAPIException {
-    return git.branchList().call().stream().filter(ref -> ref.getName().equals("refs/heads/" + branchName)).findFirst();
-  }
-
-  private Optional<Ref> findTag(Git git, String tagName) throws GitAPIException {
-    return git.tagList().call().stream().filter(ref -> ref.getName().equals("refs/tags/" + tagName)).findFirst();
-  }
-
   @Test
   public void shouldUseCredentials() throws Exception {
     SimpleHttpServer simpleHttpServer = new SimpleHttpServer(Git.open(repositoryDirectory).getRepository());
@@ -541,6 +520,27 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
         assertThat(c.getName()).isEqualTo("test-tag");
         assertThat(c.getRevision()).isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
       });
+  }
+
+  private RevObject getRevObject(Git existingClone, String revision) throws IOException {
+    RevWalk walk = new RevWalk(existingClone.getRepository());
+    ObjectId id = existingClone.getRepository().resolve(revision);
+    return walk.parseAny(id);
+  }
+
+  private MirrorCommandResult callUpdate(Consumer<MirrorCommandRequest> requestModifier) {
+    MirrorCommandRequest request = new MirrorCommandRequest();
+    request.setSourceUrl(repositoryDirectory.getAbsolutePath());
+    requestModifier.accept(request);
+    return command.update(request);
+  }
+
+  private Optional<Ref> findBranch(Git git, String branchName) throws GitAPIException {
+    return git.branchList().call().stream().filter(ref -> ref.getName().equals("refs/heads/" + branchName)).findFirst();
+  }
+
+  private Optional<Ref> findTag(Git git, String tagName) throws GitAPIException {
+    return git.tagList().call().stream().filter(ref -> ref.getName().equals("refs/tags/" + tagName)).findFirst();
   }
 
   private MirrorCommandResult callMirrorCommand() {
