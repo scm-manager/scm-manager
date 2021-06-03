@@ -29,10 +29,14 @@ import com.google.common.base.Strings;
 import org.eclipse.jgit.api.FetchCommand;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
+import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevObject;
+import org.eclipse.jgit.revwalk.RevTag;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.ReceiveCommand;
@@ -437,8 +441,17 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       private Tag computeTag() {
         try (RevWalk revWalk = new RevWalk(repository)) {
           try {
-            RevCommit revCommit = revWalk.lookupCommit(refUpdate.getNewObjectId());
-            return gitTagConverter.buildTag(repository, revWalk, refUpdate.asReceiveCommand().getRef());
+            RevObject revObject = revWalk.parseAny(refUpdate.getNewObjectId());
+            if (revObject.getType() == Constants.OBJ_TAG) {
+              RevTag revTag = revWalk.parseTag(revObject.getId());
+              return gitTagConverter.buildTag(revTag, revWalk);
+            } else if (revObject.getType() == Constants.OBJ_COMMIT) {
+              Ref ref = repository.getRefDatabase().findRef(refUpdate.getLocalName());
+              Tag t = gitTagConverter.buildTag(repository, revWalk, ref);
+              return new Tag(tagName, t.getRevision(), t.getDate().orElse(null), t.getDeletable());
+            } else {
+              throw new InternalRepositoryException(context.getRepository(), "invalid object type for tag");
+            }
           } catch (Exception e) {
             throw new InternalRepositoryException(context.getRepository(), "got exception while validating tag", e);
           }

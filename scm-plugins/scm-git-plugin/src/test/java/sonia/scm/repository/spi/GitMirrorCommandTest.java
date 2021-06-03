@@ -37,6 +37,7 @@ import org.junit.Test;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitConfig;
+import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.SimpleUsernamePasswordCredential;
@@ -45,6 +46,8 @@ import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -505,11 +508,13 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void shouldCreateUpdateObjectForAnnotatedTag() throws IOException, GitAPIException {
+  public void shouldCreateUpdateObjectForTags() throws IOException, GitAPIException {
     try (Git updatedSource = Git.open(repositoryDirectory)) {
       RevObject revObject = getRevObject(updatedSource, "9e93d8631675a89615fac56b09209686146ff3c0");
       updatedSource.tag().setAnnotated(true).setName("42").setMessage("annotated tag").setObjectId(revObject).call();
     }
+
+    List<Tag> collectedTags = new ArrayList<>();
 
     MirrorCommandRequest request = new MirrorCommandRequest();
     request.setSourceUrl(repositoryDirectory.getAbsolutePath());
@@ -518,17 +523,24 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       public Filter getFilter(FilterContext context) {
         return new Filter() {
           @Override
-          public Result acceptTag(TagUpdate tag) {
-            assertThat(tag.getTag().getRevision()).isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0");
+          public Result acceptTag(TagUpdate tagUpdate) {
+            collectedTags.add(tagUpdate.getTag());
             return Result.accept();
           }
         };
       }
     });
 
-    MirrorCommandResult result = command.mirror(request);
-
-    assertThat(result.getLog()).contains("blöd");
+    command.mirror(request);
+    assertThat(collectedTags)
+      .anySatisfy(c -> {
+        assertThat(c.getName()).isEqualTo("42");
+        assertThat(c.getRevision()).isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0");
+      })
+      .anySatisfy(c -> {
+        assertThat(c.getName()).isEqualTo("test-tag");
+        assertThat(c.getRevision()).isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
+      });
   }
 
   private MirrorCommandResult callMirrorCommand() {

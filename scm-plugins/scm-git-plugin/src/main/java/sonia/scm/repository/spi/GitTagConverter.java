@@ -51,6 +51,18 @@ class GitTagConverter {
     this.gpg = gpg;
   }
 
+  public Tag buildTag(RevTag revTag, RevWalk revWalk) {
+    Tag tag = null;
+    try {
+      RevCommit revCommit = revWalk.parseCommit(revTag.getObject().getId());
+      tag = new Tag(revTag.getTagName(), revCommit.getId().name(), revTag.getTaggerIdent().getWhen().getTime());
+      GitUtil.getTagSignature(revTag, gpg, revWalk).ifPresent(tag::addSignature);
+    } catch (IOException ex) {
+      LOG.error("could not get commit for tag", ex);
+    }
+    return tag;
+  }
+
   public Tag buildTag(Repository repository, RevWalk revWalk, Ref ref) {
     Tag tag = null;
 
