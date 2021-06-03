@@ -46,7 +46,7 @@ import javax.net.ssl.TrustManager;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import static java.util.Collections.emptyList;
+import static java.util.Arrays.asList;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
 
@@ -88,8 +88,14 @@ public class SvnMirrorCommand extends AbstractSvnCommand implements MirrorComman
       consumer.accept(admin);
       afterUpdate = context.open().getLatestRevision();
     } catch (SVNException e) {
-      LOG.error("Could not mirror svn repository", e);
-      return new MirrorCommandResult(FAILED, emptyList(), stopwatch.stop().elapsed());
+      LOG.info("Could not mirror svn repository", e);
+      return new MirrorCommandResult(
+        FAILED,
+        asList(
+          "failed to synchronize. See following error message for more details:",
+          e.getMessage()
+        ),
+        stopwatch.stop().elapsed());
     }
     return new MirrorCommandResult(
       OK,
