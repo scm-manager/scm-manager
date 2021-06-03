@@ -216,13 +216,19 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
           result = REJECTED_UPDATES;
           LOG.trace("tag ref rejected in {}: {}", repository, ref.getLocalName());
           if (ref.getResult() == NEW) {
-            repository.getRefDatabase().newUpdate(ref.getLocalName(), true).delete();
+            deleteReference(ref);
           } else {
             updateReference(ref.getLocalName(), ref.getOldObjectId());
           }
           logger.logChange(ref, tagName, filterResult.getRejectReason().orElse("rejected due to filter"));
         }
       });
+    }
+
+    private void deleteReference(TrackingRefUpdate ref) throws IOException {
+      RefUpdate deleteRefUpdate = repository.getRefDatabase().newUpdate(ref.getLocalName(), true);
+      deleteRefUpdate.setForceUpdate(true);
+      deleteRefUpdate.delete();
     }
 
     private class LoggerWithHeader {
