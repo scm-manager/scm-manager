@@ -396,6 +396,24 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldLogExceptionsFromFilter() throws IOException, GitAPIException {
+    callMirrorCommand();
+
+    try (Git existingClone = Git.open(repositoryDirectory)) {
+      existingClone.tagDelete().setTags("test-tag").call();
+    }
+
+    MirrorCommandResult result = callUpdate(r -> r.setFilter(new ErroneousMirrorFilterThrowingExceptions()));
+
+    assertThat(result.getResult()).isEqualTo(REJECTED_UPDATES);
+    assertThat(result.getLog()).containsExactly(
+      "! got error checking filter for update: this tag creates an exception",
+      "Tags:",
+      "- 86a6645ec..000000000 test-tag (exception in filter)"
+    );
+  }
+
+  @Test
   public void shouldMarkForcedBranchUpdate() throws IOException, GitAPIException {
     callMirrorCommand();
 
@@ -599,6 +617,24 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
         @Override
         public Result acceptTag(TagUpdate tag) {
           return Result.reject(reason);
+        }
+      };
+    }
+  }
+
+  private static class ErroneousMirrorFilterThrowingExceptions implements MirrorFilter {
+
+    @Override
+    public Filter getFilter(FilterContext context) {
+      return new Filter() {
+        @Override
+        public Result acceptBranch(BranchUpdate branch) {
+          throw new RuntimeException("this branch creates an exception");
+        }
+
+        @Override
+        public Result acceptTag(TagUpdate tag) {
+          throw new RuntimeException("this tag creates an exception");
         }
       };
     }

@@ -66,6 +66,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableMap;
@@ -172,7 +173,8 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private void handleBranch(LoggerWithHeader logger, TrackingRefUpdate ref) {
-      handleRef(logger, ref, "heads/", testFilterForBranch(ref), "deleting branch ref in {}: {}", "updating branch ref in {}: {}", "branch");
+      MirrorReferenceUpdateHandler refHandler = new MirrorReferenceUpdateHandler(logger, ref, "heads/", "deleting branch ref in {}: {}", "updating branch ref in {}: {}", "branch");
+      refHandler.handleRef(ref1 -> refHandler.testFilterForBranch());
     }
 
     private void handleTags() {
@@ -181,94 +183,114 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private void handleTag(LoggerWithHeader logger, TrackingRefUpdate ref) {
-      handleRef(logger, ref, "tags/", testFilterForTag(ref), "deleting tag ref in {}: {}", "updating tag ref in {}: {}", "tag");
+      MirrorReferenceUpdateHandler refHandler = new MirrorReferenceUpdateHandler(logger, ref, "tags/", "deleting tag ref in {}: {}", "updating tag ref in {}: {}", "tag");
+      refHandler.handleRef(ref1 -> refHandler.testFilterForTag());
     }
 
-    private void handleRef(LoggerWithHeader logger,
-                           TrackingRefUpdate ref,
-                           String refType,
-                           Result result,
-                           String deleteMessage,
-                           String updateMessage,
-                           String typeForMessage) {
-      try {
-        String branchName = ref.getLocalName().substring(MIRROR_REF_PREFIX.length() + refType.length());
-        if (result.isAccepted()) {
-          handleAcceptedReference(logger, ref, branchName, "refs/" + refType, deleteMessage, updateMessage);
-        } else {
-          handleRejectedRef(logger, ref, branchName, result, typeForMessage);
+    private class MirrorReferenceUpdateHandler {
+      private final LoggerWithHeader logger;
+      private final TrackingRefUpdate ref;
+      private final String refType;
+      private final String deleteMessage;
+      private final String updateMessage;
+      private final String typeForMessage;
+
+      public MirrorReferenceUpdateHandler(LoggerWithHeader logger, TrackingRefUpdate ref, String refType, String deleteMessage, String updateMessage, String typeForMessage) {
+        this.logger = logger;
+        this.ref = ref;
+        this.refType = refType;
+        this.deleteMessage = deleteMessage;
+        this.updateMessage = updateMessage;
+        this.typeForMessage = typeForMessage;
+      }
+
+      private void handleRef(Function<TrackingRefUpdate, Result> filter) {
+        Result filterResult = filter.apply(ref);
+        try {
+          String referenceName = ref.getLocalName().substring(MIRROR_REF_PREFIX.length() + refType.length());
+          if (filterResult.isAccepted()) {
+            handleAcceptedReference(referenceName);
+          } else {
+            handleRejectedRef(referenceName, filterResult);
+          }
+        } catch (Exception e) {
+          handleReferenceUpdateException(e);
         }
-      } catch (Exception e) {
-        handleReferenceUpdateException(ref, e);
       }
-    }
 
-    private Result testFilterForBranch(TrackingRefUpdate ref) {
-      try {
-        return filter.acceptBranch(filterContext.getBranchUpdate(ref.getLocalName()));
-      } catch (Exception e) {
-        return handleExceptionFromFilter(ref, e);
+      private Result testFilterForBranch() {
+        try {
+          return filter.acceptBranch(filterContext.getBranchUpdate(ref.getLocalName()));
+        } catch (Exception e) {
+          return handleExceptionFromFilter(e);
+        }
       }
-    }
 
-    private void handleReferenceUpdateException(TrackingRefUpdate ref, Exception e) {
-      LOG.warn("got exception processing ref {} in repository {}", ref.getLocalName(), GitMirrorCommand.this.repository, e);
-      mirrorLog.add(format("got error processing reference %s: %s", ref.getLocalName(), e.getMessage()));
-      mirrorLog.add("mirror may be damaged");
-    }
-
-    private void handleRejectedRef(LoggerWithHeader logger,
-                                   TrackingRefUpdate ref,
-                                   String branchName,
-                                   Result filterResult,
-                                   String typeForMessage) throws IOException {
-      result = REJECTED_UPDATES;
-      LOG.trace("{} ref rejected in {}: {}", typeForMessage, repository, ref.getLocalName());
-      if (ref.getResult() == NEW) {
-        deleteReference(ref);
-      } else {
-        updateReference(ref.getLocalName(), ref.getOldObjectId());
+      private void handleReferenceUpdateException(Exception e) {
+        LOG.warn("got exception processing ref {} in repository {}", ref.getLocalName(), GitMirrorCommand.this.repository, e);
+        mirrorLog.add(format("got error processing reference %s: %s", ref.getLocalName(), e.getMessage()));
+        mirrorLog.add("mirror may be damaged");
       }
-      logger.logChange(ref, branchName, filterResult.getRejectReason().orElse("rejected due to filter"));
-    }
 
-    private void handleAcceptedReference(LoggerWithHeader logger,
-                                         TrackingRefUpdate ref,
-                                         String referenceName,
-                                         String referencePrefix,
-                                         String deletedLogLine,
-                                         String updatedLogLine) throws IOException {
-      String targetRef = referencePrefix + referenceName;
-      if (isDeletedReference(ref)) {
-        LOG.trace(deletedLogLine, repository, targetRef);
-        updateReference(targetRef, ref.getNewObjectId()); // without this, the following deletion might be rejected
-        repository.getRefDatabase().newUpdate(targetRef, true).delete();
-        logger.logChange(ref, referenceName, "deleted");
-      } else {
-        LOG.trace(updatedLogLine, repository, targetRef);
-        updateReference(targetRef, ref.getNewObjectId());
-        logger.logChange(ref, referenceName, getUpdateType(ref));
+      private void handleRejectedRef(String referenceName, Result filterResult) throws IOException {
+        result = REJECTED_UPDATES;
+        LOG.trace("{} ref rejected in {}: {}", typeForMessage, repository, ref.getLocalName());
+        if (ref.getResult() == NEW) {
+          deleteReference();
+        } else {
+          updateReference(ref.getLocalName(), ref.getOldObjectId());
+        }
+        logger.logChange(ref, referenceName, filterResult.getRejectReason().orElse("rejected due to filter"));
       }
-    }
 
-    private Result testFilterForTag(TrackingRefUpdate ref) {
-      try {
-        return filter.acceptTag(filterContext.getTagUpdate(ref.getLocalName()));
-      } catch (Exception e) {
-        return handleExceptionFromFilter(ref, e);
+      private void handleAcceptedReference(String referenceName) throws IOException {
+        String targetRef = "refs/" + refType + referenceName;
+        if (isDeletedReference(ref)) {
+          LOG.trace(deleteMessage, repository, targetRef);
+          updateReference(targetRef, ref.getNewObjectId()); // without this, the following deletion might be rejected
+          repository.getRefDatabase().newUpdate(targetRef, true).delete();
+          logger.logChange(ref, referenceName, "deleted");
+        } else {
+          LOG.trace(updateMessage, repository, targetRef);
+          updateReference(targetRef, ref.getNewObjectId());
+          logger.logChange(ref, referenceName, getUpdateType(ref));
+        }
       }
-    }
 
-    private Result handleExceptionFromFilter(TrackingRefUpdate ref, Exception e) {
-      LOG.warn("got exception from filter for ref {} in repository {}", ref.getLocalName(), GitMirrorCommand.this.repository, e);
-      mirrorLog.add("got error checking next filter: " + e.getMessage());
-      return Result.reject("exception in filter");
-    }
+      private Result testFilterForTag() {
+        try {
+          return filter.acceptTag(filterContext.getTagUpdate(ref.getLocalName()));
+        } catch (Exception e) {
+          return handleExceptionFromFilter(e);
+        }
+      }
 
-    private void deleteReference(TrackingRefUpdate ref) throws IOException {
-      RefUpdate deleteRefUpdate = repository.getRefDatabase().newUpdate(ref.getLocalName(), true);
-      deleteRefUpdate.setForceUpdate(true);
-      deleteRefUpdate.delete();
+      private Result handleExceptionFromFilter(Exception e) {
+        LOG.warn("got exception from filter for ref {} in repository {}", ref.getLocalName(), GitMirrorCommand.this.repository, e);
+        mirrorLog.add("! got error checking filter for update: " + e.getMessage());
+        return Result.reject("exception in filter");
+      }
+
+      private void deleteReference() throws IOException {
+        RefUpdate deleteRefUpdate = repository.getRefDatabase().newUpdate(ref.getLocalName(), true);
+        deleteRefUpdate.setForceUpdate(true);
+        deleteRefUpdate.delete();
+      }
+
+      private boolean isDeletedReference(TrackingRefUpdate ref) {
+        return ref.asReceiveCommand().getType() == ReceiveCommand.Type.DELETE;
+      }
+
+      private void updateReference(String reference, ObjectId objectId) throws IOException {
+        LOG.trace("updating ref in {}: {} -> {}", repository, reference, objectId);
+        RefUpdate refUpdate = repository.getRefDatabase().newUpdate(reference, true);
+        refUpdate.setNewObjectId(objectId);
+        refUpdate.forceUpdate();
+      }
+
+      private String getUpdateType(TrackingRefUpdate trackingRefUpdate) {
+        return trackingRefUpdate.getResult().name().toLowerCase(Locale.ENGLISH);
+      }
     }
 
     private class LoggerWithHeader {
@@ -298,10 +320,6 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
     }
 
-    private boolean isDeletedReference(TrackingRefUpdate ref) {
-      return ref.asReceiveCommand().getType() == ReceiveCommand.Type.DELETE;
-    }
-
     private void doForEachRefStartingWith(String prefix, RefUpdateConsumer refUpdateConsumer) {
       fetchResult.getTrackingRefUpdates()
         .stream()
@@ -313,13 +331,6 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
             throw new InternalRepositoryException(GitMirrorCommand.this.repository, "error updating mirror references", e);
           }
         });
-    }
-
-    private void updateReference(String reference, ObjectId objectId) throws IOException {
-      LOG.trace("updating ref in {}: {} -> {}", repository, reference, objectId);
-      RefUpdate refUpdate = repository.getRefDatabase().newUpdate(reference, true);
-      refUpdate.setNewObjectId(objectId);
-      refUpdate.forceUpdate();
     }
 
     private FetchCommand createFetchCommand() {
@@ -348,30 +359,26 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       return fetchCommand;
     }
 
-    private String getUpdateType(TrackingRefUpdate trackingRefUpdate) {
-      return trackingRefUpdate.getResult().name().toLowerCase(Locale.ENGLISH);
-    }
-
     private class GitFilterContext implements MirrorFilter.FilterContext {
 
       private final Map<String, MirrorFilter.BranchUpdate> branchUpdates;
       private final Map<String, MirrorFilter.TagUpdate> tagUpdates;
 
       public GitFilterContext() {
-        Map<String, MirrorFilter.BranchUpdate> branchUpdates = new HashMap<>();
-        Map<String, MirrorFilter.TagUpdate> tagUpdates = new HashMap<>();
+        Map<String, MirrorFilter.BranchUpdate> extractedBranchUpdates = new HashMap<>();
+        Map<String, MirrorFilter.TagUpdate> extractedTagUpdates = new HashMap<>();
 
         fetchResult.getTrackingRefUpdates().forEach(refUpdate -> {
           if (refUpdate.getLocalName().startsWith(MIRROR_REF_PREFIX + "heads")) {
-            branchUpdates.put(refUpdate.getLocalName(), new GitBranchUpdate(refUpdate));
+            extractedBranchUpdates.put(refUpdate.getLocalName(), new GitBranchUpdate(refUpdate));
           }
           if (refUpdate.getLocalName().startsWith(MIRROR_REF_PREFIX + "tags")) {
-            tagUpdates.put(refUpdate.getLocalName(), new GitTagUpdate(refUpdate));
+            extractedTagUpdates.put(refUpdate.getLocalName(), new GitTagUpdate(refUpdate));
           }
         });
 
-        this.branchUpdates = unmodifiableMap(branchUpdates);
-        this.tagUpdates = unmodifiableMap(tagUpdates);
+        this.branchUpdates = unmodifiableMap(extractedBranchUpdates);
+        this.tagUpdates = unmodifiableMap(extractedTagUpdates);
       }
 
       @Override
