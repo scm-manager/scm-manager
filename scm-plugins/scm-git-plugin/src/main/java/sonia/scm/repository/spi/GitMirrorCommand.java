@@ -437,6 +437,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       private Tag computeTag() {
         try (RevWalk revWalk = new RevWalk(repository)) {
           try {
+            RevCommit revCommit = revWalk.lookupCommit(refUpdate.getNewObjectId());
             return gitTagConverter.buildTag(repository, revWalk, refUpdate.asReceiveCommand().getRef());
           } catch (Exception e) {
             throw new InternalRepositoryException(context.getRepository(), "got exception while validating tag", e);

@@ -51,7 +51,7 @@ class GitTagConverter {
     this.gpg = gpg;
   }
 
-  public Tag buildTag(Repository repository, RevWalk revWalk,Ref ref) {
+  public Tag buildTag(Repository repository, RevWalk revWalk, Ref ref) {
     Tag tag = null;
 
     try {

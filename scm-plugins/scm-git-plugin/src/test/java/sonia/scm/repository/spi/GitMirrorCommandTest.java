@@ -35,12 +35,12 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.junit.Before;
 import org.junit.Test;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
-import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.SimpleUsernamePasswordCredential;
+import sonia.scm.security.GPG;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
 import java.io.File;
@@ -55,7 +55,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.REJECTED_UPDATES;
@@ -67,17 +66,12 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   public static final Consumer<MirrorCommandRequest> REJECT_ALL = r -> r.setFilter(new DenyAllMirrorFilter());
   private final PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory = mock(PostReceiveRepositoryHookEventFactory.class);
   private final MirrorHttpConnectionProvider mirrorHttpConnectionProvider = mock(MirrorHttpConnectionProvider.class);
-  private final GitChangesetConverterFactory gitChangesetConverterFactory = mock(GitChangesetConverterFactory.class);
-  private final GitChangesetConverter gitChangesetConverter = mock(GitChangesetConverter.class);
-  private final GitTagConverter gitTagConverter = mock(GitTagConverter.class);
+  private final GPG gpg = mock(GPG.class);
+  private final GitChangesetConverterFactory gitChangesetConverterFactory = new GitChangesetConverterFactory(gpg);
+  private final GitTagConverter gitTagConverter = new GitTagConverter(gpg);
 
   private File clone;
   private GitMirrorCommand command;
-
-  @Before
-  public void initChangesetConverter() {
-    when(gitChangesetConverterFactory.create(any(), any())).thenReturn(gitChangesetConverter);
-  }
 
   @Before
   public void bendContextToNewRepository() throws IOException, GitAPIException {
@@ -181,7 +175,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     callMirrorCommand();
 
     try (Git existingClone = Git.open(repositoryDirectory)) {
-      RevObject revObject = getRevObject(existingClone);
+      RevObject revObject = getRevObject(existingClone, "9e93d8631675a89615fac56b09209686146ff3c0");
       existingClone.tag().setName("added-tag").setAnnotated(false).setObjectId(revObject).call();
     }
 
@@ -207,7 +201,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     callMirrorCommand();
 
     try (Git existingClone = Git.open(repositoryDirectory)) {
-      RevObject revObject = getRevObject(existingClone);
+      RevObject revObject = getRevObject(existingClone, "9e93d8631675a89615fac56b09209686146ff3c0");
       existingClone.tag().setName("test-tag").setObjectId(revObject).setForceUpdate(true).setAnnotated(false).call();
     }
 
@@ -318,7 +312,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     callMirrorCommand();
 
     try (Git existingClone = Git.open(repositoryDirectory)) {
-      RevObject revObject = getRevObject(existingClone);
+      RevObject revObject = getRevObject(existingClone, "9e93d8631675a89615fac56b09209686146ff3c0");
       existingClone.tag().setName("added-tag").setAnnotated(false).setObjectId(revObject).call();
     }
 
@@ -341,7 +335,7 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     callMirrorCommand();
 
     try (Git existingClone = Git.open(repositoryDirectory)) {
-      RevObject revObject = getRevObject(existingClone);
+      RevObject revObject = getRevObject(existingClone, "9e93d8631675a89615fac56b09209686146ff3c0");
       existingClone.tag().setName("test-tag").setObjectId(revObject).setForceUpdate(true).setAnnotated(false).call();
     }
 
@@ -448,9 +442,9 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     verify(filterInvokedCheck).invoked();
   }
 
-  private RevObject getRevObject(Git existingClone) throws IOException {
+  private RevObject getRevObject(Git existingClone, String revision) throws IOException {
     RevWalk walk = new RevWalk(existingClone.getRepository());
-    ObjectId id = existingClone.getRepository().resolve("9e93d8631675a89615fac56b09209686146ff3c0");
+    ObjectId id = existingClone.getRepository().resolve(revision);
     return walk.parseAny(id);
   }
 
@@ -508,6 +502,33 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     } finally {
       simpleHttpServer.stop();
     }
+  }
+
+  @Test
+  public void shouldCreateUpdateObjectForAnnotatedTag() throws IOException, GitAPIException {
+    try (Git updatedSource = Git.open(repositoryDirectory)) {
+      RevObject revObject = getRevObject(updatedSource, "9e93d8631675a89615fac56b09209686146ff3c0");
+      updatedSource.tag().setAnnotated(true).setName("42").setMessage("annotated tag").setObjectId(revObject).call();
+    }
+
+    MirrorCommandRequest request = new MirrorCommandRequest();
+    request.setSourceUrl(repositoryDirectory.getAbsolutePath());
+    request.setFilter(new MirrorFilter() {
+      @Override
+      public Filter getFilter(FilterContext context) {
+        return new Filter() {
+          @Override
+          public Result acceptTag(TagUpdate tag) {
+            assertThat(tag.getTag().getRevision()).isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0");
+            return Result.accept();
+          }
+        };
+      }
+    });
+
+    MirrorCommandResult result = command.mirror(request);
+
+    assertThat(result.getLog()).contains("blöd");
   }
 
   private MirrorCommandResult callMirrorCommand() {
