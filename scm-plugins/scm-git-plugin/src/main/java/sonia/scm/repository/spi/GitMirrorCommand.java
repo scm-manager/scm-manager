@@ -173,7 +173,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private void handleBranch(LoggerWithHeader logger, TrackingRefUpdate ref) {
-      MirrorReferenceUpdateHandler refHandler = new MirrorReferenceUpdateHandler(logger, ref, "heads/", "deleting branch ref in {}: {}", "updating branch ref in {}: {}", "branch");
+      MirrorReferenceUpdateHandler refHandler = new MirrorReferenceUpdateHandler(logger, ref, "heads/", "branch");
       refHandler.handleRef(ref1 -> refHandler.testFilterForBranch());
     }
 
@@ -183,7 +183,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private void handleTag(LoggerWithHeader logger, TrackingRefUpdate ref) {
-      MirrorReferenceUpdateHandler refHandler = new MirrorReferenceUpdateHandler(logger, ref, "tags/", "deleting tag ref in {}: {}", "updating tag ref in {}: {}", "tag");
+      MirrorReferenceUpdateHandler refHandler = new MirrorReferenceUpdateHandler(logger, ref, "tags/", "tag");
       refHandler.handleRef(ref1 -> refHandler.testFilterForTag());
     }
 
@@ -191,17 +191,13 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       private final LoggerWithHeader logger;
       private final TrackingRefUpdate ref;
       private final String refType;
-      private final String deleteMessage;
-      private final String updateMessage;
-      private final String typeForMessage;
+      private final String typeForLog;
 
-      public MirrorReferenceUpdateHandler(LoggerWithHeader logger, TrackingRefUpdate ref, String refType, String deleteMessage, String updateMessage, String typeForMessage) {
+      public MirrorReferenceUpdateHandler(LoggerWithHeader logger, TrackingRefUpdate ref, String refType, String typeForLog) {
         this.logger = logger;
         this.ref = ref;
         this.refType = refType;
-        this.deleteMessage = deleteMessage;
-        this.updateMessage = updateMessage;
-        this.typeForMessage = typeForMessage;
+        this.typeForLog = typeForLog;
       }
 
       private void handleRef(Function<TrackingRefUpdate, Result> filter) {
@@ -234,9 +230,9 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       private void handleRejectedRef(String referenceName, Result filterResult) throws IOException {
         result = REJECTED_UPDATES;
-        LOG.trace("{} ref rejected in {}: {}", typeForMessage, repository, ref.getLocalName());
+        LOG.trace("{} ref rejected in {}: {}", typeForLog, repository, ref.getLocalName());
         if (ref.getResult() == NEW) {
-          deleteReference();
+          deleteReference(ref.getLocalName());
         } else {
           updateReference(ref.getLocalName(), ref.getOldObjectId());
         }
@@ -246,12 +242,11 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       private void handleAcceptedReference(String referenceName) throws IOException {
         String targetRef = "refs/" + refType + referenceName;
         if (isDeletedReference(ref)) {
-          LOG.trace(deleteMessage, repository, targetRef);
-          updateReference(targetRef, ref.getNewObjectId()); // without this, the following deletion might be rejected
-          repository.getRefDatabase().newUpdate(targetRef, true).delete();
+          LOG.trace("deleting {} ref in {}: {}", typeForLog, repository, targetRef);
+          deleteReference(targetRef);
           logger.logChange(ref, referenceName, "deleted");
         } else {
-          LOG.trace(updateMessage, repository, targetRef);
+          LOG.trace("updating {} ref in {}: {}", typeForLog, repository, targetRef);
           updateReference(targetRef, ref.getNewObjectId());
           logger.logChange(ref, referenceName, getUpdateType(ref));
         }
@@ -271,10 +266,10 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         return Result.reject("exception in filter");
       }
 
-      private void deleteReference() throws IOException {
-        RefUpdate deleteRefUpdate = repository.getRefDatabase().newUpdate(ref.getLocalName(), true);
-        deleteRefUpdate.setForceUpdate(true);
-        deleteRefUpdate.delete();
+      private void deleteReference(String targetRef) throws IOException {
+        RefUpdate deleteUpdate = repository.getRefDatabase().newUpdate(targetRef, true);
+        deleteUpdate.setForceUpdate(true);
+        deleteUpdate.delete();
       }
 
       private boolean isDeletedReference(TrackingRefUpdate ref) {
