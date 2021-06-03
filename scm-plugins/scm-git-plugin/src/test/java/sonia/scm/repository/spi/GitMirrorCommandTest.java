@@ -105,6 +105,16 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
+  public void shouldCreateEmptyLogWhenNoChangesFound() {
+    callMirrorCommand();
+
+    MirrorCommandResult result = callUpdate(ACCEPT_ALL);
+
+    assertThat(result.getResult()).isEqualTo(OK);
+    assertThat(result.getLog()).containsExactly("No updates found");
+  }
+
+  @Test
   public void shouldUpdateMirrorWithNewBranch() throws IOException, GitAPIException {
     callMirrorCommand();
 

@@ -160,8 +160,12 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       filterContext = new GitFilterContext();
       filter = mirrorCommandRequest.getFilter().getFilter(filterContext);
 
-      handleBranches();
-      handleTags();
+      if (fetchResult.getTrackingRefUpdates().isEmpty()) {
+        mirrorLog.add("No updates found");
+      } else {
+        handleBranches();
+        handleTags();
+      }
 
       postReceiveRepositoryHookEventFactory.fireForFetch(git, fetchResult);
       return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed());
@@ -230,7 +234,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       private void handleRejectedRef(String referenceName, Result filterResult) throws IOException {
         result = REJECTED_UPDATES;
-        LOG.trace("{} ref rejected in {}: {}", typeForLog, repository, ref.getLocalName());
+        LOG.trace("{} ref rejected in {}: {}", typeForLog, GitMirrorCommand.this.repository, ref.getLocalName());
         if (ref.getResult() == NEW) {
           deleteReference(ref.getLocalName());
         } else {
@@ -242,11 +246,11 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       private void handleAcceptedReference(String referenceName) throws IOException {
         String targetRef = "refs/" + refType + referenceName;
         if (isDeletedReference(ref)) {
-          LOG.trace("deleting {} ref in {}: {}", typeForLog, repository, targetRef);
+          LOG.trace("deleting {} ref in {}: {}", typeForLog, GitMirrorCommand.this.repository, targetRef);
           deleteReference(targetRef);
           logger.logChange(ref, referenceName, "deleted");
         } else {
-          LOG.trace("updating {} ref in {}: {}", typeForLog, repository, targetRef);
+          LOG.trace("updating {} ref in {}: {}", typeForLog, GitMirrorCommand.this.repository, targetRef);
           updateReference(targetRef, ref.getNewObjectId());
           logger.logChange(ref, referenceName, getUpdateType(ref));
         }
@@ -277,7 +281,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       private void updateReference(String reference, ObjectId objectId) throws IOException {
-        LOG.trace("updating ref in {}: {} -> {}", repository, reference, objectId);
+        LOG.trace("updating ref in {}: {} -> {}", GitMirrorCommand.this.repository, reference, objectId);
         RefUpdate refUpdate = repository.getRefDatabase().newUpdate(reference, true);
         refUpdate.setNewObjectId(objectId);
         refUpdate.forceUpdate();
