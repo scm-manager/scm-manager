@@ -92,14 +92,20 @@ public interface MirrorFilter {
     }
   }
 
+  enum UpdateType {
+    CREATE, DELETE, UPDATE
+  }
+
   interface BranchUpdate {
     String getBranchName();
 
-    Changeset getChangeset();
+    Optional<Changeset> getChangeset();
 
-    String getNewRevision();
+    Optional<String> getNewRevision();
 
     Optional<String> getOldRevision();
+
+    Optional<UpdateType> getUpdateType();
 
     boolean isForcedUpdate();
   }
@@ -107,8 +113,12 @@ public interface MirrorFilter {
   interface TagUpdate {
     String getTagName();
 
-    Tag getTag();
+    Optional<Tag> getTag();
+
+    Optional<String> getNewRevision();
 
     Optional<String> getOldRevision();
+
+    Optional<UpdateType> getUpdateType();
   }
 }
