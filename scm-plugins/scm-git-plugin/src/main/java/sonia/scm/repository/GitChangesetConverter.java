@@ -35,7 +35,6 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.RawParseUtils;
-import sonia.scm.security.GPG;
 import sonia.scm.security.PublicKey;
 import sonia.scm.util.Util;
 
@@ -56,11 +55,11 @@ import java.util.Optional;
  */
 public class GitChangesetConverter implements Closeable {
 
-  private final GPG gpg;
+  private final GPGSignatureResolver gpg;
   private final Multimap<ObjectId, String> tags;
   private final TreeWalk treeWalk;
 
-  public GitChangesetConverter(GPG gpg, org.eclipse.jgit.lib.Repository repository, RevWalk revWalk) {
+  GitChangesetConverter(GPGSignatureResolver gpg, org.eclipse.jgit.lib.Repository repository, RevWalk revWalk) {
     this.gpg = gpg;
     this.tags = GitUtil.createTagMap(repository, revWalk);
     this.treeWalk = new TreeWalk(repository);

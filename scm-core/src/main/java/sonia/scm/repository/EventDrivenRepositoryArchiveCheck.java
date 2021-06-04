@@ -25,6 +25,7 @@
 package sonia.scm.repository;
 
 import com.github.legman.Subscribe;
+import sonia.scm.plugin.Extension;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -35,6 +36,7 @@ import java.util.HashSet;
  * {@link RepositoryModificationEvent}s. The initial set of archived repositories is read by
  * {@link EventDrivenRepositoryArchiveCheckInitializer} on startup.
  */
+@Extension
 public final class EventDrivenRepositoryArchiveCheck implements RepositoryArchivedCheck {
 
   private static final Collection<String> ARCHIVED_REPOSITORIES = Collections.synchronizedSet(new HashSet<>());

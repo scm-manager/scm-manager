@@ -29,10 +29,11 @@ import {
   AnnotationFactory,
   AnnotationFactoryContext,
   DiffEventHandler,
-  DiffEventContext
+  DiffEventContext,
 } from "./DiffTypes";
 
 import { FileDiff as File, FileChangeType, Hunk, Change, ChangeType } from "@scm-manager/ui-types";
+
 export { diffs };
 
 export * from "./annotate";
@@ -46,6 +47,7 @@ export { default as LoadingDiff } from "./LoadingDiff";
 export { DefaultCollapsed, DefaultCollapsedFunction } from "./defaultCollapsed";
 export { default as RepositoryAvatar } from "./RepositoryAvatar";
 export { default as RepositoryEntry } from "./RepositoryEntry";
+export { default as RepositoryFlag } from "./RepositoryFlag";
 export { default as RepositoryEntryLink } from "./RepositoryEntryLink";
 export { default as JumpToFileButton } from "./JumpToFileButton";
 export { default as CommitAuthor } from "./CommitAuthor";
@@ -61,5 +63,5 @@ export {
   AnnotationFactory,
   AnnotationFactoryContext,
   DiffEventHandler,
-  DiffEventContext
+  DiffEventContext,
 };

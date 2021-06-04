@@ -32,6 +32,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.AfterEachCallback;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.InvocationInterceptor;
@@ -40,6 +41,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.function.BooleanSupplier;
 
 import static java.util.Collections.singletonList;
@@ -117,12 +119,14 @@ class RepositoryPermissionGuardTest {
 
       @BeforeEach
       void mockArchivedRepository() {
+        RepositoryPermissionGuard.setReadOnlyChecks(Collections.singleton(new EventDrivenRepositoryArchiveCheck()));
         EventDrivenRepositoryArchiveCheck.setAsArchived("1");
       }
 
       @AfterEach
       void removeArchiveFlag() {
         EventDrivenRepositoryArchiveCheck.removeFromArchived("1");
+        RepositoryPermissionGuard.setReadOnlyChecks(Collections.emptySet());
       }
 
       @Test
@@ -174,12 +178,14 @@ class RepositoryPermissionGuardTest {
     }
   }
 
-  private static class WrapInExportCheck implements InvocationInterceptor {
+  private static class WrapInExportCheck implements InvocationInterceptor, AfterEachCallback {
 
     public void interceptTestMethod(Invocation<Void> invocation,
                                     ReflectiveInvocationContext<Method> invocationContext,
                                     ExtensionContext extensionContext) {
-      new DefaultRepositoryExportingCheck().withExportingLock(new Repository("1", "git", "space", "X"), () -> {
+      DefaultRepositoryExportingCheck check = new DefaultRepositoryExportingCheck();
+      RepositoryPermissionGuard.setReadOnlyChecks(Collections.singleton(check));
+      check.withExportingLock(new Repository("1", "git", "space", "X"), () -> {
         try {
           invocation.proceed();
           return null;
@@ -187,6 +193,11 @@ class RepositoryPermissionGuardTest {
           throw new RuntimeException(t);
         }
       });
+    }
+
+    @Override
+    public void afterEach(ExtensionContext context) {
+      RepositoryPermissionGuard.setReadOnlyChecks(Collections.emptySet());
     }
   }
 }

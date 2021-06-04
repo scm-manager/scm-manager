@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.protocolcommand.git;
 
 import org.eclipse.jgit.lib.Repository;
@@ -32,6 +32,8 @@ import sonia.scm.protocolcommand.RepositoryContext;
 public class ScmUploadPackFactory implements UploadPackFactory<RepositoryContext> {
   @Override
   public UploadPack create(RepositoryContext repositoryContext, Repository repository) {
-    return new UploadPack(repository);
+    UploadPack uploadPack = new UploadPack(repository);
+    uploadPack.setRefFilter(MirrorRefFilter::filterMirrors);
+    return uploadPack;
   }
 }

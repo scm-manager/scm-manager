@@ -56,7 +56,7 @@ export default class TagGroup extends React.Component<Props> {
           return (
             <div className="control" key={key}>
               <div className="tags has-addons">
-                <Tag color="info is-outlined" label={item.displayName} onRemove={() => this.removeEntry(item)} />
+                <Tag color="info" outlined={true} label={item.displayName} onRemove={() => this.removeEntry(item)} />
               </div>
             </div>
           );
@@ -66,7 +66,7 @@ export default class TagGroup extends React.Component<Props> {
   }
 
   removeEntry = (item: DisplayedUser) => {
-    const newItems = this.props.items.filter(name => name !== item);
+    const newItems = this.props.items.filter((name) => name !== item);
     this.props.onRemove(newItems);
   };
 }

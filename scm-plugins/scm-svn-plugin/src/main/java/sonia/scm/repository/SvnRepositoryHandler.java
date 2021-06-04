@@ -24,8 +24,6 @@
 
 package sonia.scm.repository;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import com.google.inject.Inject;
 import com.google.inject.Singleton;
 import org.slf4j.Logger;
@@ -50,40 +48,28 @@ import java.io.IOException;
 
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
- *
  * @author Sebastian Sdorra
  */
 @Singleton
 @Extension
-public class SvnRepositoryHandler
-  extends AbstractSimpleRepositoryHandler<SvnConfig>
-{
+public class SvnRepositoryHandler extends AbstractSimpleRepositoryHandler<SvnConfig> {
 
   public static final String PROPERTY_UUID = "svn.uuid";
-
   public static final String RESOURCE_VERSION = "sonia/scm/version/scm-svn-plugin";
-
   public static final String TYPE_DISPLAYNAME = "Subversion";
-
   public static final String TYPE_NAME = "svn";
 
-  public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME,
-                                    TYPE_DISPLAYNAME,
-                                    SvnRepositoryServiceProvider.COMMANDS);
+  public static final RepositoryType TYPE = new RepositoryType(TYPE_NAME, TYPE_DISPLAYNAME, SvnRepositoryServiceProvider.COMMANDS);
 
-  private static final Logger logger =
-    LoggerFactory.getLogger(SvnRepositoryHandler.class);
+  private static final Logger LOG = LoggerFactory.getLogger(SvnRepositoryHandler.class);
   private SvnRepositoryHook hook;
 
   @Inject
   public SvnRepositoryHandler(ConfigurationStoreFactory storeFactory,
                               HookEventFacade eventFacade,
                               RepositoryLocationResolver repositoryLocationResolver,
-                              PluginLoader pluginLoader)
-  {
+                              PluginLoader pluginLoader) {
     super(storeFactory, repositoryLocationResolver, pluginLoader);
 
     // register logger
@@ -93,116 +79,95 @@ public class SvnRepositoryHandler
     FSRepositoryFactory.setup();
 
     // register hook
-    if (eventFacade != null)
-    {
+    if (eventFacade != null) {
       hook = new SvnRepositoryHook(eventFacade, this);
       FSHooks.registerHook(hook);
-    }
-    else if (logger.isWarnEnabled())
-    {
-      logger.warn(
+    } else if (LOG.isWarnEnabled()) {
+      LOG.warn(
         "unable to register hook, beacause of missing repositorymanager");
     }
   }
 
   @Override
-  public ImportHandler getImportHandler()
-  {
+  public ImportHandler getImportHandler() {
     return new SvnImportHandler(this);
   }
 
   @Override
-  public RepositoryType getType()
-  {
+  public RepositoryType getType() {
     return TYPE;
   }
 
   @Override
-  public String getVersionInformation()
-  {
+  public String getVersionInformation() {
     return getStringFromResource(RESOURCE_VERSION, DEFAULT_VERSION_INFORMATION);
   }
 
   @Override
   protected void create(Repository repository, File directory) throws InternalRepositoryException {
-    Compatibility comp = config.getCompatibility();
-
-    if (logger.isDebugEnabled())
-    {
-      StringBuilder log = new StringBuilder("create svn repository \"");
-
-      log.append(directory.getName()).append("\": pre14Compatible=");
-      log.append(comp.isPre14Compatible()).append(", pre15Compatible=");
-      log.append(comp.isPre15Compatible()).append(", pre16Compatible=");
-      log.append(comp.isPre16Compatible()).append(", pre17Compatible=");
-      log.append(comp.isPre17Compatible()).append(", with17Compatible=");
-      log.append(comp.isWith17Compatible());
-      logger.debug(log.toString());
-    }
 
     SVNRepository svnRepository = null;
 
-    try
-    {
-      SVNURL url = SVNRepositoryFactory.createLocalRepository(directory, null,
-                     true, false, comp.isPre14Compatible(),
-                     comp.isPre15Compatible(), comp.isPre16Compatible(),
-                     comp.isPre17Compatible(), comp.isWith17Compatible());
+    try {
+      SVNURL url = createSvnUrl(directory);
 
       svnRepository = SVNRepositoryFactory.create(url);
 
       String uuid = svnRepository.getRepositoryUUID(true);
 
-      if (Util.isNotEmpty(uuid))
-      {
-        if (logger.isDebugEnabled())
-        {
-          logger.debug("store repository uuid {} for {}", uuid,
+      if (Util.isNotEmpty(uuid)) {
+        if (LOG.isDebugEnabled()) {
+          LOG.debug("store repository uuid {} for {}", uuid,
             repository.getName());
         }
 
         repository.setProperty(PROPERTY_UUID, uuid);
-      }
-      else if (logger.isWarnEnabled())
-      {
-        logger.warn("could not read repository uuid for {}",
+      } else if (LOG.isWarnEnabled()) {
+        LOG.warn("could not read repository uuid for {}",
           repository.getName());
       }
-    }
-    catch (SVNException ex)
-    {
-      logger.error("could not create svn repository", ex);
-      throw new InternalRepositoryException(entity(repository), "could not create repository", ex);
-    }
-    finally
-    {
+    } catch (SVNException ex) {
+      throw new InternalRepositoryException(repository, "could not create repository", ex);
+    } finally {
       SvnUtil.closeSession(svnRepository);
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
+  public SVNURL createSvnUrl(File directory) {
+    Compatibility comp = config.getCompatibility();
+
+    if (LOG.isDebugEnabled()) {
+
+      LOG.debug("create svn repository \"{}\": " +
+          "pre14Compatible={}, " +
+          "pre15Compatible={}, " +
+          "pre16Compatible={}, " +
+          "pre17Compatible={}, " +
+          "with17Compatible={}",
+        directory.getName(),
+        comp.isPre14Compatible(),
+        comp.isPre15Compatible(),
+        comp.isPre16Compatible(),
+        comp.isPre17Compatible(),
+        comp.isWith17Compatible());
+    }
+    try {
+      return SVNRepositoryFactory.createLocalRepository(directory, null,
+        true, false, comp.isPre14Compatible(),
+        comp.isPre15Compatible(), comp.isPre16Compatible(),
+        comp.isPre17Compatible(), comp.isWith17Compatible());
+    } catch (SVNException ex) {
+      throw new InternalRepositoryException(entity(File.class, directory.toString()), "could not create svn url", ex);
+    }
+  }
+
   @Override
-  protected SvnConfig createInitialConfig()
-  {
+  protected SvnConfig createInitialConfig() {
     return new SvnConfig();
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  protected Class<SvnConfig> getConfigClass()
-  {
+  protected Class<SvnConfig> getConfigClass() {
     return SvnConfig.class;
   }
 

@@ -31,20 +31,25 @@ import sonia.scm.repository.SvnRepositoryHandler;
 import sonia.scm.repository.SvnWorkingCopyFactory;
 import sonia.scm.repository.api.HookContextFactory;
 
+import javax.net.ssl.TrustManager;
+
 @Extension
 public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
 
   private final SvnRepositoryHandler handler;
   private final SvnWorkingCopyFactory workingCopyFactory;
   private final HookContextFactory hookContextFactory;
+  private final TrustManager trustManager;
 
   @Inject
   public SvnRepositoryServiceResolver(SvnRepositoryHandler handler,
                                       SvnWorkingCopyFactory workingCopyFactory,
-                                      HookContextFactory hookContextFactory) {
+                                      HookContextFactory hookContextFactory,
+                                      TrustManager trustManager) {
     this.handler = handler;
     this.workingCopyFactory = workingCopyFactory;
     this.hookContextFactory = hookContextFactory;
+    this.trustManager = trustManager;
   }
 
   @Override
@@ -52,7 +57,7 @@ public class SvnRepositoryServiceResolver implements RepositoryServiceResolver {
     SvnRepositoryServiceProvider provider = null;
 
     if (SvnRepositoryHandler.TYPE_NAME.equalsIgnoreCase(repository.getType())) {
-      provider = new SvnRepositoryServiceProvider(handler, repository, workingCopyFactory, hookContextFactory);
+      provider = new SvnRepositoryServiceProvider(handler, repository, workingCopyFactory, hookContextFactory, trustManager);
     }
 
     return provider;

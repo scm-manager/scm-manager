@@ -29,7 +29,7 @@ package sonia.scm.repository;
  *
  * @since 2.12.0
  */
-public interface RepositoryArchivedCheck {
+public interface RepositoryArchivedCheck extends ReadOnlyCheck {
 
   /**
    * Checks whether the repository with the given id is archived or not.
@@ -46,5 +46,29 @@ public interface RepositoryArchivedCheck {
    */
   default boolean isArchived(Repository repository) {
     return isArchived(repository.getId());
+  }
+
+  @Override
+  default boolean isReadOnly(String repositoryId) {
+    return isArchived(repositoryId);
+  }
+
+  @Override
+  default String getReason() {
+    return "repository is archived";
+  }
+
+  @Override
+  default void check(Repository repository) {
+    if (repository.isArchived() || isArchived(repository)) {
+      throw new RepositoryArchivedException(repository);
+    }
+  }
+
+  @Override
+  default void check(String repositoryId) {
+    if (isArchived(repositoryId)) {
+      throw new RepositoryArchivedException(repositoryId);
+    }
   }
 }

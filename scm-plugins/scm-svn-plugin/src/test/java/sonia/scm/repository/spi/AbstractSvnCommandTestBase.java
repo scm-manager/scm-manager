@@ -24,78 +24,36 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.junit.After;
 
 import java.io.IOException;
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class AbstractSvnCommandTestBase extends ZippedRepositoryTestBase
-{
+public class AbstractSvnCommandTestBase extends ZippedRepositoryTestBase {
 
-  /**
-   * Method description
-   *
-   *
-   * @throws IOException
-   */
   @After
-  public void close() throws IOException
-  {
-    if (context != null)
-    {
+  public void close() throws IOException {
+    if (context != null) {
       context.close();
     }
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
-  public SvnContext createContext()
-  {
-    if (context == null)
-    {
+  public SvnContext createContext() {
+    if (context == null) {
       context = new SvnContext(repository, repositoryDirectory);
     }
 
     return context;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  protected String getType()
-  {
+  protected String getType() {
     return "svn";
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @return
-   */
   @Override
-  protected String getZippedRepositoryResource()
-  {
+  protected String getZippedRepositoryResource() {
     return "sonia/scm/repository/spi/scm-svn-spi-test.zip";
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
   private SvnContext context;
 }

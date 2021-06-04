@@ -26,6 +26,7 @@ package sonia.scm.repository;
 
 import com.github.sdorra.ssp.PermissionActionCheckInterceptor;
 import com.github.sdorra.ssp.PermissionGuard;
+import com.google.common.collect.ImmutableSet;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.subject.Subject;
 
@@ -34,19 +35,26 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.function.BooleanSupplier;
 
-import static sonia.scm.repository.DefaultRepositoryExportingCheck.isRepositoryExporting;
-import static sonia.scm.repository.EventDrivenRepositoryArchiveCheck.isRepositoryArchived;
-
 /**
  * This intercepts permission checks for repositories and blocks write permissions for archived repositories.
- * Read only permissions are set at startup by {@link RepositoryPermissionGuardInitializer}.
+ * Read only permissions are set at startup by {@link ReadOnlyCheckInitializer}.
  */
 public class RepositoryPermissionGuard implements PermissionGuard<Repository> {
 
   private static final Collection<String> READ_ONLY_VERBS = Collections.synchronizedSet(new HashSet<>());
+  private static Collection<ReadOnlyCheck> readOnlyChecks = Collections.emptySet();
 
   static void setReadOnlyVerbs(Collection<String> readOnlyVerbs) {
     READ_ONLY_VERBS.addAll(readOnlyVerbs);
+  }
+
+  /**
+   * Sets static read only checks.
+   * @param readOnlyChecks read only checks
+   * @since 2.19.0
+   */
+  static void setReadOnlyChecks(Collection<ReadOnlyCheck> readOnlyChecks) {
+    RepositoryPermissionGuard.readOnlyChecks = ImmutableSet.copyOf(readOnlyChecks);
   }
 
   @Override
@@ -54,25 +62,35 @@ public class RepositoryPermissionGuard implements PermissionGuard<Repository> {
     if (READ_ONLY_VERBS.contains(permission)) {
       return new PermissionActionCheckInterceptor<Repository>() {};
     } else {
-      return new WriteInterceptor();
+      return new WriteInterceptor(permission);
     }
   }
 
   private static class WriteInterceptor implements PermissionActionCheckInterceptor<Repository> {
+
+    private final String permission;
+
+    private WriteInterceptor(String permission) {
+      this.permission = permission;
+    }
+
     @Override
     public void check(Subject subject, String id, Runnable delegate) {
       delegate.run();
-      if (isRepositoryArchived(id)) {
-        throw new AuthorizationException("repository is archived");
-      }
-      if (isRepositoryExporting(id)) {
-        throw new AuthorizationException("repository is exporting");
+      for (ReadOnlyCheck check : readOnlyChecks) {
+        if (check.isReadOnly(permission, id)) {
+          throw new AuthorizationException(check.getReason());
+        }
       }
     }
 
     @Override
     public boolean isPermitted(Subject subject, String id, BooleanSupplier delegate) {
-      return !isRepositoryArchived(id) && !isRepositoryExporting(id) && delegate.getAsBoolean();
+      return isWritable(id) && delegate.getAsBoolean();
+    }
+
+    private boolean isWritable(String id) {
+      return readOnlyChecks.stream().noneMatch(c -> c.isReadOnly(permission, id));
     }
   }
 }

@@ -26,7 +26,10 @@ package sonia.scm.repository;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.function.Supplier;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class DefaultRepositoryExportingCheckTest {
 
@@ -61,5 +64,33 @@ class DefaultRepositoryExportingCheckTest {
   void shouldNotBeReadOnlyIfNotBeingExported() {
     boolean readOnly = check.isExporting(EXPORTING_REPOSITORY);
     assertThat(readOnly).isFalse();
+  }
+
+  @Test
+  void shouldThrowExportingException() {
+    RepositoryExportingCheck check = new TestingRepositoryExportingCheck();
+
+    assertThrows(RepositoryExportingException.class, () -> check.check(EXPORTING_REPOSITORY));
+  }
+
+  @Test
+  void shouldThrowExportingExceptionWithId() {
+    RepositoryExportingCheck check = new TestingRepositoryExportingCheck();
+
+    assertThrows(RepositoryExportingException.class, () -> check.check("exporting_hog"));
+  }
+
+  private static class TestingRepositoryExportingCheck implements RepositoryExportingCheck {
+
+
+    @Override
+    public boolean isExporting(String repositoryId) {
+      return "exporting_hog".equals(repositoryId);
+    }
+
+    @Override
+    public <T> T withExportingLock(Repository repository, Supplier<T> callback) {
+      return null;
+    }
   }
 }

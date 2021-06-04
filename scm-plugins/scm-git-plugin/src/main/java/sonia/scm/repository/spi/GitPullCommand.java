@@ -32,26 +32,20 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.FetchResult;
-import org.eclipse.jgit.transport.RefSpec;
-import org.eclipse.jgit.transport.TagOpt;
 import org.eclipse.jgit.transport.TrackingRefUpdate;
 import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
-import sonia.scm.event.ScmEventBus;
 import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.GitUtil;
 import sonia.scm.repository.Repository;
-import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullResponse;
 
 import javax.inject.Inject;
 import java.io.File;
 import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author Sebastian Sdorra
@@ -59,19 +53,15 @@ import java.util.stream.Collectors;
 public class GitPullCommand extends AbstractGitPushOrPullCommand
   implements PullCommand {
 
-  private static final String REF_SPEC = "refs/heads/*:refs/heads/*";
   private static final Logger LOG = LoggerFactory.getLogger(GitPullCommand.class);
-  private final ScmEventBus eventBus;
-  private final GitRepositoryHookEventFactory eventFactory;
+  private final PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory;
 
   @Inject
   public GitPullCommand(GitRepositoryHandler handler,
                         GitContext context,
-                        ScmEventBus eventBus,
-                        GitRepositoryHookEventFactory eventFactory) {
+                        PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory) {
     super(handler, context);
-    this.eventBus = eventBus;
-    this.eventFactory = eventFactory;
+    this.postReceiveRepositoryHookEventFactory = postReceiveRepositoryHookEventFactory;
   }
 
   @Override
@@ -158,8 +148,8 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
     org.eclipse.jgit.lib.Repository source = null;
 
-    try {
-      source = Git.open(sourceDirectory).getRepository();
+    try (Git git = Git.open(sourceDirectory)) {
+      source = git.getRepository();
       response = new PullResponse(push(source, getRemoteUrl(targetDirectory)));
     } finally {
       GitUtil.close(source);
@@ -177,16 +167,14 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     FetchResult result;
     try {
       //J-
-      result = git.fetch()
+      result = GitUtil.createFetchCommandWithBranchAndTagUpdate(git)
         .setCredentialsProvider(
           new UsernamePasswordCredentialsProvider(
-            Strings.nullToEmpty(request.getUsername()),
+              Strings.nullToEmpty(request.getUsername()),
             Strings.nullToEmpty(request.getPassword())
           )
         )
-        .setRefSpecs(new RefSpec(REF_SPEC))
         .setRemote(request.getRemoteUrl().toExternalForm())
-        .setTagOpt(TagOpt.FETCH_TAGS)
         .call();
       //J+
 
@@ -206,31 +194,6 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
   }
 
   private void firePostReceiveRepositoryHookEvent(Git git, FetchResult result) {
-    try {
-      List<String> branches = getBranchesFromFetchResult(result);
-      List<Tag> tags = getTagsFromFetchResult(result);
-      GitLazyChangesetResolver changesetResolver = new GitLazyChangesetResolver(context.getRepository(), git);
-      eventBus.post(eventFactory.createEvent(context, branches, tags, changesetResolver));
-    } catch (IOException e) {
-      throw new ImportFailedException(
-        ContextEntry.ContextBuilder.entity(context.getRepository()).build(),
-        "Could not fire post receive repository hook event after unbundle",
-        e
-      );
-    }
-  }
-
-  private List<Tag> getTagsFromFetchResult(FetchResult result) {
-    return result.getAdvertisedRefs().stream()
-      .filter(r -> r.getName().startsWith("refs/tags/"))
-      .map(r -> new Tag(r.getName().substring("refs/tags/".length()), r.getObjectId().getName()))
-      .collect(Collectors.toList());
-  }
-
-  private List<String> getBranchesFromFetchResult(FetchResult result) {
-    return result.getAdvertisedRefs().stream()
-      .filter(r -> r.getName().startsWith("refs/heads/"))
-      .map(r -> r.getLeaf().getName().substring("refs/heads/".length()))
-      .collect(Collectors.toList());
+    postReceiveRepositoryHookEventFactory.fireForFetch(git, result);
   }
 }

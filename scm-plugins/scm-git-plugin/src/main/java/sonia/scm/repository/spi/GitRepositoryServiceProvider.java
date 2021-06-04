@@ -56,7 +56,8 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
     Command.MERGE,
     Command.MODIFY,
     Command.BUNDLE,
-    Command.UNBUNDLE
+    Command.UNBUNDLE,
+    Command.MIRROR
   );
 
   protected static final Set<Feature> FEATURES = EnumSet.of(Feature.INCOMING_REVISION);
@@ -169,6 +170,11 @@ public class GitRepositoryServiceProvider extends RepositoryServiceProvider {
   @Override
   public UnbundleCommand getUnbundleCommand() {
     return commandInjector.getInstance(GitUnbundleCommand.class);
+  }
+
+  @Override
+  public MirrorCommand getMirrorCommand() {
+    return commandInjector.getInstance(GitMirrorCommand.class);
   }
 
   @Override

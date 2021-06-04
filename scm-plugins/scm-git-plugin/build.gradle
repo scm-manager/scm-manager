@@ -37,6 +37,7 @@ dependencies {
   implementation "sonia.jgit:org.eclipse.jgit.gpg.bc:${jgitVersion}"
   implementation libraries.commonsCompress
 
+  testImplementation "sonia.jgit:org.eclipse.jgit.junit.http:${jgitVersion}"
   testImplementation libraries.shiroUnit
   testImplementation libraries.awaitility
 }

@@ -26,8 +26,9 @@ import { ExtensionPointDefinition } from "./binder";
 import {
   IndexResources,
   NamespaceStrategies,
+  Repository,
   RepositoryCreation,
-  RepositoryTypeCollection
+  RepositoryTypeCollection,
 } from "@scm-manager/ui-types";
 
 type RepositoryCreatorSubFormProps = {
@@ -55,3 +56,5 @@ export type RepositoryCreatorExtension = {
 };
 
 export type RepositoryCreator = ExtensionPointDefinition<"repos.creator", RepositoryCreatorExtension>;
+
+export type RepositoryFlags = ExtensionPointDefinition<"repository.flags", { repository: Repository }>;

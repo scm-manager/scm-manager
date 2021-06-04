@@ -74,7 +74,7 @@ const OverviewPageActions: FC<Props> = ({
     if (showCreateButton) {
       return (
         <div className={classNames("input-button", "control", "column")}>
-          <Button label={label} link={createLink || `${link}create`} color="primary" />
+          <Button label={label} link={createLink || `${link}create/`} color="primary" />
         </div>
       );
     }

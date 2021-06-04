@@ -49,6 +49,7 @@ import org.eclipse.jgit.revwalk.filter.RevFilter;
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.eclipse.jgit.transport.FetchResult;
 import org.eclipse.jgit.transport.RefSpec;
+import org.eclipse.jgit.transport.TagOpt;
 import org.eclipse.jgit.treewalk.TreeWalk;
 import org.eclipse.jgit.util.FS;
 import org.eclipse.jgit.util.LfsFactory;
@@ -97,6 +98,7 @@ public final class GitUtil {
    * the logger for GitUtil
    */
   private static final Logger logger = LoggerFactory.getLogger(GitUtil.class);
+  private static final String REF_SPEC = "refs/heads/*:refs/heads/*";
 
   //~--- constructors ---------------------------------------------------------
 
@@ -690,5 +692,11 @@ public final class GitUtil {
    */
   private static RefSpec createRefSpec(Repository repository) {
     return new RefSpec(String.format(REFSPEC, repository.getId()));
+  }
+
+  public static FetchCommand createFetchCommandWithBranchAndTagUpdate(Git git) {
+    return git.fetch()
+      .setRefSpecs(new RefSpec(REF_SPEC))
+      .setTagOpt(TagOpt.FETCH_TAGS);
   }
 }

@@ -27,11 +27,13 @@ package sonia.scm.security.gpg;
 import com.google.inject.AbstractModule;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.GPG;
+import sonia.scm.security.PublicKeyParser;
 
 @Extension
 public class GPGModule extends AbstractModule {
   @Override
   protected void configure() {
     bind(GPG.class).to(DefaultGPG.class);
+    bind(PublicKeyParser.class).to(DefaultPublicKeyParser.class);
   }
 }

@@ -22,31 +22,15 @@
  * SOFTWARE.
  */
 
-package sonia.scm.repository;
+package sonia.scm.repository.api;
 
-import sonia.scm.EagerSingleton;
-import sonia.scm.Initable;
-import sonia.scm.SCMContextProvider;
-import sonia.scm.plugin.Extension;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
-import javax.inject.Inject;
+@AllArgsConstructor
+@Getter
+public class Pkcs12ClientCertificateCredential implements Credential {
 
-/**
- * Initializes read only permissions for {@link RepositoryPermissionGuard} at startup.
- */
-@Extension
-@EagerSingleton
-final class RepositoryPermissionGuardInitializer implements Initable {
-
-  private final PermissionProvider permissionProvider;
-
-  @Inject
-  RepositoryPermissionGuardInitializer(PermissionProvider permissionProvider) {
-    this.permissionProvider = permissionProvider;
-  }
-
-  @Override
-  public void init(SCMContextProvider context) {
-    RepositoryPermissionGuard.setReadOnlyVerbs(permissionProvider.readOnlyVerbs());
-  }
+  private final byte[] certificate;
+  private final char[] password;
 }

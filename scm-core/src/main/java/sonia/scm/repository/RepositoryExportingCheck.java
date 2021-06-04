@@ -31,7 +31,7 @@ import java.util.function.Supplier;
  *
  * @since 2.14.0
  */
-public interface RepositoryExportingCheck {
+public interface RepositoryExportingCheck extends ReadOnlyCheck {
 
   /**
    * Checks whether the repository with the given id is currently (that is, at this moment) being exported or not.
@@ -59,4 +59,21 @@ public interface RepositoryExportingCheck {
    * @return The result of the callback.
    */
   <T> T withExportingLock(Repository repository, Supplier<T> callback);
+
+  @Override
+  default boolean isReadOnly(String repositoryId) {
+    return isExporting(repositoryId);
+  }
+
+  @Override
+  default String getReason() {
+    return "repository is exporting";
+  }
+
+  @Override
+  default void check(String repositoryId) {
+    if (isExporting(repositoryId)) {
+      throw new RepositoryExportingException(repositoryId);
+    }
+  }
 }
