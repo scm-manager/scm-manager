@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.19.0] - 2021-06-04
+### Added
+- Extension Point for repository creators ([#1657](https://github.com/scm-manager/scm-manager/pull/1657))
+- Add trust manager provider ([#1654](https://github.com/scm-manager/scm-manager/pull/1654))
+- Implement api for extension point typings ([#1638](https://github.com/scm-manager/scm-manager/pull/1638))
+- Add mirror command and extension points ([#1683](https://github.com/scm-manager/scm-manager/pull/1683))
+- Add support for react-hook-form ([#1656](https://github.com/scm-manager/scm-manager/pull/1656))
+- Implement Subversion mirror command ([#1660](https://github.com/scm-manager/scm-manager/pull/1660))
+- Notifications for health checks ([#1664](https://github.com/scm-manager/scm-manager/pull/1664))
+
+### Fixed
+- Show source code controls even if a file is not present ([#1680](https://github.com/scm-manager/scm-manager/pull/1680))
+- Fix annotate overflow and doubled spacing in code views ([#1678](https://github.com/scm-manager/scm-manager/pull/1678))
+- SSE for notifications behind nginx reverse proxy ([#1650](https://github.com/scm-manager/scm-manager/pull/1650))
+- Use correct syntax for config routes ([#1652](https://github.com/scm-manager/scm-manager/pull/1652))
+- Fix administration page error for empty release feed url ([#1667](https://github.com/scm-manager/scm-manager/pull/1667))
+- Remove duplicated notification endpoints in openapi ([#1677](https://github.com/scm-manager/scm-manager/pull/1677))
+
+### Changed
+- Inject custom trust manager to git https connections ([#1675](https://github.com/scm-manager/scm-manager/pull/1675))
+
 ## [2.18.0] - 2021-05-05
 ### Added
 - Patch endpoint for global configuration ([#1629](https://github.com/scm-manager/scm-manager/pull/1629))
@@ -622,3 +643,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.17.0]: https://www.scm-manager.org/download/2.17.0
 [2.17.1]: https://www.scm-manager.org/download/2.17.1
 [2.18.0]: https://www.scm-manager.org/download/2.18.0
+[2.19.0]: https://www.scm-manager.org/download/2.19.0

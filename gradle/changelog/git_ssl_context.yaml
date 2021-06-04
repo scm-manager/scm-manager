@@ -1,2 +1,0 @@
-- type: changed
-  description: Inject custom trust manager to git https connections ([#1675](https://github.com/scm-manager/scm-manager/pull/1675))

@@ -1,2 +1,0 @@
-- type: fixed
-  description: SSE for notifications behind nginx reverse proxy ([#1650](https://github.com/scm-manager/scm-manager/pull/1650))
