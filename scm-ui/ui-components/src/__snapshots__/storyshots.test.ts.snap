@@ -46388,6 +46388,62 @@ exports[`Storyshots Diff WithLinkToFile 1`] = `
 </div>
 `;
 
+exports[`Storyshots Duration Duration 1`] = `
+<div
+  className="m-5 p-5"
+>
+  <p>
+    <time
+      dateTime="500ms"
+    >
+      duration.ms
+    </time>
+  </p>
+  <p>
+    <time
+      dateTime="2s"
+    >
+      duration.s
+    </time>
+  </p>
+  <p>
+    <time
+      dateTime="42m"
+    >
+      duration.m
+    </time>
+  </p>
+  <p>
+    <time
+      dateTime="21h"
+    >
+      duration.h
+    </time>
+  </p>
+  <p>
+    <time
+      dateTime="5d"
+    >
+      duration.d
+    </time>
+  </p>
+  <p>
+    <time
+      dateTime="3w"
+    >
+      duration.w
+    </time>
+  </p>
+  <p>
+    <time
+      dateTime="2w"
+    >
+      duration.w
+    </time>
+  </p>
+</div>
+`;
+
 exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
 <div
   className="AddKeyValueEntryToTableFieldstories__Spacing-d5xy2z-0 hDvOlV"

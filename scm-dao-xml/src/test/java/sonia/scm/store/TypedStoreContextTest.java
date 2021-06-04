@@ -47,11 +47,12 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
+@SuppressWarnings("unstableApiUsage")
 class TypedStoreContextTest {
 
   @Test
   void shouldMarshallAndUnmarshall(@TempDir Path tempDir) {
-    TypedStoreContext<Sample> context = context(Sample.class);
+    TypedStoreContext<Sample> context = context();
 
     File file = tempDir.resolve("test.xml").toFile();
     context.marshal(new Sample("awesome"), file);
@@ -62,7 +63,7 @@ class TypedStoreContextTest {
 
   @Test
   void shouldWorkWithMarshallerAndUnmarshaller(@TempDir Path tempDir) {
-    TypedStoreContext<Sample> context = context(Sample.class);
+    TypedStoreContext<Sample> context = context();
 
     File file = tempDir.resolve("test.xml").toFile();
 
@@ -115,10 +116,12 @@ class TypedStoreContextTest {
     assertThat(sample.value).isEqualTo("awesome!!");
   }
 
-  private <T> TypedStoreContext<T> context(Class<T> type) {
-    return TypedStoreContext.of(params(type));
+  @SuppressWarnings("unchecked")
+  private <T> TypedStoreContext<T> context() {
+    return TypedStoreContext.of(params((Class<T>) Sample.class));
   }
 
+  @SuppressWarnings("unchecked")
   private <T> TypedStoreParameters<T> params(Class<T> type) {
     TypedStoreParameters<T> params = mock(TypedStoreParameters.class);
     when(params.getType()).thenReturn(type);
