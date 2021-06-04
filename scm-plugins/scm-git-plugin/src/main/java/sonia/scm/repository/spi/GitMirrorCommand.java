@@ -70,6 +70,7 @@ import java.util.function.Function;
 
 import static java.lang.String.format;
 import static java.util.Collections.unmodifiableMap;
+import static java.util.Optional.empty;
 import static java.util.Optional.of;
 import static org.eclipse.jgit.lib.RefUpdate.Result.NEW;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
@@ -394,7 +395,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         return branchUpdates.get(ref);
       }
 
-      public MirrorFilter.TagUpdate getTagUpdate(String ref) {
+      MirrorFilter.TagUpdate getTagUpdate(String ref) {
         return tagUpdates.get(ref);
       }
     }
@@ -418,21 +419,35 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       @Override
-      public Changeset getChangeset() {
+      public Optional<Changeset> getChangeset() {
+        if (isOfTypeOrEmpty(getUpdateType(), MirrorFilter.UpdateType.DELETE)) {
+          return empty();
+        }
         if (changeset == null) {
           changeset = computeChangeset();
         }
-        return changeset;
+        return of(changeset);
       }
 
       @Override
-      public String getNewRevision() {
-        return refUpdate.getNewObjectId().name();
+      public Optional<String> getNewRevision() {
+        if (isOfTypeOrEmpty(getUpdateType(), MirrorFilter.UpdateType.DELETE)) {
+          return empty();
+        }
+        return of(refUpdate.getNewObjectId().name());
       }
 
       @Override
       public Optional<String> getOldRevision() {
+        if (isOfTypeOrEmpty(getUpdateType(), MirrorFilter.UpdateType.CREATE)) {
+          return empty();
+        }
         return of(refUpdate.getOldObjectId().name());
+      }
+
+      @Override
+      public Optional<MirrorFilter.UpdateType> getUpdateType() {
+        return getUpdateTypeFor(refUpdate.asReceiveCommand());
       }
 
       @Override
@@ -478,16 +493,32 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       @Override
-      public Tag getTag() {
+      public Optional<Tag> getTag() {
+        if (isOfTypeOrEmpty(getUpdateType(), MirrorFilter.UpdateType.DELETE)) {
+          return empty();
+        }
         if (tag == null) {
           tag = computeTag();
         }
-        return tag;
+        return of(tag);
+      }
+
+      @Override
+      public Optional<String> getNewRevision() {
+        return getTag().map(Tag::getRevision);
       }
 
       @Override
       public Optional<String> getOldRevision() {
-        return Optional.empty();
+        if (isOfTypeOrEmpty(getUpdateType(), MirrorFilter.UpdateType.CREATE)) {
+          return empty();
+        }
+        return of(refUpdate.getOldObjectId().name());
+      }
+
+      @Override
+      public Optional<MirrorFilter.UpdateType> getUpdateType() {
+        return getUpdateTypeFor(refUpdate.asReceiveCommand());
       }
 
       private Tag computeTag() {
@@ -508,6 +539,24 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
             throw new InternalRepositoryException(context.getRepository(), "got exception while validating tag", e);
           }
         }
+      }
+    }
+
+    private boolean isOfTypeOrEmpty(Optional<MirrorFilter.UpdateType> updateType, MirrorFilter.UpdateType type) {
+      return !updateType.isPresent() || updateType.get() == type;
+    }
+
+    private Optional<MirrorFilter.UpdateType> getUpdateTypeFor(ReceiveCommand receiveCommand) {
+      switch (receiveCommand.getType()) {
+        case UPDATE:
+        case UPDATE_NONFASTFORWARD:
+          return of(MirrorFilter.UpdateType.UPDATE);
+        case CREATE:
+          return of(MirrorFilter.UpdateType.CREATE);
+        case DELETE:
+          return of(MirrorFilter.UpdateType.DELETE);
+        default:
+          return empty();
       }
     }
   }

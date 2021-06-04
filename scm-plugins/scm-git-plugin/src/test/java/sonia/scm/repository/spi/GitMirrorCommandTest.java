@@ -37,7 +37,6 @@ import org.junit.Test;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitChangesetConverterFactory;
 import sonia.scm.repository.GitConfig;
-import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.SimpleUsernamePasswordCredential;
@@ -515,13 +514,152 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
   }
 
   @Test
-  public void shouldCreateUpdateObjectForTags() throws IOException, GitAPIException {
+  public void shouldCreateUpdateObjectForCreatedTags() throws IOException, GitAPIException {
     try (Git updatedSource = Git.open(repositoryDirectory)) {
       RevObject revObject = getRevObject(updatedSource, "9e93d8631675a89615fac56b09209686146ff3c0");
       updatedSource.tag().setAnnotated(true).setName("42").setMessage("annotated tag").setObjectId(revObject).call();
     }
 
-    List<Tag> collectedTags = new ArrayList<>();
+    List<MirrorFilter.TagUpdate> collectedTagUpdates = callMirrorAndCollectUpdates().tagUpdates;
+
+    assertThat(collectedTagUpdates)
+      .anySatisfy(update -> {
+        assertThat(update.getUpdateType()).get().isEqualTo(MirrorFilter.UpdateType.CREATE);
+        assertThat(update.getTagName()).isEqualTo("42");
+        assertThat(update.getNewRevision()).get().isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0");
+        assertThat(update.getOldRevision()).isEmpty();
+        assertThat(update.getTag()).get().extracting("name").isEqualTo("42");
+        assertThat(update.getTag()).get().extracting("revision").isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0");
+      })
+      .anySatisfy(tagUpdate -> {
+        assertThat(tagUpdate.getUpdateType()).get().isEqualTo(MirrorFilter.UpdateType.CREATE);
+        assertThat(tagUpdate.getTagName()).isEqualTo("test-tag");
+        assertThat(tagUpdate.getNewRevision()).get().isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
+        assertThat(tagUpdate.getOldRevision()).isEmpty();
+        assertThat(tagUpdate.getTag()).get().extracting("name").isEqualTo("test-tag");
+        assertThat(tagUpdate.getTag()).get().extracting("revision").isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
+      });
+  }
+
+  @Test
+  public void shouldCreateUpdateObjectForDeletedTags() throws IOException, GitAPIException {
+    callMirrorCommand();
+
+    try (Git updatedSource = Git.open(repositoryDirectory)) {
+      updatedSource.tagDelete().setTags("test-tag").call();
+    }
+
+    List<MirrorFilter.TagUpdate> collectedTagUPdates = callMirrorAndCollectUpdates().tagUpdates;
+
+    assertThat(collectedTagUPdates)
+      .anySatisfy(update -> {
+        assertThat(update.getUpdateType()).get().isEqualTo(MirrorFilter.UpdateType.DELETE);
+        assertThat(update.getTagName()).isEqualTo("test-tag");
+        assertThat(update.getNewRevision()).isEmpty();
+        assertThat(update.getOldRevision()).get().isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
+        assertThat(update.getTag()).isEmpty();
+      });
+  }
+
+  @Test
+  public void shouldCreateUpdateObjectForUpdatedTags() throws IOException, GitAPIException {
+    callMirrorCommand();
+
+    try (Git updatedSource = Git.open(repositoryDirectory)) {
+      RevObject revObject = getRevObject(updatedSource, "9e93d8631675a89615fac56b09209686146ff3c0");
+      updatedSource.tag().setName("test-tag").setObjectId(revObject).setForceUpdate(true).call();
+    }
+
+    List<MirrorFilter.TagUpdate> collectedTagUpdates = callMirrorAndCollectUpdates().tagUpdates;
+
+    assertThat(collectedTagUpdates)
+      .anySatisfy(update -> {
+        assertThat(update.getUpdateType()).get().isEqualTo(MirrorFilter.UpdateType.UPDATE);
+        assertThat(update.getTagName()).isEqualTo("test-tag");
+        assertThat(update.getNewRevision()).get().isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0");
+        assertThat(update.getOldRevision()).get().isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
+        assertThat(update.getTag()).get().extracting("name").isEqualTo("test-tag");
+        assertThat(update.getTag()).get().extracting("revision").isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0");
+      });
+  }
+
+  @Test
+  public void shouldCreateUpdateObjectForNewBranch() {
+    List<MirrorFilter.BranchUpdate> collectedBranchUpdates = callMirrorAndCollectUpdates().branchUpdates;
+
+    assertThat(collectedBranchUpdates)
+      .anySatisfy(update -> {
+        assertThat(update.getUpdateType()).get().isEqualTo(MirrorFilter.UpdateType.CREATE);
+        assertThat(update.getBranchName()).isEqualTo("test-branch");
+        assertThat(update.getNewRevision()).get().isEqualTo("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
+        assertThat(update.getOldRevision()).isEmpty();
+        assertThat(update.getChangeset()).get().extracting("id").isEqualTo("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
+      });
+  }
+
+  @Test
+  public void shouldCreateUpdateObjectForForcedUpdatedBranch() throws IOException, GitAPIException {
+    callMirrorCommand();
+
+    try (Git existingClone = Git.open(repositoryDirectory)) {
+      existingClone.branchCreate().setStartPoint("9e93d8631675a89615fac56b09209686146ff3c0").setName("test-branch").setForce(true).call();
+    }
+
+    List<MirrorFilter.BranchUpdate> collectedBranchUpdates = callMirrorAndCollectUpdates().branchUpdates;
+
+    assertThat(collectedBranchUpdates)
+      .anySatisfy(update -> {
+        assertThat(update.getUpdateType()).get().isEqualTo(MirrorFilter.UpdateType.UPDATE);
+        assertThat(update.isForcedUpdate()).isTrue();
+        assertThat(update.getBranchName()).isEqualTo("test-branch");
+        assertThat(update.getNewRevision()).get().isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0");
+        assertThat(update.getOldRevision()).get().isEqualTo("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
+        assertThat(update.getChangeset()).get().extracting("id").isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0");
+      });
+  }
+
+  @Test
+  public void shouldCreateUpdateObjectForFastForwardUpdatedBranch() throws IOException, GitAPIException {
+    callMirrorCommand();
+
+    try (Git existingClone = Git.open(repositoryDirectory)) {
+      existingClone.branchCreate().setStartPoint("a8495c0335a13e6e432df90b3727fa91943189a7").setName("master").setForce(true).call();
+    }
+
+    List<MirrorFilter.BranchUpdate> collectedBranchUpdates = callMirrorAndCollectUpdates().branchUpdates;
+
+    assertThat(collectedBranchUpdates)
+      .anySatisfy(update -> {
+        assertThat(update.getUpdateType()).get().isEqualTo(MirrorFilter.UpdateType.UPDATE);
+        assertThat(update.isForcedUpdate()).isFalse();
+        assertThat(update.getBranchName()).isEqualTo("master");
+        assertThat(update.getNewRevision()).get().isEqualTo("a8495c0335a13e6e432df90b3727fa91943189a7");
+        assertThat(update.getOldRevision()).get().isEqualTo("fcd0ef1831e4002ac43ea539f4094334c79ea9ec");
+        assertThat(update.getChangeset()).get().extracting("id").isEqualTo("a8495c0335a13e6e432df90b3727fa91943189a7");
+      });
+  }
+
+  @Test
+  public void shouldCreateUpdateObjectForDeletedBranch() throws IOException, GitAPIException {
+    callMirrorCommand();
+
+    try (Git updatedSource = Git.open(repositoryDirectory)) {
+      updatedSource.branchDelete().setBranchNames("test-branch").setForce(true).call();
+    }
+
+    List<MirrorFilter.BranchUpdate> collectedBranchUpdates = callMirrorAndCollectUpdates().branchUpdates;
+
+    assertThat(collectedBranchUpdates)
+      .anySatisfy(update -> {
+        assertThat(update.getBranchName()).isEqualTo("test-branch");
+        assertThat(update.getNewRevision()).isEmpty();
+        assertThat(update.getOldRevision()).get().isEqualTo("3f76a12f08a6ba0dc988c68b7f0b2cd190efc3c4");
+        assertThat(update.getChangeset()).isEmpty();
+      });
+  }
+
+  private Updates callMirrorAndCollectUpdates() {
+    Updates updates = new Updates();
 
     MirrorCommandRequest request = new MirrorCommandRequest();
     request.setSourceUrl(repositoryDirectory.getAbsolutePath());
@@ -531,7 +669,12 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
         return new Filter() {
           @Override
           public Result acceptTag(TagUpdate tagUpdate) {
-            collectedTags.add(tagUpdate.getTag());
+            updates.tagUpdates.add(tagUpdate);
+            return Result.accept();
+          }
+          @Override
+          public Result acceptBranch(BranchUpdate branchUpdate) {
+            updates.branchUpdates.add(branchUpdate);
             return Result.accept();
           }
         };
@@ -539,15 +682,12 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     });
 
     command.mirror(request);
-    assertThat(collectedTags)
-      .anySatisfy(c -> {
-        assertThat(c.getName()).isEqualTo("42");
-        assertThat(c.getRevision()).isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0");
-      })
-      .anySatisfy(c -> {
-        assertThat(c.getName()).isEqualTo("test-tag");
-        assertThat(c.getRevision()).isEqualTo("86a6645eceefe8b9a247db5eb16e3d89a7e6e6d1");
-      });
+    return updates;
+  }
+
+  private class Updates {
+    private final List<MirrorFilter.BranchUpdate> branchUpdates = new ArrayList<>();
+    private final List<MirrorFilter.TagUpdate> tagUpdates = new ArrayList<>();
   }
 
   private RevObject getRevObject(Git existingClone, String revision) throws IOException {
