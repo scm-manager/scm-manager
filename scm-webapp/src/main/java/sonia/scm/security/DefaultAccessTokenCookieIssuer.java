@@ -118,7 +118,7 @@ public final class DefaultAccessTokenCookieIssuer implements AccessTokenCookieIs
   private boolean isSecure(HttpServletRequest request){
     boolean secure = request.isSecure();
     if (!secure) {
-      LOG.warn("issuet a non secure cookie, protect your scm-manager instance with tls https://goo.gl/lVm0ph");
+      LOG.warn("issuet a non secure cookie, protect your scm-manager instance with tls https://www.scm-manager.org/docs/latest/en/administration/scm-server/");
     }
     return secure;
   }
