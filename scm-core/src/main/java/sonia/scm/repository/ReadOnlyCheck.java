@@ -42,16 +42,26 @@ public interface ReadOnlyCheck {
   String getReason();
 
   /**
-   * Returns {@code true} if the repository with the given id is read only.
+   * Returns {@code true} if the repository with the given id is read only. If this is the case, all permissions not
+   * marked "read only" will be denied fot this repository, stores for this repository cannot be written, and calling
+   * modifying commands will be prevented. If only special permissions should be forbidden without blocking stores
+   * and commands, use {@link #isForbidden(String, String)} instead.
+   *
    * @param repositoryId repository id
    * @return {@code true} if repository is read only
+   * @see #isForbidden(String, String)
    */
-  boolean isReadOnly(String repositoryId);
+  default boolean isReadOnly(String repositoryId) {
+    return false;
+  }
 
   /**
-   * Returns {@code true} if the repository is read only.
-   * @param repository repository
+   * Returns {@code true} if the repository is read only. By default forwards to {@link #isReadOnly(String)} with the
+   * id of the given repository.
+   *
+   * @param repository The repository to check for.
    * @return {@code true} if repository is read only
+   * @see #isReadOnly(String)
    */
   default boolean isReadOnly(Repository repository) {
     return isReadOnly(repository.getId());
@@ -59,7 +69,7 @@ public interface ReadOnlyCheck {
 
   /**
    * Throws a {@link ReadOnlyException} if the repository is read only.
-   * @param repository repository
+   * @param repository The repository to check for.
    */
   default void check(Repository repository) {
     check(repository.getId());
@@ -67,7 +77,7 @@ public interface ReadOnlyCheck {
 
   /**
    * Throws a {@link ReadOnlyException} if the repository with th id is read only.
-   * @param repositoryId repository id
+   * @param repositoryId The id of the repository to check for.
    */
   default void check(String repositoryId) {
     if (isReadOnly(repositoryId)) {
@@ -75,7 +85,26 @@ public interface ReadOnlyCheck {
     }
   }
 
-  default boolean isReadOnly(String permission, String repositoryId) {
+  /**
+   * By default returns {@link #isReadOnly(String)}. This is meant to be overridden if only specific permissions
+   * should be blocked. In contrast to {@link #isReadOnly(String)}, writing to stores or calling modifying commands
+   * will not be prevented, so this relies on permission checks only.
+   *
+   * @param permission   The permission to check.
+   * @param repositoryId The id of the repository to check for.
+   * @return {@code true} if this permission should be forbidden for the current repository regardless of the
+   * current user.
+   */
+  default boolean isForbidden(String permission, String repositoryId) {
     return isReadOnly(repositoryId);
+  }
+
+  /**
+   * @deprecated This method is named badly. Please use {@link #isForbidden(String, String)} instead. This
+   * implementation simply delegates to this method.
+   */
+  @Deprecated
+  default boolean isReadOnly(String permission, String repositoryId) {
+    return isForbidden(permission, repositoryId);
   }
 }
