@@ -151,6 +151,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         return doUpdate();
       } catch (GitAPIException e) {
         result = FAILED;
+        LOG.info("got exception while trying to synchronize mirror for repository {}", context.getRepository(), e);
         mirrorLog.add("failed to synchronize: " + e.getMessage());
         return new MirrorCommandResult(FAILED, mirrorLog, stopwatch.stop().elapsed());
       }
