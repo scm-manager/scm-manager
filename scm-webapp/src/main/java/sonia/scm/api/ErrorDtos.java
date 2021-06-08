@@ -24,34 +24,22 @@
 
 package sonia.scm.api;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.slf4j.MDC;
 import sonia.scm.api.v2.resources.ErrorDto;
-import sonia.scm.web.VndMediaType;
 
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.ext.ExceptionMapper;
-import javax.ws.rs.ext.Provider;
+import java.util.Collections;
 
-@Provider
-public class WebApplicationExceptionMapper implements ExceptionMapper<WebApplicationException> {
+class ErrorDtos {
 
-  private static final Logger LOG = LoggerFactory.getLogger(WebApplicationExceptionMapper.class);
+  private ErrorDtos() {
+  }
 
-  private static final String ERROR_CODE = "FVS9JY1T21";
-
-  @Override
-  public Response toResponse(WebApplicationException exception) {
-    LOG.trace("caught web application exception", exception);
-
-
-    ErrorDto errorDto = ErrorDtos.from(ERROR_CODE, exception);
-    Response originalResponse = exception.getResponse();
-
-    return Response.fromResponse(originalResponse)
-      .entity(errorDto)
-      .type(VndMediaType.ERROR_TYPE)
-      .build();
+  static ErrorDto from(String code, Exception exception) {
+    ErrorDto errorDto = new ErrorDto();
+    errorDto.setMessage(exception.getMessage());
+    errorDto.setContext(Collections.emptyList());
+    errorDto.setErrorCode(code);
+    errorDto.setTransactionId(MDC.get("transaction_id"));
+    return errorDto;
   }
 }
