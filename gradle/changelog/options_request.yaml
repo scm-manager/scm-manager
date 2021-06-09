@@ -1,2 +1,0 @@
-- type: fixed
-  description: Options requests returning internal server errors ([#1685](https://github.com/scm-manager/scm-manager/issues/1685), [#1688](https://github.com/scm-manager/scm-manager/pull/1688))

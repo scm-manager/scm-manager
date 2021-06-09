@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.19.1] - 2021-06-09
+### Fixed
+- Add handling when duplicated branch part cannot be created ([#1692](https://github.com/scm-manager/scm-manager/pull/1692))
+- Add log for error in git mirror ([#1689](https://github.com/scm-manager/scm-manager/pull/1689))
+- Tag position for repository ([#1691](https://github.com/scm-manager/scm-manager/pull/1691))
+- Options requests returning internal server errors ([#1685](https://github.com/scm-manager/scm-manager/issues/1685), [#1688](https://github.com/scm-manager/scm-manager/pull/1688))
+- Harmonize FileInput component with styleguide ([#1693](https://github.com/scm-manager/scm-manager/pull/1693))
+
 ## [2.19.0] - 2021-06-04
 ### Added
 - Extension Point for repository creators ([#1657](https://github.com/scm-manager/scm-manager/pull/1657))
@@ -644,3 +652,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.17.1]: https://www.scm-manager.org/download/2.17.1
 [2.18.0]: https://www.scm-manager.org/download/2.18.0
 [2.19.0]: https://www.scm-manager.org/download/2.19.0
+[2.19.1]: https://www.scm-manager.org/download/2.19.1

@@ -1,2 +1,0 @@
-- type: fixed
-  description: Add handling when duplicated branch part cannot be created ([#1692](https://github.com/scm-manager/scm-manager/pull/1692))
