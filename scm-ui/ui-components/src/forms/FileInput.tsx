@@ -30,6 +30,7 @@ import LabelWithHelpIcon from "./LabelWithHelpIcon";
 
 type Props = {
   name?: string;
+  filenamePlaceholder?: string;
   className?: string;
   label?: string;
   placeholder?: string;
@@ -43,6 +44,7 @@ type Props = {
 
 const FileInput: FC<Props> = ({
   name,
+  filenamePlaceholder,
   testId,
   helpText,
   placeholder,
@@ -76,7 +78,7 @@ const FileInput: FC<Props> = ({
     <div className={classNames("field", className)}>
       <LabelWithHelpIcon label={label} helpText={helpText} />
       <div className="file is-info has-name is-fullwidth">
-      <label className="file-label">
+        <label className="file-label">
           <input
             ref={ref}
             name={name}
@@ -97,7 +99,9 @@ const FileInput: FC<Props> = ({
           {file?.name ? (
             <span className="file-name">{file?.name}</span>
           ) : (
-            <span className="file-name has-text-weight-light has-text-grey-light">{t("fileInput.noFileChosen")}</span>
+            <span className="file-name has-text-weight-light has-text-grey-light">
+              {filenamePlaceholder || t("fileInput.noFileChosen")}
+            </span>
           )}
         </label>
       </div>
