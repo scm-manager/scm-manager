@@ -59,11 +59,6 @@ const FooterWrapper = styled.div`
   padding-bottom: 1rem;
 `;
 
-const ContentLeft = styled.div`
-  margin-bottom: 0 !important;
-  overflow: hidden;
-`;
-
 const ContentRight = styled.div`
   margin-left: auto;
 `;
@@ -115,15 +110,15 @@ const CardColumn: FC<Props> = ({
         {renderAvatar}
         <FlexFullHeight className={classNames("media-content", "text-box", "is-flex")}>
           <div className="is-flex">
-            <ContentLeft className="content">
-              <p className="shorten-text is-marginless">{title}</p>
+            <div className="is-clipped mb-0">
+              <p className="shorten-text m-0">{title}</p>
               {renderDescription}
-            </ContentLeft>
+            </div>
             {renderContentRight}
           </div>
           <FooterWrapper className={classNames("level", "is-flex")}>
             <RightMarginDiv className="level-left is-hidden-mobile">{footerLeft}</RightMarginDiv>
-            <InheritFlexShrinkDiv className="level-right is-block is-mobile is-marginless shorten-text">
+            <InheritFlexShrinkDiv className="level-right is-block is-mobile m-0 shorten-text">
               {footerRight}
             </InheritFlexShrinkDiv>
           </FooterWrapper>

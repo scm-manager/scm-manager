@@ -48,9 +48,13 @@ type State = {
 const Title = styled.span`
   display: flex;
   align-items: center;
+`;
 
-  & > * {
-    margin-right: 0.25rem;
+const RepositoryFlagContainer = styled.div`
+  pointer-events: all;
+
+  .tag {
+    margin-left: 0.25rem;
   }
 `;
 
@@ -181,8 +185,11 @@ class RepositoryEntry extends React.Component<Props, State> {
     return (
       <Title>
         <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} />
-        <strong>{repository.name}</strong> {repositoryFlags}
-        <ExtensionPoint name="repository.flags" props={{ repository }} renderAll={true} />
+        <strong>{repository.name}</strong>{" "}
+        <RepositoryFlagContainer>
+          {repositoryFlags}
+          <ExtensionPoint name="repository.flags" props={{ repository }} renderAll={true} />
+        </RepositoryFlagContainer>
       </Title>
     );
   };
