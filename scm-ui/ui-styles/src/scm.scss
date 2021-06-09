@@ -664,8 +664,9 @@ form .field:not(.is-grouped) {
   margin-bottom: 1rem;
 }
 .input,
-.textarea {
-  /*background-color: whitesmoke;*/
+.select select,
+.textarea,
+.file-name {
   border-color: $blue-light;
   box-shadow: none;
 }

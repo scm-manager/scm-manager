@@ -21,13 +21,16 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ChangeEvent, FC, FocusEvent } from "react";
+import React, { ChangeEvent, FC, FocusEvent, useState } from "react";
+import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import LabelWithHelpIcon from "./LabelWithHelpIcon";
+import { File } from "@scm-manager/ui-types";
 import { createAttributesForTesting } from "../devBuild";
+import LabelWithHelpIcon from "./LabelWithHelpIcon";
 
 type Props = {
   name?: string;
+  filenamePlaceholder?: string;
   className?: string;
   label?: string;
   placeholder?: string;
@@ -41,6 +44,7 @@ type Props = {
 
 const FileInput: FC<Props> = ({
   name,
+  filenamePlaceholder,
   testId,
   helpText,
   placeholder,
@@ -49,9 +53,16 @@ const FileInput: FC<Props> = ({
   className,
   ref,
   onBlur,
-  onChange
+  onChange,
 }) => {
+  const [t] = useTranslation("commons");
+  const [file, setFile] = useState<File | null>(null);
+
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const uploadedFile = event?.target?.files![0];
+    // @ts-ignore the uploaded file doesn't match our types
+    setFile(uploadedFile);
+
     if (onChange && event.target.files) {
       onChange(event);
     }
@@ -66,18 +77,33 @@ const FileInput: FC<Props> = ({
   return (
     <div className={classNames("field", className)}>
       <LabelWithHelpIcon label={label} helpText={helpText} />
-      <div className="control">
-        <input
-          ref={ref}
-          name={name}
-          className={classNames("input", "p-1", className)}
-          type="file"
-          placeholder={placeholder}
-          disabled={disabled}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          {...createAttributesForTesting(testId)}
-        />
+      <div className="file is-info has-name is-fullwidth">
+        <label className="file-label">
+          <input
+            ref={ref}
+            name={name}
+            className="file-input"
+            type="file"
+            placeholder={placeholder}
+            disabled={disabled}
+            onChange={handleChange}
+            onBlur={handleBlur}
+            {...createAttributesForTesting(testId)}
+          />
+          <span className="file-cta">
+            <span className="file-icon">
+              <i className="fas fa-arrow-circle-up" />
+            </span>
+            <span className="file-label has-text-weight-bold">{t("fileInput.label")}</span>
+          </span>
+          {file?.name ? (
+            <span className="file-name">{file?.name}</span>
+          ) : (
+            <span className="file-name has-text-weight-light has-text-grey-light">
+              {filenamePlaceholder || t("fileInput.noFileChosen")}
+            </span>
+          )}
+        </label>
       </div>
     </div>
   );

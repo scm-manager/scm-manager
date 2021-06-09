@@ -46984,6 +46984,91 @@ exports[`Storyshots Forms|DropDown With Translation 1`] = `
 </div>
 `;
 
+exports[`Storyshots Forms|FileInput Default 1`] = `
+<div
+  className="FileInputstories__Decorator-sc-5svgf8-0 icfkjP"
+>
+  <form
+    onSubmit={[Function]}
+  >
+    <div
+      className="field"
+    >
+      <label
+        className="label"
+      >
+        Upload File
+         
+        <span
+          className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 eRZLRi is-inline-block has-tooltip-multiline"
+          data-tooltip="Select your most loved file"
+        >
+          <i
+            className="fas fa-question-circle has-text-blue-light"
+          />
+        </span>
+      </label>
+      <div
+        className="file is-info has-name is-fullwidth"
+      >
+        <label
+          className="file-label"
+        >
+          <input
+            className="file-input"
+            name="uploadFile"
+            onBlur={[Function]}
+            onChange={[Function]}
+            type="file"
+          />
+          <span
+            className="file-cta"
+          >
+            <span
+              className="file-icon"
+            >
+              <i
+                className="fas fa-arrow-circle-up"
+              />
+            </span>
+            <span
+              className="file-label has-text-weight-bold"
+            >
+              fileInput.label
+            </span>
+          </span>
+          <span
+            className="file-name has-text-weight-light has-text-grey-light"
+          >
+            fileInput.noFileChosen
+          </span>
+        </label>
+      </div>
+    </div>
+    <div
+      className="level"
+    >
+      <div
+        className="level-left"
+      />
+      <div
+        className="level-right"
+      >
+        <button
+          className="button is-primary"
+          data-testid="submit-button"
+          onClick={[Function]}
+          type="submit"
+        >
+           
+          Submit
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
+`;
+
 exports[`Storyshots Forms|InputField AutoFocus 1`] = `
 <div
   className="InputFieldstories__Decorator-kq2lhz-0 cURTRq"
