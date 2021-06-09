@@ -1,0 +1,2 @@
+- type: fixed
+  description: Harmonize FileInput component with styleguide ([#1693](https://github.com/scm-manager/scm-manager/pull/1693))
