@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
@@ -29,116 +29,96 @@ package sonia.scm.web;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.codec.Base64;
-
-import org.junit.Test;
-import org.junit.runner.RunWith;
-
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.MockitoJUnitRunner;
-
-import static org.hamcrest.Matchers.*;
-
-import static org.junit.Assert.*;
-
-import static org.mockito.Mockito.*;
-
-//~--- JDK imports ------------------------------------------------------------
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.security.BearerToken;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.junit.Before;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.when;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * TODO add test with {@link UserAgentParser}.
- * 
+ *
  * @author Sebastian Sdorra
  */
-@RunWith(MockitoJUnitRunner.class)
-public class BasicWebTokenGeneratorTest
-{
-  
-  /**
-   * Set up object under test. 
-   * Use {@code null} as {@link UserAgentParser}.
-   */
-  @Before
-  public void setUpObjectUnderTest() {
+@ExtendWith(MockitoExtension.class)
+class BasicWebTokenGeneratorTest {
+
+  private BasicWebTokenGenerator generator;
+
+  @Mock
+  private HttpServletRequest request;
+
+  @BeforeEach
+  void setUpObjectUnderTest() {
     generator = new BasicWebTokenGenerator(null);
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testCreateToken()
-  {
+  void shouldCreateUsernamePasswordToken() {
     String trillian = Base64.encodeToString("trillian:secret".getBytes());
 
-    when(request.getHeader("Authorization")).thenReturn(
-      "Basic ".concat(trillian));
+    when(request.getHeader("Authorization")).thenReturn("Basic ".concat(trillian));
 
     AuthenticationToken token = generator.createToken(request);
-
-    assertThat(token, instanceOf(UsernamePasswordToken.class));
-
-    UsernamePasswordToken upt = (UsernamePasswordToken) token;
-
-    assertEquals("trillian", token.getPrincipal());
-    assertArrayEquals("secret".toCharArray(), upt.getPassword());
+    assertThat(token)
+      .isInstanceOfSatisfying(UsernamePasswordToken.class, usernamePasswordToken -> {
+        assertThat(usernamePasswordToken.getPrincipal()).isEqualTo("trillian");
+        assertThat(usernamePasswordToken.getPassword()).isEqualTo("secret".toCharArray());
+      });
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testCreateTokenWithWrongAuthorizationHeader()
-  {
+  void shouldCreateBearerToken() {
+    String bearerToken = Base64.encodeToString(
+      (BasicWebTokenGenerator.BEARER_TOKEN_IDENTIFIER + ":awesome_access_token").getBytes()
+    );
+
+    when(request.getHeader("Authorization")).thenReturn("Basic ".concat(bearerToken));
+
+    assertThat(generator.createToken(request))
+      .isInstanceOfSatisfying(
+        BearerToken.class,
+        token -> assertThat(token.getCredentials()).isEqualTo("awesome_access_token")
+      );
+  }
+
+  @Test
+  void shouldNotCreateTokenWithWrongAuthorizationHeader() {
     when(request.getHeader("Authorization")).thenReturn("NONBASIC ASD");
-    assertNull(generator.createToken(request));
+
+    AuthenticationToken token = generator.createToken(request);
+    assertThat(token).isNull();
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testCreateTokenWithWrongBasicAuthorizationHeader()
-  {
+  void shouldNotCreateTokenWithWrongBasicAuthorizationHeader() {
     when(request.getHeader("Authorization")).thenReturn("Basic ASD");
-    assertNull(generator.createToken(request));
+
+    AuthenticationToken token = generator.createToken(request);
+    assertThat(token).isNull();
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testCreateTokenWithoutAuthorizationHeader()
-  {
-    assertNull(generator.createToken(request));
+  void testCreateTokenWithoutAuthorizationHeader() {
+    AuthenticationToken token = generator.createToken(request);
+    assertThat(token).isNull();
   }
 
-  /**
-   * Method description
-   *
-   */
   @Test
-  public void testCreateTokenWithoutPassword()
-  {
+  void shouldNotCreateTokenWithoutPassword() {
     String trillian = Base64.encodeToString("trillian:".getBytes());
+    when(request.getHeader("Authorization")).thenReturn("Basic ".concat(trillian));
 
-    when(request.getHeader("Authorization")).thenReturn(
-      "Basic ".concat(trillian));
-    assertNull(generator.createToken(request));
+    AuthenticationToken token = generator.createToken(request);
+    assertThat(token).isNull();
   }
 
-  //~--- fields ---------------------------------------------------------------
-  
-  private BasicWebTokenGenerator generator;
-  
-  /** Field description */
-  @Mock
-  private HttpServletRequest request;
 }

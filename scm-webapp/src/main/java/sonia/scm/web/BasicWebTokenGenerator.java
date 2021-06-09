@@ -21,31 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Charsets;
+import com.google.common.annotations.VisibleForTesting;
 import com.google.inject.Inject;
-
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.Charset;
-
+import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.codec.Base64;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import sonia.scm.Priority;
 import sonia.scm.plugin.Extension;
+import sonia.scm.security.BearerToken;
+import sonia.scm.security.SessionId;
 import sonia.scm.util.HttpUtil;
 import sonia.scm.util.Util;
 
-//~--- JDK imports ------------------------------------------------------------
-
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  * Creates a {@link UsernamePasswordToken} from an authorization header with
@@ -56,15 +56,17 @@ import javax.servlet.http.HttpServletRequest;
  */
 @Priority(100)
 @Extension
-public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator
-{
+public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator {
+
+  @VisibleForTesting
+  static final String BEARER_TOKEN_IDENTIFIER = "__bearer_token";
 
   /** credential separator for basic authentication */
   private static final String CREDENTIAL_SEPARATOR = ":";
 
   /** default encoding to decode basic authentication header */
-  private static final Charset DEFAULT_ENCODING = Charsets.ISO_8859_1;
-  
+  private static final Charset DEFAULT_ENCODING = StandardCharsets.ISO_8859_1;
+
   /**
    * the logger for BasicWebTokenGenerator
    */
@@ -95,10 +97,9 @@ public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator
    * @return {@link UsernamePasswordToken} or {@code null}
    */
   @Override
-  protected UsernamePasswordToken createToken(HttpServletRequest request,
-    String scheme, String authorization)
+  protected AuthenticationToken createToken(HttpServletRequest request, String scheme, String authorization)
   {
-    UsernamePasswordToken authToken = null;
+    AuthenticationToken authToken = null;
 
     if (HttpUtil.AUTHORIZATION_SCHEME_BASIC.equalsIgnoreCase(scheme))
     {
@@ -111,15 +112,7 @@ public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator
         String username = token.substring(0, index);
         String password = token.substring(index + 1);
 
-        if (Util.isNotEmpty(username) && Util.isNotEmpty(password))
-        {
-          logger.trace("try to authenticate user {}", username);
-          authToken = new UsernamePasswordToken(username, password);
-        }
-        else if (logger.isWarnEnabled())
-        {
-          logger.warn("username or password is null/empty");
-        }
+        authToken = createTokenFromCredentials(request, username, password);
       }
       else if (logger.isWarnEnabled())
       {
@@ -129,11 +122,26 @@ public class BasicWebTokenGenerator extends SchemeBasedWebTokenGenerator
 
     return authToken;
   }
-  
-/**
+
+  private AuthenticationToken createTokenFromCredentials(HttpServletRequest request, String username, String password) {
+    if (Util.isNotEmpty(username) && Util.isNotEmpty(password)) {
+      if (BEARER_TOKEN_IDENTIFIER.equals(username)) {
+        logger.trace("create bearer token");
+        return BearerToken.create(SessionId.from(request).orElse(null), password);
+      } else {
+        logger.trace("create username password token for {}", username);
+        return new UsernamePasswordToken(username, password);
+      }
+    } else if (logger.isWarnEnabled()) {
+      logger.warn("username or password is null/empty");
+    }
+    return null;
+  }
+
+  /**
    * Decode base64 of the basic authentication header. The method will use
-   * the charset provided by the {@link UserAgent}, if the 
-   * {@link UserAgentParser} is not available the method will be fall back to 
+   * the charset provided by the {@link UserAgent}, if the
+   * {@link UserAgentParser} is not available the method will be fall back to
    * ISO-8859-1.
    *
    * @param request http request

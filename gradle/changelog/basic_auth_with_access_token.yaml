@@ -1,0 +1,2 @@
+- type: added
+  description: Support basic authentication with access token ([#1694](https://github.com/scm-manager/scm-manager/pulls/1694))
