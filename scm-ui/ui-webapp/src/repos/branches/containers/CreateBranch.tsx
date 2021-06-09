@@ -57,10 +57,6 @@ const CreateBranch: FC<Props> = ({ repository }) => {
     return <ErrorNotification error={errorList} />;
   }
 
-  if (errorCreate) {
-    return <ErrorNotification error={errorCreate} />;
-  }
-
   if (isLoadingList || !branches) {
     return <Loading />;
   }
@@ -68,6 +64,7 @@ const CreateBranch: FC<Props> = ({ repository }) => {
   return (
     <>
       <Subtitle subtitle={t("branches.create.title")} />
+      {errorCreate ? <ErrorNotification error={errorCreate} /> : null}
       <BranchForm
         submitForm={create}
         loading={isLoadingCreate}
