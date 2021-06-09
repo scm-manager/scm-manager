@@ -61,7 +61,7 @@ import TagRoot from "../tags/container/TagRoot";
 import { useIndexLinks, useRepository } from "@scm-manager/ui-api";
 import styled from "styled-components";
 
-const TagGroup = styled.div`
+const TagGroup = styled.span`
   font-weight: bold;
   & > * {
     margin-right: 0.25rem;
