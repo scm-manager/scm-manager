@@ -193,11 +193,15 @@
     },
     "FtR7UznKU1": {
       "displayName": "Existiert bereits",
-      "description": "Ein Datensatz mit den gegebenen Schlüsselwerten existiert bereits"
+      "description": "Ein Datensatz mit den gegebenen Schlüsselwerten existiert bereits."
+    },
+    "FgSZpu9FR1": {
+      "displayName": "Branch existiert bereits",
+      "description": "Ein Branch oder Branchverzeichnis mit den gegebenen Schlüsselwerten existiert bereits."
     },
     "9BR7qpDAe1": {
       "displayName": "Passwortänderung nicht erlaubt",
-      "description": "Sie haben nicht die Berechtigung, das Passwort zu ändern"
+      "description": "Sie haben nicht die Berechtigung, das Passwort zu ändern."
     },
     "2wR7UzpPG1": {
       "displayName": "Konkurrierende Änderungen",

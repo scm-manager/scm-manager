@@ -195,6 +195,10 @@
       "displayName": "Already exists",
       "description": "There is already an entity with the same key values."
     },
+    "FgSZpu9FR1": {
+      "displayName": "Branch already exists",
+      "description": "There is already an branch or branch directory with the same key values."
+    },
     "9BR7qpDAe1": {
       "displayName": "Password change not allowed",
       "description": "You do not have the permission to change the password."

@@ -62,7 +62,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.util.Optional;
 
-import static sonia.scm.AlreadyExistsException.alreadyExists;
+import static sonia.scm.BranchAlreadyExistsException.branchAlreadyExists;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
@@ -254,7 +254,7 @@ public class BranchRootResource {
     String parentName = branchRequest.getParent();
     try (RepositoryService repositoryService = serviceFactory.create(namespaceAndName)) {
       if (branchExists(branchName, repositoryService)) {
-        throw alreadyExists(entity(Branch.class, branchName).in(Repository.class, namespace + "/" + name));
+        throw branchAlreadyExists(entity(Branch.class, branchName).in(Repository.class, namespace + "/" + name));
       }
       Repository repository = repositoryService.getRepository();
       RepositoryPermissions.push(repository).check();

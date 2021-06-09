@@ -36,6 +36,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.AlreadyExistsException;
 import sonia.scm.BadRequestException;
+import sonia.scm.BranchAlreadyExistsException;
 import sonia.scm.ConcurrentModificationException;
 import sonia.scm.NotFoundException;
 import sonia.scm.ScmConstraintViolationException;
@@ -90,6 +91,7 @@ public class RestDispatcher {
     public EnhanceableExceptionMapper() {
       registerException(NotFoundException.class, Status.NOT_FOUND);
       registerException(AlreadyExistsException.class, Status.CONFLICT);
+      registerException(BranchAlreadyExistsException.class, Status.CONFLICT);
       registerException(ConcurrentModificationException.class, Status.CONFLICT);
       registerException(UnauthorizedException.class, Status.FORBIDDEN);
       registerException(AuthorizationException.class, Status.FORBIDDEN);
