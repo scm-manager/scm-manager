@@ -162,7 +162,7 @@ const RepositoryRoot = () => {
   if (repository.archived) {
     repositoryFlags.push(
       <Tooltip message={t("archive.tooltip")}>
-        <RepositoryFlag size="normal">{t("repository.archived")}</RepositoryFlag>
+        <RepositoryFlag>{t("repository.archived")}</RepositoryFlag>
       </Tooltip>
     );
   }
@@ -170,7 +170,7 @@ const RepositoryRoot = () => {
   if (repository.exporting) {
     repositoryFlags.push(
       <Tooltip message={t("exporting.tooltip")}>
-        <RepositoryFlag size="normal">{t("repository.exporting")}</RepositoryFlag>
+        <RepositoryFlag>{t("repository.exporting")}</RepositoryFlag>
       </Tooltip>
     );
   }
@@ -178,7 +178,7 @@ const RepositoryRoot = () => {
   if (repository.healthCheckFailures && repository.healthCheckFailures.length > 0) {
     repositoryFlags.push(
       <Tooltip message={t("healthCheckFailure.tooltip")}>
-        <RepositoryFlag size="normal" onClick={() => setShowHealthCheck(true)} color="danger">
+        <RepositoryFlag onClick={() => setShowHealthCheck(true)} color="danger">
           {t("repository.healthCheckFailure")}
         </RepositoryFlag>
       </Tooltip>
