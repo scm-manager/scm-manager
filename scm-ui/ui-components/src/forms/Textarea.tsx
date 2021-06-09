@@ -41,6 +41,7 @@ type BaseProps = {
   errorMessage?: string | string[];
   informationMessage?: string;
   defaultValue?: string;
+  readOnly?: boolean;
 };
 
 const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
@@ -57,6 +58,7 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
   validationError,
   informationMessage,
   defaultValue,
+  readOnly,
   ...props
 }) => {
   const ref = useAutofocus<HTMLTextAreaElement>(autofocus, props.innerRef);
@@ -115,6 +117,7 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
           disabled={disabled}
           onKeyDown={onKeyDown}
           defaultValue={defaultValue}
+          readOnly={readOnly}
         />
       </div>
       {helper}

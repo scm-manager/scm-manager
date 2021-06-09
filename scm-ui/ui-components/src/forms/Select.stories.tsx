@@ -62,6 +62,8 @@ const Ref: FC = () => {
 type Settings = {
   rememberMe: string;
   scramblePassword: string;
+  disabled: string;
+  readonly: string;
 };
 
 const ReactHookForm: FC = () => {
@@ -90,6 +92,26 @@ const ReactHookForm: FC = () => {
           ]}
           label="Scramble Password"
           {...register("scramblePassword")}
+        />
+        <Select
+          options={[
+            { label: "Yes", value: "true" },
+            { label: "No", value: "false" }
+          ]}
+          label="Disabled wont be submitted"
+          defaultValue="false"
+          disabled={true}
+          {...register("disabled")}
+        />
+        <Select
+          options={[
+            { label: "Yes", value: "true" },
+            { label: "No", value: "false" }
+          ]}
+          label="Readonly will be submitted"
+          readOnly={true}
+          defaultValue="false"
+          {...register("readonly")}
         />
 
         <div className="pt-2">

@@ -42,6 +42,7 @@ type BaseProps = {
   helpText?: string;
   testId?: string;
   className?: string;
+  readOnly?: boolean;
 };
 
 const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
@@ -51,6 +52,7 @@ const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
   disabled,
   testId,
   className,
+  readOnly,
   ...props
 }) => {
   const field = useInnerRef(props.innerRef);
@@ -95,7 +97,7 @@ const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
     }
   };
   return (
-    <div className="field">
+    <fieldset className="field" disabled={readOnly}>
       {renderLabelWithHelp()}
       <div className="control">
         {/*
@@ -113,13 +115,14 @@ const InnerCheckbox: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({
             ref={field}
             checked={props.checked}
             disabled={disabled}
+            readOnly={readOnly}
             {...createAttributesForTesting(testId)}
           />{" "}
           {label}
           {renderHelp()}
         </label>
       </div>
-    </div>
+    </fieldset>
   );
 };
 

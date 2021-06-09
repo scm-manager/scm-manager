@@ -44,6 +44,7 @@ type BaseProps = {
   className?: string;
   testId?: string;
   defaultValue?: string;
+  readOnly?: boolean;
 };
 
 export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>> = ({
@@ -62,6 +63,7 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
   testId,
   autofocus,
   defaultValue,
+  readOnly,
   ...props
 }) => {
   const field = useAutofocus<HTMLInputElement>(autofocus, props.innerRef);
@@ -116,6 +118,7 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
           onKeyPress={handleKeyPress}
           onBlur={handleBlur}
           defaultValue={defaultValue}
+          readOnly={readOnly}
           {...createAttributesForTesting(testId)}
         />
       </div>

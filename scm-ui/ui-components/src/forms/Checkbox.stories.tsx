@@ -56,10 +56,17 @@ const Ref: FC = () => {
 type Settings = {
   rememberMe: string;
   scramblePassword: string;
+  readonly: boolean;
+  disabled: boolean;
 };
 
 const ReactHookForm: FC = () => {
-  const { register, handleSubmit } = useForm<Settings>();
+  const { register, handleSubmit } = useForm<Settings>({
+    defaultValues: {
+      disabled: true,
+      readonly: true
+    }
+  });
   const [stored, setStored] = useState<Settings>();
 
   const onSubmit = (settings: Settings) => {
@@ -71,6 +78,8 @@ const ReactHookForm: FC = () => {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Checkbox label="Remember Me" {...register("rememberMe")} />
         <Checkbox label="Scramble Password" {...register("scramblePassword")} />
+        <Checkbox label="Disabled wont be submitted" disabled={true} {...register("disabled")} />
+        <Checkbox label="Readonly will be submitted" readOnly={true} {...register("readonly")} />
         <div className="pt-2">
           <SubmitButton>Submit</SubmitButton>
         </div>

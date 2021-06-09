@@ -62,6 +62,8 @@ const AutoFocusAndRef: FC = () => {
 };
 
 type Name = {
+  readonly: string;
+  disabled: string;
   firstName: string;
   lastName: string;
 };
@@ -70,7 +72,7 @@ const ReactHookForm: FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm<Name>();
   const [stored, setStored] = useState<Person>();
 
@@ -81,6 +83,18 @@ const ReactHookForm: FC = () => {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
+        <InputField
+          label="Readonly"
+          defaultValue="I am readonly but still show up on submit!"
+          readOnly={true}
+          {...register("readonly")}
+        />
+        <InputField
+          label="Disabled"
+          defaultValue="I am disabled and dont show up on submit!"
+          disabled={true}
+          {...register("disabled")}
+        />
         <InputField label="First Name" autofocus={true} {...register("firstName")} />
         <InputField
           label="Last Name"
@@ -107,15 +121,15 @@ const LegacyEvents: FC = () => {
   const [value, setValue] = useState<string>("");
   return (
     <>
-      <InputField placeholder="Legacy onChange handler" value={value} onChange={e => setValue(e)} />
+      <InputField placeholder="Legacy onChange handler" value={value} onChange={(e) => setValue(e)} />
       <div className="mt-3">{value}</div>
     </>
   );
 };
 
 storiesOf("Forms|InputField", module)
-  .addDecorator(storyFn => <Decorator>{storyFn()}</Decorator>)
-  .addDecorator(storyFn => <MemoryRouter>{storyFn()}</MemoryRouter>)
+  .addDecorator((storyFn) => <Decorator>{storyFn()}</Decorator>)
+  .addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
   .add("AutoFocus", () => <InputField label="Field with AutoFocus" autofocus={true} />)
   .add("Default Value", () => <InputField label="Field with Default Value" defaultValue={"I am a default value"} />)
   .add("Ref", () => <Ref />)
