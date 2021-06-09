@@ -123,6 +123,10 @@
   "fileUpload": {
     "label": "Select File"
   },
+  "fileInput": {
+    "label": "Select File",
+    "noFileChosen": "No file chosen"
+  },
   "importLog": {
     "title": "Import Log"
   },
