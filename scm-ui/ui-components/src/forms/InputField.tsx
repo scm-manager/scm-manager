@@ -103,7 +103,7 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
     helper = <p className="help is-info">{informationMessage}</p>;
   }
   return (
-    <div className={classNames("field", className)}>
+    <fieldset className={classNames("field", className)} disabled={readOnly}>
       <LabelWithHelpIcon label={label} helpText={helpText} />
       <div className="control">
         <input
@@ -118,12 +118,11 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
           onKeyPress={handleKeyPress}
           onBlur={handleBlur}
           defaultValue={defaultValue}
-          readOnly={readOnly}
           {...createAttributesForTesting(testId)}
         />
       </div>
       {helper}
-    </div>
+    </fieldset>
   );
 };
 

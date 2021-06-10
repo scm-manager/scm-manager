@@ -103,7 +103,7 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
   }
 
   return (
-    <div className="field">
+    <fieldset className="field" disabled={readOnly}>
       <LabelWithHelpIcon label={label} helpText={helpText} />
       <div className="control">
         <textarea
@@ -117,11 +117,10 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
           disabled={disabled}
           onKeyDown={onKeyDown}
           defaultValue={defaultValue}
-          readOnly={readOnly}
         />
       </div>
       {helper}
-    </div>
+    </fieldset>
   );
 };
 
