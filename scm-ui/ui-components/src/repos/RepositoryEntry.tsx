@@ -51,7 +51,7 @@ const Title = styled.span`
 `;
 
 const RepositoryFlagContainer = styled.div`
-  pointer-events: all;
+  /*pointer-events: all;*/
 
   .tag {
     margin-left: 0.25rem;

@@ -63329,7 +63329,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
               </strong>
                
               <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
               >
                 <span
                   className="tooltip has-tooltip-bottom"
@@ -63492,7 +63492,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
               </strong>
                
               <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
               />
             </span>
           </p>
@@ -63647,7 +63647,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
               </strong>
                
               <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
               />
             </span>
           </p>
@@ -63799,7 +63799,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
               </strong>
                
               <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
               />
             </span>
           </p>
@@ -63951,7 +63951,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
               </strong>
                
               <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
               >
                 <span
                   className="tooltip has-tooltip-bottom"
@@ -64114,7 +64114,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
               </strong>
                
               <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
               >
                 <span
                   className="tooltip has-tooltip-bottom"
@@ -64278,7 +64278,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
               </strong>
                
               <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
               >
                 <span
                   className="tooltip has-tooltip-bottom"
@@ -64451,7 +64451,7 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
               </strong>
                
               <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
               />
             </span>
           </p>
@@ -64610,7 +64610,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
               </strong>
                
               <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
               >
                 <span
                   className="tooltip has-tooltip-bottom"
