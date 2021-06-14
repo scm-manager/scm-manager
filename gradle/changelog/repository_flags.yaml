@@ -1,0 +1,2 @@
+- type: fixed
+  description: Uniform rendering of tooltips for repository badges ([#1698](https://github.com/scm-manager/scm-manager/pull/1698))
