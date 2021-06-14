@@ -2374,10 +2374,10 @@ exports[`Storyshots CardColumn Default 1`] = `
         className="is-flex"
       >
         <div
-          className="CardColumn__ContentLeft-sc-1w6lsih-4 heSQMX content"
+          className="is-clipped mb-0"
         >
           <p
-            className="shorten-text is-marginless"
+            className="shorten-text m-0"
           >
             <strong>
               title
@@ -2394,14 +2394,14 @@ exports[`Storyshots CardColumn Default 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 hazmI level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
         >
           <small>
             left footer
           </small>
         </div>
         <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 bmCbDN level-right is-block is-mobile is-marginless shorten-text"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
         >
           <small>
             right footer
@@ -2427,10 +2427,10 @@ exports[`Storyshots CardColumn Minimal 1`] = `
         className="is-flex"
       >
         <div
-          className="CardColumn__ContentLeft-sc-1w6lsih-4 heSQMX content"
+          className="is-clipped mb-0"
         >
           <p
-            className="shorten-text is-marginless"
+            className="shorten-text m-0"
           >
             <strong>
               title
@@ -2442,14 +2442,14 @@ exports[`Storyshots CardColumn Minimal 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 hazmI level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
         >
           <small>
             left footer
           </small>
         </div>
         <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 bmCbDN level-right is-block is-mobile is-marginless shorten-text"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
         >
           <small>
             right footer
@@ -2475,10 +2475,10 @@ exports[`Storyshots CardColumn With hoverable date 1`] = `
         className="is-flex"
       >
         <div
-          className="CardColumn__ContentLeft-sc-1w6lsih-4 heSQMX content"
+          className="is-clipped mb-0"
         >
           <p
-            className="shorten-text is-marginless"
+            className="shorten-text m-0"
           >
             <strong>
               title
@@ -2490,14 +2490,14 @@ exports[`Storyshots CardColumn With hoverable date 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 hazmI level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
         >
           <small>
             left footer
           </small>
         </div>
         <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 bmCbDN level-right is-block is-mobile is-marginless shorten-text"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
         >
           <small
             className="level-item"
@@ -63316,24 +63316,32 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
         className="is-flex"
       >
         <div
-          className="CardColumn__ContentLeft-sc-1w6lsih-4 heSQMX content"
+          className="is-clipped mb-0"
         >
           <p
-            className="shorten-text is-marginless"
+            className="shorten-text m-0"
           >
             <span
-              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
             >
               <strong>
                 heartOfGold
               </strong>
                
-              <span
-                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
-                title="archive.tooltip"
+              <div
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
               >
-                repository.archived
-              </span>
+                <span
+                  className="tooltip has-tooltip-bottom"
+                  data-tooltip="archive.tooltip"
+                >
+                  <span
+                    className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                  >
+                    repository.archived
+                  </span>
+                </span>
+              </div>
             </span>
           </p>
           <p
@@ -63347,7 +63355,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 hazmI level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
@@ -63421,7 +63429,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
           </a>
         </div>
         <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 bmCbDN level-right is-block is-mobile is-marginless shorten-text"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
         >
           <small
             className="level-item"
@@ -63471,18 +63479,21 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
         className="is-flex"
       >
         <div
-          className="CardColumn__ContentLeft-sc-1w6lsih-4 heSQMX content"
+          className="is-clipped mb-0"
         >
           <p
-            className="shorten-text is-marginless"
+            className="shorten-text m-0"
           >
             <span
-              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
             >
               <strong>
                 heartOfGold
               </strong>
                
+              <div
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
+              />
             </span>
           </p>
           <p
@@ -63496,7 +63507,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 hazmI level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
@@ -63570,7 +63581,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
           </a>
         </div>
         <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 bmCbDN level-right is-block is-mobile is-marginless shorten-text"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
         >
           <small
             className="level-item"
@@ -63620,13 +63631,13 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
         className="is-flex"
       >
         <div
-          className="CardColumn__ContentLeft-sc-1w6lsih-4 heSQMX content"
+          className="is-clipped mb-0"
         >
           <p
-            className="shorten-text is-marginless"
+            className="shorten-text m-0"
           >
             <span
-              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
             >
               <i
                 className="far fa-star"
@@ -63635,6 +63646,9 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
                 heartOfGold
               </strong>
                
+              <div
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
+              />
             </span>
           </p>
           <p
@@ -63648,7 +63662,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 hazmI level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
@@ -63722,7 +63736,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
           </a>
         </div>
         <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 bmCbDN level-right is-block is-mobile is-marginless shorten-text"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
         >
           <small
             className="level-item"
@@ -63772,18 +63786,21 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
         className="is-flex"
       >
         <div
-          className="CardColumn__ContentLeft-sc-1w6lsih-4 heSQMX content"
+          className="is-clipped mb-0"
         >
           <p
-            className="shorten-text is-marginless"
+            className="shorten-text m-0"
           >
             <span
-              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
             >
               <strong>
                 heartOfGold
               </strong>
                
+              <div
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
+              />
             </span>
           </p>
           <p
@@ -63797,7 +63814,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 hazmI level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
@@ -63871,7 +63888,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
           </a>
         </div>
         <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 bmCbDN level-right is-block is-mobile is-marginless shorten-text"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
         >
           <small
             className="level-item"
@@ -63921,24 +63938,32 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
         className="is-flex"
       >
         <div
-          className="CardColumn__ContentLeft-sc-1w6lsih-4 heSQMX content"
+          className="is-clipped mb-0"
         >
           <p
-            className="shorten-text is-marginless"
+            className="shorten-text m-0"
           >
             <span
-              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
             >
               <strong>
                 heartOfGold
               </strong>
                
-              <span
-                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
-                title="exporting.tooltip"
+              <div
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
               >
-                repository.exporting
-              </span>
+                <span
+                  className="tooltip has-tooltip-bottom"
+                  data-tooltip="exporting.tooltip"
+                >
+                  <span
+                    className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                  >
+                    repository.exporting
+                  </span>
+                </span>
+              </div>
             </span>
           </p>
           <p
@@ -63952,7 +63977,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 hazmI level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
@@ -64026,7 +64051,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
           </a>
         </div>
         <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 bmCbDN level-right is-block is-mobile is-marginless shorten-text"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
         >
           <small
             className="level-item"
@@ -64076,25 +64101,33 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
         className="is-flex"
       >
         <div
-          className="CardColumn__ContentLeft-sc-1w6lsih-4 heSQMX content"
+          className="is-clipped mb-0"
         >
           <p
-            className="shorten-text is-marginless"
+            className="shorten-text m-0"
           >
             <span
-              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
             >
               <strong>
                 heartOfGold
               </strong>
                
-              <span
-                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-danger is-small has-cursor-pointer"
-                onClick={[Function]}
-                title="healthCheckFailure.tooltip"
+              <div
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
               >
-                repository.healthCheckFailure
-              </span>
+                <span
+                  className="tooltip has-tooltip-bottom"
+                  data-tooltip="healthCheckFailure.tooltip"
+                >
+                  <span
+                    className="Tag__InnerTag-ql67az-0 kOFYBe tag is-danger is-small has-cursor-pointer"
+                    onClick={[Function]}
+                  >
+                    repository.healthCheckFailure
+                  </span>
+                </span>
+              </div>
             </span>
           </p>
           <p
@@ -64108,7 +64141,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 hazmI level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
@@ -64182,7 +64215,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
           </a>
         </div>
         <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 bmCbDN level-right is-block is-mobile is-marginless shorten-text"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
         >
           <small
             className="level-item"
@@ -64232,30 +64265,42 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
         className="is-flex"
       >
         <div
-          className="CardColumn__ContentLeft-sc-1w6lsih-4 heSQMX content"
+          className="is-clipped mb-0"
         >
           <p
-            className="shorten-text is-marginless"
+            className="shorten-text m-0"
           >
             <span
-              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
             >
               <strong>
                 heartOfGold
               </strong>
                
-              <span
-                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
-                title="archive.tooltip"
+              <div
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
               >
-                repository.archived
-              </span>
-              <span
-                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
-                title="exporting.tooltip"
-              >
-                repository.exporting
-              </span>
+                <span
+                  className="tooltip has-tooltip-bottom"
+                  data-tooltip="archive.tooltip"
+                >
+                  <span
+                    className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                  >
+                    repository.archived
+                  </span>
+                </span>
+                <span
+                  className="tooltip has-tooltip-bottom"
+                  data-tooltip="exporting.tooltip"
+                >
+                  <span
+                    className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                  >
+                    repository.exporting
+                  </span>
+                </span>
+              </div>
             </span>
           </p>
           <p
@@ -64269,7 +64314,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 hazmI level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
@@ -64343,7 +64388,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
           </a>
         </div>
         <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 bmCbDN level-right is-block is-mobile is-marginless shorten-text"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
         >
           <small
             className="level-item"
@@ -64393,18 +64438,21 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
         className="is-flex"
       >
         <div
-          className="CardColumn__ContentLeft-sc-1w6lsih-4 heSQMX content"
+          className="is-clipped mb-0"
         >
           <p
-            className="shorten-text is-marginless"
+            className="shorten-text m-0"
           >
             <span
-              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
             >
               <strong>
                 heartOfGold
               </strong>
                
+              <div
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
+              />
             </span>
           </p>
           <p
@@ -64418,7 +64466,7 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 hazmI level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
@@ -64499,7 +64547,7 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
           </a>
         </div>
         <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 bmCbDN level-right is-block is-mobile is-marginless shorten-text"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
         >
           <small
             className="level-item"
@@ -64549,25 +64597,33 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
         className="is-flex"
       >
         <div
-          className="CardColumn__ContentLeft-sc-1w6lsih-4 heSQMX content"
+          className="is-clipped mb-0"
         >
           <p
-            className="shorten-text is-marginless"
+            className="shorten-text m-0"
           >
             <span
-              className="RepositoryEntry__Title-sc-6jys82-0 eaqclL"
+              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
             >
               <strong>
                 heartOfGold
               </strong>
                
-              <span
-                className="Tag__InnerTag-ql67az-0 kOFYBe tag is-danger is-small has-cursor-pointer"
-                onClick={[Function]}
-                title="healthCheckFailure.tooltip"
+              <div
+                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 jQZakT"
               >
-                repository.healthCheckFailure
-              </span>
+                <span
+                  className="tooltip has-tooltip-bottom"
+                  data-tooltip="healthCheckFailure.tooltip"
+                >
+                  <span
+                    className="Tag__InnerTag-ql67az-0 kOFYBe tag is-danger is-small has-cursor-pointer"
+                    onClick={[Function]}
+                  >
+                    repository.healthCheckFailure
+                  </span>
+                </span>
+              </div>
             </span>
           </p>
           <p
@@ -64581,7 +64637,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
         className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-6 hazmI level-left is-hidden-mobile"
+          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
         >
           <a
             className="RepositoryEntryLink__PointerEventsLink-sc-1hpqj0w-0 hOdNxe level-item"
@@ -64655,7 +64711,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
           </a>
         </div>
         <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-7 bmCbDN level-right is-block is-mobile is-marginless shorten-text"
+          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
         >
           <small
             className="level-item"
