@@ -21,26 +21,80 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { Title, Configuration } from "@scm-manager/ui-components";
-import GitConfigurationForm from "./GitConfigurationForm";
+import React, { FC, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { Title, ConfigurationForm, InputField, Checkbox, validation } from "@scm-manager/ui-components";
+import { useConfigLink } from "@scm-manager/ui-api";
+import { HalRepresentation } from "@scm-manager/ui-types";
+import { useForm } from "react-hook-form";
 
-type Props = WithTranslation & {
+type Props = {
   link: string;
 };
 
-class GitGlobalConfiguration extends React.Component<Props> {
-  render() {
-    const { link, t } = this.props;
+type Configuration = HalRepresentation & {
+  repositoryDirectory?: string;
+  gcExpression?: string;
+  nonFastForwardDisallowed: boolean;
+  defaultBranch: string;
+  lfsWriteAuthorizationExpirationInMinutes: number;
+};
 
-    return (
-      <div>
-        <Title title={t("scm-git-plugin.config.title")} />
-        <Configuration link={link} render={(props: any) => <GitConfigurationForm {...props} />} />
-      </div>
-    );
-  }
-}
+const GitGlobalConfiguration: FC<Props> = ({ link }) => {
+  const [t] = useTranslation("plugins");
 
-export default withTranslation("plugins")(GitGlobalConfiguration);
+  const { initialConfiguration, isReadOnly, update, ...formProps } = useConfigLink(link);
+  const { formState, handleSubmit, register, reset } = useForm<Configuration>({ mode: "onChange" });
+
+  useEffect(() => {
+    if (initialConfiguration) {
+      reset(initialConfiguration);
+    }
+  }, [initialConfiguration]);
+
+  const isValidDefaultBranch = (value: string) => {
+    return validation.isBranchValid(value);
+  };
+
+  return (
+    <ConfigurationForm
+      isValid={formState.isValid}
+      isReadOnly={isReadOnly}
+      onSubmit={handleSubmit(update)}
+      {...formProps}
+    >
+      <Title title={t("scm-git-plugin.config.title")} />
+      <InputField
+        label={t("scm-git-plugin.config.gcExpression")}
+        helpText={t("scm-git-plugin.config.gcExpressionHelpText")}
+        disabled={isReadOnly}
+        {...register("gcExpression")}
+      />
+      <Checkbox
+        label={t("scm-git-plugin.config.nonFastForwardDisallowed")}
+        helpText={t("scm-git-plugin.config.nonFastForwardDisallowedHelpText")}
+        disabled={isReadOnly}
+        {...register("nonFastForwardDisallowed")}
+      />
+      <InputField
+        label={t("scm-git-plugin.config.defaultBranch")}
+        helpText={t("scm-git-plugin.config.defaultBranchHelpText")}
+        disabled={isReadOnly}
+        validationError={!!formState.errors.defaultBranch}
+        errorMessage={t("scm-git-plugin.config.defaultBranchValidationError")}
+        {...register("defaultBranch", { validate: isValidDefaultBranch })}
+      />
+      <InputField
+        type="number"
+        label={t("scm-git-plugin.config.lfsWriteAuthorizationExpirationInMinutes")}
+        helpText={t("scm-git-plugin.config.lfsWriteAuthorizationExpirationInMinutesHelpText")}
+        disabled={isReadOnly}
+        validationError={!!formState.errors.lfsWriteAuthorizationExpirationInMinutes}
+        errorMessage={t("scm-git-plugin.config.lfsWriteAuthorizationExpirationInMinutesValidationError")}
+        {...register("lfsWriteAuthorizationExpirationInMinutes", { min: 1, required: true })}
+      />
+    </ConfigurationForm>
+  );
+};
+
+export default GitGlobalConfiguration;

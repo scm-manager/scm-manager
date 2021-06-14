@@ -27,6 +27,9 @@
       "defaultBranch": "Default Branch",
       "defaultBranchHelpText": "This name will be used for the initialization of new git repositories. It has no effect otherwise (especially this cannot change the initial branch name for empty repositories).",
       "defaultBranchValidationError": "This is not a valid branch name",
+      "lfsWriteAuthorizationExpirationInMinutes": "LFS authorization expiration",
+      "lfsWriteAuthorizationExpirationInMinutesHelpText": "Expiration time of the authorization token generated for LFS put requests in minutes. If SCM-Manager is run behind a reverse proxy that buffers http requests (eg. Nginx), this should set up to the time, an LFS upload may take at maximum.",
+      "lfsWriteAuthorizationExpirationInMinutesValidationError": "Has to be at least 1 minute",
       "disabled": "Disabled",
       "disabledHelpText": "Enable or disable the Git plugin",
       "submit": "Submit"

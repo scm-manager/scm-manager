@@ -55,6 +55,9 @@ public class GitConfig extends RepositoryConfig {
   @XmlElement(name = "default-branch")
   private String defaultBranch = FALLBACK_BRANCH;
 
+  @XmlElement(name = "lfs-write-authorization-expiration")
+  private int lfsWriteAuthorizationExpirationInMinutes = 5;
+
   public String getGcExpression() {
     return gcExpression;
   }
@@ -80,6 +83,14 @@ public class GitConfig extends RepositoryConfig {
 
   public void setDefaultBranch(String defaultBranch) {
     this.defaultBranch = defaultBranch;
+  }
+
+  public int getLfsWriteAuthorizationExpirationInMinutes() {
+    return lfsWriteAuthorizationExpirationInMinutes;
+  }
+
+  public void setLfsWriteAuthorizationExpirationInMinutes(int lfsWriteAuthorizationExpirationInMinutes) {
+    this.lfsWriteAuthorizationExpirationInMinutes = lfsWriteAuthorizationExpirationInMinutes;
   }
 
   @Override

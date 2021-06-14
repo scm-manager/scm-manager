@@ -31,6 +31,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Pattern;
 
@@ -51,6 +52,9 @@ public class GitConfigDto extends HalRepresentation implements UpdateGitConfigDt
   @Length(min = 1, max = 100)
   @Pattern(regexp = VALID_BRANCH_NAMES)
   private String defaultBranch;
+
+  @Min(1)
+  private int lfsWriteAuthorizationExpirationInMinutes;
 
   @Override
   @SuppressWarnings("squid:S1185") // We want to have this method available in this package
