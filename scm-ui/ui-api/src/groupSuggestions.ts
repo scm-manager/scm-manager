@@ -21,21 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import UserGroupAutocomplete, { AutocompleteProps } from "./UserGroupAutocomplete";
-import { useTranslation } from "react-i18next";
+import { Link } from "@scm-manager/ui-types";
+import { useIndexLinks } from "./base";
+import { useSuggestions } from "./suggestions";
 
-const GroupAutocomplete: FC<AutocompleteProps> = (props) => {
-  const [t] = useTranslation("commons");
-  return (
-    <UserGroupAutocomplete
-      label={t("autocomplete.group")}
-      noOptionsMessage={t("autocomplete.noGroupOptions")}
-      loadingMessage={t("autocomplete.loading")}
-      placeholder={t("autocomplete.groupPlaceholder")}
-      {...props}
-    />
-  );
+export const useGroupSuggestions = () => {
+  const indexLinks = useIndexLinks();
+  const autocompleteLink = (indexLinks.autocomplete as Link[]).find((i) => i.name === "groups");
+  return useSuggestions(autocompleteLink?.href);
 };
-
-export default GroupAutocomplete;

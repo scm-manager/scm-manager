@@ -21,21 +21,27 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
-import UserGroupAutocomplete, { AutocompleteProps } from "./UserGroupAutocomplete";
-import { useTranslation } from "react-i18next";
+import { AutocompleteObject, SelectValue } from "@scm-manager/ui-types";
+import { apiClient } from "./apiclient";
 
-const GroupAutocomplete: FC<AutocompleteProps> = (props) => {
-  const [t] = useTranslation("commons");
-  return (
-    <UserGroupAutocomplete
-      label={t("autocomplete.group")}
-      noOptionsMessage={t("autocomplete.noGroupOptions")}
-      loadingMessage={t("autocomplete.loading")}
-      placeholder={t("autocomplete.groupPlaceholder")}
-      {...props}
-    />
-  );
+export const useSuggestions: (link?: string) => (query: string) => Promise<SelectValue[]> = (link) => {
+  if (!link) {
+    return () => Promise.resolve([]);
+  }
+  const url = link + "?q=";
+  return (inputValue) => {
+    // Prevent violate input condition of api call because parameter length is too short
+    if (inputValue.length < 2) {
+      return Promise.resolve([]);
+    }
+    return apiClient
+      .get(url + inputValue)
+      .then((response) => response.json())
+      .then((json: AutocompleteObject[]) =>
+        json.map((element) => ({
+          value: element,
+          label: element.displayName ? `${element.displayName} (${element.id})` : element.id,
+        }))
+      );
+  };
 };
-
-export default GroupAutocomplete;
