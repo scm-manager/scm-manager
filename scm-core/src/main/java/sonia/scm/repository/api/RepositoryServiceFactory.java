@@ -369,12 +369,17 @@ public final class RepositoryServiceFactory {
 
     @Subscribe
     public void onEvent(PublicKeyDeletedEvent event) {
-      cacheManager.getCache(LogCommandBuilder.CACHE_NAME).clear();
+      invalidateCachesForChangedPublicKeys();
     }
 
     @Subscribe
     public void onEvent(PublicKeyCreatedEvent event) {
+      invalidateCachesForChangedPublicKeys();
+    }
+
+    private void invalidateCachesForChangedPublicKeys() {
       cacheManager.getCache(LogCommandBuilder.CACHE_NAME).clear();
+      cacheManager.getCache(TagsCommandBuilder.CACHE_NAME).clear();
     }
 
     @SuppressWarnings({"unchecked", "java:S3740", "rawtypes"})
