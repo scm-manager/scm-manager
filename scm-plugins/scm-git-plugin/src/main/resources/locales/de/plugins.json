@@ -27,7 +27,7 @@
       "defaultBranch": "Default Branch",
       "defaultBranchHelpText": "Dieser Name wird bei der Initialisierung neuer Git Repositories genutzt. Er hat keine weiteren Auswirkungen (insbesondere hat er keinen Einfluss auf den Branchnamen bei leeren Repositories).",
       "defaultBranchValidationError": "Dies ist kein valider Branchname",
-      "lfsWriteAuthorizationExpirationInMinutes": "LFS Autorisierungsablaufzeit",
+      "lfsWriteAuthorizationExpirationInMinutes": "Ablaufzeit für LFS Autorisierung",
       "lfsWriteAuthorizationExpirationInMinutesHelpText": "Ablaufzeit für den Autorisierungstoken in Minuten, der für LFS Speicheranfragen ausgestellt wird. Wenn der SCM-Manager hinter einem Reverse-Proxy mit Zwischenspeicherung (z. B. Nginx) betrieben wird, sollte dieser Wert auf die Zeit gesetzt werden, die ein LFS-Upload maximal benötigen kann.",
       "lfsWriteAuthorizationExpirationInMinutesValidationError": "Has to be at least 1 minute",
       "disabled": "Deaktiviert",

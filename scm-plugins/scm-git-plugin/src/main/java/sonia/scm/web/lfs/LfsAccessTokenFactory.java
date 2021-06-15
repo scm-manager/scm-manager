@@ -84,7 +84,7 @@ public class LfsAccessTokenFactory {
     PermissionCheck push = RepositoryPermissions.push(repository);
     push.check();
 
-    int lfsAuthorizationTimeoutInMinutes = readLfsAuthorizationTimeoutInMinutes();
+    int lfsAuthorizationTimeoutInMinutes = getConfiguredLfsAuthorizationTimeoutInMinutes();
 
     return createToken(Scope.valueOf(read.asShiroString(), pull.asShiroString(), push.asShiroString()), lfsAuthorizationTimeoutInMinutes);
   }
@@ -98,7 +98,7 @@ public class LfsAccessTokenFactory {
       .build();
   }
 
-  private int readLfsAuthorizationTimeoutInMinutes() {
+  private int getConfiguredLfsAuthorizationTimeoutInMinutes() {
     GitConfig repositoryConfig = handler.getConfig();
     return repositoryConfig.getLfsWriteAuthorizationExpirationInMinutes();
   }
