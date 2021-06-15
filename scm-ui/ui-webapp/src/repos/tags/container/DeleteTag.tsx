@@ -24,7 +24,7 @@
 
 import React, { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Redirect } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
 import { Repository, Tag } from "@scm-manager/ui-types";
 import { useDeleteTag } from "@scm-manager/ui-api";
@@ -35,13 +35,10 @@ type Props = {
 };
 
 const DeleteTag: FC<Props> = ({ tag, repository }) => {
-  const { isLoading, error, remove, isDeleted } = useDeleteTag(repository);
+  const history = useHistory();
+  const { isLoading, error, remove } = useDeleteTag(repository);
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
   const [t] = useTranslation("repos");
-
-  if (isDeleted) {
-    return <Redirect to={`/repo/${repository.namespace}/${repository.name}/tags/`} />;
-  }
 
   return (
     <>
@@ -55,12 +52,15 @@ const DeleteTag: FC<Props> = ({ tag, repository }) => {
               className: "is-outlined",
               label: t("tag.delete.confirmAlert.submit"),
               isLoading,
-              onClick: () => remove(tag)
+              onClick: () => {
+                remove(tag);
+                history.push(`/repo/${repository.namespace}/${repository.name}/tags/`);
+              },
             },
             {
               label: t("tag.delete.confirmAlert.cancel"),
-              onClick: () => null
-            }
+              onClick: () => null,
+            },
           ]}
           close={() => setShowConfirmAlert(false)}
         />

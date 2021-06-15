@@ -1,0 +1,2 @@
+- type: fixed
+  description: Redirect after single tag was deleted ([#1700](https://github.com/scm-manager/scm-manager/pull/1700))
