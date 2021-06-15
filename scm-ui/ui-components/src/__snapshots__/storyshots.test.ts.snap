@@ -47393,7 +47393,9 @@ exports[`Storyshots Forms|Radio Default 1`] = `
 <div
   className="Radiostories__Spacing-sc-18hvwhd-0 cAoTRX"
 >
-  <fieldset>
+  <fieldset
+    className="Radio__InlineFieldset-ays4vp-1 dwlqJP"
+  >
     <label
       className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
     >
@@ -47407,7 +47409,9 @@ exports[`Storyshots Forms|Radio Default 1`] = `
       Not checked
     </label>
   </fieldset>
-  <fieldset>
+  <fieldset
+    className="Radio__InlineFieldset-ays4vp-1 dwlqJP"
+  >
     <label
       className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
     >
@@ -47428,7 +47432,9 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
 <div
   className="Radiostories__Spacing-sc-18hvwhd-0 cAoTRX"
 >
-  <fieldset>
+  <fieldset
+    className="Radio__InlineFieldset-ays4vp-1 dwlqJP"
+  >
     <label
       className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
       disabled={true}
@@ -47449,7 +47455,9 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
 
 exports[`Storyshots Forms|Radio Legacy Events 1`] = `
 Array [
-  <fieldset>
+  <fieldset
+    className="Radio__InlineFieldset-ays4vp-1 dwlqJP"
+  >
     <label
       className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
     >
@@ -47477,7 +47485,9 @@ exports[`Storyshots Forms|Radio ReactHookForm 1`] = `
   <div
     className="Radiostories__RadioList-sc-18hvwhd-1 lcyKug"
   >
-    <fieldset>
+    <fieldset
+      className="Radio__InlineFieldset-ays4vp-1 dwlqJP"
+    >
       <label
         className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
       >
@@ -47493,7 +47503,9 @@ exports[`Storyshots Forms|Radio ReactHookForm 1`] = `
         Remember Me
       </label>
     </fieldset>
-    <fieldset>
+    <fieldset
+      className="Radio__InlineFieldset-ays4vp-1 dwlqJP"
+    >
       <label
         className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
       >
@@ -47509,7 +47521,9 @@ exports[`Storyshots Forms|Radio ReactHookForm 1`] = `
       </label>
     </fieldset>
   </div>
-  <fieldset>
+  <fieldset
+    className="Radio__InlineFieldset-ays4vp-1 dwlqJP"
+  >
     <label
       className="Radio__StyledRadio-ays4vp-0 da-DBNS radio ml-2"
     >
@@ -47524,7 +47538,9 @@ exports[`Storyshots Forms|Radio ReactHookForm 1`] = `
       Scramble Password
     </label>
   </fieldset>
-  <fieldset>
+  <fieldset
+    className="Radio__InlineFieldset-ays4vp-1 dwlqJP"
+  >
     <label
       className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
       disabled={true}
@@ -47541,7 +47557,9 @@ exports[`Storyshots Forms|Radio ReactHookForm 1`] = `
       Disabled wont be submitted
     </label>
   </fieldset>
-  <fieldset>
+  <fieldset
+    className="Radio__InlineFieldset-ays4vp-1 dwlqJP"
+  >
     <label
       className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
     >
@@ -47574,7 +47592,9 @@ exports[`Storyshots Forms|Radio ReactHookForm 1`] = `
 
 exports[`Storyshots Forms|Radio Ref 1`] = `
 Array [
-  <fieldset>
+  <fieldset
+    className="Radio__InlineFieldset-ays4vp-1 dwlqJP"
+  >
     <label
       className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
     >
@@ -47603,7 +47623,9 @@ exports[`Storyshots Forms|Radio With HelpText 1`] = `
 <div
   className="Radiostories__RadioList-sc-18hvwhd-1 lcyKug"
 >
-  <fieldset>
+  <fieldset
+    className="Radio__InlineFieldset-ays4vp-1 dwlqJP"
+  >
     <label
       className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
     >
@@ -47625,7 +47647,9 @@ exports[`Storyshots Forms|Radio With HelpText 1`] = `
       </span>
     </label>
   </fieldset>
-  <fieldset>
+  <fieldset
+    className="Radio__InlineFieldset-ays4vp-1 dwlqJP"
+  >
     <label
       className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
     >
