@@ -23,20 +23,23 @@
  */
 
 import React, { FC } from "react";
-import Tag from "../Tag";
 import { Color, Size } from "../styleConstants";
+import Tooltip from "../Tooltip";
+import Tag from "../Tag";
 
 type Props = {
   color?: Color;
-  title?: string;
+  title: string;
   onClick?: () => void;
   size?: Size;
 };
 
-const RepositoryFlag: FC<Props> = ({ children, size = "small", ...props }) => (
-  <Tag size={size} {...props}>
-    {children}
-  </Tag>
+const RepositoryFlag: FC<Props> = ({ children, title, size = "small", ...props }) => (
+  <Tooltip location="bottom" message={title}>
+    <Tag size={size} {...props}>
+      {children}
+    </Tag>
+  </Tooltip>
 );
 
 export default RepositoryFlag;
