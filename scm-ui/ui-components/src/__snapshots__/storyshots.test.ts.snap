@@ -46451,7 +46451,7 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
   <div
     className="AddKeyValueEntryToTableField__InputLevel-kiarql-0 kYncSL"
   >
-    <div
+    <fieldset
       className="field AddKeyValueEntryToTableField__StyledInputField-kiarql-1 iutNFQ"
     >
       <label
@@ -46471,8 +46471,8 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
           value=""
         />
       </div>
-    </div>
-    <div
+    </fieldset>
+    <fieldset
       className="field AddKeyValueEntryToTableField__StyledInputField-kiarql-1 iutNFQ"
     >
       <label
@@ -46492,7 +46492,7 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Default 1`] = `
           value=""
         />
       </div>
-    </div>
+    </fieldset>
     <button
       className="button is-default AddKeyValueEntryToTableField__MarginTopButton-kiarql-2 kygLQj"
       disabled={true}
@@ -46522,7 +46522,7 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Disabled 1`] = `
   <div
     className="AddKeyValueEntryToTableField__InputLevel-kiarql-0 kYncSL"
   >
-    <div
+    <fieldset
       className="field AddKeyValueEntryToTableField__StyledInputField-kiarql-1 iutNFQ"
     >
       <label
@@ -46543,8 +46543,8 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Disabled 1`] = `
           value=""
         />
       </div>
-    </div>
-    <div
+    </fieldset>
+    <fieldset
       className="field AddKeyValueEntryToTableField__StyledInputField-kiarql-1 iutNFQ"
     >
       <label
@@ -46565,7 +46565,7 @@ exports[`Storyshots Forms|AddKeyValueEntryToTableField Disabled 1`] = `
           value=""
         />
       </div>
-    </div>
+    </fieldset>
     <button
       className="button is-default AddKeyValueEntryToTableField__MarginTopButton-kiarql-2 kygLQj"
       disabled={true}
@@ -46592,7 +46592,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
 <div
   className="Checkboxstories__Spacing-sc-1bg8q8e-0 bKxINN"
 >
-  <div
+  <fieldset
     className="field"
   >
     <div
@@ -46612,8 +46612,8 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
         Not checked
       </label>
     </div>
-  </div>
-  <div
+  </fieldset>
+  <fieldset
     className="field"
   >
     <div
@@ -46633,8 +46633,8 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
         Checked
       </label>
     </div>
-  </div>
-  <div
+  </fieldset>
+  <fieldset
     className="field"
   >
     <div
@@ -46654,7 +46654,7 @@ exports[`Storyshots Forms|Checkbox Default 1`] = `
         Indeterminate
       </label>
     </div>
-  </div>
+  </fieldset>
 </div>
 `;
 
@@ -46662,7 +46662,7 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
 <div
   className="Checkboxstories__Spacing-sc-1bg8q8e-0 bKxINN"
 >
-  <div
+  <fieldset
     className="field"
   >
     <div
@@ -46684,13 +46684,13 @@ exports[`Storyshots Forms|Checkbox Disabled 1`] = `
         Checked but disabled
       </label>
     </div>
-  </div>
+  </fieldset>
 </div>
 `;
 
 exports[`Storyshots Forms|Checkbox Legacy Events 1`] = `
 Array [
-  <div
+  <fieldset
     className="field"
   >
     <div
@@ -46709,7 +46709,7 @@ Array [
          
       </label>
     </div>
-  </div>,
+  </fieldset>,
   <div
     className="mt-3"
   >
@@ -46722,7 +46722,7 @@ exports[`Storyshots Forms|Checkbox ReactHookForm 1`] = `
 <form
   onSubmit={[Function]}
 >
-  <div
+  <fieldset
     className="field"
   >
     <div
@@ -46742,8 +46742,8 @@ exports[`Storyshots Forms|Checkbox ReactHookForm 1`] = `
         Remember Me
       </label>
     </div>
-  </div>
-  <div
+  </fieldset>
+  <fieldset
     className="field"
   >
     <div
@@ -46763,7 +46763,53 @@ exports[`Storyshots Forms|Checkbox ReactHookForm 1`] = `
         Scramble Password
       </label>
     </div>
-  </div>
+  </fieldset>
+  <fieldset
+    className="field"
+  >
+    <div
+      className="control"
+    >
+      <label
+        className="checkbox"
+        disabled={true}
+      >
+        <input
+          className="checkbox"
+          disabled={true}
+          name="disabled"
+          onBlur={[Function]}
+          onChange={[Function]}
+          type="checkbox"
+        />
+         
+        Disabled wont be submitted
+      </label>
+    </div>
+  </fieldset>
+  <fieldset
+    className="field"
+    disabled={true}
+  >
+    <div
+      className="control"
+    >
+      <label
+        className="checkbox"
+      >
+        <input
+          className="checkbox"
+          name="readonly"
+          onBlur={[Function]}
+          onChange={[Function]}
+          readOnly={true}
+          type="checkbox"
+        />
+         
+        Readonly will be submitted
+      </label>
+    </div>
+  </fieldset>
   <div
     className="pt-2"
   >
@@ -46782,7 +46828,7 @@ exports[`Storyshots Forms|Checkbox ReactHookForm 1`] = `
 
 exports[`Storyshots Forms|Checkbox Ref 1`] = `
 Array [
-  <div
+  <fieldset
     className="field"
   >
     <div
@@ -46802,7 +46848,7 @@ Array [
         Ref Checkbox
       </label>
     </div>
-  </div>,
+  </fieldset>,
   <button
     className="button is-primary"
     onClick={[Function]}
@@ -46818,7 +46864,7 @@ exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
 <div
   className="Checkboxstories__Spacing-sc-1bg8q8e-0 bKxINN"
 >
-  <div
+  <fieldset
     className="field"
   >
     <div
@@ -46846,8 +46892,8 @@ exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
         </span>
       </label>
     </div>
-  </div>
-  <div
+  </fieldset>
+  <fieldset
     className="field"
   >
     <div
@@ -46875,7 +46921,7 @@ exports[`Storyshots Forms|Checkbox With HelpText 1`] = `
         </span>
       </label>
     </div>
-  </div>
+  </fieldset>
 </div>
 `;
 
@@ -47073,7 +47119,7 @@ exports[`Storyshots Forms|InputField AutoFocus 1`] = `
 <div
   className="InputFieldstories__Decorator-kq2lhz-0 cURTRq"
 >
-  <div
+  <fieldset
     className="field"
   >
     <label
@@ -47092,7 +47138,7 @@ exports[`Storyshots Forms|InputField AutoFocus 1`] = `
         onKeyPress={[Function]}
       />
     </div>
-  </div>
+  </fieldset>
 </div>
 `;
 
@@ -47100,7 +47146,7 @@ exports[`Storyshots Forms|InputField AutoFocusAndRef 1`] = `
 <div
   className="InputFieldstories__Decorator-kq2lhz-0 cURTRq"
 >
-  <div
+  <fieldset
     className="field"
   >
     
@@ -47115,8 +47161,8 @@ exports[`Storyshots Forms|InputField AutoFocusAndRef 1`] = `
         placeholder="Click the button to focus me"
       />
     </div>
-  </div>
-  <div
+  </fieldset>
+  <fieldset
     className="field"
   >
     
@@ -47131,7 +47177,7 @@ exports[`Storyshots Forms|InputField AutoFocusAndRef 1`] = `
         placeholder="Click me to switch focus"
       />
     </div>
-  </div>
+  </fieldset>
   <button
     className="button is-primary"
     onClick={[Function]}
@@ -47147,7 +47193,7 @@ exports[`Storyshots Forms|InputField Default Value 1`] = `
 <div
   className="InputFieldstories__Decorator-kq2lhz-0 cURTRq"
 >
-  <div
+  <fieldset
     className="field"
   >
     <label
@@ -47167,7 +47213,7 @@ exports[`Storyshots Forms|InputField Default Value 1`] = `
         onKeyPress={[Function]}
       />
     </div>
-  </div>
+  </fieldset>
 </div>
 `;
 
@@ -47175,7 +47221,7 @@ exports[`Storyshots Forms|InputField Legacy Events 1`] = `
 <div
   className="InputFieldstories__Decorator-kq2lhz-0 cURTRq"
 >
-  <div
+  <fieldset
     className="field"
   >
     
@@ -47191,7 +47237,7 @@ exports[`Storyshots Forms|InputField Legacy Events 1`] = `
         value=""
       />
     </div>
-  </div>
+  </fieldset>
   <div
     className="mt-3"
   >
@@ -47207,7 +47253,53 @@ exports[`Storyshots Forms|InputField React Hook Form 1`] = `
   <form
     onSubmit={[Function]}
   >
-    <div
+    <fieldset
+      className="field"
+      disabled={true}
+    >
+      <label
+        className="label"
+      >
+        Readonly
+         
+      </label>
+      <div
+        className="control"
+      >
+        <input
+          className="input"
+          defaultValue="I am readonly but still show up on submit!"
+          name="readonly"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onKeyPress={[Function]}
+        />
+      </div>
+    </fieldset>
+    <fieldset
+      className="field"
+    >
+      <label
+        className="label"
+      >
+        Disabled
+         
+      </label>
+      <div
+        className="control"
+      >
+        <input
+          className="input"
+          defaultValue="I am disabled and dont show up on submit!"
+          disabled={true}
+          name="disabled"
+          onBlur={[Function]}
+          onChange={[Function]}
+          onKeyPress={[Function]}
+        />
+      </div>
+    </fieldset>
+    <fieldset
       className="field"
     >
       <label
@@ -47227,8 +47319,8 @@ exports[`Storyshots Forms|InputField React Hook Form 1`] = `
           onKeyPress={[Function]}
         />
       </div>
-    </div>
-    <div
+    </fieldset>
+    <fieldset
       className="field"
     >
       <label
@@ -47248,7 +47340,7 @@ exports[`Storyshots Forms|InputField React Hook Form 1`] = `
           onKeyPress={[Function]}
         />
       </div>
-    </div>
+    </fieldset>
     <div
       className="pt-2"
     >
@@ -47270,7 +47362,7 @@ exports[`Storyshots Forms|InputField Ref 1`] = `
 <div
   className="InputFieldstories__Decorator-kq2lhz-0 cURTRq"
 >
-  <div
+  <fieldset
     className="field"
   >
     
@@ -47285,7 +47377,7 @@ exports[`Storyshots Forms|InputField Ref 1`] = `
         placeholder="Click the button to focus me"
       />
     </div>
-  </div>
+  </fieldset>
   <button
     className="button is-primary"
     onClick={[Function]}
@@ -47301,30 +47393,34 @@ exports[`Storyshots Forms|Radio Default 1`] = `
 <div
   className="Radiostories__Spacing-sc-18hvwhd-0 cAoTRX"
 >
-  <label
-    className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
-  >
-    <input
-      checked={false}
-      onBlur={[Function]}
-      onChange={[Function]}
-      type="radio"
-    />
-     
-    Not checked
-  </label>
-  <label
-    className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
-  >
-    <input
-      checked={true}
-      onBlur={[Function]}
-      onChange={[Function]}
-      type="radio"
-    />
-     
-    Checked
-  </label>
+  <fieldset>
+    <label
+      className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
+    >
+      <input
+        checked={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="radio"
+      />
+       
+      Not checked
+    </label>
+  </fieldset>
+  <fieldset>
+    <label
+      className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
+    >
+      <input
+        checked={true}
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="radio"
+      />
+       
+      Checked
+    </label>
+  </fieldset>
 </div>
 `;
 
@@ -47332,36 +47428,40 @@ exports[`Storyshots Forms|Radio Disabled 1`] = `
 <div
   className="Radiostories__Spacing-sc-18hvwhd-0 cAoTRX"
 >
-  <label
-    className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
-    disabled={true}
-  >
-    <input
-      checked={true}
+  <fieldset>
+    <label
+      className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
       disabled={true}
-      onBlur={[Function]}
-      onChange={[Function]}
-      type="radio"
-    />
-     
-    Checked but disabled
-  </label>
+    >
+      <input
+        checked={true}
+        disabled={true}
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="radio"
+      />
+       
+      Checked but disabled
+    </label>
+  </fieldset>
 </div>
 `;
 
 exports[`Storyshots Forms|Radio Legacy Events 1`] = `
 Array [
-  <label
-    className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
-  >
-    <input
-      checked={false}
-      onBlur={[Function]}
-      onChange={[Function]}
-      type="radio"
-    />
-     
-  </label>,
+  <fieldset>
+    <label
+      className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
+    >
+      <input
+        checked={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="radio"
+      />
+       
+    </label>
+  </fieldset>,
   <div
     className="mt-3"
   >
@@ -47377,47 +47477,85 @@ exports[`Storyshots Forms|Radio ReactHookForm 1`] = `
   <div
     className="Radiostories__RadioList-sc-18hvwhd-1 lcyKug"
   >
+    <fieldset>
+      <label
+        className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
+      >
+        <input
+          defaultChecked={true}
+          name="rememberMe"
+          onBlur={[Function]}
+          onChange={[Function]}
+          type="radio"
+          value="true"
+        />
+         
+        Remember Me
+      </label>
+    </fieldset>
+    <fieldset>
+      <label
+        className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
+      >
+        <input
+          name="rememberMe"
+          onBlur={[Function]}
+          onChange={[Function]}
+          type="radio"
+          value="false"
+        />
+         
+        Dont Remember Me
+      </label>
+    </fieldset>
+  </div>
+  <fieldset>
     <label
-      className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
+      className="Radio__StyledRadio-ays4vp-0 da-DBNS radio ml-2"
     >
       <input
-        defaultChecked={true}
-        name="rememberMe"
-        onBlur={[Function]}
-        onChange={[Function]}
-        type="radio"
-        value="true"
-      />
-       
-      Remember Me
-    </label>
-    <label
-      className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
-    >
-      <input
-        name="rememberMe"
+        name="scramblePassword"
         onBlur={[Function]}
         onChange={[Function]}
         type="radio"
         value="false"
       />
        
-      Dont Remember Me
+      Scramble Password
     </label>
-  </div>
-  <label
-    className="Radio__StyledRadio-ays4vp-0 da-DBNS radio ml-2"
-  >
-    <input
-      name="scramblePassword"
-      onBlur={[Function]}
-      onChange={[Function]}
-      type="radio"
-      value="false"
-    />
-     
-    Scramble Password
-  </label>
+  </fieldset>
+  <fieldset>
+    <label
+      className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
+      disabled={true}
+    >
+      <input
+        disabled={true}
+        name="disabled"
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="radio"
+        value="false"
+      />
+       
+      Disabled wont be submitted
+    </label>
+  </fieldset>
+  <fieldset>
+    <label
+      className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
+    >
+      <input
+        name="readonly"
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="radio"
+        value="false"
+      />
+       
+      Readonly will be submitted
+    </label>
+  </fieldset>
   <div
     className="pt-2"
   >
@@ -47436,18 +47574,20 @@ exports[`Storyshots Forms|Radio ReactHookForm 1`] = `
 
 exports[`Storyshots Forms|Radio Ref 1`] = `
 Array [
-  <label
-    className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
-  >
-    <input
-      checked={false}
-      onBlur={[Function]}
-      onChange={[Function]}
-      type="radio"
-    />
-     
-    Ref Radio Button
-  </label>,
+  <fieldset>
+    <label
+      className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
+    >
+      <input
+        checked={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="radio"
+      />
+       
+      Ref Radio Button
+    </label>
+  </fieldset>,
   <button
     className="button is-primary"
     onClick={[Function]}
@@ -47463,52 +47603,56 @@ exports[`Storyshots Forms|Radio With HelpText 1`] = `
 <div
   className="Radiostories__RadioList-sc-18hvwhd-1 lcyKug"
 >
-  <label
-    className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
-  >
-    <input
-      checked={false}
-      onBlur={[Function]}
-      onChange={[Function]}
-      type="radio"
-    />
-     
-    Classic helpText
-    <span
-      className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 eRZLRi is-inline-block has-tooltip-multiline"
-      data-tooltip="This is a classic help text."
+  <fieldset>
+    <label
+      className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
     >
-      <i
-        className="fas fa-question-circle has-text-blue-light"
+      <input
+        checked={false}
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="radio"
       />
-    </span>
-  </label>
-  <label
-    className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
-  >
-    <input
-      checked={true}
-      onBlur={[Function]}
-      onChange={[Function]}
-      type="radio"
-    />
-     
-    Long helpText
-    <span
-      className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 eRZLRi is-inline-block has-tooltip-multiline"
-      data-tooltip="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+       
+      Classic helpText
+      <span
+        className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 eRZLRi is-inline-block has-tooltip-multiline"
+        data-tooltip="This is a classic help text."
+      >
+        <i
+          className="fas fa-question-circle has-text-blue-light"
+        />
+      </span>
+    </label>
+  </fieldset>
+  <fieldset>
+    <label
+      className="Radio__StyledRadio-ays4vp-0 da-DBNS radio"
     >
-      <i
-        className="fas fa-question-circle has-text-blue-light"
+      <input
+        checked={true}
+        onBlur={[Function]}
+        onChange={[Function]}
+        type="radio"
       />
-    </span>
-  </label>
+       
+      Long helpText
+      <span
+        className="tooltip has-tooltip-right Help__HelpTooltip-ykmmew-0 eRZLRi is-inline-block has-tooltip-multiline"
+        data-tooltip="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."
+      >
+        <i
+          className="fas fa-question-circle has-text-blue-light"
+        />
+      </span>
+    </label>
+  </fieldset>
 </div>
 `;
 
 exports[`Storyshots Forms|Select Legacy Events 1`] = `
 Array [
-  <div
+  <fieldset
     className="field"
   >
     
@@ -47531,7 +47675,7 @@ Array [
         </option>
       </select>
     </div>
-  </div>,
+  </fieldset>,
   <div
     className="mt-3"
   />,
@@ -47542,7 +47686,7 @@ exports[`Storyshots Forms|Select ReactHookForm 1`] = `
 <form
   onSubmit={[Function]}
 >
-  <div
+  <fieldset
     className="field"
   >
     <label
@@ -47571,8 +47715,8 @@ exports[`Storyshots Forms|Select ReactHookForm 1`] = `
         </option>
       </select>
     </div>
-  </div>
-  <div
+  </fieldset>
+  <fieldset
     className="field"
   >
     <label
@@ -47601,7 +47745,71 @@ exports[`Storyshots Forms|Select ReactHookForm 1`] = `
         </option>
       </select>
     </div>
-  </div>
+  </fieldset>
+  <fieldset
+    className="field"
+  >
+    <label
+      className="label"
+    >
+      Disabled wont be submitted
+       
+    </label>
+    <div
+      className="control select"
+    >
+      <select
+        defaultValue="false"
+        disabled={true}
+        name="disabled"
+        onBlur={[Function]}
+        onChange={[Function]}
+      >
+        <option
+          value="true"
+        >
+          Yes
+        </option>
+        <option
+          value="false"
+        >
+          No
+        </option>
+      </select>
+    </div>
+  </fieldset>
+  <fieldset
+    className="field"
+    disabled={true}
+  >
+    <label
+      className="label"
+    >
+      Readonly will be submitted
+       
+    </label>
+    <div
+      className="control select"
+    >
+      <select
+        defaultValue="false"
+        name="readonly"
+        onBlur={[Function]}
+        onChange={[Function]}
+      >
+        <option
+          value="true"
+        >
+          Yes
+        </option>
+        <option
+          value="false"
+        >
+          No
+        </option>
+      </select>
+    </div>
+  </fieldset>
   <div
     className="pt-2"
   >
@@ -47620,7 +47828,7 @@ exports[`Storyshots Forms|Select ReactHookForm 1`] = `
 
 exports[`Storyshots Forms|Select Ref 1`] = `
 Array [
-  <div
+  <fieldset
     className="field"
   >
     <label
@@ -47649,7 +47857,7 @@ Array [
         </option>
       </select>
     </div>
-  </div>,
+  </fieldset>,
   <button
     className="button is-primary"
     onClick={[Function]}
@@ -47663,7 +47871,7 @@ Array [
 `;
 
 exports[`Storyshots Forms|Textarea AutoFocus 1`] = `
-<div
+<fieldset
   className="field"
 >
   <label
@@ -47682,12 +47890,12 @@ exports[`Storyshots Forms|Textarea AutoFocus 1`] = `
       onKeyDown={[Function]}
     />
   </div>
-</div>
+</fieldset>
 `;
 
 exports[`Storyshots Forms|Textarea AutoFocusAndRef 1`] = `
 Array [
-  <div
+  <fieldset
     className="field"
   >
     
@@ -47702,8 +47910,8 @@ Array [
         placeholder="Click the button to focus me"
       />
     </div>
-  </div>,
-  <div
+  </fieldset>,
+  <fieldset
     className="field"
   >
     
@@ -47718,7 +47926,7 @@ Array [
         placeholder="Click me to switch focus"
       />
     </div>
-  </div>,
+  </fieldset>,
   <button
     className="button is-primary"
     onClick={[Function]}
@@ -47731,7 +47939,7 @@ Array [
 `;
 
 exports[`Storyshots Forms|Textarea Default Value 1`] = `
-<div
+<fieldset
   className="field"
 >
   <label
@@ -47751,12 +47959,12 @@ exports[`Storyshots Forms|Textarea Default Value 1`] = `
       onKeyDown={[Function]}
     />
   </div>
-</div>
+</fieldset>
 `;
 
 exports[`Storyshots Forms|Textarea Legacy Events 1`] = `
 Array [
-  <div
+  <fieldset
     className="field"
   >
     
@@ -47772,7 +47980,7 @@ Array [
         value=""
       />
     </div>
-  </div>,
+  </fieldset>,
   <div
     className="mt-3"
   >
@@ -47785,7 +47993,7 @@ exports[`Storyshots Forms|Textarea OnCancel 1`] = `
 <div
   className="Textareastories__Spacing-lk5v3m-0 kWEmCD"
 >
-  <div
+  <fieldset
     className="field"
   >
     
@@ -47800,7 +48008,7 @@ exports[`Storyshots Forms|Textarea OnCancel 1`] = `
         value="Use the escape key to clear the textarea"
       />
     </div>
-  </div>
+  </fieldset>
 </div>
 `;
 
@@ -47808,7 +48016,7 @@ exports[`Storyshots Forms|Textarea OnChange 1`] = `
 <div
   className="Textareastories__Spacing-lk5v3m-0 kWEmCD"
 >
-  <div
+  <fieldset
     className="field"
   >
     
@@ -47823,7 +48031,7 @@ exports[`Storyshots Forms|Textarea OnChange 1`] = `
         value="Start typing"
       />
     </div>
-  </div>
+  </fieldset>
   <hr />
   <p>
     Start typing
@@ -47835,7 +48043,7 @@ exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
 <div
   className="Textareastories__Spacing-lk5v3m-0 kWEmCD"
 >
-  <div
+  <fieldset
     className="field"
   >
     
@@ -47850,7 +48058,7 @@ exports[`Storyshots Forms|Textarea OnSubmit 1`] = `
         value="Use the ctrl/command + Enter to submit the textarea"
       />
     </div>
-  </div>
+  </fieldset>
   <hr />
   <p>
     
@@ -47862,7 +48070,7 @@ exports[`Storyshots Forms|Textarea ReactHookForm 1`] = `
 <form
   onSubmit={[Function]}
 >
-  <div
+  <fieldset
     className="field"
   >
     <label
@@ -47882,8 +48090,8 @@ exports[`Storyshots Forms|Textarea ReactHookForm 1`] = `
         onKeyDown={[Function]}
       />
     </div>
-  </div>
-  <div
+  </fieldset>
+  <fieldset
     className="field"
   >
     <label
@@ -47903,7 +48111,53 @@ exports[`Storyshots Forms|Textarea ReactHookForm 1`] = `
         onKeyDown={[Function]}
       />
     </div>
-  </div>
+  </fieldset>
+  <fieldset
+    className="field"
+    disabled={true}
+  >
+    <label
+      className="label"
+    >
+      Readonly
+       
+    </label>
+    <div
+      className="control"
+    >
+      <textarea
+        className="textarea"
+        defaultValue="I am readonly but still show up on submit!"
+        name="readonly"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyDown={[Function]}
+      />
+    </div>
+  </fieldset>
+  <fieldset
+    className="field"
+  >
+    <label
+      className="label"
+    >
+      Disabled
+       
+    </label>
+    <div
+      className="control"
+    >
+      <textarea
+        className="textarea"
+        defaultValue="I am disabled and dont show up on submit!"
+        disabled={true}
+        name="disabled"
+        onBlur={[Function]}
+        onChange={[Function]}
+        onKeyDown={[Function]}
+      />
+    </div>
+  </fieldset>
   <div
     className="pt-2"
   >
@@ -47922,7 +48176,7 @@ exports[`Storyshots Forms|Textarea ReactHookForm 1`] = `
 
 exports[`Storyshots Forms|Textarea Ref 1`] = `
 Array [
-  <div
+  <fieldset
     className="field"
   >
     
@@ -47936,7 +48190,7 @@ Array [
         onKeyDown={[Function]}
       />
     </div>
-  </div>,
+  </fieldset>,
   <button
     className="button is-primary"
     onClick={[Function]}

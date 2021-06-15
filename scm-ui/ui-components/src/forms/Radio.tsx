@@ -31,6 +31,10 @@ const StyledRadio = styled.label`
   margin-right: 0.5em;
 `;
 
+const InlineFieldset = styled.fieldset`
+  display: inline-block;
+`;
+
 type BaseProps = {
   label?: string;
   name?: string;
@@ -40,9 +44,10 @@ type BaseProps = {
   helpText?: string;
   defaultChecked?: boolean;
   className?: string;
+  readOnly?: boolean;
 };
 
-const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({ name, defaultChecked, ...props }) => {
+const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({ name, defaultChecked, readOnly, ...props }) => {
   const renderHelp = () => {
     const helpText = props.helpText;
     if (helpText) {
@@ -71,7 +76,7 @@ const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({ name
   };
 
   return (
-    <>
+    <InlineFieldset disabled={readOnly}>
       {/*
         we have to ignore the next line,
         because jsx label does not the custom disabled attribute
@@ -92,7 +97,7 @@ const InnerRadio: FC<FieldProps<BaseProps, HTMLInputElement, boolean>> = ({ name
         {props.label}
         {renderHelp()}
       </StyledRadio>
-    </>
+    </InlineFieldset>
   );
 };
 

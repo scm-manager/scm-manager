@@ -41,6 +41,7 @@ type BaseProps = {
   errorMessage?: string | string[];
   informationMessage?: string;
   defaultValue?: string;
+  readOnly?: boolean;
 };
 
 const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
@@ -57,6 +58,7 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
   validationError,
   informationMessage,
   defaultValue,
+  readOnly,
   ...props
 }) => {
   const ref = useAutofocus<HTMLTextAreaElement>(autofocus, props.innerRef);
@@ -101,7 +103,7 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
   }
 
   return (
-    <div className="field">
+    <fieldset className="field" disabled={readOnly}>
       <LabelWithHelpIcon label={label} helpText={helpText} />
       <div className="control">
         <textarea
@@ -118,7 +120,7 @@ const InnerTextarea: FC<FieldProps<BaseProps, HTMLTextAreaElement, string>> = ({
         />
       </div>
       {helper}
-    </div>
+    </fieldset>
   );
 };
 

@@ -29,6 +29,7 @@ import Button from "../buttons/Button";
 import { useForm } from "react-hook-form";
 import { SubmitButton } from "../buttons";
 import { MemoryRouter } from "react-router-dom";
+import InputField from "./InputField";
 
 const Spacing = styled.div`
   padding: 2em;
@@ -38,7 +39,7 @@ const OnChangeTextarea = () => {
   const [value, setValue] = useState("Start typing");
   return (
     <Spacing>
-      <Textarea value={value} onChange={v => setValue(v)} />
+      <Textarea value={value} onChange={(v) => setValue(v)} />
       <hr />
       <p>{value}</p>
     </Spacing>
@@ -56,7 +57,7 @@ const OnSubmitTextare = () => {
 
   return (
     <Spacing>
-      <Textarea value={value} onChange={v => setValue(v)} onSubmit={submit} />
+      <Textarea value={value} onChange={(v) => setValue(v)} onSubmit={submit} />
       <hr />
       <p>{submitted}</p>
     </Spacing>
@@ -72,7 +73,7 @@ const OnCancelTextarea = () => {
 
   return (
     <Spacing>
-      <Textarea value={value} onChange={v => setValue(v)} onCancel={cancel} />
+      <Textarea value={value} onChange={(v) => setValue(v)} onCancel={cancel} />
     </Spacing>
   );
 };
@@ -105,13 +106,15 @@ const AutoFocusAndRef: FC = () => {
 type Commit = {
   message: string;
   footer: string;
+  readonly: string;
+  disabled: string;
 };
 
 const ReactHookForm: FC = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors }
+    formState: { errors },
   } = useForm<Commit>();
   const [stored, setStored] = useState<Commit>();
 
@@ -130,6 +133,18 @@ const ReactHookForm: FC = () => {
           errorMessage={"Message is required"}
         />
         <Textarea label="Footer" {...register("footer")} />
+        <Textarea
+          label="Readonly"
+          readOnly={true}
+          defaultValue="I am readonly but still show up on submit!"
+          {...register("readonly")}
+        />
+        <Textarea
+          label="Disabled"
+          disabled={true}
+          defaultValue="I am disabled and dont show up on submit!"
+          {...register("disabled")}
+        />
         <div className="pt-2">
           <SubmitButton>Submit</SubmitButton>
         </div>
@@ -149,14 +164,14 @@ const LegacyEvents: FC = () => {
   const [value, setValue] = useState<string>("");
   return (
     <>
-      <Textarea placeholder="Legacy onChange handler" value={value} onChange={e => setValue(e)} />
+      <Textarea placeholder="Legacy onChange handler" value={value} onChange={(e) => setValue(e)} />
       <div className="mt-3">{value}</div>
     </>
   );
 };
 
 storiesOf("Forms|Textarea", module)
-  .addDecorator(storyFn => <MemoryRouter>{storyFn()}</MemoryRouter>)
+  .addDecorator((storyFn) => <MemoryRouter>{storyFn()}</MemoryRouter>)
   .add("OnChange", () => <OnChangeTextarea />)
   .add("OnSubmit", () => <OnSubmitTextare />)
   .add("OnCancel", () => <OnCancelTextarea />)

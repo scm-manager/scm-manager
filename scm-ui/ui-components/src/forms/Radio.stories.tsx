@@ -65,6 +65,8 @@ const Ref: FC = () => {
 type Settings = {
   rememberMe: string;
   scramblePassword: string;
+  readonly: string;
+  disabled: string;
 };
 
 const ReactHookForm: FC = () => {
@@ -83,6 +85,8 @@ const ReactHookForm: FC = () => {
           <Radio value={"false"} label="Dont Remember Me" {...register("rememberMe")} />
         </RadioList>
         <Radio className="ml-2" value={"false"} label="Scramble Password" {...register("scramblePassword")} />
+        <Radio value={"false"} label="Disabled wont be submitted" disabled={true} {...register("disabled")} />
+        <Radio value={"false"} label="Readonly will be submitted" {...register("readonly")} />
         <div className="pt-2">
           <SubmitButton>Submit</SubmitButton>
         </div>

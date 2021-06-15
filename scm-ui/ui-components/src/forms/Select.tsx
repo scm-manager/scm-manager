@@ -43,6 +43,7 @@ type BaseProps = {
   disabled?: boolean;
   testId?: string;
   defaultValue?: string;
+  readOnly?: boolean;
 };
 
 const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
@@ -54,6 +55,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   loading,
   disabled,
   testId,
+  readOnly,
   ...props
 }) => {
   const field = useInnerRef(props.innerRef);
@@ -96,7 +98,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
   const loadingClass = loading ? "is-loading" : "";
 
   return (
-    <div className="field">
+    <fieldset className="field" disabled={readOnly}>
       <LabelWithHelpIcon label={label} helpText={helpText} />
       <div className={classNames("control select", loadingClass)}>
         <select
@@ -118,7 +120,7 @@ const InnerSelect: FC<FieldProps<BaseProps, HTMLSelectElement, string>> = ({
           })}
         </select>
       </div>
-    </div>
+    </fieldset>
   );
 };
 

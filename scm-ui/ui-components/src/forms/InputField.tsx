@@ -44,6 +44,7 @@ type BaseProps = {
   className?: string;
   testId?: string;
   defaultValue?: string;
+  readOnly?: boolean;
 };
 
 export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>> = ({
@@ -62,6 +63,7 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
   testId,
   autofocus,
   defaultValue,
+  readOnly,
   ...props
 }) => {
   const field = useAutofocus<HTMLInputElement>(autofocus, props.innerRef);
@@ -101,7 +103,7 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
     helper = <p className="help is-info">{informationMessage}</p>;
   }
   return (
-    <div className={classNames("field", className)}>
+    <fieldset className={classNames("field", className)} disabled={readOnly}>
       <LabelWithHelpIcon label={label} helpText={helpText} />
       <div className="control">
         <input
@@ -120,7 +122,7 @@ export const InnerInputField: FC<FieldProps<BaseProps, HTMLInputElement, string>
         />
       </div>
       {helper}
-    </div>
+    </fieldset>
   );
 };
 
