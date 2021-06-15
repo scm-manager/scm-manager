@@ -21,24 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
-import AutocompleteProps from "./UserGroupAutocomplete";
-import UserGroupAutocomplete from "./UserGroupAutocomplete";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
+import UserGroupAutocomplete, { AutocompleteProps } from "./UserGroupAutocomplete";
 
-class UserAutocomplete extends React.Component<AutocompleteProps & WithTranslation> {
-  render() {
-    const { t } = this.props;
-    return (
-      <UserGroupAutocomplete
-        label={t("autocomplete.user")}
-        noOptionsMessage={t("autocomplete.noUserOptions")}
-        loadingMessage={t("autocomplete.loading")}
-        placeholder={t("autocomplete.userPlaceholder")}
-        {...this.props}
-      />
-    );
-  }
-}
+const UserAutocomplete: FC<AutocompleteProps> = (props) => {
+  const [t] = useTranslation("commons");
+  return (
+    <UserGroupAutocomplete
+      label={t("autocomplete.user")}
+      noOptionsMessage={t("autocomplete.noUserOptions")}
+      loadingMessage={t("autocomplete.loading")}
+      placeholder={t("autocomplete.userPlaceholder")}
+      {...props}
+    />
+  );
+};
 
-export default withTranslation("commons")(UserAutocomplete);
+export default UserAutocomplete;

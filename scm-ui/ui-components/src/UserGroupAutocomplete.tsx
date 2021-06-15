@@ -21,10 +21,10 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { SelectValue, AutocompleteObject } from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import { SelectValue } from "@scm-manager/ui-types";
 import Autocomplete from "./Autocomplete";
-import { apiClient } from "@scm-manager/ui-api";
+import { useSuggestions } from "@scm-manager/ui-api";
 
 export type AutocompleteProps = {
   autocompleteLink?: string;
@@ -39,38 +39,16 @@ type Props = AutocompleteProps & {
   placeholder: string;
 };
 
-export default class UserGroupAutocomplete extends React.Component<Props> {
-  loadSuggestions = (inputValue: string): Promise<SelectValue[]> => {
-    const url = this.props.autocompleteLink;
-    const link = url + "?q=";
-    return apiClient
-      .get(link + inputValue)
-      .then(response => response.json())
-      .then((json: AutocompleteObject[]) => {
-        return json.map(element => {
-          const label = element.displayName ? `${element.displayName} (${element.id})` : element.id;
-          return {
-            value: element,
-            label
-          };
-        });
-      });
-  };
+const UserGroupAutocomplete: FC<Props> = ({ autocompleteLink, valueSelected, ...props }) => {
+  const loadSuggestions = useSuggestions(autocompleteLink);
 
-  selectName = (selection: SelectValue) => {
-    if (this.props.valueSelected) {
-      this.props.valueSelected(selection);
+  const selectName = (selection: SelectValue) => {
+    if (valueSelected) {
+      valueSelected(selection);
     }
   };
 
-  render() {
-    return (
-      <Autocomplete
-        loadSuggestions={this.loadSuggestions}
-        valueSelected={this.selectName}
-        creatable={true}
-        {...this.props}
-      />
-    );
-  }
-}
+  return <Autocomplete loadSuggestions={loadSuggestions} valueSelected={selectName} creatable={true} {...props} />;
+};
+
+export default UserGroupAutocomplete;

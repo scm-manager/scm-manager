@@ -21,32 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import {DisplayedUser, Link, SelectValue} from "@scm-manager/ui-types";
+import { Link } from "@scm-manager/ui-types";
 import { useIndexLinks } from "./base";
-import { apiClient } from "./apiclient";
+import { useSuggestions } from "./suggestions";
 
 export const useUserSuggestions = () => {
   const indexLinks = useIndexLinks();
-  const autocompleteLink = (indexLinks.autocomplete as Link[]).find(i => i.name === "users");
-  if (!autocompleteLink) {
-    return [];
-  }
-  const url = autocompleteLink.href + "?q=";
-  return (inputValue: string): never[] | Promise<SelectValue[]> => {
-    // Prevent violate input condition of api call because parameter length is too short
-    if (inputValue.length < 2) {
-      return [];
-    }
-    return apiClient
-      .get(url + inputValue)
-      .then(response => response.json())
-      .then(json => {
-        return json.map((element: DisplayedUser) => {
-          return {
-            value: element,
-            label: `${element.displayName} (${element.id})`
-          };
-        });
-      });
-  };
+  const autocompleteLink = (indexLinks.autocomplete as Link[]).find((i) => i.name === "users");
+  return useSuggestions(autocompleteLink?.href);
 };
