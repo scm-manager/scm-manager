@@ -239,14 +239,22 @@ describe("Test Tag hooks", () => {
       expect(queryState!.isInvalidated).toBe(true);
     };
 
+    const shouldRemoveQuery = async (queryKey: string[], data: unknown) => {
+      queryClient.setQueryData(queryKey, data);
+      await deleteTag();
+
+      const queryState = queryClient.getQueryState(queryKey);
+      expect(queryState).toBeUndefined();
+    };
+
     it("should delete tag", async () => {
       const { isDeleted } = await deleteTag();
 
       expect(isDeleted).toBe(true);
     });
 
-    it("should invalidate tag cache", async () => {
-      await shouldInvalidateQuery(["repository", "hitchhiker", "heart-of-gold", "tag", "1.0"], tagOneDotZero);
+    it("should delete tag cache", async () => {
+      await shouldRemoveQuery(["repository", "hitchhiker", "heart-of-gold", "tag", "1.0"], tagOneDotZero);
     });
 
     it("should invalidate tag collection cache", async () => {

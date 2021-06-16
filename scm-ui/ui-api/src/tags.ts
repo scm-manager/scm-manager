@@ -51,14 +51,12 @@ export const useTag = (repository: Repository, name: string): ApiResult<Tag> => 
   );
 };
 
-const invalidateCacheForTag = (queryClient: QueryClient, repository: NamespaceAndName, tag: Tag) => {
-  return Promise.all([
-    queryClient.invalidateQueries(repoQueryKey(repository, "tags")),
-    queryClient.invalidateQueries(tagQueryKey(repository, tag.name)),
-    queryClient.invalidateQueries(repoQueryKey(repository, "changesets")),
-    queryClient.invalidateQueries(repoQueryKey(repository, "changeset", tag.revision)),
-  ]);
-};
+async function invalidateCacheForTag(queryClient: QueryClient, repository: NamespaceAndName, tag: Tag) {
+  await queryClient.invalidateQueries(repoQueryKey(repository, "tags"));
+  queryClient.removeQueries(tagQueryKey(repository, tag.name));
+  await queryClient.invalidateQueries(repoQueryKey(repository, "changesets"));
+  await queryClient.invalidateQueries(repoQueryKey(repository, "changeset", tag.revision));
+}
 
 const createTag = (changeset: Changeset, link: string) => {
   return (name: string) => {
