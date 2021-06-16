@@ -21,12 +21,14 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.web.lfs;
 
 import com.github.sdorra.ssp.PermissionCheck;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import sonia.scm.repository.GitConfig;
+import sonia.scm.repository.GitRepositoryHandler;
 import sonia.scm.repository.Repository;
 import sonia.scm.repository.RepositoryPermissions;
 import sonia.scm.security.AccessToken;
@@ -43,10 +45,12 @@ public class LfsAccessTokenFactory {
   private static final Logger LOG = LoggerFactory.getLogger(LfsAccessTokenFactory.class);
 
   private final AccessTokenBuilderFactory tokenBuilderFactory;
+  private final GitRepositoryHandler handler;
 
   @Inject
-  LfsAccessTokenFactory(AccessTokenBuilderFactory tokenBuilderFactory) {
+  LfsAccessTokenFactory(AccessTokenBuilderFactory tokenBuilderFactory, GitRepositoryHandler handler) {
     this.tokenBuilderFactory = tokenBuilderFactory;
+    this.handler = handler;
   }
 
   AccessToken createReadAccessToken(Repository repository) {
@@ -67,7 +71,7 @@ public class LfsAccessTokenFactory {
       permissions.add(push.asShiroString());
     }
 
-    return createToken(Scope.valueOf(permissions));
+    return createToken(Scope.valueOf(permissions), 5);
   }
 
   AccessToken createWriteAccessToken(Repository repository) {
@@ -80,15 +84,22 @@ public class LfsAccessTokenFactory {
     PermissionCheck push = RepositoryPermissions.push(repository);
     push.check();
 
-    return createToken(Scope.valueOf(read.asShiroString(), pull.asShiroString(), push.asShiroString()));
+    int lfsAuthorizationTimeoutInMinutes = getConfiguredLfsAuthorizationTimeoutInMinutes();
+
+    return createToken(Scope.valueOf(read.asShiroString(), pull.asShiroString(), push.asShiroString()), lfsAuthorizationTimeoutInMinutes);
   }
 
-  private AccessToken createToken(Scope scope) {
+  private AccessToken createToken(Scope scope, int expiration) {
     LOG.trace("create access token with scope: {}", scope);
     return tokenBuilderFactory
       .create()
-      .expiresIn(5, TimeUnit.MINUTES)
+      .expiresIn(expiration, TimeUnit.MINUTES)
       .scope(scope)
       .build();
+  }
+
+  private int getConfiguredLfsAuthorizationTimeoutInMinutes() {
+    GitConfig repositoryConfig = handler.getConfig();
+    return repositoryConfig.getLfsWriteAuthorizationExpirationInMinutes();
   }
 }

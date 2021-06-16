@@ -1,0 +1,2 @@
+- type: fixed
+  description: Added option to increase LFS authorization token timeout ([#1697](https://github.com/scm-manager/scm-manager/pull/1697))

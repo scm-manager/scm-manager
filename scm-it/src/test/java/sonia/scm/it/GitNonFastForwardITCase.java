@@ -185,7 +185,7 @@ public class GitNonFastForwardITCase {
   }
 
   private static void setNonFastForwardDisallowed(boolean nonFastForwardDisallowed) {
-    String config = String.format("{'disabled': false, 'gcExpression': null, 'defaultBranch': 'main', 'nonFastForwardDisallowed': %s}", nonFastForwardDisallowed)
+    String config = String.format("{'disabled': false, 'gcExpression': null, 'defaultBranch': 'main', 'lfsWriteAuthorizationExpirationInMinutes': 5, 'nonFastForwardDisallowed': %s}", nonFastForwardDisallowed)
       .replace('\'', '"');
 
     given(VndMediaType.PREFIX + "gitConfig" + VndMediaType.SUFFIX)

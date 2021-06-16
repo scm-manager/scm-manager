@@ -48,6 +48,7 @@ import sonia.scm.repository.RepositoryManager;
 import sonia.scm.store.ConfigurationStore;
 import sonia.scm.store.ConfigurationStoreFactory;
 import sonia.scm.web.GitVndMediaType;
+import sonia.scm.web.JsonMockHttpRequest;
 import sonia.scm.web.RestDispatcher;
 
 import javax.servlet.http.HttpServletResponse;
@@ -127,10 +128,12 @@ public class GitConfigResourceTest {
 
     String responseString = response.getContentAsString();
 
-    assertTrue(responseString.contains("\"disabled\":false"));
-    assertTrue(responseString.contains("\"gcExpression\":\"valid Git GC Cron Expression\""));
-    assertTrue(responseString.contains("\"self\":{\"href\":\"/v2/config/git"));
-    assertTrue(responseString.contains("\"update\":{\"href\":\"/v2/config/git"));
+    assertThat(responseString)
+      .contains("\"disabled\":false")
+      .contains("\"gcExpression\":\"valid Git GC Cron Expression\"")
+      .contains("\"self\":{\"href\":\"/v2/config/git")
+      .contains("\"update\":{\"href\":\"/v2/config/git")
+      .contains("\"lfsWriteAuthorizationExpirationInMinutes\":5");
   }
 
   @Test
@@ -324,9 +327,9 @@ public class GitConfigResourceTest {
   }
 
   private MockHttpResponse put() throws URISyntaxException {
-    MockHttpRequest request = MockHttpRequest.put("/" + GitConfigResource.GIT_CONFIG_PATH_V2)
+    JsonMockHttpRequest request = JsonMockHttpRequest.put("/" + GitConfigResource.GIT_CONFIG_PATH_V2)
                                              .contentType(GitVndMediaType.GIT_CONFIG)
-                                             .content("{\"disabled\":true, \"defaultBranch\":\"main\"}".getBytes());
+                                             .json("{'disabled':true, 'defaultBranch':'main', 'lfsWriteAuthorizationExpirationInMinutes':5}");
 
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
@@ -337,6 +340,7 @@ public class GitConfigResourceTest {
     GitConfig config = new GitConfig();
     config.setGcExpression("valid Git GC Cron Expression");
     config.setDisabled(false);
+    config.setLfsWriteAuthorizationExpirationInMinutes(5);
     return config;
   }
 }
