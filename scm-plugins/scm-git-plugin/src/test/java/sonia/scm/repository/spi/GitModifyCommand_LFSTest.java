@@ -97,7 +97,7 @@ public class GitModifyCommand_LFSTest extends GitModifyCommandTestBase {
     when(blob.getOutputStream()).thenReturn(outputStream);
     when(blob.getSize()).thenReturn((long) content.length());
 
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), content.getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), content.getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 

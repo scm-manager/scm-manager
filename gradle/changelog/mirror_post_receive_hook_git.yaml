@@ -1,0 +1,2 @@
+- type: fixed
+  description: Post receive hook events after mirror update for git ([#1703](https://github.com/scm-manager/scm-manager/pulls/1703))

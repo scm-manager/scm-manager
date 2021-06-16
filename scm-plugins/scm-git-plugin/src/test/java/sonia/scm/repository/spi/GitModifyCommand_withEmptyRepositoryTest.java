@@ -43,7 +43,7 @@ public class GitModifyCommand_withEmptyRepositoryTest extends GitModifyCommandTe
 
   @Test
   public void shouldCreateNewFileInEmptyRepository() throws IOException, GitAPIException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -124,7 +124,7 @@ public class GitModifyCommand_withEmptyRepositoryTest extends GitModifyCommandTe
   }
 
   private ModifyCommandRequest createRequest() throws IOException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     ModifyCommandRequest request = new ModifyCommandRequest();
     request.setCommitMessage("initial commit");

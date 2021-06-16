@@ -53,8 +53,6 @@ import static sonia.scm.repository.spi.GitRepositoryConfigStoreProviderTestUtil.
 class GitModifyCommandTestBase extends AbstractGitCommandTestBase {
 
   @Rule
-  public TemporaryFolder temporaryFolder = new TemporaryFolder();
-  @Rule
   public BindTransportProtocolRule transportProtocolRule = new BindTransportProtocolRule();
   @Rule
   public ShiroRule shiro = new ShiroRule();
