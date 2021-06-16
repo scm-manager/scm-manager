@@ -1,5 +1,5 @@
 ---
-title: Testing guide
+title: Testing Guide
 subtitle: Howto write tests for SCM-Manager
 displayToc: false
 ---
