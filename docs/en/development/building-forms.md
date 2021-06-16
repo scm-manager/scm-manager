@@ -7,33 +7,68 @@ displayToc: false
 Below we would like to explain how to write [React Hook Form](https://react-hook-form.com/) forms in an easy and fast way,
 why it makes sense to switch and what needs to be considered.
 
-### Previous Process
+### Legacy Process
 
-Until now, we passed our self-written form component into the Configuration component's render function.
+Previously, we passed our self-written form component into the Configuration component's render function.
 In the form we defined a prop for each entry, plus an onChange handler that takes the value and writes it to a state.
 Additionally, we added validation logic when a field changes.
 
+Especially in [old areas](https://github.com/scm-manager/scm-ldap-plugin/blob/develop/src/main/js/LdapConfigurationForm.tsx#L65), which were still built with class components, you should be very careful.
+
 A lot of boilerplate code was needed, errors were frequent, and typings were generally flawed.
 
-### Overview of new Features
+### Standard Process
 
 React Hook Form will bring the `useForm` hook to validate your form with minimal re-render.
 This contains a generic parameter which summarizes the possible input fields.
 
-The useForm hook returns several methods:
+The useForm hook returns an object with several properties:
 
 - `register` allows you to register an input or select element and apply validation rules to React Hook Form.
 - `formState` contains information about the form state. This can also specify `isValid`.
 - `handleSubmit` is called when you press the submit button and will receive the form data if form validation is successful.
 - `reset` reset either the entire form state or part of the form state.
 
-`UseConfigLink` from `@scm-manager/ui-api` gets links via prop from binder and loads initial config asynchronously,
-also specifies as reading part whether readOnly (no update link was set) and as writing part an update method.
-As well as formProps for isLoading, isUpdating etc from ConfigurationForm.
-
 ```tsx
 import React, { FC, useEffect } from "react";
 // import hook from react-hook-form library
+import { useForm } from "react-hook-form";
+
+const ReactHookForm: FC = () => {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<Name>();
+  const [stored, setStored] = useState<Person>();
+
+  const onSubmit = (person: Person) => {
+    setStored(person);
+  };
+
+  return (
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <InputField label="First Name" autofocus={true} {...register("firstName")} />
+      <InputField
+        label="Last Name"
+        {...register("lastName", { required: true })}
+        validationError={!!errors.lastName}
+        errorMessage={"Last name is required"}
+      />
+      <Level className="pt-2" right={<SubmitButton>Submit</SubmitButton>} />
+    </form>
+  );
+};
+```
+
+### Building Configuration Forms
+
+`UseConfigLink` from `@scm-manager/ui-api` gets links via prop from binder and loads initial config asynchronously,
+also specifies as reading part whether readOnly (no update link was set) and as writing part an update method.
+As well as formProps for isLoading, isUpdating etc for ConfigurationForm.
+
+```tsx
+import React, { FC, useEffect } from "react";
 import { useForm } from "react-hook-form";
 
 const GlobalConfig: FC<Props> = ({ link }) => {
@@ -102,7 +137,7 @@ useEffect(() => {
 - Since some components have other elements built around an input field, there is also the `forwardRef`. It creates a reference that can be passed to an inner element.
 - Nested forms are a bit more complex to build and might need a wrapper.
 - Validation rules are all based on the HTML standard and also allow for custom validation methods.
-- Fields marked as `disabled` in SCM-Manager cannot be disabled as `disabled={true}`, because then the object contained in onSubmit will also no longer contain the field (undefined). `readOnly` is the better choice.
+- Fields marked as `disabled` in SCM-Manager won't be included on submission. If you want to prevent interaction but need to submit the value of a form element, `readOnly` is the better choice.
 
 Some implementations:
 
