@@ -55,7 +55,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test
   public void shouldCreateCommit() throws IOException, GitAPIException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -76,7 +76,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test
   public void shouldCreateCommitOnSelectedBranch() throws IOException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -97,7 +97,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test
   public void shouldCreateNewFile() throws IOException, GitAPIException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -115,7 +115,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test
   public void shouldCreateNewFileWhenPathStartsWithSlash() throws IOException, GitAPIException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -133,7 +133,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test(expected = AlreadyExistsException.class)
   public void shouldFailIfOverwritingExistingFileWithoutOverwriteFlag() throws IOException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -147,7 +147,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test(expected = AlreadyExistsException.class)
   public void shouldFailIfPathAlreadyExistsAsAFile() throws IOException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -161,7 +161,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test
   public void shouldOverwriteExistingFileIfOverwriteFlagSet() throws IOException, GitAPIException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -179,7 +179,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test
   public void shouldModifyExistingFile() throws IOException, GitAPIException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -197,7 +197,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test(expected = NotFoundException.class)
   public void shouldFailIfFileToModifyDoesNotExist() throws IOException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -211,7 +211,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test(expected = BadRequestException.class)
   public void shouldFailIfNoChangesMade() throws IOException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "b\n".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "b\n".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -225,7 +225,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test(expected = ConcurrentModificationException.class)
   public void shouldFailBranchDoesNotHaveExpectedRevision() throws IOException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "irrelevant\n".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "irrelevant\n".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -281,7 +281,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test(expected = NotFoundException.class)
   public void shouldFailWithNotFoundExceptionIfBranchIsNoBranch() throws IOException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "irrelevant\n".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "irrelevant\n".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -296,7 +296,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test
   public void shouldSignCreatedCommit() throws IOException, GitAPIException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -317,7 +317,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test
   public void shouldNotSignCreatedCommitIfSigningDisabled() throws IOException, GitAPIException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -338,7 +338,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test
   public void shouldTriggerPostCommitHook() throws IOException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "new content".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "new content".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 
@@ -359,7 +359,7 @@ public class GitModifyCommandTest extends GitModifyCommandTestBase {
 
   @Test(expected = ScmConstraintViolationException.class)
   public void shouldFailIfPathInGitMetadata() throws IOException {
-    File newFile = Files.write(temporaryFolder.newFile().toPath(), "other".getBytes()).toFile();
+    File newFile = Files.write(tempFolder.newFile().toPath(), "other".getBytes()).toFile();
 
     GitModifyCommand command = createCommand();
 

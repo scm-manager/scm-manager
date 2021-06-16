@@ -32,8 +32,6 @@ import sonia.scm.protocolcommand.RepositoryContext;
 public class ScmUploadPackFactory implements UploadPackFactory<RepositoryContext> {
   @Override
   public UploadPack create(RepositoryContext repositoryContext, Repository repository) {
-    UploadPack uploadPack = new UploadPack(repository);
-    uploadPack.setRefFilter(MirrorRefFilter::filterMirrors);
-    return uploadPack;
+    return new UploadPack(repository);
   }
 }

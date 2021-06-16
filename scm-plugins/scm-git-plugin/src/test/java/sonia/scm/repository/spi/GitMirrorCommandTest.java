@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.junit.http.AppServer;
@@ -33,6 +34,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevWalk;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
 import sonia.scm.api.v2.resources.GitRepositoryConfigStoreProvider;
 import sonia.scm.repository.GitChangesetConverterFactory;
@@ -40,6 +42,8 @@ import sonia.scm.repository.GitConfig;
 import sonia.scm.repository.api.MirrorCommandResult;
 import sonia.scm.repository.api.MirrorFilter;
 import sonia.scm.repository.api.SimpleUsernamePasswordCredential;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
+import sonia.scm.repository.work.WorkdirProvider;
 import sonia.scm.security.GPG;
 import sonia.scm.store.InMemoryConfigurationStoreFactory;
 
@@ -52,10 +56,7 @@ import java.util.function.Consumer;
 
 import static java.util.Collections.singletonList;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.FAILED;
 import static sonia.scm.repository.api.MirrorCommandResult.ResultType.OK;
@@ -63,10 +64,12 @@ import static sonia.scm.repository.api.MirrorCommandResult.ResultType.REJECTED_U
 
 public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
 
+  @Rule
+  public BindTransportProtocolRule transportProtocolRule = new BindTransportProtocolRule();
+
   public static final Consumer<MirrorCommandRequest> ACCEPT_ALL = r -> {
   };
   public static final Consumer<MirrorCommandRequest> REJECT_ALL = r -> r.setFilter(new DenyAllMirrorFilter());
-  private final PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory = mock(PostReceiveRepositoryHookEventFactory.class);
   private final MirrorHttpConnectionProvider mirrorHttpConnectionProvider = mock(MirrorHttpConnectionProvider.class);
   private final GPG gpg = mock(GPG.class);
   private final GitChangesetConverterFactory gitChangesetConverterFactory = new GitChangesetConverterFactory(gpg);
@@ -81,7 +84,15 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
     Git.init().setBare(true).setDirectory(clone).call();
 
     GitContext emptyContext = createMirrorContext(clone);
-    command = new GitMirrorCommand(emptyContext, postReceiveRepositoryHookEventFactory, mirrorHttpConnectionProvider, gitChangesetConverterFactory, gitTagConverter);
+    SimpleGitWorkingCopyFactory workingCopyFactory =
+      new SimpleGitWorkingCopyFactory(
+        new NoneCachingWorkingCopyPool(new WorkdirProvider(repositoryLocationResolver)), new SimpleMeterRegistry());
+    command = new GitMirrorCommand(
+      emptyContext,
+      mirrorHttpConnectionProvider,
+      gitChangesetConverterFactory,
+      gitTagConverter,
+      workingCopyFactory);
   }
 
   @Test
@@ -99,8 +110,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       assertThat(createdMirror.branchList().call()).isNotEmpty();
       assertThat(createdMirror.tagList().call()).isNotEmpty();
     }
-
-    verify(postReceiveRepositoryHookEventFactory).fireForFetch(any(), any());
   }
 
   @Test
@@ -133,9 +142,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       Optional<Ref> addedBranch = findBranch(updatedMirror, "added-branch");
       assertThat(addedBranch).isPresent();
     }
-
-    // event should be thrown two times, once for the initial clone, and once for the update
-    verify(postReceiveRepositoryHookEventFactory, times(2)).fireForFetch(any(), any());
   }
 
   @Test
@@ -203,9 +209,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
       Optional<Ref> addedTag = findTag(updatedMirror, "added-tag");
       assertThat(addedTag).hasValueSatisfying(ref -> assertThat(ref.getObjectId().getName()).isEqualTo("9e93d8631675a89615fac56b09209686146ff3c0"));
     }
-
-    // event should be thrown two times, once for the initial clone, and once for the update
-    verify(postReceiveRepositoryHookEventFactory, times(2)).fireForFetch(any(), any());
   }
 
   @Test
@@ -506,8 +509,6 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
           createCredential("wrong", "credentials"));
 
       assertThat(result.getResult()).isEqualTo(FAILED);
-
-      verify(postReceiveRepositoryHookEventFactory, never()).fireForFetch(any(), any());
     } finally {
       simpleHttpServer.stop();
     }

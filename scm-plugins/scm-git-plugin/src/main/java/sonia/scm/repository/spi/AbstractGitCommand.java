@@ -38,6 +38,7 @@ import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.PushResult;
+import org.eclipse.jgit.transport.RefSpec;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -54,8 +55,10 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+import static java.util.Arrays.stream;
 import static java.util.Optional.empty;
 import static java.util.Optional.of;
+import static java.util.stream.Collectors.toList;
 import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 import static sonia.scm.repository.GitUtil.getBranchIdOrCurrentHead;
@@ -179,7 +182,7 @@ class AbstractGitCommand {
         logger.trace("could not checkout branch {} directly; trying to create local branch", branchName, e);
         checkOutTargetAsNewLocalBranch(branchName);
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException(context.getRepository(), "could not checkout branch: " + branchName, e);
+        throw new InternalRepositoryException(repository, "could not checkout branch: " + branchName, e);
       }
     }
 
@@ -189,9 +192,9 @@ class AbstractGitCommand {
         clone.checkout().setStartPoint(targetRevision.getName()).setName(branchName).setCreateBranch(true).call();
       } catch (RefNotFoundException e) {
         logger.debug("could not checkout branch {} as local branch", branchName, e);
-        throw notFound(entity("Revision", branchName).in(context.getRepository()));
+        throw notFound(entity("Revision", branchName).in(repository));
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException(context.getRepository(), "could not checkout branch as local branch: " + branchName, e);
+        throw new InternalRepositoryException(repository, "could not checkout branch as local branch: " + branchName, e);
       }
     }
 
@@ -210,7 +213,7 @@ class AbstractGitCommand {
           throw doThrow.get();
         }
       } catch (GitAPIException e) {
-        throw new InternalRepositoryException(context.getRepository(), "could not read status of repository", e);
+        throw new InternalRepositoryException(repository, "could not read status of repository", e);
       }
     }
 
@@ -230,7 +233,7 @@ class AbstractGitCommand {
           return empty();
         }
       } catch (GitAPIException | IOException e) {
-        throw new InternalRepositoryException(context.getRepository(), "could not commit changes", e);
+        throw new InternalRepositoryException(repository, "could not commit changes", e);
       }
     }
 
@@ -238,9 +241,14 @@ class AbstractGitCommand {
       return clone.getRepository().readMergeHeads() != null && !clone.getRepository().readMergeHeads().isEmpty();
     }
 
-    void push() {
+    void push(String... refSpecs) {
       try {
-        Iterable<PushResult> pushResults = clone.push().call();
+        Iterable<PushResult> pushResults =
+          clone
+            .push()
+            .setRefSpecs(stream(refSpecs).map(RefSpec::new).collect(toList()))
+            .setForce(true)
+            .call();
         Iterator<PushResult> pushResultIterator = pushResults.iterator();
         if (!pushResultIterator.hasNext()) {
           throw new InternalRepositoryException(repository, "got no result from push");
@@ -252,7 +260,7 @@ class AbstractGitCommand {
         }
         remoteUpdates
           .stream()
-          .filter(remoteRefUpdate -> remoteRefUpdate.getStatus() != RemoteRefUpdate.Status.OK)
+          .filter(remoteRefUpdate -> remoteRefUpdate.getStatus() != RemoteRefUpdate.Status.OK && remoteRefUpdate.getStatus() != RemoteRefUpdate.Status.UP_TO_DATE)
           .findAny()
           .ifPresent(remoteRefUpdate -> {
             logger.info("message for failed push: {}", pushResult.getMessages());

@@ -32,6 +32,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.eclipse.jgit.lib.Constants;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.RefDatabase;
 import org.eclipse.jgit.lib.RefUpdate;
 import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
@@ -48,6 +49,7 @@ import org.slf4j.LoggerFactory;
 import sonia.scm.repository.Changeset;
 import sonia.scm.repository.GitChangesetConverter;
 import sonia.scm.repository.GitChangesetConverterFactory;
+import sonia.scm.repository.GitWorkingCopyFactory;
 import sonia.scm.repository.InternalRepositoryException;
 import sonia.scm.repository.Tag;
 import sonia.scm.repository.api.MirrorCommandResult;
@@ -92,22 +94,20 @@ import static sonia.scm.repository.api.MirrorCommandResult.ResultType.REJECTED_U
  */
 public class GitMirrorCommand extends AbstractGitCommand implements MirrorCommand {
 
-  public static final String MIRROR_REF_PREFIX = "refs/mirror/";
-
   private static final Logger LOG = LoggerFactory.getLogger(GitMirrorCommand.class);
 
-  private final PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory;
   private final MirrorHttpConnectionProvider mirrorHttpConnectionProvider;
   private final GitChangesetConverterFactory converterFactory;
   private final GitTagConverter gitTagConverter;
+  private final GitWorkingCopyFactory workingCopyFactory;
 
   @Inject
-  GitMirrorCommand(GitContext context, PostReceiveRepositoryHookEventFactory postReceiveRepositoryHookEventFactory, MirrorHttpConnectionProvider mirrorHttpConnectionProvider, GitChangesetConverterFactory converterFactory, GitTagConverter gitTagConverter) {
+  GitMirrorCommand(GitContext context, MirrorHttpConnectionProvider mirrorHttpConnectionProvider, GitChangesetConverterFactory converterFactory, GitTagConverter gitTagConverter, GitWorkingCopyFactory workingCopyFactory) {
     super(context);
     this.mirrorHttpConnectionProvider = mirrorHttpConnectionProvider;
-    this.postReceiveRepositoryHookEventFactory = postReceiveRepositoryHookEventFactory;
     this.converterFactory = converterFactory;
     this.gitTagConverter = gitTagConverter;
+    this.workingCopyFactory = workingCopyFactory;
   }
 
   @Override
@@ -117,20 +117,15 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
   @Override
   public MirrorCommandResult update(MirrorCommandRequest mirrorCommandRequest) {
-    try (Repository repository = context.open(); Git git = Git.wrap(repository)) {
-      return new Worker(mirrorCommandRequest, repository, git).update();
-    } catch (IOException e) {
-      throw new InternalRepositoryException(context.getRepository(), "error during git fetch", e);
-    }
+    return inClone(git -> new Worker(context, mirrorCommandRequest, repository, git), workingCopyFactory, null);
   }
 
-  private class Worker {
+  private class Worker extends GitCloneWorker<MirrorCommandResult> {
 
     private final MirrorCommandRequest mirrorCommandRequest;
     private final List<String> mirrorLog = new ArrayList<>();
     private final Stopwatch stopwatch;
 
-    private final Repository repository;
     private final Git git;
 
     private FetchResult fetchResult;
@@ -139,14 +134,16 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
     private ResultType result = OK;
 
-    private Worker(MirrorCommandRequest mirrorCommandRequest, Repository repository, Git git) {
+    private Collection<String> deletedRefs = new ArrayList<>();
+
+    private Worker(GitContext context, MirrorCommandRequest mirrorCommandRequest, sonia.scm.repository.Repository repository, Git git) {
+      super(git, context, repository);
       this.mirrorCommandRequest = mirrorCommandRequest;
-      this.repository = repository;
       this.git = git;
       stopwatch = Stopwatch.createStarted();
     }
 
-    MirrorCommandResult update() {
+    MirrorCommandResult run() {
       try {
         return doUpdate();
       } catch (GitAPIException e) {
@@ -158,6 +155,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private MirrorCommandResult doUpdate() throws GitAPIException {
+      copyRemoteRefsToMain();
       fetchResult = createFetchCommand().call();
       filterContext = new GitFilterContext();
       filter = mirrorCommandRequest.getFilter().getFilter(filterContext);
@@ -169,13 +167,44 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         handleTags();
       }
 
-      postReceiveRepositoryHookEventFactory.fireForFetch(git, fetchResult);
+      push(generatePushRefSpecs().toArray(new String[0]));
       return new MirrorCommandResult(result, mirrorLog, stopwatch.stop().elapsed());
+    }
+
+    private Collection<String> generatePushRefSpecs() {
+      Collection<String> refSpecs = new ArrayList<>();
+      refSpecs.add("refs/heads/*:refs/heads/*");
+      refSpecs.add("refs/tags/*:refs/tags/*");
+      deletedRefs.forEach(deletedRef -> refSpecs.add(":" + deletedRef));
+      return refSpecs;
+    }
+
+    private void copyRemoteRefsToMain() {
+      try {
+        RefDatabase refDatabase = git.getRepository().getRefDatabase();
+        refDatabase.getRefs()
+          .stream()
+          .filter(ref -> ref.getName().startsWith("refs/remotes/origin/"))
+          .forEach(
+          ref -> {
+            try {
+              String baseName = ref.getName().substring("refs/remotes/origin/".length());
+              RefUpdate refUpdate = refDatabase.newUpdate("refs/heads/" + baseName, true);
+              refUpdate.setNewObjectId(ref.getObjectId());
+              refUpdate.forceUpdate();
+            } catch (IOException e) {
+              throw new InternalRepositoryException(context.getRepository(), "Failed to copy origin remote refs " + ref.getName(), e);
+            }
+          }
+        );
+      } catch (IOException e) {
+        throw new InternalRepositoryException(context.getRepository(), "Failed to copy remote refs", e);
+      }
     }
 
     private void handleBranches() {
       LoggerWithHeader logger = new LoggerWithHeader("Branches:");
-      doForEachRefStartingWith(MIRROR_REF_PREFIX + "heads", ref -> handleBranch(logger, ref));
+      doForEachRefStartingWith("refs/heads", ref -> handleBranch(logger, ref));
     }
 
     private void handleBranch(LoggerWithHeader logger, TrackingRefUpdate ref) {
@@ -185,7 +214,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
     private void handleTags() {
       LoggerWithHeader logger = new LoggerWithHeader("Tags:");
-      doForEachRefStartingWith(MIRROR_REF_PREFIX + "tags", ref -> handleTag(logger, ref));
+      doForEachRefStartingWith("refs/tags", ref -> handleTag(logger, ref));
     }
 
     private void handleTag(LoggerWithHeader logger, TrackingRefUpdate ref) {
@@ -209,7 +238,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       private void handleRef(Function<TrackingRefUpdate, Result> filter) {
         Result filterResult = filter.apply(ref);
         try {
-          String referenceName = ref.getLocalName().substring(MIRROR_REF_PREFIX.length() + refType.length());
+          String referenceName = ref.getLocalName().substring("refs/".length() + refType.length());
           if (filterResult.isAccepted()) {
             handleAcceptedReference(referenceName);
           } else {
@@ -245,15 +274,14 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         logger.logChange(ref, referenceName, filterResult.getRejectReason().orElse("rejected due to filter"));
       }
 
-      private void handleAcceptedReference(String referenceName) throws IOException {
+      private void handleAcceptedReference(String referenceName) {
         String targetRef = "refs/" + refType + referenceName;
         if (isDeletedReference(ref)) {
           LOG.trace("deleting {} ref in {}: {}", typeForLog, GitMirrorCommand.this.repository, targetRef);
-          deleteReference(targetRef);
           logger.logChange(ref, referenceName, "deleted");
+          deletedRefs.add(targetRef);
         } else {
           LOG.trace("updating {} ref in {}: {}", typeForLog, GitMirrorCommand.this.repository, targetRef);
-          updateReference(targetRef, ref.getNewObjectId());
           logger.logChange(ref, referenceName, getUpdateType(ref));
         }
       }
@@ -273,7 +301,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       private void deleteReference(String targetRef) throws IOException {
-        RefUpdate deleteUpdate = repository.getRefDatabase().newUpdate(targetRef, true);
+        RefUpdate deleteUpdate = git.getRepository().getRefDatabase().newUpdate(targetRef, true);
         deleteUpdate.setForceUpdate(true);
         deleteUpdate.delete();
       }
@@ -284,7 +312,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       private void updateReference(String reference, ObjectId objectId) throws IOException {
         LOG.trace("updating ref in {}: {} -> {}", GitMirrorCommand.this.repository, reference, objectId);
-        RefUpdate refUpdate = repository.getRefDatabase().newUpdate(reference, true);
+        RefUpdate refUpdate = git.getRepository().getRefDatabase().newUpdate(reference, true);
         refUpdate.setNewObjectId(objectId);
         refUpdate.forceUpdate();
       }
@@ -335,8 +363,8 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
     }
 
     private FetchCommand createFetchCommand() {
-      FetchCommand fetchCommand = Git.wrap(repository).fetch()
-        .setRefSpecs("refs/heads/*:" + MIRROR_REF_PREFIX + "heads/*", "refs/tags/*:" + MIRROR_REF_PREFIX + "tags/*")
+      FetchCommand fetchCommand = Git.wrap(git.getRepository()).fetch()
+        .setRefSpecs("refs/heads/*:refs/heads/*", "refs/tags/*:refs/tags/*")
         .setForceUpdate(true)
         .setRemoveDeletedRefs(true)
         .setRemote(mirrorCommandRequest.getSourceUrl());
@@ -370,10 +398,10 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
         Map<String, MirrorFilter.TagUpdate> extractedTagUpdates = new HashMap<>();
 
         fetchResult.getTrackingRefUpdates().forEach(refUpdate -> {
-          if (refUpdate.getLocalName().startsWith(MIRROR_REF_PREFIX + "heads")) {
+          if (refUpdate.getLocalName().startsWith("refs/heads")) {
             extractedBranchUpdates.put(refUpdate.getLocalName(), new GitBranchUpdate(refUpdate));
           }
-          if (refUpdate.getLocalName().startsWith(MIRROR_REF_PREFIX + "tags")) {
+          if (refUpdate.getLocalName().startsWith("refs/tags")) {
             extractedTagUpdates.put(refUpdate.getLocalName(), new GitTagUpdate(refUpdate));
           }
         });
@@ -411,7 +439,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       public GitBranchUpdate(TrackingRefUpdate refUpdate) {
         this.refUpdate = refUpdate;
-        this.branchName = refUpdate.getLocalName().substring(MIRROR_REF_PREFIX.length() + "heads/".length());
+        this.branchName = refUpdate.getLocalName().substring("refs/heads/".length());
       }
 
       @Override
@@ -457,18 +485,16 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       private Changeset computeChangeset() {
-        try (RevWalk revWalk = new RevWalk(repository); GitChangesetConverter gitChangesetConverter = converter(revWalk)) {
-          try {
-            RevCommit revCommit = revWalk.parseCommit(refUpdate.getNewObjectId());
-            return gitChangesetConverter.createChangeset(revCommit, refUpdate.getLocalName());
-          } catch (Exception e) {
-            throw new InternalRepositoryException(context.getRepository(), "got exception while validating branch", e);
-          }
+        try (Repository repository = context.open(); RevWalk revWalk = new RevWalk(repository); GitChangesetConverter gitChangesetConverter = converter(revWalk)) {
+          RevCommit revCommit = revWalk.parseCommit(refUpdate.getNewObjectId());
+          return gitChangesetConverter.createChangeset(revCommit, refUpdate.getLocalName());
+        } catch (Exception e) {
+          throw new InternalRepositoryException(context.getRepository(), "got exception while validating branch", e);
         }
     }
 
     private GitChangesetConverter converter(RevWalk revWalk) {
-      return converterFactory.builder(repository)
+      return converterFactory.builder(git.getRepository())
         .withRevWalk(revWalk)
         .withAdditionalPublicKeys(mirrorCommandRequest.getPublicKeys())
         .create();
@@ -485,7 +511,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
       public GitTagUpdate(TrackingRefUpdate refUpdate) {
         this.refUpdate = refUpdate;
-        this.tagName = refUpdate.getLocalName().substring(MIRROR_REF_PREFIX.length() + "tags/".length());
+        this.tagName = refUpdate.getLocalName().substring("refs/tags/".length());
       }
 
       @Override
@@ -523,22 +549,20 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       private Tag computeTag() {
-        try (RevWalk revWalk = new RevWalk(repository)) {
-          try {
-            RevObject revObject = revWalk.parseAny(refUpdate.getNewObjectId());
-            if (revObject.getType() == Constants.OBJ_TAG) {
-              RevTag revTag = revWalk.parseTag(revObject.getId());
-              return gitTagConverter.buildTag(revTag, revWalk);
-            } else if (revObject.getType() == Constants.OBJ_COMMIT) {
-              Ref ref = repository.getRefDatabase().findRef(refUpdate.getLocalName());
-              Tag t = gitTagConverter.buildTag(repository, revWalk, ref);
-              return new Tag(tagName, t.getRevision(), t.getDate().orElse(null), t.getDeletable());
-            } else {
-              throw new InternalRepositoryException(context.getRepository(), "invalid object type for tag");
-            }
-          } catch (Exception e) {
-            throw new InternalRepositoryException(context.getRepository(), "got exception while validating tag", e);
+        try (Repository repository = context.open(); RevWalk revWalk = new RevWalk(repository)) {
+          RevObject revObject = revWalk.parseAny(refUpdate.getNewObjectId());
+          if (revObject.getType() == Constants.OBJ_TAG) {
+            RevTag revTag = revWalk.parseTag(revObject.getId());
+            return gitTagConverter.buildTag(revTag, revWalk);
+          } else if (revObject.getType() == Constants.OBJ_COMMIT) {
+            Ref ref = repository.getRefDatabase().findRef(refUpdate.getLocalName());
+            Tag t = gitTagConverter.buildTag(repository, revWalk, ref);
+            return new Tag(tagName, t.getRevision(), t.getDate().orElse(null), t.getDeletable());
+          } else {
+            throw new InternalRepositoryException(context.getRepository(), "invalid object type for tag");
           }
+        } catch (Exception e) {
+          throw new InternalRepositoryException(context.getRepository(), "got exception while validating tag", e);
         }
       }
     }
