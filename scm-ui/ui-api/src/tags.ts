@@ -37,7 +37,7 @@ export const useTags = (repository: Repository): ApiResult<TagCollection> => {
   const link = requiredLink(repository, "tags");
   return useQuery<TagCollection, Error>(
     repoQueryKey(repository, "tags"),
-    () => apiClient.get(link).then(response => response.json())
+    () => apiClient.get(link).then((response) => response.json())
     // we do not populate the cache for a single tag,
     // because we have no pagination for tags and if we have a lot of them
     // the population slows us down
@@ -47,16 +47,15 @@ export const useTags = (repository: Repository): ApiResult<TagCollection> => {
 export const useTag = (repository: Repository, name: string): ApiResult<Tag> => {
   const link = requiredLink(repository, "tags");
   return useQuery<Tag, Error>(tagQueryKey(repository, name), () =>
-    apiClient.get(concat(link, name)).then(response => response.json())
+    apiClient.get(concat(link, name)).then((response) => response.json())
   );
 };
 
 const invalidateCacheForTag = (queryClient: QueryClient, repository: NamespaceAndName, tag: Tag) => {
   return Promise.all([
     queryClient.invalidateQueries(repoQueryKey(repository, "tags")),
-    queryClient.invalidateQueries(tagQueryKey(repository, tag.name)),
     queryClient.invalidateQueries(repoQueryKey(repository, "changesets")),
-    queryClient.invalidateQueries(repoQueryKey(repository, "changeset", tag.revision))
+    queryClient.invalidateQueries(repoQueryKey(repository, "changeset", tag.revision)),
   ]);
 };
 
@@ -65,16 +64,16 @@ const createTag = (changeset: Changeset, link: string) => {
     return apiClient
       .post(link, {
         name,
-        revision: changeset.id
+        revision: changeset.id,
       })
-      .then(response => {
+      .then((response) => {
         const location = response.headers.get("Location");
         if (!location) {
           throw new Error("Server does not return required Location header");
         }
         return apiClient.get(location);
       })
-      .then(response => response.json());
+      .then((response) => response.json());
   };
 };
 
@@ -82,36 +81,38 @@ export const useCreateTag = (repository: Repository, changeset: Changeset) => {
   const queryClient = useQueryClient();
   const link = requiredLink(changeset, "tag");
   const { isLoading, error, mutate, data } = useMutation<Tag, Error, string>(createTag(changeset, link), {
-    onSuccess: async tag => {
+    onSuccess: async (tag) => {
       queryClient.setQueryData(tagQueryKey(repository, tag.name), tag);
+      await queryClient.invalidateQueries(tagQueryKey(repository, tag.name));
       await invalidateCacheForTag(queryClient, repository, tag);
-    }
+    },
   });
   return {
     isLoading,
     error,
     create: (name: string) => mutate(name),
-    tag: data
+    tag: data,
   };
 };
 
 export const useDeleteTag = (repository: Repository) => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, Tag>(
-    tag => {
+    (tag) => {
       const deleteUrl = (tag._links.delete as Link).href;
       return apiClient.delete(deleteUrl);
     },
     {
       onSuccess: async (_, tag) => {
+        queryClient.removeQueries(tagQueryKey(repository, tag.name));
         await invalidateCacheForTag(queryClient, repository, tag);
-      }
+      },
     }
   );
   return {
     remove: (tag: Tag) => mutate(tag),
     isLoading,
     error,
-    isDeleted: !!data
+    isDeleted: !!data,
   };
 };

@@ -23,10 +23,10 @@
  */
 
 import React, { FC, useEffect, useState } from "react";
-import { Link, Repository, Tag } from "@scm-manager/ui-types";
+import { Repository, Tag } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 import TagRow from "./TagRow";
-import { apiClient, ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
+import { ConfirmAlert, ErrorNotification } from "@scm-manager/ui-components";
 import { useDeleteTag } from "@scm-manager/ui-api";
 
 type Props = {
@@ -77,12 +77,12 @@ const TagTable: FC<Props> = ({ repository, baseUrl, tags }) => {
               className: "is-outlined",
               label: t("tag.delete.confirmAlert.submit"),
               isLoading,
-              onClick: () => deleteTag()
+              onClick: () => deleteTag(),
             },
             {
               label: t("tag.delete.confirmAlert.cancel"),
-              onClick: () => abortDelete()
-            }
+              onClick: () => abortDelete(),
+            },
           ]}
           close={() => abortDelete()}
         />
@@ -95,7 +95,7 @@ const TagTable: FC<Props> = ({ repository, baseUrl, tags }) => {
           </tr>
         </thead>
         <tbody>
-          {tags.map(tag => (
+          {tags.map((tag) => (
             <TagRow key={tag.name} baseUrl={baseUrl} tag={tag} onDelete={onDelete} />
           ))}
         </tbody>
