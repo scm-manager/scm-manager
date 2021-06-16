@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.20.0] - 2021-06-16
+### Added
+- Support basic authentication with access token ([#1694](https://github.com/scm-manager/scm-manager/pulls/1694))
+- Form elements that support react-hook-form can now be made read-only ([#1696](https://github.com/scm-manager/scm-manager/pulls/1696))
+
+### Fixed
+- Post receive hook events after mirror update for git ([#1703](https://github.com/scm-manager/scm-manager/pulls/1703))
+- Added option to increase LFS authorization token timeout ([#1697](https://github.com/scm-manager/scm-manager/pull/1697))
+- Uniform rendering of tooltips for repository badges ([#1698](https://github.com/scm-manager/scm-manager/pull/1698))
+- Clear related caches if gpg key was added or deleted ([#1701](https://github.com/scm-manager/scm-manager/pull/1701))
+- Redirect after single tag was deleted ([#1700](https://github.com/scm-manager/scm-manager/pull/1700))
+
 ## [2.19.1] - 2021-06-09
 ### Fixed
 - Add handling when duplicated branch part cannot be created ([#1692](https://github.com/scm-manager/scm-manager/pull/1692))
@@ -653,3 +665,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.18.0]: https://www.scm-manager.org/download/2.18.0
 [2.19.0]: https://www.scm-manager.org/download/2.19.0
 [2.19.1]: https://www.scm-manager.org/download/2.19.1
+[2.20.0]: https://www.scm-manager.org/download/2.20.0

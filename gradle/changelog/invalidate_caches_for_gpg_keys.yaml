@@ -1,2 +1,0 @@
-- type: fixed
-  description: Clear related caches if gpg key was added or deleted ([#1701](https://github.com/scm-manager/scm-manager/pull/1701))
