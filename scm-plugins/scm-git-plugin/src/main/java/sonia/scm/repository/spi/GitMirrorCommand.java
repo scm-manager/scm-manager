@@ -34,7 +34,6 @@ import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.Ref;
 import org.eclipse.jgit.lib.RefDatabase;
 import org.eclipse.jgit.lib.RefUpdate;
-import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.revwalk.RevObject;
 import org.eclipse.jgit.revwalk.RevTag;
@@ -128,13 +127,13 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
 
     private final Git git;
 
+    private final Collection<String> deletedRefs = new ArrayList<>();
+
     private FetchResult fetchResult;
     private GitFilterContext filterContext;
     private MirrorFilter.Filter filter;
 
     private ResultType result = OK;
-
-    private Collection<String> deletedRefs = new ArrayList<>();
 
     private Worker(GitContext context, MirrorCommandRequest mirrorCommandRequest, sonia.scm.repository.Repository repository, Git git) {
       super(git, context, repository);
@@ -485,7 +484,7 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       private Changeset computeChangeset() {
-        try (Repository repository = context.open(); RevWalk revWalk = new RevWalk(repository); GitChangesetConverter gitChangesetConverter = converter(revWalk)) {
+        try (RevWalk revWalk = new RevWalk(git.getRepository()); GitChangesetConverter gitChangesetConverter = converter(revWalk)) {
           RevCommit revCommit = revWalk.parseCommit(refUpdate.getNewObjectId());
           return gitChangesetConverter.createChangeset(revCommit, refUpdate.getLocalName());
         } catch (Exception e) {
@@ -549,14 +548,14 @@ public class GitMirrorCommand extends AbstractGitCommand implements MirrorComman
       }
 
       private Tag computeTag() {
-        try (Repository repository = context.open(); RevWalk revWalk = new RevWalk(repository)) {
+        try (RevWalk revWalk = new RevWalk(git.getRepository())) {
           RevObject revObject = revWalk.parseAny(refUpdate.getNewObjectId());
           if (revObject.getType() == Constants.OBJ_TAG) {
             RevTag revTag = revWalk.parseTag(revObject.getId());
             return gitTagConverter.buildTag(revTag, revWalk);
           } else if (revObject.getType() == Constants.OBJ_COMMIT) {
-            Ref ref = repository.getRefDatabase().findRef(refUpdate.getLocalName());
-            Tag t = gitTagConverter.buildTag(repository, revWalk, ref);
+            Ref ref = git.getRepository().getRefDatabase().findRef(refUpdate.getLocalName());
+            Tag t = gitTagConverter.buildTag(git.getRepository(), revWalk, ref);
             return new Tag(tagName, t.getRevision(), t.getDate().orElse(null), t.getDeletable());
           } else {
             throw new InternalRepositoryException(context.getRepository(), "invalid object type for tag");

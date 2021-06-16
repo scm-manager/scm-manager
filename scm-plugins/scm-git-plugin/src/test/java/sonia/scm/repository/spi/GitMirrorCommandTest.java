@@ -670,11 +670,13 @@ public class GitMirrorCommandTest extends AbstractGitCommandTestBase {
         return new Filter() {
           @Override
           public Result acceptTag(TagUpdate tagUpdate) {
+            tagUpdate.getTag();
             updates.tagUpdates.add(tagUpdate);
             return Result.accept();
           }
           @Override
           public Result acceptBranch(BranchUpdate branchUpdate) {
+            branchUpdate.getChangeset();
             updates.branchUpdates.add(branchUpdate);
             return Result.accept();
           }
