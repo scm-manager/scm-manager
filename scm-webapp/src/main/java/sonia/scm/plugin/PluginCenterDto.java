@@ -70,26 +70,27 @@ public final class PluginCenterDto implements Serializable {
   @AllArgsConstructor
   public static class Plugin {
 
-    private String name;
-    private String version;
-    private String displayName;
-    private String description;
-    private String category;
-    private String author;
-    private String avatarUrl;
-    private String sha256sum;
+    private final String name;
+    private final String version;
+    private final String displayName;
+    private final String description;
+    private final String category;
+    private final String author;
+    private final String avatarUrl;
+    private final String sha256sum;
+    private final String cloudoguDownload;
 
     @XmlElement(name = "conditions")
-    private Condition conditions;
+    private final Condition conditions;
 
     @XmlElement(name = "dependencies")
-    private Set<String> dependencies;
+    private final Set<String> dependencies;
 
     @XmlElement(name = "optionalDependencies")
-    private Set<String> optionalDependencies;
+    private final Set<String> optionalDependencies;
 
     @XmlElement(name = "_links")
-    private Map<String, Link> links;
+    private final Map<String, Link> links;
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)
@@ -98,9 +99,9 @@ public final class PluginCenterDto implements Serializable {
   @AllArgsConstructor
   public static class Condition {
 
-    private List<String> os;
-    private String arch;
-    private String minVersion;
+    private final List<String> os;
+    private final String arch;
+    private final String minVersion;
   }
 
   @XmlAccessorType(XmlAccessType.FIELD)

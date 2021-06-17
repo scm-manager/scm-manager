@@ -25,7 +25,7 @@ import React, { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
 import styled from "styled-components";
-import { Plugin } from "@scm-manager/ui-types";
+import { Link, Plugin } from "@scm-manager/ui-types";
 import { Button, ButtonGroup, Checkbox, ErrorNotification, Modal, Notification } from "@scm-manager/ui-components";
 import SuccessNotification from "./SuccessNotification";
 import { useInstallPlugin, useUninstallPlugin, useUpdatePlugins } from "@scm-manager/ui-api";
@@ -39,7 +39,7 @@ type Props = {
 
 const ListParent = styled.div`
   margin-right: 0;
-  min-width: ${props => (props.pluginAction === PluginAction.INSTALL ? "5.5em" : "10em")};
+  min-width: ${(props) => (props.pluginAction === PluginAction.INSTALL ? "5.5em" : "10em")};
   text-align: left;
 `;
 
@@ -66,6 +66,9 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
   const handlePluginAction = (e: Event) => {
     e.preventDefault();
     switch (pluginAction) {
+      case PluginAction.CLOUDOGU:
+        window.open((plugin._links.cloudoguDownload as Link).href, "_blank");
+        break;
       case PluginAction.INSTALL:
         install(plugin, { restart: shouldRestart });
         break;
@@ -76,7 +79,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
         update(plugin, { restart: shouldRestart });
         break;
       default:
-        throw new Error(`Unkown plugin action ${pluginAction}`);
+        throw new Error(`Unknown plugin action ${pluginAction}`);
     }
   };
 
@@ -172,7 +175,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
           disabled={false}
         />
       );
-    } else {
+    } else if (pluginAction !== PluginAction.CLOUDOGU) {
       return <Notification type="warning">{t("plugins.modal.manualRestartRequired")}</Notification>;
     }
   };
@@ -192,6 +195,13 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
             </ListParent>
             <ListChild className={classNames("field-body", "is-inline-flex")}>{plugin.author}</ListChild>
           </div>
+          {pluginAction === PluginAction.CLOUDOGU && (
+            <div className="field is-horizontal">
+              <Notification type="info" className="is-full-width">
+                {t("plugins.modal.cloudoguDownloadInfo")}
+              </Notification>
+            </div>
+          )}
           {pluginAction === PluginAction.INSTALL && (
             <div className="field is-horizontal">
               <ListParent className={classNames("field-label", "is-inline-flex")} pluginAction={pluginAction}>
@@ -230,7 +240,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
   return (
     <Modal
       title={t(`plugins.modal.title.${pluginAction}`, {
-        name: plugin.displayName ? plugin.displayName : plugin.name
+        name: plugin.displayName ? plugin.displayName : plugin.name,
       })}
       closeFunction={onClose}
       body={body}

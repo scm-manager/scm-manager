@@ -47,7 +47,8 @@
       "title": {
         "install": "Install {{name}} Plugin",
         "update": "Update {{name}} Plugin",
-        "uninstall": "Uninstall {{name}} Plugin"
+        "uninstall": "Uninstall {{name}} Plugin",
+        "cloudoguDownload": "Get plugin from MyCloudogu"
       },
       "restart": "Restart to make plugin changes effective",
       "install": "Install",
@@ -67,6 +68,8 @@
       "version": "Version",
       "currentVersion": "Installed version",
       "newVersion": "New version",
+      "cloudoguDownloadInfo": "This plugin is only available via MyCloudogu. Follow the instructions to install it.",
+      "cloudoguDownload": "To Installation Instructions",
       "dependencyNotification": "With this plugin, the following dependencies will be installed/updated if their latest versions are not installed yet!",
       "optionalDependencyNotification": "With this plugin, the following optional dependencies will be updated if they are installed!",
       "dependencies": "Dependencies",

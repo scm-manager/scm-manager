@@ -28,7 +28,9 @@ package sonia.scm.plugin;
 
 import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
 
@@ -52,6 +54,8 @@ import java.io.Serializable;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "plugin-information")
+@AllArgsConstructor
+@NoArgsConstructor
 public class PluginInformation implements PermissionObject, Validateable, Cloneable, Serializable {
 
   private static final long serialVersionUID = 461382048865977206L;
@@ -63,6 +67,7 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
   private String author;
   private String category;
   private String avatarUrl;
+  private String cloudoguDownload;
 
   @Override
   public PluginInformation clone() {
@@ -74,6 +79,7 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
     clone.setAuthor(author);
     clone.setCategory(category);
     clone.setAvatarUrl(avatarUrl);
+    clone.setCloudoguDownload(cloudoguDownload);
     return clone;
   }
 

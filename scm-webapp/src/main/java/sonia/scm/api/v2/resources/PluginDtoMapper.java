@@ -24,6 +24,7 @@
 
 package sonia.scm.api.v2.resources;
 
+import com.google.common.base.Strings;
 import de.otto.edison.hal.Links;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -91,8 +92,13 @@ public abstract class PluginDtoMapper {
         .self(information.getName()));
 
     if (!plugin.isPending() && PluginPermissions.write().isPermitted()) {
-      String href = resourceLinks.availablePlugin().install(information.getName());
-      appendLink(links, "install", href);
+      String cloudoguDownloadLink = plugin.getDescriptor().getInformation().getCloudoguDownload();
+      if (!Strings.isNullOrEmpty(cloudoguDownloadLink)) {
+        links.single(link("cloudoguDownload", cloudoguDownloadLink));
+      } else {
+        String href = resourceLinks.availablePlugin().install(information.getName());
+        appendLink(links, "install", href);
+      }
     }
 
     return new PluginDto(links.build());
