@@ -10,5 +10,8 @@
     "password": "New Password",
     "password-confirmation": "Confirm Password",
     "submit": "Submit"
+  },
+  "error": {
+    "forbidden": "Incorrect token"
   }
 }

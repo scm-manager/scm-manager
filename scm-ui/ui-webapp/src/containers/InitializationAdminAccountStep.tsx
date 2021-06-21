@@ -65,14 +65,9 @@ const createAdmin = (link: string) => {
 const useAdminStep = (link: string) => {
   const { mutate, data, isLoading, error } = useMutation<AdminAccountCreation, Error, AdminAccountCreation>(
     createAdmin(link),
-    {
-      onSuccess: () => {
-        return undefined;
-      }
-    }
   );
   return {
-    create: (user: AdminAccountCreation) => mutate(user),
+    create: mutate,
     isLoading,
     error,
     user: data,
@@ -133,7 +128,11 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
 
   let errorComponent;
   if (error) {
-    errorComponent = <ErrorNotification error={error} />;
+    if (error.message === "Forbidden") {
+      errorComponent = <ErrorNotification error={new Error(t("error.forbidden"))}/>;
+    } else {
+      errorComponent = <ErrorNotification error={error}/>;
+    }
   }
 
   const formValid =

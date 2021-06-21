@@ -10,5 +10,8 @@
     "password": "Administrator Passwort",
     "password-confirmation": "Passwort Bestätigung",
     "submit": "Absenden"
+  },
+  "error": {
+    "forbidden": "Falscher Token"
   }
 }
