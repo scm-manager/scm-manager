@@ -23,7 +23,7 @@
  */
 
 import React, { FC, useState } from "react";
-import { apiClient, validation, ErrorNotification, InputField, SubmitButton } from "@scm-manager/ui-components";
+import { apiClient, validation, ErrorNotification, InputField, SubmitButton, Button } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useMutation } from "react-query";
@@ -51,14 +51,14 @@ const createAdmin = (link: string) => {
   return (data: AdminAccountCreation) => {
     return apiClient
       .post(link, data, "application/json")
-      .then(response => {
+      .then((response) => {
         const location = response.headers.get("Location");
         if (!location) {
           throw new Error("Server does not return required Location header");
         }
         return apiClient.get(location);
       })
-      .then(response => response.json());
+      .then((response) => response.json());
   };
 };
 
@@ -75,7 +75,7 @@ const useAdminStep = (link: string) => {
     create: (user: AdminAccountCreation) => mutate(user),
     isLoading,
     error,
-    user: data
+    user: data,
   };
 };
 
@@ -127,7 +127,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
       displayName,
       email,
       password,
-      passwordConfirmation
+      passwordConfirmation,
     });
   };
 
@@ -151,68 +151,73 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
       <h4 className="subtitle">{t("adminStep.title")}</h4>
       {errorComponent}
       <p>{t("adminStep.description")}</p>
-      <form onSubmit={handleSubmit}>
-        <div className={"columns"}>
-          <div className="column is-full-width">
-            <InputField placeholder={t("adminStep.startupToken")} autofocus={true} onChange={setStartupKey} />
-          </div>
+      <div className={"columns"}>
+        <div className="column is-full-width">
+          <InputField placeholder={t("adminStep.startupToken")} autofocus={true} onChange={setStartupKey} />
         </div>
-        <div className={"columns"}>
-          <div className="column is-half">
-            <InputField
-              testId="username-input"
-              label={t("adminStep.username")}
-              onChange={validateAndSetUserName}
-              validationError={userNameValidationError}
-              value={userName}
-            />
-          </div>
-          <div className="column is-half">
-            <InputField
-              testId="displayname-input"
-              label={t("adminStep.displayname")}
-              onChange={validateAndSetDisplayName}
-              value={displayName}
-              validationError={displayNameValidationError}
-            />
-          </div>
+      </div>
+      <div className={"columns"}>
+        <div className="column is-half">
+          <InputField
+            testId="username-input"
+            label={t("adminStep.username")}
+            onChange={validateAndSetUserName}
+            validationError={userNameValidationError}
+            value={userName}
+          />
         </div>
-        <div className={"columns"}>
-          <div className="column is-full-width">
-            <InputField
-              label={t("adminStep.email")}
-              onChange={validateAndSetEmail}
-              value={email}
-              validationError={mailValidationError}
-            />
-          </div>
+        <div className="column is-half">
+          <InputField
+            testId="displayname-input"
+            label={t("adminStep.displayname")}
+            onChange={validateAndSetDisplayName}
+            value={displayName}
+            validationError={displayNameValidationError}
+          />
         </div>
-        <div className={"columns"}>
-          <div className="column is-half">
-            <InputField
-              testId="password-input"
-              label={t("adminStep.password")}
-              type="password"
-              onChange={validateAndSetPassword}
-              validationError={passwordValidationError}
-            />
-          </div>
-          <div className="column is-half">
-            <InputField
-              testId="password-confirmation-input"
-              label={t("adminStep.password-confirmation")}
-              type="password"
-              onChange={validateAndSetPasswordConfirmation}
-              validationError={passwordConfirmationValidationError}
-            />
-          </div>
+      </div>
+      <div className={"columns"}>
+        <div className="column is-full-width">
+          <InputField
+            label={t("adminStep.email")}
+            onChange={validateAndSetEmail}
+            value={email}
+            validationError={mailValidationError}
+          />
         </div>
-        <div className={"columns"}>
-          <div className="column is-full-width">
-            <SubmitButton label={t("adminStep.submit")} fullWidth={true} loading={isLoading} disabled={!formValid} />
-          </div>
+      </div>
+      <div className={"columns"}>
+        <div className="column is-half">
+          <InputField
+            testId="password-input"
+            label={t("adminStep.password")}
+            type="password"
+            onChange={validateAndSetPassword}
+            validationError={passwordValidationError}
+          />
         </div>
-      </form>
+        <div className="column is-half">
+          <InputField
+            testId="password-confirmation-input"
+            label={t("adminStep.password-confirmation")}
+            type="password"
+            onChange={validateAndSetPasswordConfirmation}
+            validationError={passwordConfirmationValidationError}
+          />
+        </div>
+      </div>
+      <div className={"columns"}>
+        <div className="column is-full-width">
+          <Button
+            color={"primary"}
+            label={t("adminStep.submit")}
+            fullWidth={true}
+            loading={isLoading}
+            disabled={!formValid}
+            action={handleSubmit}
+          />
+        </div>
+      </div>
     </div>
   );
 
