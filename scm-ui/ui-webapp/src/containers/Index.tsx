@@ -29,12 +29,17 @@ import ScrollToTop from "./ScrollToTop";
 import IndexErrorPage from "./IndexErrorPage";
 import { useIndex } from "@scm-manager/ui-api";
 import { Link } from "@scm-manager/ui-types";
+import i18next from "i18next";
 
 const Index: FC = () => {
   const { isLoading, error, data } = useIndex();
   const [pluginsLoaded, setPluginsLoaded] = useState(false);
 
   // TODO check componentDidUpdate method for anonymous user stuff
+
+  i18next.on("languageChanged", (lng) => {
+    document.documentElement.setAttribute("lang", lng);
+  });
 
   if (error) {
     return (
