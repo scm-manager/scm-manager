@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 
-import React, { FC, useState } from "react";
+import React, { FC, FormEvent, useState } from "react";
 import { apiClient, validation, ErrorNotification, InputField, SubmitButton, Button } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
@@ -64,7 +64,7 @@ const createAdmin = (link: string) => {
 
 const useAdminStep = (link: string) => {
   const { mutate, data, isLoading, error } = useMutation<AdminAccountCreation, Error, AdminAccountCreation>(
-    createAdmin(link),
+    createAdmin(link)
   );
   return {
     create: mutate,
@@ -115,7 +115,8 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
     setPasswordConfirmation(newPasswordConfirmation);
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
     create({
       startupToken: startupKey,
       userName,
@@ -129,9 +130,9 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
   let errorComponent;
   if (error) {
     if (error.message === "Forbidden") {
-      errorComponent = <ErrorNotification error={new Error(t("error.forbidden"))}/>;
+      errorComponent = <ErrorNotification error={new Error(t("error.forbidden"))} />;
     } else {
-      errorComponent = <ErrorNotification error={error}/>;
+      errorComponent = <ErrorNotification error={error} />;
     }
   }
 
@@ -146,77 +147,77 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
     );
   const component = (
     <div className="column is-8 box  has-background-white-ter">
-      <h3 className="title">{t("title")}</h3>
-      <h4 className="subtitle">{t("adminStep.title")}</h4>
-      {errorComponent}
-      <p>{t("adminStep.description")}</p>
-      <div className={"columns"}>
-        <div className="column is-full-width">
-          <InputField placeholder={t("adminStep.startupToken")} autofocus={true} onChange={setStartupKey} />
+      <form onSubmit={handleSubmit}>
+        <h3 className="title">{t("title")}</h3>
+        <h4 className="subtitle">{t("adminStep.title")}</h4>
+        {errorComponent}
+        <p>{t("adminStep.description")}</p>
+        <div className={"columns"}>
+          <div className="column is-full-width">
+            <InputField placeholder={t("adminStep.startupToken")} autofocus={true} onChange={setStartupKey} />
+          </div>
         </div>
-      </div>
-      <div className={"columns"}>
-        <div className="column is-half">
-          <InputField
-            testId="username-input"
-            label={t("adminStep.username")}
-            onChange={validateAndSetUserName}
-            validationError={userNameValidationError}
-            value={userName}
-          />
+        <div className={"columns"}>
+          <div className="column is-half">
+            <InputField
+              testId="username-input"
+              label={t("adminStep.username")}
+              onChange={validateAndSetUserName}
+              validationError={userNameValidationError}
+              value={userName}
+            />
+          </div>
+          <div className="column is-half">
+            <InputField
+              testId="displayname-input"
+              label={t("adminStep.displayname")}
+              onChange={validateAndSetDisplayName}
+              value={displayName}
+              validationError={displayNameValidationError}
+            />
+          </div>
         </div>
-        <div className="column is-half">
-          <InputField
-            testId="displayname-input"
-            label={t("adminStep.displayname")}
-            onChange={validateAndSetDisplayName}
-            value={displayName}
-            validationError={displayNameValidationError}
-          />
+        <div className={"columns"}>
+          <div className="column is-full-width">
+            <InputField
+              label={t("adminStep.email")}
+              onChange={validateAndSetEmail}
+              value={email}
+              validationError={mailValidationError}
+            />
+          </div>
         </div>
-      </div>
-      <div className={"columns"}>
-        <div className="column is-full-width">
-          <InputField
-            label={t("adminStep.email")}
-            onChange={validateAndSetEmail}
-            value={email}
-            validationError={mailValidationError}
-          />
+        <div className={"columns"}>
+          <div className="column is-half">
+            <InputField
+              testId="password-input"
+              label={t("adminStep.password")}
+              type="password"
+              onChange={validateAndSetPassword}
+              validationError={passwordValidationError}
+            />
+          </div>
+          <div className="column is-half">
+            <InputField
+              testId="password-confirmation-input"
+              label={t("adminStep.password-confirmation")}
+              type="password"
+              onChange={validateAndSetPasswordConfirmation}
+              validationError={passwordConfirmationValidationError}
+            />
+          </div>
         </div>
-      </div>
-      <div className={"columns"}>
-        <div className="column is-half">
-          <InputField
-            testId="password-input"
-            label={t("adminStep.password")}
-            type="password"
-            onChange={validateAndSetPassword}
-            validationError={passwordValidationError}
-          />
+        <div className={"columns"}>
+          <div className="column is-full-width">
+            <SubmitButton
+              label={t("adminStep.submit")}
+              fullWidth={true}
+              loading={isLoading}
+              disabled={!formValid}
+            />
+          </div>
         </div>
-        <div className="column is-half">
-          <InputField
-            testId="password-confirmation-input"
-            label={t("adminStep.password-confirmation")}
-            type="password"
-            onChange={validateAndSetPasswordConfirmation}
-            validationError={passwordConfirmationValidationError}
-          />
-        </div>
-      </div>
-      <div className={"columns"}>
-        <div className="column is-full-width">
-          <Button
-            color={"primary"}
-            label={t("adminStep.submit")}
-            fullWidth={true}
-            loading={isLoading}
-            disabled={!formValid}
-            action={handleSubmit}
-          />
-        </div>
-      </div>
+      </form>
     </div>
   );
 
