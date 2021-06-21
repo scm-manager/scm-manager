@@ -24,6 +24,8 @@
 
 package sonia.scm.plugin;
 
+import com.google.common.base.Strings;
+
 import java.util.Optional;
 import java.util.Set;
 
@@ -40,15 +42,20 @@ public class AvailablePluginDescriptor implements PluginDescriptor {
   private final Set<String> optionalDependencies;
   private final String url;
   private final String checksum;
+  private final Optional<String> installLink;
 
   /**
-   * @deprecated Use {@link #AvailablePluginDescriptor(PluginInformation, PluginCondition, Set, Set, String, String)} instead
+   * @deprecated Use {@link #AvailablePluginDescriptor(PluginInformation, PluginCondition, Set, Set, String, String, String)} instead
    */
   @Deprecated
   public AvailablePluginDescriptor(PluginInformation information, PluginCondition condition, Set<String> dependencies, String url, String checksum) {
     this(information, condition, dependencies, emptySet(), url, checksum);
   }
 
+  /**
+   * @deprecated Use {@link #AvailablePluginDescriptor(PluginInformation, PluginCondition, Set, Set, String, String, String)} instead
+   */
+  @Deprecated
   public AvailablePluginDescriptor(PluginInformation information, PluginCondition condition, Set<String> dependencies, Set<String> optionalDependencies, String url, String checksum) {
     this.information = information;
     this.condition = condition;
@@ -56,6 +63,21 @@ public class AvailablePluginDescriptor implements PluginDescriptor {
     this.optionalDependencies = optionalDependencies;
     this.url = url;
     this.checksum = checksum;
+    this.installLink = Optional.empty();
+  }
+
+  public AvailablePluginDescriptor(PluginInformation information, PluginCondition condition, Set<String> dependencies, Set<String> optionalDependencies, String url, String checksum, String installLink) {
+    this.information = information;
+    this.condition = condition;
+    this.dependencies = dependencies;
+    this.optionalDependencies = optionalDependencies;
+    this.url = url;
+    this.checksum = checksum;
+    if (Strings.isNullOrEmpty(installLink)) {
+      this.installLink = Optional.empty();
+    } else {
+      this.installLink = Optional.of(installLink);
+    }
   }
 
   public String getUrl() {
@@ -84,5 +106,9 @@ public class AvailablePluginDescriptor implements PluginDescriptor {
   @Override
   public Set<String> getOptionalDependencies() {
     return optionalDependencies;
+  }
+
+  public Optional<String> getInstallLink() {
+    return installLink;
   }
 }

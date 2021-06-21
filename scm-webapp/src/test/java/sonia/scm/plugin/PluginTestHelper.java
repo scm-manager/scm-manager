@@ -26,6 +26,8 @@ package sonia.scm.plugin;
 
 import org.mockito.Answers;
 
+import java.util.Optional;
+
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -62,6 +64,7 @@ public class PluginTestHelper {
   public static AvailablePlugin createAvailable(PluginInformation information) {
     AvailablePluginDescriptor descriptor = mock(AvailablePluginDescriptor.class);
     lenient().when(descriptor.getInformation()).thenReturn(information);
+    lenient().when(descriptor.getInstallLink()).thenReturn(Optional.of("mycloudogu.com/install/my_plugin"));
     return new AvailablePlugin(descriptor);
   }
 

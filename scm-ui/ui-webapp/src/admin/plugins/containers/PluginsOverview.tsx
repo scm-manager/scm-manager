@@ -48,7 +48,7 @@ export enum PluginAction {
   INSTALL = "install",
   UPDATE = "update",
   UNINSTALL = "uninstall",
-  CLOUDOGU = "cloudoguDownload",
+  CLOUDOGU = "cloudoguInstall",
 }
 
 export type PluginModalContent = {

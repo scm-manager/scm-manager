@@ -33,11 +33,15 @@ import { PluginAction } from "../containers/PluginsOverview";
 
 type Props = {
   plugin: Plugin;
-  pluginAction: string;
+  pluginAction: PluginAction;
   onClose: () => void;
 };
 
-const ListParent = styled.div`
+type ParentWithPluginAction = {
+  pluginAction?: PluginAction;
+};
+
+const ListParent = styled.div.attrs((props) => ({}))<ParentWithPluginAction>`
   margin-right: 0;
   min-width: ${(props) => (props.pluginAction === PluginAction.INSTALL ? "5.5em" : "10em")};
   text-align: left;
@@ -63,11 +67,11 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
     }
   }, [isDone]);
 
-  const handlePluginAction = (e: Event) => {
+  const handlePluginAction = (e: React.MouseEvent<Element, MouseEvent>) => {
     e.preventDefault();
     switch (pluginAction) {
       case PluginAction.CLOUDOGU:
-        window.open((plugin._links.cloudoguDownload as Link).href, "_blank");
+        window.open((plugin._links.cloudoguInstall as Link).href, "_blank");
         break;
       case PluginAction.INSTALL:
         install(plugin, { restart: shouldRestart });
@@ -198,7 +202,7 @@ const PluginModal: FC<Props> = ({ onClose, pluginAction, plugin }) => {
           {pluginAction === PluginAction.CLOUDOGU && (
             <div className="field is-horizontal">
               <Notification type="info" className="is-full-width">
-                {t("plugins.modal.cloudoguDownloadInfo")}
+                {t("plugins.modal.cloudoguInstallInfo")}
               </Notification>
             </div>
           )}

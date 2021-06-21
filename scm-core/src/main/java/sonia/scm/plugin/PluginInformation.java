@@ -21,16 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.plugin;
 
 import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import sonia.scm.Validateable;
 import sonia.scm.util.Util;
 
@@ -39,11 +35,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
-//~--- JDK imports ------------------------------------------------------------
-
-/**
- * @author Sebastian Sdorra
- */
 @Data
 @StaticPermissions(
   value = "plugin",
@@ -54,8 +45,6 @@ import java.io.Serializable;
 )
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "plugin-information")
-@AllArgsConstructor
-@NoArgsConstructor
 public class PluginInformation implements PermissionObject, Validateable, Cloneable, Serializable {
 
   private static final long serialVersionUID = 461382048865977206L;
@@ -67,7 +56,7 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
   private String author;
   private String category;
   private String avatarUrl;
-  private String cloudoguDownload;
+  private PluginType type = PluginType.SCM;
 
   @Override
   public PluginInformation clone() {
@@ -79,7 +68,7 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
     clone.setAuthor(author);
     clone.setCategory(category);
     clone.setAvatarUrl(avatarUrl);
-    clone.setCloudoguDownload(cloudoguDownload);
+    clone.setType(type);
     return clone;
   }
 
@@ -100,5 +89,10 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
   @Override
   public boolean isValid() {
     return Util.isNotEmpty(name) && Util.isNotEmpty(version);
+  }
+
+  public enum PluginType {
+    SCM,
+    CLOUDOGU
   }
 }

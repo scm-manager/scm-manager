@@ -1,0 +1,2 @@
+- type: Added
+  description: Prepare plugin center to show cloudogu plugins ([#1709](https://github.com/scm-manager/scm-manager/pull/1709))

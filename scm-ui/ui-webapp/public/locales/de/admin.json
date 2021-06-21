@@ -48,7 +48,7 @@
         "install": "{{name}} Plugin installieren",
         "update": "{{name}} Plugin aktualisieren",
         "uninstall": "{{name}} Plugin deinstallieren",
-        "cloudoguDownload": "Plugin über MyCloudogu installieren"
+        "cloudoguInstall": "Plugin über myCloudogu installieren"
       },
       "restart": "Neustarten, um Plugin-Änderungen wirksam zu machen",
       "install": "Installieren",
@@ -68,8 +68,8 @@
       "version": "Version",
       "currentVersion": "Installierte Version",
       "newVersion": "Neue Version",
-      "cloudoguDownloadInfo": "Dieses Plugin ist nur über MyCloudogu erhältlich. Zum Installieren folgen Sie bitte der Anleitung.",
-      "cloudoguDownload": "Zur Installationsanleitung",
+      "cloudoguInstallInfo": "Dieses Plugin ist nur über myCloudogu erhältlich. Zum Installieren folgen Sie bitte der Anleitung.",
+      "cloudoguInstall": "Zur Installationsanleitung",
       "dependencyNotification": "Mit diesem Plugin werden folgende Abhängigkeiten mit installiert bzw. aktualisiert, wenn sie noch nicht in der aktuellen Version vorhanden sind!",
       "optionalDependencyNotification": "Mit diesem Plugin werden folgende optionale Abhängigkeiten mit aktualisiert, falls sie installiert sind!",
       "dependencies": "Abhängigkeiten",
