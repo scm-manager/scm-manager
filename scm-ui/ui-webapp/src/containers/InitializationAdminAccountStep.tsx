@@ -22,13 +22,13 @@
  * SOFTWARE.
  */
 
-import React, { FC, FormEvent, useState } from "react";
-import { apiClient, validation, ErrorNotification, InputField, SubmitButton, Button } from "@scm-manager/ui-components";
+import React, { FC, FormEvent, useEffect, useState } from "react";
+import { apiClient, validation, ErrorNotification, InputField, SubmitButton } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useMutation } from "react-query";
 import { isDisplayNameValid, isPasswordValid } from "../users/components/userValidation";
-import { Links } from "@scm-manager/ui-types";
+import { Links, Link } from "@scm-manager/ui-types";
 
 const HeroSection = styled.section`
   padding-top: 2em;
@@ -49,28 +49,19 @@ type AdminAccountCreation = {
 
 const createAdmin = (link: string) => {
   return (data: AdminAccountCreation) => {
-    return apiClient
-      .post(link, data, "application/json")
-      .then((response) => {
-        const location = response.headers.get("Location");
-        if (!location) {
-          throw new Error("Server does not return required Location header");
-        }
-        return apiClient.get(location);
-      })
-      .then((response) => response.json());
+    return apiClient.post(link, data, "application/json").then(() => {
+      return new Promise<void>((resolve) => resolve());
+    });
   };
 };
 
-const useAdminStep = (link: string) => {
-  const { mutate, data, isLoading, error } = useMutation<AdminAccountCreation, Error, AdminAccountCreation>(
-    createAdmin(link)
-  );
+const useCreateAdmin = (link: string) => {
+  const { mutate, isLoading, error, isSuccess } = useMutation<void, Error, AdminAccountCreation>(createAdmin(link));
   return {
     create: mutate,
     isLoading,
     error,
-    user: data,
+    isCreated: isSuccess,
   };
 };
 
@@ -88,7 +79,13 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
   const [passwordValidationError, setPasswordValidationError] = useState(false);
   const [passwordConfirmationValidationError, setPasswordConfirmationValidationError] = useState(false);
 
-  const { create, isLoading, error } = useAdminStep(data._links.initialAdminUser.href);
+  const { create, isLoading, error, isCreated } = useCreateAdmin((data._links.initialAdminUser as Link).href);
+
+  useEffect(() => {
+    if (isCreated) {
+      window.location.reload(false);
+    }
+  }, [isCreated]);
 
   const validateAndSetUserName = (newUserName: string) => {
     setUserNameValidationError(!validation.isNameValid(newUserName));
@@ -209,12 +206,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
         </div>
         <div className={"columns"}>
           <div className="column is-full-width">
-            <SubmitButton
-              label={t("adminStep.submit")}
-              fullWidth={true}
-              loading={isLoading}
-              disabled={!formValid}
-            />
+            <SubmitButton label={t("adminStep.submit")} fullWidth={true} loading={isLoading} disabled={!formValid} />
           </div>
         </div>
       </form>
