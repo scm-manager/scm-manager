@@ -1,6 +1,7 @@
 - section: Getting started
   entries:
   - /installation/
+  - /first-startup/
   - /migrate-scm-manager-from-v1/
   - /import/
   - /faq/
