@@ -31,8 +31,8 @@ import { useIndex, useSubject } from "@scm-manager/ui-api";
 import Notifications from "./Notifications";
 
 const App: FC = () => {
-  const {data: index} = useIndex();
-  const {isLoading, error, isAuthenticated, isAnonymous, me} = useSubject();
+  const { data: index } = useIndex();
+  const { isLoading, error, isAuthenticated, isAnonymous, me } = useSubject();
   const [t] = useTranslation("commons");
 
   if (!index) {
