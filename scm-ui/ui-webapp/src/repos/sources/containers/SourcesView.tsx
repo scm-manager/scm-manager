@@ -44,7 +44,6 @@ type Props = {
   repository: Repository;
   file: File;
   revision: string;
-  path: string;
 };
 
 const SourcesView: FC<Props> = ({ file, repository, revision }) => {

@@ -215,7 +215,7 @@ const Content: FC<Props> = ({ file, repository, revision, path, breadcrumb, erro
   let body;
   switch (selected) {
     case "source":
-      body = <SourcesView revision={revision} file={file} repository={repository} path={path} />;
+      body = <SourcesView file={file} repository={repository} revision={revision} />;
       break;
     case "annotations":
       body = <AnnotateView file={file} repository={repository} />;
