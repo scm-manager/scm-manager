@@ -31,4 +31,5 @@ The password of the administration user cannot be recovered.
 # Bypass User Creation Form
 
 For automated processes, you might want to bypass the initial user creation. To do so, you can set the initial password
-in a system property `scm.initialPassword`. If this is present, a user `scmadmin` with this password will be created.
+in a system property `scm.initialPassword`. If this is present, a user `scmadmin` with this password will be created,
+if it does not already exist.
