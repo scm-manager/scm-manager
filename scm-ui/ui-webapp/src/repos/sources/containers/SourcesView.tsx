@@ -21,16 +21,17 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+
+import React, { FC } from "react";
 import SourcecodeViewer from "../components/content/SourcecodeViewer";
 import ImageViewer from "../components/content/ImageViewer";
 import DownloadViewer from "../components/content/DownloadViewer";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { getContentType } from "./contentType";
-import { File, Repository } from "@scm-manager/ui-types";
+import { File, Link, Repository } from "@scm-manager/ui-types";
 import { ErrorNotification, Loading } from "@scm-manager/ui-components";
 import SwitchableMarkdownViewer from "../components/content/SwitchableMarkdownViewer";
 import styled from "styled-components";
+import { useContentType } from "@scm-manager/ui-api";
 
 const NoSpacingSyntaxHighlighterContainer = styled.div`
   & pre {
@@ -46,93 +47,46 @@ type Props = {
   path: string;
 };
 
-type State = {
-  contentType: string;
-  language: string;
-  loaded: boolean;
-  error?: Error;
+const SourcesView: FC<Props> = ({ file, repository, revision }) => {
+  const { data: contentTypeData, error, isLoading } = useContentType((file._links.self as Link).href);
+
+  if (error) {
+    return <ErrorNotification error={error} />;
+  }
+
+  if (!contentTypeData || isLoading) {
+    return <Loading />;
+  }
+
+  let sources;
+
+  const { type: contentType, language } = contentTypeData;
+  const basePath = `/repo/${repository.namespace}/${repository.name}/code/sources/${revision}/`;
+  if (contentType.startsWith("image/")) {
+    sources = <ImageViewer file={file} />;
+  } else if (contentType.includes("markdown") || (language && language.toLowerCase() === "markdown")) {
+    sources = <SwitchableMarkdownViewer file={file} basePath={basePath} />;
+  } else if (language) {
+    sources = <SourcecodeViewer file={file} language={language} />;
+  } else if (contentType.startsWith("text/")) {
+    sources = <SourcecodeViewer file={file} language="none" />;
+  } else {
+    sources = (
+      <ExtensionPoint
+        name="repos.sources.view"
+        props={{
+          file,
+          contentType,
+          revision,
+          basePath,
+        }}
+      >
+        <DownloadViewer file={file} />
+      </ExtensionPoint>
+    );
+  }
+
+  return <NoSpacingSyntaxHighlighterContainer className="panel-block">{sources}</NoSpacingSyntaxHighlighterContainer>;
 };
-
-class SourcesView extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      contentType: "",
-      language: "",
-      loaded: false,
-    };
-  }
-
-  componentDidMount() {
-    const { file } = this.props;
-    getContentType(file._links.self.href)
-      .then((result) => {
-        this.setState({
-          ...this.state,
-          contentType: result.type,
-          language: result.language,
-          loaded: true,
-        });
-      })
-      .catch((error) => {
-        this.setState({
-          ...this.state,
-          error,
-          loaded: true,
-        });
-      });
-  }
-
-  createBasePath() {
-    const { repository, revision } = this.props;
-    return `/repo/${repository.namespace}/${repository.name}/code/sources/${revision}/`;
-  }
-
-  showSources() {
-    const { file, revision } = this.props;
-    const { contentType, language } = this.state;
-    const basePath = this.createBasePath();
-    if (contentType.startsWith("image/")) {
-      return <ImageViewer file={file} />;
-    } else if (contentType.includes("markdown") || (language && language.toLowerCase() === "markdown")) {
-      return <SwitchableMarkdownViewer file={file} basePath={basePath} />;
-    } else if (language) {
-      return <SourcecodeViewer file={file} language={language} />;
-    } else if (contentType.startsWith("text/")) {
-      return <SourcecodeViewer file={file} language="none" />;
-    } else {
-      return (
-        <ExtensionPoint
-          name="repos.sources.view"
-          props={{
-            file,
-            contentType,
-            revision,
-            basePath,
-          }}
-        >
-          <DownloadViewer file={file} />
-        </ExtensionPoint>
-      );
-    }
-  }
-
-  render() {
-    const { file } = this.props;
-    const { loaded, error } = this.state;
-
-    if (!file || !loaded) {
-      return <Loading />;
-    }
-    if (error) {
-      return <ErrorNotification error={error} />;
-    }
-
-    const sources = this.showSources();
-
-    return <NoSpacingSyntaxHighlighterContainer className="panel-block">{sources}</NoSpacingSyntaxHighlighterContainer>;
-  }
-}
 
 export default SourcesView;

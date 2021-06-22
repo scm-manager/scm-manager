@@ -25,7 +25,7 @@
 import React, { FC } from "react";
 import { File, Link, Repository } from "@scm-manager/ui-types";
 import { Annotate, ErrorNotification, Loading } from "@scm-manager/ui-components";
-import { useContentType, useAnnotations } from "@scm-manager/ui-api";
+import { useAnnotations, useContentType } from "@scm-manager/ui-api";
 
 type Props = {
   file: File;
@@ -43,18 +43,17 @@ const AnnotateView: FC<Props> = ({ file, repository }) => {
     isLoading: isContentTypeLoading,
     error: contentTypeLoadError,
   } = useContentType((file._links.self as Link).href);
-  const isLoading = isAnnotationLoading || isContentTypeLoading || !annotation || !contentType;
   const error = annotationLoadError || contentTypeLoadError;
 
   if (error) {
     return <ErrorNotification error={error} />;
   }
 
-  if (isLoading) {
+  if (isAnnotationLoading || isContentTypeLoading || !annotation || !contentType) {
     return <Loading />;
   }
 
-  return <Annotate source={{ ...annotation!, language: contentType!.language }} repository={repository} />;
+  return <Annotate source={{ ...annotation, language: contentType.language }} repository={repository} />;
 };
 
 export default AnnotateView;
