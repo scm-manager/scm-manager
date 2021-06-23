@@ -52,6 +52,7 @@ export * from "./notifications";
 export * from "./configLink";
 export * from "./apiKeys";
 export * from "./publicKeys";
+export * from "./fileContent";
 export * from "./history";
 export * from "./contentType";
 export * from "./annotations";

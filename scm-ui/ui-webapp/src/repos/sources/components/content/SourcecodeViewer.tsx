@@ -21,11 +21,12 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, useEffect, useState } from "react";
-import { apiClient, ErrorNotification, Loading, SyntaxHighlighter } from "@scm-manager/ui-components";
-import { File, Link } from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import { ErrorNotification, Loading, SyntaxHighlighter } from "@scm-manager/ui-components";
+import { File } from "@scm-manager/ui-types";
 import { useLocation } from "react-router-dom";
 import replaceBranchWithRevision from "../../ReplaceBranchWithRevision";
+import { useFileContent } from "@scm-manager/ui-api";
 
 type Props = {
   file: File;
@@ -33,47 +34,20 @@ type Props = {
 };
 
 const SourcecodeViewer: FC<Props> = ({ file, language }) => {
-  const [content, setContent] = useState("");
-  const [error, setError] = useState<Error | undefined>(undefined);
-  const [loading, setLoading] = useState(true);
-  const [currentFileRevision, setCurrentFileRevision] = useState("");
+  const { error, isLoading, data: content } = useFileContent(file);
   const location = useLocation();
-
-  useEffect(() => {
-    if (file.revision !== currentFileRevision) {
-      getContent((file._links.self as Link).href)
-        .then(content => {
-          setContent(content);
-          setCurrentFileRevision(file.revision);
-          setLoading(false);
-        })
-        .catch(setError);
-    }
-  }, [currentFileRevision, file]);
 
   if (error) {
     return <ErrorNotification error={error} />;
   }
 
-  if (loading) {
+  if (!content || isLoading) {
     return <Loading />;
   }
 
-  if (!content) {
-    return null;
-  }
+  const permalink = replaceBranchWithRevision(location.pathname, file.revision);
 
-  const permalink = replaceBranchWithRevision(location.pathname, currentFileRevision);
-
-  return <SyntaxHighlighter language={getLanguage(language)} value={content} permalink={permalink} />;
+  return <SyntaxHighlighter language={language.toLowerCase()} value={content} permalink={permalink} />;
 };
-
-export function getLanguage(language: string) {
-  return language.toLowerCase();
-}
-
-export function getContent(url: string) {
-  return apiClient.get(url).then(response => response.text());
-}
 
 export default SourcecodeViewer;
