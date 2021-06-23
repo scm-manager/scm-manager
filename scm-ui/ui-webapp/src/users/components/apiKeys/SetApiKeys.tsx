@@ -22,29 +22,14 @@
  * SOFTWARE.
  */
 
-import { Collection, Links, User, Me } from "@scm-manager/ui-types";
-import React, { FC, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import { apiClient, ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
+import { Link, Me, User } from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
 import ApiKeyTable from "./ApiKeyTable";
 import AddApiKey from "./AddApiKey";
 import { useTranslation } from "react-i18next";
-
-export type ApiKeysCollection = Collection & {
-  _embedded: {
-    keys: ApiKey[];
-  };
-};
-
-export type ApiKey = {
-  id: string;
-  displayName: string;
-  permissionRole: string;
-  created: string;
-  _links: Links;
-};
-
-export const CONTENT_TYPE_API_KEY = "application/vnd.scmm-apiKey+json;v=2";
+import { useApiKeys, useDeleteApiKey } from "@scm-manager/ui-api";
+import { Link as RouterLink } from "react-router-dom";
 
 type Props = {
   user: User | Me;
@@ -52,30 +37,9 @@ type Props = {
 
 const SetApiKeys: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
-  const [error, setError] = useState<undefined | Error>();
-  const [loading, setLoading] = useState(false);
-  const [apiKeys, setApiKeys] = useState<ApiKeysCollection | undefined>(undefined);
-
-  useEffect(() => {
-    fetchApiKeys();
-  }, [user]);
-
-  const fetchApiKeys = () => {
-    setLoading(true);
-    apiClient
-      .get((user._links.apiKeys as Link).href)
-      .then(r => r.json())
-      .then(setApiKeys)
-      .then(() => setLoading(false))
-      .catch(setError);
-  };
-
-  const onDelete = (link: string) => {
-    apiClient
-      .delete(link)
-      .then(fetchApiKeys)
-      .catch(setError);
-  };
+  const { isLoading, data: apiKeys, error: fetchError, refetch } = useApiKeys(user);
+  const { error: deletionError, isLoading: isDeleting, remove } = useDeleteApiKey(user);
+  const error = deletionError || fetchError;
 
   const createLink = (apiKeys?._links?.create as Link)?.href;
 
@@ -83,7 +47,7 @@ const SetApiKeys: FC<Props> = ({ user }) => {
     return <ErrorNotification error={error} />;
   }
 
-  if (loading) {
+  if (!apiKeys || isLoading || isDeleting) {
     return <Loading />;
   }
 
@@ -91,12 +55,12 @@ const SetApiKeys: FC<Props> = ({ user }) => {
     <>
       <Subtitle subtitle={t("apiKey.subtitle")} />
       <p>
-        {t("apiKey.text1")} <Link to={"/admin/roles/"}>{t("apiKey.manageRoles")}</Link>
+        {t("apiKey.text1")} <RouterLink to={"/admin/roles/"}>{t("apiKey.manageRoles")}</RouterLink>
       </p>
       <p>{t("apiKey.text2")}</p>
       <br />
-      <ApiKeyTable apiKeys={apiKeys} onDelete={onDelete} />
-      {createLink && <AddApiKey createLink={createLink} refresh={fetchApiKeys} />}
+      <ApiKeyTable apiKeys={apiKeys} onDelete={remove} />
+      {createLink && <AddApiKey user={user} apiKeys={apiKeys} refresh={refetch} />}
     </>
   );
 };

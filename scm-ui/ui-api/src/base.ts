@@ -34,6 +34,12 @@ export type ApiResult<T> = {
   data?: T;
 };
 
+export type RefetchableApiResult<T> = ApiResult<T> & {
+  refetch: () => Promise<unknown>;
+}
+
+export type DeleteFunction<T> = (entity: T) => void;
+
 export const useIndex = (): ApiResult<IndexResources> => {
   const legacy = useLegacyContext();
   return useQuery<IndexResources, Error>("index", () => apiClient.get("/").then(response => response.json()), {

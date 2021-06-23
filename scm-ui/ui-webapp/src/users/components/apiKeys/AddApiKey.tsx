@@ -23,37 +23,34 @@
  */
 
 import React, { FC, useState } from "react";
-import {
-  apiClient,
-  ErrorNotification,
-  InputField,
-  Level,
-  Loading,
-  SubmitButton,
-  Subtitle
-} from "@scm-manager/ui-components";
+import { ErrorNotification, InputField, Level, Loading, SubmitButton, Subtitle } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import { CONTENT_TYPE_API_KEY } from "./SetApiKeys";
 import RoleSelector from "../../../repos/permissions/components/RoleSelector";
 import ApiKeyCreatedModal from "./ApiKeyCreatedModal";
-import { useRepositoryRoles } from "@scm-manager/ui-api";
+import { useCreateApiKey, useRepositoryRoles } from "@scm-manager/ui-api";
+import { ApiKeysCollection, Me, User } from "@scm-manager/ui-types";
 
 type Props = {
-  createLink: string;
+  user: User | Me;
+  apiKeys: ApiKeysCollection;
   refresh: () => void;
 };
 
-const AddApiKey: FC<Props> = ({ createLink, refresh }) => {
+const AddApiKey: FC<Props> = ({ user, apiKeys, refresh }) => {
   const [t] = useTranslation("users");
-  const [isCurrentlyAddingKey, setCurrentlyAddingKey] = useState(false);
-  const [errorAddingKey, setErrorAddingKey] = useState<undefined | Error>();
+  const {
+    isLoading: isCurrentlyAddingKey,
+    error: errorAddingKey,
+    apiKey: addedKey,
+    create,
+    reset: resetCreationHook
+  } = useCreateApiKey(user, apiKeys);
   const [displayName, setDisplayName] = useState("");
   const [permissionRole, setPermissionRole] = useState("");
-  const [addedKey, setAddedKey] = useState("");
   const {
     isLoading: isLoadingRepositoryRoles,
     data: availableRepositoryRoles,
-    error: errorLoadingRepositoryRoles
+    error: errorLoadingRepositoryRoles,
   } = useRepositoryRoles();
   const loading = isCurrentlyAddingKey || isLoadingRepositoryRoles;
   const error = errorAddingKey || errorLoadingRepositoryRoles;
@@ -67,16 +64,6 @@ const AddApiKey: FC<Props> = ({ createLink, refresh }) => {
     setPermissionRole("");
   };
 
-  const addKey = () => {
-    setCurrentlyAddingKey(true);
-    apiClient
-      .post(createLink, { displayName: displayName, permissionRole: permissionRole }, CONTENT_TYPE_API_KEY)
-      .then(response => response.text())
-      .then(setAddedKey)
-      .then(() => setCurrentlyAddingKey(false))
-      .catch(setErrorAddingKey);
-  };
-
   if (error) {
     return <ErrorNotification error={error} />;
   }
@@ -86,13 +73,13 @@ const AddApiKey: FC<Props> = ({ createLink, refresh }) => {
   }
 
   const availableRoleNames = availableRepositoryRoles
-    ? availableRepositoryRoles._embedded.repositoryRoles.map(r => r.name)
+    ? availableRepositoryRoles._embedded.repositoryRoles.map((r) => r.name)
     : [];
 
   const closeModal = () => {
     resetForm();
     refresh();
-    setAddedKey("");
+    resetCreationHook();
   };
 
   const newKeyModal = addedKey && <ApiKeyCreatedModal addedKey={addedKey} close={closeModal} />;
@@ -112,7 +99,14 @@ const AddApiKey: FC<Props> = ({ createLink, refresh }) => {
         role={permissionRole}
       />
       <Level
-        right={<SubmitButton label={t("apiKey.addKey")} loading={loading} disabled={!isValid()} action={addKey} />}
+        right={
+          <SubmitButton
+            label={t("apiKey.addKey")}
+            loading={loading}
+            disabled={!isValid()}
+            action={() => create({ displayName, permissionRole })}
+          />
+        }
       />
     </>
   );
