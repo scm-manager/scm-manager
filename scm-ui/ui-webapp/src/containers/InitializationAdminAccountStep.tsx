@@ -22,13 +22,14 @@
  * SOFTWARE.
  */
 
-import React, { FC, FormEvent, useEffect, useState } from "react";
+import React, { FC, useEffect } from "react";
 import { apiClient, validation, ErrorNotification, InputField, SubmitButton } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
 import { useMutation } from "react-query";
 import { isDisplayNameValid, isPasswordValid } from "../users/components/userValidation";
 import { Links, Link } from "@scm-manager/ui-types";
+import { useForm } from "react-hook-form";
 
 const HeroSection = styled.section`
   padding-top: 2em;
@@ -67,17 +68,16 @@ const useCreateAdmin = (link: string) => {
 
 const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
   const [t] = useTranslation("initialization");
-  const [startupKey, setStartupKey] = useState("");
-  const [userName, setUserName] = useState("scmadmin");
-  const [displayName, setDisplayName] = useState("SCM Administrator");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [passwordConfirmation, setPasswordConfirmation] = useState("");
-  const [userNameValidationError, setUserNameValidationError] = useState(false);
-  const [displayNameValidationError, setDisplayNameValidationError] = useState(false);
-  const [mailValidationError, setMailValidationError] = useState(false);
-  const [passwordValidationError, setPasswordValidationError] = useState(false);
-  const [passwordConfirmationValidationError, setPasswordConfirmationValidationError] = useState(false);
+  const { formState, register, handleSubmit, getValues, setError, clearErrors } = useForm<AdminAccountCreation>({
+    defaultValues: {
+      userName: "scmadmin",
+      displayName: "SCM Administrator",
+      email: "",
+      password: "",
+      passwordConfirmation: "",
+    },
+    mode: "onChange",
+  });
 
   const { create, isLoading, error, isCreated } = useCreateAdmin((data._links.initialAdminUser as Link).href);
 
@@ -87,42 +87,33 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
     }
   }, [isCreated]);
 
-  const validateAndSetUserName = (newUserName: string) => {
-    setUserNameValidationError(!validation.isNameValid(newUserName));
-    setUserName(newUserName);
+  const validateUserName = (newUserName: string) => {
+    return validation.isNameValid(newUserName);
   };
 
-  const validateAndSetDisplayName = (newDisplayName: string) => {
-    setDisplayNameValidationError(!isDisplayNameValid(newDisplayName));
-    setDisplayName(newDisplayName);
+  const validateDisplayName = (newDisplayName: string) => {
+    return isDisplayNameValid(newDisplayName);
   };
 
-  const validateAndSetEmail = (newEmail: string) => {
-    setMailValidationError(!!newEmail && !validation.isMailValid(newEmail));
-    setEmail(newEmail);
+  const validateEmail = (newEmail: string) => {
+    return !newEmail || validation.isMailValid(newEmail);
   };
 
-  const validateAndSetPassword = (newPassword: string) => {
-    setPasswordValidationError(!isPasswordValid(newPassword));
-    setPasswordConfirmationValidationError(!!passwordConfirmation && passwordConfirmation !== newPassword);
-    setPassword(newPassword);
+  const validatePassword = (newPassword: string) => {
+    if (getValues("passwordConfirmation") !== newPassword) {
+      setError("passwordConfirmation", { type: "manual", message: "does not match password" });
+    } else {
+      clearErrors("passwordConfirmation");
+    }
+    return isPasswordValid(newPassword);
   };
 
-  const validateAndSetPasswordConfirmation = (newPasswordConfirmation: string) => {
-    setPasswordConfirmationValidationError(newPasswordConfirmation !== password);
-    setPasswordConfirmation(newPasswordConfirmation);
+  const validatePasswordConfirmation = (newPasswordConfirmation: string) => {
+    return newPasswordConfirmation === getValues("password");
   };
 
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    create({
-      startupToken: startupKey,
-      userName,
-      displayName,
-      email,
-      password,
-      passwordConfirmation,
-    });
+  const onSubmit = (admin: AdminAccountCreation) => {
+    create(admin);
   };
 
   let errorComponent;
@@ -134,24 +125,15 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
     }
   }
 
-  const formValid =
-    !!(startupKey && userName && displayName && password && passwordConfirmation) &&
-    !(
-      userNameValidationError ||
-      displayNameValidationError ||
-      mailValidationError ||
-      passwordValidationError ||
-      passwordConfirmationValidationError
-    );
   const component = (
     <div className="column is-8 box  has-background-white-ter">
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <h3 className="title">{t("title")}</h3>
         <h4 className="subtitle">{t("adminStep.title")}</h4>
         <p>{t("adminStep.description")}</p>
         <div className={"columns"}>
           <div className="column is-full-width">
-            <InputField placeholder={t("adminStep.startupToken")} autofocus={true} onChange={setStartupKey} />
+            <InputField placeholder={t("adminStep.startupToken")} autofocus={true} {...register("startupToken")} />
           </div>
         </div>
         <div className={"columns"}>
@@ -159,18 +141,16 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
             <InputField
               testId="username-input"
               label={t("adminStep.username")}
-              onChange={validateAndSetUserName}
-              validationError={userNameValidationError}
-              value={userName}
+              validationError={!!formState.errors.userName}
+              {...register("userName", { validate: validateUserName })}
             />
           </div>
           <div className="column is-half">
             <InputField
               testId="displayname-input"
               label={t("adminStep.displayname")}
-              onChange={validateAndSetDisplayName}
-              value={displayName}
-              validationError={displayNameValidationError}
+              validationError={!!formState.errors.displayName}
+              {...register("displayName", { validate: validateDisplayName })}
             />
           </div>
         </div>
@@ -178,9 +158,8 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
           <div className="column is-full-width">
             <InputField
               label={t("adminStep.email")}
-              onChange={validateAndSetEmail}
-              value={email}
-              validationError={mailValidationError}
+              validationError={!!formState.errors.email}
+              {...register("email", { validate: validateEmail })}
             />
           </div>
         </div>
@@ -190,8 +169,8 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
               testId="password-input"
               label={t("adminStep.password")}
               type="password"
-              onChange={validateAndSetPassword}
-              validationError={passwordValidationError}
+              validationError={!!formState.errors.password}
+              {...register("password", { validate: validatePassword })}
             />
           </div>
           <div className="column is-half">
@@ -199,15 +178,20 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
               testId="password-confirmation-input"
               label={t("adminStep.password-confirmation")}
               type="password"
-              onChange={validateAndSetPasswordConfirmation}
-              validationError={passwordConfirmationValidationError}
+              validationError={!!formState.errors.passwordConfirmation}
+              {...register("passwordConfirmation", { validate: validatePasswordConfirmation })}
             />
           </div>
         </div>
         {errorComponent}
         <div className={"columns"}>
           <div className="column is-full-width">
-            <SubmitButton label={t("adminStep.submit")} fullWidth={true} loading={isLoading} disabled={!formValid} />
+            <SubmitButton
+              label={t("adminStep.submit")}
+              fullWidth={true}
+              loading={isLoading}
+              disabled={!formState.isValid}
+            />
           </div>
         </div>
       </form>
