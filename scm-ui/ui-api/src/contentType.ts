@@ -21,27 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { apiClient } from "./apiclient";
+import { useQuery } from "react-query";
+import { ApiResult } from "./base";
 
-import { apiClient } from "@scm-manager/ui-components";
+export type ContentType = {
+  type: string;
+  language?: string;
+};
 
-export function getHistory(url: string) {
-  return apiClient
-    .get(url)
-    .then(response => response.json())
-    .then(result => {
-      return {
-        changesets: result._embedded.changesets,
-        pageCollection: {
-          _embedded: result._embedded,
-          _links: result._links,
-          page: result.page,
-          pageTotal: result.pageTotal
-        }
-      };
-    })
-    .catch(err => {
-      return {
-        error: err
-      };
-    });
+function getContentType(url: string): Promise<ContentType> {
+  return apiClient.head(url).then((response) => {
+    return {
+      type: response.headers.get("Content-Type") || "application/octet-stream",
+      language: response.headers.get("X-Programming-Language") || undefined,
+    };
+  });
 }
+
+export const useContentType = (url: string): ApiResult<ContentType> => {
+  const { isLoading, error, data } = useQuery<ContentType, Error>(["contentType", url], () => getContentType(url));
+  return {
+    isLoading,
+    error,
+    data,
+  };
+};

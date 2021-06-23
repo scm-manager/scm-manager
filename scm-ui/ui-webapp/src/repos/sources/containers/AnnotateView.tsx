@@ -22,46 +22,39 @@
  * SOFTWARE.
  */
 
-import React, { FC, useEffect, useState } from "react";
-import { Link, Repository, File, AnnotatedSource } from "@scm-manager/ui-types";
-import { Annotate, apiClient, ErrorNotification, Loading } from "@scm-manager/ui-components";
-import { getContentType } from "./contentType";
+import React, { FC } from "react";
+import { File, Link, Repository } from "@scm-manager/ui-types";
+import { Annotate, ErrorNotification, Loading } from "@scm-manager/ui-components";
+import { useAnnotations, useContentType } from "@scm-manager/ui-api";
 
 type Props = {
   file: File;
   repository: Repository;
+  revision: string;
 };
 
-const AnnotateView: FC<Props> = ({ file, repository }) => {
-  const [annotation, setAnnotation] = useState<AnnotatedSource | undefined>(undefined);
-  const [language, setLanguage] = useState<string | undefined>(undefined);
-  const [error, setError] = useState<Error | undefined>(undefined);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const languagePromise = getContentType((file._links.self as Link).href).then(result =>
-      setLanguage(result.language)
-    );
-
-    const apiClientPromise = apiClient
-      .get((file._links.annotate as Link).href)
-      .then(response => response.json())
-      .then(setAnnotation);
-
-    Promise.all([languagePromise, apiClientPromise])
-      .then(() => setLoading(false))
-      .catch(setError);
-  }, [file]);
+const AnnotateView: FC<Props> = ({ file, repository, revision }) => {
+  const {
+    data: annotation,
+    isLoading: isAnnotationLoading,
+    error: annotationLoadError,
+  } = useAnnotations(repository, revision, file);
+  const {
+    data: contentType,
+    isLoading: isContentTypeLoading,
+    error: contentTypeLoadError,
+  } = useContentType((file._links.self as Link).href);
+  const error = annotationLoadError || contentTypeLoadError;
 
   if (error) {
     return <ErrorNotification error={error} />;
   }
 
-  if (!annotation || loading) {
+  if (isAnnotationLoading || isContentTypeLoading || !annotation || !contentType) {
     return <Loading />;
   }
 
-  return <Annotate source={{ ...annotation, language }} repository={repository} />;
+  return <Annotate source={{ ...annotation, language: contentType.language }} repository={repository} />;
 };
 
 export default AnnotateView;

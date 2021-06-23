@@ -21,21 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { AnnotatedSource, File, Link, Repository } from "@scm-manager/ui-types";
+import { useQuery } from "react-query";
+import { apiClient } from "./apiclient";
+import { ApiResult } from "./base";
+import { repoQueryKey } from "./keys";
 
-import { apiClient } from "@scm-manager/ui-components";
-
-export type ContentType = {
-  type : string;
-  language?: string;
-}
-
-export function getContentType(url: string) : Promise<ContentType> {
-  return apiClient
-    .head(url)
-    .then(response => {
-      return {
-        type: response.headers.get("Content-Type") || "application/octet-stream",
-        language: response.headers.get("X-Programming-Language") || undefined
-      };
-    })
-}
+export const useAnnotations = (repository: Repository, revision: string, file: File): ApiResult<AnnotatedSource> => {
+  const { isLoading, error, data } = useQuery<AnnotatedSource, Error>(
+    repoQueryKey(repository, "annotations", revision, file.path),
+    () => apiClient.get((file._links.annotate as Link).href).then((response) => response.json())
+  );
+  return {
+    isLoading,
+    error,
+    data,
+  };
+};

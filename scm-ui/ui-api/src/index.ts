@@ -50,6 +50,9 @@ export * from "./import";
 export * from "./diff";
 export * from "./notifications";
 export * from "./configLink";
+export * from "./history";
+export * from "./contentType";
+export * from "./annotations";
 
 export { default as ApiProvider } from "./ApiProvider";
 export * from "./ApiProvider";
