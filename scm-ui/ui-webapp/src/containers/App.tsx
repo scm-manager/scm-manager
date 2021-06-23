@@ -47,7 +47,6 @@ const App: FC = () => {
   if (index?.initialization) {
     const Extension = binder.getExtension(`initialization.step.${index.initialization}`);
     content = <Extension data={index._embedded[index.initialization]} />;
-    // content = <div>{index.initialization}</div>;
   } else if (!authenticated && !isLoading) {
     content = <Login />;
   } else if (isLoading) {

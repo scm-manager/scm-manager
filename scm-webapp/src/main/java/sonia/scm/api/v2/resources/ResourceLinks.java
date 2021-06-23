@@ -1127,7 +1127,7 @@ class ResourceLinks {
     public String indexLink(String stepName) {
       return initializationLinkBuilder
         .method("step").parameters(stepName)
-        .method("post").parameters()
+        .method("postAdminInitializationData").parameters()
         .href();
     }
   }

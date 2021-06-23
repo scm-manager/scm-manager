@@ -57,22 +57,8 @@ public class IndexResourceTest {
   public void setUpObjectUnderTest() {
     this.configuration = new ScmConfiguration();
     this.scmContextProvider = mock(SCMContextProvider.class);
-    InitializationFinisher initializationFinisher = new InitializationFinisher() {
-      @Override
-      public boolean isFullyInitialized() {
-        return true;
-      }
-
-      @Override
-      public InitializationStep missingInitialization() {
-        return null;
-      }
-
-      @Override
-      public InitializationStepResource getResource(String name) {
-        return null;
-      }
-    };
+    InitializationFinisher initializationFinisher = mock(InitializationFinisher.class);
+    when(initializationFinisher.isFullyInitialized()).thenReturn(true);
     IndexDtoGenerator generator = new IndexDtoGenerator(
       ResourceLinksMock.createMock(URI.create("/")),
       scmContextProvider,

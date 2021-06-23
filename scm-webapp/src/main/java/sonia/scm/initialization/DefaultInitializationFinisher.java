@@ -61,6 +61,10 @@ public class DefaultInitializationFinisher implements InitializationFinisher {
 
   @Override
   public InitializationStepResource getResource(String name) {
-    return resources.get().stream().filter(resource -> name.equals(resource.name())).findFirst().orElseThrow(() -> new IllegalStateException("resource not found for initialization step " + name));
+    return resources.get()
+      .stream()
+      .filter(resource -> name.equals(resource.name()))
+      .findFirst()
+      .orElseThrow(() -> new IllegalStateException("resource not found for initialization step " + name));
   }
 }

@@ -62,28 +62,42 @@ public class AdminAccountStartupResource implements InitializationStepResource {
   @POST
   @Path("")
   @Consumes("application/json")
-  public void post(@Valid AdminInitializationData data) {
+  public void postAdminInitializationData(@Valid AdminInitializationData data) {
+    verifyInInitialization();
+    verifyToken(data);
+    createAdminUser(data);
+  }
+
+  private void verifyInInitialization() {
     doThrow()
       .violation("initialization not necessary")
       .when(adminAccountStartupAction.done());
+  }
 
+  private void verifyToken(AdminInitializationData data) {
     String givenStartupToken = data.getStartupToken();
 
     if (!adminAccountStartupAction.isCorrectToken(givenStartupToken)) {
       throw new UnauthenticatedException("wrong password");
     }
+  }
 
+  private void createAdminUser(AdminInitializationData data) {
     String userName = data.getUserName();
     String displayName = data.getDisplayName();
     String email = data.getEmail();
     String password = data.getPassword();
     String passwordConfirmation = data.getPasswordConfirmation();
 
+    verifyPasswordConfirmation(password, passwordConfirmation);
+
+    adminAccountStartupAction.createAdminUser(userName, displayName, email, password);
+  }
+
+  private void verifyPasswordConfirmation(String password, String passwordConfirmation) {
     doThrow()
       .violation("password and confirmation differ", "password")
       .when(!password.equals(passwordConfirmation));
-
-    adminAccountStartupAction.createAdminUser(userName, displayName, email, password);
   }
 
   @Override

@@ -98,12 +98,13 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
   };
 
   const validateAndSetEmail = (newEmail: string) => {
-    setMailValidationError(!validation.isMailValid(newEmail));
+    setMailValidationError(!!newEmail && !validation.isMailValid(newEmail));
     setEmail(newEmail);
   };
 
   const validateAndSetPassword = (newPassword: string) => {
     setPasswordValidationError(!isPasswordValid(newPassword));
+    setPasswordConfirmationValidationError(!!passwordConfirmation && passwordConfirmation !== newPassword);
     setPassword(newPassword);
   };
 
@@ -134,7 +135,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
   }
 
   const formValid =
-    !!(startupKey && userName && displayName && email && password && passwordConfirmation) &&
+    !!(startupKey && userName && displayName && password && passwordConfirmation) &&
     !(
       userNameValidationError ||
       displayNameValidationError ||
@@ -147,7 +148,6 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
       <form onSubmit={handleSubmit}>
         <h3 className="title">{t("title")}</h3>
         <h4 className="subtitle">{t("adminStep.title")}</h4>
-        {errorComponent}
         <p>{t("adminStep.description")}</p>
         <div className={"columns"}>
           <div className="column is-full-width">
@@ -204,6 +204,7 @@ const InitializationAdminAccountStep: FC<Props> = ({ data }) => {
             />
           </div>
         </div>
+        {errorComponent}
         <div className={"columns"}>
           <div className="column is-full-width">
             <SubmitButton label={t("adminStep.submit")} fullWidth={true} loading={isLoading} disabled={!formValid} />
