@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC, FormEvent, useEffect, useState } from "react";
 import {
   ErrorNotification,
   InputField,
@@ -29,143 +29,74 @@ import {
   Notification,
   PasswordConfirmation,
   SubmitButton,
-  Subtitle
+  Subtitle,
 } from "@scm-manager/ui-components";
-import { WithTranslation, withTranslation } from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { Me } from "@scm-manager/ui-types";
-import { changePassword } from "../utils/changePassword";
+import { useChangeUserPassword } from "@scm-manager/ui-api";
 
-type Props = WithTranslation & {
+type Props = {
   me: Me;
 };
 
-type State = {
-  oldPassword: string;
-  password: string;
-  loading: boolean;
-  error?: Error;
-  passwordChanged: boolean;
-  passwordValid: boolean;
+const ChangeUserPassword: FC<Props> = ({ me }) => {
+  const [t] = useTranslation("commons");
+  const { isLoading, error, passwordChanged, changePassword, reset } = useChangeUserPassword(me);
+  const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordValid, setPasswordValid] = useState(false);
+
+  useEffect(() => {
+    if (passwordChanged) {
+      setOldPassword("");
+      setNewPassword("");
+      setPasswordValid(false);
+    }
+  }, [passwordChanged]);
+
+  const submit = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (newPassword) {
+      changePassword(oldPassword, newPassword);
+    }
+  };
+
+  const onPasswordChange = (newValue: string, valid: boolean) => {
+    setNewPassword(newValue);
+    setPasswordValid(!!newValue && valid);
+  };
+
+  let message = null;
+
+  if (passwordChanged) {
+    message = <Notification type={"success"} children={t("password.changedSuccessfully")} onClose={reset} />;
+  } else if (error) {
+    message = <ErrorNotification error={error} />;
+  }
+
+  return (
+    <form onSubmit={submit}>
+      <Subtitle subtitle={t("password.subtitle")} />
+      {message}
+      <div className="columns">
+        <div className="column">
+          <InputField
+            label={t("password.currentPassword")}
+            type="password"
+            onChange={setOldPassword}
+            value={oldPassword}
+            helpText={t("password.currentPasswordHelpText")}
+          />
+        </div>
+      </div>
+      <PasswordConfirmation passwordChanged={onPasswordChange} key={passwordChanged ? "changed" : "unchanged"} />
+      <Level
+        right={
+          <SubmitButton disabled={!passwordValid || !oldPassword} loading={isLoading} label={t("password.submit")} />
+        }
+      />
+    </form>
+  );
 };
 
-class ChangeUserPassword extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      oldPassword: "",
-      password: "",
-      loading: false,
-      passwordChanged: false,
-      passwordValid: false
-    };
-  }
-
-  setLoadingState = () => {
-    this.setState({
-      ...this.state,
-      loading: true
-    });
-  };
-
-  setErrorState = (error: Error) => {
-    this.setState({
-      ...this.state,
-      error: error,
-      loading: false
-    });
-  };
-
-  setSuccessfulState = () => {
-    this.setState({
-      ...this.state,
-      loading: false,
-      passwordChanged: true,
-      oldPassword: "",
-      password: ""
-    });
-  };
-
-  submit = (event: Event) => {
-    event.preventDefault();
-    if (this.state.password) {
-      const { oldPassword, password } = this.state;
-      this.setLoadingState();
-      changePassword(this.props.me._links.password.href, oldPassword, password)
-        .then(result => {
-          if (result.error) {
-            this.setErrorState(result.error);
-          } else {
-            this.setSuccessfulState();
-          }
-        })
-        .catch(err => {
-          this.setErrorState(err);
-        });
-    }
-  };
-
-  isValid = () => {
-    return this.state.oldPassword && this.state.passwordValid;
-  };
-
-  render() {
-    const { t } = this.props;
-    const { loading, passwordChanged, error } = this.state;
-
-    let message = null;
-
-    if (passwordChanged) {
-      message = (
-        <Notification type={"success"} children={t("password.changedSuccessfully")} onClose={() => this.onClose()} />
-      );
-    } else if (error) {
-      message = <ErrorNotification error={error} />;
-    }
-
-    return (
-      <form onSubmit={this.submit}>
-        <Subtitle subtitle={t("password.subtitle")} />
-        {message}
-        <div className="columns">
-          <div className="column">
-            <InputField
-              label={t("password.currentPassword")}
-              type="password"
-              onChange={oldPassword =>
-                this.setState({
-                  ...this.state,
-                  oldPassword
-                })
-              }
-              value={this.state.oldPassword ? this.state.oldPassword : ""}
-              helpText={t("password.currentPasswordHelpText")}
-            />
-          </div>
-        </div>
-        <PasswordConfirmation
-          passwordChanged={this.passwordChanged}
-          key={this.state.passwordChanged ? "changed" : "unchanged"}
-        />
-        <Level right={<SubmitButton disabled={!this.isValid()} loading={loading} label={t("password.submit")} />} />
-      </form>
-    );
-  }
-
-  passwordChanged = (password: string, passwordValid: boolean) => {
-    this.setState({
-      ...this.state,
-      password,
-      passwordValid: !!password && passwordValid
-    });
-  };
-
-  onClose = () => {
-    this.setState({
-      ...this.state,
-      passwordChanged: false
-    });
-  };
-}
-
-export default withTranslation("commons")(ChangeUserPassword);
+export default ChangeUserPassword;

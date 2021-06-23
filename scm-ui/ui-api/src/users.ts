@@ -24,10 +24,11 @@
 
 import { ApiResult, useRequiredIndexLink } from "./base";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { Link, User, UserCollection, UserCreation } from "@scm-manager/ui-types";
+import {Link, Me, User, UserCollection, UserCreation} from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
 import { concat } from "./urls";
+import { requiredLink } from "./links";
 
 export type UseUsersRequest = {
   page?: number | string;
@@ -48,11 +49,11 @@ export const useUsers = (request?: UseUsersRequest): ApiResult<UserCollection> =
 
   return useQuery<UserCollection, Error>(
     ["users", request?.search || "", request?.page || 0],
-    () => apiClient.get(`${indexLink}?${createQueryString(queryParams)}`).then(response => response.json()),
+    () => apiClient.get(`${indexLink}?${createQueryString(queryParams)}`).then((response) => response.json()),
     {
       onSuccess: (users: UserCollection) => {
         users._embedded.users.forEach((user: User) => queryClient.setQueryData(["user", user.name], user));
-      }
+      },
     }
   );
 };
@@ -60,7 +61,7 @@ export const useUsers = (request?: UseUsersRequest): ApiResult<UserCollection> =
 export const useUser = (name: string): ApiResult<User> => {
   const indexLink = useRequiredIndexLink("users");
   return useQuery<User, Error>(["user", name], () =>
-    apiClient.get(concat(indexLink, name)).then(response => response.json())
+    apiClient.get(concat(indexLink, name)).then((response) => response.json())
   );
 };
 
@@ -68,14 +69,14 @@ const createUser = (link: string) => {
   return (user: UserCreation) => {
     return apiClient
       .post(link, user, "application/vnd.scmm-user+json;v=2")
-      .then(response => {
+      .then((response) => {
         const location = response.headers.get("Location");
         if (!location) {
           throw new Error("Server does not return required Location header");
         }
         return apiClient.get(location);
       })
-      .then(response => response.json());
+      .then((response) => response.json());
   };
 };
 
@@ -83,23 +84,23 @@ export const useCreateUser = () => {
   const queryClient = useQueryClient();
   const link = useRequiredIndexLink("users");
   const { mutate, data, isLoading, error } = useMutation<User, Error, UserCreation>(createUser(link), {
-    onSuccess: user => {
+    onSuccess: (user) => {
       queryClient.setQueryData(["user", user.name], user);
       return queryClient.invalidateQueries(["users"]);
-    }
+    },
   });
   return {
     create: (user: UserCreation) => mutate(user),
     isLoading,
     error,
-    user: data
+    user: data,
   };
 };
 
 export const useUpdateUser = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, User>(
-    user => {
+    (user) => {
       const updateUrl = (user._links.update as Link).href;
       return apiClient.put(updateUrl, user, "application/vnd.scmm-user+json;v=2");
     },
@@ -107,21 +108,21 @@ export const useUpdateUser = () => {
       onSuccess: async (_, user) => {
         await queryClient.invalidateQueries(["user", user.name]);
         await queryClient.invalidateQueries(["users"]);
-      }
+      },
     }
   );
   return {
     update: (user: User) => mutate(user),
     isLoading,
     error,
-    isUpdated: !!data
+    isUpdated: !!data,
   };
 };
 
 export const useDeleteUser = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, User>(
-    user => {
+    (user) => {
       const deleteUrl = (user._links.delete as Link).href;
       return apiClient.delete(deleteUrl);
     },
@@ -129,14 +130,14 @@ export const useDeleteUser = () => {
       onSuccess: async (_, name) => {
         await queryClient.invalidateQueries(["user", name]);
         await queryClient.invalidateQueries(["users"]);
-      }
+      },
     }
   );
   return {
     remove: (user: User) => mutate(user),
     isLoading,
     error,
-    isDeleted: !!data
+    isDeleted: !!data,
   };
 };
 
@@ -144,7 +145,7 @@ const convertToInternal = (url: string, newPassword: string) => {
   return apiClient.put(
     url,
     {
-      newPassword
+      newPassword,
     },
     "application/vnd.scmm-user+json;v=2"
   );
@@ -167,32 +168,73 @@ export const useConvertToInternal = () => {
       onSuccess: async (_, { user }) => {
         await queryClient.invalidateQueries(["user", user.name]);
         await queryClient.invalidateQueries(["users"]);
-      }
+      },
     }
   );
   return {
     convertToInternal: (user: User, password: string) => mutate({ user, password }),
     isLoading,
     error,
-    isConverted: !!data
+    isConverted: !!data,
   };
 };
 
 export const useConvertToExternal = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, User>(
-    user => convertToExternal((user._links.convertToExternal as Link).href),
+    (user) => convertToExternal((user._links.convertToExternal as Link).href),
     {
       onSuccess: async (_, user) => {
         await queryClient.invalidateQueries(["user", user.name]);
         await queryClient.invalidateQueries(["users"]);
-      }
+      },
     }
   );
   return {
     convertToExternal: (user: User) => mutate(user),
     isLoading,
     error,
-    isConverted: !!data
+    isConverted: !!data,
+  };
+};
+
+const CONTENT_TYPE_PASSWORD_OVERWRITE = "application/vnd.scmm-passwordOverwrite+json;v=2";
+
+export const useSetUserPassword = (user: User) => {
+  const { data, isLoading, error, mutate, reset } = useMutation<unknown, Error, string>((password) =>
+    apiClient.put(
+      requiredLink(user, "password"),
+      {
+        newPassword: password,
+      },
+      CONTENT_TYPE_PASSWORD_OVERWRITE
+    )
+  );
+  return {
+    setPassword: (newPassword: string) => mutate(newPassword),
+    passwordOverwritten: !!data,
+    isLoading,
+    error,
+    reset
+  };
+};
+
+const CONTENT_TYPE_PASSWORD_CHANGE = "application/vnd.scmm-passwordChange+json;v=2";
+
+type ChangeUserPasswordRequest = {
+  oldPassword: string;
+  newPassword: string;
+};
+
+export const useChangeUserPassword = (user: User | Me) => {
+  const { data, isLoading, error, mutate, reset } = useMutation<unknown, Error, ChangeUserPasswordRequest>((request) =>
+    apiClient.put(requiredLink(user, "password"), request, CONTENT_TYPE_PASSWORD_CHANGE)
+  );
+  return {
+    changePassword: (oldPassword: string, newPassword: string) => mutate({ oldPassword, newPassword }),
+    passwordChanged: !!data,
+    isLoading,
+    error,
+    reset
   };
 };
