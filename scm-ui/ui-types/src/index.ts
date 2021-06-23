@@ -68,3 +68,4 @@ export * from "./Admin";
 export * from "./Diff";
 export * from "./Notifications";
 export * from "./ApiKeys";
+export * from "./PublicKeys";

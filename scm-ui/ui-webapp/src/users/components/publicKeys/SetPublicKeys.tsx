@@ -22,28 +22,13 @@
  * SOFTWARE.
  */
 
-import { Collection, Link, Links, User, Me } from "@scm-manager/ui-types";
-import React, { FC, useEffect, useState } from "react";
+import { Link, Me, User } from "@scm-manager/ui-types";
+import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
 import AddPublicKey from "./AddPublicKey";
 import PublicKeyTable from "./PublicKeyTable";
-import { apiClient, ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
-
-export type PublicKeysCollection = Collection & {
-  _embedded: {
-    keys: PublicKey[];
-  };
-};
-
-export type PublicKey = {
-  id: string;
-  displayName: string;
-  raw: string;
-  created?: string;
-  _links: Links;
-};
-
-export const CONTENT_TYPE_PUBLIC_KEY = "application/vnd.scmm-publicKey+json;v=2";
+import { ErrorNotification, Loading, Subtitle } from "@scm-manager/ui-components";
+import { useDeletePublicKey, usePublicKeys } from "@scm-manager/ui-api";
 
 type Props = {
   user: User | Me;
@@ -51,30 +36,9 @@ type Props = {
 
 const SetPublicKeys: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
-  const [error, setError] = useState<undefined | Error>();
-  const [loading, setLoading] = useState(false);
-  const [publicKeys, setPublicKeys] = useState<PublicKeysCollection | undefined>(undefined);
-
-  useEffect(() => {
-    fetchPublicKeys();
-  }, [user]);
-
-  const fetchPublicKeys = () => {
-    setLoading(true);
-    apiClient
-      .get((user._links.publicKeys as Link).href)
-      .then(r => r.json())
-      .then(setPublicKeys)
-      .then(() => setLoading(false))
-      .catch(setError);
-  };
-
-  const onDelete = (link: string) => {
-    apiClient
-      .delete(link)
-      .then(fetchPublicKeys)
-      .catch(setError);
-  };
+  const { error: fetchingError, isLoading, data: publicKeys } = usePublicKeys(user);
+  const { error: deletionError, isLoading: isDeleting, remove } = useDeletePublicKey(user);
+  const error = fetchingError || deletionError;
 
   const createLink = (publicKeys?._links?.create as Link)?.href;
 
@@ -82,7 +46,7 @@ const SetPublicKeys: FC<Props> = ({ user }) => {
     return <ErrorNotification error={error} />;
   }
 
-  if (loading) {
+  if (!publicKeys || isLoading || isDeleting) {
     return <Loading />;
   }
 
@@ -91,8 +55,8 @@ const SetPublicKeys: FC<Props> = ({ user }) => {
       <Subtitle subtitle={t("publicKey.subtitle")} />
       <p>{t("publicKey.description")}</p>
       <br />
-      <PublicKeyTable publicKeys={publicKeys} onDelete={onDelete} />
-      {createLink && <AddPublicKey createLink={createLink} refresh={fetchPublicKeys} />}
+      <PublicKeyTable publicKeys={publicKeys} onDelete={remove} />
+      {createLink && <AddPublicKey publicKeys={publicKeys} user={user} />}
     </>
   );
 };

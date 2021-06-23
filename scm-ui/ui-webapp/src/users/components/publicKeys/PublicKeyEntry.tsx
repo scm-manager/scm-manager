@@ -24,13 +24,13 @@
 
 import React, { FC } from "react";
 import { DateFromNow, Icon } from "@scm-manager/ui-components";
-import { PublicKey } from "./SetPublicKeys";
 import { useTranslation } from "react-i18next";
-import { Link } from "@scm-manager/ui-types";
+import { Link, PublicKey } from "@scm-manager/ui-types";
+import { DeleteFunction } from "@scm-manager/ui-api";
 
 type Props = {
   publicKey: PublicKey;
-  onDelete: (link: string) => void;
+  onDelete: DeleteFunction<PublicKey>;
 };
 
 export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
@@ -39,7 +39,7 @@ export const PublicKeyEntry: FC<Props> = ({ publicKey, onDelete }) => {
   let deleteButton;
   if (publicKey?._links?.delete) {
     deleteButton = (
-      <a className="level-item" onClick={() => onDelete((publicKey._links.delete as Link).href)}>
+      <a className="level-item" onClick={() => onDelete(publicKey)}>
         <span className="icon">
           <Icon name="trash" title={t("publicKey.delete")} color="inherit" />
         </span>

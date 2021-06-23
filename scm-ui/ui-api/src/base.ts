@@ -33,11 +33,6 @@ export type ApiResult<T> = {
   error: Error | null;
   data?: T;
 };
-
-export type RefetchableApiResult<T> = ApiResult<T> & {
-  refetch: () => Promise<unknown>;
-}
-
 export type DeleteFunction<T> = (entity: T) => void;
 
 export const useIndex = (): ApiResult<IndexResources> => {

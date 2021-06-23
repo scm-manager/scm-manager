@@ -33,17 +33,16 @@ import { ApiKeysCollection, Me, User } from "@scm-manager/ui-types";
 type Props = {
   user: User | Me;
   apiKeys: ApiKeysCollection;
-  refresh: () => void;
 };
 
-const AddApiKey: FC<Props> = ({ user, apiKeys, refresh }) => {
+const AddApiKey: FC<Props> = ({ user, apiKeys }) => {
   const [t] = useTranslation("users");
   const {
     isLoading: isCurrentlyAddingKey,
     error: errorAddingKey,
     apiKey: addedKey,
     create,
-    reset: resetCreationHook
+    reset: resetCreationHook,
   } = useCreateApiKey(user, apiKeys);
   const [displayName, setDisplayName] = useState("");
   const [permissionRole, setPermissionRole] = useState("");
@@ -52,8 +51,6 @@ const AddApiKey: FC<Props> = ({ user, apiKeys, refresh }) => {
     data: availableRepositoryRoles,
     error: errorLoadingRepositoryRoles,
   } = useRepositoryRoles();
-  const loading = isCurrentlyAddingKey || isLoadingRepositoryRoles;
-  const error = errorAddingKey || errorLoadingRepositoryRoles;
 
   const isValid = () => {
     return !!displayName && !!permissionRole;
@@ -64,11 +61,11 @@ const AddApiKey: FC<Props> = ({ user, apiKeys, refresh }) => {
     setPermissionRole("");
   };
 
-  if (error) {
-    return <ErrorNotification error={error} />;
+  if (errorLoadingRepositoryRoles) {
+    return <ErrorNotification error={errorLoadingRepositoryRoles} />;
   }
 
-  if (loading) {
+  if (isLoadingRepositoryRoles) {
     return <Loading />;
   }
 
@@ -78,7 +75,6 @@ const AddApiKey: FC<Props> = ({ user, apiKeys, refresh }) => {
 
   const closeModal = () => {
     resetForm();
-    refresh();
     resetCreationHook();
   };
 
@@ -87,6 +83,7 @@ const AddApiKey: FC<Props> = ({ user, apiKeys, refresh }) => {
   return (
     <>
       <hr />
+      {errorAddingKey ? <ErrorNotification error={errorAddingKey} /> : null}
       <Subtitle subtitle={t("apiKey.addSubtitle")} />
       {newKeyModal}
       <InputField label={t("apiKey.displayName")} value={displayName} onChange={setDisplayName} />
@@ -102,8 +99,8 @@ const AddApiKey: FC<Props> = ({ user, apiKeys, refresh }) => {
         right={
           <SubmitButton
             label={t("apiKey.addKey")}
-            loading={loading}
-            disabled={!isValid()}
+            loading={isCurrentlyAddingKey}
+            disabled={!isValid() || isCurrentlyAddingKey}
             action={() => create({ displayName, permissionRole })}
           />
         }

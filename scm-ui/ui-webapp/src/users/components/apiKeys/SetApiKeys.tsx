@@ -37,7 +37,7 @@ type Props = {
 
 const SetApiKeys: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
-  const { isLoading, data: apiKeys, error: fetchError, refetch } = useApiKeys(user);
+  const { isLoading, data: apiKeys, error: fetchError } = useApiKeys(user);
   const { error: deletionError, isLoading: isDeleting, remove } = useDeleteApiKey(user);
   const error = deletionError || fetchError;
 
@@ -60,7 +60,7 @@ const SetApiKeys: FC<Props> = ({ user }) => {
       <p>{t("apiKey.text2")}</p>
       <br />
       <ApiKeyTable apiKeys={apiKeys} onDelete={remove} />
-      {createLink && <AddApiKey user={user} apiKeys={apiKeys} refresh={refetch} />}
+      {createLink && <AddApiKey user={user} apiKeys={apiKeys} />}
     </>
   );
 };

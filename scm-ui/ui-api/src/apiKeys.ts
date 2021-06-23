@@ -1,12 +1,12 @@
 import { ApiKey, ApiKeyCreation, ApiKeysCollection, ApiKeyWithToken, Me, User } from "@scm-manager/ui-types";
-import { RefetchableApiResult } from "./base";
+import { ApiResult } from "./base";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient } from "./apiclient";
 import { requiredLink } from "./links";
 
 const CONTENT_TYPE_API_KEY = "application/vnd.scmm-apiKey+json;v=2";
 
-export const useApiKeys = (user: User | Me): RefetchableApiResult<ApiKeysCollection> =>
+export const useApiKeys = (user: User | Me): ApiResult<ApiKeysCollection> =>
   useQuery(["user", user.name, "apiKeys"], () => apiClient.get(requiredLink(user, "apiKeys")).then((r) => r.json()));
 
 const createApiKey =
@@ -27,10 +27,7 @@ export const useCreateApiKey = (user: User | Me, apiKeys: ApiKeysCollection) => 
   const { mutate, data, isLoading, error, reset } = useMutation<ApiKeyWithToken, Error, ApiKeyCreation>(
     createApiKey(requiredLink(apiKeys, "create")),
     {
-      onSuccess: (apiKey) => {
-        queryClient.setQueryData(["user", user.name, "apiKey", apiKey.id], apiKey);
-        return queryClient.invalidateQueries(["user", user.name, "apiKeys"]);
-      },
+      onSuccess: () => queryClient.invalidateQueries(["user", user.name, "apiKeys"]),
     }
   );
   return {
@@ -38,7 +35,7 @@ export const useCreateApiKey = (user: User | Me, apiKeys: ApiKeysCollection) => 
     isLoading,
     error,
     apiKey: data,
-    reset
+    reset,
   };
 };
 
@@ -50,10 +47,7 @@ export const useDeleteApiKey = (user: User | Me) => {
       return apiClient.delete(deleteUrl);
     },
     {
-      onSuccess: async (_, apiKey) => {
-        await queryClient.invalidateQueries(["user", user.name, "apiKey", apiKey.id]);
-        await queryClient.invalidateQueries(["user", user.name, "apiKeys"]);
-      },
+      onSuccess: () => queryClient.invalidateQueries(["user", user.name, "apiKeys"]),
     }
   );
   return {
