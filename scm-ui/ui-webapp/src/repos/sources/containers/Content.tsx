@@ -218,10 +218,10 @@ const Content: FC<Props> = ({ file, repository, revision, path, breadcrumb, erro
       body = <SourcesView file={file} repository={repository} revision={revision} />;
       break;
     case "annotations":
-      body = <AnnotateView file={file} repository={repository} />;
+      body = <AnnotateView file={file} repository={repository} revision={revision} />;
       break;
     case "history":
-      body = <HistoryView file={file} repository={repository} />;
+      body = <HistoryView file={file} repository={repository} revision={revision} />;
   }
   const header = showHeader(body);
   const moreInformation = showMoreInformation();

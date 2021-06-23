@@ -29,11 +29,12 @@ import { useHistory } from "@scm-manager/ui-api";
 type Props = {
   file: File;
   repository: Repository;
+  revision: string;
 };
 
-const HistoryView: FC<Props> = ({ repository, file }) => {
+const HistoryView: FC<Props> = ({ repository, file, revision }) => {
   const [page, setPage] = useState(0);
-  const { error, isLoading, data: history } = useHistory(repository, file, { page });
+  const { error, isLoading, data: history } = useHistory(repository, revision, file, { page });
 
   if (!history || isLoading) {
     return <Loading />;

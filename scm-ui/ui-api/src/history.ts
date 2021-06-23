@@ -35,6 +35,7 @@ export type UseHistoryRequest = {
 
 export const useHistory = (
   repository: Repository,
+  revision: string,
   file: File,
   request?: UseHistoryRequest
 ): ApiResult<ChangesetCollection> => {
@@ -47,7 +48,7 @@ export const useHistory = (
   }
 
   return useQuery<ChangesetCollection, Error>(
-    repoQueryKey(repository, "history", file.revision, request?.page || 0),
+    repoQueryKey(repository, "history", revision, file.path, request?.page || 0),
     () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
     {
       keepPreviousData: true,

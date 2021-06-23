@@ -30,14 +30,15 @@ import { useAnnotations, useContentType } from "@scm-manager/ui-api";
 type Props = {
   file: File;
   repository: Repository;
+  revision: string;
 };
 
-const AnnotateView: FC<Props> = ({ file, repository }) => {
+const AnnotateView: FC<Props> = ({ file, repository, revision }) => {
   const {
     data: annotation,
     isLoading: isAnnotationLoading,
     error: annotationLoadError,
-  } = useAnnotations(repository, file);
+  } = useAnnotations(repository, revision, file);
   const {
     data: contentType,
     isLoading: isContentTypeLoading,
