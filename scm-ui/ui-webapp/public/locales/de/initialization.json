@@ -2,7 +2,7 @@
   "title": "Abschluss der Initialisierung",
   "adminStep": {
     "title": "Administrations Zugang",
-    "description": "Der Token zur Erstellung des Administrationszugangs befindet sich im Log.",
+    "description": "Der Token zur Erstellung des Administrationszugangs befindet sich im Server Log.",
     "startupToken": "Start-Token",
     "username": "Administrator Benutzername",
     "displayname": "Administrator Anzeigename",
