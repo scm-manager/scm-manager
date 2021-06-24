@@ -23,7 +23,7 @@
  */
 
 import React, { FC } from "react";
-import { Repository, Links } from "@scm-manager/ui-types";
+import { Repository } from "@scm-manager/ui-types";
 import RenameRepository from "./RenameRepository";
 import DeleteRepo from "./DeleteRepo";
 import styled from "styled-components";
@@ -34,7 +34,6 @@ import UnarchiveRepo from "./UnarchiveRepo";
 
 type Props = {
   repository: Repository;
-  indexLinks: Links;
 };
 
 export const DangerZoneContainer = styled.div`
@@ -60,12 +59,12 @@ export const DangerZoneContainer = styled.div`
   }
 `;
 
-const RepositoryDangerZone: FC<Props> = ({ repository, indexLinks }) => {
+const RepositoryDangerZone: FC<Props> = ({ repository }) => {
   const [t] = useTranslation("repos");
 
   const dangerZone = [];
   if (repository?._links?.rename || repository?._links?.renameWithNamespace) {
-    dangerZone.push(<RenameRepository repository={repository} indexLinks={indexLinks} />);
+    dangerZone.push(<RenameRepository repository={repository} />);
   }
   if (repository?._links?.delete) {
     dangerZone.push(<DeleteRepo repository={repository} />);

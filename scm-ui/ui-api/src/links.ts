@@ -34,3 +34,14 @@ export const requiredLink = (object: HalRepresentation, name: string) => {
   }
   return link.href;
 };
+
+export const objectLink = (object: HalRepresentation, name: string) => {
+  const link = object._links[name];
+  if (!link) {
+    return null;
+  }
+  if (Array.isArray(link)) {
+    throw new Error(`could not return href, link ${name} is a multi link`);
+  }
+  return link.href;
+};
