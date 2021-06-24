@@ -22,11 +22,12 @@
  * SOFTWARE.
  */
 
-import { IndexResources, Link } from "@scm-manager/ui-types";
+import { HalRepresentation, IndexResources, Link } from "@scm-manager/ui-types";
 import { useQuery } from "react-query";
 import { apiClient } from "./apiclient";
 import { useLegacyContext } from "./LegacyContext";
 import { MissingLinkError, UnauthorizedError } from "./errors";
+import { requiredLink } from "./links";
 
 export type ApiResult<T> = {
   isLoading: boolean;
@@ -37,8 +38,8 @@ export type DeleteFunction<T> = (entity: T) => void;
 
 export const useIndex = (): ApiResult<IndexResources> => {
   const legacy = useLegacyContext();
-  return useQuery<IndexResources, Error>("index", () => apiClient.get("/").then(response => response.json()), {
-    onSuccess: index => {
+  return useQuery<IndexResources, Error>("index", () => apiClient.get("/").then((response) => response.json()), {
+    onSuccess: (index) => {
       // ensure legacy code is notified
       if (legacy.onIndexFetched) {
         legacy.onIndexFetched(index);
@@ -50,7 +51,7 @@ export const useIndex = (): ApiResult<IndexResources> => {
       // This only happens once because the error response automatically invalidates the cookie.
       // In this event, we have to try the request once again.
       return error instanceof UnauthorizedError && failureCount === 0;
-    }
+    },
   });
 };
 
@@ -95,7 +96,10 @@ export const useVersion = (): string => {
 
 export const useIndexJsonResource = <T>(name: string): ApiResult<T> => {
   const link = useIndexLink(name);
-  return useQuery<T, Error>(name, () => apiClient.get(link!).then(response => response.json()), {
-    enabled: !!link
+  return useQuery<T, Error>(name, () => apiClient.get(link!).then((response) => response.json()), {
+    enabled: !!link,
   });
 };
+
+export const useJsonResource = <T>(entity: HalRepresentation, name: string, key: string[]): ApiResult<T> =>
+  useQuery<T, Error>(key, () => apiClient.get(requiredLink(entity, name)).then((response) => response.json()));

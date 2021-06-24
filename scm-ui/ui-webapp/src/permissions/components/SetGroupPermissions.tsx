@@ -21,52 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { Group } from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import SetPermissions from "./SetPermissions";
+import { useGroupPermissions, useSetGroupPermissions } from "@scm-manager/ui-api";
 
-export { Action } from "./Action";
-export * from "./hal";
+type Props = {
+  group: Group;
+};
 
-export { Me } from "./Me";
-export * from "./User";
-export * from "./Group";
+const SetGroupPermissions: FC<Props> = ({ group }) => {
+  const {
+    data: selectedPermissions,
+    isLoading: loadingPermissions,
+    error: permissionsLoadError,
+  } = useGroupPermissions(group);
+  const {
+    isLoading: isUpdatingPermissions,
+    isUpdated: permissionsUpdated,
+    setPermissions,
+    error: permissionsUpdateError,
+  } = useSetGroupPermissions(group, selectedPermissions);
+  return (
+    <SetPermissions
+      selectedPermissions={selectedPermissions}
+      loadingPermissions={loadingPermissions}
+      isUpdatingPermissions={isUpdatingPermissions}
+      permissionsLoadError={permissionsLoadError || undefined}
+      permissionsUpdated={permissionsUpdated}
+      updatePermissions={setPermissions}
+      permissionsUpdateError={permissionsUpdateError || undefined}
+    />
+  );
+};
 
-export * from "./Repositories";
-export { RepositoryType, RepositoryTypeCollection } from "./RepositoryTypes";
-
-export * from "./Branches";
-
-export { Person } from "./Person";
-
-export * from "./Changesets";
-
-export { Signature } from "./Signature";
-
-export { AnnotatedSource, AnnotatedLine } from "./Annotate";
-
-export * from "./Tags";
-
-export { Config, AnonymousMode } from "./Config";
-
-export { IndexResources } from "./IndexResources";
-
-export { Permission, PermissionCreateEntry, PermissionCollection } from "./RepositoryPermissions";
-
-export * from "./Sources";
-
-export { SelectValue, AutocompleteObject } from "./Autocomplete";
-
-export * from "./Plugin";
-
-export * from "./RepositoryRole";
-export * from "./RepositoryVerbs";
-
-export * from "./NamespaceStrategies";
-
-export * from "./LoginInfo";
-
-export * from "./Admin";
-
-export * from "./Diff";
-export * from "./Notifications";
-export * from "./ApiKeys";
-export * from "./PublicKeys";
-export * from "./GlobalPermissions";
+export default SetGroupPermissions;
