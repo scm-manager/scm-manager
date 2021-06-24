@@ -88,7 +88,7 @@ export const useDeleteBranch = (repository: Repository) => {
     },
     {
       onSuccess: async (_, branch) => {
-        await queryClient.invalidateQueries(branchQueryKey(repository, branch));
+        await queryClient.removeQueries(branchQueryKey(repository, branch));
         await queryClient.invalidateQueries(repoQueryKey(repository, "branches"));
       }
     }

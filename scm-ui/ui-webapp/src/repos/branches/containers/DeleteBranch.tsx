@@ -22,10 +22,11 @@
  * SOFTWARE.
  */
 import React, { FC, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Branch, Link, Repository } from "@scm-manager/ui-types";
-import { apiClient, ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { Branch, Repository } from "@scm-manager/ui-types";
+import { ConfirmAlert, DeleteButton, ErrorNotification, Level } from "@scm-manager/ui-components";
+import { useDeleteBranch } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
@@ -34,16 +35,12 @@ type Props = {
 
 const DeleteBranch: FC<Props> = ({ repository, branch }: Props) => {
   const [showConfirmAlert, setShowConfirmAlert] = useState(false);
-  const [error, setError] = useState<Error | undefined>();
   const [t] = useTranslation("repos");
-  const history = useHistory();
+  const { isLoading, error, remove, isDeleted } = useDeleteBranch(repository);
 
-  const deleteBranch = () => {
-    apiClient
-      .delete((branch._links.delete as Link).href)
-      .then(() => history.push(`/repo/${repository.namespace}/${repository.name}/branches/`))
-      .catch(setError);
-  };
+  if (isDeleted) {
+    return <Redirect to={`/repo/${repository.namespace}/${repository.name}/branches/`} />;
+  }
 
   if (!branch._links.delete) {
     return null;
@@ -59,12 +56,13 @@ const DeleteBranch: FC<Props> = ({ repository, branch }: Props) => {
           {
             className: "is-outlined",
             label: t("branch.delete.confirmAlert.submit"),
-            onClick: () => deleteBranch()
+            onClick: () => remove(branch),
+            isLoading,
           },
           {
             label: t("branch.delete.confirmAlert.cancel"),
-            onClick: () => null
-          }
+            onClick: () => null,
+          },
         ]}
         close={() => setShowConfirmAlert(false)}
       />
