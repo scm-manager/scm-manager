@@ -109,7 +109,7 @@ class RunTask extends DefaultTask {
         args(new File(project.buildDir, 'server/config.json').toString())
         environment 'NODE_ENV', 'development'
         classpath project.buildscript.configurations.classpath
-        systemProperties = ["user.home": extension.getHome()]
+        systemProperties = ["user.home": extension.getHome(), "scm.initialPassword": "scmadmin"]
         if (debugJvm) {
           debug = true
           debugOptions {

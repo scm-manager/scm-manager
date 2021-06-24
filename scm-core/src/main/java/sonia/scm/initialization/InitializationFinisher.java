@@ -22,10 +22,13 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+package sonia.scm.initialization;
 
-export type IndexResources = {
-  version: string;
-  initialization?: string;
-  _links: Links;
-};
+public interface InitializationFinisher {
+
+  boolean isFullyInitialized();
+
+  InitializationStep missingInitialization();
+
+  InitializationStepResource getResource(String name);
+}

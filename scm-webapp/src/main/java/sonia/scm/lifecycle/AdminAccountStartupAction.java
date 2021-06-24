@@ -25,45 +25,111 @@
 package sonia.scm.lifecycle;
 
 import org.apache.shiro.authc.credential.PasswordService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import sonia.scm.SCMContext;
+import sonia.scm.initialization.InitializationStep;
 import sonia.scm.plugin.Extension;
 import sonia.scm.security.PermissionAssigner;
 import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
+import sonia.scm.web.security.AdministrationContext;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Collections;
 
+import static sonia.scm.ScmConstraintViolationException.Builder.doThrow;
+
 @Extension
-public class AdminAccountStartupAction implements PrivilegedStartupAction {
+@Singleton
+public class AdminAccountStartupAction implements InitializationStep {
+
+  private static final Logger LOG = LoggerFactory.getLogger(AdminAccountStartupAction.class);
+
+  private static final String INITIAL_PASSWORD_PROPERTY = "scm.initialPassword";
 
   private final PasswordService passwordService;
   private final UserManager userManager;
   private final PermissionAssigner permissionAssigner;
+  private final RandomPasswordGenerator randomPasswordGenerator;
+  private final AdministrationContext context;
+
+  private String initialToken;
 
   @Inject
-  public AdminAccountStartupAction(PasswordService passwordService, UserManager userManager, PermissionAssigner permissionAssigner) {
+  public AdminAccountStartupAction(PasswordService passwordService, UserManager userManager, PermissionAssigner permissionAssigner, RandomPasswordGenerator randomPasswordGenerator, AdministrationContext context) {
     this.passwordService = passwordService;
     this.userManager = userManager;
     this.permissionAssigner = permissionAssigner;
+    this.randomPasswordGenerator = randomPasswordGenerator;
+    this.context = context;
+
+    initialize();
   }
 
-  @Override
-  public void run() {
-    if (shouldCreateAdminAccount()) {
-      createAdminAccount();
+  private void initialize() {
+    context.runAsAdmin((PrivilegedStartupAction)() -> {
+      if (shouldCreateAdminAccount() && !adminUserCreatedWithGivenPassword()) {
+        createStartupToken();
+      }
+    });
+  }
+
+  private boolean adminUserCreatedWithGivenPassword() {
+    String startupTokenByProperty = System.getProperty(INITIAL_PASSWORD_PROPERTY);
+    if (startupTokenByProperty != null) {
+      context.runAsAdmin((PrivilegedStartupAction) () ->
+        createAdminUser("scmadmin", "SCM Administrator", "scm-admin@scm-manager.org", startupTokenByProperty));
+      LOG.info("=================================================");
+      LOG.info("==                                             ==");
+      LOG.info("== Created user 'scmadmin' with given password ==");
+      LOG.info("==                                             ==");
+      LOG.info("=================================================");
+      return true;
+    } else {
+      return false;
     }
   }
 
-  private void createAdminAccount() {
-    User scmadmin = new User("scmadmin", "SCM Administrator", "scm-admin@scm-manager.org");
-    String password = passwordService.encryptPassword("scmadmin");
-    scmadmin.setPassword(password);
-    userManager.create(scmadmin);
+  @Override
+  public String name() {
+    return "adminAccount";
+  }
 
+  @Override
+  public int sequence() {
+    return 0;
+  }
+
+  @Override
+  public boolean done() {
+    return initialToken == null;
+  }
+
+  public void createAdminUser(String userName, String displayName, String email, String password) {
+    User admin = new User(userName, displayName, email);
+    String encryptedPassword = passwordService.encryptPassword(password);
+    admin.setPassword(encryptedPassword);
+    doThrow().violation("invalid user name").when(!admin.isValid());
     PermissionDescriptor descriptor = new PermissionDescriptor("*");
-    permissionAssigner.setPermissionsForUser("scmadmin", Collections.singleton(descriptor));
+    context.runAsAdmin((PrivilegedStartupAction) () -> {
+      userManager.create(admin);
+      permissionAssigner.setPermissionsForUser(userName, Collections.singleton(descriptor));
+      initialToken = null;
+    });
+  }
+
+  private void createStartupToken() {
+    initialToken = randomPasswordGenerator.createRandomPassword();
+    LOG.warn("====================================================");
+    LOG.warn("==                                                ==");
+    LOG.warn("==    Startup token for initial user creation     ==");
+    LOG.warn("==                                                ==");
+    LOG.warn("==              {}              ==", initialToken);
+    LOG.warn("==                                                ==");
+    LOG.warn("====================================================");
   }
 
   private boolean shouldCreateAdminAccount() {
@@ -72,5 +138,9 @@ public class AdminAccountStartupAction implements PrivilegedStartupAction {
 
   private boolean onlyAnonymousUserExists() {
     return userManager.getAll().size() == 1 && userManager.contains(SCMContext.USER_ANONYMOUS);
+  }
+
+  public boolean isCorrectToken(String givenStartupToken) {
+    return initialToken.equals(givenStartupToken);
   }
 }

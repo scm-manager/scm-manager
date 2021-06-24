@@ -22,10 +22,15 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+package sonia.scm.api.v2.resources;
 
-export type IndexResources = {
-  version: string;
-  initialization?: string;
-  _links: Links;
-};
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
+
+public class InitializationDto extends HalRepresentation {
+
+  public InitializationDto(Links links, Embedded embedded) {
+    super(links, embedded);
+  }
+}

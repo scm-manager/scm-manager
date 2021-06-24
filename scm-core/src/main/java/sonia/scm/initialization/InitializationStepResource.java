@@ -22,10 +22,15 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+package sonia.scm.initialization;
 
-export type IndexResources = {
-  version: string;
-  initialization?: string;
-  _links: Links;
-};
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.Links;
+import sonia.scm.plugin.ExtensionPoint;
+
+@ExtensionPoint
+public interface InitializationStepResource {
+  String name();
+
+  void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder);
+}

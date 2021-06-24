@@ -34,6 +34,8 @@ import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ConfigurationPermissions;
 import sonia.scm.config.ScmConfiguration;
 import sonia.scm.group.GroupPermissions;
+import sonia.scm.initialization.InitializationFinisher;
+import sonia.scm.initialization.InitializationStep;
 import sonia.scm.plugin.PluginPermissions;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.Authentications;
@@ -52,20 +54,32 @@ public class IndexDtoGenerator extends HalAppenderMapper {
   private final ResourceLinks resourceLinks;
   private final SCMContextProvider scmContextProvider;
   private final ScmConfiguration configuration;
+  private final InitializationFinisher initializationFinisher;
 
   @Inject
-  public IndexDtoGenerator(ResourceLinks resourceLinks, SCMContextProvider scmContextProvider, ScmConfiguration configuration) {
+  public IndexDtoGenerator(ResourceLinks resourceLinks, SCMContextProvider scmContextProvider, ScmConfiguration configuration, InitializationFinisher initializationFinisher) {
     this.resourceLinks = resourceLinks;
     this.scmContextProvider = scmContextProvider;
     this.configuration = configuration;
+    this.initializationFinisher = initializationFinisher;
   }
 
   public IndexDto generate() {
     Links.Builder builder = Links.linkingTo();
-    List<Link> autoCompleteLinks = Lists.newArrayList();
+    Embedded.Builder embeddedBuilder = embeddedBuilder();
+
     builder.self(resourceLinks.index().self());
     builder.single(link("uiPlugins", resourceLinks.uiPluginCollection().self()));
 
+    if (initializationFinisher.isFullyInitialized()) {
+      return handleNormalIndex(builder, embeddedBuilder);
+    } else {
+      return handleInitialization(builder, embeddedBuilder);
+    }
+  }
+
+  private IndexDto handleNormalIndex(Links.Builder builder, Embedded.Builder embeddedBuilder) {
+    List<Link> autoCompleteLinks = Lists.newArrayList();
     String loginInfoUrl = configuration.getLoginInfoUrl();
     if (!Strings.isNullOrEmpty(loginInfoUrl)) {
       builder.single(link("loginInfo", loginInfoUrl));
@@ -121,10 +135,17 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       builder.single(link("login", resourceLinks.authentication().jsonLogin()));
     }
 
-    Embedded.Builder embeddedBuilder = embeddedBuilder();
     applyEnrichers(new EdisonHalAppender(builder, embeddedBuilder), new Index());
-
     return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion());
+  }
+
+  private IndexDto handleInitialization(Links.Builder builder, Embedded.Builder embeddedBuilder) {
+    Links.Builder initializationLinkBuilder = Links.linkingTo();
+    Embedded.Builder initializationEmbeddedBuilder = embeddedBuilder();
+    InitializationStep initializationStep = initializationFinisher.missingInitialization();
+    initializationFinisher.getResource(initializationStep.name()).setupIndex(initializationLinkBuilder, initializationEmbeddedBuilder);
+    embeddedBuilder.with(initializationStep.name(), new InitializationDto(initializationLinkBuilder.build(), initializationEmbeddedBuilder.build()));
+    return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion(), initializationStep.name());
   }
 
   private boolean shouldAppendSubjectRelatedLinks() {

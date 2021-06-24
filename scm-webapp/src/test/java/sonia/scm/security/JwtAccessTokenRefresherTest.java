@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.security;
 
 import org.apache.shiro.subject.Subject;
@@ -52,7 +52,7 @@ import static org.mockito.Mockito.when;
 import static sonia.scm.security.SecureKeyTestUtil.createSecureKey;
 
 @ExtendWith(MockitoExtension.class)
-public class JwtAccessTokenRefresherTest {
+class JwtAccessTokenRefresherTest {
 
   private static final Instant NOW = Instant.now().truncatedTo(SECONDS);
   private static final Instant TOKEN_CREATION = NOW.minus(ofMinutes(1));
@@ -182,4 +182,16 @@ public class JwtAccessTokenRefresherTest {
     JwtAccessToken refreshedToken = refreshedTokenResult.get();
     assertThat(refreshedToken.getRefreshExpiration()).get().isEqualTo(Date.from(TOKEN_CREATION.plus(ofMinutes(10))));
   }
+
+  @Test
+  void shouldNotRefreshTokenWhenPrincipalIsMissing() {
+    JwtAccessToken oldToken = tokenBuilder.build();
+
+    when(subject.getPrincipals()).thenReturn(null);
+
+    Optional<JwtAccessToken> refreshedTokenResult = refresher.refresh(oldToken);
+
+    assertThat(refreshedTokenResult).isEmpty();
+  }
+
 }

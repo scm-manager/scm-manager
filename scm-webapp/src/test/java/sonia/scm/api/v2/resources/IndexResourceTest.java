@@ -32,6 +32,9 @@ import org.junit.Rule;
 import org.junit.Test;
 import sonia.scm.SCMContextProvider;
 import sonia.scm.config.ScmConfiguration;
+import sonia.scm.initialization.InitializationFinisher;
+import sonia.scm.initialization.InitializationStep;
+import sonia.scm.initialization.InitializationStepResource;
 
 import java.net.URI;
 import java.util.Optional;
@@ -54,11 +57,13 @@ public class IndexResourceTest {
   public void setUpObjectUnderTest() {
     this.configuration = new ScmConfiguration();
     this.scmContextProvider = mock(SCMContextProvider.class);
+    InitializationFinisher initializationFinisher = mock(InitializationFinisher.class);
+    when(initializationFinisher.isFullyInitialized()).thenReturn(true);
     IndexDtoGenerator generator = new IndexDtoGenerator(
       ResourceLinksMock.createMock(URI.create("/")),
       scmContextProvider,
-      configuration
-    );
+      configuration,
+      initializationFinisher);
     this.indexResource = new IndexResource(generator);
   }
 

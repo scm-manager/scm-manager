@@ -57,6 +57,8 @@ import sonia.scm.group.GroupDisplayManager;
 import sonia.scm.group.GroupManager;
 import sonia.scm.group.GroupManagerProvider;
 import sonia.scm.group.xml.XmlGroupDAO;
+import sonia.scm.initialization.DefaultInitializationFinisher;
+import sonia.scm.initialization.InitializationFinisher;
 import sonia.scm.metrics.MeterRegistryProvider;
 import sonia.scm.migration.MigrationDAO;
 import sonia.scm.net.SSLContextProvider;
@@ -275,6 +277,8 @@ class ScmServletModule extends ServletModule {
     bind(HealthCheckService.class).to(DefaultHealthCheckService.class);
 
     bind(NotificationSender.class).to(DefaultNotificationSender.class);
+
+    bind(InitializationFinisher.class).to(DefaultInitializationFinisher.class);
   }
 
   private <T> void bind(Class<T> clazz, Class<? extends T> defaultImplementation) {

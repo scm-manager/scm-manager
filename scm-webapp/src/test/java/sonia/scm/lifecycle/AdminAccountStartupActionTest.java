@@ -26,10 +26,11 @@ package sonia.scm.lifecycle;
 
 import com.google.common.collect.Lists;
 import org.apache.shiro.authc.credential.PasswordService;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.mockito.junit.jupiter.MockitoSettings;
@@ -40,13 +41,17 @@ import sonia.scm.security.PermissionDescriptor;
 import sonia.scm.user.User;
 import sonia.scm.user.UserManager;
 import sonia.scm.user.UserTestData;
+import sonia.scm.web.security.AdministrationContext;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -60,30 +65,89 @@ class AdminAccountStartupActionTest {
   private UserManager userManager;
   @Mock
   private PermissionAssigner permissionAssigner;
+  @Mock
+  private RandomPasswordGenerator randomPasswordGenerator;
+  @Mock
+  private AdministrationContext context;
 
-  @InjectMocks
-  private AdminAccountStartupAction startupAction;
+  AdminAccountStartupAction startupAction;
 
-  @Test
-  void shouldCreateAdminAccountIfNoUserExistsAndAssignPermissions() {
-    when(passwordService.encryptPassword("scmadmin")).thenReturn("secret");
+  ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
 
-    startupAction.run();
+  @BeforeEach
+  void clearProperties() {
+    System.clearProperty("scm.initialPassword");
+    System.clearProperty("sonia.scm.skipAdminCreation");
 
-    verifyAdminCreated();
-    verifyAdminPermissionsAssigned();
+  }
+
+  @BeforeEach
+  void mockAdminContext() {
+    doAnswer(invocation -> {
+      invocation.getArgument(0, PrivilegedStartupAction.class).run();
+      return null;
+    }).when(context).runAsAdmin(any(PrivilegedStartupAction.class));
+  }
+
+  @BeforeEach
+  void setUpUserCaptor() {
+    lenient().when(userManager.create(userCaptor.capture())).thenAnswer(i -> i.getArgument(0));
+  }
+
+  @Nested
+  class WithPredefinedPassword {
+    @BeforeEach
+    void initPasswordGenerator() {
+      System.setProperty("scm.initialPassword", "password");
+      lenient().when(passwordService.encryptPassword("password")).thenReturn("encrypted");
+    }
+
+    @Test
+    void shouldCreateAdminAccountIfNoUserExistsAndAssignPermissions() {
+      createStartupAction();
+
+      verifyAdminCreated();
+      verifyAdminPermissionsAssigned();
+      assertThat(startupAction.done()).isTrue();
+    }
+
+    @Test
+    void shouldCreateAdminAccountIfOnlyAnonymousUserExistsAndAssignPermissions() {
+      when(userManager.getAll()).thenReturn(Lists.newArrayList(SCMContext.ANONYMOUS));
+      when(userManager.contains(SCMContext.USER_ANONYMOUS)).thenReturn(true);
+
+      createStartupAction();
+
+      verifyAdminCreated();
+      verifyAdminPermissionsAssigned();
+      assertThat(startupAction.done()).isTrue();
+    }
+
+    @Test
+    void shouldDoNothingOnSecondStart() {
+      List<User> users = Lists.newArrayList(UserTestData.createTrillian());
+      when(userManager.getAll()).thenReturn(users);
+
+      createStartupAction();
+
+      verify(userManager, never()).create(any(User.class));
+      verify(permissionAssigner, never()).setPermissionsForUser(anyString(), any());
+      assertThat(startupAction.done()).isTrue();
+    }
   }
 
   @Test
-  void shouldCreateAdminAccountIfOnlyAnonymousUserExistsAndAssignPermissions() {
-    when(userManager.getAll()).thenReturn(Lists.newArrayList(SCMContext.ANONYMOUS));
-    when(userManager.contains(SCMContext.USER_ANONYMOUS)).thenReturn(true);
-    when(passwordService.encryptPassword("scmadmin")).thenReturn("secret");
+  void shouldCreateStartupToken() {
+    lenient().when(randomPasswordGenerator.createRandomPassword()).thenReturn("random");
+    when(userManager.getAll()).thenReturn(Collections.emptyList());
 
-    startupAction.run();
+    createStartupAction();
 
-    verifyAdminCreated();
-    verifyAdminPermissionsAssigned();
+    verify(userManager, never()).create(any(User.class));
+    verify(permissionAssigner, never()).setPermissionsForUser(anyString(), any());
+    assertThat(startupAction.done()).isFalse();
+    assertThat(startupAction.isCorrectToken("random")).isTrue();
+    assertThat(startupAction.isCorrectToken("wrong")).isFalse();
   }
 
   @Test
@@ -91,14 +155,10 @@ class AdminAccountStartupActionTest {
   void shouldSkipAdminAccountCreationIfPropertyIsSet() {
     System.setProperty("sonia.scm.skipAdminCreation", "true");
 
-    try {
-      startupAction.run();
+    createStartupAction();
 
-      verify(userManager, never()).create(any());
-      verify(permissionAssigner, never()).setPermissionsForUser(anyString(), any(Collection.class));
-    } finally {
-      System.setProperty("sonia.scm.skipAdminCreation", "");
-    }
+    verify(userManager, never()).create(any());
+    verify(permissionAssigner, never()).setPermissionsForUser(anyString(), any());
   }
 
   @Test
@@ -106,10 +166,15 @@ class AdminAccountStartupActionTest {
     List<User> users = Lists.newArrayList(UserTestData.createTrillian());
     when(userManager.getAll()).thenReturn(users);
 
-    startupAction.run();
+    createStartupAction();
 
     verify(userManager, never()).create(any(User.class));
-    verify(permissionAssigner, never()).setPermissionsForUser(anyString(), any(Collection.class));
+    verify(permissionAssigner, never()).setPermissionsForUser(anyString(), any());
+    assertThat(startupAction.done()).isTrue();
+  }
+
+  private void createStartupAction() {
+    startupAction = new AdminAccountStartupAction(passwordService, userManager, permissionAssigner, randomPasswordGenerator, context);
   }
 
   private void verifyAdminPermissionsAssigned() {
@@ -123,10 +188,8 @@ class AdminAccountStartupActionTest {
   }
 
   private void verifyAdminCreated() {
-    ArgumentCaptor<User> userCaptor = ArgumentCaptor.forClass(User.class);
-    verify(userManager).create(userCaptor.capture());
     User user = userCaptor.getValue();
     assertThat(user.getName()).isEqualTo("scmadmin");
-    assertThat(user.getPassword()).isEqualTo("secret");
+    assertThat(user.getPassword()).isEqualTo("encrypted");
   }
 }
