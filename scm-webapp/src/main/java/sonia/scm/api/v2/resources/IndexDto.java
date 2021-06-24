@@ -24,8 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreType;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
