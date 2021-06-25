@@ -57,13 +57,7 @@ public class AvailablePluginDescriptor implements PluginDescriptor {
    */
   @Deprecated
   public AvailablePluginDescriptor(PluginInformation information, PluginCondition condition, Set<String> dependencies, Set<String> optionalDependencies, String url, String checksum) {
-    this.information = information;
-    this.condition = condition;
-    this.dependencies = dependencies;
-    this.optionalDependencies = optionalDependencies;
-    this.url = url;
-    this.checksum = checksum;
-    this.installLink = Optional.empty();
+    this(information, condition, dependencies, optionalDependencies, url, checksum, null);
   }
 
   public AvailablePluginDescriptor(PluginInformation information, PluginCondition condition, Set<String> dependencies, Set<String> optionalDependencies, String url, String checksum, String installLink) {

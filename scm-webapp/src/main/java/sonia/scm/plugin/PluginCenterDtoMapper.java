@@ -57,6 +57,6 @@ public abstract class PluginCenterDtoMapper {
     if (link != null) {
       return link.getHref();
     }
-    return "";
+    return null;
   }
 }
