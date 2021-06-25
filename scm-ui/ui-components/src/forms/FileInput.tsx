@@ -24,7 +24,6 @@
 import React, { ChangeEvent, FC, FocusEvent, useState } from "react";
 import { useTranslation } from "react-i18next";
 import classNames from "classnames";
-import { File } from "@scm-manager/ui-types";
 import { createAttributesForTesting } from "../devBuild";
 import LabelWithHelpIcon from "./LabelWithHelpIcon";
 

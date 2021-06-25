@@ -103,3 +103,13 @@ export const useIndexJsonResource = <T>(name: string): ApiResult<T> => {
 
 export const useJsonResource = <T>(entity: HalRepresentation, name: string, key: string[]): ApiResult<T> =>
   useQuery<T, Error>(key, () => apiClient.get(requiredLink(entity, name)).then((response) => response.json()));
+
+export function fetchResourceFromLocationHeader(response: Response) {
+  const location = response.headers.get("Location");
+  if (!location) {
+    throw new Error("Server does not return required Location header");
+  }
+  return apiClient.get(location);
+}
+
+export const getResponseJson = (response: Response) => response.json();
