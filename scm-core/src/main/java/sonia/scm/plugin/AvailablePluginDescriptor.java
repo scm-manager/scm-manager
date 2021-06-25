@@ -24,8 +24,6 @@
 
 package sonia.scm.plugin;
 
-import com.google.common.base.Strings;
-
 import java.util.Optional;
 import java.util.Set;
 
@@ -42,7 +40,7 @@ public class AvailablePluginDescriptor implements PluginDescriptor {
   private final Set<String> optionalDependencies;
   private final String url;
   private final String checksum;
-  private final Optional<String> installLink;
+  private final String installLink;
 
   /**
    * @deprecated Use {@link #AvailablePluginDescriptor(PluginInformation, PluginCondition, Set, Set, String, String, String)} instead
@@ -67,11 +65,7 @@ public class AvailablePluginDescriptor implements PluginDescriptor {
     this.optionalDependencies = optionalDependencies;
     this.url = url;
     this.checksum = checksum;
-    if (Strings.isNullOrEmpty(installLink)) {
-      this.installLink = Optional.empty();
-    } else {
-      this.installLink = Optional.of(installLink);
-    }
+    this.installLink = installLink;
   }
 
   public String getUrl() {
@@ -103,6 +97,6 @@ public class AvailablePluginDescriptor implements PluginDescriptor {
   }
 
   public Optional<String> getInstallLink() {
-    return installLink;
+    return Optional.ofNullable(installLink);
   }
 }
