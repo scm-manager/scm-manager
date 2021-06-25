@@ -24,7 +24,6 @@
     
 package sonia.scm.api.v2.resources;
 
-import de.otto.edison.hal.HalRepresentation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -98,6 +97,7 @@ public class AvailablePluginResource {
     PluginPermissions.read().check();
     List<InstalledPlugin> installed = pluginManager.getInstalled();
     List<AvailablePlugin> available = pluginManager.getAvailable().stream().filter(a -> notInstalled(a, installed)).collect(Collectors.toList());
+
     return Response.ok(collectionMapper.mapAvailable(available)).build();
   }
 

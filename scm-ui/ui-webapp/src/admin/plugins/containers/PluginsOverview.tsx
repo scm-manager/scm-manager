@@ -32,7 +32,7 @@ import {
   Loading,
   Notification,
   Subtitle,
-  Title
+  Title,
 } from "@scm-manager/ui-components";
 import PluginsList from "../components/PluginList";
 import PluginTopActions from "../components/PluginTopActions";
@@ -47,13 +47,14 @@ import PluginModal from "../components/PluginModal";
 export enum PluginAction {
   INSTALL = "install",
   UPDATE = "update",
-  UNINSTALL = "uninstall"
+  UNINSTALL = "uninstall",
+  CLOUDOGU = "cloudoguInstall",
 }
 
 export type PluginModalContent = {
   plugin: Plugin;
   action: PluginAction;
-}
+};
 
 type Props = {
   installed: boolean;
@@ -64,12 +65,12 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   const {
     data: availablePlugins,
     isLoading: isLoadingAvailablePlugins,
-    error: availablePluginsError
+    error: availablePluginsError,
   } = useAvailablePlugins({ enabled: !installed });
   const {
     data: installedPlugins,
     isLoading: isLoadingInstalledPlugins,
-    error: installedPluginsError
+    error: installedPluginsError,
   } = useInstalledPlugins({ enabled: installed });
   const { data: pendingPlugins, isLoading: isLoadingPendingPlugins, error: pendingPluginsError } = usePendingPlugins();
   const [showPendingModal, setShowPendingModal] = useState(false);
@@ -166,7 +167,7 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
   const computeUpdateAllSize = () => {
     const outdatedPlugins = collection?._embedded.plugins.filter((p: Plugin) => p._links.update).length;
     return t("plugins.outdatedPlugins", {
-      count: outdatedPlugins
+      count: outdatedPlugins,
     });
   };
 
@@ -187,28 +188,14 @@ const PluginsOverview: FC<Props> = ({ installed }) => {
       );
     }
     if (showCancelModal && pendingPlugins) {
-      return (
-        <CancelPendingActionModal
-          onClose={() => setShowCancelModal(false)}
-          pendingPlugins={pendingPlugins}
-        />
-      );
+      return <CancelPendingActionModal onClose={() => setShowCancelModal(false)} pendingPlugins={pendingPlugins} />;
     }
     if (showUpdateAllModal && collection) {
-      return (
-        <UpdateAllActionModal
-          onClose={() => setShowUpdateAllModal(false)}
-          installedPlugins={collection}
-        />
-      );
+      return <UpdateAllActionModal onClose={() => setShowUpdateAllModal(false)} installedPlugins={collection} />;
     }
     if (pluginModalContent) {
       const { action, plugin } = pluginModalContent;
-      return <PluginModal
-        plugin={plugin}
-        pluginAction={action}
-        onClose={() => setPluginModalContent(null)}
-      />
+      return <PluginModal plugin={plugin} pluginAction={action} onClose={() => setPluginModalContent(null)} />;
     }
     return null;
   };
