@@ -60,6 +60,7 @@ const ImportRepositoryFromBundle: FC<Props> = ({
   const { importRepositoryFromBundle, importedRepository, error, isLoading } =
     useImportRepositoryFromBundle(repositoryType);
 
+  useEffect(() => setRepo({...repo, type: repositoryType.name}), [repositoryType]);
   useEffect(() => setImportPending(isLoading), [isLoading]);
   useEffect(() => {
     if (importedRepository) {

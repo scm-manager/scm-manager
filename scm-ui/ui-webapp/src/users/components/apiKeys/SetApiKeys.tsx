@@ -38,7 +38,7 @@ type Props = {
 const SetApiKeys: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
   const { isLoading, data: apiKeys, error: fetchError } = useApiKeys(user);
-  const { error: deletionError, isLoading: isDeleting, remove } = useDeleteApiKey(user);
+  const { error: deletionError, remove } = useDeleteApiKey(user);
   const error = deletionError || fetchError;
 
   const createLink = (apiKeys?._links?.create as Link)?.href;
@@ -47,7 +47,7 @@ const SetApiKeys: FC<Props> = ({ user }) => {
     return <ErrorNotification error={error} />;
   }
 
-  if (!apiKeys || isLoading || isDeleting) {
+  if (!apiKeys || isLoading) {
     return <Loading />;
   }
 

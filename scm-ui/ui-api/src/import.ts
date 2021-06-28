@@ -22,11 +22,11 @@
  * SOFTWARE.
  */
 
-import {ApiResult, fetchResourceFromLocationHeader, getResponseJson, useRequiredIndexLink} from "./base";
-import {useMutation, useQuery} from "react-query";
-import {apiClient} from "./apiclient";
-import {Repository, RepositoryCreation, RepositoryType, RepositoryUrlImport} from "@scm-manager/ui-types";
-import {requiredLink} from "./links";
+import { ApiResult, fetchResourceFromLocationHeader, getResponseJson, useRequiredIndexLink } from "./base";
+import { useMutation, useQuery } from "react-query";
+import { apiClient } from "./apiclient";
+import { Repository, RepositoryCreation, RepositoryType, RepositoryUrlImport } from "@scm-manager/ui-types";
+import { requiredLink } from "./links";
 
 export const useImportLog = (logId: string): ApiResult<string> => {
   const link = useRequiredIndexLink("importLog").replace("{logId}", logId);

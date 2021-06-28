@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import {HalRepresentation, Link} from "@scm-manager/ui-types";
+import { HalRepresentation, Link } from "@scm-manager/ui-types";
 import { MissingLinkError } from "./errors";
 
 export const requiredLink = (object: HalRepresentation, name: string, subName?: string): string => {

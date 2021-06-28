@@ -37,7 +37,7 @@ type Props = {
 const SetPublicKeys: FC<Props> = ({ user }) => {
   const [t] = useTranslation("users");
   const { error: fetchingError, isLoading, data: publicKeys } = usePublicKeys(user);
-  const { error: deletionError, isLoading: isDeleting, remove } = useDeletePublicKey(user);
+  const { error: deletionError, remove } = useDeletePublicKey(user);
   const error = fetchingError || deletionError;
 
   const createLink = (publicKeys?._links?.create as Link)?.href;
@@ -46,7 +46,7 @@ const SetPublicKeys: FC<Props> = ({ user }) => {
     return <ErrorNotification error={error} />;
   }
 
-  if (!publicKeys || isLoading || isDeleting) {
+  if (!publicKeys || isLoading) {
     return <Loading />;
   }
 
