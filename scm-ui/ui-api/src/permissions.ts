@@ -21,18 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import { ApiResult, useIndexJsonResource } from "./base";
+import { ApiResult, useIndexJsonResource, useJsonResource } from "./base";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
+  GlobalPermissionsCollection,
+  Group,
   Namespace,
   Permission,
   PermissionCollection,
   PermissionCreateEntry,
   Repository,
-  RepositoryVerbs
+  RepositoryVerbs,
+  User,
 } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
-import { requiredLink } from "./links";
+import { objectLink, requiredLink } from "./links";
 import { repoQueryKey } from "./keys";
 import { useRepositoryRoles } from "./repository-roles";
 
@@ -40,6 +43,9 @@ export const useRepositoryVerbs = (): ApiResult<RepositoryVerbs> => {
   return useIndexJsonResource<RepositoryVerbs>("repositoryVerbs");
 };
 
+/**
+ * *IMPORTANT NOTE:* These are actually *REPOSITORY* permissions.
+ */
 export const useAvailablePermissions = () => {
   const roles = useRepositoryRoles();
   const verbs = useRepositoryVerbs();
@@ -47,14 +53,14 @@ export const useAvailablePermissions = () => {
   if (roles.data && verbs.data) {
     data = {
       repositoryVerbs: verbs.data.verbs,
-      repositoryRoles: roles.data._embedded.repositoryRoles
+      repositoryRoles: roles.data._embedded.repositoryRoles,
     };
   }
 
   return {
     isLoading: roles.isLoading || verbs.isLoading,
     error: roles.error || verbs.error,
-    data
+    data,
   };
 };
 
@@ -73,21 +79,21 @@ const createQueryKey = (namespaceOrRepository: Namespace | Repository) => {
 export const usePermissions = (namespaceOrRepository: Namespace | Repository): ApiResult<PermissionCollection> => {
   const link = requiredLink(namespaceOrRepository, "permissions");
   const queryKey = createQueryKey(namespaceOrRepository);
-  return useQuery<PermissionCollection, Error>(queryKey, () => apiClient.get(link).then(response => response.json()));
+  return useQuery<PermissionCollection, Error>(queryKey, () => apiClient.get(link).then((response) => response.json()));
 };
 
 const createPermission = (link: string) => {
   return (permission: PermissionCreateEntry) => {
     return apiClient
       .post(link, permission, "application/vnd.scmm-repositoryPermission+json")
-      .then(response => {
+      .then((response) => {
         const location = response.headers.get("Location");
         if (!location) {
           throw new Error("Server does not return required Location header");
         }
         return apiClient.get(location);
       })
-      .then(response => response.json());
+      .then((response) => response.json());
   };
 };
 
@@ -100,21 +106,21 @@ export const useCreatePermission = (namespaceOrRepository: Namespace | Repositor
       onSuccess: () => {
         const queryKey = createQueryKey(namespaceOrRepository);
         return queryClient.invalidateQueries(queryKey);
-      }
+      },
     }
   );
   return {
     isLoading,
     error,
     create: (permission: PermissionCreateEntry) => mutate(permission),
-    permission: data
+    permission: data,
   };
 };
 
 export const useUpdatePermission = (namespaceOrRepository: Namespace | Repository) => {
   const queryClient = useQueryClient();
   const { isLoading, error, mutate, data } = useMutation<unknown, Error, Permission>(
-    permission => {
+    (permission) => {
       const link = requiredLink(permission, "update");
       return apiClient.put(link, permission, "application/vnd.scmm-repositoryPermission+json");
     },
@@ -122,21 +128,21 @@ export const useUpdatePermission = (namespaceOrRepository: Namespace | Repositor
       onSuccess: () => {
         const queryKey = createQueryKey(namespaceOrRepository);
         return queryClient.invalidateQueries(queryKey);
-      }
+      },
     }
   );
   return {
     isLoading,
     error,
     update: (permission: Permission) => mutate(permission),
-    isUpdated: !!data
+    isUpdated: !!data,
   };
 };
 
 export const useDeletePermission = (namespaceOrRepository: Namespace | Repository) => {
   const queryClient = useQueryClient();
   const { isLoading, error, mutate, data } = useMutation<unknown, Error, Permission>(
-    permission => {
+    (permission) => {
       const link = requiredLink(permission, "delete");
       return apiClient.delete(link);
     },
@@ -144,13 +150,53 @@ export const useDeletePermission = (namespaceOrRepository: Namespace | Repositor
       onSuccess: () => {
         const queryKey = createQueryKey(namespaceOrRepository);
         return queryClient.invalidateQueries(queryKey);
-      }
+      },
     }
   );
   return {
     isLoading,
     error,
     remove: (permission: Permission) => mutate(permission),
-    isDeleted: !!data
+    isDeleted: !!data,
   };
 };
+
+const userPermissionsKey = (user: User) => ["user", user.name, "permissions"];
+const groupPermissionsKey = (group: Group) => ["group", group.name, "permissions"];
+
+export const useGroupPermissions = (group: Group) =>
+  useJsonResource<GlobalPermissionsCollection>(group, "permissions", groupPermissionsKey(group));
+export const useUserPermissions = (user: User) =>
+  useJsonResource<GlobalPermissionsCollection>(user, "permissions", userPermissionsKey(user));
+export const useAvailableGlobalPermissions = () =>
+  useIndexJsonResource<Omit<GlobalPermissionsCollection, "_links">>("permissions");
+
+const useSetEntityPermissions = (permissionCollection?: GlobalPermissionsCollection, key?: string[]) => {
+  const queryClient = useQueryClient();
+  const url = permissionCollection ? objectLink(permissionCollection, "overwrite") : null;
+  const { isLoading, error, mutate, data } = useMutation<unknown, Error, string[]>(
+    (permissions) =>
+      apiClient.put(
+        url!,
+        {
+          permissions,
+        },
+        "application/vnd.scmm-permissionCollection+json;v=2"
+      ),
+    {
+      onSuccess: () => queryClient.invalidateQueries(key),
+    }
+  );
+  const setPermissions = (permissions: string[]) => mutate(permissions);
+  return {
+    isLoading,
+    error,
+    setPermissions: url ? setPermissions : undefined,
+    isUpdated: !!data,
+  };
+};
+
+export const useSetUserPermissions = (user: User, permissions?: GlobalPermissionsCollection) =>
+  useSetEntityPermissions(permissions, userPermissionsKey(user));
+export const useSetGroupPermissions = (group: Group, permissions?: GlobalPermissionsCollection) =>
+  useSetEntityPermissions(permissions, groupPermissionsKey(group));

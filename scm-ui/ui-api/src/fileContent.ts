@@ -21,21 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { File } from "@scm-manager/ui-types";
+import { useQuery } from "react-query";
+import { apiClient } from "./apiclient";
+import { requiredLink } from "./links";
+import { ApiResult } from "./base";
 
-import { apiClient } from "@scm-manager/ui-components";
-
-export const CONTENT_TYPE_PASSWORD_CHANGE = "application/vnd.scmm-passwordChange+json;v=2";
-export function changePassword(url: string, oldPassword: string, newPassword: string) {
-  return apiClient
-    .put(
-      url,
-      {
-        oldPassword,
-        newPassword
-      },
-      CONTENT_TYPE_PASSWORD_CHANGE
-    )
-    .then(response => {
-      return response;
-    });
-}
+export const useFileContent = (file: File): ApiResult<string> => {
+  const selfLink = requiredLink(file, "self");
+  return useQuery(["fileContent", selfLink], () => apiClient.get(selfLink).then((response) => response.text()));
+};

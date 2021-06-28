@@ -24,13 +24,14 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { PublicKey, PublicKeysCollection } from "./SetPublicKeys";
 import PublicKeyEntry from "./PublicKeyEntry";
 import { Notification } from "@scm-manager/ui-components";
+import { DeleteFunction } from "@scm-manager/ui-api";
+import { PublicKey, PublicKeysCollection } from "@scm-manager/ui-types";
 
 type Props = {
   publicKeys?: PublicKeysCollection;
-  onDelete: (link: string) => void;
+  onDelete: DeleteFunction<PublicKey>;
 };
 
 const PublicKeyTable: FC<Props> = ({ publicKeys, onDelete }) => {
@@ -51,9 +52,9 @@ const PublicKeyTable: FC<Props> = ({ publicKeys, onDelete }) => {
         </tr>
       </thead>
       <tbody>
-        {publicKeys?._embedded?.keys?.map((publicKey: PublicKey, index: number) => {
-          return <PublicKeyEntry key={index} onDelete={onDelete} publicKey={publicKey} />;
-        })}
+        {publicKeys?._embedded?.keys?.map((publicKey: PublicKey, index: number) => (
+          <PublicKeyEntry key={index} onDelete={onDelete} publicKey={publicKey} />
+        ))}
       </tbody>
     </table>
   );

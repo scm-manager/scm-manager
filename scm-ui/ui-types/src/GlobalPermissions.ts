@@ -21,21 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { HalRepresentation } from "./hal";
 
-import { apiClient } from "@scm-manager/ui-components";
-
-export const CONTENT_TYPE_PASSWORD_OVERWRITE = "application/vnd.scmm-passwordOverwrite+json;v=2";
-
-export function setPassword(url: string, password: string) {
-  return apiClient
-    .put(
-      url,
-      {
-        newPassword: password
-      },
-      CONTENT_TYPE_PASSWORD_OVERWRITE
-    )
-    .then(response => {
-      return response;
-    });
-}
+export type GlobalPermissionsCollection = HalRepresentation & { permissions: string[] };

@@ -24,7 +24,6 @@
 
 import React, { FC } from "react";
 import { FileUpload, InputField, LabelWithHelpIcon } from "@scm-manager/ui-components";
-import { File } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -51,7 +50,7 @@ const ImportFullRepositoryForm: FC<Props> = ({ setFile, setValid, password, setP
       <div className="column is-half is-vcentered">
         <InputField
           value={password}
-          onChange={value => setPassword(value)}
+          onChange={(value) => setPassword(value)}
           type="password"
           label={t("import.bundle.password.title")}
           helpText={t("import.bundle.password.helpText")}

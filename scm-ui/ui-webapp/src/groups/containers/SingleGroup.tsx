@@ -25,7 +25,6 @@ import React, { FC } from "react";
 import { Route, useParams, useRouteMatch } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Link } from "@scm-manager/ui-types";
 import {
   CustomQueryFlexWrappedColumns,
   ErrorPage,
@@ -37,16 +36,16 @@ import {
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { Details } from "./../components/table";
 import { EditGroupNavLink, SetPermissionsNavLink } from "./../components/navLinks";
 import EditGroup from "./EditGroup";
-import SetPermissions from "../../permissions/components/SetPermissions";
 import { useGroup } from "@scm-manager/ui-api";
+import SetGroupPermissions from "../../permissions/components/SetGroupPermissions";
 
 const SingleGroup: FC = () => {
-  const { name } = useParams();
+  const { name } = useParams<{ name: string }>();
   const match = useRouteMatch();
   const { data: group, isLoading, error } = useGroup(name);
   const [t] = useTranslation("groups");
@@ -63,7 +62,7 @@ const SingleGroup: FC = () => {
 
   const extensionProps = {
     group,
-    url
+    url,
   };
 
   return (
@@ -78,7 +77,7 @@ const SingleGroup: FC = () => {
               <EditGroup group={group} />
             </Route>
             <Route path={`${url}/settings/permissions`} exact>
-              <SetPermissions selectedPermissionsLink={group._links.permissions as Link} />
+              <SetGroupPermissions group={group} />
             </Route>
             <ExtensionPoint name="group.route" props={extensionProps} renderAll={true} />
           </PrimaryContentColumn>

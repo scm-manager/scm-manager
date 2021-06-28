@@ -23,8 +23,7 @@
  */
 
 import React, { FC } from "react";
-import { FileUpload, LabelWithHelpIcon, Checkbox, InputField } from "@scm-manager/ui-components";
-import { File } from "@scm-manager/ui-types";
+import { Checkbox, FileUpload, InputField, LabelWithHelpIcon } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 
 type Props = {
@@ -44,7 +43,7 @@ const ImportFromBundleForm: FC<Props> = ({
   setCompressed,
   password,
   setPassword,
-  disabled
+  disabled,
 }) => {
   const [t] = useTranslation("repos");
 
@@ -54,7 +53,7 @@ const ImportFromBundleForm: FC<Props> = ({
         <div className="column is-half is-vcentered">
           <LabelWithHelpIcon label={t("import.bundle.title")} helpText={t("import.bundle.helpText")} />
           <FileUpload
-            handleFile={(file: File) => {
+            handleFile={(file) => {
               setFile(file);
               setValid(!!file);
             }}
@@ -75,7 +74,7 @@ const ImportFromBundleForm: FC<Props> = ({
         <div className="column is-half is-vcentered">
           <InputField
             value={password}
-            onChange={value => setPassword(value)}
+            onChange={(value) => setPassword(value)}
             type="password"
             label={t("import.bundle.password.title")}
             helpText={t("import.bundle.password.helpText")}

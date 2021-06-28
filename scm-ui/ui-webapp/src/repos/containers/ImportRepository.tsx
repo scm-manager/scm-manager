@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import React, { FC, useState } from "react";
-import { Link, RepositoryType } from "@scm-manager/ui-types";
+import React, { useState } from "react";
+import { Link, Repository, RepositoryType } from "@scm-manager/ui-types";
 
 import { useTranslation } from "react-i18next";
 import ImportRepositoryTypeSelect from "../components/ImportRepositoryTypeSelect";
@@ -33,8 +33,8 @@ import { Loading, Notification, useNavigationLock } from "@scm-manager/ui-compon
 
 import ImportRepositoryFromBundle from "../components/ImportRepositoryFromBundle";
 import ImportFullRepository from "../components/ImportFullRepository";
-import { Prompt } from "react-router-dom";
-import { CreatorComponentProps } from "../types";
+import { Prompt, Redirect } from "react-router-dom";
+import { extensionPoints } from "@scm-manager/ui-extensions";
 
 const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => {
   const [t] = useTranslation("repos");
@@ -50,8 +50,13 @@ const ImportPendingLoading = ({ importPending }: { importPending: boolean }) => 
   );
 };
 
-const ImportRepository: FC<CreatorComponentProps> = ({ repositoryTypes, nameForm, informationForm }) => {
+const ImportRepository: extensionPoints.RepositoryCreatorExtension["component"] = ({
+  repositoryTypes,
+  nameForm,
+  informationForm,
+}) => {
   const [importPending, setImportPending] = useState(false);
+  const [importedRepository, setImportedRepository] = useState<Repository>();
   const [repositoryType, setRepositoryType] = useState<RepositoryType | undefined>();
   const [importType, setImportType] = useState("");
   const [t] = useTranslation("repos");
@@ -67,9 +72,9 @@ const ImportRepository: FC<CreatorComponentProps> = ({ repositoryTypes, nameForm
     if (importType === "url") {
       return (
         <ImportRepositoryFromUrl
-          url={((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "url") as Link).href}
-          repositoryType={repositoryType!.name}
+          repositoryType={repositoryType!}
           setImportPending={setImportPending}
+          setImportedRepository={setImportedRepository}
           nameForm={nameForm}
           informationForm={informationForm}
         />
@@ -79,9 +84,9 @@ const ImportRepository: FC<CreatorComponentProps> = ({ repositoryTypes, nameForm
     if (importType === "bundle") {
       return (
         <ImportRepositoryFromBundle
-          url={((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "bundle") as Link).href}
-          repositoryType={repositoryType!.name}
+          repositoryType={repositoryType!}
           setImportPending={setImportPending}
+          setImportedRepository={setImportedRepository}
           nameForm={nameForm}
           informationForm={informationForm}
         />
@@ -91,11 +96,9 @@ const ImportRepository: FC<CreatorComponentProps> = ({ repositoryTypes, nameForm
     if (importType === "fullImport") {
       return (
         <ImportFullRepository
-          url={
-            ((repositoryType!._links.import as Link[])!.find((link: Link) => link.name === "fullImport") as Link).href
-          }
-          repositoryType={repositoryType!.name}
+          repositoryType={repositoryType!}
           setImportPending={setImportPending}
+          setImportedRepository={setImportedRepository}
           nameForm={nameForm}
           informationForm={informationForm}
         />
@@ -104,6 +107,10 @@ const ImportRepository: FC<CreatorComponentProps> = ({ repositoryTypes, nameForm
 
     throw new Error("Unknown import type");
   };
+
+  if (importedRepository) {
+    return <Redirect to={`/repo/${importedRepository.namespace}/${importedRepository.name}/code/sources`} />;
+  }
 
   return (
     <>

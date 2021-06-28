@@ -23,28 +23,19 @@
  */
 
 import React, { FC, useState } from "react";
-import {
-  ErrorNotification,
-  InputField,
-  Level,
-  Textarea,
-  SubmitButton,
-  apiClient,
-  Loading,
-  Subtitle
-} from "@scm-manager/ui-components";
+import { ErrorNotification, InputField, Level, SubmitButton, Subtitle, Textarea } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import { CONTENT_TYPE_PUBLIC_KEY } from "./SetPublicKeys";
+import { Me, PublicKeysCollection, User } from "@scm-manager/ui-types";
+import { useCreatePublicKey } from "@scm-manager/ui-api";
 
 type Props = {
-  createLink: string;
-  refresh: () => void;
+  publicKeys: PublicKeysCollection;
+  user: User | Me;
 };
 
-const AddPublicKey: FC<Props> = ({ createLink, refresh }) => {
+const AddPublicKey: FC<Props> = ({ user, publicKeys }) => {
   const [t] = useTranslation("users");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<undefined | Error>();
+  const { isLoading, error, create } = useCreatePublicKey(user, publicKeys);
   const [displayName, setDisplayName] = useState("");
   const [raw, setRaw] = useState("");
 
@@ -58,31 +49,26 @@ const AddPublicKey: FC<Props> = ({ createLink, refresh }) => {
   };
 
   const addKey = () => {
-    setLoading(true);
-    apiClient
-      .post(createLink, { displayName: displayName, raw: raw }, CONTENT_TYPE_PUBLIC_KEY)
-      .then(resetForm)
-      .then(refresh)
-      .then(() => setLoading(false))
-      .catch(setError);
+    create({ raw, displayName });
+    resetForm();
   };
-
-  if (error) {
-    return <ErrorNotification error={error} />;
-  }
-
-  if (loading) {
-    return <Loading />;
-  }
 
   return (
     <>
       <hr />
+      {error ? <ErrorNotification error={error} /> : null}
       <Subtitle subtitle={t("publicKey.addSubtitle")} />
       <InputField label={t("publicKey.displayName")} value={displayName} onChange={setDisplayName} />
       <Textarea name="raw" label={t("publicKey.raw")} value={raw} onChange={setRaw} />
       <Level
-        right={<SubmitButton label={t("publicKey.addKey")} loading={loading} disabled={!isValid()} action={addKey} />}
+        right={
+          <SubmitButton
+            label={t("publicKey.addKey")}
+            loading={isLoading}
+            disabled={!isValid() || isLoading}
+            action={addKey}
+          />
+        }
       />
     </>
   );

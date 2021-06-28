@@ -22,47 +22,42 @@
  * SOFTWARE.
  */
 
-import React, { FC, useEffect, useState } from "react";
-import { Link, Links, Repository, CUSTOM_NAMESPACE_STRATEGY } from "@scm-manager/ui-types";
+import React, { FC, useState } from "react";
+import { CUSTOM_NAMESPACE_STRATEGY, Repository } from "@scm-manager/ui-types";
 import { Button, ButtonGroup, ErrorNotification, InputField, Level, Loading, Modal } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
-import { apiClient } from "@scm-manager/ui-components";
-import { useHistory } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import * as validator from "../components/form/repositoryValidation";
-
-export const CONTENT_TYPE = "application/vnd.scmm-repository+json;v=2";
+import { useNamespaceStrategies, useRenameRepository } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
-  indexLinks: Links;
 };
 
-const RenameRepository: FC<Props> = ({ repository, indexLinks }) => {
-  const history = useHistory();
+const RenameRepository: FC<Props> = ({ repository }) => {
   const [t] = useTranslation("repos");
-  const [error, setError] = useState<Error | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState(repository.name);
   const [namespace, setNamespace] = useState(repository.namespace);
   const [nameValidationError, setNameValidationError] = useState(false);
   const [namespaceValidationError, setNamespaceValidationError] = useState(false);
-  const [currentNamespaceStrategie, setCurrentNamespaceStrategy] = useState("");
+  const { isLoading: isRenaming, renameRepository, isRenamed, error: renamingError } = useRenameRepository(repository);
+  const {
+    isLoading: isLoadingNamespaceStrategies,
+    error: namespaceStrategyLoadError,
+    data: namespaceStrategies,
+  } = useNamespaceStrategies();
 
-  useEffect(() => {
-    apiClient
-      .get((indexLinks?.namespaceStrategies as Link).href)
-      .then(result => result.json())
-      .then(result => setCurrentNamespaceStrategy(result.current))
-      .catch(setError);
-  }, [repository]);
-
-  if (error) {
-    return <ErrorNotification error={error} />;
+  if (isRenamed) {
+    return <Redirect to={`/repo/${namespace}/${name}`} />;
   }
 
-  if (loading) {
+  if (namespaceStrategyLoadError) {
+    return <ErrorNotification error={namespaceStrategyLoadError} />;
+  }
+
+  if (isLoadingNamespaceStrategies) {
     return <Loading />;
   }
 
@@ -88,31 +83,19 @@ const RenameRepository: FC<Props> = ({ repository, indexLinks }) => {
       value: namespace,
       onChange: handleNamespaceChange,
       errorMessage: t("validation.namespace-invalid"),
-      validationError: namespaceValidationError
+      validationError: namespaceValidationError,
     };
 
-    if (currentNamespaceStrategie === CUSTOM_NAMESPACE_STRATEGY) {
+    if (namespaceStrategies!.current === CUSTOM_NAMESPACE_STRATEGY) {
       return <InputField {...props} />;
     }
 
     return <ExtensionPoint name="repos.create.namespace" props={props} renderAll={false} />;
   };
 
-  const rename = () => {
-    setLoading(true);
-    const url = repository?._links?.renameWithNamespace
-      ? (repository?._links?.renameWithNamespace as Link).href
-      : (repository?._links?.rename as Link).href;
-
-    apiClient
-      .post(url, { name, namespace }, CONTENT_TYPE)
-      .then(() => setLoading(false))
-      .then(() => history.push(`/repo/${namespace}/${name}`))
-      .catch(setError);
-  };
-
   const modalBody = (
     <div>
+      {renamingError ? <ErrorNotification error={renamingError} /> : null}
       <InputField
         label={t("renameRepo.modal.label.repoName")}
         name={t("renameRepo.modal.label.repoName")}
@@ -135,7 +118,8 @@ const RenameRepository: FC<Props> = ({ repository, indexLinks }) => {
           label={t("renameRepo.modal.button.rename")}
           disabled={!isValid}
           title={t("renameRepo.modal.button.rename")}
-          action={rename}
+          loading={isRenaming}
+          action={() => renameRepository(namespace, name)}
         />
         <Button
           label={t("renameRepo.modal.button.cancel")}
@@ -165,15 +149,7 @@ const RenameRepository: FC<Props> = ({ repository, indexLinks }) => {
             {t("renameRepo.description2")}
           </p>
         }
-        right={
-          <Button
-            label={t("renameRepo.button")}
-            action={() => setShowModal(true)}
-            loading={loading}
-            color="warning"
-            icon="edit"
-          />
-        }
+        right={<Button label={t("renameRepo.button")} action={() => setShowModal(true)} color="warning" icon="edit" />}
       />
     </>
   );

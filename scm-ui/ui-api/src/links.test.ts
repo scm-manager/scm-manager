@@ -60,4 +60,40 @@ describe("requireLink tests", () => {
     };
     expect(() => requiredLink(object, "spaceship")).toThrowError();
   });
+
+  it("should return sub-link if it exists", () => {
+    const object = {
+      _links: {
+        spaceship: [
+          {
+            name: "one",
+            href: "/v2/one"
+          },
+          {
+            name: "two",
+            href: "/v2/two"
+          }
+        ]
+      }
+    };
+    expect(requiredLink(object, "spaceship", "one")).toBe("/v2/one");
+  });
+
+  it("should throw error, if sub-link does not exist in link array", () => {
+    const object = {
+      _links: {
+        spaceship: [
+          {
+            name: "one",
+            href: "/v2/one"
+          },
+          {
+            name: "two",
+            href: "/v2/two"
+          }
+        ]
+      }
+    };
+    expect(() => requiredLink(object, "spaceship", "three")).toThrowError();
+  });
 });

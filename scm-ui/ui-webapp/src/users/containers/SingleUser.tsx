@@ -24,7 +24,6 @@
 import React, { FC } from "react";
 import { Route, useParams, useRouteMatch } from "react-router-dom";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { Link } from "@scm-manager/ui-types";
 import {
   CustomQueryFlexWrappedColumns,
   ErrorPage,
@@ -36,7 +35,7 @@ import {
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import { Details } from "./../components/table";
 import EditUser from "./EditUser";
@@ -45,14 +44,14 @@ import {
   SetApiKeysNavLink,
   SetPasswordNavLink,
   SetPermissionsNavLink,
-  SetPublicKeysNavLink
+  SetPublicKeysNavLink,
 } from "./../components/navLinks";
 import { useTranslation } from "react-i18next";
 import SetUserPassword from "../components/SetUserPassword";
-import SetPermissions from "../../permissions/components/SetPermissions";
 import SetPublicKeys from "../components/publicKeys/SetPublicKeys";
 import SetApiKeys from "../components/apiKeys/SetApiKeys";
 import { useUser } from "@scm-manager/ui-api";
+import SetUserPermissions from "../../permissions/components/SetUserPermissions";
 
 const SingleUser: FC = () => {
   const [t] = useTranslation("users");
@@ -72,7 +71,7 @@ const SingleUser: FC = () => {
 
   const extensionProps = {
     user,
-    url
+    url,
   };
 
   return (
@@ -90,7 +89,7 @@ const SingleUser: FC = () => {
               <SetUserPassword user={user} />
             </Route>
             <Route path={`${url}/settings/permissions`}>
-              <SetPermissions selectedPermissionsLink={user._links.permissions as Link} />
+              <SetUserPermissions user={user} />
             </Route>
             <Route path={`${url}/settings/publickeys`}>
               <SetPublicKeys user={user} />

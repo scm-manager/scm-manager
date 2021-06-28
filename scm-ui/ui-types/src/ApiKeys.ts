@@ -21,33 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
 
-import fetchMock from "fetch-mock";
-import { getContent, getLanguage } from "./SourcecodeViewer";
+export type ApiKeysCollection = HalRepresentationWithEmbedded<{ keys: ApiKey[] }>;
 
-describe("get content", () => {
-  const CONTENT_URL = "/repositories/scmadmin/TestRepo/content/testContent";
+export type ApiKeyBase = {
+  displayName: string;
+  permissionRole: string;
+};
 
-  afterEach(() => {
-    fetchMock.reset();
-    fetchMock.restore();
-  });
+export type ApiKey = HalRepresentation &
+  ApiKeyBase & {
+    id: string;
+    created: string;
+  };
 
-  it("should return content", done => {
-    fetchMock.getOnce("/api/v2" + CONTENT_URL, "This is a testContent");
+export type ApiKeyWithToken = ApiKey & {
+  token: string;
+};
 
-    getContent(CONTENT_URL).then(content => {
-      expect(content).toBe("This is a testContent");
-      done();
-    });
-  });
-});
-
-describe("get correct language type", () => {
-  it("should return javascript", () => {
-    expect(getLanguage("JAVASCRIPT")).toBe("javascript");
-  });
-  it("should return nothing for plain text", () => {
-    expect(getLanguage("")).toBe("");
-  });
-});
+export type ApiKeyCreation = ApiKeyBase;
