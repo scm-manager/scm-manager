@@ -21,78 +21,57 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC, useState } from "react";
 import DiffFile from "./DiffFile";
 import { DiffObjectProps, FileControlFactory } from "./DiffTypes";
 import { FileDiff } from "@scm-manager/ui-types";
 import { escapeWhitespace } from "./diffs";
 import Notification from "../Notification";
-import { WithTranslation, withTranslation } from "react-i18next";
-import { RouteComponentProps, withRouter } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useLocation } from "react-router-dom";
+import useScrollToElement from "../useScrollToElement";
 
-type Props = RouteComponentProps &
-  WithTranslation &
-  DiffObjectProps & {
-    diff: FileDiff[];
-    fileControlFactory?: FileControlFactory;
-  };
-
-type State = {
-  contentRef?: HTMLElement | null;
+type Props = DiffObjectProps & {
+  diff: FileDiff[];
+  fileControlFactory?: FileControlFactory;
 };
 
-function getAnchorSelector(uriHashContent: string) {
+const createKey = (file: FileDiff) => {
+  return `${file.oldPath}@${file.oldRevision}/${file.newPath}@${file.newRevision}`;
+};
+
+const getAnchorSelector = (uriHashContent: string) => {
   return "#" + escapeWhitespace(decodeURIComponent(uriHashContent));
-}
+};
 
-class Diff extends React.Component<Props, State> {
-  static defaultProps: Partial<Props> = {
-    sideBySide: false
-  };
-
-  constructor(props: Readonly<Props>) {
-    super(props);
-    this.state = {
-      contentRef: undefined
-    };
-  }
-
-  componentDidUpdate() {
-    const { contentRef } = this.state;
-
-    // we have to use componentDidUpdate, because we have to wait until all
-    // children are rendered and componentDidMount is called before the
-    // changeset content was rendered.
-    const hash = this.props.location.hash;
-    const match = hash && hash.match(/^#diff-(.*)$/);
-    if (contentRef && match) {
-      const selector = getAnchorSelector(match[1]);
-      const element = contentRef.querySelector(selector);
-      if (element && element.scrollIntoView) {
-        element.scrollIntoView();
+const Diff: FC<Props> = ({ diff, ...fileProps }) => {
+  const [t] = useTranslation("repos");
+  const [contentRef, setContentRef] = useState<HTMLElement | null>();
+  const { hash } = useLocation();
+  useScrollToElement(
+    contentRef,
+    () => {
+      const match = hash.match(/^#diff-(.*)$/);
+      if (match) {
+        return getAnchorSelector(match[1]);
       }
-    }
-  }
+    },
+    hash
+  );
 
-  shouldComponentUpdate(nextProps: Readonly<Props>, nextState: Readonly<State>): boolean {
-    // We have check if the contentRef changed and update afterwards so the page can scroll to the anchor links.
-    // Otherwise it can happen that componentDidUpdate is never executed depending on how fast the markdown got rendered
-    return this.state.contentRef !== nextState.contentRef || this.props !== nextProps;
-  }
+  return (
+    <div ref={setContentRef}>
+      {diff.length === 0 ? (
+        <Notification type="info">{t("diff.noDiffFound")}</Notification>
+      ) : (
+        diff.map((file) => <DiffFile key={createKey(file)} file={file} {...fileProps} />)
+      )}
+    </div>
+  );
+};
 
-  render() {
-    const { diff, t, ...fileProps } = this.props;
+Diff.defaultProps = {
+  sideBySide: false,
+};
 
-    return (
-      <div ref={el => this.setState({ contentRef: el })}>
-        {diff.length === 0 ? (
-          <Notification type="info">{t("diff.noDiffFound")}</Notification>
-        ) : (
-          diff.map((file, index) => <DiffFile key={index} file={file} {...fileProps} {...this.props} />)
-        )}
-      </div>
-    );
-  }
-}
-
-export default withRouter(withTranslation("repos")(Diff));
+export default Diff;

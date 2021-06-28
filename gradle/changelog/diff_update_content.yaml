@@ -1,0 +1,2 @@
+- type: fixed
+  description: Missing update if content of diff changes ([#1714](https://github.com/scm-manager/scm-manager/pull/1714))
