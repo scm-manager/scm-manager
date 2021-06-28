@@ -71,8 +71,13 @@ public class PublicKeyStore {
     UserPermissions.changePublicKeys(username).check();
 
     if (!rawKey.contains("PUBLIC KEY")) {
-      throw new NotPublicKeyException(ContextEntry.ContextBuilder.entity(RawGpgKey.class, displayName).build(), "The provided key is not a public key");
+      throw new NotPublicKeyException(
+        ContextEntry.ContextBuilder.entity(RawGpgKey.class, displayName).build(),
+        "The provided key is not a public key"
+      );
     }
+
+    preventOverwriteReadOnlyKeys(rawKey);
 
     Keys keys = Keys.resolve(rawKey);
     String master = keys.getMaster();
@@ -88,6 +93,17 @@ public class PublicKeyStore {
 
     return key;
 
+  }
+
+  private void preventOverwriteReadOnlyKeys(String rawKey) {
+    Optional<RawGpgKey> existingReadOnlyKey = store.getAll().values()
+      .stream()
+      .filter(k -> k.getRaw().trim().equals(rawKey.trim()))
+      .filter(RawGpgKey::isReadonly)
+      .findFirst();
+    if (existingReadOnlyKey.isPresent()) {
+      throw new DeletingReadonlyKeyNotAllowedException(existingReadOnlyKey.get().getId());
+    }
   }
 
   private Set<Person> getContactsFromPublicKey(String rawKey) {
