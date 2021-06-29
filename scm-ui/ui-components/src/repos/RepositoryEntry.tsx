@@ -152,7 +152,7 @@ class RepositoryEntry extends React.Component<Props, State> {
   createFooterRight = (repository: Repository, baseDate?: DateProp) => {
     return (
       <small className="level-item">
-        <DateFromNow baseDate={baseDate} date={repository.creationDate} />
+        <DateFromNow baseDate={baseDate} date={repository.lastModified} />
       </small>
     );
   };
