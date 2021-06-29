@@ -22,11 +22,41 @@
  * SOFTWARE.
  */
 
-import { Embedded, Links } from "./hal";
+import React, { FC } from "react";
+import Notifications from "./Notifications";
+import LogoutButton from "./LogoutButton";
+import { Links } from "@scm-manager/ui-types";
+import styled from "styled-components";
 
-export type IndexResources = {
-  version: string;
-  initialization?: string;
-  _links: Links;
-  _embedded?: Embedded;
+type Props = {
+  className?: string;
+  links: Links;
 };
+
+const StyledLogoutButton = styled(LogoutButton)`
+  margin-right: 0.2rem;
+`;
+
+const ActionWrapper = styled.div`
+  margin-left: 1rem;
+`;
+
+const VerticalSeparator = styled.div`
+  border-left: 3px solid white;
+  border-radius: 5px;
+  margin: 0 1rem;
+`;
+
+const HeaderActions: FC<Props> = ({ links }) => {
+  return (
+    <div className="is-flex">
+      <ActionWrapper className={"is-flex is-justify-content-space-between"}>
+        <Notifications />
+      </ActionWrapper>
+      <VerticalSeparator />
+      <StyledLogoutButton links={links} />
+    </div>
+  );
+};
+
+export default HeaderActions;

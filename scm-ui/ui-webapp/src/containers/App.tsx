@@ -28,7 +28,7 @@ import { ErrorPage, Footer, Header, Loading, PrimaryNavigation } from "@scm-mana
 import { binder } from "@scm-manager/ui-extensions";
 import Login from "./Login";
 import { useIndex, useSubject } from "@scm-manager/ui-api";
-import Notifications from "./Notifications";
+import HeaderActions from "./HeaderActions";
 
 const App: FC = () => {
   const { data: index } = useIndex();
@@ -46,7 +46,7 @@ const App: FC = () => {
 
   if (index?.initialization) {
     const Extension = binder.getExtension(`initialization.step.${index.initialization}`);
-    content = <Extension data={index._embedded[index.initialization]} />;
+    content = <Extension data={index?._embedded ? index._embedded[index.initialization] : undefined} />;
   } else if (!authenticated && !isLoading) {
     content = <Login />;
   } else if (isLoading) {
@@ -59,11 +59,11 @@ const App: FC = () => {
 
   return (
     <div className="App">
-      <Header>
+      <Header authenticated={authenticated}>
         {authenticated ? (
           <div className="is-flex is-justify-content-space-between is-flex-wrap-nowrap	">
             <PrimaryNavigation links={index._links} />
-            <Notifications />
+            <HeaderActions links={index._links} />
           </div>
         ) : null}
       </Header>

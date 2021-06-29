@@ -22,11 +22,38 @@
  * SOFTWARE.
  */
 
-import { Embedded, Links } from "./hal";
+import React, { FC } from "react";
+import { Icon } from "@scm-manager/ui-components";
+import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { useTranslation } from "react-i18next";
+import { Links } from "@scm-manager/ui-types";
+import classNames from "classnames";
 
-export type IndexResources = {
-  version: string;
-  initialization?: string;
-  _links: Links;
-  _embedded?: Embedded;
+type Props = {
+  className?: string;
+  links?: Links;
 };
+
+const LogoutButton: FC<Props> = ({ links, className }) => {
+  const [t] = useTranslation("commons");
+  const extensionProps = {
+    links,
+    label: t("primary-navigation.logout"),
+  };
+
+  if (binder.hasExtension("primary-navigation.logout", extensionProps)) {
+    return <ExtensionPoint key="primary-navigation.logout" name="primary-navigation.logout" props={extensionProps} />;
+  } else {
+    return (
+      <a
+        data-testid="primary-navigation-logout"
+        href={"scm/logout"}
+        className={classNames("is-flex", "is-align-items-center", className)}
+      >
+        <Icon title={t("primary-navigation.logout")} name="sign-out-alt" color="white" className="is-size-4" />
+      </a>
+    );
+  }
+};
+
+export default LogoutButton;

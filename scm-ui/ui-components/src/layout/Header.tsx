@@ -21,33 +21,54 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
+import React, { FC, ReactNode } from "react";
 import Logo from "./../Logo";
+import styled from "styled-components";
 
 type Props = {
+  authenticated: boolean;
   children?: ReactNode;
 };
 
-class Header extends React.Component<Props> {
-  render() {
-    const { children } = this.props;
-    return (
-      <section className="hero is-dark is-small">
-        <div className="hero-body">
-          <div className="container">
-            <div className="columns is-vcentered">
-              <div className="column">
-                <Logo />
-              </div>
+const SmallHeader = styled.div`
+  padding-top: 1rem;
+`;
+
+const renderSmallHeader = (children: ReactNode) => {
+  return (
+    <section className="hero is-dark is-small">
+      <SmallHeader className="hero-foot">
+        <div className="container">{children}</div>
+      </SmallHeader>
+    </section>
+  );
+};
+
+const renderLargeHeader = (children: ReactNode) => {
+  return (
+    <section className="hero is-dark is-small">
+      <div className="hero-body">
+        <div className="container">
+          <div className="columns is-vcentered">
+            <div className="column">
+              <Logo />
             </div>
           </div>
         </div>
-        <div className="hero-foot">
-          <div className="container">{children}</div>
-        </div>
-      </section>
-    );
+      </div>
+      <div className="hero-foot">
+        <div className="container">{children}</div>
+      </div>
+    </section>
+  );
+};
+
+const Header: FC<Props> = ({ children, authenticated }) => {
+  if (authenticated) {
+    return renderSmallHeader(children);
+  } else {
+    return renderLargeHeader(children);
   }
-}
+};
 
 export default Header;

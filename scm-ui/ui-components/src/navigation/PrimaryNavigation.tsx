@@ -29,9 +29,10 @@ import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { urls } from "@scm-manager/ui-api";
 import { withRouter, RouteComponentProps } from "react-router-dom";
 
-type Props = RouteComponentProps & WithTranslation & {
-  links: Links;
-};
+type Props = RouteComponentProps &
+  WithTranslation & {
+    links: Links;
+  };
 
 type Appender = (to: string, match: string, label: string, linkName: string) => void;
 
@@ -42,7 +43,15 @@ class PrimaryNavigation extends React.Component<Props> {
     return (to: string, match: string, label: string, linkName: string) => {
       const link = links[linkName];
       if (link) {
-        const navigationItem = <PrimaryNavigationLink testId={label.replace(".", "-")} to={to} match={match} label={t(label)} key={linkName} />;
+        const navigationItem = (
+          <PrimaryNavigationLink
+            testId={label.replace(".", "-")}
+            to={to}
+            match={match}
+            label={t(label)}
+            key={linkName}
+          />
+        );
         navigationItems.push(navigationItem);
       }
     };
@@ -76,7 +85,7 @@ class PrimaryNavigation extends React.Component<Props> {
       links,
       label: t("primary-navigation.login"),
       loginUrl: urls.withContextPath(loginPath),
-      from
+      from,
     };
 
     if (binder.hasExtension("primary-navigation.login", props)) {
@@ -94,7 +103,7 @@ class PrimaryNavigation extends React.Component<Props> {
 
     const props = {
       links,
-      label: t("primary-navigation.first-menu")
+      label: t("primary-navigation.first-menu"),
     };
 
     const append = this.createNavigationAppender(navigationItems);
@@ -114,12 +123,11 @@ class PrimaryNavigation extends React.Component<Props> {
         name="primary-navigation"
         renderAll={true}
         props={{
-          links: this.props.links
+          links: this.props.links,
         }}
       />
     );
 
-    this.appendLogout(navigationItems, append);
     this.appendLogin(navigationItems, append);
 
     return navigationItems;
