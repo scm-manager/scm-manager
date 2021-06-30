@@ -21,21 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { HalRepresentation } from "./hal";
 
-import { apiClient } from "@scm-manager/ui-components";
-
-export type ContentType = {
-  type : string;
-  language?: string;
-}
-
-export function getContentType(url: string) : Promise<ContentType> {
-  return apiClient
-    .head(url)
-    .then(response => {
-      return {
-        type: response.headers.get("Content-Type") || "application/octet-stream",
-        language: response.headers.get("X-Programming-Language") || undefined
-      };
-    })
-}
+export type GlobalPermissionsCollection = HalRepresentation & { permissions: string[] };

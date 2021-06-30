@@ -21,10 +21,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
-package sonia.scm.plugin;
 
-//~--- non-JDK imports --------------------------------------------------------
+package sonia.scm.plugin;
 
 import com.github.sdorra.ssp.PermissionObject;
 import com.github.sdorra.ssp.StaticPermissions;
@@ -37,11 +35,6 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
-//~--- JDK imports ------------------------------------------------------------
-
-/**
- * @author Sebastian Sdorra
- */
 @Data
 @StaticPermissions(
   value = "plugin",
@@ -63,6 +56,7 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
   private String author;
   private String category;
   private String avatarUrl;
+  private PluginType type = PluginType.SCM;
 
   @Override
   public PluginInformation clone() {
@@ -74,6 +68,7 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
     clone.setAuthor(author);
     clone.setCategory(category);
     clone.setAvatarUrl(avatarUrl);
+    clone.setType(type);
     return clone;
   }
 
@@ -94,5 +89,10 @@ public class PluginInformation implements PermissionObject, Validateable, Clonea
   @Override
   public boolean isValid() {
     return Util.isNotEmpty(name) && Util.isNotEmpty(version);
+  }
+
+  public enum PluginType {
+    SCM,
+    CLOUDOGU
   }
 }

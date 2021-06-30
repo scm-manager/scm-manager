@@ -1,0 +1,17 @@
+{
+  "title": "Abschluss der Initialisierung",
+  "adminStep": {
+    "title": "Administrations Zugang",
+    "description": "Der Token zur Erstellung des Administrationszugangs befindet sich im Server Log.",
+    "startupToken": "Start-Token",
+    "username": "Administrator Benutzername",
+    "displayname": "Administrator Anzeigename",
+    "email": "E-Mail",
+    "password": "Administrator Passwort",
+    "password-confirmation": "Passwort Bestätigung",
+    "submit": "Absenden"
+  },
+  "error": {
+    "forbidden": "Falscher Token"
+  }
+}

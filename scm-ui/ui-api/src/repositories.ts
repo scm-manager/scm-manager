@@ -30,17 +30,17 @@ import {
   Repository,
   RepositoryCollection,
   RepositoryCreation,
-  RepositoryTypeCollection
+  RepositoryTypeCollection,
 } from "@scm-manager/ui-types";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { apiClient } from "./apiclient";
 import { ApiResult, useIndexJsonResource, useRequiredIndexLink } from "./base";
 import { createQueryString } from "./utils";
-import { requiredLink } from "./links";
+import { objectLink, requiredLink } from "./links";
 import { repoQueryKey } from "./keys";
 import { concat } from "./urls";
 import { useEffect, useState } from "react";
-import { NotFoundError } from "./errors";
+import { MissingLinkError, NotFoundError } from "./errors";
 
 export type UseRepositoriesRequest = {
   namespace?: Namespace;
@@ -56,7 +56,7 @@ export const useRepositories = (request?: UseRepositoriesRequest): ApiResult<Rep
   const link = namespaceLink || indexLink;
 
   const queryParams: Record<string, string> = {
-    sortBy: "namespaceAndName"
+    sortBy: "namespaceAndName",
   };
   if (request?.search) {
     queryParams.q = request.search;
@@ -66,7 +66,7 @@ export const useRepositories = (request?: UseRepositoriesRequest): ApiResult<Rep
   }
   return useQuery<RepositoryCollection, Error>(
     ["repositories", request?.namespace?.namespace, request?.search || "", request?.page || 0],
-    () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then(response => response.json()),
+    () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
     {
       enabled: !request?.disabled,
       onSuccess: (repositories: RepositoryCollection) => {
@@ -74,7 +74,7 @@ export const useRepositories = (request?: UseRepositoriesRequest): ApiResult<Rep
         repositories._embedded.repositories.forEach((repository: Repository) => {
           queryClient.setQueryData(["repository", repository.namespace, repository.name], repository);
         });
-      }
+      },
     }
   );
 };
@@ -92,14 +92,14 @@ const createRepository = (link: string) => {
     }
     return apiClient
       .post(createLink, request.repository, "application/vnd.scmm-repository+json;v=2")
-      .then(response => {
+      .then((response) => {
         const location = response.headers.get("Location");
         if (!location) {
           throw new Error("Server does not return required Location header");
         }
         return apiClient.get(location);
       })
-      .then(response => response.json());
+      .then((response) => response.json());
   };
 };
 
@@ -111,10 +111,10 @@ export const useCreateRepository = () => {
   const { mutate, data, isLoading, error } = useMutation<Repository, Error, CreateRepositoryRequest>(
     createRepository(link),
     {
-      onSuccess: repository => {
+      onSuccess: (repository) => {
         queryClient.setQueryData(["repository", repository.namespace, repository.name], repository);
         return queryClient.invalidateQueries(["repositories"]);
-      }
+      },
     }
   );
   return {
@@ -123,7 +123,7 @@ export const useCreateRepository = () => {
     },
     isLoading,
     error,
-    repository: data
+    repository: data,
   };
 };
 
@@ -133,7 +133,7 @@ export const useRepositoryTypes = () => useIndexJsonResource<RepositoryTypeColle
 export const useRepository = (namespace: string, name: string): ApiResult<Repository> => {
   const link = useRequiredIndexLink("repositories");
   return useQuery<Repository, Error>(["repository", namespace, name], () =>
-    apiClient.get(concat(link, namespace, name)).then(response => response.json())
+    apiClient.get(concat(link, namespace, name)).then((response) => response.json())
   );
 };
 
@@ -144,7 +144,7 @@ export type UseDeleteRepositoryOptions = {
 export const useDeleteRepository = (options?: UseDeleteRepositoryOptions) => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
-    repository => {
+    (repository) => {
       const link = requiredLink(repository, "delete");
       return apiClient.delete(link);
     },
@@ -155,21 +155,21 @@ export const useDeleteRepository = (options?: UseDeleteRepositoryOptions) => {
         }
         await queryClient.invalidateQueries(repoQueryKey(repository));
         await queryClient.invalidateQueries(["repositories"]);
-      }
+      },
     }
   );
   return {
     remove: (repository: Repository) => mutate(repository),
     isLoading,
     error,
-    isDeleted: !!data
+    isDeleted: !!data,
   };
 };
 
 export const useUpdateRepository = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
-    repository => {
+    (repository) => {
       const link = requiredLink(repository, "update");
       return apiClient.put(link, repository, "application/vnd.scmm-repository+json;v=2");
     },
@@ -177,21 +177,21 @@ export const useUpdateRepository = () => {
       onSuccess: async (_, repository) => {
         await queryClient.invalidateQueries(repoQueryKey(repository));
         await queryClient.invalidateQueries(["repositories"]);
-      }
+      },
     }
   );
   return {
     update: (repository: Repository) => mutate(repository),
     isLoading,
     error,
-    isUpdated: !!data
+    isUpdated: !!data,
   };
 };
 
 export const useArchiveRepository = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
-    repository => {
+    (repository) => {
       const link = requiredLink(repository, "archive");
       return apiClient.post(link);
     },
@@ -199,21 +199,21 @@ export const useArchiveRepository = () => {
       onSuccess: async (_, repository) => {
         await queryClient.invalidateQueries(repoQueryKey(repository));
         await queryClient.invalidateQueries(["repositories"]);
-      }
+      },
     }
   );
   return {
     archive: (repository: Repository) => mutate(repository),
     isLoading,
     error,
-    isArchived: !!data
+    isArchived: !!data,
   };
 };
 
 export const useUnarchiveRepository = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
-    repository => {
+    (repository) => {
       const link = requiredLink(repository, "unarchive");
       return apiClient.post(link);
     },
@@ -221,35 +221,35 @@ export const useUnarchiveRepository = () => {
       onSuccess: async (_, repository) => {
         await queryClient.invalidateQueries(repoQueryKey(repository));
         await queryClient.invalidateQueries(["repositories"]);
-      }
+      },
     }
   );
   return {
     unarchive: (repository: Repository) => mutate(repository),
     isLoading,
     error,
-    isUnarchived: !!data
+    isUnarchived: !!data,
   };
 };
 
 export const useRunHealthCheck = () => {
   const queryClient = useQueryClient();
   const { mutate, isLoading, error, data } = useMutation<unknown, Error, Repository>(
-    repository => {
+    (repository) => {
       const link = requiredLink(repository, "runHealthCheck");
       return apiClient.post(link);
     },
     {
       onSuccess: async (_, repository) => {
         await queryClient.invalidateQueries(repoQueryKey(repository));
-      }
+      },
     }
   );
   return {
     runHealthCheck: (repository: Repository) => mutate(repository),
     isLoading,
     error,
-    isRunning: !!data
+    isRunning: !!data,
   };
 };
 
@@ -258,14 +258,14 @@ export const useExportInfo = (repository: Repository): ApiResult<ExportInfo> => 
   //TODO Refetch while exporting to update the page
   const { isLoading, error, data } = useQuery<ExportInfo, Error>(
     ["repository", repository.namespace, repository.name, "exportInfo"],
-    () => apiClient.get(link).then(response => response.json()),
+    () => apiClient.get(link).then((response) => response.json()),
     {}
   );
 
   return {
     isLoading,
     error: error instanceof NotFoundError ? null : error,
-    data
+    data,
   };
 };
 
@@ -308,14 +308,14 @@ export const useExportRepository = () => {
             const id = setInterval(() => {
               apiClient
                 .get(infolink)
-                .then(r => r.json())
+                .then((r) => r.json())
                 .then((info: ExportInfo) => {
                   if (info._links.download) {
                     clearInterval(id);
                     resolve(info);
                   }
                 })
-                .catch(e => {
+                .catch((e) => {
                   clearInterval(id);
                   reject(e);
                 });
@@ -328,20 +328,49 @@ export const useExportRepository = () => {
       onSuccess: async (_, { repository }) => {
         await queryClient.invalidateQueries(repoQueryKey(repository));
         await queryClient.invalidateQueries(["repositories"]);
-      }
+      },
     }
   );
   return {
     exportRepository: (repository: Repository, options: ExportOptions) => mutate({ repository, options }),
     isLoading,
     error,
-    data
+    data,
   };
 };
 
 export const usePaths = (repository: Repository, revision: string): ApiResult<Paths> => {
   const link = requiredLink(repository, "paths").replace("{revision}", revision);
   return useQuery<Paths, Error>(repoQueryKey(repository, "paths", revision), () =>
-    apiClient.get(link).then(response => response.json())
+    apiClient.get(link).then((response) => response.json())
   );
+};
+
+type RenameRepositoryRequest = {
+  name: string;
+  namespace: string;
+};
+
+export const useRenameRepository = (repository: Repository) => {
+  const queryClient = useQueryClient();
+
+  const url = objectLink(repository, "renameWithNamespace") || objectLink(repository, "rename");
+
+  if (!url) {
+    throw new MissingLinkError(`could not find rename link on repository ${repository.namespace}/${repository.name}`);
+  }
+
+  const { mutate, isLoading, error, data } = useMutation<unknown, Error, RenameRepositoryRequest>(
+    ({ name, namespace }) => apiClient.post(url, { namespace, name }, "application/vnd.scmm-repository+json;v=2"),
+    {
+      onSuccess: () => queryClient.removeQueries(repoQueryKey(repository))
+    }
+  );
+
+  return {
+    renameRepository: (namespace: string, name: string) => mutate({ namespace, name }),
+    isLoading,
+    error,
+    isRenamed: !!data,
+  };
 };

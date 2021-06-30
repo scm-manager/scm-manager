@@ -25,12 +25,12 @@ import React, { FC } from "react";
 import { Redirect, useRouteMatch } from "react-router-dom";
 import RepositoryForm from "../components/form";
 import { Repository } from "@scm-manager/ui-types";
-import { ErrorNotification, Notification, Subtitle, urls } from "@scm-manager/ui-components";
+import { ErrorNotification, Subtitle, urls } from "@scm-manager/ui-components";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import RepositoryDangerZone from "./RepositoryDangerZone";
 import { useTranslation } from "react-i18next";
 import ExportRepository from "./ExportRepository";
-import { useIndexLinks, useUpdateRepository } from "@scm-manager/ui-api";
+import { useUpdateRepository } from "@scm-manager/ui-api";
 import HealthCheckWarning from "./HealthCheckWarning";
 import RunHealthCheck from "./RunHealthCheck";
 
@@ -41,7 +41,6 @@ type Props = {
 const EditRepo: FC<Props> = ({ repository }) => {
   const match = useRouteMatch();
   const { isLoading, error, update, isUpdated } = useUpdateRepository();
-  const indexLinks = useIndexLinks();
   const [t] = useTranslation("repos");
 
   if (isUpdated) {
@@ -51,7 +50,7 @@ const EditRepo: FC<Props> = ({ repository }) => {
   const url = urls.matchedUrlFromMatch(match);
   const extensionProps = {
     repository,
-    url
+    url,
   };
 
   return (
@@ -66,7 +65,7 @@ const EditRepo: FC<Props> = ({ repository }) => {
       {(repository._links.runHealthCheck || repository.healthCheckRunning) && (
         <RunHealthCheck repository={repository} />
       )}
-      <RepositoryDangerZone repository={repository} indexLinks={indexLinks} />
+      <RepositoryDangerZone repository={repository} />
     </>
   );
 };

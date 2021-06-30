@@ -22,26 +22,34 @@
  * SOFTWARE.
  */
 
-import { apiClient } from "@scm-manager/ui-components";
+package sonia.scm.api.v2.resources;
 
-export function getHistory(url: string) {
-  return apiClient
-    .get(url)
-    .then(response => response.json())
-    .then(result => {
-      return {
-        changesets: result._embedded.changesets,
-        pageCollection: {
-          _embedded: result._embedded,
-          _links: result._links,
-          page: result.page,
-          pageTotal: result.pageTotal
-        }
-      };
-    })
-    .catch(err => {
-      return {
-        error: err
-      };
-    });
+import sonia.scm.initialization.InitializationStep;
+import sonia.scm.initialization.InitializationStepResource;
+
+import javax.inject.Inject;
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import java.util.Set;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
+@Path("v2/initialization/")
+public class InitializationResource {
+
+  private final Set<InitializationStepResource> steps;
+
+  @Inject
+  public InitializationResource(Set<InitializationStepResource> steps) {
+    this.steps = steps;
+  }
+
+  @Path("{stepName}")
+  public InitializationStepResource step(@PathParam("stepName") String stepName) {
+    return steps.stream()
+      .filter(step -> stepName.equals(step.name()))
+      .findFirst()
+      .orElseThrow(() -> notFound(entity(InitializationStep.class, stepName)));
+  }
 }

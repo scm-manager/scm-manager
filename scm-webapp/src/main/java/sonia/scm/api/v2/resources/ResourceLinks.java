@@ -1112,4 +1112,23 @@ class ResourceLinks {
       return metricsLinkBuilder.method("metrics").parameters(type).href();
     }
   }
+
+  public InitialAdminAccountLinks initialAdminAccount() {
+    return new InitialAdminAccountLinks(new LinkBuilder(scmPathInfoStore.get(), InitializationResource.class, AdminAccountStartupResource.class));
+  }
+
+  public static class InitialAdminAccountLinks {
+    private final LinkBuilder initializationLinkBuilder;
+
+    private InitialAdminAccountLinks(LinkBuilder initializationLinkBuilder) {
+      this.initializationLinkBuilder = initializationLinkBuilder;
+    }
+
+    public String indexLink(String stepName) {
+      return initializationLinkBuilder
+        .method("step").parameters(stepName)
+        .method("postAdminInitializationData").parameters()
+        .href();
+    }
+  }
 }

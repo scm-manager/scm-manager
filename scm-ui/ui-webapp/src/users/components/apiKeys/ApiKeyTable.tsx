@@ -24,13 +24,14 @@
 
 import React, { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { ApiKey, ApiKeysCollection } from "./SetApiKeys";
 import ApiKeyEntry from "./ApiKeyEntry";
 import { Notification } from "@scm-manager/ui-components";
+import { ApiKey, ApiKeysCollection } from "@scm-manager/ui-types";
+import { DeleteFunction } from "@scm-manager/ui-api";
 
 type Props = {
   apiKeys?: ApiKeysCollection;
-  onDelete: (link: string) => void;
+  onDelete: DeleteFunction<ApiKey>;
 };
 
 const ApiKeyTable: FC<Props> = ({ apiKeys, onDelete }) => {

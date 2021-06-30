@@ -37,7 +37,6 @@ type Props = {
   file: File;
   repository: Repository;
   revision: string;
-  path: string;
   breadcrumb: React.ReactNode;
   error?: Error;
 };
@@ -78,7 +77,7 @@ const BorderLessDiv = styled.div`
 
 export type SourceViewSelection = "source" | "annotations" | "history";
 
-const Content: FC<Props> = ({ file, repository, revision, path, breadcrumb, error }) => {
+const Content: FC<Props> = ({ file, repository, revision, breadcrumb, error }) => {
   const [t] = useTranslation("repos");
   const [collapsed, setCollapsed] = useState(true);
   const [selected, setSelected] = useState<SourceViewSelection>("source");
@@ -215,13 +214,13 @@ const Content: FC<Props> = ({ file, repository, revision, path, breadcrumb, erro
   let body;
   switch (selected) {
     case "source":
-      body = <SourcesView revision={revision} file={file} repository={repository} path={path} />;
+      body = <SourcesView file={file} repository={repository} revision={revision} />;
       break;
     case "annotations":
-      body = <AnnotateView file={file} repository={repository} />;
+      body = <AnnotateView file={file} repository={repository} revision={revision} />;
       break;
     case "history":
-      body = <HistoryView file={file} repository={repository} />;
+      body = <HistoryView file={file} repository={repository} revision={revision} />;
   }
   const header = showHeader(body);
   const moreInformation = showMoreInformation();

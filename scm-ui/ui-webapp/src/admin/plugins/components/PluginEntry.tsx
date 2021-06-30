@@ -58,12 +58,18 @@ const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
   const isInstallable = plugin._links.install && (plugin._links.install as Link).href;
   const isUpdatable = plugin._links.update && (plugin._links.update as Link).href;
   const isUninstallable = plugin._links.uninstall && (plugin._links.uninstall as Link).href;
+  const isCloudoguPlugin = plugin.type === "CLOUDOGU";
 
   const pendingSpinner = () => (
     <Icon className="fa-spin fa-lg" name="spinner" color={plugin.markedForUninstall ? "danger" : "info"} />
   );
   const actionBar = () => (
     <ActionbarWrapper className="is-flex">
+      {isCloudoguPlugin && (
+        <IconWrapper className="level-item" onClick={() => openModal({ plugin, action: PluginAction.CLOUDOGU })}>
+          <Icon title={t("plugins.modal.cloudoguInstall")} name="link" color="success-dark" />
+        </IconWrapper>
+      )}
       {isInstallable && (
         <IconWrapper className="level-item" onClick={() => openModal({ plugin, action: PluginAction.INSTALL })}>
           <Icon title={t("plugins.modal.install")} name="download" color="info" />

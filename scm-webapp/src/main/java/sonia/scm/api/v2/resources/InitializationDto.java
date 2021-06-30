@@ -22,31 +22,15 @@
  * SOFTWARE.
  */
 
-import fetchMock from "fetch-mock";
-import { getContentType } from "./contentType";
+package sonia.scm.api.v2.resources;
 
-describe("get content type", () => {
-  const CONTENT_URL = "/repositories/scmadmin/TestRepo/content/testContent";
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
 
-  afterEach(() => {
-    fetchMock.reset();
-    fetchMock.restore();
-  });
+public class InitializationDto extends HalRepresentation {
 
-  it("should return content", done => {
-    const headers = {
-      "Content-Type": "application/text",
-      "X-Programming-Language": "JAVA"
-    };
-
-    fetchMock.head("/api/v2" + CONTENT_URL, {
-      headers
-    });
-
-    getContentType(CONTENT_URL).then(content => {
-      expect(content.type).toBe("application/text");
-      expect(content.language).toBe("JAVA");
-      done();
-    });
-  });
-});
+  public InitializationDto(Links links, Embedded embedded) {
+    super(links, embedded);
+  }
+}

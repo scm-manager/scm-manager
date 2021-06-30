@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 import org.mapstruct.Mapper;
@@ -31,22 +31,32 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Mapper
-public abstract class PluginCenterDtoMapper  {
+public abstract class PluginCenterDtoMapper {
 
   static final PluginCenterDtoMapper INSTANCE = Mappers.getMapper(PluginCenterDtoMapper.class);
 
   abstract PluginInformation map(PluginCenterDto.Plugin plugin);
+
   abstract PluginCondition map(PluginCenterDto.Condition condition);
 
   Set<AvailablePlugin> map(PluginCenterDto pluginCenterDto) {
     Set<AvailablePlugin> plugins = new HashSet<>();
     for (PluginCenterDto.Plugin plugin : pluginCenterDto.getEmbedded().getPlugins()) {
       String url = plugin.getLinks().get("download").getHref();
+      String installLink = getInstallLink(plugin);
       AvailablePluginDescriptor descriptor = new AvailablePluginDescriptor(
-        map(plugin), map(plugin.getConditions()), plugin.getDependencies(), plugin.getOptionalDependencies(), url, plugin.getSha256sum()
+        map(plugin), map(plugin.getConditions()), plugin.getDependencies(), plugin.getOptionalDependencies(), url, plugin.getSha256sum(), installLink
       );
       plugins.add(new AvailablePlugin(descriptor));
     }
     return plugins;
+  }
+
+  private String getInstallLink(PluginCenterDto.Plugin plugin) {
+    PluginCenterDto.Link link = plugin.getLinks().get("install");
+    if (link != null) {
+      return link.getHref();
+    }
+    return null;
   }
 }

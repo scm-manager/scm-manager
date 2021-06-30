@@ -34,7 +34,7 @@ type UseChangesetsRequest = {
   page?: string | number;
 };
 
-const changesetQueryKey = (repository: NamespaceAndName, id: string) => {
+export const changesetQueryKey = (repository: NamespaceAndName, id: string) => {
   return repoQueryKey(repository, "changeset", id);
 };
 

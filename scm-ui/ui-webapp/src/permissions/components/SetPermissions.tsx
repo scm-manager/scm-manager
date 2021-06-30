@@ -23,55 +23,69 @@
  */
 import React, { FC, FormEvent, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Link } from "@scm-manager/ui-types";
-import { ErrorNotification, Level, Notification, SubmitButton, Subtitle } from "@scm-manager/ui-components";
-import { loadPermissionsForEntity, setPermissions as updatePermissions } from "./handlePermissions";
+import { ErrorNotification, Level, Loading, Notification, SubmitButton, Subtitle } from "@scm-manager/ui-components";
 import PermissionsWrapper from "./PermissionsWrapper";
-import { useRequiredIndexLink } from "@scm-manager/ui-api";
+import { useAvailableGlobalPermissions } from "@scm-manager/ui-api";
+import { GlobalPermissionsCollection } from "@scm-manager/ui-types";
 
 type Props = {
-  selectedPermissionsLink: Link;
+  selectedPermissions?: GlobalPermissionsCollection;
+  loadingPermissions?: boolean;
+  permissionsLoadError?: Error;
+  updatePermissions?: (permissions: string[]) => void;
+  isUpdatingPermissions?: boolean;
+  permissionsUpdated?: boolean;
+  permissionsUpdateError?: Error;
 };
 
-const SetPermissions: FC<Props> = ({ selectedPermissionsLink }) => {
+const SetPermissions: FC<Props> = ({
+  loadingPermissions,
+  isUpdatingPermissions,
+  permissionsLoadError,
+  permissionsUpdateError,
+  updatePermissions,
+  permissionsUpdated,
+  selectedPermissions,
+}) => {
   const [t] = useTranslation("permissions");
-  const availablePermissionLink = useRequiredIndexLink("permissions");
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null | undefined>();
+  const {
+    data: availablePermissions,
+    error: availablePermissionsLoadError,
+    isLoading: isLoadingAvailablePermissions,
+  } = useAvailableGlobalPermissions();
+  const [permissions, setPermissions] = useState<Record<string, boolean>>({});
   const [permissionsSubmitted, setPermissionsSubmitted] = useState(false);
   const [permissionsChanged, setPermissionsChanged] = useState(false);
-  const [overwritePermissionsLink, setOverwritePermissionsLink] = useState<Link | undefined>();
-  const [permissions, setPermissions] = useState<{
-    [key: string]: boolean;
-  }>({});
+  const error = permissionsLoadError || availablePermissionsLoadError;
 
   useEffect(() => {
-    loadPermissionsForEntity(availablePermissionLink, selectedPermissionsLink.href).then(response => {
-      const { permissions, overwriteLink } = response;
-      setPermissions(permissions);
-      setOverwritePermissionsLink(overwriteLink);
-      setLoading(false);
-    });
-  }, [availablePermissionLink, selectedPermissionsLink]);
+    if (selectedPermissions && availablePermissions) {
+      const newPermissions: Record<string, boolean> = {};
+      availablePermissions.permissions.forEach((p) => (newPermissions[p] = false));
+      selectedPermissions.permissions.forEach((p) => (newPermissions[p] = true));
+      setPermissions(newPermissions);
+    }
+  }, [availablePermissions, selectedPermissions]);
 
-  const setLoadingState = () => setLoading(true);
+  useEffect(() => {
+    if (permissionsUpdated) {
+      setPermissionsSubmitted(true);
+      setPermissionsChanged(false);
+    }
+  }, [permissionsUpdated]);
 
-  const setErrorState = (error: Error) => {
-    setLoading(false);
-    setError(error);
-  };
+  if (loadingPermissions || isLoadingAvailablePermissions) {
+    return <Loading />;
+  }
 
-  const setSuccessfulState = () => {
-    setLoading(false);
-    setError(undefined);
-    setPermissionsSubmitted(true);
-    setPermissionsChanged(false);
-  };
+  if (error) {
+    return <ErrorNotification error={error} />;
+  }
 
   const valueChanged = (value: boolean, name: string) => {
     setPermissions({
       ...permissions,
-      [name]: value
+      [name]: value,
     });
     setPermissionsChanged(true);
   };
@@ -81,15 +95,10 @@ const SetPermissions: FC<Props> = ({ selectedPermissionsLink }) => {
   const submit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (permissions) {
-      setLoadingState();
       const selectedPermissions = Object.entries(permissions)
-        .filter(e => e[1])
-        .map(e => e[0]);
-      if (overwritePermissionsLink) {
-        updatePermissions(overwritePermissionsLink.href, selectedPermissions)
-          .then(_ => setSuccessfulState())
-          .catch(err => setErrorState(err));
-      }
+        .filter((e) => e[1])
+        .map((e) => e[0]);
+      updatePermissions!(selectedPermissions);
     }
   };
 
@@ -99,7 +108,7 @@ const SetPermissions: FC<Props> = ({ selectedPermissionsLink }) => {
     message = (
       <Notification type={"success"} children={t("setPermissions.setPermissionsSuccessful")} onClose={onClose} />
     );
-  } else if (error) {
+  } else if (permissionsUpdateError) {
     message = <ErrorNotification error={error} />;
   }
 
@@ -107,12 +116,12 @@ const SetPermissions: FC<Props> = ({ selectedPermissionsLink }) => {
     <form onSubmit={submit}>
       <Subtitle subtitle={t("setPermissions.subtitle")} />
       {message}
-      <PermissionsWrapper permissions={permissions} onChange={valueChanged} disabled={!overwritePermissionsLink} />
+      <PermissionsWrapper permissions={permissions} onChange={valueChanged} disabled={!updatePermissions} />
       <Level
         right={
           <SubmitButton
             disabled={!permissionsChanged}
-            loading={loading}
+            loading={isUpdatingPermissions}
             label={t("setPermissions.button")}
             testId="set-permissions-button"
           />
@@ -121,4 +130,5 @@ const SetPermissions: FC<Props> = ({ selectedPermissionsLink }) => {
     </form>
   );
 };
+
 export default SetPermissions;

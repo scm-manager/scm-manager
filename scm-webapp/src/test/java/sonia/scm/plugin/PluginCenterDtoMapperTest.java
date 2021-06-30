@@ -58,13 +58,14 @@ class PluginCenterDtoMapperTest {
   void shouldMapSinglePlugin() {
     Plugin plugin = new Plugin(
       "scm-hitchhiker-plugin",
+      "2.0.0",
       "SCM Hitchhiker Plugin",
       "plugin for hitchhikers",
       "Travel",
-      "2.0.0",
       "trillian",
       "http://avatar.url",
       "555000444",
+      PluginInformation.PluginType.SCM,
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
       ImmutableSet.of("scm-review-plugin"),
       ImmutableSet.of(),
@@ -93,13 +94,14 @@ class PluginCenterDtoMapperTest {
   void shouldMapMultiplePlugins() {
     Plugin plugin1 = new Plugin(
       "scm-review-plugin",
+      "2.1.0",
       "SCM Hitchhiker Plugin",
       "plugin for hitchhikers",
       "Travel",
-      "2.1.0",
       "trillian",
       "https://avatar.url",
       "12345678aa",
+      PluginInformation.PluginType.SCM,
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
       ImmutableSet.of("scm-review-plugin"),
       ImmutableSet.of(),
@@ -108,13 +110,14 @@ class PluginCenterDtoMapperTest {
 
     Plugin plugin2 = new Plugin(
       "scm-hitchhiker-plugin",
+      "2.0.0",
       "SCM Hitchhiker Plugin",
       "plugin for hitchhikers",
       "Travel",
-      "2.0.0",
       "dent",
       "http://avatar.url",
       "555000444",
+      PluginInformation.PluginType.CLOUDOGU,
       new Condition(Collections.singletonList("linux"), "amd64","2.0.0"),
       ImmutableSet.of("scm-review-plugin"),
       ImmutableSet.of(),
@@ -132,6 +135,8 @@ class PluginCenterDtoMapperTest {
     assertThat(pluginInformation1.getVersion()).isEqualTo(plugin1.getVersion());
     assertThat(pluginInformation2.getAuthor()).isEqualTo(plugin2.getAuthor());
     assertThat(pluginInformation2.getVersion()).isEqualTo(plugin2.getVersion());
+    assertThat(pluginInformation1.getType()).isEqualTo(PluginInformation.PluginType.SCM);
+    assertThat(pluginInformation2.getType()).isEqualTo(PluginInformation.PluginType.CLOUDOGU);
     assertThat(resultSet.size()).isEqualTo(2);
   }
 

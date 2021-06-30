@@ -21,33 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { apiClient } from "./apiclient";
+import { useQuery } from "react-query";
+import { ApiResult } from "./base";
 
-import fetchMock from "fetch-mock";
-import { getContent, getLanguage } from "./SourcecodeViewer";
+export type ContentType = {
+  type: string;
+  language?: string;
+};
 
-describe("get content", () => {
-  const CONTENT_URL = "/repositories/scmadmin/TestRepo/content/testContent";
-
-  afterEach(() => {
-    fetchMock.reset();
-    fetchMock.restore();
+function getContentType(url: string): Promise<ContentType> {
+  return apiClient.head(url).then((response) => {
+    return {
+      type: response.headers.get("Content-Type") || "application/octet-stream",
+      language: response.headers.get("X-Programming-Language") || undefined,
+    };
   });
+}
 
-  it("should return content", done => {
-    fetchMock.getOnce("/api/v2" + CONTENT_URL, "This is a testContent");
-
-    getContent(CONTENT_URL).then(content => {
-      expect(content).toBe("This is a testContent");
-      done();
-    });
-  });
-});
-
-describe("get correct language type", () => {
-  it("should return javascript", () => {
-    expect(getLanguage("JAVASCRIPT")).toBe("javascript");
-  });
-  it("should return nothing for plain text", () => {
-    expect(getLanguage("")).toBe("");
-  });
-});
+export const useContentType = (url: string): ApiResult<ContentType> => {
+  const { isLoading, error, data } = useQuery<ContentType, Error>(["contentType", url], () => getContentType(url));
+  return {
+    isLoading,
+    error,
+    data,
+  };
+};

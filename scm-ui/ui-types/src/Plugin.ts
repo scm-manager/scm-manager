@@ -24,6 +24,8 @@
 
 import { HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
 
+type PluginType = "SCM" | "CLOUDOGU";
+
 export type Plugin = HalRepresentation & {
   name: string;
   version: string;
@@ -34,6 +36,7 @@ export type Plugin = HalRepresentation & {
   category: string;
   avatarUrl?: string;
   pending: boolean;
+  type: PluginType;
   markedForUninstall?: boolean;
   dependencies: string[];
   optionalDependencies: string[];
@@ -43,7 +46,8 @@ export type PluginCollection = HalRepresentationWithEmbedded<{
   plugins: Plugin[];
 }>;
 
-export const isPluginCollection = (input: HalRepresentation): input is PluginCollection => input._embedded ? "plugins" in input._embedded : false;
+export const isPluginCollection = (input: HalRepresentation): input is PluginCollection =>
+  input._embedded ? "plugins" in input._embedded : false;
 
 export type PluginGroup = {
   name: string;

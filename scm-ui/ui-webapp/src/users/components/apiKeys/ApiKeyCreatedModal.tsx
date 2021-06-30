@@ -26,9 +26,10 @@ import React, { FC, useRef, useState } from "react";
 import { Button, Icon, Modal } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import styled from "styled-components";
+import { ApiKeyWithToken } from "@scm-manager/ui-types";
 
 type Props = {
-  addedKey: string;
+  addedKey: ApiKeyWithToken;
   close: () => void;
 };
 
@@ -46,10 +47,10 @@ const NoLeftMargin = styled.div`
 const ApiKeyCreatedModal: FC<Props> = ({ addedKey, close }) => {
   const [t] = useTranslation("users");
   const [copied, setCopied] = useState(false);
-  const keyRef = useRef(null);
+  const keyRef = useRef<HTMLTextAreaElement>(null);
 
   const copy = () => {
-    keyRef.current.select();
+    keyRef.current!.select();
     document.execCommand("copy");
     setCopied(true);
   };
@@ -63,10 +64,15 @@ const ApiKeyCreatedModal: FC<Props> = ({ addedKey, close }) => {
       <hr />
       <div className={"columns"}>
         <div className={"column is-11"}>
-          <KeyArea wrap={"soft"} ref={keyRef} className={"input"} value={addedKey} />
+          <KeyArea wrap={"soft"} ref={keyRef} className={"input"} value={addedKey.token} />
         </div>
         <NoLeftMargin className={"column is-1"}>
-          <Icon className={"is-hidden-mobile fa-2x"} name={copied ? "clipboard-check" : "clipboard"} title={t("apiKey.modal.clipboard")} onClick={copy} />
+          <Icon
+            className={"is-hidden-mobile fa-2x"}
+            name={copied ? "clipboard-check" : "clipboard"}
+            title={t("apiKey.modal.clipboard")}
+            onClick={copy}
+          />
         </NoLeftMargin>
       </div>
     </div>

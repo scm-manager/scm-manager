@@ -169,6 +169,19 @@ class PublicKeyStoreTest {
     verify(eventBus, never()).post(any(PublicKeyDeletedEvent.class));
   }
 
+  @Test()
+  void shouldThrowOnOverwriteReadonlyKey() throws IOException {
+    String rawKey = GPGTestHelper.readResourceAsString("single.asc");
+    keyStore.add("SCM Package Key", "trillian", rawKey, true);
+    Optional<RawGpgKey> key = keyStore.findById("0x975922F193B07D6E");
+
+    assertThat(key).isPresent();
+
+    assertThrows(DeletingReadonlyKeyNotAllowedException.class, () -> keyStore.add("Some other entry with same raw key", "trillian", rawKey, false));
+
+    verify(eventBus, never()).post(any(PublicKeyDeletedEvent.class));
+  }
+
   @Test
   void shouldReturnEmptyListIfNoKeysAvailable() {
     List<RawGpgKey> keys = keyStore.findByUsername("zaphod");

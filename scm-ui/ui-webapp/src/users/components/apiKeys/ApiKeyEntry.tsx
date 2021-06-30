@@ -24,13 +24,13 @@
 
 import React, { FC } from "react";
 import { DateFromNow, Icon } from "@scm-manager/ui-components";
-import { ApiKey } from "./SetApiKeys";
-import { Link } from "@scm-manager/ui-types";
+import { ApiKey } from "@scm-manager/ui-types";
 import { useTranslation } from "react-i18next";
+import { DeleteFunction } from "@scm-manager/ui-api";
 
 type Props = {
   apiKey: ApiKey;
-  onDelete: (link: string) => void;
+  onDelete: DeleteFunction<ApiKey>;
 };
 
 export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
@@ -38,7 +38,7 @@ export const ApiKeyEntry: FC<Props> = ({ apiKey, onDelete }) => {
   let deleteButton;
   if (apiKey?._links?.delete) {
     deleteButton = (
-      <a className="level-item" onClick={() => onDelete((apiKey._links.delete as Link).href)}>
+      <a className="level-item" onClick={() => onDelete(apiKey)}>
         <span className="icon">
           <Icon name="trash" title={t("apiKey.delete")} color="inherit" />
         </span>

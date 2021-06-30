@@ -34,7 +34,7 @@ import {
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
-  urls
+  urls,
 } from "@scm-manager/ui-components";
 import ChangeUserPassword from "./ChangeUserPassword";
 import ProfileInfo from "./ProfileInfo";
@@ -69,7 +69,7 @@ const Profile: FC = () => {
         subtitle={t("profile.error-subtitle")}
         error={{
           name: t("profile.error"),
-          message: t("profile.error-message")
+          message: t("profile.error-message"),
         }}
       />
     );
@@ -77,7 +77,7 @@ const Profile: FC = () => {
 
   const extensionProps = {
     me,
-    url
+    url,
   };
 
   return (
@@ -94,12 +94,20 @@ const Profile: FC = () => {
               </Switch>
             )}
             {mayChangePassword && (
-              <Route path={`${url}/settings/password`} render={() => <ChangeUserPassword me={me} />} />
+              <Route path={`${url}/settings/password`}>
+                <ChangeUserPassword me={me} />
+              </Route>
             )}
             {canManagePublicKeys && (
-              <Route path={`${url}/settings/publicKeys`} render={() => <SetPublicKeys user={me} />} />
+              <Route path={`${url}/settings/publicKeys`}>
+                <SetPublicKeys user={me} />
+              </Route>
             )}
-            {canManageApiKeys && <Route path={`${url}/settings/apiKeys`} render={() => <SetApiKeys user={me} />} />}
+            {canManageApiKeys && (
+              <Route path={`${url}/settings/apiKeys`}>
+                <SetApiKeys user={me} />
+              </Route>
+            )}
             <ExtensionPoint name="profile.route" props={extensionProps} renderAll={true} />
           </PrimaryContentColumn>
           <SecondaryNavigationColumn>

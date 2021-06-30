@@ -21,21 +21,23 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { HalRepresentation, HalRepresentationWithEmbedded } from "./hal";
 
-import { apiClient } from "@scm-manager/ui-components";
+export type ApiKeysCollection = HalRepresentationWithEmbedded<{ keys: ApiKey[] }>;
 
-export const CONTENT_TYPE_PASSWORD_CHANGE = "application/vnd.scmm-passwordChange+json;v=2";
-export function changePassword(url: string, oldPassword: string, newPassword: string) {
-  return apiClient
-    .put(
-      url,
-      {
-        oldPassword,
-        newPassword
-      },
-      CONTENT_TYPE_PASSWORD_CHANGE
-    )
-    .then(response => {
-      return response;
-    });
-}
+export type ApiKeyBase = {
+  displayName: string;
+  permissionRole: string;
+};
+
+export type ApiKey = HalRepresentation &
+  ApiKeyBase & {
+    id: string;
+    created: string;
+  };
+
+export type ApiKeyWithToken = ApiKey & {
+  token: string;
+};
+
+export type ApiKeyCreation = ApiKeyBase;

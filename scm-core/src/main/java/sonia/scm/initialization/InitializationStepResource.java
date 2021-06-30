@@ -22,20 +22,15 @@
  * SOFTWARE.
  */
 
-import { apiClient } from "@scm-manager/ui-components";
+package sonia.scm.initialization;
 
-export const CONTENT_TYPE_PASSWORD_OVERWRITE = "application/vnd.scmm-passwordOverwrite+json;v=2";
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.Links;
+import sonia.scm.plugin.ExtensionPoint;
 
-export function setPassword(url: string, password: string) {
-  return apiClient
-    .put(
-      url,
-      {
-        newPassword: password
-      },
-      CONTENT_TYPE_PASSWORD_OVERWRITE
-    )
-    .then(response => {
-      return response;
-    });
+@ExtensionPoint
+public interface InitializationStepResource {
+  String name();
+
+  void setupIndex(Links.Builder builder, Embedded.Builder embeddedBuilder);
 }

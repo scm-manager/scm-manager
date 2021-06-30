@@ -22,27 +22,21 @@
  * SOFTWARE.
  */
 
-import fetchMock from "fetch-mock";
-import { CONTENT_TYPE_PASSWORD_OVERWRITE, setPassword } from "./setPassword";
+package sonia.scm.lifecycle;
 
-describe("password change", () => {
-  const SET_PASSWORD_URL = "/users/testuser/password";
-  const newPassword = "testpw123";
+import org.apache.commons.lang3.RandomStringUtils;
 
-  afterEach(() => {
-    fetchMock.reset();
-    fetchMock.restore();
-  });
+import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 
-  it("should set password", done => {
-    fetchMock.put("/api/v2" + SET_PASSWORD_URL, 204, {
-      headers: {
-        "content-type": CONTENT_TYPE_PASSWORD_OVERWRITE
-      }
-    });
+final class RandomPasswordGenerator {
 
-    setPassword(SET_PASSWORD_URL, newPassword).then(content => {
-      done();
-    });
-  });
-});
+  String createRandomPassword() {
+    try {
+      SecureRandom random = SecureRandom.getInstanceStrong();
+      return RandomStringUtils.random(20, 0, 0, true, true, null, random);
+    } catch (NoSuchAlgorithmException e) {
+      throw new IllegalStateException("Every Java distribution is required to support a strong secure random generator; this should not have happened", e);
+    }
+  }
+}

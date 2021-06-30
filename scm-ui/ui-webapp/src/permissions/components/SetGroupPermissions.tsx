@@ -21,29 +21,38 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+import { Group } from "@scm-manager/ui-types";
+import React, { FC } from "react";
+import SetPermissions from "./SetPermissions";
+import { useGroupPermissions, useSetGroupPermissions } from "@scm-manager/ui-api";
 
-import fetchMock from "fetch-mock";
-import { changePassword, CONTENT_TYPE_PASSWORD_CHANGE } from "./changePassword";
+type Props = {
+  group: Group;
+};
 
-describe("change password", () => {
-  const CHANGE_PASSWORD_URL = "/me/password";
-  const oldPassword = "old";
-  const newPassword = "new";
+const SetGroupPermissions: FC<Props> = ({ group }) => {
+  const {
+    data: selectedPermissions,
+    isLoading: loadingPermissions,
+    error: permissionsLoadError,
+  } = useGroupPermissions(group);
+  const {
+    isLoading: isUpdatingPermissions,
+    isUpdated: permissionsUpdated,
+    setPermissions,
+    error: permissionsUpdateError,
+  } = useSetGroupPermissions(group, selectedPermissions);
+  return (
+    <SetPermissions
+      selectedPermissions={selectedPermissions}
+      loadingPermissions={loadingPermissions}
+      isUpdatingPermissions={isUpdatingPermissions}
+      permissionsLoadError={permissionsLoadError || undefined}
+      permissionsUpdated={permissionsUpdated}
+      updatePermissions={setPermissions}
+      permissionsUpdateError={permissionsUpdateError || undefined}
+    />
+  );
+};
 
-  afterEach(() => {
-    fetchMock.reset();
-    fetchMock.restore();
-  });
-
-  it("should update password", done => {
-    fetchMock.put("/api/v2" + CHANGE_PASSWORD_URL, 204, {
-      headers: {
-        "content-type": CONTENT_TYPE_PASSWORD_CHANGE
-      }
-    });
-
-    changePassword(CHANGE_PASSWORD_URL, oldPassword, newPassword).then(content => {
-      done();
-    });
-  });
-});
+export default SetGroupPermissions;

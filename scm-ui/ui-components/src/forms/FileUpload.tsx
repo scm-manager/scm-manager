@@ -24,7 +24,6 @@
 
 import React, { FC, useState, ChangeEvent } from "react";
 import { useTranslation } from "react-i18next";
-import { File } from "@scm-manager/ui-types";
 
 type Props = {
   handleFile: (file: File, event?: ChangeEvent<HTMLInputElement>) => void;

@@ -37,9 +37,9 @@ import javax.ws.rs.Path;
 @Path("v2/plugins")
 public class PluginRootResource {
 
-  private Provider<InstalledPluginResource> installedPluginResourceProvider;
-  private Provider<AvailablePluginResource> availablePluginResourceProvider;
-  private Provider<PendingPluginResource> pendingPluginResourceProvider;
+  private final Provider<InstalledPluginResource> installedPluginResourceProvider;
+  private final Provider<AvailablePluginResource> availablePluginResourceProvider;
+  private final Provider<PendingPluginResource> pendingPluginResourceProvider;
 
   @Inject
   public PluginRootResource(Provider<InstalledPluginResource> installedPluginResourceProvider, Provider<AvailablePluginResource> availablePluginResourceProvider, Provider<PendingPluginResource> pendingPluginResourceProvider) {

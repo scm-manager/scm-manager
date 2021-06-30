@@ -167,7 +167,6 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
         file={file}
         repository={repository}
         revision={revision || file.revision}
-        path={path}
         breadcrumb={renderBreadcrumb()}
         error={error || undefined}
       />
