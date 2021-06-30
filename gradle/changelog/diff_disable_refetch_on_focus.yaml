@@ -1,0 +1,2 @@
+- type: added
+  description: Option to diable automatic refresh for diff view on window focus change ([#1714](https://github.com/scm-manager/scm-manager/pull/1714))

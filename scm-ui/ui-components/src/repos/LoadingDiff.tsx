@@ -36,6 +36,7 @@ import styled from "styled-components";
 type Props = DiffObjectProps & {
   url: string;
   limit?: number;
+  refetchOnWindowFocus?: boolean;
 };
 
 type NotificationProps = {
@@ -59,8 +60,8 @@ const PartialNotification: FC<NotificationProps> = ({ fetchNextPage, isFetchingN
   );
 };
 
-const LoadingDiff: FC<Props> = ({ url, limit, ...props }) => {
-  const { error, isLoading, data, fetchNextPage, isFetchingNextPage } = useDiff(url, { limit });
+const LoadingDiff: FC<Props> = ({ url, limit, refetchOnWindowFocus, ...props }) => {
+  const { error, isLoading, data, fetchNextPage, isFetchingNextPage } = useDiff(url, { limit, refetchOnWindowFocus });
   const [t] = useTranslation("repos");
 
   if (error) {
@@ -86,7 +87,8 @@ const LoadingDiff: FC<Props> = ({ url, limit, ...props }) => {
 
 LoadingDiff.defaultProps = {
   limit: 25,
-  sideBySide: false
+  sideBySide: false,
+  refetchOnWindowFocus: true,
 };
 
 export default LoadingDiff;
