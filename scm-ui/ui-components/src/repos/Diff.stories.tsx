@@ -36,9 +36,10 @@ import { getPath } from "./diffs";
 import DiffButton from "./DiffButton";
 import styled from "styled-components";
 import { MemoryRouter } from "react-router-dom";
-import { one, two } from "../__resources__/changesets";
+import { two } from "../__resources__/changesets";
 import { Changeset, FileDiff } from "@scm-manager/ui-types";
 import JumpToFileButton from "./JumpToFileButton";
+import Button from "../buttons/Button";
 
 const diffFiles = parser.parse(simpleDiff);
 
@@ -48,15 +49,15 @@ const Container = styled.div`
 
 const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
 
-const fileControlFactory: (changeset: Changeset) => FileControlFactory = changeset => file => {
+const fileControlFactory: (changeset: Changeset) => FileControlFactory = (changeset) => (file) => {
   const baseUrl = "/repo/hitchhiker/heartOfGold/code/changeset";
   const sourceLink = {
     url: `${baseUrl}/${changeset.id}/${file.newPath}/`,
-    label: "Jump to source"
+    label: "Jump to source",
   };
   const targetLink = changeset._embedded?.parents?.length === 1 && {
     url: `${baseUrl}/${changeset._embedded.parents[0].id}/${file.oldPath}`,
-    label: "Jump to target"
+    label: "Jump to target",
   };
 
   const links = [];
@@ -82,7 +83,7 @@ const fileControlFactory: (changeset: Changeset) => FileControlFactory = changes
 
 storiesOf("Diff", module)
   .addDecorator(RoutingDecorator)
-  .addDecorator(storyFn => <Container>{storyFn()}</Container>)
+  .addDecorator((storyFn) => <Container>{storyFn()}</Container>)
   .add("Default", () => <Diff diff={diffFiles} />)
   .add("Side-By-Side", () => <Diff diff={diffFiles} sideBySide={true} />)
   .add("Collapsed", () => <Diff diff={diffFiles} defaultCollapse={true} fileControlFactory={fileControlFactory(two)} />)
@@ -101,15 +102,15 @@ storiesOf("Diff", module)
   .add("File Annotation", () => (
     <Diff
       diff={diffFiles}
-      fileAnnotationFactory={file => [<p key={file.newPath}>Custom File annotation for {file.newPath}</p>]}
+      fileAnnotationFactory={(file) => [<p key={file.newPath}>Custom File annotation for {file.newPath}</p>]}
     />
   ))
   .add("Line Annotation", () => (
     <Diff
       diff={diffFiles}
-      annotationFactory={ctx => {
+      annotationFactory={(ctx) => {
         return {
-          N2: <p key="N2">Line Annotation</p>
+          N2: <p key="N2">Line Annotation</p>,
         };
       }}
     />
@@ -166,4 +167,20 @@ storiesOf("Diff", module)
     });
     return <Diff diff={filesWithLanguage} />;
   })
-  .add("WithLinkToFile", () => <Diff diff={diffFiles} />);
+  .add("WithLinkToFile", () => <Diff diff={diffFiles} />)
+  .add("Changing Content", () => {
+    const ChangingContentDiff = () => {
+      const [markdown, setMarkdown] = useState(false);
+      return (
+        <div>
+          <Button className="mb-5" action={() => setMarkdown((m) => !m)}>
+            Change content
+          </Button>
+          {/* @ts-ignore */}
+          <Diff diff={markdown ? markdownDiff.files : diffFiles} />
+        </div>
+      );
+    };
+
+    return <ChangingContentDiff />;
+  });
