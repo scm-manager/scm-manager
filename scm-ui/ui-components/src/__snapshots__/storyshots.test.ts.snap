@@ -1663,11 +1663,11 @@ exports[`Storyshots BreadCrumb Default 1`] = `
   className="Breadcrumbstories__Wrapper-sc-1eq8sgz-0 exRctT"
 >
   <div
-    className="is-flex is-align-items-center"
+    className="is-flex is-align-items-center is-justify-content-flex-end"
   >
     <nav
       aria-label="breadcrumbs"
-      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 ieUHOq breadcrumb sources-breadcrumb ml-1 mb-0"
+      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 eupowG breadcrumb sources-breadcrumb mx-2 my-4"
     >
       <ul>
         <li>
@@ -1760,11 +1760,11 @@ exports[`Storyshots BreadCrumb Long path 1`] = `
   className="Breadcrumbstories__Wrapper-sc-1eq8sgz-0 exRctT"
 >
   <div
-    className="is-flex is-align-items-center"
+    className="is-flex is-align-items-center is-justify-content-flex-end"
   >
     <nav
       aria-label="breadcrumbs"
-      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 ieUHOq breadcrumb sources-breadcrumb ml-1 mb-0"
+      className="Breadcrumb__BreadcrumbNav-zvtb4t-1 eupowG breadcrumb sources-breadcrumb mx-2 my-4"
     >
       <ul>
         <li>

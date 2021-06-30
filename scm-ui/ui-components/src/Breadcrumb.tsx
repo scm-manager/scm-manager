@@ -26,12 +26,12 @@ import { useTranslation } from "react-i18next";
 import { useHistory, useLocation, Link } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { urls } from "@scm-manager/ui-api";
 import { Branch, Repository, File } from "@scm-manager/ui-types";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 import copyToClipboard from "./CopyToClipboard";
-import { urls } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
@@ -65,8 +65,6 @@ const BreadcrumbNav = styled.nav`
   flex: 1;
   display: flex;
   align-items: center;
-  margin: 1rem 1rem !important;
-
   width: 100%;
 
   /* move slash to end */
@@ -127,12 +125,23 @@ const Breadcrumb: FC<Props> = ({
   baseUrl,
   sources,
   permalink,
-  preButtons
+  preButtons,
 }) => {
   const location = useLocation();
   const history = useHistory();
   const [copying, setCopying] = useState(false);
   const [t] = useTranslation("commons");
+
+  const hasBranchesWhenSupporting = (repository: Repository) => {
+    return !repository._links.branches || branch;
+  };
+
+  const hasAnyExtension = () => {
+    return (
+      binder.hasExtension<extensionPoints.ReposSourcesActionbar>("repos.sources.actionbar") ||
+      binder.hasExtension<extensionPoints.ReposSourcesEmptyActionbar>("repos.sources.empty.actionbar")
+    );
+  };
 
   const pathSection = () => {
     if (path) {
@@ -172,30 +181,21 @@ const Breadcrumb: FC<Props> = ({
     ).finally(() => setCopying(false));
   };
 
-  let homeUrl = baseUrl + "/";
-  if (revision) {
-    homeUrl += encodeURIComponent(revision) + "/";
-  }
+  const renderBreadcrumbNav = () => {
+    let prefixButtons = null;
+    if (preButtons) {
+      prefixButtons = <PrefixButton>{preButtons}</PrefixButton>;
+    }
 
-  let prefixButtons = null;
-  if (preButtons) {
-    prefixButtons = <PrefixButton>{preButtons}</PrefixButton>;
-  }
+    let homeUrl = baseUrl + "/";
+    if (revision) {
+      homeUrl += encodeURIComponent(revision) + "/";
+    }
 
-  const extProps = {
-    baseUrl,
-    revision: revision ? encodeURIComponent(revision) : "",
-    branch: branch ? branch : defaultBranch,
-    path,
-    sources,
-    repository
-  };
-
-  return (
-    <>
-      <div className="is-flex is-align-items-center">
+    if (hasBranchesWhenSupporting(repository)) {
+      return (
         <BreadcrumbNav
-          className={classNames("breadcrumb", "sources-breadcrumb", "ml-1", "mb-0")}
+          className={classNames("breadcrumb", "sources-breadcrumb", "mx-2", "my-4")}
           aria-label="breadcrumbs"
         >
           {prefixButtons}
@@ -217,15 +217,41 @@ const Breadcrumb: FC<Props> = ({
             )}
           </PermaLinkWrapper>
         </BreadcrumbNav>
-        {binder.hasExtension("repos.sources.actionbar") && (
-          <ActionBar>
-            <ExtensionPoint name="repos.sources.actionbar" props={extProps} renderAll={true} />
-          </ActionBar>
-        )}
-      </div>
-      <hr className="is-marginless" />
-    </>
-  );
+      );
+    }
+  };
+
+  const extProps = {
+    baseUrl,
+    revision: revision ? encodeURIComponent(revision) : "",
+    branch: branch ? branch : defaultBranch,
+    path,
+    sources,
+    repository,
+  };
+
+  const renderExtensionPoints = () => {
+    if (binder.hasExtension<extensionPoints.ReposSourcesActionbar>("repos.sources.actionbar")) {
+      return <ExtensionPoint name="repos.sources.actionbar" props={extProps} renderAll={true} />;
+    }
+    if (binder.hasExtension<extensionPoints.ReposSourcesEmptyActionbar>("repos.sources.empty.actionbar")) {
+      return <ExtensionPoint name="repos.sources.empty.actionbar" props={extProps} renderAll={true} />;
+    }
+    return null;
+  };
+
+  if (hasBranchesWhenSupporting(repository) || hasAnyExtension()) {
+    return (
+      <>
+        <div className="is-flex is-align-items-center is-justify-content-flex-end">
+          {renderBreadcrumbNav()}
+          {hasAnyExtension() && <ActionBar className="my-2">{renderExtensionPoints()}</ActionBar>}
+        </div>
+        <hr className="is-marginless" />
+      </>
+    );
+  }
+  return null;
 };
 
 export default Breadcrumb;
