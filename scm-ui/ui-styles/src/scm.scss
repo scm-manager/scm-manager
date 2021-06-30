@@ -716,6 +716,13 @@ form .field:not(.is-grouped) {
   opacity: 1;
 }
 
+.has-scm-background {
+  background-image: url(images/scmManagerHero.jpg) !important;
+  background-size: cover;
+  background-position: top center;
+  background-color: #002e4b;
+}
+
 // hero
 .hero.is-dark {
   background-color: #002e4b;

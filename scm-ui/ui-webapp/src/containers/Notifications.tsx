@@ -33,14 +33,14 @@ import {
   ToastType,
   Loading,
   DateFromNow,
-  devices
+  devices,
 } from "@scm-manager/ui-components";
 import styled from "styled-components";
 import {
   useClearNotifications,
   useDismissNotification,
   useNotifications,
-  useNotificationSubscription
+  useNotificationSubscription,
 } from "@scm-manager/ui-api";
 import { Notification, NotificationCollection } from "@scm-manager/ui-types";
 import { useHistory, Link } from "react-router-dom";
@@ -79,7 +79,7 @@ const DropDownMenu = styled.div`
     height: 0;
     width: 0;
     top: 0;
-    right: 0.9rem;
+    right: 1.25rem;
     border-color: transparent;
     border-bottom-color: white;
     border-left-color: white;
@@ -273,6 +273,9 @@ const BellNotificationContainer = styled.div`
   position: relative;
   width: 2rem;
   height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 type NotificationCounterProps = {
@@ -282,7 +285,7 @@ type NotificationCounterProps = {
 const NotificationCounter = styled.span<NotificationCounterProps>`
   position: absolute;
   top: -0.5rem;
-  right: ${props => (props.count < 10 ? "0" : "-0.25")}rem;
+  right: ${(props) => (props.count < 10 ? "0" : "-0.25")}rem;
 `;
 
 type BellNotificationIconProps = {
@@ -317,7 +320,11 @@ const ErrorBox: FC<{ error: Error | null }> = ({ error }) => {
   );
 };
 
-const Notifications: FC = () => {
+type NotificationProps = {
+  className?: string;
+};
+
+const Notifications: FC<NotificationProps> = ({ className }) => {
   const { data, isLoading, error, refetch } = useNotifications();
   const { notifications, remove, clear } = useNotificationSubscription(refetch, data);
 
@@ -332,13 +339,19 @@ const Notifications: FC = () => {
     <>
       <NotificationSubscription notifications={notifications} remove={remove} />
       <div
-        className={classNames("is-align-self-flex-end", "dropdown", "is-right", "is-hoverable", {
-          "is-active": open
-        })}
-        onClick={e => e.stopPropagation()}
+        className={classNames(
+          "dropdown",
+          "is-right",
+          "is-hoverable",
+          {
+            "is-active": open,
+          },
+          className
+        )}
+        onClick={(e) => e.stopPropagation()}
       >
         <Container className="dropdown-trigger">
-          <BellNotificationIcon data={data} onClick={() => setOpen(o => !o)} />
+          <BellNotificationIcon data={data} onClick={() => setOpen((o) => !o)} />
         </Container>
         <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">
           <ErrorBox error={error} />

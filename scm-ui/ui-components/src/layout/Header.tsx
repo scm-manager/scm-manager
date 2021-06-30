@@ -23,30 +23,21 @@
  */
 import React, { FC, ReactNode } from "react";
 import Logo from "./../Logo";
-import styled from "styled-components";
+import { Links } from "@scm-manager/ui-types";
 
 type Props = {
+  links: Links;
   authenticated: boolean;
-  children?: ReactNode;
+  children: ReactNode;
 };
 
-const SmallHeader = styled.div`
-  padding-top: 1rem;
-`;
-
-const renderSmallHeader = (children: ReactNode) => {
-  return (
-    <section className="hero is-dark is-small">
-      <SmallHeader className="hero-foot">
-        <div className="container">{children}</div>
-      </SmallHeader>
-    </section>
-  );
+const SmallHeader: FC<{ children: ReactNode }> = ({ children }) => {
+  return <div className="has-scm-background">{children}</div>;
 };
 
-const renderLargeHeader = (children: ReactNode) => {
+const LargeHeader: FC = () => {
   return (
-    <section className="hero is-dark is-small">
+    <section className="hero has-scm-background is-small">
       <div className="hero-body">
         <div className="container">
           <div className="columns is-vcentered">
@@ -56,18 +47,15 @@ const renderLargeHeader = (children: ReactNode) => {
           </div>
         </div>
       </div>
-      <div className="hero-foot">
-        <div className="container">{children}</div>
-      </div>
     </section>
   );
 };
 
-const Header: FC<Props> = ({ children, authenticated }) => {
+const Header: FC<Props> = ({ authenticated, children, links }) => {
   if (authenticated) {
-    return renderSmallHeader(children);
+    return <SmallHeader>{children}</SmallHeader>;
   } else {
-    return renderLargeHeader(children);
+    return <LargeHeader />;
   }
 };
 

@@ -28,6 +28,7 @@ import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
 import { Links } from "@scm-manager/ui-types";
 import classNames from "classnames";
+import { useHistory } from "react-router-dom";
 
 type Props = {
   className?: string;
@@ -36,6 +37,8 @@ type Props = {
 
 const LogoutButton: FC<Props> = ({ links, className }) => {
   const [t] = useTranslation("commons");
+  const history = useHistory();
+
   const extensionProps = {
     links,
     label: t("primary-navigation.logout"),
@@ -45,13 +48,13 @@ const LogoutButton: FC<Props> = ({ links, className }) => {
     return <ExtensionPoint key="primary-navigation.logout" name="primary-navigation.logout" props={extensionProps} />;
   } else {
     return (
-      <a
+      <div
         data-testid="primary-navigation-logout"
-        href={"scm/logout"}
-        className={classNames("is-flex", "is-align-items-center", className)}
+        onClick={() => history.push({ pathname: "/logout" })}
+        className={classNames("is-align-items-center", "navbar-item", className)}
       >
         <Icon title={t("primary-navigation.logout")} name="sign-out-alt" color="white" className="is-size-4" />
-      </a>
+      </div>
     );
   }
 };

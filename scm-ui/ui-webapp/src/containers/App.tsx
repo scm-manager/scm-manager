@@ -24,11 +24,11 @@
 import React, { FC } from "react";
 import Main from "./Main";
 import { useTranslation } from "react-i18next";
-import { ErrorPage, Footer, Header, Loading, PrimaryNavigation } from "@scm-manager/ui-components";
+import { ErrorPage, Footer, Header, Loading } from "@scm-manager/ui-components";
 import { binder } from "@scm-manager/ui-extensions";
 import Login from "./Login";
 import { useIndex, useSubject } from "@scm-manager/ui-api";
-import HeaderActions from "./HeaderActions";
+import NavigationBar from "./NavigationBar";
 
 const App: FC = () => {
   const { data: index } = useIndex();
@@ -59,13 +59,8 @@ const App: FC = () => {
 
   return (
     <div className="App">
-      <Header authenticated={authenticated}>
-        {authenticated ? (
-          <div className="is-flex is-justify-content-space-between is-flex-wrap-nowrap	">
-            <PrimaryNavigation links={index._links} />
-            <HeaderActions links={index._links} />
-          </div>
-        ) : null}
+      <Header authenticated={authenticated} links={index._links}>
+        <NavigationBar links={index._links} />
       </Header>
       {content}
       {authenticated ? <Footer me={me} version={index.version} links={index._links} /> : null}

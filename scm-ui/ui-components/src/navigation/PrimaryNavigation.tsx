@@ -21,25 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC, ReactNode } from "react";
 import PrimaryNavigationLink from "./PrimaryNavigationLink";
 import { Links } from "@scm-manager/ui-types";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { urls } from "@scm-manager/ui-api";
-import { withRouter, RouteComponentProps } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
-type Props = RouteComponentProps &
-  WithTranslation & {
-    links: Links;
-  };
+type Props = {
+  links: Links;
+};
 
 type Appender = (to: string, match: string, label: string, linkName: string) => void;
 
-class PrimaryNavigation extends React.Component<Props> {
-  createNavigationAppender = (navigationItems: ReactNode[]): Appender => {
-    const { t, links } = this.props;
+const PrimaryNavigation: FC<Props> = ({ links }) => {
+  const [t] = useTranslation("commons");
+  const location = useLocation();
 
+  const createNavigationAppender = (navItems: ReactNode[]): Appender => {
     return (to: string, match: string, label: string, linkName: string) => {
       const link = links[linkName];
       if (link) {
@@ -50,33 +50,15 @@ class PrimaryNavigation extends React.Component<Props> {
             match={match}
             label={t(label)}
             key={linkName}
+            className="navbar-item"
           />
         );
-        navigationItems.push(navigationItem);
+        navItems.push(navigationItem);
       }
     };
   };
 
-  appendLogout = (navigationItems: ReactNode[], append: Appender) => {
-    const { t, links } = this.props;
-
-    const props = {
-      links,
-      label: t("primary-navigation.logout")
-    };
-
-    if (binder.hasExtension("primary-navigation.logout", props)) {
-      navigationItems.push(
-        <ExtensionPoint key="primary-navigation.logout" name="primary-navigation.logout" props={props} />
-      );
-    } else {
-      append("/logout", "/logout", "primary-navigation.logout", "logout");
-    }
-  };
-
-  appendLogin = (navigationItems: ReactNode[], append: Appender) => {
-    const { t, links, location } = this.props;
-
+  const appendLogin = (navItems: ReactNode[], append: Appender) => {
     const from = location.pathname;
     const loginPath = "/login";
     const to = `${loginPath}?from=${encodeURIComponent(from)}`;
@@ -89,27 +71,28 @@ class PrimaryNavigation extends React.Component<Props> {
     };
 
     if (binder.hasExtension("primary-navigation.login", props)) {
-      navigationItems.push(
-        <ExtensionPoint key="primary-navigation.login" name="primary-navigation.login" props={props} />
-      );
+      navItems.push(<ExtensionPoint key="primary-navigation.login" name="primary-navigation.login" props={props} />);
     } else {
       append(to, "/login", "primary-navigation.login", "login");
     }
   };
 
-  createNavigationItems = () => {
-    const navigationItems: ReactNode[] = [];
-    const { t, links } = this.props;
+  const createNavigationItems = () => {
+    const navItems: ReactNode[] = [];
 
-    const props = {
+    const extensionProps = {
       links,
       label: t("primary-navigation.first-menu"),
     };
 
-    const append = this.createNavigationAppender(navigationItems);
-    if (binder.hasExtension("primary-navigation.first-menu", props)) {
-      navigationItems.push(
-        <ExtensionPoint key="primary-navigation.first-menu" name="primary-navigation.first-menu" props={props} />
+    const append = createNavigationAppender(navItems);
+    if (binder.hasExtension("primary-navigation.first-menu", extensionProps)) {
+      navItems.push(
+        <ExtensionPoint
+          key="primary-navigation.first-menu"
+          name="primary-navigation.first-menu"
+          props={extensionProps}
+        />
       );
     }
     append("/repos/", "/(repo|repos)", "primary-navigation.repositories", "repositories");
@@ -117,31 +100,23 @@ class PrimaryNavigation extends React.Component<Props> {
     append("/groups/", "/(group|groups)", "primary-navigation.groups", "groups");
     append("/admin", "/admin", "primary-navigation.admin", "config");
 
-    navigationItems.push(
+    navItems.push(
       <ExtensionPoint
         key="primary-navigation"
         name="primary-navigation"
         renderAll={true}
         props={{
-          links: this.props.links,
+          links,
         }}
       />
     );
 
-    this.appendLogin(navigationItems, append);
+    appendLogin(navItems, append);
 
-    return navigationItems;
+    return navItems;
   };
 
-  render() {
-    const navigationItems = this.createNavigationItems();
+  return <>{createNavigationItems()}</>;
+};
 
-    return (
-      <nav className="tabs is-boxed mb-0">
-        <ul>{navigationItems}</ul>
-      </nav>
-    );
-  }
-}
-
-export default withTranslation("commons")(withRouter(PrimaryNavigation));
+export default PrimaryNavigation;
