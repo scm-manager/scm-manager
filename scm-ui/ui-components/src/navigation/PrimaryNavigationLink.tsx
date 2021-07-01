@@ -41,7 +41,7 @@ const PrimaryNavigationLink: FC<Props> = ({ to, match, testId, label, className 
   return (
     <a
       onClick={() => history.push(to)}
-      className={classNames(className, { "is-active": routeMatch })}
+      className={classNames(className, "navbar-item", { "is-active": routeMatch })}
       {...createAttributesForTesting(testId)}
     >
       {label}

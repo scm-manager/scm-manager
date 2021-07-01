@@ -36,8 +36,7 @@ const HeaderActions: FC<Props> = ({ burgerMode, links }) => {
   return (
     <>
       {!burgerMode ? <Notifications className="navbar-item" /> : null}
-      <div className="navbar-divider" />
-      <LogoutButton links={links} />
+      <LogoutButton burgerMode={burgerMode} links={links} />
     </>
   );
 };

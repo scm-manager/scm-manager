@@ -23,19 +23,35 @@
  */
 
 import React, { FC } from "react";
-import { Icon } from "@scm-manager/ui-components";
+import { devices, Icon } from "@scm-manager/ui-components";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
 import { Links } from "@scm-manager/ui-types";
 import classNames from "classnames";
 import { useHistory } from "react-router-dom";
+import styled from "styled-components";
 
 type Props = {
   className?: string;
   links?: Links;
+  burgerMode: boolean;
 };
 
-const LogoutButton: FC<Props> = ({ links, className }) => {
+const StyledLogoutButton = styled.div`
+  @media screen and (max-width: ${devices.desktop.width}px) {
+    border-top: 1px solid white;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+
+  @media screen and (min-width: ${devices.desktop.width}px) {
+    border-left: 3px solid white;
+    margin-left: 2rem;
+  }
+`;
+
+const LogoutButton: FC<Props> = ({ burgerMode, links, className }) => {
   const [t] = useTranslation("commons");
   const history = useHistory();
 
@@ -48,13 +64,19 @@ const LogoutButton: FC<Props> = ({ links, className }) => {
     return <ExtensionPoint key="primary-navigation.logout" name="primary-navigation.logout" props={extensionProps} />;
   } else {
     return (
-      <div
+      <StyledLogoutButton
         data-testid="primary-navigation-logout"
         onClick={() => history.push({ pathname: "/logout" })}
         className={classNames("is-align-items-center", "navbar-item", className)}
       >
-        <Icon title={t("primary-navigation.logout")} name="sign-out-alt" color="white" className="is-size-4" />
-      </div>
+        <Icon
+          title={t("primary-navigation.logout")}
+          name="sign-out-alt"
+          color="white"
+          className={burgerMode ? "is-size-5" : "is-size-4"}
+        />
+        {" " + t("primary-navigation.logout")}
+      </StyledLogoutButton>
     );
   }
 };

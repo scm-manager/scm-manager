@@ -55,6 +55,18 @@ const StyledNavBar = styled.nav`
     }
   }
 
+  .navbar-menu {
+    padding: 0;
+  }
+
+  .navbar-brand {
+    border-bottom: 1px solid white;
+  }
+
+  .navbar-menu.is-active .navbar-end .navbar-item {
+    border-left: solid 5px transparent;
+  }
+
   .navbar-burger {
     color: #fff !important;
   }
@@ -71,20 +83,14 @@ const StyledNavBar = styled.nav`
   background-color: transparent !important;
 `;
 
-const StyledBurgerActions = styled.div`
-  .navbar-burger-actions {
-    display: none;
-  }
-`;
-
 type Props = {
   links: Links;
 };
 
 const BurgerActionBar: FC = () => (
-  <StyledBurgerActions className="navbar-burger-actions">
+  <div className="navbar-burger-actions">
     <Notifications className="navbar-item" direction="left" />
-  </StyledBurgerActions>
+  </div>
 );
 
 const NavigationBar: FC<Props> = ({ links }) => {
