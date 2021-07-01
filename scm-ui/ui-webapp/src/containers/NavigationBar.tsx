@@ -25,14 +25,21 @@ import React, { FC, useEffect, useState } from "react";
 import { Links } from "@scm-manager/ui-types";
 import classNames from "classnames";
 import styled from "styled-components";
-import { PrimaryNavigation } from "@scm-manager/ui-components";
+import { devices, PrimaryNavigation } from "@scm-manager/ui-components";
 import HeaderActions from "./HeaderActions";
+import Notifications from "./Notifications";
 
 const StyledMenuBar = styled.div`
   background-color: transparent !important;
 `;
 
 const StyledNavBar = styled.nav`
+  @media screen and (min-width: ${devices.desktop.width}px) {
+    .navbar-burger-actions {
+      display: none;
+    }
+  }
+
   .navbar-start .navbar-item {
     border-bottom: solid 5px transparent;
     &.is-active {
@@ -64,9 +71,21 @@ const StyledNavBar = styled.nav`
   background-color: transparent !important;
 `;
 
+const StyledBurgerActions = styled.div`
+  .navbar-burger-actions {
+    display: none;
+  }
+`;
+
 type Props = {
   links: Links;
 };
+
+const BurgerActionBar: FC = () => (
+  <StyledBurgerActions className="navbar-burger-actions">
+    <Notifications className="navbar-item" direction="left" />
+  </StyledBurgerActions>
+);
 
 const NavigationBar: FC<Props> = ({ links }) => {
   const [burgerActive, setBurgerActive] = useState(false);
@@ -83,6 +102,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
   return (
     <StyledNavBar className="navbar mb-0 container" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
+        <BurgerActionBar />
         <a
           role="button"
           className={classNames("navbar-burger", { "is-active": burgerActive })}

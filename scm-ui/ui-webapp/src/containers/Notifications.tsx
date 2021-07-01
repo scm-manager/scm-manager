@@ -60,7 +60,12 @@ const Container = styled.div`
   }
 `;
 
-const DropDownMenu = styled.div`
+type DropDownProps = {
+  direction: "left" | "right";
+};
+
+// eslint-disable-next-line @typescript-eslint/no-empty-function
+const DropDownMenu = styled.div.attrs((props) => {})<DropDownProps>`
   min-width: 35rem;
 
   @media screen and (max-width: ${devices.mobile.width}px) {
@@ -79,7 +84,7 @@ const DropDownMenu = styled.div`
     height: 0;
     width: 0;
     top: 0;
-    right: 1.25rem;
+    ${(props) => props.direction}: 1.25rem;
     border-color: transparent;
     border-bottom-color: white;
     border-left-color: white;
@@ -322,9 +327,10 @@ const ErrorBox: FC<{ error: Error | null }> = ({ error }) => {
 
 type NotificationProps = {
   className?: string;
+  direction?: "left" | "right";
 };
 
-const Notifications: FC<NotificationProps> = ({ className }) => {
+const Notifications: FC<NotificationProps> = ({ className, direction = "right" }) => {
   const { data, isLoading, error, refetch } = useNotifications();
   const { notifications, remove, clear } = useNotificationSubscription(refetch, data);
 
@@ -341,7 +347,7 @@ const Notifications: FC<NotificationProps> = ({ className }) => {
       <div
         className={classNames(
           "dropdown",
-          "is-right",
+          `is-${direction}`,
           "is-hoverable",
           {
             "is-active": open,
@@ -353,7 +359,7 @@ const Notifications: FC<NotificationProps> = ({ className }) => {
         <Container className="dropdown-trigger">
           <BellNotificationIcon data={data} onClick={() => setOpen((o) => !o)} />
         </Container>
-        <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">
+        <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu" direction={direction}>
           <ErrorBox error={error} />
           {isLoading ? <LoadingBox /> : null}
           {data ? <NotificationDropDown data={data} remove={remove} clear={clear} /> : null}
