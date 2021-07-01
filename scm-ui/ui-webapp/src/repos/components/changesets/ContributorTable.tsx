@@ -69,8 +69,7 @@ const ContributorTable: FC<Props> = ({ changeset }) => {
     if (!changeset.contributors) {
       return [];
     }
-    // @ts-ignore
-    return [...new Set(changeset.contributors.map(contributor => contributor.type))];
+    return new Set(changeset.contributors.map(contributor => contributor.type));
   };
 
   const getPersonsByContributorType = (type: string) => {
