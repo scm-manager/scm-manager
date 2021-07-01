@@ -136,19 +136,6 @@ class RepositoryEntry extends React.Component<Props, State> {
     return null;
   };
 
-  createFooterLeft = (repository: Repository, repositoryLink: string) => {
-    return (
-      <>
-        {this.renderBranchesLink(repository, repositoryLink)}
-        {this.renderTagsLink(repository, repositoryLink)}
-        {this.renderChangesetsLink(repository, repositoryLink)}
-        {this.renderSourcesLink(repository, repositoryLink)}
-        <ExtensionPoint name={"repository.card.quickLink"} props={{ repository, repositoryLink }} renderAll={true} />
-        {this.renderModifyLink(repository, repositoryLink)}
-      </>
-    );
-  };
-
   createFooterRight = (repository: Repository, baseDate?: DateProp) => {
     return (
       <small className="level-item">
@@ -197,7 +184,6 @@ class RepositoryEntry extends React.Component<Props, State> {
   render() {
     const { repository, baseDate } = this.props;
     const repositoryLink = this.createLink(repository);
-    const footerLeft = this.createFooterLeft(repository, repositoryLink);
     const footerRight = this.createFooterRight(repository, baseDate);
     const title = this.createTitle();
     const modal = (
@@ -216,7 +202,7 @@ class RepositoryEntry extends React.Component<Props, State> {
           title={title}
           description={repository.description}
           link={repositoryLink}
-          footerLeft={footerLeft}
+          footerLeft={undefined}
           footerRight={footerRight}
         />
       </>
