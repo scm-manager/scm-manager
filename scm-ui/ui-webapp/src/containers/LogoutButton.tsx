@@ -59,25 +59,28 @@ const LogoutButton: FC<Props> = ({ burgerMode, links, className }) => {
     label: t("primary-navigation.logout"),
   };
 
-  if (binder.hasExtension("primary-navigation.logout", extensionProps)) {
-    return <ExtensionPoint key="primary-navigation.logout" name="primary-navigation.logout" props={extensionProps} />;
-  } else {
-    return (
-      <StyledLogoutButton
-        data-testid="primary-navigation-logout"
-        onClick={() => history.push({ pathname: "/logout" })}
-        className={classNames("is-align-items-center", "navbar-item", className)}
-      >
-        <Icon
-          title={t("primary-navigation.logout")}
-          name="sign-out-alt"
-          color="white"
-          className={burgerMode ? "is-size-5" : "is-size-4"}
-        />
-        {" " + t("primary-navigation.logout")}
-      </StyledLogoutButton>
-    );
+  if (links?.logout) {
+    if (binder.hasExtension("primary-navigation.logout", extensionProps)) {
+      return <ExtensionPoint key="primary-navigation.logout" name="primary-navigation.logout" props={extensionProps} />;
+    } else {
+      return (
+        <StyledLogoutButton
+          data-testid="primary-navigation-logout"
+          onClick={() => history.push({ pathname: "/logout" })}
+          className={classNames("is-align-items-center", "navbar-item", className)}
+        >
+          <Icon
+            title={t("primary-navigation.logout")}
+            name="sign-out-alt"
+            color="white"
+            className={burgerMode ? "is-size-5" : "is-size-4"}
+          />
+          {" " + t("primary-navigation.logout")}
+        </StyledLogoutButton>
+      );
+    }
   }
+  return null;
 };
 
 export default LogoutButton;
