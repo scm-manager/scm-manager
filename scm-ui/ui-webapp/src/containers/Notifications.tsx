@@ -54,10 +54,6 @@ const Bell = styled(Icon)`
 const Container = styled.div`
   display: flex;
   cursor: pointer;
-
-  @media screen and (max-width: ${devices.desktop.width}px) {
-    padding-right: 1rem;
-  }
 `;
 
 type DropDownProps = {

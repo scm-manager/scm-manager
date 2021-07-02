@@ -25,7 +25,7 @@ import React, { FC, useEffect, useState } from "react";
 import { Links } from "@scm-manager/ui-types";
 import classNames from "classnames";
 import styled from "styled-components";
-import { devices, PrimaryNavigation } from "@scm-manager/ui-components";
+import { devices, Logo, PrimaryNavigation } from "@scm-manager/ui-components";
 import HeaderActions from "./HeaderActions";
 import Notifications from "./Notifications";
 
@@ -108,6 +108,9 @@ const NavigationBar: FC<Props> = ({ links }) => {
   return (
     <StyledNavBar className="navbar mb-0 container" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
+        <a className="navbar-item">
+          <Logo withText={false} />
+        </a>
         <BurgerActionBar />
         <a
           role="button"

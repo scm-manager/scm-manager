@@ -21,15 +21,21 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import Image from "./Image";
 
-class Logo extends React.Component<WithTranslation> {
-  render() {
-    const { t } = this.props;
+type Props = {
+  withText?: boolean;
+};
+
+const Logo: FC<Props> = ({ withText = true }) => {
+  const [t] = useTranslation("commons");
+
+  if (withText) {
     return <Image src="/images/logo.png" alt={t("logo.alt")} />;
   }
-}
+  return <Image src="/images/scmLogo.svg" alt={t("logo.alt")} />;
+};
 
-export default withTranslation("commons")(Logo);
+export default Logo;

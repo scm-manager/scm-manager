@@ -46,7 +46,6 @@ const StyledLogoutButton = styled.div`
   }
 
   @media screen and (min-width: ${devices.desktop.width}px) {
-    border-left: 3px solid white;
     margin-left: 2rem;
   }
 `;

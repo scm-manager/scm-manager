@@ -32,8 +32,14 @@ const Wrapper = styled.div`
   height: 100%;
 `;
 
-storiesOf("Logo", module).add("Default", () => (
-  <Wrapper>
-    <Logo />
-  </Wrapper>
-));
+storiesOf("Logo", module)
+  .add("Default", () => (
+    <Wrapper>
+      <Logo />
+    </Wrapper>
+  ))
+  .add("WithoutText", () => (
+    <Wrapper>
+      <Logo withText={false} />
+    </Wrapper>
+  ));
