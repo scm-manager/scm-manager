@@ -27,15 +27,16 @@ import Image from "./Image";
 
 type Props = {
   withText?: boolean;
+  className?: string;
 };
 
-const Logo: FC<Props> = ({ withText = true }) => {
+const Logo: FC<Props> = ({ withText = true, className }) => {
   const [t] = useTranslation("commons");
 
   if (withText) {
-    return <Image src="/images/logo.png" alt={t("logo.alt")} />;
+    return <Image src="/images/logo.png" alt={t("logo.alt")} className={className} />;
   }
-  return <Image src="/images/scmLogo.svg" alt={t("logo.alt")} />;
+  return <Image src="/images/scmLogo.svg" alt={t("logo.alt")} className={className} />;
 };
 
 export default Logo;

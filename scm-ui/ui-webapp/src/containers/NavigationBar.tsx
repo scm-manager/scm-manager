@@ -33,8 +33,12 @@ const StyledMenuBar = styled.div`
   background-color: transparent !important;
 `;
 
+const LogoItem = styled.a`
+  cursor: default !important;
+`;
+
 const StyledNavBar = styled.nav`
-  @media screen and (min-width: ${devices.desktop.width}px) {
+  @media screen and (min-width: ${devices.desktop.width - 1}px) {
     .navbar-burger-actions {
       display: none;
     }
@@ -60,7 +64,9 @@ const StyledNavBar = styled.nav`
   }
 
   .navbar-brand {
-    border-bottom: 1px solid white;
+    @media screen and (max-width: ${devices.desktop.width - 1}px) {
+      border-bottom: 1px solid white;
+    }
   }
 
   .navbar-menu.is-active .navbar-end .navbar-item {
@@ -108,9 +114,9 @@ const NavigationBar: FC<Props> = ({ links }) => {
   return (
     <StyledNavBar className="navbar mb-0 container" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
-        <a className="navbar-item">
-          <Logo withText={false} />
-        </a>
+        <LogoItem className="navbar-item">
+          <Logo withText={false} className="image is-32x32" />
+        </LogoItem>
         <BurgerActionBar />
         <a
           role="button"
