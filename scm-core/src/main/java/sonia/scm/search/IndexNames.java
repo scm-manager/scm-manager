@@ -24,10 +24,10 @@
 
 package sonia.scm.search;
 
-public interface Index extends AutoCloseable {
-  void store(Id id, Object object);
-  void delete(Id id, Class<?> type);
-  void deleteByRepository(String repository);
-  @Override
-  void close();
+public final class IndexNames {
+
+  public static final String DEFAULT = "_default";
+
+  private IndexNames() {
+  }
 }

@@ -47,6 +47,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static sonia.scm.search.LuceneIndex.FIELD_ID;
 import static sonia.scm.search.LuceneIndex.FIELD_REPOSITORY;
 import static sonia.scm.search.LuceneIndex.FIELD_TYPE;
+import static sonia.scm.search.LuceneIndex.FIELD_UID;
 
 class LuceneIndexTest {
 
@@ -66,6 +67,25 @@ class LuceneIndexTest {
     }
 
     assertHits("value", "content", 1);
+  }
+
+  @Test
+  void shouldUpdateObject() throws IOException {
+    try (LuceneIndex index = createIndex()) {
+      index.store(ONE, new Storable("Awesome content which should be indexed"));
+      index.store(ONE, new Storable("Awesome content"));
+    }
+
+    assertHits("value", "content", 1);
+  }
+
+  @Test
+  void shouldStoreUidOfObject() throws IOException {
+    try (LuceneIndex index = createIndex()) {
+      index.store(ONE, new Storable("Awesome content which should be indexed"));
+    }
+
+    assertHits(FIELD_UID, "one/" + Storable.class.getName(), 1);
   }
 
   @Test
@@ -102,10 +122,27 @@ class LuceneIndexTest {
     }
 
     try (LuceneIndex index = createIndex()) {
-      index.delete(ONE);
+      index.delete(ONE, Storable.class);
     }
 
     assertHits(FIELD_ID, "one", 0);
+  }
+
+  @Test
+  void shouldDeleteByIdAnyType() throws IOException {
+    try (LuceneIndex index = createIndex()) {
+      index.store(ONE, new Storable("Some text"));
+      index.store(ONE, new OtherStorable("Some other text"));
+    }
+
+    try (LuceneIndex index = createIndex()) {
+      index.delete(ONE, Storable.class);
+    }
+
+    assertHits(FIELD_ID, "one", 1);
+    ScoreDoc[] docs = assertHits(FIELD_ID, "one", 1);
+    Document doc = doc(docs[0].doc);
+    assertThat(doc.get("value")).isEqualTo("Some other text");
   }
 
   @Test
@@ -117,12 +154,26 @@ class LuceneIndexTest {
     }
 
     try (LuceneIndex index = createIndex()) {
-      index.delete(withRepository);
+      index.delete(withRepository, Storable.class);
     }
 
     ScoreDoc[] docs = assertHits(FIELD_ID, "one", 1);
     Document doc = doc(docs[0].doc);
     assertThat(doc.get("value")).isEqualTo("Some other text");
+  }
+
+  @Test
+  void shouldDeleteByRepository() throws IOException {
+    try (LuceneIndex index = createIndex()) {
+      index.store(ONE.withRepository("4211"), new Storable("Some other text"));
+      index.store(ONE.withRepository("4212"), new Storable("New stuff"));
+    }
+
+    try (LuceneIndex index = createIndex()) {
+      index.deleteByRepository("4212");
+    }
+
+    assertHits(FIELD_ID, "one", 1);
   }
 
   private Document doc(int doc) throws IOException {
@@ -153,6 +204,12 @@ class LuceneIndexTest {
 
   @Value
   private static class Storable {
+    @Indexed
+    String value;
+  }
+
+  @Value
+  private static class OtherStorable {
     @Indexed
     String value;
   }
