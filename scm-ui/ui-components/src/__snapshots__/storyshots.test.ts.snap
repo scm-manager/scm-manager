@@ -49004,6 +49004,17 @@ exports[`Storyshots Logo Default 1`] = `
 </div>
 `;
 
+exports[`Storyshots Logo WithoutText 1`] = `
+<div
+  className="Logostories__Wrapper-sc-14nnt4j-0 brMuIC"
+>
+  <img
+    alt="logo.alt"
+    src="/images/scmLogo.svg"
+  />
+</div>
+`;
+
 exports[`Storyshots MarkdownView Code without Lang 1`] = `
 <div
   className="MarkdownViewstories__Spacing-sc-1lofakk-0 iOWSJJ"

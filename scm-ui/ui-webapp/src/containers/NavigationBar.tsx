@@ -78,7 +78,7 @@ const StyledNavBar = styled.nav`
   }
 
   .navbar-item {
-    :hover {
+    :hover:not(.logo) {
       background-color: rgba(10, 10, 10, 0.1) !important;
       color: #fff;
     }
@@ -114,7 +114,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
   return (
     <StyledNavBar className="navbar mb-0 container" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
-        <LogoItem className="navbar-item">
+        <LogoItem className="navbar-item logo">
           <Logo withText={false} className="image is-32x32" />
         </LogoItem>
         <BurgerActionBar />
