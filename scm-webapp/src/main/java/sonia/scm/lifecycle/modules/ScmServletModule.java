@@ -98,6 +98,10 @@ import sonia.scm.repository.xml.XmlRepositoryDAO;
 import sonia.scm.repository.xml.XmlRepositoryRoleDAO;
 import sonia.scm.schedule.CronScheduler;
 import sonia.scm.schedule.Scheduler;
+import sonia.scm.search.DefaultIndexQueue;
+import sonia.scm.search.IndexQueue;
+import sonia.scm.search.LuceneSearchEngine;
+import sonia.scm.search.SearchEngine;
 import sonia.scm.security.AccessTokenCookieIssuer;
 import sonia.scm.security.AuthorizationChangedEventProducer;
 import sonia.scm.security.ConfigurableLoginAttemptHandler;
@@ -279,6 +283,10 @@ class ScmServletModule extends ServletModule {
     bind(NotificationSender.class).to(DefaultNotificationSender.class);
 
     bind(InitializationFinisher.class).to(DefaultInitializationFinisher.class);
+
+    // bind search stuff
+    bind(IndexQueue.class, DefaultIndexQueue.class);
+    bind(SearchEngine.class, LuceneSearchEngine.class);
   }
 
   private <T> void bind(Class<T> clazz, Class<? extends T> defaultImplementation) {
