@@ -24,13 +24,16 @@
 
 package sonia.scm.search;
 
+import com.google.errorprone.annotations.CanIgnoreReturnValue;
 import lombok.Value;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
+import org.apache.lucene.document.Document;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.ByteBuffersDirectory;
@@ -42,9 +45,12 @@ import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static sonia.scm.search.LuceneIndex.FIELD_ID;
+import static sonia.scm.search.LuceneIndex.FIELD_REPOSITORY;
 import static sonia.scm.search.LuceneIndex.FIELD_TYPE;
 
 class LuceneIndexTest {
+
+  private static final Id ONE = Id.of("one");
 
   private Directory directory;
 
@@ -56,7 +62,7 @@ class LuceneIndexTest {
   @Test
   void shouldStoreObject() throws IOException {
     try (LuceneIndex index = createIndex()) {
-      index.store("one", new Storable("Awesome content which should be indexed"));
+      index.store(ONE, new Storable("Awesome content which should be indexed"));
     }
 
     assertHits("value", "content", 1);
@@ -65,16 +71,25 @@ class LuceneIndexTest {
   @Test
   void shouldStoreIdOfObject() throws IOException {
     try (LuceneIndex index = createIndex()) {
-      index.store("one", new Storable("Some text"));
+      index.store(ONE, new Storable("Some text"));
     }
 
     assertHits(FIELD_ID, "one", 1);
   }
 
   @Test
+  void shouldStoreRepositoryOfId() throws IOException {
+    try (LuceneIndex index = createIndex()) {
+      index.store(ONE.withRepository("4211"), new Storable("Some text"));
+    }
+
+    assertHits(FIELD_REPOSITORY, "4211", 1);
+  }
+
+  @Test
   void shouldStoreTypeOfObject() throws IOException {
     try (LuceneIndex index = createIndex()) {
-      index.store("one", new Storable("Some other text"));
+      index.store(ONE, new Storable("Some other text"));
     }
 
     assertHits(FIELD_TYPE, Storable.class.getName(), 1);
@@ -83,21 +98,46 @@ class LuceneIndexTest {
   @Test
   void shouldDeleteById() throws IOException {
     try (LuceneIndex index = createIndex()) {
-      index.store("one", new Storable("Some other text"));
+      index.store(ONE, new Storable("Some other text"));
     }
 
     try (LuceneIndex index = createIndex()) {
-      index.delete("one");
+      index.delete(ONE);
     }
 
     assertHits(FIELD_ID, "one", 0);
   }
 
-  private void assertHits(String field, String value, int expectedHits) throws IOException {
+  @Test
+  void shouldDeleteByIdAndRepository() throws IOException {
+    Id withRepository = ONE.withRepository("4211");
+    try (LuceneIndex index = createIndex()) {
+      index.store(ONE, new Storable("Some other text"));
+      index.store(withRepository, new Storable("New stuff"));
+    }
+
+    try (LuceneIndex index = createIndex()) {
+      index.delete(withRepository);
+    }
+
+    ScoreDoc[] docs = assertHits(FIELD_ID, "one", 1);
+    Document doc = doc(docs[0].doc);
+    assertThat(doc.get("value")).isEqualTo("Some other text");
+  }
+
+  private Document doc(int doc) throws IOException {
+    try (DirectoryReader reader = DirectoryReader.open(directory)) {
+      return reader.document(doc);
+    }
+  }
+
+  @CanIgnoreReturnValue
+  private ScoreDoc[] assertHits(String field, String value, int expectedHits) throws IOException {
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
       IndexSearcher searcher = new IndexSearcher(reader);
       TopDocs docs = searcher.search(new TermQuery(new Term(field, value)), 10);
       assertThat(docs.totalHits.value).isEqualTo(expectedHits);
+      return docs.scoreDocs;
     }
   }
 

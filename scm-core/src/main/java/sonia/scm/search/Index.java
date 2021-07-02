@@ -25,6 +25,6 @@
 package sonia.scm.search;
 
 public interface Index extends AutoCloseable {
-  void store(String id, Object object);
-  void delete(String id);
+  void store(Id id, Object object);
+  void delete(Id id);
 }
