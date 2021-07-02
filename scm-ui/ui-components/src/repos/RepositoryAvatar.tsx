@@ -56,7 +56,7 @@ const renderExtensionPoint = (repository: Repository) => {
 };
 
 const RepositoryAvatar: FC<Props> = ({ repository }) => {
-  return <Avatar className="image is-64x64">{renderExtensionPoint(repository)}</Avatar>;
+  return <Avatar className="image is-32x32">{renderExtensionPoint(repository)}</Avatar>;
 };
 
 export default RepositoryAvatar;
