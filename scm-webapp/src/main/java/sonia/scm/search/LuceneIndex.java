@@ -30,20 +30,14 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanClause;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.TermQuery;
 
 import java.io.IOException;
-import java.util.Optional;
 
 
-/**
- * - UPDATE
- * - delete with id and type
- * - delete everything for a repository
- */
 public class LuceneIndex implements Index {
+
+  @VisibleForTesting
+  static final String FIELD_UID = "_uid";
 
   @VisibleForTesting
   static final String FIELD_ID = "_id";
@@ -64,15 +58,21 @@ public class LuceneIndex implements Index {
 
   @Override
   public void store(Id id, Object object) {
+    String uid = createUid(id, object.getClass());
     Document document = converter.convert(object);
     try {
+      field(document, FIELD_UID, uid);
       field(document, FIELD_ID, id.getValue());
       id.getRepository().ifPresent(repository -> field(document, FIELD_REPOSITORY, repository));
       field(document, FIELD_TYPE, object.getClass().getName());
-      writer.addDocument(document);
+      writer.updateDocument(new Term(FIELD_UID, uid), document);
     } catch (IOException e) {
       throw new SearchEngineException("failed to add document to index");
     }
+  }
+
+  private String createUid(Id id, Class<?> type) {
+    return id.asString() + "/" + type.getName();
   }
 
   private void field(Document document, String type, String name) {
@@ -80,26 +80,29 @@ public class LuceneIndex implements Index {
   }
 
   @Override
-  public void delete(Id id) {
+  public void delete(Id id, Class<?> type) {
     try {
-      Term idTerm = new Term(FIELD_ID, id.getValue());
-      Optional<String> repository = id.getRepository();
-      if (repository.isPresent()) {
-        BooleanQuery query = new BooleanQuery.Builder()
-          .add(new TermQuery(idTerm), BooleanClause.Occur.MUST)
-          .add(new TermQuery(new Term(FIELD_REPOSITORY, repository.get())), BooleanClause.Occur.MUST)
-          .build();
-        writer.deleteDocuments(query);
-      } else {
-        writer.deleteDocuments(idTerm);
-      }
+      writer.deleteDocuments(new Term(FIELD_UID, createUid(id, type)));
     } catch (IOException e) {
       throw new SearchEngineException("failed to delete document from index");
     }
   }
 
   @Override
-  public void close() throws IOException {
-    writer.close();
+  public void deleteByRepository(String repository) {
+    try {
+      writer.deleteDocuments(new Term(FIELD_REPOSITORY, repository));
+    } catch (IOException ex) {
+      throw new SearchEngineException("failed to delete documents from index");
+    }
+  }
+
+  @Override
+  public void close() {
+    try {
+      writer.close();
+    } catch (IOException e) {
+      throw new SearchEngineException("failed to close index writer", e);
+    }
   }
 }

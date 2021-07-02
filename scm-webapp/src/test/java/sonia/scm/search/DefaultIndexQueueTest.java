@@ -90,9 +90,7 @@ class DefaultIndexQueueTest {
     }
     executorService.execute(() -> {
       try (Index index = queue.getQueuedIndex("default")) {
-        index.delete(Id.of(String.valueOf(12)));
-      } catch (Exception ex) {
-        // should never happen
+        index.delete(Id.of(String.valueOf(12)), IndexedNumber.class);
       }
     });
     executorService.shutdown();
@@ -136,8 +134,6 @@ class DefaultIndexQueueTest {
     public void run() {
       try (Index index = queue.getQueuedIndex("default")) {
         index.store(Id.of(String.valueOf(number)), new IndexedNumber(number));
-      } catch (Exception ex) {
-        // should never happen
       }
     }
   }

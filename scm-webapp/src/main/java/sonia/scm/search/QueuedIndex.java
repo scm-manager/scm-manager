@@ -47,12 +47,17 @@ public class QueuedIndex implements Index {
   }
 
   @Override
-  public void delete(Id id) {
-    tasks.add(index -> index.delete(id));
+  public void delete(Id id, Class<?> type) {
+    tasks.add(index -> index.delete(id, type));
   }
 
   @Override
-  public void close() throws Exception {
+  public void deleteByRepository(String repository) {
+    tasks.add(index -> index.deleteByRepository(repository));
+  }
+
+  @Override
+  public void close() {
     IndexQueueTaskWrapper wrappedTask = new IndexQueueTaskWrapper(
       queue.getSearchEngine(), indexName, indexOptions, tasks
     );

@@ -62,6 +62,13 @@ public final class Id {
     return new Id(value, repository);
   }
 
+  public String asString() {
+    if (repository != null) {
+      return value + "/" + repository;
+    }
+    return value;
+  }
+
   public static Id of(@Nonnull String value, String... others) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(value), "primary value is required");
     String idValue = value;

@@ -113,4 +113,16 @@ class IdTest {
     assertThrows(IllegalArgumentException.class, () -> Id.of((ModelObject) null));
   }
 
+  @Test
+  void shouldReturnSimpleIdAsString() {
+    Id id = Id.of("one", "two");
+    assertThat(id.asString()).isEqualTo("one:two");
+  }
+
+  @Test
+  void shouldReturnIdWithRepositoryAsString() {
+    Id id = Id.of("one", "two").withRepository("4211");
+    assertThat(id.asString()).isEqualTo("one:two/4211");
+  }
+
 }
