@@ -24,7 +24,6 @@
 import React from "react";
 import { Repository } from "@scm-manager/ui-types";
 import { CardColumn, DateFromNow } from "@scm-manager/ui-components";
-import RepositoryEntryLink from "./RepositoryEntryLink";
 import RepositoryAvatar from "./RepositoryAvatar";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import { withTranslation, WithTranslation } from "react-i18next";
@@ -51,8 +50,6 @@ const Title = styled.span`
 `;
 
 const RepositoryFlagContainer = styled.div`
-  /*pointer-events: all;*/
-
   .tag {
     margin-left: 0.25rem;
   }
@@ -68,72 +65,6 @@ class RepositoryEntry extends React.Component<Props, State> {
 
   createLink = (repository: Repository) => {
     return `/repo/${repository.namespace}/${repository.name}`;
-  };
-
-  renderBranchesLink = (repository: Repository, repositoryLink: string) => {
-    const { t } = this.props;
-    if (repository._links["branches"]) {
-      return (
-        <RepositoryEntryLink
-          icon="code-branch"
-          to={repositoryLink + "/branches/"}
-          tooltip={t("repositoryRoot.tooltip.branches")}
-        />
-      );
-    }
-    return null;
-  };
-
-  renderTagsLink = (repository: Repository, repositoryLink: string) => {
-    const { t } = this.props;
-    if (repository._links["tags"]) {
-      return (
-        <RepositoryEntryLink icon="tags" to={repositoryLink + "/tags/"} tooltip={t("repositoryRoot.tooltip.tags")} />
-      );
-    }
-    return null;
-  };
-
-  renderChangesetsLink = (repository: Repository, repositoryLink: string) => {
-    const { t } = this.props;
-    if (repository._links["changesets"]) {
-      return (
-        <RepositoryEntryLink
-          icon="exchange-alt"
-          to={repositoryLink + "/code/changesets/"}
-          tooltip={t("repositoryRoot.tooltip.commits")}
-        />
-      );
-    }
-    return null;
-  };
-
-  renderSourcesLink = (repository: Repository, repositoryLink: string) => {
-    const { t } = this.props;
-    if (repository._links["sources"]) {
-      return (
-        <RepositoryEntryLink
-          icon="code"
-          to={repositoryLink + "/code/sources/"}
-          tooltip={t("repositoryRoot.tooltip.sources")}
-        />
-      );
-    }
-    return null;
-  };
-
-  renderModifyLink = (repository: Repository, repositoryLink: string) => {
-    const { t } = this.props;
-    if (repository._links["update"]) {
-      return (
-        <RepositoryEntryLink
-          icon="cog"
-          to={repositoryLink + "/settings/general"}
-          tooltip={t("repositoryRoot.tooltip.settings")}
-        />
-      );
-    }
-    return null;
   };
 
   createFooterRight = (repository: Repository, baseDate?: DateProp) => {
