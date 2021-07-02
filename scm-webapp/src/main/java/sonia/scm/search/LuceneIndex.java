@@ -30,8 +30,12 @@ import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.TermQuery;
 
 import java.io.IOException;
+import java.util.Optional;
 
 public class LuceneIndex implements Index {
 
@@ -40,6 +44,9 @@ public class LuceneIndex implements Index {
 
   @VisibleForTesting
   static final String FIELD_TYPE = "_type";
+
+  @VisibleForTesting
+  static final String FIELD_REPOSITORY = "_repository";
 
   private final DocumentConverter converter;
   private final IndexWriter writer;
@@ -50,10 +57,11 @@ public class LuceneIndex implements Index {
   }
 
   @Override
-  public void store(String id, Object object) {
+  public void store(Id id, Object object) {
     Document document = converter.convert(object);
     try {
-      field(document, FIELD_ID, id);
+      field(document, FIELD_ID, id.getValue());
+      id.getRepository().ifPresent(repository -> field(document, FIELD_REPOSITORY, repository));
       field(document, FIELD_TYPE, object.getClass().getName());
       writer.addDocument(document);
     } catch (IOException e) {
@@ -66,9 +74,19 @@ public class LuceneIndex implements Index {
   }
 
   @Override
-  public void delete(String id) {
+  public void delete(Id id) {
     try {
-      writer.deleteDocuments(new Term(FIELD_ID, id));
+      Term idTerm = new Term(FIELD_ID, id.getValue());
+      Optional<String> repository = id.getRepository();
+      if (repository.isPresent()) {
+        BooleanQuery query = new BooleanQuery.Builder()
+          .add(new TermQuery(idTerm), BooleanClause.Occur.MUST)
+          .add(new TermQuery(new Term(FIELD_REPOSITORY, repository.get())), BooleanClause.Occur.MUST)
+          .build();
+        writer.deleteDocuments(query);
+      } else {
+        writer.deleteDocuments(idTerm);
+      }
     } catch (IOException e) {
       throw new SearchEngineException("failed to delete document from index");
     }
