@@ -37,6 +37,12 @@ import org.apache.lucene.search.TermQuery;
 import java.io.IOException;
 import java.util.Optional;
 
+
+/**
+ * - UPDATE
+ * - delete with id and type
+ * - delete everything for a repository
+ */
 public class LuceneIndex implements Index {
 
   @VisibleForTesting

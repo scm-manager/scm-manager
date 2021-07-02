@@ -28,6 +28,7 @@ import com.google.common.base.Strings;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
 
+import javax.inject.Singleton;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -39,6 +40,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import static java.util.Collections.emptySet;
 
+@Singleton
 public class DocumentConverter {
 
   private final Map<Class<?>, TypeConverter> typeConverter = new ConcurrentHashMap<>();
