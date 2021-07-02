@@ -49,6 +49,7 @@ public class AdminAccountStartupAction implements InitializationStep {
   private static final Logger LOG = LoggerFactory.getLogger(AdminAccountStartupAction.class);
 
   private static final String INITIAL_PASSWORD_PROPERTY = "scm.initialPassword";
+  private static final String INITIAL_USER_PROPERTY = "scm.initialUser";
 
   private final PasswordService passwordService;
   private final UserManager userManager;
@@ -77,16 +78,19 @@ public class AdminAccountStartupAction implements InitializationStep {
     });
   }
 
+  @SuppressWarnings({"java:S2639", "java:S2629"}) // Yes, we use '.' as a regex here
+                                                  // No, we do not need conditional execution for 'replaceAll' here
   private boolean adminUserCreatedWithGivenPassword() {
     String startupTokenByProperty = System.getProperty(INITIAL_PASSWORD_PROPERTY);
     if (startupTokenByProperty != null) {
+      String adminUserName = System.getProperty(INITIAL_USER_PROPERTY, "scmadmin");
       context.runAsAdmin((PrivilegedStartupAction) () ->
-        createAdminUser("scmadmin", "SCM Administrator", "scm-admin@scm-manager.org", startupTokenByProperty));
-      LOG.info("=================================================");
-      LOG.info("==                                             ==");
-      LOG.info("== Created user 'scmadmin' with given password ==");
-      LOG.info("==                                             ==");
-      LOG.info("=================================================");
+        createAdminUser(adminUserName, "SCM Administrator", "scm-admin@scm-manager.org", startupTokenByProperty));
+      LOG.info("================={}========================", adminUserName.replaceAll(".", "="));
+      LOG.info("==               {}                      ==", adminUserName.replaceAll(".", " "));
+      LOG.info("== Created user '{}' with given password ==", adminUserName);
+      LOG.info("==               {}                      ==", adminUserName.replaceAll(".", " "));
+      LOG.info("================={}========================", adminUserName.replaceAll(".", "="));
       return true;
     } else {
       return false;
@@ -121,6 +125,7 @@ public class AdminAccountStartupAction implements InitializationStep {
     });
   }
 
+  @SuppressWarnings("java:S1192") // With duplication the log message is far better readable in the code
   private void createStartupToken() {
     initialToken = randomPasswordGenerator.createRandomPassword();
     LOG.warn("====================================================");

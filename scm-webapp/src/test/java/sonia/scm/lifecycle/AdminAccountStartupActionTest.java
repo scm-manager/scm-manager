@@ -99,6 +99,7 @@ class AdminAccountStartupActionTest {
     @BeforeEach
     void initPasswordGenerator() {
       System.setProperty("scm.initialPassword", "password");
+      System.clearProperty("scm.initialUser");
       lenient().when(passwordService.encryptPassword("password")).thenReturn("encrypted");
     }
 
@@ -106,8 +107,19 @@ class AdminAccountStartupActionTest {
     void shouldCreateAdminAccountIfNoUserExistsAndAssignPermissions() {
       createStartupAction();
 
-      verifyAdminCreated();
-      verifyAdminPermissionsAssigned();
+      verifyAdminCreated("scmadmin");
+      verifyAdminPermissionsAssigned("scmadmin");
+      assertThat(startupAction.done()).isTrue();
+    }
+
+    @Test
+    void shouldUseSpecifiedAdminUsername() {
+      System.setProperty("scm.initialUser", "arthur");
+
+      createStartupAction();
+
+      verifyAdminCreated("arthur");
+      verifyAdminPermissionsAssigned("arthur");
       assertThat(startupAction.done()).isTrue();
     }
 
@@ -118,8 +130,8 @@ class AdminAccountStartupActionTest {
 
       createStartupAction();
 
-      verifyAdminCreated();
-      verifyAdminPermissionsAssigned();
+      verifyAdminCreated("scmadmin");
+      verifyAdminPermissionsAssigned("scmadmin");
       assertThat(startupAction.done()).isTrue();
     }
 
@@ -177,19 +189,19 @@ class AdminAccountStartupActionTest {
     startupAction = new AdminAccountStartupAction(passwordService, userManager, permissionAssigner, randomPasswordGenerator, context);
   }
 
-  private void verifyAdminPermissionsAssigned() {
+  private void verifyAdminPermissionsAssigned(String expectedUsername) {
     ArgumentCaptor<String> usernameCaptor = ArgumentCaptor.forClass(String.class);
     ArgumentCaptor<Collection<PermissionDescriptor>> permissionCaptor = ArgumentCaptor.forClass(Collection.class);
     verify(permissionAssigner).setPermissionsForUser(usernameCaptor.capture(), permissionCaptor.capture());
     String username = usernameCaptor.getValue();
-    assertThat(username).isEqualTo("scmadmin");
+    assertThat(username).isEqualTo(expectedUsername);
     PermissionDescriptor descriptor = permissionCaptor.getValue().iterator().next();
     assertThat(descriptor.getValue()).isEqualTo("*");
   }
 
-  private void verifyAdminCreated() {
+  private void verifyAdminCreated(String expectedUsername) {
     User user = userCaptor.getValue();
-    assertThat(user.getName()).isEqualTo("scmadmin");
+    assertThat(user.getName()).isEqualTo(expectedUsername);
     assertThat(user.getPassword()).isEqualTo("encrypted");
   }
 }
