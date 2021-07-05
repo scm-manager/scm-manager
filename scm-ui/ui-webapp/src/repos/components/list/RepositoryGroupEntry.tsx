@@ -27,6 +27,7 @@ import { CardColumnGroup, Icon, RepositoryEntry } from "@scm-manager/ui-componen
 import { RepositoryGroup } from "@scm-manager/ui-types";
 import { WithTranslation, withTranslation } from "react-i18next";
 import styled from "styled-components";
+import ColumnGroup from "@scm-manager/ui-components/src/layout/ColumnGroup";
 
 type Props = WithTranslation & {
   group: RepositoryGroup;
@@ -55,7 +56,7 @@ class RepositoryGroupEntry extends React.Component<Props> {
     const entries = group.repositories.map((repository, index) => {
       return <RepositoryEntry repository={repository} key={index} />;
     });
-    return <CardColumnGroup name={namespaceHeader} elements={entries} />;
+    return <ColumnGroup name={namespaceHeader} elements={entries} />;
   }
 }
 
