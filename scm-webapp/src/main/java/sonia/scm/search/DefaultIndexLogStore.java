@@ -24,32 +24,36 @@
 
 package sonia.scm.search;
 
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.store.FSDirectory;
-import sonia.scm.SCMContextProvider;
+import sonia.scm.store.DataStore;
+import sonia.scm.store.DataStoreFactory;
 
 import javax.inject.Inject;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import javax.inject.Singleton;
+import java.util.Optional;
 
-public class IndexWriterFactory {
+@Singleton
+public class DefaultIndexLogStore implements IndexLogStore {
 
-  private final Path directory;
-  private final AnalyzerFactory analyzerFactory;
+  private final DataStore<IndexLog> dataStore;
 
   @Inject
-  public IndexWriterFactory(SCMContextProvider context, AnalyzerFactory analyzerFactory) {
-    directory = context.resolve(Paths.get("index"));
-    this.analyzerFactory = analyzerFactory;
+  public DefaultIndexLogStore(DataStoreFactory dataStoreFactory) {
+    this.dataStore = dataStoreFactory.withType(IndexLog.class).withName("index-log").build();
   }
 
-  public IndexWriter create(String name, IndexOptions options) throws IOException {
-    Path indexDirectory = directory.resolve(name);
-    IndexWriterConfig config = new IndexWriterConfig(analyzerFactory.create(options));
-    config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-    return new IndexWriter(FSDirectory.open(indexDirectory), config);
+  @Override
+  public void log(String index,Class<?> type, int version) {
+    String id = id(index, type);
+    dataStore.put(id, new IndexLog(version));
   }
 
+  private String id(String index, Class<?> type) {
+    return index + "_" + type.getName();
+  }
+
+  @Override
+  public Optional<IndexLog> get(String index, Class<?> type) {
+    String id = id(index, type);
+    return dataStore.getOptional(id);
+  }
 }

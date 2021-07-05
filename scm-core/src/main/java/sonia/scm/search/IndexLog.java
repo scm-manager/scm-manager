@@ -24,32 +24,28 @@
 
 package sonia.scm.search;
 
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.store.FSDirectory;
-import sonia.scm.SCMContextProvider;
+import lombok.Data;
+import sonia.scm.xml.XmlInstantAdapter;
 
-import javax.inject.Inject;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import java.time.Instant;
 
-public class IndexWriterFactory {
+@Data
+@XmlRootElement
+@XmlAccessorType(XmlAccessType.FIELD)
+public class IndexLog {
 
-  private final Path directory;
-  private final AnalyzerFactory analyzerFactory;
+  private int version = 1;
+  @XmlJavaTypeAdapter(XmlInstantAdapter.class)
+  private Instant date = Instant.now();
 
-  @Inject
-  public IndexWriterFactory(SCMContextProvider context, AnalyzerFactory analyzerFactory) {
-    directory = context.resolve(Paths.get("index"));
-    this.analyzerFactory = analyzerFactory;
+  public IndexLog() {
   }
 
-  public IndexWriter create(String name, IndexOptions options) throws IOException {
-    Path indexDirectory = directory.resolve(name);
-    IndexWriterConfig config = new IndexWriterConfig(analyzerFactory.create(options));
-    config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-    return new IndexWriter(FSDirectory.open(indexDirectory), config);
+  public IndexLog(int version) {
+    this.version = version;
   }
-
 }
