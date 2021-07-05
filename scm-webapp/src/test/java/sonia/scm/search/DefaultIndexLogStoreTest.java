@@ -24,32 +24,38 @@
 
 package sonia.scm.search;
 
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.store.FSDirectory;
-import sonia.scm.SCMContextProvider;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import sonia.scm.store.InMemoryByteDataStoreFactory;
 
-import javax.inject.Inject;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.Optional;
 
-public class IndexWriterFactory {
+import static org.assertj.core.api.Assertions.assertThat;
 
-  private final Path directory;
-  private final AnalyzerFactory analyzerFactory;
+class DefaultIndexLogStoreTest {
 
-  @Inject
-  public IndexWriterFactory(SCMContextProvider context, AnalyzerFactory analyzerFactory) {
-    directory = context.resolve(Paths.get("index"));
-    this.analyzerFactory = analyzerFactory;
+  private IndexLogStore indexLogStore;
+
+  @BeforeEach
+  void setUpIndexLogStore() {
+    InMemoryByteDataStoreFactory dataStoreFactory = new InMemoryByteDataStoreFactory();
+    indexLogStore = new DefaultIndexLogStore(dataStoreFactory);
   }
 
-  public IndexWriter create(String name, IndexOptions options) throws IOException {
-    Path indexDirectory = directory.resolve(name);
-    IndexWriterConfig config = new IndexWriterConfig(analyzerFactory.create(options));
-    config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-    return new IndexWriter(FSDirectory.open(indexDirectory), config);
+  @Test
+  void shouldReturnEmptyOptional() {
+    Optional<IndexLog> indexLog = indexLogStore.get("index", String.class);
+    assertThat(indexLog).isEmpty();
+  }
+
+  @Test
+  void shouldStoreLog() {
+    indexLogStore.log("index", String.class, 42);
+    Optional<IndexLog> index = indexLogStore.get("index", String.class);
+    assertThat(index).hasValueSatisfying(log -> {
+      assertThat(log.getVersion()).isEqualTo(42);
+      assertThat(log.getDate()).isNotNull();
+    });
   }
 
 }
