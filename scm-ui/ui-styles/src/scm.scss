@@ -60,10 +60,6 @@ $family-monospace: "Courier New", Monaco, Menlo, "Ubuntu Mono", "source-code-pro
   padding: 0 0 0 3.8em !important;
 }
 
-.main {
-  min-height: calc(100vh - 300px);
-}
-
 // shown in top section when pageactions set
 hr.header-with-actions {
   margin-top: -10px;
@@ -92,7 +88,6 @@ hr.header-with-actions {
 }
 
 footer.footer {
-  //height: 100px;
   background-color: $white-ter;
   padding: inherit;
 
