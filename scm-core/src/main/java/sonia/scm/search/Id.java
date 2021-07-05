@@ -27,6 +27,8 @@ package sonia.scm.search;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import sonia.scm.ModelObject;
 import sonia.scm.repository.Repository;
 
@@ -34,6 +36,8 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
+@ToString
+@EqualsAndHashCode
 public final class Id {
 
   private final String value;
