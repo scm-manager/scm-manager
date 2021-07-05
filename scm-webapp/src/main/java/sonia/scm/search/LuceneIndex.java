@@ -93,7 +93,16 @@ public class LuceneIndex implements Index {
     try {
       writer.deleteDocuments(new Term(FIELD_REPOSITORY, repository));
     } catch (IOException ex) {
-      throw new SearchEngineException("failed to delete documents from index");
+      throw new SearchEngineException("failed to delete documents by repository " + repository + " from index");
+    }
+  }
+
+  @Override
+  public void deleteByType(Class<?> type) {
+    try {
+      writer.deleteDocuments(new Term(FIELD_TYPE, type.getName()));
+    } catch (IOException ex) {
+      throw new SearchEngineException("failed to delete documents by repository " + type + " from index");
     }
   }
 

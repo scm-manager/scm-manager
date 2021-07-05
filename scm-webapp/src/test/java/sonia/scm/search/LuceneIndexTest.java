@@ -129,6 +129,21 @@ class LuceneIndexTest {
   }
 
   @Test
+  void shouldDeleteAllByType() throws IOException {
+    try (LuceneIndex index = createIndex()) {
+      index.store(ONE, new Storable("content"));
+      index.store(Id.of("two"), new Storable("content"));
+      index.store(Id.of("three"), new OtherStorable("content"));
+    }
+
+    try (LuceneIndex index = createIndex()) {
+      index.deleteByType(Storable.class);
+    }
+
+    assertHits("value", "content", 1);
+  }
+
+  @Test
   void shouldDeleteByIdAnyType() throws IOException {
     try (LuceneIndex index = createIndex()) {
       index.store(ONE, new Storable("Some text"));
