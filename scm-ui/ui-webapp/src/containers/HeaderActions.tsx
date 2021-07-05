@@ -26,6 +26,7 @@ import React, { FC } from "react";
 import Notifications from "./Notifications";
 import LogoutButton from "./LogoutButton";
 import { Links } from "@scm-manager/ui-types";
+import LoginButton from "./LoginButton";
 
 type Props = {
   burgerMode: boolean;
@@ -37,6 +38,7 @@ const HeaderActions: FC<Props> = ({ burgerMode, links }) => {
     <>
       {!burgerMode ? <Notifications className="navbar-item" /> : null}
       <LogoutButton burgerMode={burgerMode} links={links} />
+      <LoginButton burgerMode={burgerMode} links={links} />
     </>
   );
 };

@@ -58,25 +58,6 @@ const PrimaryNavigation: FC<Props> = ({ links }) => {
     };
   };
 
-  const appendLogin = (navItems: ReactNode[], append: Appender) => {
-    const from = location.pathname;
-    const loginPath = "/login";
-    const to = `${loginPath}?from=${encodeURIComponent(from)}`;
-
-    const props = {
-      links,
-      label: t("primary-navigation.login"),
-      loginUrl: urls.withContextPath(loginPath),
-      from,
-    };
-
-    if (binder.hasExtension("primary-navigation.login", props)) {
-      navItems.push(<ExtensionPoint key="primary-navigation.login" name="primary-navigation.login" props={props} />);
-    } else {
-      append(to, "/login", "primary-navigation.login", "login");
-    }
-  };
-
   const createNavigationItems = () => {
     const navItems: ReactNode[] = [];
 
@@ -110,8 +91,6 @@ const PrimaryNavigation: FC<Props> = ({ links }) => {
         }}
       />
     );
-
-    appendLogin(navItems, append);
 
     return navItems;
   };
