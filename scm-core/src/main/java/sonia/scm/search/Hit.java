@@ -24,9 +24,17 @@
 
 package sonia.scm.search;
 
+import java.time.Instant;
+import java.util.Optional;
+
 public interface Hit {
 
-  String get(String name);
+  Optional<String> get(String name);
+  Optional<Integer> getInteger(String name);
+  Optional<Long> getLong(String name);
+  Optional<Boolean> getBoolean(String name);
+  Optional<Instant> getInstant(String name);
+
   float getScore();
 
 }
