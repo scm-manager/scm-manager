@@ -57,8 +57,8 @@ class DefaultIndexQueueTest {
   @BeforeEach
   void createQueue() throws IOException {
     directory = new ByteBuffersDirectory();
-    IndexWriterFactory factory = mock(IndexWriterFactory.class);
-    when(factory.create(any(String.class), any(IndexOptions.class))).thenAnswer(ic -> {
+    IndexOpener factory = mock(IndexOpener.class);
+    when(factory.openForWrite(any(String.class), any(IndexOptions.class))).thenAnswer(ic -> {
       IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
       config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
       return new IndexWriter(directory, config);
@@ -76,8 +76,8 @@ class DefaultIndexQueueTest {
   @Test
   void shouldWriteToIndex() throws Exception {
     try (Index index = queue.getQueuedIndex("default")) {
-      index.store(Id.of("tricia"), new Account("tricia", "Trillian", "McMillan"));
-      index.store(Id.of("dent"), new Account("dent", "Arthur", "Dent"));
+      index.store(Id.of("tricia"), null, new Account("tricia", "Trillian", "McMillan"));
+      index.store(Id.of("dent"), null, new Account("dent", "Arthur", "Dent"));
     }
     assertDocCount(2);
   }
@@ -133,7 +133,7 @@ class DefaultIndexQueueTest {
     @Override
     public void run() {
       try (Index index = queue.getQueuedIndex("default")) {
-        index.store(Id.of(String.valueOf(number)), new IndexedNumber(number));
+        index.store(Id.of(String.valueOf(number)), null, new IndexedNumber(number));
       }
     }
   }
