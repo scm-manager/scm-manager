@@ -37,4 +37,6 @@ public @interface Indexed {
   String name() default "";
   boolean tokenized() default true;
   Stored stored() default Stored.DEFAULT;
+  boolean defaultQuery() default false;
+  float boost() default 1f;
 }

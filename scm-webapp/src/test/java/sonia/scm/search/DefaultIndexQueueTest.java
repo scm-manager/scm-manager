@@ -35,6 +35,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.io.IOException;
@@ -54,6 +55,9 @@ class DefaultIndexQueueTest {
 
   private DefaultIndexQueue queue;
 
+  @Mock
+  private LuceneQueryBuilderFactory queryBuilderFactory;
+
   @BeforeEach
   void createQueue() throws IOException {
     directory = new ByteBuffersDirectory();
@@ -63,7 +67,7 @@ class DefaultIndexQueueTest {
       config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
       return new IndexWriter(directory, config);
     });
-    SearchEngine engine = new LuceneSearchEngine(factory, new DocumentConverter());
+    SearchEngine engine = new LuceneSearchEngine(factory, new DocumentConverter(), queryBuilderFactory);
     queue = new DefaultIndexQueue(engine);
   }
 

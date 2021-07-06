@@ -68,7 +68,7 @@ public class DocumentConverter {
     for (Field field : type.getDeclaredFields()) {
       Indexed indexed = field.getAnnotation(Indexed.class);
       if (indexed != null) {
-        IndexableFieldFactory fieldFactory = IndexableFieldFactories.create(field, indexed);
+        IndexableFieldFactory fieldFactory = IndexableFields.create(field, indexed);
         Method getter = findGetter(type, field);
         fieldConverters.add(new FieldConverter(field, getter, indexed, fieldFactory));
       }
