@@ -94,8 +94,8 @@ class IndexUpdateListenerTest {
 
     updateListener.contextInitialized(null);
 
-    verify(index).store(eq(Id.of(heartOfGold)), eq(heartOfGold));
-    verify(index).store(eq(Id.of(puzzle42)), eq(puzzle42));
+    verify(index).store(eq(Id.of(heartOfGold)), eq(RepositoryPermissions.read(heartOfGold).asShiroString()), eq(heartOfGold));
+    verify(index).store(eq(Id.of(puzzle42)), eq(RepositoryPermissions.read(puzzle42).asShiroString()), eq(puzzle42));
     verify(index).close();
 
     verify(indexLogStore).log(IndexNames.DEFAULT, Repository.class, IndexUpdateListener.INDEX_VERSION);
@@ -131,7 +131,7 @@ class IndexUpdateListenerTest {
 
     updateListener.handleEvent(event);
 
-    verify(index).store(Id.of(puzzle), puzzle);
+    verify(index).store(Id.of(puzzle), RepositoryPermissions.read(puzzle).asShiroString(), puzzle);
     verify(index).close();
   }
 

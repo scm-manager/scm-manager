@@ -24,7 +24,7 @@
 
 package sonia.scm.search;
 
-import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Strings;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.document.StringField;
@@ -33,20 +33,9 @@ import org.apache.lucene.index.Term;
 
 import java.io.IOException;
 
+import static sonia.scm.search.Fields.*;
 
 public class LuceneIndex implements Index {
-
-  @VisibleForTesting
-  static final String FIELD_UID = "_uid";
-
-  @VisibleForTesting
-  static final String FIELD_ID = "_id";
-
-  @VisibleForTesting
-  static final String FIELD_TYPE = "_type";
-
-  @VisibleForTesting
-  static final String FIELD_REPOSITORY = "_repository";
 
   private final DocumentConverter converter;
   private final IndexWriter writer;
@@ -57,7 +46,7 @@ public class LuceneIndex implements Index {
   }
 
   @Override
-  public void store(Id id, Object object) {
+  public void store(Id id, String permission, Object object) {
     String uid = createUid(id, object.getClass());
     Document document = converter.convert(object);
     try {
@@ -65,6 +54,9 @@ public class LuceneIndex implements Index {
       field(document, FIELD_ID, id.getValue());
       id.getRepository().ifPresent(repository -> field(document, FIELD_REPOSITORY, repository));
       field(document, FIELD_TYPE, object.getClass().getName());
+      if (!Strings.isNullOrEmpty(permission)) {
+        field(document, FIELD_PERMISSION, permission);
+      }
       writer.updateDocument(new Term(FIELD_UID, uid), document);
     } catch (IOException e) {
       throw new SearchEngineException("failed to add document to index");

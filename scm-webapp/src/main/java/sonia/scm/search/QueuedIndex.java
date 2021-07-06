@@ -42,8 +42,8 @@ public class QueuedIndex implements Index {
   }
 
   @Override
-  public void store(Id id, Object object) {
-    tasks.add(index -> index.store(id, object));
+  public void store(Id id, String permission, Object object) {
+    tasks.add(index -> index.store(id, permission, object));
   }
 
   @Override

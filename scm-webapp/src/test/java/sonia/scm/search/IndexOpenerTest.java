@@ -47,14 +47,14 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-class IndexWriterFactoryTest {
+class IndexOpenerTest {
 
   private Path directory;
 
   @Mock
   private AnalyzerFactory analyzerFactory;
 
-  private IndexWriterFactory indexWriterFactory;
+  private IndexOpener indexOpener;
 
   @BeforeEach
   void createIndexWriterFactory(@TempDir Path tempDirectory) {
@@ -62,12 +62,12 @@ class IndexWriterFactoryTest {
     SCMContextProvider context = mock(SCMContextProvider.class);
     when(context.resolve(Paths.get("index"))).thenReturn(tempDirectory);
     when(analyzerFactory.create(any(IndexOptions.class))).thenReturn(new SimpleAnalyzer());
-    indexWriterFactory = new IndexWriterFactory(context, analyzerFactory);
+    indexOpener = new IndexOpener(context, analyzerFactory);
   }
 
   @Test
   void shouldCreateNewIndex() throws IOException {
-    try (IndexWriter writer = indexWriterFactory.create("new-index", IndexOptions.defaults())) {
+    try (IndexWriter writer = indexOpener.openForWrite("new-index", IndexOptions.defaults())) {
       addDoc(writer, "Trillian");
     }
     assertThat(directory.resolve("new-index")).exists();
@@ -75,17 +75,17 @@ class IndexWriterFactoryTest {
 
   @Test
   void shouldOpenExistingIndex() throws IOException {
-    try (IndexWriter writer = indexWriterFactory.create("reused", IndexOptions.defaults())) {
+    try (IndexWriter writer = indexOpener.openForWrite("reused", IndexOptions.defaults())) {
       addDoc(writer, "Dent");
     }
-    try (IndexWriter writer = indexWriterFactory.create("reused", IndexOptions.defaults())) {
+    try (IndexWriter writer = indexOpener.openForWrite("reused", IndexOptions.defaults())) {
       assertThat(writer.getFieldNames()).contains("hitchhiker");
     }
   }
 
   @Test
   void shouldUseAnalyzerFromFactory() throws IOException {
-    try (IndexWriter writer = indexWriterFactory.create("new-index", IndexOptions.defaults())) {
+    try (IndexWriter writer = indexOpener.openForWrite("new-index", IndexOptions.defaults())) {
       assertThat(writer.getAnalyzer()).isInstanceOf(SimpleAnalyzer.class);
     }
   }

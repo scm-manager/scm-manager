@@ -79,8 +79,7 @@ public class IndexUpdateListener implements ServletContextListener {
       if (type == HandlerEventType.DELETE) {
         index.deleteByRepository(repository.getId());
       } else {
-        Id id = Id.of(repository);
-        index.store(id, repository);
+        store(index, repository);
       }
     }
   }
@@ -100,6 +99,10 @@ public class IndexUpdateListener implements ServletContextListener {
     // we have nothing to destroy
   }
 
+  private static void store(Index index, Repository repository) {
+    index.store(Id.of(repository), RepositoryPermissions.read(repository).asShiroString(), repository);
+  }
+
   public static class ReIndexAll implements PrivilegedAction {
 
     private final RepositoryManager repositoryManager;
@@ -115,7 +118,7 @@ public class IndexUpdateListener implements ServletContextListener {
     public void run() {
       try (Index index = queue.getQueuedIndex(IndexNames.DEFAULT)) {
         for (Repository repository : repositoryManager.getAll()) {
-          index.store(Id.of(repository), repository);
+          store(index, repository);
         }
       }
     }

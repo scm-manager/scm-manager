@@ -24,32 +24,12 @@
 
 package sonia.scm.search;
 
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
-import org.apache.lucene.store.FSDirectory;
-import sonia.scm.SCMContextProvider;
+final class Fields {
+  private Fields(){}
 
-import javax.inject.Inject;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-
-public class IndexWriterFactory {
-
-  private final Path directory;
-  private final AnalyzerFactory analyzerFactory;
-
-  @Inject
-  public IndexWriterFactory(SCMContextProvider context, AnalyzerFactory analyzerFactory) {
-    directory = context.resolve(Paths.get("index"));
-    this.analyzerFactory = analyzerFactory;
-  }
-
-  public IndexWriter create(String name, IndexOptions options) throws IOException {
-    Path indexDirectory = directory.resolve(name);
-    IndexWriterConfig config = new IndexWriterConfig(analyzerFactory.create(options));
-    config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-    return new IndexWriter(FSDirectory.open(indexDirectory), config);
-  }
-
+  static final String FIELD_UID = "_uid";
+  static final String FIELD_ID = "_id";
+  static final String FIELD_TYPE = "_type";
+  static final String FIELD_REPOSITORY = "_repository";
+  static final String FIELD_PERMISSION= "_permission";
 }

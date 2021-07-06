@@ -44,10 +44,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static sonia.scm.search.LuceneIndex.FIELD_ID;
-import static sonia.scm.search.LuceneIndex.FIELD_REPOSITORY;
-import static sonia.scm.search.LuceneIndex.FIELD_TYPE;
-import static sonia.scm.search.LuceneIndex.FIELD_UID;
+import static sonia.scm.search.Fields.*;
 
 class LuceneIndexTest {
 
@@ -63,7 +60,7 @@ class LuceneIndexTest {
   @Test
   void shouldStoreObject() throws IOException {
     try (LuceneIndex index = createIndex()) {
-      index.store(ONE, new Storable("Awesome content which should be indexed"));
+      index.store(ONE, null, new Storable("Awesome content which should be indexed"));
     }
 
     assertHits("value", "content", 1);
@@ -72,8 +69,8 @@ class LuceneIndexTest {
   @Test
   void shouldUpdateObject() throws IOException {
     try (LuceneIndex index = createIndex()) {
-      index.store(ONE, new Storable("Awesome content which should be indexed"));
-      index.store(ONE, new Storable("Awesome content"));
+      index.store(ONE, null, new Storable("Awesome content which should be indexed"));
+      index.store(ONE, null, new Storable("Awesome content"));
     }
 
     assertHits("value", "content", 1);
@@ -82,7 +79,7 @@ class LuceneIndexTest {
   @Test
   void shouldStoreUidOfObject() throws IOException {
     try (LuceneIndex index = createIndex()) {
-      index.store(ONE, new Storable("Awesome content which should be indexed"));
+      index.store(ONE, null, new Storable("Awesome content which should be indexed"));
     }
 
     assertHits(FIELD_UID, "one/" + Storable.class.getName(), 1);
@@ -91,7 +88,7 @@ class LuceneIndexTest {
   @Test
   void shouldStoreIdOfObject() throws IOException {
     try (LuceneIndex index = createIndex()) {
-      index.store(ONE, new Storable("Some text"));
+      index.store(ONE, null, new Storable("Some text"));
     }
 
     assertHits(FIELD_ID, "one", 1);
@@ -100,7 +97,7 @@ class LuceneIndexTest {
   @Test
   void shouldStoreRepositoryOfId() throws IOException {
     try (LuceneIndex index = createIndex()) {
-      index.store(ONE.withRepository("4211"), new Storable("Some text"));
+      index.store(ONE.withRepository("4211"), null, new Storable("Some text"));
     }
 
     assertHits(FIELD_REPOSITORY, "4211", 1);
@@ -109,7 +106,7 @@ class LuceneIndexTest {
   @Test
   void shouldStoreTypeOfObject() throws IOException {
     try (LuceneIndex index = createIndex()) {
-      index.store(ONE, new Storable("Some other text"));
+      index.store(ONE, null, new Storable("Some other text"));
     }
 
     assertHits(FIELD_TYPE, Storable.class.getName(), 1);
@@ -118,7 +115,7 @@ class LuceneIndexTest {
   @Test
   void shouldDeleteById() throws IOException {
     try (LuceneIndex index = createIndex()) {
-      index.store(ONE, new Storable("Some other text"));
+      index.store(ONE, null, new Storable("Some other text"));
     }
 
     try (LuceneIndex index = createIndex()) {
@@ -131,9 +128,9 @@ class LuceneIndexTest {
   @Test
   void shouldDeleteAllByType() throws IOException {
     try (LuceneIndex index = createIndex()) {
-      index.store(ONE, new Storable("content"));
-      index.store(Id.of("two"), new Storable("content"));
-      index.store(Id.of("three"), new OtherStorable("content"));
+      index.store(ONE, null, new Storable("content"));
+      index.store(Id.of("two"), null, new Storable("content"));
+      index.store(Id.of("three"), null, new OtherStorable("content"));
     }
 
     try (LuceneIndex index = createIndex()) {
@@ -146,8 +143,8 @@ class LuceneIndexTest {
   @Test
   void shouldDeleteByIdAnyType() throws IOException {
     try (LuceneIndex index = createIndex()) {
-      index.store(ONE, new Storable("Some text"));
-      index.store(ONE, new OtherStorable("Some other text"));
+      index.store(ONE, null, new Storable("Some text"));
+      index.store(ONE, null, new OtherStorable("Some other text"));
     }
 
     try (LuceneIndex index = createIndex()) {
@@ -164,8 +161,8 @@ class LuceneIndexTest {
   void shouldDeleteByIdAndRepository() throws IOException {
     Id withRepository = ONE.withRepository("4211");
     try (LuceneIndex index = createIndex()) {
-      index.store(ONE, new Storable("Some other text"));
-      index.store(withRepository, new Storable("New stuff"));
+      index.store(ONE, null, new Storable("Some other text"));
+      index.store(withRepository, null, new Storable("New stuff"));
     }
 
     try (LuceneIndex index = createIndex()) {
@@ -180,8 +177,8 @@ class LuceneIndexTest {
   @Test
   void shouldDeleteByRepository() throws IOException {
     try (LuceneIndex index = createIndex()) {
-      index.store(ONE.withRepository("4211"), new Storable("Some other text"));
-      index.store(ONE.withRepository("4212"), new Storable("New stuff"));
+      index.store(ONE.withRepository("4211"), null, new Storable("Some other text"));
+      index.store(ONE.withRepository("4212"), null, new Storable("New stuff"));
     }
 
     try (LuceneIndex index = createIndex()) {
@@ -189,6 +186,15 @@ class LuceneIndexTest {
     }
 
     assertHits(FIELD_ID, "one", 1);
+  }
+
+  @Test
+  void shouldStorePermission() throws IOException {
+    try (LuceneIndex index = createIndex()) {
+      index.store(ONE.withRepository("4211"), "repo:4211:read", new Storable("Some other text"));
+    }
+
+    assertHits(FIELD_PERMISSION, "repo:4211:read", 1);
   }
 
   private Document doc(int doc) throws IOException {
