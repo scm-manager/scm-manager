@@ -68,6 +68,7 @@ public class LuceneQueryBuilder extends QueryBuilder {
     try (IndexReader reader = opener.openForRead(indexName)) {
       IndexSearcher searcher = new IndexSearcher(reader);
 
+      // TODO paging and configurable result size
       TopScoreDocCollector topScoreCollector = TopScoreDocCollector.create(10, Integer.MAX_VALUE);
       Collector collector = new PermissionAwareCollector(reader, topScoreCollector);
       searcher.search(query, collector);
