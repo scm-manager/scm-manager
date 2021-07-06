@@ -25,12 +25,15 @@
 package sonia.scm.search;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
-import org.checkerframework.checker.nullness.Opt;
 
 import java.io.IOException;
 import java.time.Instant;
@@ -69,11 +72,10 @@ public class LuceneQueryResult implements QueryResult {
     return hits;
   }
 
+  @JsonSerialize(using = HitSerializer.class)
   public static class LuceneHit implements Hit {
 
-    @JsonProperty
     private final Document document;
-    @JsonProperty
     private final float score;
 
     public LuceneHit(Document document, float score) {
@@ -121,6 +123,34 @@ public class LuceneQueryResult implements QueryResult {
     @Override
     public float getScore() {
       return score;
+    }
+  }
+
+  public static class HitSerializer extends StdSerializer<LuceneHit> {
+    public HitSerializer() {
+      this(null);
+    }
+
+    public HitSerializer(Class<LuceneHit> t) {
+      super(t);
+    }
+
+    @Override
+    public void serialize(LuceneHit doc, JsonGenerator gen, SerializerProvider provider) throws IOException {
+      gen.writeStartObject();
+      gen.writeNumberField("score", doc.score);
+      gen.writeObjectFieldStart("fields");
+
+      for (IndexableField field : doc.document) {
+        String name = field.name();
+        if (!name.startsWith("_")) {
+          // TODO support numeric, date and boolean fields
+          gen.writeStringField(field.name(), field.stringValue());
+        }
+      }
+
+      gen.writeEndObject();
+      gen.writeEndObject();
     }
   }
 
