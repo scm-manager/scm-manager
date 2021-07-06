@@ -24,6 +24,7 @@
 
 package sonia.scm.search;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
@@ -284,7 +285,17 @@ class LuceneQueryBuilderTest {
 
     QueryResult result = query(InetOrgPerson.class, "Arthur");
     ObjectMapper mapper = new ObjectMapper();
-    mapper.writeValue(System.out, result);
+
+    JsonNode root = mapper.valueToTree(result);
+    assertThat(root.get("totalHits").asInt()).isOne();
+
+    JsonNode hit = root.get("hits").get(0);
+    assertThat(hit.get("score").asDouble()).isGreaterThan(0d);
+
+    JsonNode fields = hit.get("fields");
+    assertThat(fields.get("firstName").asText()).isEqualTo("Arthur");
+    assertThat(fields.get("lastName").asText()).isEqualTo("Dent");
+    assertThat(fields.get("_type")).isNull();
   }
 
   private QueryResult query(Class<?> type, String queryString) throws IOException {
