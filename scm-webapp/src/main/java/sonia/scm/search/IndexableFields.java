@@ -31,36 +31,73 @@ import org.apache.lucene.document.StoredField;
 import org.apache.lucene.document.StringField;
 import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexableField;
+import org.apache.lucene.queryparser.flexible.standard.config.PointsConfig;
 
 import java.lang.reflect.Field;
+import java.text.DecimalFormat;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Date;
 
 import static java.util.Collections.singleton;
 
-class IndexableFieldFactories {
-  private IndexableFieldFactories() {}
+class IndexableFields {
+  private IndexableFields() {
+  }
+
+  static PointsConfig pointConfig(Field field) {
+    Class<?> type = field.getType();
+    if (isLong(type) || isDate(type) || isInstant(type)) {
+      return new PointsConfig(new DecimalFormat(), Long.class);
+    } else if (isInteger(type)) {
+      return new PointsConfig(new DecimalFormat(), Integer.class);
+    }
+    return null;
+  }
 
   static IndexableFieldFactory create(Field field, Indexed indexed) {
     Class<?> type = field.getType();
     if (type == String.class) {
       return new StringFieldFactory(indexed);
-    } else if (type == Long.TYPE) {
+    } else if (isLong(type)) {
       return createStorableField(indexed, LONG_STORED_FIELD_FACTORY, LONG_FIELD_FACTORY);
-    } else if (type == Integer.TYPE) {
+    } else if (isInteger(type)) {
       return createStorableField(indexed, INTEGER_STORED_FIELD_FACTORY, INTEGER_FIELD_FACTORY);
-    } else if (type == Boolean.TYPE) {
-      return BOOLEAN_FIELD_FACTORY;
-    } else if (type == Date.class) {
+    } else if (isBoolean(type)) {
+      if (indexed.stored() == Stored.NO) {
+        return BOOLEAN_NOT_STORED_FIELD_FACTORY;
+      } else {
+        return BOOLEAN_FIELD_FACTORY;
+      }
+    } else if (isDate(type)) {
       return createStorableField(indexed, DATE_STORED_FIELD_FACTORY, DATE_FIELD_FACTORY);
-    } else if (type == Instant.class) {
+    } else if (isInstant(type)) {
       return createStorableField(indexed, INSTANT_STORED_FIELD_FACTORY, INSTANT_FIELD_FACTORY);
     } else {
       throw new UnsupportedTypeOfFieldException(
         "type " + type + " of " + field.getName() + " is unsupported."
       );
     }
+  }
+
+  private static boolean isLong(Class<?> type) {
+    return type == Long.TYPE || type == Long.class;
+  }
+
+  private static boolean isInteger(Class<?> type) {
+    return type == Integer.TYPE || type == Integer.class;
+  }
+
+  private static boolean isBoolean(Class<?> type) {
+    return type == Boolean.TYPE || type == Boolean.class;
+  }
+
+  private static boolean isDate(Class<?> type) {
+    return type == Date.class;
+  }
+
+  private static boolean isInstant(Class<?> type) {
+    return type == Instant.class;
   }
 
   private static IndexableFieldFactory createStorableField(Indexed indexed, IndexableFieldFactory storableFactory, IndexableFieldFactory factory) {
@@ -103,7 +140,7 @@ class IndexableFieldFactories {
   );
 
   private static final IndexableFieldFactory LONG_STORED_FIELD_FACTORY = (name, value) -> Arrays.asList(
-    new LongPoint(name, (Long) value), new StoredField("__" + name, (Long) value)
+    new LongPoint(name, (Long) value), new StoredField(name, (Long) value)
   );
 
   private static final IndexableFieldFactory INTEGER_FIELD_FACTORY = (name, value) -> singleton(
@@ -111,11 +148,15 @@ class IndexableFieldFactories {
   );
 
   private static final IndexableFieldFactory INTEGER_STORED_FIELD_FACTORY = (name, value) -> Arrays.asList(
-    new IntPoint(name, (Integer) value), new StoredField("__" + name, (Integer) value)
+    new IntPoint(name, (Integer) value), new StoredField(name, (Integer) value)
   );
 
   private static final IndexableFieldFactory BOOLEAN_FIELD_FACTORY = (name, value) -> singleton(
-    new StoredField(name, value.toString())
+    new StringField(name, value.toString(), Store.YES)
+  );
+
+  private static final IndexableFieldFactory BOOLEAN_NOT_STORED_FIELD_FACTORY = (name, value) -> singleton(
+    new StringField(name, value.toString(), Store.NO)
   );
 
   private static final IndexableFieldFactory DATE_FIELD_FACTORY = (name, value) -> singleton(
@@ -125,7 +166,8 @@ class IndexableFieldFactories {
   private static final IndexableFieldFactory DATE_STORED_FIELD_FACTORY = (name, value) -> {
     long time = ((Date) value).getTime();
     return Arrays.asList(
-      new LongPoint(name, time), new StoredField("__" + name, time)
+      new LongPoint(name, time),
+      new StoredField(name, time)
     );
   };
 
@@ -136,7 +178,8 @@ class IndexableFieldFactories {
   private static final IndexableFieldFactory INSTANT_STORED_FIELD_FACTORY = (name, value) -> {
     long time = ((Instant) value).toEpochMilli();
     return Arrays.asList(
-      new LongPoint(name, time), new StoredField("__" + name, time)
+      new LongPoint(name, time),
+      new StoredField(name, time)
     );
   };
 

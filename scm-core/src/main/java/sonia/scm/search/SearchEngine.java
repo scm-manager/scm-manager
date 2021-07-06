@@ -25,8 +25,16 @@
 package sonia.scm.search;
 
 public interface SearchEngine {
+
   Index getOrCreate(String name, IndexOptions options);
+
   default Index getOrCreate(String name) {
     return getOrCreate(name, IndexOptions.defaults());
+  }
+
+  QueryBuilder search(String name, IndexOptions options);
+
+  default QueryBuilder search(String name) {
+    return search(name, IndexOptions.defaults());
   }
 }

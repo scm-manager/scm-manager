@@ -34,6 +34,7 @@ import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
 import java.util.Date;
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -123,17 +124,23 @@ class DocumentConverterTest {
 
     IndexableField longType = document.getField("longType");
     assertThat(longType.numericValue()).isEqualTo(42L);
-    assertThat(document.getField("__longType")).isNull();
+    assertThat(longType.fieldType().stored()).isFalse();
   }
 
   @Test
   void shouldCreateSeparateFieldForStoredLongValues() {
     Document document = documentConverter.convert(new SupportedTypes());
+    assertPointField(document, "storedLongType", field -> {
+      assertThat(field.numericValue().longValue()).isEqualTo(42L);
+    });
+  }
 
-    IndexableField longType = document.getField("storedLongType");
-    assertThat(longType.numericValue()).isEqualTo(42L);
-    IndexableField storedValue = document.getField("__storedLongType");
-    assertThat(storedValue.numericValue()).isEqualTo(42L);
+  private void assertPointField(Document document, String name, Consumer<IndexableField> consumer) {
+    IndexableField[] fields = document.getFields(name);
+    assertThat(fields)
+      .allSatisfy(consumer)
+      .anySatisfy(field -> assertThat(field.fieldType().stored()).isFalse())
+      .anySatisfy(field -> assertThat(field.fieldType().stored()).isTrue());
   }
 
   @Test
@@ -142,16 +149,15 @@ class DocumentConverterTest {
 
     IndexableField longType = document.getField("intType");
     assertThat(longType.numericValue()).isEqualTo(42);
+    assertThat(longType.fieldType().stored()).isFalse();
   }
 
   @Test
   void shouldCreateSeparateFieldForStoredIntValues() {
     Document document = documentConverter.convert(new SupportedTypes());
-
-    IndexableField longType = document.getField("storedIntType");
-    assertThat(longType.numericValue().intValue()).isEqualTo(42);
-    IndexableField storedValue = document.getField("__storedIntType");
-    assertThat(storedValue.numericValue().intValue()).isEqualTo(42);
+    assertPointField(document, "storedIntType", field -> {
+      assertThat(field.numericValue().intValue()).isEqualTo(42);
+    });
   }
 
   @Test
@@ -175,11 +181,9 @@ class DocumentConverterTest {
   void shouldCreateSeparateFieldForStoredDateValues() {
     Instant now = Instant.now();
     Document document = documentConverter.convert(new DateTypes(now));
-
-    IndexableField field = document.getField("storedDate");
-    assertThat(field.numericValue()).isEqualTo(now.toEpochMilli());
-    IndexableField storedField = document.getField("__storedDate");
-    assertThat(storedField.numericValue()).isEqualTo(now.toEpochMilli());
+    assertPointField(document, "storedDate", field -> {
+      assertThat(field.numericValue().longValue()).isEqualTo(now.toEpochMilli());
+    });
   }
 
   @Test
@@ -195,11 +199,9 @@ class DocumentConverterTest {
   void shouldCreateSeparateFieldForStoredInstantValues() {
     Instant now = Instant.now();
     Document document = documentConverter.convert(new DateTypes(now));
-
-    IndexableField field = document.getField("storedInstant");
-    assertThat(field.numericValue()).isEqualTo(now.toEpochMilli());
-    IndexableField storedField = document.getField("__storedInstant");
-    assertThat(storedField.numericValue()).isEqualTo(now.toEpochMilli());
+    assertPointField(document, "storedInstant", field -> {
+      assertThat(field.numericValue().longValue()).isEqualTo(now.toEpochMilli());
+    });
   }
 
   @Getter
@@ -250,13 +252,13 @@ class DocumentConverterTest {
   @Getter
   public static class SupportedTypes {
     @Indexed
-    private final long longType = 42L;
+    private final Long longType = 42L;
     @Indexed(stored = Stored.YES)
     private final long storedLongType = 42L;
     @Indexed
     private final int intType = 42;
     @Indexed(stored = Stored.YES)
-    private final long storedIntType = 42L;
+    private final Integer storedIntType = 42;
     @Indexed
     private final boolean boolType = true;
   }

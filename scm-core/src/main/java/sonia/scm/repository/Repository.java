@@ -67,13 +67,13 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   private static final long serialVersionUID = 3486560714961909711L;
 
   private String id;
-  @Indexed
+  @Indexed(defaultQuery = true, boost = 1.25f)
   private String namespace;
-  @Indexed
+  @Indexed(defaultQuery = true, boost = 1.5f)
   private String name;
   @Indexed(tokenized = false)
   private String type;
-  @Indexed
+  @Indexed(defaultQuery = true)
   private String description;
   private String contact;
   private Long creationDate;

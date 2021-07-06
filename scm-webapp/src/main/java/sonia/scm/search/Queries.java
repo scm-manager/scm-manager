@@ -24,34 +24,31 @@
 
 package sonia.scm.search;
 
-import javax.inject.Inject;
-import java.io.IOException;
+import org.apache.lucene.index.Term;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TermQuery;
 
-public class LuceneSearchEngine implements SearchEngine {
+import static org.apache.lucene.search.BooleanClause.Occur.MUST;
 
-  private final IndexOpener indexOpener;
-  private final DocumentConverter converter;
-  private final LuceneQueryBuilderFactory queryBuilderFactory;
+final class Queries {
 
-  @Inject
-  public LuceneSearchEngine(IndexOpener indexOpener, DocumentConverter converter, LuceneQueryBuilderFactory queryBuilderFactory) {
-    this.indexOpener = indexOpener;
-    this.converter = converter;
-    this.queryBuilderFactory = queryBuilderFactory;
+  private Queries() {
   }
 
-  @Override
-  public Index getOrCreate(String name, IndexOptions options) {
-    try {
-      return new LuceneIndex(converter, indexOpener.openForWrite(name, options));
-    } catch (IOException ex) {
-      throw new SearchEngineException("failed to open index", ex);
-    }
+  private static Query typeQuery(Class<?> type) {
+    return new TermQuery(new Term(Fields.FIELD_TYPE, type.getName()));
   }
 
-  @Override
-  public QueryBuilder search(String name, IndexOptions options) {
-    return queryBuilderFactory.create(name, options);
+  private static Query repositoryQuery(String repository) {
+    return new TermQuery(new Term(Fields.FIELD_REPOSITORY, repository));
   }
 
+  static Query filter(Query query, QueryBuilder.QueryParams params) {
+    BooleanQuery.Builder builder = new BooleanQuery.Builder()
+      .add(query, MUST)
+      .add(typeQuery(params.getType()), MUST);
+    params.getRepository().ifPresent(repo -> builder.add(repositoryQuery(repo), MUST));
+    return builder.build();
+  }
 }

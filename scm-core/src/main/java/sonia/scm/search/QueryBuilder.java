@@ -24,34 +24,38 @@
 
 package sonia.scm.search;
 
-import javax.inject.Inject;
-import java.io.IOException;
+import lombok.Value;
+import sonia.scm.repository.Repository;
 
-public class LuceneSearchEngine implements SearchEngine {
+import java.util.Optional;
 
-  private final IndexOpener indexOpener;
-  private final DocumentConverter converter;
-  private final LuceneQueryBuilderFactory queryBuilderFactory;
+public abstract class QueryBuilder {
 
-  @Inject
-  public LuceneSearchEngine(IndexOpener indexOpener, DocumentConverter converter, LuceneQueryBuilderFactory queryBuilderFactory) {
-    this.indexOpener = indexOpener;
-    this.converter = converter;
-    this.queryBuilderFactory = queryBuilderFactory;
+  private String repository;
+
+  public QueryBuilder repository(Repository repository) {
+    return repository(repository.getId());
   }
 
-  @Override
-  public Index getOrCreate(String name, IndexOptions options) {
-    try {
-      return new LuceneIndex(converter, indexOpener.openForWrite(name, options));
-    } catch (IOException ex) {
-      throw new SearchEngineException("failed to open index", ex);
+  public QueryBuilder repository(String repository) {
+    this.repository = repository;
+    return this;
+  }
+
+  public QueryResult execute(Class<?> type, String queryString){
+    return execute(new QueryParams(type, repository, queryString));
+  }
+
+  protected abstract QueryResult execute(QueryParams queryParams);
+
+  @Value
+  static class QueryParams {
+    Class<?> type;
+    String repository;
+    String queryString;
+
+    public Optional<String> getRepository() {
+      return Optional.ofNullable(repository);
     }
   }
-
-  @Override
-  public QueryBuilder search(String name, IndexOptions options) {
-    return queryBuilderFactory.create(name, options);
-  }
-
 }
