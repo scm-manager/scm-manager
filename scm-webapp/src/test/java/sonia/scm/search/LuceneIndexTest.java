@@ -44,7 +44,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static sonia.scm.search.Fields.*;
+import static sonia.scm.search.FieldNames.*;
 
 class LuceneIndexTest {
 
@@ -82,7 +82,7 @@ class LuceneIndexTest {
       index.store(ONE, null, new Storable("Awesome content which should be indexed"));
     }
 
-    assertHits(FIELD_UID, "one/" + Storable.class.getName(), 1);
+    assertHits(UID, "one/" + Storable.class.getName(), 1);
   }
 
   @Test
@@ -91,7 +91,7 @@ class LuceneIndexTest {
       index.store(ONE, null, new Storable("Some text"));
     }
 
-    assertHits(FIELD_ID, "one", 1);
+    assertHits(ID, "one", 1);
   }
 
   @Test
@@ -100,7 +100,7 @@ class LuceneIndexTest {
       index.store(ONE.withRepository("4211"), null, new Storable("Some text"));
     }
 
-    assertHits(FIELD_REPOSITORY, "4211", 1);
+    assertHits(REPOSITORY, "4211", 1);
   }
 
   @Test
@@ -109,7 +109,7 @@ class LuceneIndexTest {
       index.store(ONE, null, new Storable("Some other text"));
     }
 
-    assertHits(FIELD_TYPE, Storable.class.getName(), 1);
+    assertHits(TYPE, Storable.class.getName(), 1);
   }
 
   @Test
@@ -122,7 +122,7 @@ class LuceneIndexTest {
       index.delete(ONE, Storable.class);
     }
 
-    assertHits(FIELD_ID, "one", 0);
+    assertHits(ID, "one", 0);
   }
 
   @Test
@@ -151,8 +151,8 @@ class LuceneIndexTest {
       index.delete(ONE, Storable.class);
     }
 
-    assertHits(FIELD_ID, "one", 1);
-    ScoreDoc[] docs = assertHits(FIELD_ID, "one", 1);
+    assertHits(ID, "one", 1);
+    ScoreDoc[] docs = assertHits(ID, "one", 1);
     Document doc = doc(docs[0].doc);
     assertThat(doc.get("value")).isEqualTo("Some other text");
   }
@@ -169,7 +169,7 @@ class LuceneIndexTest {
       index.delete(withRepository, Storable.class);
     }
 
-    ScoreDoc[] docs = assertHits(FIELD_ID, "one", 1);
+    ScoreDoc[] docs = assertHits(ID, "one", 1);
     Document doc = doc(docs[0].doc);
     assertThat(doc.get("value")).isEqualTo("Some other text");
   }
@@ -185,7 +185,7 @@ class LuceneIndexTest {
       index.deleteByRepository("4212");
     }
 
-    assertHits(FIELD_ID, "one", 1);
+    assertHits(ID, "one", 1);
   }
 
   @Test
@@ -194,7 +194,7 @@ class LuceneIndexTest {
       index.store(ONE.withRepository("4211"), "repo:4211:read", new Storable("Some other text"));
     }
 
-    assertHits(FIELD_PERMISSION, "repo:4211:read", 1);
+    assertHits(PERMISSION, "repo:4211:read", 1);
   }
 
   private Document doc(int doc) throws IOException {

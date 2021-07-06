@@ -37,11 +37,11 @@ final class Queries {
   }
 
   private static Query typeQuery(Class<?> type) {
-    return new TermQuery(new Term(Fields.FIELD_TYPE, type.getName()));
+    return new TermQuery(new Term(FieldNames.TYPE, type.getName()));
   }
 
   private static Query repositoryQuery(String repository) {
-    return new TermQuery(new Term(Fields.FIELD_REPOSITORY, repository));
+    return new TermQuery(new Term(FieldNames.REPOSITORY, repository));
   }
 
   static Query filter(Query query, QueryBuilder.QueryParams params) {

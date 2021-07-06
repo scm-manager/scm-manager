@@ -24,12 +24,12 @@
 
 package sonia.scm.search;
 
-final class Fields {
-  private Fields(){}
+final class FieldNames {
+  private FieldNames(){}
 
-  static final String FIELD_UID = "_uid";
-  static final String FIELD_ID = "_id";
-  static final String FIELD_TYPE = "_type";
-  static final String FIELD_REPOSITORY = "_repository";
-  static final String FIELD_PERMISSION= "_permission";
+  static final String UID = "_uid";
+  static final String ID = "_id";
+  static final String TYPE = "_type";
+  static final String REPOSITORY = "_repository";
+  static final String PERMISSION = "_permission";
 }
