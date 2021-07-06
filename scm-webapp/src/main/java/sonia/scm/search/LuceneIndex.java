@@ -33,7 +33,7 @@ import org.apache.lucene.index.Term;
 
 import java.io.IOException;
 
-import static sonia.scm.search.Fields.*;
+import static sonia.scm.search.FieldNames.*;
 
 public class LuceneIndex implements Index {
 
@@ -50,14 +50,14 @@ public class LuceneIndex implements Index {
     String uid = createUid(id, object.getClass());
     Document document = converter.convert(object);
     try {
-      field(document, FIELD_UID, uid);
-      field(document, FIELD_ID, id.getValue());
-      id.getRepository().ifPresent(repository -> field(document, FIELD_REPOSITORY, repository));
-      field(document, FIELD_TYPE, object.getClass().getName());
+      field(document, UID, uid);
+      field(document, ID, id.getValue());
+      id.getRepository().ifPresent(repository -> field(document, REPOSITORY, repository));
+      field(document, TYPE, object.getClass().getName());
       if (!Strings.isNullOrEmpty(permission)) {
-        field(document, FIELD_PERMISSION, permission);
+        field(document, PERMISSION, permission);
       }
-      writer.updateDocument(new Term(FIELD_UID, uid), document);
+      writer.updateDocument(new Term(UID, uid), document);
     } catch (IOException e) {
       throw new SearchEngineException("failed to add document to index");
     }
@@ -74,7 +74,7 @@ public class LuceneIndex implements Index {
   @Override
   public void delete(Id id, Class<?> type) {
     try {
-      writer.deleteDocuments(new Term(FIELD_UID, createUid(id, type)));
+      writer.deleteDocuments(new Term(UID, createUid(id, type)));
     } catch (IOException e) {
       throw new SearchEngineException("failed to delete document from index");
     }
@@ -83,7 +83,7 @@ public class LuceneIndex implements Index {
   @Override
   public void deleteByRepository(String repository) {
     try {
-      writer.deleteDocuments(new Term(FIELD_REPOSITORY, repository));
+      writer.deleteDocuments(new Term(REPOSITORY, repository));
     } catch (IOException ex) {
       throw new SearchEngineException("failed to delete documents by repository " + repository + " from index");
     }
@@ -92,7 +92,7 @@ public class LuceneIndex implements Index {
   @Override
   public void deleteByType(Class<?> type) {
     try {
-      writer.deleteDocuments(new Term(FIELD_TYPE, type.getName()));
+      writer.deleteDocuments(new Term(TYPE, type.getName()));
     } catch (IOException ex) {
       throw new SearchEngineException("failed to delete documents by repository " + type + " from index");
     }

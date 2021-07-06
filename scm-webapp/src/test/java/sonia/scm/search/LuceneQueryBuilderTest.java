@@ -50,7 +50,6 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -168,7 +167,7 @@ class LuceneQueryBuilderTest {
     List<Hit> hits = result.hits();
     assertThat(hits).hasSize(1).allSatisfy(hit -> {
       assertThat(hit.get("content")).contains("Awesome content one");
-      assertThat(hit.get(Fields.FIELD_PERMISSION)).contains("abc");
+      assertThat(hit.get(FieldNames.PERMISSION)).contains("abc");
       assertThat(hit.getScore()).isGreaterThan(0f);
     });
   }
@@ -195,7 +194,7 @@ class LuceneQueryBuilderTest {
     List<Hit> hits = result.hits();
     assertThat(hits).hasSize(1).allSatisfy(hit -> {
       assertThat(hit.get("content")).contains("Awesome content two");
-      assertThat(hit.get(Fields.FIELD_REPOSITORY)).contains("cde");
+      assertThat(hit.get(FieldNames.REPOSITORY)).contains("cde");
       assertThat(hit.getScore()).isGreaterThan(0f);
     });
   }
@@ -307,23 +306,23 @@ class LuceneQueryBuilderTest {
   private Document simpleDoc(String content) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-    document.add(new StringField(Fields.FIELD_TYPE, "java.lang.String", Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, "java.lang.String", Field.Store.YES));
     return document;
   }
 
   private Document permissionDoc(String content, String permission) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-    document.add(new StringField(Fields.FIELD_TYPE, "java.lang.String", Field.Store.YES));
-    document.add(new StringField(Fields.FIELD_PERMISSION, permission, Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, "java.lang.String", Field.Store.YES));
+    document.add(new StringField(FieldNames.PERMISSION, permission, Field.Store.YES));
     return document;
   }
 
   private Document repositoryDoc(String content, String repository) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-    document.add(new StringField(Fields.FIELD_TYPE, "java.lang.String", Field.Store.YES));
-    document.add(new StringField(Fields.FIELD_REPOSITORY, repository, Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, "java.lang.String", Field.Store.YES));
+    document.add(new StringField(FieldNames.REPOSITORY, repository, Field.Store.YES));
     return document;
   }
 
@@ -333,14 +332,14 @@ class LuceneQueryBuilderTest {
     document.add(new TextField("lastName", lastName, Field.Store.YES));
     document.add(new TextField("displayName", displayName, Field.Store.YES));
     document.add(new TextField("carLicense", carLicense, Field.Store.YES));
-    document.add(new StringField(Fields.FIELD_TYPE, InetOrgPerson.class.getName(), Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, InetOrgPerson.class.getName(), Field.Store.YES));
     return document;
   }
 
   private Document personDoc(String lastName) {
     Document document = new Document();
     document.add(new TextField("lastName", lastName, Field.Store.YES));
-    document.add(new StringField(Fields.FIELD_TYPE, Person.class.getName(), Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, Person.class.getName(), Field.Store.YES));
     return document;
   }
 
@@ -353,7 +352,7 @@ class LuceneQueryBuilderTest {
     document.add(new StringField("boolValue", String.valueOf(boolValue), Field.Store.YES));
     document.add(new LongPoint("instantValue", instantValue.toEpochMilli()));
     document.add(new StoredField("instantValue", instantValue.toEpochMilli()));
-    document.add(new StringField(Fields.FIELD_TYPE, Types.class.getName(), Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, Types.class.getName(), Field.Store.YES));
     return document;
   }
 
