@@ -26,13 +26,17 @@ package sonia.scm.search;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
+import org.checkerframework.checker.nullness.Opt;
 
 import java.io.IOException;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class LuceneQueryResult implements QueryResult {
 
@@ -78,8 +82,40 @@ public class LuceneQueryResult implements QueryResult {
     }
 
     @Override
-    public String get(String name) {
-      return document.get(name);
+    public Optional<String> get(String name) {
+      return Optional.ofNullable(document.get(name));
+    }
+
+    @Override
+    public Optional<Integer> getInteger(String name) {
+      IndexableField field = document.getField(name);
+      if (field != null) {
+        return Optional.of(field.numericValue().intValue());
+      }
+      return Optional.empty();
+    }
+
+    @Override
+    public Optional<Long> getLong(String name) {
+      IndexableField field = document.getField(name);
+      if (field != null) {
+        return Optional.of(field.numericValue().longValue());
+      }
+      return Optional.empty();
+    }
+
+    @Override
+    public Optional<Boolean> getBoolean(String name) {
+      IndexableField field = document.getField(name);
+      if (field != null) {
+        return Optional.of(Boolean.parseBoolean(field.stringValue()));
+      }
+      return Optional.empty();
+    }
+
+    @Override
+    public Optional<Instant> getInstant(String name) {
+      return getLong(name).map(Instant::ofEpochMilli);
     }
 
     @Override

@@ -100,7 +100,6 @@ class LuceneQueryBuilderTest {
     assertThat(result.totalHits()).isOne();
   }
 
-
   @Test
   void shouldIgnoreNonDefaultFieldsForBestGuessQuery() throws IOException {
     try (IndexWriter writer = writer()) {
@@ -123,10 +122,10 @@ class LuceneQueryBuilderTest {
 
     List<Hit> hits = result.hits();
     Hit arthur = hits.get(0);
-    assertThat(arthur.get("firstName")).isEqualTo("Arthur");
+    assertThat(arthur.get("firstName")).contains("Arthur");
 
     Hit fake = hits.get(1);
-    assertThat(fake.get("firstName")).isEqualTo("Fake");
+    assertThat(fake.get("firstName")).contains("Fake");
 
     assertThat(arthur.getScore()).isGreaterThan(fake.getScore());
   }
@@ -168,8 +167,8 @@ class LuceneQueryBuilderTest {
 
     List<Hit> hits = result.hits();
     assertThat(hits).hasSize(1).allSatisfy(hit -> {
-      assertThat(hit.get("content")).isEqualTo("Awesome content one");
-      assertThat(hit.get(Fields.FIELD_PERMISSION)).isEqualTo("abc");
+      assertThat(hit.get("content")).contains("Awesome content one");
+      assertThat(hit.get(Fields.FIELD_PERMISSION)).contains("abc");
       assertThat(hit.getScore()).isGreaterThan(0f);
     });
   }
@@ -195,9 +194,23 @@ class LuceneQueryBuilderTest {
 
     List<Hit> hits = result.hits();
     assertThat(hits).hasSize(1).allSatisfy(hit -> {
-      assertThat(hit.get("content")).isEqualTo("Awesome content two");
-      assertThat(hit.get(Fields.FIELD_REPOSITORY)).isEqualTo("cde");
+      assertThat(hit.get("content")).contains("Awesome content two");
+      assertThat(hit.get(Fields.FIELD_REPOSITORY)).contains("cde");
       assertThat(hit.getScore()).isGreaterThan(0f);
+    });
+  }
+
+  @Test
+  void shouldReturnStringFields() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(simpleDoc("Awesome"));
+    }
+
+    QueryResult result = query(String.class, "content:awesome");
+    assertThat(result.totalHits()).isOne();
+    assertThat(result.hits()).allSatisfy(hit -> {
+      assertThat(hit.get("content")).contains("Awesome");
+      assertThat(hit.get("nonExisting")).isEmpty();
     });
   }
 
@@ -210,6 +223,10 @@ class LuceneQueryBuilderTest {
 
     QueryResult result = query(Types.class, "intValue:[0 TO 100]");
     assertThat(result.totalHits()).isOne();
+    assertThat(result.hits()).allSatisfy(hit -> {
+      assertThat(hit.getInteger("intValue")).contains(42);
+      assertThat(hit.getInteger("nonExisting")).isEmpty();
+    });
   }
 
   @Test
@@ -221,11 +238,15 @@ class LuceneQueryBuilderTest {
 
     QueryResult result = query(Types.class, "longValue:[0 TO 100]");
     assertThat(result.totalHits()).isOne();
+    assertThat(result.hits()).allSatisfy(hit -> {
+      assertThat(hit.getLong("longValue")).contains(21L);
+      assertThat(hit.getLong("nonExisting")).isEmpty();
+    });
   }
 
   @Test
   void shouldSupportInstantRangeQueries() throws IOException {
-    Instant now = Instant.now();
+    Instant now = Instant.ofEpochMilli(Instant.now().toEpochMilli());
     try (IndexWriter writer = writer()) {
       writer.addDocument(typesDoc(42, 21L, false, now));
     }
@@ -236,6 +257,10 @@ class LuceneQueryBuilderTest {
 
     QueryResult result = query(Types.class, queryString);
     assertThat(result.totalHits()).isOne();
+    assertThat(result.hits()).allSatisfy(hit -> {
+      assertThat(hit.getInstant("instantValue")).contains(now);
+      assertThat(hit.getInstant("nonExisting")).isEmpty();
+    });
   }
 
   @Test
@@ -246,6 +271,10 @@ class LuceneQueryBuilderTest {
 
     QueryResult result = query(Types.class, "boolValue:true");
     assertThat(result.totalHits()).isOne();
+    assertThat(result.hits()).allSatisfy(hit -> {
+      assertThat(hit.getBoolean("boolValue")).contains(Boolean.TRUE);
+      assertThat(hit.getBoolean("nonExisting")).isEmpty();
+    });
   }
 
   @Test
@@ -330,13 +359,13 @@ class LuceneQueryBuilderTest {
 
   static class Types {
 
-    @Indexed
+    @Indexed(stored = Stored.YES)
     private Integer intValue;
-    @Indexed
+    @Indexed(stored = Stored.YES)
     private long longValue;
-    @Indexed
+    @Indexed(stored = Stored.YES)
     private boolean boolValue;
-    @Indexed
+    @Indexed(stored = Stored.YES)
     private Instant instantValue;
 
   }
