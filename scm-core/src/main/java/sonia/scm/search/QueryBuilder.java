@@ -32,6 +32,8 @@ import java.util.Optional;
 public abstract class QueryBuilder {
 
   private String repository;
+  private int start = 0;
+  private int limit = 10;
 
   public QueryBuilder repository(Repository repository) {
     return repository(repository.getId());
@@ -42,8 +44,18 @@ public abstract class QueryBuilder {
     return this;
   }
 
+  public QueryBuilder start(int start) {
+    this.start = start;
+    return this;
+  }
+
+  public QueryBuilder limit(int limit) {
+    this.limit = limit;
+    return this;
+  }
+
   public QueryResult execute(Class<?> type, String queryString){
-    return execute(new QueryParams(type, repository, queryString));
+    return execute(new QueryParams(type, repository, queryString, start, limit));
   }
 
   protected abstract QueryResult execute(QueryParams queryParams);
@@ -53,6 +65,8 @@ public abstract class QueryBuilder {
     Class<?> type;
     String repository;
     String queryString;
+    int start;
+    int limit;
 
     public Optional<String> getRepository() {
       return Optional.ofNullable(repository);

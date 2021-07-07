@@ -34,9 +34,11 @@ import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser;
 import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
+import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -65,18 +67,26 @@ public class LuceneQueryBuilder extends QueryBuilder {
     try (IndexReader reader = opener.openForRead(indexName)) {
       IndexSearcher searcher = new IndexSearcher(reader);
 
-      // TODO paging and configurable result size
-      TopScoreDocCollector topScoreCollector = TopScoreDocCollector.create(10, Integer.MAX_VALUE);
+      TopScoreDocCollector topScoreCollector = createTopScoreCollector(queryParams);
       Collector collector = new PermissionAwareCollector(reader, topScoreCollector);
       searcher.search(query, collector);
 
       QueryResultFactory resultFactory = new QueryResultFactory(analyzer, searcher, searchableType, query);
-      return resultFactory.create(topScoreCollector.topDocs());
+      return resultFactory.create(getTopDocs(queryParams, topScoreCollector));
     } catch (IOException e) {
       throw new SearchEngineException("failed to search index", e);
     } catch (InvalidTokenOffsetsException e) {
       throw new SearchEngineException("failed to highlight results", e);
     }
+  }
+
+  @Nonnull
+  private TopScoreDocCollector createTopScoreCollector(QueryParams queryParams) {
+    return TopScoreDocCollector.create(queryParams.getStart() + queryParams.getLimit(), Integer.MAX_VALUE);
+  }
+
+  private TopDocs getTopDocs(QueryParams queryParams, TopScoreDocCollector topScoreCollector) {
+    return topScoreCollector.topDocs(queryParams.getStart(), queryParams.getLimit());
   }
 
   private Query createQuery(SearchableType searchableType, QueryParams queryParams, String queryString) {

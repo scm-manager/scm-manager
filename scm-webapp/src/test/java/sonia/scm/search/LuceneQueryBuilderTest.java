@@ -53,6 +53,7 @@ import java.io.IOException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.when;
@@ -292,6 +293,58 @@ class LuceneQueryBuilderTest {
   }
 
   @Test
+  void shouldLimitHitsByDefaultSize() throws IOException {
+    try (IndexWriter writer = writer()) {
+      for (int i=0; i<20; i++)
+      writer.addDocument(simpleDoc("counter " + i));
+    }
+
+    QueryResult result = query(Simple.class, "content:counter");
+    assertThat(result.getTotalHits()).isEqualTo(20L);
+    assertThat(result.getHits()).hasSize(10);
+  }
+
+  @Test
+  void shouldLimitHitsByConfiguredSize() throws IOException {
+    try (IndexWriter writer = writer()) {
+      for (int i=0; i<20; i++)
+        writer.addDocument(simpleDoc("counter " + (i + 1)));
+    }
+
+    QueryResult result = query(Simple.class, "content:counter", null, 2);
+    assertThat(result.getTotalHits()).isEqualTo(20L);
+    assertThat(result.getHits()).hasSize(2);
+
+    assertContainsValues(
+      result, "content", "counter 1", "counter 2"
+    );
+  }
+
+  @Test
+  void shouldRespectStartValue() throws IOException {
+    try (IndexWriter writer = writer()) {
+      for (int i=0; i<20; i++)
+        writer.addDocument(simpleDoc("counter " + (i + 1)));
+    }
+
+    QueryResult result = query(Simple.class, "content:counter", 10, 3);
+    assertThat(result.getTotalHits()).isEqualTo(20L);
+    assertThat(result.getHits()).hasSize(3);
+
+    assertContainsValues(
+      result, "content", "counter 11", "counter 12", "counter 13"
+    );
+  }
+
+  private void assertContainsValues(QueryResult result, String fieldName, Object... expectedValues) {
+    List<Object> values = result.getHits().stream().map(hit -> {
+      Hit.ValueField content = (Hit.ValueField) hit.getFields().get(fieldName);
+      return content.getValue();
+    }).collect(Collectors.toList());
+    assertThat(values).containsExactly(expectedValues);
+  }
+
+  @Test
   void shouldBeAbleToMarshalQueryResultToJson() throws IOException {
     try (IndexWriter writer = writer()) {
       writer.addDocument(inetOrgPersonDoc("Arthur", "Dent", "Arthur Dent", "4211"));
@@ -339,11 +392,21 @@ class LuceneQueryBuilderTest {
   }
 
   private QueryResult query(Class<?> type, String queryString) throws IOException {
+    return query(type, queryString, null, null);
+  }
+
+  private QueryResult query(Class<?> type, String queryString, Integer start, Integer limit) throws IOException {
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
       when(opener.openForRead("default")).thenReturn(reader);
       LuceneQueryBuilder builder = new LuceneQueryBuilder(
         opener, "default", new StandardAnalyzer()
       );
+      if (start != null) {
+        builder.start(start);
+      }
+      if (limit != null) {
+        builder.limit(limit);
+      }
       return builder.execute(type, queryString);
     }
   }
