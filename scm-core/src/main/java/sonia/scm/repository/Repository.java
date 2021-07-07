@@ -67,16 +67,20 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   private static final long serialVersionUID = 3486560714961909711L;
 
   private String id;
+
   @Indexed(defaultQuery = true, boost = 1.25f)
   private String namespace;
+
   @Indexed(defaultQuery = true, boost = 1.5f)
   private String name;
-  @Indexed(tokenized = false)
+  @Indexed(type = Indexed.Type.SEARCHABLE)
   private String type;
   @Indexed(defaultQuery = true)
   private String description;
   private String contact;
+  @Indexed
   private Long creationDate;
+  @Indexed
   private Long lastModified;
   @XmlTransient
   private List<HealthCheckFailure> healthCheckFailures;

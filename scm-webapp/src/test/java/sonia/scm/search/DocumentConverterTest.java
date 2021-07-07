@@ -27,13 +27,15 @@ package sonia.scm.search;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.apache.lucene.document.Document;
+import org.apache.lucene.document.StoredField;
+import org.apache.lucene.document.StringField;
+import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.index.IndexableFieldType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -66,26 +68,24 @@ class DocumentConverterTest {
   }
 
   @Test
-  void shouldIndexStoredAndTokenizedByDefault() {
+  void shouldBeIndexedAsTextFieldByDefault() {
     Document document = documentConverter.convert(new ParamSample());
 
-    IndexableFieldType fieldType = document.getField("username").fieldType();
-    assertThat(fieldType.stored()).isTrue();
-    assertThat(fieldType.tokenized()).isTrue();
+    assertThat(document.getField("username")).isInstanceOf(TextField.class);
   }
 
   @Test
-  void shouldRespectStoredParameter() {
+  void shouldBeIndexedAsStringField() {
     Document document = documentConverter.convert(new ParamSample());
 
-    assertThat(document.getField("notStored").fieldType().stored()).isFalse();
+    assertThat(document.getField("searchable")).isInstanceOf(StringField.class);
   }
 
   @Test
-  void shouldRespectTokenizedParameter() {
+  void shouldBeIndexedAsStoredField() {
     Document document = documentConverter.convert(new ParamSample());
 
-    assertThat(document.getField("notTokenized").fieldType().tokenized()).isFalse();
+    assertThat(document.getField("storedOnly")).isInstanceOf(StoredField.class);
   }
 
   @Test
@@ -119,20 +119,86 @@ class DocumentConverterTest {
   }
 
   @Test
-  void shouldSupportLongFields() {
+  void shouldStoreLongFieldsAsPointAndStoredByDefault() {
     Document document = documentConverter.convert(new SupportedTypes());
 
-    IndexableField longType = document.getField("longType");
-    assertThat(longType.numericValue()).isEqualTo(42L);
-    assertThat(longType.fieldType().stored()).isFalse();
+    assertPointField(document, "longType",
+      field -> assertThat(field.numericValue().longValue()).isEqualTo(42L)
+    );
   }
 
   @Test
-  void shouldCreateSeparateFieldForStoredLongValues() {
+  void shouldStoreLongFieldAsStored() {
     Document document = documentConverter.convert(new SupportedTypes());
-    assertPointField(document, "storedLongType", field -> {
-      assertThat(field.numericValue().longValue()).isEqualTo(42L);
-    });
+
+    IndexableField field = document.getField("storedOnlyLongType");
+    assertThat(field).isInstanceOf(StoredField.class);
+    assertThat(field.numericValue().longValue()).isEqualTo(42L);
+  }
+
+  @Test
+  void shouldStoreIntegerFieldsAsPointAndStoredByDefault() {
+    Document document = documentConverter.convert(new SupportedTypes());
+
+    assertPointField(document, "intType",
+      field -> assertThat(field.numericValue().intValue()).isEqualTo(42)
+    );
+  }
+
+  @Test
+  void shouldStoreIntegerFieldAsStored() {
+    Document document = documentConverter.convert(new SupportedTypes());
+
+    IndexableField field = document.getField("storedOnlyIntegerType");
+    assertThat(field).isInstanceOf(StoredField.class);
+    assertThat(field.numericValue().intValue()).isEqualTo(42);
+  }
+
+  @Test
+  void shouldStoreBooleanFieldsAsStringField() {
+    Document document = documentConverter.convert(new SupportedTypes());
+
+    IndexableField field = document.getField("boolType");
+    assertThat(field).isInstanceOf(StringField.class);
+    assertThat(field.stringValue()).isEqualTo("true");
+    assertThat(field.fieldType().stored()).isTrue();
+  }
+
+  @Test
+  void shouldStoreBooleanFieldAsStored() {
+    Document document = documentConverter.convert(new SupportedTypes());
+
+    IndexableField field = document.getField("storedOnlyBoolType");
+    assertThat(field).isInstanceOf(StoredField.class);
+    assertThat(field.stringValue()).isEqualTo("true");
+  }
+
+  @Test
+  void shouldStoreInstantFieldsAsPointAndStoredByDefault() {
+    Instant now = Instant.now();
+    Document document = documentConverter.convert(new DateTypes(now));
+
+    assertPointField(document, "instant",
+      field -> assertThat(field.numericValue().longValue()).isEqualTo(now.toEpochMilli())
+    );
+  }
+
+  @Test
+  void shouldStoreInstantFieldAsStored() {
+    Instant now = Instant.now();
+    Document document = documentConverter.convert(new DateTypes(now));
+
+    IndexableField field = document.getField("storedOnlyInstant");
+    assertThat(field).isInstanceOf(StoredField.class);
+    assertThat(field.numericValue().longValue()).isEqualTo(now.toEpochMilli());
+  }
+
+  @Test
+  void shouldCreateNoFieldForNullValues() {
+    Document document = documentConverter.convert(new Person("Trillian", null));
+
+    assertThat(document.getField("firstName")).isNotNull();
+    assertThat(document.getField("lastName")).isNull();
   }
 
   private void assertPointField(Document document, String name, Consumer<IndexableField> consumer) {
@@ -141,67 +207,6 @@ class DocumentConverterTest {
       .allSatisfy(consumer)
       .anySatisfy(field -> assertThat(field.fieldType().stored()).isFalse())
       .anySatisfy(field -> assertThat(field.fieldType().stored()).isTrue());
-  }
-
-  @Test
-  void shouldSupportIntFields() {
-    Document document = documentConverter.convert(new SupportedTypes());
-
-    IndexableField longType = document.getField("intType");
-    assertThat(longType.numericValue()).isEqualTo(42);
-    assertThat(longType.fieldType().stored()).isFalse();
-  }
-
-  @Test
-  void shouldCreateSeparateFieldForStoredIntValues() {
-    Document document = documentConverter.convert(new SupportedTypes());
-    assertPointField(document, "storedIntType", field -> {
-      assertThat(field.numericValue().intValue()).isEqualTo(42);
-    });
-  }
-
-  @Test
-  void shouldSupportBooleanFields() {
-    Document document = documentConverter.convert(new SupportedTypes());
-
-    IndexableField longType = document.getField("boolType");
-    assertThat(longType.stringValue()).isEqualTo("true");
-  }
-
-  @Test
-  void shouldSupportDateFields() {
-    Instant now = Instant.now();
-    Document document = documentConverter.convert(new DateTypes(now));
-
-    IndexableField field = document.getField("date");
-    assertThat(field.numericValue()).isEqualTo(now.toEpochMilli());
-  }
-
-  @Test
-  void shouldCreateSeparateFieldForStoredDateValues() {
-    Instant now = Instant.now();
-    Document document = documentConverter.convert(new DateTypes(now));
-    assertPointField(document, "storedDate", field -> {
-      assertThat(field.numericValue().longValue()).isEqualTo(now.toEpochMilli());
-    });
-  }
-
-  @Test
-  void shouldSupportInstantFields() {
-    Instant now = Instant.now();
-    Document document = documentConverter.convert(new DateTypes(now));
-
-    IndexableField field = document.getField("instant");
-    assertThat(field.numericValue()).isEqualTo(now.toEpochMilli());
-  }
-
-  @Test
-  void shouldCreateSeparateFieldForStoredInstantValues() {
-    Instant now = Instant.now();
-    Document document = documentConverter.convert(new DateTypes(now));
-    assertPointField(document, "storedInstant", field -> {
-      assertThat(field.numericValue().longValue()).isEqualTo(now.toEpochMilli());
-    });
   }
 
   @Getter
@@ -229,11 +234,11 @@ class DocumentConverterTest {
     @Indexed(name = "username")
     private final String name = "dent";
 
-    @Indexed(stored = Stored.NO)
-    private final String notStored = "--";
+    @Indexed(type = Indexed.Type.SEARCHABLE)
+    private final String searchable = "--";
 
-    @Indexed(tokenized = false)
-    private final String notTokenized = "--";
+    @Indexed(type = Indexed.Type.STORED_ONLY)
+    private final String storedOnly = "--";
 
     private final String notIndexed = "--";
   }
@@ -253,14 +258,18 @@ class DocumentConverterTest {
   public static class SupportedTypes {
     @Indexed
     private final Long longType = 42L;
-    @Indexed(stored = Stored.YES)
-    private final long storedLongType = 42L;
+    @Indexed(type = Indexed.Type.STORED_ONLY)
+    private final long storedOnlyLongType = 42L;
+
     @Indexed
     private final int intType = 42;
-    @Indexed(stored = Stored.YES)
-    private final Integer storedIntType = 42;
+    @Indexed(type = Indexed.Type.STORED_ONLY)
+    private final Integer storedOnlyIntegerType = 42;
+
     @Indexed
     private final boolean boolType = true;
+    @Indexed(type = Indexed.Type.STORED_ONLY)
+    private final boolean storedOnlyBoolType = true;
   }
 
   @Getter
@@ -268,20 +277,12 @@ class DocumentConverterTest {
     @Indexed
     private final Instant instant;
 
-    @Indexed(stored = Stored.YES)
-    private final Instant storedInstant;
-
-    @Indexed
-    private final Date date;
-
-    @Indexed(stored = Stored.YES)
-    private final Date storedDate;
+    @Indexed(type = Indexed.Type.STORED_ONLY)
+    private final Instant storedOnlyInstant;
 
     private DateTypes(Instant instant) {
       this.instant = instant;
-      this.storedInstant = instant;
-      this.date = Date.from(instant);
-      this.storedDate = Date.from(instant);
+      this.storedOnlyInstant = instant;
     }
   }
 }

@@ -34,9 +34,38 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Indexed {
+
   String name() default "";
-  boolean tokenized() default true;
-  Stored stored() default Stored.DEFAULT;
+  Type type() default Type.TOKENIZED;
+
   boolean defaultQuery() default false;
   float boost() default 1f;
+
+  enum Type {
+    TOKENIZED(true, true, true),
+    SEARCHABLE(false, true, true),
+    STORED_ONLY(false, false, true);
+
+    private final boolean tokenized;
+    private final boolean searchable;
+    private final boolean stored;
+
+    Type(boolean tokenized, boolean searchable, boolean stored) {
+      this.tokenized = tokenized;
+      this.searchable = searchable;
+      this.stored = stored;
+    }
+
+    public boolean isTokenized() {
+      return tokenized;
+    }
+
+    public boolean isSearchable() {
+      return searchable;
+    }
+
+    public boolean isStored() {
+      return stored;
+    }
+  }
 }
