@@ -30,6 +30,12 @@ import sonia.scm.search.QueryResult;
 import sonia.scm.search.SearchEngine;
 
 import javax.inject.Inject;
+import javax.validation.Valid;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
+import javax.ws.rs.BeanParam;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -48,8 +54,28 @@ public class SearchResource {
 
   @GET
   @Produces(MediaType.APPLICATION_JSON)
-  public QueryResult search(@QueryParam("query") String query) {
+  public QueryResult search(@Valid @BeanParam QueryParameters params) {
     return engine.search(IndexNames.DEFAULT)
-      .execute(Repository.class, query);
+      .start(params.start)
+      .limit(params.limit)
+      .execute(Repository.class, params.query);
+  }
+
+  public static class QueryParameters {
+
+    @Size(min = 2)
+    @QueryParam("q")
+    private String query;
+
+    @Min(0)
+    @QueryParam("start")
+    @DefaultValue("0")
+    private int start = 0;
+
+    @Min(1)
+    @Max(100)
+    @QueryParam("limit")
+    @DefaultValue("10")
+    private int limit = 0;
   }
 }
