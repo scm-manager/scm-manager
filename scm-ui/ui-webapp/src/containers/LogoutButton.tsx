@@ -28,7 +28,7 @@ import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
 import { Links } from "@scm-manager/ui-types";
 import classNames from "classnames";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 type Props = {
@@ -37,7 +37,7 @@ type Props = {
   burgerMode: boolean;
 };
 
-const StyledLogoutButton = styled.div`
+const StyledLogoutButton = styled(Link)`
   @media screen and (max-width: ${devices.desktop.width}px) {
     border-top: 1px solid white;
     margin-top: 1rem;
@@ -52,7 +52,6 @@ const StyledLogoutButton = styled.div`
 
 const LogoutButton: FC<Props> = ({ burgerMode, links, className }) => {
   const [t] = useTranslation("commons");
-  const history = useHistory();
 
   const extensionProps = {
     links,
@@ -66,7 +65,7 @@ const LogoutButton: FC<Props> = ({ burgerMode, links, className }) => {
       return (
         <StyledLogoutButton
           data-testid="primary-navigation-logout"
-          onClick={() => history.push({ pathname: "/logout" })}
+          to={"/logout"}
           className={classNames("is-align-items-center", "navbar-item", className)}
         >
           <Icon
