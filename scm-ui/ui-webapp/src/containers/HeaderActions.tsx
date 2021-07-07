@@ -22,11 +22,25 @@
  * SOFTWARE.
  */
 
-import { Embedded, Links } from "./hal";
+import React, { FC } from "react";
+import Notifications from "./Notifications";
+import LogoutButton from "./LogoutButton";
+import { Links } from "@scm-manager/ui-types";
+import LoginButton from "./LoginButton";
 
-export type IndexResources = {
-  version: string;
-  initialization?: string;
-  _links: Links;
-  _embedded?: Embedded;
+type Props = {
+  burgerMode: boolean;
+  links: Links;
 };
+
+const HeaderActions: FC<Props> = ({ burgerMode, links }) => {
+  return (
+    <>
+      {!burgerMode ? <Notifications className="navbar-item" /> : null}
+      <LogoutButton burgerMode={burgerMode} links={links} />
+      <LoginButton burgerMode={burgerMode} links={links} />
+    </>
+  );
+};
+
+export default HeaderActions;

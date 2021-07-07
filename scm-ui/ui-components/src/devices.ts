@@ -30,20 +30,20 @@ export type Device = {
 
 export const devices = {
   mobile: {
-    width: 768
+    width: 768,
   },
   tablet: {
-    width: 769
+    width: 769,
   },
   desktop: {
-    width: 1024
+    width: 1024,
   },
   widescreen: {
-    width: 1216
+    width: 1216,
   },
   fullhd: {
-    width: 1408
-  }
+    width: 1408,
+  },
 };
 
 export type DeviceType = keyof typeof devices;
