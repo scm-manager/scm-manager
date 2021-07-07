@@ -118,7 +118,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
           <Logo withText={false} className="image is-32x32" />
         </LogoItem>
         <BurgerActionBar />
-        <a
+        <button
           role="button"
           className={classNames("navbar-burger", { "is-active": burgerActive })}
           aria-expanded="true"
@@ -127,7 +127,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
           <span aria-hidden="true" />
           <span aria-hidden="true" />
           <span aria-hidden="true" />
-        </a>
+        </button>
       </div>
       <StyledMenuBar className={classNames("navbar-menu", { "is-active": burgerActive })}>
         <div className="navbar-start">

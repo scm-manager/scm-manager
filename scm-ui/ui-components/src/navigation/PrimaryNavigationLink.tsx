@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { FC } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
+import { useRouteMatch, Link } from "react-router-dom";
 import { createAttributesForTesting } from "../devBuild";
 import classNames from "classnames";
 
@@ -36,16 +36,15 @@ type Props = {
 
 const PrimaryNavigationLink: FC<Props> = ({ to, match, testId, label, className }) => {
   const routeMatch = useRouteMatch({ path: match });
-  const history = useHistory();
 
   return (
-    <a
-      onClick={() => history.push(to)}
+    <Link
+      to={to}
       className={classNames(className, "navbar-item", { "is-active": routeMatch })}
       {...createAttributesForTesting(testId)}
     >
       {label}
-    </a>
+    </Link>
   );
 };
 
