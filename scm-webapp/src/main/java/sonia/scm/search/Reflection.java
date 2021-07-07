@@ -24,14 +24,30 @@
 
 package sonia.scm.search;
 
-import lombok.Value;
+import java.time.Instant;
 
-import java.util.Map;
+final class Reflection {
 
-@Value
-public class Hit {
+  private Reflection() {
+  }
 
-   float score;
-   Map<String, Object> fields;
+  public static boolean isLong(Class<?> type) {
+    return type == Long.TYPE || type == Long.class;
+  }
 
+  public static boolean isInteger(Class<?> type) {
+    return type == Integer.TYPE || type == Integer.class;
+  }
+
+  public static boolean isBoolean(Class<?> type) {
+    return type == Boolean.TYPE || type == Boolean.class;
+  }
+
+  public static boolean isInstant(Class<?> type) {
+    return type == Instant.class;
+  }
+
+  public static boolean isString(Class<?> type) {
+    return type == String.class;
+  }
 }

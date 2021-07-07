@@ -26,6 +26,8 @@ package sonia.scm.search;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -76,7 +78,7 @@ class LuceneQueryBuilderTest {
     }
 
     QueryResult result = query(InetOrgPerson.class, "Arthur");
-    assertThat(result.totalHits()).isOne();
+    assertThat(result.getTotalHits()).isOne();
   }
 
   @Test
@@ -86,7 +88,7 @@ class LuceneQueryBuilderTest {
     }
 
     QueryResult result = query(InetOrgPerson.class, "Dent");
-    assertThat(result.totalHits()).isOne();
+    assertThat(result.getTotalHits()).isOne();
   }
 
   @Test
@@ -97,7 +99,7 @@ class LuceneQueryBuilderTest {
     }
 
     QueryResult result = query(InetOrgPerson.class, "Dent");
-    assertThat(result.totalHits()).isOne();
+    assertThat(result.getTotalHits()).isOne();
   }
 
   @Test
@@ -107,7 +109,7 @@ class LuceneQueryBuilderTest {
     }
 
     QueryResult result = query(InetOrgPerson.class, "car");
-    assertThat(result.totalHits()).isZero();
+    assertThat(result.getTotalHits()).isZero();
   }
 
   @Test
@@ -118,14 +120,14 @@ class LuceneQueryBuilderTest {
     }
 
     QueryResult result = query(InetOrgPerson.class, "Arthur");
-    assertThat(result.totalHits()).isEqualTo(2);
+    assertThat(result.getTotalHits()).isEqualTo(2);
 
-    List<Hit> hits = result.hits();
+    List<Hit> hits = result.getHits();
     Hit arthur = hits.get(0);
-    assertThat(arthur.get("firstName")).contains("Arthur");
+    assertThat(arthur.getFields()).containsEntry("firstName", "Arthur");
 
     Hit fake = hits.get(1);
-    assertThat(fake.get("firstName")).contains("Fake");
+    assertThat(fake.getFields()).containsEntry("firstName", "Fake");
 
     assertThat(arthur.getScore()).isGreaterThan(fake.getScore());
   }
@@ -138,9 +140,9 @@ class LuceneQueryBuilderTest {
       writer.addDocument(simpleDoc("Awesome content three"));
     }
 
-    QueryResult result = query(String.class, "content:awesome");
-    assertThat(result.totalHits()).isEqualTo(3L);
-    assertThat(result.hits()).hasSize(3);
+    QueryResult result = query(Simple.class, "content:awesome");
+    assertThat(result.getTotalHits()).isEqualTo(3L);
+    assertThat(result.getHits()).hasSize(3);
   }
 
   @Test
@@ -151,7 +153,7 @@ class LuceneQueryBuilderTest {
     }
 
     QueryResult result = query(InetOrgPerson.class, "lastName:prefect");
-    assertThat(result.totalHits()).isEqualTo(1L);
+    assertThat(result.getTotalHits()).isEqualTo(1L);
   }
 
   @Test
@@ -162,13 +164,12 @@ class LuceneQueryBuilderTest {
       writer.addDocument(permissionDoc("Awesome content three", "fgh"));
     }
 
-    QueryResult result = query(String.class, "content:awesome");
-    assertThat(result.totalHits()).isOne();
+    QueryResult result = query(Simple.class, "content:awesome");
+    assertThat(result.getTotalHits()).isOne();
 
-    List<Hit> hits = result.hits();
+    List<Hit> hits = result.getHits();
     assertThat(hits).hasSize(1).allSatisfy(hit -> {
-      assertThat(hit.get("content")).contains("Awesome content one");
-      assertThat(hit.get(FieldNames.PERMISSION)).contains("abc");
+      assertThat(hit.getFields()).containsEntry("content", "Awesome content one");
       assertThat(hit.getScore()).isGreaterThan(0f);
     });
   }
@@ -187,15 +188,14 @@ class LuceneQueryBuilderTest {
       LuceneQueryBuilder builder = new LuceneQueryBuilder(
         opener, "default", new StandardAnalyzer()
       );
-      result = builder.repository("cde").execute(String.class, "content:awesome");
+      result = builder.repository("cde").execute(Simple.class, "content:awesome");
     }
 
-    assertThat(result.totalHits()).isOne();
+    assertThat(result.getTotalHits()).isOne();
 
-    List<Hit> hits = result.hits();
+    List<Hit> hits = result.getHits();
     assertThat(hits).hasSize(1).allSatisfy(hit -> {
-      assertThat(hit.get("content")).contains("Awesome content two");
-      assertThat(hit.get(FieldNames.REPOSITORY)).contains("cde");
+      assertThat(hit.getFields()).containsEntry("content", "Awesome content two");
       assertThat(hit.getScore()).isGreaterThan(0f);
     });
   }
@@ -206,11 +206,10 @@ class LuceneQueryBuilderTest {
       writer.addDocument(simpleDoc("Awesome"));
     }
 
-    QueryResult result = query(String.class, "content:awesome");
-    assertThat(result.totalHits()).isOne();
-    assertThat(result.hits()).allSatisfy(hit -> {
-      assertThat(hit.get("content")).contains("Awesome");
-      assertThat(hit.get("nonExisting")).isEmpty();
+    QueryResult result = query(Simple.class, "content:awesome");
+    assertThat(result.getTotalHits()).isOne();
+    assertThat(result.getHits()).allSatisfy(hit -> {
+      assertThat(hit.getFields()).containsEntry("content", "Awesome");
     });
   }
 
@@ -222,10 +221,9 @@ class LuceneQueryBuilderTest {
     }
 
     QueryResult result = query(Types.class, "intValue:[0 TO 100]");
-    assertThat(result.totalHits()).isOne();
-    assertThat(result.hits()).allSatisfy(hit -> {
-      assertThat(hit.getInteger("intValue")).contains(42);
-      assertThat(hit.getInteger("nonExisting")).isEmpty();
+    assertThat(result.getTotalHits()).isOne();
+    assertThat(result.getHits()).allSatisfy(hit -> {
+      assertThat(hit.getFields()).containsEntry("intValue", 42);
     });
   }
 
@@ -237,10 +235,9 @@ class LuceneQueryBuilderTest {
     }
 
     QueryResult result = query(Types.class, "longValue:[0 TO 100]");
-    assertThat(result.totalHits()).isOne();
-    assertThat(result.hits()).allSatisfy(hit -> {
-      assertThat(hit.getLong("longValue")).contains(21L);
-      assertThat(hit.getLong("nonExisting")).isEmpty();
+    assertThat(result.getTotalHits()).isOne();
+    assertThat(result.getHits()).allSatisfy(hit -> {
+      assertThat(hit.getFields()).containsEntry("longValue", 21L);
     });
   }
 
@@ -256,10 +253,9 @@ class LuceneQueryBuilderTest {
     String queryString = String.format("instantValue:[%d TO %d]", before, after);
 
     QueryResult result = query(Types.class, queryString);
-    assertThat(result.totalHits()).isOne();
-    assertThat(result.hits()).allSatisfy(hit -> {
-      assertThat(hit.getInstant("instantValue")).contains(now);
-      assertThat(hit.getInstant("nonExisting")).isEmpty();
+    assertThat(result.getTotalHits()).isOne();
+    assertThat(result.getHits()).allSatisfy(hit -> {
+      assertThat(hit.getFields()).containsEntry("instantValue", now);
     });
   }
 
@@ -270,10 +266,9 @@ class LuceneQueryBuilderTest {
     }
 
     QueryResult result = query(Types.class, "boolValue:true");
-    assertThat(result.totalHits()).isOne();
-    assertThat(result.hits()).allSatisfy(hit -> {
-      assertThat(hit.getBoolean("boolValue")).contains(Boolean.TRUE);
-      assertThat(hit.getBoolean("nonExisting")).isEmpty();
+    assertThat(result.getTotalHits()).isOne();
+    assertThat(result.getHits()).allSatisfy(hit -> {
+      assertThat(hit.getFields()).containsEntry("boolValue", Boolean.TRUE);
     });
   }
 
@@ -298,6 +293,26 @@ class LuceneQueryBuilderTest {
     assertThat(fields.get("_type")).isNull();
   }
 
+  @Test
+  void shouldBeAbleToMarshalDifferentTypesOfQueryResultToJson() throws IOException {
+    Instant now = Instant.ofEpochMilli(Instant.now().toEpochMilli());
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(typesDoc(21, 42L, true, now));
+    }
+
+    QueryResult result = query(Types.class, "intValue:21");
+    ObjectMapper mapper = new ObjectMapper();
+    mapper.configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false);
+    mapper.registerModule(new JavaTimeModule());
+
+    JsonNode root = mapper.valueToTree(result);
+    JsonNode fields = root.get("hits").get(0).get("fields");
+    assertThat(fields.get("intValue").asInt()).isEqualTo(21);
+    assertThat(fields.get("longValue").asLong()).isEqualTo(42L);
+    assertThat(fields.get("boolValue").asBoolean()).isTrue();
+    assertThat(fields.get("instantValue").asText()).isEqualTo(now.toString());
+  }
+
   private QueryResult query(Class<?> type, String queryString) throws IOException {
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
       when(opener.openForRead("default")).thenReturn(reader);
@@ -317,14 +332,14 @@ class LuceneQueryBuilderTest {
   private Document simpleDoc(String content) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-    document.add(new StringField(FieldNames.TYPE, "java.lang.String", Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, Simple.class.getName(), Field.Store.YES));
     return document;
   }
 
   private Document permissionDoc(String content, String permission) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-    document.add(new StringField(FieldNames.TYPE, "java.lang.String", Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, Simple.class.getName(), Field.Store.YES));
     document.add(new StringField(FieldNames.PERMISSION, permission, Field.Store.YES));
     return document;
   }
@@ -332,7 +347,7 @@ class LuceneQueryBuilderTest {
   private Document repositoryDoc(String content, String repository) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-    document.add(new StringField(FieldNames.TYPE, "java.lang.String", Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, Simple.class.getName(), Field.Store.YES));
     document.add(new StringField(FieldNames.REPOSITORY, repository, Field.Store.YES));
     return document;
   }
@@ -396,6 +411,11 @@ class LuceneQueryBuilderTest {
 
     @Indexed
     private String carLicense;
+  }
+
+  static class Simple {
+    @Indexed
+    private String content;
   }
 
 }

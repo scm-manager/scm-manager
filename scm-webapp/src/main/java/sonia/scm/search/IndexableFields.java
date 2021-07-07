@@ -41,6 +41,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singleton;
+import static sonia.scm.search.Reflection.isBoolean;
+import static sonia.scm.search.Reflection.isInstant;
+import static sonia.scm.search.Reflection.isInteger;
+import static sonia.scm.search.Reflection.isLong;
 
 class IndexableFields {
   private IndexableFields() {
@@ -74,22 +78,6 @@ class IndexableFields {
         "type " + fieldType + " of " + field.getName() + " is unsupported."
       );
     }
-  }
-
-  private static boolean isLong(Class<?> type) {
-    return type == Long.TYPE || type == Long.class;
-  }
-
-  private static boolean isInteger(Class<?> type) {
-    return type == Integer.TYPE || type == Integer.class;
-  }
-
-  private static boolean isBoolean(Class<?> type) {
-    return type == Boolean.TYPE || type == Boolean.class;
-  }
-
-  private static boolean isInstant(Class<?> type) {
-    return type == Instant.class;
   }
 
   private static class StringFieldFactory implements IndexableFieldFactory {

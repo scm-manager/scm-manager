@@ -24,14 +24,9 @@
 
 package sonia.scm.search;
 
-import lombok.Value;
+import org.apache.lucene.document.Document;
 
-import java.util.Map;
-
-@Value
-public class Hit {
-
-   float score;
-   Map<String, Object> fields;
-
+@FunctionalInterface
+public interface ValueExtractor {
+  Object extract(Document document);
 }

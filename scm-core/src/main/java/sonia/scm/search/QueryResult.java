@@ -24,11 +24,14 @@
 
 package sonia.scm.search;
 
+import lombok.Value;
+
 import java.util.List;
 
-public interface QueryResult {
+@Value
+public class QueryResult {
 
-  long totalHits();
-  List<Hit> hits();
+  long totalHits;
+  List<Hit> hits;
 
 }

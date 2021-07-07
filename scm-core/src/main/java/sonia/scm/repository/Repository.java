@@ -75,7 +75,7 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
   private String name;
   @Indexed(type = Indexed.Type.SEARCHABLE)
   private String type;
-  @Indexed(defaultQuery = true)
+  @Indexed(defaultQuery = true, highlighted = true)
   private String description;
   private String contact;
   @Indexed
