@@ -22,45 +22,40 @@
  * SOFTWARE.
  */
 
-package sonia.scm.search;
+package sonia.scm.api.v2.resources;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.Value;
 
-import java.util.Map;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
+import javax.ws.rs.DefaultValue;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.UriInfo;
 
-@Value
-public class Hit {
+@Getter
+public class SearchParameters {
 
-  float score;
-  Map<String, Field> fields;
+  @Context
+  private UriInfo uriInfo;
 
-  @Getter
-  @AllArgsConstructor(access = AccessLevel.PRIVATE)
-  public abstract static class Field {
-    boolean highlighted;
+  @Size(min = 2)
+  @QueryParam("q")
+  private String query;
+
+  @Min(0)
+  @QueryParam("page")
+  @DefaultValue("0")
+  private int page = 0;
+
+  @Min(1)
+  @Max(100)
+  @QueryParam("pageSize")
+  @DefaultValue("10")
+  private int pageSize = 10;
+
+  String getSelfLink() {
+    return uriInfo.getAbsolutePath().toASCIIString();
   }
-
-  @Getter
-  public static class ValueField extends Field {
-    Object value;
-
-    public ValueField(Object value) {
-      super(false);
-      this.value = value;
-    }
-  }
-
-  @Getter
-  public static class HighlightedField extends Field {
-    String[] fragments;
-
-    public HighlightedField(String[] fragments) {
-      super(true);
-      this.fragments = fragments;
-    }
-  }
-
 }
