@@ -36,8 +36,9 @@ import org.apache.lucene.queryparser.flexible.standard.config.PointsConfig;
 import java.lang.reflect.Field;
 import java.text.DecimalFormat;
 import java.time.Instant;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import static java.util.Collections.singleton;
 
@@ -47,7 +48,7 @@ class IndexableFields {
 
   static PointsConfig pointConfig(Field field) {
     Class<?> type = field.getType();
-    if (isLong(type) || isDate(type) || isInstant(type)) {
+    if (isLong(type) || isInstant(type)) {
       return new PointsConfig(new DecimalFormat(), Long.class);
     } else if (isInteger(type)) {
       return new PointsConfig(new DecimalFormat(), Integer.class);
@@ -56,26 +57,21 @@ class IndexableFields {
   }
 
   static IndexableFieldFactory create(Field field, Indexed indexed) {
-    Class<?> type = field.getType();
-    if (type == String.class) {
-      return new StringFieldFactory(indexed);
-    } else if (isLong(type)) {
-      return createStorableField(indexed, LONG_STORED_FIELD_FACTORY, LONG_FIELD_FACTORY);
-    } else if (isInteger(type)) {
-      return createStorableField(indexed, INTEGER_STORED_FIELD_FACTORY, INTEGER_FIELD_FACTORY);
-    } else if (isBoolean(type)) {
-      if (indexed.stored() == Stored.NO) {
-        return BOOLEAN_NOT_STORED_FIELD_FACTORY;
-      } else {
-        return BOOLEAN_FIELD_FACTORY;
-      }
-    } else if (isDate(type)) {
-      return createStorableField(indexed, DATE_STORED_FIELD_FACTORY, DATE_FIELD_FACTORY);
-    } else if (isInstant(type)) {
-      return createStorableField(indexed, INSTANT_STORED_FIELD_FACTORY, INSTANT_FIELD_FACTORY);
+    Class<?> fieldType = field.getType();
+    Indexed.Type indexType = indexed.type();
+    if (fieldType == String.class) {
+      return new StringFieldFactory(indexType);
+    } else if (isLong(fieldType)) {
+      return new LongFieldFactory(indexType);
+    } else if (isInteger(fieldType)) {
+      return new IntegerFieldFactory(indexType);
+    } else if (isBoolean(fieldType)) {
+      return new BooleanFieldFactory(indexType);
+    } else if (isInstant(fieldType)) {
+      return new InstantFieldFactory(indexType);
     } else {
       throw new UnsupportedTypeOfFieldException(
-        "type " + type + " of " + field.getName() + " is unsupported."
+        "type " + fieldType + " of " + field.getName() + " is unsupported."
       );
     }
   }
@@ -92,95 +88,99 @@ class IndexableFields {
     return type == Boolean.TYPE || type == Boolean.class;
   }
 
-  private static boolean isDate(Class<?> type) {
-    return type == Date.class;
-  }
-
   private static boolean isInstant(Class<?> type) {
     return type == Instant.class;
   }
 
-  private static IndexableFieldFactory createStorableField(Indexed indexed, IndexableFieldFactory storableFactory, IndexableFieldFactory factory) {
-    if (indexed.stored() == Stored.YES) {
-      return storableFactory;
-    } else {
-      return factory;
-    }
-  }
-
   private static class StringFieldFactory implements IndexableFieldFactory {
+    private final Indexed.Type type;
 
-    private final boolean tokenized;
-    private final Store store;
-
-    private StringFieldFactory(Indexed indexed) {
-      this.tokenized = indexed.tokenized();
-      this.store = createStore(indexed.stored());
-    }
-
-    private Store createStore(Stored stored) {
-      if (stored == Stored.NO) {
-        return Store.NO;
-      }
-      return Store.YES;
+    private StringFieldFactory(Indexed.Type type) {
+      this.type = type;
     }
 
     @Override
     public Iterable<IndexableField> create(String name, Object value) {
       String stringValue = (String) value;
-      if (tokenized) {
-        return singleton(new TextField(name, stringValue, store));
+      if (type.isTokenized()) {
+        return singleton(new TextField(name, stringValue, Store.YES));
+      } else if (type.isSearchable()) {
+        return singleton(new StringField(name, stringValue, Store.YES));
+      } else {
+        return singleton(new StoredField(name, stringValue));
       }
-      return singleton(new StringField(name, stringValue, store));
     }
   }
 
-  private static final IndexableFieldFactory LONG_FIELD_FACTORY = (name, value) -> singleton(
-    new LongPoint(name, (Long) value)
-  );
+  private static class LongFieldFactory implements IndexableFieldFactory {
 
-  private static final IndexableFieldFactory LONG_STORED_FIELD_FACTORY = (name, value) -> Arrays.asList(
-    new LongPoint(name, (Long) value), new StoredField(name, (Long) value)
-  );
+    private final Indexed.Type type;
 
-  private static final IndexableFieldFactory INTEGER_FIELD_FACTORY = (name, value) -> singleton(
-    new IntPoint(name, (Integer) value)
-  );
+    private LongFieldFactory(Indexed.Type type) {
+      this.type = type;
+    }
 
-  private static final IndexableFieldFactory INTEGER_STORED_FIELD_FACTORY = (name, value) -> Arrays.asList(
-    new IntPoint(name, (Integer) value), new StoredField(name, (Integer) value)
-  );
+    @Override
+    public Iterable<IndexableField> create(String name, Object value) {
+      Long longValue = (Long) value;
+      List<IndexableField> fields = new ArrayList<>();
+      if (type.isSearchable()) {
+        fields.add(new LongPoint(name, longValue));
+      }
+      fields.add(new StoredField(name, longValue));
+      return Collections.unmodifiableList(fields);
+    }
+  }
 
-  private static final IndexableFieldFactory BOOLEAN_FIELD_FACTORY = (name, value) -> singleton(
-    new StringField(name, value.toString(), Store.YES)
-  );
+  private static class IntegerFieldFactory implements IndexableFieldFactory {
 
-  private static final IndexableFieldFactory BOOLEAN_NOT_STORED_FIELD_FACTORY = (name, value) -> singleton(
-    new StringField(name, value.toString(), Store.NO)
-  );
+    private final Indexed.Type type;
 
-  private static final IndexableFieldFactory DATE_FIELD_FACTORY = (name, value) -> singleton(
-    new LongPoint(name, ((Date) value).getTime())
-  );
+    private IntegerFieldFactory(Indexed.Type type) {
+      this.type = type;
+    }
 
-  private static final IndexableFieldFactory DATE_STORED_FIELD_FACTORY = (name, value) -> {
-    long time = ((Date) value).getTime();
-    return Arrays.asList(
-      new LongPoint(name, time),
-      new StoredField(name, time)
-    );
-  };
+    @Override
+    public Iterable<IndexableField> create(String name, Object value) {
+      Integer integerValue = (Integer) value;
+      List<IndexableField> fields = new ArrayList<>();
+      if (type.isSearchable()) {
+        fields.add(new IntPoint(name, integerValue));
+      }
+      fields.add(new StoredField(name, integerValue));
+      return Collections.unmodifiableList(fields);
+    }
+  }
 
-  private static final IndexableFieldFactory INSTANT_FIELD_FACTORY = (name, value) -> singleton(
-    new LongPoint(name, ((Instant) value).toEpochMilli())
-  );
+  private static class BooleanFieldFactory implements IndexableFieldFactory {
+    private final Indexed.Type type;
 
-  private static final IndexableFieldFactory INSTANT_STORED_FIELD_FACTORY = (name, value) -> {
-    long time = ((Instant) value).toEpochMilli();
-    return Arrays.asList(
-      new LongPoint(name, time),
-      new StoredField(name, time)
-    );
-  };
+    private BooleanFieldFactory(Indexed.Type type) {
+      this.type = type;
+    }
+
+    @Override
+    public Iterable<IndexableField> create(String name, Object value) {
+      Boolean booleanValue = (Boolean) value;
+      if (type.isSearchable()) {
+        return singleton(new StringField(name, booleanValue.toString(), Store.YES));
+      } else {
+        return singleton(new StoredField(name, booleanValue.toString()));
+      }
+    }
+  }
+
+  private static class InstantFieldFactory extends LongFieldFactory {
+
+    private InstantFieldFactory(Indexed.Type type) {
+      super(type);
+    }
+
+    @Override
+    public Iterable<IndexableField> create(String name, Object value) {
+      Instant instant = (Instant) value;
+      return super.create(name, instant.toEpochMilli());
+    }
+  }
 
 }

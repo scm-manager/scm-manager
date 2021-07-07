@@ -369,13 +369,13 @@ class LuceneQueryBuilderTest {
 
   static class Types {
 
-    @Indexed(stored = Stored.YES)
+    @Indexed
     private Integer intValue;
-    @Indexed(stored = Stored.YES)
+    @Indexed
     private long longValue;
-    @Indexed(stored = Stored.YES)
+    @Indexed
     private boolean boolValue;
-    @Indexed(stored = Stored.YES)
+    @Indexed
     private Instant instantValue;
 
   }
