@@ -124,12 +124,20 @@ class LuceneQueryBuilderTest {
 
     List<Hit> hits = result.getHits();
     Hit arthur = hits.get(0);
-    assertThat(arthur.getFields()).containsEntry("firstName", "Arthur");
+    assertValueField(arthur, "firstName", "Arthur");
 
     Hit fake = hits.get(1);
-    assertThat(fake.getFields()).containsEntry("firstName", "Fake");
+    assertValueField(fake, "firstName", "Fake");
 
     assertThat(arthur.getScore()).isGreaterThan(fake.getScore());
+  }
+
+  private void assertValueField(Hit hit, String fieldName, Object value) {
+    assertThat(hit.getFields().get(fieldName))
+      .isInstanceOfSatisfying(Hit.ValueField.class, (field) -> {
+        assertThat(field.isHighlighted()).isFalse();
+        assertThat(field.getValue()).isEqualTo(value);
+      });
   }
 
   @Test
@@ -169,7 +177,7 @@ class LuceneQueryBuilderTest {
 
     List<Hit> hits = result.getHits();
     assertThat(hits).hasSize(1).allSatisfy(hit -> {
-      assertThat(hit.getFields()).containsEntry("content", "Awesome content one");
+      assertValueField(hit, "content", "Awesome content one");
       assertThat(hit.getScore()).isGreaterThan(0f);
     });
   }
@@ -195,7 +203,7 @@ class LuceneQueryBuilderTest {
 
     List<Hit> hits = result.getHits();
     assertThat(hits).hasSize(1).allSatisfy(hit -> {
-      assertThat(hit.getFields()).containsEntry("content", "Awesome content two");
+      assertValueField(hit, "content", "Awesome content two");
       assertThat(hit.getScore()).isGreaterThan(0f);
     });
   }
@@ -208,9 +216,9 @@ class LuceneQueryBuilderTest {
 
     QueryResult result = query(Simple.class, "content:awesome");
     assertThat(result.getTotalHits()).isOne();
-    assertThat(result.getHits()).allSatisfy(hit -> {
-      assertThat(hit.getFields()).containsEntry("content", "Awesome");
-    });
+    assertThat(result.getHits()).allSatisfy(
+      hit -> assertValueField(hit, "content", "Awesome")
+    );
   }
 
   @Test
@@ -222,9 +230,9 @@ class LuceneQueryBuilderTest {
 
     QueryResult result = query(Types.class, "intValue:[0 TO 100]");
     assertThat(result.getTotalHits()).isOne();
-    assertThat(result.getHits()).allSatisfy(hit -> {
-      assertThat(hit.getFields()).containsEntry("intValue", 42);
-    });
+    assertThat(result.getHits()).allSatisfy(
+      hit -> assertValueField(hit, "intValue", 42)
+    );
   }
 
   @Test
@@ -236,9 +244,9 @@ class LuceneQueryBuilderTest {
 
     QueryResult result = query(Types.class, "longValue:[0 TO 100]");
     assertThat(result.getTotalHits()).isOne();
-    assertThat(result.getHits()).allSatisfy(hit -> {
-      assertThat(hit.getFields()).containsEntry("longValue", 21L);
-    });
+    assertThat(result.getHits()).allSatisfy(
+      hit -> assertValueField(hit, "longValue", 21L)
+    );
   }
 
   @Test
@@ -254,9 +262,9 @@ class LuceneQueryBuilderTest {
 
     QueryResult result = query(Types.class, queryString);
     assertThat(result.getTotalHits()).isOne();
-    assertThat(result.getHits()).allSatisfy(hit -> {
-      assertThat(hit.getFields()).containsEntry("instantValue", now);
-    });
+    assertThat(result.getHits()).allSatisfy(
+      hit -> assertValueField(hit, "instantValue", now)
+    );
   }
 
   @Test
@@ -267,9 +275,20 @@ class LuceneQueryBuilderTest {
 
     QueryResult result = query(Types.class, "boolValue:true");
     assertThat(result.getTotalHits()).isOne();
-    assertThat(result.getHits()).allSatisfy(hit -> {
-      assertThat(hit.getFields()).containsEntry("boolValue", Boolean.TRUE);
-    });
+    assertThat(result.getHits()).allSatisfy(
+      hit -> assertValueField(hit, "boolValue", Boolean.TRUE)
+    );
+  }
+
+  @Test
+  void shouldReturnValueFieldForHighlightedFieldWithoutFragment() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(inetOrgPersonDoc("Marvin", "HoG", "Paranoid Android", "4211"));
+    }
+
+    QueryResult result = query(InetOrgPerson.class, "Marvin");
+    Hit hit = result.getHits().get(0);
+    assertValueField(hit, "displayName", "Paranoid Android");
   }
 
   @Test
@@ -288,8 +307,14 @@ class LuceneQueryBuilderTest {
     assertThat(hit.get("score").asDouble()).isGreaterThan(0d);
 
     JsonNode fields = hit.get("fields");
-    assertThat(fields.get("firstName").asText()).isEqualTo("Arthur");
-    assertThat(fields.get("lastName").asText()).isEqualTo("Dent");
+    JsonNode firstName = fields.get("firstName");
+    assertThat(firstName.get("highlighted").asBoolean()).isFalse();
+    assertThat(firstName.get("value").asText()).isEqualTo("Arthur");
+
+    JsonNode displayName = fields.get("displayName");
+    assertThat(displayName.get("highlighted").asBoolean()).isTrue();
+    assertThat(displayName.get("fragments").get(0).asText()).contains("**Arthur**");
+
     assertThat(fields.get("_type")).isNull();
   }
 
@@ -307,10 +332,10 @@ class LuceneQueryBuilderTest {
 
     JsonNode root = mapper.valueToTree(result);
     JsonNode fields = root.get("hits").get(0).get("fields");
-    assertThat(fields.get("intValue").asInt()).isEqualTo(21);
-    assertThat(fields.get("longValue").asLong()).isEqualTo(42L);
-    assertThat(fields.get("boolValue").asBoolean()).isTrue();
-    assertThat(fields.get("instantValue").asText()).isEqualTo(now.toString());
+    assertThat(fields.get("intValue").get("value").asInt()).isEqualTo(21);
+    assertThat(fields.get("longValue").get("value").asLong()).isEqualTo(42L);
+    assertThat(fields.get("boolValue").get("value").asBoolean()).isTrue();
+    assertThat(fields.get("instantValue").get("value").asText()).isEqualTo(now.toString());
   }
 
   private QueryResult query(Class<?> type, String queryString) throws IOException {
@@ -406,7 +431,7 @@ class LuceneQueryBuilderTest {
     @Indexed(defaultQuery = true, boost = 2f)
     private String firstName;
 
-    @Indexed(defaultQuery = true)
+    @Indexed(defaultQuery = true, highlighted = true)
     private String displayName;
 
     @Indexed

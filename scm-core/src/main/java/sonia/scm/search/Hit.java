@@ -24,6 +24,9 @@
 
 package sonia.scm.search;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import lombok.Value;
 
 import java.util.Map;
@@ -31,7 +34,33 @@ import java.util.Map;
 @Value
 public class Hit {
 
-   float score;
-   Map<String, Object> fields;
+  float score;
+  Map<String, Field> fields;
+
+  @Getter
+  @AllArgsConstructor(access = AccessLevel.PRIVATE)
+  abstract static class Field {
+    boolean highlighted;
+  }
+
+  @Getter
+  static class ValueField extends Field {
+    Object value;
+
+    public ValueField(Object value) {
+      super(false);
+      this.value = value;
+    }
+  }
+
+  @Getter
+  static class HighlightedField extends Field {
+    String[] fragments;
+
+    public HighlightedField(String[] fragments) {
+      super(true);
+      this.fragments = fragments;
+    }
+  }
 
 }
