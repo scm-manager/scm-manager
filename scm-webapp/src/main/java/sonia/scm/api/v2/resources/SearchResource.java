@@ -22,10 +22,34 @@
  * SOFTWARE.
  */
 
-package sonia.scm.search;
+package sonia.scm.api.v2.resources;
 
-public enum Stored {
+import sonia.scm.repository.Repository;
+import sonia.scm.search.IndexNames;
+import sonia.scm.search.QueryResult;
+import sonia.scm.search.SearchEngine;
 
-  DEFAULT, YES, NO
+import javax.inject.Inject;
+import javax.ws.rs.GET;
+import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.MediaType;
 
+@Path("v2/search")
+public class SearchResource {
+
+  private final SearchEngine engine;
+
+  @Inject
+  public SearchResource(SearchEngine engine) {
+    this.engine = engine;
+  }
+
+  @GET
+  @Produces(MediaType.APPLICATION_JSON)
+  public QueryResult search(@QueryParam("query") String query) {
+    return engine.search(IndexNames.DEFAULT)
+      .execute(Repository.class, query);
+  }
 }

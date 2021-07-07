@@ -24,14 +24,42 @@
 
 package sonia.scm.search;
 
-import lombok.Value;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
-@Value
-public class Hit {
+public class QueryResultFactory {
 
-   float score;
-   Map<String, Object> fields;
+  private final IndexSearcher searcher;
+  private final SearchableType searchableType;
+
+  public QueryResultFactory(IndexSearcher searcher, SearchableType searchableType) {
+    this.searcher = searcher;
+    this.searchableType = searchableType;
+  }
+
+  public QueryResult create(TopDocs topDocs) throws IOException {
+    List<Hit> hits = new ArrayList<>();
+    for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
+      hits.add(createHit(scoreDoc));
+    }
+    return new QueryResult(topDocs.totalHits.value, hits);
+  }
+
+  private Hit createHit(ScoreDoc scoreDoc) throws IOException {
+    Document document = searcher.doc(scoreDoc.doc);
+    Map<String, Object> fields = new HashMap<>();
+    for (SearchableField field : searchableType.getFields()) {
+      fields.put(field.getName(), field.value(document));
+    }
+    return new Hit(scoreDoc.score, fields);
+  }
 
 }

@@ -25,13 +25,17 @@
 package sonia.scm.search;
 
 import lombok.Value;
+import org.apache.lucene.queryparser.flexible.standard.config.PointsConfig;
 
+import java.util.List;
 import java.util.Map;
 
 @Value
-public class Hit {
+public class SearchableType {
 
-   float score;
-   Map<String, Object> fields;
+  String[] fieldNames;
+  Map<String,Float> boosts;
+  Map<String, PointsConfig> pointsConfig;
+  List<SearchableField> fields;
 
 }

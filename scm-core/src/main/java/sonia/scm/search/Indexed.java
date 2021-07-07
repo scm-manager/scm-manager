@@ -40,6 +40,7 @@ public @interface Indexed {
 
   boolean defaultQuery() default false;
   float boost() default 1f;
+  boolean highlighted() default false;
 
   enum Type {
     TOKENIZED(true, true, true),

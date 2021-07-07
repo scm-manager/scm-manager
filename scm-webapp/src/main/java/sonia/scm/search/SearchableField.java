@@ -24,14 +24,43 @@
 
 package sonia.scm.search;
 
-import lombok.Value;
+import com.google.common.base.Strings;
+import lombok.Getter;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.queryparser.flexible.standard.config.PointsConfig;
 
-import java.util.Map;
+import java.lang.reflect.Field;
 
-@Value
-public class Hit {
+@Getter
+class SearchableField {
 
-   float score;
-   Map<String, Object> fields;
+  private final String name;
+  private final Class<?> type;
+  private final ValueExtractor valueExtractor;
+  private final float boost;
+  private final boolean defaultQuery;
+  private final boolean highlighted;
+  private final PointsConfig pointsConfig;
 
+  SearchableField(Field field, Indexed indexed) {
+    this.name = name(field, indexed);
+    this.type = field.getType();
+    this.valueExtractor = ValueExtractors.create(name, type);
+    this.boost = indexed.boost();
+    this.defaultQuery = indexed.defaultQuery();
+    this.highlighted = indexed.highlighted();
+    this.pointsConfig = IndexableFields.pointConfig(field);
+  }
+
+  Object value(Document document) {
+    return valueExtractor.extract(document);
+  }
+
+  private String name(Field field, Indexed indexed) {
+    String nameFromAnnotation = indexed.name();
+    if (!Strings.isNullOrEmpty(nameFromAnnotation)) {
+      return nameFromAnnotation;
+    }
+    return field.getName();
+  }
 }
