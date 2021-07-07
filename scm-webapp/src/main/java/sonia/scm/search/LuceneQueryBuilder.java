@@ -35,6 +35,7 @@ import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
 
 import java.io.IOException;
 import java.util.Map;
@@ -69,10 +70,12 @@ public class LuceneQueryBuilder extends QueryBuilder {
       Collector collector = new PermissionAwareCollector(reader, topScoreCollector);
       searcher.search(query, collector);
 
-      QueryResultFactory resultFactory = new QueryResultFactory(searcher, searchableType);
+      QueryResultFactory resultFactory = new QueryResultFactory(analyzer, searcher, searchableType, query);
       return resultFactory.create(topScoreCollector.topDocs());
     } catch (IOException e) {
       throw new SearchEngineException("failed to search index", e);
+    } catch (InvalidTokenOffsetsException e) {
+      throw new SearchEngineException("failed to highlight results", e);
     }
   }
 
