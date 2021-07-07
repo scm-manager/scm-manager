@@ -24,58 +24,74 @@
 
 package sonia.scm.api.v2.resources;
 
+import io.swagger.v3.oas.annotations.OpenAPIDefinition;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.repository.Repository;
 import sonia.scm.search.IndexNames;
 import sonia.scm.search.QueryResult;
 import sonia.scm.search.SearchEngine;
+import sonia.scm.web.VndMediaType;
 
 import javax.inject.Inject;
 import javax.validation.Valid;
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.Size;
 import javax.ws.rs.BeanParam;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.MediaType;
 
-@Path("v2/search")
+@Path(SearchResource.PATH)
+@OpenAPIDefinition(tags = {
+  @Tag(name = "Search", description = "Search related endpoints")
+})
 public class SearchResource {
 
+  static final String PATH = "v2/search";
+
   private final SearchEngine engine;
+  private final QueryResultMapper mapper;
 
   @Inject
-  public SearchResource(SearchEngine engine) {
+  public SearchResource(SearchEngine engine, QueryResultMapper mapper) {
     this.engine = engine;
+    this.mapper = mapper;
   }
 
   @GET
-  @Produces(MediaType.APPLICATION_JSON)
-  public QueryResult search(@Valid @BeanParam QueryParameters params) {
-    return engine.search(IndexNames.DEFAULT)
-      .start(params.start)
-      .limit(params.limit)
-      .execute(Repository.class, params.query);
+  @Path("")
+  @Produces(VndMediaType.QUERY_RESULT)
+  @Operation(
+    summary = "Query result",
+    description = "Returns a collection of matched hits.",
+    tags = "Search",
+    operationId = "search_query"
+  )
+  @ApiResponse(
+    responseCode = "200",
+    description = "success",
+    content = @Content(
+      mediaType = VndMediaType.QUERY_RESULT,
+      schema = @Schema(implementation = CollectionDto.class)
+    )
+  )
+  @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
+  @ApiResponse(
+    responseCode = "500",
+    description = "internal server error",
+    content = @Content(
+      mediaType = VndMediaType.ERROR_TYPE,
+      schema = @Schema(implementation = ErrorDto.class)
+    ))
+  public CollectionDto search(@Valid @BeanParam SearchParameters params) {
+    QueryResult result = engine.search(IndexNames.DEFAULT)
+      .start(params.getPage() * params.getPageSize())
+      .limit(params.getPageSize())
+      .execute(Repository.class, params.getQuery());
+
+    return mapper.map(params, result);
   }
 
-  public static class QueryParameters {
-
-    @Size(min = 2)
-    @QueryParam("q")
-    private String query;
-
-    @Min(0)
-    @QueryParam("start")
-    @DefaultValue("0")
-    private int start = 0;
-
-    @Min(1)
-    @Max(100)
-    @QueryParam("limit")
-    @DefaultValue("10")
-    private int limit = 0;
-  }
 }

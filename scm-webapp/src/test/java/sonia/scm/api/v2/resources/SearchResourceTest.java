@@ -1,0 +1,203 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package sonia.scm.api.v2.resources;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.jboss.resteasy.mock.MockHttpRequest;
+import org.jboss.resteasy.mock.MockHttpResponse;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
+import org.mockito.Answers;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import sonia.scm.repository.Repository;
+import sonia.scm.search.Hit;
+import sonia.scm.search.IndexNames;
+import sonia.scm.search.QueryResult;
+import sonia.scm.search.SearchEngine;
+import sonia.scm.web.RestDispatcher;
+import sonia.scm.web.VndMediaType;
+
+import javax.annotation.Nonnull;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+@ExtendWith(MockitoExtension.class)
+class SearchResourceTest {
+
+  private final ObjectMapper objectMapper = new ObjectMapper();
+
+  @Mock(answer = Answers.RETURNS_DEEP_STUBS)
+  private SearchEngine searchEngine;
+
+  private RestDispatcher dispatcher;
+
+  @BeforeEach
+  void setUpDispatcher() {
+    SearchResource resource = new SearchResource(
+      searchEngine, Mappers.getMapper(QueryResultMapper.class)
+    );
+    dispatcher = new RestDispatcher();
+    dispatcher.addSingletonResource(resource);
+  }
+
+  @Test
+  void shouldReturnVndContentType() throws UnsupportedEncodingException, URISyntaxException {
+    mockQueryResult("Hello", result(0L));
+    MockHttpResponse response = search("Hello");
+    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+    assertHeader(response, "Content-Type", VndMediaType.QUERY_RESULT);
+  }
+
+  @Test
+  void shouldReturnPagingLinks() throws IOException, URISyntaxException {
+    mockQueryResult(20, 20, "paging", result(100));
+    MockHttpResponse response = search("paging", 1, 20);
+
+    JsonNode links = json(response).get("_links");
+    assertLink(links, "self", "/v2/search?q=paging&page=1&pageSize=20");
+    assertLink(links, "first", "/v2/search?q=paging&page=0&pageSize=20");
+    assertLink(links, "prev", "/v2/search?q=paging&page=0&pageSize=20");
+    assertLink(links, "next", "/v2/search?q=paging&page=2&pageSize=20");
+    assertLink(links, "last", "/v2/search?q=paging&page=4&pageSize=20");
+  }
+
+  @Test
+  void shouldPagingFields() throws IOException, URISyntaxException {
+    mockQueryResult(20, 20, "pagingFields", result(100));
+    MockHttpResponse response = search("pagingFields", 1, 20);
+
+    JsonNode root = json(response);
+    assertThat(root.get("page").asInt()).isOne();
+    assertThat(root.get("pageTotal").asInt()).isEqualTo(5);
+  }
+
+  @Test
+  void shouldReturnHitsAsEmbedded() throws IOException, URISyntaxException {
+    mockQueryResult("Hello", result(2L, "Hello", "Hello Again"));
+    MockHttpResponse response = search("Hello");
+
+    System.out.println(response.getContentAsString());
+
+    JsonNode hits = json(response).get("_embedded").get("hits");
+    assertThat(hits.size()).isEqualTo(2);
+
+    JsonNode first = hits.get(0);
+    assertThat(first.get("score").asDouble()).isEqualTo(2d);
+
+    JsonNode fields = first.get("fields");
+
+    JsonNode valueField = fields.get("value");
+    assertThat(valueField.get("highlighted").asBoolean()).isFalse();
+    assertThat(valueField.get("value").asText()).isEqualTo("Hello");
+
+    JsonNode highlightedField = fields.get("highlighted");
+    assertThat(highlightedField.get("highlighted").asBoolean()).isTrue();
+    assertThat(highlightedField.get("fragments").get(0).asText()).isEqualTo("Hello");
+  }
+
+  private void assertLink(JsonNode links, String self, String s) {
+    assertThat(links.get(self).get("href").asText()).isEqualTo(s);
+  }
+
+  private JsonNode json(MockHttpResponse response) throws IOException {
+    return objectMapper.readTree(response.getContentAsString());
+  }
+
+  private QueryResult result(long totalHits, Object... values) {
+    List<Hit> hits = new ArrayList<>();
+    for (int i=0; i<values.length; i++) {
+      hits.add(hit(i, values));
+    }
+    return new QueryResult(totalHits, hits);
+  }
+
+  @Nonnull
+  private Hit hit(int i, Object[] values) {
+    Map<String, Hit.Field> fields = fields(values[i]);
+    return new Hit(values.length - i, fields);
+  }
+
+  @Nonnull
+  private Map<String, Hit.Field> fields(Object value) {
+    Map<String, Hit.Field> fields = new HashMap<>();
+    fields.put("value", new Hit.ValueField(value));
+    fields.put("highlighted", new Hit.HighlightedField(new String[]{ value.toString() }));
+    return fields;
+  }
+
+  private void mockQueryResult(String query, QueryResult result) {
+    mockQueryResult(0, 10, query, result);
+  }
+
+  private void mockQueryResult(int start, int limit, String query, QueryResult result) {
+    when(
+      searchEngine.search(IndexNames.DEFAULT)
+        .start(start)
+        .limit(limit)
+        .execute(Repository.class, query)
+    ).thenReturn(result);
+  }
+
+  private void assertHeader(MockHttpResponse response, String header, String expectedValue) {
+    assertThat(response.getOutputHeaders().getFirst(header)).hasToString(expectedValue);
+  }
+
+  private MockHttpResponse search(String query) throws URISyntaxException, UnsupportedEncodingException {
+    return search(query, null, null);
+  }
+
+  private MockHttpResponse search(String query, Integer page, Integer pageSize) throws URISyntaxException, UnsupportedEncodingException {
+    String uri = "/v2/search?q=" + URLEncoder.encode(query, "UTF-8");
+    if (page != null) {
+      uri += "&page=" + page;
+    }
+    if (pageSize != null) {
+      uri += "&pageSize=" + pageSize;
+    }
+    MockHttpRequest request = MockHttpRequest.get(uri);
+    MockHttpResponse response = new MockHttpResponse();
+    dispatcher.invoke(request, response);
+    return response;
+  }
+}

@@ -22,45 +22,23 @@
  * SOFTWARE.
  */
 
-package sonia.scm.search;
+package sonia.scm.api.v2.resources;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
+import de.otto.edison.hal.HalRepresentation;
 import lombok.Getter;
-import lombok.Value;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import sonia.scm.search.Hit;
 
 import java.util.Map;
 
-@Value
-public class Hit {
+@Getter
+@Setter
+@NoArgsConstructor
+@SuppressWarnings("java:S2160") // we do not need this for dto
+public class HitDto extends HalRepresentation {
 
-  float score;
-  Map<String, Field> fields;
-
-  @Getter
-  @AllArgsConstructor(access = AccessLevel.PRIVATE)
-  public abstract static class Field {
-    boolean highlighted;
-  }
-
-  @Getter
-  public static class ValueField extends Field {
-    Object value;
-
-    public ValueField(Object value) {
-      super(false);
-      this.value = value;
-    }
-  }
-
-  @Getter
-  public static class HighlightedField extends Field {
-    String[] fragments;
-
-    public HighlightedField(String[] fragments) {
-      super(true);
-      this.fragments = fragments;
-    }
-  }
+  private float score;
+  private Map<String, Hit.Field> fields;
 
 }
