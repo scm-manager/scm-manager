@@ -33,6 +33,7 @@ import java.util.Map;
 @Value
 public class SearchableType {
 
+  Class<?> type;
   String[] fieldNames;
   Map<String,Float> boosts;
   Map<String, PointsConfig> pointsConfig;

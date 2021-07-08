@@ -40,10 +40,10 @@ class SearchableTypes {
   static SearchableType create(Class<?> type) {
     List<SearchableField> fields = new ArrayList<>();
     collectFields(type, fields);
-    return createSearchableType(fields);
+    return createSearchableType(type, fields);
   }
 
-  private static SearchableType createSearchableType(List<SearchableField> fields) {
+  private static SearchableType createSearchableType(Class<?> type, List<SearchableField> fields) {
     String[] fieldsNames = fields.stream()
       .filter(SearchableField::isDefaultQuery)
       .map(SearchableField::getName)
@@ -61,7 +61,7 @@ class SearchableTypes {
       }
     }
 
-    return new SearchableType(fieldsNames, boosts, pointsConfig, fields);
+    return new SearchableType(type, fieldsNames, boosts, pointsConfig, fields);
   }
 
 

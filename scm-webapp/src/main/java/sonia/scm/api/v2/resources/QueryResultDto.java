@@ -22,17 +22,21 @@
  * SOFTWARE.
  */
 
-package sonia.scm.search;
+package sonia.scm.api.v2.resources;
 
-import lombok.Value;
+import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.Links;
+import lombok.Getter;
+import lombok.Setter;
 
-import java.util.List;
+@Getter
+@Setter
+@SuppressWarnings("squid:S2160") // we do not need equals for dto
+public class QueryResultDto extends CollectionDto {
 
-@Value
-public class QueryResult {
+  private Class<?> type;
 
-  long totalHits;
-  Class<?> type;
-  List<Hit> hits;
-
+  QueryResultDto(Links links, Embedded embedded) {
+    super(links, embedded);
+  }
 }

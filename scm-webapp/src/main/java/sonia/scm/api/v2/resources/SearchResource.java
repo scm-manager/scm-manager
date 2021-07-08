@@ -74,7 +74,7 @@ public class SearchResource {
     description = "success",
     content = @Content(
       mediaType = VndMediaType.QUERY_RESULT,
-      schema = @Schema(implementation = CollectionDto.class)
+      schema = @Schema(implementation = QueryResultDto.class)
     )
   )
   @ApiResponse(responseCode = "401", description = "not authenticated / invalid credentials")
@@ -85,7 +85,7 @@ public class SearchResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
-  public CollectionDto search(@Valid @BeanParam SearchParameters params) {
+  public QueryResultDto search(@Valid @BeanParam SearchParameters params) {
     QueryResult result = engine.search(IndexNames.DEFAULT)
       .start(params.getPage() * params.getPageSize())
       .limit(params.getPageSize())

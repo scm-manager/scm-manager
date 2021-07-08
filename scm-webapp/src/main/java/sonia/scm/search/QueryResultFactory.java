@@ -67,7 +67,7 @@ public class QueryResultFactory {
     for (ScoreDoc scoreDoc : topDocs.scoreDocs) {
       hits.add(createHit(scoreDoc));
     }
-    return new QueryResult(topDocs.totalHits.value, hits);
+    return new QueryResult(topDocs.totalHits.value, searchableType.getType(), hits);
   }
 
   private Hit createHit(ScoreDoc scoreDoc) throws IOException, InvalidTokenOffsetsException {
@@ -80,6 +80,7 @@ public class QueryResultFactory {
         fields.put(field.getName(), f);
       }
     }
+    fields.put(FieldNames.TYPE, new Hit.ValueField(document.get(FieldNames.TYPE)));
 
     return new Hit(scoreDoc.score, fields);
   }

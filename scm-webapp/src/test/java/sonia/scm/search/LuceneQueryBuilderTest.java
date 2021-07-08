@@ -223,6 +223,16 @@ class LuceneQueryBuilderTest {
   }
 
   @Test
+  void shouldReturnTypeOfHits() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(simpleDoc("We need the type"));
+    }
+
+    QueryResult result = query(Simple.class, "content:type");
+    assertThat(result.getType()).isEqualTo(Simple.class);
+  }
+
+  @Test
   void shouldSupportIntRangeQueries() throws IOException {
     Instant now = Instant.now();
     try (IndexWriter writer = writer()) {
@@ -367,8 +377,6 @@ class LuceneQueryBuilderTest {
     JsonNode displayName = fields.get("displayName");
     assertThat(displayName.get("highlighted").asBoolean()).isTrue();
     assertThat(displayName.get("fragments").get(0).asText()).contains("**Arthur**");
-
-    assertThat(fields.get("_type")).isNull();
   }
 
   @Test
