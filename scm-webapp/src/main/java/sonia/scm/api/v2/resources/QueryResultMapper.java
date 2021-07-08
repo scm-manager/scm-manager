@@ -29,7 +29,9 @@ import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.Links;
 import de.otto.edison.hal.paging.NumberedPaging;
 import de.otto.edison.hal.paging.PagingRel;
+import org.mapstruct.Context;
 import org.mapstruct.Mapper;
+import org.mapstruct.ObjectFactory;
 import sonia.scm.search.Hit;
 import sonia.scm.search.QueryResult;
 import sonia.scm.web.EdisonHalAppender;
@@ -78,8 +80,20 @@ public abstract class QueryResultMapper extends HalAppenderMapper {
 
   @Nonnull
   private Embedded.Builder hits(QueryResult result) {
-    List<HitDto> hits = result.getHits().stream().map(this::map).collect(Collectors.toList());
+    List<HitDto> hits = result.getHits()
+      .stream()
+      .map(hit -> map(result, hit))
+      .collect(Collectors.toList());
     return Embedded.embeddedBuilder().with("hits", hits);
+  }
+
+  @ObjectFactory
+  protected HitDto createHitDto(@Context QueryResult queryResult, Hit hit) {
+    Links.Builder links = linkingTo();
+    Embedded.Builder embedded = Embedded.embeddedBuilder();
+
+    applyEnrichers(new EdisonHalAppender(links, embedded), hit, queryResult);
+    return new HitDto(links.build(), embedded.build());
   }
 
   private int computePageTotal(int totalHits, int pageSize) {
@@ -90,5 +104,5 @@ public abstract class QueryResultMapper extends HalAppenderMapper {
     }
   }
 
-  protected abstract HitDto map(Hit hit);
+  protected abstract HitDto map(@Context QueryResult queryResult, Hit hit);
 }
