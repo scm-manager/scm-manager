@@ -223,6 +223,19 @@ class LuceneQueryBuilderTest {
   }
 
   @Test
+  void shouldReturnIdOfHit() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(inetOrgPersonDoc("Slarti", "Bartfass", "Slartibartfass", "-"));
+    }
+
+    QueryResult result = query(InetOrgPerson.class, "lastName:Bartfass");
+    assertThat(result.getTotalHits()).isOne();
+    assertThat(result.getHits()).allSatisfy(
+      hit -> assertThat(hit.getId()).isEqualTo("Bartfass")
+    );
+  }
+
+  @Test
   void shouldReturnTypeOfHits() throws IOException {
     try (IndexWriter writer = writer()) {
       writer.addDocument(simpleDoc("We need the type"));
@@ -454,6 +467,7 @@ class LuceneQueryBuilderTest {
     document.add(new TextField("lastName", lastName, Field.Store.YES));
     document.add(new TextField("displayName", displayName, Field.Store.YES));
     document.add(new TextField("carLicense", carLicense, Field.Store.YES));
+    document.add(new StringField(FieldNames.ID, lastName, Field.Store.YES));
     document.add(new StringField(FieldNames.TYPE, InetOrgPerson.class.getName(), Field.Store.YES));
     return document;
   }

@@ -34,6 +34,7 @@ import java.util.Map;
 @Value
 public class Hit {
 
+  String id;
   float score;
   Map<String, Field> fields;
 
