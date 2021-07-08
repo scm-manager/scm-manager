@@ -22,41 +22,29 @@
  * SOFTWARE.
  */
 
-import * as urls from "./urls";
-export { urls };
+import { HalRepresentation, PagedCollection } from "./hal";
 
-export * from "./errors";
-export * from "./apiclient";
+export type ValueField = {
+  highlighted: false;
+  value: unknown;
+};
 
-export * from "./base";
-export * from "./login";
-export * from "./groups";
-export * from "./users";
-export * from "./suggestions";
-export * from "./userSuggestions";
-export * from "./groupSuggestions";
-export * from "./repositories";
-export * from "./namespaces";
-export * from "./branches";
-export * from "./changesets";
-export * from "./tags";
-export * from "./config";
-export * from "./admin";
-export * from "./plugins";
-export * from "./repository-roles";
-export * from "./permissions";
-export * from "./sources";
-export * from "./import";
-export * from "./diff";
-export * from "./notifications";
-export * from "./configLink";
-export * from "./apiKeys";
-export * from "./publicKeys";
-export * from "./fileContent";
-export * from "./history";
-export * from "./contentType";
-export * from "./annotations";
-export * from "./search";
+export type HighligthedField = {
+  highlighted: true;
+  fragments: string[];
+};
 
-export { default as ApiProvider } from "./ApiProvider";
-export * from "./ApiProvider";
+export type Field = ValueField | HighligthedField;
+
+export type Hit = HalRepresentation & {
+  score: number;
+  fields: { [name: string]: Field };
+};
+
+export type HitEmbedded = {
+  hits: Hit[];
+};
+
+export type QueryResult = PagedCollection<HitEmbedded> & {
+  type: string;
+};

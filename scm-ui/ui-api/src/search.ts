@@ -22,41 +22,27 @@
  * SOFTWARE.
  */
 
-import * as urls from "./urls";
-export { urls };
+import { ApiResult, useRequiredIndexLink } from "./base";
+import { QueryResult } from "@scm-manager/ui-types";
+import { apiClient } from "./apiclient";
+import { createQueryString } from "./utils";
+import { useQuery } from "react-query";
 
-export * from "./errors";
-export * from "./apiclient";
+export type SearchOptions = {};
 
-export * from "./base";
-export * from "./login";
-export * from "./groups";
-export * from "./users";
-export * from "./suggestions";
-export * from "./userSuggestions";
-export * from "./groupSuggestions";
-export * from "./repositories";
-export * from "./namespaces";
-export * from "./branches";
-export * from "./changesets";
-export * from "./tags";
-export * from "./config";
-export * from "./admin";
-export * from "./plugins";
-export * from "./repository-roles";
-export * from "./permissions";
-export * from "./sources";
-export * from "./import";
-export * from "./diff";
-export * from "./notifications";
-export * from "./configLink";
-export * from "./apiKeys";
-export * from "./publicKeys";
-export * from "./fileContent";
-export * from "./history";
-export * from "./contentType";
-export * from "./annotations";
-export * from "./search";
+const defaultSearchOptions: SearchOptions = {};
 
-export { default as ApiProvider } from "./ApiProvider";
-export * from "./ApiProvider";
+export const useSearch = (query: string, options = defaultSearchOptions): ApiResult<QueryResult> => {
+  const link = useRequiredIndexLink("search");
+
+  const queryParams: Record<string, string> = {};
+  queryParams.q = query;
+
+  return useQuery<QueryResult, Error>(
+    ["search", query],
+    () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
+    {
+      enabled: query.length > 1,
+    }
+  );
+};
