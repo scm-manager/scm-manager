@@ -22,26 +22,29 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import Notifications from "./Notifications";
-import LogoutButton from "./LogoutButton";
-import { Links } from "@scm-manager/ui-types";
-import LoginButton from "./LoginButton";
-import OmniSearch from "./OmniSearch";
+import { HalRepresentation, PagedCollection } from "./hal";
 
-type Props = {
-  burgerMode: boolean;
-  links: Links;
+export type ValueField = {
+  highlighted: false;
+  value: unknown;
 };
 
-const HeaderActions: FC<Props> = ({ burgerMode, links }) => {
-  return (
-    <>
-      {!burgerMode ? <OmniSearch links={links} /> : null}
-      {!burgerMode ? <Notifications className="navbar-item" /> : null}
-      <LogoutButton burgerMode={burgerMode} links={links} />
-      <LoginButton burgerMode={burgerMode} links={links} />
-    </>
-  );
+export type HighligthedField = {
+  highlighted: true;
+  fragments: string[];
 };
-export default HeaderActions;
+
+export type Field = ValueField | HighligthedField;
+
+export type Hit = HalRepresentation & {
+  score: number;
+  fields: { [name: string]: Field };
+};
+
+export type HitEmbedded = {
+  hits: Hit[];
+};
+
+export type QueryResult = PagedCollection<HitEmbedded> & {
+  type: string;
+};

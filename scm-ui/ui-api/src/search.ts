@@ -22,26 +22,27 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import Notifications from "./Notifications";
-import LogoutButton from "./LogoutButton";
-import { Links } from "@scm-manager/ui-types";
-import LoginButton from "./LoginButton";
-import OmniSearch from "./OmniSearch";
+import { ApiResult, useRequiredIndexLink } from "./base";
+import { QueryResult } from "@scm-manager/ui-types";
+import { apiClient } from "./apiclient";
+import { createQueryString } from "./utils";
+import { useQuery } from "react-query";
 
-type Props = {
-  burgerMode: boolean;
-  links: Links;
-};
+export type SearchOptions = {};
 
-const HeaderActions: FC<Props> = ({ burgerMode, links }) => {
-  return (
-    <>
-      {!burgerMode ? <OmniSearch links={links} /> : null}
-      {!burgerMode ? <Notifications className="navbar-item" /> : null}
-      <LogoutButton burgerMode={burgerMode} links={links} />
-      <LoginButton burgerMode={burgerMode} links={links} />
-    </>
+const defaultSearchOptions: SearchOptions = {};
+
+export const useSearch = (query: string, options = defaultSearchOptions): ApiResult<QueryResult> => {
+  const link = useRequiredIndexLink("search");
+
+  const queryParams: Record<string, string> = {};
+  queryParams.q = query;
+
+  return useQuery<QueryResult, Error>(
+    ["search", query],
+    () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
+    {
+      enabled: query.length > 1,
+    }
   );
 };
-export default HeaderActions;
