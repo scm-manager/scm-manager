@@ -45,12 +45,13 @@ import static de.otto.edison.hal.paging.NumberedPaging.zeroBasedNumberedPaging;
 @Mapper
 public abstract class QueryResultMapper {
 
-  public CollectionDto map(SearchParameters params, QueryResult result) {
+  public QueryResultDto map(SearchParameters params, QueryResult result) {
     int totalHits = (int) result.getTotalHits();
     Links links = links(params, totalHits);
-    CollectionDto dto = new CollectionDto(links, hits(result));
+    QueryResultDto dto = new QueryResultDto(links, hits(result));
     dto.setPage(params.getPage());
     dto.setPageTotal(computePageTotal(totalHits, params.getPageSize()));
+    dto.setType(result.getType());
     return dto;
   }
 

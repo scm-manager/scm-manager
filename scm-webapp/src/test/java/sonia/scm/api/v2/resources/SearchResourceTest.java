@@ -24,7 +24,6 @@
 
 package sonia.scm.api.v2.resources;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.jboss.resteasy.mock.MockHttpRequest;
@@ -51,15 +50,11 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -113,11 +108,18 @@ class SearchResourceTest {
   }
 
   @Test
+  void shouldReturnType() throws IOException, URISyntaxException {
+    mockQueryResult("Hello", result(0L));
+    MockHttpResponse response = search("Hello");
+
+    JsonNode root = json(response);
+    assertThat(root.get("type").asText()).isEqualTo("java.lang.String");
+  }
+
+  @Test
   void shouldReturnHitsAsEmbedded() throws IOException, URISyntaxException {
     mockQueryResult("Hello", result(2L, "Hello", "Hello Again"));
     MockHttpResponse response = search("Hello");
-
-    System.out.println(response.getContentAsString());
 
     JsonNode hits = json(response).get("_embedded").get("hits");
     assertThat(hits.size()).isEqualTo(2);
@@ -149,7 +151,7 @@ class SearchResourceTest {
     for (int i=0; i<values.length; i++) {
       hits.add(hit(i, values));
     }
-    return new QueryResult(totalHits, hits);
+    return new QueryResult(totalHits, String.class, hits);
   }
 
   @Nonnull

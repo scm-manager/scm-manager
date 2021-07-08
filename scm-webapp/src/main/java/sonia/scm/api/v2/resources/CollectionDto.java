@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
@@ -31,6 +31,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Getter @Setter
+@SuppressWarnings("squid:S2160") // we do not need equals for dto
 class CollectionDto extends HalRepresentation {
 
   private int page;
