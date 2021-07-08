@@ -26,9 +26,13 @@ package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import de.otto.edison.hal.HalRepresentation;
+import lombok.Getter;
+import lombok.Setter;
 import org.jboss.resteasy.mock.MockHttpRequest;
 import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -50,6 +54,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,75 +72,104 @@ class SearchResourceTest {
 
   private RestDispatcher dispatcher;
 
+  @Mock
+  private HalEnricherRegistry enricherRegistry;
+
   @BeforeEach
   void setUpDispatcher() {
+    QueryResultMapper mapper = Mappers.getMapper(QueryResultMapper.class);
+    mapper.setRegistry(enricherRegistry);
     SearchResource resource = new SearchResource(
-      searchEngine, Mappers.getMapper(QueryResultMapper.class)
+      searchEngine, mapper
     );
     dispatcher = new RestDispatcher();
     dispatcher.addSingletonResource(resource);
   }
 
   @Test
-  void shouldReturnVndContentType() throws UnsupportedEncodingException, URISyntaxException {
-    mockQueryResult("Hello", result(0L));
-    MockHttpResponse response = search("Hello");
-    assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
-    assertHeader(response, "Content-Type", VndMediaType.QUERY_RESULT);
-  }
+  void shouldEnrichResponse() throws IOException, URISyntaxException {
+    when(enricherRegistry.allByType(QueryResult.class))
+      .thenReturn(Collections.singleton(new SampleEnricher()));
 
-  @Test
-  void shouldReturnPagingLinks() throws IOException, URISyntaxException {
-    mockQueryResult(20, 20, "paging", result(100));
-    MockHttpResponse response = search("paging", 1, 20);
-
-    JsonNode links = json(response).get("_links");
-    assertLink(links, "self", "/v2/search?q=paging&page=1&pageSize=20");
-    assertLink(links, "first", "/v2/search?q=paging&page=0&pageSize=20");
-    assertLink(links, "prev", "/v2/search?q=paging&page=0&pageSize=20");
-    assertLink(links, "next", "/v2/search?q=paging&page=2&pageSize=20");
-    assertLink(links, "last", "/v2/search?q=paging&page=4&pageSize=20");
-  }
-
-  @Test
-  void shouldPagingFields() throws IOException, URISyntaxException {
-    mockQueryResult(20, 20, "pagingFields", result(100));
-    MockHttpResponse response = search("pagingFields", 1, 20);
-
-    JsonNode root = json(response);
-    assertThat(root.get("page").asInt()).isOne();
-    assertThat(root.get("pageTotal").asInt()).isEqualTo(5);
-  }
-
-  @Test
-  void shouldReturnType() throws IOException, URISyntaxException {
     mockQueryResult("Hello", result(0L));
     MockHttpResponse response = search("Hello");
 
-    JsonNode root = json(response);
-    assertThat(root.get("type").asText()).isEqualTo("java.lang.String");
+    System.out.println(response.getContentAsString());
+
+    JsonNode sample = json(response).get("_embedded").get("sample");
+    assertThat(sample.get("type").asText()).isEqualTo("java.lang.String");
   }
 
-  @Test
-  void shouldReturnHitsAsEmbedded() throws IOException, URISyntaxException {
-    mockQueryResult("Hello", result(2L, "Hello", "Hello Again"));
-    MockHttpResponse response = search("Hello");
+  @Nested
+  class WithoutEnricher {
 
-    JsonNode hits = json(response).get("_embedded").get("hits");
-    assertThat(hits.size()).isEqualTo(2);
+    @BeforeEach
+    void setUpEnricherRegistry() {
+      when(enricherRegistry.allByType(QueryResult.class)).thenReturn(Collections.emptySet());
+    }
 
-    JsonNode first = hits.get(0);
-    assertThat(first.get("score").asDouble()).isEqualTo(2d);
+    @Test
+    void shouldReturnVndContentType() throws UnsupportedEncodingException, URISyntaxException {
+      mockQueryResult("Hello", result(0L));
+      MockHttpResponse response = search("Hello");
+      assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
+      assertHeader(response, "Content-Type", VndMediaType.QUERY_RESULT);
+    }
 
-    JsonNode fields = first.get("fields");
+    @Test
+    void shouldReturnPagingLinks() throws IOException, URISyntaxException {
+      mockQueryResult(20, 20, "paging", result(100));
+      MockHttpResponse response = search("paging", 1, 20);
 
-    JsonNode valueField = fields.get("value");
-    assertThat(valueField.get("highlighted").asBoolean()).isFalse();
-    assertThat(valueField.get("value").asText()).isEqualTo("Hello");
+      JsonNode links = json(response).get("_links");
+      assertLink(links, "self", "/v2/search?q=paging&page=1&pageSize=20");
+      assertLink(links, "first", "/v2/search?q=paging&page=0&pageSize=20");
+      assertLink(links, "prev", "/v2/search?q=paging&page=0&pageSize=20");
+      assertLink(links, "next", "/v2/search?q=paging&page=2&pageSize=20");
+      assertLink(links, "last", "/v2/search?q=paging&page=4&pageSize=20");
+    }
 
-    JsonNode highlightedField = fields.get("highlighted");
-    assertThat(highlightedField.get("highlighted").asBoolean()).isTrue();
-    assertThat(highlightedField.get("fragments").get(0).asText()).isEqualTo("Hello");
+    @Test
+    void shouldPagingFields() throws IOException, URISyntaxException {
+      mockQueryResult(20, 20, "pagingFields", result(100));
+      MockHttpResponse response = search("pagingFields", 1, 20);
+
+      JsonNode root = json(response);
+      assertThat(root.get("page").asInt()).isOne();
+      assertThat(root.get("pageTotal").asInt()).isEqualTo(5);
+    }
+
+    @Test
+    void shouldReturnType() throws IOException, URISyntaxException {
+      mockQueryResult("Hello", result(0L));
+      MockHttpResponse response = search("Hello");
+
+      JsonNode root = json(response);
+      assertThat(root.get("type").asText()).isEqualTo("java.lang.String");
+    }
+
+    @Test
+    void shouldReturnHitsAsEmbedded() throws IOException, URISyntaxException {
+      mockQueryResult("Hello", result(2L, "Hello", "Hello Again"));
+      MockHttpResponse response = search("Hello");
+
+      JsonNode hits = json(response).get("_embedded").get("hits");
+      assertThat(hits.size()).isEqualTo(2);
+
+      JsonNode first = hits.get(0);
+      assertThat(first.get("score").asDouble()).isEqualTo(2d);
+
+      JsonNode fields = first.get("fields");
+
+      JsonNode valueField = fields.get("value");
+      assertThat(valueField.get("highlighted").asBoolean()).isFalse();
+      assertThat(valueField.get("value").asText()).isEqualTo("Hello");
+
+      JsonNode highlightedField = fields.get("highlighted");
+      assertThat(highlightedField.get("highlighted").asBoolean()).isTrue();
+      assertThat(highlightedField.get("fragments").get(0).asText()).isEqualTo("Hello");
+    }
+
   }
 
   private void assertLink(JsonNode links, String self, String s) {
@@ -148,7 +182,7 @@ class SearchResourceTest {
 
   private QueryResult result(long totalHits, Object... values) {
     List<Hit> hits = new ArrayList<>();
-    for (int i=0; i<values.length; i++) {
+    for (int i = 0; i < values.length; i++) {
       hits.add(hit(i, values));
     }
     return new QueryResult(totalHits, String.class, hits);
@@ -164,7 +198,7 @@ class SearchResourceTest {
   private Map<String, Hit.Field> fields(Object value) {
     Map<String, Hit.Field> fields = new HashMap<>();
     fields.put("value", new Hit.ValueField(value));
-    fields.put("highlighted", new Hit.HighlightedField(new String[]{ value.toString() }));
+    fields.put("highlighted", new Hit.HighlightedField(new String[]{value.toString()}));
     return fields;
   }
 
@@ -201,5 +235,22 @@ class SearchResourceTest {
     MockHttpResponse response = new MockHttpResponse();
     dispatcher.invoke(request, response);
     return response;
+  }
+
+  @Getter @Setter
+  public static class SampleEmbedded extends HalRepresentation {
+    private Class<?> type;
+  }
+
+  private static class SampleEnricher implements HalEnricher {
+    @Override
+    public void enrich(HalEnricherContext context, HalAppender appender) {
+      QueryResult result = context.oneRequireByType(QueryResult.class);
+
+      SampleEmbedded embedded = new SampleEmbedded();
+      embedded.setType(result.getType());
+
+      appender.appendEmbedded("sample", embedded);
+    }
   }
 }
