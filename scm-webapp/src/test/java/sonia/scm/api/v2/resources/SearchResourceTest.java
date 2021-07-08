@@ -60,6 +60,7 @@ import java.util.List;
 import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -87,16 +88,30 @@ class SearchResourceTest {
   }
 
   @Test
-  void shouldEnrichResponse() throws IOException, URISyntaxException {
+  void shouldEnrichQueryResult() throws IOException, URISyntaxException {
     when(enricherRegistry.allByType(QueryResult.class))
       .thenReturn(Collections.singleton(new SampleEnricher()));
 
     mockQueryResult("Hello", result(0L));
     MockHttpResponse response = search("Hello");
 
-    System.out.println(response.getContentAsString());
-
     JsonNode sample = json(response).get("_embedded").get("sample");
+    assertThat(sample.get("type").asText()).isEqualTo("java.lang.String");
+  }
+
+  @Test
+  void shouldEnrichHitResult() throws IOException, URISyntaxException {
+    when(enricherRegistry.allByType(QueryResult.class))
+      .thenReturn(Collections.emptySet());
+    when(enricherRegistry.allByType(Hit.class))
+      .thenReturn(Collections.singleton(new SampleEnricher()));
+
+    mockQueryResult("Hello", result(1L, "Hello"));
+    MockHttpResponse response = search("Hello");
+
+    JsonNode sample = json(response)
+      .get("_embedded").get("hits").get(0)
+      .get("_embedded").get("sample");
     assertThat(sample.get("type").asText()).isEqualTo("java.lang.String");
   }
 
@@ -106,6 +121,7 @@ class SearchResourceTest {
     @BeforeEach
     void setUpEnricherRegistry() {
       when(enricherRegistry.allByType(QueryResult.class)).thenReturn(Collections.emptySet());
+      lenient().when(enricherRegistry.allByType(Hit.class)).thenReturn(Collections.emptySet());
     }
 
     @Test

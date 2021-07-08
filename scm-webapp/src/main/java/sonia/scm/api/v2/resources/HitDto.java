@@ -24,7 +24,9 @@
 
 package sonia.scm.api.v2.resources;
 
+import de.otto.edison.hal.Embedded;
 import de.otto.edison.hal.HalRepresentation;
+import de.otto.edison.hal.Links;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -41,4 +43,7 @@ public class HitDto extends HalRepresentation {
   private float score;
   private Map<String, Hit.Field> fields;
 
+  public HitDto(Links links, Embedded embedded) {
+    super(links, embedded);
+  }
 }
