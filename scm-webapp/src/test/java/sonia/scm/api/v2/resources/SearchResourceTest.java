@@ -207,7 +207,7 @@ class SearchResourceTest {
   @Nonnull
   private Hit hit(int i, Object[] values) {
     Map<String, Hit.Field> fields = fields(values[i]);
-    return new Hit(values.length - i, fields);
+    return new Hit("" + i, values.length - i, fields);
   }
 
   @Nonnull
@@ -253,7 +253,8 @@ class SearchResourceTest {
     return response;
   }
 
-  @Getter @Setter
+  @Getter
+  @Setter
   public static class SampleEmbedded extends HalRepresentation {
     private Class<?> type;
   }

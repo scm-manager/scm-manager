@@ -80,9 +80,8 @@ public class QueryResultFactory {
         fields.put(field.getName(), f);
       }
     }
-    fields.put(FieldNames.TYPE, new Hit.ValueField(document.get(FieldNames.TYPE)));
 
-    return new Hit(scoreDoc.score, fields);
+    return new Hit(document.get(FieldNames.ID), scoreDoc.score, fields);
   }
 
   private Hit.Field field(Document document, SearchableField field) throws IOException, InvalidTokenOffsetsException {
