@@ -30,6 +30,8 @@ import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Notification } from "@scm-manager/ui-components";
 
+// TODO return only 5 results
+
 const Field = styled.div`
   margin-bottom: 0 !important;
 `;
@@ -187,7 +189,7 @@ const OmniSearch: FC = () => {
   return (
     <Field className="navbar-item field">
       <div
-        className={classNames("control has-icons-right", {
+        className={classNames("control", "has-icons-right", {
           "is-loading": isLoading,
         })}
       >
