@@ -28,7 +28,7 @@ import { useSearch } from "@scm-manager/ui-api";
 import classNames from "classnames";
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Notification } from "@scm-manager/ui-components";
+import { ErrorNotification, Notification } from "@scm-manager/ui-components";
 
 // TODO return only 5 results
 
@@ -54,14 +54,26 @@ type HitsProps = {
 
 // TODO relabel old search from search to filter
 
+const QuickSearchNotification: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
+
 const EmptyHits = () => {
   const [t] = useTranslation("commons");
   return (
-    <div className="dropdown-content p-4">
+    <QuickSearchNotification>
       <Notification type="info">{t("search.quickSearch.noResults")}</Notification>
-    </div>
+    </QuickSearchNotification>
   );
 };
+
+type ErrorProps = {
+  error: Error;
+};
+
+const SearchErrorNotification: FC<ErrorProps> = ({ error }) => (
+  <QuickSearchNotification>
+    <ErrorNotification error={error} />
+  </QuickSearchNotification>
+);
 
 const ResultHeading = styled.div`
   border-bottom: 1px solid lightgray;
@@ -140,7 +152,6 @@ const useKeyBoardNavigation = (onSelect: (hit: Hit) => void, hits?: Array<Hit>) 
   };
 };
 
-// TODO move to ui-components?
 const useDebounce = (value: string, delay: number) => {
   const [debouncedValue, setDebouncedValue] = useState(value);
   useEffect(() => {
@@ -168,7 +179,7 @@ const useShowResultsOnFocus = () => {
   return {
     showResults,
     onClick: (e: MouseEvent<HTMLInputElement>) => e.stopPropagation(),
-    onFocus: () => setShowResults(true)
+    onFocus: () => setShowResults(true),
   };
 };
 
@@ -185,7 +196,6 @@ const OmniSearch: FC = () => {
   const { data, isLoading, error } = useSearch(debouncedQuery);
   const { onKeyDown, index } = useKeyBoardNavigation(onHitSelect, data?._embedded.hits);
 
-
   return (
     <Field className="navbar-item field">
       <div
@@ -193,7 +203,7 @@ const OmniSearch: FC = () => {
           "is-loading": isLoading,
         })}
       >
-        <div className={classNames("dropdown", { "is-active": !!data && showResults })}>
+        <div className={classNames("dropdown", { "is-active": (!!data || error) && showResults })}>
           <div className="dropdown-trigger">
             <input
               className="input"
@@ -211,7 +221,8 @@ const OmniSearch: FC = () => {
             )}
           </div>
           <div className="dropdown-menu">
-            {data ? <Hits onClick={onHitSelect} index={index} hits={data._embedded.hits} /> : null}
+            {error ? <SearchErrorNotification error={error} /> : null}
+            {!error && data ? <Hits onClick={onHitSelect} index={index} hits={data._embedded.hits} /> : null}
           </div>
         </div>
       </div>
