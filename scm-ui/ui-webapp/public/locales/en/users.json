@@ -45,7 +45,7 @@
     }
   },
   "overview": {
-    "searchUser": "Search user"
+    "filterUser": "Filter users"
   },
   "createUser": {
     "title": "Create User",
