@@ -47,7 +47,7 @@ const namespaceAndName = (hit: Hit) => {
 type HitsProps = {
   hits: Hit[];
   index: number;
-  onClick: (hit: Hit) => void;
+  clear: () => void;
 };
 
 const QuickSearchNotification: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
@@ -80,6 +80,7 @@ const isBackendError = (error: Error | BackendError): error is BackendError => {
 };
 
 const SearchErrorNotification: FC<ErrorProps> = ({ error }) => {
+  // 5VScek8Xp1 is the id of sonia.scm.search.QueryParseException
   if (isBackendError(error) && error.errorCode === "5VScek8Xp1") {
     return <ParseErrorNotification />;
   }
@@ -96,8 +97,8 @@ const ResultHeading = styled.div`
   padding: 0.375rem 0.5rem;
 `;
 
-const Hits: FC<HitsProps> = ({ hits, index, onClick }) => {
-  const id = useCallback(namespaceAndName, hits);
+const Hits: FC<HitsProps> = ({ hits, index, clear }) => {
+  const id = useCallback(namespaceAndName, [hits]);
   const [t] = useTranslation("commons");
 
   if (hits.length === 0) {
@@ -108,7 +109,7 @@ const Hits: FC<HitsProps> = ({ hits, index, onClick }) => {
     <div className="dropdown-content">
       <ResultHeading className="dropdown-item">{t("search.quickSearch.resultHeading")}</ResultHeading>
       {hits.map((hit, idx) => (
-        <div key={id(hit)} onClick={() => onClick(hit)}>
+        <div key={id(hit)} onMouseDown={(e) => e.preventDefault()} onClick={clear}>
           <Link
             className={classNames("dropdown-item", "has-text-weight-medium", { "is-active": idx === index })}
             to={`/repo/${id(hit)}`}
@@ -142,7 +143,7 @@ const useKeyBoardNavigation = (clear: () => void, hits?: Array<Hit>) => {
           });
         }
         break;
-      case 38: // e.code: ArrowUp:
+      case 38: // e.code: ArrowUp
         if (hits) {
           setIndex((idx) => {
             if (idx > 0) {
@@ -152,14 +153,14 @@ const useKeyBoardNavigation = (clear: () => void, hits?: Array<Hit>) => {
           });
         }
         break;
-      case 13: // e.code: Enter:
+      case 13: // e.code: Enter
         if (hits && index >= 0) {
           const hit = hits[index];
           history.push(`/repo/${namespaceAndName(hit)}`);
           clear();
         }
         break;
-      case 27: // e.code: Escape:
+      case 27: // e.code: Escape
         clear();
         break;
     }
@@ -186,34 +187,24 @@ const useDebounce = (value: string, delay: number) => {
 
 const useShowResultsOnFocus = () => {
   const [showResults, setShowResults] = useState(false);
-
-  useEffect(() => {
-    const hideResults = () => {
-      setShowResults(false);
-    };
-    window.addEventListener("click", hideResults);
-    return () => window.removeEventListener("click", hideResults);
-  }, []);
-
   return {
     showResults,
     onClick: (e: MouseEvent<HTMLInputElement>) => e.stopPropagation(),
     onFocus: () => setShowResults(true),
-    onBlur: () => setShowResults(false),
+    onBlur: () => setShowResults(false)
   };
 };
 
 const OmniSearch: FC = () => {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 250);
+  const { data, isLoading, error } = useSearch(debouncedQuery, { pageSize: 5 });
   const { showResults, ...handlers } = useShowResultsOnFocus();
 
-  const onHitSelect = () => {
+  const clearQuery = () => {
     setQuery("");
   };
-
-  const { data, isLoading, error } = useSearch(debouncedQuery, { pageSize: 5 });
-  const { onKeyDown, index } = useKeyBoardNavigation(onHitSelect, data?._embedded.hits);
+  const { onKeyDown, index } = useKeyBoardNavigation(clearQuery, data?._embedded.hits);
 
   return (
     <Field className="navbar-item field">
@@ -241,7 +232,7 @@ const OmniSearch: FC = () => {
           </div>
           <div className="dropdown-menu">
             {error ? <SearchErrorNotification error={error} /> : null}
-            {!error && data ? <Hits onClick={onHitSelect} index={index} hits={data._embedded.hits} /> : null}
+            {!error && data ? <Hits clear={clearQuery} index={index} hits={data._embedded.hits} /> : null}
           </div>
         </div>
       </div>
