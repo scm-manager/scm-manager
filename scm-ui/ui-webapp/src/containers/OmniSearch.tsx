@@ -57,10 +57,16 @@ const EmptyHits = () => {
   // TODO improve layout
   return (
     <div className="dropdown-content">
-      <Notification type="info">{t("search.noResults")}</Notification>
+      <Notification type="info">{t("search.quickSearch.noResults")}</Notification>
     </div>
   );
 };
+
+const ResultHeading = styled.div`
+  border-bottom: 1px solid lightgray;
+  margin: 0 0.5rem;
+  padding: 0.375rem 0.5rem;
+`;
 
 const Hits: FC<HitsProps> = ({ hits, index, onClick }) => {
   const id = useCallback(namespaceAndName, hits);
@@ -71,12 +77,14 @@ const Hits: FC<HitsProps> = ({ hits, index, onClick }) => {
     return <EmptyHits />;
   }
 
-
   return (
     <div className="dropdown-content">
+      <ResultHeading className="dropdown-item">
+        Top repository results
+      </ResultHeading>
       {hits.map((hit, idx) => (
         <div key={id(hit)} onClick={() => onClick(hit)}>
-          <Link className={classNames("dropdown-item", { "is-active": idx === index })} to={`/repo/${id(hit)}`}>
+          <Link className={classNames("dropdown-item", "has-text-weight-medium", { "is-active": idx === index })} to={`/repo/${id(hit)}`}>
             {id(hit)}
           </Link>
         </div>
