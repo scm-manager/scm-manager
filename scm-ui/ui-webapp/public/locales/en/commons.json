@@ -151,5 +151,11 @@
     "d_plural": "{{count}} days",
     "w": "{{count}} week",
     "w_plural": "{{count}} weeks"
+  },
+  "search": {
+    "quickSearch": {
+      "resultHeading": "Top repository results",
+      "noResults": "Could not find matching repository"
+    }
   }
 }
