@@ -31,19 +31,42 @@ import lombok.Value;
 
 import java.util.Map;
 
+/**
+ * Represents an object which matched the search query.
+ *
+ * @since 2.21.0
+ */
 @Value
 public class Hit {
 
+  /**
+   * Id of the matched object.
+   */
   String id;
+
+  /**
+   * The score describes how good the match was.
+   */
   float score;
+
+  /**
+   * Fields of the matched object.
+   * Key of the map is the name of the field and the value is either a {@link ValueField} or a {@link HighlightedField}.
+   */
   Map<String, Field> fields;
 
+  /**
+   * Base class of hit field types.
+   */
   @Getter
   @AllArgsConstructor(access = AccessLevel.PRIVATE)
   public abstract static class Field {
     boolean highlighted;
   }
 
+  /**
+   * A fields which holds a complete value.
+   */
   @Getter
   public static class ValueField extends Field {
     Object value;
@@ -54,6 +77,9 @@ public class Hit {
     }
   }
 
+  /**
+   * A field which consist of fragments which containing a match of the searched query.
+   */
   @Getter
   public static class HighlightedField extends Field {
     String[] fragments;

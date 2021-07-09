@@ -28,11 +28,26 @@ import lombok.Value;
 
 import java.util.List;
 
+/**
+ * Result of a query execution.
+ * @since 2.21.0
+ */
 @Value
 public class QueryResult {
 
+  /**
+   * Total count of hits, which are matched by the query.
+   */
   long totalHits;
+  /**
+   * Searched type of object.
+   */
   Class<?> type;
+  /**
+   * List of hits which are matched by the query.
+   * The list contains only those hits which are starting at start and they are limit by the given amount.
+   * @see QueryBuilder
+   */
   List<Hit> hits;
 
 }

@@ -29,37 +29,73 @@ import sonia.scm.repository.Repository;
 
 import java.util.Optional;
 
+/**
+ * Build and execute queries against an index.
+ *
+ * @since 2.21.0
+ */
 public abstract class QueryBuilder {
 
   private String repository;
   private int start = 0;
   private int limit = 10;
 
+  /**
+   * Return only results which are related to the given repository.
+   * @param repository repository
+   * @return {@code this}
+   */
   public QueryBuilder repository(Repository repository) {
     return repository(repository.getId());
   }
 
+  /**
+   * Return only results which are related to the given repository.
+   * @param repository repository
+   * @return {@code this}
+   */
   public QueryBuilder repository(String repository) {
     this.repository = repository;
     return this;
   }
 
+  /**
+   * The result should start at the given start.
+   * All matching objects before the given start are skipped.
+   * @param start start of result
+   * @return {@code this}
+   */
   public QueryBuilder start(int start) {
     this.start = start;
     return this;
   }
 
+  /**
+   * Defines how many hits are returned.
+   * @param limit limit of hits
+   * @return {@code this}
+   */
   public QueryBuilder limit(int limit) {
     this.limit = limit;
     return this;
   }
 
+  /**
+   * Executes the query and returns the matched hits.
+   *
+   * @param type type of objects which are searched
+   * @param queryString searched query
+   * @return result of query
+   */
   public QueryResult execute(Class<?> type, String queryString){
     return execute(new QueryParams(type, repository, queryString, start, limit));
   }
 
   protected abstract QueryResult execute(QueryParams queryParams);
 
+  /**
+   * The searched query and all parameters, which are belong to the query.
+   */
   @Value
   static class QueryParams {
     Class<?> type;

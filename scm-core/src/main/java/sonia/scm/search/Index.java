@@ -24,11 +24,50 @@
 
 package sonia.scm.search;
 
+/**
+ * Can be used to index objects for full text searches.
+ *
+ * @since 2.21.0
+ */
 public interface Index extends AutoCloseable {
+
+  /**
+   * Store the given object in the index.
+   * The object will we searched for {@link Indexed} annotations.
+   * All fields which such a annotation will be stored in the index.
+   *
+   * @param id identifier of the object in the index
+   * @param permission who is able to find the object in the index
+   * @param object object to index
+   *
+   * @see Indexed
+   */
   void store(Id id, String permission, Object object);
+
+  /**
+   * Delete the object with the given id and type from index.
+   *
+   * @param id id of object
+   * @param type type of object
+   */
   void delete(Id id, Class<?> type);
+
+  /**
+   * Delete all objects which are related the given repository from index.
+   *
+   * @param repository id of repository
+   */
   void deleteByRepository(String repository);
+
+  /**
+   * Delete all objects with the given type from index.
+   * @param type type of objects
+   */
   void deleteByType(Class<?> type);
+
+  /**
+   * Close index and commit changes.
+   */
   @Override
   void close();
 }

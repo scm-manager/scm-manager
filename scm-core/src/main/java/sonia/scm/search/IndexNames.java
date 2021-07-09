@@ -24,8 +24,15 @@
 
 package sonia.scm.search;
 
+/**
+ * Names of predefined indexes.
+ * @since 2.21.0
+ */
 public final class IndexNames {
 
+  /**
+   * The default index.
+   */
   public static final String DEFAULT = "_default";
 
   private IndexNames() {

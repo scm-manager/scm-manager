@@ -24,6 +24,11 @@
 
 package sonia.scm.search;
 
+/**
+ * Generic exception which is could by thrown by any part of the search engine.
+ *
+ * @since 2.21.0
+ */
 public class SearchEngineException extends RuntimeException {
 
   public SearchEngineException(String message) {

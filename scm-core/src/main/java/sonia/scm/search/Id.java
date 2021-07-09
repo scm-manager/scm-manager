@@ -36,6 +36,11 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
+/**
+ * Describes the id of an indexed object.
+ *
+ * @since 2.21.0
+ */
 @ToString
 @EqualsAndHashCode
 public final class Id {
@@ -48,24 +53,47 @@ public final class Id {
     this.repository = repository;
   }
 
+  /**
+   * Returns the string representation of the id without the repository part.
+   *
+   * @return string representation without repository.
+   */
   public String getValue() {
     return value;
   }
 
+  /**
+   * Returns the repository id part of the id or an empty optional if the id does not belong to a repository.
+   * @return repository id or empty
+   */
   public Optional<String> getRepository() {
     return Optional.ofNullable(repository);
   }
 
+  /**
+   * Creates the id with the id of the given repository.
+   * @param repository repository
+   * @return id with repository id
+   */
   public Id withRepository(@Nonnull Repository repository) {
     checkRepository(repository);
     return withRepository(repository.getId());
   }
 
+  /**
+   * Creates the id with the  given repository id.
+   * @param repository repository id
+   * @return id with repository id
+   */
   public Id withRepository(@Nonnull String repository) {
     checkRepository(repository);
     return new Id(value, repository);
   }
 
+  /**
+   * Returns the string representation of the id including the repository.
+   * @return string representation
+   */
   public String asString() {
     if (repository != null) {
       return value + "/" + repository;
@@ -73,6 +101,14 @@ public final class Id {
     return value;
   }
 
+  /**
+   * Creates a new id.
+   *
+   * @param value primary value of the id
+   * @param others additional values which should be part of the id
+   *
+   * @return new id
+   */
   public static Id of(@Nonnull String value, String... others) {
     Preconditions.checkArgument(!Strings.isNullOrEmpty(value), "primary value is required");
     String idValue = value;
@@ -82,6 +118,12 @@ public final class Id {
     return new Id(idValue, null);
   }
 
+  /**
+   * Creates a new id for the given repository.
+   *
+   * @param repository repository
+   * @return id of repository
+   */
   public static Id of(@Nonnull Repository repository) {
     checkRepository(repository);
     String id = repository.getId();
@@ -89,6 +131,12 @@ public final class Id {
     return new Id(id, id);
   }
 
+  /**
+   * Creates a new id for the given model object.
+   * @param object model object
+   * @param others additional values which should be part of the id
+   * @return new id from model object
+   */
   public static Id of(@Nonnull ModelObject object, String... others) {
     checkObject(object);
     return of(object.getId(), others);

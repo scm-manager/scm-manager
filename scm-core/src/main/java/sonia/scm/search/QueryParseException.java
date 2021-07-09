@@ -28,6 +28,11 @@ import sonia.scm.BadRequestException;
 
 import static sonia.scm.ContextEntry.ContextBuilder.only;
 
+/**
+ * Is thrown if a query with invalid syntax was executed.
+ *
+ * @since 2.21.0
+ */
 @SuppressWarnings("java:S110") // large inheritance is ok for exceptions
 public class QueryParseException extends BadRequestException {
 

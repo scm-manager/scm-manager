@@ -26,6 +26,11 @@ package sonia.scm.search;
 
 import java.util.Locale;
 
+/**
+ * Options to configure how things are indexed and searched.
+ *
+ * @since 2.21.0
+ */
 public class IndexOptions {
 
   private final Type type;
@@ -36,26 +41,58 @@ public class IndexOptions {
     this.locale = locale;
   }
 
+  /**
+   * Returns the type of the index.
+   * @return type of index
+   */
   public Type getType() {
     return type;
   }
 
+  /**
+   * Returns the locale of the index content.
+   *
+   * @return locale of index content
+   */
   public Locale getLocale() {
     return locale;
   }
 
+  /**
+   * Returns the default index options which should match most of the use cases.
+   *
+   * @return default index options
+   */
   public static IndexOptions defaults() {
     return new IndexOptions(Type.GENERIC, Locale.ENGLISH);
   }
 
+  /**
+   * Returns index options for a specific language.
+   * This options should be used if the content is written in a specific natural language.
+   *
+   * @param locale natural language of content
+   *
+   * @return options for content in natural language
+   */
   public static IndexOptions naturalLanguage(Locale locale) {
     return new IndexOptions(Type.NATURAL_LANGUAGE, locale);
   }
 
+  /**
+   * Type of indexing.
+   */
   public enum Type {
 
-    GENERIC, NATURAL_LANGUAGE;
+    /**
+     * Not specified content.
+     */
+    GENERIC,
 
+    /**
+     * Content in natural language.
+     */
+    NATURAL_LANGUAGE;
   }
 
 }
