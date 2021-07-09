@@ -56,9 +56,8 @@ type HitsProps = {
 
 const EmptyHits = () => {
   const [t] = useTranslation("commons");
-  // TODO improve layout
   return (
-    <div className="dropdown-content">
+    <div className="dropdown-content p-4">
       <Notification type="info">{t("search.quickSearch.noResults")}</Notification>
     </div>
   );
@@ -106,9 +105,10 @@ const useKeyBoardNavigation = (onSelect: (hit: Hit) => void, hits?: Array<Hit>) 
     if (!hits) {
       return;
     }
-    // TODO check support for code
-    switch (e.code) {
-      case "ArrowDown":
+    // We use e.which, because ie 11 does not support e.code
+    // https://caniuse.com/keyboardevent-code
+    switch (e.which) {
+      case 40: // e.code: ArrowDown
         setIndex((idx) => {
           if (idx + 1 < hits.length) {
             return idx + 1;
@@ -116,7 +116,7 @@ const useKeyBoardNavigation = (onSelect: (hit: Hit) => void, hits?: Array<Hit>) 
           return idx;
         });
         break;
-      case "ArrowUp":
+      case 38: // e.code: ArrowUp:
         setIndex((idx) => {
           if (idx > 0) {
             return idx - 1;
@@ -124,7 +124,7 @@ const useKeyBoardNavigation = (onSelect: (hit: Hit) => void, hits?: Array<Hit>) 
           return idx;
         });
         break;
-      case "Enter":
+      case 13: // e.code: Enter:
         if (index >= 0) {
           const hit = hits[index];
           history.push(`/repo/${namespaceAndName(hit)}`);
