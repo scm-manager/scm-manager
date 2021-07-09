@@ -24,7 +24,7 @@
 import React, { FC, KeyboardEvent, MouseEvent, useCallback, useState, useEffect } from "react";
 import { Hit, Links, ValueField } from "@scm-manager/ui-types";
 import styled from "styled-components";
-import { useSearch } from "@scm-manager/ui-api";
+import { BackendError, useSearch } from "@scm-manager/ui-api";
 import classNames from "classnames";
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -65,11 +65,30 @@ type ErrorProps = {
   error: Error;
 };
 
-const SearchErrorNotification: FC<ErrorProps> = ({ error }) => (
-  <QuickSearchNotification>
-    <ErrorNotification error={error} />
-  </QuickSearchNotification>
-);
+const ParseErrorNotification: FC = () => {
+  const [t] = useTranslation("commons");
+  // TODO add link to query syntax page/modal
+  return (
+    <QuickSearchNotification>
+      <Notification type="warning">{t("search.quickSearch.parseError")}</Notification>
+    </QuickSearchNotification>
+  );
+};
+
+const isBackendError = (error: Error | BackendError): error is BackendError => {
+  return (error as BackendError).errorCode !== undefined;
+};
+
+const SearchErrorNotification: FC<ErrorProps> = ({ error }) => {
+  if (isBackendError(error) && error.errorCode === "5VScek8Xp1") {
+    return <ParseErrorNotification />;
+  }
+  return (
+    <QuickSearchNotification>
+      <ErrorNotification error={error} />
+    </QuickSearchNotification>
+  );
+};
 
 const ResultHeading = styled.div`
   border-bottom: 1px solid lightgray;
@@ -110,31 +129,31 @@ const useKeyBoardNavigation = (clear: () => void, hits?: Array<Hit>) => {
   }, [hits]);
 
   const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (!hits) {
-      return;
-    }
-
     // We use e.which, because ie 11 does not support e.code
     // https://caniuse.com/keyboardevent-code
     switch (e.which) {
       case 40: // e.code: ArrowDown
-        setIndex((idx) => {
-          if (idx + 1 < hits.length) {
-            return idx + 1;
-          }
-          return idx;
-        });
+        if (hits) {
+          setIndex((idx) => {
+            if (idx + 1 < hits.length) {
+              return idx + 1;
+            }
+            return idx;
+          });
+        }
         break;
       case 38: // e.code: ArrowUp:
-        setIndex((idx) => {
-          if (idx > 0) {
-            return idx - 1;
-          }
-          return idx;
-        });
+        if (hits) {
+          setIndex((idx) => {
+            if (idx > 0) {
+              return idx - 1;
+            }
+            return idx;
+          });
+        }
         break;
       case 13: // e.code: Enter:
-        if (index >= 0) {
+        if (hits && index >= 0) {
           const hit = hits[index];
           history.push(`/repo/${namespaceAndName(hit)}`);
           clear();
@@ -180,7 +199,7 @@ const useShowResultsOnFocus = () => {
     showResults,
     onClick: (e: MouseEvent<HTMLInputElement>) => e.stopPropagation(),
     onFocus: () => setShowResults(true),
-    onBlur: () => setShowResults(false)
+    onBlur: () => setShowResults(false),
   };
 };
 

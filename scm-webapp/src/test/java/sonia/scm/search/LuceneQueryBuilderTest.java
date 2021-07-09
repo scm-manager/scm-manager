@@ -56,6 +56,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.when;
 
 @SubjectAware(value = "trillian", permissions = "abc")
@@ -101,6 +103,14 @@ class LuceneQueryBuilderTest {
 
     QueryResult result = query(InetOrgPerson.class, "Dent");
     assertThat(result.getTotalHits()).isOne();
+  }
+
+  @Test
+  void shouldThrowQueryParseExceptionOnInvalidQuery() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(personDoc("Dent"));
+    }
+    assertThrows(QueryParseException.class, () -> query(String.class, "~~"));
   }
 
   @Test
@@ -418,7 +428,7 @@ class LuceneQueryBuilderTest {
 
   private QueryResult query(Class<?> type, String queryString, Integer start, Integer limit) throws IOException {
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
-      when(opener.openForRead("default")).thenReturn(reader);
+      lenient().when(opener.openForRead("default")).thenReturn(reader);
       LuceneQueryBuilder builder = new LuceneQueryBuilder(
         opener, "default", new StandardAnalyzer()
       );

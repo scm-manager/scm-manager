@@ -154,6 +154,7 @@
   "search": {
     "quickSearch": {
       "resultHeading": "Top-Ergebnisse Repositories",
+      "parseError": "Der Suchstring is ungültig",
       "noResults": "Es konnten keine Repositories gefunden werden"
     }
   }
