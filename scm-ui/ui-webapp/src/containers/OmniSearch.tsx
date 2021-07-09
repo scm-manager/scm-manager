@@ -102,7 +102,7 @@ const Hits: FC<HitsProps> = ({ hits, index, onClick }) => {
   );
 };
 
-const useKeyBoardNavigation = (onSelect: (hit: Hit) => void, hits?: Array<Hit>) => {
+const useKeyBoardNavigation = (clear: () => void, hits?: Array<Hit>) => {
   const [index, setIndex] = useState(-1);
   const history = useHistory();
   useEffect(() => {
@@ -113,6 +113,7 @@ const useKeyBoardNavigation = (onSelect: (hit: Hit) => void, hits?: Array<Hit>) 
     if (!hits) {
       return;
     }
+
     // We use e.which, because ie 11 does not support e.code
     // https://caniuse.com/keyboardevent-code
     switch (e.which) {
@@ -136,8 +137,11 @@ const useKeyBoardNavigation = (onSelect: (hit: Hit) => void, hits?: Array<Hit>) 
         if (index >= 0) {
           const hit = hits[index];
           history.push(`/repo/${namespaceAndName(hit)}`);
-          onSelect(hit);
+          clear();
         }
+        break;
+      case 27: // e.code: Escape:
+        clear();
         break;
     }
   };
@@ -176,6 +180,7 @@ const useShowResultsOnFocus = () => {
     showResults,
     onClick: (e: MouseEvent<HTMLInputElement>) => e.stopPropagation(),
     onFocus: () => setShowResults(true),
+    onBlur: () => setShowResults(false)
   };
 };
 
