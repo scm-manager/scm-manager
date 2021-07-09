@@ -155,6 +155,7 @@
   "search": {
     "quickSearch": {
       "resultHeading": "Top repository results",
+      "parseError": "Failed to parse query",
       "noResults": "Could not find matching repository"
     }
   }

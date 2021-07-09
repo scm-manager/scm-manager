@@ -96,7 +96,7 @@ public class LuceneQueryBuilder extends QueryBuilder {
       }
       return createBestGuessQuery(searchableType, queryParams);
     } catch (QueryNodeException | ParseException ex) {
-      throw new SearchEngineException("failed to parse query", ex);
+      throw new QueryParseException(queryString, "failed to parse query", ex);
     }
   }
 
