@@ -153,7 +153,7 @@ const Overview: FC = () => {
             createLink="/repos/create/"
             label={t("overview.createButton")}
             testId="repository-overview"
-            searchPlaceholder={t("overview.searchRepository")}
+            searchPlaceholder={t("overview.filterRepositories")}
           />
         ) : null}
       </PageActions>

@@ -79,7 +79,7 @@ const Users: FC = () => {
           showCreateButton={canAddUsers}
           link="users"
           label={t("users.createButton")}
-          searchPlaceholder={t("overview.searchUser")}
+          searchPlaceholder={t("overview.filterUser")}
         />
       </PageActions>
     </Page>

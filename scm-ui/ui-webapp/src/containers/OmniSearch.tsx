@@ -50,8 +50,6 @@ type HitsProps = {
   onClick: (hit: Hit) => void;
 };
 
-// TODO relabel old search from search to filter
-
 const QuickSearchNotification: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
 
 const EmptyHits = () => {
