@@ -28,7 +28,10 @@ import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
 import { useQuery } from "react-query";
 
-export type SearchOptions = {};
+export type SearchOptions = {
+  page?: number;
+  pageSize?: number;
+};
 
 const defaultSearchOptions: SearchOptions = {};
 
@@ -37,7 +40,12 @@ export const useSearch = (query: string, options = defaultSearchOptions): ApiRes
 
   const queryParams: Record<string, string> = {};
   queryParams.q = query;
-
+  if (options.page) {
+    queryParams.page = options.page.toString();
+  }
+  if (options.pageSize) {
+    queryParams.pageSize = options.pageSize.toString();
+  }
   return useQuery<QueryResult, Error>(
     ["search", query],
     () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
