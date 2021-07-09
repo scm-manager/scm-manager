@@ -24,10 +24,32 @@
 
 package sonia.scm.search;
 
+/**
+ * Queue the work of indexing.
+ * An index can't be opened in parallel, so the queue coordinates the work of indexing in an asynchron manner.
+ * {@link IndexQueue} should be used most of the time to index content.
+ *
+ * @since 2.21.0
+ */
 public interface IndexQueue {
 
+  /**
+   * Returns an index which queues every change to the content.
+   *
+   * @param name name of index
+   * @param indexOptions options for the index
+   *
+   * @return index which queues changes
+   */
   Index getQueuedIndex(String name, IndexOptions indexOptions);
 
+  /**
+   * Returns an index which with default options which queues every change to the content.
+   * @param name name of index
+   *
+   * @return index with default options which queues changes
+   * @see IndexOptions#defaults()
+   */
   default Index getQueuedIndex(String name) {
     return getQueuedIndex(name, IndexOptions.defaults());
   }

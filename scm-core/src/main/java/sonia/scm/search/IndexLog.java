@@ -33,6 +33,10 @@ import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.Instant;
 
+/**
+ * A marker when an object type was last indexed and with which version of the model.
+ * @since 2.21
+ */
 @Data
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)

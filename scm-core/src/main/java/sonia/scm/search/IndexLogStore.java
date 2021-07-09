@@ -26,9 +26,33 @@ package sonia.scm.search;
 
 import java.util.Optional;
 
+/**
+ * Can be used to mark when an type of object was last indexed and with which version.
+ * This is useful to detect and mark if an bootstrap index was created for the kind of object
+ * or if  the art how an object is indexed has changed.
+ *
+ * @since 2.21.0
+ */
 public interface IndexLogStore {
 
+  /**
+   * Log index and version of a type which is now indexed.
+   *
+   * @param index name of index
+   * @param type type which was indexed
+   * @param version model version
+   */
   void log(String index, Class<?> type, int version);
+
+  /**
+   * Returns version and date of the indexed type or an empty object,
+   * if the object was not indexed at all.
+   *
+   * @param index name if index
+   * @param type type of object
+   *
+   * @return log entry or empty
+   */
   Optional<IndexLog> get(String index, Class<?> type);
 
 }

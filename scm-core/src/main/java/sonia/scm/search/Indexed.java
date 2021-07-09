@@ -30,21 +30,74 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+/**
+ * Mark a field which should be indexed.
+ * @since 2.21.0
+ */
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Indexed {
 
+  /**
+   * Name of the field.
+   * If not set the name of the annotated field is used.
+   *
+   * @return name of field
+   */
   String name() default "";
+
+  /**
+   * Describes how the field is indexed.
+   *
+   * @return type of indexing
+   */
   Type type() default Type.TOKENIZED;
 
+  /**
+   * {@code true} if this field should be part of default query for this type of object.
+   *
+   * @return {@code true} if field is part of default query
+   */
   boolean defaultQuery() default false;
+
+  /**
+   * Boost the object if the searched query matches this field.
+   * Greater than one brings the object further up in the search results.
+   * Smaller than one devalues the object in the search results.
+   *
+   * @return boost score
+   */
   float boost() default 1f;
+
+  /**
+   * {@code true} to search the field value for matches and returns fragments with those matches instead the whole value.
+   *
+   * @return {@code true} to return matched fragments
+   */
   boolean highlighted() default false;
 
+  /**
+   * Describes how the field is indexed.
+   */
   enum Type {
+    /**
+     * The value of the fields is analyzed and splitted into tokens, this allows searches for parts of the value.
+     * Tokenized works only for string values, if another type is marked as tokenized,
+     * the field is indexed as it was marked as {@link #SEARCHABLE}.
+     */
     TOKENIZED(true, true, true),
+
+    /**
+     * The value can be searched as a whole.
+     * Numeric fields can also be search as part of a range,
+     * but strings are only searchable if the query contains the whole field value.
+     */
     SEARCHABLE(false, true, true),
+
+    /**
+     * Value of the field can not be searched, but is returned in the result.
+     */
     STORED_ONLY(false, false, true);
 
     private final boolean tokenized;
@@ -57,14 +110,30 @@ public @interface Indexed {
       this.stored = stored;
     }
 
+    /**
+     * Returns {@code true} if the field is tokenized.
+     *
+     * @return {@code true} if tokenized
+     * @see #TOKENIZED
+     */
     public boolean isTokenized() {
       return tokenized;
     }
 
+    /**
+     * Returns {@code true} if the field is searchable.
+     *
+     * @return {@code true} if searchable
+     * @see #SEARCHABLE
+     */
     public boolean isSearchable() {
       return searchable;
     }
 
+    /**
+     * Returns {@code true} if the field is stored.
+     * @return {@code true} if stored
+     */
     public boolean isStored() {
       return stored;
     }
