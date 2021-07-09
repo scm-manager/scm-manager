@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, KeyboardEvent, useCallback, useState, useEffect } from "react";
+import React, { FC, KeyboardEvent, MouseEvent, useCallback, useState, useEffect } from "react";
 import { Hit, Links, ValueField } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import { useSearch } from "@scm-manager/ui-api";
@@ -70,8 +70,7 @@ const ResultHeading = styled.div`
 
 const Hits: FC<HitsProps> = ({ hits, index, onClick }) => {
   const id = useCallback(namespaceAndName, hits);
-
-  // TODO heading top repository results
+  const [t] = useTranslation("commons");
 
   if (hits.length === 0) {
     return <EmptyHits />;
@@ -79,12 +78,13 @@ const Hits: FC<HitsProps> = ({ hits, index, onClick }) => {
 
   return (
     <div className="dropdown-content">
-      <ResultHeading className="dropdown-item">
-        Top repository results
-      </ResultHeading>
+      <ResultHeading className="dropdown-item">{t("search.quickSearch.resultHeading")}</ResultHeading>
       {hits.map((hit, idx) => (
         <div key={id(hit)} onClick={() => onClick(hit)}>
-          <Link className={classNames("dropdown-item", "has-text-weight-medium", { "is-active": idx === index })} to={`/repo/${id(hit)}`}>
+          <Link
+            className={classNames("dropdown-item", "has-text-weight-medium", { "is-active": idx === index })}
+            to={`/repo/${id(hit)}`}
+          >
             {id(hit)}
           </Link>
         </div>
@@ -152,9 +152,28 @@ const useDebounce = (value: string, delay: number) => {
   return debouncedValue;
 };
 
+const useShowResultsOnFocus = () => {
+  const [showResults, setShowResults] = useState(false);
+
+  useEffect(() => {
+    const hideResults = () => {
+      setShowResults(false);
+    };
+    window.addEventListener("click", hideResults);
+    return () => window.removeEventListener("click", hideResults);
+  }, []);
+
+  return {
+    showResults,
+    onClick: (e: MouseEvent<HTMLInputElement>) => e.stopPropagation(),
+    onFocus: () => setShowResults(true)
+  };
+};
+
 const OmniSearch: FC = () => {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 250);
+  const { showResults, ...handlers } = useShowResultsOnFocus();
 
   const onHitSelect = () => {
     setQuery("");
@@ -164,6 +183,7 @@ const OmniSearch: FC = () => {
   const { data, isLoading, error } = useSearch(debouncedQuery);
   const { onKeyDown, index } = useKeyBoardNavigation(onHitSelect, data?._embedded.hits);
 
+
   return (
     <Field className="navbar-item field">
       <div
@@ -171,7 +191,7 @@ const OmniSearch: FC = () => {
           "is-loading": isLoading,
         })}
       >
-        <div className={classNames("dropdown", { "is-active": !!data })}>
+        <div className={classNames("dropdown", { "is-active": !!data && showResults })}>
           <div className="dropdown-trigger">
             <input
               className="input"
@@ -180,6 +200,7 @@ const OmniSearch: FC = () => {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={onKeyDown}
               value={query}
+              {...handlers}
             />
             {isLoading ? null : (
               <span className="icon is-right">
