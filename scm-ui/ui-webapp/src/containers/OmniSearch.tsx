@@ -30,8 +30,6 @@ import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ErrorNotification, Notification } from "@scm-manager/ui-components";
 
-// TODO return only 5 results
-
 const Field = styled.div`
   margin-bottom: 0 !important;
 `;
@@ -192,8 +190,7 @@ const OmniSearch: FC = () => {
     setQuery("");
   };
 
-  // TODO handle error
-  const { data, isLoading, error } = useSearch(debouncedQuery);
+  const { data, isLoading, error } = useSearch(debouncedQuery, { pageSize: 5 });
   const { onKeyDown, index } = useKeyBoardNavigation(onHitSelect, data?._embedded.hits);
 
   return (
