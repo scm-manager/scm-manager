@@ -33,11 +33,10 @@ public interface Index extends AutoCloseable {
 
   /**
    * Store the given object in the index.
-   * The object will we searched for {@link Indexed} annotations.
-   * All fields which such a annotation will be stored in the index.
+   * All fields of the object annotated with {@link Indexed} will be stored in the index.
    *
    * @param id identifier of the object in the index
-   * @param permission who is able to find the object in the index
+   * @param permission Shiro permission string representing the required permission to see this object as a result
    * @param object object to index
    *
    * @see Indexed
@@ -55,9 +54,9 @@ public interface Index extends AutoCloseable {
   /**
    * Delete all objects which are related the given repository from index.
    *
-   * @param repository id of repository
+   * @param repositoryId id of repository
    */
-  void deleteByRepository(String repository);
+  void deleteByRepository(String repositoryId);
 
   /**
    * Delete all objects with the given type from index.

@@ -71,7 +71,7 @@ public @interface Indexed {
   float boost() default 1f;
 
   /**
-   * {@code true} to search the field value for matches and returns fragments with those matches instead the whole value.
+   * {@code true} to search the field value for matches and returns fragments with those matches instead of the whole value.
    *
    * @return {@code true} to return matched fragments
    */
@@ -82,21 +82,21 @@ public @interface Indexed {
    */
   enum Type {
     /**
-     * The value of the fields is analyzed and splitted into tokens, this allows searches for parts of the value.
-     * Tokenized works only for string values, if another type is marked as tokenized,
-     * the field is indexed as it was marked as {@link #SEARCHABLE}.
+     * The value of the field is analyzed and split into tokens, which allows searches for parts of the value.
+     * Tokenization only works for string values. If a field with another type is marked as tokenized,
+     * the field is indexed as if it was marked as {@link #SEARCHABLE}.
      */
     TOKENIZED(true, true, true),
 
     /**
-     * The value can be searched as a whole.
+     * The value can only be searched as a whole.
      * Numeric fields can also be search as part of a range,
-     * but strings are only searchable if the query contains the whole field value.
+     * but strings are only found if the query contains the whole field value.
      */
     SEARCHABLE(false, true, true),
 
     /**
-     * Value of the field can not be searched, but is returned in the result.
+     * Value of the field cannot be searched for, but is returned in the result.
      */
     STORED_ONLY(false, false, true);
 

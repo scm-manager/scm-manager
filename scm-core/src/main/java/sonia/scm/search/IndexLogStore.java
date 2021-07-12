@@ -27,9 +27,9 @@ package sonia.scm.search;
 import java.util.Optional;
 
 /**
- * Can be used to mark when an type of object was last indexed and with which version.
- * This is useful to detect and mark if an bootstrap index was created for the kind of object
- * or if  the art how an object is indexed has changed.
+ * Can be used to mark when a type of object was last indexed and with which version.
+ * This is useful to detect and mark if a bootstrap index was created for the kind of object
+ * or if the way how an object is indexed has changed.
  *
  * @since 2.21.0
  */
