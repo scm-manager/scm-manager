@@ -65,7 +65,7 @@ public class Hit {
   }
 
   /**
-   * A fields which holds a complete value.
+   * A field holding a complete value.
    */
   @Getter
   public static class ValueField extends Field {
@@ -78,7 +78,7 @@ public class Hit {
   }
 
   /**
-   * A field which consist of fragments which containing a match of the searched query.
+   * A field which consists of fragments that contain a match of the search query.
    */
   @Getter
   public static class HighlightedField extends Field {

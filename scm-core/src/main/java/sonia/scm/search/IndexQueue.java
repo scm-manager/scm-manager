@@ -26,7 +26,7 @@ package sonia.scm.search;
 
 /**
  * Queue the work of indexing.
- * An index can't be opened in parallel, so the queue coordinates the work of indexing in an asynchron manner.
+ * An index can't be opened in parallel, so the queue coordinates the work of indexing in an asynchronous manner.
  * {@link IndexQueue} should be used most of the time to index content.
  *
  * @since 2.21.0

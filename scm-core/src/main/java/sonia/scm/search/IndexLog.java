@@ -34,7 +34,7 @@ import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.time.Instant;
 
 /**
- * A marker when an object type was last indexed and with which version of the model.
+ * A marker keeping track of when and with which model version an object type was last indexed.
  * @since 2.21
  */
 @Data
