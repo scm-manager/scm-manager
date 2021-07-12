@@ -26,8 +26,9 @@ import { Links } from "@scm-manager/ui-types";
 import classNames from "classnames";
 import styled from "styled-components";
 import { devices, Logo, PrimaryNavigation } from "@scm-manager/ui-components";
-import HeaderActions from "./HeaderActions";
 import Notifications from "./Notifications";
+import LogoutButton from "./LogoutButton";
+import LoginButton from "./LoginButton";
 
 const StyledMenuBar = styled.div`
   background-color: transparent !important;
@@ -38,9 +39,27 @@ const LogoItem = styled.a`
 `;
 
 const StyledNavBar = styled.nav`
+  @media screen and (max-width: ${devices.desktop.width - 1}px) {
+    .navbar-header-actions {
+      position: absolute;
+      top: 0;
+      left: 52px;
+    }
+  }
+
   @media screen and (min-width: ${devices.desktop.width - 1}px) {
-    .navbar-burger-actions {
-      display: none;
+    .navbar-header-actions {
+      position: absolute;
+      right: 120px;
+    }
+  }
+
+  .navbar-header-actions {
+    display: flex;
+    flex-grow: 2;
+    justify-content: flex-end;
+    .navbar-item {
+      padding: 0.65rem 0.75rem;
     }
   }
 
@@ -93,14 +112,9 @@ type Props = {
   links: Links;
 };
 
-const BurgerActionBar: FC = () => (
-  <div className="navbar-burger-actions">
-    <Notifications className="navbar-item" direction="left" />
-  </div>
-);
-
 const NavigationBar: FC<Props> = ({ links }) => {
   const [burgerActive, setBurgerActive] = useState(false);
+  const [matchQuery, setMatchQuery] = useState<boolean>(false);
   useEffect(() => {
     const close = () => {
       if (burgerActive) {
@@ -111,13 +125,26 @@ const NavigationBar: FC<Props> = ({ links }) => {
     return () => window.removeEventListener("click", close);
   }, [burgerActive]);
 
+  useEffect(() => {
+    const query = `(max-width: ${devices.desktop.width - 1}px)`;
+    const media = window.matchMedia(query);
+    if (media.matches !== matchQuery) {
+      setMatchQuery(media.matches);
+    }
+    const listener = () => {
+      setMatchQuery(media.matches);
+    };
+    const eventKey = "resize";
+    media.addEventListener(eventKey, listener);
+    return () => media.removeEventListener(eventKey, listener);
+  }, [matchQuery]);
+
   return (
     <StyledNavBar className="navbar mb-0 container" role="navigation" aria-label="main navigation">
       <div className="navbar-brand">
         <LogoItem className="navbar-item logo">
           <Logo withText={false} className="image is-32x32" />
         </LogoItem>
-        <BurgerActionBar />
         <button
           role="button"
           className={classNames("navbar-burger", { "is-active": burgerActive })}
@@ -129,12 +156,16 @@ const NavigationBar: FC<Props> = ({ links }) => {
           <span aria-hidden="true" />
         </button>
       </div>
+      <div className="is-active navbar-header-actions">
+        <Notifications className="navbar-item" direction={matchQuery ? "left" : "right"} />
+      </div>
       <StyledMenuBar className={classNames("navbar-menu", { "is-active": burgerActive })}>
         <div className="navbar-start">
           <PrimaryNavigation links={links} />
         </div>
         <div className="navbar-end">
-          <HeaderActions burgerMode={burgerActive} links={links} />
+          <LogoutButton burgerMode={burgerActive} links={links} />
+          <LoginButton burgerMode={burgerActive} links={links} />
         </div>
       </StyledMenuBar>
     </StyledNavBar>
