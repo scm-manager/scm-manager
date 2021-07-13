@@ -27,23 +27,31 @@ package sonia.scm.search;
 import com.google.common.base.Strings;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
-import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.index.Term;
 import org.apache.lucene.queryparser.flexible.core.QueryNodeException;
 import org.apache.lucene.queryparser.flexible.standard.StandardQueryParser;
+import org.apache.lucene.search.BooleanClause;
+import org.apache.lucene.search.BooleanQuery;
+import org.apache.lucene.search.BoostQuery;
 import org.apache.lucene.search.Collector;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
+import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class LuceneQueryBuilder extends QueryBuilder {
+
+  private static final Logger LOG = LoggerFactory.getLogger(LuceneQueryBuilder.class);
 
   private static final Map<Class<?>, SearchableType> CACHE = new ConcurrentHashMap<>();
 
@@ -64,6 +72,9 @@ public class LuceneQueryBuilder extends QueryBuilder {
     SearchableType searchableType = CACHE.computeIfAbsent(queryParams.getType(), SearchableTypes::create);
 
     Query query = Queries.filter(createQuery(searchableType, queryParams, queryString), queryParams);
+    if (LOG.isDebugEnabled()) {
+      LOG.debug("execute lucene query: {}", query);
+    }
     try (IndexReader reader = opener.openForRead(indexName)) {
       IndexSearcher searcher = new IndexSearcher(reader);
 
@@ -95,7 +106,7 @@ public class LuceneQueryBuilder extends QueryBuilder {
         return createExpertQuery(searchableType, queryParams);
       }
       return createBestGuessQuery(searchableType, queryParams);
-    } catch (QueryNodeException | ParseException ex) {
+    } catch (QueryNodeException ex) {
       throw new QueryParseException(queryString, "failed to parse query", ex);
     }
   }
@@ -107,10 +118,28 @@ public class LuceneQueryBuilder extends QueryBuilder {
     return parser.parse(queryParams.getQueryString(), "");
   }
 
-  public Query createBestGuessQuery(SearchableType searchableType, QueryBuilder.QueryParams queryParams) throws ParseException {
-    MultiFieldQueryParser parser = new MultiFieldQueryParser(
-      searchableType.getFieldNames(), analyzer, searchableType.getBoosts()
-    );
-    return parser.parse(queryParams.getQueryString());
+  public Query createBestGuessQuery(SearchableType searchableType, QueryBuilder.QueryParams queryParams) {
+    BooleanQuery.Builder builder = new BooleanQuery.Builder();
+    for (String fieldName : searchableType.getFieldNames()) {
+      Term term = new Term(fieldName, appendWildcardIfNotAlreadyUsed(queryParams));
+      WildcardQuery query = new WildcardQuery(term);
+
+      Float boost = searchableType.getBoosts().get(fieldName);
+      if (boost != null) {
+        builder.add(new BoostQuery(query, boost), BooleanClause.Occur.SHOULD);
+      } else {
+        builder.add(query, BooleanClause.Occur.SHOULD);
+      }
+    }
+    return builder.build();
+  }
+
+  @Nonnull
+  private String appendWildcardIfNotAlreadyUsed(QueryParams queryParams) {
+    String queryString = queryParams.getQueryString().toLowerCase(Locale.ENGLISH);
+    if (!queryString.contains("?") && !queryString.contains("*")) {
+      queryString += "*";
+    }
+    return queryString;
   }
 }
