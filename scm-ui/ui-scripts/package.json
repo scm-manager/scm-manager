@@ -16,7 +16,7 @@
     "file-loader": "^4.2.0",
     "mini-css-extract-plugin": "^0.12.0",
     "mustache": "^3.1.0",
-    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "optimize-css-assets-webpack-plugin": "^6.0.0",
     "react-refresh": "^0.10.0",
     "sass": "^1.26.3",
     "sass-loader": "^8.0.0",
