@@ -153,7 +153,7 @@ class LuceneQueryBuilderTest {
     try (IndexWriter writer = writer()) {
       writer.addDocument(personDoc("Dent"));
     }
-    assertThrows(QueryParseException.class, () -> query(String.class, "~~"));
+    assertThrows(QueryParseException.class, () -> query(String.class, ":~:~"));
   }
 
   @Test
@@ -366,6 +366,14 @@ class LuceneQueryBuilderTest {
     QueryResult result = query(InetOrgPerson.class, "Marvin");
     Hit hit = result.getHits().get(0);
     assertValueField(hit, "displayName", "Paranoid Android");
+  }
+
+  @Test
+  void shouldFailBestGuessQueryWithoutDefaultQueryFields() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(typesDoc(1, 2L, false, Instant.now()));
+    }
+    assertThrows(NoDefaultQueryFieldsFoundException.class, () -> query(Types.class, "something"));
   }
 
   @Test

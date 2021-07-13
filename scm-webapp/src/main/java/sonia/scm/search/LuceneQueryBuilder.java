@@ -119,8 +119,12 @@ public class LuceneQueryBuilder extends QueryBuilder {
   }
 
   public Query createBestGuessQuery(SearchableType searchableType, QueryBuilder.QueryParams queryParams) {
+    String[] fieldNames = searchableType.getFieldNames();
+    if (fieldNames == null || fieldNames.length == 0) {
+      throw new NoDefaultQueryFieldsFoundException("no default query fields defined for " + searchableType.getType());
+    }
     BooleanQuery.Builder builder = new BooleanQuery.Builder();
-    for (String fieldName : searchableType.getFieldNames()) {
+    for (String fieldName : fieldNames) {
       Term term = new Term(fieldName, appendWildcardIfNotAlreadyUsed(queryParams));
       WildcardQuery query = new WildcardQuery(term);
 
