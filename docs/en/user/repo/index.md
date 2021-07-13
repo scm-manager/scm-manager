@@ -18,13 +18,6 @@ Using the select box at the top of the page you can restrict the repositories sh
 
 The different tabs like branches, changesets or sources of the repository can be accessed through the blue icons.
 
-Icon             |  Description
----|---
-![Repository Branches](assets/repository-overview-branches.png)  |  Opens the branches overview for the repository
-![Repository Changesets](assets/repository-overview-changesets.png) | Opens the changeset overview for the repository
-![Repository Sources](assets/repository-overview-sources.png) | Opens the sources overview for the repository
-![Repository Settings](assets/repository-overview-settings.png) | Opens the settings for the repository
-
 Clicking the icon on the right-hand side of each namespace caption, you can change additional settings for this namespace. 
 
 ### Create a Repository
