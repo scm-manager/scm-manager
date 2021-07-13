@@ -59,7 +59,7 @@
     "noRepositories": "No repositories found.",
     "invalidNamespace": "No repositories found. It's likely that the selected namespace does not exist.",
     "createButton": "Add Repository",
-    "searchRepository": "Search repository",
+    "filterRepositories": "Filter repositories",
     "allNamespaces": "All namespaces"
   },
   "create": {

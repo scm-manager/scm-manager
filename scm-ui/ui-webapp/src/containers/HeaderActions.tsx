@@ -27,6 +27,7 @@ import Notifications from "./Notifications";
 import LogoutButton from "./LogoutButton";
 import { Links } from "@scm-manager/ui-types";
 import LoginButton from "./LoginButton";
+import OmniSearch from "./OmniSearch";
 
 type Props = {
   burgerMode: boolean;
@@ -36,11 +37,11 @@ type Props = {
 const HeaderActions: FC<Props> = ({ burgerMode, links }) => {
   return (
     <>
+      {!burgerMode ? <OmniSearch links={links} /> : null}
       {!burgerMode ? <Notifications className="navbar-item" /> : null}
       <LogoutButton burgerMode={burgerMode} links={links} />
       <LoginButton burgerMode={burgerMode} links={links} />
     </>
   );
 };
-
 export default HeaderActions;

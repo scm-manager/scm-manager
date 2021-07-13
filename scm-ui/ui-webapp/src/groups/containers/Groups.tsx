@@ -72,7 +72,7 @@ const Groups: FC = () => {
           showCreateButton={canCreateGroups}
           link="groups"
           label={t("create-group-button.label")}
-          searchPlaceholder={t("overview.searchGroup")}
+          searchPlaceholder={t("overview.filterGroup")}
         />
       </PageActions>
     </Page>

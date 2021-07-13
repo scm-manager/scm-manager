@@ -70,3 +70,4 @@ export * from "./Notifications";
 export * from "./ApiKeys";
 export * from "./PublicKeys";
 export * from "./GlobalPermissions";
+export * from "./Search";

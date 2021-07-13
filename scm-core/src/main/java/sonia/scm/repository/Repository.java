@@ -31,6 +31,7 @@ import com.google.common.base.MoreObjects;
 import com.google.common.base.Objects;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
+import sonia.scm.search.Indexed;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
@@ -65,20 +66,27 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
 
   private static final long serialVersionUID = 3486560714961909711L;
 
-  private String contact;
-  private Long creationDate;
+  private String id;
+
+  @Indexed(defaultQuery = true, boost = 1.25f)
+  private String namespace;
+
+  @Indexed(defaultQuery = true, boost = 1.5f)
+  private String name;
+  @Indexed(type = Indexed.Type.SEARCHABLE)
+  private String type;
+  @Indexed(defaultQuery = true, highlighted = true)
   private String description;
+  private String contact;
+  @Indexed
+  private Long creationDate;
+  @Indexed
+  private Long lastModified;
   @XmlTransient
   private List<HealthCheckFailure> healthCheckFailures;
-  private String id;
-  private Long lastModified;
-  private String namespace;
-  private String name;
   @XmlElement(name = "permission")
   private Set<RepositoryPermission> permissions = new HashSet<>();
-  private String type;
   private boolean archived;
-
 
   /**
    * Constructs a new {@link Repository}.
@@ -162,10 +170,9 @@ public class Repository extends BasicPropertiesAware implements ModelObject, Per
    * @return {@link List} of {@link HealthCheckFailure}s
    * @since 1.36
    */
-  @SuppressWarnings("unchecked")
   public List<HealthCheckFailure> getHealthCheckFailures() {
     if (healthCheckFailures == null) {
-      healthCheckFailures = Collections.EMPTY_LIST;
+      healthCheckFailures = Collections.emptyList();
     }
 
     return healthCheckFailures;

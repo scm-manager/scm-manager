@@ -28,6 +28,7 @@ import styled from "styled-components";
 import { devices, Logo, PrimaryNavigation } from "@scm-manager/ui-components";
 import HeaderActions from "./HeaderActions";
 import Notifications from "./Notifications";
+import OmniSearch from "./OmniSearch";
 
 const StyledMenuBar = styled.div`
   background-color: transparent !important;
@@ -37,15 +38,18 @@ const LogoItem = styled.a`
   cursor: default !important;
 `;
 
-const StyledNavBar = styled.nav`
-  @media screen and (min-width: ${devices.desktop.width - 1}px) {
-    .navbar-burger-actions {
-      display: none;
-    }
-  }
+const NavBarBurgerActions = styled.div`
+  display: flex;
 
+  @media screen and (min-width: ${devices.desktop.width - 1}px) {
+    display: none;
+  }
+`;
+
+const StyledNavBar = styled.nav`
   .navbar-start .navbar-item {
     border-bottom: solid 5px transparent;
+
     &.is-active {
       border-bottom: solid 5px #28b1e8;
     }
@@ -54,6 +58,7 @@ const StyledNavBar = styled.nav`
   .navbar-menu.is-active .navbar-start .navbar-item {
     border-bottom: none;
     border-left: solid 5px transparent;
+
     &.is-active {
       border-left: solid 5px #28b1e8;
     }
@@ -82,9 +87,11 @@ const StyledNavBar = styled.nav`
       background-color: rgba(10, 10, 10, 0.1) !important;
       color: #fff;
     }
+
     color: #fff !important;
     background-color: transparent !important;
   }
+
   color: #fff;
   background-color: transparent !important;
 `;
@@ -93,10 +100,11 @@ type Props = {
   links: Links;
 };
 
-const BurgerActionBar: FC = () => (
-  <div className="navbar-burger-actions">
+const BurgerActionBar: FC<Props> = ({ links }) => (
+  <NavBarBurgerActions>
     <Notifications className="navbar-item" direction="left" />
-  </div>
+    <OmniSearch links={links} />
+  </NavBarBurgerActions>
 );
 
 const NavigationBar: FC<Props> = ({ links }) => {
@@ -117,7 +125,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
         <LogoItem className="navbar-item logo">
           <Logo withText={false} className="image is-32x32" />
         </LogoItem>
-        <BurgerActionBar />
+        <BurgerActionBar links={links} />
         <button
           role="button"
           className={classNames("navbar-burger", { "is-active": burgerActive })}

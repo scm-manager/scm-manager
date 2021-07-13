@@ -120,6 +120,11 @@ dependencies {
   // metrics
   implementation libraries.micrometerExtra
 
+  implementation libraries.luceneCore
+  implementation libraries.luceneQueryParser
+  implementation libraries.luceneHighlighter
+  implementation libraries.luceneAnalyzersCommon
+
   // lombok
   compileOnly libraries.lombok
   testCompileOnly libraries.lombok
