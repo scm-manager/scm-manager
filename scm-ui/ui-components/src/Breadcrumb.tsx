@@ -132,22 +132,14 @@ const Breadcrumb: FC<Props> = ({
   const [copying, setCopying] = useState(false);
   const [t] = useTranslation("commons");
 
-  const hasBranchesWhenSupporting = (repository: Repository) => {
-    return !repository._links.branches || branch;
-  };
-
-  const hasAnyExtension = () => {
-    return (
-      binder.hasExtension<extensionPoints.ReposSourcesActionbar>("repos.sources.actionbar") ||
-      binder.hasExtension<extensionPoints.ReposSourcesEmptyActionbar>("repos.sources.empty.actionbar")
-    );
-  };
-
   const pathSection = () => {
     if (path) {
       const paths = path.split("/");
       return paths.map((pathFragment, index) => {
-        const currPath = paths.slice(0, index + 1).join("/");
+        let currPath = paths.slice(0, index + 1).join("/");
+        if (!currPath.endsWith("/")) {
+          currPath = currPath + "/";
+        }
         if (paths.length - 1 === index) {
           return (
             <li className="is-active" key={index}>
@@ -190,35 +182,35 @@ const Breadcrumb: FC<Props> = ({
     let homeUrl = baseUrl + "/";
     if (revision) {
       homeUrl += encodeURIComponent(revision) + "/";
+    } else {
+      homeUrl = `/repo/${repository.namespace}/${repository.name}/code/sources/`;
     }
 
-    if (hasBranchesWhenSupporting(repository)) {
-      return (
-        <BreadcrumbNav
-          className={classNames("breadcrumb", "sources-breadcrumb", "mx-2", "my-4")}
-          aria-label="breadcrumbs"
-        >
-          {prefixButtons}
-          <ul>
-            <li>
-              <Link to={homeUrl}>
-                <HomeIcon title={t("breadcrumb.home")} name="home" color="inherit" />
-              </Link>
-            </li>
-            {pathSection()}
-          </ul>
-          <PermaLinkWrapper className="ml-1">
-            {copying ? (
-              <Icon name="spinner fa-spin" />
-            ) : (
-              <Tooltip message={t("breadcrumb.copyPermalink")}>
-                <Icon name="link" color="inherit" onClick={() => copySource()} />
-              </Tooltip>
-            )}
-          </PermaLinkWrapper>
-        </BreadcrumbNav>
-      );
-    }
+    return (
+      <BreadcrumbNav
+        className={classNames("breadcrumb", "sources-breadcrumb", "mx-2", "my-4")}
+        aria-label="breadcrumbs"
+      >
+        {prefixButtons}
+        <ul>
+          <li>
+            <Link to={homeUrl}>
+              <HomeIcon title={t("breadcrumb.home")} name="home" color="inherit" />
+            </Link>
+          </li>
+          {pathSection()}
+        </ul>
+        <PermaLinkWrapper className="ml-1">
+          {copying ? (
+            <Icon name="spinner fa-spin" />
+          ) : (
+            <Tooltip message={t("breadcrumb.copyPermalink")}>
+              <Icon name="link" color="inherit" onClick={() => copySource()} />
+            </Tooltip>
+          )}
+        </PermaLinkWrapper>
+      </BreadcrumbNav>
+    );
   };
 
   const extProps = {
@@ -235,7 +227,13 @@ const Breadcrumb: FC<Props> = ({
       binder.hasExtension<extensionPoints.ReposSourcesEmptyActionbar>("repos.sources.empty.actionbar") &&
       sources?._embedded?.children?.length === 0
     ) {
-      return <ExtensionPoint name="repos.sources.empty.actionbar" props={{ repository, sources }} renderAll={true} />;
+      return (
+        <ExtensionPoint
+          name="repos.sources.empty.actionbar"
+          props={{ repository, sources }}
+          renderAll={true}
+        />
+      );
     }
     if (binder.hasExtension<extensionPoints.ReposSourcesActionbar>("repos.sources.actionbar")) {
       return <ExtensionPoint name="repos.sources.actionbar" props={extProps} renderAll={true} />;
@@ -243,18 +241,15 @@ const Breadcrumb: FC<Props> = ({
     return null;
   };
 
-  if (hasBranchesWhenSupporting(repository) || hasAnyExtension()) {
-    return (
-      <>
-        <div className="is-flex is-align-items-center is-justify-content-flex-end">
-          {renderBreadcrumbNav()}
-          {hasAnyExtension() && <ActionBar className="my-2">{renderExtensionPoints()}</ActionBar>}
-        </div>
-        <hr className="is-marginless" />
-      </>
-    );
-  }
-  return null;
+  return (
+    <>
+      <div className="is-flex is-align-items-center is-justify-content-flex-end">
+        {renderBreadcrumbNav()}
+        {<ActionBar className="my-2">{renderExtensionPoints()}</ActionBar>}
+      </div>
+      <hr className="is-marginless" />
+    </>
+  );
 };
 
 export default Breadcrumb;
