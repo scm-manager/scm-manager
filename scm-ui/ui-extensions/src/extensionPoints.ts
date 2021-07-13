@@ -72,7 +72,10 @@ export type ReposSourcesActionbarExtensionProps = {
 export type ReposSourcesActionbarExtension = React.ComponentType<ReposSourcesActionbarExtensionProps>;
 export type ReposSourcesActionbar = ExtensionPointDefinition<"repos.sources.actionbar", ReposSourcesActionbarExtension>;
 
-export type ReposSourcesEmptyActionbarExtensionProps = ReposSourcesActionbarExtensionProps;
+export type ReposSourcesEmptyActionbarExtensionProps = {
+  sources: File;
+  repository: Repository;
+};
 export type ReposSourcesEmptyActionbarExtension = ReposSourcesActionbarExtension;
 export type ReposSourcesEmptyActionbar = ExtensionPointDefinition<
   "repos.sources.empty.actionbar",

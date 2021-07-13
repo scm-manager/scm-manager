@@ -231,11 +231,14 @@ const Breadcrumb: FC<Props> = ({
   };
 
   const renderExtensionPoints = () => {
+    if (
+      binder.hasExtension<extensionPoints.ReposSourcesEmptyActionbar>("repos.sources.empty.actionbar") &&
+      sources?._embedded?.children?.length === 0
+    ) {
+      return <ExtensionPoint name="repos.sources.empty.actionbar" props={{ repository, sources }} renderAll={true} />;
+    }
     if (binder.hasExtension<extensionPoints.ReposSourcesActionbar>("repos.sources.actionbar")) {
       return <ExtensionPoint name="repos.sources.actionbar" props={extProps} renderAll={true} />;
-    }
-    if (binder.hasExtension<extensionPoints.ReposSourcesEmptyActionbar>("repos.sources.empty.actionbar")) {
-      return <ExtensionPoint name="repos.sources.empty.actionbar" props={extProps} renderAll={true} />;
     }
     return null;
   };
