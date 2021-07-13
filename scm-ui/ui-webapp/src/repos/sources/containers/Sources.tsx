@@ -22,17 +22,17 @@
  * SOFTWARE.
  */
 import React, { FC, useEffect } from "react";
+import { useTranslation } from "react-i18next";
+import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useSources } from "@scm-manager/ui-api";
 import { Branch, Repository } from "@scm-manager/ui-types";
 import { Breadcrumb, Loading, Notification } from "@scm-manager/ui-components";
 import FileTree from "../components/FileTree";
 import Content from "./Content";
 import CodeActionBar from "../../codeSection/components/CodeActionBar";
 import replaceBranchWithRevision from "../ReplaceBranchWithRevision";
-import { useSources } from "@scm-manager/ui-api";
-import { useHistory, useLocation, useParams } from "react-router-dom";
 import FileSearchButton from "../../codeSection/components/FileSearchButton";
 import { isEmptyDirectory, isRootFile } from "../utils/files";
-import { useTranslation } from "react-i18next";
 
 type Props = {
   repository: Repository;
@@ -84,6 +84,10 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
     return <Loading />;
   }
 
+  if (!file) {
+    return null;
+  }
+
   const onSelectBranch = (branch?: Branch) => {
     let url;
     if (branch) {
@@ -129,18 +133,17 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
     );
   };
 
-  if (file && file.directory) {
-    let body;
-    if (isRootFile(file) && isEmptyDirectory(file)) {
-      body = (
-        <div className="panel-block">
-          <Notification type="info">{t("sources.noSources")}</Notification>
-        </div>
-      );
-    } else {
-      body = (
-        <>
-          {renderBreadcrumb()}
+  const renderPanelContent = () => {
+    if (file.directory) {
+      let body;
+      if (isRootFile(file) && isEmptyDirectory(file)) {
+        body = (
+          <div className="panel-block">
+            <Notification type="info">{t("sources.noSources")}</Notification>
+          </div>
+        );
+      } else {
+        body = (
           <FileTree
             directory={file}
             revision={revision || file.revision}
@@ -148,40 +151,45 @@ const Sources: FC<Props> = ({ repository, branches, selectedBranch, baseUrl }) =
             isFetchingNextPage={isFetchingNextPage}
             fetchNextPage={fetchNextPage}
           />
-        </>
+        );
+      }
+
+      return (
+        <div className="panel">
+          {renderBreadcrumb()}
+          {body}
+        </div>
       );
     }
 
     return (
-      <>
+      <Content
+        file={file}
+        repository={repository}
+        revision={revision || file.revision}
+        breadcrumb={renderBreadcrumb()}
+        error={error || undefined}
+      />
+    );
+  };
+
+  const hasBranchesWhenSupporting = (repository: Repository) => {
+    return !repository._links.branches || (branches && branches.length !== 0);
+  };
+
+  return (
+    <>
+      {hasBranchesWhenSupporting(repository) && (
         <CodeActionBar
           selectedBranch={selectedBranch}
           branches={branches}
           onSelectBranch={onSelectBranch}
           switchViewLink={evaluateSwitchViewLink()}
         />
-        <div className="panel">{body}</div>
-      </>
-    );
-  } else {
-    return (
-      <>
-        <CodeActionBar
-          selectedBranch={selectedBranch}
-          branches={branches}
-          onSelectBranch={onSelectBranch}
-          switchViewLink={evaluateSwitchViewLink()}
-        />
-        <Content
-          file={file}
-          repository={repository}
-          revision={revision || file.revision}
-          breadcrumb={renderBreadcrumb()}
-          error={error}
-        />
-      </>
-    );
-  }
+      )}
+      {renderPanelContent()}
+    </>
+  );
 };
 
 export default Sources;
