@@ -85,6 +85,49 @@ class LuceneQueryBuilderTest {
   }
 
   @Test
+  void shouldMatchPartial() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(personDoc("Trillian"));
+    }
+
+    QueryResult result = query(Person.class, "Trill");
+    assertThat(result.getTotalHits()).isOne();
+  }
+
+  @Test
+  @SuppressWarnings("java:S5976")
+  void shouldNotAppendWildcardIfStarIsUsed() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(simpleDoc("Trillian"));
+    }
+
+    QueryResult result = query(Simple.class, "Tr*ll");
+    assertThat(result.getTotalHits()).isZero();
+  }
+
+  @Test
+  @SuppressWarnings("java:S5976")
+  void shouldNotAppendWildcardIfQuestionMarkIsUsed() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(simpleDoc("Trillian"));
+    }
+
+    QueryResult result = query(Simple.class, "Tr?ll");
+    assertThat(result.getTotalHits()).isZero();
+  }
+
+  @Test
+  @SuppressWarnings("java:S5976")
+  void shouldNotAppendWildcardIfExpertQueryIsUsed() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(simpleDoc("Trillian"));
+    }
+
+    QueryResult result = query(Simple.class, "lastName:Trill");
+    assertThat(result.getTotalHits()).isZero();
+  }
+
+  @Test
   void shouldSupportFieldsFromParentClass() throws IOException {
     try (IndexWriter writer = writer()) {
       writer.addDocument(inetOrgPersonDoc("Arthur", "Dent", "Arthur Dent", "4211"));
@@ -328,8 +371,8 @@ class LuceneQueryBuilderTest {
   @Test
   void shouldLimitHitsByDefaultSize() throws IOException {
     try (IndexWriter writer = writer()) {
-      for (int i=0; i<20; i++)
-      writer.addDocument(simpleDoc("counter " + i));
+      for (int i = 0; i < 20; i++)
+        writer.addDocument(simpleDoc("counter " + i));
     }
 
     QueryResult result = query(Simple.class, "content:counter");
@@ -340,7 +383,7 @@ class LuceneQueryBuilderTest {
   @Test
   void shouldLimitHitsByConfiguredSize() throws IOException {
     try (IndexWriter writer = writer()) {
-      for (int i=0; i<20; i++)
+      for (int i = 0; i < 20; i++)
         writer.addDocument(simpleDoc("counter " + (i + 1)));
     }
 
@@ -356,7 +399,7 @@ class LuceneQueryBuilderTest {
   @Test
   void shouldRespectStartValue() throws IOException {
     try (IndexWriter writer = writer()) {
-      for (int i=0; i<20; i++)
+      for (int i = 0; i < 20; i++)
         writer.addDocument(simpleDoc("counter " + (i + 1)));
     }
 
@@ -534,7 +577,7 @@ class LuceneQueryBuilderTest {
   }
 
   static class Simple {
-    @Indexed
+    @Indexed(defaultQuery = true)
     private String content;
   }
 
