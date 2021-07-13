@@ -56,12 +56,7 @@ const Container = styled.div`
   cursor: pointer;
 `;
 
-type DropDownProps = {
-  direction: "left" | "right";
-};
-
-// eslint-disable-next-line @typescript-eslint/no-empty-function
-const DropDownMenu = styled.div.attrs((props) => {})<DropDownProps>`
+const DropDownMenu = styled.div`
   min-width: 35rem;
 
   @media screen and (max-width: ${devices.mobile.width}px) {
@@ -80,13 +75,20 @@ const DropDownMenu = styled.div.attrs((props) => {})<DropDownProps>`
     height: 0;
     width: 0;
     top: 0;
-    ${(props) => props.direction}: 1.25rem;
     border-color: transparent;
     border-bottom-color: white;
     border-left-color: white;
     border-width: 0.4rem;
     transform-origin: center;
     transform: rotate(135deg);
+
+    @media screen and (max-width: ${devices.desktop.width - 1}px) {
+      left: 1.3rem;
+    }
+
+    @media screen and (min-width: ${devices.desktop.width}px) {
+      right: 1.3rem;
+    }
   }
 `;
 
@@ -323,10 +325,9 @@ const ErrorBox: FC<{ error: Error | null }> = ({ error }) => {
 
 type NotificationProps = {
   className?: string;
-  direction?: "left" | "right";
 };
 
-const Notifications: FC<NotificationProps> = ({ className, direction = "right" }) => {
+const Notifications: FC<NotificationProps> = ({ className }) => {
   const { data, isLoading, error, refetch } = useNotifications();
   const { notifications, remove, clear } = useNotificationSubscription(refetch, data);
 
@@ -337,13 +338,15 @@ const Notifications: FC<NotificationProps> = ({ className, direction = "right" }
     return () => window.removeEventListener("click", close);
   }, []);
 
+  const isMobileView = window.matchMedia(`(max-width: ${devices.desktop.width - 1}px)`).matches;
+
   return (
     <>
       <NotificationSubscription notifications={notifications} remove={remove} />
       <div
         className={classNames(
           "dropdown",
-          `is-${direction}`,
+          isMobileView ? "is-left" : "is-right",
           "is-hoverable",
           {
             "is-active": open,
@@ -355,7 +358,7 @@ const Notifications: FC<NotificationProps> = ({ className, direction = "right" }
         <Container className="dropdown-trigger">
           <BellNotificationIcon data={data} onClick={() => setOpen((o) => !o)} />
         </Container>
-        <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu" direction={direction}>
+        <DropDownMenu className="dropdown-menu" id="dropdown-menu" role="menu">
           <ErrorBox error={error} />
           {isLoading ? <LoadingBox /> : null}
           {data ? <NotificationDropDown data={data} remove={remove} clear={clear} /> : null}
