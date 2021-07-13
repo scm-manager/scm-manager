@@ -114,7 +114,6 @@ type Props = {
 
 const NavigationBar: FC<Props> = ({ links }) => {
   const [burgerActive, setBurgerActive] = useState(false);
-  const [matchQuery, setMatchQuery] = useState<boolean>(false);
   useEffect(() => {
     const close = () => {
       if (burgerActive) {
@@ -124,20 +123,6 @@ const NavigationBar: FC<Props> = ({ links }) => {
     window.addEventListener("click", close);
     return () => window.removeEventListener("click", close);
   }, [burgerActive]);
-
-  useEffect(() => {
-    const query = `(max-width: ${devices.desktop.width - 1}px)`;
-    const media = window.matchMedia(query);
-    if (media.matches !== matchQuery) {
-      setMatchQuery(media.matches);
-    }
-    const listener = () => {
-      setMatchQuery(media.matches);
-    };
-    const eventKey = "resize";
-    media.addEventListener(eventKey, listener);
-    return () => media.removeEventListener(eventKey, listener);
-  }, [matchQuery]);
 
   return (
     <StyledNavBar className="navbar mb-0 container" role="navigation" aria-label="main navigation">
@@ -157,7 +142,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
         </button>
       </div>
       <div className="is-active navbar-header-actions">
-        <Notifications className="navbar-item" direction={matchQuery ? "left" : "right"} />
+        <Notifications className="navbar-item" />
       </div>
       <StyledMenuBar className={classNames("navbar-menu", { "is-active": burgerActive })}>
         <div className="navbar-start">
