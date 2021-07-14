@@ -32,6 +32,7 @@ import { ErrorNotification, Notification } from "@scm-manager/ui-components";
 
 const Field = styled.div`
   margin-bottom: 0 !important;
+  max-width: 75%;
 `;
 
 type Props = {
