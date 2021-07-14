@@ -53,7 +53,7 @@ public class PermissionAwareCollector implements Collector {
 
   @Override
   public LeafCollector getLeafCollector(LeafReaderContext context) throws IOException {
-    return new PermissionAwareLeafCollector(delegate.getLeafCollector(context));
+    return new PermissionAwareLeafCollector(delegate.getLeafCollector(context), context.docBase);
   }
 
   @Override
@@ -64,9 +64,11 @@ public class PermissionAwareCollector implements Collector {
   private class PermissionAwareLeafCollector implements LeafCollector {
 
     private final LeafCollector delegate;
+    private final int docBase;
 
-    private PermissionAwareLeafCollector(LeafCollector delegate) {
+    private PermissionAwareLeafCollector(LeafCollector delegate, int docBase) {
       this.delegate = delegate;
+      this.docBase = docBase;
     }
 
     @Override
@@ -76,7 +78,7 @@ public class PermissionAwareCollector implements Collector {
 
     @Override
     public void collect(int doc) throws IOException {
-      Document document = reader.document(doc, FIELDS);
+      Document document = reader.document(docBase + doc, FIELDS);
       String permission = document.get(FIELD_PERMISSION);
       if (Strings.isNullOrEmpty(permission) || SecurityUtils.getSubject().isPermitted(permission)) {
         this.delegate.collect(doc);
