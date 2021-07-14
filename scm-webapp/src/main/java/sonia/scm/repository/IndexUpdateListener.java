@@ -103,7 +103,7 @@ public class IndexUpdateListener implements ServletContextListener {
     index.store(Id.of(repository), RepositoryPermissions.read(repository).asShiroString(), repository);
   }
 
-  public static class ReIndexAll implements PrivilegedAction {
+  static class ReIndexAll implements PrivilegedAction {
 
     private final RepositoryManager repositoryManager;
     private final IndexQueue queue;

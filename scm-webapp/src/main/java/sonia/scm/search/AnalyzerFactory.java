@@ -47,14 +47,16 @@ public class AnalyzerFactory {
   }
 
   private Analyzer createNaturalLanguageAnalyzer(String lang) {
-    if ("en".equals(lang)) {
-      return new EnglishAnalyzer();
-    } else if ("de".equals(lang)) {
-      return new GermanAnalyzer();
-    } else if ("es".equals(lang)) {
-      return new SpanishAnalyzer();
+    switch (lang) {
+      case "en":
+        return new EnglishAnalyzer();
+      case "de":
+        return new GermanAnalyzer();
+      case "es":
+        return new SpanishAnalyzer();
+      default:
+        return createDefaultAnalyzer();
     }
-    return createDefaultAnalyzer();
   }
 
 }

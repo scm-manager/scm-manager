@@ -29,7 +29,7 @@ import org.apache.lucene.index.IndexableField;
 import javax.annotation.Nonnull;
 import java.time.Instant;
 
-class ValueExtractors {
+final class ValueExtractors {
 
   private ValueExtractors() {
   }
