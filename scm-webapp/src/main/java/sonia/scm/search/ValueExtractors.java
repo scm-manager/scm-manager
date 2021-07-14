@@ -35,18 +35,18 @@ final class ValueExtractors {
   }
 
   static ValueExtractor create(String name, Class<?> type) {
-    if (Reflection.isString(type)) {
+    if (TypeCheck.isString(type)) {
       return stringExtractor(name);
-    } else if (Reflection.isLong(type)) {
+    } else if (TypeCheck.isLong(type)) {
       return longExtractor(name);
-    } else if (Reflection.isInteger(type)) {
+    } else if (TypeCheck.isInteger(type)) {
       return integerExtractor(name);
-    } else if (Reflection.isBoolean(type)) {
+    } else if (TypeCheck.isBoolean(type)) {
       return booleanExtractor(name);
-    } else if (Reflection.isInstant(type)) {
+    } else if (TypeCheck.isInstant(type)) {
       return instantExtractor(name);
     } else {
-      throw new UnsupportedTypeOfFieldException(type + " is currently not supported");
+      throw new UnsupportedTypeOfFieldException(type, name);
     }
   }
 

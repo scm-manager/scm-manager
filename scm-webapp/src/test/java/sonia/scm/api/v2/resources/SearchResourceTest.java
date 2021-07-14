@@ -25,12 +25,10 @@
 package sonia.scm.api.v2.resources;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import de.otto.edison.hal.HalRepresentation;
 import lombok.Getter;
 import lombok.Setter;
 import org.jboss.resteasy.mock.MockHttpRequest;
-import org.jboss.resteasy.mock.MockHttpResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -44,6 +42,7 @@ import sonia.scm.search.Hit;
 import sonia.scm.search.IndexNames;
 import sonia.scm.search.QueryResult;
 import sonia.scm.search.SearchEngine;
+import sonia.scm.web.JsonMockHttpResponse;
 import sonia.scm.web.RestDispatcher;
 import sonia.scm.web.VndMediaType;
 
@@ -65,8 +64,6 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SearchResourceTest {
-
-  private final ObjectMapper objectMapper = new ObjectMapper();
 
   @Mock(answer = Answers.RETURNS_DEEP_STUBS)
   private SearchEngine searchEngine;
@@ -93,9 +90,9 @@ class SearchResourceTest {
       .thenReturn(Collections.singleton(new SampleEnricher()));
 
     mockQueryResult("Hello", result(0L));
-    MockHttpResponse response = search("Hello");
+    JsonMockHttpResponse response = search("Hello");
 
-    JsonNode sample = json(response).get("_embedded").get("sample");
+    JsonNode sample = response.getContentAsJson().get("_embedded").get("sample");
     assertThat(sample.get("type").asText()).isEqualTo("java.lang.String");
   }
 
@@ -107,9 +104,9 @@ class SearchResourceTest {
       .thenReturn(Collections.singleton(new SampleEnricher()));
 
     mockQueryResult("Hello", result(1L, "Hello"));
-    MockHttpResponse response = search("Hello");
+    JsonMockHttpResponse response = search("Hello");
 
-    JsonNode sample = json(response)
+    JsonNode sample = response.getContentAsJson()
       .get("_embedded").get("hits").get(0)
       .get("_embedded").get("sample");
     assertThat(sample.get("type").asText()).isEqualTo("java.lang.String");
@@ -127,7 +124,7 @@ class SearchResourceTest {
     @Test
     void shouldReturnVndContentType() throws UnsupportedEncodingException, URISyntaxException {
       mockQueryResult("Hello", result(0L));
-      MockHttpResponse response = search("Hello");
+      JsonMockHttpResponse response = search("Hello");
       assertThat(response.getStatus()).isEqualTo(HttpServletResponse.SC_OK);
       assertHeader(response, "Content-Type", VndMediaType.QUERY_RESULT);
     }
@@ -135,9 +132,9 @@ class SearchResourceTest {
     @Test
     void shouldReturnPagingLinks() throws IOException, URISyntaxException {
       mockQueryResult(20, 20, "paging", result(100));
-      MockHttpResponse response = search("paging", 1, 20);
+      JsonMockHttpResponse response = search("paging", 1, 20);
 
-      JsonNode links = json(response).get("_links");
+      JsonNode links = response.getContentAsJson().get("_links");
       assertLink(links, "self", "/v2/search?q=paging&page=1&pageSize=20");
       assertLink(links, "first", "/v2/search?q=paging&page=0&pageSize=20");
       assertLink(links, "prev", "/v2/search?q=paging&page=0&pageSize=20");
@@ -148,9 +145,9 @@ class SearchResourceTest {
     @Test
     void shouldPagingFields() throws IOException, URISyntaxException {
       mockQueryResult(20, 20, "pagingFields", result(100));
-      MockHttpResponse response = search("pagingFields", 1, 20);
+      JsonMockHttpResponse response = search("pagingFields", 1, 20);
 
-      JsonNode root = json(response);
+      JsonNode root = response.getContentAsJson();
       assertThat(root.get("page").asInt()).isOne();
       assertThat(root.get("pageTotal").asInt()).isEqualTo(5);
     }
@@ -158,18 +155,18 @@ class SearchResourceTest {
     @Test
     void shouldReturnType() throws IOException, URISyntaxException {
       mockQueryResult("Hello", result(0L));
-      MockHttpResponse response = search("Hello");
+      JsonMockHttpResponse response = search("Hello");
 
-      JsonNode root = json(response);
+      JsonNode root = response.getContentAsJson();
       assertThat(root.get("type").asText()).isEqualTo("java.lang.String");
     }
 
     @Test
     void shouldReturnHitsAsEmbedded() throws IOException, URISyntaxException {
       mockQueryResult("Hello", result(2L, "Hello", "Hello Again"));
-      MockHttpResponse response = search("Hello");
+      JsonMockHttpResponse response = search("Hello");
 
-      JsonNode hits = json(response).get("_embedded").get("hits");
+      JsonNode hits = response.getContentAsJson().get("_embedded").get("hits");
       assertThat(hits.size()).isEqualTo(2);
 
       JsonNode first = hits.get(0);
@@ -190,10 +187,6 @@ class SearchResourceTest {
 
   private void assertLink(JsonNode links, String self, String s) {
     assertThat(links.get(self).get("href").asText()).isEqualTo(s);
-  }
-
-  private JsonNode json(MockHttpResponse response) throws IOException {
-    return objectMapper.readTree(response.getContentAsString());
   }
 
   private QueryResult result(long totalHits, Object... values) {
@@ -231,15 +224,15 @@ class SearchResourceTest {
     ).thenReturn(result);
   }
 
-  private void assertHeader(MockHttpResponse response, String header, String expectedValue) {
+  private void assertHeader(JsonMockHttpResponse response, String header, String expectedValue) {
     assertThat(response.getOutputHeaders().getFirst(header)).hasToString(expectedValue);
   }
 
-  private MockHttpResponse search(String query) throws URISyntaxException, UnsupportedEncodingException {
+  private JsonMockHttpResponse search(String query) throws URISyntaxException, UnsupportedEncodingException {
     return search(query, null, null);
   }
 
-  private MockHttpResponse search(String query, Integer page, Integer pageSize) throws URISyntaxException, UnsupportedEncodingException {
+  private JsonMockHttpResponse search(String query, Integer page, Integer pageSize) throws URISyntaxException, UnsupportedEncodingException {
     String uri = "/v2/search?q=" + URLEncoder.encode(query, "UTF-8");
     if (page != null) {
       uri += "&page=" + page;
@@ -248,7 +241,7 @@ class SearchResourceTest {
       uri += "&pageSize=" + pageSize;
     }
     MockHttpRequest request = MockHttpRequest.get(uri);
-    MockHttpResponse response = new MockHttpResponse();
+    JsonMockHttpResponse response = new JsonMockHttpResponse();
     dispatcher.invoke(request, response);
     return response;
   }

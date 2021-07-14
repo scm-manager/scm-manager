@@ -41,10 +41,10 @@ import java.util.Collections;
 import java.util.List;
 
 import static java.util.Collections.singleton;
-import static sonia.scm.search.Reflection.isBoolean;
-import static sonia.scm.search.Reflection.isInstant;
-import static sonia.scm.search.Reflection.isInteger;
-import static sonia.scm.search.Reflection.isLong;
+import static sonia.scm.search.TypeCheck.isBoolean;
+import static sonia.scm.search.TypeCheck.isInstant;
+import static sonia.scm.search.TypeCheck.isInteger;
+import static sonia.scm.search.TypeCheck.isLong;
 
 class IndexableFields {
   private IndexableFields() {
@@ -74,9 +74,7 @@ class IndexableFields {
     } else if (isInstant(fieldType)) {
       return new InstantFieldFactory(indexType);
     } else {
-      throw new UnsupportedTypeOfFieldException(
-        "type " + fieldType + " of " + field.getName() + " is unsupported."
-      );
+      throw new UnsupportedTypeOfFieldException(fieldType, field.getName());
     }
   }
 

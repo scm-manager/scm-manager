@@ -26,9 +26,9 @@ package sonia.scm.search;
 
 import java.time.Instant;
 
-final class Reflection {
+final class TypeCheck {
 
-  private Reflection() {
+  private TypeCheck() {
   }
 
   public static boolean isLong(Class<?> type) {

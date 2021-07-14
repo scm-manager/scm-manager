@@ -40,6 +40,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
+
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 public class QueryResultFactory {
 
@@ -72,30 +76,24 @@ public class QueryResultFactory {
 
   private Hit createHit(ScoreDoc scoreDoc) throws IOException, InvalidTokenOffsetsException {
     Document document = searcher.doc(scoreDoc.doc);
-
     Map<String, Hit.Field> fields = new HashMap<>();
     for (SearchableField field : searchableType.getFields()) {
-      Hit.Field f = field(document, field);
-      if (f != null) {
-        fields.put(field.getName(), f);
-      }
+      field(document, field).ifPresent(f -> fields.put(field.getName(), f));
     }
-
     return new Hit(document.get(FieldNames.ID), scoreDoc.score, fields);
   }
-
-  private Hit.Field field(Document document, SearchableField field) throws IOException, InvalidTokenOffsetsException {
+  private Optional<Hit.Field> field(Document document, SearchableField field) throws IOException, InvalidTokenOffsetsException {
     Object value = field.value(document);
     if (value != null) {
       if (field.isHighlighted()) {
         String[] fragments = createFragments(field, value.toString());
         if (fragments.length > 0) {
-          return new Hit.HighlightedField(fragments);
+          return of(new Hit.HighlightedField(fragments));
         }
       }
-      return new Hit.ValueField(value);
+      return of(new Hit.ValueField(value));
     }
-    return null;
+    return empty();
   }
 
   private String[] createFragments(SearchableField field, String value) throws InvalidTokenOffsetsException, IOException {

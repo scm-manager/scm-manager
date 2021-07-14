@@ -27,6 +27,7 @@ package sonia.scm.search;
 import lombok.Value;
 import org.apache.lucene.queryparser.flexible.standard.config.PointsConfig;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -38,5 +39,13 @@ public class SearchableType {
   Map<String,Float> boosts;
   Map<String, PointsConfig> pointsConfig;
   List<SearchableField> fields;
+
+  SearchableType(Class<?> type, String[] fieldNames, Map<String, Float> boosts, Map<String, PointsConfig> pointsConfig, List<SearchableField> fields) {
+    this.type = type;
+    this.fieldNames = fieldNames;
+    this.boosts = Collections.unmodifiableMap(boosts);
+    this.pointsConfig = Collections.unmodifiableMap(pointsConfig);
+    this.fields = Collections.unmodifiableList(fields);
+  }
 
 }

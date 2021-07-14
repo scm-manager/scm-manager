@@ -29,7 +29,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
-import org.junit.jupiter.params.provider.ValueSource;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -45,7 +44,6 @@ import sonia.scm.web.security.AdministrationContext;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.doAnswer;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
@@ -74,7 +72,6 @@ class IndexUpdateListenerTest {
 
   @Test
   @SuppressWarnings("java:S6068")
-    // eq is required for verify with changing parametern
   void shouldIndexAllRepositories() {
     when(indexLogStore.get(IndexNames.DEFAULT, Repository.class)).thenReturn(Optional.empty());
     doAnswer(ic -> {
@@ -94,8 +91,8 @@ class IndexUpdateListenerTest {
 
     updateListener.contextInitialized(null);
 
-    verify(index).store(eq(Id.of(heartOfGold)), eq(RepositoryPermissions.read(heartOfGold).asShiroString()), eq(heartOfGold));
-    verify(index).store(eq(Id.of(puzzle42)), eq(RepositoryPermissions.read(puzzle42).asShiroString()), eq(puzzle42));
+    verify(index).store(Id.of(heartOfGold), RepositoryPermissions.read(heartOfGold).asShiroString(), heartOfGold);
+    verify(index).store(Id.of(puzzle42), RepositoryPermissions.read(puzzle42).asShiroString(), puzzle42);
     verify(index).close();
 
     verify(indexLogStore).log(IndexNames.DEFAULT, Repository.class, IndexUpdateListener.INDEX_VERSION);

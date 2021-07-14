@@ -25,7 +25,7 @@
 package sonia.scm.search;
 
 public class UnsupportedTypeOfFieldException extends SearchEngineException {
-  public UnsupportedTypeOfFieldException(String message) {
-    super(message);
+  public UnsupportedTypeOfFieldException(Class<?> type, String field) {
+    super("type " + type + " of " + field + " is unsupported.");
   }
 }

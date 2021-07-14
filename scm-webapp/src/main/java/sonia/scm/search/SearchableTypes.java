@@ -34,6 +34,8 @@ import java.util.Map;
 
 final class SearchableTypes {
 
+  private static final float DEFAULT_BOOST = 1f;
+
   private SearchableTypes() {
   }
 
@@ -52,8 +54,8 @@ final class SearchableTypes {
     Map<String, Float> boosts = new HashMap<>();
     Map<String, PointsConfig> pointsConfig = new HashMap<>();
     for (SearchableField field : fields) {
-      if (field.isDefaultQuery() && field.getBoost() != 1f) {
-        boosts.put(field.getName(),  field.getBoost());
+      if (field.isDefaultQuery() && field.getBoost() != DEFAULT_BOOST) {
+        boosts.put(field.getName(), field.getBoost());
       }
       PointsConfig config = field.getPointsConfig();
       if (config != null) {
@@ -63,7 +65,6 @@ final class SearchableTypes {
 
     return new SearchableType(type, fieldsNames, boosts, pointsConfig, fields);
   }
-
 
   private static void collectFields(Class<?> type, List<SearchableField> fields) {
     Class<?> parent = type.getSuperclass();
@@ -77,7 +78,5 @@ final class SearchableTypes {
       }
     }
   }
-
-
 
 }

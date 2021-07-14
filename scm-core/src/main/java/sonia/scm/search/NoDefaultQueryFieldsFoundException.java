@@ -35,7 +35,7 @@ import com.google.common.annotations.Beta;
  */
 @Beta
 public class NoDefaultQueryFieldsFoundException extends SearchEngineException {
-  public NoDefaultQueryFieldsFoundException(String message) {
-    super(message);
+  public NoDefaultQueryFieldsFoundException(Class<?> type) {
+    super("no default query fields defined for " + type);
   }
 }
