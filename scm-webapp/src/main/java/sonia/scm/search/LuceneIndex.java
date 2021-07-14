@@ -59,7 +59,7 @@ public class LuceneIndex implements Index {
       }
       writer.updateDocument(new Term(UID, uid), document);
     } catch (IOException e) {
-      throw new SearchEngineException("failed to add document to index");
+      throw new SearchEngineException("failed to add document to index", e);
     }
   }
 
@@ -76,7 +76,7 @@ public class LuceneIndex implements Index {
     try {
       writer.deleteDocuments(new Term(UID, createUid(id, type)));
     } catch (IOException e) {
-      throw new SearchEngineException("failed to delete document from index");
+      throw new SearchEngineException("failed to delete document from index", e);
     }
   }
 
@@ -85,7 +85,7 @@ public class LuceneIndex implements Index {
     try {
       writer.deleteDocuments(new Term(REPOSITORY, repository));
     } catch (IOException ex) {
-      throw new SearchEngineException("failed to delete documents by repository " + repository + " from index");
+      throw new SearchEngineException("failed to delete documents by repository " + repository + " from index", ex);
     }
   }
 
@@ -94,7 +94,7 @@ public class LuceneIndex implements Index {
     try {
       writer.deleteDocuments(new Term(TYPE, type.getName()));
     } catch (IOException ex) {
-      throw new SearchEngineException("failed to delete documents by repository " + type + " from index");
+      throw new SearchEngineException("failed to delete documents by repository " + type + " from index", ex);
     }
   }
 
