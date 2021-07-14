@@ -32,7 +32,10 @@ import { ErrorNotification, Notification } from "@scm-manager/ui-components";
 
 const Field = styled.div`
   margin-bottom: 0 !important;
-  max-width: 75%;
+`;
+
+const Input = styled.input`
+  border-radius: 4px !important;
 `;
 
 type Props = {
@@ -216,8 +219,8 @@ const OmniSearch: FC = () => {
       >
         <div className={classNames("dropdown", { "is-active": (!!data || error) && showResults })}>
           <div className="dropdown-trigger">
-            <input
-              className="input"
+            <Input
+              className="input is-small"
               type="text"
               placeholder="Search ..."
               onChange={(e) => setQuery(e.target.value)}

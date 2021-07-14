@@ -27,6 +27,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { devices, Logo, PrimaryNavigation } from "@scm-manager/ui-components";
 import Notifications from "./Notifications";
+import OmniSearch from "./OmniSearch";
 import LogoutButton from "./LogoutButton";
 import LoginButton from "./LoginButton";
 
@@ -44,6 +45,7 @@ const StyledNavBar = styled.nav`
       position: absolute;
       top: 0;
       left: 52px;
+      flex-direction: row-reverse;
     }
   }
 
@@ -62,6 +64,50 @@ const StyledNavBar = styled.nav`
       padding: 0.65rem 0.75rem;
     }
   }
+
+  .navbar-start .navbar-item {
+    border-bottom: solid 5px transparent;
+    &.is-active {
+      border-bottom: solid 5px #28b1e8;
+    }
+  }
+
+  .navbar-menu.is-active .navbar-start .navbar-item {
+    border-bottom: none;
+    border-left: solid 5px transparent;
+    &.is-active {
+      border-left: solid 5px #28b1e8;
+    }
+  }
+
+  .navbar-menu {
+    padding: 0;
+  }
+
+  .navbar-brand {
+    @media screen and (max-width: ${devices.desktop.width - 1}px) {
+      border-bottom: 1px solid white;
+    }
+  }
+
+  .navbar-menu.is-active .navbar-end .navbar-item {
+    border-left: solid 5px transparent;
+  }
+
+  .navbar-burger {
+    color: #fff !important;
+  }
+
+  .navbar-item {
+    :hover:not(.logo) {
+      background-color: rgba(10, 10, 10, 0.1) !important;
+      color: #fff;
+    }
+    color: #fff !important;
+    background-color: transparent !important;
+  }
+  color: #fff;
+  background-color: transparent !important;
 `;
 
 type Props = {
@@ -98,6 +144,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
         </button>
       </div>
       <div className="is-active navbar-header-actions">
+        <OmniSearch links={links} />
         <Notifications className="navbar-item" />
       </div>
       <StyledMenuBar className={classNames("navbar-menu", { "is-active": burgerActive })}>
