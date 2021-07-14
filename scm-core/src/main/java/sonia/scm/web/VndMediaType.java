@@ -95,6 +95,8 @@ public class VndMediaType {
 
   public static final String NOTIFICATION_COLLECTION = PREFIX + "notificationCollection" + SUFFIX;
 
+  public static final String QUERY_RESULT = PREFIX + "queryResult" + SUFFIX;
+
   private VndMediaType() {
   }
 

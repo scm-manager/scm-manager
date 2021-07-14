@@ -60,11 +60,16 @@ const DropDownMenu = styled.div`
   min-width: 35rem;
 
   @media screen and (max-width: ${devices.mobile.width}px) {
-    min-width: 25rem;
+    min-width: 20rem;
   }
 
   @media screen and (max-width: ${devices.desktop.width}px) {
     margin-right: 1rem;
+  }
+
+  @media screen and (min-width: ${devices.desktop.width}px) {
+    right: 0;
+    left: auto;
   }
 
   &:before {
@@ -338,15 +343,12 @@ const Notifications: FC<NotificationProps> = ({ className }) => {
     return () => window.removeEventListener("click", close);
   }, []);
 
-  const isMobileView = window.matchMedia(`(max-width: ${devices.desktop.width - 1}px)`).matches;
-
   return (
     <>
       <NotificationSubscription notifications={notifications} remove={remove} />
       <div
         className={classNames(
           "dropdown",
-          isMobileView ? "is-left" : "is-right",
           "is-hoverable",
           {
             "is-active": open,

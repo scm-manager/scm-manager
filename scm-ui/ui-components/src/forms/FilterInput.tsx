@@ -81,7 +81,7 @@ const FilterInput: FC<Props> = ({ filter, value, testId, placeholder, autoFocus,
           autoFocus={autoFocus || false}
         />
         <span className="icon is-small is-left">
-          <i className="fas fa-search" />
+          <i className="fas fa-filter" />
         </span>
       </div>
     </form>

@@ -56,6 +56,7 @@ export * from "./fileContent";
 export * from "./history";
 export * from "./contentType";
 export * from "./annotations";
+export * from "./search";
 
 export { default as ApiProvider } from "./ApiProvider";
 export * from "./ApiProvider";

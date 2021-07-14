@@ -27,6 +27,7 @@ import classNames from "classnames";
 import styled from "styled-components";
 import { devices, Logo, PrimaryNavigation } from "@scm-manager/ui-components";
 import Notifications from "./Notifications";
+import OmniSearch from "./OmniSearch";
 import LogoutButton from "./LogoutButton";
 import LoginButton from "./LoginButton";
 
@@ -44,6 +45,7 @@ const StyledNavBar = styled.nav`
       position: absolute;
       top: 0;
       left: 52px;
+      flex-direction: row-reverse;
     }
   }
 
@@ -142,6 +144,7 @@ const NavigationBar: FC<Props> = ({ links }) => {
         </button>
       </div>
       <div className="is-active navbar-header-actions">
+        <OmniSearch links={links} />
         <Notifications className="navbar-item" />
       </div>
       <StyledMenuBar className={classNames("navbar-menu", { "is-active": burgerActive })}>
