@@ -24,6 +24,8 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
+
 import java.util.Locale;
 
 /**
@@ -31,6 +33,7 @@ import java.util.Locale;
  *
  * @since 2.21.0
  */
+@Beta
 public class IndexOptions {
 
   private final Type type;

@@ -24,6 +24,8 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
+
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -34,6 +36,7 @@ import java.lang.annotation.Target;
  * Mark a field which should be indexed.
  * @since 2.21.0
  */
+@Beta
 @Documented
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

@@ -24,10 +24,13 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
+
 /**
  * Names of predefined indexes.
  * @since 2.21.0
  */
+@Beta
 public final class IndexNames {
 
   /**

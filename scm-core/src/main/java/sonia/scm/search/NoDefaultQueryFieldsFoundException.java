@@ -24,6 +24,8 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
+
 /**
  * Exception is thrown if a best guess query is executed
  * and the search type does not contain a field which is marked for default query.
@@ -31,6 +33,7 @@ package sonia.scm.search;
  * @see Indexed#defaultQuery()
  * @since 2.21.0
  */
+@Beta
 public class NoDefaultQueryFieldsFoundException extends SearchEngineException {
   public NoDefaultQueryFieldsFoundException(String message) {
     super(message);

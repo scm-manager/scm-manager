@@ -24,6 +24,8 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
+
 /**
  * Queue the work of indexing.
  * An index can't be opened in parallel, so the queue coordinates the work of indexing in an asynchronous manner.
@@ -31,6 +33,7 @@ package sonia.scm.search;
  *
  * @since 2.21.0
  */
+@Beta
 public interface IndexQueue {
 
   /**

@@ -24,11 +24,14 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
+
 /**
  * Can be used to index objects for full text searches.
  *
  * @since 2.21.0
  */
+@Beta
 public interface Index extends AutoCloseable {
 
   /**

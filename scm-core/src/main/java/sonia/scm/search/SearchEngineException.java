@@ -24,11 +24,14 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
+
 /**
  * Generic exception which could by thrown by any part of the search engine.
  *
  * @since 2.21.0
  */
+@Beta
 public class SearchEngineException extends RuntimeException {
 
   public SearchEngineException(String message) {

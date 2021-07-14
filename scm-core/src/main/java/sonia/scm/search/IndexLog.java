@@ -24,6 +24,7 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
 import lombok.Data;
 import sonia.scm.xml.XmlInstantAdapter;
 
@@ -37,6 +38,7 @@ import java.time.Instant;
  * A marker keeping track of when and with which model version an object type was last indexed.
  * @since 2.21
  */
+@Beta
 @Data
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)

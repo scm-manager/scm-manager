@@ -24,6 +24,7 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
 import sonia.scm.BadRequestException;
 
 import static sonia.scm.ContextEntry.ContextBuilder.only;
@@ -33,6 +34,7 @@ import static sonia.scm.ContextEntry.ContextBuilder.only;
  *
  * @since 2.21.0
  */
+@Beta
 @SuppressWarnings("java:S110") // large inheritance is ok for exceptions
 public class QueryParseException extends BadRequestException {
 

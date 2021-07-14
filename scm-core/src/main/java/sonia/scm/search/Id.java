@@ -24,6 +24,7 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
 import com.google.common.base.Joiner;
 import com.google.common.base.Preconditions;
 import com.google.common.base.Strings;
@@ -41,6 +42,7 @@ import java.util.Optional;
  *
  * @since 2.21.0
  */
+@Beta
 @ToString
 @EqualsAndHashCode
 public final class Id {

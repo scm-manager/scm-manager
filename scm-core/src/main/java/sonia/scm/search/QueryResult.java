@@ -24,6 +24,7 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
 import lombok.Value;
 
 import java.util.List;
@@ -32,6 +33,7 @@ import java.util.List;
  * Result of a query.
  * @since 2.21.0
  */
+@Beta
 @Value
 public class QueryResult {
 

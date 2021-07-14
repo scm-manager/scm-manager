@@ -24,6 +24,8 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
+
 import java.util.Optional;
 
 /**
@@ -33,6 +35,7 @@ import java.util.Optional;
  *
  * @since 2.21.0
  */
+@Beta
 public interface IndexLogStore {
 
   /**

@@ -24,6 +24,7 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
 import lombok.Value;
 import sonia.scm.repository.Repository;
 
@@ -34,6 +35,7 @@ import java.util.Optional;
  *
  * @since 2.21.0
  */
+@Beta
 public abstract class QueryBuilder {
 
   private String repositoryId;

@@ -24,6 +24,8 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
+
 /**
  * The {@link SearchEngine} is the main entry point for indexing and searching.
  * Note that this is kind of a low level api for indexing.
@@ -32,6 +34,7 @@ package sonia.scm.search;
  * @see IndexQueue
  * @since 2.21.0
  */
+@Beta
 public interface SearchEngine {
 
   /**

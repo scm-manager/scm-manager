@@ -24,6 +24,7 @@
 
 package sonia.scm.search;
 
+import com.google.common.annotations.Beta;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -36,6 +37,7 @@ import java.util.Map;
  *
  * @since 2.21.0
  */
+@Beta
 @Value
 public class Hit {
 
