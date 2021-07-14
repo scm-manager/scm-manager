@@ -48,13 +48,23 @@ import static de.otto.edison.hal.paging.NumberedPaging.zeroBasedNumberedPaging;
 @Mapper
 public abstract class QueryResultMapper extends HalAppenderMapper {
 
-  public QueryResultDto map(SearchParameters params, QueryResult result) {
+  public abstract QueryResultDto map(@Context SearchParameters params, QueryResult result);
+
+  @AfterMapping
+  void setPageValues(@MappingTarget QueryResultDto dto, QueryResult result, @Context SearchParameters params) {
     int totalHits = (int) result.getTotalHits();
-    QueryResultDto dto = createDto(params, result, totalHits);
-    dto.setPage(params.getPage());
     dto.setPageTotal(computePageTotal(totalHits, params.getPageSize()));
-    dto.setType(result.getType());
-    return dto;
+    dto.setPage(params.getPage());
+  }
+
+  @Nonnull
+  @ObjectFactory
+  QueryResultDto createDto(@Context SearchParameters params, QueryResult result) {
+    int totalHits = (int) result.getTotalHits();
+    Links.Builder links = links(params, totalHits);
+    Embedded.Builder embedded = hits(result);
+    applyEnrichers(new EdisonHalAppender(links, embedded), result);
+    return new QueryResultDto(links.build(), embedded.build());
   }
 
   @Nonnull
