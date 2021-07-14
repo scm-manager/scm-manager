@@ -26,6 +26,7 @@ package sonia.scm.api.v2.resources;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -85,6 +86,19 @@ public class SearchResource {
       mediaType = VndMediaType.ERROR_TYPE,
       schema = @Schema(implementation = ErrorDto.class)
     ))
+  @Parameter(
+    name = "query",
+    description = "The search expression",
+    required = true
+  )
+  @Parameter(
+    name = "page",
+    description = "The requested page number of the search results (zero based, defaults to 0)"
+  )
+  @Parameter(
+    name = "pageSize",
+    description = "The maximum number of results per page (defaults to 10)"
+  )
   public QueryResultDto search(@Valid @BeanParam SearchParameters params) {
     QueryResult result = engine.search(IndexNames.DEFAULT)
       .start(params.getPage() * params.getPageSize())

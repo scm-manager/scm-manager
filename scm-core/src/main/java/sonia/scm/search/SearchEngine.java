@@ -25,32 +25,32 @@
 package sonia.scm.search;
 
 /**
- * The {@link SearchEngine} is the main entry point for indexing and search opertation.
- * Note is more an low level api for indexing.
- * For non expert indexing the {@link IndexQueue} should be used-
+ * The {@link SearchEngine} is the main entry point for indexing and searching.
+ * Note that this is kind of a low level api for indexing.
+ * For non expert indexing the {@link IndexQueue} should be used.
  *
- * @since 2.21.0
  * @see IndexQueue
+ * @since 2.21.0
  */
 public interface SearchEngine {
 
   /**
-   * Returns index with the given name and the given options.
-   * The index is created if it not exists.
-   * Warning: Be careful, because an index can't open in parallel.
+   * Returns the index with the given name and the given options.
+   * The index is created if it does not exist.
+   * Warning: Be careful, because an index can't be opened multiple times in parallel.
    * If you are not sure how you should index your objects, use the {@link IndexQueue}.
    *
-   * @param name name of index
+   * @param name    name of the index
    * @param options index options
-   *
-   * @return existing index of creates a new one
+   * @return existing index or a new one if none exists
    */
   Index getOrCreate(String name, IndexOptions options);
 
   /**
    * Same as {@link #getOrCreate(String, IndexOptions)} with default options.
-   * @param name name of index
-   * @return existing index of creates a new one
+   *
+   * @param name name of the index
+   * @return existing index or a new one if none exists
    * @see IndexOptions#defaults()
    */
   default Index getOrCreate(String name) {
@@ -59,18 +59,18 @@ public interface SearchEngine {
 
   /**
    * Search the index.
-   * Returns an {@link QueryBuilder} which allows to query the index.
+   * Returns a {@link QueryBuilder} which allows to query the index.
    *
-   * @param name name of index
+   * @param name    name of the index
    * @param options options for searching the index
-   *
    * @return query builder
    */
   QueryBuilder search(String name, IndexOptions options);
 
   /**
    * Same as {@link #search(String, IndexOptions)} with default options.
-   * @param name name of index
+   *
+   * @param name name of the index
    * @return query builder
    * @see IndexOptions#defaults()
    */

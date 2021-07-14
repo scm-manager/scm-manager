@@ -36,7 +36,7 @@ import java.util.Optional;
  */
 public abstract class QueryBuilder {
 
-  private String repository;
+  private String repositoryId;
   private int start = 0;
   private int limit = 10;
 
@@ -50,17 +50,17 @@ public abstract class QueryBuilder {
   }
 
   /**
-   * Return only results which are related to the given repository.
-   * @param repository repository
+   * Return only results which are related to the repository with the given id.
+   * @param repositoryId id of the repository
    * @return {@code this}
    */
-  public QueryBuilder repository(String repository) {
-    this.repository = repository;
+  public QueryBuilder repository(String repositoryId) {
+    this.repositoryId = repositoryId;
     return this;
   }
 
   /**
-   * The result should start at the given start.
+   * The result should start at the given number.
    * All matching objects before the given start are skipped.
    * @param start start of result
    * @return {@code this}
@@ -81,31 +81,31 @@ public abstract class QueryBuilder {
   }
 
   /**
-   * Executes the query and returns the matched hits.
+   * Executes the query and returns the matches.
    *
    * @param type type of objects which are searched
    * @param queryString searched query
    * @return result of query
    */
   public QueryResult execute(Class<?> type, String queryString){
-    return execute(new QueryParams(type, repository, queryString, start, limit));
+    return execute(new QueryParams(type, repositoryId, queryString, start, limit));
   }
 
   protected abstract QueryResult execute(QueryParams queryParams);
 
   /**
-   * The searched query and all parameters, which are belong to the query.
+   * The searched query and all parameters, which belong to the query.
    */
   @Value
   static class QueryParams {
     Class<?> type;
-    String repository;
+    String repositoryId;
     String queryString;
     int start;
     int limit;
 
-    public Optional<String> getRepository() {
-      return Optional.ofNullable(repository);
+    public Optional<String> getRepositoryId() {
+      return Optional.ofNullable(repositoryId);
     }
   }
 }

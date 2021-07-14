@@ -40,15 +40,15 @@ final class Queries {
     return new TermQuery(new Term(FieldNames.TYPE, type.getName()));
   }
 
-  private static Query repositoryQuery(String repository) {
-    return new TermQuery(new Term(FieldNames.REPOSITORY, repository));
+  private static Query repositoryQuery(String repositoryId) {
+    return new TermQuery(new Term(FieldNames.REPOSITORY, repositoryId));
   }
 
   static Query filter(Query query, QueryBuilder.QueryParams params) {
     BooleanQuery.Builder builder = new BooleanQuery.Builder()
       .add(query, MUST)
       .add(typeQuery(params.getType()), MUST);
-    params.getRepository().ifPresent(repo -> builder.add(repositoryQuery(repo), MUST));
+    params.getRepositoryId().ifPresent(repo -> builder.add(repositoryQuery(repo), MUST));
     return builder.build();
   }
 }
