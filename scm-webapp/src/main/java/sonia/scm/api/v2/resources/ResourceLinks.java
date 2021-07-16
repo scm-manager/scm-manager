@@ -1125,8 +1125,8 @@ class ResourceLinks {
       this.searchLinkBuilder = new LinkBuilder(pathInfo, SearchResource.class);
     }
 
-    public String search() {
-      return searchLinkBuilder.method("search").parameters().href();
+    public String search(String type) {
+      return searchLinkBuilder.method("search").parameters(type).href();
     }
   }
 

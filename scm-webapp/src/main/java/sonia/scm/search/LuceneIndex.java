@@ -33,27 +33,32 @@ import org.apache.lucene.index.Term;
 
 import java.io.IOException;
 
-import static sonia.scm.search.FieldNames.*;
+import static sonia.scm.search.FieldNames.ID;
+import static sonia.scm.search.FieldNames.PERMISSION;
+import static sonia.scm.search.FieldNames.REPOSITORY;
+import static sonia.scm.search.FieldNames.TYPE;
+import static sonia.scm.search.FieldNames.UID;
 
 public class LuceneIndex implements Index {
 
-  private final DocumentConverter converter;
+  private final SearchableTypeResolver resolver;
   private final IndexWriter writer;
 
-  LuceneIndex(DocumentConverter converter, IndexWriter writer) {
-    this.converter = converter;
+  LuceneIndex(SearchableTypeResolver resolver, IndexWriter writer) {
+    this.resolver = resolver;
     this.writer = writer;
   }
 
   @Override
   public void store(Id id, String permission, Object object) {
-    String uid = createUid(id, object.getClass());
-    Document document = converter.convert(object);
+    SearchableType type = resolver.resolve(object);
+    String uid = createUid(id, type);
+    Document document = type.getTypeConverter().convert(object);
     try {
       field(document, UID, uid);
       field(document, ID, id.getValue());
       id.getRepository().ifPresent(repository -> field(document, REPOSITORY, repository));
-      field(document, TYPE, object.getClass().getName());
+      field(document, TYPE, type.getName());
       if (!Strings.isNullOrEmpty(permission)) {
         field(document, PERMISSION, permission);
       }
@@ -63,7 +68,7 @@ public class LuceneIndex implements Index {
     }
   }
 
-  private String createUid(Id id, Class<?> type) {
+  private String createUid(Id id, SearchableType type) {
     return id.asString() + "/" + type.getName();
   }
 
@@ -73,8 +78,9 @@ public class LuceneIndex implements Index {
 
   @Override
   public void delete(Id id, Class<?> type) {
+    SearchableType searchableType = resolver.resolve(type);
     try {
-      writer.deleteDocuments(new Term(UID, createUid(id, type)));
+      writer.deleteDocuments(new Term(UID, createUid(id, searchableType)));
     } catch (IOException e) {
       throw new SearchEngineException("failed to delete document from index", e);
     }
@@ -91,10 +97,16 @@ public class LuceneIndex implements Index {
 
   @Override
   public void deleteByType(Class<?> type) {
+    SearchableType searchableType = resolver.resolve(type);
+    deleteByTypeName(searchableType.getName());
+  }
+
+  @Override
+  public void deleteByTypeName(String typeName) {
     try {
-      writer.deleteDocuments(new Term(TYPE, type.getName()));
+      writer.deleteDocuments(new Term(TYPE, typeName));
     } catch (IOException ex) {
-      throw new SearchEngineException("failed to delete documents by repository " + type + " from index", ex);
+      throw new SearchEngineException("failed to delete documents by repository " + typeName + " from index", ex);
     }
   }
 

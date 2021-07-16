@@ -22,39 +22,27 @@
  * SOFTWARE.
  */
 
-import { ApiResult, useRequiredIndexLink } from "./base";
-import { QueryResult } from "@scm-manager/ui-types";
-import { apiClient } from "./apiclient";
-import { createQueryString } from "./utils";
-import { useQuery } from "react-query";
+package sonia.scm.search;
 
-export type SearchOptions = {
-  type: string;
-  page?: number;
-  pageSize?: number;
-};
+import javax.inject.Inject;
+import java.io.IOException;
 
-const defaultSearchOptions: SearchOptions = {
-  type: "repository",
-};
+public class LuceneIndexFactory {
 
-export const useSearch = (query: string, optionParam = defaultSearchOptions): ApiResult<QueryResult> => {
-  const options = { ...defaultSearchOptions, ...optionParam };
-  const link = useRequiredIndexLink("search").replace("{type}", options.type);
+  private final SearchableTypeResolver typeResolver;
+  private final IndexOpener indexOpener;
 
-  const queryParams: Record<string, string> = {};
-  queryParams.q = query;
-  if (options.page) {
-    queryParams.page = options.page.toString();
+  @Inject
+  public LuceneIndexFactory(SearchableTypeResolver typeResolver, IndexOpener indexOpener) {
+    this.typeResolver = typeResolver;
+    this.indexOpener = indexOpener;
   }
-  if (options.pageSize) {
-    queryParams.pageSize = options.pageSize.toString();
-  }
-  return useQuery<QueryResult, Error>(
-    ["search", query],
-    () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
-    {
-      enabled: query.length > 1,
+
+  public LuceneIndex create(String name, IndexOptions options) {
+    try {
+      return new LuceneIndex(typeResolver, indexOpener.openForWrite(name, options));
+    } catch (IOException ex) {
+      throw new SearchEngineException("failed to open index", ex);
     }
-  );
-};
+  }
+}

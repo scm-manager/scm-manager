@@ -28,6 +28,8 @@ package sonia.scm.plugin;
 
 import com.google.inject.Binder;
 
+import java.util.Collections;
+
 /**
  * Process and resolve extensions.
  *
@@ -46,8 +48,7 @@ public interface ExtensionProcessor
    *
    * @return extensions
    */
-  public <T> Iterable<Class<? extends T>> byExtensionPoint(
-    Class<T> extensionPoint);
+  <T> Iterable<Class<? extends T>> byExtensionPoint(Class<T> extensionPoint);
 
   /**
    * Returns single extension by its extension point.
@@ -58,7 +59,7 @@ public interface ExtensionProcessor
    *
    * @return extension
    */
-  public <T> Class<? extends T> oneByExtensionPoint(Class<T> extensionPoint);
+  <T> Class<? extends T> oneByExtensionPoint(Class<T> extensionPoint);
 
   /**
    * Process auto bind extensions.
@@ -66,7 +67,7 @@ public interface ExtensionProcessor
    *
    * @param binder injection binder
    */
-  public void processAutoBindExtensions(Binder binder);
+  void processAutoBindExtensions(Binder binder);
 
   //~--- get methods ----------------------------------------------------------
 
@@ -76,5 +77,15 @@ public interface ExtensionProcessor
    *
    * @return collected web elements
    */
-  public Iterable<WebElementExtension> getWebElements();
+  Iterable<WebElementExtension> getWebElements();
+
+  /**
+   * Returns all collected indexable types.
+   *
+   * @return collected indexable types
+   * @since 2.21.0
+   */
+  default Iterable<Class<?>> getIndexedTypes() {
+    return Collections.emptySet();
+  }
 }

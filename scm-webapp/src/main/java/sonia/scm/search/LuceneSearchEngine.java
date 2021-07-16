@@ -25,28 +25,21 @@
 package sonia.scm.search;
 
 import javax.inject.Inject;
-import java.io.IOException;
 
 public class LuceneSearchEngine implements SearchEngine {
 
-  private final IndexOpener indexOpener;
-  private final DocumentConverter converter;
+  private final LuceneIndexFactory indexFactory;
   private final LuceneQueryBuilderFactory queryBuilderFactory;
 
   @Inject
-  public LuceneSearchEngine(IndexOpener indexOpener, DocumentConverter converter, LuceneQueryBuilderFactory queryBuilderFactory) {
-    this.indexOpener = indexOpener;
-    this.converter = converter;
+  public LuceneSearchEngine(LuceneIndexFactory indexFactory, LuceneQueryBuilderFactory queryBuilderFactory) {
+    this.indexFactory = indexFactory;
     this.queryBuilderFactory = queryBuilderFactory;
   }
 
   @Override
   public Index getOrCreate(String name, IndexOptions options) {
-    try {
-      return new LuceneIndex(converter, indexOpener.openForWrite(name, options));
-    } catch (IOException ex) {
-      throw new SearchEngineException("failed to open index", ex);
-    }
+    return indexFactory.create(name, options);
   }
 
   @Override

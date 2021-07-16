@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import lombok.Getter;
 import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -153,7 +154,7 @@ class LuceneQueryBuilderTest {
     try (IndexWriter writer = writer()) {
       writer.addDocument(personDoc("Dent"));
     }
-    assertThrows(QueryParseException.class, () -> query(String.class, ":~:~"));
+    assertThrows(QueryParseException.class, () -> query(InetOrgPerson.class, ":~:~"));
   }
 
   @Test
@@ -247,8 +248,9 @@ class LuceneQueryBuilderTest {
     QueryResult result;
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
       when(opener.openForRead("default")).thenReturn(reader);
+      SearchableTypeResolver resolver = new SearchableTypeResolver(Simple.class);
       LuceneQueryBuilder builder = new LuceneQueryBuilder(
-        opener, "default", new StandardAnalyzer()
+        opener, resolver, "default", new StandardAnalyzer()
       );
       result = builder.repository("cde").execute(Simple.class, "content:awesome");
     }
@@ -480,8 +482,9 @@ class LuceneQueryBuilderTest {
   private QueryResult query(Class<?> type, String queryString, Integer start, Integer limit) throws IOException {
     try (DirectoryReader reader = DirectoryReader.open(directory)) {
       lenient().when(opener.openForRead("default")).thenReturn(reader);
+      SearchableTypeResolver resolver = new SearchableTypeResolver(type);
       LuceneQueryBuilder builder = new LuceneQueryBuilder(
-        opener, "default", new StandardAnalyzer()
+        opener, resolver, "default", new StandardAnalyzer()
       );
       if (start != null) {
         builder.start(start);
@@ -502,14 +505,14 @@ class LuceneQueryBuilderTest {
   private Document simpleDoc(String content) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-    document.add(new StringField(FieldNames.TYPE, Simple.class.getName(), Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, "simple", Field.Store.YES));
     return document;
   }
 
   private Document permissionDoc(String content, String permission) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-    document.add(new StringField(FieldNames.TYPE, Simple.class.getName(), Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, "simple", Field.Store.YES));
     document.add(new StringField(FieldNames.PERMISSION, permission, Field.Store.YES));
     return document;
   }
@@ -517,7 +520,7 @@ class LuceneQueryBuilderTest {
   private Document repositoryDoc(String content, String repository) {
     Document document = new Document();
     document.add(new TextField("content", content, Field.Store.YES));
-    document.add(new StringField(FieldNames.TYPE, Simple.class.getName(), Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, "simple", Field.Store.YES));
     document.add(new StringField(FieldNames.REPOSITORY, repository, Field.Store.YES));
     return document;
   }
@@ -529,14 +532,14 @@ class LuceneQueryBuilderTest {
     document.add(new TextField("displayName", displayName, Field.Store.YES));
     document.add(new TextField("carLicense", carLicense, Field.Store.YES));
     document.add(new StringField(FieldNames.ID, lastName, Field.Store.YES));
-    document.add(new StringField(FieldNames.TYPE, InetOrgPerson.class.getName(), Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, "inetOrgPerson", Field.Store.YES));
     return document;
   }
 
   private Document personDoc(String lastName) {
     Document document = new Document();
     document.add(new TextField("lastName", lastName, Field.Store.YES));
-    document.add(new StringField(FieldNames.TYPE, Person.class.getName(), Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, "person", Field.Store.YES));
     return document;
   }
 
@@ -549,10 +552,12 @@ class LuceneQueryBuilderTest {
     document.add(new StringField("boolValue", String.valueOf(boolValue), Field.Store.YES));
     document.add(new LongPoint("instantValue", instantValue.toEpochMilli()));
     document.add(new StoredField("instantValue", instantValue.toEpochMilli()));
-    document.add(new StringField(FieldNames.TYPE, Types.class.getName(), Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, "types", Field.Store.YES));
     return document;
   }
 
+  @Getter
+  @IndexedType
   static class Types {
 
     @Indexed
@@ -566,12 +571,16 @@ class LuceneQueryBuilderTest {
 
   }
 
+  @Getter
+  @IndexedType
   static class Person {
 
     @Indexed(defaultQuery = true)
     private String lastName;
   }
 
+  @Getter
+  @IndexedType
   static class InetOrgPerson extends Person {
 
     @Indexed(defaultQuery = true, boost = 2f)
@@ -584,6 +593,8 @@ class LuceneQueryBuilderTest {
     private String carLicense;
   }
 
+  @Getter
+  @IndexedType
   static class Simple {
     @Indexed(defaultQuery = true)
     private String content;

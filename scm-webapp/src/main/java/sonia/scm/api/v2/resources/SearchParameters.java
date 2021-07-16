@@ -30,6 +30,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 import javax.ws.rs.DefaultValue;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
@@ -54,6 +55,9 @@ public class SearchParameters {
   @QueryParam("pageSize")
   @DefaultValue("10")
   private int pageSize = 10;
+
+  @PathParam("type")
+  private String type;
 
   String getSelfLink() {
     return uriInfo.getAbsolutePath().toASCIIString();

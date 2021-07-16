@@ -46,32 +46,37 @@ import org.slf4j.LoggerFactory;
 import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Optional;
 
 public class LuceneQueryBuilder extends QueryBuilder {
 
   private static final Logger LOG = LoggerFactory.getLogger(LuceneQueryBuilder.class);
 
-  private static final Map<Class<?>, SearchableType> CACHE = new ConcurrentHashMap<>();
-
   private final IndexOpener opener;
+  private final SearchableTypeResolver resolver;
   private final String indexName;
   private final Analyzer analyzer;
 
-  LuceneQueryBuilder(IndexOpener opener, String indexName, Analyzer analyzer) {
+  LuceneQueryBuilder(IndexOpener opener, SearchableTypeResolver resolver, String indexName, Analyzer analyzer) {
     this.opener = opener;
+    this.resolver = resolver;
     this.indexName = indexName;
     this.analyzer = analyzer;
+  }
+
+  @Override
+  protected Optional<Class<?>> resolveByName(String typeName) {
+    return resolver.resolveClassByName(typeName);
   }
 
   @Override
   protected QueryResult execute(QueryParams queryParams) {
     String queryString = Strings.nullToEmpty(queryParams.getQueryString());
 
-    SearchableType searchableType = CACHE.computeIfAbsent(queryParams.getType(), SearchableTypes::create);
+    SearchableType searchableType = resolver.resolve(queryParams.getType());
 
-    Query query = Queries.filter(createQuery(searchableType, queryParams, queryString), queryParams);
+    Query parsedQuery = createQuery(searchableType, queryParams, queryString);
+    Query query = Queries.filter(parsedQuery, searchableType, queryParams);
     if (LOG.isDebugEnabled()) {
       LOG.debug("execute lucene query: {}", query);
     }

@@ -22,39 +22,43 @@
  * SOFTWARE.
  */
 
-import { ApiResult, useRequiredIndexLink } from "./base";
-import { QueryResult } from "@scm-manager/ui-types";
-import { apiClient } from "./apiclient";
-import { createQueryString } from "./utils";
-import { useQuery } from "react-query";
+package sonia.scm.search;
 
-export type SearchOptions = {
-  type: string;
-  page?: number;
-  pageSize?: number;
-};
+import com.google.common.base.Strings;
+import org.apache.lucene.index.IndexableField;
 
-const defaultSearchOptions: SearchOptions = {
-  type: "repository",
-};
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
-export const useSearch = (query: string, optionParam = defaultSearchOptions): ApiResult<QueryResult> => {
-  const options = { ...defaultSearchOptions, ...optionParam };
-  const link = useRequiredIndexLink("search").replace("{type}", options.type);
+import static java.util.Collections.emptySet;
 
-  const queryParams: Record<string, string> = {};
-  queryParams.q = query;
-  if (options.page) {
-    queryParams.page = options.page.toString();
+final class FieldConverter {
+
+  private final Method getter;
+  private final IndexableFieldFactory fieldFactory;
+  private final String name;
+
+  FieldConverter(Field field, Method getter, Indexed indexed, IndexableFieldFactory fieldFactory) {
+    this.getter = getter;
+    this.fieldFactory = fieldFactory;
+    this.name = createName(field, indexed);
   }
-  if (options.pageSize) {
-    queryParams.pageSize = options.pageSize.toString();
-  }
-  return useQuery<QueryResult, Error>(
-    ["search", query],
-    () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
-    {
-      enabled: query.length > 1,
+
+  private String createName(Field field, Indexed indexed) {
+    String nameFromAnnotation = indexed.name();
+    if (Strings.isNullOrEmpty(nameFromAnnotation)) {
+      return field.getName();
     }
-  );
-};
+    return nameFromAnnotation;
+  }
+
+  Iterable<IndexableField> convert(Object object) throws IllegalAccessException, InvocationTargetException {
+    Object value = getter.invoke(object);
+    if (value != null) {
+      return fieldFactory.create(name, value);
+    }
+    return emptySet();
+  }
+
+}

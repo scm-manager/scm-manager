@@ -31,7 +31,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import sonia.scm.repository.Repository;
 import sonia.scm.search.IndexNames;
 import sonia.scm.search.QueryResult;
 import sonia.scm.search.SearchEngine;
@@ -62,7 +61,7 @@ public class SearchResource {
   }
 
   @GET
-  @Path("")
+  @Path("{type}")
   @Produces(VndMediaType.QUERY_RESULT)
   @Operation(
     summary = "Query result",
@@ -103,7 +102,7 @@ public class SearchResource {
     QueryResult result = engine.search(IndexNames.DEFAULT)
       .start(params.getPage() * params.getPageSize())
       .limit(params.getPageSize())
-      .execute(Repository.class, params.getQuery());
+      .execute(params.getType(), params.getQuery());
 
     return mapper.map(params, result);
   }

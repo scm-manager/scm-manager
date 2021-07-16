@@ -35,62 +35,61 @@ import org.apache.lucene.index.IndexableFieldType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.Nonnull;
 import java.time.Instant;
 import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-class DocumentConverterTest {
-
-  private DocumentConverter documentConverter;
-
-  @BeforeEach
-  void prepare() {
-    documentConverter = new DocumentConverter();
-  }
+class TypeConvertersTest {
 
   @Test
   void shouldConvertPersonToDocument() {
     Person person = new Person("Arthur", "Dent");
 
-    Document document = documentConverter.convert(person);
+    Document document = convert(person);
 
     assertThat(document.getField("firstName").stringValue()).isEqualTo("Arthur");
     assertThat(document.getField("lastName").stringValue()).isEqualTo("Dent");
   }
 
+  @Nonnull
+  private Document convert(Object object) {
+    return TypeConverters.create(object.getClass()).convert(object);
+  }
+
   @Test
   void shouldUseNameFromAnnotation() {
-    Document document = documentConverter.convert(new ParamSample());
+    Document document = convert(new ParamSample());
 
     assertThat(document.getField("username").stringValue()).isEqualTo("dent");
   }
 
   @Test
   void shouldBeIndexedAsTextFieldByDefault() {
-    Document document = documentConverter.convert(new ParamSample());
+    Document document = convert(new ParamSample());
 
     assertThat(document.getField("username")).isInstanceOf(TextField.class);
   }
 
   @Test
   void shouldBeIndexedAsStringField() {
-    Document document = documentConverter.convert(new ParamSample());
+    Document document = convert(new ParamSample());
 
     assertThat(document.getField("searchable")).isInstanceOf(StringField.class);
   }
 
   @Test
   void shouldBeIndexedAsStoredField() {
-    Document document = documentConverter.convert(new ParamSample());
+    Document document = convert(new ParamSample());
 
     assertThat(document.getField("storedOnly")).isInstanceOf(StoredField.class);
   }
 
   @Test
   void shouldIgnoreNonIndexedFields() {
-    Document document = documentConverter.convert(new ParamSample());
+    Document document = convert(new ParamSample());
 
     assertThat(document.getField("notIndexed")).isNull();
   }
@@ -99,7 +98,7 @@ class DocumentConverterTest {
   void shouldSupportInheritance() {
     Account account = new Account("Arthur", "Dent", "arthur@hitchhiker.com");
 
-    Document document = documentConverter.convert(account);
+    Document document = convert(account);
 
     assertThat(document.getField("firstName")).isNotNull();
     assertThat(document.getField("lastName")).isNotNull();
@@ -109,18 +108,18 @@ class DocumentConverterTest {
   @Test
   void shouldFailWithoutGetter() {
     WithoutGetter withoutGetter = new WithoutGetter();
-    assertThrows(NonReadableFieldException.class, () -> documentConverter.convert(withoutGetter));
+    assertThrows(NonReadableFieldException.class, () -> convert(withoutGetter));
   }
 
   @Test
   void shouldFailOnUnsupportedFieldType() {
     UnsupportedFieldType unsupportedFieldType = new UnsupportedFieldType();
-    assertThrows(UnsupportedTypeOfFieldException.class, () -> documentConverter.convert(unsupportedFieldType));
+    assertThrows(UnsupportedTypeOfFieldException.class, () -> convert(unsupportedFieldType));
   }
 
   @Test
   void shouldStoreLongFieldsAsPointAndStoredByDefault() {
-    Document document = documentConverter.convert(new SupportedTypes());
+    Document document = convert(new SupportedTypes());
 
     assertPointField(document, "longType",
       field -> assertThat(field.numericValue().longValue()).isEqualTo(42L)
@@ -129,7 +128,7 @@ class DocumentConverterTest {
 
   @Test
   void shouldStoreLongFieldAsStored() {
-    Document document = documentConverter.convert(new SupportedTypes());
+    Document document = convert(new SupportedTypes());
 
     IndexableField field = document.getField("storedOnlyLongType");
     assertThat(field).isInstanceOf(StoredField.class);
@@ -138,7 +137,7 @@ class DocumentConverterTest {
 
   @Test
   void shouldStoreIntegerFieldsAsPointAndStoredByDefault() {
-    Document document = documentConverter.convert(new SupportedTypes());
+    Document document = convert(new SupportedTypes());
 
     assertPointField(document, "intType",
       field -> assertThat(field.numericValue().intValue()).isEqualTo(42)
@@ -147,7 +146,7 @@ class DocumentConverterTest {
 
   @Test
   void shouldStoreIntegerFieldAsStored() {
-    Document document = documentConverter.convert(new SupportedTypes());
+    Document document = convert(new SupportedTypes());
 
     IndexableField field = document.getField("storedOnlyIntegerType");
     assertThat(field).isInstanceOf(StoredField.class);
@@ -156,7 +155,7 @@ class DocumentConverterTest {
 
   @Test
   void shouldStoreBooleanFieldsAsStringField() {
-    Document document = documentConverter.convert(new SupportedTypes());
+    Document document = convert(new SupportedTypes());
 
     IndexableField field = document.getField("boolType");
     assertThat(field).isInstanceOf(StringField.class);
@@ -166,7 +165,7 @@ class DocumentConverterTest {
 
   @Test
   void shouldStoreBooleanFieldAsStored() {
-    Document document = documentConverter.convert(new SupportedTypes());
+    Document document = convert(new SupportedTypes());
 
     IndexableField field = document.getField("storedOnlyBoolType");
     assertThat(field).isInstanceOf(StoredField.class);
@@ -176,7 +175,7 @@ class DocumentConverterTest {
   @Test
   void shouldStoreInstantFieldsAsPointAndStoredByDefault() {
     Instant now = Instant.now();
-    Document document = documentConverter.convert(new DateTypes(now));
+    Document document = convert(new DateTypes(now));
 
     assertPointField(document, "instant",
       field -> assertThat(field.numericValue().longValue()).isEqualTo(now.toEpochMilli())
@@ -186,7 +185,7 @@ class DocumentConverterTest {
   @Test
   void shouldStoreInstantFieldAsStored() {
     Instant now = Instant.now();
-    Document document = documentConverter.convert(new DateTypes(now));
+    Document document = convert(new DateTypes(now));
 
     IndexableField field = document.getField("storedOnlyInstant");
     assertThat(field).isInstanceOf(StoredField.class);
@@ -195,7 +194,7 @@ class DocumentConverterTest {
 
   @Test
   void shouldCreateNoFieldForNullValues() {
-    Document document = documentConverter.convert(new Person("Trillian", null));
+    Document document = convert(new Person("Trillian", null));
 
     assertThat(document.getField("firstName")).isNotNull();
     assertThat(document.getField("lastName")).isNull();
@@ -210,6 +209,7 @@ class DocumentConverterTest {
   }
 
   @Getter
+  @IndexedType
   @AllArgsConstructor
   public static class Person {
     @Indexed
@@ -219,6 +219,7 @@ class DocumentConverterTest {
   }
 
   @Getter
+  @IndexedType
   public static class Account extends Person {
     @Indexed
     private String mail;
@@ -230,6 +231,7 @@ class DocumentConverterTest {
   }
 
   @Getter
+  @IndexedType
   public static class ParamSample {
     @Indexed(name = "username")
     private final String name = "dent";
@@ -243,18 +245,21 @@ class DocumentConverterTest {
     private final String notIndexed = "--";
   }
 
+  @IndexedType
   public static class WithoutGetter {
     @Indexed
     private final String value = "one";
   }
 
   @Getter
+  @IndexedType
   public static class UnsupportedFieldType {
     @Indexed
     private final Object value = "one";
   }
 
   @Getter
+  @IndexedType
   public static class SupportedTypes {
     @Indexed
     private final Long longType = 42L;
@@ -273,6 +278,7 @@ class DocumentConverterTest {
   }
 
   @Getter
+  @IndexedType
   private static class DateTypes {
     @Indexed
     private final Instant instant;

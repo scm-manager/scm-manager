@@ -26,9 +26,14 @@ package sonia.scm.search;
 
 import com.google.common.annotations.Beta;
 import lombok.Value;
+import sonia.scm.ContextEntry;
+import sonia.scm.NotFoundException;
 import sonia.scm.repository.Repository;
 
 import java.util.Optional;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
 
 /**
  * Build and execute queries against an index.
@@ -41,6 +46,7 @@ public abstract class QueryBuilder {
   private String repositoryId;
   private int start = 0;
   private int limit = 10;
+
 
   /**
    * Return only results which are related to the given repository.
@@ -93,6 +99,33 @@ public abstract class QueryBuilder {
     return execute(new QueryParams(type, repositoryId, queryString, start, limit));
   }
 
+  /**
+   * Executes the query and returns the matches.
+   *
+   * @param typeName type name of objects which are searched
+   * @param queryString searched query
+   * @return result of query
+   *
+   * @throws NotFoundException if type could not be found
+   */
+  public QueryResult execute(String typeName, String queryString){
+    Class<?> type = resolveByName(typeName).orElseThrow(() -> notFound(entity("type", typeName)));
+    return execute(new QueryParams(type, repositoryId, queryString, start, limit));
+  }
+
+  /**
+   * Resolves the type by its name. Returns optional with class of type or an empty optional.
+   *
+   * @param typeName name of type
+   * @return optional with class of type or empty
+   */
+  protected abstract Optional<Class<?>> resolveByName(String typeName);
+
+  /**
+   * Executes the query and returns the matches.
+   * @param queryParams query parameter
+   * @return result of query
+   */
   protected abstract QueryResult execute(QueryParams queryParams);
 
   /**

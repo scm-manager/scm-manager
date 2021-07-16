@@ -21,23 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-    
+
 package sonia.scm.plugin;
 
 //~--- non-JDK imports --------------------------------------------------------
 
-import com.google.common.base.Function;
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-
-//~--- JDK imports ------------------------------------------------------------
-
-import java.util.Set;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.Set;
+
+//~--- JDK imports ------------------------------------------------------------
 
 /**
  *
@@ -127,6 +124,10 @@ public class ScmModule
     return nonNull(webElements);
   }
 
+  public Iterable<ClassElement> getIndexedTypes() {
+    return nonNull(indexedTypes);
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -150,6 +151,9 @@ public class ScmModule
 
 
   //~--- fields ---------------------------------------------------------------
+
+  @XmlElement(name = "indexed-type")
+  private Set<ClassElement> indexedTypes;
 
   /** Field description */
   @XmlElement(name = "event")

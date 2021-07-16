@@ -29,16 +29,18 @@ import javax.inject.Inject;
 public class LuceneQueryBuilderFactory {
 
   private final IndexOpener indexOpener;
+  private final SearchableTypeResolver searchableTypeResolver;
   private final AnalyzerFactory analyzerFactory;
 
   @Inject
-  public LuceneQueryBuilderFactory(IndexOpener indexOpener, AnalyzerFactory analyzerFactory) {
+  public LuceneQueryBuilderFactory(IndexOpener indexOpener, SearchableTypeResolver searchableTypeResolver, AnalyzerFactory analyzerFactory) {
     this.indexOpener = indexOpener;
+    this.searchableTypeResolver = searchableTypeResolver;
     this.analyzerFactory = analyzerFactory;
   }
 
   public LuceneQueryBuilder create(String name, IndexOptions options) {
-    return new LuceneQueryBuilder(indexOpener, name, analyzerFactory.create(options));
+    return new LuceneQueryBuilder(indexOpener, searchableTypeResolver, name, analyzerFactory.create(options));
   }
 
 }

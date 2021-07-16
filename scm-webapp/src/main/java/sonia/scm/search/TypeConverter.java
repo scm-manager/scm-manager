@@ -22,39 +22,40 @@
  * SOFTWARE.
  */
 
-import { ApiResult, useRequiredIndexLink } from "./base";
-import { QueryResult } from "@scm-manager/ui-types";
-import { apiClient } from "./apiclient";
-import { createQueryString } from "./utils";
-import { useQuery } from "react-query";
+package sonia.scm.search;
 
-export type SearchOptions = {
-  type: string;
-  page?: number;
-  pageSize?: number;
-};
+import org.apache.lucene.document.Document;
+import org.apache.lucene.index.IndexableField;
 
-const defaultSearchOptions: SearchOptions = {
-  type: "repository",
-};
+import javax.annotation.Nonnull;
+import java.lang.reflect.InvocationTargetException;
+import java.util.List;
 
-export const useSearch = (query: string, optionParam = defaultSearchOptions): ApiResult<QueryResult> => {
-  const options = { ...defaultSearchOptions, ...optionParam };
-  const link = useRequiredIndexLink("search").replace("{type}", options.type);
+final class TypeConverter {
 
-  const queryParams: Record<string, string> = {};
-  queryParams.q = query;
-  if (options.page) {
-    queryParams.page = options.page.toString();
+  private final List<FieldConverter> fieldConverters;
+
+  TypeConverter(List<FieldConverter> fieldConverters) {
+    this.fieldConverters = fieldConverters;
   }
-  if (options.pageSize) {
-    queryParams.pageSize = options.pageSize.toString();
-  }
-  return useQuery<QueryResult, Error>(
-    ["search", query],
-    () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
-    {
-      enabled: query.length > 1,
+
+  public Document convert(Object object) {
+    try {
+      return doConversion(object);
+    } catch (IllegalAccessException | InvocationTargetException ex) {
+      throw new SearchEngineException("failed to create document", ex);
     }
-  );
-};
+  }
+
+  @Nonnull
+  private Document doConversion(Object object) throws IllegalAccessException, InvocationTargetException {
+    Document document = new Document();
+    for (FieldConverter fieldConverter : fieldConverters) {
+      for (IndexableField field : fieldConverter.convert(object)) {
+        document.add(field);
+      }
+    }
+    return document;
+  }
+
+}

@@ -52,7 +52,7 @@ public class IndexUpdateListener implements ServletContextListener {
   private static final Logger LOG = LoggerFactory.getLogger(IndexUpdateListener.class);
 
   @VisibleForTesting
-  static final int INDEX_VERSION = 1;
+  static final int INDEX_VERSION = 2;
 
   private final AdministrationContext administrationContext;
   private final IndexQueue queue;
@@ -87,11 +87,21 @@ public class IndexUpdateListener implements ServletContextListener {
   @Override
   public void contextInitialized(ServletContextEvent servletContextEvent) {
     Optional<IndexLog> indexLog = indexLogStore.get(IndexNames.DEFAULT, Repository.class);
-    if (!indexLog.isPresent()) {
+    if (indexLog.isPresent()) {
+      int version = indexLog.get().getVersion();
+      if (version < INDEX_VERSION) {
+        LOG.debug("repository index {} is older then {}, start reindexing of all repositories", version, INDEX_VERSION);
+        indexAll();
+      }
+    } else {
       LOG.debug("could not find log entry for repository index, start reindexing of all repositories");
-      administrationContext.runAsAdmin(ReIndexAll.class);
-      indexLogStore.log(IndexNames.DEFAULT, Repository.class, INDEX_VERSION);
+      indexAll();
     }
+  }
+
+  private void indexAll() {
+    administrationContext.runAsAdmin(ReIndexAll.class);
+    indexLogStore.log(IndexNames.DEFAULT, Repository.class, INDEX_VERSION);
   }
 
   @Override
@@ -117,6 +127,8 @@ public class IndexUpdateListener implements ServletContextListener {
     @Override
     public void run() {
       try (Index index = queue.getQueuedIndex(IndexNames.DEFAULT)) {
+        // delete v1 types
+        index.deleteByTypeName(Repository.class.getName());
         for (Repository repository : repositoryManager.getAll()) {
           store(index, repository);
         }

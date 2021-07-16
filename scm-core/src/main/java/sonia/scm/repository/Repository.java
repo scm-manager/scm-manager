@@ -32,6 +32,7 @@ import com.google.common.base.Objects;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.search.Indexed;
+import sonia.scm.search.IndexedType;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
@@ -52,6 +53,7 @@ import java.util.Set;
  *
  * @author Sebastian Sdorra
  */
+@IndexedType
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlRootElement(name = "repositories")
 @StaticPermissions(
