@@ -63,7 +63,7 @@ const DropDownMenu = styled.div`
     min-width: 20rem;
   }
 
-  @media screen and (max-width: ${devices.desktop.width}px) {
+  @media screen and (max-width: ${devices.desktop.width - 1}px) {
     margin-right: 1rem;
   }
 

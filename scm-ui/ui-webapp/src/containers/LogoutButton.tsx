@@ -38,7 +38,7 @@ type Props = {
 };
 
 const StyledLogoutButton = styled(Link)`
-  @media screen and (max-width: ${devices.desktop.width}px) {
+  @media screen and (max-width: ${devices.desktop.width}px -1 ) {
     border-top: 1px solid white;
     margin-top: 1rem;
     padding-top: 1rem;
