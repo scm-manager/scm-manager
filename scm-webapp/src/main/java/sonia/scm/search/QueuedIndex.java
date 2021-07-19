@@ -62,6 +62,11 @@ public class QueuedIndex implements Index {
   }
 
   @Override
+  public void deleteByTypeName(String typeName) {
+    tasks.add(index -> index.deleteByTypeName(typeName));
+  }
+
+  @Override
   public void close() {
     IndexQueueTaskWrapper wrappedTask = new IndexQueueTaskWrapper(
       queue.getSearchEngine(), indexName, indexOptions, tasks

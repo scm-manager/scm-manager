@@ -24,59 +24,54 @@
 
 package sonia.scm.search;
 
-import org.apache.lucene.queryparser.flexible.standard.config.PointsConfig;
-
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
-final class SearchableTypes {
+final class TypeConverters {
 
-  private static final float DEFAULT_BOOST = 1f;
-
-  private SearchableTypes() {
+  private TypeConverters() {
   }
 
-  static SearchableType create(Class<?> type) {
-    List<SearchableField> fields = new ArrayList<>();
-    collectFields(type, fields);
-    return createSearchableType(type, fields);
+  static TypeConverter create(Class<?> type) {
+    List<FieldConverter> fieldConverters = new ArrayList<>();
+    collectFields(fieldConverters, type);
+    return new TypeConverter(fieldConverters);
   }
 
-  private static SearchableType createSearchableType(Class<?> type, List<SearchableField> fields) {
-    String[] fieldsNames = fields.stream()
-      .filter(SearchableField::isDefaultQuery)
-      .map(SearchableField::getName)
-      .toArray(String[]::new);
-
-    Map<String, Float> boosts = new HashMap<>();
-    Map<String, PointsConfig> pointsConfig = new HashMap<>();
-    for (SearchableField field : fields) {
-      if (field.isDefaultQuery() && field.getBoost() != DEFAULT_BOOST) {
-        boosts.put(field.getName(), field.getBoost());
-      }
-      PointsConfig config = field.getPointsConfig();
-      if (config != null) {
-        pointsConfig.put(field.getName(), config);
-      }
-    }
-
-    return new SearchableType(type, fieldsNames, boosts, pointsConfig, fields, TypeConverters.create(type));
-  }
-
-  private static void collectFields(Class<?> type, List<SearchableField> fields) {
+  private static void collectFields(List<FieldConverter> fieldConverters, Class<?> type) {
     Class<?> parent = type.getSuperclass();
     if (parent != null) {
-      collectFields(parent, fields);
+      collectFields(fieldConverters, parent);
     }
     for (Field field : type.getDeclaredFields()) {
       Indexed indexed = field.getAnnotation(Indexed.class);
       if (indexed != null) {
-        fields.add(new SearchableField(field, indexed));
+        IndexableFieldFactory fieldFactory = IndexableFields.create(field, indexed);
+        Method getter = findGetter(type, field);
+        fieldConverters.add(new FieldConverter(field, getter, indexed, fieldFactory));
       }
     }
+  }
+
+  private static Method findGetter(Class<?> type, Field field) {
+    String name = createGetterName(field);
+    try {
+      return type.getMethod(name);
+    } catch (NoSuchMethodException ex) {
+      throw new NonReadableFieldException("could not find getter for field", ex);
+    }
+  }
+
+  private static String createGetterName(Field field) {
+    String fieldName = field.getName();
+    String prefix = "get";
+    if (field.getType() == Boolean.TYPE) {
+      prefix = "is";
+    }
+    return prefix + fieldName.substring(0, 1).toUpperCase(Locale.ENGLISH) + fieldName.substring(1);
   }
 
 }

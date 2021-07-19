@@ -36,7 +36,7 @@ final class Queries {
   private Queries() {
   }
 
-  private static Query typeQuery(Class<?> type) {
+  private static Query typeQuery(SearchableType type) {
     return new TermQuery(new Term(FieldNames.TYPE, type.getName()));
   }
 
@@ -44,10 +44,10 @@ final class Queries {
     return new TermQuery(new Term(FieldNames.REPOSITORY, repositoryId));
   }
 
-  static Query filter(Query query, QueryBuilder.QueryParams params) {
+  static Query filter(Query query, SearchableType searchableType, QueryBuilder.QueryParams params) {
     BooleanQuery.Builder builder = new BooleanQuery.Builder()
       .add(query, MUST)
-      .add(typeQuery(params.getType()), MUST);
+      .add(typeQuery(searchableType), MUST);
     params.getRepositoryId().ifPresent(repo -> builder.add(repositoryQuery(repo), MUST));
     return builder.build();
   }

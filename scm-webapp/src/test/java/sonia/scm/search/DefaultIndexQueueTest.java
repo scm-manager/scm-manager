@@ -61,13 +61,16 @@ class DefaultIndexQueueTest {
   @BeforeEach
   void createQueue() throws IOException {
     directory = new ByteBuffersDirectory();
-    IndexOpener factory = mock(IndexOpener.class);
-    when(factory.openForWrite(any(String.class), any(IndexOptions.class))).thenAnswer(ic -> {
+    IndexOpener opener = mock(IndexOpener.class);
+    when(opener.openForWrite(any(String.class), any(IndexOptions.class))).thenAnswer(ic -> {
       IndexWriterConfig config = new IndexWriterConfig(new StandardAnalyzer());
       config.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
       return new IndexWriter(directory, config);
     });
-    SearchEngine engine = new LuceneSearchEngine(factory, new DocumentConverter(), queryBuilderFactory);
+
+    SearchableTypeResolver resolver = new SearchableTypeResolver(Account.class, IndexedNumber.class);
+    LuceneIndexFactory indexFactory = new LuceneIndexFactory(resolver, opener);
+    SearchEngine engine = new LuceneSearchEngine(indexFactory, queryBuilderFactory);
     queue = new DefaultIndexQueue(engine);
   }
 
@@ -111,6 +114,7 @@ class DefaultIndexQueueTest {
   }
 
   @Value
+  @IndexedType
   public static class Account {
     @Indexed
     String username;
@@ -121,6 +125,7 @@ class DefaultIndexQueueTest {
   }
 
   @Value
+  @IndexedType
   public static class IndexedNumber {
     @Indexed
     int value;

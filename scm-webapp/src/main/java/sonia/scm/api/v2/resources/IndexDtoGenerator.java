@@ -132,7 +132,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       builder.single(link("repositoryRoles", resourceLinks.repositoryRoleCollection().self()));
       builder.single(link("importLog", resourceLinks.repository().importLog("IMPORT_LOG_ID").replace("IMPORT_LOG_ID", "{logId}")));
 
-      builder.single(link("search", resourceLinks.search().search()));
+      builder.single(link("search", resourceLinks.search().search("INDEXED_TYPE").replace("INDEXED_TYPE", "{type}")));
     } else {
       builder.single(link("login", resourceLinks.authentication().jsonLogin()));
     }

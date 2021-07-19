@@ -68,6 +68,13 @@ public interface Index extends AutoCloseable {
   void deleteByType(Class<?> type);
 
   /**
+   * Delete all objects with the given type from index.
+   * This method is mostly if the index type has changed and the old type (in form of class) is no longer available.
+   * @param typeName type name of objects
+   */
+  void deleteByTypeName(String typeName);
+
+  /**
    * Close index and commit changes.
    */
   @Override

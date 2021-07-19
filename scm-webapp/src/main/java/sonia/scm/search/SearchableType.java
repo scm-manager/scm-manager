@@ -24,6 +24,7 @@
 
 package sonia.scm.search;
 
+import com.google.common.base.Strings;
 import lombok.Value;
 import org.apache.lucene.queryparser.flexible.standard.config.PointsConfig;
 
@@ -35,17 +36,40 @@ import java.util.Map;
 public class SearchableType {
 
   Class<?> type;
+  String name;
   String[] fieldNames;
   Map<String,Float> boosts;
   Map<String, PointsConfig> pointsConfig;
   List<SearchableField> fields;
+  TypeConverter typeConverter;
 
-  SearchableType(Class<?> type, String[] fieldNames, Map<String, Float> boosts, Map<String, PointsConfig> pointsConfig, List<SearchableField> fields) {
+  SearchableType(Class<?> type,
+                 String[] fieldNames,
+                 Map<String, Float> boosts,
+                 Map<String, PointsConfig> pointsConfig,
+                 List<SearchableField> fields,
+                 TypeConverter typeConverter) {
     this.type = type;
+    this.name = name(type);
     this.fieldNames = fieldNames;
     this.boosts = Collections.unmodifiableMap(boosts);
     this.pointsConfig = Collections.unmodifiableMap(pointsConfig);
     this.fields = Collections.unmodifiableList(fields);
+    this.typeConverter = typeConverter;
   }
 
+  private String name(Class<?> type) {
+    IndexedType annotation = type.getAnnotation(IndexedType.class);
+    if (annotation == null) {
+      throw new IllegalArgumentException(
+        type.getName() + " has no " + IndexedType.class.getSimpleName() + " annotation"
+      );
+    }
+    String nameFromAnnotation = annotation.value();
+    if (Strings.isNullOrEmpty(nameFromAnnotation)) {
+      String simpleName = type.getSimpleName();
+      return Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
+    }
+    return nameFromAnnotation;
+  }
 }

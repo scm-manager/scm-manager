@@ -82,7 +82,7 @@ class LuceneIndexTest {
       index.store(ONE, null, new Storable("Awesome content which should be indexed"));
     }
 
-    assertHits(UID, "one/" + Storable.class.getName(), 1);
+    assertHits(UID, "one/storable", 1);
   }
 
   @Test
@@ -109,7 +109,7 @@ class LuceneIndexTest {
       index.store(ONE, null, new Storable("Some other text"));
     }
 
-    assertHits(TYPE, Storable.class.getName(), 1);
+    assertHits(TYPE, "storable", 1);
   }
 
   @Test
@@ -214,7 +214,8 @@ class LuceneIndexTest {
   }
 
   private LuceneIndex createIndex() throws IOException {
-    return new LuceneIndex(new DocumentConverter(), createWriter());
+    SearchableTypeResolver resolver = new SearchableTypeResolver(Storable.class, OtherStorable.class);
+    return new LuceneIndex(resolver, createWriter());
   }
 
   private IndexWriter createWriter() throws IOException {
@@ -224,12 +225,14 @@ class LuceneIndexTest {
   }
 
   @Value
+  @IndexedType
   private static class Storable {
     @Indexed
     String value;
   }
 
   @Value
+  @IndexedType
   private static class OtherStorable {
     @Indexed
     String value;

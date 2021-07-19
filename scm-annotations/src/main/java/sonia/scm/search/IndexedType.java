@@ -22,39 +22,33 @@
  * SOFTWARE.
  */
 
-import { ApiResult, useRequiredIndexLink } from "./base";
-import { QueryResult } from "@scm-manager/ui-types";
-import { apiClient } from "./apiclient";
-import { createQueryString } from "./utils";
-import { useQuery } from "react-query";
+package sonia.scm.search;
 
-export type SearchOptions = {
-  type: string;
-  page?: number;
-  pageSize?: number;
-};
+import com.google.common.annotations.Beta;
+import sonia.scm.plugin.PluginAnnotation;
 
-const defaultSearchOptions: SearchOptions = {
-  type: "repository",
-};
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-export const useSearch = (query: string, optionParam = defaultSearchOptions): ApiResult<QueryResult> => {
-  const options = { ...defaultSearchOptions, ...optionParam };
-  const link = useRequiredIndexLink("search").replace("{type}", options.type);
-
-  const queryParams: Record<string, string> = {};
-  queryParams.q = query;
-  if (options.page) {
-    queryParams.page = options.page.toString();
-  }
-  if (options.pageSize) {
-    queryParams.pageSize = options.pageSize.toString();
-  }
-  return useQuery<QueryResult, Error>(
-    ["search", query],
-    () => apiClient.get(`${link}?${createQueryString(queryParams)}`).then((response) => response.json()),
-    {
-      enabled: query.length > 1,
-    }
-  );
-};
+/**
+ * Mark an field object should be indexed.
+ *
+ * @since 2.21.0
+ */
+@Beta
+@Documented
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@PluginAnnotation("indexed-type")
+public @interface IndexedType {
+  /**
+   * Returns the name of the indexed object.
+   * Default is the simple name of the indexed class, with the first char is lowercase.
+   *
+   * @return name of the index object or an empty string which indicates that the default should be used.
+   */
+  String value() default "";
+}
