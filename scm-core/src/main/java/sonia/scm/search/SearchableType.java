@@ -24,31 +24,27 @@
 
 package sonia.scm.search;
 
-import org.apache.lucene.index.Term;
-import org.apache.lucene.search.BooleanQuery;
-import org.apache.lucene.search.Query;
-import org.apache.lucene.search.TermQuery;
+import com.google.common.annotations.Beta;
 
-import static org.apache.lucene.search.BooleanClause.Occur.MUST;
+/**
+ * A type which can be searched with the {@link SearchEngine}.
+ *
+ * @since 2.21.0
+ */
+@Beta
+public interface SearchableType {
 
-final class Queries {
+  /**
+   * Return name of the type.
+   *
+   * @return name of type
+   */
+  String getName();
 
-  private Queries() {
-  }
-
-  private static Query typeQuery(LuceneSearchableType type) {
-    return new TermQuery(new Term(FieldNames.TYPE, type.getName()));
-  }
-
-  private static Query repositoryQuery(String repositoryId) {
-    return new TermQuery(new Term(FieldNames.REPOSITORY, repositoryId));
-  }
-
-  static Query filter(Query query, LuceneSearchableType searchableType, QueryBuilder.QueryParams params) {
-    BooleanQuery.Builder builder = new BooleanQuery.Builder()
-      .add(query, MUST)
-      .add(typeQuery(searchableType), MUST);
-    params.getRepositoryId().ifPresent(repo -> builder.add(repositoryQuery(repo), MUST));
-    return builder.build();
-  }
+  /**
+   * Return type in form of class.
+   *
+   * @return class of type
+   */
+  Class<?> getType();
 }

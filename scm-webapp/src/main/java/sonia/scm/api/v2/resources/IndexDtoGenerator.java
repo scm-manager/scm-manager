@@ -37,6 +37,8 @@ import sonia.scm.group.GroupPermissions;
 import sonia.scm.initialization.InitializationFinisher;
 import sonia.scm.initialization.InitializationStep;
 import sonia.scm.plugin.PluginPermissions;
+import sonia.scm.search.SearchEngine;
+import sonia.scm.search.SearchableType;
 import sonia.scm.security.AnonymousMode;
 import sonia.scm.security.Authentications;
 import sonia.scm.security.PermissionPermissions;
@@ -45,9 +47,11 @@ import sonia.scm.web.EdisonHalAppender;
 
 import javax.inject.Inject;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static de.otto.edison.hal.Embedded.embeddedBuilder;
 import static de.otto.edison.hal.Link.link;
+import static de.otto.edison.hal.Link.linkBuilder;
 
 public class IndexDtoGenerator extends HalAppenderMapper {
 
@@ -55,13 +59,15 @@ public class IndexDtoGenerator extends HalAppenderMapper {
   private final SCMContextProvider scmContextProvider;
   private final ScmConfiguration configuration;
   private final InitializationFinisher initializationFinisher;
+  private final SearchEngine searchEngine;
 
   @Inject
-  public IndexDtoGenerator(ResourceLinks resourceLinks, SCMContextProvider scmContextProvider, ScmConfiguration configuration, InitializationFinisher initializationFinisher) {
+  public IndexDtoGenerator(ResourceLinks resourceLinks, SCMContextProvider scmContextProvider, ScmConfiguration configuration, InitializationFinisher initializationFinisher, SearchEngine searchEngine) {
     this.resourceLinks = resourceLinks;
     this.scmContextProvider = scmContextProvider;
     this.configuration = configuration;
     this.initializationFinisher = initializationFinisher;
+    this.searchEngine = searchEngine;
   }
 
   public IndexDto generate() {
@@ -132,13 +138,22 @@ public class IndexDtoGenerator extends HalAppenderMapper {
       builder.single(link("repositoryRoles", resourceLinks.repositoryRoleCollection().self()));
       builder.single(link("importLog", resourceLinks.repository().importLog("IMPORT_LOG_ID").replace("IMPORT_LOG_ID", "{logId}")));
 
-      builder.single(link("search", resourceLinks.search().search("INDEXED_TYPE").replace("INDEXED_TYPE", "{type}")));
+      builder.array(searchLinks());
     } else {
       builder.single(link("login", resourceLinks.authentication().jsonLogin()));
     }
 
     applyEnrichers(new EdisonHalAppender(builder, embeddedBuilder), new Index());
     return new IndexDto(builder.build(), embeddedBuilder.build(), scmContextProvider.getVersion());
+  }
+
+  private List<Link> searchLinks() {
+    return searchEngine.getSearchableTypes().stream()
+      .map(SearchableType::getName)
+      .map(typeName ->
+        linkBuilder("search", resourceLinks.search().search(typeName)).withName(typeName).build()
+      )
+      .collect(Collectors.toList());
   }
 
   private IndexDto handleInitialization(Links.Builder builder, Embedded.Builder embeddedBuilder) {

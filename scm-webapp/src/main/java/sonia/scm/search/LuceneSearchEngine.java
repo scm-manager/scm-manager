@@ -25,16 +25,24 @@
 package sonia.scm.search;
 
 import javax.inject.Inject;
+import java.util.List;
 
 public class LuceneSearchEngine implements SearchEngine {
 
+  private final SearchableTypeResolver resolver;
   private final LuceneIndexFactory indexFactory;
   private final LuceneQueryBuilderFactory queryBuilderFactory;
 
   @Inject
-  public LuceneSearchEngine(LuceneIndexFactory indexFactory, LuceneQueryBuilderFactory queryBuilderFactory) {
+  public LuceneSearchEngine(SearchableTypeResolver resolver, LuceneIndexFactory indexFactory, LuceneQueryBuilderFactory queryBuilderFactory) {
+    this.resolver = resolver;
     this.indexFactory = indexFactory;
     this.queryBuilderFactory = queryBuilderFactory;
+  }
+
+  @Override
+  public List<SearchableType> getSearchableTypes() {
+    return resolver.getSearchableTypes();
   }
 
   @Override

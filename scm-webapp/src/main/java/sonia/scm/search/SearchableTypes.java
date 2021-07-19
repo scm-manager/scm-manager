@@ -39,13 +39,13 @@ final class SearchableTypes {
   private SearchableTypes() {
   }
 
-  static SearchableType create(Class<?> type) {
+  static LuceneSearchableType create(Class<?> type) {
     List<SearchableField> fields = new ArrayList<>();
     collectFields(type, fields);
     return createSearchableType(type, fields);
   }
 
-  private static SearchableType createSearchableType(Class<?> type, List<SearchableField> fields) {
+  private static LuceneSearchableType createSearchableType(Class<?> type, List<SearchableField> fields) {
     String[] fieldsNames = fields.stream()
       .filter(SearchableField::isDefaultQuery)
       .map(SearchableField::getName)
@@ -63,7 +63,7 @@ final class SearchableTypes {
       }
     }
 
-    return new SearchableType(type, fieldsNames, boosts, pointsConfig, fields, TypeConverters.create(type));
+    return new LuceneSearchableType(type, fieldsNames, boosts, pointsConfig, fields, TypeConverters.create(type));
   }
 
   private static void collectFields(Class<?> type, List<SearchableField> fields) {

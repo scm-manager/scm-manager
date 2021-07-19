@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 @Value
-public class SearchableType {
+public class LuceneSearchableType implements SearchableType {
 
   Class<?> type;
   String name;
@@ -43,12 +43,12 @@ public class SearchableType {
   List<SearchableField> fields;
   TypeConverter typeConverter;
 
-  SearchableType(Class<?> type,
-                 String[] fieldNames,
-                 Map<String, Float> boosts,
-                 Map<String, PointsConfig> pointsConfig,
-                 List<SearchableField> fields,
-                 TypeConverter typeConverter) {
+  LuceneSearchableType(Class<?> type,
+                       String[] fieldNames,
+                       Map<String, Float> boosts,
+                       Map<String, PointsConfig> pointsConfig,
+                       List<SearchableField> fields,
+                       TypeConverter typeConverter) {
     this.type = type;
     this.name = name(type);
     this.fieldNames = fieldNames;

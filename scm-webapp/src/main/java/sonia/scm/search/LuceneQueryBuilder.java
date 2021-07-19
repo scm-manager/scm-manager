@@ -73,7 +73,7 @@ public class LuceneQueryBuilder extends QueryBuilder {
   protected QueryResult execute(QueryParams queryParams) {
     String queryString = Strings.nullToEmpty(queryParams.getQueryString());
 
-    SearchableType searchableType = resolver.resolve(queryParams.getType());
+    LuceneSearchableType searchableType = resolver.resolve(queryParams.getType());
 
     Query parsedQuery = createQuery(searchableType, queryParams, queryString);
     Query query = Queries.filter(parsedQuery, searchableType, queryParams);
@@ -105,7 +105,7 @@ public class LuceneQueryBuilder extends QueryBuilder {
     return topScoreCollector.topDocs(queryParams.getStart(), queryParams.getLimit());
   }
 
-  private Query createQuery(SearchableType searchableType, QueryParams queryParams, String queryString) {
+  private Query createQuery(LuceneSearchableType searchableType, QueryParams queryParams, String queryString) {
     try {
       if (queryString.contains(":")) {
         return createExpertQuery(searchableType, queryParams);
@@ -116,14 +116,14 @@ public class LuceneQueryBuilder extends QueryBuilder {
     }
   }
 
-  private Query createExpertQuery(SearchableType searchableType, QueryParams queryParams) throws QueryNodeException {
+  private Query createExpertQuery(LuceneSearchableType searchableType, QueryParams queryParams) throws QueryNodeException {
     StandardQueryParser parser = new StandardQueryParser(analyzer);
 
     parser.setPointsConfigMap(searchableType.getPointsConfig());
     return parser.parse(queryParams.getQueryString(), "");
   }
 
-  public Query createBestGuessQuery(SearchableType searchableType, QueryBuilder.QueryParams queryParams) {
+  public Query createBestGuessQuery(LuceneSearchableType searchableType, QueryBuilder.QueryParams queryParams) {
     String[] fieldNames = searchableType.getFieldNames();
     if (fieldNames == null || fieldNames.length == 0) {
       throw new NoDefaultQueryFieldsFoundException(searchableType.getType());

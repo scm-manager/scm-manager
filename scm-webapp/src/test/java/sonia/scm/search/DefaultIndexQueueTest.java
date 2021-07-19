@@ -70,7 +70,7 @@ class DefaultIndexQueueTest {
 
     SearchableTypeResolver resolver = new SearchableTypeResolver(Account.class, IndexedNumber.class);
     LuceneIndexFactory indexFactory = new LuceneIndexFactory(resolver, opener);
-    SearchEngine engine = new LuceneSearchEngine(indexFactory, queryBuilderFactory);
+    SearchEngine engine = new LuceneSearchEngine(resolver, indexFactory, queryBuilderFactory);
     queue = new DefaultIndexQueue(engine);
   }
 
