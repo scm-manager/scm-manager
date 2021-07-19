@@ -110,7 +110,7 @@ public abstract class QueryBuilder {
    */
   public QueryResult execute(String typeName, String queryString){
     Class<?> type = resolveByName(typeName).orElseThrow(() -> notFound(entity("type", typeName)));
-    return execute(new QueryParams(type, repositoryId, queryString, start, limit));
+    return execute(type, queryString);
   }
 
   /**

@@ -42,7 +42,7 @@ public class LuceneIndexFactory {
     try {
       return new LuceneIndex(typeResolver, indexOpener.openForWrite(name, options));
     } catch (IOException ex) {
-      throw new SearchEngineException("failed to open index", ex);
+      throw new SearchEngineException("failed to open index " + name, ex);
     }
   }
 }

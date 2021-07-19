@@ -42,7 +42,7 @@ import static sonia.scm.ContextEntry.ContextBuilder.entity;
 import static sonia.scm.NotFoundException.notFound;
 
 @Singleton
-public class SearchableTypeResolver {
+class SearchableTypeResolver {
 
   private final Map<Class<?>, SearchableType> classToSearchableType = new HashMap<>();
   private final Map<String, Class<?>> nameToClass = new HashMap<>();
