@@ -135,11 +135,11 @@ class SearchResourceTest {
       JsonMockHttpResponse response = search("paging", 1, 20);
 
       JsonNode links = response.getContentAsJson().get("_links");
-      assertLink(links, "self", "/v2/search?q=paging&page=1&pageSize=20");
-      assertLink(links, "first", "/v2/search?q=paging&page=0&pageSize=20");
-      assertLink(links, "prev", "/v2/search?q=paging&page=0&pageSize=20");
-      assertLink(links, "next", "/v2/search?q=paging&page=2&pageSize=20");
-      assertLink(links, "last", "/v2/search?q=paging&page=4&pageSize=20");
+      assertLink(links, "self", "/v2/search/string?q=paging&page=1&pageSize=20");
+      assertLink(links, "first", "/v2/search/string?q=paging&page=0&pageSize=20");
+      assertLink(links, "prev", "/v2/search/string?q=paging&page=0&pageSize=20");
+      assertLink(links, "next", "/v2/search/string?q=paging&page=2&pageSize=20");
+      assertLink(links, "last", "/v2/search/string?q=paging&page=4&pageSize=20");
     }
 
     @Test
@@ -220,7 +220,7 @@ class SearchResourceTest {
       searchEngine.search(IndexNames.DEFAULT)
         .start(start)
         .limit(limit)
-        .execute(Repository.class, query)
+        .execute("string", query)
     ).thenReturn(result);
   }
 
@@ -233,7 +233,7 @@ class SearchResourceTest {
   }
 
   private JsonMockHttpResponse search(String query, Integer page, Integer pageSize) throws URISyntaxException, UnsupportedEncodingException {
-    String uri = "/v2/search?q=" + URLEncoder.encode(query, "UTF-8");
+    String uri = "/v2/search/string?q=" + URLEncoder.encode(query, "UTF-8");
     if (page != null) {
       uri += "&page=" + page;
     }
