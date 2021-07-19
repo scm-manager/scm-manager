@@ -40,6 +40,7 @@ import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.search.WildcardQuery;
 import org.apache.lucene.search.highlight.InvalidTokenOffsetsException;
+import org.apache.shiro.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -74,6 +75,9 @@ public class LuceneQueryBuilder extends QueryBuilder {
     String queryString = Strings.nullToEmpty(queryParams.getQueryString());
 
     LuceneSearchableType searchableType = resolver.resolve(queryParams.getType());
+    searchableType.getPermission().ifPresent(
+      permission -> SecurityUtils.getSubject().checkPermission(permission)
+    );
 
     Query parsedQuery = createQuery(searchableType, queryParams, queryString);
     Query query = Queries.filter(parsedQuery, searchableType, queryParams);

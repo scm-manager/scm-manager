@@ -78,7 +78,7 @@ class SearchableTypeResolver {
       .collect(Collectors.toSet());
   }
 
-  public List<SearchableType> getSearchableTypes() {
+  public List<LuceneSearchableType> getSearchableTypes() {
     return ImmutableList.copyOf(classToSearchableType.values());
   }
 

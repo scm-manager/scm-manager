@@ -24,46 +24,25 @@
 
 package sonia.scm.search;
 
-import org.apache.lucene.queryparser.flexible.standard.config.PointsConfig;
-
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 final class SearchableTypes {
-
-  private static final float DEFAULT_BOOST = 1f;
 
   private SearchableTypes() {
   }
 
   static LuceneSearchableType create(Class<?> type) {
     List<SearchableField> fields = new ArrayList<>();
-    collectFields(type, fields);
-    return createSearchableType(type, fields);
-  }
-
-  private static LuceneSearchableType createSearchableType(Class<?> type, List<SearchableField> fields) {
-    String[] fieldsNames = fields.stream()
-      .filter(SearchableField::isDefaultQuery)
-      .map(SearchableField::getName)
-      .toArray(String[]::new);
-
-    Map<String, Float> boosts = new HashMap<>();
-    Map<String, PointsConfig> pointsConfig = new HashMap<>();
-    for (SearchableField field : fields) {
-      if (field.isDefaultQuery() && field.getBoost() != DEFAULT_BOOST) {
-        boosts.put(field.getName(), field.getBoost());
-      }
-      PointsConfig config = field.getPointsConfig();
-      if (config != null) {
-        pointsConfig.put(field.getName(), config);
-      }
+    IndexedType annotation = type.getAnnotation(IndexedType.class);
+    if (annotation == null) {
+      throw new IllegalArgumentException(
+        type.getName() + " has no " + IndexedType.class.getSimpleName() + " annotation"
+      );
     }
-
-    return new LuceneSearchableType(type, fieldsNames, boosts, pointsConfig, fields, TypeConverters.create(type));
+    collectFields(type, fields);
+    return new LuceneSearchableType(type, annotation, fields);
   }
 
   private static void collectFields(Class<?> type, List<SearchableField> fields) {

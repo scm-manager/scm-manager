@@ -24,21 +24,27 @@
 
 package sonia.scm.search;
 
+import org.github.sdorra.jse.ShiroExtension;
+import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-@ExtendWith(MockitoExtension.class)
+@SubjectAware("trillian")
+@ExtendWith({MockitoExtension.class, ShiroExtension.class})
 class LuceneSearchEngineTest {
 
   @Mock
@@ -55,12 +61,37 @@ class LuceneSearchEngineTest {
 
   @Test
   void shouldDelegateGetSearchableTypes() {
-    List<SearchableType> mockedTypes = Collections.singletonList(mock(SearchableType.class));
+    List<LuceneSearchableType> mockedTypes = Collections.singletonList(searchableType("repository"));
     when(resolver.getSearchableTypes()).thenReturn(mockedTypes);
 
     List<SearchableType> searchableTypes = searchEngine.getSearchableTypes();
 
-    assertThat(searchableTypes).isSameAs(mockedTypes);
+    assertThat(searchableTypes).containsAll(mockedTypes);
+  }
+
+  @Test
+  @SubjectAware(value = "dent", permissions = "user:list")
+  void shouldExcludeTypesWithoutPermission() {
+    LuceneSearchableType repository = searchableType("repository");
+    LuceneSearchableType user = searchableType("user", "user:list");
+    LuceneSearchableType group = searchableType("group", "group:list");
+    List<LuceneSearchableType> mockedTypes = Arrays.asList(repository, user, group);
+    when(resolver.getSearchableTypes()).thenReturn(mockedTypes);
+
+    List<SearchableType> searchableTypes = searchEngine.getSearchableTypes();
+
+    assertThat(searchableTypes).containsOnly(repository, user);
+  }
+
+  private LuceneSearchableType searchableType(String name) {
+    return searchableType(name, null);
+  }
+
+  private LuceneSearchableType searchableType(String name, String permission) {
+    LuceneSearchableType searchableType = mock(LuceneSearchableType.class);
+    lenient().when(searchableType.getName()).thenReturn(name);
+    when(searchableType.getPermission()).thenReturn(Optional.ofNullable(permission));
+    return searchableType;
   }
 
   @Test
