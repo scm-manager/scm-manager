@@ -151,7 +151,7 @@ public class IndexDtoGenerator extends HalAppenderMapper {
     return searchEngine.getSearchableTypes().stream()
       .map(SearchableType::getName)
       .map(typeName ->
-        linkBuilder("search", resourceLinks.search().search(typeName)).withName(typeName).build()
+        linkBuilder("search", resourceLinks.search().query(typeName)).withName(typeName).build()
       )
       .collect(Collectors.toList());
   }

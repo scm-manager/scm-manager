@@ -159,9 +159,9 @@ class IndexDtoGeneratorTest {
 
       IndexDto dto = generator.generate();
       assertThat(dto.getLinks().getLinksBy("search")).contains(
-        Link.linkBuilder("search", "/api/v2/search/repository").withName("repository").build(),
-        Link.linkBuilder("search", "/api/v2/search/user").withName("user").build(),
-        Link.linkBuilder("search", "/api/v2/search/group").withName("group").build()
+        Link.linkBuilder("search", "/api/v2/search/query/repository").withName("repository").build(),
+        Link.linkBuilder("search", "/api/v2/search/query/user").withName("user").build(),
+        Link.linkBuilder("search", "/api/v2/search/query/group").withName("group").build()
       );
     }
   }
