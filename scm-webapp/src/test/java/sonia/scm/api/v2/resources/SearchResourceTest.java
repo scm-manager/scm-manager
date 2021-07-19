@@ -37,7 +37,6 @@ import org.mapstruct.factory.Mappers;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.repository.Repository;
 import sonia.scm.search.Hit;
 import sonia.scm.search.IndexNames;
 import sonia.scm.search.QueryResult;
