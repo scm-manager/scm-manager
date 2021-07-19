@@ -71,7 +71,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     Repository sourceRepository = request.getRemoteRepository();
 
     if (sourceRepository != null) {
-      response = pullFromScmRepository(sourceRepository);
+      response = pullFromScmRepository(sourceRepository, request.getUsername(), request.getPassword());
     } else if (request.getRemoteUrl() != null) {
       response = pullFromUrl(request);
     } else {
@@ -129,7 +129,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
     return counter;
   }
 
-  private PullResponse pullFromScmRepository(Repository sourceRepository)
+  private PullResponse pullFromScmRepository(Repository sourceRepository, String username, String password)
     throws IOException {
     File sourceDirectory = handler.getDirectory(sourceRepository.getId());
 
@@ -150,7 +150,7 @@ public class GitPullCommand extends AbstractGitPushOrPullCommand
 
     try (Git git = Git.open(sourceDirectory)) {
       source = git.getRepository();
-      response = new PullResponse(push(source, getRemoteUrl(targetDirectory)));
+      response = new PullResponse(push(source, getRemoteUrl(targetDirectory), username, password));
     } finally {
       GitUtil.close(source);
     }

@@ -24,9 +24,7 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
-import com.google.common.base.Preconditions;
+import com.google.common.base.Strings;
 import com.google.common.collect.Iterables;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.lib.ObjectId;
@@ -35,6 +33,7 @@ import org.eclipse.jgit.revwalk.RevCommit;
 import org.eclipse.jgit.transport.PushResult;
 import org.eclipse.jgit.transport.RemoteRefUpdate;
 import org.eclipse.jgit.transport.ScmTransportProtocol;
+import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitRepositoryHandler;
@@ -44,230 +43,113 @@ import sonia.scm.repository.InternalRepositoryException;
 import java.io.File;
 import java.util.Collection;
 
-//~--- JDK imports ------------------------------------------------------------
+public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand {
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public abstract class AbstractGitPushOrPullCommand extends AbstractGitCommand
-{
-
-  /** Field description */
   private static final String SCHEME = ScmTransportProtocol.NAME + "://";
+  private static final Logger LOG = LoggerFactory.getLogger(AbstractGitPushOrPullCommand.class);
 
-  /**
-   * the logger for AbstractGitPushOrPullCommand
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(AbstractGitPushOrPullCommand.class);
+  protected GitRepositoryHandler handler;
 
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *  @param handler
-   * @param context
-   */
-  protected AbstractGitPushOrPullCommand(GitRepositoryHandler handler, GitContext context)
-  {
+  protected AbstractGitPushOrPullCommand(GitRepositoryHandler handler, GitContext context) {
     super(context);
     this.handler = handler;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  protected long push(Repository source, String remoteUrl) {
+  protected long push(Repository source, String remoteUrl, String username, String password) {
     Git git = Git.wrap(source);
     org.eclipse.jgit.api.PushCommand push = git.push();
 
+    if (!Strings.isNullOrEmpty(username) && !Strings.isNullOrEmpty(password)) {
+      push.setCredentialsProvider(new UsernamePasswordCredentialsProvider(username, password.toCharArray()));
+    }
     push.setPushAll().setPushTags();
     push.setRemote(remoteUrl);
 
     long counter = -1;
 
-    try
-    {
+    try {
       Iterable<PushResult> results = push.call();
 
-      if (results != null)
-      {
+      if (results != null) {
         counter = 0;
 
-        for (PushResult result : results)
-        {
+        for (PushResult result : results) {
           counter += count(git, result);
         }
       }
-    }
-    catch (Exception ex)
-    {
+    } catch (Exception ex) {
       throw new InternalRepositoryException(repository, "could not execute push/pull command", ex);
     }
 
     return counter;
   }
 
-  //~--- get methods ----------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  protected sonia.scm.repository.Repository getRemoteRepository(
-    RemoteCommandRequest request)
-  {
-    Preconditions.checkNotNull(request, "request is required");
-
-    sonia.scm.repository.Repository remoteRepository =
-      request.getRemoteRepository();
-
-    Preconditions.checkNotNull(remoteRepository,
-      "remote repository is required");
-
-    return remoteRepository;
-  }
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   */
-  protected String getRemoteUrl(RemoteCommandRequest request)
-  {
+  protected String getRemoteUrl(RemoteCommandRequest request) {
     String url;
     sonia.scm.repository.Repository remRepo = request.getRemoteRepository();
 
-    if (remRepo != null)
-    {
+    if (remRepo != null) {
       url = getRemoteUrl(remRepo);
-    }
-    else if (request.getRemoteUrl() != null)
-    {
+    } else if (request.getRemoteUrl() != null) {
       url = request.getRemoteUrl().toExternalForm();
-    }
-    else
-    {
+    } else {
       throw new IllegalArgumentException("repository or url is required");
     }
 
     return url;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param directory
-   *
-   * @return
-   */
-  protected String getRemoteUrl(File directory)
-  {
+  protected String getRemoteUrl(File directory) {
     return SCHEME.concat(directory.getAbsolutePath());
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param repository
-   *
-   * @return
-   */
-  protected String getRemoteUrl(sonia.scm.repository.Repository repository)
-  {
+  protected String getRemoteUrl(sonia.scm.repository.Repository repository) {
     return getRemoteUrl(handler.getDirectory(repository.getId()));
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param git
-   * @param result
-   *
-   * @return
-   */
-  private long count(Git git, PushResult result)
-  {
+  private long count(Git git, PushResult result) {
     long counter = 0;
     Collection<RemoteRefUpdate> updates = result.getRemoteUpdates();
 
-    for (RemoteRefUpdate update : updates)
-    {
+    for (RemoteRefUpdate update : updates) {
       counter += count(git, update);
     }
 
     return counter;
   }
 
-  /**
-   * Method description
-   *
-   *
-   * @param git
-   * @param update
-   *
-   * @return
-   */
-  private long count(Git git, RemoteRefUpdate update)
-  {
+  private long count(Git git, RemoteRefUpdate update) {
     long counter = 0;
 
-    if (GitUtil.isHead(update.getRemoteName()))
-    {
-      try
-      {
+    if (GitUtil.isHead(update.getRemoteName())) {
+      try {
         org.eclipse.jgit.api.LogCommand log = git.log();
         ObjectId oldId = update.getExpectedOldObjectId();
 
-        if (GitUtil.isValidObjectId(oldId))
-        {
+        if (GitUtil.isValidObjectId(oldId)) {
           log.not(oldId);
         }
 
         ObjectId newId = update.getNewObjectId();
 
-        if (GitUtil.isValidObjectId(newId))
-        {
+        if (GitUtil.isValidObjectId(newId)) {
           log.add(newId);
         }
 
         Iterable<RevCommit> commits = log.call();
 
-        if (commits != null)
-        {
+        if (commits != null) {
           counter += Iterables.size(commits);
         }
 
-        logger.trace("counting {} commits for ref update {}", counter, update);
+        LOG.trace("counting {} commits for ref update {}", counter, update);
+      } catch (Exception ex) {
+        LOG.error("could not count pushed/pulled changesets", ex);
       }
-      catch (Exception ex)
-      {
-        logger.error("could not count pushed/pulled changesets", ex);
-      }
-    }
-    else
-    {
-      logger.debug("do not count non branch ref update {}", update);
+    } else {
+      LOG.debug("do not count non branch ref update {}", update);
     }
 
     return counter;
   }
-
-  //~--- fields ---------------------------------------------------------------
-
-  /** Field description */
-  protected GitRepositoryHandler handler;
 }
