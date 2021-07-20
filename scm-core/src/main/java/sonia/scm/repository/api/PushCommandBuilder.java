@@ -54,25 +54,14 @@ public final class PushCommandBuilder {
   }
 
   /**
-   * Set username for authentication
+   * Set basic authentication for request
    *
    * @param username username
    * @return this builder instance.
    * @since 2.22.0
    */
-  public PushCommandBuilder withUsername(String username) {
+  public PushCommandBuilder withBasicAuth(String username, String password) {
     request.setUsername(username);
-    return this;
-  }
-
-  /**
-   * Set password for authentication
-   *
-   * @param password password
-   * @return this builder instance.
-   * @since 2.22.0
-   */
-  public PushCommandBuilder withPassword(String password) {
     request.setPassword(password);
     return this;
   }
