@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.work;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Stopwatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,16 +32,18 @@ import sonia.scm.util.IOUtil;
 
 import javax.inject.Inject;
 import java.io.File;
+import java.util.LinkedHashMap;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
+
+import static java.lang.Integer.getInteger;
 
 /**
  * This class is a simple implementation of the {@link WorkingCopyPool} to demonstrate,
- * how caching can work in the simplest way. For the first time a {@link WorkingCopy} is
+ * how caching can work in an LRU style. For the first time a {@link WorkingCopy} is
  * requested for a repository with {@link #getWorkingCopy(SimpleWorkingCopyFactory.WorkingCopyContext)},
  * this implementation fetches a new directory from the {@link WorkdirProvider}.
  * On {@link #contextClosed(SimpleWorkingCopyFactory.WorkingCopyContext, File)},
- * the directory is not deleted, but put into a map with the repository id as key.
+ * the directory is not deleted, but put into a cache with the repository id as key.
  * When a working copy is requested with {@link #getWorkingCopy(SimpleWorkingCopyFactory.WorkingCopyContext)}
  * for a repository with such an existing directory, it is taken from the map, reclaimed and
  * returned as {@link WorkingCopy}.
@@ -49,10 +52,19 @@ import java.util.concurrent.ConcurrentHashMap;
  * If a context is closed with {@link #contextClosed(SimpleWorkingCopyFactory.WorkingCopyContext, File)}
  * and there already is a directory stored in the map for the repository,
  * the directory from the closed context simply is deleted.
+ * The number of directories cached is limited. By default, directories are cached for
+ * {@value DEFAULT_WORKING_COPY_POOL_SIZE} repositories. This can be changes with the system
+ * property '{@value WORKING_COPY_POOL_SIZE_PROPERTY}' (if this is set to zero, no caching will
+ * take place; to cache the directories for each repository without eviction simply set this to a
+ * high enough value).
  * <br>
- * In general, this implementation should speed up things a bit, but one has to take into
- * account, that there is no monitoring of diskspace. So you have to make sure, that
- * there is enough space for a clone of each repository in the working dir.
+ * The usage of this pool has to be enabled by setting the system property `scm.workingCopyPoolStrategy`
+ * to 'sonia.scm.repository.work.SimpleCachingWorkingCopyPool'.
+ * <br>
+ * In general, this implementation should speed up modifications inside SCM-Manager performed by
+ * the editor plugin or the review plugin, but one has to take into
+ * account, that the space needed for repositories is multiplied. So you have to make sure, that
+ * there is enough space for clones of the repository.
  * <br>
  * Possible enhancements:
  * <ul>
@@ -65,21 +77,43 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
 
+  public static final int DEFAULT_WORKING_COPY_POOL_SIZE = 5;
+  public static final String WORKING_COPY_POOL_SIZE_PROPERTY = "scm.workingCopyPoolSize";
+
   private static final Logger LOG = LoggerFactory.getLogger(SimpleCachingWorkingCopyPool.class);
 
-  private final Map<String, File> workdirs = new ConcurrentHashMap<>();
-
   private final WorkdirProvider workdirProvider;
+  private final LinkedHashMap<String, File> workdirs;
+  private final boolean cacheEnabled;
 
   @Inject
   public SimpleCachingWorkingCopyPool(WorkdirProvider workdirProvider) {
+    this(getInteger(WORKING_COPY_POOL_SIZE_PROPERTY, DEFAULT_WORKING_COPY_POOL_SIZE), workdirProvider);
+  }
+
+  @VisibleForTesting
+  SimpleCachingWorkingCopyPool(int size, WorkdirProvider workdirProvider) {
     this.workdirProvider = workdirProvider;
+    this.workdirs = new LinkedHashMap<String, File>(size) {
+      @Override
+      protected boolean removeEldestEntry(Map.Entry<String, File> eldest) {
+        if (size() > size) {
+          deleteWorkdir(eldest.getValue());
+          return true;
+        }
+        return false;
+      }
+    };
+    cacheEnabled = size > 0;
   }
 
   @Override
   public <R, W> WorkingCopy<R, W> getWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext workingCopyContext) {
     String id = workingCopyContext.getScmRepository().getId();
-    File existingWorkdir = workdirs.remove(id);
+    File existingWorkdir;
+    synchronized (workdirs) {
+      existingWorkdir = workdirs.remove(id);
+    }
     if (existingWorkdir != null) {
       Stopwatch stopwatch = Stopwatch.createStarted();
       try {
@@ -104,11 +138,24 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
 
   @Override
   public void contextClosed(SimpleWorkingCopyFactory<?, ?, ?>.WorkingCopyContext workingCopyContext, File workdir) {
-    String id = workingCopyContext.getScmRepository().getId();
-    File putResult = workdirs.putIfAbsent(id, workdir);
-    if (putResult != null && putResult != workdir) {
+    if (!cacheEnabled) {
       deleteWorkdir(workdir);
+      return;
     }
+    String id = workingCopyContext.getScmRepository().getId();
+    synchronized (workdirs) {
+      File cachedWorkdir = workdirs.putIfAbsent(id, workdir);
+      if (cachedWorkdir != null && cachedWorkdir != workdir) {
+        deleteWorkdir(workdir);
+      } else if (cachedWorkdir != null) {
+        moveToTopInCache(id, cachedWorkdir);
+      }
+    }
+  }
+
+  private void moveToTopInCache(String id, File workDir) {
+    workdirs.remove(id);
+    workdirs.put(id, workDir);
   }
 
   @Override
@@ -118,6 +165,7 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
   }
 
   private void deleteWorkdir(File workdir) {
+    LOG.debug("deleting old workdir {}", workdir);
     if (workdir.exists()) {
       IOUtil.deleteSilently(workdir);
     }
