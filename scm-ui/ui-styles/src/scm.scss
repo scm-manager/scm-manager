@@ -23,13 +23,24 @@
  */
 @import "bulma/sass/utilities/initial-variables";
 @import "bulma/sass/utilities/functions";
-
+//$link: #007EB0;
+$info: #33b2e8;
 $turquoise: #00d1df;
 $blue: #33b2e8;
 $cyan: $blue;
 $green: #00c79b;
+$warning: #ffdd57;
 $blue-light: #98d8f3;
+$danger: #ff3860;
+$high-contrast-danger: #e63453;
 $family-monospace: "Courier New", Monaco, Menlo, "Ubuntu Mono", "source-code-pro", monospace;
+$high-contrast-background-color: #050514;
+$high-contrast-light-gray: #f2f2f2;
+
+.table.high-contrast, .table.high-contrast thead td, .table.high-contrast thead th {
+  background-color: $high-contrast-background-color;
+  color: $high-contrast-light-gray;
+}
 
 .is-ellipsis-overflow {
   overflow: hidden;
@@ -92,7 +103,7 @@ footer.footer {
   padding: inherit;
 
   a {
-    color: darken($blue, 15%);
+    color: darken($info, 15%);
   }
 }
 
@@ -122,6 +133,14 @@ $danger-75: scale-color($danger, $lightness: 25%);
 $danger-50: scale-color($danger, $lightness: 50%);
 $danger-25: scale-color($danger, $lightness: 75%);
 
+$high-contrast-danger-75: scale-color($high-contrast-danger, $lightness: 25%);
+$high-contrast-danger-50: scale-color($high-contrast-danger, $lightness: 50%);
+$high-contrast-danger-25: scale-color($high-contrast-danger, $lightness: 75%);
+
+//high-contrast light gray
+$light-75: darken($high-contrast-light-gray, 15%);
+$light-50: darken($high-contrast-light-gray, 30%);
+$light-25: darken($high-contrast-light-gray, 45%);
 /*
 // not supported by ie
 // css vars for external reuse
@@ -177,6 +196,17 @@ $danger-25: scale-color($danger, $lightness: 75%);
 .has-text-blue-light {
   color: $blue-light !important;
 }
+
+.has-text-high-contrast-warning {
+  color: $warning;
+}
+.has-text-high-contrast-danger{
+  color: $high-contrast-danger-50;
+}
+.has-text-high-contrast-light-gray {
+  color: $high-contrast-light-gray;
+}
+
 
 // border and background colors
 .has-background-dark-75 {
@@ -243,8 +273,34 @@ $danger-25: scale-color($danger, $lightness: 75%);
   background-color: $danger-25;
 }
 
+.has-background-danger-high-contrast {
+  background-color: $high-contrast-danger;
+}
+.has-background-danger-high-contrast-75 {
+  background-color: $high-contrast-danger-75;
+}
+.has-background-danger-high-contrast-50 {
+  background-color: $high-contrast-danger-50;
+}
+.has-background-danger-high-contrast-25 {
+  background-color: $high-contrast-danger-25;
+}
+
 .has-background-blue-light {
   background-color: $blue-light;
+}
+
+.has-background-high-contrast-light-gray {
+  background-color: $high-contrast-light-gray;
+}
+.has-background-high-contrast-light-gray-75 {
+  background-color: $light-75;
+}
+.has-background-high-contrast-light-gray-50 {
+  background-color: $light-50;
+}
+.has-background-high-contrast-light-gray-25 {
+  background-color: $light-25;
 }
 
 // tags
@@ -779,7 +835,7 @@ form .field:not(.is-grouped) {
     padding: 1rem;
 
     &.is-active {
-      color: $blue;
+      color: $info;
       background-color: #fff;
     }
   }
