@@ -26,6 +26,9 @@ package sonia.scm.repository.work;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Stopwatch;
+import io.micrometer.core.instrument.Counter;
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.Timer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.util.IOUtil;
@@ -34,8 +37,11 @@ import javax.inject.Inject;
 import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import static java.lang.Integer.getInteger;
+import static java.util.Optional.empty;
+import static java.util.Optional.of;
 
 /**
  * This class is a simple implementation of the {@link WorkingCopyPool} to demonstrate,
@@ -86,25 +92,57 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
   private final LinkedHashMap<String, File> workdirs;
   private final boolean cacheEnabled;
 
+  private final Counter cacheHitCounter;
+  private final Counter cacheMissCounter;
+  private final Counter reclaimFailureCounter;
+  private final Counter parallelExistingCounter;
+  private final Counter overflowCounter;
+  private final Timer reclaimTimer;
+  private final Timer initializeTimer;
+  private final Timer deleteTimer;
+
   @Inject
-  public SimpleCachingWorkingCopyPool(WorkdirProvider workdirProvider) {
-    this(getInteger(WORKING_COPY_POOL_SIZE_PROPERTY, DEFAULT_WORKING_COPY_POOL_SIZE), workdirProvider);
+  public SimpleCachingWorkingCopyPool(WorkdirProvider workdirProvider, MeterRegistry meterRegistry) {
+    this(getInteger(WORKING_COPY_POOL_SIZE_PROPERTY, DEFAULT_WORKING_COPY_POOL_SIZE), workdirProvider, meterRegistry);
   }
 
   @VisibleForTesting
-  SimpleCachingWorkingCopyPool(int size, WorkdirProvider workdirProvider) {
+  SimpleCachingWorkingCopyPool(int size, WorkdirProvider workdirProvider, MeterRegistry meterRegistry) {
     this.workdirProvider = workdirProvider;
-    this.workdirs = new LinkedHashMap<String, File>(size) {
-      @Override
-      protected boolean removeEldestEntry(Map.Entry<String, File> eldest) {
-        if (size() > size) {
-          deleteWorkdir(eldest.getValue());
-          return true;
-        }
-        return false;
-      }
-    };
+    this.workdirs = new LruMap(size);
     cacheEnabled = size > 0;
+    cacheHitCounter = Counter
+      .builder("scm.workingCopy.pool.cache.hit")
+      .description("The amount of cache hits for the working copy pool")
+      .register(meterRegistry);
+    cacheMissCounter = Counter
+      .builder("scm.workingCopy.pool.cache.miss")
+      .description("The amount of cache misses for the working copy pool")
+      .register(meterRegistry);
+    reclaimFailureCounter = Counter
+      .builder("scm.workingCopy.pool.reclaim.failure")
+      .description("The amount of failed reclaim processes")
+      .register(meterRegistry);
+    parallelExistingCounter = Counter
+      .builder("scm.workingCopy.pool.cache.parallelExisting")
+      .description("The amount of discarded working copies, because another working copy exists for the repository")
+      .register(meterRegistry);
+    overflowCounter = Counter
+      .builder("scm.workingCopy.pool.cache.overflow")
+      .description("The amount of discarded working copies due to cache overflow")
+      .register(meterRegistry);
+    reclaimTimer = Timer
+      .builder("scm.workingCopy.pool.reclaim.duration")
+      .description("Duration of reclaiming existing working copies")
+      .register(meterRegistry);
+    initializeTimer = Timer
+      .builder("scm.workingCopy.pool.initialize.duration")
+      .description("Duration of initialization of working copies")
+      .register(meterRegistry);
+    deleteTimer = Timer
+      .builder("scm.workingCopy.pool.delete.duration")
+      .description("Duration of deletes of working copies")
+      .register(meterRegistry);
   }
 
   @Override
@@ -115,25 +153,41 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
       existingWorkdir = workdirs.remove(id);
     }
     if (existingWorkdir != null) {
-      Stopwatch stopwatch = Stopwatch.createStarted();
-      try {
-        WorkingCopy<R, W> reclaimed = workingCopyContext.reclaim(existingWorkdir);
-        LOG.debug("reclaimed workdir for {} in path {} in {}", workingCopyContext.getScmRepository(), existingWorkdir, stopwatch.stop());
-        return reclaimed;
-      } catch (SimpleWorkingCopyFactory.ReclaimFailedException e) {
-        LOG.debug("failed to reclaim workdir for {} in path {} in {}", workingCopyContext.getScmRepository(), existingWorkdir, stopwatch.stop(), e);
-        deleteWorkdir(existingWorkdir);
+      Optional<WorkingCopy<R, W>> reclaimedWorkingCopy = tryToReclaim(workingCopyContext, existingWorkdir);
+      if (reclaimedWorkingCopy.isPresent()) {
+        cacheHitCounter.increment();
+        return reclaimedWorkingCopy.get();
       }
+    } else {
+      cacheMissCounter.increment();
     }
     return createNewWorkingCopy(workingCopyContext);
   }
 
+  private <R, W> Optional<WorkingCopy<R, W>> tryToReclaim(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext workingCopyContext, File existingWorkdir) {
+    return reclaimTimer.record(() -> {
+      Stopwatch stopwatch = Stopwatch.createStarted();
+      try {
+        WorkingCopy<R, W> reclaimed = workingCopyContext.reclaim(existingWorkdir);
+        LOG.debug("reclaimed workdir for {} in path {} in {}", workingCopyContext.getScmRepository(), existingWorkdir, stopwatch.stop());
+        return of(reclaimed);
+      } catch (SimpleWorkingCopyFactory.ReclaimFailedException e) {
+        LOG.debug("failed to reclaim workdir for {} in path {} in {}", workingCopyContext.getScmRepository(), existingWorkdir, stopwatch.stop(), e);
+        deleteWorkdir(existingWorkdir);
+        reclaimFailureCounter.increment();
+        return empty();
+      }
+    });
+  }
+
   private <R, W> WorkingCopy<R, W> createNewWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext workingCopyContext) {
-    Stopwatch stopwatch = Stopwatch.createStarted();
-    File newWorkdir = workdirProvider.createNewWorkdir(workingCopyContext.getScmRepository().getId());
-    WorkingCopy<R, W> parentAndClone = workingCopyContext.initialize(newWorkdir);
-    LOG.debug("initialized new workdir for {} in path {} in {}", workingCopyContext.getScmRepository(), newWorkdir, stopwatch.stop());
-    return parentAndClone;
+    return initializeTimer.record(() -> {
+      Stopwatch stopwatch = Stopwatch.createStarted();
+      File newWorkdir = workdirProvider.createNewWorkdir(workingCopyContext.getScmRepository().getId());
+      WorkingCopy<R, W> parentAndClone = workingCopyContext.initialize(newWorkdir);
+      LOG.debug("initialized new workdir for {} in path {} in {}", workingCopyContext.getScmRepository(), newWorkdir, stopwatch.stop());
+      return parentAndClone;
+    });
   }
 
   @Override
@@ -146,6 +200,7 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
     synchronized (workdirs) {
       File cachedWorkdir = workdirs.putIfAbsent(id, workdir);
       if (cachedWorkdir != null && cachedWorkdir != workdir) {
+        parallelExistingCounter.increment();
         deleteWorkdir(workdir);
       } else if (cachedWorkdir != null) {
         moveToTopInCache(id, cachedWorkdir);
@@ -167,7 +222,27 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
   private void deleteWorkdir(File workdir) {
     LOG.debug("deleting old workdir {}", workdir);
     if (workdir.exists()) {
-      IOUtil.deleteSilently(workdir);
+      deleteTimer.record(() -> IOUtil.deleteSilently(workdir));
+    }
+  }
+
+  @SuppressWarnings("java:S2160") // no need for equals here
+  private class LruMap extends LinkedHashMap<String, File> {
+    private final int maxSize;
+
+    public LruMap(int maxSize) {
+      super(maxSize);
+      this.maxSize = maxSize;
+    }
+
+    @Override
+    protected boolean removeEldestEntry(Map.Entry<String, File> eldest) {
+      if (size() > maxSize) {
+        overflowCounter.increment();
+        deleteWorkdir(eldest.getValue());
+        return true;
+      }
+      return false;
     }
   }
 }

@@ -24,6 +24,7 @@
 
 package sonia.scm.repository.spi;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.Before;
 import org.junit.Rule;
@@ -44,9 +45,11 @@ public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase 
 
   @Rule
   public TemporaryFolder temporaryFolder = new TemporaryFolder();
+  private MeterRegistry meterRegistry = new SimpleMeterRegistry();
 
   // keep this so that it will not be garbage collected (Transport keeps this in a week reference)
   private WorkdirProvider workdirProvider;
+
 
   @Before
   public void initWorkDirProvider() throws IOException {
@@ -54,7 +57,7 @@ public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase 
   }
 
   @Test
-  public void shouldCheckoutLatestRevision() throws SVNException, IOException {
+  public void shouldCheckoutLatestRevision() {
     SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new NoneCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
 
     try (WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null)) {
@@ -96,7 +99,7 @@ public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase 
 
   @Test
   public void shouldDeleteUntrackedFileOnReclaim() throws IOException {
-    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider, meterRegistry), new SimpleMeterRegistry());
 
     WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null);
     File directory = workingCopy.getWorkingRepository();
@@ -113,8 +116,8 @@ public class SimpleSvnWorkingCopyFactoryTest extends AbstractSvnCommandTestBase 
   }
 
   @Test
-  public void shouldRestoreDeletedFileOnReclaim() throws IOException {
-    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider), new SimpleMeterRegistry());
+  public void shouldRestoreDeletedFileOnReclaim() {
+    SimpleSvnWorkingCopyFactory factory = new SimpleSvnWorkingCopyFactory(new SimpleCachingWorkingCopyPool(workdirProvider, meterRegistry), new SimpleMeterRegistry());
 
     WorkingCopy<File, File> workingCopy = factory.createWorkingCopy(createContext(), null);
     File directory = workingCopy.getWorkingRepository();

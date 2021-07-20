@@ -24,6 +24,8 @@
 
 package sonia.scm.repository.work;
 
+import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.simple.SimpleMeterRegistry;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
@@ -32,6 +34,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import sonia.scm.repository.Repository;
+import sonia.scm.repository.work.SimpleWorkingCopyFactory.ReclaimFailedException;
 
 import java.io.File;
 import java.nio.file.Path;
@@ -51,6 +54,7 @@ class SimpleCachingWorkingCopyPoolTest {
 
   @Mock
   WorkdirProvider workdirProvider;
+  MeterRegistry meterRegistry = new SimpleMeterRegistry();
 
   SimpleCachingWorkingCopyPool simpleCachingWorkingCopyPool;
 
@@ -58,7 +62,7 @@ class SimpleCachingWorkingCopyPoolTest {
   SimpleWorkingCopyFactory<Object, Path, ?>.WorkingCopyContext workingCopyContext;
 
   @BeforeEach
-  void initContext() throws SimpleWorkingCopyFactory.ReclaimFailedException {
+  void initContext() throws ReclaimFailedException {
     lenient().when(workingCopyContext.initialize(any()))
       .thenAnswer(invocationOnMock -> new WorkingCopy<>(null, null, () -> {}, invocationOnMock.getArgument(0, File.class)));
     lenient().when(workingCopyContext.reclaim(any()))
@@ -70,7 +74,7 @@ class SimpleCachingWorkingCopyPoolTest {
 
     @BeforeEach
     void initContext() {
-      simpleCachingWorkingCopyPool = new SimpleCachingWorkingCopyPool(2, workdirProvider);
+      simpleCachingWorkingCopyPool = new SimpleCachingWorkingCopyPool(2, workdirProvider, meterRegistry);
     }
 
     @Test
@@ -81,10 +85,11 @@ class SimpleCachingWorkingCopyPoolTest {
       WorkingCopy<?, ?> workdir = simpleCachingWorkingCopyPool.getWorkingCopy(workingCopyContext);
 
       verify(workingCopyContext).initialize(temp.toFile());
+      assertThat(meterRegistry.get("scm.workingCopy.pool.cache.miss").counter().count()).isEqualTo(1d);
     }
 
     @Test
-    void shouldReuseWorkdirForTheSameRepository(@TempDir Path temp) throws SimpleWorkingCopyFactory.ReclaimFailedException {
+    void shouldReuseWorkdirForTheSameRepository(@TempDir Path temp) throws ReclaimFailedException {
       when(workingCopyContext.getScmRepository()).thenReturn(REPOSITORY);
       when(workdirProvider.createNewWorkdir(anyString())).thenReturn(temp.toFile());
 
@@ -95,10 +100,25 @@ class SimpleCachingWorkingCopyPoolTest {
       verify(workingCopyContext).initialize(temp.toFile());
       verify(workingCopyContext).reclaim(temp.toFile());
       assertThat(secondWorkdir.getDirectory()).isEqualTo(temp.toFile());
+      assertThat(meterRegistry.get("scm.workingCopy.pool.cache.hit").counter().count()).isEqualTo(1d);
     }
 
     @Test
-    void shouldCacheOnlyOneWorkdirForRepository(@TempDir Path temp) throws SimpleWorkingCopyFactory.ReclaimFailedException {
+    void shouldCreateNewWorkdirIfReclaimFails(@TempDir Path temp) throws ReclaimFailedException {
+      when(workingCopyContext.getScmRepository()).thenReturn(REPOSITORY);
+      when(workdirProvider.createNewWorkdir(anyString())).thenReturn(temp.resolve("1").toFile(), temp.resolve("2").toFile());
+      when(workingCopyContext.reclaim(any())).thenThrow(ReclaimFailedException.class);
+
+      WorkingCopy<?, ?> firstWorkdir = simpleCachingWorkingCopyPool.getWorkingCopy(workingCopyContext);
+      simpleCachingWorkingCopyPool.contextClosed(workingCopyContext, firstWorkdir.getDirectory());
+      WorkingCopy<?, ?> secondWorkdir = simpleCachingWorkingCopyPool.getWorkingCopy(workingCopyContext);
+
+      assertThat(secondWorkdir.getDirectory()).isNotEqualTo(temp.toFile());
+      assertThat(meterRegistry.get("scm.workingCopy.pool.reclaim.failure").counter().count()).isEqualTo(1d);
+    }
+
+    @Test
+    void shouldCacheOnlyOneWorkdirForRepository(@TempDir Path temp) throws ReclaimFailedException {
       when(workingCopyContext.getScmRepository()).thenReturn(REPOSITORY);
       File firstDirectory = temp.resolve("first").toFile();
       firstDirectory.mkdirs();
@@ -119,6 +139,7 @@ class SimpleCachingWorkingCopyPoolTest {
       assertThat(firstWorkdir.getDirectory()).isNotEqualTo(secondWorkdir.getDirectory());
       assertThat(firstWorkdir.getDirectory()).exists();
       assertThat(secondWorkdir.getDirectory()).doesNotExist();
+      assertThat(meterRegistry.get("scm.workingCopy.pool.cache.parallelExisting").counter().count()).isEqualTo(1d);
     }
 
     @Test
@@ -127,6 +148,7 @@ class SimpleCachingWorkingCopyPoolTest {
       assertThat(temp.resolve("path-0")).doesNotExist();
       assertThat(temp.resolve("path-1")).exists();
       assertThat(temp.resolve("path-2")).exists();
+      assertThat(meterRegistry.get("scm.workingCopy.pool.cache.overflow").counter().count()).isEqualTo(1d);
     }
 
     @Test
@@ -145,7 +167,7 @@ class SimpleCachingWorkingCopyPoolTest {
 
     @BeforeEach
     void initContext() {
-      simpleCachingWorkingCopyPool = new SimpleCachingWorkingCopyPool(0, workdirProvider);
+      simpleCachingWorkingCopyPool = new SimpleCachingWorkingCopyPool(0, workdirProvider, meterRegistry);
     }
 
     @Test
