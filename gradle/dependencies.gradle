@@ -15,6 +15,7 @@ ext {
   jjwtVersion = '0.11.2'
   bouncycastleVersion = '1.67'
   jettyVersion = '9.4.35.v20201120'
+  luceneVersion = '8.9.0'
 
   junitJupiterVersion = '5.7.0'
   hamcrestVersion = '2.1'
@@ -147,6 +148,12 @@ ext {
     jettyWebapp: "org.eclipse.jetty:jetty-webapp:${jettyVersion}",
     jettyJmx: "org.eclipse.jetty:jetty-jmx:${jettyVersion}",
     jettyClient: "org.eclipse.jetty:jetty-client:${jettyVersion}",
+
+    // search
+    luceneCore: "org.apache.lucene:lucene-core:${luceneVersion}",
+    luceneQueryParser: "org.apache.lucene:lucene-queryparser:${luceneVersion}",
+    luceneHighlighter: "org.apache.lucene:lucene-highlighter:${luceneVersion}",
+    luceneAnalyzersCommon: "org.apache.lucene:lucene-analyzers-common:${luceneVersion}",
 
     // tests
     junitJupiterApi: "org.junit.jupiter:junit-jupiter-api:${junitJupiterVersion}",

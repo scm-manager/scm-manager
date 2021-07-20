@@ -1,0 +1,95 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2020-present Cloudogu GmbH and Contributors
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package sonia.scm.search;
+
+import com.google.common.annotations.VisibleForTesting;
+import sonia.scm.plugin.PluginLoader;
+
+import javax.annotation.Nonnull;
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
+import static sonia.scm.ContextEntry.ContextBuilder.entity;
+import static sonia.scm.NotFoundException.notFound;
+
+@Singleton
+class SearchableTypeResolver {
+
+  private final Map<Class<?>, SearchableType> classToSearchableType = new HashMap<>();
+  private final Map<String, Class<?>> nameToClass = new HashMap<>();
+
+  @Inject
+  public SearchableTypeResolver(PluginLoader pluginLoader) {
+    this(pluginLoader.getExtensionProcessor().getIndexedTypes());
+  }
+
+  @VisibleForTesting
+  SearchableTypeResolver(Class<?>... indexedTypes) {
+    this(Arrays.asList(indexedTypes));
+  }
+
+  @VisibleForTesting
+  SearchableTypeResolver(Iterable<Class<?>> indexedTypes) {
+    fillMaps(convert(indexedTypes));
+  }
+
+  private void fillMaps(Iterable<SearchableType> types) {
+    for (SearchableType type : types) {
+      classToSearchableType.put(type.getType(), type);
+      nameToClass.put(type.getName(), type.getType());
+    }
+  }
+
+  @Nonnull
+  private Set<SearchableType> convert(Iterable<Class<?>> indexedTypes) {
+    return StreamSupport.stream(indexedTypes.spliterator(), false)
+      .map(SearchableTypes::create)
+      .collect(Collectors.toSet());
+  }
+
+  public SearchableType resolve(Object object) {
+    return resolve(object.getClass());
+  }
+
+  public SearchableType resolve(Class<?> type) {
+    SearchableType searchableType = classToSearchableType.get(type);
+    if (searchableType == null) {
+      throw notFound(entity("type", type.getName()));
+    }
+    return searchableType;
+  }
+
+  public Optional<Class<?>> resolveClassByName(String typeName) {
+    return Optional.ofNullable(nameToClass.get(typeName));
+  }
+
+}

@@ -1,0 +1,2 @@
+- type: Added
+  description: Create files in empty non-initiated repositories ([#1717](https://github.com/scm-manager/scm-manager/pull/1717))

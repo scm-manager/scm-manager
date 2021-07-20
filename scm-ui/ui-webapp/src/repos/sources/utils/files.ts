@@ -28,14 +28,14 @@ export const isRootPath = (path: string) => {
 };
 
 export const isRootFile = (file: File) => {
-  if (!file.directory) {
+  if (!file?.directory) {
     return false;
   }
   return isRootPath(file.path);
 };
 
 export const isEmptyDirectory = (file: File) => {
-  if (!file.directory) {
+  if (!file?.directory) {
     return false;
   }
   return (file._embedded?.children?.length || 0) === 0;

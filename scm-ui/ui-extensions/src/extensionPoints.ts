@@ -22,14 +22,16 @@
  * SOFTWARE.
  */
 
-import { ExtensionPointDefinition } from "./binder";
+import React from "react";
 import {
+  Branch,
   IndexResources,
   NamespaceStrategies,
   Repository,
   RepositoryCreation,
   RepositoryTypeCollection,
 } from "@scm-manager/ui-types";
+import { ExtensionPointDefinition } from "./binder";
 
 type RepositoryCreatorSubFormProps = {
   repository: RepositoryCreation;
@@ -58,3 +60,24 @@ export type RepositoryCreatorExtension = {
 export type RepositoryCreator = ExtensionPointDefinition<"repos.creator", RepositoryCreatorExtension>;
 
 export type RepositoryFlags = ExtensionPointDefinition<"repository.flags", { repository: Repository }>;
+
+export type ReposSourcesActionbarExtensionProps = {
+  baseUrl: string;
+  revision: string;
+  branch: Branch | undefined;
+  path: string;
+  sources: File;
+  repository: Repository;
+};
+export type ReposSourcesActionbarExtension = React.ComponentType<ReposSourcesActionbarExtensionProps>;
+export type ReposSourcesActionbar = ExtensionPointDefinition<"repos.sources.actionbar", ReposSourcesActionbarExtension>;
+
+export type ReposSourcesEmptyActionbarExtensionProps = {
+  sources: File;
+  repository: Repository;
+};
+export type ReposSourcesEmptyActionbarExtension = ReposSourcesActionbarExtension;
+export type ReposSourcesEmptyActionbar = ExtensionPointDefinition<
+  "repos.sources.empty.actionbar",
+  ReposSourcesEmptyActionbarExtension
+>;

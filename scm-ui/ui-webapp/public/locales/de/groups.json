@@ -26,7 +26,7 @@
     }
   },
   "overview": {
-    "searchGroup": "Gruppe suchen"
+    "filterGroup": "Gruppen filtern"
   },
   "add-group": {
     "title": "Gruppe erstellen",

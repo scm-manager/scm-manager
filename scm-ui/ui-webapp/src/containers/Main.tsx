@@ -48,12 +48,21 @@ import Profile from "./Profile";
 import NamespaceRoot from "../repos/namespaces/containers/NamespaceRoot";
 import ImportLog from "../repos/importlog/ImportLog";
 import CreateRepositoryRoot from "../repos/containers/CreateRepositoryRoot";
+import styled from "styled-components";
 
 type Props = {
   me: Me;
   authenticated?: boolean;
   links: Links;
 };
+
+type StyledMainProps = {
+  isSmallHeader: boolean;
+};
+
+const StyledMain = styled.div.attrs((props) => ({}))<StyledMainProps>`
+  min-height: calc(100vh - ${(props) => (props.isSmallHeader ? 250 : 210)}px);
+`;
 
 class Main extends React.Component<Props> {
   render() {
@@ -71,7 +80,7 @@ class Main extends React.Component<Props> {
     }
     return (
       <ErrorBoundary>
-        <div className="main">
+        <StyledMain className="main" isSmallHeader={!!links.logout}>
           <Switch>
             <Redirect exact from="/" to={url} />
             <Route exact path="/login" component={Login} />
@@ -103,11 +112,11 @@ class Main extends React.Component<Props> {
               props={{
                 me,
                 links,
-                authenticated
+                authenticated,
               }}
             />
           </Switch>
-        </div>
+        </StyledMain>
       </ErrorBoundary>
     );
   }

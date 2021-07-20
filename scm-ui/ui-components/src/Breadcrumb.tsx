@@ -26,12 +26,12 @@ import { useTranslation } from "react-i18next";
 import { useHistory, useLocation, Link } from "react-router-dom";
 import classNames from "classnames";
 import styled from "styled-components";
-import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
+import { urls } from "@scm-manager/ui-api";
 import { Branch, Repository, File } from "@scm-manager/ui-types";
+import { binder, ExtensionPoint, extensionPoints } from "@scm-manager/ui-extensions";
 import Icon from "./Icon";
 import Tooltip from "./Tooltip";
 import copyToClipboard from "./CopyToClipboard";
-import { urls } from "@scm-manager/ui-api";
 
 type Props = {
   repository: Repository;
@@ -65,8 +65,6 @@ const BreadcrumbNav = styled.nav`
   flex: 1;
   display: flex;
   align-items: center;
-  margin: 1rem 1rem !important;
-
   width: 100%;
 
   /* move slash to end */
@@ -127,7 +125,7 @@ const Breadcrumb: FC<Props> = ({
   baseUrl,
   sources,
   permalink,
-  preButtons
+  preButtons,
 }) => {
   const location = useLocation();
   const history = useHistory();
@@ -138,7 +136,10 @@ const Breadcrumb: FC<Props> = ({
     if (path) {
       const paths = path.split("/");
       return paths.map((pathFragment, index) => {
-        const currPath = paths.slice(0, index + 1).join("/");
+        let currPath = paths.slice(0, index + 1).join("/");
+        if (!currPath.endsWith("/")) {
+          currPath = currPath + "/";
+        }
         if (paths.length - 1 === index) {
           return (
             <li className="is-active" key={index}>
@@ -172,15 +173,45 @@ const Breadcrumb: FC<Props> = ({
     ).finally(() => setCopying(false));
   };
 
-  let homeUrl = baseUrl + "/";
-  if (revision) {
-    homeUrl += encodeURIComponent(revision) + "/";
-  }
+  const renderBreadcrumbNav = () => {
+    let prefixButtons = null;
+    if (preButtons) {
+      prefixButtons = <PrefixButton>{preButtons}</PrefixButton>;
+    }
 
-  let prefixButtons = null;
-  if (preButtons) {
-    prefixButtons = <PrefixButton>{preButtons}</PrefixButton>;
-  }
+    let homeUrl = baseUrl + "/";
+    if (revision) {
+      homeUrl += encodeURIComponent(revision) + "/";
+    } else {
+      homeUrl = `/repo/${repository.namespace}/${repository.name}/code/sources/`;
+    }
+
+    return (
+      <BreadcrumbNav
+        className={classNames("breadcrumb", "sources-breadcrumb", "mx-2", "my-4")}
+        aria-label="breadcrumbs"
+      >
+        {prefixButtons}
+        <ul>
+          <li>
+            <Link to={homeUrl}>
+              <HomeIcon title={t("breadcrumb.home")} name="home" color="inherit" />
+            </Link>
+          </li>
+          {pathSection()}
+        </ul>
+        <PermaLinkWrapper className="ml-1">
+          {copying ? (
+            <Icon name="spinner fa-spin" />
+          ) : (
+            <Tooltip message={t("breadcrumb.copyPermalink")}>
+              <Icon name="link" color="inherit" onClick={() => copySource()} />
+            </Tooltip>
+          )}
+        </PermaLinkWrapper>
+      </BreadcrumbNav>
+    );
+  };
 
   const extProps = {
     baseUrl,
@@ -188,40 +219,33 @@ const Breadcrumb: FC<Props> = ({
     branch: branch ? branch : defaultBranch,
     path,
     sources,
-    repository
+    repository,
+  };
+
+  const renderExtensionPoints = () => {
+    if (
+      binder.hasExtension<extensionPoints.ReposSourcesEmptyActionbar>("repos.sources.empty.actionbar") &&
+      sources?._embedded?.children?.length === 0
+    ) {
+      return (
+        <ExtensionPoint
+          name="repos.sources.empty.actionbar"
+          props={{ repository, sources }}
+          renderAll={true}
+        />
+      );
+    }
+    if (binder.hasExtension<extensionPoints.ReposSourcesActionbar>("repos.sources.actionbar")) {
+      return <ExtensionPoint name="repos.sources.actionbar" props={extProps} renderAll={true} />;
+    }
+    return null;
   };
 
   return (
     <>
-      <div className="is-flex is-align-items-center">
-        <BreadcrumbNav
-          className={classNames("breadcrumb", "sources-breadcrumb", "ml-1", "mb-0")}
-          aria-label="breadcrumbs"
-        >
-          {prefixButtons}
-          <ul>
-            <li>
-              <Link to={homeUrl}>
-                <HomeIcon title={t("breadcrumb.home")} name="home" color="inherit" />
-              </Link>
-            </li>
-            {pathSection()}
-          </ul>
-          <PermaLinkWrapper className="ml-1">
-            {copying ? (
-              <Icon name="spinner fa-spin" />
-            ) : (
-              <Tooltip message={t("breadcrumb.copyPermalink")}>
-                <Icon name="link" color="inherit" onClick={() => copySource()} />
-              </Tooltip>
-            )}
-          </PermaLinkWrapper>
-        </BreadcrumbNav>
-        {binder.hasExtension("repos.sources.actionbar") && (
-          <ActionBar>
-            <ExtensionPoint name="repos.sources.actionbar" props={extProps} renderAll={true} />
-          </ActionBar>
-        )}
+      <div className="is-flex is-align-items-center is-justify-content-flex-end">
+        {renderBreadcrumbNav()}
+        {<ActionBar className="my-2">{renderExtensionPoints()}</ActionBar>}
       </div>
       <hr className="is-marginless" />
     </>

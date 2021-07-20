@@ -68,7 +68,7 @@
       "version": "Version",
       "currentVersion": "Installed version",
       "newVersion": "New version",
-      "cloudoguInstallInfo": "This plugin is only available via myCloudogu. Follow the instructions to install it.",
+      "cloudoguInstallInfo": "This plugin is exclusively available via myCloudogu. Follow the instructions to install it.",
       "cloudoguInstall": "To Installation Instructions",
       "dependencyNotification": "With this plugin, the following dependencies will be installed/updated if their latest versions are not installed yet!",
       "optionalDependencyNotification": "With this plugin, the following optional dependencies will be updated if they are installed!",

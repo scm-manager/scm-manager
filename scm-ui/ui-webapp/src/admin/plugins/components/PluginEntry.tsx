@@ -60,6 +60,18 @@ const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
   const isUninstallable = plugin._links.uninstall && (plugin._links.uninstall as Link).href;
   const isCloudoguPlugin = plugin.type === "CLOUDOGU";
 
+  const evaluateAction = () => {
+    if (isInstallable) {
+      return () => openModal({ plugin, action: PluginAction.INSTALL });
+    }
+
+    if (isCloudoguPlugin) {
+      return () => openModal({ plugin, action: PluginAction.CLOUDOGU });
+    }
+
+    return undefined;
+  };
+
   const pendingSpinner = () => (
     <Icon className="fa-spin fa-lg" name="spinner" color={plugin.markedForUninstall ? "danger" : "info"} />
   );
@@ -91,7 +103,7 @@ const PluginEntry: FC<Props> = ({ plugin, openModal }) => {
   return (
     <>
       <CardColumn
-        action={isInstallable ? () => openModal({ plugin, action: PluginAction.INSTALL }) : undefined}
+        action={evaluateAction()}
         avatar={<PluginAvatar plugin={plugin} />}
         title={plugin.displayName ? <strong>{plugin.displayName}</strong> : <strong>{plugin.name}</strong>}
         description={plugin.description}

@@ -120,6 +120,11 @@ public class DefaultExtensionProcessor implements ExtensionProcessor
     return collector.getWebElements();
   }
 
+  @Override
+  public Iterable<Class<?>> getIndexedTypes() {
+    return collector.getIndexedTypes();
+  }
+
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */

@@ -223,6 +223,10 @@ public final class ExtensionCollector
     return webElements;
   }
 
+  public Set<Class<?>> getIndexedTypes() {
+    return indexedTypes;
+  }
+
   //~--- methods --------------------------------------------------------------
 
   /**
@@ -255,7 +259,7 @@ public final class ExtensionCollector
   private void collectExtensions(ClassLoader defaultClassLoader, ScmModule module) {
     for (ClassElement extension : module.getExtensions()) {
       if (isRequirementFulfilled(extension)) {
-        Class<?> extensionClass = loadExtension(defaultClassLoader, extension);
+        Class<?> extensionClass = load(defaultClassLoader, extension);
         appendExtension(extensionClass);
       }
     }
@@ -265,25 +269,34 @@ public final class ExtensionCollector
     Set<Class<?>> classes = new HashSet<>();
     for (ClassElement element : classElements) {
       if (isRequirementFulfilled(element)) {
-        Class<?> loadedClass = loadExtension(defaultClassLoader, element);
+        Class<?> loadedClass = load(defaultClassLoader, element);
         classes.add(loadedClass);
       }
     }
     return classes;
   }
 
+  private Collection<Class<?>> collectIndexedTypes(ClassLoader defaultClassLoader, Iterable<ClassElement> descriptors) {
+    Set<Class<?>> types = new HashSet<>();
+    for (ClassElement descriptor : descriptors) {
+      Class<?> loadedClass = load(defaultClassLoader, descriptor);
+      types.add(loadedClass);
+    }
+    return types;
+  }
+
   private Set<WebElementExtension> collectWebElementExtensions(ClassLoader defaultClassLoader, Iterable<WebElementDescriptor> descriptors) {
     Set<WebElementExtension> webElementExtensions = new HashSet<>();
     for (WebElementDescriptor descriptor : descriptors) {
       if (isRequirementFulfilled(descriptor)) {
-        Class<?> loadedClass = loadExtension(defaultClassLoader, descriptor);
+        Class<?> loadedClass = load(defaultClassLoader, descriptor);
         webElementExtensions.add(new WebElementExtension(loadedClass, descriptor));
       }
     }
     return webElementExtensions;
   }
 
-  private Class<?> loadExtension(ClassLoader classLoader, ClassElement extension) {
+  private Class<?> load(ClassLoader classLoader, ClassElement extension) {
     try {
       return classLoader.loadClass(extension.getClazz());
     } catch (ClassNotFoundException ex) {
@@ -320,12 +333,15 @@ public final class ExtensionCollector
     restResources.addAll(collectClasses(classLoader, module.getRestResources()));
 
     webElements.addAll(collectWebElementExtensions(classLoader, module.getWebElements()));
+    indexedTypes.addAll(collectIndexedTypes(classLoader, module.getIndexedTypes()));
   }
 
   //~--- fields ---------------------------------------------------------------
 
   /** Field description */
   private final Set<WebElementExtension> webElements = Sets.newHashSet();
+
+  private final Set<Class<?>> indexedTypes = Sets.newHashSet();
 
   /** Field description */
   private final Set<Class> restResources = Sets.newHashSet();

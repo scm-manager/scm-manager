@@ -21,33 +21,42 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { ReactNode } from "react";
+import React, { FC, ReactNode } from "react";
 import Logo from "./../Logo";
+import { Links } from "@scm-manager/ui-types";
 
 type Props = {
-  children?: ReactNode;
+  links: Links;
+  authenticated: boolean;
+  children: ReactNode;
 };
 
-class Header extends React.Component<Props> {
-  render() {
-    const { children } = this.props;
-    return (
-      <section className="hero is-dark is-small">
-        <div className="hero-body">
-          <div className="container">
-            <div className="columns is-vcentered">
-              <div className="column">
-                <Logo />
-              </div>
+const SmallHeader: FC<{ children: ReactNode }> = ({ children }) => {
+  return <div className="has-scm-background">{children}</div>;
+};
+
+const LargeHeader: FC = () => {
+  return (
+    <section className="hero has-scm-background is-small">
+      <div className="hero-body">
+        <div className="container">
+          <div className="columns is-vcentered">
+            <div className="column">
+              <Logo />
             </div>
           </div>
         </div>
-        <div className="hero-foot">
-          <div className="container">{children}</div>
-        </div>
-      </section>
-    );
+      </div>
+    </section>
+  );
+};
+
+const Header: FC<Props> = ({ authenticated, children, links }) => {
+  if (authenticated) {
+    return <SmallHeader>{children}</SmallHeader>;
+  } else {
+    return <LargeHeader />;
   }
-}
+};
 
 export default Header;

@@ -26,7 +26,7 @@ import { Route, useLocation } from "react-router-dom";
 import Sources from "../../sources/containers/Sources";
 import ChangesetsRoot from "../../containers/ChangesetsRoot";
 import { Branch, Repository } from "@scm-manager/ui-types";
-import { ErrorPage, Loading, Notification } from "@scm-manager/ui-components";
+import { ErrorPage, Loading } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 import { useBranches } from "@scm-manager/ui-api";
 import FileSearch from "./FileSearch";
@@ -71,7 +71,7 @@ const CodeOverviewWithBranches: FC<Props> = ({ repository, baseUrl }) => {
   }
 
   if (branches.length === 0) {
-    return <Notification type="info">{t("code.noBranches")}</Notification>;
+    return <Sources repository={repository} baseUrl={baseUrl} />;
   }
 
   return <CodeRouting repository={repository} baseUrl={baseUrl} branches={branches} selectedBranch={selectedBranch} />;

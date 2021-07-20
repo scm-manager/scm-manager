@@ -1113,6 +1113,23 @@ class ResourceLinks {
     }
   }
 
+  public SearchLinks search() {
+    return new SearchLinks(scmPathInfoStore.get());
+  }
+
+  public static class SearchLinks {
+
+    private final LinkBuilder searchLinkBuilder;
+
+    SearchLinks(ScmPathInfo pathInfo) {
+      this.searchLinkBuilder = new LinkBuilder(pathInfo, SearchResource.class);
+    }
+
+    public String search(String type) {
+      return searchLinkBuilder.method("search").parameters(type).href();
+    }
+  }
+
   public InitialAdminAccountLinks initialAdminAccount() {
     return new InitialAdminAccountLinks(new LinkBuilder(scmPathInfoStore.get(), InitializationResource.class, AdminAccountStartupResource.class));
   }

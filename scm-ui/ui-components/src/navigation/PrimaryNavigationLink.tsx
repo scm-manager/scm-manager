@@ -21,42 +21,31 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import * as React from "react";
-import { Route, Link } from "react-router-dom";
+import React, { FC } from "react";
+import { useRouteMatch, Link } from "react-router-dom";
 import { createAttributesForTesting } from "../devBuild";
+import classNames from "classnames";
 
 type Props = {
   to: string;
+  match: string;
   label: string;
-  match?: string;
-  activeOnlyWhenExact?: boolean;
   testId?: string;
+  className?: string;
 };
 
-class PrimaryNavigationLink extends React.Component<Props> {
-  renderLink = (route: any) => {
-    const { to, label, testId } = this.props;
-    return (
-      <li className={route.match ? "is-active" : ""}>
-        <Link to={to} {...createAttributesForTesting(testId)}>
-          {label}
-        </Link>
-      </li>
-    );
-  };
+const PrimaryNavigationLink: FC<Props> = ({ to, match, testId, label, className }) => {
+  const routeMatch = useRouteMatch({ path: match });
 
-  render() {
-    const { to, match, activeOnlyWhenExact, testId } = this.props;
-    const path = match ? match : to;
-    return (
-      <Route
-        path={path}
-        exact={activeOnlyWhenExact}
-        children={this.renderLink}
-        {...createAttributesForTesting(testId)}
-      />
-    );
-  }
-}
+  return (
+    <Link
+      to={to}
+      className={classNames(className, "navbar-item", { "is-active": routeMatch })}
+      {...createAttributesForTesting(testId)}
+    >
+      {label}
+    </Link>
+  );
+};
 
 export default PrimaryNavigationLink;

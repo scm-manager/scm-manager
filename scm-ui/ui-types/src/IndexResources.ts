@@ -22,10 +22,11 @@
  * SOFTWARE.
  */
 
-import { Links } from "./hal";
+import { Embedded, Links } from "./hal";
 
 export type IndexResources = {
   version: string;
   initialization?: string;
   _links: Links;
+  _embedded?: Embedded;
 };
