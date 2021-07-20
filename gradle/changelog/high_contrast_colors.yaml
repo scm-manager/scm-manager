@@ -1,0 +1,2 @@
+- type: added
+  description: Additional color scheme to prepare a high contrast mode ([#1730](https://github.com/scm-manager/scm-manager/pull/1731))
