@@ -31,17 +31,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.ContextEntry;
 import sonia.scm.event.ScmEventBus;
-import sonia.scm.io.INIConfiguration;
-import sonia.scm.io.INIConfigurationReader;
-import sonia.scm.io.INIConfigurationWriter;
-import sonia.scm.io.INISection;
 import sonia.scm.repository.HgRepositoryHandler;
 import sonia.scm.repository.api.ImportFailedException;
 import sonia.scm.repository.api.PullResponse;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.URI;
 import java.util.List;
 
 public class HgPullCommand extends AbstractHgPushOrPullCommand implements PullCommand {
