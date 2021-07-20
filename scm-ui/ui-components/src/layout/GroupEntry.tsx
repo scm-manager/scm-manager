@@ -23,26 +23,42 @@
  */
 
 import React, { FC, ReactNode } from "react";
-import { useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { devices } from "../devices";
 
 const StyledGroupEntry = styled.div`
+  max-height: calc(90px - 1.5rem);
   width: 100%;
   display: flex;
-  padding: 1rem;
-  border: 1px solid rgb(219, 219, 219);
-  border-radius: 5px;
+  justify-content: space-between;
+  padding: 0.5rem;
   align-items: center;
   overflow: hidden;
+  pointer-events: all;
+`;
 
+const OverlayLink = styled(Link)`
+  width: 100%;
+  position: absolute;
+  height: calc(90px - 1.5rem);
+  pointer-events: all;
   :hover {
-    border: 1px solid #33b2e8;
+    background-color: rgb(51, 178, 232, 0.1);
     cursor: pointer;
   }
 `;
 
 const Avatar = styled.div`
-  padding: 0 0.25rem;
+  padding-right: 1rem;
+  .image * {
+    width: 48px !important;
+    height: 48px !important;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 2rem;
+  }
 `;
 
 const Name = styled.div`
@@ -50,44 +66,60 @@ const Name = styled.div`
 `;
 
 const NameDescriptionContainer = styled.div`
-  flex-grow: 1;
+  flex: 0 0 0;
 `;
 
-const Description = styled.div`
+const Description = styled.p`
+  display: block;
   padding: 0 0.25rem;
+  height: 1.5rem;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  word-break: break-all;
+  width: calc(55vw);
+  @media screen and (max-width: ${devices.desktop.width - 1}px) {
+    width: calc(80vw);
+  }
 `;
 
 const ContentLeft = styled.div`
-  padding: 0 1rem;
+  display: flex;
 `;
 
 const ContentRight = styled.div`
+  display: flex;
+  justify-self: flex-end;
+  justify-content: space-between;
+  pointer-events: all;
   padding-left: 2rem;
+  margin-bottom: -10px;
 `;
 
 type Props = {
-  link: string;
   title?: string;
   avatar: string | ReactNode;
   name: string | ReactNode;
   description?: string | ReactNode;
-  contentLeft: ReactNode;
-  contentRight: ReactNode;
+  contentRight?: ReactNode;
+  link: string;
 };
 
-const GroupEntry: FC<Props> = ({ link, avatar, title, name, description, contentLeft, contentRight }) => {
-  const history = useHistory();
-
+const GroupEntry: FC<Props> = ({ link, avatar, title, name, description, contentRight }) => {
   return (
-    <StyledGroupEntry onClick={() => history.push(link)} title={title}>
-      <Avatar>{avatar}</Avatar>
-      <NameDescriptionContainer>
-        <Name>{name}</Name>
-        {description ? <Description>{description}</Description> : null}
-      </NameDescriptionContainer>
-      <ContentLeft>{contentLeft}</ContentLeft>
-      <ContentRight>{contentRight}</ContentRight>
-    </StyledGroupEntry>
+    <>
+      <OverlayLink to={link} />
+      <StyledGroupEntry title={title}>
+        <ContentLeft>
+          <Avatar>{avatar}</Avatar>
+          <NameDescriptionContainer>
+            <Name>{name}</Name>
+            <Description>{description}</Description>
+          </NameDescriptionContainer>
+        </ContentLeft>
+        <ContentRight className="is-hidden-touch">{contentRight}</ContentRight>
+      </StyledGroupEntry>
+    </>
   );
 };
 

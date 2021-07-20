@@ -21,13 +21,15 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { Repository } from "@scm-manager/ui-types";
-import { DateFromNow } from "@scm-manager/ui-components";
+import { DateFromNow, Modal } from "@scm-manager/ui-components";
 import RepositoryAvatar from "./RepositoryAvatar";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import GroupEntry from "../layout/GroupEntry";
 import RepositoryFlags from "./RepositoryFlags";
+import styled from "styled-components";
+import Icon from "../Icon";
 
 type DateProp = Date | string;
 
@@ -38,26 +40,66 @@ type Props = {
   baseDate?: DateProp;
 };
 
-const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
-  const createLink = () => {
-    return `/repo/${repository.namespace}/${repository.name}`;
-  };
+const ContentRightContainer = styled.div`
+  height: calc(80px - 1.5rem);
+  margin-right: 1rem;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`;
 
-  const createActions = () => {
+const QuickActionbar = styled.span`
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+`;
+
+const QuickAction = styled(Icon)`
+  font-size: 1.25rem;
+
+  :hover {
+    color: #363636 !important;
+  }
+`;
+
+const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
+  const [openCloneModal, setOpenCloneModal] = useState(false);
+
+  const createContentRight = () => {
     return (
-      <small className="level-item">
-        <DateFromNow baseDate={baseDate} date={repository.lastModified || repository.creationDate} />
-      </small>
+      <ContentRightContainer>
+        {openCloneModal ? (
+          <Modal
+            active={openCloneModal}
+            title={"Clone Modal test"}
+            body={"test"}
+            closeFunction={() => setOpenCloneModal(false)}
+          />
+        ) : null}
+        <QuickActionbar>
+          <QuickAction
+            name="download"
+            color="info"
+            className="has-cursor-pointer"
+            onClick={() => setOpenCloneModal(true)}
+            title={"Clone repository"}
+          />
+        </QuickActionbar>
+        <small>
+          <DateFromNow baseDate={baseDate} date={repository.lastModified || repository.creationDate} />
+        </small>
+      </ContentRightContainer>
     );
   };
 
-  const repositoryLink = createLink();
-  const actions = createActions();
+  const repositoryLink = `/repo/${repository.namespace}/${repository.name}`;
+  const actions = createContentRight();
   const name = (
-    <>
+    <div className="is-flex">
       <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} />
-      <strong>{repository.name}</strong>{" "}
-    </>
+      <strong>{repository.name}</strong> <RepositoryFlags repository={repository} className="is-hidden-mobile" />
+    </div>
   );
 
   return (
@@ -66,9 +108,8 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
         avatar={<RepositoryAvatar repository={repository} />}
         name={name}
         description={repository.description}
-        link={repositoryLink}
-        contentLeft={<RepositoryFlags repository={repository} />}
         contentRight={actions}
+        link={repositoryLink}
       />
     </>
   );

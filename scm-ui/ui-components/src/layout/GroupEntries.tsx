@@ -28,24 +28,30 @@ import styled from "styled-components";
 import Icon from "../Icon";
 
 const Container = styled.div`
-  margin-bottom: 0.2em;
+  margin-bottom: 1em;
 `;
 
 const ContentWrapper = styled.div`
-  padding: 0 0.75rem;
 `;
 
 const TitleWrapper = styled.div`
-  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem;
+  font-size: 1.5rem;
   font-weight: bold;
 `;
 
 const CollapsableTitle = styled.span`
   cursor: pointer;
   font-size: 1rem;
+  padding-right: 0.5rem;
 `;
 const Entry = styled.div`
-  margin: 0.5rem 0;
+`;
+
+const Separator = styled.div`
+  border-bottom: 1px solid rgb(219, 219, 219);
 `;
 
 type Props = {
@@ -60,7 +66,12 @@ const GroupEntries: FC<Props> = ({ name, url, elements }) => {
   let content = null;
   if (!collapsed) {
     content = elements.map((entry, index) => {
-      return <Entry key={index}>{entry}</Entry>;
+      return (
+        <>
+          <Entry key={index}>{entry}</Entry>
+          {index + 1 !== elements.length ? <Separator /> : null}
+        </>
+      );
     });
   }
 
@@ -68,7 +79,7 @@ const GroupEntries: FC<Props> = ({ name, url, elements }) => {
     <Container>
       <TitleWrapper>
         <CollapsableTitle onClick={() => setCollapsed((prevState: boolean) => !prevState)}>
-          <Icon name={collapsed ? "angle-right" : "angle-down"} color="dark" />
+          <Icon name={collapsed ? "angle-right" : "angle-down"} color="dark" className="is-size-3" />
         </CollapsableTitle>{" "}
         {url ? (
           <Link to={url} className={"has-text-dark"}>
@@ -78,6 +89,7 @@ const GroupEntries: FC<Props> = ({ name, url, elements }) => {
           name
         )}
       </TitleWrapper>
+      {!collapsed ? <Separator /> : null}
       <ContentWrapper>{content}</ContentWrapper>
       <div className="is-clearfix" />
     </Container>

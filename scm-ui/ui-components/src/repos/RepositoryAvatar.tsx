@@ -29,6 +29,8 @@ import styled from "styled-components";
 
 const Avatar = styled.p`
   border-radius: 5px;
+  width: 48px !important;
+  height: 48px !important;
 `;
 
 type Props = {
@@ -40,13 +42,13 @@ const renderExtensionPoint = (repository: Repository) => {
     <ExtensionPoint
       name="repos.repository-avatar.primary"
       props={{
-        repository
+        repository,
       }}
     >
       <ExtensionPoint
         name="repos.repository-avatar"
         props={{
-          repository
+          repository,
         }}
       >
         <Image src="/images/blib.jpg" alt="Logo" />
@@ -56,7 +58,7 @@ const renderExtensionPoint = (repository: Repository) => {
 };
 
 const RepositoryAvatar: FC<Props> = ({ repository }) => {
-  return <Avatar className="image is-32x32">{renderExtensionPoint(repository)}</Avatar>;
+  return <Avatar className="image">{renderExtensionPoint(repository)}</Avatar>;
 };
 
 export default RepositoryAvatar;

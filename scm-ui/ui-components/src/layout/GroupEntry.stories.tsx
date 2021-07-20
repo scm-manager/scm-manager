@@ -34,6 +34,7 @@ import copyToClipboard from "../CopyToClipboard";
 
 const Wrapper = styled.div`
   margin: 2rem;
+  max-width: 200px;
 `;
 
 const link = "/foo/bar";

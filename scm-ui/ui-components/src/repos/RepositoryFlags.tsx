@@ -32,6 +32,7 @@ import HealthCheckFailureDetail from "./HealthCheckFailureDetail";
 
 type Props = {
   repository: Repository;
+  className?: string;
 };
 
 const Wrapper = styled.span`
@@ -45,7 +46,7 @@ const RepositoryFlagContainer = styled.div`
   }
 `;
 
-const RepositoryFlags: FC<Props> = ({ repository }) => {
+const RepositoryFlags: FC<Props> = ({ repository, className }) => {
   const [t] = useTranslation("repos");
   const [showHealthCheck, setShowHealthCheck] = useState(false);
 
@@ -74,7 +75,7 @@ const RepositoryFlags: FC<Props> = ({ repository }) => {
   );
 
   return (
-    <Wrapper>
+    <Wrapper >
       {modal}
       <RepositoryFlagContainer>
         {repositoryFlags}

@@ -37,7 +37,7 @@ const RepositoryGroupEntry: FC<Props> = ({ group }) => {
 
   const settingsLink = group.namespace?._links?.permissions && (
     <Link to={`/namespace/${group.name}/settings`}>
-      <Icon color="is-link" name="cog" title={t("repositoryOverview.settings.tooltip")} className={"is-size-5"} />
+      <Icon color="is-link" name="cog" title={t("repositoryOverview.settings.tooltip")} className={"is-size-4 ml-2"} />
     </Link>
   );
   const namespaceHeader = (
