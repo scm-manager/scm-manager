@@ -21,53 +21,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
+import React, { FC } from "react";
 import { Repository } from "@scm-manager/ui-types";
-import { CardColumn, DateFromNow } from "@scm-manager/ui-components";
+import { DateFromNow } from "@scm-manager/ui-components";
 import RepositoryAvatar from "./RepositoryAvatar";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
-import { withTranslation, WithTranslation } from "react-i18next";
-import styled from "styled-components";
-import HealthCheckFailureDetail from "./HealthCheckFailureDetail";
-import RepositoryFlag from "./RepositoryFlag";
+import GroupEntry from "../layout/GroupEntry";
+import RepositoryFlags from "./RepositoryFlags";
 
 type DateProp = Date | string;
 
-type Props = WithTranslation & {
+type Props = {
   repository: Repository;
   // @VisibleForTesting
   // the baseDate is only to avoid failing snapshot tests
   baseDate?: DateProp;
 };
 
-type State = {
-  showHealthCheck: boolean;
-};
-
-const Title = styled.span`
-  display: flex;
-  align-items: center;
-`;
-
-const RepositoryFlagContainer = styled.div`
-  .tag {
-    margin-left: 0.25rem;
-  }
-`;
-
-class RepositoryEntry extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      showHealthCheck: false,
-    };
-  }
-
-  createLink = (repository: Repository) => {
+const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
+  const createLink = () => {
     return `/repo/${repository.namespace}/${repository.name}`;
   };
 
-  createFooterRight = (repository: Repository, baseDate?: DateProp) => {
+  const createActions = () => {
     return (
       <small className="level-item">
         <DateFromNow baseDate={baseDate} date={repository.lastModified || repository.creationDate} />
@@ -75,70 +51,27 @@ class RepositoryEntry extends React.Component<Props, State> {
     );
   };
 
-  createTitle = () => {
-    const { repository, t } = this.props;
-    const repositoryFlags = [];
-    if (repository.archived) {
-      repositoryFlags.push(<RepositoryFlag title={t("archive.tooltip")}>{t("repository.archived")}</RepositoryFlag>);
-    }
+  const repositoryLink = createLink();
+  const actions = createActions();
+  const name = (
+    <>
+      <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} />
+      <strong>{repository.name}</strong>{" "}
+    </>
+  );
 
-    if (repository.exporting) {
-      repositoryFlags.push(<RepositoryFlag title={t("exporting.tooltip")}>{t("repository.exporting")}</RepositoryFlag>);
-    }
-
-    if (repository.healthCheckFailures && repository.healthCheckFailures.length > 0) {
-      repositoryFlags.push(
-        <RepositoryFlag
-          color="danger"
-          title={t("healthCheckFailure.tooltip")}
-          onClick={() => {
-            this.setState({ showHealthCheck: true });
-          }}
-        >
-          {t("repository.healthCheckFailure")}
-        </RepositoryFlag>
-      );
-    }
-
-    return (
-      <Title>
-        <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} />
-        <strong>{repository.name}</strong>{" "}
-        <RepositoryFlagContainer>
-          {repositoryFlags}
-          <ExtensionPoint name="repository.flags" props={{ repository }} renderAll={true} />
-        </RepositoryFlagContainer>
-      </Title>
-    );
-  };
-
-  render() {
-    const { repository, baseDate } = this.props;
-    const repositoryLink = this.createLink(repository);
-    const footerRight = this.createFooterRight(repository, baseDate);
-    const title = this.createTitle();
-    const modal = (
-      <HealthCheckFailureDetail
-        closeFunction={() => this.setState({ showHealthCheck: false })}
-        active={this.state.showHealthCheck}
-        failures={repository.healthCheckFailures}
+  return (
+    <>
+      <GroupEntry
+        avatar={<RepositoryAvatar repository={repository} />}
+        name={name}
+        description={repository.description}
+        link={repositoryLink}
+        contentLeft={<RepositoryFlags repository={repository} />}
+        contentRight={actions}
       />
-    );
+    </>
+  );
+};
 
-    return (
-      <>
-        {modal}
-        <CardColumn
-          avatar={<RepositoryAvatar repository={repository} />}
-          title={title}
-          description={repository.description}
-          link={repositoryLink}
-          footerLeft={undefined}
-          footerRight={footerRight}
-        />
-      </>
-    );
-  }
-}
-
-export default withTranslation("repos")(RepositoryEntry);
+export default RepositoryEntry;

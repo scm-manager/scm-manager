@@ -36,12 +36,11 @@ import {
   NavLink,
   Page,
   PrimaryContentColumn,
-  RepositoryFlag,
   SecondaryNavigation,
   SecondaryNavigationColumn,
   StateMenuContextProvider,
   SubNavigation,
-  Tooltip,
+  RepositoryFlags,
   urls,
 } from "@scm-manager/ui-components";
 import RepositoryDetails from "../components/RepositoryDetails";
@@ -158,23 +157,6 @@ const RepositoryRoot = () => {
     return links ? links.map(({ url, label }) => <JumpToFileButton tooltip={label} link={url} />) : null;
   };
 
-  const repositoryFlags = [];
-  if (repository.archived) {
-    repositoryFlags.push(<RepositoryFlag title={t("archive.tooltip")}>{t("repository.archived")}</RepositoryFlag>);
-  }
-
-  if (repository.exporting) {
-    repositoryFlags.push(<RepositoryFlag title={t("exporting.tooltip")}>{t("repository.exporting")}</RepositoryFlag>);
-  }
-
-  if (repository.healthCheckFailures && repository.healthCheckFailures.length > 0) {
-    repositoryFlags.push(
-      <RepositoryFlag color="danger" title={t("healthCheckFailure.tooltip")} onClick={() => setShowHealthCheck(true)}>
-        {t("repository.healthCheckFailure")}
-      </RepositoryFlag>
-    );
-  }
-
   const titleComponent = (
     <>
       <RouteLink to={`/repos/${repository.namespace}/`} className={"has-text-dark"}>
@@ -239,8 +221,7 @@ const RepositoryRoot = () => {
           <>
             <ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />
             <TagGroup>
-              {repositoryFlags}
-              <ExtensionPoint name="repository.flags" props={{ repository }} renderAll={true} />
+              <RepositoryFlags repository={repository} />
             </TagGroup>
           </>
         }
