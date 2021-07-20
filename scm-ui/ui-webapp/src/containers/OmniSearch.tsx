@@ -28,7 +28,7 @@ import { BackendError, useSearch } from "@scm-manager/ui-api";
 import classNames from "classnames";
 import { Link, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ErrorNotification, Notification } from "@scm-manager/ui-components";
+import { Button, ErrorNotification, Notification } from "@scm-manager/ui-components";
 
 const Field = styled.div`
   margin-bottom: 0 !important;
@@ -51,16 +51,22 @@ const namespaceAndName = (hit: Hit) => {
 type HitsProps = {
   hits: Hit[];
   index: number;
+  gotoDetailSearch: () => void;
   clear: () => void;
 };
 
 const QuickSearchNotification: FC = ({ children }) => <div className="dropdown-content p-4">{children}</div>;
 
-const EmptyHits = () => {
+type GotoProps = {
+  gotoDetailSearch: () => void;
+};
+
+const EmptyHits: FC<GotoProps> = ({ gotoDetailSearch }) => {
   const [t] = useTranslation("commons");
   return (
     <QuickSearchNotification>
       <Notification type="info">{t("search.quickSearch.noResults")}</Notification>
+      <MoreResults gotoDetailSearch={gotoDetailSearch} />
     </QuickSearchNotification>
   );
 };
@@ -105,12 +111,28 @@ const DropdownMenu = styled.div`
   max-width: 20rem;
 `;
 
-const Hits: FC<HitsProps> = ({ hits, index, clear }) => {
+const ResultFooter = styled.div`
+  border-top: 1px solid lightgray;
+  margin: 0 0.5rem;
+  padding: 0.375rem 0.5rem;
+`;
+
+const MoreResults: FC<GotoProps> = ({ gotoDetailSearch }) => {
+  const [t] = useTranslation("commons");
+  return (
+    <ResultFooter className="dropdown-item has-text-centered" onMouseDown={(e) => e.preventDefault()}>
+      <Button action={gotoDetailSearch} color="primary">
+        {t("search.quickSearch.moreResults")}
+      </Button>
+    </ResultFooter>
+  );};
+
+const Hits: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
   const id = useCallback(namespaceAndName, [hits]);
   const [t] = useTranslation("commons");
 
   if (hits.length === 0) {
-    return <EmptyHits />;
+    return <EmptyHits gotoDetailSearch={gotoDetailSearch} />;
   }
 
   return (
@@ -129,11 +151,12 @@ const Hits: FC<HitsProps> = ({ hits, index, clear }) => {
           </Link>
         </div>
       ))}
+      <MoreResults gotoDetailSearch={gotoDetailSearch} />
     </div>
   );
 };
 
-const useKeyBoardNavigation = (clear: () => void, hits?: Array<Hit>) => {
+const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, hits?: Array<Hit>) => {
   const [index, setIndex] = useState(-1);
   const history = useHistory();
   useEffect(() => {
@@ -169,6 +192,9 @@ const useKeyBoardNavigation = (clear: () => void, hits?: Array<Hit>) => {
           const hit = hits[index];
           history.push(`/repo/${namespaceAndName(hit)}`);
           clear();
+        } else {
+          e.preventDefault();
+          gotoDetailSearch();
         }
         break;
       case 27: // e.code: Escape
@@ -200,22 +226,34 @@ const useShowResultsOnFocus = () => {
   const [showResults, setShowResults] = useState(false);
   return {
     showResults,
-    onClick: (e: MouseEvent<HTMLInputElement>) => e.stopPropagation(),
+    onClick: (e: MouseEvent<HTMLInputElement>) => {
+      e.stopPropagation();
+      setShowResults(true);
+    },
+    onKeyPress: () => setShowResults(true),
     onFocus: () => setShowResults(true),
     onBlur: () => setShowResults(false),
+    hideResults: () => setShowResults(false),
   };
 };
 
 const OmniSearch: FC = () => {
   const [query, setQuery] = useState("");
   const debouncedQuery = useDebounce(query, 250);
-  const { data, isLoading, error } = useSearch(debouncedQuery, { pageSize: 5 });
-  const { showResults, ...handlers } = useShowResultsOnFocus();
+  const { data, isLoading, error } = useSearch(debouncedQuery, { type: "repository", pageSize: 5 });
+  const { showResults, hideResults, ...handlers } = useShowResultsOnFocus();
+  const history = useHistory();
 
   const clearQuery = () => {
     setQuery("");
   };
-  const { onKeyDown, index } = useKeyBoardNavigation(clearQuery, data?._embedded.hits);
+
+  const gotoDetailSearch = () => {
+    history.push(`/search/repository?q=${query}`);
+    hideResults();
+  };
+
+  const { onKeyDown, index } = useKeyBoardNavigation(gotoDetailSearch, clearQuery, data?._embedded.hits);
 
   return (
     <Field className="navbar-item field">
@@ -243,7 +281,9 @@ const OmniSearch: FC = () => {
           </div>
           <DropdownMenu className="dropdown-menu">
             {error ? <SearchErrorNotification error={error} /> : null}
-            {!error && data ? <Hits clear={clearQuery} index={index} hits={data._embedded.hits} /> : null}
+            {!error && data ? (
+              <Hits gotoDetailSearch={gotoDetailSearch} clear={clearQuery} index={index} hits={data._embedded.hits} />
+            ) : null}
           </DropdownMenu>
         </div>
       </div>

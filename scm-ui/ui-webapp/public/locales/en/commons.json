@@ -156,7 +156,8 @@
     "quickSearch": {
       "resultHeading": "Top repository results",
       "parseError": "Failed to parse query",
-      "noResults": "Could not find matching repository"
+      "noResults": "Could not find matching repository",
+      "moreResults": "More results"
     }
   }
 }

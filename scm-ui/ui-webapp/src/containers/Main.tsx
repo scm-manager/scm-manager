@@ -49,6 +49,7 @@ import NamespaceRoot from "../repos/namespaces/containers/NamespaceRoot";
 import ImportLog from "../repos/importlog/ImportLog";
 import CreateRepositoryRoot from "../repos/containers/CreateRepositoryRoot";
 import styled from "styled-components";
+import Search from "../search";
 
 type Props = {
   me: Me;
@@ -106,6 +107,7 @@ class Main extends React.Component<Props> {
             <ProtectedRoute path="/admin" component={Admin} authenticated={authenticated} />
             <ProtectedRoute path="/me" component={Profile} authenticated={authenticated} />
             <ProtectedRoute path="/importlog/:logId" component={ImportLog} authenticated={authenticated} />
+            <ProtectedRoute path="/search/:type" component={Search} authenticated={authenticated} />
             <ExtensionPoint
               name="main.route"
               renderAll={true}

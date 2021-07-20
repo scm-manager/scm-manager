@@ -155,6 +155,7 @@
     "quickSearch": {
       "resultHeading": "Top-Ergebnisse Repositories",
       "parseError": "Der Suchstring is ungültig",
+      "moreResults": "Mehr Ergebnisse",
       "noResults": "Es konnten keine Repositories gefunden werden"
     }
   }
