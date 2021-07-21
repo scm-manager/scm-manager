@@ -62,7 +62,11 @@ public class IndexDtoGenerator extends HalAppenderMapper {
   private final SearchEngine searchEngine;
 
   @Inject
-  public IndexDtoGenerator(ResourceLinks resourceLinks, SCMContextProvider scmContextProvider, ScmConfiguration configuration, InitializationFinisher initializationFinisher, SearchEngine searchEngine) {
+  public IndexDtoGenerator(ResourceLinks resourceLinks,
+                           SCMContextProvider scmContextProvider,
+                           ScmConfiguration configuration,
+                           InitializationFinisher initializationFinisher,
+                           SearchEngine searchEngine) {
     this.resourceLinks = resourceLinks;
     this.scmContextProvider = scmContextProvider;
     this.configuration = configuration;

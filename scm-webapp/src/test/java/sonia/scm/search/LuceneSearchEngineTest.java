@@ -33,6 +33,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -64,7 +65,7 @@ class LuceneSearchEngineTest {
     List<LuceneSearchableType> mockedTypes = Collections.singletonList(searchableType("repository"));
     when(resolver.getSearchableTypes()).thenReturn(mockedTypes);
 
-    List<SearchableType> searchableTypes = searchEngine.getSearchableTypes();
+    Collection<SearchableType> searchableTypes = searchEngine.getSearchableTypes();
 
     assertThat(searchableTypes).containsAll(mockedTypes);
   }
@@ -78,7 +79,7 @@ class LuceneSearchEngineTest {
     List<LuceneSearchableType> mockedTypes = Arrays.asList(repository, user, group);
     when(resolver.getSearchableTypes()).thenReturn(mockedTypes);
 
-    List<SearchableType> searchableTypes = searchEngine.getSearchableTypes();
+    Collection<SearchableType> searchableTypes = searchEngine.getSearchableTypes();
 
     assertThat(searchableTypes).containsOnly(repository, user);
   }

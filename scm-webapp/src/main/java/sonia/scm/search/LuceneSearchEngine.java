@@ -28,7 +28,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 
 import javax.inject.Inject;
-import java.util.List;
+import java.util.Collection;
 import java.util.stream.Collectors;
 
 public class LuceneSearchEngine implements SearchEngine {
@@ -45,7 +45,7 @@ public class LuceneSearchEngine implements SearchEngine {
   }
 
   @Override
-  public List<SearchableType> getSearchableTypes() {
+  public Collection<SearchableType> getSearchableTypes() {
     Subject subject = SecurityUtils.getSubject();
     return resolver.getSearchableTypes()
       .stream()

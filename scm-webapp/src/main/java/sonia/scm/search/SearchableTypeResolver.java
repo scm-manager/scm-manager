@@ -25,15 +25,15 @@
 package sonia.scm.search;
 
 import com.google.common.annotations.VisibleForTesting;
-import com.google.common.collect.ImmutableList;
 import sonia.scm.plugin.PluginLoader;
 
 import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -78,8 +78,8 @@ class SearchableTypeResolver {
       .collect(Collectors.toSet());
   }
 
-  public List<LuceneSearchableType> getSearchableTypes() {
-    return ImmutableList.copyOf(classToSearchableType.values());
+  public Collection<LuceneSearchableType> getSearchableTypes() {
+    return Collections.unmodifiableCollection(classToSearchableType.values());
   }
 
   public LuceneSearchableType resolve(Object object) {
