@@ -33,6 +33,7 @@ const Avatar = styled.div`
 
 type Props = {
   repository: Repository;
+  size?: 16 | 24 | 32 | 48 | 64 | 96 | 128;
 };
 
 const renderExtensionPoint = (repository: Repository) => {
@@ -55,8 +56,8 @@ const renderExtensionPoint = (repository: Repository) => {
   );
 };
 
-const RepositoryAvatar: FC<Props> = ({ repository }) => {
-  return <Avatar className="image is-48x48">{renderExtensionPoint(repository)}</Avatar>;
+const RepositoryAvatar: FC<Props> = ({ repository, size = 64 }) => {
+  return <Avatar className={`image is-${size}x${size}`}>{renderExtensionPoint(repository)}</Avatar>;
 };
 
 export default RepositoryAvatar;

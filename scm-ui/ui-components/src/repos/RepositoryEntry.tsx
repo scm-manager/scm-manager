@@ -79,39 +79,37 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
   const [t] = useTranslation("repos");
   const [openCloneModal, setOpenCloneModal] = useState(false);
 
-  const createContentRight = () => {
-    return (
-      <ContentRightContainer>
-        <Modal
-          size="L"
-          active={openCloneModal}
-          title={t("overview.clone")}
-          body={
-            <ExtensionPoint
-              name="repos.repository-details.information"
-              renderAll={true}
-              props={{
-                repository,
-              }}
-            />
-          }
-          closeFunction={() => setOpenCloneModal(false)}
-        />
-        <QuickActionbar>
-          <QuickAction
-            name="download"
-            color="info"
-            className="has-cursor-pointer"
-            onClick={() => setOpenCloneModal(true)}
-            title={t("overview.clone")}
+  const createContentRight = () => (
+    <ContentRightContainer>
+      <Modal
+        size="L"
+        active={openCloneModal}
+        title={t("overview.clone")}
+        body={
+          <ExtensionPoint
+            name="repos.repository-details.information"
+            renderAll={true}
+            props={{
+              repository,
+            }}
           />
-        </QuickActionbar>
-        <DateWrapper>
-          <DateFromNow baseDate={baseDate} date={repository.lastModified || repository.creationDate} />
-        </DateWrapper>
-      </ContentRightContainer>
-    );
-  };
+        }
+        closeFunction={() => setOpenCloneModal(false)}
+      />
+      <QuickActionbar>
+        <QuickAction
+          name="download"
+          color="info"
+          className="has-cursor-pointer"
+          onClick={() => setOpenCloneModal(true)}
+          title={t("overview.clone")}
+        />
+      </QuickActionbar>
+      <DateWrapper>
+        <DateFromNow baseDate={baseDate} date={repository.lastModified || repository.creationDate} />
+      </DateWrapper>
+    </ContentRightContainer>
+  );
 
   const repositoryLink = `/repo/${repository.namespace}/${repository.name}/`;
   const actions = createContentRight();

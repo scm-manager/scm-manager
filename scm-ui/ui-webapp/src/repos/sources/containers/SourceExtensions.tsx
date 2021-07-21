@@ -34,7 +34,7 @@ const extensionPointName = "repos.sources.extensions";
 
 type Props = {
   repository: Repository;
-  baseUrl: string;
+  baseUrl?: string;
 };
 
 type Params = {

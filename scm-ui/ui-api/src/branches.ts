@@ -103,7 +103,7 @@ export const useDeleteBranch = (repository: Repository) => {
 
 type DefaultBranch = { defaultBranch: string };
 
-export const useDefaultBranch = (repository: Repository) => {
+export const useDefaultBranch = (repository: Repository): ApiResult<DefaultBranch> => {
   const link = requiredLink(repository, "defaultBranch");
   return useQuery<DefaultBranch, Error>(branchQueryKey(repository, "__default-branch"), () =>
     apiClient.get(link).then((response) => response.json())

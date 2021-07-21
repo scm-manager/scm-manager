@@ -22,7 +22,7 @@
  * SOFTWARE.
  */
 import React, { useState } from "react";
-import { Link as RouteLink, Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Link as RouteLink, Redirect, Route, Switch, useRouteMatch, match } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { Changeset, Link } from "@scm-manager/ui-types";
@@ -221,7 +221,7 @@ const RepositoryRoot = () => {
           <>
             <ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />
             <TagGroup>
-              <RepositoryFlags repository={repository} />
+              <RepositoryFlags repository={repository} tooltipLocations="bottom" />
             </TagGroup>
           </>
         }
@@ -267,10 +267,7 @@ const RepositoryRoot = () => {
               <Route path={`${url}/code`}>
                 <CodeOverview baseUrl={`${url}/code`} repository={repository} />
               </Route>
-              <Route
-                path={`${url}/branch/:branch`}
-                render={() => <BranchRoot repository={repository} baseUrl={`${url}/branch`} />}
-              />
+              <Route path={`${url}/branch/:branch`} render={() => <BranchRoot repository={repository} />} />
               <Route
                 path={`${url}/branches`}
                 exact={true}

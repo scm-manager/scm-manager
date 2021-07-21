@@ -41,6 +41,7 @@ const OverlayLink = styled(Link)`
   position: absolute;
   height: calc(90px - 1.5rem);
   pointer-events: all;
+  border-radius: 4px;
   :hover {
     background-color: rgb(51, 178, 232, 0.1);
     cursor: pointer;
