@@ -91,7 +91,7 @@ public class LuceneQueryBuilder extends QueryBuilder {
       Collector collector = new PermissionAwareCollector(reader, topScoreCollector);
       searcher.search(query, collector);
 
-      QueryResultFactory resultFactory = new QueryResultFactory(analyzer, searcher, searchableType, query);
+      QueryResultFactory resultFactory = new QueryResultFactory(analyzer, searcher, searchableType, parsedQuery);
       return resultFactory.create(getTopDocs(queryParams, topScoreCollector));
     } catch (IOException e) {
       throw new SearchEngineException("failed to search index", e);
