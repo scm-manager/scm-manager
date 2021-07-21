@@ -61,7 +61,7 @@ public class SearchResource {
   }
 
   @GET
-  @Path("{type}")
+  @Path("query/{type}")
   @Produces(VndMediaType.QUERY_RESULT)
   @Operation(
     summary = "Query result",
@@ -98,7 +98,7 @@ public class SearchResource {
     name = "pageSize",
     description = "The maximum number of results per page (defaults to 10)"
   )
-  public QueryResultDto search(@Valid @BeanParam SearchParameters params) {
+  public QueryResultDto query(@Valid @BeanParam SearchParameters params) {
     QueryResult result = engine.search(IndexNames.DEFAULT)
       .start(params.getPage() * params.getPageSize())
       .limit(params.getPageSize())

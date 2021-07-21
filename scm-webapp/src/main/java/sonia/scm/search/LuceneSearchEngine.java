@@ -24,17 +24,33 @@
 
 package sonia.scm.search;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.subject.Subject;
+
 import javax.inject.Inject;
+import java.util.Collection;
+import java.util.stream.Collectors;
 
 public class LuceneSearchEngine implements SearchEngine {
 
+  private final SearchableTypeResolver resolver;
   private final LuceneIndexFactory indexFactory;
   private final LuceneQueryBuilderFactory queryBuilderFactory;
 
   @Inject
-  public LuceneSearchEngine(LuceneIndexFactory indexFactory, LuceneQueryBuilderFactory queryBuilderFactory) {
+  public LuceneSearchEngine(SearchableTypeResolver resolver, LuceneIndexFactory indexFactory, LuceneQueryBuilderFactory queryBuilderFactory) {
+    this.resolver = resolver;
     this.indexFactory = indexFactory;
     this.queryBuilderFactory = queryBuilderFactory;
+  }
+
+  @Override
+  public Collection<SearchableType> getSearchableTypes() {
+    Subject subject = SecurityUtils.getSubject();
+    return resolver.getSearchableTypes()
+      .stream()
+      .filter(type -> type.getPermission().map(subject::isPermitted).orElse(true))
+      .collect(Collectors.toList());
   }
 
   @Override

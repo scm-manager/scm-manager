@@ -37,7 +37,6 @@ import org.mapstruct.factory.Mappers;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import sonia.scm.repository.Repository;
 import sonia.scm.search.Hit;
 import sonia.scm.search.IndexNames;
 import sonia.scm.search.QueryResult;
@@ -135,11 +134,11 @@ class SearchResourceTest {
       JsonMockHttpResponse response = search("paging", 1, 20);
 
       JsonNode links = response.getContentAsJson().get("_links");
-      assertLink(links, "self", "/v2/search/string?q=paging&page=1&pageSize=20");
-      assertLink(links, "first", "/v2/search/string?q=paging&page=0&pageSize=20");
-      assertLink(links, "prev", "/v2/search/string?q=paging&page=0&pageSize=20");
-      assertLink(links, "next", "/v2/search/string?q=paging&page=2&pageSize=20");
-      assertLink(links, "last", "/v2/search/string?q=paging&page=4&pageSize=20");
+      assertLink(links, "self", "/v2/search/query/string?q=paging&page=1&pageSize=20");
+      assertLink(links, "first", "/v2/search/query/string?q=paging&page=0&pageSize=20");
+      assertLink(links, "prev", "/v2/search/query/string?q=paging&page=0&pageSize=20");
+      assertLink(links, "next", "/v2/search/query/string?q=paging&page=2&pageSize=20");
+      assertLink(links, "last", "/v2/search/query/string?q=paging&page=4&pageSize=20");
     }
 
     @Test
@@ -233,7 +232,7 @@ class SearchResourceTest {
   }
 
   private JsonMockHttpResponse search(String query, Integer page, Integer pageSize) throws URISyntaxException, UnsupportedEncodingException {
-    String uri = "/v2/search/string?q=" + URLEncoder.encode(query, "UTF-8");
+    String uri = "/v2/search/query/string?q=" + URLEncoder.encode(query, "UTF-8");
     if (page != null) {
       uri += "&page=" + page;
     }

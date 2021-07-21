@@ -22,8 +22,8 @@
  * SOFTWARE.
  */
 
-import { ApiResult, useRequiredIndexLink } from "./base";
-import { QueryResult } from "@scm-manager/ui-types";
+import { ApiResult, useIndexLinks } from "./base";
+import { Link, QueryResult } from "@scm-manager/ui-types";
 import { apiClient } from "./apiclient";
 import { createQueryString } from "./utils";
 import { useQuery } from "react-query";
@@ -38,9 +38,29 @@ const defaultSearchOptions: SearchOptions = {
   type: "repository",
 };
 
+const useSearchLink = (name: string) => {
+  const links = useIndexLinks();
+  const searchLinks = links["search"];
+  if (!searchLinks) {
+    throw new Error("could not find search links in index");
+  }
+
+  if (!Array.isArray(searchLinks)) {
+    throw new Error("search links returned in wrong format, array is expected");
+  }
+
+  for (const l of searchLinks as Link[]) {
+    if (l.name === name) {
+      return l.href;
+    }
+  }
+
+  throw new Error(`could not find search link for ${name}`);
+};
+
 export const useSearch = (query: string, optionParam = defaultSearchOptions): ApiResult<QueryResult> => {
   const options = { ...defaultSearchOptions, ...optionParam };
-  const link = useRequiredIndexLink("search").replace("{type}", options.type);
+  const link = useSearchLink(options.type);
 
   const queryParams: Record<string, string> = {};
   queryParams.q = query;
