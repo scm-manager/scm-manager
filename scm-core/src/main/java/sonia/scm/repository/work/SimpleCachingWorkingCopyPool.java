@@ -38,6 +38,8 @@ import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Semaphore;
 
 import static java.lang.Integer.getInteger;
 import static java.util.Optional.empty;
@@ -54,10 +56,7 @@ import static java.util.Optional.of;
  * for a repository with such an existing directory, it is taken from the map, reclaimed and
  * returned as {@link WorkingCopy}.
  * If for one repository a working copy is requested, while another is in use already,
- * a second directory is requested from the {@link WorkdirProvider} for the second one.
- * If a context is closed with {@link #contextClosed(SimpleWorkingCopyFactory.WorkingCopyContext, File)}
- * and there already is a directory stored in the map for the repository,
- * the directory from the closed context simply is deleted.
+ * the process will wait until the other process has finished.
  * The number of directories cached is limited. By default, directories are cached for
  * {@value DEFAULT_WORKING_COPY_POOL_SIZE} repositories. This can be changes with the system
  * property '{@value WORKING_COPY_POOL_SIZE_PROPERTY}' (if this is set to zero, no caching will
@@ -90,13 +89,14 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
 
   private final WorkdirProvider workdirProvider;
   private final LinkedHashMap<String, File> workdirs;
+  private final Map<String, Semaphore> x;
   private final boolean cacheEnabled;
 
   private final Counter cacheHitCounter;
   private final Counter cacheMissCounter;
   private final Counter reclaimFailureCounter;
-  private final Counter parallelExistingCounter;
   private final Counter overflowCounter;
+  private final Timer parallelWaitTimer;
   private final Timer reclaimTimer;
   private final Timer initializeTimer;
   private final Timer deleteTimer;
@@ -110,6 +110,7 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
   SimpleCachingWorkingCopyPool(int size, WorkdirProvider workdirProvider, MeterRegistry meterRegistry) {
     this.workdirProvider = workdirProvider;
     this.workdirs = new LruMap(size);
+    this.x = new ConcurrentHashMap<>();
     cacheEnabled = size > 0;
     cacheHitCounter = Counter
       .builder("scm.workingCopy.pool.cache.hit")
@@ -123,13 +124,13 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
       .builder("scm.workingCopy.pool.reclaim.failure")
       .description("The amount of failed reclaim processes")
       .register(meterRegistry);
-    parallelExistingCounter = Counter
-      .builder("scm.workingCopy.pool.cache.parallelExisting")
-      .description("The amount of discarded working copies, because another working copy exists for the repository")
-      .register(meterRegistry);
     overflowCounter = Counter
       .builder("scm.workingCopy.pool.cache.overflow")
       .description("The amount of discarded working copies due to cache overflow")
+      .register(meterRegistry);
+    parallelWaitTimer = Timer
+      .builder("scm.workingCopy.pool.parallel")
+      .description("Duration of blocking waits for available working copies")
       .register(meterRegistry);
     reclaimTimer = Timer
       .builder("scm.workingCopy.pool.reclaim.duration")
@@ -146,7 +147,19 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
   }
 
   @Override
-  public <R, W> WorkingCopy<R, W> getWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext workingCopyContext) {
+  public <R, W> WorkingCopy<R, W> getWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext context) {
+    parallelWaitTimer.record(() -> {
+      try {
+        getSemaphore(context).acquire();
+      } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
+        throw new RuntimeException(e);
+      }
+    });
+    return getWorkingCopyFromPoolOrCreate(context);
+  }
+
+  private <R, W> WorkingCopy<R, W> getWorkingCopyFromPoolOrCreate(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext workingCopyContext) {
     String id = workingCopyContext.getScmRepository().getId();
     File existingWorkdir;
     synchronized (workdirs) {
@@ -192,19 +205,20 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
 
   @Override
   public void contextClosed(SimpleWorkingCopyFactory<?, ?, ?>.WorkingCopyContext workingCopyContext, File workdir) {
+    try {
+      putWorkingCopyToCache(workingCopyContext, workdir);
+    } finally {
+      getSemaphore(workingCopyContext).release();
+    }
+  }
+
+  private void putWorkingCopyToCache(SimpleWorkingCopyFactory<?, ?, ?>.WorkingCopyContext workingCopyContext, File workdir) {
     if (!cacheEnabled) {
       deleteWorkdir(workdir);
       return;
     }
-    String id = workingCopyContext.getScmRepository().getId();
     synchronized (workdirs) {
-      File cachedWorkdir = workdirs.putIfAbsent(id, workdir);
-      if (cachedWorkdir != null && cachedWorkdir != workdir) {
-        parallelExistingCounter.increment();
-        deleteWorkdir(workdir);
-      } else if (cachedWorkdir != null) {
-        moveToTopInCache(id, cachedWorkdir);
-      }
+      workdirs.put(workingCopyContext.getScmRepository().getId(), workdir);
     }
   }
 
@@ -224,6 +238,10 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
     if (workdir.exists()) {
       deleteTimer.record(() -> IOUtil.deleteSilently(workdir));
     }
+  }
+
+  private <R, W> Semaphore getSemaphore(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext context) {
+    return x.computeIfAbsent(context.getScmRepository().getId(), id -> new Semaphore(1));
   }
 
   @SuppressWarnings("java:S2160") // no need for equals here

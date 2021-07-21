@@ -43,7 +43,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -115,31 +114,6 @@ class SimpleCachingWorkingCopyPoolTest {
 
       assertThat(secondWorkdir.getDirectory()).isNotEqualTo(temp.toFile());
       assertThat(meterRegistry.get("scm.workingCopy.pool.reclaim.failure").counter().count()).isEqualTo(1d);
-    }
-
-    @Test
-    void shouldCacheOnlyOneWorkdirForRepository(@TempDir Path temp) throws ReclaimFailedException {
-      when(workingCopyContext.getScmRepository()).thenReturn(REPOSITORY);
-      File firstDirectory = temp.resolve("first").toFile();
-      firstDirectory.mkdirs();
-      File secondDirectory = temp.resolve("second").toFile();
-      secondDirectory.mkdirs();
-      when(workdirProvider.createNewWorkdir(anyString())).thenReturn(
-        firstDirectory,
-        secondDirectory);
-
-      WorkingCopy<?, ?> firstWorkdir = simpleCachingWorkingCopyPool.getWorkingCopy(workingCopyContext);
-      WorkingCopy<?, ?> secondWorkdir = simpleCachingWorkingCopyPool.getWorkingCopy(workingCopyContext);
-      simpleCachingWorkingCopyPool.contextClosed(workingCopyContext, firstWorkdir.getDirectory());
-      simpleCachingWorkingCopyPool.contextClosed(workingCopyContext, secondWorkdir.getDirectory());
-
-      verify(workingCopyContext, never()).reclaim(any());
-      verify(workingCopyContext).initialize(firstDirectory);
-      verify(workingCopyContext).initialize(secondDirectory);
-      assertThat(firstWorkdir.getDirectory()).isNotEqualTo(secondWorkdir.getDirectory());
-      assertThat(firstWorkdir.getDirectory()).exists();
-      assertThat(secondWorkdir.getDirectory()).doesNotExist();
-      assertThat(meterRegistry.get("scm.workingCopy.pool.cache.parallelExisting").counter().count()).isEqualTo(1d);
     }
 
     @Test
