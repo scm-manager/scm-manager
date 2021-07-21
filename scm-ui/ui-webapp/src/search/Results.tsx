@@ -23,53 +23,26 @@
  */
 
 import React, { FC } from "react";
-import { Hit as HitType } from "@scm-manager/ui-types";
-import { HitProps } from "./Hit";
-import RepositoryHit from "./RepositoryHit";
-import GenericHit from "./GenericHit";
-import UserHit from "./UserHit";
-import GroupHit from "./GroupHit";
-import { Notification } from "@scm-manager/ui-components";
+import { QueryResult } from "@scm-manager/ui-types";
+import Hits from "./Hits";
+import { LinkPaginator, urls } from "@scm-manager/ui-components";
 
 type Props = {
+  result: QueryResult;
   type: string;
-  hits: HitType[];
+  page: number;
+  query: string;
 };
 
-const hitComponents: { [name: string]: FC<HitProps> } = {
-  repository: RepositoryHit,
-  user: UserHit,
-  group: GroupHit,
+const Results: FC<Props> = ({ result, type, page, query }) => {
+  return (
+    <div className="panel">
+      <Hits type={type} hits={result._embedded.hits} />
+      <div className="panel-footer">
+        <LinkPaginator collection={result} page={page} filter={query} />
+      </div>
+    </div>
+  );
 };
 
-const findComponent = (type: string) => {
-  const cmp = hitComponents[type];
-  if (!cmp) {
-    return GenericHit;
-  }
-  return cmp;
-};
-
-type HitComponentProps = {
-  type: string;
-  hit: HitType;
-};
-
-const HitComponent: FC<HitComponentProps> = ({ hit, type }) => {
-  const Cmp = findComponent(type);
-  return <Cmp hit={hit} />;
-};
-
-const NoHits: FC = () => <Notification>No matching hits</Notification>;
-
-const Hits: FC<Props> = ({ type, hits }) => (
-  <div className="panel-block">
-    {hits.length > 0 ? (
-      hits.map((hit, c) => <HitComponent key={`${type}_${c}_${hit.score}`} hit={hit} type={type} />)
-    ) : (
-      <NoHits />
-    )}
-  </div>
-);
-
-export default Hits;
+export default Results;

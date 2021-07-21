@@ -249,7 +249,7 @@ const OmniSearch: FC = () => {
   };
 
   const gotoDetailSearch = () => {
-    history.push(`/search/repository?q=${query}`);
+    history.push(`/search/repository/?q=${query}`);
     hideResults();
   };
 

@@ -24,7 +24,7 @@
 
 import React, { FC } from "react";
 import { HighlightedField, Hit } from "@scm-manager/ui-types";
-import HighlightedFragment from "./Fragment";
+import HighlightedFragment from "./HighlightedFragment";
 import { isHighlightedField } from "./fields";
 
 type Props = {

@@ -107,7 +107,9 @@ class Main extends React.Component<Props> {
             <ProtectedRoute path="/admin" component={Admin} authenticated={authenticated} />
             <ProtectedRoute path="/me" component={Profile} authenticated={authenticated} />
             <ProtectedRoute path="/importlog/:logId" component={ImportLog} authenticated={authenticated} />
-            <ProtectedRoute path="/search/:type" component={Search} authenticated={authenticated} />
+            <Redirect exact strict from="/search/:type" to="/search/:type/" />
+            <ProtectedRoute path="/search/:type/:page" component={Search} authenticated={authenticated} />
+            <ProtectedRoute path="/search/:type/" component={Search} authenticated={authenticated} />
             <ExtensionPoint
               name="main.route"
               renderAll={true}

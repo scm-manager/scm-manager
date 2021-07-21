@@ -31,20 +31,15 @@ import {
   PrimaryContentColumn,
   SecondaryNavigation,
   Tag,
+  urls,
 } from "@scm-manager/ui-components";
 import { useLocation, useParams } from "react-router-dom";
-import { parse } from "query-string";
 import { useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
-import Hits from "./Hits";
-
-const useQueryParam = () => {
-  const location = useLocation();
-  const params = parse(location.search);
-  return params.q || "";
-};
+import Results from "./Results";
 
 type PathParams = {
   type: string;
+  page: string;
 };
 
 type CountProps = {
@@ -65,10 +60,13 @@ const Count: FC<CountProps> = ({ isLoading, isSelected, count }) => {
 };
 
 const Search: FC = () => {
-  const { type: selectedType } = useParams<PathParams>();
-  const query = useQueryParam();
+  const { type: selectedType, ...params } = useParams<PathParams>();
+  const page = urls.getPageFromMatch({params});
+  const location = useLocation();
+  const query = urls.getQueryStringFromLocation(location);
   const { data, isLoading, error } = useSearch(query, {
     type: selectedType,
+    page: page - 1,
     pageSize: 25,
   });
   const types = useSearchTypes();
@@ -91,11 +89,11 @@ const Search: FC = () => {
       {data ? (
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
-            <Hits type={selectedType} hits={data._embedded.hits} />
+            <Results result={data} query={query} page={page} type={selectedType} />
           </PrimaryContentColumn>
           <SecondaryNavigation label={"Types"} collapsible={false}>
             {types.map((type) => (
-              <NavLink key={type} to={`/search/${type}?q=${query}`} label={type}>
+              <NavLink key={type} to={`/search/${type}/?q=${query}`} label={type} activeOnlyWhenExact={false}>
                 <Level
                   left={type}
                   right={

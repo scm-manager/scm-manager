@@ -46,7 +46,13 @@ const HighlightedFragment: FC<Props> = ({ value }) => {
       break;
     }
   }
-  return <>{result}</>;
+  return (
+    <>
+      {result.map((c, i) => (
+        <React.Fragment key={i}>{c}</React.Fragment>
+      ))}
+    </>
+  );
 };
 
 export default HighlightedFragment;
