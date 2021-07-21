@@ -21,126 +21,120 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React from "react";
-import { WithTranslation, withTranslation } from "react-i18next";
+import React, { FC } from "react";
+import { useTranslation } from "react-i18next";
 import { PagedCollection } from "@scm-manager/ui-types";
 import { Button } from "./buttons";
 
-type Props = WithTranslation & {
+type Props = {
   collection: PagedCollection;
   page: number;
   filter?: string;
 };
 
-class LinkPaginator extends React.Component<Props> {
-  addFilterToLink(link: string) {
-    const { filter } = this.props;
+const LinkPaginator: FC<Props> = ({ collection, page, filter }) => {
+  const [t] = useTranslation("commons");
+  const addFilterToLink = (link: string) => {
     if (filter) {
       return `${link}?q=${filter}`;
     }
     return link;
-  }
+  };
 
-  renderFirstButton() {
-    return <Button className="pagination-link" label={"1"} disabled={false} link={this.addFilterToLink("1")} />;
-  }
+  const renderFirstButton = () => {
+    return <Button className="pagination-link" label={"1"} disabled={false} link={addFilterToLink("1")} />;
+  };
 
-  renderPreviousButton(className: string, label?: string) {
-    const { page } = this.props;
+  const renderPreviousButton = (className: string, label?: string) => {
     const previousPage = page - 1;
 
     return (
       <Button
         className={className}
         label={label ? label : previousPage.toString()}
-        disabled={!this.hasLink("prev")}
-        link={this.addFilterToLink(`${previousPage}`)}
+        disabled={!hasLink("prev")}
+        link={addFilterToLink(`${previousPage}`)}
       />
     );
-  }
+  };
 
-  hasLink(name: string) {
-    const { collection } = this.props;
+  const hasLink = (name: string) => {
     return collection._links[name];
-  }
+  };
 
-  renderNextButton(className: string, label?: string) {
-    const { page } = this.props;
+  const renderNextButton = (className: string, label?: string) => {
     const nextPage = page + 1;
     return (
       <Button
         className={className}
         label={label ? label : nextPage.toString()}
-        disabled={!this.hasLink("next")}
-        link={this.addFilterToLink(`${nextPage}`)}
+        disabled={!hasLink("next")}
+        link={addFilterToLink(`${nextPage}`)}
       />
     );
-  }
+  };
 
-  renderLastButton() {
-    const { collection } = this.props;
+  const renderLastButton = () => {
     return (
       <Button
         className="pagination-link"
         label={`${collection.pageTotal}`}
         disabled={false}
-        link={this.addFilterToLink(`${collection.pageTotal}`)}
+        link={addFilterToLink(`${collection.pageTotal}`)}
       />
     );
-  }
+  };
 
-  separator() {
+  const separator = () => {
     return <span className="pagination-ellipsis">&hellip;</span>;
-  }
+  };
 
-  currentPage(page: number) {
+  const currentPage = (page: number) => {
     return <Button className="pagination-link is-current" label={"" + page} disabled={true} />;
-  }
+  };
 
-  pageLinks() {
-    const { collection } = this.props;
-
+  const pageLinks = () => {
     const links = [];
     const page = collection.page + 1;
     const pageTotal = collection.pageTotal;
     if (page > 1) {
-      links.push(this.renderFirstButton());
+      links.push(renderFirstButton());
     }
     if (page > 3) {
-      links.push(this.separator());
+      links.push(separator());
     }
     if (page > 2) {
-      links.push(this.renderPreviousButton("pagination-link"));
+      links.push(renderPreviousButton("pagination-link"));
     }
 
-    links.push(this.currentPage(page));
+    links.push(currentPage(page));
 
     if (page + 1 < pageTotal) {
-      links.push(this.renderNextButton("pagination-link"));
+      links.push(renderNextButton("pagination-link"));
     }
-    if (page + 2 < pageTotal) links.push(this.separator());
+    if (page + 2 < pageTotal) links.push(separator());
     //if there exists pages between next and last
     if (page < pageTotal) {
-      links.push(this.renderLastButton());
+      links.push(renderLastButton());
     }
     return links;
-  }
-  render() {
-    const { collection, t } = this.props;
-    if (collection) {
-      return (
-        <nav className="pagination is-centered" aria-label="pagination">
-          {this.renderPreviousButton("pagination-previous", t("paginator.previous"))}
-          <ul className="pagination-list">
-            {this.pageLinks().map((link, index) => (
-              <li key={index}>{link}</li>
-            ))}
-          </ul>
-          {this.renderNextButton("pagination-next", t("paginator.next"))}
-        </nav>
-      );
-    }
+  };
+
+  if (!collection) {
     return null;
   }
-}
-export default withTranslation("commons")(LinkPaginator);
+
+  return (
+    <nav className="pagination is-centered" aria-label="pagination">
+      {renderPreviousButton("pagination-previous", t("paginator.previous"))}
+      <ul className="pagination-list">
+        {pageLinks().map((link, index) => (
+          <li key={index}>{link}</li>
+        ))}
+      </ul>
+      {renderNextButton("pagination-next", t("paginator.next"))}
+    </nav>
+  );
+};
+
+export default LinkPaginator;
