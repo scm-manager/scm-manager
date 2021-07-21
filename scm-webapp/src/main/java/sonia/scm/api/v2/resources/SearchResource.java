@@ -42,6 +42,7 @@ import javax.ws.rs.BeanParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import java.util.Collections;
 
 @Path(SearchResource.PATH)
 @OpenAPIDefinition(tags = {
@@ -99,12 +100,27 @@ public class SearchResource {
     description = "The maximum number of results per page (defaults to 10)"
   )
   public QueryResultDto query(@Valid @BeanParam SearchParameters params) {
+    if (params.isCountOnly()) {
+      return count(params);
+    }
+    return search(params);
+  }
+
+  private QueryResultDto search(SearchParameters params) {
     QueryResult result = engine.search(IndexNames.DEFAULT)
       .start(params.getPage() * params.getPageSize())
       .limit(params.getPageSize())
       .execute(params.getType(), params.getQuery());
 
     return mapper.map(params, result);
+  }
+
+  private QueryResultDto count(SearchParameters params) {
+    QueryResult result = engine.search(IndexNames.DEFAULT)
+      .limit(1)
+      .execute(params.getType(), params.getQuery());
+
+    return mapper.map(params, new QueryResult(result.getTotalHits(), result.getType(), Collections.emptyList()));
   }
 
 }

@@ -47,4 +47,5 @@ export type HitEmbedded = {
 
 export type QueryResult = PagedCollection<HitEmbedded> & {
   type: string;
+  totalHits: number;
 };
