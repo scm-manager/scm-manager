@@ -25,9 +25,11 @@
 import React, { FC } from "react";
 import styled from "styled-components";
 import useMenuContext from "./MenuContext";
+import classNames from "classnames";
 
 type Props = {
   label: string;
+  collapsible?: boolean;
 };
 
 type CollapsedProps = {
@@ -38,6 +40,7 @@ const SectionContainer = styled.aside`
   position: sticky;
   position: -webkit-sticky; /* Safari */
   top: 2rem;
+  width: 100%;
 
   @media (max-height: 900px) {
     position: relative;
@@ -55,19 +58,20 @@ const Icon = styled.i<CollapsedProps>`
 
 const MenuLabel = styled.p<CollapsedProps>`
   justify-content: ${(props: CollapsedProps) => (props.collapsed ? "center" : "inherit")};
-  cursor: pointer;
 `;
 
-const SecondaryNavigation: FC<Props> = ({ label, children }) => {
+const SecondaryNavigation: FC<Props> = ({ label, children, collapsible = true }) => {
   const menuContext = useMenuContext();
-  const isCollapsed = menuContext.isCollapsed();
+  const isCollapsed = collapsible && menuContext.isCollapsed();
 
   const toggleCollapseState = () => {
-    menuContext.setCollapsed(!isCollapsed);
+    if (collapsible) {
+      menuContext.setCollapsed(!isCollapsed);
+    }
   };
 
   const uncollapseMenu = () => {
-    if (isCollapsed) {
+    if (collapsible && isCollapsed) {
       menuContext.setCollapsed(false);
     }
   };
@@ -77,10 +81,16 @@ const SecondaryNavigation: FC<Props> = ({ label, children }) => {
   return (
     <SectionContainer className="menu">
       <div>
-        <MenuLabel className="menu-label" collapsed={isCollapsed} onClick={toggleCollapseState}>
-          <Icon color="info" className="is-medium" collapsed={isCollapsed}>
-            {arrowIcon}
-          </Icon>
+        <MenuLabel
+          className={classNames("menu-label", { "has-cursor-pointer": collapsible })}
+          collapsed={isCollapsed}
+          onClick={toggleCollapseState}
+        >
+          {collapsible ? (
+            <Icon color="info" className="is-medium" collapsed={isCollapsed}>
+              {arrowIcon}
+            </Icon>
+          ) : null}
           {isCollapsed ? "" : label}
         </MenuLabel>
         <ul className="menu-list" onClick={uncollapseMenu}>
