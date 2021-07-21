@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [2.21.0] - 2021-07-21
+### Added
+- API to index and query objects ([#1727](https://github.com/scm-manager/scm-manager/pull/1727))
+- Quick search for repositories ([#1727](https://github.com/scm-manager/scm-manager/pull/1727))
+- Additional color scheme to prepare a high contrast mode ([#1730](https://github.com/scm-manager/scm-manager/pull/1731))
+- Create files in empty non-initiated repositories ([#1717](https://github.com/scm-manager/scm-manager/pull/1717))
+- Prepare plugin center to show cloudogu plugins ([#1709](https://github.com/scm-manager/scm-manager/pull/1709))
+- Option to diable automatic refresh for diff view on window focus change ([#1714](https://github.com/scm-manager/scm-manager/pull/1714))
+- Building forms documentation with react-hook-form ([#1704](https://github.com/scm-manager/scm-manager/pull/1704))
+
+### Fixed
+- Missing update if content of diff changes ([#1714](https://github.com/scm-manager/scm-manager/pull/1714))
+- Contributors table in changeset detail view ([#1718](https://github.com/scm-manager/scm-manager/pull/1718))
+- Prevent overwrite read-only gpg keys ([#1713](https://github.com/scm-manager/scm-manager/pull/1713))
+- Language tag of top level html element ([#1705](https://github.com/scm-manager/scm-manager/pull/1705))
+
+### Changed
+- Show last modified date on repository overview ([#1715](https://github.com/scm-manager/scm-manager/pull/1715))
+- Redesign SCM-Manager header ([#1721](https://github.com/scm-manager/scm-manager/pull/1721))
+- Initial admin user has to be created on first startup ([#1707](https://github.com/scm-manager/scm-manager/pull/1707), [#1722](https://github.com/scm-manager/scm-manager/pull/1722))
+
 ## [2.20.0] - 2021-06-16
 ### Added
 - Support basic authentication with access token ([#1694](https://github.com/scm-manager/scm-manager/pull/1694))
@@ -666,3 +687,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [2.19.0]: https://www.scm-manager.org/download/2.19.0
 [2.19.1]: https://www.scm-manager.org/download/2.19.1
 [2.20.0]: https://www.scm-manager.org/download/2.20.0
+[2.21.0]: https://www.scm-manager.org/download/2.21.0
