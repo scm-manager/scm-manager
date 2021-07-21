@@ -23,10 +23,19 @@
  */
 
 import React, { FC } from "react";
-import { Page } from "@scm-manager/ui-components";
+import {
+  CustomQueryFlexWrappedColumns,
+  Level,
+  NavLink,
+  Page,
+  PrimaryContentColumn,
+  SecondaryNavigation,
+  Tag,
+} from "@scm-manager/ui-components";
 import { useLocation, useParams } from "react-router-dom";
 import { parse } from "query-string";
-import { useSearch } from "@scm-manager/ui-api";
+import { useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
+import Hits from "./Hits";
 
 const useQueryParam = () => {
   const location = useLocation();
@@ -38,17 +47,72 @@ type PathParams = {
   type: string;
 };
 
-const Search: FC = ({}) => {
-  const { type } = useParams<PathParams>();
+type CountProps = {
+  isLoading: boolean;
+  isSelected: boolean;
+  count?: number;
+};
+
+const Count: FC<CountProps> = ({ isLoading, isSelected, count }) => {
+  if (isLoading) {
+    return <span className={"small-loading-spinner"} />;
+  }
+  return (
+    <Tag rounded={true} color={isSelected ? "info" : "light"}>
+      {count}
+    </Tag>
+  );
+};
+
+const Search: FC = () => {
+  const { type: selectedType } = useParams<PathParams>();
   const query = useQueryParam();
   const { data, isLoading, error } = useSearch(query, {
-    type,
-    pageSize: 25
+    type: selectedType,
+    pageSize: 25,
   });
+  const types = useSearchTypes();
 
-  return <Page title="Search" subtitle={`Searching for "${query}" in ${type}`} loading={isLoading} error={error}>
-    <pre>{JSON.stringify(data, null, 2)}</pre>
-  </Page>;
+  const searchCounts = useSearchCounts(
+    types.filter((t) => t !== selectedType),
+    query
+  );
+  const counts = {
+    [selectedType]: {
+      isLoading,
+      error,
+      data: data?.totalHits,
+    },
+    ...searchCounts,
+  };
+
+  return (
+    <Page title="Search" subtitle={`${selectedType} results for "${query}"`} loading={isLoading} error={error}>
+      {data ? (
+        <CustomQueryFlexWrappedColumns>
+          <PrimaryContentColumn>
+            <Hits type={selectedType} hits={data._embedded.hits} />
+          </PrimaryContentColumn>
+          <SecondaryNavigation label={"Types"} collapsible={false}>
+            {types.map((type) => (
+              <NavLink key={type} to={`/search/${type}?q=${query}`} label={type}>
+                <Level
+                  left={type}
+                  right={
+                    <Count
+                      isLoading={counts[type].isLoading}
+                      isSelected={type === selectedType}
+                      count={counts[type].data}
+                    />
+                  }
+                />
+              </NavLink>
+            ))}
+          </SecondaryNavigation>
+        </CustomQueryFlexWrappedColumns>
+      ) : null}
+    </Page>
+  );
 };
 
 export default Search;
