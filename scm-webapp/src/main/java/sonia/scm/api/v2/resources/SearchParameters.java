@@ -28,6 +28,7 @@ import lombok.Getter;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import javax.ws.rs.DefaultValue;
 import javax.ws.rs.PathParam;
@@ -41,6 +42,7 @@ public class SearchParameters {
   @Context
   private UriInfo uriInfo;
 
+  @NotNull
   @Size(min = 2)
   @QueryParam("q")
   private String query;
