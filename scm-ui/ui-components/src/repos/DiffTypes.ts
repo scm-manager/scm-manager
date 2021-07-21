@@ -40,9 +40,7 @@ export type AnnotationFactoryContext = BaseContext;
 export type FileAnnotationFactory = (file: File) => ReactNode[];
 
 // key = change id, value = react component
-export type AnnotationFactory = (
-  context: AnnotationFactoryContext
-) => {
+export type AnnotationFactory = (context: AnnotationFactoryContext) => {
   [key: string]: any;
 };
 
@@ -63,5 +61,7 @@ export type DiffObjectProps = {
   annotationFactory?: AnnotationFactory;
   markConflicts?: boolean;
   defaultCollapse?: DefaultCollapsed;
+  isCollapsed?: (file: File) => boolean;
+  onCollapseStateChange?: (file: File, newState?: boolean) => void;
   hunkClass?: (hunk: Hunk) => string;
 };

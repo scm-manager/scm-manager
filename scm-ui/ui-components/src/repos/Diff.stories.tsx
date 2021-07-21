@@ -47,6 +47,10 @@ const Container = styled.div`
   padding: 2rem 6rem;
 `;
 
+type ExternalDiffState = {
+  [key: string]: boolean;
+};
+
 const RoutingDecorator = (story: () => ReactNode) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>;
 
 const fileControlFactory: (changeset: Changeset) => FileControlFactory = (changeset) => (file) => {
@@ -183,4 +187,17 @@ storiesOf("Diff", module)
     };
 
     return <ChangingContentDiff />;
+  })
+  .add("External state management", () => {
+    const [externalState, setExternalState] = useState<ExternalDiffState>({});
+
+    const isCollapsed = (file: FileDiff) => {
+      return externalState[file.newPath] || false;
+    };
+
+    const onCollapseStateChange = (file: FileDiff) => {
+      setExternalState((current) => ({ ...current, [file.newPath]: !current[file.newPath] }));
+    };
+
+    return <Diff diff={diffFiles} isCollapsed={isCollapsed} onCollapseStateChange={onCollapseStateChange} />;
   });
