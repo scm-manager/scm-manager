@@ -29,12 +29,12 @@ export type ValueField = {
   value: unknown;
 };
 
-export type HighligthedField = {
+export type HighlightedField = {
   highlighted: true;
   fragments: string[];
 };
 
-export type Field = ValueField | HighligthedField;
+export type Field = ValueField | HighlightedField;
 
 export type Hit = HalRepresentation & {
   score: number;
