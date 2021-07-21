@@ -21,14 +21,13 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import * as React from "react";
+import React, { FC } from "react";
 import classNames from "classnames";
 import { Link } from "react-router-dom";
 import { RoutingProps } from "./RoutingProps";
-import { FC } from "react";
 import useMenuContext from "./MenuContext";
 import useActiveMatch from "./useActiveMatch";
-import {createAttributesForTesting} from "../devBuild";
+import { createAttributesForTesting } from "../devBuild";
 
 type Props = RoutingProps & {
   label: string;
@@ -37,20 +36,28 @@ type Props = RoutingProps & {
   testId?: string;
 };
 
-const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, icon, label, title, testId }) => {
+type NavLinkContentProp = {
+  label: string;
+  icon?: string;
+  collapsed: boolean;
+};
+
+const NavLinkContent: FC<NavLinkContentProp> = ({ label, icon, collapsed }) => (
+  <>
+    {icon ? (
+      <>
+        <i className={classNames(icon, "fa-fw")} />{" "}
+      </>
+    ) : null}
+    {collapsed ? null : label}
+  </>
+);
+
+const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, title, testId, children, ...contentProps }) => {
   const active = useActiveMatch({ to, activeWhenMatch, activeOnlyWhenExact });
 
   const context = useMenuContext();
   const collapsed = context.isCollapsed();
-
-  let showIcon = null;
-  if (icon) {
-    showIcon = (
-      <>
-        <i className={classNames(icon, "fa-fw")} />{" "}
-      </>
-    );
-  }
 
   return (
     <li title={collapsed ? title : undefined}>
@@ -59,15 +66,14 @@ const NavLink: FC<Props> = ({ to, activeWhenMatch, activeOnlyWhenExact, icon, la
         to={to}
         {...createAttributesForTesting(testId)}
       >
-        {showIcon}
-        {collapsed ? null : label}
+        {children ? children : <NavLinkContent {...contentProps} collapsed={collapsed} />}
       </Link>
     </li>
   );
 };
 
 NavLink.defaultProps = {
-  activeOnlyWhenExact: true
+  activeOnlyWhenExact: true,
 };
 
 export default NavLink;
