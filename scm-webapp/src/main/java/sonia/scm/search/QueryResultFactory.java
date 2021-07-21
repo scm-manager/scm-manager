@@ -61,7 +61,7 @@ public class QueryResultFactory {
 
   private Highlighter createHighlighter(Query query) {
     return new Highlighter(
-      new SimpleHTMLFormatter("**", "**"),
+      new SimpleHTMLFormatter("<>", "</>"),
       new QueryScorer(query)
     );
   }

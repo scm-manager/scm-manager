@@ -472,7 +472,7 @@ class LuceneQueryBuilderTest {
 
     JsonNode displayName = fields.get("displayName");
     assertThat(displayName.get("highlighted").asBoolean()).isTrue();
-    assertThat(displayName.get("fragments").get(0).asText()).contains("**Arthur**");
+    assertThat(displayName.get("fragments").get(0).asText()).contains("<>Arthur</>");
   }
 
   @Test
