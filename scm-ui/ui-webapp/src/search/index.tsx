@@ -59,11 +59,20 @@ const Count: FC<CountProps> = ({ isLoading, isSelected, count }) => {
   );
 };
 
-const Search: FC = () => {
-  const { type: selectedType, ...params } = useParams<PathParams>();
-  const page = urls.getPageFromMatch({params});
+const usePageParams = () => {
   const location = useLocation();
+  const { type: selectedType, ...params } = useParams<PathParams>();
+  const page = urls.getPageFromMatch({ params });
   const query = urls.getQueryStringFromLocation(location);
+  return {
+    page,
+    selectedType,
+    query,
+  };
+};
+
+const Search: FC = () => {
+  const { query, selectedType, page } = usePageParams();
   const { data, isLoading, error } = useSearch(query, {
     type: selectedType,
     page: page - 1,

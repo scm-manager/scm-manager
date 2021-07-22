@@ -44,7 +44,9 @@ const UserHit: FC<HitProps> = ({ hit }) => {
           </Hit.Title>
         </Link>
         <p>
-          <TextField hit={hit} field="displayName" /> &lt;<TextField hit={hit} field="mail" />&gt;
+          <TextField hit={hit} field="displayName" /> &lt;
+          <TextField hit={hit} field="mail" />
+          &gt;
         </p>
       </Hit.Content>
       <Hit.Right>

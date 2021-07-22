@@ -50,18 +50,36 @@ export const useStringFieldValue = (hit: Hit, fieldName: string): string | undef
     if (typeof value === "string") {
       return value;
     } else {
-      throw new Error("field value is not a string");
+      throw new Error(`field value of ${fieldName} is not a string`);
     }
   }
 };
 
-export const useDateFieldValue = (hit: Hit, fieldName: string) => {
+export const useNumberFieldValue = (hit: Hit, fieldName: string): number | undefined => {
   const value = useFieldValue(hit, fieldName);
   if (value) {
     if (typeof value === "number") {
-      return new Date(value);
+      return value;
     } else {
-      throw new Error("field value is not a number");
+      throw new Error(`field value of ${fieldName} is not a number`);
+    }
+  }
+};
+
+export const useDateFieldValue = (hit: Hit, fieldName: string): Date | undefined => {
+  const value = useNumberFieldValue(hit, fieldName);
+  if (value) {
+    return new Date(value);
+  }
+};
+
+export const useBooleanFieldValue = (hit: Hit, fieldName: string): boolean | undefined => {
+  const value = useFieldValue(hit, fieldName);
+  if (value) {
+    if (typeof value === "boolean") {
+      return value;
+    } else {
+      throw new Error(`field value of ${fieldName} is not a boolean`);
     }
   }
 };
