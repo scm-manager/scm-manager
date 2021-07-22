@@ -78,7 +78,8 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
       for (String unknown : StatusCommand.on(clone).execute().getUnknown()) {
         delete(clone.getDirectory(), unknown);
       }
-      UpdateCommand.on(clone).rev(initialBranch).clean().execute();
+      String branchToCheckOut = initialBranch == null ? "default" : initialBranch;
+      UpdateCommand.on(clone).rev(branchToCheckOut).clean().execute();
       return new ParentAndClone<>(centralRepository, clone, target);
     } catch (ExecutionException | IOException e) {
       throw new ReclaimFailedException(e);
