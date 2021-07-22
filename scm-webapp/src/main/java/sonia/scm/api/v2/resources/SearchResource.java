@@ -32,6 +32,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import sonia.scm.search.IndexNames;
+import sonia.scm.search.QueryCountResult;
 import sonia.scm.search.QueryResult;
 import sonia.scm.search.SearchEngine;
 import sonia.scm.web.VndMediaType;
@@ -99,6 +100,10 @@ public class SearchResource {
     name = "pageSize",
     description = "The maximum number of results per page (defaults to 10)"
   )
+  @Parameter(
+    name = "countOnly",
+    description = "Do not return hits, return only count of pages and hits"
+  )
   public QueryResultDto query(@Valid @BeanParam SearchParameters params) {
     if (params.isCountOnly()) {
       return count(params);
@@ -116,9 +121,8 @@ public class SearchResource {
   }
 
   private QueryResultDto count(SearchParameters params) {
-    QueryResult result = engine.search(IndexNames.DEFAULT)
-      .limit(1)
-      .execute(params.getType(), params.getQuery());
+    QueryCountResult result = engine.search(IndexNames.DEFAULT)
+      .count(params.getType(), params.getQuery());
 
     return mapper.map(params, new QueryResult(result.getTotalHits(), result.getType(), Collections.emptyList()));
   }

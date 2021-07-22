@@ -26,7 +26,6 @@ package sonia.scm.search;
 
 import com.google.common.annotations.Beta;
 import lombok.Value;
-import sonia.scm.ContextEntry;
 import sonia.scm.NotFoundException;
 import sonia.scm.repository.Repository;
 
@@ -99,6 +98,20 @@ public abstract class QueryBuilder {
     return execute(new QueryParams(type, repositoryId, queryString, start, limit));
   }
 
+
+  /**
+   * Executes the query and returns the total count of hits.
+   *
+   * @param type type of objects which are searched
+   * @param queryString searched query
+   *
+   * @return total count of hits
+   * @since 2.22.0
+   */
+  public QueryCountResult count(Class<?> type, String queryString) {
+    return count(new QueryParams(type, repositoryId, queryString, start, limit));
+  }
+
   /**
    * Executes the query and returns the matches.
    *
@@ -109,8 +122,20 @@ public abstract class QueryBuilder {
    * @throws NotFoundException if type could not be found
    */
   public QueryResult execute(String typeName, String queryString){
-    Class<?> type = resolveByName(typeName).orElseThrow(() -> notFound(entity("type", typeName)));
-    return execute(type, queryString);
+    return execute(resolveTypeByName(typeName), queryString);
+  }
+
+  /**
+   * Executes the query and returns the total count of hits.
+   *
+   * @param typeName type name of objects which are searched
+   * @param queryString searched query
+   *
+   * @return total count of hits
+   * @since 2.22.0
+   */
+  public QueryCountResult count(String typeName, String queryString) {
+    return count(resolveTypeByName(typeName), queryString);
   }
 
   /**
@@ -127,6 +152,20 @@ public abstract class QueryBuilder {
    * @return result of query
    */
   protected abstract QueryResult execute(QueryParams queryParams);
+
+  /**
+   * Executes the query and returns the total count of hits.
+   * @param queryParams query parameter
+   * @return total hit count
+   * @since 2.22.0
+   */
+  protected QueryCountResult count(QueryParams queryParams) {
+    return execute(queryParams);
+  }
+
+  private Class<?> resolveTypeByName(String typeName) {
+    return resolveByName(typeName).orElseThrow(() -> notFound(entity("type", typeName)));
+  }
 
   /**
    * The searched query and all parameters, which belong to the query.

@@ -88,6 +88,16 @@ class LuceneQueryBuilderTest {
   }
 
   @Test
+  void shouldReturnCount() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(inetOrgPersonDoc("Arthur", "Dent", "Arthur Dent", "4211"));
+    }
+
+    long hits = count(InetOrgPerson.class, "Arthur");
+    assertThat(hits).isOne();
+  }
+
+  @Test
   void shouldMatchPartial() throws IOException {
     try (IndexWriter writer = writer()) {
       writer.addDocument(personDoc("Trillian"));
@@ -237,6 +247,18 @@ class LuceneQueryBuilderTest {
       assertValueField(hit, "content", "Awesome content one");
       assertThat(hit.getScore()).isGreaterThan(0f);
     });
+  }
+
+  @Test
+  void shouldCountOnlyPermittedHits() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(permissionDoc("Awesome content one", "abc"));
+      writer.addDocument(permissionDoc("Awesome content two", "cde"));
+      writer.addDocument(permissionDoc("Awesome content three", "fgh"));
+    }
+
+    long hits = count(Simple.class, "content:awesome");
+    assertThat(hits).isOne();
   }
 
   @Test
@@ -497,6 +519,17 @@ class LuceneQueryBuilderTest {
 
   private QueryResult query(Class<?> type, String queryString) throws IOException {
     return query(type, queryString, null, null);
+  }
+
+  private long count(Class<?> type, String queryString) throws IOException {
+    try (DirectoryReader reader = DirectoryReader.open(directory)) {
+      lenient().when(opener.openForRead("default")).thenReturn(reader);
+      SearchableTypeResolver resolver = new SearchableTypeResolver(type);
+      LuceneQueryBuilder builder = new LuceneQueryBuilder(
+        opener, resolver, "default", new StandardAnalyzer()
+      );
+      return builder.count(type, queryString).getTotalHits();
+    }
   }
 
   private QueryResult query(Class<?> type, String queryString, Integer start, Integer limit) throws IOException {

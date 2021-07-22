@@ -29,28 +29,30 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
- * Result of a query.
- * @since 2.21.0
+ * Result of a counting query.
+ *
+ * @since 2.22.0
+ * @see QueryBuilder
  */
 @Beta
 @Getter
 @ToString
-@EqualsAndHashCode(callSuper = true)
-public class QueryResult extends QueryCountResult {
+@EqualsAndHashCode
+public class QueryCountResult {
 
   /**
-   * List of hits found by the query.
-   * The list contains only those hits which are starting at start and they are limit by the given amount.
-   * @see QueryBuilder
+   * Searched type of object.
    */
-  private final List<Hit> hits;
+  private final Class<?> type;
 
-  public QueryResult(long totalHits, Class<?> type, List<Hit> hits) {
-    super(type, totalHits);
-    this.hits = Collections.unmodifiableList(hits);
+  /**
+   * Total count of hits, which are matched by the query.
+   */
+  private final long totalHits;
+
+  public QueryCountResult(Class<?> type, long totalHits) {
+    this.type = type;
+    this.totalHits = totalHits;
   }
 }
