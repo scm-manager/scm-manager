@@ -153,6 +153,10 @@
     "w_plural": "{{count}} weeks"
   },
   "search": {
+    "title": "Search",
+    "subtitle": "{{type}} results for \"{{query}}\"",
+    "types": "Results",
+    "noHits": "No hit matched query",
     "quickSearch": {
       "resultHeading": "Top repository results",
       "parseError": "Failed to parse query",

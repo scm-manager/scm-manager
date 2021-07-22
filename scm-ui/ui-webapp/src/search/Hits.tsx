@@ -30,6 +30,7 @@ import GenericHit from "./GenericHit";
 import UserHit from "./UserHit";
 import GroupHit from "./GroupHit";
 import { Notification } from "@scm-manager/ui-components";
+import { useTranslation } from "react-i18next";
 
 type Props = {
   type: string;
@@ -60,7 +61,10 @@ const HitComponent: FC<HitComponentProps> = ({ hit, type }) => {
   return <Cmp hit={hit} />;
 };
 
-const NoHits: FC = () => <Notification>No matching hits</Notification>;
+const NoHits: FC = () => {
+  const [t] = useTranslation("commons");
+  return <Notification>{t("search.noHits")}</Notification>;
+};
 
 const Hits: FC<Props> = ({ type, hits }) => (
   <div className="panel-block">

@@ -36,6 +36,7 @@ import {
 import { useLocation, useParams } from "react-router-dom";
 import { useSearch, useSearchCounts, useSearchTypes } from "@scm-manager/ui-api";
 import Results from "./Results";
+import { useTranslation } from "react-i18next";
 
 type PathParams = {
   type: string;
@@ -71,7 +72,19 @@ const usePageParams = () => {
   };
 };
 
+const orderTypes = (left: string, right: string) => {
+  if (left === right) {
+    return 0;
+  } else if (left < right || left === "repository") {
+    return -1;
+  } else if (left > right || right === "repository") {
+    return 1;
+  }
+  return 0;
+};
+
 const Search: FC = () => {
+  const [t] = useTranslation(["commons", "plugins"]);
   const { query, selectedType, page } = usePageParams();
   const { data, isLoading, error } = useSearch(query, {
     type: selectedType,
@@ -79,6 +92,7 @@ const Search: FC = () => {
     pageSize: 25,
   });
   const types = useSearchTypes();
+  types.sort(orderTypes);
 
   const searchCounts = useSearchCounts(
     types.filter((t) => t !== selectedType),
@@ -94,17 +108,25 @@ const Search: FC = () => {
   };
 
   return (
-    <Page title="Search" subtitle={`${selectedType} results for "${query}"`} loading={isLoading} error={error}>
+    <Page
+      title={t("search.title")}
+      subtitle={t("search.subtitle", {
+        query,
+        type: t(`plugins:search.types.${selectedType}.subtitle`, selectedType),
+      })}
+      loading={isLoading}
+      error={error}
+    >
       {data ? (
         <CustomQueryFlexWrappedColumns>
           <PrimaryContentColumn>
             <Results result={data} query={query} page={page} type={selectedType} />
           </PrimaryContentColumn>
-          <SecondaryNavigation label={"Types"} collapsible={false}>
+          <SecondaryNavigation label={t("search.types")} collapsible={false}>
             {types.map((type) => (
               <NavLink key={type} to={`/search/${type}/?q=${query}`} label={type} activeOnlyWhenExact={false}>
                 <Level
-                  left={type}
+                  left={t(`plugins:search.types.${type}.navItem`, type)}
                   right={
                     <Count
                       isLoading={counts[type].isLoading}

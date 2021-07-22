@@ -25,7 +25,7 @@
 import React, { FC } from "react";
 import { QueryResult } from "@scm-manager/ui-types";
 import Hits from "./Hits";
-import { LinkPaginator, urls } from "@scm-manager/ui-components";
+import { LinkPaginator } from "@scm-manager/ui-components";
 
 type Props = {
   result: QueryResult;

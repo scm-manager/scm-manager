@@ -377,5 +377,21 @@
     "exportFinished": "The repository export has been finished.",
     "exportFailed": "The repository export has failed. Try it again or contact your administrator.",
     "healthCheckFailed": "The repository health check has failed."
+  },
+  "search": {
+    "types": {
+      "repository": {
+        "subtitle": "Repository",
+        "navItem": "Repositories"
+      },
+      "user": {
+        "subtitle": "User",
+        "navItem": "Users"
+      },
+      "group": {
+        "subtitle": "Group",
+        "navItem": "Groups"
+      }
+    }
   }
 }

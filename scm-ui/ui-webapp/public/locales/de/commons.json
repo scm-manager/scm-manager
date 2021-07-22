@@ -152,6 +152,10 @@
     "w_plural": "{{count}} Wochen"
   },
   "search": {
+    "title": "Suche",
+    "subtitle": "{{type}} Ergebnisse für \"{{query}}\"",
+    "types": "Ergebnisse",
+    "noHits": "Die Suche ergab kein Ergebnis",
     "quickSearch": {
       "resultHeading": "Top-Ergebnisse Repositories",
       "parseError": "Der Suchstring is ungültig",
