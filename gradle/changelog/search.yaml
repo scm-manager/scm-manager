@@ -1,0 +1,4 @@
+- type: Added
+  description: Add users and groups to default search index ([#1738](https://github.com/scm-manager/scm-manager/pull/1738))
+- type: Added
+  description: Add dedicated search page with more details and different types ([#1738](https://github.com/scm-manager/scm-manager/pull/1738))
