@@ -1,0 +1,2 @@
+- type: fixed
+  description: Make MarkdownView backwards-compatible with edge-cases ([#1737](https://github.com/scm-manager/scm-manager/pull/1737))
