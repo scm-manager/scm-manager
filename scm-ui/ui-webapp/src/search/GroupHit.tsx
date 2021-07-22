@@ -23,11 +23,15 @@
  */
 
 import React, { FC } from "react";
-import { useDateFieldValue, useStringFieldValue } from "./fields";
+import {
+  Hit,
+  HitProps,
+  DateFromNow,
+  TextField,
+  useDateFieldValue,
+  useStringFieldValue,
+} from "@scm-manager/ui-components";
 import { Link } from "react-router-dom";
-import { DateFromNow } from "@scm-manager/ui-components";
-import TextField from "./TextField";
-import Hit, { HitProps } from "./Hit";
 
 const GroupHit: FC<HitProps> = ({ hit }) => {
   const name = useStringFieldValue(hit, "name");

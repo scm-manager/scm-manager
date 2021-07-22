@@ -22,29 +22,6 @@
  * SOFTWARE.
  */
 
-import React, { FC } from "react";
-import { Hit, HitProps, TextField } from "@scm-manager/ui-components";
-import styled from "styled-components";
-
-const LabelColumn = styled.th`
-  min-width: 10rem;
-`;
-
-const GenericHit: FC<HitProps> = ({ hit }) => (
-  <Hit>
-    <Hit.Content>
-      <table>
-        {Object.keys(hit.fields).map((field) => (
-          <tr key={field}>
-            <LabelColumn>{field}:</LabelColumn>
-            <td>
-              <TextField hit={hit} field={field} />
-            </td>
-          </tr>
-        ))}
-      </table>
-    </Hit.Content>
-  </Hit>
-);
-
-export default GenericHit;
+export * from "./fields";
+export { default as Hit, HitProps } from "./Hit";
+export { default as TextField } from "./TextField";

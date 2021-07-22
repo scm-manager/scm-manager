@@ -24,12 +24,11 @@
 
 import React, { FC } from "react";
 import { Hit as HitType } from "@scm-manager/ui-types";
-import { HitProps } from "./Hit";
 import RepositoryHit from "./RepositoryHit";
 import GenericHit from "./GenericHit";
 import UserHit from "./UserHit";
 import GroupHit from "./GroupHit";
-import { Notification } from "@scm-manager/ui-components";
+import { Notification, HitProps } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
 
 type Props = {

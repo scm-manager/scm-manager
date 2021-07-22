@@ -23,12 +23,17 @@
  */
 
 import React, { FC } from "react";
-import { useDateFieldValue, useStringFieldValue } from "./fields";
 import { Repository } from "@scm-manager/ui-types";
 import { Link } from "react-router-dom";
-import { DateFromNow, RepositoryAvatar } from "@scm-manager/ui-components";
-import TextField from "./TextField";
-import Hit, { HitProps } from "./Hit";
+import {
+  useDateFieldValue,
+  useStringFieldValue,
+  DateFromNow,
+  RepositoryAvatar,
+  TextField,
+  Hit,
+  HitProps,
+} from "@scm-manager/ui-components";
 
 const RepositoryHit: FC<HitProps> = ({ hit }) => {
   const namespace = useStringFieldValue(hit, "namespace");
