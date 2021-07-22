@@ -37,7 +37,7 @@ const RepositoryGroupEntry: FC<Props> = ({ group }) => {
 
   const settingsLink = group.namespace?._links?.permissions && (
     <Link to={`/namespace/${group.name}/settings`}>
-      <Icon color="is-link" name="cog" title={t("repositoryOverview.settings.tooltip")} className={"is-size-4 ml-2"} />
+      <Icon color="is-link" name="cog" title={t("repositoryOverview.settings.tooltip")} className={"is-size-6 ml-2"} />
     </Link>
   );
   const namespaceHeader = (
@@ -51,7 +51,7 @@ const RepositoryGroupEntry: FC<Props> = ({ group }) => {
   const entries = group.repositories.map((repository, index) => {
     return <RepositoryEntry repository={repository} key={index} />;
   });
-  return <GroupEntries name={namespaceHeader} elements={entries} />;
+  return <GroupEntries namespaceHeader={namespaceHeader} elements={entries} />;
 };
 
 export default RepositoryGroupEntry;

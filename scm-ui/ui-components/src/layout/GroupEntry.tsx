@@ -51,26 +51,23 @@ const OverlayLink = styled(Link)`
 
 const Avatar = styled.div`
   padding-right: 1rem;
-  .image * {
-    width: 48px !important;
-    height: 48px !important;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 2rem;
+  .predefined-avatar {
+    height: 48px;
+    width: 48px;
+    font-size: 1.75rem;
   }
 `;
 
 const Name = styled.div`
   padding: 0 0.25rem;
-`;
-
-const NameDescriptionContainer = styled.div`
-  flex: 0 0 0;
+  overflow: hidden;
+  width: calc(55vw);
+  @media screen and (max-width: ${devices.desktop.width - 1}px) {
+    width: calc(80vw);
+  }
 `;
 
 const Description = styled.p`
-  display: block;
   padding: 0 0.25rem;
   height: 1.5rem;
   text-overflow: ellipsis;
@@ -85,6 +82,7 @@ const Description = styled.p`
 
 const ContentLeft = styled.div`
   display: flex;
+  align-items: center;
 `;
 
 const ContentRight = styled.div`
@@ -112,10 +110,10 @@ const GroupEntry: FC<Props> = ({ link, avatar, title, name, description, content
       <StyledGroupEntry title={title}>
         <ContentLeft>
           <Avatar>{avatar}</Avatar>
-          <NameDescriptionContainer>
+          <div>
             <Name>{name}</Name>
             <Description>{description}</Description>
-          </NameDescriptionContainer>
+          </div>
         </ContentLeft>
         <ContentRight className="is-hidden-touch">{contentRight}</ContentRight>
       </StyledGroupEntry>

@@ -22,74 +22,46 @@
  * SOFTWARE.
  */
 
-import React, { FC, ReactNode, useState } from "react";
-import { Link } from "react-router-dom";
+import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
-import Icon from "../Icon";
 
 const Container = styled.div`
   margin-bottom: 1em;
 `;
 
-const ContentWrapper = styled.div`
-`;
+const ContentWrapper = styled.div``;
 
 const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
   padding: 0.75rem;
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: bold;
 `;
 
-const CollapsableTitle = styled.span`
-  cursor: pointer;
-  font-size: 1rem;
-  padding-right: 0.5rem;
-`;
-const Entry = styled.div`
-`;
+const Entry = styled.div``;
 
 const Separator = styled.div`
   border-bottom: 1px solid rgb(219, 219, 219);
 `;
 
 type Props = {
-  name: ReactNode;
-  url?: string;
+  namespaceHeader: ReactNode;
   elements: ReactNode[];
 };
 
-const GroupEntries: FC<Props> = ({ name, url, elements }) => {
-  const [collapsed, setCollapsed] = useState(false);
-
-  let content = null;
-  if (!collapsed) {
-    content = elements.map((entry, index) => {
-      return (
-        <>
-          <Entry key={index}>{entry}</Entry>
-          {index + 1 !== elements.length ? <Separator /> : null}
-        </>
-      );
-    });
-  }
+const GroupEntries: FC<Props> = ({ namespaceHeader, elements }) => {
+  const content = elements.map((entry, index) => (
+    <>
+      <Entry key={index}>{entry}</Entry>
+      {index + 1 !== elements.length ? <Separator /> : null}
+    </>
+  ));
 
   return (
     <Container>
-      <TitleWrapper>
-        <CollapsableTitle onClick={() => setCollapsed((prevState: boolean) => !prevState)}>
-          <Icon name={collapsed ? "angle-right" : "angle-down"} color="dark" className="is-size-3" />
-        </CollapsableTitle>{" "}
-        {url ? (
-          <Link to={url} className={"has-text-dark"}>
-            {name}
-          </Link>
-        ) : (
-          name
-        )}
-      </TitleWrapper>
-      {!collapsed ? <Separator /> : null}
+      <TitleWrapper>{namespaceHeader}</TitleWrapper>
+      <Separator />
       <ContentWrapper>{content}</ContentWrapper>
       <div className="is-clearfix" />
     </Container>

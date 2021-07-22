@@ -60,7 +60,8 @@
     "invalidNamespace": "No repositories found. It's likely that the selected namespace does not exist.",
     "createButton": "Add Repository",
     "filterRepositories": "Filter repositories",
-    "allNamespaces": "All namespaces"
+    "allNamespaces": "All namespaces",
+    "clone": "Clone/Checkout"
   },
   "create": {
     "title": "Add Repository",
@@ -290,7 +291,7 @@
       "helpText": "If a password is set, it will be used the encrypt the export file."
     },
     "createExportButton": "Create new Export",
-    "downloadExportButton":  "Download Export",
+    "downloadExportButton": "Download Export",
     "exportInfo": {
       "infoBoxTitle": "Stored Repository Export Information",
       "exporter": "Creator: {{username}}",

@@ -41,11 +41,6 @@ const link = "/foo/bar";
 const icon = <Icon name="icons fa-2x fa-fw" />;
 const name = <strong className="is-marginless">main content</strong>;
 const description = <small>more text</small>;
-const contentLeft = (
-  <>
-    <RepositoryFlag title={"Archive"}>Archive</RepositoryFlag>
-  </>
-);
 const contentRight = (
   <ButtonGroup>
     <Button
@@ -65,7 +60,6 @@ storiesOf("GroupEntry", module)
       avatar={icon}
       name={name}
       description={description}
-      contentLeft={contentLeft}
       contentRight={contentRight}
     />
   ));

@@ -23,13 +23,14 @@
  */
 import React, { FC, useState } from "react";
 import { Repository } from "@scm-manager/ui-types";
-import { DateFromNow, Modal } from "@scm-manager/ui-components";
+import { DateFromNow, FullscreenModal } from "@scm-manager/ui-components";
 import RepositoryAvatar from "./RepositoryAvatar";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import GroupEntry from "../layout/GroupEntry";
 import RepositoryFlags from "./RepositoryFlags";
 import styled from "styled-components";
 import Icon from "../Icon";
+import { useTranslation } from "react-i18next";
 
 type DateProp = Date | string;
 
@@ -49,6 +50,10 @@ const ContentRightContainer = styled.div`
   justify-content: space-between;
 `;
 
+const DateWrapper = styled.small`
+  padding-bottom: 0.25rem;
+`;
+
 const QuickActionbar = styled.span`
   display: flex;
   justify-content: flex-end;
@@ -64,16 +69,27 @@ const QuickAction = styled(Icon)`
 `;
 
 const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
+  const [t] = useTranslation("repos");
   const [openCloneModal, setOpenCloneModal] = useState(false);
 
   const createContentRight = () => {
     return (
       <ContentRightContainer>
         {openCloneModal ? (
-          <Modal
+          <FullscreenModal
             active={openCloneModal}
-            title={"Clone Modal test"}
-            body={"test"}
+            title={t("overview.clone")}
+            body={
+              <div className="content">
+                <ExtensionPoint
+                  name="repos.repository-details.information"
+                  renderAll={true}
+                  props={{
+                    repository,
+                  }}
+                />
+              </div>
+            }
             closeFunction={() => setOpenCloneModal(false)}
           />
         ) : null}
@@ -83,12 +99,12 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
             color="info"
             className="has-cursor-pointer"
             onClick={() => setOpenCloneModal(true)}
-            title={"Clone repository"}
+            title={t("overview.clone")}
           />
         </QuickActionbar>
-        <small>
+        <DateWrapper>
           <DateFromNow baseDate={baseDate} date={repository.lastModified || repository.creationDate} />
-        </small>
+        </DateWrapper>
       </ContentRightContainer>
     );
   };

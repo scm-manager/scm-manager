@@ -40,8 +40,8 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
     if (repository) {
       apiClient
         .get((repository._links.changesets as Link).href + "?limit=1")
-        .then(r => r.json())
-        .then(result => {
+        .then((r) => r.json())
+        .then((result) => {
           const empty = result._embedded.changesets.length === 0;
           setEmptyRepository(empty);
         });
@@ -52,8 +52,8 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
     if (repository) {
       apiClient
         .get((repository._links.defaultBranch as Link).href)
-        .then(r => r.json())
-        .then(r => r.defaultBranch && setDefaultBranch(r.defaultBranch));
+        .then((r) => r.json())
+        .then((r) => r.defaultBranch && setDefaultBranch(r.defaultBranch));
     }
   }, [repository]);
 
