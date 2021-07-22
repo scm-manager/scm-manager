@@ -36,7 +36,7 @@ const Logo: FC<Props> = ({ withText = true, className }) => {
   if (withText) {
     return <Image src="/images/logo.png" alt={t("logo.alt")} className={className} />;
   }
-  return <Image src="/images/scmLogo.svg" alt={t("logo.alt")} className={className} />;
+  return <Image src="/images/blibSimpleSmallDarkBackground.svg" alt={t("logo.alt")} className={className} />;
 };
 
 export default Logo;
