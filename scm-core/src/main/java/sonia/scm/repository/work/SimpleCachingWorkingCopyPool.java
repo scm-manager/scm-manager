@@ -222,11 +222,6 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
     }
   }
 
-  private void moveToTopInCache(String id, File workDir) {
-    workdirs.remove(id);
-    workdirs.put(id, workDir);
-  }
-
   @Override
   public void shutdown() {
     workdirs.values().parallelStream().forEach(this::deleteWorkdir);

@@ -44,27 +44,38 @@ class GitWorkingCopyReclaimer {
 
   private final GitContext context;
 
-  public GitWorkingCopyReclaimer(GitContext context) {
+  GitWorkingCopyReclaimer(GitContext context) {
     this.context = context;
   }
 
   public ParentAndClone<Repository, Repository> reclaim(File target, String initialBranch) throws SimpleWorkingCopyFactory.ReclaimFailedException {
     LOG.trace("reclaim repository {}", context.getRepository());
+    String branchToCheckout = determineBranch(initialBranch);
     Stopwatch stopwatch = Stopwatch.createStarted();
     Repository repo = openTarget(target);
     try (Git git = Git.open(target)) {
       git.reset().setMode(ResetCommand.ResetType.HARD).call();
       git.clean().setForce(true).setCleanDirectories(true).call();
       git.fetch().call();
-      git.checkout().setForced(true).setName("origin/" + initialBranch).call();
-      git.branchDelete().setBranchNames(initialBranch).setForce(true).call();
-      git.checkout().setName(initialBranch).setCreateBranch(true).call();
+      git.checkout().setForced(true).setName("origin/" + branchToCheckout).call();
+      git.branchDelete().setBranchNames(branchToCheckout).setForce(true).call();
+      git.checkout().setName(branchToCheckout).setCreateBranch(true).call();
       return new ParentAndClone<>(null, repo, target);
     } catch (GitAPIException | IOException e) {
       throw new SimpleWorkingCopyFactory.ReclaimFailedException(e);
     } finally {
       LOG.trace("took {} to reclaim repository {}", stopwatch.stop(), context.getRepository());
     }
+  }
+
+  private String determineBranch(String initialBranch) {
+    if (initialBranch != null) {
+      return initialBranch;
+    }
+    if (context.getConfig().getDefaultBranch() != null) {
+      return context.getConfig().getDefaultBranch();
+    }
+    return context.getGlobalConfig().getDefaultBranch();
   }
 
   private Repository openTarget(File target) throws SimpleWorkingCopyFactory.ReclaimFailedException {

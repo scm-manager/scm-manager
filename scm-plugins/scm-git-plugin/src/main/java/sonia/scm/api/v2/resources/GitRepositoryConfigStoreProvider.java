@@ -46,10 +46,10 @@ public class GitRepositoryConfigStoreProvider {
   }
 
   public GitRepositoryConfig getGitRepositoryConfig(String repositoryId) {
-    return getFronStore(createStore(repositoryId));
+    return getFromStore(createStore(repositoryId));
   }
 
-  private static GitRepositoryConfig getFronStore(ConfigurationStore<GitRepositoryConfig> store) {
+  private static GitRepositoryConfig getFromStore(ConfigurationStore<GitRepositoryConfig> store) {
     return store.getOptional().orElse(new GitRepositoryConfig());
   }
 
@@ -72,7 +72,7 @@ public class GitRepositoryConfigStoreProvider {
 
     @Override
     public GitRepositoryConfig get() {
-      return getFronStore(delegate);
+      return getFromStore(delegate);
     }
 
     @Override
