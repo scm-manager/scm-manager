@@ -73,11 +73,13 @@ const usePageParams = () => {
 };
 
 const orderTypes = (left: string, right: string) => {
-  if (left === right) {
-    return 0;
-  } else if (left < right || left === "repository") {
+  if (left === "repository" && right !== "repository") {
     return -1;
-  } else if (left > right || right === "repository") {
+  } else if (left !== "repository" && right === "repository") {
+    return 1;
+  } else if (left < right) {
+    return -1;
+  } else if (left > right) {
     return 1;
   }
   return 0;
