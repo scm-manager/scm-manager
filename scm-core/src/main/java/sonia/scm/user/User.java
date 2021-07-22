@@ -35,6 +35,8 @@ import lombok.Setter;
 import sonia.scm.BasicPropertiesAware;
 import sonia.scm.ModelObject;
 import sonia.scm.ReducedModelObject;
+import sonia.scm.search.Indexed;
+import sonia.scm.search.IndexedType;
 import sonia.scm.util.Util;
 import sonia.scm.util.ValidationUtil;
 
@@ -49,6 +51,7 @@ import java.security.Principal;
   permissions = {"read", "modify", "delete", "changePassword", "changePublicKeys", "changeApiKeys"},
   custom = true, customGlobal = true
 )
+@IndexedType(permission = "user:list")
 @XmlRootElement(name = "users")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Getter
@@ -61,10 +64,15 @@ public class User extends BasicPropertiesAware implements Principal, ModelObject
 
   private boolean active = true;
   private boolean external;
+  @Indexed
   private Long creationDate;
+  @Indexed(defaultQuery = true)
   private String displayName;
+  @Indexed
   private Long lastModified;
+  @Indexed
   private String mail;
+  @Indexed(defaultQuery = true, boost = 1.5f)
   private String name;
   private String password;
 
