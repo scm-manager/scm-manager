@@ -32,6 +32,7 @@ import { concat } from "./urls";
 type UseChangesetsRequest = {
   branch?: Branch;
   page?: string | number;
+  limit?: number;
 };
 
 export const changesetQueryKey = (repository: NamespaceAndName, id: string) => {
@@ -53,23 +54,29 @@ export const useChangesets = (
     link = requiredLink(repository, "changesets");
   }
 
-  if (request?.page) {
-    link = `${link}?page=${request.page}`;
+  if (request?.page || request?.limit) {
+    if (request?.page && request?.limit) {
+      link = `${link}?page=${request.page}&limit=${request.limit}`;
+    } else if (request.page) {
+      link = `${link}?page=${request.page}`;
+    } else if (request.limit) {
+      link = `${link}?limit=${request.limit}`;
+    }
   }
 
   const key = branchQueryKey(repository, branch, "changesets", request?.page || 0);
-  return useQuery<ChangesetCollection, Error>(key, () => apiClient.get(link).then(response => response.json()), {
-    onSuccess: changesetCollection => {
-      changesetCollection._embedded.changesets.forEach(changeset => {
+  return useQuery<ChangesetCollection, Error>(key, () => apiClient.get(link).then((response) => response.json()), {
+    onSuccess: (changesetCollection) => {
+      changesetCollection._embedded.changesets.forEach((changeset) => {
         queryClient.setQueryData(changesetQueryKey(repository, changeset.id), changeset);
       });
-    }
+    },
   });
 };
 
 export const useChangeset = (repository: Repository, id: string): ApiResult<Changeset> => {
   const changesetsLink = requiredLink(repository, "changesets");
   return useQuery<Changeset, Error>(changesetQueryKey(repository, id), () =>
-    apiClient.get(concat(changesetsLink, id)).then(response => response.json())
+    apiClient.get(concat(changesetsLink, id)).then((response) => response.json())
   );
 };
