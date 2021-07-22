@@ -39,7 +39,8 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Semaphore;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 import static java.lang.Integer.getInteger;
 import static java.util.Optional.empty;
@@ -89,7 +90,7 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
 
   private final WorkdirProvider workdirProvider;
   private final LinkedHashMap<String, File> workdirs;
-  private final Map<String, Semaphore> x;
+  private final Map<String, Lock> x;
   private final boolean cacheEnabled;
 
   private final Counter cacheHitCounter;
@@ -148,15 +149,14 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
 
   @Override
   public <R, W> WorkingCopy<R, W> getWorkingCopy(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext context) {
-    parallelWaitTimer.record(() -> {
-      try {
-        getSemaphore(context).acquire();
-      } catch (InterruptedException e) {
-        Thread.currentThread().interrupt();
-        throw new RuntimeException(e);
-      }
-    });
-    return getWorkingCopyFromPoolOrCreate(context);
+    Lock lock = getLock(context);
+    parallelWaitTimer.record(lock::lock);
+    try {
+      return getWorkingCopyFromPoolOrCreate(context);
+    } catch (RuntimeException e) {
+      lock.unlock();
+      throw e;
+    }
   }
 
   private <R, W> WorkingCopy<R, W> getWorkingCopyFromPoolOrCreate(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext workingCopyContext) {
@@ -184,7 +184,7 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
         WorkingCopy<R, W> reclaimed = workingCopyContext.reclaim(existingWorkdir);
         LOG.debug("reclaimed workdir for {} in path {} in {}", workingCopyContext.getScmRepository(), existingWorkdir, stopwatch.stop());
         return of(reclaimed);
-      } catch (SimpleWorkingCopyFactory.ReclaimFailedException e) {
+      } catch (Exception e) {
         LOG.debug("failed to reclaim workdir for {} in path {} in {}", workingCopyContext.getScmRepository(), existingWorkdir, stopwatch.stop(), e);
         deleteWorkdir(existingWorkdir);
         reclaimFailureCounter.increment();
@@ -208,7 +208,7 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
     try {
       putWorkingCopyToCache(workingCopyContext, workdir);
     } finally {
-      getSemaphore(workingCopyContext).release();
+      getLock(workingCopyContext).unlock();
     }
   }
 
@@ -235,8 +235,8 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
     }
   }
 
-  private <R, W> Semaphore getSemaphore(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext context) {
-    return x.computeIfAbsent(context.getScmRepository().getId(), id -> new Semaphore(1));
+  private <R, W> Lock getLock(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext context) {
+    return x.computeIfAbsent(context.getScmRepository().getId(), id -> new ReentrantLock(true));
   }
 
   @SuppressWarnings("java:S2160") // no need for equals here
