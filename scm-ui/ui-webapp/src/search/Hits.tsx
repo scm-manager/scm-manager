@@ -30,6 +30,7 @@ import UserHit from "./UserHit";
 import GroupHit from "./GroupHit";
 import { Notification, HitProps } from "@scm-manager/ui-components";
 import { useTranslation } from "react-i18next";
+import { ExtensionPoint } from "@scm-manager/ui-extensions";
 
 type Props = {
   type: string;
@@ -55,10 +56,16 @@ type HitComponentProps = {
   hit: HitType;
 };
 
-const HitComponent: FC<HitComponentProps> = ({ hit, type }) => {
+const InternalHitRenderer: FC<HitComponentProps> = ({ type, hit }) => {
   const Cmp = findComponent(type);
   return <Cmp hit={hit} />;
 };
+
+const HitComponent: FC<HitComponentProps> = ({ hit, type }) => (
+  <ExtensionPoint name={`search.hit.${type}.renderer`} props={{ hit }}>
+    <InternalHitRenderer type={type} hit={hit} />
+  </ExtensionPoint>
+);
 
 const NoHits: FC = () => {
   const [t] = useTranslation("commons");
