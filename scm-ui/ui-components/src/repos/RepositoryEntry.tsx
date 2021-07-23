@@ -23,7 +23,7 @@
  */
 import React, { FC, useState } from "react";
 import { Repository } from "@scm-manager/ui-types";
-import { DateFromNow, FullscreenModal } from "@scm-manager/ui-components";
+import { DateFromNow, Modal } from "@scm-manager/ui-components";
 import RepositoryAvatar from "./RepositoryAvatar";
 import { ExtensionPoint } from "@scm-manager/ui-extensions";
 import GroupEntry from "../layout/GroupEntry";
@@ -75,6 +75,12 @@ const Name = styled.strong`
   white-space: nowrap;
 `;
 
+const SizedModal = styled(Modal)`
+  .modal-card {
+    width: 66%;
+  }
+`;
+
 const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
   const [t] = useTranslation("repos");
   const [openCloneModal, setOpenCloneModal] = useState(false);
@@ -82,7 +88,7 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
   const createContentRight = () => {
     return (
       <ContentRightContainer>
-        <FullscreenModal
+        <SizedModal
           active={openCloneModal}
           title={t("overview.clone")}
           body={

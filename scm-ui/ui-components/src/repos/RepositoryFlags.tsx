@@ -75,7 +75,7 @@ const RepositoryFlags: FC<Props> = ({ repository, className }) => {
   );
 
   return (
-    <Wrapper >
+    <Wrapper>
       {modal}
       <RepositoryFlagContainer>
         {repositoryFlags}
