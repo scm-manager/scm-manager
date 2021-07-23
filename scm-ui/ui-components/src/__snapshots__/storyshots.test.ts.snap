@@ -72025,11 +72025,11 @@ exports[`Storyshots Navigation|Secondary Active when match 1`] = `
     className="column is-3"
   >
     <aside
-      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 cmlWoX menu"
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 iqbNdU menu"
     >
       <div>
         <p
-          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fzDYSb menu-label"
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fCZGGb menu-label has-cursor-pointer"
           onClick={[Function]}
         >
           <i
@@ -72087,11 +72087,11 @@ exports[`Storyshots Navigation|Secondary Default 1`] = `
     className="column is-3"
   >
     <aside
-      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 cmlWoX menu"
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 iqbNdU menu"
     >
       <div>
         <p
-          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fzDYSb menu-label"
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fCZGGb menu-label has-cursor-pointer"
           onClick={[Function]}
         >
           <i
@@ -72149,11 +72149,11 @@ exports[`Storyshots Navigation|Secondary Extension Point 1`] = `
     className="column is-3"
   >
     <aside
-      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 cmlWoX menu"
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 iqbNdU menu"
     >
       <div>
         <p
-          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fzDYSb menu-label"
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fCZGGb menu-label has-cursor-pointer"
           onClick={[Function]}
         >
           <i
@@ -72237,11 +72237,11 @@ exports[`Storyshots Navigation|Secondary Sub Navigation 1`] = `
     className="column is-3"
   >
     <aside
-      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 cmlWoX menu"
+      className="SecondaryNavigation__SectionContainer-sc-8p1rgi-0 iqbNdU menu"
     >
       <div>
         <p
-          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fzDYSb menu-label"
+          className="SecondaryNavigation__MenuLabel-sc-8p1rgi-2 fCZGGb menu-label has-cursor-pointer"
           onClick={[Function]}
         >
           <i
