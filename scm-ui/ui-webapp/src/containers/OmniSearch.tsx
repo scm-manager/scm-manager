@@ -101,10 +101,11 @@ const SearchErrorNotification: FC<ErrorProps> = ({ error }) => {
   );
 };
 
-const ResultHeading = styled.div`
+const ResultHeading = styled.h3`
   border-bottom: 1px solid lightgray;
   margin: 0 0.5rem;
   padding: 0.375rem 0.5rem;
+  font-weight: bold;
 `;
 
 const DropdownMenu = styled.div`
