@@ -84,7 +84,7 @@ class SimpleCachingWorkingCopyPoolTest {
       WorkingCopy<?, ?> workdir = simpleCachingWorkingCopyPool.getWorkingCopy(workingCopyContext);
 
       verify(workingCopyContext).initialize(temp.toFile());
-      assertThat(meterRegistry.get("scm.workingCopy.pool.cache.miss").counter().count()).isEqualTo(1d);
+      assertThat(meterRegistry.get("scm.workingcopy.pool.cache.miss").counter().count()).isEqualTo(1d);
     }
 
     @Test
@@ -99,7 +99,7 @@ class SimpleCachingWorkingCopyPoolTest {
       verify(workingCopyContext).initialize(temp.toFile());
       verify(workingCopyContext).reclaim(temp.toFile());
       assertThat(secondWorkdir.getDirectory()).isEqualTo(temp.toFile());
-      assertThat(meterRegistry.get("scm.workingCopy.pool.cache.hit").counter().count()).isEqualTo(1d);
+      assertThat(meterRegistry.get("scm.workingcopy.pool.cache.hit").counter().count()).isEqualTo(1d);
     }
 
     @Test
@@ -113,7 +113,7 @@ class SimpleCachingWorkingCopyPoolTest {
       WorkingCopy<?, ?> secondWorkdir = simpleCachingWorkingCopyPool.getWorkingCopy(workingCopyContext);
 
       assertThat(secondWorkdir.getDirectory()).isNotEqualTo(temp.toFile());
-      assertThat(meterRegistry.get("scm.workingCopy.pool.reclaim.failure").counter().count()).isEqualTo(1d);
+      assertThat(meterRegistry.get("scm.workingcopy.pool.reclaim.failure").counter().count()).isEqualTo(1d);
     }
 
     @Test
@@ -122,7 +122,7 @@ class SimpleCachingWorkingCopyPoolTest {
       assertThat(temp.resolve("path-0")).doesNotExist();
       assertThat(temp.resolve("path-1")).exists();
       assertThat(temp.resolve("path-2")).exists();
-      assertThat(meterRegistry.get("scm.workingCopy.pool.cache.overflow").counter().count()).isEqualTo(1d);
+      assertThat(meterRegistry.get("scm.workingcopy.pool.cache.overflow").counter().count()).isEqualTo(1d);
     }
 
     @Test
