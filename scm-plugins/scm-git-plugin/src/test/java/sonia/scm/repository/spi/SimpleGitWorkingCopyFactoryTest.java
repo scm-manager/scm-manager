@@ -219,6 +219,7 @@ public class SimpleGitWorkingCopyFactoryTest extends AbstractGitCommandTestBase 
     factory.reclaim(createContext(), workdir, "master");
 
     assertBranchCheckedOutAndClean(workdir, "master");
+    assertThat(newDirectory).doesNotExist();
   }
 
   public File createExistingClone(SimpleGitWorkingCopyFactory factory) throws Exception {

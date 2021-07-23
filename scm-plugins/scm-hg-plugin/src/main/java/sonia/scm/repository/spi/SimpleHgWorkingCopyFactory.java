@@ -32,6 +32,7 @@ import com.aragost.javahg.commands.PullCommand;
 import com.aragost.javahg.commands.StatusCommand;
 import com.aragost.javahg.commands.UpdateCommand;
 import com.aragost.javahg.commands.flags.CloneCommandFlags;
+import com.aragost.javahg.ext.purge.PurgeCommand;
 import io.micrometer.core.instrument.MeterRegistry;
 import sonia.scm.repository.HgExtensions;
 import sonia.scm.repository.InternalRepositoryException;
@@ -80,6 +81,7 @@ public class SimpleHgWorkingCopyFactory extends SimpleWorkingCopyFactory<Reposit
       }
       String branchToCheckOut = initialBranch == null ? "default" : initialBranch;
       UpdateCommand.on(clone).rev(branchToCheckOut).clean().execute();
+      PurgeCommand.on(clone).execute();
       return new ParentAndClone<>(centralRepository, clone, target);
     } catch (ExecutionException | IOException e) {
       throw new ReclaimFailedException(e);

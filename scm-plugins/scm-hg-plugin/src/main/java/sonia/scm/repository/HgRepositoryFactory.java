@@ -25,6 +25,7 @@
 package sonia.scm.repository;
 
 import com.aragost.javahg.RepositoryConfiguration;
+import com.aragost.javahg.ext.purge.PurgeExtension;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.hooks.HookEnvironment;
@@ -69,6 +70,7 @@ public class HgRepositoryFactory {
     RepositoryConfiguration repoConfiguration = RepositoryConfiguration.DEFAULT;
     repoConfiguration.getEnvironment().putAll(environment);
     repoConfiguration.addExtension(HgFileviewExtension.class);
+    repoConfiguration.addExtension(PurgeExtension.class);
 
     boolean pending = hookEnvironment.isPending();
     repoConfiguration.setEnablePendingChangesets(pending);
