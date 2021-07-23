@@ -22,6 +22,7 @@
   - /administration/logging/
   - /administration/scm-server/
   - /administration/reverse-proxies/
+  - /administration/workdir_caching/
 
 - section: Development
   entries:
