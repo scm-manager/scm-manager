@@ -53574,7 +53574,6 @@ exports[`Storyshots MarkdownView Commit Links 1`] = `
       </h1>
       
 
-      <p />
       <p>
         <a
           href="/repo/namespace/name/code/changeset/1a5s4w8a"
@@ -53583,10 +53582,8 @@ exports[`Storyshots MarkdownView Commit Links 1`] = `
           namespace/name@1a5s4w8a
         </a>
       </p>
-      <p />
       
 
-      <p />
       <p>
         Please check for this commit: 
         <a
@@ -53595,12 +53592,22 @@ exports[`Storyshots MarkdownView Commit Links 1`] = `
         >
           namespace/name@1a5s4w8a
         </a>
+         it 
+        <em>
+          works
+        </em>
       </p>
-      <p />
       
 
-      <p />
       <p>
+        <strong>
+          really
+        </strong>
+         also check 
+        <em>
+          this
+        </em>
+         commit: 
         <a
           href="/repo/hitchhiker/heart-of-gold/code/changeset/c7237cb60689046990dc9dc2a388a517adb3e2b2"
           title="changeset.shortlink.title"
@@ -53608,10 +53615,8 @@ exports[`Storyshots MarkdownView Commit Links 1`] = `
           hitchhiker/heart-of-gold@c7237cb60689046990dc9dc2a388a517adb3e2b2
         </a>
       </p>
-      <p />
       
 
-      <p />
       <p>
         <a
           href="/repo/hitchhiker/heart-of-gold/code/changeset/c7237cb"
@@ -53620,10 +53625,8 @@ exports[`Storyshots MarkdownView Commit Links 1`] = `
           hitchhiker/heart-of-gold@c7237cb
         </a>
       </p>
-      <p />
       
 
-      <p />
       <p>
         <a
           href="/repo/hitchhiker/heart-of-gold/code/changeset/42"
@@ -53632,7 +53635,6 @@ exports[`Storyshots MarkdownView Commit Links 1`] = `
           hitchhiker/heart-of-gold@42
         </a>
       </p>
-      <p />
       
 
       <p>
@@ -53646,7 +53648,6 @@ exports[`Storyshots MarkdownView Commit Links 1`] = `
       </p>
       
 
-      <p />
       <p>
         Prefix 
         <a
@@ -53664,7 +53665,6 @@ exports[`Storyshots MarkdownView Commit Links 1`] = `
         </a>
          suffix
       </p>
-      <p />
     </div>
   </div>
 </div>
