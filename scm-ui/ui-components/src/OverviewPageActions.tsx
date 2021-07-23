@@ -24,8 +24,8 @@
 import React, { FC, useState } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import classNames from "classnames";
-import { Button, DropDown, urls } from "./index";
-import { FilterInput } from "./forms";
+import { Button, urls } from "./index";
+import { FilterInput, Select } from "./forms";
 
 type Props = {
   showCreateButton: boolean;
@@ -52,7 +52,7 @@ const OverviewPageActions: FC<Props> = ({
   groupSelected,
   label,
   testId,
-  searchPlaceholder
+  searchPlaceholder,
 }) => {
   const history = useHistory();
   const location = useLocation();
@@ -61,11 +61,11 @@ const OverviewPageActions: FC<Props> = ({
 
   const groupSelector = groups && (
     <div className={"column is-flex"}>
-      <DropDown
+      <Select
         className={"is-fullwidth"}
-        options={groups}
-        preselectedOption={currentGroup}
-        optionSelected={groupSelected}
+        options={groups.map((g) => ({ value: g, label: g }))}
+        value={currentGroup}
+        onChange={groupSelected}
       />
     </div>
   );

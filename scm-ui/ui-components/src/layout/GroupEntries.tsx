@@ -37,7 +37,12 @@ const TitleWrapper = styled.div`
 `;
 
 const Separator = styled.div`
-  border-bottom: 1px solid rgb(219, 219, 219);
+  border-bottom: 1px solid rgb(219, 219, 219, 0.5);
+  margin: 0 1rem;
+`;
+
+const Box = styled.div`
+  padding: 0.5rem;
 `;
 
 type Props = {
@@ -47,17 +52,16 @@ type Props = {
 
 const GroupEntries: FC<Props> = ({ namespaceHeader, elements }) => {
   const content = elements.map((entry, index) => (
-    <>
-      <div key={index}>{entry}</div>
+    <React.Fragment key={index}>
+      <div>{entry}</div>
       {index + 1 !== elements.length ? <Separator /> : null}
-    </>
+    </React.Fragment>
   ));
 
   return (
     <Container>
       <TitleWrapper>{namespaceHeader}</TitleWrapper>
-      <Separator />
-      {content}
+      <Box className="box">{content}</Box>
       <div className="is-clearfix" />
     </Container>
   );

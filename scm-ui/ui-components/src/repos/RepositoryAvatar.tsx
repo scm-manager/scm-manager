@@ -27,7 +27,7 @@ import { Repository } from "@scm-manager/ui-types";
 import { Image } from "@scm-manager/ui-components";
 import styled from "styled-components";
 
-const Avatar = styled.p`
+const Avatar = styled.div`
   border-radius: 5px;
 `;
 

@@ -75,12 +75,6 @@ const Name = styled.strong`
   white-space: nowrap;
 `;
 
-const SizedModal = styled(Modal)`
-  .modal-card {
-    width: 66%;
-  }
-`;
-
 const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
   const [t] = useTranslation("repos");
   const [openCloneModal, setOpenCloneModal] = useState(false);
@@ -88,19 +82,18 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
   const createContentRight = () => {
     return (
       <ContentRightContainer>
-        <SizedModal
+        <Modal
+          size="L"
           active={openCloneModal}
           title={t("overview.clone")}
           body={
-            <div className="content">
-              <ExtensionPoint
-                name="repos.repository-details.information"
-                renderAll={true}
-                props={{
-                  repository,
-                }}
-              />
-            </div>
+            <ExtensionPoint
+              name="repos.repository-details.information"
+              renderAll={true}
+              props={{
+                repository,
+              }}
+            />
           }
           closeFunction={() => setOpenCloneModal(false)}
         />

@@ -52,16 +52,29 @@ const RepositoryFlags: FC<Props> = ({ repository, className }) => {
 
   const repositoryFlags = [];
   if (repository.archived) {
-    repositoryFlags.push(<RepositoryFlag title={t("archive.tooltip")}>{t("repository.archived")}</RepositoryFlag>);
+    repositoryFlags.push(
+      <RepositoryFlag key="archived" title={t("archive.tooltip")}>
+        {t("repository.archived")}
+      </RepositoryFlag>
+    );
   }
 
   if (repository.exporting) {
-    repositoryFlags.push(<RepositoryFlag title={t("exporting.tooltip")}>{t("repository.exporting")}</RepositoryFlag>);
+    repositoryFlags.push(
+      <RepositoryFlag key="exporting" title={t("exporting.tooltip")}>
+        {t("repository.exporting")}
+      </RepositoryFlag>
+    );
   }
 
   if (repository.healthCheckFailures && repository.healthCheckFailures.length > 0) {
     repositoryFlags.push(
-      <RepositoryFlag color="danger" title={t("healthCheckFailure.tooltip")} onClick={() => setShowHealthCheck(true)}>
+      <RepositoryFlag
+        key="healthcheck"
+        color="danger"
+        title={t("healthCheckFailure.tooltip")}
+        onClick={() => setShowHealthCheck(true)}
+      >
         {t("repository.healthCheckFailure")}
       </RepositoryFlag>
     );

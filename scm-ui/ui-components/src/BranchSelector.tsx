@@ -25,7 +25,7 @@ import React, { FC } from "react";
 import classNames from "classnames";
 import styled from "styled-components";
 import { Branch } from "@scm-manager/ui-types";
-import DropDown from "./forms/DropDown";
+import { Select } from "./forms";
 
 type Props = {
   branches: Branch[];
@@ -58,12 +58,12 @@ const BranchSelector: FC<Props> = ({ branches, onSelectBranch, selectedBranch, l
         <div className="field-body">
           <NoBottomMarginField className={classNames("field", "is-narrow")}>
             <MinWidthControl className="control">
-              <DropDown
+              <Select
                 className="is-fullwidth"
-                options={branches.map(b => b.name)}
-                optionSelected={branch => onSelectBranch(branches.filter(b => b.name === branch)[0])}
+                options={branches.map((b) => ({ label: b.name, value: b.name }))}
+                onChange={(branch) => onSelectBranch(branches.filter((b) => b.name === branch)[0])}
                 disabled={!!disabled}
-                preselectedOption={selectedBranch}
+                value={selectedBranch}
               />
             </MinWidthControl>
           </NoBottomMarginField>
