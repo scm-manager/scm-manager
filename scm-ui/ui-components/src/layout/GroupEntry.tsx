@@ -72,6 +72,7 @@ const Description = styled.p`
 
 const ContentLeft = styled.div`
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
   min-width: 0;
 `;
@@ -87,6 +88,7 @@ const ContentRight = styled.div`
 
 const NameDescriptionWrapper = styled.div`
   overflow: hidden;
+  flex: 1 1 auto;
 `;
 
 const Wrapper = styled.div`
