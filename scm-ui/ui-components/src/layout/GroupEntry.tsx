@@ -25,7 +25,6 @@
 import React, { FC, ReactNode } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-import { devices } from "../devices";
 
 const StyledGroupEntry = styled.div`
   max-height: calc(90px - 1.5rem);
@@ -60,10 +59,10 @@ const Avatar = styled.div`
 
 const Name = styled.div`
   padding: 0 0.25rem;
-  overflow: hidden;
-  width: calc(55vw);
-  @media screen and (max-width: ${devices.desktop.width - 1}px) {
-    width: calc(80vw);
+  strong {
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
 `;
 
@@ -74,24 +73,29 @@ const Description = styled.p`
   overflow: hidden;
   white-space: nowrap;
   word-break: break-all;
-  width: calc(55vw);
-  @media screen and (max-width: ${devices.desktop.width - 1}px) {
-    width: calc(80vw);
-  }
 `;
 
 const ContentLeft = styled.div`
   display: flex;
   align-items: center;
+  min-width: 0;
 `;
 
 const ContentRight = styled.div`
   display: flex;
-  justify-self: flex-end;
-  justify-content: space-between;
+  flex: 0 0 auto;
+  justify-content: flex-end;
   pointer-events: all;
   padding-left: 2rem;
   margin-bottom: -10px;
+`;
+
+const NameDescriptionWrapper = styled.div`
+  overflow: hidden;
+`;
+
+const Wrapper = styled.div`
+  position: relative;
 `;
 
 type Props = {
@@ -105,19 +109,19 @@ type Props = {
 
 const GroupEntry: FC<Props> = ({ link, avatar, title, name, description, contentRight }) => {
   return (
-    <>
+    <Wrapper>
       <OverlayLink to={link} />
       <StyledGroupEntry title={title}>
         <ContentLeft>
           <Avatar>{avatar}</Avatar>
-          <div>
+          <NameDescriptionWrapper>
             <Name>{name}</Name>
             <Description>{description}</Description>
-          </div>
+          </NameDescriptionWrapper>
         </ContentLeft>
         <ContentRight className="is-hidden-touch">{contentRight}</ContentRight>
       </StyledGroupEntry>
-    </>
+    </Wrapper>
   );
 };
 
