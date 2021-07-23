@@ -25,9 +25,6 @@
 import React, { FC, ReactNode } from "react";
 import styled from "styled-components";
 
-const Container = styled.div`
-  margin-bottom: 1em;
-`;
 const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -59,11 +56,11 @@ const GroupEntries: FC<Props> = ({ namespaceHeader, elements }) => {
   ));
 
   return (
-    <Container>
+    <>
       <TitleWrapper>{namespaceHeader}</TitleWrapper>
       <Box className="box">{content}</Box>
       <div className="is-clearfix" />
-    </Container>
+    </>
   );
 };
 
