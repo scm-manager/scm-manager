@@ -121,12 +121,13 @@ const ResultFooter = styled.div`
 const MoreResults: FC<GotoProps> = ({ gotoDetailSearch }) => {
   const [t] = useTranslation("commons");
   return (
-    <ResultFooter className="dropdown-item has-text-centered" onMouseDown={(e) => e.preventDefault()}>
+    <ResultFooter className="dropdown-item has-text-centered">
       <Button action={gotoDetailSearch} color="primary">
         {t("search.quickSearch.moreResults")}
       </Button>
     </ResultFooter>
-  );};
+  );
+};
 
 const Hits: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
   const id = useCallback(namespaceAndName, [hits]);
@@ -280,7 +281,7 @@ const OmniSearch: FC = () => {
               </span>
             )}
           </div>
-          <DropdownMenu className="dropdown-menu">
+          <DropdownMenu className="dropdown-menu" onMouseDown={(e) => e.preventDefault()}>
             {error ? <SearchErrorNotification error={error} /> : null}
             {!error && data ? (
               <Hits gotoDetailSearch={gotoDetailSearch} clear={clearQuery} index={index} hits={data._embedded.hits} />
