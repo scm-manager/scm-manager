@@ -138,7 +138,7 @@ const Hits: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
   }
 
   return (
-    <div className="dropdown-content">
+    <div aria-expanded="true" role="listbox" className="dropdown-content">
       <ResultHeading className="dropdown-item">{t("search.quickSearch.resultHeading")}</ResultHeading>
       {hits.map((hit, idx) => (
         <div key={id(hit)} onMouseDown={(e) => e.preventDefault()} onClick={clear}>
@@ -148,6 +148,7 @@ const Hits: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
             })}
             title={id(hit)}
             to={`/repo/${id(hit)}`}
+            role="option"
           >
             {id(hit)}
           </Link>
@@ -273,6 +274,8 @@ const OmniSearch: FC = () => {
               onChange={(e) => setQuery(e.target.value)}
               onKeyDown={onKeyDown}
               value={query}
+              role="combobox"
+              aria-autocomplete="list"
               {...handlers}
             />
             {isLoading ? null : (
