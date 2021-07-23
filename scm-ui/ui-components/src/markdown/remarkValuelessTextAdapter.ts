@@ -28,13 +28,37 @@ import { Node, Parent } from "unist";
 /**
  * Some existing remark plugins (e.g. changesetShortLinkParser or the plugin for issue tracker links) create
  * text nodes without values but with children. This does not get parsed properly by remark2rehype.
- * This remark-plugin transforms all of these invalid text nodes to valid paragraphs.
+ * This remark-plugin takes the children of these invalid text nodes and inserts them into the node's parent
+ * in place of the text node.
+ *
+ * @example
+ * ```
+ * # This ->
+ *
+ * validNode
+ * invalidNode
+ *  child1
+ *  child2
+ *  child3
+ * validNode
+ *
+ * # Becomes ->
+ *
+ * validNode
+ * child1
+ * child2
+ * child3
+ * validNode
+ * ```
  */
 export const createTransformer = (): AstPlugin => {
   return ({ visit }) => {
     visit("text", (node: Node, index: number, parent?: Parent) => {
       if (node.value === undefined && Array.isArray(node.children) && node.children.length > 0) {
-        node.type = "paragraph";
+        const children = node.children;
+        const preChildren = parent?.children.slice(0, index) || [];
+        const postChildren = parent?.children.slice(index + 1) || [];
+        parent!.children = [...preChildren, ...children, ...postChildren];
       }
     });
   };

@@ -24,9 +24,9 @@
 export default `# Commit Links in Markdown
 namespace/name@1a5s4w8a
 
-Please check for this commit: namespace/name@1a5s4w8a
+Please check for this commit: namespace/name@1a5s4w8a it *works*
 
-hitchhiker/heart-of-gold@c7237cb60689046990dc9dc2a388a517adb3e2b2
+**really** also check *this* commit: hitchhiker/heart-of-gold@c7237cb60689046990dc9dc2a388a517adb3e2b2
 
 hitchhiker/heart-of-gold@c7237cb
 
