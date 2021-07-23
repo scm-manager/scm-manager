@@ -52658,6 +52658,160 @@ Array [
 ]
 `;
 
+exports[`Storyshots GroupEntry Default 1`] = `
+<div
+  className="GroupEntrystories__Wrapper-sc-6ytotm-0 cFuNvv"
+>
+  <div
+    className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
+  >
+    <a
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      href="/foo/bar"
+      onClick={[Function]}
+    />
+    <div
+      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 jAGxYw"
+    >
+      <div
+        className="GroupEntry__ContentLeft-sc-1f902yu-5 jyDOdM"
+      >
+        <div
+          className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
+        >
+          <i
+            className="fas fa-icons fa-2x fa-fw has-text-grey-light"
+          />
+        </div>
+        <div
+          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-7 hBKdoF"
+        >
+          <div
+            className="GroupEntry__Name-sc-1f902yu-3 fpbhOs"
+          >
+            <strong
+              className="is-marginless"
+            >
+              main content
+            </strong>
+          </div>
+          <p
+            className="GroupEntry__Description-sc-1f902yu-4 dAfper"
+          >
+            <small>
+              more text
+            </small>
+          </p>
+        </div>
+      </div>
+      <div
+        className="GroupEntry__ContentRight-sc-1f902yu-6 euVvLR is-hidden-touch"
+      >
+        <div
+          className="field is-grouped"
+        >
+          <div
+            className="control"
+          >
+            <button
+              className="button is-default"
+              onClick={[Function]}
+              title="Copy clone command to clipboard"
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-download has-text-inherit"
+                />
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`Storyshots GroupEntry With long texts 1`] = `
+<div
+  className="GroupEntrystories__Wrapper-sc-6ytotm-0 cFuNvv"
+>
+  <div
+    className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
+  >
+    <a
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      href="/foo/bar"
+      onClick={[Function]}
+    />
+    <div
+      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 jAGxYw"
+    >
+      <div
+        className="GroupEntry__ContentLeft-sc-1f902yu-5 jyDOdM"
+      >
+        <div
+          className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
+        >
+          <i
+            className="fas fa-icons fa-2x fa-fw has-text-grey-light"
+          />
+        </div>
+        <div
+          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-7 hBKdoF"
+        >
+          <div
+            className="GroupEntry__Name-sc-1f902yu-3 fpbhOs"
+          >
+            <strong
+              className="is-marginless"
+            >
+              Very-important-repository-with-a-particular-long-but-easily-rememberable-name-which-also-is-written-in-kebab-case
+            </strong>
+          </div>
+          <p
+            className="GroupEntry__Description-sc-1f902yu-4 dAfper"
+          >
+            <small>
+              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
+            </small>
+          </p>
+        </div>
+      </div>
+      <div
+        className="GroupEntry__ContentRight-sc-1f902yu-6 euVvLR is-hidden-touch"
+      >
+        <div
+          className="field is-grouped"
+        >
+          <div
+            className="control"
+          >
+            <button
+              className="button is-default"
+              onClick={[Function]}
+              title="Copy clone command to clipboard"
+              type="button"
+            >
+              <span
+                className="icon is-medium"
+              >
+                <i
+                  className="fas fa-download has-text-inherit"
+                />
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots Help Default 1`] = `
 <div
   className="Helpstories__Wrapper-yq79zu-0 bZhLbP"
@@ -53442,7 +53596,7 @@ exports[`Storyshots Logo WithoutText 1`] = `
 >
   <img
     alt="logo.alt"
-    src="/images/scmLogo.svg"
+    src="/images/blibSimpleSmallDarkBackground.svg"
   />
 </div>
 `;
@@ -68010,79 +68164,89 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-toppdg-0 gZhLog box box-link-shadow"
 >
-  <a
-    className="overlay-column"
-    href="/repo/hitchhiker/heartOfGold"
-    onClick={[Function]}
-  />
-  <article
-    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 cvqkqR media"
+  <div
+    className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
-    <figure
-      className="CardColumn__AvatarWrapper-sc-1w6lsih-1 jBSrYP media-left"
-    >
-      <p
-        className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
-      >
-        <img
-          alt="Logo"
-          src="test-file-stub"
-        />
-      </p>
-    </figure>
+    <a
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      href="/repo/hitchhiker/heartOfGold/"
+      onClick={[Function]}
+    />
     <div
-      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 dvHFki media-content text-box is-flex"
+      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 jAGxYw"
     >
       <div
-        className="is-flex"
+        className="GroupEntry__ContentLeft-sc-1f902yu-5 jyDOdM"
       >
         <div
-          className="is-clipped mb-0"
+          className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <p
-            className="shorten-text m-0"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
-            <span
-              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
+            <img
+              alt="Logo"
+              src="test-file-stub"
+            />
+          </p>
+        </div>
+        <div
+          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-7 hBKdoF"
+        >
+          <div
+            className="GroupEntry__Name-sc-1f902yu-3 fpbhOs"
+          >
+            <div
+              className="is-flex"
             >
               <strong>
                 heartOfGold
               </strong>
                
-              <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
+              <span
+                className="RepositoryFlags__Wrapper-sc-1swhx1t-0 iZwVwy"
               >
-                <span
-                  className="tooltip has-tooltip-bottom"
-                  data-tooltip="archive.tooltip"
+                <div
+                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-1 dkzelp"
                 >
                   <span
-                    className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                    className="tooltip has-tooltip-bottom"
+                    data-tooltip="archive.tooltip"
                   >
-                    repository.archived
+                    <span
+                      className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                    >
+                      repository.archived
+                    </span>
                   </span>
-                </span>
-              </div>
-            </span>
-          </p>
+                </div>
+              </span>
+            </div>
+          </div>
           <p
-            className="shorten-text"
+            className="GroupEntry__Description-sc-1f902yu-4 dAfper"
           >
             The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
           </p>
         </div>
       </div>
       <div
-        className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
+        className="GroupEntry__ContentRight-sc-1f902yu-6 euVvLR is-hidden-touch"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
-        />
-        <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
+          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 hpwSFW"
         >
+          <span
+            className="RepositoryEntry__QuickActionbar-sc-6jys82-2 bbVvmm"
+          >
+            <i
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-3 jNjBgB has-cursor-pointer"
+              onClick={[Function]}
+              title="overview.clone"
+            />
+          </span>
           <small
-            className="level-item"
+            className="RepositoryEntry__DateWrapper-sc-6jys82-1 jWsUcR"
           >
             <time
               className="DateElement-sc-1schp8c-0 cinWxa"
@@ -68094,7 +68258,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
         </div>
       </div>
     </div>
-  </article>
+  </div>
 </div>
 `;
 
@@ -68102,68 +68266,78 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-toppdg-0 gZhLog box box-link-shadow"
 >
-  <a
-    className="overlay-column"
-    href="/repo/hitchhiker/heartOfGold"
-    onClick={[Function]}
-  />
-  <article
-    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 cvqkqR media"
+  <div
+    className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
-    <figure
-      className="CardColumn__AvatarWrapper-sc-1w6lsih-1 jBSrYP media-left"
-    >
-      <p
-        className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
-      >
-        <img
-          alt="Logo"
-          src="test-file-stub"
-        />
-      </p>
-    </figure>
+    <a
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      href="/repo/hitchhiker/heartOfGold/"
+      onClick={[Function]}
+    />
     <div
-      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 dvHFki media-content text-box is-flex"
+      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 jAGxYw"
     >
       <div
-        className="is-flex"
+        className="GroupEntry__ContentLeft-sc-1f902yu-5 jyDOdM"
       >
         <div
-          className="is-clipped mb-0"
+          className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <p
-            className="shorten-text m-0"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
-            <span
-              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
+            <img
+              alt="Logo"
+              src="test-file-stub"
+            />
+          </p>
+        </div>
+        <div
+          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-7 hBKdoF"
+        >
+          <div
+            className="GroupEntry__Name-sc-1f902yu-3 fpbhOs"
+          >
+            <div
+              className="is-flex"
             >
               <strong>
                 heartOfGold
               </strong>
                
-              <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
-              />
-            </span>
-          </p>
+              <span
+                className="RepositoryFlags__Wrapper-sc-1swhx1t-0 iZwVwy"
+              >
+                <div
+                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-1 dkzelp"
+                />
+              </span>
+            </div>
+          </div>
           <p
-            className="shorten-text"
+            className="GroupEntry__Description-sc-1f902yu-4 dAfper"
           >
             The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
           </p>
         </div>
       </div>
       <div
-        className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
+        className="GroupEntry__ContentRight-sc-1f902yu-6 euVvLR is-hidden-touch"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
-        />
-        <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
+          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 hpwSFW"
         >
+          <span
+            className="RepositoryEntry__QuickActionbar-sc-6jys82-2 bbVvmm"
+          >
+            <i
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-3 jNjBgB has-cursor-pointer"
+              onClick={[Function]}
+              title="overview.clone"
+            />
+          </span>
           <small
-            className="level-item"
+            className="RepositoryEntry__DateWrapper-sc-6jys82-1 jWsUcR"
           >
             <time
               className="DateElement-sc-1schp8c-0 cinWxa"
@@ -68175,7 +68349,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
         </div>
       </div>
     </div>
-  </article>
+  </div>
 </div>
 `;
 
@@ -68183,40 +68357,40 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-toppdg-0 gZhLog box box-link-shadow"
 >
-  <a
-    className="overlay-column"
-    href="/repo/hitchhiker/heartOfGold"
-    onClick={[Function]}
-  />
-  <article
-    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 cvqkqR media"
+  <div
+    className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
-    <figure
-      className="CardColumn__AvatarWrapper-sc-1w6lsih-1 jBSrYP media-left"
-    >
-      <p
-        className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
-      >
-        <img
-          alt="Logo"
-          src="/images/blib.jpg"
-        />
-      </p>
-    </figure>
+    <a
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      href="/repo/hitchhiker/heartOfGold/"
+      onClick={[Function]}
+    />
     <div
-      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 dvHFki media-content text-box is-flex"
+      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 jAGxYw"
     >
       <div
-        className="is-flex"
+        className="GroupEntry__ContentLeft-sc-1f902yu-5 jyDOdM"
       >
         <div
-          className="is-clipped mb-0"
+          className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <p
-            className="shorten-text m-0"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
-            <span
-              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
+            <img
+              alt="Logo"
+              src="/images/blib.jpg"
+            />
+          </p>
+        </div>
+        <div
+          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-7 hBKdoF"
+        >
+          <div
+            className="GroupEntry__Name-sc-1f902yu-3 fpbhOs"
+          >
+            <div
+              className="is-flex"
             >
               <i
                 className="far fa-star"
@@ -68225,29 +68399,39 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
                 heartOfGold
               </strong>
                
-              <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
-              />
-            </span>
-          </p>
+              <span
+                className="RepositoryFlags__Wrapper-sc-1swhx1t-0 iZwVwy"
+              >
+                <div
+                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-1 dkzelp"
+                />
+              </span>
+            </div>
+          </div>
           <p
-            className="shorten-text"
+            className="GroupEntry__Description-sc-1f902yu-4 dAfper"
           >
             The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
           </p>
         </div>
       </div>
       <div
-        className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
+        className="GroupEntry__ContentRight-sc-1f902yu-6 euVvLR is-hidden-touch"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
-        />
-        <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
+          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 hpwSFW"
         >
+          <span
+            className="RepositoryEntry__QuickActionbar-sc-6jys82-2 bbVvmm"
+          >
+            <i
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-3 jNjBgB has-cursor-pointer"
+              onClick={[Function]}
+              title="overview.clone"
+            />
+          </span>
           <small
-            className="level-item"
+            className="RepositoryEntry__DateWrapper-sc-6jys82-1 jWsUcR"
           >
             <time
               className="DateElement-sc-1schp8c-0 cinWxa"
@@ -68259,7 +68443,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
         </div>
       </div>
     </div>
-  </article>
+  </div>
 </div>
 `;
 
@@ -68267,68 +68451,78 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-toppdg-0 gZhLog box box-link-shadow"
 >
-  <a
-    className="overlay-column"
-    href="/repo/hitchhiker/heartOfGold"
-    onClick={[Function]}
-  />
-  <article
-    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 cvqkqR media"
+  <div
+    className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
-    <figure
-      className="CardColumn__AvatarWrapper-sc-1w6lsih-1 jBSrYP media-left"
-    >
-      <p
-        className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
-      >
-        <img
-          alt="Logo"
-          src="/images/blib.jpg"
-        />
-      </p>
-    </figure>
+    <a
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      href="/repo/hitchhiker/heartOfGold/"
+      onClick={[Function]}
+    />
     <div
-      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 dvHFki media-content text-box is-flex"
+      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 jAGxYw"
     >
       <div
-        className="is-flex"
+        className="GroupEntry__ContentLeft-sc-1f902yu-5 jyDOdM"
       >
         <div
-          className="is-clipped mb-0"
+          className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <p
-            className="shorten-text m-0"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
-            <span
-              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
+            <img
+              alt="Logo"
+              src="/images/blib.jpg"
+            />
+          </p>
+        </div>
+        <div
+          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-7 hBKdoF"
+        >
+          <div
+            className="GroupEntry__Name-sc-1f902yu-3 fpbhOs"
+          >
+            <div
+              className="is-flex"
             >
               <strong>
                 heartOfGold
               </strong>
                
-              <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
-              />
-            </span>
-          </p>
+              <span
+                className="RepositoryFlags__Wrapper-sc-1swhx1t-0 iZwVwy"
+              >
+                <div
+                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-1 dkzelp"
+                />
+              </span>
+            </div>
+          </div>
           <p
-            className="shorten-text"
+            className="GroupEntry__Description-sc-1f902yu-4 dAfper"
           >
             The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
           </p>
         </div>
       </div>
       <div
-        className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
+        className="GroupEntry__ContentRight-sc-1f902yu-6 euVvLR is-hidden-touch"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
-        />
-        <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
+          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 hpwSFW"
         >
+          <span
+            className="RepositoryEntry__QuickActionbar-sc-6jys82-2 bbVvmm"
+          >
+            <i
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-3 jNjBgB has-cursor-pointer"
+              onClick={[Function]}
+              title="overview.clone"
+            />
+          </span>
           <small
-            className="level-item"
+            className="RepositoryEntry__DateWrapper-sc-6jys82-1 jWsUcR"
           >
             <time
               className="DateElement-sc-1schp8c-0 cinWxa"
@@ -68340,7 +68534,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
         </div>
       </div>
     </div>
-  </article>
+  </div>
 </div>
 `;
 
@@ -68348,79 +68542,89 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-toppdg-0 gZhLog box box-link-shadow"
 >
-  <a
-    className="overlay-column"
-    href="/repo/hitchhiker/heartOfGold"
-    onClick={[Function]}
-  />
-  <article
-    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 cvqkqR media"
+  <div
+    className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
-    <figure
-      className="CardColumn__AvatarWrapper-sc-1w6lsih-1 jBSrYP media-left"
-    >
-      <p
-        className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
-      >
-        <img
-          alt="Logo"
-          src="test-file-stub"
-        />
-      </p>
-    </figure>
+    <a
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      href="/repo/hitchhiker/heartOfGold/"
+      onClick={[Function]}
+    />
     <div
-      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 dvHFki media-content text-box is-flex"
+      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 jAGxYw"
     >
       <div
-        className="is-flex"
+        className="GroupEntry__ContentLeft-sc-1f902yu-5 jyDOdM"
       >
         <div
-          className="is-clipped mb-0"
+          className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <p
-            className="shorten-text m-0"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
-            <span
-              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
+            <img
+              alt="Logo"
+              src="test-file-stub"
+            />
+          </p>
+        </div>
+        <div
+          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-7 hBKdoF"
+        >
+          <div
+            className="GroupEntry__Name-sc-1f902yu-3 fpbhOs"
+          >
+            <div
+              className="is-flex"
             >
               <strong>
                 heartOfGold
               </strong>
                
-              <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
+              <span
+                className="RepositoryFlags__Wrapper-sc-1swhx1t-0 iZwVwy"
               >
-                <span
-                  className="tooltip has-tooltip-bottom"
-                  data-tooltip="exporting.tooltip"
+                <div
+                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-1 dkzelp"
                 >
                   <span
-                    className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                    className="tooltip has-tooltip-bottom"
+                    data-tooltip="exporting.tooltip"
                   >
-                    repository.exporting
+                    <span
+                      className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                    >
+                      repository.exporting
+                    </span>
                   </span>
-                </span>
-              </div>
-            </span>
-          </p>
+                </div>
+              </span>
+            </div>
+          </div>
           <p
-            className="shorten-text"
+            className="GroupEntry__Description-sc-1f902yu-4 dAfper"
           >
             The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
           </p>
         </div>
       </div>
       <div
-        className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
+        className="GroupEntry__ContentRight-sc-1f902yu-6 euVvLR is-hidden-touch"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
-        />
-        <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
+          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 hpwSFW"
         >
+          <span
+            className="RepositoryEntry__QuickActionbar-sc-6jys82-2 bbVvmm"
+          >
+            <i
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-3 jNjBgB has-cursor-pointer"
+              onClick={[Function]}
+              title="overview.clone"
+            />
+          </span>
           <small
-            className="level-item"
+            className="RepositoryEntry__DateWrapper-sc-6jys82-1 jWsUcR"
           >
             <time
               className="DateElement-sc-1schp8c-0 cinWxa"
@@ -68432,7 +68636,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
         </div>
       </div>
     </div>
-  </article>
+  </div>
 </div>
 `;
 
@@ -68440,80 +68644,90 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-toppdg-0 gZhLog box box-link-shadow"
 >
-  <a
-    className="overlay-column"
-    href="/repo/hitchhiker/heartOfGold"
-    onClick={[Function]}
-  />
-  <article
-    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 cvqkqR media"
+  <div
+    className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
-    <figure
-      className="CardColumn__AvatarWrapper-sc-1w6lsih-1 jBSrYP media-left"
-    >
-      <p
-        className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
-      >
-        <img
-          alt="Logo"
-          src="test-file-stub"
-        />
-      </p>
-    </figure>
+    <a
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      href="/repo/hitchhiker/heartOfGold/"
+      onClick={[Function]}
+    />
     <div
-      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 dvHFki media-content text-box is-flex"
+      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 jAGxYw"
     >
       <div
-        className="is-flex"
+        className="GroupEntry__ContentLeft-sc-1f902yu-5 jyDOdM"
       >
         <div
-          className="is-clipped mb-0"
+          className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <p
-            className="shorten-text m-0"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
-            <span
-              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
+            <img
+              alt="Logo"
+              src="test-file-stub"
+            />
+          </p>
+        </div>
+        <div
+          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-7 hBKdoF"
+        >
+          <div
+            className="GroupEntry__Name-sc-1f902yu-3 fpbhOs"
+          >
+            <div
+              className="is-flex"
             >
               <strong>
                 heartOfGold
               </strong>
                
-              <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
+              <span
+                className="RepositoryFlags__Wrapper-sc-1swhx1t-0 iZwVwy"
               >
-                <span
-                  className="tooltip has-tooltip-bottom"
-                  data-tooltip="healthCheckFailure.tooltip"
+                <div
+                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-1 dkzelp"
                 >
                   <span
-                    className="Tag__InnerTag-ql67az-0 kOFYBe tag is-danger is-small has-cursor-pointer"
-                    onClick={[Function]}
+                    className="tooltip has-tooltip-bottom"
+                    data-tooltip="healthCheckFailure.tooltip"
                   >
-                    repository.healthCheckFailure
+                    <span
+                      className="Tag__InnerTag-ql67az-0 kOFYBe tag is-danger is-small has-cursor-pointer"
+                      onClick={[Function]}
+                    >
+                      repository.healthCheckFailure
+                    </span>
                   </span>
-                </span>
-              </div>
-            </span>
-          </p>
+                </div>
+              </span>
+            </div>
+          </div>
           <p
-            className="shorten-text"
+            className="GroupEntry__Description-sc-1f902yu-4 dAfper"
           >
             The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
           </p>
         </div>
       </div>
       <div
-        className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
+        className="GroupEntry__ContentRight-sc-1f902yu-6 euVvLR is-hidden-touch"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
-        />
-        <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
+          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 hpwSFW"
         >
+          <span
+            className="RepositoryEntry__QuickActionbar-sc-6jys82-2 bbVvmm"
+          >
+            <i
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-3 jNjBgB has-cursor-pointer"
+              onClick={[Function]}
+              title="overview.clone"
+            />
+          </span>
           <small
-            className="level-item"
+            className="RepositoryEntry__DateWrapper-sc-6jys82-1 jWsUcR"
           >
             <time
               className="DateElement-sc-1schp8c-0 cinWxa"
@@ -68525,7 +68739,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
         </div>
       </div>
     </div>
-  </article>
+  </div>
 </div>
 `;
 
@@ -68533,89 +68747,99 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-toppdg-0 gZhLog box box-link-shadow"
 >
-  <a
-    className="overlay-column"
-    href="/repo/hitchhiker/heartOfGold"
-    onClick={[Function]}
-  />
-  <article
-    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 cvqkqR media"
+  <div
+    className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
-    <figure
-      className="CardColumn__AvatarWrapper-sc-1w6lsih-1 jBSrYP media-left"
-    >
-      <p
-        className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
-      >
-        <img
-          alt="Logo"
-          src="test-file-stub"
-        />
-      </p>
-    </figure>
+    <a
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      href="/repo/hitchhiker/heartOfGold/"
+      onClick={[Function]}
+    />
     <div
-      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 dvHFki media-content text-box is-flex"
+      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 jAGxYw"
     >
       <div
-        className="is-flex"
+        className="GroupEntry__ContentLeft-sc-1f902yu-5 jyDOdM"
       >
         <div
-          className="is-clipped mb-0"
+          className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <p
-            className="shorten-text m-0"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
-            <span
-              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
+            <img
+              alt="Logo"
+              src="test-file-stub"
+            />
+          </p>
+        </div>
+        <div
+          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-7 hBKdoF"
+        >
+          <div
+            className="GroupEntry__Name-sc-1f902yu-3 fpbhOs"
+          >
+            <div
+              className="is-flex"
             >
               <strong>
                 heartOfGold
               </strong>
                
-              <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
+              <span
+                className="RepositoryFlags__Wrapper-sc-1swhx1t-0 iZwVwy"
               >
-                <span
-                  className="tooltip has-tooltip-bottom"
-                  data-tooltip="archive.tooltip"
+                <div
+                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-1 dkzelp"
                 >
                   <span
-                    className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                    className="tooltip has-tooltip-bottom"
+                    data-tooltip="archive.tooltip"
                   >
-                    repository.archived
+                    <span
+                      className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                    >
+                      repository.archived
+                    </span>
                   </span>
-                </span>
-                <span
-                  className="tooltip has-tooltip-bottom"
-                  data-tooltip="exporting.tooltip"
-                >
                   <span
-                    className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                    className="tooltip has-tooltip-bottom"
+                    data-tooltip="exporting.tooltip"
                   >
-                    repository.exporting
+                    <span
+                      className="Tag__InnerTag-ql67az-0 kOFYBe tag is-light is-small"
+                    >
+                      repository.exporting
+                    </span>
                   </span>
-                </span>
-              </div>
-            </span>
-          </p>
+                </div>
+              </span>
+            </div>
+          </div>
           <p
-            className="shorten-text"
+            className="GroupEntry__Description-sc-1f902yu-4 dAfper"
           >
             The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
           </p>
         </div>
       </div>
       <div
-        className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
+        className="GroupEntry__ContentRight-sc-1f902yu-6 euVvLR is-hidden-touch"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
-        />
-        <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
+          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 hpwSFW"
         >
+          <span
+            className="RepositoryEntry__QuickActionbar-sc-6jys82-2 bbVvmm"
+          >
+            <i
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-3 jNjBgB has-cursor-pointer"
+              onClick={[Function]}
+              title="overview.clone"
+            />
+          </span>
           <small
-            className="level-item"
+            className="RepositoryEntry__DateWrapper-sc-6jys82-1 jWsUcR"
           >
             <time
               className="DateElement-sc-1schp8c-0 cinWxa"
@@ -68627,7 +68851,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
         </div>
       </div>
     </div>
-  </article>
+  </div>
 </div>
 `;
 
@@ -68635,68 +68859,78 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-toppdg-0 gZhLog box box-link-shadow"
 >
-  <a
-    className="overlay-column"
-    href="/repo/hitchhiker/heartOfGold"
-    onClick={[Function]}
-  />
-  <article
-    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 cvqkqR media"
+  <div
+    className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
-    <figure
-      className="CardColumn__AvatarWrapper-sc-1w6lsih-1 jBSrYP media-left"
-    >
-      <p
-        className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
-      >
-        <img
-          alt="Logo"
-          src="/images/blib.jpg"
-        />
-      </p>
-    </figure>
+    <a
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      href="/repo/hitchhiker/heartOfGold/"
+      onClick={[Function]}
+    />
     <div
-      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 dvHFki media-content text-box is-flex"
+      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 jAGxYw"
     >
       <div
-        className="is-flex"
+        className="GroupEntry__ContentLeft-sc-1f902yu-5 jyDOdM"
       >
         <div
-          className="is-clipped mb-0"
+          className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <p
-            className="shorten-text m-0"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
-            <span
-              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
+            <img
+              alt="Logo"
+              src="/images/blib.jpg"
+            />
+          </p>
+        </div>
+        <div
+          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-7 hBKdoF"
+        >
+          <div
+            className="GroupEntry__Name-sc-1f902yu-3 fpbhOs"
+          >
+            <div
+              className="is-flex"
             >
               <strong>
                 heartOfGold
               </strong>
                
-              <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
-              />
-            </span>
-          </p>
+              <span
+                className="RepositoryFlags__Wrapper-sc-1swhx1t-0 iZwVwy"
+              >
+                <div
+                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-1 dkzelp"
+                />
+              </span>
+            </div>
+          </div>
           <p
-            className="shorten-text"
+            className="GroupEntry__Description-sc-1f902yu-4 dAfper"
           >
             The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
           </p>
         </div>
       </div>
       <div
-        className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
+        className="GroupEntry__ContentRight-sc-1f902yu-6 euVvLR is-hidden-touch"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
-        />
-        <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
+          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 hpwSFW"
         >
+          <span
+            className="RepositoryEntry__QuickActionbar-sc-6jys82-2 bbVvmm"
+          >
+            <i
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-3 jNjBgB has-cursor-pointer"
+              onClick={[Function]}
+              title="overview.clone"
+            />
+          </span>
           <small
-            className="level-item"
+            className="RepositoryEntry__DateWrapper-sc-6jys82-1 jWsUcR"
           >
             <time
               className="DateElement-sc-1schp8c-0 cinWxa"
@@ -68708,7 +68942,7 @@ exports[`Storyshots RepositoryEntry Quick Link EP 1`] = `
         </div>
       </div>
     </div>
-  </article>
+  </div>
 </div>
 `;
 
@@ -68716,80 +68950,90 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
 <div
   className="RepositoryEntrystories__Spacing-toppdg-0 gZhLog box box-link-shadow"
 >
-  <a
-    className="overlay-column"
-    href="/repo/hitchhiker/heartOfGold"
-    onClick={[Function]}
-  />
-  <article
-    className="CardColumn__NoEventWrapper-sc-1w6lsih-0 cvqkqR media"
+  <div
+    className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
-    <figure
-      className="CardColumn__AvatarWrapper-sc-1w6lsih-1 jBSrYP media-left"
-    >
-      <p
-        className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
-      >
-        <img
-          alt="Logo"
-          src="test-file-stub"
-        />
-      </p>
-    </figure>
+    <a
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      href="/repo/hitchhiker/heartOfGold/"
+      onClick={[Function]}
+    />
     <div
-      className="CardColumn__FlexFullHeight-sc-1w6lsih-2 dvHFki media-content text-box is-flex"
+      className="GroupEntry__StyledGroupEntry-sc-1f902yu-0 jAGxYw"
     >
       <div
-        className="is-flex"
+        className="GroupEntry__ContentLeft-sc-1f902yu-5 jyDOdM"
       >
         <div
-          className="is-clipped mb-0"
+          className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <p
-            className="shorten-text m-0"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
           >
-            <span
-              className="RepositoryEntry__Title-sc-6jys82-0 dqCES"
+            <img
+              alt="Logo"
+              src="test-file-stub"
+            />
+          </p>
+        </div>
+        <div
+          className="GroupEntry__NameDescriptionWrapper-sc-1f902yu-7 hBKdoF"
+        >
+          <div
+            className="GroupEntry__Name-sc-1f902yu-3 fpbhOs"
+          >
+            <div
+              className="is-flex"
             >
               <strong>
                 heartOfGold
               </strong>
                
-              <div
-                className="RepositoryEntry__RepositoryFlagContainer-sc-6jys82-1 fpFEji"
+              <span
+                className="RepositoryFlags__Wrapper-sc-1swhx1t-0 iZwVwy"
               >
-                <span
-                  className="tooltip has-tooltip-bottom"
-                  data-tooltip="healthCheckFailure.tooltip"
+                <div
+                  className="RepositoryFlags__RepositoryFlagContainer-sc-1swhx1t-1 dkzelp"
                 >
                   <span
-                    className="Tag__InnerTag-ql67az-0 kOFYBe tag is-danger is-small has-cursor-pointer"
-                    onClick={[Function]}
+                    className="tooltip has-tooltip-bottom"
+                    data-tooltip="healthCheckFailure.tooltip"
                   >
-                    repository.healthCheckFailure
+                    <span
+                      className="Tag__InnerTag-ql67az-0 kOFYBe tag is-danger is-small has-cursor-pointer"
+                      onClick={[Function]}
+                    >
+                      repository.healthCheckFailure
+                    </span>
                   </span>
-                </span>
-              </div>
-            </span>
-          </p>
+                </div>
+              </span>
+            </div>
+          </div>
           <p
-            className="shorten-text"
+            className="GroupEntry__Description-sc-1f902yu-4 dAfper"
           >
             The starship Heart of Gold was the first spacecraft to make use of the Infinite Improbability Drive
           </p>
         </div>
       </div>
       <div
-        className="CardColumn__FooterWrapper-sc-1w6lsih-3 kYSWZY level is-flex"
+        className="GroupEntry__ContentRight-sc-1f902yu-6 euVvLR is-hidden-touch"
       >
         <div
-          className="CardColumn__RightMarginDiv-sc-1w6lsih-5 hWvnQP level-left is-hidden-mobile"
-        />
-        <div
-          className="CardColumn__InheritFlexShrinkDiv-sc-1w6lsih-6 UetKA level-right is-block is-mobile m-0 shorten-text"
+          className="RepositoryEntry__ContentRightContainer-sc-6jys82-0 hpwSFW"
         >
+          <span
+            className="RepositoryEntry__QuickActionbar-sc-6jys82-2 bbVvmm"
+          >
+            <i
+              className="fas fa-fw fa-download has-text-info RepositoryEntry__QuickAction-sc-6jys82-3 jNjBgB has-cursor-pointer"
+              onClick={[Function]}
+              title="overview.clone"
+            />
+          </span>
           <small
-            className="level-item"
+            className="RepositoryEntry__DateWrapper-sc-6jys82-1 jWsUcR"
           >
             <time
               className="DateElement-sc-1schp8c-0 cinWxa"
@@ -68801,7 +69045,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
         </div>
       </div>
     </div>
-  </article>
+  </div>
 </div>
 `;
 
