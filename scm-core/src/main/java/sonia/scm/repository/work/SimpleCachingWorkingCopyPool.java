@@ -114,36 +114,36 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
     this.x = new ConcurrentHashMap<>();
     cacheEnabled = size > 0;
     cacheHitCounter = Counter
-      .builder("scm.workingCopy.pool.cache.hit")
+      .builder("scm.workingcopy.pool.cache.hit")
       .description("The amount of cache hits for the working copy pool")
       .register(meterRegistry);
     cacheMissCounter = Counter
-      .builder("scm.workingCopy.pool.cache.miss")
+      .builder("scm.workingcopy.pool.cache.miss")
       .description("The amount of cache misses for the working copy pool")
       .register(meterRegistry);
     reclaimFailureCounter = Counter
-      .builder("scm.workingCopy.pool.reclaim.failure")
-      .description("The amount of failed reclaim processes")
+      .builder("scm.workingcopy.pool.reclaim.failure")
+      .description("The amount of failed reclaim processes from pool")
       .register(meterRegistry);
     overflowCounter = Counter
-      .builder("scm.workingCopy.pool.cache.overflow")
-      .description("The amount of discarded working copies due to cache overflow")
+      .builder("scm.workingcopy.pool.cache.overflow")
+      .description("The amount of discarded working copies from pool due to cache overflow")
       .register(meterRegistry);
     parallelWaitTimer = Timer
-      .builder("scm.workingCopy.pool.parallel")
-      .description("Duration of blocking waits for available working copies")
+      .builder("scm.workingcopy.pool.parallel")
+      .description("Duration of blocking waits for available working copies in pool")
       .register(meterRegistry);
     reclaimTimer = Timer
-      .builder("scm.workingCopy.pool.reclaim.duration")
-      .description("Duration of reclaiming existing working copies")
+      .builder("scm.workingcopy.pool.reclaim.duration")
+      .description("Duration of reclaiming existing working copies in pool")
       .register(meterRegistry);
     initializeTimer = Timer
-      .builder("scm.workingCopy.pool.initialize.duration")
-      .description("Duration of initialization of working copies")
+      .builder("scm.workingcopy.pool.initialize.duration")
+      .description("Duration of initialization of working copies in pool")
       .register(meterRegistry);
     deleteTimer = Timer
-      .builder("scm.workingCopy.pool.delete.duration")
-      .description("Duration of deletes of working copies")
+      .builder("scm.workingcopy.pool.delete.duration")
+      .description("Duration of deletes of working copies from pool")
       .register(meterRegistry);
   }
 
