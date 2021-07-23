@@ -68,6 +68,13 @@ const QuickAction = styled(Icon)`
   }
 `;
 
+const Name = styled.strong`
+  text-overflow: ellipsis;
+  overflow-x: hidden;
+  overflow-y: visible;
+  white-space: nowrap;
+`;
+
 const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
   const [t] = useTranslation("repos");
   const [openCloneModal, setOpenCloneModal] = useState(false);
@@ -112,7 +119,7 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
   const name = (
     <div className="is-flex">
       <ExtensionPoint name="repository.card.beforeTitle" props={{ repository }} />
-      <strong>{repository.name}</strong> <RepositoryFlags repository={repository} className="is-hidden-mobile" />
+      <Name>{repository.name}</Name> <RepositoryFlags repository={repository} className="is-hidden-mobile" />
     </div>
   );
 

@@ -35,7 +35,7 @@ type Props = {
 };
 
 const RepositoryFlag: FC<Props> = ({ children, title, size = "small", ...props }) => (
-  <Tooltip location="bottom" message={title}>
+  <Tooltip location="right" message={title}>
     <Tag size={size} {...props}>
       {children}
     </Tag>

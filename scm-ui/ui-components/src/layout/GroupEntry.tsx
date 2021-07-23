@@ -33,7 +33,6 @@ const StyledGroupEntry = styled.div`
   justify-content: space-between;
   padding: 0.5rem;
   align-items: center;
-  overflow: hidden;
   pointer-events: all;
 `;
 
@@ -59,18 +58,14 @@ const Avatar = styled.div`
 
 const Name = styled.div`
   padding: 0 0.25rem;
-  strong {
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
-  }
 `;
 
 const Description = styled.p`
   padding: 0 0.25rem;
   height: 1.5rem;
   text-overflow: ellipsis;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
   white-space: nowrap;
   word-break: break-all;
 `;
