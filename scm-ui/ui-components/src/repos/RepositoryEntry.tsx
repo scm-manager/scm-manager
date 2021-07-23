@@ -75,24 +75,22 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
   const createContentRight = () => {
     return (
       <ContentRightContainer>
-        {openCloneModal ? (
-          <FullscreenModal
-            active={openCloneModal}
-            title={t("overview.clone")}
-            body={
-              <div className="content">
-                <ExtensionPoint
-                  name="repos.repository-details.information"
-                  renderAll={true}
-                  props={{
-                    repository,
-                  }}
-                />
-              </div>
-            }
-            closeFunction={() => setOpenCloneModal(false)}
-          />
-        ) : null}
+        <FullscreenModal
+          active={openCloneModal}
+          title={t("overview.clone")}
+          body={
+            <div className="content">
+              <ExtensionPoint
+                name="repos.repository-details.information"
+                renderAll={true}
+                props={{
+                  repository,
+                }}
+              />
+            </div>
+          }
+          closeFunction={() => setOpenCloneModal(false)}
+        />
         <QuickActionbar>
           <QuickAction
             name="download"
@@ -109,7 +107,7 @@ const RepositoryEntry: FC<Props> = ({ repository, baseDate }) => {
     );
   };
 
-  const repositoryLink = `/repo/${repository.namespace}/${repository.name}`;
+  const repositoryLink = `/repo/${repository.namespace}/${repository.name}/`;
   const actions = createContentRight();
   const name = (
     <div className="is-flex">
