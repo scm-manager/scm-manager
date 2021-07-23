@@ -40,8 +40,10 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.index.DirectoryReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.index.IndexableField;
 import org.apache.lucene.store.ByteBuffersDirectory;
 import org.apache.lucene.store.Directory;
+import org.apache.shiro.authz.AuthorizationException;
 import org.github.sdorra.jse.ShiroExtension;
 import org.github.sdorra.jse.SubjectAware;
 import org.junit.jupiter.api.BeforeEach;
@@ -379,6 +381,24 @@ class LuceneQueryBuilderTest {
   }
 
   @Test
+  void shouldFailWithoutPermissionForTheSearchedType() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(denyDoc("awesome"));
+    }
+    assertThrows(AuthorizationException.class, () -> query(Deny.class, "awesome"));
+  }
+
+  @Test
+  @SubjectAware(value = "marvin", permissions = "deny:4711")
+  void shouldNotFailWithRequiredPermissionForTheSearchedType() throws IOException {
+    try (IndexWriter writer = writer()) {
+      writer.addDocument(denyDoc("awesome"));
+    }
+    QueryResult result = query(Deny.class, "awesome");
+    assertThat(result.getTotalHits()).isOne();
+  }
+
+  @Test
   void shouldLimitHitsByDefaultSize() throws IOException {
     try (IndexWriter writer = writer()) {
       for (int i = 0; i < 20; i++)
@@ -452,7 +472,7 @@ class LuceneQueryBuilderTest {
 
     JsonNode displayName = fields.get("displayName");
     assertThat(displayName.get("highlighted").asBoolean()).isTrue();
-    assertThat(displayName.get("fragments").get(0).asText()).contains("**Arthur**");
+    assertThat(displayName.get("fragments").get(0).asText()).contains("<>Arthur</>");
   }
 
   @Test
@@ -556,9 +576,17 @@ class LuceneQueryBuilderTest {
     return document;
   }
 
+  private Document denyDoc(String value) {
+    Document document = new Document();
+    document.add(new TextField("value", value, Field.Store.YES));
+    document.add(new StringField(FieldNames.TYPE, "deny", Field.Store.YES));
+    return document;
+  }
+
   @Getter
   @IndexedType
   static class Types {
+
 
     @Indexed
     private Integer intValue;
@@ -598,6 +626,13 @@ class LuceneQueryBuilderTest {
   static class Simple {
     @Indexed(defaultQuery = true)
     private String content;
+  }
+
+  @Getter
+  @IndexedType(permission = "deny:4711")
+  static class Deny {
+    @Indexed(defaultQuery = true)
+    private String value;
   }
 
 }

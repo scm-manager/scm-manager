@@ -22,46 +22,29 @@
  * SOFTWARE.
  */
 
-package sonia.scm.api.v2.resources;
+package sonia.scm.search;
 
-import lombok.Getter;
+import com.google.common.annotations.Beta;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.QueryParam;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.UriInfo;
+/**
+ * A type which can be searched with the {@link SearchEngine}.
+ *
+ * @since 2.21.0
+ */
+@Beta
+public interface SearchableType {
 
-@Getter
-public class SearchParameters {
+  /**
+   * Return name of the type.
+   *
+   * @return name of type
+   */
+  String getName();
 
-  @Context
-  private UriInfo uriInfo;
-
-  @NotNull
-  @Size(min = 2)
-  @QueryParam("q")
-  private String query;
-
-  @Min(0)
-  @QueryParam("page")
-  @DefaultValue("0")
-  private int page = 0;
-
-  @Min(1)
-  @Max(100)
-  @QueryParam("pageSize")
-  @DefaultValue("10")
-  private int pageSize = 10;
-
-  @PathParam("type")
-  private String type;
-
-  String getSelfLink() {
-    return uriInfo.getAbsolutePath().toASCIIString();
-  }
+  /**
+   * Return type in form of class.
+   *
+   * @return class of type
+   */
+  Class<?> getType();
 }

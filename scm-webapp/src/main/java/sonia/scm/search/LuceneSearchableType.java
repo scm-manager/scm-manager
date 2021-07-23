@@ -29,47 +29,74 @@ import lombok.Value;
 import org.apache.lucene.queryparser.flexible.standard.config.PointsConfig;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @Value
-public class SearchableType {
+public class LuceneSearchableType implements SearchableType {
+
+  private static final float DEFAULT_BOOST = 1f;
 
   Class<?> type;
   String name;
-  String[] fieldNames;
-  Map<String,Float> boosts;
-  Map<String, PointsConfig> pointsConfig;
+  String permission;
   List<SearchableField> fields;
+  String[] fieldNames;
+  Map<String, Float> boosts;
+  Map<String, PointsConfig> pointsConfig;
   TypeConverter typeConverter;
 
-  SearchableType(Class<?> type,
-                 String[] fieldNames,
-                 Map<String, Float> boosts,
-                 Map<String, PointsConfig> pointsConfig,
-                 List<SearchableField> fields,
-                 TypeConverter typeConverter) {
+  LuceneSearchableType(Class<?> type, IndexedType annotation, List<SearchableField> fields) {
     this.type = type;
-    this.name = name(type);
-    this.fieldNames = fieldNames;
-    this.boosts = Collections.unmodifiableMap(boosts);
-    this.pointsConfig = Collections.unmodifiableMap(pointsConfig);
-    this.fields = Collections.unmodifiableList(fields);
-    this.typeConverter = typeConverter;
+    this.name = name(type, annotation);
+    this.permission = Strings.emptyToNull(annotation.permission());
+    this.fields = fields;
+    this.fieldNames = fieldNames(fields);
+    this.boosts = boosts(fields);
+    this.pointsConfig = pointsConfig(fields);
+    this.typeConverter = TypeConverters.create(type);
   }
 
-  private String name(Class<?> type) {
-    IndexedType annotation = type.getAnnotation(IndexedType.class);
-    if (annotation == null) {
-      throw new IllegalArgumentException(
-        type.getName() + " has no " + IndexedType.class.getSimpleName() + " annotation"
-      );
-    }
+  public Optional<String> getPermission() {
+    return Optional.ofNullable(permission);
+  }
+
+  private String name(Class<?> type, IndexedType annotation) {
     String nameFromAnnotation = annotation.value();
     if (Strings.isNullOrEmpty(nameFromAnnotation)) {
       String simpleName = type.getSimpleName();
       return Character.toLowerCase(simpleName.charAt(0)) + simpleName.substring(1);
     }
     return nameFromAnnotation;
+  }
+
+  private String[] fieldNames(List<SearchableField> fields) {
+    return fields.stream()
+      .filter(SearchableField::isDefaultQuery)
+      .map(SearchableField::getName)
+      .toArray(String[]::new);
+  }
+
+  private Map<String, Float> boosts(List<SearchableField> fields) {
+    Map<String, Float> map = new HashMap<>();
+    for (SearchableField field : fields) {
+      if (field.isDefaultQuery() && field.getBoost() != DEFAULT_BOOST) {
+        map.put(field.getName(), field.getBoost());
+      }
+    }
+    return Collections.unmodifiableMap(map);
+  }
+
+  private Map<String, PointsConfig> pointsConfig(List<SearchableField> fields) {
+    Map<String, PointsConfig> map = new HashMap<>();
+    for (SearchableField field : fields) {
+      PointsConfig config = field.getPointsConfig();
+      if (config != null) {
+        map.put(field.getName(), config);
+      }
+    }
+    return Collections.unmodifiableMap(map);
   }
 }

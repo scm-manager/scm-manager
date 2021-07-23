@@ -31,6 +31,8 @@ import javax.annotation.Nonnull;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -44,7 +46,7 @@ import static sonia.scm.NotFoundException.notFound;
 @Singleton
 class SearchableTypeResolver {
 
-  private final Map<Class<?>, SearchableType> classToSearchableType = new HashMap<>();
+  private final Map<Class<?>, LuceneSearchableType> classToSearchableType = new HashMap<>();
   private final Map<String, Class<?>> nameToClass = new HashMap<>();
 
   @Inject
@@ -62,26 +64,30 @@ class SearchableTypeResolver {
     fillMaps(convert(indexedTypes));
   }
 
-  private void fillMaps(Iterable<SearchableType> types) {
-    for (SearchableType type : types) {
+  private void fillMaps(Iterable<LuceneSearchableType> types) {
+    for (LuceneSearchableType type : types) {
       classToSearchableType.put(type.getType(), type);
       nameToClass.put(type.getName(), type.getType());
     }
   }
 
   @Nonnull
-  private Set<SearchableType> convert(Iterable<Class<?>> indexedTypes) {
+  private Set<LuceneSearchableType> convert(Iterable<Class<?>> indexedTypes) {
     return StreamSupport.stream(indexedTypes.spliterator(), false)
       .map(SearchableTypes::create)
       .collect(Collectors.toSet());
   }
 
-  public SearchableType resolve(Object object) {
+  public Collection<LuceneSearchableType> getSearchableTypes() {
+    return Collections.unmodifiableCollection(classToSearchableType.values());
+  }
+
+  public LuceneSearchableType resolve(Object object) {
     return resolve(object.getClass());
   }
 
-  public SearchableType resolve(Class<?> type) {
-    SearchableType searchableType = classToSearchableType.get(type);
+  public LuceneSearchableType resolve(Class<?> type) {
+    LuceneSearchableType searchableType = classToSearchableType.get(type);
     if (searchableType == null) {
       throw notFound(entity("type", type.getName()));
     }

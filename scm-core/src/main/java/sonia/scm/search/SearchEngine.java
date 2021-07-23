@@ -26,6 +26,8 @@ package sonia.scm.search;
 
 import com.google.common.annotations.Beta;
 
+import java.util.Collection;
+
 /**
  * The {@link SearchEngine} is the main entry point for indexing and searching.
  * Note that this is kind of a low level api for indexing.
@@ -36,6 +38,13 @@ import com.google.common.annotations.Beta;
  */
 @Beta
 public interface SearchEngine {
+
+  /**
+   * Returns a list of searchable types.
+   *
+   * @return collection of searchable types
+   */
+  Collection<SearchableType> getSearchableTypes();
 
   /**
    * Returns the index with the given name and the given options.

@@ -51,7 +51,7 @@ public class LuceneIndex implements Index {
 
   @Override
   public void store(Id id, String permission, Object object) {
-    SearchableType type = resolver.resolve(object);
+    LuceneSearchableType type = resolver.resolve(object);
     String uid = createUid(id, type);
     Document document = type.getTypeConverter().convert(object);
     try {
@@ -68,7 +68,7 @@ public class LuceneIndex implements Index {
     }
   }
 
-  private String createUid(Id id, SearchableType type) {
+  private String createUid(Id id, LuceneSearchableType type) {
     return id.asString() + "/" + type.getName();
   }
 
@@ -78,7 +78,7 @@ public class LuceneIndex implements Index {
 
   @Override
   public void delete(Id id, Class<?> type) {
-    SearchableType searchableType = resolver.resolve(type);
+    LuceneSearchableType searchableType = resolver.resolve(type);
     try {
       writer.deleteDocuments(new Term(UID, createUid(id, searchableType)));
     } catch (IOException e) {
@@ -97,7 +97,7 @@ public class LuceneIndex implements Index {
 
   @Override
   public void deleteByType(Class<?> type) {
-    SearchableType searchableType = resolver.resolve(type);
+    LuceneSearchableType searchableType = resolver.resolve(type);
     deleteByTypeName(searchableType.getName());
   }
 

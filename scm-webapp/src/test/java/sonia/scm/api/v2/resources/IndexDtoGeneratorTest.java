@@ -25,6 +25,7 @@
 package sonia.scm.api.v2.resources;
 
 import de.otto.edison.hal.Embedded;
+import de.otto.edison.hal.Link;
 import de.otto.edison.hal.Links;
 import org.apache.shiro.subject.Subject;
 import org.apache.shiro.util.ThreadContext;
@@ -41,15 +42,19 @@ import sonia.scm.config.ScmConfiguration;
 import sonia.scm.initialization.InitializationFinisher;
 import sonia.scm.initialization.InitializationStep;
 import sonia.scm.initialization.InitializationStepResource;
+import sonia.scm.search.SearchEngine;
+import sonia.scm.search.SearchableType;
 import sonia.scm.security.AnonymousMode;
 
 import java.net.URI;
+import java.util.Arrays;
 import java.util.List;
 
 import static de.otto.edison.hal.Link.link;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doAnswer;
+import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static sonia.scm.SCMContext.USER_ANONYMOUS;
 
@@ -66,7 +71,8 @@ class IndexDtoGeneratorTest {
   private ScmConfiguration configuration;
   @Mock
   private InitializationFinisher initializationFinisher;
-
+  @Mock
+  private SearchEngine searchEngine;
   @InjectMocks
   private IndexDtoGenerator generator;
 
@@ -137,6 +143,33 @@ class IndexDtoGeneratorTest {
 
       assertThat(dto.getLinks().getLinkBy("me")).isNotPresent();
     }
+
+    @Test
+    void shouldAppendSearchLinksForEveryType() {
+      List<SearchableType> types = Arrays.asList(
+        searchableType("repository"),
+        searchableType("user"),
+        searchableType("group")
+      );
+      when(searchEngine.getSearchableTypes()).thenReturn(types);
+      mockSubjectRelatedResourceLinks();
+      when(resourceLinks.search()).thenReturn(new ResourceLinks.SearchLinks(scmPathInfo));
+
+      when(subject.isAuthenticated()).thenReturn(true);
+
+      IndexDto dto = generator.generate();
+      assertThat(dto.getLinks().getLinksBy("search")).contains(
+        Link.linkBuilder("search", "/api/v2/search/query/repository").withName("repository").build(),
+        Link.linkBuilder("search", "/api/v2/search/query/user").withName("user").build(),
+        Link.linkBuilder("search", "/api/v2/search/query/group").withName("group").build()
+      );
+    }
+  }
+
+  private SearchableType searchableType(String name) {
+    SearchableType searchableType = mock(SearchableType.class);
+    when(searchableType.getName()).thenReturn(name);
+    return searchableType;
   }
 
   @Nested
@@ -195,6 +228,5 @@ class IndexDtoGeneratorTest {
     when(resourceLinks.namespaceCollection()).thenReturn(new ResourceLinks.NamespaceCollectionLinks(scmPathInfo));
     when(resourceLinks.me()).thenReturn(new ResourceLinks.MeLinks(scmPathInfo, new ResourceLinks.UserLinks(scmPathInfo)));
     when(resourceLinks.repository()).thenReturn(new ResourceLinks.RepositoryLinks(scmPathInfo));
-    when(resourceLinks.search()).thenReturn(new ResourceLinks.SearchLinks(scmPathInfo));
   }
 }

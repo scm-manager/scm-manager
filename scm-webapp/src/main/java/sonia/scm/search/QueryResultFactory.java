@@ -50,9 +50,9 @@ public class QueryResultFactory {
   private final Analyzer analyzer;
   private final Highlighter highlighter;
   private final IndexSearcher searcher;
-  private final SearchableType searchableType;
+  private final LuceneSearchableType searchableType;
 
-  public QueryResultFactory(Analyzer analyzer, IndexSearcher searcher, SearchableType searchableType, Query query) {
+  public QueryResultFactory(Analyzer analyzer, IndexSearcher searcher, LuceneSearchableType searchableType, Query query) {
     this.analyzer = analyzer;
     this.searcher = searcher;
     this.searchableType = searchableType;
@@ -61,7 +61,7 @@ public class QueryResultFactory {
 
   private Highlighter createHighlighter(Query query) {
     return new Highlighter(
-      new SimpleHTMLFormatter("**", "**"),
+      new SimpleHTMLFormatter("<>", "</>"),
       new QueryScorer(query)
     );
   }

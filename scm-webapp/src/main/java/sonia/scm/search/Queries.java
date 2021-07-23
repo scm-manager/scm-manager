@@ -36,7 +36,7 @@ final class Queries {
   private Queries() {
   }
 
-  private static Query typeQuery(SearchableType type) {
+  private static Query typeQuery(LuceneSearchableType type) {
     return new TermQuery(new Term(FieldNames.TYPE, type.getName()));
   }
 
@@ -44,7 +44,7 @@ final class Queries {
     return new TermQuery(new Term(FieldNames.REPOSITORY, repositoryId));
   }
 
-  static Query filter(Query query, SearchableType searchableType, QueryBuilder.QueryParams params) {
+  static Query filter(Query query, LuceneSearchableType searchableType, QueryBuilder.QueryParams params) {
     BooleanQuery.Builder builder = new BooleanQuery.Builder()
       .add(query, MUST)
       .add(typeQuery(searchableType), MUST);

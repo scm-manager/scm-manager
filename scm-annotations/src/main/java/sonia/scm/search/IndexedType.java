@@ -51,4 +51,13 @@ public @interface IndexedType {
    * @return name of the index object or an empty string which indicates that the default should be used.
    */
   String value() default "";
+
+  /**
+   * Returns the required permission for searching this type.
+   * Default means that every user is able to search that type of data.
+   * Note: Every entry in the index has its own permission.
+   *
+   * @return required permission for searching this type.
+   */
+  String permission() default "";
 }

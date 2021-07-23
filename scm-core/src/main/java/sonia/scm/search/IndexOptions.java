@@ -25,6 +25,7 @@
 package sonia.scm.search;
 
 import com.google.common.annotations.Beta;
+import lombok.EqualsAndHashCode;
 
 import java.util.Locale;
 
@@ -34,6 +35,7 @@ import java.util.Locale;
  * @since 2.21.0
  */
 @Beta
+@EqualsAndHashCode
 public class IndexOptions {
 
   private final Type type;
