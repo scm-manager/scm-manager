@@ -53442,7 +53442,7 @@ exports[`Storyshots Logo WithoutText 1`] = `
 >
   <img
     alt="logo.alt"
-    src="/images/scmLogo.svg"
+    src="/images/blibSimpleSmallDarkBackground.svg"
   />
 </div>
 `;
