@@ -26,11 +26,11 @@ package sonia.scm.lifecycle.modules;
 
 import com.google.inject.AbstractModule;
 import sonia.scm.plugin.PluginLoader;
-import sonia.scm.repository.work.SimpleCachingWorkingCopyPool;
+import sonia.scm.repository.work.NoneCachingWorkingCopyPool;
 import sonia.scm.repository.work.WorkingCopyPool;
 
 public class WorkingCopyPoolModule extends AbstractModule {
-  public static final String DEFAULT_WORKING_COPY_POOL_STRATEGY = SimpleCachingWorkingCopyPool.class.getName();
+  public static final String DEFAULT_WORKING_COPY_POOL_STRATEGY = NoneCachingWorkingCopyPool.class.getName();
   public static final String WORKING_COPY_POOL_STRATEGY_PROPERTY = "scm.workingCopyPoolStrategy";
   private final ClassLoader classLoader;
 
