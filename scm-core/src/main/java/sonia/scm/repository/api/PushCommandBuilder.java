@@ -24,8 +24,6 @@
 
 package sonia.scm.repository.api;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.subject.Subject;
 import org.slf4j.Logger;
@@ -38,44 +36,42 @@ import sonia.scm.repository.spi.PushCommandRequest;
 import java.io.IOException;
 import java.net.URL;
 
-//~--- JDK imports ------------------------------------------------------------
-
 /**
  * The push command push changes to a other repository.
  *
  * @author Sebastian Sdorra
  * @since 1.31
  */
-public final class PushCommandBuilder
-{
+public final class PushCommandBuilder {
 
-  /**
-   * the logger for PushCommandBuilder
-   */
-  private static final Logger logger =
-    LoggerFactory.getLogger(PushCommandBuilder.class);
+  private static final Logger logger = LoggerFactory.getLogger(PushCommandBuilder.class);
 
-  //~--- constructors ---------------------------------------------------------
+  private final PushCommand command;
+  private final PushCommandRequest request = new PushCommandRequest();
 
-  /**
-   * Constructs a new PushCommandBuilder.
-   *
-   * @param command implementation of the {@link PushCommand}
-   */
-  PushCommandBuilder(PushCommand command)
-  {
+  PushCommandBuilder(PushCommand command) {
     this.command = command;
   }
 
-  //~--- methods --------------------------------------------------------------
+  /**
+   * Set username and password for request
+   *
+   * @param username username
+   * @param password password
+   * @return this builder instance.
+   * @since 2.22.0
+   */
+  public PushCommandBuilder withUsernamePassword(String username, String password) {
+    request.setUsername(username);
+    request.setPassword(password);
+    return this;
+  }
 
   /**
    * Push all changes to the given remote repository.
    *
    * @param remoteRepository remote repository
-   *
    * @return informations of the executed push command
-   *
    * @throws IOException
    */
   public PushResponse push(Repository remoteRepository) throws IOException {
@@ -97,11 +93,8 @@ public final class PushCommandBuilder
    * Push all changes to the given remote url.
    *
    * @param url url of a remote repository
-   *
    * @return informations of the executed push command
-   *
    * @throws IOException
-   *
    * @since 1.43
    */
   public PushResponse push(String url) throws IOException {
@@ -110,17 +103,9 @@ public final class PushCommandBuilder
 
     logger.info("push changes to url {}", url);
 
-    request.reset();
     request.setRemoteUrl(remoteUrl);
 
     return command.push(request);
   }
 
-  //~--- fields ---------------------------------------------------------------
-
-  /** push command implementation */
-  private PushCommand command;
-
-  /** push command request */
-  private PushCommandRequest request = new PushCommandRequest();
 }

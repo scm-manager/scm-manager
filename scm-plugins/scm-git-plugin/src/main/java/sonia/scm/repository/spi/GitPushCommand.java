@@ -24,8 +24,6 @@
 
 package sonia.scm.repository.spi;
 
-//~--- non-JDK imports --------------------------------------------------------
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import sonia.scm.repository.GitRepositoryHandler;
@@ -34,54 +32,23 @@ import sonia.scm.repository.api.PushResponse;
 import javax.inject.Inject;
 import java.io.IOException;
 
-//~--- JDK imports ------------------------------------------------------------
+public class GitPushCommand extends AbstractGitPushOrPullCommand implements PushCommand {
 
-/**
- *
- * @author Sebastian Sdorra
- */
-public class GitPushCommand extends AbstractGitPushOrPullCommand
-  implements PushCommand
-{
+  private static final Logger LOG = LoggerFactory.getLogger(GitPushCommand.class);
 
-  /** Field description */
-  private static final Logger logger =
-    LoggerFactory.getLogger(GitPushCommand.class);
-
-  //~--- constructors ---------------------------------------------------------
-
-  /**
-   * Constructs ...
-   *
-   *  @param handler
-   * @param context
-   */
   @Inject
   public GitPushCommand(GitRepositoryHandler handler, GitContext context) {
     super(handler, context);
     this.handler = handler;
   }
 
-  //~--- methods --------------------------------------------------------------
-
-  /**
-   * Method description
-   *
-   *
-   * @param request
-   *
-   * @return
-   *
-   * @throws IOException
-   */
   @Override
   public PushResponse push(PushCommandRequest request)
-    throws IOException
-  {
+    throws IOException {
     String remoteUrl = getRemoteUrl(request);
 
-    logger.debug("push changes from {} to {}", repository, remoteUrl);
+    LOG.debug("push changes from {} to {}", repository, remoteUrl);
 
-    return new PushResponse(push(open(), remoteUrl));
+    return new PushResponse(push(open(), remoteUrl, request.getUsername(), request.getPassword()));
   }
 }
