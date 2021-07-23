@@ -34,13 +34,17 @@ import copyToClipboard from "../CopyToClipboard";
 
 const Wrapper = styled.div`
   margin: 2rem;
-  max-width: 200px;
 `;
 
 const link = "/foo/bar";
 const icon = <Icon name="icons fa-2x fa-fw" />;
 const name = <strong className="is-marginless">main content</strong>;
 const description = <small>more text</small>;
+const longName = (
+  <strong className="is-marginless">
+    Very-important-repository-with-a-particular-long-but-easily-rememberable-name-which-also-is-written-in-kebab-case
+  </strong>
+);
 const contentRight = (
   <ButtonGroup>
     <Button
@@ -55,11 +59,23 @@ storiesOf("GroupEntry", module)
   .addDecorator((story) => <MemoryRouter initialEntries={["/"]}>{story()}</MemoryRouter>)
   .addDecorator((storyFn) => <Wrapper>{storyFn()}</Wrapper>)
   .add("Default", () => (
+    <GroupEntry link={link} avatar={icon} name={name} description={description} contentRight={contentRight} />
+  ))
+  .add("With long texts", () => (
     <GroupEntry
       link={link}
       avatar={icon}
-      name={name}
-      description={description}
+      name={longName}
+      description={
+        <small>
+          Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et
+          dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet
+          clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet,
+          consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+          sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+          takimata sanctus est Lorem ipsum dolor sit amet.
+        </small>
+      }
       contentRight={contentRight}
     />
   ));
