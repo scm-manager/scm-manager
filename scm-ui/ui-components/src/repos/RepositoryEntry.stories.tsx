@@ -42,7 +42,7 @@ const Spacing = styled.div`
   margin: 2rem;
 `;
 
-const Container: FC = ({ children }) => <Spacing className="box box-link-shadow">{children}</Spacing>;
+const Container: FC = ({ children }) => <Spacing>{children}</Spacing>;
 
 const bindAvatar = (binder: Binder, avatar: string) => {
   binder.bind("repos.repository-avatar", () => {
@@ -78,14 +78,14 @@ const withBinder = (binder: Binder, repo: Repository) => {
   );
 };
 
-const QuickLink = (
-  <a className="level-item">
-    <Icon className="fa-lg" name="fas fa-code-branch fa-rotate-180 fa-fw" color="inherit" />
-  </a>
-);
-
 const archivedRepository = { ...repository, archived: true };
 const exportingRepository = { ...repository, exporting: true };
+const longTextRepository = {
+  ...repository,
+  name: "veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery-loooooooooooooooooooooooooooooooooooooooooooooooooooong-repooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo-naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame",
+  description:
+    "Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.",
+};
 const healthCheckFailedRepository = {
   ...repository,
   healthCheckFailures: [
@@ -93,9 +93,9 @@ const healthCheckFailedRepository = {
       id: "4211",
       summary: "Something failed",
       description: "Something realy bad happend",
-      url: "https://something-realy-bad.happend"
-    }
-  ]
+      url: "https://something-realy-bad.happend",
+    },
+  ],
 };
 const archivedExportingRepository = { ...repository, archived: true, exporting: true };
 
@@ -113,11 +113,6 @@ storiesOf("RepositoryEntry", module)
   .add("Before Title EP", () => {
     const binder = new Binder("title");
     bindBeforeTitle(binder, <i className="far fa-star" />);
-    return withBinder(binder, repository);
-  })
-  .add("Quick Link EP", () => {
-    const binder = new Binder("title");
-    bindQuickLink(binder, QuickLink);
     return withBinder(binder, repository);
   })
   .add("Archived", () => {
@@ -146,4 +141,7 @@ storiesOf("RepositoryEntry", module)
     const binder = new Binder("title");
     bindAvatar(binder, Git);
     return withBinder(binder, archivedExportingRepository);
+  })
+  .add("With long texts", () => {
+    return <RepositoryEntry repository={longTextRepository} baseDate={baseDate} />;
   });

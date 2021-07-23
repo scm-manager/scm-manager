@@ -28,9 +28,6 @@ import styled from "styled-components";
 const Container = styled.div`
   margin-bottom: 1em;
 `;
-
-const ContentWrapper = styled.div``;
-
 const TitleWrapper = styled.div`
   display: flex;
   align-items: center;
@@ -38,8 +35,6 @@ const TitleWrapper = styled.div`
   font-size: 1rem;
   font-weight: bold;
 `;
-
-const Entry = styled.div``;
 
 const Separator = styled.div`
   border-bottom: 1px solid rgb(219, 219, 219);
@@ -53,7 +48,7 @@ type Props = {
 const GroupEntries: FC<Props> = ({ namespaceHeader, elements }) => {
   const content = elements.map((entry, index) => (
     <>
-      <Entry key={index}>{entry}</Entry>
+      <div key={index}>{entry}</div>
       {index + 1 !== elements.length ? <Separator /> : null}
     </>
   ));
@@ -62,7 +57,7 @@ const GroupEntries: FC<Props> = ({ namespaceHeader, elements }) => {
     <Container>
       <TitleWrapper>{namespaceHeader}</TitleWrapper>
       <Separator />
-      <ContentWrapper>{content}</ContentWrapper>
+      {content}
       <div className="is-clearfix" />
     </Container>
   );
