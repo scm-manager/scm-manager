@@ -10,13 +10,11 @@ The Repository area includes everything based on repositories in namespaces. Thi
 * [Settings](settings/)
 
 ### Overview
-The repository overview screen shows all repositories sorted by namespaces. Each repository is shown as a tile. After clicking on the tile the readme screen of the repository is shown.
+The repository overview screen shows all repositories sorted by namespaces.
 
 ![Repository Overview](assets/repository-overview.png)
 
 Using the select box at the top of the page you can restrict the repositories shown for one namespace. Alternatively you can click on one namespace heading to show only repositories of this namespace. The search bar aside the select box can be used to arbitrarily filter the repositories by namespace, name and description.
-
-The different tabs like branches, changesets or sources of the repository can be accessed through the blue icons.
 
 Clicking the icon on the right-hand side of each namespace caption, you can change additional settings for this namespace. 
 
