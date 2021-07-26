@@ -28,7 +28,6 @@ import { storiesOf } from "@storybook/react";
 import { MemoryRouter } from "react-router-dom";
 import React from "react";
 import GroupEntry from "./GroupEntry";
-import { RepositoryFlag } from "../repos";
 import { Button, ButtonGroup } from "../buttons";
 import copyToClipboard from "../CopyToClipboard";
 

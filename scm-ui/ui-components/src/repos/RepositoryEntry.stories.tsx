@@ -31,7 +31,6 @@ import RepositoryEntry from "./RepositoryEntry";
 import { Binder, BinderContext } from "@scm-manager/ui-extensions";
 import { Repository } from "@scm-manager/ui-types";
 import Image from "../Image";
-import Icon from "../Icon";
 import { MemoryRouter } from "react-router-dom";
 import { Color } from "../styleConstants";
 import RepositoryFlag from "./RepositoryFlag";
