@@ -51,7 +51,7 @@ const bindAvatar = (binder: Binder, avatar: string) => {
 
 const bindFlag = (binder: Binder, color: Color, label: string) => {
   binder.bind("repository.card.flags", () => (
-    <RepositoryFlag title={label} color={color}>
+    <RepositoryFlag title={label} color={color} tooltipLocation="right">
       {label}
     </RepositoryFlag>
   ));
@@ -59,12 +59,6 @@ const bindFlag = (binder: Binder, color: Color, label: string) => {
 
 const bindBeforeTitle = (binder: Binder, extension: ReactNode) => {
   binder.bind("repository.card.beforeTitle", () => {
-    return extension;
-  });
-};
-
-const bindQuickLink = (binder: Binder, extension: ReactNode) => {
-  binder.bind("repository.card.quickLink", () => {
     return extension;
   });
 };
