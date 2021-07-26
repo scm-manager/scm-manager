@@ -52668,7 +52668,7 @@ exports[`Storyshots GroupEntry Default 1`] = `
     className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
       href="/foo/bar"
       onClick={[Function]}
     />
@@ -52745,7 +52745,7 @@ exports[`Storyshots GroupEntry With long texts 1`] = `
     className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
       href="/foo/bar"
       onClick={[Function]}
     />
@@ -68170,7 +68170,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
     className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -68184,7 +68184,7 @@ exports[`Storyshots RepositoryEntry Archived 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
           >
             <img
               alt="Logo"
@@ -68274,7 +68274,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
     className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -68288,7 +68288,7 @@ exports[`Storyshots RepositoryEntry Avatar EP 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
           >
             <img
               alt="Logo"
@@ -68367,7 +68367,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
     className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -68381,7 +68381,7 @@ exports[`Storyshots RepositoryEntry Before Title EP 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
           >
             <img
               alt="Logo"
@@ -68463,7 +68463,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
     className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -68477,7 +68477,7 @@ exports[`Storyshots RepositoryEntry Default 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
           >
             <img
               alt="Logo"
@@ -68556,7 +68556,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
     className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -68570,7 +68570,7 @@ exports[`Storyshots RepositoryEntry Exporting 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
           >
             <img
               alt="Logo"
@@ -68660,7 +68660,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
     className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -68674,7 +68674,7 @@ exports[`Storyshots RepositoryEntry HealthCheck Failure 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
           >
             <img
               alt="Logo"
@@ -68765,7 +68765,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
     className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -68779,7 +68779,7 @@ exports[`Storyshots RepositoryEntry MultiRepositoryTags 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
           >
             <img
               alt="Logo"
@@ -68879,7 +68879,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
     className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
       href="/repo/hitchhiker/heartOfGold/"
       onClick={[Function]}
     />
@@ -68893,7 +68893,7 @@ exports[`Storyshots RepositoryEntry RepositoryFlag EP 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
           >
             <img
               alt="Logo"
@@ -68984,7 +68984,7 @@ exports[`Storyshots RepositoryEntry With long texts 1`] = `
     className="GroupEntry__Wrapper-sc-1f902yu-8 bXFjdM"
   >
     <a
-      className="GroupEntry__OverlayLink-sc-1f902yu-1 fiMbHO"
+      className="GroupEntry__OverlayLink-sc-1f902yu-1 RhDcq"
       href="/repo/hitchhiker/veeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeery-loooooooooooooooooooooooooooooooooooooooooooooooooooong-repooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooooo-naaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaame/"
       onClick={[Function]}
     />
@@ -68998,7 +68998,7 @@ exports[`Storyshots RepositoryEntry With long texts 1`] = `
           className="GroupEntry__Avatar-sc-1f902yu-2 jgyqDs"
         >
           <div
-            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-48x48"
+            className="RepositoryAvatar__Avatar-uh53vb-0 iYRgUJ image is-64x64"
           >
             <img
               alt="Logo"

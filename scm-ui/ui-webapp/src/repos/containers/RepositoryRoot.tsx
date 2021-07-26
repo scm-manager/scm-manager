@@ -218,12 +218,12 @@ const RepositoryRoot = () => {
         title={titleComponent}
         documentTitle={`${repository.namespace}/${repository.name}`}
         afterTitle={
-          <>
+          <div className="is-flex">
             <ExtensionPoint name={"repository.afterTitle"} props={{ repository }} />
             <TagGroup>
               <RepositoryFlags repository={repository} tooltipLocations="bottom" />
             </TagGroup>
-          </>
+          </div>
         }
       >
         {modal}
