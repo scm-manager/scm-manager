@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-import React, { FC, KeyboardEvent, MouseEvent, useCallback, useState, useEffect } from "react";
+import React, { FC, KeyboardEvent as ReactKeyboardEvent, MouseEvent, useCallback, useState, useEffect } from "react";
 import { Hit, Links, ValueField } from "@scm-manager/ui-types";
 import styled from "styled-components";
 import { BackendError, useSearch } from "@scm-manager/ui-api";
@@ -122,7 +122,7 @@ const MoreResults: FC<GotoProps> = ({ gotoDetailSearch }) => {
   const [t] = useTranslation("commons");
   return (
     <ResultFooter className="dropdown-item has-text-centered">
-      <Button action={gotoDetailSearch} color="primary">
+      <Button action={gotoDetailSearch} color="primary" data-omnisearch="true">
         {t("search.quickSearch.moreResults")}
       </Button>
     </ResultFooter>
@@ -149,6 +149,7 @@ const Hits: FC<HitsProps> = ({ hits, index, clear, gotoDetailSearch }) => {
             title={id(hit)}
             to={`/repo/${id(hit)}`}
             role="option"
+            data-omnisearch="true"
           >
             {id(hit)}
           </Link>
@@ -166,7 +167,7 @@ const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, 
     setIndex(-1);
   }, [hits]);
 
-  const onKeyDown = (e: KeyboardEvent<HTMLInputElement>) => {
+  const onKeyDown = (e: ReactKeyboardEvent<HTMLInputElement>) => {
     // We use e.which, because ie 11 does not support e.code
     // https://caniuse.com/keyboardevent-code
     switch (e.which) {
@@ -201,7 +202,11 @@ const useKeyBoardNavigation = (gotoDetailSearch: () => void, clear: () => void, 
         }
         break;
       case 27: // e.code: Escape
-        clear();
+        if (index >= 0) {
+          setIndex(-1);
+        } else {
+          clear();
+        }
         break;
     }
   };
@@ -225,8 +230,39 @@ const useDebounce = (value: string, delay: number) => {
   return debouncedValue;
 };
 
+const isMoreResultsButton = (element: Element) => {
+  return element.tagName.toLocaleLowerCase("en") === "button" && element.className.includes("is-primary");
+};
+
+const isOnmiSearchElement = (element: Element) => {
+  return element.getAttribute("data-omnisearch") || isMoreResultsButton(element);
+};
+
 const useShowResultsOnFocus = () => {
   const [showResults, setShowResults] = useState(false);
+  useEffect(() => {
+    if (showResults) {
+      const close = () => {
+        setShowResults(false);
+      };
+
+      const onKeyUp = (e: KeyboardEvent) => {
+        if (e.which === 9) { // tab
+          const element = document.activeElement;
+          if (!element || !isOnmiSearchElement(element)) {
+            close();
+          }
+        }
+      };
+
+      window.addEventListener("click", close);
+      window.addEventListener("keyup", onKeyUp);
+      return () => {
+        window.removeEventListener("click", close);
+        window.removeEventListener("keyup", onKeyUp);
+      };
+    }
+  }, [showResults]);
   return {
     showResults,
     onClick: (e: MouseEvent<HTMLInputElement>) => {
@@ -235,7 +271,6 @@ const useShowResultsOnFocus = () => {
     },
     onKeyPress: () => setShowResults(true),
     onFocus: () => setShowResults(true),
-    onBlur: () => setShowResults(false),
     hideResults: () => setShowResults(false),
   };
 };
@@ -276,6 +311,7 @@ const OmniSearch: FC = () => {
               value={query}
               role="combobox"
               aria-autocomplete="list"
+              data-omnisearch="true"
               {...handlers}
             />
             {isLoading ? null : (
