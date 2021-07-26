@@ -54,7 +54,7 @@ const CloneInformation: FC<Props> = ({ url, repository }) => {
   const emptyRepository = changesets?._embedded.changesets.length === 0;
 
   return (
-    <div>
+    <div classname="content">
       <ErrorNotification error={error} />
       <h4>{t("scm-git-plugin.information.clone")}</h4>
       <pre>
