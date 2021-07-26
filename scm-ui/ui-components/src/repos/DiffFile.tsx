@@ -97,7 +97,7 @@ const MarginlessModalContent = styled.div`
 class DiffFile extends React.Component<Props, State> {
   static defaultProps: Partial<Props> = {
     defaultCollapse: false,
-    markConflicts: true
+    markConflicts: true,
   };
 
   constructor(props: Props) {
@@ -106,14 +106,14 @@ class DiffFile extends React.Component<Props, State> {
       collapsed: this.defaultCollapse(),
       sideBySide: props.sideBySide,
       diffExpander: new DiffExpander(props.file),
-      file: props.file
+      file: props.file,
     };
   }
 
   componentDidUpdate(prevProps: Readonly<Props>) {
-    if (this.props.defaultCollapse !== prevProps.defaultCollapse) {
+    if (!this.props.isCollapsed && this.props.defaultCollapse !== prevProps.defaultCollapse) {
       this.setState({
-        collapsed: this.defaultCollapse()
+        collapsed: this.defaultCollapse(),
       });
     }
   }
@@ -130,27 +130,37 @@ class DiffFile extends React.Component<Props, State> {
   };
 
   toggleCollapse = () => {
+    const { onCollapseStateChange } = this.props;
     const { file } = this.state;
     if (this.hasContent(file)) {
-      this.setState(state => ({
-        collapsed: !state.collapsed
-      }));
+      if (onCollapseStateChange) {
+        onCollapseStateChange(file);
+      } else {
+        this.setState((state) => ({
+          collapsed: !state.collapsed,
+        }));
+      }
     }
   };
 
   toggleSideBySide = (callback: () => void) => {
     this.setState(
-      state => ({
-        sideBySide: !state.sideBySide
+      (state) => ({
+        sideBySide: !state.sideBySide,
       }),
       () => callback()
     );
   };
 
   setCollapse = (collapsed: boolean) => {
-    this.setState({
-      collapsed
-    });
+    const { onCollapseStateChange } = this.props;
+    if (onCollapseStateChange) {
+      onCollapseStateChange(this.state.file, collapsed);
+    } else {
+      this.setState({
+        collapsed,
+      });
+    }
   };
 
   createHunkHeader = (expandableHunk: ExpandableHunk) => {
@@ -242,19 +252,13 @@ class DiffFile extends React.Component<Props, State> {
 
   expandHead = (expandableHunk: ExpandableHunk, count: number) => {
     return () => {
-      return expandableHunk
-        .expandHead(count)
-        .then(this.diffExpanded)
-        .catch(this.diffExpansionFailed);
+      return expandableHunk.expandHead(count).then(this.diffExpanded).catch(this.diffExpansionFailed);
     };
   };
 
   expandBottom = (expandableHunk: ExpandableHunk, count: number) => {
     return () => {
-      return expandableHunk
-        .expandBottom(count)
-        .then(this.diffExpanded)
-        .catch(this.diffExpansionFailed);
+      return expandableHunk.expandBottom(count).then(this.diffExpanded).catch(this.diffExpansionFailed);
     };
   };
 
@@ -272,7 +276,7 @@ class DiffFile extends React.Component<Props, State> {
     if (annotationFactory) {
       return annotationFactory({
         hunk,
-        file
+        file,
       });
     } else {
       return EMPTY_ANNOTATION_FACTORY;
@@ -286,7 +290,7 @@ class DiffFile extends React.Component<Props, State> {
       changeId: getChangeKey(change),
       change,
       hunk,
-      file
+      file,
     };
     if (onClick) {
       onClick(context);
@@ -299,7 +303,7 @@ class DiffFile extends React.Component<Props, State> {
       return {
         onClick: (event: ChangeEvent) => {
           this.handleClickEvent(event.change, hunk);
-        }
+        },
       };
     }
   };
@@ -409,12 +413,21 @@ class DiffFile extends React.Component<Props, State> {
     );
   };
 
+  isCollapsed = () => {
+    const { file, isCollapsed } = this.props;
+    if (isCollapsed) {
+      return isCollapsed(file);
+    }
+    return this.state.collapsed;
+  };
+
   hasContent = (file: FileDiff) => file && !file.isBinary && file.hunks && file.hunks.length > 0;
 
   render() {
     const { fileControlFactory, fileAnnotationFactory, t } = this.props;
-    const { file, collapsed, sideBySide, diffExpander, expansionError } = this.state;
+    const { file, sideBySide, diffExpander, expansionError } = this.state;
     const viewType = sideBySide ? "split" : "unified";
+    const collapsed = this.isCollapsed();
 
     const fileAnnotations = fileAnnotationFactory ? fileAnnotationFactory(file) : null;
     const innerContent = (
@@ -437,9 +450,10 @@ class DiffFile extends React.Component<Props, State> {
     }
     const collapseIcon = this.hasContent(file) ? <Icon name={icon} color="inherit" /> : null;
     const fileControls = fileControlFactory ? fileControlFactory(file, this.setCollapse) : null;
+    const modalTitle = file.type === "delete" ? file.oldPath : file.newPath;
     const openInFullscreen = file?.hunks?.length ? (
       <OpenInFullscreenButton
-        modalTitle={file.type === "delete" ? file.oldPath : file.newPath}
+        modalTitle={modalTitle}
         modalBody={<MarginlessModalContent>{innerContent}</MarginlessModalContent>}
       />
     ) : null;
