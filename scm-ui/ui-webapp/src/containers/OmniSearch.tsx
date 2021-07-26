@@ -101,6 +101,10 @@ const ResultHeading = styled.div`
   padding: 0.375rem 0.5rem;
 `;
 
+const DropdownMenu = styled.div`
+  max-width: 20rem;
+`;
+
 const Hits: FC<HitsProps> = ({ hits, index, clear }) => {
   const id = useCallback(namespaceAndName, [hits]);
   const [t] = useTranslation("commons");
@@ -115,7 +119,10 @@ const Hits: FC<HitsProps> = ({ hits, index, clear }) => {
       {hits.map((hit, idx) => (
         <div key={id(hit)} onMouseDown={(e) => e.preventDefault()} onClick={clear}>
           <Link
-            className={classNames("dropdown-item", "has-text-weight-medium", { "is-active": idx === index })}
+            className={classNames("dropdown-item", "has-text-weight-medium", "is-ellipsis-overflow", {
+              "is-active": idx === index,
+            })}
+            title={id(hit)}
             to={`/repo/${id(hit)}`}
           >
             {id(hit)}
@@ -195,7 +202,7 @@ const useShowResultsOnFocus = () => {
     showResults,
     onClick: (e: MouseEvent<HTMLInputElement>) => e.stopPropagation(),
     onFocus: () => setShowResults(true),
-    onBlur: () => setShowResults(false)
+    onBlur: () => setShowResults(false),
   };
 };
 
@@ -234,10 +241,10 @@ const OmniSearch: FC = () => {
               </span>
             )}
           </div>
-          <div className="dropdown-menu">
+          <DropdownMenu className="dropdown-menu">
             {error ? <SearchErrorNotification error={error} /> : null}
             {!error && data ? <Hits clear={clearQuery} index={index} hits={data._embedded.hits} /> : null}
-          </div>
+          </DropdownMenu>
         </div>
       </div>
     </Field>
