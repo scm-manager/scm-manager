@@ -36,3 +36,4 @@ export { default as SecondaryNavigationItem } from "./SecondaryNavigationItem";
 export { default as ExternalLink } from "./ExternalLink";
 export { default as ExternalNavLink } from "./ExternalNavLink";
 export { default as useNavigationLock } from "./useNavigationLock";
+export { default as LoginButton } from "./LoginButton";

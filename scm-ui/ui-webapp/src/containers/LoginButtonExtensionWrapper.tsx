@@ -23,13 +23,11 @@
  */
 
 import React, { FC } from "react";
-import { devices, Icon } from "@scm-manager/ui-components";
+import { LoginButton, urls } from "@scm-manager/ui-components";
 import { binder, ExtensionPoint } from "@scm-manager/ui-extensions";
 import { useTranslation } from "react-i18next";
 import { Links } from "@scm-manager/ui-types";
-import classNames from "classnames";
-import { Link } from "react-router-dom";
-import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 
 type Props = {
   className?: string;
@@ -37,49 +35,29 @@ type Props = {
   burgerMode: boolean;
 };
 
-const StyledLogoutButton = styled(Link)`
-  @media screen and (max-width: ${devices.desktop.width - 1}px) {
-    border-top: 1px solid white;
-    margin-top: 1rem;
-    padding-top: 1rem;
-    padding-bottom: 1rem;
-  }
-
-  @media screen and (min-width: ${devices.desktop.width}px) {
-    margin-left: 2rem;
-  }
-`;
-
-const LoginButton: FC<Props> = ({ burgerMode, links, className }) => {
+const LoginButtonExtensionWrapper: FC<Props> = ({ burgerMode, links, className }) => {
   const [t] = useTranslation("commons");
+  const location = useLocation();
+
+  const from = location.pathname;
+  const loginPath = "/login";
 
   const extensionProps = {
     links,
     label: t("primary-navigation.login"),
+    loginUrl: urls.withContextPath(loginPath),
+    from,
+    burgerMode,
   };
 
   if (links?.login) {
     if (binder.hasExtension("primary-navigation.login", extensionProps)) {
       return <ExtensionPoint key="primary-navigation.login" name="primary-navigation.login" props={extensionProps} />;
     } else {
-      return (
-        <StyledLogoutButton
-          data-testid="primary-navigation-login"
-          to={"/login"}
-          className={classNames("is-align-items-center", "navbar-item", className)}
-        >
-          <Icon
-            title={t("primary-navigation.login")}
-            name="sign-in-alt"
-            color="white"
-            className={burgerMode ? "is-size-5" : "is-size-4"}
-          />
-          {" " + t("primary-navigation.login")}
-        </StyledLogoutButton>
-      );
+      return <LoginButton burgerMode={burgerMode} className={className} />;
     }
   }
   return null;
 };
 
-export default LoginButton;
+export default LoginButtonExtensionWrapper;
