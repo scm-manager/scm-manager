@@ -90,7 +90,7 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
 
   private final WorkdirProvider workdirProvider;
   private final LinkedHashMap<String, File> workdirs;
-  private final Map<String, Lock> x;
+  private final Map<String, Lock> locks;
   private final boolean cacheEnabled;
 
   private final Counter cacheHitCounter;
@@ -111,7 +111,7 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
   SimpleCachingWorkingCopyPool(int size, WorkdirProvider workdirProvider, MeterRegistry meterRegistry) {
     this.workdirProvider = workdirProvider;
     this.workdirs = new LruMap(size);
-    this.x = new ConcurrentHashMap<>();
+    this.locks = new ConcurrentHashMap<>();
     cacheEnabled = size > 0;
     cacheHitCounter = Counter
       .builder("scm.workingcopy.pool.cache.hit")
@@ -236,7 +236,7 @@ public class SimpleCachingWorkingCopyPool implements WorkingCopyPool {
   }
 
   private <R, W> Lock getLock(SimpleWorkingCopyFactory<R, W, ?>.WorkingCopyContext context) {
-    return x.computeIfAbsent(context.getScmRepository().getId(), id -> new ReentrantLock(true));
+    return locks.computeIfAbsent(context.getScmRepository().getId(), id -> new ReentrantLock(true));
   }
 
   @SuppressWarnings("java:S2160") // no need for equals here
