@@ -113,3 +113,6 @@ export const useSearch = (query: string, optionParam = defaultSearchOptions): Ap
     }
   );
 };
+
+export const useSearchHelpContent = (language: string) => useQuery<string, Error>(["searchHelpContent", language], () => import(`./help/search/modal.${language}`).then(module => module.default));
+export const useSearchSyntaxContent = (language: string) => useQuery<string, Error>(["searchHelpContent", language], () => import(`./help/search/syntax.${language}`).then(module => module.default));
