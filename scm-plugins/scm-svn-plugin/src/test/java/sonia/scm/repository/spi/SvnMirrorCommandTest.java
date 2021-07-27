@@ -83,6 +83,14 @@ public class SvnMirrorCommandTest extends AbstractSvnCommandTestBase {
   }
 
   @Test
+  public void shouldDoMirrorUpdateOnNotInitializedRepo() {
+    MirrorCommandResult result = callMirrorUpdate(emptyContext, repositoryDirectory);
+
+    assertThat(result.getResult()).isEqualTo(OK);
+    assertThat(result.getLog()).contains("Updated from revision 0 to revision 5");
+  }
+
+  @Test
   public void shouldUseCredentials() {
     MirrorCommandResult result = callMirror(emptyContext, repositoryDirectory, createCredential("svnadmin", "secret"));
 
