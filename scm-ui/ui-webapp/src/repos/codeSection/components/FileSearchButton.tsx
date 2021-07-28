@@ -39,7 +39,7 @@ const SearchIcon = styled(Icon)`
 const FileSearchButton: FC<Props> = ({ baseUrl, revision }) => {
   const [t] = useTranslation("repos");
   return (
-    <Link to={`${baseUrl}/search/${revision}`}>
+    <Link to={`${baseUrl}/search/${encodeURIComponent(revision)}`}>
       <SearchIcon title={t("filesearch.button.title")} name="search" color="inherit" />
     </Link>
   );
